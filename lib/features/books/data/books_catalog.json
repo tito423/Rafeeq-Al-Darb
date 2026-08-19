@@ -1,0 +1,210 @@
+[
+  {
+    "id": "riyad_salihin",
+    "title": "رياض الصالحين",
+    "author": "الإمام النووي",
+    "category": "الحديث",
+    "cover_url": "https://archive.org/download/Riyad-Us-Saliheen_201705/Riyad%20Us%20Saliheen_cover.jpg",
+    "download_url": "assets/data/books/book_0.pdf"
+  },
+  {
+    "id": "dham_alhawa",
+    "title": "ذم الهوى",
+    "author": "ابن الجوزي",
+    "category": "تزكية",
+    "cover_url": "https://archive.org/download/Zammo_Alhawa/cover.jpg",
+    "download_url": "assets/data/books/book_1.pdf"
+  },
+  {
+    "id": "muntakhab_nafaes",
+    "title": "منتخب النفائس",
+    "author": "الصفوري",
+    "category": "مواعظ",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_2.pdf"
+  },
+  {
+    "id": "ighathat_lahfan",
+    "title": "إغاثة اللهفان من مصايد الشيطان",
+    "author": "ابن القيم",
+    "category": "تزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_3.pdf"
+  },
+  {
+    "id": "talbis_iblis",
+    "title": "تلبيس إبليس",
+    "author": "ابن الجوزي",
+    "category": "عقيدة وتزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_4.pdf"
+  },
+  {
+    "id": "daa_dawaa",
+    "title": "الداء والدواء",
+    "author": "ابن القيم",
+    "category": "تزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_5.pdf"
+  },
+  {
+    "id": "zad_maad",
+    "title": "زاد المعاد في هدي خير العباد",
+    "author": "ابن القيم",
+    "category": "سيرة",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_6.pdf"
+  },
+  {
+    "id": "hadi_arwah",
+    "title": "حادي الأرواح إلى بلاد الأفراح",
+    "author": "ابن القيم",
+    "category": "عقيدة",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_7.pdf"
+  },
+  {
+    "id": "rawdat_muhibbin",
+    "title": "روضة المحبين ونزهة المشتاقين",
+    "author": "ابن القيم",
+    "category": "تزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_8.pdf"
+  },
+  {
+    "id": "mukhtasar_minhaj",
+    "title": "مختصر منهاج القاصدين",
+    "author": "ابن قدامة المقدسي",
+    "category": "تزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_9.pdf"
+  },
+  {
+    "id": "sifat_safwa",
+    "title": "صفة الصفوة",
+    "author": "ابن الجوزي",
+    "category": "تراجم",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_10.pdf"
+  },
+  {
+    "id": "mudhish",
+    "title": "المدهش",
+    "author": "ابن الجوزي",
+    "category": "مواعظ",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_11.pdf"
+  },
+  {
+    "id": "laali_manthura",
+    "title": "اللآلئ المنثورة",
+    "author": "متعدد",
+    "category": "متفرقات",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_12.pdf"
+  },
+  {
+    "id": "tabsira_jawzi",
+    "title": "التبصرة",
+    "author": "ابن الجوزي",
+    "category": "مواعظ",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_13.pdf"
+  },
+  {
+    "id": "tadhkira_qurtubi",
+    "title": "التذكرة بأحوال الموتى وأمور الآخرة",
+    "author": "القرطبي",
+    "category": "عقيدة",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_14.pdf"
+  },
+  {
+    "id": "la_tahzan",
+    "title": "لا تحزن",
+    "author": "عائض القرني",
+    "category": "تزكية وتنمية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_15.pdf"
+  },
+  {
+    "id": "sayd_khatir",
+    "title": "صيد الخاطر",
+    "author": "ابن الجوزي",
+    "category": "تزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_16.pdf"
+  },
+  {
+    "id": "fiqh_madhahib",
+    "title": "الفقه على المذاهب الأربعة",
+    "author": "عبد الرحمن الجزائري",
+    "category": "فقه",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_17.pdf"
+  },
+  {
+    "id": "bidaya_nihaya",
+    "title": "البداية والنهاية (بجميع أجزائه)",
+    "author": "ابن كثير",
+    "category": "تاريخ",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_18.pdf"
+  },
+  {
+    "id": "muwatta",
+    "title": "الموطأ",
+    "author": "الإمام مالك",
+    "category": "الحديث",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_19.pdf"
+  },
+  {
+    "id": "zuhd_mubarak",
+    "title": "الزهد والرقائق",
+    "author": "ابن المبارك",
+    "category": "تزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_20.pdf"
+  },
+  {
+    "id": "tawwabin_qudamah",
+    "title": "التوابين",
+    "author": "ابن قدامة المقدسي",
+    "category": "مواعظ",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_21.pdf"
+  },
+  {
+    "id": "hakim_tirmidhi",
+    "title": "مجموعة كتب الحكيم الترمذي",
+    "author": "الحكيم الترمذي",
+    "category": "تزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_22.pdf"
+  },
+  {
+    "id": "uqala_busti",
+    "title": "روضة العقلاء ونزهة الفضلاء",
+    "author": "أبو حاتم البستي",
+    "category": "أدب وتزكية",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_23.pdf"
+  },
+  {
+    "id": "wahid_bali",
+    "title": "مجموعة كتب الشيخ وحيد عبدالسلام بالي",
+    "author": "وحيد عبدالسلام بالي",
+    "category": "عقيدة",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_24.pdf"
+  },
+  {
+    "id": "mustafa_mahmoud",
+    "title": "مجموعة كتب الدكتور مصطفى محمود",
+    "author": "مصطفى محمود",
+    "category": "فكر إسلامي",
+    "cover_url": "",
+    "download_url": "assets/data/books/book_25.pdf"
+  }
+]

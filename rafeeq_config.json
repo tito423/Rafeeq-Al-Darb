@@ -1,0 +1,50 @@
+{
+  "apis": {
+    "quran": "https://api.quran.com/api/v4",
+    "prayer_times": "https://api.aladhan.com/v1",
+    "mushaf_png_base": "https://raw.githubusercontent.com/tito423/Quran-PNG/main/images/",
+    "quran_audio_primary": "https://cdn.islamic.network/quran/audio/",
+    "quran_audio_backup": "https://everyayah.com/data/",
+    "tafseer": "https://api.alquran.cloud/v1/",
+    "azan_audio": "https://praytimes.org/audio/adhan/",
+    "geocoding": "https://nominatim.openstreetmap.org/reverse"
+  },
+  "library": {
+    "books": [
+      {
+        "id": "sahih_bukhari",
+        "title": "صحيح البخاري",
+        "author": "محمد بن إسماعيل البخاري",
+        "description": "أصح الكتب بعد كتاب الله عز وجل، ومرجع أساسي في السنة النبوية.",
+        "download_url": "",
+        "cover_url": ""
+      },
+      {
+        "id": "sahih_muslim",
+        "title": "صحيح مسلم",
+        "author": "مسلم بن الحجاج",
+        "description": "ثاني أصح كتب الحديث بعد صحيح البخاري.",
+        "download_url": "",
+        "cover_url": ""
+      }
+    ],
+    "websites": [
+      {
+        "name": "طريق الإسلام",
+        "url": "https://ar.islamway.net/"
+      },
+      {
+        "name": "الإسلام سؤال وجواب",
+        "url": "https://islamqa.info/ar"
+      },
+      {
+        "name": "المكتبة الشاملة",
+        "url": "https://shamela.ws/"
+      },
+      {
+        "name": "تي في قرآن",
+        "url": "https://www.tvquran.com/"
+      }
+    ]
+  }
+}

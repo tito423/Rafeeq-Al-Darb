@@ -1,0 +1,109 @@
+name: rafeeq_app
+description: "رفيق الدرب — تطبيق إسلامي شامل للقرآن والأذكار ومواقيت الصلاة"
+publish_to: 'none'
+
+version: 2.1.0+2
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # Typography
+  google_fonts: ^6.2.1
+
+  # Storage & DB
+  path: ^1.9.1
+  shared_preferences: ^2.3.3
+  sqflite: ^2.4.2
+  sqflite_common_ffi_web: ^1.1.1
+  path_provider: ^2.1.6
+
+  # Networking & Downloads
+  dio: ^5.11.0
+  http: ^1.2.2
+
+  # Audio playback (with background support)
+  just_audio: ^0.9.41
+  just_audio_background: ^0.0.1-beta.12
+
+  # Notifications (prayer times Adhan alerts)
+  flutter_local_notifications: ^18.0.0
+
+  # Image caching (for Mushaf PNG pages)
+  cached_network_image: ^3.4.1
+
+  # Location for prayer times
+  geolocator: ^13.0.2
+  permission_handler: ^11.3.1
+
+  # Date & time formatting
+  intl: ^0.20.2
+
+  # SVG support
+  flutter_svg: ^2.0.10+1
+  timezone: ^0.10.1
+  flutter_timezone: ^3.0.0
+  flutter_localizations:
+    sdk: flutter
+  hijri: ^3.0.1
+  url_launcher: ^6.3.2
+  syncfusion_flutter_pdfviewer: ^33.2.13
+  video_player: ^2.11.1
+  wakelock_plus: ^1.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/quran_local.db
+    - assets/audio/
+    - assets/videos/
+    - assets/data/
+    - assets/data/hadith/
+    - assets/mushaf_thumbs/douri/
+    - assets/mushaf_thumbs/line12/
+    - assets/mushaf_thumbs/medina1/
+    - assets/mushaf_thumbs/medina2/
+    - assets/mushaf_thumbs/medina3/
+    - assets/mushaf_thumbs/medina_old/
+    - assets/mushaf_thumbs/naskh_taleek/
+    - assets/mushaf_thumbs/qaloon/
+    - assets/mushaf_thumbs/shamarly/
+    - assets/mushaf_thumbs/shubah/
+    - assets/mushaf_thumbs/tahajod/
+    - assets/mushaf_thumbs/tajweed/
+    - assets/mushaf_thumbs/urdu12/
+    - assets/mushaf_thumbs/urdu13/
+    - assets/mushaf_thumbs/urdu15/
+    - assets/mushaf_thumbs/warsh1/
+    - assets/mushaf_thumbs/warsh2/
+
+dependency_overrides:
+  path_provider_android: 2.2.14
+  shared_preferences_android: 2.2.3
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: 'assets/icon/app_icon.jpg'
+
+flutter_native_splash:
+  color: '#071625'
+  color_dark: '#071625'
+  android_12:
+    color: '#071625'
+    icon_background_color: '#071625'
