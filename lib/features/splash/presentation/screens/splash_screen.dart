@@ -240,20 +240,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       letterSpacing: 0.5,
                     ),
                   ),
-                  const SizedBox(height: 48),
-
-                  // Elegant Gold Loading Bar
-                  SizedBox(
-                    width: 140,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: const LinearProgressIndicator(
-                        minHeight: 4,
-                        backgroundColor: Colors.white12,
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentGold),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

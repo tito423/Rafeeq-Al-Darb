@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
+import 'package:just_audio/just_audio.dart';
 
 import '../../../../core/theme/theme_provider.dart';
 
@@ -24,6 +25,7 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
     with TickerProviderStateMixin {
   late AnimationController _bgController;
   late AnimationController _textController;
+  late AudioPlayer _audioPlayer;
   
   int _currentSubtitleIndex = 0;
   Timer? _timer;
@@ -42,7 +44,7 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
     (time: 53, text: "حَيَّ عَلَى الْفَلَاحِ"),
     (time: 60, text: "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ"),
     (time: 66, text: "لَا إِلَهَ إِلَّا اللَّهُ"),
-    (time: 75, text: "الصلاة خير من النوم (في الفجر فقط)"), // Just a fallback, will be omitted if not Fajr
+    (time: 75, text: "الصلاة خير من النوم (في الفجر فقط)"),
   ];
 
   @override
@@ -59,9 +61,25 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
       duration: const Duration(milliseconds: 1000),
     );
 
+    _audioPlayer = AudioPlayer();
+    _startAdhan();
+  }
+
+  Future<void> _startAdhan() async {
     _startSubtitleTimer();
-    // In a real implementation, we would start playing the Audio here
-    // using just_audio and sync exactly.
+    try {
+      // Find the URL for the selected muezzin if possible, fallback to Makkah
+      String url = 'https://download.quranicaudio.com/adhan/makkah.mp3';
+      if (widget.muezzinName.contains('عبد الباسط')) url = 'https://download.quranicaudio.com/adhan/abdulbasit.mp3';
+      else if (widget.muezzinName.contains('المنشاوي')) url = 'https://download.quranicaudio.com/adhan/minshawi.mp3';
+      else if (widget.muezzinName.contains('حافظ')) url = 'https://download.quranicaudio.com/adhan/hafez.mp3';
+      else if (widget.muezzinName.contains('الحسيني')) url = 'https://download.quranicaudio.com/adhan/hussaini.mp3';
+
+      await _audioPlayer.setUrl(url);
+      _audioPlayer.play();
+    } catch (e) {
+      debugPrint("Could not play adhan audio: $e");
+    }
   }
 
   void _startSubtitleTimer() {
@@ -94,6 +112,7 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
     _bgController.dispose();
     _textController.dispose();
     _timer?.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -226,7 +245,12 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
                         label: 'إيقاف الصوت',
                         color: Colors.white54,
                         onTap: () {
-                          // Stop audio
+                          if (_audioPlayer.playing) {
+                            _audioPlayer.pause();
+                          } else {
+                            _audioPlayer.play();
+                          }
+                          setState(() {});
                         },
                       ),
                       const SizedBox(width: 40),

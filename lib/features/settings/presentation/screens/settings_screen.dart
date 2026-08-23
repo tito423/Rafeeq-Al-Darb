@@ -5,7 +5,7 @@ import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/alerts_customization_sheet.dart';
 import '../widgets/theme_customization_sheet.dart';
-import '../../prayer/presentation/widgets/prayer_settings_sheet.dart';
+import '../../../prayer/presentation/widgets/prayer_settings_sheet.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -38,7 +38,7 @@ class SettingsScreen extends ConsumerWidget {
             clipBehavior: Clip.antiAlias,
             child: SwitchListTile(
               secondary: Icon(
-                themeState == ThemeMode.dark
+                themeState.themeMode == ThemeMode.dark
                     ? Icons.dark_mode_rounded
                     : Icons.light_mode_rounded,
                 color: theme.colorScheme.primary,
@@ -52,12 +52,12 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               subtitle: Text(
-                themeState == ThemeMode.dark
+                themeState.themeMode == ThemeMode.dark
                     ? 'المظهر الليلي مفعَّل لراحة العين'
                     : 'المظهر النهاري مفعَّل',
                 style: GoogleFonts.amiri(fontSize: 13),
               ),
-              value: themeState == ThemeMode.dark,
+              value: themeState.themeMode == ThemeMode.dark,
               activeColor: AppColors.accentGold,
               onChanged: (val) {
                 notifier.setThemeMode(val ? ThemeMode.dark : ThemeMode.light);

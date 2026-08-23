@@ -41,7 +41,7 @@ class DownloadsScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'التنزيلات',
+                          'مدير التنزيلات',
                           style: GoogleFonts.scheherazadeNew(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
@@ -432,7 +432,35 @@ class _ReciterDownloadRowState extends ConsumerState<_ReciterDownloadRow> {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
+
+          // Download Full Quran button
+          IconButton(
+            onPressed: () {
+              // Full Quran download loop
+              for (int i = 1; i <= 114; i++) {
+                ref
+                    .read(downloadManagerProvider.notifier)
+                    .downloadSurahAudio(
+                      surahNumber: i,
+                      reciterId: widget.reciter.id,
+                      mp3quranBaseUrl: widget.reciter.mp3quranIdentifier,
+                    );
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'بدأ تحميل القرآن كاملاً — ${widget.reciter.nameAr}',
+                    style: GoogleFonts.amiri(),
+                  ),
+                  duration: const Duration(seconds: 3),
+                ),
+              );
+            },
+            icon: const Icon(Icons.download_done_rounded, color: AppColors.accentGold),
+            tooltip: 'تحميل المصحف كاملاً',
+          ),
+          const SizedBox(width: 8),
 
           // Surah number picker
           SizedBox(

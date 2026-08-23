@@ -10,10 +10,13 @@ import 'package:intl/intl.dart' hide TextDirection;
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_provider.dart';
+import '../../../../core/localization/locale_provider.dart';
 import '../../../../core/services/prayer_times_service.dart';
 import '../../../quran/presentation/providers/quran_provider.dart';
 import '../../../quran/presentation/screens/surah_reading_screen.dart';
 import '../providers/home_provider.dart';
+import '../../../khatma/presentation/providers/khatma_provider.dart';
+import '../../../khatma/presentation/screens/khatma_setup_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Home Screen
@@ -83,8 +86,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             // ── Continue Reading ──────────────────────────────────────────
             SliverToBoxAdapter(child: _ContinueReadingCard(isDark: isDark)),
 
-            // ── Daily Wird ────────────────────────────────────────────────
-            SliverToBoxAdapter(child: _DailyWirdCard(isDark: isDark)),
+            // ── Khatma ────────────────────────────────────────────────
+            SliverToBoxAdapter(child: _KhatmaCard(isDark: isDark)),
 
             // ── Hadith RGB Card ───────────────────────────────────────────
             SliverToBoxAdapter(child: _HadithCard(isDark: isDark)),
@@ -124,8 +127,8 @@ class _PrayerTimesHero extends ConsumerWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isDark 
-                    ? [AppColors.darkSurface, AppColors.darkBackground] 
-                    : [AppColors.primaryBlue, const Color(0xFF0A2A45)],
+                    ? [const Color(0xFF0F1714), const Color(0xFF14251D)] 
+                    : [const Color(0xFF14251D), const Color(0xFF0A100E)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -135,41 +138,52 @@ class _PrayerTimesHero extends ConsumerWidget {
           Positioned.fill(child: CustomPaint(painter: _StarPainter())),
           // Content
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
             child: Column(
               children: [
+                // Top Action Bar
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start, // Left side in RTL
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        ref.read(currentTabProvider.notifier).state = 5; // Go to More Settings
+                      },
+                      icon: const Icon(
+                        Icons.settings_rounded,
+                        color: Colors.white,
+                      ),
+                      tooltip: 'الإعدادات',
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        ref.read(themeProvider.notifier).toggleTheme();
+                      },
+                      icon: Icon(
+                        isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                        color: Colors.white,
+                      ),
+                      tooltip: 'تغيير المظهر',
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _showLanguageSelector(context, ref);
+                      },
+                      icon: const Icon(
+                        Icons.language_rounded,
+                        color: Colors.white,
+                      ),
+                      tooltip: 'تغيير اللغة',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                // Clock and Dates Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Left controls: Settings, Theme
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            ref.read(currentTabProvider.notifier).state = 5; // Go to More Settings
-                          },
-                          icon: const Icon(
-                            Icons.settings_rounded,
-                            color: Colors.white,
-                          ),
-                          tooltip: 'الإعدادات',
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            ref.read(themeProvider.notifier).toggleTheme();
-                          },
-                          icon: Icon(
-                            isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                            color: Colors.white,
-                          ),
-                          tooltip: 'تغيير المظهر',
-                        ),
-                        // Note: Language/RGB toggle can be added here later
-                      ],
-                    ),
-                    // Gregorian (Right in RTL)
+                    // Gregorian
                     Expanded(
                       child: Text(
                         dateStr,
@@ -195,7 +209,7 @@ class _PrayerTimesHero extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    // Hijri (Left in RTL)
+                    // Hijri
                     Expanded(
                       child: prayerAsync.when(
                         data: (pt) => Text(
@@ -252,12 +266,16 @@ class _PrayerTimesHero extends ConsumerWidget {
                                 final diff = PrayerTimesService().getTimeUntilNextPrayer(pt);
                                 if (diff == null) return const SizedBox.shrink();
                                 
-                                // Format without seconds: - h:m -
-                                final h = diff.inHours.toString().padLeft(2, '0');
-                                final m = (diff.inMinutes % 60).toString().padLeft(2, '0');
+                                final int h = diff.inHours;
+                                final int m = diff.inMinutes % 60;
+                                String text = 'بعد ';
+                                if (h > 0) text += '$h ساعة ';
+                                if (h > 0 && m > 0) text += 'و ';
+                                if (m > 0) text += '$m دقيقة';
+                                if (h == 0 && m == 0) text = 'الآن';
                                 
                                 return Text(
-                                  'بعد $h س $m د',
+                                  text,
                                   textDirection: TextDirection.rtl,
                                   style: GoogleFonts.outfit(
                                     fontSize: 16,
@@ -307,6 +325,61 @@ class _PrayerTimesHero extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLanguageSelector(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.read(localeProvider);
+    final notifier = ref.read(localeProvider.notifier);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'اختر لغة التطبيق / Select Language',
+                  style: GoogleFonts.amiri(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  leading: const Text('🇸🇦', style: TextStyle(fontSize: 24)),
+                  title: Text('العربية (Arabic)', style: GoogleFonts.amiri(fontSize: 18, fontWeight: FontWeight.bold, color: currentLocale.languageCode == 'ar' ? AppColors.accentGold : null)),
+                  trailing: currentLocale.languageCode == 'ar' ? const Icon(Icons.check_circle, color: AppColors.accentGold) : null,
+                  onTap: () {
+                    notifier.setLocale('ar');
+                    Navigator.pop(ctx);
+                  },
+                ),
+                ListTile(
+                  leading: const Text('🇬🇧', style: TextStyle(fontSize: 24)),
+                  title: Text('English (الإنجليزية)', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w600, color: currentLocale.languageCode == 'en' ? AppColors.accentGold : null)),
+                  trailing: currentLocale.languageCode == 'en' ? const Icon(Icons.check_circle, color: AppColors.accentGold) : null,
+                  onTap: () {
+                    notifier.setLocale('en');
+                    Navigator.pop(ctx);
+                  },
+                ),
+                ListTile(
+                  leading: const Text('🇫🇷', style: TextStyle(fontSize: 24)),
+                  title: Text('Français (الفرنسية)', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w600, color: currentLocale.languageCode == 'fr' ? AppColors.accentGold : null)),
+                  trailing: currentLocale.languageCode == 'fr' ? const Icon(Icons.check_circle, color: AppColors.accentGold) : null,
+                  onTap: () {
+                    notifier.setLocale('fr');
+                    Navigator.pop(ctx);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -664,197 +737,100 @@ class _ContinueReadingCard extends ConsumerWidget {
   }
 }
 
-// ── Daily Wird card ───────────────────────────────────────────────────────────
+// ── Khatma Card ───────────────────────────────────────────────────────────
 
-class _DailyWirdCard extends ConsumerWidget {
+class _KhatmaCard extends ConsumerWidget {
   final bool isDark;
-  const _DailyWirdCard({required this.isDark});
+  const _KhatmaCard({required this.isDark});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final wird = ref.watch(dailyWirdProvider);
+    final khatma = ref.watch(khatmaProvider);
     final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
-    final textColor = isDark
-        ? AppColors.darkOnSurface
-        : AppColors.lightOnSurface;
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: cardBg,
-
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.track_changes_rounded,
-                color: AppColors.primaryBlue,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'متابعة الختمة',
-                style: GoogleFonts.amiri(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: textColor,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '${wird.morningCompleted + wird.eveningCompleted}/${wird.morningTotal + wird.eveningTotal}',
-                style: GoogleFonts.outfit(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryBlue,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              // Morning
-              Expanded(
-                child: _WirdProgress(
-                  label: 'أذكار الصباح',
-                  completed: wird.morningCompleted,
-                  total: wird.morningTotal,
-                  progress: wird.morningProgress,
-                  color: const Color(0xFFE17055),
-                  icon: Icons.wb_sunny_rounded,
-                  isDark: isDark,
-                  onTap: () =>
-                      ref.read(dailyWirdProvider.notifier).incrementMorning(),
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Evening
-              Expanded(
-                child: _WirdProgress(
-                  label: 'أذكار المساء',
-                  completed: wird.eveningCompleted,
-                  total: wird.eveningTotal,
-                  progress: wird.eveningProgress,
-                  color: const Color(0xFF6C5CE7),
-                  icon: Icons.nights_stay_rounded,
-                  isDark: isDark,
-                  onTap: () =>
-                      ref.read(dailyWirdProvider.notifier).incrementEvening(),
-                ),
-              ),
-            ],
-          ),
-          if (wird.morningDone && wird.eveningDone) ...[
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.check_circle_rounded,
-                  color: AppColors.success,
-                  size: 16,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'أحسنت! أكملت ورد اليوم 🌟',
-                  style: GoogleFonts.amiri(
-                    fontSize: 14,
-                    color: AppColors.success,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+    final progress = khatma.currentPage / 604.0;
+    
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const KhatmaSetupScreen()),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: cardBg,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
-        ],
-      ),
-    );
-  }
-}
-
-class _WirdProgress extends StatelessWidget {
-  final String label;
-  final int completed;
-  final int total;
-  final double progress;
-  final Color color;
-  final IconData icon;
-  final bool isDark;
-  final VoidCallback onTap;
-
-  const _WirdProgress({
-    required this.label,
-    required this.completed,
-    required this.total,
-    required this.progress,
-    required this.color,
-    required this.icon,
-    required this.isDark,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(
+              children: [
+                const Icon(
+                  Icons.auto_stories_rounded,
+                  color: AppColors.primaryBlue,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  khatma.name,
+                  style: GoogleFonts.amiri(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: textColor,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '${(progress * 100).toStringAsFixed(1)}%',
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primaryBlue,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 8,
+                backgroundColor: AppColors.primaryBlue.withValues(alpha: 0.15),
+                color: AppColors.primaryBlue,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '$completed/$total',
+                  'الصفحة ${khatma.currentPage} من 604',
                   style: GoogleFonts.outfit(
                     fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: color,
+                    color: isDark ? Colors.white70 : Colors.black54,
                   ),
                 ),
-                Icon(icon, color: color, size: 18),
+                Text(
+                  'الهدف: ختمة خلال ${khatma.targetDays} يوم',
+                  style: GoogleFonts.amiri(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+                ),
               ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              label,
-              style: GoogleFonts.amiri(
-                fontSize: 13,
-                color: isDark
-                    ? AppColors.darkOnSurface
-                    : AppColors.lightOnSurface,
-                fontWeight: FontWeight.w600,
-              ),
-              textDirection: TextDirection.rtl,
-            ),
-            const SizedBox(height: 8),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 6,
-                backgroundColor: color.withValues(alpha: 0.15),
-                color: color,
-              ),
             ),
           ],
         ),
@@ -862,6 +838,7 @@ class _WirdProgress extends StatelessWidget {
     );
   }
 }
+
 
 // ── Hadith Card (Islamic Ornamental & Animated) ───────────────────────────────
 

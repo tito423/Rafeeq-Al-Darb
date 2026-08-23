@@ -8,7 +8,7 @@ import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
 import '../../features/sebha/presentation/screens/sebha_screen.dart';
 import '../../features/prayer/presentation/screens/prayer_screen.dart';
-import '../../features/books/presentation/screens/books_library_screen.dart';
+import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/settings/presentation/screens/more_screen.dart';
 
 // ── Tab index provider ────────────────────────────────────────────────────────
@@ -26,9 +26,9 @@ const _tabs = [
   _Tab('الرئيسية',   Icons.home_outlined,            Icons.home_rounded),
   _Tab('القرآن',     Icons.menu_book_outlined,        Icons.menu_book_rounded),
   _Tab('الصلاة',     Icons.access_time_outlined,      Icons.access_time_filled),
+  _Tab('المكتبة',    Icons.local_library_outlined,   Icons.local_library_rounded),
   _Tab('الأذكار',    Icons.favorite_border_rounded,  Icons.favorite_rounded),
   _Tab('المسبحة',    Icons.touch_app_outlined,        Icons.touch_app_rounded),
-  _Tab('الكتب',     Icons.local_library_outlined,    Icons.local_library_rounded),
   _Tab('المزيد',     Icons.grid_view_outlined,        Icons.grid_view_rounded),
 ];
 
@@ -47,9 +47,9 @@ class AppShell extends ConsumerWidget {
     HomeScreen(),
     QuranScreen(),
     PrayerScreen(),
+    LibraryScreen(),
     AzkarScreen(),
     SebhaScreen(),
-    BooksLibraryScreen(),
     MoreScreen(),
   ];
 

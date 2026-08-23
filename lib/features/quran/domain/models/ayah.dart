@@ -45,4 +45,35 @@ class Ayah {
         irab: m['irab'] as String? ?? '',
         asbab: m['asbab'] as String? ?? '',
       );
+
+  String get sanitizedText {
+    if (surahId == 1 || surahId == 9) return textUthmani;
+    
+    if (ayahNumber == 1) {
+      final bismillahVariants = [
+        'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ',
+        'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ',
+        'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ ',
+        'بسم الله الرحمن الرحيم ',
+        'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
+        'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ',
+        'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ',
+        'بسم الله الرحمن الرحيم',
+      ];
+      
+      String text = textUthmani;
+      for (final b in bismillahVariants) {
+        if (text.startsWith(b)) {
+          text = text.substring(b.length).trim();
+          break;
+        }
+      }
+      
+      // Sometimes it's appended with a special space or pause mark
+      text = text.replaceFirst(RegExp(r'^[\s\u200F\u200E\u200D\u200C]+'), '');
+      return text;
+    }
+    
+    return textUthmani;
+  }
 }

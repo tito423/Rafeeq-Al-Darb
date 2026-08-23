@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../services/download_manager.dart';
+import '../../data/datasources/hadith_db_helper.dart';
 
 class HadithReaderScreen extends ConsumerStatefulWidget {
   final String bookId;
@@ -37,33 +37,13 @@ class _HadithReaderScreenState extends ConsumerState<HadithReaderScreen> {
 
   Future<void> _loadBook() async {
     try {
-      final downloadManager = ref.read(downloadManagerProvider.notifier);
-      final path = await downloadManager.getBookPath(widget.bookId);
-      final file = File(path);
       
-      String jsonString;
-      
-      // If it exists locally, read it
-      if (await file.exists()) {
-        jsonString = await file.readAsString();
-      } else {
-        // Fallback to assets if exists (though we are moving away from this)
-        try {
-          jsonString = await rootBundle.loadString('assets/data/hadith/${widget.bookId}.json');
-        } catch (_) {
-          // Both local storage and assets failed
-          setState(() {
-            _error = 'الكتاب غير متوفر. يرجى تنزيله من شاشة التنزيلات أو التأكد من الاتصال بالإنترنت.';
-            _isLoading = false;
-          });
-          return;
-        }
-      }
-      
-      final Map<String, dynamic> data = jsonDecode(jsonString);
+      // Fetch from DB
+      final dbHelper = HadithDbHelper();
+      final data = await dbHelper.getHadithsByBook(widget.bookId, limit: 10000);
       
       setState(() {
-        _hadiths = data['hadiths'] ?? [];
+        _hadiths = data;
         _isLoading = false;
       });
     } catch (e) {
@@ -113,18 +93,9 @@ class _HadithReaderScreenState extends ConsumerState<HadithReaderScreen> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton.icon(
-                          onPressed: () {
-                            ref.read(downloadManagerProvider.notifier).downloadBook(
-                              bookId: widget.bookId,
-                              downloadUrl: widget.downloadUrl,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('تمت إضافة ${widget.bookTitle} إلى قائمة التنزيلات', style: GoogleFonts.amiri())),
-                            );
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.download, color: Colors.white),
-                          label: Text('تنزيل الآن', style: GoogleFonts.amiri(fontSize: 16, color: Colors.white)),
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          label: Text('العودة', style: GoogleFonts.amiri(fontSize: 16, color: Colors.white)),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryBlue,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -140,7 +111,7 @@ class _HadithReaderScreenState extends ConsumerState<HadithReaderScreen> {
                   itemBuilder: (context, index) {
                     final hadith = _hadiths[index];
                     final text = hadith['text'] ?? '';
-                    final number = hadith['hadithnumber'] ?? index + 1;
+                    final number = hadith['hadith_number'] ?? index + 1;
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16),

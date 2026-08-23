@@ -21,17 +21,28 @@ class GeocodingService {
 
         if (address != null) {
           // Try multiple keys in order of preference
-          return address['city'] as String? ??
+          final String cityName = address['city'] as String? ??
               address['town'] as String? ??
               address['village'] as String? ??
               address['county'] as String? ??
               address['state'] as String? ??
-              body['display_name']?.toString().split(',').first ??
               '';
+              
+          final String countryName = address['country'] as String? ?? '';
+          
+          if (cityName.isNotEmpty && countryName.isNotEmpty) {
+            return '$cityName، $countryName';
+          } else if (cityName.isNotEmpty) {
+            return cityName;
+          } else if (countryName.isNotEmpty) {
+            return countryName;
+          } else {
+             return body['display_name']?.toString().split(',').first ?? 'موقع غير محدد';
+          }
         }
       }
     } catch (_) {}
 
-    return '';
+    return 'موقع غير محدد';
   }
 }

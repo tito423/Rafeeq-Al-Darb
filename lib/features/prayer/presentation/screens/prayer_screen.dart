@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/services/prayer_times_service.dart';
 import '../providers/prayer_settings_provider.dart';
+import '../widgets/prayer_settings_sheet.dart';
 
 class PrayerScreen extends ConsumerStatefulWidget {
   const PrayerScreen({super.key});
@@ -31,19 +31,13 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'إعدادات الصلاة',
-          style: GoogleFonts.amiri(
-            fontSize: 20,
+          'إعدادات الصلاة والمواقيت',
+          style: GoogleFonts.scheherazadeNew(
+            fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: textColor,
+            color: AppColors.accentGold,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.arrow_forward_ios_rounded, color: textColor, size: 20),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -52,7 +46,7 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
           // Main Toggles
           _buildSwitchTile(
             title: 'إشعارات الصلاة',
-            subtitle: 'تنبيه عند دخول وقت كل صلاة',
+            subtitle: 'تنبيه عند دخول وقت كل صلاة مع الأذان',
             value: settings.globalNotifications,
             onChanged: (v) => notifier.setGlobalNotifications(v),
             icon: Icons.notifications_active_outlined,
@@ -60,8 +54,8 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
           ),
           const SizedBox(height: 12),
           _buildSwitchTile(
-            title: 'أوقات حسب موقعي الجغرافي',
-            subtitle: 'تلقائي',
+            title: 'المواقيت حسب الموقع الجغرافي',
+            subtitle: 'حساب فلكي دقيق حسب إحداثيات موقعك',
             value: settings.locationEnabled,
             onChanged: (v) => notifier.setLocationEnabled(v),
             icon: Icons.location_on_outlined,
@@ -71,100 +65,107 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
 
           // Muezzin Selection
           Text(
-            'اختر المؤذن',
-            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.lightSubtext),
+            'صوت المؤذن والأذان',
+            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.accentGold, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF132B25) : Colors.white,
+              color: cardBg,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.primaryBlue.withOpacity(0.1)),
+              border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.2)),
             ),
             child: ListTile(
-              title: Text(settings.selectedMuezzin, style: GoogleFonts.amiri(color: textColor, fontWeight: FontWeight.bold)),
-              subtitle: Text('Adhan', style: GoogleFonts.outfit(color: AppColors.lightSubtext, fontSize: 12)),
-              trailing: const Icon(Icons.mosque, color: AppColors.accentGold),
+              title: Text(settings.selectedMuezzin, style: GoogleFonts.scheherazadeNew(color: textColor, fontWeight: FontWeight.bold, fontSize: 18)),
+              subtitle: Text('اضغط للمعاينة الفورية وتغيير المؤذن', style: GoogleFonts.amiri(color: AppColors.lightSubtext, fontSize: 12)),
+              trailing: const Icon(Icons.record_voice_over_rounded, color: AppColors.accentGold),
               onTap: () {
-                // Future: show bottom sheet to select muezzin
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const MuezzinSelectionSheet(),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Calculation Method Selection
+          Text(
+            'طريقة الحساب الفلكي',
+            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.accentGold, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: cardBg,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.2)),
+            ),
+            child: ListTile(
+              title: Text(settings.calculationMethod, style: GoogleFonts.outfit(color: textColor, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr),
+              subtitle: Text('Calculation Method', style: GoogleFonts.outfit(color: AppColors.lightSubtext, fontSize: 12)),
+              trailing: const Icon(Icons.calculate_rounded, color: AppColors.accentGold),
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const CalculationMethodSheet(),
+                );
               },
             ),
           ),
           const SizedBox(height: 24),
 
           // Prayer Times list
+          Text(
+            'تخصيص تنبيهات الصلوات المفردة',
+            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.accentGold, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
           ...['الفجر', 'الشروق', 'الظهر', 'العصر', 'المغرب', 'العشاء'].map((p) {
-            bool isNext = false; // Mock next prayer or calculate it later
-            bool isEnabled = settings.prayerToggles[p] ?? true;
+            final isEnabled = settings.prayerToggles[p] ?? true;
             return Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              margin: const EdgeInsets.only(bottom: 8),
               decoration: BoxDecoration(
-                color: isNext ? AppColors.primaryBlue.withOpacity(0.1) : Colors.transparent,
-                borderRadius: BorderRadius.circular(12),
+                color: cardBg,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.15)),
               ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isNext ? AppColors.primaryBlue : Colors.transparent,
-                    ),
+              child: ListTile(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => SinglePrayerConfigSheet(prayer: p),
+                  );
+                },
+                title: Text(
+                  p,
+                  style: GoogleFonts.scheherazadeNew(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: isEnabled ? textColor : Colors.grey,
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      p,
-                      style: GoogleFonts.amiri(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: isNext ? AppColors.primaryBlue : textColor,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    isEnabled ? 'مفعل' : 'معطل',
-                    style: GoogleFonts.outfit(
-                      fontSize: 12,
-                      color: AppColors.lightSubtext,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Switch(
-                    value: isEnabled,
-                    onChanged: settings.globalNotifications
-                        ? (v) => notifier.setPrayerToggle(p, v)
-                        : null,
-                    activeColor: AppColors.primaryBlue,
-                  ),
-                ],
+                ),
+                subtitle: Text(
+                  'اضغط لتعديل الوقت وتنبيه الإقامة',
+                  style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext),
+                ),
+                trailing: Switch(
+                  value: isEnabled,
+                  onChanged: settings.globalNotifications
+                      ? (v) => notifier.setPrayerToggle(p, v)
+                      : null,
+                  activeColor: AppColors.accentGold,
+                ),
               ),
             );
           }),
-
-          const SizedBox(height: 24),
-          // Sections placeholders
-          _buildSectionTitle('تذكيرات الأذكار'),
-          _buildReminderTile('أذكار الصباح', 'يومياً عند 05:00', Icons.wb_sunny_outlined, isDark),
-          _buildReminderTile('أذكار المساء', 'يومياً عند 16:30', Icons.nights_stay_outlined, isDark),
-          
-          const SizedBox(height: 24),
-          _buildSectionTitle('تذكيرات الورد اليومي'),
-          _buildReminderTile('ورد القرآن اليومي - الصبح', 'يومياً عند 05:00', Icons.menu_book, isDark),
-          _buildReminderTile('ورد القرآن اليومي - المغرب', 'يومياً عند 16:30', Icons.menu_book, isDark),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(
-        title,
-        style: GoogleFonts.amiri(fontSize: 14, color: AppColors.lightSubtext, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -177,40 +178,28 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
     required IconData icon,
     required bool isDark,
   }) {
+    final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
+    final textColor = isDark ? Colors.white : Colors.black87;
+
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primaryBlue.withOpacity(0.1)),
+        border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.2)),
       ),
       child: SwitchListTile(
-        title: Text(title, style: GoogleFonts.amiri(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle, style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
+        title: Text(
+          title,
+          style: GoogleFonts.scheherazadeNew(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext),
+        ),
         value: value,
         onChanged: onChanged,
-        secondary: Icon(icon, color: AppColors.primaryBlue),
-        activeColor: AppColors.primaryBlue,
-      ),
-    );
-  }
-
-  Widget _buildReminderTile(String title, String subtitle, IconData icon, bool isDark) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primaryBlue.withOpacity(0.1)),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: AppColors.primaryBlue),
-        title: Text(title, style: GoogleFonts.amiri(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle, style: GoogleFonts.outfit(fontSize: 12, color: AppColors.lightSubtext)),
-        trailing: Switch(
-          value: true,
-          onChanged: (v) {},
-          activeColor: AppColors.primaryBlue,
-        ),
+        activeColor: AppColors.accentGold,
+        secondary: Icon(icon, color: AppColors.accentGold),
       ),
     );
   }

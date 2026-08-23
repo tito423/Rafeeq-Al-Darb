@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
 enum AppThemeType {
-  sakanati,
-  oud,
-  rose,
-  desert,
-  river,
-  dawn,
-  purple,
-  night,
+  light, // نهاري
+  dark,  // ليلي
+  rgb,   // متحرك RGB
 }
 
 class AppThemeConfig {
   final AppThemeType type;
   final String name;
+  final String nameEn;
+  final String nameFr;
   final String subtitle;
   final IconData icon;
   final Color backgroundColor;
   final Color cardColor;
-  final Color primaryColor; // ذهبي
-  final Color accentColor; // أساسي
-  final Color borderColor; // حدود
+  final Color primaryColor;
+  final Color accentColor;
+  final Color borderColor;
+  final bool isAnimatedRgb;
   
   const AppThemeConfig({
     required this.type,
     required this.name,
+    required this.nameEn,
+    required this.nameFr,
     required this.subtitle,
     required this.icon,
     required this.backgroundColor,
@@ -32,96 +32,51 @@ class AppThemeConfig {
     required this.primaryColor,
     required this.accentColor,
     required this.borderColor,
+    this.isAnimatedRgb = false,
   });
 }
 
 const List<AppThemeConfig> kAppThemes = [
   AppThemeConfig(
-    type: AppThemeType.desert,
-    name: 'الصحراء',
-    subtitle: 'منقط',
-    icon: Icons.landscape_rounded,
-    backgroundColor: Color(0xFF1C1A17),
-    cardColor: Color(0xFF2B251E),
-    primaryColor: Color(0xFFD49A4C),
-    accentColor: Color(0xFFE8B671),
-    borderColor: Color(0xFF453B31),
+    type: AppThemeType.light,
+    name: 'نهاري (دافئ)',
+    nameEn: 'Light Theme',
+    nameFr: 'Thème Clair',
+    subtitle: 'خلفية ورقية دافئة مع لمسات ذهبية وزمردية',
+    icon: Icons.wb_sunny_rounded,
+    backgroundColor: Color(0xFFFAF7F0), // Warm cream / parchment
+    cardColor: Color(0xFFFFFFFF),
+    primaryColor: Color(0xFF1B4D3E),     // Dark Emerald
+    accentColor: Color(0xFFD4AF37),      // Dark Gold
+    borderColor: Color(0xFFE5DEC9),
+    isAnimatedRgb: false,
   ),
   AppThemeConfig(
-    type: AppThemeType.rose,
-    name: 'الورد',
-    subtitle: 'مزدوج',
-    icon: Icons.local_florist_rounded,
-    backgroundColor: Color(0xFF1D1719),
-    cardColor: Color(0xFF2E2226),
-    primaryColor: Color(0xFFD46B80),
-    accentColor: Color(0xFFE88A9C),
-    borderColor: Color(0xFF4A343A),
-  ),
-  AppThemeConfig(
-    type: AppThemeType.oud,
-    name: 'العود',
-    subtitle: 'إطار كامل',
-    icon: Icons.park_rounded,
-    backgroundColor: Color(0xFF1F1C18),
-    cardColor: Color(0xFF332A22),
-    primaryColor: Color(0xFFC79860),
-    accentColor: Color(0xFFE3BC8D),
-    borderColor: Color(0xFF54463A),
-  ),
-  AppThemeConfig(
-    type: AppThemeType.sakanati,
-    name: 'سكينتي',
-    subtitle: 'أخضر وذهبي',
-    icon: Icons.mosque_rounded,
-    backgroundColor: Color(0xFF0A1D1C), // Deep Forest Green
-    cardColor: Color(0xFF142C2A), // Lighter Green
-    primaryColor: Color(0xFFD4AF37), // Gold
-    accentColor: Color(0xFFF1C40F),
-    borderColor: Color(0xFF1E4340),
-  ),
-  AppThemeConfig(
-    type: AppThemeType.river,
-    name: 'النهر',
-    subtitle: 'بسيط',
-    icon: Icons.water_rounded,
-    backgroundColor: Color(0xFF141C1E),
-    cardColor: Color(0xFF1E2E31),
-    primaryColor: Color(0xFF4DD0E1),
-    accentColor: Color(0xFF80DEEA),
-    borderColor: Color(0xFF314C51),
-  ),
-  AppThemeConfig(
-    type: AppThemeType.dawn,
-    name: 'الفجر',
-    subtitle: 'ظل',
-    icon: Icons.wb_twilight_rounded,
-    backgroundColor: Color(0xFF1D1A1E),
-    cardColor: Color(0xFF2B252E),
-    primaryColor: Color(0xFFFFB74D),
-    accentColor: Color(0xFFFFCC80),
-    borderColor: Color(0xFF453B4A),
-  ),
-  AppThemeConfig(
-    type: AppThemeType.purple,
-    name: 'البنفسج',
-    subtitle: 'زخرفي',
-    icon: Icons.favorite_rounded,
-    backgroundColor: Color(0xFF1A1721),
-    cardColor: Color(0xFF272136),
-    primaryColor: Color(0xFFBA68C8),
-    accentColor: Color(0xFFCE93D8),
-    borderColor: Color(0xFF413759),
-  ),
-  AppThemeConfig(
-    type: AppThemeType.night,
-    name: 'الليل',
-    subtitle: 'ليلي حالك ✦',
+    type: AppThemeType.dark,
+    name: 'ليلي (سبجي)',
+    nameEn: 'Dark Theme',
+    nameFr: 'Thème Sombre',
+    subtitle: 'خلفية سبجية داكنة مع إشراقات ذهبية هادئة',
     icon: Icons.nightlight_round,
-    backgroundColor: Color(0xFF050505),
-    cardColor: Color(0xFF111111),
-    primaryColor: Color(0xFFD4AF37),
-    accentColor: Color(0xFFE5C158),
-    borderColor: Color(0xFF222222),
+    backgroundColor: Color(0xFF0A100E), // Deep Obsidian / Slate
+    cardColor: Color(0xFF14251D),       // Card deep slate
+    primaryColor: Color(0xFFD4AF37),     // Soft Gold
+    accentColor: Color(0xFF10B981),      // Emerald Green
+    borderColor: Color(0xFF1E3A2E),
+    isAnimatedRgb: false,
+  ),
+  AppThemeConfig(
+    type: AppThemeType.rgb,
+    name: 'متحرك (RGB أثيري)',
+    nameEn: 'Animated RGB',
+    nameFr: 'RGB Animé',
+    subtitle: 'تدرجات لونية محيطية متوهجة ومتحركة بسلاسة',
+    icon: Icons.auto_awesome_rounded,
+    backgroundColor: Color(0xFF090D16), // Dark Cosmic Blue
+    cardColor: Color(0xFF131B2E),
+    primaryColor: Color(0xFF6C5CE7),     // Electric Purple-Blue
+    accentColor: Color(0xFF00CEC9),      // Neon Cyan / Gold
+    borderColor: Color(0xFF81ECEC),
+    isAnimatedRgb: true,
   ),
 ];

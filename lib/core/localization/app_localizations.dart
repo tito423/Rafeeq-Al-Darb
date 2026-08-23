@@ -1,0 +1,166 @@
+import 'package:flutter/material.dart';
+
+/// Lightweight, comprehensive i18n localization dictionary for Arabic, English, and French
+class AppLocalizations {
+  final Locale locale;
+
+  AppLocalizations(this.locale);
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+        AppLocalizations(const Locale('ar'));
+  }
+
+  static const _localizedValues = <String, Map<String, String>>{
+    'ar': {
+      'app_name': 'رفيق الدرب',
+      'home': 'الرئيسية',
+      'quran': 'القرآن',
+      'prayer': 'الصلاة',
+      'library': 'المكتبة',
+      'azkar': 'الأذكار',
+      'sebha': 'المسبحة',
+      'more': 'المزيد',
+      'settings': 'الإعدادات',
+      'language': 'اللغة',
+      'choose_language': 'اختر لغة التطبيق',
+      'arabic': 'العربية',
+      'english': 'الإنجليزية (English)',
+      'french': 'الفرنسية (Français)',
+      'theme': 'المظهر والسمات',
+      'light_theme': 'نهاري (دافئ)',
+      'dark_theme': 'ليلي (سبجي)',
+      'rgb_theme': 'متحرك (RGB أثيري)',
+      'prayer_times': 'مواقيت الصلاة',
+      'fajr': 'الفجر',
+      'sunrise': 'الشروق',
+      'dhuhr': 'الظهر',
+      'asr': 'العصر',
+      'maghrib': 'المغرب',
+      'isha': 'العشاء',
+      'next_prayer': 'الصلاة القادمة',
+      'quran_wird': 'الورد اليومي',
+      'daily_hadith': 'حديث اليوم',
+      'morning_athkar': 'أذكار الصباح',
+      'evening_athkar': 'أذكار المساء',
+      'search': 'بحث',
+      'saved': 'المحفوظات',
+      'download': 'تحميل',
+      'downloaded': 'تم التحميل',
+      'audio_player': 'المشغل الصوتي',
+      'reciters': 'القراء',
+    },
+    'en': {
+      'app_name': 'Rafiq Al-Darb',
+      'home': 'Home',
+      'quran': 'Quran',
+      'prayer': 'Prayer',
+      'library': 'Library',
+      'azkar': 'Azkar',
+      'sebha': 'Tasbeeh',
+      'more': 'More',
+      'settings': 'Settings',
+      'language': 'Language',
+      'choose_language': 'Choose App Language',
+      'arabic': 'العربية (Arabic)',
+      'english': 'English',
+      'french': 'Français (French)',
+      'theme': 'Theme & Appearance',
+      'light_theme': 'Warm Daylight',
+      'dark_theme': 'Obsidian Night',
+      'rgb_theme': 'Dynamic RGB Ambient',
+      'prayer_times': 'Prayer Times',
+      'fajr': 'Fajr',
+      'sunrise': 'Sunrise',
+      'dhuhr': 'Dhuhr',
+      'asr': 'Asr',
+      'maghrib': 'Maghrib',
+      'isha': 'Isha',
+      'next_prayer': 'Next Prayer',
+      'quran_wird': 'Daily Quran Wird',
+      'daily_hadith': 'Hadith of the Day',
+      'morning_athkar': 'Morning Athkar',
+      'evening_athkar': 'Evening Athkar',
+      'search': 'Search',
+      'saved': 'Bookmarks',
+      'download': 'Download',
+      'downloaded': 'Downloaded',
+      'audio_player': 'Audio Player',
+      'reciters': 'Reciters',
+    },
+    'fr': {
+      'app_name': 'Rafiq Al-Darb',
+      'home': 'Accueil',
+      'quran': 'Coran',
+      'prayer': 'Prière',
+      'library': 'Bibliothèque',
+      'azkar': 'Invocations',
+      'sebha': 'Chapelet',
+      'more': 'Plus',
+      'settings': 'Paramètres',
+      'language': 'Langue',
+      'choose_language': "Choisir la langue de l'application",
+      'arabic': 'العربية (Arabe)',
+      'english': 'English (Anglais)',
+      'french': 'Français',
+      'theme': 'Thème et Apparence',
+      'light_theme': 'Clair et Chaleureux',
+      'dark_theme': 'Nuit Obsidienne',
+      'rgb_theme': 'Ambiance RGB Dynamique',
+      'prayer_times': 'Heures de Prière',
+      'fajr': 'Fajr',
+      'sunrise': 'Lever du soleil',
+      'dhuhr': 'Dhuhr',
+      'asr': 'Asr',
+      'maghrib': 'Maghrib',
+      'isha': 'Isha',
+      'next_prayer': 'Prochaine Prière',
+      'quran_wird': 'Wird Quotidien',
+      'daily_hadith': 'Hadith du Jour',
+      'morning_athkar': 'Invocations du Matin',
+      'evening_athkar': 'Invocations du Soir',
+      'search': 'Recherche',
+      'saved': 'Favoris',
+      'download': 'Télécharger',
+      'downloaded': 'Téléchargé',
+      'audio_player': 'Lecteur Audio',
+      'reciters': 'Récitateurs',
+    },
+  };
+
+  String translate(String key) {
+    return _localizedValues[locale.languageCode]?[key] ??
+        _localizedValues['ar']?[key] ??
+        key;
+  }
+
+  String get appName => translate('app_name');
+  String get home => translate('home');
+  String get quran => translate('quran');
+  String get prayer => translate('prayer');
+  String get library => translate('library');
+  String get azkar => translate('azkar');
+  String get sebha => translate('sebha');
+  String get more => translate('more');
+  String get settings => translate('settings');
+  String get language => translate('language');
+  String get chooseLanguage => translate('choose_language');
+  String get theme => translate('theme');
+  String get lightTheme => translate('light_theme');
+  String get darkTheme => translate('dark_theme');
+  String get rgbTheme => translate('rgb_theme');
+  String get prayerTimes => translate('prayer_times');
+}
+
+class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+  const AppLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => ['ar', 'en', 'fr'].contains(locale.languageCode);
+
+  @override
+  Future<AppLocalizations> load(Locale locale) async => AppLocalizations(locale);
+
+  @override
+  bool shouldReload(AppLocalizationsDelegate old) => false;
+}

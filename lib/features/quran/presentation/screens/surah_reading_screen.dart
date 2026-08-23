@@ -832,7 +832,7 @@ class _AyahsFlowState extends State<_AyahsFlow> {
 
       spans.add(
         TextSpan(
-          text: '${ayah.textUthmani} ',
+          text: '${ayah.sanitizedText} ',
           style: GoogleFonts.scheherazadeNew(
             fontSize: 26,
             height: 2.1,
@@ -1008,9 +1008,9 @@ class _AyahOptionsSheet extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
-              ayah.textUthmani.length > 70
-                  ? '${ayah.textUthmani.substring(0, 70)}...'
-                  : ayah.textUthmani,
+              ayah.sanitizedText.length > 70
+                  ? '${ayah.sanitizedText.substring(0, 70)}...'
+                  : ayah.sanitizedText,
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.center,
               style: GoogleFonts.scheherazadeNew(
@@ -1092,7 +1092,7 @@ class _OptionButton extends ConsumerWidget {
     }
 
     if (option.type == 'copy') {
-      Clipboard.setData(ClipboardData(text: ayah.textUthmani));
+      Clipboard.setData(ClipboardData(text: ayah.sanitizedText));
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -1394,7 +1394,7 @@ class _TafseerPickerSheetState extends ConsumerState<_TafseerPickerSheet> {
                             ),
                           ),
                           child: Text(
-                            widget.ayah.textUthmani,
+                            widget.ayah.sanitizedText,
                             textDirection: TextDirection.rtl,
                             textAlign: TextAlign.justify,
                             style: GoogleFonts.scheherazadeNew(

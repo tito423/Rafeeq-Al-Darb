@@ -87,24 +87,43 @@ class _BookReaderScreenState extends State<BookReaderScreen> {
       ),
       body: _isLoading 
         ? const Center(child: CircularProgressIndicator(color: AppColors.accentGold))
-        : SfPdfViewer.network(
-            widget.pdfUrl,
-            key: _pdfViewerKey,
-            controller: _pdfViewerController,
-            canShowScrollHead: true,
-            canShowScrollStatus: true,
-            pageLayoutMode: PdfPageLayoutMode.continuous,
-            enableDoubleTapZooming: true,
-            onDocumentLoaded: (PdfDocumentLoadedDetails details) {
-              final savedPage = _prefs.getInt('book_page_${widget.title}');
-              if (savedPage != null && savedPage > 1) {
-                _pdfViewerController.jumpToPage(savedPage);
-              }
-            },
-            onPageChanged: (PdfPageChangedDetails details) {
-              _saveCurrentPage(details.newPageNumber);
-            },
-          ),
+        : (widget.pdfUrl.startsWith('assets/')
+            ? SfPdfViewer.asset(
+                widget.pdfUrl,
+                key: _pdfViewerKey,
+                controller: _pdfViewerController,
+                canShowScrollHead: true,
+                canShowScrollStatus: true,
+                pageLayoutMode: PdfPageLayoutMode.continuous,
+                enableDoubleTapZooming: true,
+                onDocumentLoaded: (PdfDocumentLoadedDetails details) {
+                  final savedPage = _prefs.getInt('book_page_${widget.title}');
+                  if (savedPage != null && savedPage > 1) {
+                    _pdfViewerController.jumpToPage(savedPage);
+                  }
+                },
+                onPageChanged: (PdfPageChangedDetails details) {
+                  _saveCurrentPage(details.newPageNumber);
+                },
+              )
+            : SfPdfViewer.network(
+                widget.pdfUrl,
+                key: _pdfViewerKey,
+                controller: _pdfViewerController,
+                canShowScrollHead: true,
+                canShowScrollStatus: true,
+                pageLayoutMode: PdfPageLayoutMode.continuous,
+                enableDoubleTapZooming: true,
+                onDocumentLoaded: (PdfDocumentLoadedDetails details) {
+                  final savedPage = _prefs.getInt('book_page_${widget.title}');
+                  if (savedPage != null && savedPage > 1) {
+                    _pdfViewerController.jumpToPage(savedPage);
+                  }
+                },
+                onPageChanged: (PdfPageChangedDetails details) {
+                  _saveCurrentPage(details.newPageNumber);
+                },
+              )),
     );
   }
 }

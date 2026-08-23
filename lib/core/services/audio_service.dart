@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'github_config_service.dart';
@@ -72,6 +73,38 @@ const kReciters = [
     everyayahIdentifier: 'MaherAlMuaiqly128kbps',
     mp3quranIdentifier: 'https://server12.mp3quran.net/maher',
     fallbackSurahUrl: 'https://download.quranicaudio.com/quran/maher_almu3aiqly',
+  ),
+  Reciter(
+    id: 'shuraim',
+    nameAr: 'سعود الشريم',
+    nameEn: 'Saud Al-Shuraim',
+    everyayahIdentifier: 'Saud_Ash-Shuraym_128kbps',
+    mp3quranIdentifier: 'https://server7.mp3quran.net/shur',
+    fallbackSurahUrl: 'https://download.quranicaudio.com/quran/sa3ood_al-shuraym',
+  ),
+  Reciter(
+    id: 'sudais',
+    nameAr: 'عبدالرحمن السديس',
+    nameEn: 'Abdur-Rahman as-Sudais',
+    everyayahIdentifier: 'Abdurrahmaan_As-Sudais_192kbps',
+    mp3quranIdentifier: 'https://server11.mp3quran.net/sds',
+    fallbackSurahUrl: 'https://download.quranicaudio.com/quran/abdurrahmaan_as-sudais',
+  ),
+  Reciter(
+    id: 'ayyoub',
+    nameAr: 'محمد أيوب',
+    nameEn: 'Muhammad Ayyoub',
+    everyayahIdentifier: 'Muhammad_Ayyoub_128kbps',
+    mp3quranIdentifier: 'https://server8.mp3quran.net/ayyub',
+    fallbackSurahUrl: 'https://download.quranicaudio.com/quran/muhammad_ayyoob',
+  ),
+  Reciter(
+    id: 'dussary',
+    nameAr: 'ياسر الدوسري',
+    nameEn: 'Yasser Al-Dosari',
+    everyayahIdentifier: 'Yaser_Ad-Dussary_128kbps',
+    mp3quranIdentifier: 'https://server11.mp3quran.net/yasser',
+    fallbackSurahUrl: 'https://download.quranicaudio.com/quran/yasser_ad-dussary',
   ),
 ];
 
@@ -221,11 +254,18 @@ class AudioService extends StateNotifier<AudioState> {
 
       final cacheFile = File('${cacheDir.path}/${reciter.everyayahIdentifier}_${surahNumber}_$ayahNumber.mp3');
       
+      final mediaItem = MediaItem(
+        id: 'ayah_${surahNumber}_$ayahNumber',
+        title: 'الآية $ayahNumber',
+        album: 'سورة رقم $surahNumber',
+        artist: reciter.nameAr,
+      );
+
       await _player.stop();
       if (cacheFile.existsSync() && cacheFile.lengthSync() > 1000) {
-        await _player.setAudioSource(AudioSource.uri(Uri.file(cacheFile.path)));
+        await _player.setAudioSource(AudioSource.uri(Uri.file(cacheFile.path), tag: mediaItem));
       } else {
-        await _player.setAudioSource(LockCachingAudioSource(Uri.parse(url), cacheFile: cacheFile));
+        await _player.setAudioSource(LockCachingAudioSource(Uri.parse(url), cacheFile: cacheFile, tag: mediaItem));
       }
       
       await _player.setSpeed(state.speed);
@@ -276,15 +316,22 @@ class AudioService extends StateNotifier<AudioState> {
 
       final cacheFile = File('${cacheDir.path}/surah_${reciter.id}_$surahNumber.mp3');
 
+      final mediaItem = MediaItem(
+        id: 'surah_$surahNumber',
+        title: 'سورة رقم $surahNumber',
+        album: 'القرآن الكريم',
+        artist: reciter.nameAr,
+      );
+
       await _player.stop();
       if (cacheFile.existsSync() && cacheFile.lengthSync() > 10000) {
-        await _player.setAudioSource(AudioSource.uri(Uri.file(cacheFile.path)));
+        await _player.setAudioSource(AudioSource.uri(Uri.file(cacheFile.path), tag: mediaItem));
       } else {
         try {
-          await _player.setAudioSource(LockCachingAudioSource(Uri.parse(primaryUrl), cacheFile: cacheFile));
+          await _player.setAudioSource(LockCachingAudioSource(Uri.parse(primaryUrl), cacheFile: cacheFile, tag: mediaItem));
         } catch (_) {
           // Fallback to secondary source
-          await _player.setAudioSource(LockCachingAudioSource(Uri.parse(fallbackUrl), cacheFile: cacheFile));
+          await _player.setAudioSource(LockCachingAudioSource(Uri.parse(fallbackUrl), cacheFile: cacheFile, tag: mediaItem));
         }
       }
       
