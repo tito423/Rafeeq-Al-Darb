@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_provider.dart';
-import '../../../splash/presentation/screens/splash_screen.dart';
 import '../../../prayer/presentation/providers/prayer_settings_provider.dart';
 
 class ThemeSelectionScreen extends ConsumerWidget {

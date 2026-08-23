@@ -19,7 +19,7 @@ const _presets = [
   _Preset('سُبْحَانَ اللَّهِ', 33, Color(0xFF0984E3)),
   _Preset('الْحَمْدُ لِلَّهِ', 33, Color(0xFF00B894)),
   _Preset('اللَّهُ أَكْبَرُ', 34, Color(0xFF6C5CE7)),
-  _Preset('لَا إِلَهَ إِلَّا اللَّهُ', 100, AppColors.primaryBlue),
+  _Preset('لَا إِلَهَ إِلَّا اللَّهُ', 100, Color(0xFFE5A93C)),
   _Preset('اسْتَغْفِرُ اللَّهَ', 100, Color(0xFFE17055)),
 ];
 
@@ -164,18 +164,23 @@ class SebhaScreen extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? _presets[i].color
-                            : _presets[i].color.withValues(alpha: 0.1),
+                            : _presets[i].color.withValues(alpha: isDark ? 0.20 : 0.12),
                         borderRadius: BorderRadius.circular(20),
-                        border: isSelected
-                            ? null
-                            : Border.all(color: _presets[i].color.withValues(alpha: 0.3)),
+                        border: Border.all(
+                          color: isSelected
+                              ? _presets[i].color
+                              : _presets[i].color.withValues(alpha: isDark ? 0.50 : 0.40),
+                          width: 1.2,
+                        ),
                       ),
                       child: Text(
-                        _presets[i].arabic, // Show full name instead of .split(' ').first
+                        _presets[i].arabic,
                         style: GoogleFonts.scheherazadeNew(
                           fontSize: 14,
-                          color: isSelected ? Colors.white : _presets[i].color,
-                          fontWeight: FontWeight.w600,
+                          color: isSelected
+                              ? Colors.white
+                              : (isDark ? _presets[i].color : _presets[i].color),
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),

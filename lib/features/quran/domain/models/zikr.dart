@@ -1,3 +1,5 @@
+import '../../../../core/utils/text_sanitizer.dart';
+
 /// Zikr model — represents one dhikr/supplication entry
 class Zikr {
   final int id;
@@ -25,11 +27,11 @@ class Zikr {
 
   factory Zikr.fromMap(Map<String, dynamic> m) => Zikr(
         id: m['id'] as int? ?? 0,
-        category: m['category'] as String? ?? '',
-        content: m['content'] as String? ?? '',
+        category: TextSanitizer.clean(m['category'] as String?),
+        content: TextSanitizer.clean(m['content'] as String?),
         count: m['count'] as String? ?? '1',
-        description: m['description'] as String? ?? '',
-        reference: m['reference'] as String? ?? '',
-        fadl: m['fadl'] as String? ?? '',
+        description: TextSanitizer.clean(m['description'] as String?),
+        reference: TextSanitizer.clean(m['reference'] as String?),
+        fadl: TextSanitizer.clean(m['fadl'] as String?),
       );
 }

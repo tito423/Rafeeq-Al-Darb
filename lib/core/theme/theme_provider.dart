@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app_theme.dart';
 import '../models/app_theme_config.dart';
+import '../../features/prayer/presentation/providers/prayer_settings_provider.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Theme State
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Holds the complete reactive theme configuration.
-/// Keeping [primaryColor] and [accentColor] as state fields makes it trivial
-/// to wire a future RGB/Hex picker: just call
-/// `ref.read(themeProvider.notifier).setPrimaryColor(myColor)`.
 @immutable
 class ThemeState {
   final ThemeMode themeMode;
@@ -18,11 +16,13 @@ class ThemeState {
 
   const ThemeState({
     this.themeMode = ThemeMode.dark,
-    this.appThemeType = AppThemeType.sakanati,
+    this.appThemeType = AppThemeType.dark,
   });
   
   AppThemeConfig get currentConfig => 
-      kAppThemes.firstWhere((t) => t.type == appThemeType);
+      kAppThemes.firstWhere((t) => t.type == appThemeType, orElse: () => kAppThemes[1]);
+
+  bool get isRgb => appThemeType == AppThemeType.rgb;
 
   ThemeState copyWith({
     ThemeMode? themeMode,
@@ -34,55 +34,84 @@ class ThemeState {
     );
   }
 
-  /// Resolved [ThemeData] for the light branch.
-  ThemeData get lightTheme => AppTheme.light(
-        primaryColor: currentConfig.primaryColor,
-        accentColor: currentConfig.accentColor,
-      ).copyWith(
-        scaffoldBackgroundColor: const Color(0xFFFAF7F0), // Standard light bg
-        cardColor: Colors.white,
-      );
+  /// Resolved [ThemeData] for light branch.
+  ThemeData get lightTheme {
+    final cfg = currentConfig;
+    return AppTheme.light(
+      primaryColor: cfg.primaryColor,
+      accentColor: cfg.accentColor,
+    ).copyWith(
+      scaffoldBackgroundColor: cfg.backgroundColor,
+      cardColor: cfg.cardColor,
+    );
+  }
 
-  /// Resolved [ThemeData] for the dark branch.
-  ThemeData get darkTheme => AppTheme.dark(
-        primaryColor: currentConfig.primaryColor,
-        accentColor: currentConfig.accentColor,
-      ).copyWith(
-        scaffoldBackgroundColor: currentConfig.backgroundColor,
-        cardColor: currentConfig.cardColor,
-      );
+  /// Resolved [ThemeData] for dark branch.
+  ThemeData get darkTheme {
+    final cfg = currentConfig;
+    return AppTheme.dark(
+      primaryColor: cfg.primaryColor,
+      accentColor: cfg.accentColor,
+    ).copyWith(
+      scaffoldBackgroundColor: cfg.backgroundColor,
+      cardColor: cfg.cardColor,
+    );
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Notifier
+// Notifier with SharedPreferences Persistence
 // ─────────────────────────────────────────────────────────────────────────────
 
 class ThemeNotifier extends StateNotifier<ThemeState> {
-  ThemeNotifier() : super(const ThemeState());
+  final SharedPreferences? _prefs;
 
-  /// Toggle between light and dark. Cycles: system → light → dark → system.
+  ThemeNotifier([this._prefs]) : super(const ThemeState()) {
+    _loadFromPrefs();
+  }
+
+  void _loadFromPrefs() {
+    if (_prefs == null) return;
+    final savedMode = _prefs!.getString('theme_mode');
+    final savedType = _prefs!.getString('app_theme_type');
+
+    ThemeMode mode = ThemeMode.dark;
+    if (savedMode == 'light') mode = ThemeMode.light;
+    if (savedMode == 'system') mode = ThemeMode.system;
+
+    AppThemeType type = AppThemeType.dark;
+    if (savedType == 'light') type = AppThemeType.light;
+    if (savedType == 'rgb') type = AppThemeType.rgb;
+
+    state = ThemeState(themeMode: mode, appThemeType: type);
+  }
+
   void toggleTheme() {
-    final next = switch (state.themeMode) {
-      ThemeMode.system => ThemeMode.light,
-      ThemeMode.light  => ThemeMode.dark,
-      ThemeMode.dark   => ThemeMode.system,
-    };
-    state = state.copyWith(themeMode: next);
-    // TODO: persist with SharedPreferences when persistence layer is wired.
+    final next = state.themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    setThemeMode(next);
   }
 
   void setThemeMode(ThemeMode mode) {
     state = state.copyWith(themeMode: mode);
+    _prefs?.setString('theme_mode', mode == ThemeMode.dark ? 'dark' : (mode == ThemeMode.light ? 'light' : 'system'));
   }
 
-  // ── Theme Config hooks ───────────────────────────────────────────────────
-
   void setAppThemeType(AppThemeType type) {
-    state = state.copyWith(appThemeType: type);
+    ThemeMode mode = state.themeMode;
+    if (type == AppThemeType.light) {
+      mode = ThemeMode.light;
+    } else {
+      mode = ThemeMode.dark;
+    }
+    state = state.copyWith(appThemeType: type, themeMode: mode);
+    _prefs?.setString('app_theme_type', type.name);
+    _prefs?.setString('theme_mode', mode == ThemeMode.dark ? 'dark' : 'light');
   }
 
   void resetToDefaults() {
     state = const ThemeState();
+    _prefs?.remove('app_theme_type');
+    _prefs?.remove('theme_mode');
   }
 }
 
@@ -90,7 +119,9 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
 // Providers
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Global theme provider. Consume with `ref.watch(themeProvider)`.
 final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeState>(
-  (_) => ThemeNotifier(),
+  (ref) {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return ThemeNotifier(prefs);
+  },
 );

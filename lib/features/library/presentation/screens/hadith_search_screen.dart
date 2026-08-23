@@ -1,56 +1,64 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/datasources/hadith_db_helper.dart';
 
-class HadithReaderScreen extends ConsumerStatefulWidget {
-  final String bookId;
-  final String bookTitle;
-  final String downloadUrl;
-
-  const HadithReaderScreen({
-    super.key,
-    required this.bookId,
-    required this.bookTitle,
-    required this.downloadUrl,
-  });
+class HadithSearchScreen extends ConsumerStatefulWidget {
+  const HadithSearchScreen({super.key});
 
   @override
-  ConsumerState<HadithReaderScreen> createState() => _HadithReaderScreenState();
+  ConsumerState<HadithSearchScreen> createState() => _HadithSearchScreenState();
 }
 
-class _HadithReaderScreenState extends ConsumerState<HadithReaderScreen> {
-  List<dynamic> _hadiths = [];
-  bool _isLoading = true;
-  String? _error;
+class _HadithSearchScreenState extends ConsumerState<HadithSearchScreen> {
+  final _searchController = TextEditingController();
+  final _dbHelper = HadithDbHelper();
+  
+  List<Map<String, dynamic>> _results = [];
+  bool _isLoading = false;
+  Timer? _debounce;
 
   @override
-  void initState() {
-    super.initState();
-    _loadBook();
+  void dispose() {
+    _searchController.dispose();
+    _debounce?.cancel();
+    super.dispose();
   }
 
-  Future<void> _loadBook() async {
-    try {
-      
-      // Fetch from DB
-      final dbHelper = HadithDbHelper();
-      final data = await dbHelper.getHadithsByBook(widget.bookId, limit: 10000);
-      
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _performSearch(query);
+    });
+  }
+
+  Future<void> _performSearch(String query) async {
+    if (query.trim().isEmpty) {
       setState(() {
-        _hadiths = data;
+        _results = [];
+        _isLoading = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final results = await _dbHelper.searchHadiths(query);
+      setState(() {
+        _results = results;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _error = 'حدث خطأ أثناء قراءة الكتاب: $e';
         _isLoading = false;
       });
+      debugPrint('Search error: $e');
     }
   }
 
@@ -66,52 +74,47 @@ class _HadithReaderScreenState extends ConsumerState<HadithReaderScreen> {
       appBar: AppBar(
         backgroundColor: bgColor,
         elevation: 0,
-        centerTitle: true,
-        title: Text(
-          widget.bookTitle,
-          style: GoogleFonts.amiri(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        ),
         iconTheme: IconThemeData(color: textColor),
+        title: TextField(
+          controller: _searchController,
+          autofocus: true,
+          style: GoogleFonts.amiri(fontSize: 18, color: textColor),
+          decoration: InputDecoration(
+            hintText: 'ابحث في الأحاديث...',
+            hintStyle: GoogleFonts.amiri(color: Colors.grey),
+            border: InputBorder.none,
+          ),
+          onChanged: _onSearchChanged,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              _searchController.clear();
+              _onSearchChanged('');
+            },
+          )
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppColors.primaryBlue))
-          : _error != null
+          : _results.isEmpty
               ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _error!,
-                          style: GoogleFonts.amiri(fontSize: 18, color: Colors.red),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton.icon(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.arrow_back, color: Colors.white),
-                          label: Text('العودة', style: GoogleFonts.amiri(fontSize: 16, color: Colors.white)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryBlue,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                        )
-                      ],
-                    ),
+                  child: Text(
+                    _searchController.text.isEmpty
+                        ? 'أدخل كلمة للبحث في الأحاديث'
+                        : 'لا توجد نتائج مطابقة',
+                    style: GoogleFonts.amiri(fontSize: 18, color: Colors.grey),
                   ),
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: _hadiths.length,
+                  itemCount: _results.length,
                   itemBuilder: (context, index) {
-                    final hadith = _hadiths[index];
+                    final hadith = _results[index];
                     final text = hadith['text'] ?? '';
-                    final number = hadith['hadith_number'] ?? index + 1;
+                    final bookId = hadith['book_id'] ?? '';
+                    final number = hadith['hadith_number'] ?? '';
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16),
@@ -141,7 +144,7 @@ class _HadithReaderScreenState extends ConsumerState<HadithReaderScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
-                                  'حديث رقم $number',
+                                  'الكتاب: $bookId - حديث رقم $number',
                                   style: GoogleFonts.amiri(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
@@ -156,7 +159,7 @@ class _HadithReaderScreenState extends ConsumerState<HadithReaderScreen> {
                           Text(
                             text,
                             style: GoogleFonts.amiri(
-                              fontSize: 20,
+                              fontSize: 18,
                               height: 1.8,
                               color: textColor,
                             ),

@@ -455,16 +455,20 @@ class _MushafSelectionGalleryState extends ConsumerState<MushafSelectionGallery>
                             ),
                             onPressed: () {
                               ref.read(mushafStyleProvider.notifier).setStyle(item.style);
+                              
+                              // Trigger full Mushaf download in background
+                              ref.read(downloadManagerProvider.notifier).downloadAllMushaafPages(styleInfo: item);
+
                               Navigator.of(ctx).pop();
                               Navigator.of(context).pop();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'تم تفعيل ${item.nameAr} بنجاح ✨',
+                                    'تم تفعيل ${item.nameAr} وجاري تحميل الصفحات في الخلفية ✨',
                                     style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w700),
                                   ),
                                   backgroundColor: AppColors.primaryBlue,
-                                  duration: const Duration(seconds: 2),
+                                  duration: const Duration(seconds: 3),
                                 ),
                               );
                             },

@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/github_config_service.dart';
+import '../../../books/presentation/screens/book_reader_screen.dart';
 import 'hadith_reader_screen.dart';
+import 'hadith_search_screen.dart';
 
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
@@ -14,38 +18,53 @@ class LibraryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppColors.darkBackground : const Color(0xFFFAF7F0);
-    final textColor = isDark ? Colors.white : Colors.black87;
+    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: bgColor,
         appBar: AppBar(
-          backgroundColor: bgColor,
+          backgroundColor: isDark ? AppColors.darkSurface : Colors.white,
           elevation: 0,
           centerTitle: true,
           title: Text(
             'المكتبة الإسلامية',
-            style: GoogleFonts.amiri(
-              fontSize: 22,
+            style: GoogleFonts.scheherazadeNew(
+              fontSize: 26,
               fontWeight: FontWeight.bold,
-              color: textColor,
+              color: isDark ? AppColors.accentGold : AppColors.primaryBlue,
             ),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search_rounded),
+              color: AppColors.accentGold,
+              tooltip: 'بحث في الأحاديث',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HadithSearchScreen()),
+                );
+              },
+            ),
+          ],
           bottom: TabBar(
             indicatorColor: AppColors.accentGold,
             labelColor: AppColors.accentGold,
-            unselectedLabelColor: AppColors.lightSubtext,
-            labelStyle: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.bold),
+            unselectedLabelColor: isDark ? AppColors.darkSubtext : AppColors.lightSubtext,
+            labelStyle: GoogleFonts.amiri(fontSize: 15, fontWeight: FontWeight.bold),
             tabs: const [
+              Tab(text: 'الكتب الإسلامية'),
               Tab(text: 'كتب الحديث'),
-              Tab(text: 'مواقع إسلامية'),
+              Tab(text: 'المواقع الإسلامية'),
             ],
           ),
         ),
         body: const TabBarView(
           children: [
-            _BooksTab(),
+            _IslamicBooksTab(),
+            _HadithBooksTab(),
             _WebsitesTab(),
           ],
         ),
@@ -54,17 +73,227 @@ class LibraryScreen extends ConsumerWidget {
   }
 }
 
-class _BooksTab extends ConsumerWidget {
-  const _BooksTab();
+// ── Islamic Books Catalog Tab ────────────────────────────────────────────────
+class _IslamicBooksTab extends StatefulWidget {
+  const _IslamicBooksTab();
+
+  @override
+  State<_IslamicBooksTab> createState() => _IslamicBooksTabState();
+}
+
+class _IslamicBooksTabState extends State<_IslamicBooksTab> {
+  List<dynamic> _books = [];
+  String _selectedCategory = 'الكل';
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCatalog();
+  }
+
+  Future<void> _loadCatalog() async {
+    try {
+      final jsonString = await rootBundle.loadString('lib/features/books/data/books_catalog.json');
+      if (mounted) {
+        setState(() {
+          _books = json.decode(jsonString);
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
+    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+    final subtext = isDark ? AppColors.darkSubtext : AppColors.lightSubtext;
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator(color: AppColors.accentGold));
+    }
+
+    final categories = ['الكل', ..._books.map((b) => b['category'] as String? ?? '').toSet().where((c) => c.isNotEmpty)];
+    final filtered = _selectedCategory == 'الكل'
+        ? _books
+        : _books.where((b) => b['category'] == _selectedCategory).toList();
+
+    return Column(
+      children: [
+        // Category Pills
+        SizedBox(
+          height: 48,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            scrollDirection: Axis.horizontal,
+            itemCount: categories.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (ctx, idx) {
+              final cat = categories[idx];
+              final isSel = cat == _selectedCategory;
+              return GestureDetector(
+                onTap: () => setState(() => _selectedCategory = cat),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isSel ? AppColors.accentGold : (isDark ? AppColors.darkSurface : Colors.white),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isSel ? AppColors.accentGold : (isDark ? AppColors.darkDivider : AppColors.lightDivider),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      cat,
+                      style: GoogleFonts.amiri(
+                        fontSize: 13,
+                        fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+                        color: isSel ? Colors.black87 : (isDark ? Colors.white70 : Colors.black87),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+
+        // Grid of Books
+        Expanded(
+          child: filtered.isEmpty
+              ? Center(child: Text('لا توجد كتب في هذا القسم', style: GoogleFonts.amiri(color: subtext)))
+              : GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
+                    childAspectRatio: 0.72,
+                  ),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    final book = filtered[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => BookReaderScreen(
+                              title: book['title'] ?? '',
+                              pdfUrl: book['download_url'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: cardBg,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                          border: Border.all(
+                            color: AppColors.accentGold.withValues(alpha: 0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      AppColors.primaryBlue.withValues(alpha: 0.8),
+                                      AppColors.primaryBlue2.withValues(alpha: 0.9),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.menu_book_rounded,
+                                    size: 42,
+                                    color: AppColors.accentGold.withValues(alpha: 0.85),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      book['title'] ?? '',
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.scheherazadeNew(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.2,
+                                        color: textColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      book['author'] ?? '',
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.amiri(
+                                        fontSize: 12,
+                                        color: AppColors.accentGold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Hadith Books Tab ──────────────────────────────────────────────────────────
+class _HadithBooksTab extends ConsumerWidget {
+  const _HadithBooksTab();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
+    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+    final subtext = isDark ? AppColors.darkSubtext : AppColors.lightSubtext;
     final configAsync = ref.watch(githubConfigProvider);
 
     return configAsync.when(
       loading: () => const Center(
-        child: CircularProgressIndicator(color: AppColors.primaryBlue),
+        child: CircularProgressIndicator(color: AppColors.accentGold),
       ),
       error: (error, stack) => Center(
         child: Text(
@@ -79,10 +308,7 @@ class _BooksTab extends ConsumerWidget {
           return Center(
             child: Text(
               'لا توجد كتب حالياً',
-              style: GoogleFonts.amiri(
-                fontSize: 18,
-                color: isDark ? Colors.white : Colors.black87,
-              ),
+              style: GoogleFonts.amiri(fontSize: 18, color: textColor),
             ),
           );
         }
@@ -95,25 +321,39 @@ class _BooksTab extends ConsumerWidget {
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkCardBackground : Colors.white,
+                color: cardBg,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.primaryBlue.withValues(alpha: 0.1)),
+                border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.15)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
               child: ListTile(
-                leading: const Icon(Icons.book, color: AppColors.primaryBlue),
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.accentGold.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.book_rounded, color: AppColors.accentGold),
+                ),
                 title: Text(
                   book.title,
-                  style: GoogleFonts.amiri(
-                    fontSize: 18,
+                  style: GoogleFonts.scheherazadeNew(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: textColor,
                   ),
                 ),
                 subtitle: Text(
                   book.description.isNotEmpty ? book.description : book.author,
-                  style: GoogleFonts.outfit(fontSize: 12, color: AppColors.lightSubtext),
+                  style: GoogleFonts.amiri(fontSize: 13, color: subtext),
                 ),
-                trailing: Icon(Icons.download_rounded, color: AppColors.accentGold.withValues(alpha: 0.7)),
+                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.accentGold),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -135,6 +375,7 @@ class _BooksTab extends ConsumerWidget {
   }
 }
 
+// ── Islamic Websites Tab ──────────────────────────────────────────────────────
 class _WebsitesTab extends ConsumerWidget {
   const _WebsitesTab();
 
@@ -148,11 +389,13 @@ class _WebsitesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
+    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
     final configAsync = ref.watch(githubConfigProvider);
 
     return configAsync.when(
       loading: () => const Center(
-        child: CircularProgressIndicator(color: AppColors.primaryBlue),
+        child: CircularProgressIndicator(color: AppColors.accentGold),
       ),
       error: (error, stack) => Center(
         child: Text(
@@ -167,10 +410,7 @@ class _WebsitesTab extends ConsumerWidget {
           return Center(
             child: Text(
               'لا توجد مواقع حالياً',
-              style: GoogleFonts.amiri(
-                fontSize: 18,
-                color: isDark ? Colors.white : Colors.black87,
-              ),
+              style: GoogleFonts.amiri(fontSize: 18, color: textColor),
             ),
           );
         }
@@ -183,21 +423,35 @@ class _WebsitesTab extends ConsumerWidget {
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkCardBackground : Colors.white,
+                color: cardBg,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.primaryBlue.withValues(alpha: 0.1)),
+                border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.15)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
               child: ListTile(
-                leading: const Icon(Icons.language_rounded, color: AppColors.primaryBlue),
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.accentGold.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.language_rounded, color: AppColors.accentGold),
+                ),
                 title: Text(
                   site.name,
-                  style: GoogleFonts.amiri(
-                    fontSize: 18,
+                  style: GoogleFonts.scheherazadeNew(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: textColor,
                   ),
                 ),
-                trailing: const Icon(Icons.open_in_browser_rounded, color: AppColors.accentGold),
+                trailing: const Icon(Icons.open_in_new_rounded, color: AppColors.accentGold, size: 20),
                 onTap: () => _launchUrl(site.url),
               ),
             );

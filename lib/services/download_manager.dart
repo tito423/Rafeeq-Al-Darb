@@ -99,10 +99,6 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
   final Dio _dio = Dio();
   final Map<String, CancelToken> _cancelTokens = {};
 
-  // PNG base URL pattern for Quran-PNG repository (Legacy fallback)
-  static const String _mushaafBaseUrl =
-      'https://raw.githubusercontent.com/Govarjabbar/Quran-PNG/main/images/';
-
   DownloadManager() : super(const DownloadManagerState());
 
   // ── File paths ────────────────────────────────────────────────────────────

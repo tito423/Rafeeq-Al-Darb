@@ -221,8 +221,8 @@ class ThemeCustomizationSheet extends ConsumerWidget {
                                   ),
                                 ),
                               ),
-                              // Top-left small icon (from the image)
-                              if (theme.type == AppThemeType.night)
+                              // Top-left small icon
+                              if (theme.type == AppThemeType.dark)
                                 const Positioned(
                                   top: 18,
                                   left: 6,

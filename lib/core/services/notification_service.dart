@@ -9,6 +9,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/material.dart' as import_material;
 import '../../app/rafeeq_app.dart' as import_app;
 import '../../features/quran/presentation/screens/surah_reading_screen.dart' as import_surah;
+import '../../features/azkar/presentation/screens/azkar_detail_screen.dart' as import_azkar;
 import '../../features/prayer/presentation/screens/full_screen_adhan_screen.dart';
 
 // ── Notification IDs ──────────────────────────────────────────────────────────
@@ -285,6 +286,32 @@ class NotificationService {
         ),
       );
       return;
+    } else if (response.payload != null && response.payload!.startsWith('azkar_')) {
+      final parts = response.payload!.split('_');
+      final catKey = parts.length > 1 ? parts[1] : 'صباح';
+      final catName = catKey == 'صباح' ? 'أذكار الصباح' : (catKey == 'مساء' ? 'أذكار المساء' : 'الأذكار');
+      import_app.navigatorKey.currentState?.push(
+        import_material.MaterialPageRoute(
+          builder: (_) => import_azkar.AzkarDetailScreen(
+            categoryKey: catKey,
+            categoryName: catName,
+            gradientColors: const [import_material.Color(0xFF1B3328), import_material.Color(0xFF0F1714)],
+          ),
+        ),
+      );
+      return;
+    } else if (response.payload != null && response.payload!.startsWith('quran_wird_')) {
+      import_app.navigatorKey.currentState?.push(
+        import_material.MaterialPageRoute(
+          builder: (_) => const import_surah.SurahReadingScreen(
+            surahId: 1,
+            surahNameAr: 'سورة الفاتحة',
+            surahNameEn: 'Al-Fatihah',
+            startPage: 1,
+          ),
+        ),
+      );
+      return;
     }
 
     // Handle tap / action buttons
@@ -449,6 +476,75 @@ class NotificationService {
       matchDateTimeComponents: matchComponents,
       payload: payload,
     );
+  }
+
+  // ── Athkar & Wird Daily Alarms (Sakanty Style) ───────────────────────────
+
+  static const _athkarChannelId = 'athkar_channel';
+  static const _athkarChannelName = 'أذكار الصباح والمساء والورد';
+  static const _athkarChannelDesc = 'تنبيهات أذكار الصباح وأذكار المساء والورد القرآني';
+
+  Future<void> scheduleAthkarAndWirdReminders({
+    required bool morningAthkar,
+    required bool eveningAthkar,
+    required bool morningWird,
+    required bool eveningWird,
+  }) async {
+    await initialize();
+
+    // Cancel previous alarms
+    await _plugin.cancel(30);
+    await _plugin.cancel(31);
+    await _plugin.cancel(32);
+    await _plugin.cancel(33);
+
+    // 1. Morning Athkar (05:00 AM)
+    if (morningAthkar) {
+      await _scheduleDailyReminder(
+        id: 30,
+        title: 'أذكار الصباح 🌅',
+        body: 'أصبحنا وأصبح الملك لله.. ابدأ يومك بذكر الله وطمأنينة القلب',
+        hour: 5,
+        minute: 0,
+        payload: 'azkar_صباح',
+      );
+    }
+
+    // 2. Evening Athkar (16:30 PM)
+    if (eveningAthkar) {
+      await _scheduleDailyReminder(
+        id: 31,
+        title: 'أذكار المساء 🌙',
+        body: 'أمسينا وأمسى الملك لله.. حصّن نفسك وأهلك بأذكار المساء',
+        hour: 16,
+        minute: 30,
+        payload: 'azkar_مساء',
+      );
+    }
+
+    // 3. Morning Quran Wird (05:00 AM)
+    if (morningWird) {
+      await _scheduleDailyReminder(
+        id: 32,
+        title: 'ورد القرآن الصباحي 📖',
+        body: 'رتّل آيات من كتاب الله لتستفتح بها يومك بالبركة والهدى',
+        hour: 5,
+        minute: 0,
+        payload: 'quran_wird_morning',
+      );
+    }
+
+    // 4. Evening Quran Wird (16:30 PM)
+    if (eveningWird) {
+      await _scheduleDailyReminder(
+        id: 33,
+        title: 'ورد القرآن المسائي 📖',
+        body: 'لا تنسَ تلاوة وردك اليومي من القرآن الكريم قبل غروب الشمس',
+        hour: 16,
+        minute: 30,
+        payload: 'quran_wird_evening',
+      );
+    }
   }
 }
 
