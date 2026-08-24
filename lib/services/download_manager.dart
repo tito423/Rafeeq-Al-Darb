@@ -232,12 +232,52 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
 
     final savePath = '${audioDir.path}/$id.mp3';
 
+    if (File(savePath).existsSync() && File(savePath).lengthSync() > 1024) {
+      // Already downloaded
+      return;
+    }
+
     await _startDownload(
       id: id,
       url: url,
       savePath: savePath,
       category: DownloadCategory.audioSurah,
     );
+  }
+
+  /// Sequentially download all 114 surahs for a reciter
+  Future<void> downloadFullReciterArchive({
+    required String reciterId,
+    required String mp3quranBaseUrl,
+    void Function(int completed, int total)? onProgress,
+  }) async {
+    const total = 114;
+    int completed = 0;
+
+    state = state.copyWith(
+      isBulkDownloading: true,
+      bulkTotal: total,
+      bulkCompleted: 0,
+    );
+
+    for (int surah = 1; surah <= total; surah++) {
+      if (!state.isBulkDownloading) break; // cancelled
+
+      final id = 'audio_${reciterId}_$surah';
+      await downloadSurahAudio(
+        surahNumber: surah,
+        reciterId: reciterId,
+        mp3quranBaseUrl: mp3quranBaseUrl,
+      );
+      
+      await _waitForTask(id);
+      completed++;
+      
+      state = state.copyWith(bulkCompleted: completed);
+      onProgress?.call(completed, total);
+    }
+
+    state = state.copyWith(isBulkDownloading: false);
   }
 
   Future<void> downloadBook({
