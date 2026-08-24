@@ -391,9 +391,11 @@ class _SebhaRingState extends State<_SebhaRing>
                 Text(
                   widget.arabic,
                   style: GoogleFonts.scheherazadeNew(
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: widget.color,
+                    color: widget.isDark 
+                        ? (widget.color == const Color(0xFFE5A93C) ? const Color(0xFFFFD56B) : widget.color)
+                        : (widget.color == const Color(0xFFE5A93C) ? const Color(0xFF9E6800) : widget.color),
                     height: 1.4,
                   ),
                   textAlign: TextAlign.center,

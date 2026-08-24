@@ -118,17 +118,17 @@ class _PrayerTimesHero extends ConsumerWidget {
     final prayerAsync = ref.watch(prayerTimesProvider);
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      margin: EdgeInsets.zero,
       child: Stack(
         children: [
           // Background gradient
           Container(
-            height: 220,
+            height: 250,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isDark 
-                    ? [const Color(0xFF0F1714), const Color(0xFF14251D)] 
-                    : [const Color(0xFF14251D), const Color(0xFF0A100E)],
+                    ? [const Color(0xFF07100D), const Color(0xFF0F1E17), const Color(0xFF14251D)] 
+                    : [const Color(0xFF14251D), const Color(0xFF1B382B), const Color(0xFF0A100E)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -136,131 +136,156 @@ class _PrayerTimesHero extends ConsumerWidget {
           ),
           // Stars / decorative pattern
           Positioned.fill(child: CustomPaint(painter: _StarPainter())),
+          
+          // Action Buttons: Theme & Settings arranged vertically on the left side
+          Positioned(
+            left: 12,
+            top: 12,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () {
+                    ref.read(currentTabProvider.notifier).state = 6; // Go directly to Settings tab
+                  },
+                  icon: const Icon(
+                    Icons.settings_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
+                  tooltip: 'الإعدادات',
+                ),
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () {
+                    ref.read(themeProvider.notifier).toggleTheme();
+                  },
+                  icon: Icon(
+                    isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                    color: AppColors.accentGold,
+                    size: 22,
+                  ),
+                  tooltip: 'تغيير المظهر',
+                ),
+              ],
+            ),
+          ),
+
           // Content
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // Top Action Bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start, // Left side in RTL
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        ref.read(currentTabProvider.notifier).state = 5; // Go to More Settings
-                      },
-                      icon: const Icon(
-                        Icons.settings_rounded,
-                        color: Colors.white,
-                      ),
-                      tooltip: 'الإعدادات',
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        ref.read(themeProvider.notifier).toggleTheme();
-                      },
-                      icon: Icon(
-                        isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                        color: Colors.white,
-                      ),
-                      tooltip: 'تغيير المظهر',
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _showLanguageSelector(context, ref);
-                      },
-                      icon: const Icon(
-                        Icons.language_rounded,
-                        color: Colors.white,
-                      ),
-                      tooltip: 'تغيير اللغة',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // Clock and Dates Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Gregorian
-                    Expanded(
-                      child: Text(
-                        dateStr,
-                        textAlign: TextAlign.right,
-                        style: GoogleFonts.amiri(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.9),
-                        ),
-                      ),
-                    ),
-                    // Clock (Center)
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        timeStr,
-                        textAlign: TextAlign.center,
-                        textDirection: TextDirection.ltr,
-                        style: GoogleFonts.amiri(
-                          fontSize: 34,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ),
-                    // Hijri
-                    Expanded(
-                      child: prayerAsync.when(
-                        data: (pt) => Text(
-                          pt.hijriDate,
+                // Dates and Clock Row
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Gregorian date on the left
+                      Expanded(
+                        child: Text(
+                          dateStr,
                           textAlign: TextAlign.left,
+                          textDirection: TextDirection.ltr,
                           style: GoogleFonts.amiri(
-                            fontSize: 12,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
                             color: Colors.white.withValues(alpha: 0.9),
                           ),
                         ),
-                        loading: () => const SizedBox.shrink(),
-                        error: (_, __) => const SizedBox.shrink(),
                       ),
-                    ),
-                  ],
+                      // Hijri date on the right
+                      Expanded(
+                        child: prayerAsync.when(
+                          data: (pt) => Text(
+                            pt.hijriDate,
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                            style: GoogleFonts.amiri(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.accentGold,
+                            ),
+                          ),
+                          loading: () => const SizedBox.shrink(),
+                          error: (_, __) => const SizedBox.shrink(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                // Upcoming Prayer
+                const SizedBox(height: 6),
+
+                // Clock (Center)
+                Text(
+                  timeStr,
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.ltr,
+                  style: GoogleFonts.outfit(
+                    fontSize: 34,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: 2,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Upcoming Prayer Card (Fixed container & border clipping)
                 prayerAsync.when(
                   data: (pt) {
                     final next = PrayerTimesService().getNextPrayer(pt);
                     return GestureDetector(
                       onTap: () {
-                        // Navigate to Prayer Settings Screen (Index 1)
-                        ref.read(currentTabProvider.notifier).state = 1;
+                        // Navigate to Prayer Screen (Index 2)
+                        ref.read(currentTabProvider.notifier).state = 2;
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        width: double.infinity,
+                        constraints: const BoxConstraints(maxWidth: 320),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.5)),
+                          color: Colors.black.withValues(alpha: 0.25),
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: AppColors.accentGold.withValues(alpha: 0.4),
+                            width: 1.2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              'الصلاة القادمة',
-                              style: GoogleFonts.amiri(
-                                fontSize: 14,
-                                color: Colors.white.withValues(alpha: 0.8),
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'الصلاة القادمة: ',
+                                  style: GoogleFonts.amiri(
+                                    fontSize: 14,
+                                    color: Colors.white.withValues(alpha: 0.85),
+                                  ),
+                                ),
+                                Text(
+                                  next,
+                                  style: GoogleFonts.scheherazadeNew(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.accentGold,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              next,
-                              style: GoogleFonts.amiri(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.accentGold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Builder(
                               builder: (context) {
                                 final diff = PrayerTimesService().getTimeUntilNextPrayer(pt);
@@ -268,20 +293,19 @@ class _PrayerTimesHero extends ConsumerWidget {
                                 
                                 final int h = diff.inHours;
                                 final int m = diff.inMinutes % 60;
-                                String text = 'بعد ';
+                                String text = 'متبقي ';
                                 if (h > 0) text += '$h ساعة ';
                                 if (h > 0 && m > 0) text += 'و ';
                                 if (m > 0) text += '$m دقيقة';
-                                if (h == 0 && m == 0) text = 'الآن';
+                                if (h == 0 && m == 0) text = 'الآن حان الوقت';
                                 
                                 return Text(
                                   text,
                                   textDirection: TextDirection.rtl,
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 16,
+                                  style: GoogleFonts.amiri(
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.white.withValues(alpha: 0.9),
-                                    letterSpacing: 1,
+                                    color: Colors.white.withValues(alpha: 0.95),
                                   ),
                                 );
                               }
@@ -294,7 +318,8 @@ class _PrayerTimesHero extends ConsumerWidget {
                   loading: () => const SizedBox.shrink(),
                   error: (_, __) => const SizedBox.shrink(),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
+
                 // City name
                 prayerAsync.when(
                   data: (pt) => pt.city.isNotEmpty
@@ -304,14 +329,14 @@ class _PrayerTimesHero extends ConsumerWidget {
                             const Icon(
                               Icons.location_on_rounded,
                               color: AppColors.accentGold,
-                              size: 14,
+                              size: 13,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               pt.city,
                               style: GoogleFonts.amiri(
-                                fontSize: 14,
-                                color: Colors.white.withValues(alpha: 0.9),
+                                fontSize: 13,
+                                color: Colors.white.withValues(alpha: 0.85),
                               ),
                             ),
                           ],
@@ -325,61 +350,6 @@ class _PrayerTimesHero extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  void _showLanguageSelector(BuildContext context, WidgetRef ref) {
-    final currentLocale = ref.read(localeProvider);
-    final notifier = ref.read(localeProvider.notifier);
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'اختر لغة التطبيق / Select Language',
-                  style: GoogleFonts.amiri(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                ListTile(
-                  leading: const Text('🇸🇦', style: TextStyle(fontSize: 24)),
-                  title: Text('العربية (Arabic)', style: GoogleFonts.amiri(fontSize: 18, fontWeight: FontWeight.bold, color: currentLocale.languageCode == 'ar' ? AppColors.accentGold : null)),
-                  trailing: currentLocale.languageCode == 'ar' ? const Icon(Icons.check_circle, color: AppColors.accentGold) : null,
-                  onTap: () {
-                    notifier.setLocale('ar');
-                    Navigator.pop(ctx);
-                  },
-                ),
-                ListTile(
-                  leading: const Text('🇬🇧', style: TextStyle(fontSize: 24)),
-                  title: Text('English (الإنجليزية)', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w600, color: currentLocale.languageCode == 'en' ? AppColors.accentGold : null)),
-                  trailing: currentLocale.languageCode == 'en' ? const Icon(Icons.check_circle, color: AppColors.accentGold) : null,
-                  onTap: () {
-                    notifier.setLocale('en');
-                    Navigator.pop(ctx);
-                  },
-                ),
-                ListTile(
-                  leading: const Text('🇫🇷', style: TextStyle(fontSize: 24)),
-                  title: Text('Français (الفرنسية)', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w600, color: currentLocale.languageCode == 'fr' ? AppColors.accentGold : null)),
-                  trailing: currentLocale.languageCode == 'fr' ? const Icon(Icons.check_circle, color: AppColors.accentGold) : null,
-                  onTap: () {
-                    notifier.setLocale('fr');
-                    Navigator.pop(ctx);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

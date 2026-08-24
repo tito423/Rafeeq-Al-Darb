@@ -10,7 +10,7 @@ import '../../domain/models/zikr.dart';
 
 class QuranDbHelper {
   static const _dbAssetPath = 'assets/quran_local.db';
-  static const _dbFileName = 'quran_local_v4.db';
+  static const _dbFileName = 'quran_local_v5.db';
 
   static QuranDbHelper? _instance;
   static Database? _db;

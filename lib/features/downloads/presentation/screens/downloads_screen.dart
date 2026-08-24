@@ -7,7 +7,6 @@ import '../../../../services/download_manager.dart';
 import '../../../../core/services/audio_service.dart';
 import '../../../../core/models/tafseer.dart';
 import '../../../../core/services/tafseer_service.dart';
-import '../../../../core/models/mushaf_style.dart';
 
 class DownloadsScreen extends ConsumerWidget {
   const DownloadsScreen({super.key});
@@ -74,17 +73,6 @@ class DownloadsScreen extends ConsumerWidget {
               ),
             ),
 
-            // ── Mushaaf section ───────────────────────────────────────────
-            SliverToBoxAdapter(
-              child: _MushaafDownloadSection(
-                isDark: isDark,
-                downloadState: downloadState,
-                cardBg: cardBg,
-                textColor: textColor,
-                subtext: subtext,
-              ),
-            ),
-
             // ── Tafseer section ───────────────────────────────────────────
             SliverToBoxAdapter(
               child: _TafseerDownloadSection(
@@ -135,165 +123,6 @@ class DownloadsScreen extends ConsumerWidget {
             const SliverToBoxAdapter(child: SizedBox(height: 40)),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ── Mushaaf section ───────────────────────────────────────────────────────────
-
-class _MushaafDownloadSection extends ConsumerWidget {
-  final bool isDark;
-  final DownloadManagerState downloadState;
-  final Color cardBg;
-  final Color textColor;
-  final Color subtext;
-
-  const _MushaafDownloadSection({
-    required this.isDark,
-    required this.downloadState,
-    required this.cardBg,
-    required this.textColor,
-    required this.subtext,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isBulk = downloadState.isBulkDownloading;
-    final progress = downloadState.bulkProgress;
-    final completed = downloadState.bulkCompleted;
-    final total = downloadState.bulkTotal;
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primaryBlue, AppColors.primaryBlue2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryBlue.withValues(alpha: 0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.auto_stories_rounded,
-                color: AppColors.accentGold,
-                size: 24,
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'المصحف الشريف',
-                    style: GoogleFonts.scheherazadeNew(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    '٦٠٤ صفحة بجودة عالية',
-                    style: GoogleFonts.amiri(
-                      fontSize: 13,
-                      color: Colors.white.withValues(alpha: 0.75),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          if (isBulk) ...[
-            LinearProgressIndicator(
-              value: progress,
-              backgroundColor: Colors.white.withValues(alpha: 0.2),
-              color: AppColors.accentGold,
-              minHeight: 8,
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton.icon(
-                  onPressed: () => ref
-                      .read(downloadManagerProvider.notifier)
-                      .cancelBulkDownload(),
-                  icon: const Icon(
-                    Icons.stop_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  label: Text(
-                    'إيقاف',
-                    style: GoogleFonts.amiri(color: Colors.white),
-                  ),
-                ),
-                Text(
-                  '$completed / $total صفحة',
-                  style: GoogleFonts.outfit(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.accentGold,
-                  ),
-                ),
-              ],
-            ),
-          ] else ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Download all button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    final styleInfo = ref.read(mushafStyleInfoProvider);
-                    ref
-                        .read(downloadManagerProvider.notifier)
-                        .downloadAllMushaafPages(styleInfo: styleInfo);
-                  },
-                  icon: const Icon(Icons.download_rounded, size: 18),
-                  label: Text(
-                    'تحميل الكل',
-                    style: GoogleFonts.amiri(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accentGold,
-                    foregroundColor: AppColors.primaryBlue,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                Text(
-                  'حجم تقريبي: ~300MB',
-                  style: GoogleFonts.outfit(
-                    fontSize: 12,
-                    color: Colors.white.withValues(alpha: 0.7),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ],
       ),
     );
   }

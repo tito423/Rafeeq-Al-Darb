@@ -13,24 +13,28 @@ import '../../features/prayer/presentation/providers/prayer_settings_provider.da
 class ThemeState {
   final ThemeMode themeMode;
   final AppThemeType appThemeType;
+  final AppThemeType previousThemeType;
 
   const ThemeState({
     this.themeMode = ThemeMode.dark,
     this.appThemeType = AppThemeType.dark,
+    this.previousThemeType = AppThemeType.light,
   });
   
   AppThemeConfig get currentConfig => 
       kAppThemes.firstWhere((t) => t.type == appThemeType, orElse: () => kAppThemes[1]);
 
-  bool get isRgb => appThemeType == AppThemeType.rgb;
+  bool get isRgb => appThemeType == AppThemeType.rgb && themeMode != ThemeMode.dark;
 
   ThemeState copyWith({
     ThemeMode? themeMode,
     AppThemeType? appThemeType,
+    AppThemeType? previousThemeType,
   }) {
     return ThemeState(
       themeMode: themeMode ?? this.themeMode,
       appThemeType: appThemeType ?? this.appThemeType,
+      previousThemeType: previousThemeType ?? this.previousThemeType,
     );
   }
 
@@ -60,7 +64,7 @@ class ThemeState {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Notifier with SharedPreferences Persistence
+// Notifier with SharedPreferences Persistence & Dark Mode Override
 // ─────────────────────────────────────────────────────────────────────────────
 
 class ThemeNotifier extends StateNotifier<ThemeState> {
@@ -71,9 +75,11 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
   }
 
   void _loadFromPrefs() {
-    if (_prefs == null) return;
-    final savedMode = _prefs!.getString('theme_mode');
-    final savedType = _prefs!.getString('app_theme_type');
+    final prefs = _prefs;
+    if (prefs == null) return;
+    final savedMode = prefs.getString('theme_mode');
+    final savedType = prefs.getString('app_theme_type');
+    final savedPrev = prefs.getString('previous_theme_type');
 
     ThemeMode mode = ThemeMode.dark;
     if (savedMode == 'light') mode = ThemeMode.light;
@@ -83,7 +89,11 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
     if (savedType == 'light') type = AppThemeType.light;
     if (savedType == 'rgb') type = AppThemeType.rgb;
 
-    state = ThemeState(themeMode: mode, appThemeType: type);
+    AppThemeType prev = AppThemeType.light;
+    if (savedPrev == 'rgb') prev = AppThemeType.rgb;
+    if (savedPrev == 'dark') prev = AppThemeType.dark;
+
+    state = ThemeState(themeMode: mode, appThemeType: type, previousThemeType: prev);
   }
 
   void toggleTheme() {
@@ -92,26 +102,58 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
   }
 
   void setThemeMode(ThemeMode mode) {
-    state = state.copyWith(themeMode: mode);
-    _prefs?.setString('theme_mode', mode == ThemeMode.dark ? 'dark' : (mode == ThemeMode.light ? 'light' : 'system'));
+    if (mode == ThemeMode.dark) {
+      // Activating dark mode overrides active preset and saves previous
+      final prev = state.appThemeType != AppThemeType.dark ? state.appThemeType : state.previousThemeType;
+      state = state.copyWith(
+        themeMode: ThemeMode.dark,
+        appThemeType: AppThemeType.dark,
+        previousThemeType: prev,
+      );
+      _prefs?.setString('theme_mode', 'dark');
+      _prefs?.setString('app_theme_type', 'dark');
+      _prefs?.setString('previous_theme_type', prev.name);
+    } else {
+      // Deactivating dark mode restores previously active theme preset
+      final restoreType = state.previousThemeType != AppThemeType.dark ? state.previousThemeType : AppThemeType.light;
+      state = state.copyWith(
+        themeMode: ThemeMode.light,
+        appThemeType: restoreType,
+      );
+      _prefs?.setString('theme_mode', 'light');
+      _prefs?.setString('app_theme_type', restoreType.name);
+    }
   }
 
   void setAppThemeType(AppThemeType type) {
-    ThemeMode mode = state.themeMode;
-    if (type == AppThemeType.light) {
-      mode = ThemeMode.light;
-    } else {
-      mode = ThemeMode.dark;
+    if (type == AppThemeType.dark) {
+      setThemeMode(ThemeMode.dark);
+    } else if (type == AppThemeType.light) {
+      state = state.copyWith(
+        themeMode: ThemeMode.light,
+        appThemeType: AppThemeType.light,
+        previousThemeType: AppThemeType.light,
+      );
+      _prefs?.setString('theme_mode', 'light');
+      _prefs?.setString('app_theme_type', 'light');
+      _prefs?.setString('previous_theme_type', 'light');
+    } else if (type == AppThemeType.rgb) {
+      state = state.copyWith(
+        themeMode: ThemeMode.light,
+        appThemeType: AppThemeType.rgb,
+        previousThemeType: AppThemeType.rgb,
+      );
+      _prefs?.setString('theme_mode', 'light');
+      _prefs?.setString('app_theme_type', 'rgb');
+      _prefs?.setString('previous_theme_type', 'rgb');
     }
-    state = state.copyWith(appThemeType: type, themeMode: mode);
-    _prefs?.setString('app_theme_type', type.name);
-    _prefs?.setString('theme_mode', mode == ThemeMode.dark ? 'dark' : 'light');
   }
 
   void resetToDefaults() {
     state = const ThemeState();
     _prefs?.remove('app_theme_type');
     _prefs?.remove('theme_mode');
+    _prefs?.remove('previous_theme_type');
   }
 }
 
