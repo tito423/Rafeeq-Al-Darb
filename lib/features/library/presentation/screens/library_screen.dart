@@ -18,7 +18,6 @@ class LibraryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppColors.darkBackground : const Color(0xFFFAF7F0);
-    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
 
     return DefaultTabController(
       length: 3,

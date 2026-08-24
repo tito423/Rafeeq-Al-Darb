@@ -6,9 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/models/mushaf_style.dart';
-import '../../../../core/models/app_theme_config.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/theme_provider.dart';
 import '../../../../services/download_manager.dart';
 import '../../../quran/presentation/widgets/mushaf_selection_gallery.dart';
 

@@ -33,7 +33,7 @@ class MoreScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Text(
-                  'الإعدادات والمزيد',
+                  'الإعدادات',
                   style: GoogleFonts.scheherazadeNew(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,

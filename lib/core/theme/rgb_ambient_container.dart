@@ -78,9 +78,9 @@ class _RgbAmbientContainerState extends State<RgbAmbientContainer>
       animation: _ctrl!,
       builder: (context, child) {
         final t = _ctrl!.value;
-        final c1 = HSLColor.fromAHSV(1.0, (t * 360) % 360, 0.75, 0.65).toColor();
-        final c2 = HSLColor.fromAHSV(1.0, ((t * 360) + 120) % 360, 0.75, 0.65).toColor();
-        final c3 = HSLColor.fromAHSV(1.0, ((t * 360) + 240) % 360, 0.75, 0.65).toColor();
+        final c1 = HSVColor.fromAHSV(1.0, (t * 360) % 360, 0.75, 0.65).toColor();
+        final c2 = HSVColor.fromAHSV(1.0, ((t * 360) + 120) % 360, 0.75, 0.65).toColor();
+        final c3 = HSVColor.fromAHSV(1.0, ((t * 360) + 240) % 360, 0.75, 0.65).toColor();
 
         return Container(
           margin: widget.margin,
