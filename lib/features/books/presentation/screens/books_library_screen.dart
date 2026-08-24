@@ -93,6 +93,7 @@ class _BooksLibraryScreenState extends State<BooksLibraryScreen> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => BookReaderScreen(
+              bookId: book['id'] ?? '',
               title: title,
               pdfUrl: book['download_url'],
             ),
