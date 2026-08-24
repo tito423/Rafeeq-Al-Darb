@@ -180,18 +180,19 @@ class _AudioDownloadSection extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           Text(
-            'اختر القارئ والسورة لتحميل التلاوة للاستماع بدون إنترنت',
+            'اختر قارئاً لتحميل تلاوته للاستماع بدون إنترنت',
             style: GoogleFonts.amiri(fontSize: 14, color: subtext, height: 1.7),
             textDirection: TextDirection.rtl,
           ),
           const SizedBox(height: 16),
           ...kReciters.map(
-            (reciter) => _ReciterDownloadRow(
+            (reciter) => _ReciterCard(
               reciter: reciter,
               isDark: isDark,
               textColor: textColor,
+              subtext: subtext,
             ),
           ),
         ],
@@ -200,152 +201,181 @@ class _AudioDownloadSection extends ConsumerWidget {
   }
 }
 
-class _ReciterDownloadRow extends ConsumerStatefulWidget {
+const _surahNames = [
+  'الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال',
+  'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'إبراهيم', 'الحجر', 'النحل', 'الإسراء',
+  'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء',
+  'النمل', 'القصص', 'العنكبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبأ', 'فاطر',
+  'يس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان',
+  'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاريات', 'الطور', 'النجم',
+  'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف',
+  'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة',
+  'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الإنسان', 'المرسلات',
+  'النبأ', 'النازعات', 'عبس', 'التكوير', 'الانفطار', 'المطففين', 'الانشقاق', 'البروج',
+  'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد', 'الشمس', 'الليل', 'الضحى',
+  'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات', 'القارعة',
+  'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون',
+  'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس',
+];
+
+class _ReciterCard extends ConsumerStatefulWidget {
   final Reciter reciter;
   final bool isDark;
   final Color textColor;
+  final Color subtext;
 
-  const _ReciterDownloadRow({
+  const _ReciterCard({
     required this.reciter,
     required this.isDark,
     required this.textColor,
+    required this.subtext,
   });
 
   @override
-  ConsumerState<_ReciterDownloadRow> createState() =>
-      _ReciterDownloadRowState();
+  ConsumerState<_ReciterCard> createState() => _ReciterCardState();
 }
 
-class _ReciterDownloadRowState extends ConsumerState<_ReciterDownloadRow> {
+class _ReciterCardState extends ConsumerState<_ReciterCard> {
   int _selectedSurah = 1;
+  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    final subtext = widget.isDark
-        ? AppColors.darkSubtext
-        : AppColors.lightSubtext;
+    final cardBg = widget.isDark ? AppColors.darkBackground : const Color(0xFFF5F0E8);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          // Download button
-          ElevatedButton.icon(
-            onPressed: () {
-              ref
-                  .read(downloadManagerProvider.notifier)
-                  .downloadSurahAudio(
-                    surahNumber: _selectedSurah,
-                    reciterId: widget.reciter.id,
-                    mp3quranBaseUrl: widget.reciter.mp3quranIdentifier,
-                  );
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'بدأ تحميل سورة $_selectedSurah — ${widget.reciter.nameAr}',
-                    style: GoogleFonts.amiri(),
-                  ),
-                  duration: const Duration(seconds: 2),
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: cardBg,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.primaryBlue.withValues(alpha: 0.15),
+          ),
+        ),
+        child: Column(
+          children: [
+            // ── Header row ─────────────────────────────────────────────────
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              title: Text(
+                widget.reciter.nameAr,
+                style: GoogleFonts.scheherazadeNew(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: widget.textColor,
                 ),
-              );
-            },
-            icon: const Icon(Icons.download_rounded, size: 16),
-            label: Text('تحميل', style: GoogleFonts.amiri(fontSize: 13)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryBlue,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                textDirection: TextDirection.rtl,
+              ),
+              subtitle: Text(
+                widget.reciter.nameEn,
+                style: GoogleFonts.outfit(fontSize: 12, color: widget.subtext),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Quick full-archive download
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    onPressed: () {
+                      ref.read(downloadManagerProvider.notifier).downloadFullReciterArchive(
+                        reciterId: widget.reciter.id,
+                        mp3quranBaseUrl: widget.reciter.mp3quranIdentifier,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          'بدأ تحميل التلاوة كاملة — ${widget.reciter.nameAr}',
+                          style: GoogleFonts.amiri(),
+                        ),
+                        duration: const Duration(seconds: 3),
+                        behavior: SnackBarBehavior.floating,
+                      ));
+                    },
+                    icon: const Icon(
+                      Icons.download_for_offline_rounded,
+                      color: AppColors.accentGold,
+                      size: 26,
+                    ),
+                    tooltip: 'تحميل المصحف كاملاً',
+                  ),
+                  const SizedBox(width: 4),
+                  // Expand for single-surah download
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    onPressed: () => setState(() => _isExpanded = !_isExpanded),
+                    icon: Icon(
+                      _isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                      color: AppColors.primaryBlue,
+                      size: 26,
+                    ),
+                    tooltip: 'تحميل سورة محددة',
+                  ),
+                ],
               ),
             ),
-          ),
-          const SizedBox(width: 8),
 
-          // Download Full Quran button
-          IconButton(
-            onPressed: () {
-              // Full Quran download loop
-              for (int i = 1; i <= 114; i++) {
-                ref
-                    .read(downloadManagerProvider.notifier)
-                    .downloadSurahAudio(
-                      surahNumber: i,
-                      reciterId: widget.reciter.id,
-                      mp3quranBaseUrl: widget.reciter.mp3quranIdentifier,
-                    );
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'بدأ تحميل القرآن كاملاً — ${widget.reciter.nameAr}',
-                    style: GoogleFonts.amiri(),
-                  ),
-                  duration: const Duration(seconds: 3),
+            // ── Expanded surah picker ───────────────────────────────────────
+            if (_isExpanded)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Divider(height: 1),
+                    const SizedBox(height: 10),
+                    // Surah dropdown
+                    DropdownButton<int>(
+                      value: _selectedSurah,
+                      isExpanded: true,
+                      underline: Container(
+                        height: 1,
+                        color: AppColors.primaryBlue.withValues(alpha: 0.3),
+                      ),
+                      items: List.generate(114, (i) => DropdownMenuItem(
+                        value: i + 1,
+                        child: Text(
+                          '${i + 1}. ${_surahNames[i]}',
+                          style: GoogleFonts.scheherazadeNew(fontSize: 16),
+                        ),
+                      )),
+                      onChanged: (v) => setState(() => _selectedSurah = v!),
+                    ),
+                    const SizedBox(height: 10),
+                    // Download surah button
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        ref.read(downloadManagerProvider.notifier).downloadSurahAudio(
+                          surahNumber: _selectedSurah,
+                          reciterId: widget.reciter.id,
+                          mp3quranBaseUrl: widget.reciter.mp3quranIdentifier,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            'تحميل سورة ${_surahNames[_selectedSurah - 1]} — ${widget.reciter.nameAr}',
+                            style: GoogleFonts.amiri(),
+                          ),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                        ));
+                        setState(() => _isExpanded = false);
+                      },
+                      icon: const Icon(Icons.download_rounded, size: 18),
+                      label: Text(
+                        'تحميل سورة ${_surahNames[_selectedSurah - 1]}',
+                        style: GoogleFonts.amiri(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.accentGold,
+                        foregroundColor: Colors.black87,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
-            icon: const Icon(Icons.download_done_rounded, color: AppColors.accentGold),
-            tooltip: 'تحميل المصحف كاملاً',
-          ),
-          const SizedBox(width: 8),
-
-          // Surah number picker
-          SizedBox(
-            width: 88,
-            child: DropdownButtonFormField<int>(
-              value: _selectedSurah,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: AppColors.primaryBlue.withValues(alpha: 0.3),
-                  ),
-                ),
-                isDense: true,
               ),
-              items: List.generate(
-                114,
-                (i) => DropdownMenuItem(
-                  value: i + 1,
-                  child: Text(
-                    '${i + 1}',
-                    style: GoogleFonts.outfit(fontSize: 12),
-                  ),
-                ),
-              ),
-              onChanged: (v) => setState(() => _selectedSurah = v!),
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // Reciter name
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  widget.reciter.nameAr,
-                  style: GoogleFonts.amiri(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: widget.textColor,
-                  ),
-                  textDirection: TextDirection.rtl,
-                ),
-                Text(
-                  widget.reciter.nameEn,
-                  style: GoogleFonts.outfit(fontSize: 11, color: subtext),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

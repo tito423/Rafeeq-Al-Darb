@@ -1,8 +1,11 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/localization/locale_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/audio_service.dart';
 import '../../../../core/services/tafseer_service.dart';
@@ -1136,6 +1139,7 @@ class _OptionButton extends ConsumerWidget {
         ayah: ayah,
         isDark: isDark,
         accentColor: accentColor,
+        localeCode: ref.read(localeProvider).languageCode,
       ),
     );
   }
@@ -1487,6 +1491,7 @@ class _AyahDetailModal extends StatefulWidget {
   final Ayah ayah;
   final bool isDark;
   final Color accentColor;
+  final String localeCode;
 
   const _AyahDetailModal({
     required this.title,
@@ -1494,6 +1499,7 @@ class _AyahDetailModal extends StatefulWidget {
     required this.ayah,
     required this.isDark,
     required this.accentColor,
+    required this.localeCode,
   });
 
   @override
@@ -1510,7 +1516,16 @@ class _AyahDetailModalState extends State<_AyahDetailModal> {
   }
 
   Future<List<String>> _loadDetail() async {
-    // Try DB first
+    // 1. Hybrid Translation System: Use API for non-English/non-Arabic locales
+    if (widget.type == 'translation' && widget.localeCode != 'en' && widget.localeCode != 'ar') {
+      final apiTranslation = await _fetchTranslationFromApi(widget.localeCode);
+      if (apiTranslation != null) {
+        return [apiTranslation];
+      }
+      // If API fails, fallback to local DB English
+    }
+
+    // 2. Try DB first
     final dbResult =
         await QuranDbHelper().getAyahDetail(widget.type, widget.ayah.id);
     if (dbResult.isNotEmpty &&
@@ -1520,12 +1535,46 @@ class _AyahDetailModalState extends State<_AyahDetailModal> {
       return dbResult;
     }
 
-    // For i'rab: fallback to quran.com words API
+    // 3. For i'rab: fallback to quran.com words API
     if (widget.type == 'irab') {
       return _fetchIrabFromApi();
     }
 
     return dbResult;
+  }
+
+  Future<String?> _fetchTranslationFromApi(String langCode) async {
+    // Map of 16-language identifiers for AlQuran.cloud API
+    final Map<String, String> editions = {
+      'fr': 'fr.hamidullah',
+      'id': 'id.indonesian',
+      'ms': 'ms.basmeih',
+      'tr': 'tr.diyanet',
+      'ur': 'ur.jalandhry',
+      'hi': 'hi.hindi',
+      'bn': 'bn.bengali',
+      'fa': 'fa.ayati',
+      'es': 'es.cortes',
+      'ru': 'ru.kuliev',
+      'zh': 'zh.jian',
+      'de': 'de.aburida',
+      'it': 'it.piccardo',
+      'pt': 'pt.elhayek',
+      'ha': 'ha.gumi',
+    };
+    final edition = editions[langCode] ?? 'en.asad';
+    try {
+      final url = Uri.parse(
+          'https://api.alquran.cloud/v1/ayah/${widget.ayah.id}/$edition');
+      final response = await _httpGet(url);
+      if (response != null) {
+        final jsonMap = jsonDecode(response);
+        if (jsonMap['code'] == 200 && jsonMap['data'] != null) {
+          return jsonMap['data']['text'];
+        }
+      }
+    } catch (_) {}
+    return null;
   }
 
   Future<List<String>> _fetchIrabFromApi() async {

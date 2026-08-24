@@ -130,7 +130,7 @@ class PrayerSettingsSheet extends ConsumerWidget {
                       ),
                       subtitle: Text('تذكير يومي في بداية الصباح', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
                       value: settings.morningAthkarEnabled,
-                      activeColor: AppColors.accentGold,
+                      activeThumbColor: AppColors.accentGold,
                       onChanged: (val) => notifier.setMorningAthkarEnabled(val),
                     ),
                     const Divider(height: 1, indent: 56),
@@ -142,7 +142,7 @@ class PrayerSettingsSheet extends ConsumerWidget {
                       ),
                       subtitle: Text('تذكير يومي في وقت العصر', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
                       value: settings.eveningAthkarEnabled,
-                      activeColor: AppColors.accentGold,
+                      activeThumbColor: AppColors.accentGold,
                       onChanged: (val) => notifier.setEveningAthkarEnabled(val),
                     ),
                     const Divider(height: 1, indent: 56),
@@ -154,7 +154,7 @@ class PrayerSettingsSheet extends ConsumerWidget {
                       ),
                       subtitle: Text('تذكير بقراءة الورد اليومي', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
                       value: settings.morningQuranWirdEnabled,
-                      activeColor: AppColors.accentGold,
+                      activeThumbColor: AppColors.accentGold,
                       onChanged: (val) => notifier.setMorningQuranWirdEnabled(val),
                     ),
                     const Divider(height: 1, indent: 56),
@@ -166,7 +166,7 @@ class PrayerSettingsSheet extends ConsumerWidget {
                       ),
                       subtitle: Text('تذكير بختام اليوم مع كتاب الله', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
                       value: settings.eveningQuranWirdEnabled,
-                      activeColor: AppColors.accentGold,
+                      activeThumbColor: AppColors.accentGold,
                       onChanged: (val) => notifier.setEveningQuranWirdEnabled(val),
                     ),
                   ],
@@ -229,36 +229,64 @@ class PrayerSettingsSheet extends ConsumerWidget {
                     color: cardBg,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     margin: EdgeInsets.zero,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                prayer,
-                                style: GoogleFonts.scheherazadeNew(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.accentGold,
-                                ),
-                              ),
-                              Switch(
-                                value: isEnabled,
-                                activeColor: AppColors.accentGold,
-                                onChanged: (val) => notifier.setPrayerToggle(prayer, val),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          _buildNumberRow('تعديل الوقت:', offset, (val) => notifier.setPrayerOffset(prayer, val)),
-                          _buildNumberRow('تنبيه قبل الأذان:', preAdhan, (val) => notifier.setPreAdhanAlarm(prayer, val), allowNegative: false),
-                          if (prayer != 'الشروق')
-                            _buildNumberRow('تنبيه الإقامة:', iqamah, (val) => notifier.setIqamahAlarm(prayer, val), allowNegative: false),
-                        ],
+                    clipBehavior: Clip.hardEdge,
+                    child: ExpansionTile(
+                      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      leading: Switch(
+                        value: isEnabled,
+                        activeThumbColor: AppColors.accentGold,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onChanged: (val) => notifier.setPrayerToggle(prayer, val),
                       ),
+                      title: Text(
+                        prayer,
+                        style: GoogleFonts.scheherazadeNew(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: isEnabled ? AppColors.accentGold : (isDark ? AppColors.darkSubtext : AppColors.lightSubtext),
+                        ),
+                      ),
+                      trailing: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.accentGold),
+                      children: [
+                        // Offset dropdown
+                        _buildDropdownRow(
+                          label: 'تعديل الوقت',
+                          icon: Icons.tune_rounded,
+                          value: offset,
+                          items: List.generate(61, (i) => i - 30), // -30 to +30
+                          labelFn: (v) => v > 0 ? '+$v دق' : (v < 0 ? '$v دق' : 'بدون تعديل'),
+                          onChanged: (v) => notifier.setPrayerOffset(prayer, v),
+                          textColor: textColor,
+                          isDark: isDark,
+                        ),
+                        const Divider(height: 1),
+                        // Pre-adhan alert dropdown
+                        _buildDropdownRow(
+                          label: 'تنبيه قبل الأذان',
+                          icon: Icons.notifications_active_rounded,
+                          value: preAdhan,
+                          items: [0, 5, 10, 15, 20, 30, 45, 60],
+                          labelFn: (v) => v == 0 ? 'لا يوجد' : 'قبل $v دق',
+                          onChanged: (v) => notifier.setPreAdhanAlarm(prayer, v),
+                          textColor: textColor,
+                          isDark: isDark,
+                        ),
+                        if (prayer != 'الشروق') ...[
+                          const Divider(height: 1),
+                          // Iqama alert dropdown
+                          _buildDropdownRow(
+                            label: 'تنبيه الإقامة',
+                            icon: Icons.alarm_rounded,
+                            value: iqamah,
+                            items: [0, 5, 10, 15, 20, 25, 30, 45],
+                            labelFn: (v) => v == 0 ? 'لا يوجد' : 'بعد $v دق',
+                            onChanged: (v) => notifier.setIqamahAlarm(prayer, v),
+                            textColor: textColor,
+                            isDark: isDark,
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 );
@@ -270,47 +298,60 @@ class PrayerSettingsSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildNumberRow(String label, int value, ValueChanged<int> onChanged, {bool allowNegative = true}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.amiri(fontSize: 14),
-        ),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {
-                if (!allowNegative && value <= 0) return;
-                onChanged(value - 1);
-              },
-              icon: const Icon(Icons.remove_circle_outline_rounded),
-              color: Colors.redAccent,
-              iconSize: 20,
+  Widget _buildDropdownRow({
+    required String label,
+    required IconData icon,
+    required int value,
+    required List<int> items,
+    required String Function(int) labelFn,
+    required ValueChanged<int> onChanged,
+    required Color textColor,
+    required bool isDark,
+  }) {
+    // Clamp value to available items to avoid assertion errors
+    final safeValue = items.contains(value) ? value : items.first;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: AppColors.accentGold, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: GoogleFonts.amiri(fontSize: 15, color: textColor),
+              ),
+            ],
+          ),
+          DropdownButton<int>(
+            value: safeValue,
+            underline: const SizedBox(),
+            dropdownColor: isDark ? AppColors.darkCardBackground : Colors.white,
+            icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: AppColors.accentGold),
+            style: GoogleFonts.amiri(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: AppColors.accentGold,
             ),
-            SizedBox(
-              width: 32,
+            onChanged: (v) {
+              if (v != null) onChanged(v);
+            },
+            items: items.map((v) => DropdownMenuItem(
+              value: v,
               child: Text(
-                value > 0 && allowNegative ? '+$value' : '$value',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.outfit(
+                labelFn(v),
+                style: GoogleFonts.amiri(
                   fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                  color: v == safeValue ? AppColors.accentGold : textColor,
+                  fontWeight: v == safeValue ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
-            ),
-            IconButton(
-              onPressed: () {
-                onChanged(value + 1);
-              },
-              icon: const Icon(Icons.add_circle_outline_rounded),
-              color: Colors.green,
-              iconSize: 20,
-            ),
-          ],
-        ),
-      ],
+            )).toList(),
+          ),
+        ],
+      ),
     );
   }
 }

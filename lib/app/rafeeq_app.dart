@@ -24,7 +24,7 @@ class RafeeqApp extends ConsumerWidget {
       title: 'رفيق الدرب',
       debugShowCheckedModeBanner: false,
 
-      // ── Localization (Arabic, English, French) ───────────────────────────
+      // ── Localization (16 Languages) ───────────────────────────
       localizationsDelegates: const [
         AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -32,9 +32,23 @@ class RafeeqApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('ar'),
-        Locale('en'),
-        Locale('fr'),
+        Locale('ar'), // Arabic
+        Locale('en'), // English
+        Locale('fr'), // French
+        Locale('id'), // Indonesian
+        Locale('ms'), // Malay
+        Locale('tr'), // Turkish
+        Locale('ur'), // Urdu
+        Locale('hi'), // Hindi
+        Locale('bn'), // Bengali
+        Locale('fa'), // Persian
+        Locale('es'), // Spanish
+        Locale('ru'), // Russian
+        Locale('zh'), // Chinese
+        Locale('de'), // German
+        Locale('it'), // Italian
+        Locale('pt'), // Portuguese
+        Locale('ha'), // Hausa
       ],
       locale: currentLocale,
 

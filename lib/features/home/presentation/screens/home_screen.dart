@@ -9,14 +9,14 @@ import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/theme_provider.dart';
-import '../../../../core/localization/locale_provider.dart';
 import '../../../../core/services/prayer_times_service.dart';
 import '../../../quran/presentation/providers/quran_provider.dart';
 import '../../../quran/presentation/screens/surah_reading_screen.dart';
 import '../providers/home_provider.dart';
 import '../../../khatma/presentation/providers/khatma_provider.dart';
 import '../../../khatma/presentation/screens/khatma_setup_screen.dart';
+import '../../../khatma/presentation/screens/khatma_dashboard_screen.dart';
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Home Screen
@@ -137,38 +137,21 @@ class _PrayerTimesHero extends ConsumerWidget {
           // Stars / decorative pattern
           Positioned.fill(child: CustomPaint(painter: _StarPainter())),
           
-          // Action Buttons: Theme & Settings arranged vertically on the left side
+          // Settings shortcut — small unobtrusive icon, top-left
           Positioned(
             left: 12,
             top: 12,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    ref.read(currentTabProvider.notifier).state = 6; // Go directly to Settings tab
-                  },
-                  icon: const Icon(
-                    Icons.settings_rounded,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                  tooltip: 'الإعدادات',
-                ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    ref.read(themeProvider.notifier).toggleTheme();
-                  },
-                  icon: Icon(
-                    isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                    color: AppColors.accentGold,
-                    size: 22,
-                  ),
-                  tooltip: 'تغيير المظهر',
-                ),
-              ],
+            child: IconButton(
+              visualDensity: VisualDensity.compact,
+              onPressed: () {
+                ref.read(currentTabProvider.notifier).state = 6;
+              },
+              icon: const Icon(
+                Icons.settings_rounded,
+                color: Colors.white54,
+                size: 20,
+              ),
+              tooltip: 'الإعدادات',
             ),
           ),
 
@@ -178,34 +161,37 @@ class _PrayerTimesHero extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Dates and Clock Row
+                // ── Date Header Row: Gregorian أقصى اليسار | Hijri أقصى اليمين ──
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Gregorian date on the left
-                      Expanded(
+                      // Gregorian date — extreme LEFT (أقصى اليسار)
+                      Flexible(
                         child: Text(
                           dateStr,
-                          textAlign: TextAlign.left,
+                          textAlign: TextAlign.start,
                           textDirection: TextDirection.ltr,
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.amiri(
-                            fontSize: 13,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white.withValues(alpha: 0.9),
+                            color: Colors.white.withValues(alpha: 0.88),
                           ),
                         ),
                       ),
-                      // Hijri date on the right
-                      Expanded(
+                      const SizedBox(width: 8),
+                      // Hijri date — extreme RIGHT (أقصى اليمين)
+                      Flexible(
                         child: prayerAsync.when(
                           data: (pt) => Text(
                             pt.hijriDate,
-                            textAlign: TextAlign.right,
+                            textAlign: TextAlign.end,
                             textDirection: TextDirection.rtl,
-                            style: GoogleFonts.amiri(
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.scheherazadeNew(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
                               color: AppColors.accentGold,
@@ -243,22 +229,25 @@ class _PrayerTimesHero extends ConsumerWidget {
                         // Navigate to Prayer Screen (Index 2)
                         ref.read(currentTabProvider.notifier).state = 2;
                       },
-                      child: Container(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(18),
+                        child: Container(
                         width: double.infinity,
-                        constraints: const BoxConstraints(maxWidth: 320),
+                        constraints: const BoxConstraints(maxWidth: 340),
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.25),
+                          color: Colors.black.withValues(alpha: 0.28),
                           borderRadius: BorderRadius.circular(18),
                           border: Border.all(
-                            color: AppColors.accentGold.withValues(alpha: 0.4),
-                            width: 1.2,
+                            color: AppColors.accentGold.withValues(alpha: 0.45),
+                            width: 1.0,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 10,
-                              offset: const Offset(0, 3),
+                              color: AppColors.accentGold.withValues(alpha: 0.08),
+                              blurRadius: 16,
+                              spreadRadius: 0,
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
@@ -312,7 +301,8 @@ class _PrayerTimesHero extends ConsumerWidget {
                             ),
                           ],
                         ),
-                      ),
+                        ), // ClipRRect child close
+                      ), // ClipRRect close
                     );
                   },
                   loading: () => const SizedBox.shrink(),
@@ -722,10 +712,19 @@ class _KhatmaCard extends ConsumerWidget {
     
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const KhatmaSetupScreen()),
-        );
+        // If khatma is active (past first setup), go to dashboard; otherwise setup
+        final isActive = khatma.id != 'default' || khatma.completedDays > 0 || khatma.currentPage > 1;
+        if (isActive) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const KhatmaDashboardScreen()),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const KhatmaSetupScreen()),
+          );
+        }
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
