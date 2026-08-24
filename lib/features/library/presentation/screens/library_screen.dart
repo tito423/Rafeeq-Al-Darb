@@ -184,6 +184,7 @@ class _IslamicBooksTabState extends State<_IslamicBooksTab> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => BookReaderScreen(
+                              bookId: book['id'] ?? '',
                               title: book['title'] ?? '',
                               pdfUrl: book['download_url'],
                             ),

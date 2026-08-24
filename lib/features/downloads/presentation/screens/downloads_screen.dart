@@ -7,6 +7,7 @@ import '../../../../services/download_manager.dart';
 import '../../../../core/services/audio_service.dart';
 import '../../../../core/models/tafseer.dart';
 import '../../../../core/services/tafseer_service.dart';
+import '../../../../core/services/translation_service.dart';
 
 class DownloadsScreen extends ConsumerWidget {
   const DownloadsScreen({super.key});
@@ -76,6 +77,16 @@ class DownloadsScreen extends ConsumerWidget {
             // ── Tafseer section ───────────────────────────────────────────
             SliverToBoxAdapter(
               child: _TafseerDownloadSection(
+                isDark: isDark,
+                cardBg: cardBg,
+                textColor: textColor,
+                subtext: subtext,
+              ),
+            ),
+
+            // ── Translation section ───────────────────────────────────────
+            SliverToBoxAdapter(
+              child: _TranslationDownloadSection(
                 isDark: isDark,
                 cardBg: cardBg,
                 textColor: textColor,
@@ -377,6 +388,225 @@ class _ReciterCardState extends ConsumerState<_ReciterCard> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ── Translation download section ──────────────────────────────────────────────
+
+class _TranslationDownloadSection extends ConsumerWidget {
+  final bool isDark;
+  final Color cardBg;
+  final Color textColor;
+  final Color subtext;
+
+  const _TranslationDownloadSection({
+    required this.isDark,
+    required this.cardBg,
+    required this.textColor,
+    required this.subtext,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.g_translate_rounded,
+                color: Color(0xFF00B894),
+                size: 22,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'تنزيل التراجم',
+                style: GoogleFonts.amiri(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'حمّل تراجم معاني القرآن للوصول إليها بدون إنترنت',
+            style: GoogleFonts.amiri(fontSize: 14, color: subtext, height: 1.7),
+            textDirection: TextDirection.rtl,
+          ),
+          const SizedBox(height: 16),
+          ...kTranslations.values.map(
+            (t) => _TranslationDownloadRow(
+              translation: t,
+              isDark: isDark,
+              textColor: textColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TranslationDownloadRow extends ConsumerWidget {
+  final TranslationConfig translation;
+  final bool isDark;
+  final Color textColor;
+
+  const _TranslationDownloadRow({
+    required this.translation,
+    required this.isDark,
+    required this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(translationDownloadProvider);
+    final subtext = isDark ? AppColors.darkSubtext : AppColors.lightSubtext;
+
+    final isDownloading = state.isDownloading[translation.edition] == true;
+    final isCompleted = state.isCompleted[translation.edition] == true;
+    final progress = state.progress[translation.edition] ?? 0.0;
+    final error = state.errors[translation.edition];
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          // Action button
+          if (isDownloading)
+            SizedBox(
+              width: 90,
+              child: Column(
+                children: [
+                  LinearProgressIndicator(
+                    value: progress,
+                    color: AppColors.primaryBlue,
+                    backgroundColor: AppColors.primaryBlue.withValues(alpha: 0.2),
+                  ),
+                  const SizedBox(height: 4),
+                  GestureDetector(
+                    onTap: () => ref.read(translationDownloadProvider.notifier).cancelDownload(translation.edition),
+                    child: Text(
+                      'إلغاء',
+                      style: GoogleFonts.amiri(fontSize: 12, color: AppColors.error),
+                    ),
+                  )
+                ],
+              ),
+            )
+          else if (isCompleted)
+            ElevatedButton.icon(
+              onPressed: () => _confirmDelete(context, ref),
+              icon: const Icon(Icons.check_circle_rounded, size: 16),
+              label: Text('محمل', style: GoogleFonts.amiri(fontSize: 13)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accentGold.withValues(alpha: 0.1),
+                foregroundColor: AppColors.accentGold,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 0,
+              ),
+            )
+          else
+            ElevatedButton.icon(
+              onPressed: () {
+                ref.read(translationDownloadProvider.notifier).startDownload(translation.edition);
+              },
+              icon: const Icon(Icons.download_rounded, size: 16),
+              label: Text('تنزيل', style: GoogleFonts.amiri(fontSize: 13)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryBlue.withValues(alpha: 0.1),
+                foregroundColor: AppColors.primaryBlue,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 0,
+              ),
+            ),
+
+          const SizedBox(width: 14),
+
+          // Title
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  translation.languageName,
+                  style: GoogleFonts.outfit(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+                ),
+                if (error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      error,
+                      style: GoogleFonts.amiri(fontSize: 12, color: AppColors.error),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            'حذف الترجمة',
+            style: GoogleFonts.amiri(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.right,
+          ),
+          content: Text(
+            'هل أنت متأكد من حذف ${translation.languageName}؟',
+            style: GoogleFonts.amiri(fontSize: 16),
+            textAlign: TextAlign.right,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text('إلغاء', style: GoogleFonts.amiri(color: AppColors.primaryBlue)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
+              onPressed: () {
+                ref.read(translationDownloadProvider.notifier).deleteTranslation(translation.edition);
+                Navigator.pop(ctx);
+              },
+              child: Text('حذف', style: GoogleFonts.amiri(color: Colors.white)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

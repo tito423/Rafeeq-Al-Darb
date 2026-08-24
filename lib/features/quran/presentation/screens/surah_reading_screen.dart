@@ -10,6 +10,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/audio_service.dart';
 import '../../../../core/services/tafseer_service.dart';
 import '../../../../core/models/tafseer.dart';
+import '../../../../core/services/translation_service.dart';
 import '../../data/datasources/quran_db_helper.dart';
 
 import '../../domain/models/ayah.dart';
@@ -1563,6 +1564,18 @@ class _AyahDetailModalState extends State<_AyahDetailModal> {
       'ha': 'ha.gumi',
     };
     final edition = editions[langCode] ?? 'en.asad';
+    
+    // Check local download first
+    final localTrans = await TranslationService().getAyahTranslation(
+      edition: edition,
+      surahId: widget.ayah.surahId,
+      ayahNumberInSurah: widget.ayah.ayahNumber,
+    );
+    if (localTrans != null) {
+      return localTrans;
+    }
+
+    // Fallback to API if not downloaded
     try {
       final url = Uri.parse(
           'https://api.alquran.cloud/v1/ayah/${widget.ayah.id}/$edition');

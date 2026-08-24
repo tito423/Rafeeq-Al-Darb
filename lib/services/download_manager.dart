@@ -129,6 +129,16 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     return '${dir.path}/$bookId.json';
   }
 
+  Future<String> getBookPdfPath(String bookId) async {
+    final dir = await _bookDir;
+    return '${dir.path}/$bookId.pdf';
+  }
+
+  Future<bool> isBookPdfDownloaded(String bookId) async {
+    final path = await getBookPdfPath(bookId);
+    return File(path).existsSync();
+  }
+
   Future<String> getMushaafPagePath(int pageNumber, String styleName) async {
     final dir = await _mushaafDir(styleName);
     final filename = 'page_${pageNumber.toString().padLeft(3, '0')}.jpg';
@@ -178,6 +188,36 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
       url: styleInfo.pageUrl(pageNumber),
       savePath: savePath,
       category: DownloadCategory.mushaafPage,
+    );
+  }
+
+  // ── Download a Book PDF ───────────────────────────────────────────────────
+
+  Future<void> downloadBookPdf(String bookId, String url, String title) async {
+    final id = 'book_$bookId';
+    if (state.tasks[id]?.isDownloading == true) return;
+    
+    if (await isBookPdfDownloaded(bookId)) {
+      _updateTask(
+        id,
+        DownloadTask(
+          id: id,
+          url: url,
+          filename: '$title.pdf',
+          category: DownloadCategory.book,
+          isCompleted: true,
+          progress: 1.0,
+        ),
+      );
+      return;
+    }
+
+    final savePath = await getBookPdfPath(bookId);
+    await _startDownload(
+      id: id,
+      url: url,
+      savePath: savePath,
+      category: DownloadCategory.book,
     );
   }
 
