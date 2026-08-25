@@ -85,7 +85,6 @@ flutter:
     - assets/videos/
     - assets/books/
     - assets/quran/quran_images.zip
-    - assets/quran/quran_tafsir.zip
     - assets/data/
     - assets/data/hadith/
     - lib/features/books/data/
