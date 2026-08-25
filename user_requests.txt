@@ -1,0 +1,657 @@
+<USER_REQUEST>
+Please execute the following full end-to-end pipeline in structured phases:
+
+### Phase 1: Data Audit & Automated Download / Extraction
+1. Check the local storage and existing assets for the following categories:
+   - **Quran Mushaf Editions:** High-resolution page images and metadata for all planned Mushaf editions.
+   - **Hadith Collections:** Complete texts for the Nine Books (الكتب التسعة).
+   - **Tafseer, I'rab, & Translations:** Complete Tafseer texts, grammatical analysis (إعراب), and multi-language translations.
+   - **Islamic Books Library:** All requested Islamic reference books.
+   - **Audio Assets:** Full recitations for selected Quran reciters and Adhan audio files for various Muadhins.
+2. For any missing content, run the automated fetching/scraping scripts or API loaders to complete the downloads and verify checksums/file integrity.
+
+### Phase 2: Cloudflare R2 Upload & Firebase Indexing
+1. Upload all processed assets to Cloudflare R2 under a clean, organized bucket hierarchy (e.g., `/mushaf/{edition_id}/pages/`, `/audio/reciters/{reciter_id}/`, `/audio/adhan/`, `/hadith/`, `/tafseer/`, `/books/`).
+2. Sync and index metadata, catalogs, and direct R2 resource paths into Cloud Firestore for fast querying and offline caching rules.
+
+### Phase 3: Flutter UI Implementation & Quran Download Manager
+1. **Mushaf Browser Screen:**
+   - Display all available Mushaf editions with high-quality thumbnails, edition names, and details.
+   - Provide an interactive download manager allowing the user to:
+     * Download a single selected Mushaf.
+     * Select and download multiple Mushafs concurrently.
+     * "Download All" option with progress indicators and cancel/retry support.
+2. **Reading & Library Screens:**
+   - Implement the smooth reader interface supporting offline page rendering from local cache, switching Mushafs, and viewing synced Tafseer/I'rab overlays.
+   - Add initial browsing views for the Hadith collections, Islamic books library, and audio setti
+<truncated 1205 bytes>
+ gallery featuring high-resolution covers and thumbnails.
+  - Implement fluid animations (smooth transitions, zoom effects, and micro-interactions) when switching Mushaf editions.
+  - Support downloading individual Mushafs, batch selection, and a "Download All" option with accurate progress tracking.
+
+### 3. Azkar Custom Notification System
+- **Dynamic Scheduling:** Remove hardcoded Azkar notification times.
+- Allow users to fully customize and pick exact notification times for Morning, Evening, and custom Azkar with system alarm scheduling (`flutter_local_notifications`).
+
+### 4. Authentication & Real-Time Sync
+- **Onboarding / Initial Google Sign-In:** Prompt users with a clean Google Sign-In screen on initial launch (with a "Skip / Continue as Guest" option).
+- **Auto-Sync:** Persist and sync bookmarks, reading progress, and settings to Cloud Firestore upon sign-in.
+
+### 5. Complete Data Pipeline (Download & Cloudflare R2 Upload)
+- **Asset Verification & Automated Fetching:** Run the automated scripts to download any missing Nine Books of Hadith (الكتب التسعة), Tafseer collections, I'rab texts, multi-language translations, Islamic reference books, and audio files (Adhan muadhins and Quran recitations).
+- **Cloudflare R2 & Firestore Ingestion:** Upload all collected media and text assets to R2 and write their catalog metadata into Firestore for caching.
+
+### 6. Production Release Build
+- Run `flutter clean` and `flutter pub get`.
+- Build the final production APK (`flutter build apk --release`).
+- Output the absolute path to the generated APK file so it can be delivered immediately.
+-
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T05:53:03+04:00.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+---
+<USER_REQUEST>
+did you download every thing then upload to cloud flar and configure the fire store and be sue all mushaf has then send the release to my github 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T06:16:48+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+Please finalize the complete integration for Firebase and Cloudflare R2:
+
+1. Firebase Initialization:
+   - In `lib/main.dart`, ensure `WidgetsFlutterBinding.ensureInitialized()` and `await Firebase.initializeApp();` are properly configured before `runApp()`.
+
+2. Cloudflare R2 Service Configuration:
+   - In `lib/services/r2_storage_service.dart`, update the Minio client configuration with the following credentials:
+     - EndPoint: '33946f20ace0d8aa2aba052fa705d685.r2.cloudflarestorage.com'
+     - AccessKey: '0ea932e392ce7b96cb81e8b4132a26d9'
+     - SecretKey: 'a117398b232c11b17b9bebd497131bf8b0497791b20a5f02ada8558cbc1427ad'
+     - Enable SSL: true
+   - Add helper methods in `r2_storage_service.dart` for fetching file download URLs and streaming/downloading assets.
+
+3. Run `flutter pub get` and verify that there are no compilation errors or missing dependencies.
+4.finish everything
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T06:22:02+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+Proceed and upload
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T06:24:47+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+"I have placed the serviceAccountKey.json file in the project root directory. Please make sure that serviceAccountKey.json is added to .gitignore so it doesn't get committed, and then proceed with running scripts/firestore_indexer.py."
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T15:13:35+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+rafeeq-aldarb-data. This the bucket name
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T15:19:00+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T15:24:23+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+can you show me the progress of the upload process
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T16:11:30+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+could you intellegently make ana nimated screen with the progree in percent or in progress bar or both. could you do that. 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T16:17:31+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+give me the location which should i run the script 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T16:29:10+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T16:31:10+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T16:32:39+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+it freezes and not giving the actual progress
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T16:36:47+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+انا كنت عطيتك قبل كدة برومبت بتحميل كتب معينة انت خملته ولا لاء . قوللي كدة ايه اللي انت حملته بالظبط من جميع الكتب عشان اراجع معاك
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T16:44:11+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+Please execute a comprehensive end-to-end development, data ingestion, and refactoring pipeline for the Flutter app. Work step-by-step and confirm each phase before proceeding to the next.
+
+### Phase 1: Comprehensive Data Audit & Automated Ingestion Scripts
+1. **Audit Existing Data:** Check the local environment to identify which assets are already downloaded and what is missing.
+2. **Write & Execute Download Scripts:** Create a Python/Node.js script to automatically fetch, format, and prepare the following missing assets from trusted Islamic APIs (e.g., Shamela API, Quran.com API, or similar reliable sources):
+   - **Quran:** High-res Mushaf pages from "Quran Flash" and all previously requested editions.
+   - **Tafseer & Quran Sciences:** Tafseer Al-Qurtubi, As-Sa'di, Al-Baghawi, Ibn Al-Qayyim, Ibn Kathir. Also include I'rab Al-Quran, Ma'ani Al-Quran, Asbab Al-Nuzul, and all translated languages defined in the app's localizations.
+   - **Hadith:** The complete Nine Books of Hadith (الكتب التسعة).
+   - **Preaching, Asceticism & Reference Books:** Books from Al-Maktaba Al-Shamela regarding Wa'z and Zuhd. Specifically download books by: Ibn Qudamah, Ibn Abi Al-Dunya, Al-Hakim Al-Tirmidhi, Abu Hatim Al-Busti, Abdullah Ibn Al-Mubarak, Ibn Kathir, Abu Nu'aym (Hilyat Al-Awliya), and Dr. Mustafa Mahmoud.
+   - **Specific Titles:** Muntakhab Al-Nafais (Al-Saffuri), Al-Tadhkirah (Al-Qurtubi), La Tahzan (Al-Qarni), Zad Al-Ma'ad, Fiqh Al-Sunnah (Sayyid Sabiq), Al-Fiqh 'ala Al-Madhahib Al-Arba'ah, and the first 4 levels of Zad Academy courses.
+   - **Audio:** Complete Quran recitations (multiple reciters) and various Adhan voices.
+3. **Data Formatting:** Ensure all downloaded books are formatted logically for the app (matching physical prints, paginated correctly for the reader UI).
+
+### Phase 2: Cloudflare R2 Upload & Firebase Indexing
+1. Upload all formatted Mushaf images, books, and audio files to the Cloudflare R2 bucket in a clean directory structure.
+2. Index all metadata, downlo
+<truncated 97 bytes>
+: Premium UI/UX Refactoring
+1. **Header & Navigation Fix:** 
+   - Remove the Settings icon from the home screen's top AppBar to resolve the overlap with the Gregorian date.
+   - Rename the last bottom navigation tab from "المزيد" to "الإعدادات / الضبط" and consolidate all app settings inside it.
+2. **Zero Dummy Icons:** Scan all screens and remove any placeholder or non-functional icons. Every element must be fully functional.
+3. **Mushaf Gallery & Download Manager:**
+   - Build a highly aesthetic Mushaf selection screen with premium thumbnails.
+   - Implement fluid, high-end animations (e.g., Hero transitions, color matching) when switching between Mushafs.
+   - Allow users to download a single Mushaf, select multiple, or "Download All".
+4. **Quran Direct Linking:** Ensure tapping any Juz, Surah, or Ayah from the index navigates instantly to the exact mapped page in both the text-based reader and the image-based Mushaf.
+
+### Phase 4: Core Features Integration
+1. **Custom Azkar Engine:** Remove hardcoded times. Implement a custom time picker in settings using `flutter_local_notifications` so the user can set their exact preferred times for Morning, Evening, and Sleep Azkar.
+2. **Google Auth & Sync:** Implement a premium Google Sign-In onboarding screen on the first launch (with a "Skip/Guest" option). Automatically sync bookmarks, Khatma progress, and settings to Firestore.
+
+### Phase 5: Production Build
+1. Run `flutter clean` and `flutter pub get`.
+2. Build the release APK (`flutter build apk --release`).
+3. Output the absolute path to the APK so it can be shared via WhatsApp.
+
+Start with Phase 1 and update me on the script creation and download progress.
+اهم حاجة متحملش حاجة مكررة او حاجة انت متاكد انك حملته قبل كدة وابقى قوللي حجم الداتا اللي اتحملت لحد الوقتي اد ايه
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T16:57:50+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+use option 1 if 2 not available but first do this 
+URGENT: Halt any ongoing Cloudflare R2 upload scripts immediately to avoid exceeding the 1M Class A operations free tier limit (we are currently at ~909k).
+
+Please execute the following optimized data ingestion strategy strictly:
+
+### Step 1: Generate Pending Uploads Checklist
+1. Scan the local environment and identify all remaining data/assets that have NOT been uploaded to Cloudflare R2 yet (e.g., remaining Mushaf images, Tafseer/I'rab JSONs/texts, Hadith databases, Islamic books, audio files, etc.).
+2. Output a comprehensive, categorized CHECKLIST of these pending items, estimating the number of files for each category.
+3. **STOP AND WAIT** for my explicit approval. Do not upload anything yet. I will review the checklist and tell you exactly which specific items to proceed with.
+
+### Step 2: Optimized Upload Strategy (Only for Approved Items)
+For the items I explicitly approve, you must apply the following optimizations to drastically reduce Class A operations:
+1. **Archive Mass Small Files (Zipping):** If a selected category contains hundreds or thousands of small files (e.g., individual Mushaf page images, chapter texts), compress them into `.zip` archives locally, then upload the single `.zip` file. (We will update the Flutter app to handle local extraction).
+2. **Blind PUTs:** Do not perform `LIST` or `HEAD` operations to check if a file exists before uploading. Execute direct `PUT` requests to save operations.
+
+Please output the categorized checklist now and wait for my explicit selection!
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T17:29:07+04:00.
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+show me and tell me what are doing now then proceed
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T17:49:06+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\download_books.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\download_books.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+انا عايز لما يجي معاد الاذان يجي بالشكل ده بس سيقى انيميتد اكتر من كدة rgb اكتر من كدة ويبقى مربوط فعليا بمواعيد الاذان وصوت المؤذن المختار مش وهمي كما هو الاحال الان وعايز في notification bar كارت للصلاة بميعاد الصلاة القادمة ويبقي فيه باقي ادي ايه بالساعات والدقايق والثواني ويبقى شكله تفاعلي احترافي بصريا لكل الصلوات
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T18:25:33+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\download_books.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\download_books.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+tell me where are we in zipping and uploading then proceed phase 5 بس انا عاوز الاذان الفيديو يبقى اختيار ليا في اعدادات الاذان بحيث اني اقدر اختار اولا نوع الاذان يبقى فيديو انيميتد ولا صوت وشرط مهما جدا يبقى في الحالتين تعمل حل او خوارمية تربط صوت المؤذن في الوقت الحقيقي بنص الاذان الاذان اللي على الشاة مع امكانية اكمال الاذان في الخلفية او وقف الاذان  وممكن تعمل انت فيديو مسبق للمؤذنين المتاحين في التطبيق بحيث يبقوا جاهزين للعرض وخد بالك ان لسه لحد الوقتي اصوات التلاوة مش شغالة ولا اصوات الاذان شغاله فممكن تعمل ebscrabbing للمؤذنين اللي هما عبدالباسط عبدالصمد ومشاري راشد الفجر والشيخ مصطفى اسماعيل وباقي المؤذنين االي تم اضافتهم قبل كده 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T18:45:09+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+the firebase database is normally to be like that after all my data uploaded to cloudflare , i think my data should be tied to it , i do not understand
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T19:33:10+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev
+chec the screen shot it is for cloudflare i think there something wrong
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T19:42:36+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+first download all of them locally o my computer then tell me the size of them ,  also i can see in the cloud flare there only one mushaf which we agreed to put all of mushafs on my server
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T19:50:41+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+the most important thing is to download first my books by any mean after zip it and put it on my server then tie every thin to the data bases then build my app with my fixes then put it on github
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T21:14:28+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T21:17:02+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+Comments on artifact URI: file:///c%3A/Users/Asus/.gemini/antigravity-ide/brain/8a34792d-e7a0-4d80-accc-81ba255a6f83/implementation_plan.md
+
+The user has approved this document.
+
+
+<USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T21:17:45+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+الكتب اللي انا عايزها كتب الامام ابن القيم وكتب الامام ابن الجوزي وكتب ابن ابي الدنيا والترمذي الحكيم وكتاب منهاج القاصدين لابن قدامة وكتب الوعظ والرقائق في المكتبة الشاملة والتذكرة للقرطبي وكتب اكاديمية زاد المستويات الاربعه 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T21:22:08+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+اذا قمت بتحميل الكتب بصيغة .bok من الشاملة هل ممكن تحويلها الى pdf ,,quih td hgj'fdr
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T21:36:44+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+ig lk hgll;k hk juvq hg;jf ],k jp,dgih hgn حيب بحيث تكون بنفس التصميم من الفهرس وغيره داخل تطبيق
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T21:39:27+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+انا عندي فكرة ممتازة انا عندي برنامج الشاملة متسطب وموجود على اللاب ايه رايك لو اديتك مكانه تقدر فعلا تعرف الاليه اللي بتشتغل بيها المكتبة الشاملة وتروح تستخرج انت الكتب اللي انا عايزها منها وتدمجه عندي في التطبيق والسيرفر بتاعي ايه رايك تقدر ولا
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T21:45:34+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+"E:\shamela"
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T21:47:05+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+اعمل تصدير منين
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-25T22:09:37+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+لايوجد
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T00:43:48+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+جاهز ان شاء الله
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T00:52:11+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+بالله شغل المحاكي وشغل  فيه البرنامج لانه مشتغلش خالص اقصد المحاكي
+
+تمام حمل بقى كل الكتببنفس النمط وانا جبتلك جزء منهمفي المساؤ ده عشان اخف عنك فمتحملش االلي حطيتهولك في المسار
+ حمل بس اللي مش موجود
+E:\MyBooks
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T01:10:10+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+قم انت بمقارنة اسماء الكتب التي حملتها انا بم نزلتها انت ونزل كل الكتب الناقصة
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T01:22:18+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+اقصد بالكتب اللي نزلتها انا الموجودة في E:\MyBooks
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T01:23:48+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+Cursor is on line: 286
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\lib\features\prayer\presentation\screens\full_screen_adhan_screen.dart (LANGUAGE_DART)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+الكتابين في هذا المسار 
+E:\MyBooks\New folder
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:02:37+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+الايميوليتر لا يعمل
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:03:48+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+لم يظهر على الشاة
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:06:21+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+اقصد المحاكي نفسه لايعمل ولا اره على الشاشة
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:07:14+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+قم انت بذلك
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:08:17+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+ظهر وانطفا لوحده
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:11:05+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+حسنا قم بوضع هذا الايميوليتر على سطح المكتب كتطبيق واكمل العمل على تطبيقي
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:14:41+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+اكمل كل البرنامج
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:16:35+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+انا عايز البوصلة في تحديد القبلة تبقى animated بشكل خرافي اسطوري روعهجماليا بصريا.
+ابدا مرحلة تلو الاخرى
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:31:27+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+اكمل كل شي
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:40:53+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\search_shamela.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+شغله اولا على المحاكي
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:47:05+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\update_catalog.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\update_catalog.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+ابحث في كل محادثاتنا السابقة هل طلبت منك شي ولم تفعله خاص بتطبيقنا ثم اعطيني تقريرا لذلك ولكن اولا راجع التطبيق وقواعد البايانات والسيرفر
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-26T02:49:27+04:00.
+
+The user's current state is as follows:
+Active Document: e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\update_catalog.py (LANGUAGE_PYTHON)
+Cursor is on line: 1
+Other open documents:
+- e:\My Projects\Rafiq-Al-Darb\rafeeq_app\scripts\update_catalog.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+---

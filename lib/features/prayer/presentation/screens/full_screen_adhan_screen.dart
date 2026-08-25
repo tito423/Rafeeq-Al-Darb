@@ -13,13 +13,14 @@ final AudioPlayer globalAdhanPlayer = AudioPlayer();
 
 Future<void> playAdhanInBackground(String prayerName, String muezzinName) async {
   try {
-    String assetName = 'makkah';
-    if (muezzinName.contains('عبد الباسط')) assetName = 'abdulbasit';
+    String assetName = 'minshawi';
+    if (muezzinName.contains('مكة')) assetName = 'minshawi'; // Fallback
+    else if (muezzinName.contains('عبد الباسط')) assetName = 'abdulbasit';
     else if (muezzinName.contains('المنشاوي')) assetName = 'minshawi';
     else if (muezzinName.contains('مشاري') || muezzinName.contains('العفاسي')) assetName = 'mishary';
     else if (muezzinName.contains('مصطفى') || muezzinName.contains('اسماعيل')) assetName = 'mustafa_ismail';
-    else if (muezzinName.contains('حافظ')) assetName = 'hafez';
-    else if (muezzinName.contains('الحسيني')) assetName = 'hussaini';
+    else if (muezzinName.contains('حافظ')) assetName = 'abdulbasit'; // Fallback
+    else if (muezzinName.contains('الحسيني')) assetName = 'mustafa_ismail'; // Fallback
 
     await globalAdhanPlayer.setAudioSource(
       AudioSource.uri(
@@ -109,13 +110,14 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
   Future<void> _startAdhan() async {
     try {
       // Map muezzin name to the local m4a asset
-      String assetName = 'makkah';
-      if (widget.muezzinName.contains('عبد الباسط')) assetName = 'abdulbasit';
+      String assetName = 'minshawi'; // Default to a guaranteed local asset
+      if (widget.muezzinName.contains('مكة')) assetName = 'minshawi'; // Fallback
+      else if (widget.muezzinName.contains('عبد الباسط')) assetName = 'abdulbasit';
       else if (widget.muezzinName.contains('المنشاوي')) assetName = 'minshawi';
       else if (widget.muezzinName.contains('مشاري') || widget.muezzinName.contains('العفاسي')) assetName = 'mishary';
       else if (widget.muezzinName.contains('مصطفى') || widget.muezzinName.contains('اسماعيل')) assetName = 'mustafa_ismail';
-      else if (widget.muezzinName.contains('حافظ')) assetName = 'hafez'; // Optional fallback
-      else if (widget.muezzinName.contains('الحسيني')) assetName = 'hussaini'; // Optional fallback
+      else if (widget.muezzinName.contains('حافظ')) assetName = 'abdulbasit'; // Fallback
+      else if (widget.muezzinName.contains('الحسيني')) assetName = 'mustafa_ismail'; // Fallback
 
       // We use local assets downloaded by yt-dlp
       await globalAdhanPlayer.setAudioSource(

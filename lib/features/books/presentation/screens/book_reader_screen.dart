@@ -188,7 +188,26 @@ class _BookReaderScreenState extends ConsumerState<BookReaderScreen> {
                       _saveCurrentPage(details.newPageNumber);
                     },
                   )
-                : SfPdfViewer.network(
+                : widget.pdfUrl.startsWith('E:\\') || widget.pdfUrl.startsWith('C:\\') || widget.pdfUrl.startsWith('/') || widget.pdfUrl.startsWith('D:\\')
+                  ? SfPdfViewer.file(
+                      File(widget.pdfUrl),
+                      key: _pdfViewerKey,
+                      controller: _pdfViewerController,
+                      canShowScrollHead: true,
+                      canShowScrollStatus: true,
+                      pageLayoutMode: PdfPageLayoutMode.continuous,
+                      enableDoubleTapZooming: true,
+                      onDocumentLoaded: (PdfDocumentLoadedDetails details) {
+                        final savedPage = _prefs.getInt('book_page_${widget.title}');
+                        if (savedPage != null && savedPage > 1) {
+                          _pdfViewerController.jumpToPage(savedPage);
+                        }
+                      },
+                      onPageChanged: (PdfPageChangedDetails details) {
+                        _saveCurrentPage(details.newPageNumber);
+                      },
+                    )
+                  : SfPdfViewer.network(
                     widget.pdfUrl,
                     key: _pdfViewerKey,
                     controller: _pdfViewerController,

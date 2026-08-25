@@ -63,6 +63,9 @@ dependencies:
   cloud_firestore: ^6.9.0
   minio: ^3.5.8
   google_sign_in: ^6.2.1
+  flutter_compass: ^0.8.1
+  sensors_plus: ^7.1.0
+  archive: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -77,10 +80,16 @@ flutter:
   assets:
     - assets/quran_local.db
     - assets/audio/
+    - assets/icon/
+    - assets/mushaf_thumbs/
     - assets/videos/
+    - assets/books/
+    - assets/quran/quran_images.zip
+    - assets/quran/quran_tafsir.zip
     - assets/data/
     - assets/data/hadith/
     - lib/features/books/data/
+    - assets/books/
     - assets/mushaf_thumbs/douri/
     - assets/mushaf_thumbs/line12/
     - assets/mushaf_thumbs/medina1/
