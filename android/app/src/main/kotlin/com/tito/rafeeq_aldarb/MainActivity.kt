@@ -1,4 +1,4 @@
-package com.example.rafeeq_app
+package com.tito.rafeeq_aldarb
 
 import io.flutter.embedding.android.FlutterActivity
 import com.ryanheise.audioservice.AudioServiceActivity

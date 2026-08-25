@@ -17,6 +17,16 @@ class AlertSettingsState {
   final bool isBaqarahEnabled;
   final TimeOfDay baqarahTime;
 
+  // New Azkar/Wird settings
+  final bool isMorningAthkarEnabled;
+  final TimeOfDay morningAthkarTime;
+  final bool isEveningAthkarEnabled;
+  final TimeOfDay eveningAthkarTime;
+  final bool isMorningWirdEnabled;
+  final TimeOfDay morningWirdTime;
+  final bool isEveningWirdEnabled;
+  final TimeOfDay eveningWirdTime;
+
   AlertSettingsState({
     this.isKahfEnabled = false,
     this.kahfTime = const TimeOfDay(hour: 9, minute: 0),
@@ -26,6 +36,15 @@ class AlertSettingsState {
     this.sajdahTime = const TimeOfDay(hour: 5, minute: 0),
     this.isBaqarahEnabled = false,
     this.baqarahTime = const TimeOfDay(hour: 7, minute: 0),
+
+    this.isMorningAthkarEnabled = false,
+    this.morningAthkarTime = const TimeOfDay(hour: 5, minute: 0),
+    this.isEveningAthkarEnabled = false,
+    this.eveningAthkarTime = const TimeOfDay(hour: 16, minute: 30),
+    this.isMorningWirdEnabled = false,
+    this.morningWirdTime = const TimeOfDay(hour: 5, minute: 0),
+    this.isEveningWirdEnabled = false,
+    this.eveningWirdTime = const TimeOfDay(hour: 16, minute: 30),
   });
 
   AlertSettingsState copyWith({
@@ -37,6 +56,14 @@ class AlertSettingsState {
     TimeOfDay? sajdahTime,
     bool? isBaqarahEnabled,
     TimeOfDay? baqarahTime,
+    bool? isMorningAthkarEnabled,
+    TimeOfDay? morningAthkarTime,
+    bool? isEveningAthkarEnabled,
+    TimeOfDay? eveningAthkarTime,
+    bool? isMorningWirdEnabled,
+    TimeOfDay? morningWirdTime,
+    bool? isEveningWirdEnabled,
+    TimeOfDay? eveningWirdTime,
   }) {
     return AlertSettingsState(
       isKahfEnabled: isKahfEnabled ?? this.isKahfEnabled,
@@ -47,6 +74,14 @@ class AlertSettingsState {
       sajdahTime: sajdahTime ?? this.sajdahTime,
       isBaqarahEnabled: isBaqarahEnabled ?? this.isBaqarahEnabled,
       baqarahTime: baqarahTime ?? this.baqarahTime,
+      isMorningAthkarEnabled: isMorningAthkarEnabled ?? this.isMorningAthkarEnabled,
+      morningAthkarTime: morningAthkarTime ?? this.morningAthkarTime,
+      isEveningAthkarEnabled: isEveningAthkarEnabled ?? this.isEveningAthkarEnabled,
+      eveningAthkarTime: eveningAthkarTime ?? this.eveningAthkarTime,
+      isMorningWirdEnabled: isMorningWirdEnabled ?? this.isMorningWirdEnabled,
+      morningWirdTime: morningWirdTime ?? this.morningWirdTime,
+      isEveningWirdEnabled: isEveningWirdEnabled ?? this.isEveningWirdEnabled,
+      eveningWirdTime: eveningWirdTime ?? this.eveningWirdTime,
     );
   }
 }
@@ -77,6 +112,23 @@ class AlertSettingsNotifier extends StateNotifier<AlertSettingsState> {
     final baqarahHour = prefs.getInt('alert_baqarah_hour') ?? 7;
     final baqarahMinute = prefs.getInt('alert_baqarah_minute') ?? 0;
 
+    // Load Azkar / Wird settings
+    final mAthkarEnabled = prefs.getBool('alert_morning_athkar_enabled') ?? false;
+    final mAthkarHour = prefs.getInt('alert_morning_athkar_hour') ?? 5;
+    final mAthkarMinute = prefs.getInt('alert_morning_athkar_minute') ?? 0;
+
+    final eAthkarEnabled = prefs.getBool('alert_evening_athkar_enabled') ?? false;
+    final eAthkarHour = prefs.getInt('alert_evening_athkar_hour') ?? 16;
+    final eAthkarMinute = prefs.getInt('alert_evening_athkar_minute') ?? 30;
+
+    final mWirdEnabled = prefs.getBool('alert_morning_wird_enabled') ?? false;
+    final mWirdHour = prefs.getInt('alert_morning_wird_hour') ?? 5;
+    final mWirdMinute = prefs.getInt('alert_morning_wird_minute') ?? 0;
+
+    final eWirdEnabled = prefs.getBool('alert_evening_wird_enabled') ?? false;
+    final eWirdHour = prefs.getInt('alert_evening_wird_hour') ?? 16;
+    final eWirdMinute = prefs.getInt('alert_evening_wird_minute') ?? 30;
+
     state = state.copyWith(
       isKahfEnabled: kahfEnabled,
       kahfTime: TimeOfDay(hour: kahfHour, minute: kahfMinute),
@@ -86,6 +138,14 @@ class AlertSettingsNotifier extends StateNotifier<AlertSettingsState> {
       sajdahTime: TimeOfDay(hour: sajdahHour, minute: sajdahMinute),
       isBaqarahEnabled: baqarahEnabled,
       baqarahTime: TimeOfDay(hour: baqarahHour, minute: baqarahMinute),
+      isMorningAthkarEnabled: mAthkarEnabled,
+      morningAthkarTime: TimeOfDay(hour: mAthkarHour, minute: mAthkarMinute),
+      isEveningAthkarEnabled: eAthkarEnabled,
+      eveningAthkarTime: TimeOfDay(hour: eAthkarHour, minute: eAthkarMinute),
+      isMorningWirdEnabled: mWirdEnabled,
+      morningWirdTime: TimeOfDay(hour: mWirdHour, minute: mWirdMinute),
+      isEveningWirdEnabled: eWirdEnabled,
+      eveningWirdTime: TimeOfDay(hour: eWirdHour, minute: eWirdMinute),
     );
   }
 
@@ -129,12 +189,63 @@ class AlertSettingsNotifier extends StateNotifier<AlertSettingsState> {
     _rescheduleAlerts();
   }
 
+  // Azkar/Wird Mutators
+  Future<void> setMorningAthkarAlert(bool enabled, TimeOfDay time) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('alert_morning_athkar_enabled', enabled);
+    await prefs.setInt('alert_morning_athkar_hour', time.hour);
+    await prefs.setInt('alert_morning_athkar_minute', time.minute);
+    
+    state = state.copyWith(isMorningAthkarEnabled: enabled, morningAthkarTime: time);
+    _rescheduleAlerts();
+  }
+
+  Future<void> setEveningAthkarAlert(bool enabled, TimeOfDay time) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('alert_evening_athkar_enabled', enabled);
+    await prefs.setInt('alert_evening_athkar_hour', time.hour);
+    await prefs.setInt('alert_evening_athkar_minute', time.minute);
+    
+    state = state.copyWith(isEveningAthkarEnabled: enabled, eveningAthkarTime: time);
+    _rescheduleAlerts();
+  }
+
+  Future<void> setMorningWirdAlert(bool enabled, TimeOfDay time) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('alert_morning_wird_enabled', enabled);
+    await prefs.setInt('alert_morning_wird_hour', time.hour);
+    await prefs.setInt('alert_morning_wird_minute', time.minute);
+    
+    state = state.copyWith(isMorningWirdEnabled: enabled, morningWirdTime: time);
+    _rescheduleAlerts();
+  }
+
+  Future<void> setEveningWirdAlert(bool enabled, TimeOfDay time) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('alert_evening_wird_enabled', enabled);
+    await prefs.setInt('alert_evening_wird_hour', time.hour);
+    await prefs.setInt('alert_evening_wird_minute', time.minute);
+    
+    state = state.copyWith(isEveningWirdEnabled: enabled, eveningWirdTime: time);
+    _rescheduleAlerts();
+  }
+
+
   void _rescheduleAlerts() {
-    ref.read(notificationServiceProvider).scheduleSurahReminders(
+    final notifService = ref.read(notificationServiceProvider);
+    
+    notifService.scheduleSurahReminders(
       isKahfEnabled: state.isKahfEnabled, kahfTime: state.kahfTime,
       isMulkEnabled: state.isMulkEnabled, mulkTime: state.mulkTime,
       isSajdahEnabled: state.isSajdahEnabled, sajdahTime: state.sajdahTime,
       isBaqarahEnabled: state.isBaqarahEnabled, baqarahTime: state.baqarahTime,
+    );
+
+    notifService.scheduleAthkarAndWirdReminders(
+      morningAthkar: state.isMorningAthkarEnabled, morningAthkarTime: state.morningAthkarTime,
+      eveningAthkar: state.isEveningAthkarEnabled, eveningAthkarTime: state.eveningAthkarTime,
+      morningWird: state.isMorningWirdEnabled, morningWirdTime: state.morningWirdTime,
+      eveningWird: state.isEveningWirdEnabled, eveningWirdTime: state.eveningWirdTime,
     );
   }
 }

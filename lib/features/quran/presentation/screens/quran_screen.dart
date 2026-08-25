@@ -7,6 +7,7 @@ import '../../domain/models/surah.dart';
 import '../providers/quran_provider.dart';
 import 'surah_reading_screen.dart';
 import 'advanced_search_screen.dart';
+import 'mushaf_browser_screen.dart';
 
 class QuranScreen extends ConsumerStatefulWidget {
   const QuranScreen({super.key});
@@ -208,16 +209,21 @@ class _QuranHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppColors.primaryBlue, AppColors.primaryBlue2],
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MushafBrowserScreen()));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppColors.primaryBlue, AppColors.primaryBlue2],
+                    ),
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                  borderRadius: BorderRadius.circular(14),
+                  child: const Icon(Icons.download_rounded,
+                      color: Colors.white, size: 26),
                 ),
-                child: const Icon(Icons.menu_book_rounded,
-                    color: Colors.white, size: 26),
               ),
             ],
           ),

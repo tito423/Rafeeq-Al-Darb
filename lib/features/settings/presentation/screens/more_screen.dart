@@ -10,6 +10,7 @@ import '../../../library/presentation/screens/library_screen.dart';
 import '../../../prayer/presentation/widgets/prayer_settings_sheet.dart';
 import '../widgets/alerts_customization_sheet.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
+import '../../../../core/services/sync_service.dart' as import_sync;
 
 class MoreScreen extends ConsumerWidget {
   const MoreScreen({super.key});
@@ -46,6 +47,99 @@ class MoreScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
+                  // ── Profile / Sync Section ──────────────────────────────────
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final authState = ref.watch(import_sync.authStateProvider);
+                      
+                      return Card(
+                        color: cardColor,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: authState.when(
+                          data: (user) {
+                            if (user == null) {
+                              // Not logged in
+                              return ListTile(
+                                contentPadding: const EdgeInsets.all(16),
+                                leading: const CircleAvatar(
+                                  backgroundColor: AppColors.primaryBlue,
+                                  child: Icon(Icons.person_rounded, color: Colors.white),
+                                ),
+                                title: Text(
+                                  'تسجيل الدخول للمزامنة',
+                                  style: GoogleFonts.scheherazadeNew(fontSize: 19, fontWeight: FontWeight.bold, color: textColor),
+                                ),
+                                subtitle: Text(
+                                  'قم بتسجيل الدخول بحساب جوجل لمزامنة تقدمك وعلاماتك',
+                                  style: GoogleFonts.amiri(fontSize: 13, color: isDark ? Colors.white60 : Colors.black54),
+                                ),
+                                trailing: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.accentGold,
+                                    foregroundColor: Colors.black,
+                                  ),
+                                  onPressed: () async {
+                                    final syncService = ref.read(import_sync.syncServiceProvider);
+                                    await syncService.signInWithGoogle();
+                                  },
+                                  child: Text('دخول', style: GoogleFonts.amiri(fontWeight: FontWeight.bold)),
+                                ),
+                              );
+                            }
+                            // Logged in
+                            return Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 28,
+                                    backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
+                                    child: user.photoURL == null ? const Icon(Icons.person) : null,
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          user.displayName ?? 'المستخدم',
+                                          style: GoogleFonts.scheherazadeNew(fontSize: 19, fontWeight: FontWeight.bold, color: textColor),
+                                        ),
+                                        Text(
+                                          user.email ?? '',
+                                          style: GoogleFonts.outfit(fontSize: 12, color: isDark ? Colors.white60 : Colors.black54),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.sync_rounded, color: AppColors.accentGold),
+                                    tooltip: 'مزامنة الآن',
+                                    onPressed: () {
+                                      ref.read(import_sync.syncServiceProvider).pushUserData();
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('تمت المزامنة بنجاح', style: GoogleFonts.cairo())),
+                                      );
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
+                                    tooltip: 'تسجيل الخروج',
+                                    onPressed: () {
+                                      ref.read(import_sync.syncServiceProvider).signOut();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          loading: () => const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator())),
+                          error: (err, stack) => ListTile(title: Text('خطأ: $err')),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 24),
                   // ── Theme Section ─────────────────────────────────────────
                   _buildSectionHeader('المظهر والسمات'),
                   Card(

@@ -485,10 +485,10 @@ class NotificationService {
   static const _athkarChannelDesc = 'تنبيهات أذكار الصباح وأذكار المساء والورد القرآني';
 
   Future<void> scheduleAthkarAndWirdReminders({
-    required bool morningAthkar,
-    required bool eveningAthkar,
-    required bool morningWird,
-    required bool eveningWird,
+    required bool morningAthkar, required import_material.TimeOfDay morningAthkarTime,
+    required bool eveningAthkar, required import_material.TimeOfDay eveningAthkarTime,
+    required bool morningWird, required import_material.TimeOfDay morningWirdTime,
+    required bool eveningWird, required import_material.TimeOfDay eveningWirdTime,
   }) async {
     await initialize();
 
@@ -498,50 +498,50 @@ class NotificationService {
     await _plugin.cancel(32);
     await _plugin.cancel(33);
 
-    // 1. Morning Athkar (05:00 AM)
+    // 1. Morning Athkar
     if (morningAthkar) {
       await _scheduleDailyReminder(
         id: 30,
         title: 'أذكار الصباح 🌅',
         body: 'أصبحنا وأصبح الملك لله.. ابدأ يومك بذكر الله وطمأنينة القلب',
-        hour: 5,
-        minute: 0,
+        hour: morningAthkarTime.hour,
+        minute: morningAthkarTime.minute,
         payload: 'azkar_صباح',
       );
     }
 
-    // 2. Evening Athkar (16:30 PM)
+    // 2. Evening Athkar
     if (eveningAthkar) {
       await _scheduleDailyReminder(
         id: 31,
         title: 'أذكار المساء 🌙',
         body: 'أمسينا وأمسى الملك لله.. حصّن نفسك وأهلك بأذكار المساء',
-        hour: 16,
-        minute: 30,
+        hour: eveningAthkarTime.hour,
+        minute: eveningAthkarTime.minute,
         payload: 'azkar_مساء',
       );
     }
 
-    // 3. Morning Quran Wird (05:00 AM)
+    // 3. Morning Quran Wird
     if (morningWird) {
       await _scheduleDailyReminder(
         id: 32,
         title: 'ورد القرآن الصباحي 📖',
         body: 'رتّل آيات من كتاب الله لتستفتح بها يومك بالبركة والهدى',
-        hour: 5,
-        minute: 0,
+        hour: morningWirdTime.hour,
+        minute: morningWirdTime.minute,
         payload: 'quran_wird_morning',
       );
     }
 
-    // 4. Evening Quran Wird (16:30 PM)
+    // 4. Evening Quran Wird
     if (eveningWird) {
       await _scheduleDailyReminder(
         id: 33,
         title: 'ورد القرآن المسائي 📖',
         body: 'لا تنسَ تلاوة وردك اليومي من القرآن الكريم قبل غروب الشمس',
-        hour: 16,
-        minute: 30,
+        hour: eveningWirdTime.hour,
+        minute: eveningWirdTime.minute,
         payload: 'quran_wird_evening',
       );
     }

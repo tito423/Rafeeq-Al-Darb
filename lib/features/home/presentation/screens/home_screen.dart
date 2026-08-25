@@ -137,23 +137,6 @@ class _PrayerTimesHero extends ConsumerWidget {
           // Stars / decorative pattern
           Positioned.fill(child: CustomPaint(painter: _StarPainter())),
           
-          // Settings shortcut — small unobtrusive icon, top-left
-          Positioned(
-            left: 12,
-            top: 12,
-            child: IconButton(
-              visualDensity: VisualDensity.compact,
-              onPressed: () {
-                ref.read(currentTabProvider.notifier).state = 6;
-              },
-              icon: const Icon(
-                Icons.settings_rounded,
-                color: Colors.white54,
-                size: 20,
-              ),
-              tooltip: 'الإعدادات',
-            ),
-          ),
 
           // Content
           Padding(
