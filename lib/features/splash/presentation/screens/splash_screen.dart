@@ -9,6 +9,7 @@ import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/notification_service.dart' as import_notification_service;
 import '../../../onboarding/presentation/screens/first_launch_screen.dart';
+import '../../../../services/assets_extractor_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -26,6 +27,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   late Animation<double> _scaleAnim;
   late Animation<double> _glowAnim;
   late Animation<double> _fadeAnim;
+  
+  String _extractionProgress = '';
+  bool _isExtracting = false;
 
   @override
   void initState() {
@@ -62,8 +66,35 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     // Check if launched from notification
     _checkInitialNotification();
 
-    // Transition after 3 seconds
-    Timer(const Duration(milliseconds: 3200), _navigateNext);
+    // Start initialization sequence
+    _initializeApp();
+  }
+  
+  Future<void> _initializeApp() async {
+    // Show splash for at least 2.5 seconds before checking assets
+    await Future.delayed(const Duration(milliseconds: 2500));
+    
+    if (!mounted) return;
+    setState(() {
+      _isExtracting = true;
+    });
+    
+    await AssetsExtractorService.extractInitialAssetsIfNeeded((progressMsg) {
+      if (mounted) {
+        setState(() {
+          _extractionProgress = progressMsg;
+        });
+      }
+    });
+    
+    if (mounted) {
+      setState(() {
+        _isExtracting = false;
+      });
+    }
+    
+    // Proceed
+    _navigateNext();
   }
 
   Future<void> _checkInitialNotification() async {
@@ -200,21 +231,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-                              // Inner ring
-                              Container(
-                                width: 124,
-                                height: 124,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 2),
-                                ),
-                              ),
-                              // Core icon
-                              const Icon(
-                                Icons.menu_book_rounded,
-                                size: 68,
-                                color: Color(0xFF031024),
-                              ),
+                              const Icon(Icons.mosque_rounded, size: 68, color: Colors.white),
+                              Icon(Icons.mosque_outlined, size: 68, color: Colors.black.withValues(alpha: 0.1)),
                             ],
                           ),
                         ),
@@ -252,6 +270,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       letterSpacing: 0.5,
                     ),
                   ),
+                  
+                  // Extraction Progress Indicator
+                  if (_isExtracting && _extractionProgress.isNotEmpty) ...[
+                    const SizedBox(height: 48),
+                    const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: AppColors.accentGold,
+                        strokeWidth: 2.5,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      _extractionProgress,
+                      style: GoogleFonts.cairo(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

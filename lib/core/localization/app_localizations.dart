@@ -20,7 +20,7 @@ class AppLocalizations {
       'library': 'المكتبة',
       'azkar': 'الأذكار',
       'sebha': 'المسبحة',
-      'more': 'المزيد',
+      'more': 'الإعدادات / الضبط',
       'settings': 'الإعدادات',
       'language': 'اللغة',
       'choose_language': 'اختر لغة التطبيق',

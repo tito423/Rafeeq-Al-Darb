@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import 'book_reader_screen.dart';
+import 'text_book_reader_screen.dart';
 
 class BooksLibraryScreen extends StatefulWidget {
   const BooksLibraryScreen({super.key});
@@ -90,15 +91,27 @@ class _BooksLibraryScreenState extends State<BooksLibraryScreen> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => BookReaderScreen(
-              bookId: book['id'] ?? '',
-              title: title,
-              pdfUrl: book['download_url'],
+        if (book['format'] == 'text') {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => TextBookReaderScreen(
+                bookId: book['id'] ?? '',
+                title: title,
+                bookUrl: book['download_url'],
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => BookReaderScreen(
+                bookId: book['id'] ?? '',
+                title: title,
+                pdfUrl: book['download_url'],
+              ),
+            ),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(

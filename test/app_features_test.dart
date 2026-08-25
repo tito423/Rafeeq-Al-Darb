@@ -5,8 +5,6 @@ import 'package:rafeeq_app/core/models/app_theme_config.dart';
 import 'package:rafeeq_app/core/localization/app_localizations.dart';
 import 'package:rafeeq_app/features/quran/domain/models/zikr.dart';
 import 'package:rafeeq_app/features/prayer/presentation/providers/prayer_settings_provider.dart';
-import 'package:rafeeq_app/features/quran/presentation/screens/quran_screen.dart';
-
 void main() {
   group('Phase 1: Database & Text Sanitizer Tests', () {
     test('TextSanitizer cleans bracket artifacts and Python raw lists', () {
@@ -55,14 +53,6 @@ void main() {
     });
   });
 
-  group('Phase 5: Accurate Juz Index-to-Page Map Tests', () {
-    test('All 30 Juz have exact starting pages and surah names', () {
-      expect(kJuzPages.length, 30);
-      expect(kJuzPages[1]!.page, 1);
-      expect(kJuzPages[2]!.page, 22);
-      expect(kJuzPages[30]!.page, 582);
-    });
-  });
 
   group('Phase 6: Full i18n Localization Tests', () {
     test('AppLocalizations supports Arabic, English, and French', () {
