@@ -5,11 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_colors.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
-import '../../features/azkar/presentation/screens/azkar_screen.dart';
-import '../../features/sebha/presentation/screens/sebha_screen.dart';
 import '../../features/prayer/presentation/screens/prayer_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
-import '../../features/settings/presentation/screens/more_screen.dart';
 
 // ── Tab index provider ────────────────────────────────────────────────────────
 final currentTabProvider = StateProvider<int>((_) => 0);
@@ -26,10 +23,7 @@ const _tabs = [
   _Tab('الرئيسية',   Icons.home_outlined,            Icons.home_rounded),
   _Tab('القرآن',     Icons.menu_book_outlined,        Icons.menu_book_rounded),
   _Tab('الصلاة',     Icons.access_time_outlined,      Icons.access_time_filled),
-  _Tab('المكتبة',    Icons.local_library_outlined,   Icons.local_library_rounded),
-  _Tab('الأذكار',    Icons.favorite_border_rounded,  Icons.favorite_rounded),
-  _Tab('المسبحة',    Icons.touch_app_outlined,        Icons.touch_app_rounded),
-  _Tab('الإعدادات / الضبط',  Icons.settings_outlined,        Icons.settings_rounded),
+  _Tab('الصوتيات',   Icons.headphones_outlined,       Icons.headphones_rounded),
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -48,9 +42,6 @@ class AppShell extends ConsumerWidget {
     QuranScreen(),
     PrayerScreen(),
     LibraryScreen(),
-    AzkarScreen(),
-    SebhaScreen(),
-    MoreScreen(),
   ];
 
   @override

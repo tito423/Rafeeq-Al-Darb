@@ -10,6 +10,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/prayer_times_service.dart';
+import '../../../../core/services/notification_service.dart';
 import '../../../quran/presentation/providers/quran_provider.dart';
 import '../../../quran/presentation/screens/surah_reading_screen.dart';
 import '../providers/home_provider.dart';
@@ -62,6 +63,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Keep Live Notification Updated
+    ref.listen(prayerTimesProvider, (previous, next) {
+      if (next is AsyncData && next.value != null) {
+        NotificationService().updateLivePrayerNotification(next.value!);
+      }
+    });
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppColors.darkBackground : const Color(0xFFFAF7F0);
 
@@ -121,16 +129,16 @@ class _PrayerTimesHero extends ConsumerWidget {
       margin: EdgeInsets.zero,
       child: Stack(
         children: [
-          // Background gradient
+          // Premium deep green gradient
           Container(
             height: 250,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isDark 
-                    ? [const Color(0xFF07100D), const Color(0xFF0F1E17), const Color(0xFF14251D)] 
-                    : [const Color(0xFF14251D), const Color(0xFF1B382B), const Color(0xFF0A100E)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+                    ? [const Color(0xFF040A08), const Color(0xFF0A1811), const Color(0xFF102118)] 
+                    : [const Color(0xFF102118), const Color(0xFF163225), const Color(0xFF08120D)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
           ),
@@ -213,24 +221,24 @@ class _PrayerTimesHero extends ConsumerWidget {
                         ref.read(currentTabProvider.notifier).state = 2;
                       },
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(18),
+                        borderRadius: BorderRadius.circular(24),
                         child: Container(
                         width: double.infinity,
                         constraints: const BoxConstraints(maxWidth: 340),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.28),
-                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.white.withValues(alpha: 0.08), // Glassmorphism effect
+                          borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                            color: AppColors.accentGold.withValues(alpha: 0.45),
+                            color: Colors.white.withValues(alpha: 0.15),
                             width: 1.0,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.accentGold.withValues(alpha: 0.08),
-                              blurRadius: 16,
-                              spreadRadius: 0,
-                              offset: const Offset(0, 4),
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 20,
+                              spreadRadius: -5,
+                              offset: const Offset(0, 8),
                             ),
                           ],
                         ),
@@ -358,15 +366,16 @@ class _PrayerTimesStrip extends ConsumerWidget {
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 18),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryBlue.withValues(alpha: 0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+            color: isDark ? Colors.black.withValues(alpha: 0.3) : AppColors.primaryBlue.withValues(alpha: 0.06),
+            blurRadius: 24,
+            spreadRadius: -4,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -711,15 +720,17 @@ class _KhatmaCard extends ConsumerWidget {
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(22),
         decoration: BoxDecoration(
           color: cardBg,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.primaryBlue.withValues(alpha: 0.05)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: isDark ? Colors.black.withValues(alpha: 0.4) : AppColors.primaryBlue.withValues(alpha: 0.06),
+              blurRadius: 24,
+              spreadRadius: -4,
+              offset: const Offset(0, 8),
             ),
           ],
         ),

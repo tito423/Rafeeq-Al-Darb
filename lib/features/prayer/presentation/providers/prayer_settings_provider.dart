@@ -45,6 +45,7 @@ class PrayerSettings {
   final bool globalNotifications;
   final bool locationEnabled;
   final String selectedMuezzin;
+  final String adhanDisplayMode; // 'animated' or 'audio_only'
   final String calculationMethod;
   final Map<String, bool> prayerToggles;
   final Map<String, int> prayerOffsets;
@@ -61,6 +62,7 @@ class PrayerSettings {
     this.globalNotifications = true,
     this.locationEnabled = true,
     this.selectedMuezzin = 'أذان مكة المكرمة',
+    this.adhanDisplayMode = 'animated',
     this.calculationMethod = 'Umm Al-Qura Univ., Makkah',
     this.prayerToggles = const {
       'الفجر': true,
@@ -104,6 +106,7 @@ class PrayerSettings {
     bool? globalNotifications,
     bool? locationEnabled,
     String? selectedMuezzin,
+    String? adhanDisplayMode,
     String? calculationMethod,
     Map<String, bool>? prayerToggles,
     Map<String, int>? prayerOffsets,
@@ -118,6 +121,7 @@ class PrayerSettings {
       globalNotifications: globalNotifications ?? this.globalNotifications,
       locationEnabled: locationEnabled ?? this.locationEnabled,
       selectedMuezzin: selectedMuezzin ?? this.selectedMuezzin,
+      adhanDisplayMode: adhanDisplayMode ?? this.adhanDisplayMode,
       calculationMethod: calculationMethod ?? this.calculationMethod,
       prayerToggles: prayerToggles ?? this.prayerToggles,
       prayerOffsets: prayerOffsets ?? this.prayerOffsets,
@@ -142,6 +146,7 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
     final global = _prefs.getBool('globalNotifications') ?? true;
     final loc = _prefs.getBool('locationEnabled') ?? true;
     final muezzin = _prefs.getString('selectedMuezzin') ?? 'أذان مكة المكرمة';
+    final adhanMode = _prefs.getString('adhanDisplayMode') ?? 'animated';
     final calcMethod = _prefs.getString('calculationMethod') ?? 'Umm Al-Qura Univ., Makkah';
     
     final toggles = <String, bool>{};
@@ -165,6 +170,7 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
       globalNotifications: global,
       locationEnabled: loc,
       selectedMuezzin: muezzin,
+      adhanDisplayMode: adhanMode,
       calculationMethod: calcMethod,
       prayerToggles: toggles,
       prayerOffsets: offsets,
@@ -190,6 +196,11 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
   void setSelectedMuezzin(String value) {
     _prefs.setString('selectedMuezzin', value);
     state = state.copyWith(selectedMuezzin: value);
+  }
+  
+  void setAdhanDisplayMode(String value) {
+    _prefs.setString('adhanDisplayMode', value);
+    state = state.copyWith(adhanDisplayMode: value);
   }
 
   void setCalculationMethod(String value) {

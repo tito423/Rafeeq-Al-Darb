@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/services/notification_service.dart' as import_notification_service;
 import '../../../onboarding/presentation/screens/first_launch_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -58,8 +59,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeIn);
 
+    // Check if launched from notification
+    _checkInitialNotification();
+
     // Transition after 3 seconds
     Timer(const Duration(milliseconds: 3200), _navigateNext);
+  }
+
+  Future<void> _checkInitialNotification() async {
+    // Need to use NotificationService which depends on context/navigation if pushed
+    // Wait until build completes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      import_notification_service.NotificationService().checkInitialNotification();
+    });
   }
 
   Future<void> _navigateNext() async {

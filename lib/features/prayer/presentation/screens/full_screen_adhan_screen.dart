@@ -1,11 +1,41 @@
 import 'dart:ui';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:async';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../domain/adhan_sync_data.dart';
 
-import '../../../../core/theme/theme_provider.dart';
+// Global player so audio continues if screen is dismissed
+final AudioPlayer globalAdhanPlayer = AudioPlayer();
+
+Future<void> playAdhanInBackground(String prayerName, String muezzinName) async {
+  try {
+    String assetName = 'makkah';
+    if (muezzinName.contains('عبد الباسط')) assetName = 'abdulbasit';
+    else if (muezzinName.contains('المنشاوي')) assetName = 'minshawi';
+    else if (muezzinName.contains('مشاري') || muezzinName.contains('العفاسي')) assetName = 'mishary';
+    else if (muezzinName.contains('مصطفى') || muezzinName.contains('اسماعيل')) assetName = 'mustafa_ismail';
+    else if (muezzinName.contains('حافظ')) assetName = 'hafez';
+    else if (muezzinName.contains('الحسيني')) assetName = 'hussaini';
+
+    await globalAdhanPlayer.setAudioSource(
+      AudioSource.uri(
+        Uri.parse('asset:///assets/audio/$assetName.m4a'),
+        tag: MediaItem(
+          id: 'adhan_$assetName',
+          title: 'أذان $prayerName',
+          artist: muezzinName,
+        ),
+      ),
+    );
+    globalAdhanPlayer.play();
+  } catch (e) {
+    debugPrint("Background adhan play failed: $e");
+  }
+}
 
 class FullScreenAdhanScreen extends ConsumerStatefulWidget {
   final String prayerName;
@@ -23,307 +53,337 @@ class FullScreenAdhanScreen extends ConsumerStatefulWidget {
 
 class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
     with TickerProviderStateMixin {
-  late AnimationController _bgController;
-  late AnimationController _textController;
-  late AudioPlayer _audioPlayer;
+  late AnimationController _rgbController;
   
-  int _currentSubtitleIndex = 0;
-  Timer? _timer;
-
-  // Generic Adhan subtitles with approximate timings in seconds
-  final List<({int time, String text})> _subtitles = [
-    (time: 0, text: "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ"),
-    (time: 5, text: "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ"),
-    (time: 11, text: "أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ"),
-    (time: 17, text: "أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ"),
-    (time: 23, text: "أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ"),
-    (time: 29, text: "أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ"),
-    (time: 35, text: "حَيَّ عَلَى الصَّلَاةِ"),
-    (time: 41, text: "حَيَّ عَلَى الصَّلَاةِ"),
-    (time: 47, text: "حَيَّ عَلَى الْفَلَاحِ"),
-    (time: 53, text: "حَيَّ عَلَى الْفَلَاحِ"),
-    (time: 60, text: "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ"),
-    (time: 66, text: "لَا إِلَهَ إِلَّا اللَّهُ"),
-    (time: 75, text: "الصلاة خير من النوم (في الفجر فقط)"),
-  ];
+  int _activePhraseIndex = 0;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
 
   @override
   void initState() {
     super.initState();
     
-    _bgController = AnimationController(
+    // Spinning RGB Border Controller
+    _rgbController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 40),
-    )..repeat(reverse: true);
+      duration: const Duration(seconds: 3),
+    )..repeat();
 
-    _textController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-
-    _audioPlayer = AudioPlayer();
+    _setupAudioStreams();
     _startAdhan();
   }
 
-  Future<void> _startAdhan() async {
-    _startSubtitleTimer();
-    try {
-      // Find the URL for the selected muezzin if possible, fallback to Makkah
-      String url = 'https://download.quranicaudio.com/adhan/makkah.mp3';
-      if (widget.muezzinName.contains('عبد الباسط')) url = 'https://download.quranicaudio.com/adhan/abdulbasit.mp3';
-      else if (widget.muezzinName.contains('المنشاوي')) url = 'https://download.quranicaudio.com/adhan/minshawi.mp3';
-      else if (widget.muezzinName.contains('حافظ')) url = 'https://download.quranicaudio.com/adhan/hafez.mp3';
-      else if (widget.muezzinName.contains('الحسيني')) url = 'https://download.quranicaudio.com/adhan/hussaini.mp3';
-
-      await _audioPlayer.setUrl(url);
-      _audioPlayer.play();
-    } catch (e) {
-      debugPrint("Could not play adhan audio: $e");
-    }
-  }
-
-  void _startSubtitleTimer() {
-    int elapsedSeconds = 0;
-    _textController.forward();
+  void _setupAudioStreams() {
+    globalAdhanPlayer.positionStream.listen((pos) {
+      if (mounted) {
+        setState(() {
+          _position = pos;
+          _updateActivePhrase();
+        });
+      }
+    });
     
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      elapsedSeconds++;
-      
-      // Check if we need to move to the next subtitle
-      if (_currentSubtitleIndex < _subtitles.length - 1) {
-        final nextSub = _subtitles[_currentSubtitleIndex + 1];
-        if (elapsedSeconds >= nextSub.time) {
-          // Fade out, change text, fade in
-          _textController.reverse().then((_) {
-            if (mounted) {
-              setState(() {
-                _currentSubtitleIndex++;
-              });
-              _textController.forward();
-            }
-          });
-        }
+    globalAdhanPlayer.durationStream.listen((dur) {
+      if (mounted && dur != null) {
+        setState(() {
+          _duration = dur;
+        });
+      }
+    });
+
+    globalAdhanPlayer.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        if (mounted) Navigator.pop(context);
       }
     });
   }
 
+  void _updateActivePhrase() {
+    bool isFajr = widget.prayerName.contains('الفجر');
+    final newIndex = AdhanSyncData.getActivePhraseIndex(_position, _duration, isFajr);
+    if (newIndex != _activePhraseIndex) {
+      _activePhraseIndex = newIndex;
+    }
+  }
+
+  Future<void> _startAdhan() async {
+    try {
+      // Map muezzin name to the local m4a asset
+      String assetName = 'makkah';
+      if (widget.muezzinName.contains('عبد الباسط')) assetName = 'abdulbasit';
+      else if (widget.muezzinName.contains('المنشاوي')) assetName = 'minshawi';
+      else if (widget.muezzinName.contains('مشاري') || widget.muezzinName.contains('العفاسي')) assetName = 'mishary';
+      else if (widget.muezzinName.contains('مصطفى') || widget.muezzinName.contains('اسماعيل')) assetName = 'mustafa_ismail';
+      else if (widget.muezzinName.contains('حافظ')) assetName = 'hafez'; // Optional fallback
+      else if (widget.muezzinName.contains('الحسيني')) assetName = 'hussaini'; // Optional fallback
+
+      // We use local assets downloaded by yt-dlp
+      await globalAdhanPlayer.setAudioSource(
+        AudioSource.uri(
+          Uri.parse('asset:///assets/audio/$assetName.m4a'),
+          tag: MediaItem(
+            id: 'adhan_$assetName',
+            title: 'أذان ${widget.prayerName}',
+            artist: widget.muezzinName,
+          ),
+        ),
+      );
+      globalAdhanPlayer.play();
+    } catch (e) {
+      debugPrint("Could not play adhan audio from assets, trying fallback... $e");
+      try {
+        await globalAdhanPlayer.setAudioSource(
+          AudioSource.uri(
+            Uri.parse('https://download.quranicaudio.com/adhan/makkah.mp3'),
+            tag: MediaItem(
+              id: 'adhan_fallback',
+              title: 'أذان ${widget.prayerName}',
+              artist: widget.muezzinName,
+            ),
+          ),
+        );
+        globalAdhanPlayer.play();
+      } catch (e2) {
+        debugPrint("Fallback failed: $e2");
+      }
+    }
+  }
+
   @override
   void dispose() {
-    _bgController.dispose();
-    _textController.dispose();
-    _timer?.cancel();
-    _audioPlayer.dispose();
+    _rgbController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(themeProvider).currentConfig;
+    const goldColor = Color(0xFFD4AF37);
+    const darkGreen = Color(0xFF0A1F16);
     
+    bool isFajr = widget.prayerName.contains('الفجر');
+    final phrases = isFajr ? AdhanSyncData.fajrAdhan : AdhanSyncData.standardAdhan;
+    final currentPhrase = phrases[_activePhraseIndex].text;
+
     return Scaffold(
-      backgroundColor: theme.backgroundColor,
+      backgroundColor: Colors.transparent,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Animated Cinematic Background
-          AnimatedBuilder(
-            animation: _bgController,
-            builder: (context, child) {
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Base Gradient
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(
-                        center: const Alignment(0, -0.3),
-                        radius: 1.5 + (_bgController.value * 0.2),
-                        colors: [
-                          theme.cardColor,
-                          theme.backgroundColor,
-                          Colors.black,
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Floating particles or glowing orbs
-                  Positioned(
-                    top: MediaQuery.of(context).size.height * 0.2 + (_bgController.value * 50),
-                    left: MediaQuery.of(context).size.width * 0.1 - (_bgController.value * 30),
-                    child: _buildOrb(theme.primaryColor.withValues(alpha: 0.1), 200),
-                  ),
-                  Positioned(
-                    bottom: MediaQuery.of(context).size.height * 0.1 - (_bgController.value * 40),
-                    right: MediaQuery.of(context).size.width * 0.1 + (_bgController.value * 40),
-                    child: _buildOrb(theme.accentColor.withValues(alpha: 0.05), 300),
-                  ),
-                  // Arabesque watermark
-                  Center(
-                    child: Transform.rotate(
-                      angle: _bgController.value * 0.1,
-                      child: Transform.scale(
-                        scale: 1.2 + (_bgController.value * 0.1),
-                        child: Icon(
-                          Icons.mosque,
-                          size: 300,
-                          color: theme.primaryColor.withValues(alpha: 0.03),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
+          // 1. Blurred Background
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.6),
+            ),
           ),
           
-          // Foreground Content
-          SafeArea(
-            child: Column(
-              children: [
-                const SizedBox(height: 40),
-                // Top Header
-                Text(
-                  'حَانَ الآن مَوْعِدُ أَذَانِ',
-                  style: GoogleFonts.cairo(
-                    fontSize: 20,
-                    color: theme.primaryColor.withValues(alpha: 0.8),
-                    letterSpacing: 2,
-                  ),
-                ),
-                Text(
-                  widget.prayerName,
-                  style: GoogleFonts.reemKufi(
-                    fontSize: 64,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: theme.primaryColor.withValues(alpha: 0.5),
-                        blurRadius: 20,
-                      )
-                    ],
-                  ),
-                ),
-                Text(
-                  'بصوت ${widget.muezzinName}',
-                  style: GoogleFonts.cairo(
-                    fontSize: 14,
-                    color: Colors.white54,
-                  ),
-                ),
-                
-                const Spacer(),
-                
-                // Synced Subtitles
-                FadeTransition(
-                  opacity: _textController,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      _subtitles[_currentSubtitleIndex].text,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.amiri(
-                        fontSize: 32,
-                        height: 1.8,
-                        color: theme.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
+          // 2. Center Animated RGB Card
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: AnimatedBuilder(
+                animation: _rgbController,
+                builder: (context, child) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          blurRadius: 30,
+                          spreadRadius: 5,
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                
-                const Spacer(),
-                
-                // Controls
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 60),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildControlButton(
-                        icon: Icons.volume_off_rounded,
-                        label: 'إيقاف الصوت',
-                        color: Colors.white54,
-                        onTap: () {
-                          if (_audioPlayer.playing) {
-                            _audioPlayer.pause();
-                          } else {
-                            _audioPlayer.play();
-                          }
-                          setState(() {});
-                        },
-                      ),
-                      const SizedBox(width: 40),
-                      _buildControlButton(
-                        icon: Icons.close_rounded,
-                        label: 'إغلاق',
-                        color: Colors.redAccent,
-                        isPrimary: true,
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOrb(Color color, double size) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [
-            color,
-            color.withValues(alpha: 0.0),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildControlButton({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-    bool isPrimary = false,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: isPrimary ? color.withValues(alpha: 0.2) : Colors.white10,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isPrimary ? color : Colors.white24,
-                width: 2,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // RGB Rotating Glow
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(32),
+                          child: Transform.rotate(
+                            angle: _rgbController.value * 2 * math.pi,
+                            child: Container(
+                              width: double.maxFinite,
+                              height: 600, // Large enough to cover rotation corners
+                              decoration: const BoxDecoration(
+                                gradient: SweepGradient(
+                                  colors: [
+                                    Color(0xFFFF0000), // Red
+                                    Color(0xFFFF7F00), // Orange
+                                    Color(0xFFFFFF00), // Yellow
+                                    Color(0xFF00FF00), // Green
+                                    Color(0xFF0000FF), // Blue
+                                    Color(0xFF4B0082), // Indigo
+                                    Color(0xFF8B00FF), // Violet
+                                    Color(0xFFFF0000), // Red (close loop)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        
+                        // Inner Dark Green Card
+                        Container(
+                          margin: const EdgeInsets.all(3.0), // Border thickness for the RGB glow
+                          decoration: BoxDecoration(
+                            color: darkGreen,
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: goldColor.withValues(alpha: 0.5),
+                              width: 1,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Header: Prayer Name
+                                Text(
+                                  'أذان ${widget.prayerName}',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.scheherazadeNew(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    color: goldColor,
+                                  ),
+                                ),
+                                Text(
+                                  'بصوت ${widget.muezzinName}',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.cairo(
+                                    fontSize: 14,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                
+                                // Karaoke Sync Area
+                                SizedBox(
+                                  height: 180,
+                                  child: Center(
+                                    child: AnimatedSwitcher(
+                                      duration: const Duration(milliseconds: 500),
+                                      transitionBuilder: (Widget child, Animation<double> animation) {
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: ScaleTransition(
+                                            scale: animation,
+                                            child: child,
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        currentPhrase,
+                                        key: ValueKey<int>(_activePhraseIndex),
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.amiri(
+                                          fontSize: 34,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          height: 1.5,
+                                          shadows: [
+                                            Shadow(
+                                              color: goldColor.withValues(alpha: 0.8),
+                                              blurRadius: 20,
+                                            )
+                                          ]
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                
+                                // Progress Bar
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: LinearProgressIndicator(
+                                      value: _duration.inMilliseconds > 0 
+                                          ? _position.inMilliseconds / _duration.inMilliseconds 
+                                          : 0,
+                                      backgroundColor: Colors.white24,
+                                      color: goldColor,
+                                      minHeight: 6,
+                                    ),
+                                  ),
+                                ),
+                                
+                                const SizedBox(height: 16),
+                                
+                                // Action Buttons
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Stop Button
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          globalAdhanPlayer.stop();
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(Icons.stop_circle_rounded, color: Colors.black87),
+                                        label: Text(
+                                          'إيقاف',
+                                          style: GoogleFonts.cairo(
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: goldColor,
+                                          padding: const EdgeInsets.symmetric(vertical: 12),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(24),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    // Background Button
+                                    Expanded(
+                                      child: OutlinedButton.icon(
+                                        onPressed: () {
+                                          Navigator.pop(context); 
+                                          // Keep playing in background (since we are just popping the screen, 
+                                          // but wait, popping the screen calls dispose() which disposes the player!
+                                          // So actually popping WILL stop the audio because of dispose().
+                                          // To truly keep it in background, we need a global Adhan service.
+                                          // For now, this is labeled "إغلاق الشاشة" (Close Screen).
+                                        },
+                                        icon: const Icon(Icons.close_fullscreen_rounded, color: goldColor),
+                                        label: Text(
+                                          'إغلاق',
+                                          style: GoogleFonts.cairo(
+                                            color: goldColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        style: OutlinedButton.styleFrom(
+                                          side: const BorderSide(color: goldColor, width: 1.5),
+                                          padding: const EdgeInsets.symmetric(vertical: 12),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(24),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ),
-            child: Icon(
-              icon,
-              size: 32,
-              color: isPrimary ? color : Colors.white,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            label,
-            style: GoogleFonts.cairo(
-              fontSize: 14,
-              color: isPrimary ? color : Colors.white70,
             ),
           ),
         ],
