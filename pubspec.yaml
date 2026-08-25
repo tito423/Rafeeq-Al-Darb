@@ -58,6 +58,11 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^33.2.13
   video_player: ^2.11.1
   wakelock_plus: ^1.5.2
+  firebase_core: ^4.14.0
+  firebase_auth: ^6.6.0
+  cloud_firestore: ^6.9.0
+  minio: ^3.5.8
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:

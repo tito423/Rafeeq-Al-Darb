@@ -61,10 +61,67 @@ class AlertsCustomizationSheet extends ConsumerWidget {
                   ),
                 ],
               ),
+              // ── Azkar & Wird Alerts ──────────────────────────────────────────
+              const SizedBox(height: 12),
+              Text(
+                'أذكار الصباح والمساء والورد القرآني',
+                style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+              ),
+              const SizedBox(height: 12),
+
+              _buildAlertCard(
+                context,
+                title: 'أذكار الصباح',
+                icon: Icons.wb_sunny_rounded,
+                time: alertState.morningAthkarTime,
+                isEnabled: alertState.isMorningAthkarEnabled,
+                onToggle: (val) => alertNotifier.setMorningAthkarAlert(val, alertState.morningAthkarTime),
+                onTimeChanged: (newTime) => alertNotifier.setMorningAthkarAlert(alertState.isMorningAthkarEnabled, newTime),
+              ),
+              const SizedBox(height: 12),
+
+              _buildAlertCard(
+                context,
+                title: 'أذكار المساء',
+                icon: Icons.nights_stay_rounded,
+                time: alertState.eveningAthkarTime,
+                isEnabled: alertState.isEveningAthkarEnabled,
+                onToggle: (val) => alertNotifier.setEveningAthkarAlert(val, alertState.eveningAthkarTime),
+                onTimeChanged: (newTime) => alertNotifier.setEveningAthkarAlert(alertState.isEveningAthkarEnabled, newTime),
+              ),
+              const SizedBox(height: 12),
+
+              _buildAlertCard(
+                context,
+                title: 'ورد القرآن الصباحي',
+                icon: Icons.auto_stories_rounded,
+                time: alertState.morningWirdTime,
+                isEnabled: alertState.isMorningWirdEnabled,
+                onToggle: (val) => alertNotifier.setMorningWirdAlert(val, alertState.morningWirdTime),
+                onTimeChanged: (newTime) => alertNotifier.setMorningWirdAlert(alertState.isMorningWirdEnabled, newTime),
+              ),
+              const SizedBox(height: 12),
+
+              _buildAlertCard(
+                context,
+                title: 'ورد القرآن المسائي',
+                icon: Icons.menu_book_rounded,
+                time: alertState.eveningWirdTime,
+                isEnabled: alertState.isEveningWirdEnabled,
+                onToggle: (val) => alertNotifier.setEveningWirdAlert(val, alertState.eveningWirdTime),
+                onTimeChanged: (newTime) => alertNotifier.setEveningWirdAlert(alertState.isEveningWirdEnabled, newTime),
+              ),
               const SizedBox(height: 20),
+              
+              // ── Surah Alerts ────────────────────────────────────────────────
+              Text(
+                'تنبيهات السور',
+                style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+              ),
+              const SizedBox(height: 12),
 
               // Surah Al-Baqarah
-              _buildSurahAlertCard(
+              _buildAlertCard(
                 context,
                 title: 'سورة البقرة',
                 icon: Icons.menu_book_rounded,
@@ -76,7 +133,7 @@ class AlertsCustomizationSheet extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Surah Al-Kahf
-              _buildSurahAlertCard(
+              _buildAlertCard(
                 context,
                 title: 'سورة الكهف',
                 icon: Icons.auto_stories_rounded,
@@ -88,7 +145,7 @@ class AlertsCustomizationSheet extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Surah As-Sajdah
-              _buildSurahAlertCard(
+              _buildAlertCard(
                 context,
                 title: 'سورة السجدة',
                 icon: Icons.accessibility_new_rounded,
@@ -100,7 +157,7 @@ class AlertsCustomizationSheet extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Surah Al-Mulk
-              _buildSurahAlertCard(
+              _buildAlertCard(
                 context,
                 title: 'سورة الملك',
                 icon: Icons.nights_stay_rounded,
@@ -117,7 +174,7 @@ class AlertsCustomizationSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildSurahAlertCard(
+  Widget _buildAlertCard(
     BuildContext context, {
     required String title,
     required IconData icon,

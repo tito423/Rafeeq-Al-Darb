@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "201578300543",
+    "project_id": "rafeeq-aldarb",
+    "storage_bucket": "rafeeq-aldarb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201578300543:android:0dcc7e370c2f1cbd8aeb4a",
+        "android_client_info": {
+          "package_name": "com.tito.rafeeq_aldarb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201578300543-tdnos2457pdvho9535890nd2cbskaieh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqExWcklJ3jMBL7HIMHXpTf79IJH8Ge2A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201578300543-tdnos2457pdvho9535890nd2cbskaieh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

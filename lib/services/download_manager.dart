@@ -221,10 +221,11 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     );
   }
 
-  /// Download all 604 Mushaaf pages sequentially (bulk)
+  /// Download all 604 Mushaaf pages concurrently (bulk)
   Future<void> downloadAllMushaafPages({
     required MushafStyleInfo styleInfo,
     void Function(int completed, int total)? onProgress,
+    int concurrency = 5,
   }) async {
     const total = 604;
     int completed = 0;
@@ -236,17 +237,33 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
       bulkCompleted: 0,
     );
 
+    // Filter out already downloaded pages first
+    final pendingPages = <int>[];
     for (int page = 1; page <= total; page++) {
-      if (!state.isBulkDownloading) break; // cancelled
-
       if (!await isPageDownloaded(page, styleName)) {
-        await downloadMushaafPage(page, styleInfo: styleInfo);
-        // Wait for completion
-        await _waitForTask('page_${styleName}_$page');
+        pendingPages.add(page);
+      } else {
+        completed++;
       }
-      completed++;
-      state = state.copyWith(bulkCompleted: completed);
-      onProgress?.call(completed, total);
+    }
+
+    state = state.copyWith(bulkCompleted: completed);
+    onProgress?.call(completed, total);
+
+    // Process in chunks
+    for (int i = 0; i < pendingPages.length; i += concurrency) {
+      if (!state.isBulkDownloading) break;
+
+      final end = (i + concurrency < pendingPages.length) ? i + concurrency : pendingPages.length;
+      final chunk = pendingPages.sublist(i, end);
+
+      await Future.wait(chunk.map((page) async {
+        await downloadMushaafPage(page, styleInfo: styleInfo);
+        await _waitForTask('page_${styleName}_$page');
+        completed++;
+        state = state.copyWith(bulkCompleted: completed);
+        onProgress?.call(completed, total);
+      }));
     }
 
     state = state.copyWith(isBulkDownloading: false);
