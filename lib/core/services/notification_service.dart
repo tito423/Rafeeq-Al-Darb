@@ -246,6 +246,75 @@ class NotificationService {
     );
   }
 
+  // ── Live Persistent Prayer Notification ───────────────────────────────────
+  static const _liveChannelId = 'live_prayer_channel';
+  static const _liveChannelName = 'الصلاة القادمة';
+  static const _liveChannelDesc = 'عرض الصلاة القادمة والوقت المتبقي لها';
+
+  Future<void> updateLivePrayerNotification(PrayerTimes pt) async {
+    if (!Platform.isAndroid) return; // Chronometer is mostly an Android feature natively supported like this.
+    await initialize();
+
+    final now = DateTime.now();
+    final prayers = [
+      (nameAr: 'الفجر',   time: _parseToDateTime(pt.fajr)),
+      (nameAr: 'الشروق', time: _parseToDateTime(pt.sunrise)),
+      (nameAr: 'الظهر',   time: _parseToDateTime(pt.dhuhr)),
+      (nameAr: 'العصر',   time: _parseToDateTime(pt.asr)),
+      (nameAr: 'المغرب',  time: _parseToDateTime(pt.maghrib)),
+      (nameAr: 'العشاء',  time: _parseToDateTime(pt.isha)),
+    ];
+
+    String nextPrayerName = 'الفجر';
+    DateTime? nextPrayerTime;
+
+    for (final p in prayers) {
+      if (p.time != null && p.time!.isAfter(now)) {
+        nextPrayerName = p.nameAr;
+        nextPrayerTime = p.time;
+        break;
+      }
+    }
+
+    if (nextPrayerTime == null) {
+      // It's after Isha, next is Fajr tomorrow.
+      final t = _parseToDateTime(pt.fajr);
+      if (t != null) {
+        nextPrayerTime = t.add(const Duration(days: 1));
+        nextPrayerName = 'الفجر';
+      } else {
+        return;
+      }
+    }
+
+    final androidDetails = AndroidNotificationDetails(
+      _liveChannelId,
+      _liveChannelName,
+      channelDescription: _liveChannelDesc,
+      importance: Importance.low, // low so it doesn't pop up over the screen
+      priority: Priority.low,
+      ongoing: true, // cannot be dismissed
+      autoCancel: false,
+      showWhen: true, // required for chronometer
+      usesChronometer: true, // Natively counts time
+      chronometerCountDown: true, // Count down instead of up
+      when: nextPrayerTime.millisecondsSinceEpoch,
+      color: const import_material.Color(0xFF003322),
+      icon: '@mipmap/ic_launcher',
+    );
+
+    await _plugin.show(
+      100, // Fixed ID for the live notification
+      'الصلاة القادمة: $nextPrayerName',
+      'باقي من الزمن:',
+      NotificationDetails(android: androidDetails),
+    );
+  }
+
+  Future<void> cancelLivePrayerNotification() async {
+    await _plugin.cancel(100);
+  }
+
   // ── Helpers ───────────────────────────────────────────────────────────────
 
   static const Map<int, ({String ar, String en, int page})> _surahMetadata = {
@@ -255,7 +324,7 @@ class NotificationService {
     67: (ar: 'الملك', en: 'Al-Mulk', page: 562),
   };
 
-  void _onNotificationTap(NotificationResponse response) {
+  void _onNotificationTap(NotificationResponse response) async {
     if (response.payload != null && response.payload!.startsWith('surah_')) {
       final surahNumber = int.tryParse(response.payload!.split('_')[1]);
       if (surahNumber != null) {
@@ -277,14 +346,23 @@ class NotificationService {
       final parts = response.payload!.split('_');
       final pName = parts.length > 1 ? parts[1] : 'الصلاة';
       final mMuezzin = parts.length > 2 ? parts[2] : 'مكة';
-      import_app.navigatorKey.currentState?.push(
-        import_material.MaterialPageRoute(
-          builder: (_) => FullScreenAdhanScreen(
-            prayerName: pName,
-            muezzinName: mMuezzin,
+      
+      final prefs = await SharedPreferences.getInstance();
+      final mode = prefs.getString('adhanDisplayMode') ?? 'animated';
+      
+      if (mode == 'audio_only') {
+        // Just play it in background
+        playAdhanInBackground(pName, mMuezzin);
+      } else {
+        import_app.navigatorKey.currentState?.push(
+          import_material.MaterialPageRoute(
+            builder: (_) => FullScreenAdhanScreen(
+              prayerName: pName,
+              muezzinName: mMuezzin,
+            ),
           ),
-        ),
-      );
+        );
+      }
       return;
     } else if (response.payload != null && response.payload!.startsWith('azkar_')) {
       final parts = response.payload!.split('_');
@@ -328,6 +406,14 @@ class NotificationService {
           prayerTime: snoozeTime,
         );
         break;
+    }
+  }
+
+  // Check if app was launched via notification (e.g. from fullScreenIntent)
+  Future<void> checkInitialNotification() async {
+    final details = await _plugin.getNotificationAppLaunchDetails();
+    if (details != null && details.didNotificationLaunchApp && details.notificationResponse != null) {
+      _onNotificationTap(details.notificationResponse!);
     }
   }
 

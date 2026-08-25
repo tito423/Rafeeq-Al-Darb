@@ -80,6 +80,7 @@ flutter:
     - assets/videos/
     - assets/data/
     - assets/data/hadith/
+    - lib/features/books/data/
     - assets/mushaf_thumbs/douri/
     - assets/mushaf_thumbs/line12/
     - assets/mushaf_thumbs/medina1/

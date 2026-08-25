@@ -104,6 +104,50 @@ class PrayerSettingsSheet extends ConsumerWidget {
                   },
                 ),
               ),
+              const SizedBox(height: 16),
+              
+              // Adhan Display Mode Toggle
+              Text(
+                'طريقة عرض الأذان',
+                style: GoogleFonts.amiri(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.accentGold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Card(
+                color: cardBg,
+                margin: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: Column(
+                  children: [
+                    RadioListTile<String>(
+                      value: 'animated',
+                      groupValue: settings.adhanDisplayMode,
+                      activeColor: AppColors.accentGold,
+                      title: Text(
+                        'صوت وفيديو تفاعلي',
+                        style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w600, color: textColor),
+                      ),
+                      subtitle: Text('عرض فيديو تفاعلي متزامن مع صوت المؤذن', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
+                      onChanged: (val) => notifier.setAdhanDisplayMode(val!),
+                    ),
+                    const Divider(height: 1, indent: 56),
+                    RadioListTile<String>(
+                      value: 'audio_only',
+                      groupValue: settings.adhanDisplayMode,
+                      activeColor: AppColors.accentGold,
+                      title: Text(
+                        'صوت فقط (في الخلفية)',
+                        style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w600, color: textColor),
+                      ),
+                      subtitle: Text('تشغيل الأذان صوتياً فقط دون إظهار الشاشة الكاملة', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
+                      onChanged: (val) => notifier.setAdhanDisplayMode(val!),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 20),
 
               // ── Athkar & Wird Alarms (Sakanty-Style) ────────────────────────
