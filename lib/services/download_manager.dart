@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:archive/archive_io.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/models/mushaf_style.dart';
 import 'r2_storage_service.dart';
 
@@ -66,6 +67,7 @@ class DownloadManagerState {
   final bool isBulkDownloading;
   final int bulkTotal;
   final int bulkCompleted;
+  final Set<String> localRegistry; // The Offline-First SharedPreferences registry
 
   const DownloadManagerState({
     this.tasks = const {},
@@ -73,6 +75,7 @@ class DownloadManagerState {
     this.isBulkDownloading = false,
     this.bulkTotal = 0,
     this.bulkCompleted = 0,
+    this.localRegistry = const {},
   });
 
   DownloadManagerState copyWith({
@@ -81,18 +84,19 @@ class DownloadManagerState {
     bool? isBulkDownloading,
     int? bulkTotal,
     int? bulkCompleted,
+    Set<String>? localRegistry,
   }) => DownloadManagerState(
     tasks: tasks ?? this.tasks,
     activeCount: activeCount ?? this.activeCount,
     isBulkDownloading: isBulkDownloading ?? this.isBulkDownloading,
     bulkTotal: bulkTotal ?? this.bulkTotal,
     bulkCompleted: bulkCompleted ?? this.bulkCompleted,
+    localRegistry: localRegistry ?? this.localRegistry,
   );
 
   double get bulkProgress => bulkTotal > 0 ? bulkCompleted / bulkTotal : 0.0;
-
-  List<DownloadTask> get activeTasks =>
-      tasks.values.where((t) => t.isDownloading).toList();
+  List<DownloadTask> get activeTasks => tasks.values.where((t) => t.isDownloading).toList();
+  bool isAssetDownloaded(String assetId) => localRegistry.contains(assetId);
 }
 
 // ── Manager ───────────────────────────────────────────────────────────────────
@@ -101,7 +105,30 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
   final Dio _dio = Dio();
   final Map<String, CancelToken> _cancelTokens = {};
 
-  DownloadManager() : super(const DownloadManagerState());
+  static const String _registryKey = 'offline_assets_registry';
+
+  DownloadManager() : super(const DownloadManagerState()) {
+    _initRegistry();
+  }
+
+  // ── Offline-First Registry (Zero Server Calls) ──────────────────────────────
+  
+  Future<void> _initRegistry() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String> cachedAssets = prefs.getStringList(_registryKey) ?? [];
+    state = state.copyWith(localRegistry: cachedAssets.toSet());
+  }
+
+  Future<void> _registerAsset(String assetId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final updatedRegistry = Set<String>.from(state.localRegistry)..add(assetId);
+    await prefs.setStringList(_registryKey, updatedRegistry.toList());
+    state = state.copyWith(localRegistry: updatedRegistry);
+  }
+
+  bool isDownloadedLocally(String assetId) {
+    return state.localRegistry.contains(assetId);
+  }
 
   // ── File paths ────────────────────────────────────────────────────────────
 
@@ -137,8 +164,7 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
   }
 
   Future<bool> isBookPdfDownloaded(String bookId) async {
-    final path = await getBookPdfPath(bookId);
-    return File(path).existsSync();
+    return isDownloadedLocally('book_$bookId');
   }
 
   Future<String> getMushaafPagePath(int pageNumber, String styleName) async {
@@ -148,305 +174,30 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
   }
 
   Future<bool> isPageDownloaded(int pageNumber, String styleName) async {
-    final path = await getLocalPagePath(pageNumber, styleName);
-    return path != null;
+    return isDownloadedLocally('page_${styleName}_$pageNumber');
   }
 
   Future<String?> getLocalPagePath(int pageNumber, String styleName) async {
     final dir = await _mushaafDir(styleName);
     final p3 = pageNumber.toString().padLeft(3, '0');
     final jpgPath = '${dir.path}/page_$p3.jpg';
-    if (File(jpgPath).existsSync() && File(jpgPath).lengthSync() > 1000) return jpgPath;
+    if (File(jpgPath).existsSync()) return jpgPath;
     final pngPath = '${dir.path}/page_$p3.png';
-    if (File(pngPath).existsSync() && File(pngPath).lengthSync() > 1000) return pngPath;
+    if (File(pngPath).existsSync()) return pngPath;
     return null;
   }
 
-  // ── Coordinates ───────────────────────────────────────────────────────────
-
-  Future<String> getMushafCoordsPath(String styleName) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final d = Directory('${dir.path}/mushaf_coords');
-    if (!d.existsSync()) d.createSync(recursive: true);
-    return '${d.path}/$styleName.json';
-  }
-
-  Future<bool> isMushafCoordsDownloaded(String styleName) async {
-    final path = await getMushafCoordsPath(styleName);
-    return File(path).existsSync();
-  }
-
-  Future<String?> downloadMushafCoords(String styleName) async {
-    try {
-      if (await isMushafCoordsDownloaded(styleName)) {
-        return await getMushafCoordsPath(styleName);
-      }
-      final path = await getMushafCoordsPath(styleName);
-      final r2Service = R2StorageService();
-      await r2Service.downloadFile('rafeeq-aldarb-data', 'mushaf_coords/$styleName.json', path);
-      return path;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // ── Download a single page ────────────────────────────────────────────────
-
-  Future<void> downloadMushaafPage(int pageNumber, {required MushafStyleInfo styleInfo}) async {
-    final styleName = styleInfo.style.name;
-    final id = 'page_${styleName}_$pageNumber';
-    if (state.tasks[id]?.isDownloading == true) return;
-    
-    if (await isPageDownloaded(pageNumber, styleName)) {
-      _updateTask(
-        id,
-        DownloadTask(
-          id: id,
-          url: styleInfo.pageUrl(pageNumber),
-          filename: 'page_${pageNumber.toString().padLeft(3, '0')}.png',
-          category: DownloadCategory.mushaafPage,
-          isCompleted: true,
-          progress: 1.0,
-        ),
-      );
-      return;
-    }
-
-    final savePath = await getMushaafPagePath(pageNumber, styleName);
-    await _startDownload(
-      id: id,
-      url: styleInfo.pageUrl(pageNumber),
-      savePath: savePath,
-      category: DownloadCategory.mushaafPage,
-    );
-  }
-
-  // ── Download a Book PDF ───────────────────────────────────────────────────
-
-  Future<void> downloadBookPdf(String bookId, String url, String title) async {
-    final id = 'book_$bookId';
-    if (state.tasks[id]?.isDownloading == true) return;
-    
-    if (await isBookPdfDownloaded(bookId)) {
-      _updateTask(
-        id,
-        DownloadTask(
-          id: id,
-          url: url,
-          filename: '$title.pdf',
-          category: DownloadCategory.book,
-          isCompleted: true,
-          progress: 1.0,
-        ),
-      );
-      return;
-    }
-
-    final savePath = await getBookPdfPath(bookId);
-    await _startDownload(
-      id: id,
-      url: url,
-      savePath: savePath,
-      category: DownloadCategory.book,
-    );
-  }
-
-  /// Download all Mushaaf pages concurrently (bulk) using ZIP extraction from R2
-  Future<void> downloadAllMushaafPages({
-    required MushafStyleInfo styleInfo,
-    void Function(int completed, int total)? onProgress,
-    int concurrency = 5,
-  }) async {
-    const total = 604;
-    final styleName = styleInfo.style.name;
-    final id = 'mushaf_${styleName}_zip';
-
-    state = state.copyWith(
-      isBulkDownloading: true,
-      bulkTotal: total,
-      bulkCompleted: 0,
-    );
-
-    try {
-      // Cloudflare R2 zip url pattern:
-      final zipUrl = 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf_${styleName}.zip';
-      final dir = await getApplicationDocumentsDirectory();
-      final zipPath = '${dir.path}/$id.zip';
-      final extractDir = await _mushaafDir(styleName);
-
-      // We'll update progress to 10% on download start, then 50% during download, 
-      // then 100% on extraction. 
-      await _startDownload(
-        id: id,
-        url: zipUrl,
-        savePath: zipPath,
-        category: DownloadCategory.mushaafPage,
-      );
-
-      // Wait for it
-      while (state.tasks[id]?.isDownloading == true) {
-        final prog = state.tasks[id]?.progress ?? 0.0;
-        final simulatedPages = (prog * (total * 0.8)).toInt();
-        state = state.copyWith(bulkCompleted: simulatedPages);
-        onProgress?.call(simulatedPages, total);
-        await Future.delayed(const Duration(milliseconds: 200));
-      }
-      
-      final task = state.tasks[id];
-      if (task?.isCompleted == true && File(zipPath).existsSync()) {
-        state = state.copyWith(bulkCompleted: (total * 0.9).toInt()); 
-        onProgress?.call((total * 0.9).toInt(), total);
-        
-        // Extracting zip in the background
-        final bytes = File(zipPath).readAsBytesSync();
-        final archive = ZipDecoder().decodeBytes(bytes);
-        for (final file in archive) {
-          if (file.isFile) {
-            // file.name usually looks like "medina1/page_001.png" or "page_001.png"
-            final filename = file.name.split('/').last; 
-            final data = file.content as List<int>;
-            File('${extractDir.path}/$filename')
-              ..createSync(recursive: true)
-              ..writeAsBytesSync(data);
-          }
-        }
-        File(zipPath).deleteSync();
-        
-        state = state.copyWith(bulkCompleted: total, isBulkDownloading: false);
-        onProgress?.call(total, total);
-      } else {
-        // Failed
-        state = state.copyWith(isBulkDownloading: false);
-      }
-    } catch (e) {
-      state = state.copyWith(isBulkDownloading: false);
-    }
-  }
-
-  void cancelBulkDownload() {
-    state = state.copyWith(isBulkDownloading: false);
-    for (final token in _cancelTokens.values) {
-      token.cancel('User cancelled');
-    }
-  }
-
-  /// Download surah audio (mp3quran.net — reliable, no CDN auth required)
-  Future<void> downloadSurahAudio({
-    required int surahNumber,
-    required String reciterId,
-    required String mp3quranBaseUrl,
-  }) async {
-    final s = surahNumber.toString().padLeft(3, '0');
-    final id = 'audio_${reciterId}_$surahNumber';
-    final url = '$mp3quranBaseUrl/$s.mp3';
-    final audioDir = await _audioDir;
-
-    final savePath = '${audioDir.path}/$id.mp3';
-
-    if (File(savePath).existsSync() && File(savePath).lengthSync() > 1024) {
-      // Already downloaded
-      return;
-    }
-
-    await _startDownload(
-      id: id,
-      url: url,
-      savePath: savePath,
-      category: DownloadCategory.audioSurah,
-    );
-  }
-
-  /// Sequentially download all 114 surahs for a reciter
-  Future<void> downloadFullReciterArchive({
-    required String reciterId,
-    required String mp3quranBaseUrl,
-    void Function(int completed, int total)? onProgress,
-  }) async {
-    const total = 114;
-    int completed = 0;
-
-    state = state.copyWith(
-      isBulkDownloading: true,
-      bulkTotal: total,
-      bulkCompleted: 0,
-    );
-
-    for (int surah = 1; surah <= total; surah++) {
-      if (!state.isBulkDownloading) break; // cancelled
-
-      final id = 'audio_${reciterId}_$surah';
-      await downloadSurahAudio(
-        surahNumber: surah,
-        reciterId: reciterId,
-        mp3quranBaseUrl: mp3quranBaseUrl,
-      );
-      
-      await _waitForTask(id);
-      completed++;
-      
-      state = state.copyWith(bulkCompleted: completed);
-      onProgress?.call(completed, total);
-    }
-
-    state = state.copyWith(isBulkDownloading: false);
-  }
-
-  Future<void> downloadBook({
-    required String bookId,
-    required String downloadUrl,
-  }) async {
-    final id = 'book_$bookId';
-    if (state.tasks[id]?.isDownloading == true) return;
-
-    final savePath = await getBookPath(bookId);
-    
-    // Check if already downloaded
-    if (File(savePath).existsSync()) {
-      _updateTask(
-        id,
-        DownloadTask(
-          id: id,
-          url: downloadUrl,
-          filename: '$bookId.json',
-          category: DownloadCategory.book,
-          isCompleted: true,
-          progress: 1.0,
-        ),
-      );
-      return;
-    }
-
-    await _startDownload(
-      id: id,
-      url: downloadUrl,
-      savePath: savePath,
-      category: DownloadCategory.book,
-    );
-  }
-
-  // ── Core download logic ───────────────────────────────────────────────────
-
-  Future<void> startDownload({
-    required String id,
-    required String url,
-    required String filename,
-  }) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final savePath = '${dir.path}/$filename';
-    await _startDownload(
-      id: id,
-      url: url,
-      savePath: savePath,
-      category: DownloadCategory.audioSurah,
-    );
-  }
+  // ── Core download & auto-extract logic ────────────────────────────────────
 
   Future<void> _startDownload({
     required String id,
     required String url,
     required String savePath,
     required DownloadCategory category,
+    bool autoExtractZip = true,
   }) async {
+    if (isDownloadedLocally(id)) return; // Strictly intercept if in registry
+
     final filename = savePath.split(RegExp(r'[/\\]')).last;
     final cancelToken = CancelToken();
     _cancelTokens[id] = cancelToken;
@@ -479,6 +230,33 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
         },
       );
 
+      // ZIP Auto-Extraction Logic
+      if (autoExtractZip && savePath.toLowerCase().endsWith('.zip')) {
+        _updateTask(id, state.tasks[id]!.copyWith(progress: 0.99)); // Extraction phase
+        
+        // Extract to parent directory
+        final File zipFile = File(savePath);
+        final extractDir = zipFile.parent;
+        
+        final bytes = zipFile.readAsBytesSync();
+        final archive = ZipDecoder().decodeBytes(bytes);
+        
+        for (final file in archive) {
+          if (file.isFile) {
+            final outputFilename = file.name.split('/').last; 
+            final data = file.content as List<int>;
+            File('${extractDir.path}/$outputFilename')
+              ..createSync(recursive: true)
+              ..writeAsBytesSync(data);
+          }
+        }
+        
+        // Delete zip to save storage
+        zipFile.deleteSync();
+      }
+
+      await _registerAsset(id); // Persist to local registry
+
       _updateTask(
         id,
         state.tasks[id]!.copyWith(
@@ -493,51 +271,137 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
           id,
           state.tasks[id]!.copyWith(isDownloading: false, isCancelled: true),
         );
-        // Delete partial file
         final f = File(savePath);
         if (f.existsSync()) f.deleteSync();
       } else {
-        _updateTask(
-          id,
-          state.tasks[id]!.copyWith(isDownloading: false, error: e.message),
-        );
+        _updateTask(id, state.tasks[id]!.copyWith(isDownloading: false, error: e.message));
       }
     } catch (e) {
-      _updateTask(
-        id,
-        state.tasks[id]!.copyWith(isDownloading: false, error: e.toString()),
-      );
+      _updateTask(id, state.tasks[id]!.copyWith(isDownloading: false, error: e.toString()));
     } finally {
       _cancelTokens.remove(id);
+    }
+  }
+
+  // ── Download a Book ───────────────────────────────────────────────────────
+
+  Future<void> downloadBook({
+    required String bookId,
+    required String downloadUrl,
+  }) async {
+    final id = 'book_$bookId';
+    if (state.tasks[id]?.isDownloading == true) return;
+
+    // Check offline cache
+    if (isDownloadedLocally(id)) return;
+
+    final isZip = downloadUrl.toLowerCase().endsWith('.zip');
+    final savePath = isZip ? '${(await _bookDir).path}/$bookId.zip' : await getBookPath(bookId);
+
+    await _startDownload(
+      id: id,
+      url: downloadUrl,
+      savePath: savePath,
+      category: DownloadCategory.book,
+      autoExtractZip: true,
+    );
+  }
+
+  Future<void> downloadBookPdf(String bookId, String url, String title) async {
+    final id = 'book_$bookId';
+    if (state.tasks[id]?.isDownloading == true) return;
+    
+    if (isDownloadedLocally(id)) return;
+
+    final isZip = url.toLowerCase().endsWith('.zip');
+    final savePath = isZip ? '${(await _bookDir).path}/$bookId.zip' : await getBookPdfPath(bookId);
+
+    await _startDownload(
+      id: id,
+      url: url,
+      savePath: savePath,
+      category: DownloadCategory.book,
+      autoExtractZip: true,
+    );
+  }
+
+  // ── Download Mushaf Page ──────────────────────────────────────────────────
+
+  Future<void> downloadMushaafPage(int pageNumber, {required MushafStyleInfo styleInfo}) async {
+    final styleName = styleInfo.style.name;
+    final id = 'page_${styleName}_$pageNumber';
+    if (state.tasks[id]?.isDownloading == true) return;
+    
+    if (isDownloadedLocally(id)) return;
+
+    final savePath = await getMushaafPagePath(pageNumber, styleName);
+    await _startDownload(
+      id: id,
+      url: styleInfo.pageUrl(pageNumber),
+      savePath: savePath,
+      category: DownloadCategory.mushaafPage,
+    );
+  }
+
+  Future<void> downloadAllMushaafPages({
+    required MushafStyleInfo styleInfo,
+    void Function(int completed, int total)? onProgress,
+    int concurrency = 5,
+  }) async {
+    const total = 604;
+    final styleName = styleInfo.style.name;
+    final id = 'mushaf_${styleName}_zip';
+
+    state = state.copyWith(
+      isBulkDownloading: true,
+      bulkTotal: total,
+      bulkCompleted: 0,
+    );
+
+    try {
+      if (!isDownloadedLocally(id)) {
+        final zipUrl = 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf_${styleName}.zip';
+        final dir = await getApplicationDocumentsDirectory();
+        final zipPath = '${dir.path}/$id.zip';
+
+        await _startDownload(
+          id: id,
+          url: zipUrl,
+          savePath: zipPath,
+          category: DownloadCategory.mushaafPage,
+          autoExtractZip: true, 
+        );
+
+        while (state.tasks[id]?.isDownloading == true) {
+          final prog = state.tasks[id]?.progress ?? 0.0;
+          final simulatedPages = (prog * (total * 0.8)).toInt();
+          state = state.copyWith(bulkCompleted: simulatedPages);
+          onProgress?.call(simulatedPages, total);
+          await Future.delayed(const Duration(milliseconds: 200));
+        }
+      }
+
+      state = state.copyWith(bulkCompleted: total, isBulkDownloading: false);
+      onProgress?.call(total, total);
+      
+    } catch (e) {
+      state = state.copyWith(isBulkDownloading: false);
     }
   }
 
   // ── Adhan Downloads ─────────────────────────────────────────────────────────
 
   Future<void> downloadAdhan(String adhanId, String url) async {
-    final taskId = 'adhan_$adhanId';
-    if (state.tasks[taskId]?.isDownloading == true) return;
+    final id = 'adhan_$adhanId';
+    if (state.tasks[id]?.isDownloading == true) return;
+
+    if (isDownloadedLocally(id)) return;
 
     final dir = await _getAdhansDirectory();
     final file = File('${dir.path}/$adhanId.mp3');
 
-    if (await file.exists()) {
-      _updateTask(
-        taskId,
-        DownloadTask(
-          id: taskId,
-          url: url,
-          filename: '$adhanId.mp3',
-          category: DownloadCategory.audioAdhan,
-          isCompleted: true,
-          progress: 1.0,
-        ),
-      );
-      return;
-    }
-
     await _startDownload(
-      id: taskId,
+      id: id,
       url: url,
       savePath: file.path,
       category: DownloadCategory.audioAdhan,
@@ -545,27 +409,26 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
   }
 
   Future<bool> isAdhanDownloaded(String adhanId) async {
-    final dir = await _getAdhansDirectory();
-    final file = File('${dir.path}/$adhanId.mp3');
-    return file.exists();
+    return isDownloadedLocally('adhan_$adhanId');
   }
 
   Future<String?> getAdhanPath(String adhanId) async {
-    final dir = await _getAdhansDirectory();
-    final file = File('${dir.path}/$adhanId.mp3');
-    if (await file.exists()) return file.path;
+    if (isDownloadedLocally('adhan_$adhanId')) {
+      final dir = await _getAdhansDirectory();
+      return '${dir.path}/$adhanId.mp3';
+    }
     return null;
   }
 
   Future<Directory> _getAdhansDirectory() async {
     final appDir = await getApplicationDocumentsDirectory();
     final dir = Directory('${appDir.path}/adhans');
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
+    if (!await dir.exists()) await dir.create(recursive: true);
     return dir;
   }
 
+  // ── Helper functions ────────────────────────────────────────────────────────
+  
   void _updateTask(String id, DownloadTask task) {
     final newTasks = Map<String, DownloadTask>.from(state.tasks);
     newTasks[id] = task;
@@ -578,12 +441,6 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
   void _updateProgress(String id, double progress) {
     if (!state.tasks.containsKey(id)) return;
     _updateTask(id, state.tasks[id]!.copyWith(progress: progress));
-  }
-
-  Future<void> _waitForTask(String id) async {
-    while (state.tasks[id]?.isDownloading == true) {
-      await Future.delayed(const Duration(milliseconds: 200));
-    }
   }
 
   void cancelTask(String id) {
@@ -599,9 +456,7 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
 
   @override
   void dispose() {
-    for (final token in _cancelTokens.values) {
-      token.cancel();
-    }
+    for (final token in _cancelTokens.values) token.cancel();
     _dio.close();
     super.dispose();
   }
@@ -614,7 +469,6 @@ final downloadManagerProvider =
       (ref) => DownloadManager(),
     );
 
-/// Convenience: watch a specific page download task
 final pageDownloadTaskProvider = Provider.family<DownloadTask?, String>((
   ref,
   taskId,
