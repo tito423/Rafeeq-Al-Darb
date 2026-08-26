@@ -6,7 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../services/download_manager.dart';
 import '../../../../core/models/mushaf_style.dart';
+import '../../domain/models/ayah.dart';
 import '../providers/page_verse_provider.dart';
+import '../../data/datasources/quran_db_helper.dart';
 
 class MushaafPageWidget extends ConsumerWidget {
   final int pageNumber;
@@ -98,10 +100,9 @@ class _LocalPageImage extends ConsumerStatefulWidget {
 
 class _LocalPageImageState extends ConsumerState<_LocalPageImage>
     with SingleTickerProviderStateMixin {
-  // Standard Mushaf Uthmani: pages 1-2 special, rest have 15 lines
-  static const int _linesPerPage = 15;
-
-  VerseInfo? _selectedVerse;
+  Ayah? _selectedVerse;
+  List<MushafAyahCoord>? _selectedVerseCoords;
+  
   late AnimationController _cardAnimCtrl;
   late Animation<double> _cardAnim;
 
@@ -124,48 +125,79 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
     super.dispose();
   }
 
-  void _onTapImage(TapDownDetails details, PageVerseMap verseMap) {
+  void _onTapImage(TapDownDetails details, List<MushafAyahCoord> coordsList, MushafStyleInfo styleInfo) async {
     // Get the rendered size of the image widget
     final RenderBox? box =
         _imageKey.currentContext?.findRenderObject() as RenderBox?;
     if (box == null) return;
 
     final size = box.size;
+    final localX = details.localPosition.dx;
     final localY = details.localPosition.dy;
 
-    // Calculate which line was tapped (1-indexed, top to bottom)
-    final double lineHeight = size.height / _linesPerPage;
-    final int tappedLine = (localY / lineHeight).floor() + 1;
+    // Scale factors
+    final double scaleX = size.width / styleInfo.baseWidth;
+    final double scaleY = size.height / styleInfo.baseHeight;
 
-    final VerseInfo? verse = verseMap.lineToVerse[tappedLine];
+    MushafAyahCoord? tappedCoord;
+    for (final coord in coordsList) {
+      final double left = coord.x * scaleX;
+      final double top = coord.y * scaleY;
+      final double right = (coord.x + coord.w) * scaleX;
+      final double bottom = (coord.y + coord.h) * scaleY;
 
-    if (verse == null) {
+      if (localX >= left && localX <= right && localY >= top && localY <= bottom) {
+        tappedCoord = coord;
+        break;
+      }
+    }
+
+    if (tappedCoord == null) {
       // Tap on empty area — dismiss
       if (_selectedVerse != null) {
-        setState(() => _selectedVerse = null);
+        setState(() {
+          _selectedVerse = null;
+          _selectedVerseCoords = null;
+        });
         _cardAnimCtrl.reverse();
       }
       return;
     }
 
-    if (_selectedVerse?.verseKey == verse.verseKey) {
+    if (_selectedVerse?.surahId == tappedCoord.surah && _selectedVerse?.ayahNumber == tappedCoord.ayah) {
       // Same verse tapped — toggle off
-      setState(() => _selectedVerse = null);
+      setState(() {
+        _selectedVerse = null;
+        _selectedVerseCoords = null;
+      });
       _cardAnimCtrl.reverse();
     } else {
-      setState(() => _selectedVerse = verse);
-      _cardAnimCtrl.forward(from: 0);
+      // Find all parts of this verse
+      final allParts = coordsList.where((c) => c.surah == tappedCoord!.surah && c.ayah == tappedCoord.ayah).toList();
+      
+      // Fetch text
+      final db = QuranDbHelper();
+      final ayah = await db.getAyahBySurahAndNumber(tappedCoord.surah, tappedCoord.ayah);
+      
+      if (ayah != null && mounted) {
+        setState(() {
+          _selectedVerse = ayah;
+          _selectedVerseCoords = allParts;
+        });
+        _cardAnimCtrl.forward(from: 0);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final verseMapAsync = ref.watch(pageVerseMapProvider(widget.pageNumber));
+    final styleInfo = ref.watch(mushafStyleInfoProvider);
+    final coordsAsync = ref.watch(pageCoordsProvider((styleName: styleInfo.style.name, pageNumber: widget.pageNumber)));
 
-    return verseMapAsync.when(
+    return coordsAsync.when(
       loading: () => _buildImageOnly(),
       error: (_, __) => _buildImageOnly(),
-      data: (verseMap) => _buildInteractiveImage(verseMap),
+      data: (coords) => _buildInteractiveImage(coords, styleInfo),
     );
   }
 
@@ -183,7 +215,7 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
     );
   }
 
-  Widget _buildInteractiveImage(PageVerseMap verseMap) {
+  Widget _buildInteractiveImage(List<MushafAyahCoord> coordsList, MushafStyleInfo styleInfo) {
     return Stack(
       children: [
         // ── Zoomable / Pannable mushaf image ──────────────────────────────
@@ -191,7 +223,7 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
           minScale: 0.8,
           maxScale: 4.0,
           child: GestureDetector(
-            onTapDown: (details) => _onTapImage(details, verseMap),
+            onTapDown: (details) => _onTapImage(details, coordsList, styleInfo),
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return Stack(
@@ -211,8 +243,8 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
                     ),
 
                     // ── Golden highlight overlay ──────────────────────────
-                    if (_selectedVerse != null)
-                      _buildHighlightOverlay(constraints, verseMap),
+                    if (_selectedVerseCoords != null && _selectedVerseCoords!.isNotEmpty)
+                      ..._selectedVerseCoords!.map((coord) => _buildHighlightBox(constraints, coord, styleInfo)),
                   ],
                 );
               },
@@ -243,43 +275,30 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
     );
   }
 
-  Widget _buildHighlightOverlay(
-      BoxConstraints constraints, PageVerseMap verseMap) {
-    final double lineHeight = constraints.maxHeight / _linesPerPage;
-    final verse = _selectedVerse!;
+  Widget _buildHighlightBox(
+      BoxConstraints constraints, MushafAyahCoord coord, MushafStyleInfo styleInfo) {
+    
+    final double scaleX = constraints.maxWidth / styleInfo.baseWidth;
+    final double scaleY = constraints.maxHeight / styleInfo.baseHeight;
 
-    // Find all lines belonging to this verse
-    final List<int> highlightedLines = verseMap.lineToVerse.entries
-        .where((e) => e.value.verseKey == verse.verseKey)
-        .map((e) => e.key)
-        .toList();
-
-    if (highlightedLines.isEmpty) return const SizedBox.shrink();
-
-    final minLine = highlightedLines.reduce((a, b) => a < b ? a : b);
-    final maxLine = highlightedLines.reduce((a, b) => a > b ? a : b);
-
-    final double top = (minLine - 1) * lineHeight;
-    final double height = (maxLine - minLine + 1) * lineHeight;
+    final double left = coord.x * scaleX;
+    final double top = coord.y * scaleY;
+    final double width = coord.w * scaleX;
+    final double height = coord.h * scaleY;
 
     return Positioned(
       top: top,
-      left: 0,
-      right: 0,
+      left: left,
+      width: width,
       height: height,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: const Color(0xFFD4AF37).withValues(alpha: 0.25),
-          border: Border(
-            top: BorderSide(
-              color: const Color(0xFFD4AF37).withValues(alpha: 0.7),
-              width: 1.5,
-            ),
-            bottom: BorderSide(
-              color: const Color(0xFFD4AF37).withValues(alpha: 0.7),
-              width: 1.5,
-            ),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: const Color(0xFFD4AF37).withValues(alpha: 0.7),
+            width: 1.5,
           ),
         ),
       ),
@@ -290,7 +309,7 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
 // ── Verse info card ───────────────────────────────────────────────────────────
 
 class _VerseCard extends StatelessWidget {
-  final VerseInfo verse;
+  final Ayah verse;
   final bool isDark;
   final VoidCallback onClose;
 
@@ -347,7 +366,7 @@ class _VerseCard extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'الآية ${verse.verseNumber} • سورة ${verse.surahNumber}',
+                    'الآية ${verse.ayahNumber} • سورة ${verse.surahId}',
                     style: GoogleFonts.amiri(
                       fontSize: 13,
                       color: const Color(0xFFD4AF37),

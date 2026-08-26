@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import '../core/models/mushaf_style.dart';
+import 'r2_storage_service.dart';
 
 // ── Download categories ───────────────────────────────────────────────────────
 
@@ -158,6 +159,34 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     final pngPath = '${dir.path}/page_$p3.png';
     if (File(pngPath).existsSync() && File(pngPath).lengthSync() > 1000) return pngPath;
     return null;
+  }
+
+  // ── Coordinates ───────────────────────────────────────────────────────────
+
+  Future<String> getMushafCoordsPath(String styleName) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final d = Directory('${dir.path}/mushaf_coords');
+    if (!d.existsSync()) d.createSync(recursive: true);
+    return '${d.path}/$styleName.json';
+  }
+
+  Future<bool> isMushafCoordsDownloaded(String styleName) async {
+    final path = await getMushafCoordsPath(styleName);
+    return File(path).existsSync();
+  }
+
+  Future<String?> downloadMushafCoords(String styleName) async {
+    try {
+      if (await isMushafCoordsDownloaded(styleName)) {
+        return await getMushafCoordsPath(styleName);
+      }
+      final path = await getMushafCoordsPath(styleName);
+      final r2Service = R2StorageService();
+      await r2Service.downloadFile('rafeeq-aldarb-data', 'mushaf_coords/$styleName.json', path);
+      return path;
+    } catch (e) {
+      return null;
+    }
   }
 
   // ── Download a single page ────────────────────────────────────────────────

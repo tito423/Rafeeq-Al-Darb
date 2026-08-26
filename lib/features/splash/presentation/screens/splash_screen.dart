@@ -63,16 +63,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeIn);
 
-    // Check if launched from notification
-    _checkInitialNotification();
+    // Removed _checkInitialNotification() from initState, handled in _initializeApp
 
     // Start initialization sequence
     _initializeApp();
   }
   
   Future<void> _initializeApp() async {
-    // Show splash for at least 2.5 seconds before checking assets
-    await Future.delayed(const Duration(milliseconds: 2500));
+    final launchedByNotif = await import_notification_service.NotificationService().checkInitialNotification();
+
+    if (!launchedByNotif) {
+      // Show splash for at least 2.5 seconds before checking assets
+      await Future.delayed(const Duration(milliseconds: 2500));
+    }
+
     
     if (!mounted) return;
     setState(() {
@@ -97,12 +101,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _navigateNext();
   }
 
-  Future<void> _checkInitialNotification() async {
-    // Need to use NotificationService which depends on context/navigation if pushed
-    // Wait until build completes
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      import_notification_service.NotificationService().checkInitialNotification();
-    });
+  Future<bool> _checkInitialNotification() async {
+    // Deprecated wrapper
+    return false;
   }
 
   Future<void> _navigateNext() async {

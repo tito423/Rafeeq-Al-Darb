@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Ayah {
   final int id;
   final int surahId;
@@ -30,20 +32,31 @@ class Ayah {
     this.asbab = '',
   });
 
+  static String _fix(String text) {
+    if (text.isEmpty) return text;
+    // Check if it's likely gibberish (Latin-1 chars over 0x80)
+    // Actually, just try to decode the codeUnits as UTF-8. If it fails, return as-is.
+    try {
+      return utf8.decode(text.codeUnits, allowMalformed: false);
+    } catch (_) {
+      return text;
+    }
+  }
+
   factory Ayah.fromMap(Map<String, dynamic> m) => Ayah(
         id: m['id'] as int? ?? 0,
         surahId: m['surah_number'] as int? ?? 1,
         ayahNumber: m['ayah_in_surah'] as int? ?? 1,
-        textUthmani: m['text_uthmani'] as String? ?? '',
-        textClean: m['text_uthmani'] as String? ?? '',
+        textUthmani: _fix(m['text_uthmani'] as String? ?? ''),
+        textClean: _fix(m['text_uthmani'] as String? ?? ''),
         pageNumber: m['page_number'] as int? ?? 1,
         juzNumber: m['juz_number'] as int? ?? 1,
-        tafsir: m['tafsir'] as String? ?? '',
-        tafsirJalalayn: m['tafsir_jalalayn'] as String? ?? '',
-        translation: m['translation'] as String? ?? '',
-        wordMeanings: m['word_meanings'] as String? ?? '',
-        irab: m['irab'] as String? ?? '',
-        asbab: m['asbab'] as String? ?? '',
+        tafsir: _fix(m['tafsir'] as String? ?? ''),
+        tafsirJalalayn: _fix(m['tafsir_jalalayn'] as String? ?? ''),
+        translation: _fix(m['translation'] as String? ?? ''),
+        wordMeanings: _fix(m['word_meanings'] as String? ?? ''),
+        irab: _fix(m['irab'] as String? ?? ''),
+        asbab: _fix(m['asbab'] as String? ?? ''),
       );
 
   String get sanitizedText {

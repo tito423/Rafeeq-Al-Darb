@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../providers/prayer_settings_provider.dart';
@@ -80,21 +81,93 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.2)),
             ),
-            child: ListTile(
-              title: Text(settings.selectedMuezzin, style: GoogleFonts.scheherazadeNew(color: textColor, fontWeight: FontWeight.bold, fontSize: 18)),
-              subtitle: Text('اضغط للمعاينة الفورية وتغيير المؤذن', style: GoogleFonts.amiri(color: AppColors.lightSubtext, fontSize: 12)),
-              trailing: const Icon(Icons.record_voice_over_rounded, color: AppColors.accentGold),
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => const MuezzinSelectionSheet(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final muezzinsAsync = ref.watch(muezzinsProvider);
+                return muezzinsAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator(color: AppColors.accentGold)),
+                  error: (err, _) => Text('خطأ في التحميل', style: GoogleFonts.amiri(color: Colors.red)),
+                  data: (muezzins) {
+                    final selected = muezzins.any((m) => m.name == settings.selectedMuezzin)
+                        ? settings.selectedMuezzin
+                        : muezzins.first.name;
+
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: selected,
+                        isExpanded: true,
+                        icon: const Icon(Icons.arrow_drop_down_rounded, color: AppColors.accentGold),
+                        dropdownColor: cardBg,
+                        style: GoogleFonts.scheherazadeNew(color: textColor, fontWeight: FontWeight.bold, fontSize: 18),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            notifier.setSelectedMuezzin(newValue);
+                          }
+                        },
+                        items: muezzins.map<DropdownMenuItem<String>>((m) {
+                          return DropdownMenuItem<String>(
+                            value: m.name,
+                            child: Text(m.name),
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  },
                 );
               },
             ),
           ),
           const SizedBox(height: 16),
+
+          // Adhan Display Mode
+          Text(
+            'نوع تنبيه الأذان',
+            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.accentGold, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: cardBg,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.2)),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Consumer(
+              builder: (context, ref, child) {
+                // Read directly from SharedPreferences since it's used directly in notification_service
+                return FutureBuilder<SharedPreferences>(
+                  future: SharedPreferences.getInstance(),
+                  builder: (context, snapshot) {
+                    final prefs = snapshot.data;
+                    final mode = prefs?.getString('adhanDisplayMode') ?? 'animated';
+
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: mode,
+                        isExpanded: true,
+                        icon: const Icon(Icons.arrow_drop_down_rounded, color: AppColors.accentGold),
+                        dropdownColor: cardBg,
+                        style: GoogleFonts.amiri(color: textColor, fontWeight: FontWeight.bold, fontSize: 16),
+                        onChanged: (String? newValue) {
+                          if (newValue != null && prefs != null) {
+                            prefs.setString('adhanDisplayMode', newValue);
+                            // Force rebuild
+                            (context as Element).markNeedsBuild();
+                          }
+                        },
+                        items: const [
+                          DropdownMenuItem(value: 'animated', child: Text('شاشة أذان متحركة')),
+                          DropdownMenuItem(value: 'audio_only', child: Text('صوت في الخلفية فقط')),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 24),
 
           // Calculation Method Selection
           Text(

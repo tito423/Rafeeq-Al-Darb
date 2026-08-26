@@ -8,6 +8,7 @@ import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/prayer/presentation/screens/prayer_screen.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
 import '../../features/sebha/presentation/screens/sebha_screen.dart';
+import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 
 // ── Tab index provider ────────────────────────────────────────────────────────
@@ -27,6 +28,7 @@ const _tabs = [
   _Tab('الصلاة',   Icons.access_time_outlined,    Icons.access_time_filled),
   _Tab('الأذكار',  Icons.auto_awesome_outlined,   Icons.auto_awesome_rounded),
   _Tab('المسبحة',  Icons.loop_outlined,           Icons.loop_rounded),
+  _Tab('المكتبة',  Icons.local_library_outlined,  Icons.local_library_rounded),
   _Tab('المزيد',   Icons.settings_outlined,       Icons.settings_rounded),
 ];
 
@@ -44,6 +46,7 @@ class AppShell extends ConsumerWidget {
     PrayerScreen(),
     AzkarScreen(),
     SebhaScreen(),
+    LibraryScreen(),
     SettingsScreen(),
   ];
 

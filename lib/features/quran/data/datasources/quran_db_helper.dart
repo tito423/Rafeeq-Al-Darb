@@ -101,6 +101,12 @@ class QuranDbHelper {
     return rows.isEmpty ? null : Ayah.fromMap(rows.first);
   }
 
+  Future<Ayah?> getAyahBySurahAndNumber(int surahNumber, int ayahNumber) async {
+    final db = await database;
+    final rows = await db.rawQuery('$_ayahSelect WHERE surah_number = ? AND ayah_in_surah = ?', [surahNumber, ayahNumber]);
+    return rows.isEmpty ? null : Ayah.fromMap(rows.first);
+  }
+
   Future<List<Ayah>> getAyahsByPage(int pageNumber) async {
     final db = await database;
     final rows = await db.rawQuery(

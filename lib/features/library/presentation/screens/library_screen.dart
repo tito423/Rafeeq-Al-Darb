@@ -11,6 +11,7 @@ import '../../../books/presentation/screens/book_reader_screen.dart';
 import '../../../books/presentation/screens/text_book_reader_screen.dart';
 import 'hadith_reader_screen.dart';
 import 'hadith_search_screen.dart';
+import '../../data/datasources/hadith_db_helper.dart';
 
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
@@ -289,95 +290,145 @@ class _IslamicBooksTabState extends State<_IslamicBooksTab> {
 }
 
 // ── Hadith Books Tab ──────────────────────────────────────────────────────────
-class _HadithBooksTab extends ConsumerWidget {
+class _HadithBooksTab extends StatefulWidget {
   const _HadithBooksTab();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  State<_HadithBooksTab> createState() => _HadithBooksTabState();
+}
+
+class _HadithBooksTabState extends State<_HadithBooksTab> {
+  final _dbHelper = HadithDbHelper();
+  List<Map<String, dynamic>> _collections = [];
+  bool _isLoading = true;
+
+  static const _collectionNamesAr = {
+    'bukhari': 'صحيح البخاري',
+    'muslim': 'صحيح مسلم',
+    'tirmidhi': 'جامع الترمذي',
+    'abudawud': 'سنن أبي داود',
+    'nasai': 'سنن النسائي',
+    'ibnmajah': 'سنن ابن ماجه',
+    'malik': 'موطأ مالك',
+    'nawawi': 'الأربعون النووية',
+    'qudsi': 'الأحاديث القدسية',
+  };
+
+  static const _collectionIcons = {
+    'bukhari': '📗',
+    'muslim': '📘',
+    'tirmidhi': '📙',
+    'abudawud': '📕',
+    'nasai': '📓',
+    'ibnmajah': '📔',
+    'malik': '📒',
+    'nawawi': '🌟',
+    'qudsi': '✨',
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCollections();
+  }
+
+  Future<void> _loadCollections() async {
+    try {
+      final data = await _dbHelper.getCollections();
+      if (mounted) {
+        setState(() {
+          _collections = data;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading hadith collections: $e');
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
     final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
     final subtext = isDark ? AppColors.darkSubtext : AppColors.lightSubtext;
-    final configAsync = ref.watch(githubConfigProvider);
 
-    return configAsync.when(
-      loading: () => const Center(
-        child: CircularProgressIndicator(color: AppColors.accentGold),
-      ),
-      error: (error, stack) => Center(
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator(color: AppColors.accentGold));
+    }
+
+    if (_collections.isEmpty) {
+      return Center(
         child: Text(
-          'حدث خطأ في تحميل البيانات',
-          style: GoogleFonts.amiri(color: Colors.red),
+          'لا توجد كتب حديث حالياً',
+          style: GoogleFonts.amiri(fontSize: 18, color: textColor),
         ),
-      ),
-      data: (config) {
-        final books = config.library.books;
+      );
+    }
 
-        if (books.isEmpty) {
-          return Center(
-            child: Text(
-              'لا توجد كتب حالياً',
-              style: GoogleFonts.amiri(fontSize: 18, color: textColor),
-            ),
-          );
-        }
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _collections.length,
+      itemBuilder: (context, index) {
+        final c = _collections[index];
+        final id = c['id'] as String? ?? '';
+        final nameAr = _collectionNamesAr[id] ?? (c['name'] as String? ?? id);
+        final total = c['total_hadiths'] as int? ?? 0;
+        final icon = _collectionIcons[id] ?? '📖';
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: books.length,
-          itemBuilder: (context, index) {
-            final book = books[index];
-            return Container(
-              margin: const EdgeInsets.only(bottom: 12),
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: cardBg,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.15)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            leading: Container(
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
-                color: cardBg,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.15)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
+                color: AppColors.accentGold.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(14),
               ),
-              child: ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppColors.accentGold.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.book_rounded, color: AppColors.accentGold),
-                ),
-                title: Text(
-                  book.title,
-                  style: GoogleFonts.scheherazadeNew(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                  ),
-                ),
-                subtitle: Text(
-                  book.description.isNotEmpty ? book.description : book.author,
-                  style: GoogleFonts.amiri(fontSize: 13, color: subtext),
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.accentGold),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HadithReaderScreen(
-                        bookId: book.id,
-                        bookTitle: book.title,
-                        downloadUrl: book.downloadUrl,
-                      ),
-                    ),
-                  );
-                },
+              child: Center(
+                child: Text(icon, style: const TextStyle(fontSize: 24)),
               ),
-            );
-          },
+            ),
+            title: Text(
+              nameAr,
+              style: GoogleFonts.scheherazadeNew(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: textColor,
+              ),
+            ),
+            subtitle: Text(
+              '$total حديث',
+              style: GoogleFonts.amiri(fontSize: 13, color: subtext),
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.accentGold),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => HadithReaderScreen(
+                    bookId: id,
+                    bookTitle: nameAr,
+                  ),
+                ),
+              );
+            },
+          ),
         );
       },
     );

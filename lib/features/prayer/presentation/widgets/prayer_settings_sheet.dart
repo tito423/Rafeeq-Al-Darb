@@ -484,7 +484,7 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'اختر المؤذن مع المعاينة الفورية',
+                    'اختر المؤذن',
                     style: GoogleFonts.scheherazadeNew(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
