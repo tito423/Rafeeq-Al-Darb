@@ -9,7 +9,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/models/text_book_model.dart';
 import '../providers/reader_settings_provider.dart';
 import '../widgets/book_index_drawer.dart';
-
+import 'dart:io';
+import '../../../../services/download_manager.dart';
 class TextBookReaderScreen extends ConsumerStatefulWidget {
   final String bookId;
   final String title;
@@ -43,12 +44,20 @@ class _TextBookReaderScreenState extends ConsumerState<TextBookReaderScreen> {
 
   Future<void> _loadBookData() async {
     try {
-      // If it's a network URL, we would use http.get. 
-      // For now, assuming it's a local asset or handling both.
-      String jsonString;
-      if (widget.bookUrl.startsWith('http')) {
-        // Implement HTTP fetching if needed. Using rootBundle for sample.
-        throw Exception("Network fetching not implemented yet. Use local asset for testing.");
+      String jsonString = '';
+      final manager = ref.read(downloadManagerProvider.notifier);
+      final isDownloaded = manager.isDownloadedLocally('book_${widget.bookId}');
+      
+      if (isDownloaded) {
+        final localPath = await manager.getBookPath(widget.bookId);
+        final file = File(localPath);
+        if (await file.exists()) {
+          jsonString = await file.readAsString();
+        } else {
+           throw Exception('File not found locally despite being in registry.');
+        }
+      } else if (widget.bookUrl.startsWith('http')) {
+        throw Exception("Network fetching not implemented yet. Please download the book first.");
       } else {
         jsonString = await rootBundle.loadString(widget.bookUrl);
       }

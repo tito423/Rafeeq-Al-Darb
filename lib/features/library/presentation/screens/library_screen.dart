@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/github_config_service.dart';
+import '../../../../services/download_manager.dart';
 import '../../../books/presentation/screens/book_reader_screen.dart';
 import '../../../books/presentation/screens/text_book_reader_screen.dart';
 import 'hadith_reader_screen.dart';
@@ -181,22 +182,49 @@ class _IslamicBooksTabState extends State<_IslamicBooksTab> {
                   itemCount: filtered.length,
                   itemBuilder: (context, index) {
                     final book = filtered[index];
-                    return GestureDetector(
+                    final bookId = book['id'] ?? '';
+                    
+                    return Consumer(
+                      builder: (context, ref, child) {
+                        final downloadState = ref.watch(downloadManagerProvider);
+                        final taskId = 'book_';
+                        final task = downloadState.tasks[taskId];
+                        final isDownloaded = downloadState.isAssetDownloaded(taskId);
+                        final isDownloading = task?.isDownloading == true;
+                        final progress = task?.progress ?? 0.0;
+
+                        return GestureDetector(
                       onTap: () {
                         final isText = book['format'] == 'text' || (book['download_url']?.endsWith('.json') ?? false);
+                        final downloadUrl = book['download_url'] ?? '';
+                        
+                        if (!isDownloaded && !isDownloading && downloadUrl.isNotEmpty) {
+                          // Start download
+                          if (isText) {
+                            ref.read(downloadManagerProvider.notifier).downloadBook(bookId: bookId, downloadUrl: downloadUrl);
+                          } else {
+                            ref.read(downloadManagerProvider.notifier).downloadBookPdf(bookId, downloadUrl, book['title'] ?? '');
+                          }
+                          return;
+                        }
+
+                        if (isDownloading) {
+                          // Ignore tap while downloading
+                          return;
+                        }
                         
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => isText
                                 ? TextBookReaderScreen(
-                                    bookId: book['id'] ?? '',
+                                    bookId: bookId,
                                     title: book['title'] ?? '',
-                                    bookUrl: book['download_url'] ?? '',
+                                    bookUrl: downloadUrl,
                                   )
                                 : BookReaderScreen(
-                                    bookId: book['id'] ?? '',
+                                    bookId: bookId,
                                     title: book['title'] ?? '',
-                                    pdfUrl: book['download_url'] ?? '',
+                                    pdfUrl: downloadUrl,
                                   ),
                           ),
                         );
@@ -280,6 +308,8 @@ class _IslamicBooksTabState extends State<_IslamicBooksTab> {
                           ],
                         ),
                       ),
+                    );
+                      },
                     );
                   },
                 ),
