@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../providers/prayer_settings_provider.dart';
 import '../widgets/prayer_settings_sheet.dart';
+import 'qibla_compass_screen.dart';
 
 class PrayerScreen extends ConsumerStatefulWidget {
   const PrayerScreen({super.key});
@@ -43,6 +44,10 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
         padding: const EdgeInsets.all(16),
         physics: const BouncingScrollPhysics(),
         children: [
+          // ── Qibla Card ──────────────────────────────────────────────────
+          _buildQiblaCard(context, isDark),
+          const SizedBox(height: 24),
+
           // Main Toggles
           _buildSwitchTile(
             title: 'إشعارات الصلاة',
@@ -166,6 +171,80 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
             );
           }),
         ],
+      ),
+    );
+  }
+
+  Widget _buildQiblaCard(BuildContext context, bool isDark) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const QiblaCompassScreen()),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: isDark
+              ? const LinearGradient(
+                  colors: [Color(0xFF0F1714), Color(0xFF14251D)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : const LinearGradient(
+                  colors: [Color(0xFF102118), Color(0xFF163225)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.4)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accentGold.withValues(alpha: 0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: AppColors.accentGold.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.4)),
+              ),
+              child: const Icon(Icons.explore_rounded, color: AppColors.accentGold, size: 30),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'تحديد القبلة',
+                    style: GoogleFonts.scheherazadeNew(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'بوصلة ذكية نحو الكعبة المشرفة',
+                    style: GoogleFonts.amiri(
+                      fontSize: 14,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.accentGold, size: 18),
+          ],
+        ),
       ),
     );
   }

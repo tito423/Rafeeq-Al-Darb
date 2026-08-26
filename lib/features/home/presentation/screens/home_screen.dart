@@ -10,7 +10,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/prayer_times_service.dart';
-import '../../../prayer/presentation/screens/qibla_compass_screen.dart';
+
 import '../../../../core/services/notification_service.dart';
 import '../../../quran/presentation/providers/quran_provider.dart';
 import '../../../quran/presentation/screens/surah_reading_screen.dart';
@@ -92,8 +92,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             // ── Prayer times strip ────────────────────────────────────────
             SliverToBoxAdapter(child: _PrayerTimesStrip(isDark: isDark)),
 
-            // ── Qibla ─────────────────────────────────────────────────────
-            SliverToBoxAdapter(child: _QiblaCard(isDark: isDark)),
 
             // ── Continue Reading ──────────────────────────────────────────
             SliverToBoxAdapter(child: _ContinueReadingCard(isDark: isDark)),
@@ -357,82 +355,9 @@ class _StarPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-// ── Qibla Card ────────────────────────────────────────────────────────────────
-class _QiblaCard extends StatelessWidget {
-  final bool isDark;
-  const _QiblaCard({required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const QiblaCompassScreen()),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-        padding: const EdgeInsets.all(22),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : AppColors.primaryBlue,
-          gradient: isDark ? const LinearGradient(
-            colors: [Color(0xFF0F1714), Color(0xFF14251D)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ) : null,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.3)),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.accentGold.withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.accentGold.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.explore_rounded, color: AppColors.accentGold, size: 28),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'تحديد القبلة',
-                    style: GoogleFonts.amiri(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'بوصلة ذكية نحو مكة المكرمة',
-                    style: GoogleFonts.amiri(
-                      fontSize: 14,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.accentGold, size: 18),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 // ── Prayer times strip ────────────────────────────────────────────────────────
+
 
 class _PrayerTimesStrip extends ConsumerWidget {
   final bool isDark;

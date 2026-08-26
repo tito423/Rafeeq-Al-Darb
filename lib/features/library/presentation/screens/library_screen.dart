@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/github_config_service.dart';
 import '../../../books/presentation/screens/book_reader_screen.dart';
+import '../../../books/presentation/screens/text_book_reader_screen.dart';
 import 'hadith_reader_screen.dart';
 import 'hadith_search_screen.dart';
 
@@ -181,13 +182,21 @@ class _IslamicBooksTabState extends State<_IslamicBooksTab> {
                     final book = filtered[index];
                     return GestureDetector(
                       onTap: () {
+                        final isText = book['format'] == 'text' || (book['download_url']?.endsWith('.json') ?? false);
+                        
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => BookReaderScreen(
-                              bookId: book['id'] ?? '',
-                              title: book['title'] ?? '',
-                              pdfUrl: book['download_url'],
-                            ),
+                            builder: (_) => isText
+                                ? TextBookReaderScreen(
+                                    bookId: book['id'] ?? '',
+                                    title: book['title'] ?? '',
+                                    bookUrl: book['download_url'] ?? '',
+                                  )
+                                : BookReaderScreen(
+                                    bookId: book['id'] ?? '',
+                                    title: book['title'] ?? '',
+                                    pdfUrl: book['download_url'] ?? '',
+                                  ),
                           ),
                         );
                       },

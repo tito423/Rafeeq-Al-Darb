@@ -7,26 +7,46 @@ import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/adhan_sync_data.dart';
+import '../../../../services/download_manager.dart';
+import '../providers/prayer_settings_provider.dart';
 
 // Global player so audio continues if screen is dismissed
 final AudioPlayer globalAdhanPlayer = AudioPlayer();
 
-Future<void> playAdhanInBackground(String prayerName, String muezzinName) async {
+Future<void> playAdhanInBackground(String prayerName, String muezzinName, [WidgetRef? ref]) async {
   try {
-    String assetName = 'minshawi';
-    if (muezzinName.contains('مكة')) assetName = 'minshawi'; // Fallback
-    else if (muezzinName.contains('عبد الباسط')) assetName = 'abdulbasit';
-    else if (muezzinName.contains('المنشاوي')) assetName = 'minshawi';
-    else if (muezzinName.contains('مشاري') || muezzinName.contains('العفاسي')) assetName = 'mishary';
-    else if (muezzinName.contains('مصطفى') || muezzinName.contains('اسماعيل')) assetName = 'mustafa_ismail';
-    else if (muezzinName.contains('حافظ')) assetName = 'abdulbasit'; // Fallback
-    else if (muezzinName.contains('الحسيني')) assetName = 'mustafa_ismail'; // Fallback
+    String? audioPath;
+    String? audioUrl;
+    
+    if (ref != null) {
+      final muezzins = await ref.read(muezzinsProvider.future);
+      Muezzin? selected;
+      for (var m in muezzins) {
+        if (m.name == muezzinName) selected = m;
+      }
+      selected ??= muezzins.isNotEmpty ? muezzins.first : null;
+
+      if (selected != null) {
+        final manager = ref.read(downloadManagerProvider.notifier);
+        audioPath = await manager.getAdhanPath(selected.id);
+        audioUrl = selected.url;
+      }
+    } else {
+      // Fallback for notification service
+      audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/makkah.mp3';
+      if (muezzinName.contains('عبد الباسط')) audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/abdulbasit.mp3';
+      else if (muezzinName.contains('المنشاوي')) audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/minshawi.mp3';
+      else if (muezzinName.contains('مشاري') || muezzinName.contains('العفاسي')) audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/mishary.mp3';
+      else if (muezzinName.contains('مصطفى') || muezzinName.contains('اسماعيل')) audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/mustafa_ismail.mp3';
+    }
+
+    final uri = audioPath != null ? Uri.file(audioPath) : Uri.parse(audioUrl ?? 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/makkah.mp3');
 
     await globalAdhanPlayer.setAudioSource(
       AudioSource.uri(
-        Uri.parse('asset:///assets/audio/$assetName.m4a'),
+        uri,
         tag: MediaItem(
-          id: 'adhan_$assetName',
+          id: 'adhan_bg',
           title: 'أذان $prayerName',
           artist: muezzinName,
         ),
@@ -109,45 +129,32 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
 
   Future<void> _startAdhan() async {
     try {
-      // Map muezzin name to the local m4a asset
-      String assetName = 'minshawi'; // Default to a guaranteed local asset
-      if (widget.muezzinName.contains('مكة')) assetName = 'minshawi'; // Fallback
-      else if (widget.muezzinName.contains('عبد الباسط')) assetName = 'abdulbasit';
-      else if (widget.muezzinName.contains('المنشاوي')) assetName = 'minshawi';
-      else if (widget.muezzinName.contains('مشاري') || widget.muezzinName.contains('العفاسي')) assetName = 'mishary';
-      else if (widget.muezzinName.contains('مصطفى') || widget.muezzinName.contains('اسماعيل')) assetName = 'mustafa_ismail';
-      else if (widget.muezzinName.contains('حافظ')) assetName = 'abdulbasit'; // Fallback
-      else if (widget.muezzinName.contains('الحسيني')) assetName = 'mustafa_ismail'; // Fallback
+      final muezzins = await ref.read(muezzinsProvider.future);
+      Muezzin? selected;
+      for (var m in muezzins) {
+        if (m.name == widget.muezzinName) selected = m;
+      }
+      selected ??= muezzins.isNotEmpty ? muezzins.first : null;
 
-      // We use local assets downloaded by yt-dlp
-      await globalAdhanPlayer.setAudioSource(
-        AudioSource.uri(
-          Uri.parse('asset:///assets/audio/$assetName.m4a'),
-          tag: MediaItem(
-            id: 'adhan_$assetName',
-            title: 'أذان ${widget.prayerName}',
-            artist: widget.muezzinName,
-          ),
-        ),
-      );
-      globalAdhanPlayer.play();
-    } catch (e) {
-      debugPrint("Could not play adhan audio from assets, trying fallback... $e");
-      try {
+      if (selected != null) {
+        final manager = ref.read(downloadManagerProvider.notifier);
+        final path = await manager.getAdhanPath(selected.id);
+        final uri = path != null ? Uri.file(path) : Uri.parse(selected.url);
+
         await globalAdhanPlayer.setAudioSource(
           AudioSource.uri(
-            Uri.parse('https://download.quranicaudio.com/adhan/makkah.mp3'),
+            uri,
             tag: MediaItem(
-              id: 'adhan_fallback',
+              id: 'adhan_${selected.id}',
               title: 'أذان ${widget.prayerName}',
               artist: widget.muezzinName,
             ),
           ),
         );
         globalAdhanPlayer.play();
-      } catch (e2) {
-        debugPrint("Fallback failed: $e2");
       }
+    } catch (e) {
+      debugPrint("Could not play adhan audio: $e");
     }
   }
 

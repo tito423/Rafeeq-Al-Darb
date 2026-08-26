@@ -6,7 +6,8 @@ import '../../core/theme/app_colors.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/prayer/presentation/screens/prayer_screen.dart';
-import '../../features/library/presentation/screens/library_screen.dart';
+import '../../features/azkar/presentation/screens/azkar_screen.dart';
+import '../../features/sebha/presentation/screens/sebha_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 
 // ── Tab index provider ────────────────────────────────────────────────────────
@@ -21,11 +22,12 @@ class _Tab {
 }
 
 const _tabs = [
-  _Tab('الرئيسية',   Icons.home_outlined,            Icons.home_rounded),
-  _Tab('القرآن',     Icons.menu_book_outlined,        Icons.menu_book_rounded),
-  _Tab('الصلاة',     Icons.access_time_outlined,      Icons.access_time_filled),
-  _Tab('المكتبة',   Icons.local_library_outlined,    Icons.local_library_rounded),
-  _Tab('الإعدادات / الضبط', Icons.settings_outlined,  Icons.settings_rounded),
+  _Tab('الرئيسية', Icons.home_outlined,          Icons.home_rounded),
+  _Tab('القرآن',   Icons.menu_book_outlined,      Icons.menu_book_rounded),
+  _Tab('الصلاة',   Icons.access_time_outlined,    Icons.access_time_filled),
+  _Tab('الأذكار',  Icons.auto_awesome_outlined,   Icons.auto_awesome_rounded),
+  _Tab('المسبحة',  Icons.loop_outlined,           Icons.loop_rounded),
+  _Tab('المزيد',   Icons.settings_outlined,       Icons.settings_rounded),
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -33,9 +35,6 @@ const _tabs = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Root [Scaffold] with a fully custom premium bottom navigation bar.
-/// • [IndexedStack] keeps all screens alive.
-/// • Each nav item animates its icon size & color via [AnimatedScale] / [TweenAnimationBuilder].
-/// • A top gold indicator line marks the active tab.
 class AppShell extends ConsumerWidget {
   const AppShell({super.key});
 
@@ -43,7 +42,8 @@ class AppShell extends ConsumerWidget {
     HomeScreen(),
     QuranScreen(),
     PrayerScreen(),
-    LibraryScreen(),
+    AzkarScreen(),
+    SebhaScreen(),
     SettingsScreen(),
   ];
 
