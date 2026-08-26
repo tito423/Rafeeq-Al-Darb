@@ -149,22 +149,6 @@ class _TextBookReaderScreenState extends ConsumerState<TextBookReaderScreen> {
                       _toggleBookmark(_currentPageIndex);
                     },
                   ),
-                if (_book != null)
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () async {
-                      final result = await showSearch<Map<String, dynamic>?>(
-                        context: context,
-                        delegate: BookSearchDelegate(book: _book!),
-                      );
-                      if (result != null) {
-                        setState(() {
-                          _searchQuery = result['query'] as String;
-                        });
-                        _goToChapter(result['index'] as int);
-                      }
-                    },
-                  ),
                 Builder(
                   builder: (context) => IconButton(
                     icon: const Icon(Icons.menu_book),
@@ -184,7 +168,7 @@ class _TextBookReaderScreenState extends ConsumerState<TextBookReaderScreen> {
           );
   }
 
-  Widget _buildSettingsBar(ReaderSettings notifier, Color bgColor) {
+  Widget _buildSettingsBar(ReaderSettingsProvider notifier, Color bgColor) {
     return Container(
       color: bgColor,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -221,7 +205,7 @@ class _TextBookReaderScreenState extends ConsumerState<TextBookReaderScreen> {
     );
   }
 
-  Widget _buildReaderBody(Color textColor, ReaderSettings settings) {
+  Widget _buildReaderBody(Color textColor, ReaderSettingsProvider settings) {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator(color: AppColors.accentGold));
     }
