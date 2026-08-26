@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:file_picker/file_picker.dart';
 
 import '../providers/prayer_settings_provider.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -438,14 +440,16 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
 
     try {
       await _player.stop();
-      final manager = ref.read(downloadManagerProvider.notifier);
-      final path = await manager.getAdhanPath(muezzin.id);
-      if (path != null) {
-        await _player.setFilePath(path);
+      if (muezzin.id == 'custom') {
+        final settings = ref.read(prayerSettingsProvider);
+        if (settings.customAdhanPath.isNotEmpty) {
+          await _player.setFilePath(settings.customAdhanPath);
+          await _player.play();
+        }
       } else {
-        await _player.setUrl(muezzin.url);
+        await _player.setAsset(muezzin.assetPath);
+        await _player.play();
       }
-      await _player.play();
     } catch (e) {
       debugPrint('Error previewing adhan: $e');
     } finally {
@@ -550,54 +554,55 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
                             color: isSelected ? AppColors.accentGold : textColor,
                           ),
                         ),
+                        subtitle: m.id == 'custom' && settings.customAdhanPath.isNotEmpty
+                            ? Text('مسار الملف مخصص', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.accentGold))
+                            : null,
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            FutureBuilder<bool>(
-                              future: ref.read(downloadManagerProvider.notifier).isAdhanDownloaded(m.id),
-                              builder: (context, snapshot) {
-                                final isDownloaded = snapshot.data ?? false;
-                                if (isDownloaded) return const SizedBox();
-                                
-                                if (isDownloading) {
-                                  return SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      value: task?.progress,
-                                      strokeWidth: 2,
-                                      color: AppColors.accentGold,
-                                    ),
-                                  );
-                                }
-                                
-                                return IconButton(
-                                  icon: const Icon(Icons.download_rounded, color: AppColors.accentGold),
-                                  onPressed: () {
-                                    ref.read(downloadManagerProvider.notifier).downloadAdhan(m.id, m.url);
-                                  },
-                                );
-                              },
-                            ),
                             if (isSelected)
                               const Icon(Icons.check_circle_rounded, color: AppColors.accentGold, size: 24)
                             else
                               TextButton(
-                                onPressed: () {
-                                  notifier.setSelectedMuezzin(m.name);
-                                  _player.stop();
-                                  Navigator.pop(context);
+                                onPressed: () async {
+                                  if (m.id == 'custom') {
+                                    final result = await FilePicker.platform.pickFiles(type: FileType.audio);
+                                    if (result != null && result.files.single.path != null) {
+                                      notifier.setCustomAdhanPath(result.files.single.path!);
+                                      notifier.setSelectedMuezzin(m.name);
+                                      _player.stop();
+                                      if (mounted) Navigator.pop(context);
+                                    }
+                                  } else {
+                                    notifier.setSelectedMuezzin(m.name);
+                                    _player.stop();
+                                    if (mounted) Navigator.pop(context);
+                                  }
                                 },
                                 child: Text(
-                                  'اختيار',
+                                  m.id == 'custom' ? 'اختيار ملف' : 'اختيار',
                                   style: GoogleFonts.amiri(color: AppColors.accentGold, fontWeight: FontWeight.bold),
                                 ),
                               ),
                           ],
                         ),
-                        onTap: () {
-                          notifier.setSelectedMuezzin(m.name);
-                          _previewAudio(m);
+                        onTap: () async {
+                          if (m.id == 'custom') {
+                            if (settings.customAdhanPath.isEmpty) {
+                              final result = await FilePicker.platform.pickFiles(type: FileType.audio);
+                              if (result != null && result.files.single.path != null) {
+                                notifier.setCustomAdhanPath(result.files.single.path!);
+                                notifier.setSelectedMuezzin(m.name);
+                                _previewAudio(m);
+                              }
+                            } else {
+                              notifier.setSelectedMuezzin(m.name);
+                              _previewAudio(m);
+                            }
+                          } else {
+                            notifier.setSelectedMuezzin(m.name);
+                            _previewAudio(m);
+                          }
                         },
                       ),
                     );

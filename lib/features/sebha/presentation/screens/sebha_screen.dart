@@ -37,8 +37,11 @@ class _SebhaState {
   });
 
   _Preset get preset => _presets[presetIndex];
-  double get progress =>
-      preset.target > 0 ? (count % preset.target) / preset.target : 0;
+  double get progress {
+    if (preset.target <= 0) return 0;
+    if (count > 0 && count % preset.target == 0) return 1.0;
+    return (count % preset.target) / preset.target;
+  }
   bool get isRoundComplete => count > 0 && count % preset.target == 0;
 
   _SebhaState copyWith({int? presetIndex, int? count, int? sessionTotal}) =>
@@ -73,7 +76,12 @@ class _SebhaNotifier extends StateNotifier<_SebhaState> {
   }
 
   void setPreset(int index) {
-    state = _SebhaState(presetIndex: index);
+    if (state.presetIndex == index) return;
+    state = _SebhaState(
+      presetIndex: index,
+      count: 0, // Reset round count for the new preset
+      sessionTotal: state.sessionTotal, // Preserve overall session total
+    );
   }
 }
 
@@ -199,7 +207,7 @@ class SebhaScreen extends ConsumerWidget {
                   final isSelected = i == sebha.presetIndex;
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: isSelected ? () => ref.read(_sebhaProvider.notifier).increment() : null,
+                    onTapDown: isSelected ? (_) => ref.read(_sebhaProvider.notifier).increment() : null,
                     child: Center(
                       child: AnimatedScale(
                         scale: isSelected ? 1.0 : 0.85,
@@ -335,8 +343,16 @@ class _SebhaRingState extends State<_SebhaRing>
   void didUpdateWidget(_SebhaRing old) {
     super.didUpdateWidget(old);
     if (old.progress != widget.progress) {
-      _progressAnim = Tween<double>(begin: _prevProgress, end: widget.progress)
-          .animate(CurvedAnimation(parent: _anim, curve: Curves.easeOut));
+      // If we are starting a new round (progress drops from 1.0 to close to 0)
+      // we don't want a slow backwards rewind animation. We just snap to 0.
+      if (old.progress == 1.0 && widget.progress < 0.1) {
+        _prevProgress = 0;
+        _progressAnim = Tween<double>(begin: 0, end: widget.progress)
+            .animate(CurvedAnimation(parent: _anim, curve: Curves.easeOut));
+      } else {
+        _progressAnim = Tween<double>(begin: _prevProgress, end: widget.progress)
+            .animate(CurvedAnimation(parent: _anim, curve: Curves.easeOut));
+      }
       _prevProgress = widget.progress;
       _anim.forward(from: 0);
     }

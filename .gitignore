@@ -47,7 +47,6 @@ android/.gradle/
 *.zip
 
 # Ignore large data staging
-assets/data/hadith/*.json
 assets/data/tafsir/*.json
 assets/quran/*.zip
 temp_downloads/

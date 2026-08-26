@@ -36,6 +36,7 @@ class MushafStyleInfo {
   final String localThumbCover;
   final String localThumbPage1;
   final String localThumbPage2;
+  final String r2Url;
   final String githubUrl;
   final String s3FallbackUrl;
   final int baseWidth;
@@ -53,6 +54,7 @@ class MushafStyleInfo {
     required this.localThumbCover,
     required this.localThumbPage1,
     required this.localThumbPage2,
+    required this.r2Url,
     required this.githubUrl,
     required this.s3FallbackUrl,
     required this.baseWidth,
@@ -63,7 +65,7 @@ class MushafStyleInfo {
     final pg = pageNumber.toString();
     final pg3 = pg.padLeft(3, '0');
     final pg4 = pg.padLeft(4, '0');
-    return githubUrl
+    return r2Url
         .replaceAll('{page}', pg)
         .replaceAll('{page3}', pg3)
         .replaceAll('{page4}', pg4);
@@ -91,6 +93,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/medina1/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/medina1/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/medina1/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/medina1/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/medina1/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Medina1/data/L/{page4}.gif',
     baseWidth: 460,
@@ -108,6 +111,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/medina2/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/medina2/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/medina2/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/medina2/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/medina2/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Medina2/data/L/{page4}.gif',
     baseWidth: 477,
@@ -125,6 +129,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/medina3/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/medina3/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/medina3/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/medina3/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/medina3/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Medina3/data/L/{page4}.gif',
     baseWidth: 468,
@@ -142,6 +147,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/medina_old/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/medinaOld/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/medinaOld/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/medinaOld/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/medinaOld/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/MedinaOld/data/L/{page4}.gif',
     baseWidth: 463,
@@ -159,6 +165,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/tajweed/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/tajweedColor/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/tajweedColor/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/tajweedColor/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/tajweedColor/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Tajweed/data/L/{page4}.gif',
     baseWidth: 479,
@@ -176,6 +183,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/shamarly/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/shamarly/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/shamarly/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/shamarly/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/shamarly/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Shamarly/data/L/{page4}.gif',
     baseWidth: 477,
@@ -193,6 +201,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/line12/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/line12/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/line12/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/line12/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/line12/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/12line/data/L/{page4}.gif',
     baseWidth: 442,
@@ -210,6 +219,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/tahajod/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/tahajod/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/tahajod/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/tahajod/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/tahajod/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Tahajod/data/L/{page4}.gif',
     baseWidth: 792,
@@ -229,6 +239,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/warsh1/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/warsh1/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/warsh1/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/warsh1/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/warsh1/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Warsh1/data/L/{page4}.gif',
     baseWidth: 475,
@@ -246,6 +257,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/warsh2/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/warsh2/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/warsh2/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/warsh2/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/warsh2/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Warsh2/data/L/{page4}.gif',
     baseWidth: 505,
@@ -263,6 +275,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/qaloon/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/qaloon/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/qaloon/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/qaloon/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/qaloon/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Qaloon/data/L/{page4}.gif',
     baseWidth: 475,
@@ -280,6 +293,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/douri/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/douri/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/douri/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/douri/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/douri/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Douri/data/L/{page4}.gif',
     baseWidth: 471,
@@ -297,6 +311,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/shubah/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/shubah/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/shubah/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/shubah/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/shubah/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Shubah/data/L/{page4}.gif',
     baseWidth: 474,
@@ -316,6 +331,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/naskh_taleek/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/naskh_taleek/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/naskh_taleek/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/naskh_taleek/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/naskh_taleek/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/NaskhTaleek/data/L/{page4}.gif',
     baseWidth: 462,
@@ -333,6 +349,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/urdu12/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/urdu12/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/urdu12/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/urdu12/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/urdu12/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Urdu12/data/L/{page4}.gif',
     baseWidth: 453,
@@ -350,6 +367,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/urdu13/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/urdu13/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/urdu13/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/urdu13/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/urdu13/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Urdu13/data/L/{page4}.gif',
     baseWidth: 446,
@@ -367,6 +385,7 @@ const kMushafStyles = <MushafStyleInfo>[
     localThumbCover: 'assets/mushaf_thumbs/urdu15/cover.gif',
     localThumbPage1: 'assets/mushaf_thumbs/urdu15/page1.gif',
     localThumbPage2: 'assets/mushaf_thumbs/urdu15/page2.gif',
+    r2Url: 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf/urdu15/{page}.png',
     githubUrl: 'https://raw.githubusercontent.com/tito423/rafeeq-api/master/mushaf/urdu15/{page}.png',
     s3FallbackUrl: 'https://s3.amazonaws.com/quranflash/books/Urdu15/data/L/{page4}.gif',
     baseWidth: 431,
