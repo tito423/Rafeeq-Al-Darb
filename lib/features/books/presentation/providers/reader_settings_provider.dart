@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final readerSettingsProvider = ChangeNotifierProvider<ReaderSettingsProvider>((ref) {
+  return ReaderSettingsProvider();
+});
+
 
 class ReaderSettingsProvider extends ChangeNotifier {
   double _fontSize = 20.0;
