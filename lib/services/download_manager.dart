@@ -427,6 +427,109 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     return dir;
   }
 
+  // ── Missing Legacy Methods ────────────────────────────────────────────────
+  
+  Future<String> getMushafCoordsPath(String styleName) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final d = Directory('${dir.path}/mushaf_coords');
+    if (!d.existsSync()) d.createSync(recursive: true);
+    return '${d.path}/$styleName.json';
+  }
+
+  Future<String?> downloadMushafCoords(String styleName) async {
+    final id = 'mushaf_coords_$styleName';
+    final path = await getMushafCoordsPath(styleName);
+    
+    if (isDownloadedLocally(id)) {
+      return path;
+    }
+    
+    try {
+      final url = 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf_coords/$styleName.json';
+      await _startDownload(
+        id: id,
+        url: url,
+        savePath: path,
+        category: DownloadCategory.mushaafPage,
+      );
+      
+      // Wait for completion
+      while (state.tasks[id]?.isDownloading == true) {
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+      return path;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  void cancelBulkDownload() {
+    state = state.copyWith(isBulkDownloading: false);
+    for (final token in _cancelTokens.values) {
+      token.cancel('User cancelled');
+    }
+    _cancelTokens.clear();
+  }
+
+  Future<void> downloadSurahAudio({
+    required int surahNumber,
+    required String reciterId,
+    required String mp3quranBaseUrl,
+  }) async {
+    final s = surahNumber.toString().padLeft(3, '0');
+    final id = 'audio_${reciterId}_$surahNumber';
+    final url = '$mp3quranBaseUrl/$s.mp3';
+    
+    if (isDownloadedLocally(id)) return;
+    if (state.tasks[id]?.isDownloading == true) return;
+
+    final audioDir = await _audioDir;
+    final savePath = '${audioDir.path}/$id.mp3';
+
+    await _startDownload(
+      id: id,
+      url: url,
+      savePath: savePath,
+      category: DownloadCategory.audioSurah,
+    );
+  }
+
+  Future<void> downloadFullReciterArchive({
+    required String reciterId,
+    required String mp3quranBaseUrl,
+    void Function(int completed, int total)? onProgress,
+  }) async {
+    const total = 114;
+    int completed = 0;
+
+    state = state.copyWith(
+      isBulkDownloading: true,
+      bulkTotal: total,
+      bulkCompleted: 0,
+    );
+
+    for (int surah = 1; surah <= total; surah++) {
+      if (!state.isBulkDownloading) break;
+
+      final id = 'audio_${reciterId}_$surah';
+      await downloadSurahAudio(
+        surahNumber: surah,
+        reciterId: reciterId,
+        mp3quranBaseUrl: mp3quranBaseUrl,
+      );
+      
+      while (state.tasks[id]?.isDownloading == true) {
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+      
+      completed++;
+      state = state.copyWith(bulkCompleted: completed);
+      onProgress?.call(completed, total);
+    }
+
+    state = state.copyWith(isBulkDownloading: false);
+  }
+
   // ── Helper functions ────────────────────────────────────────────────────────
   
   void _updateTask(String id, DownloadTask task) {
