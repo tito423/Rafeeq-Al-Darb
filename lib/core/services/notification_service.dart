@@ -11,6 +11,7 @@ import '../../app/rafeeq_app.dart' as import_app;
 import '../../features/quran/presentation/screens/surah_reading_screen.dart' as import_surah;
 import '../../features/azkar/presentation/screens/azkar_detail_screen.dart' as import_azkar;
 import '../../features/prayer/presentation/screens/full_screen_adhan_screen.dart';
+import 'package:flutter/services.dart';
 
 // ── Notification IDs ──────────────────────────────────────────────────────────
 
@@ -241,8 +242,10 @@ class NotificationService {
   static const _liveChannelName = 'الصلاة القادمة';
   static const _liveChannelDesc = 'عرض الصلاة القادمة والوقت المتبقي لها';
 
+  static const _platform = MethodChannel('com.tito.rafeeq_aldarb/salatuk_notification');
+
   Future<void> updateLivePrayerNotification(PrayerTimes pt) async {
-    if (!Platform.isAndroid) return; // Chronometer is mostly an Android feature natively supported like this.
+    if (!Platform.isAndroid) return;
     await initialize();
 
     final now = DateTime.now();
@@ -257,11 +260,14 @@ class NotificationService {
 
     String nextPrayerName = 'الفجر';
     DateTime? nextPrayerTime;
+    int activeIndex = 0;
 
-    for (final p in prayers) {
+    for (int i = 0; i < prayers.length; i++) {
+      final p = prayers[i];
       if (p.time != null && p.time!.isAfter(now)) {
         nextPrayerName = p.nameAr;
         nextPrayerTime = p.time;
+        activeIndex = i;
         break;
       }
     }
@@ -272,36 +278,39 @@ class NotificationService {
       if (t != null) {
         nextPrayerTime = t.add(const Duration(days: 1));
         nextPrayerName = 'الفجر';
+        activeIndex = 0;
       } else {
         return;
       }
     }
 
-    final androidDetails = AndroidNotificationDetails(
-      _liveChannelId,
-      _liveChannelName,
-      channelDescription: _liveChannelDesc,
-      importance: Importance.low, // low so it doesn't pop up over the screen
-      priority: Priority.low,
-      ongoing: true, // cannot be dismissed
-      autoCancel: false,
-      showWhen: true, // required for chronometer
-      usesChronometer: true, // Natively counts time
-      chronometerCountDown: true, // Count down instead of up
-      when: nextPrayerTime.millisecondsSinceEpoch,
-      color: const import_material.Color(0xFF003322),
-      icon: '@mipmap/ic_launcher',
-    );
-
-    await _plugin.show(
-      100, // Fixed ID for the live notification
-      'الصلاة القادمة: $nextPrayerName',
-      'باقي من الزمن:',
-      NotificationDetails(android: androidDetails),
-    );
+    try {
+      await _platform.invokeMethod('updateNotification', {
+        'nextPrayerName': nextPrayerName,
+        'nextPrayerTimeMs': nextPrayerTime.millisecondsSinceEpoch,
+        'times': [
+          pt.fajr,
+          pt.sunrise,
+          pt.dhuhr,
+          pt.asr,
+          pt.maghrib,
+          pt.isha,
+        ],
+        'activeIndex': activeIndex,
+      });
+    } catch (e) {
+      debugPrint("Failed to update custom native notification: $e");
+    }
   }
 
   Future<void> cancelLivePrayerNotification() async {
+    if (Platform.isAndroid) {
+      try {
+        await _platform.invokeMethod('cancelNotification');
+      } catch (e) {
+         debugPrint("Failed to cancel custom native notification: $e");
+      }
+    }
     await _plugin.cancel(100);
   }
 

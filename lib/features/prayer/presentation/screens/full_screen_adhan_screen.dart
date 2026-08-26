@@ -20,7 +20,8 @@ Future<void> playAdhanInBackground(String prayerName, String muezzinName, [Widge
     String? audioUrl;
     
     if (ref != null) {
-      final muezzins = await ref.read(muezzinsProvider.future);
+      final muezzins = ref.read(muezzinsProvider);
+      final settings = ref.read(prayerSettingsProvider);
       Muezzin? selected;
       for (var m in muezzins) {
         if (m.name == muezzinName) selected = m;
@@ -28,20 +29,26 @@ Future<void> playAdhanInBackground(String prayerName, String muezzinName, [Widge
       selected ??= muezzins.isNotEmpty ? muezzins.first : null;
 
       if (selected != null) {
-        final manager = ref.read(downloadManagerProvider.notifier);
-        audioPath = await manager.getAdhanPath(selected.id);
-        audioUrl = selected.url;
+        if (selected.id == 'custom' && settings.customAdhanPath.isNotEmpty) {
+          audioPath = settings.customAdhanPath;
+        } else {
+          audioPath = selected.assetPath;
+        }
       }
     } else {
-      // Fallback for notification service
-      audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/makkah.mp3';
-      if (muezzinName.contains('عبد الباسط')) audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/abdulbasit.mp3';
-      else if (muezzinName.contains('المنشاوي')) audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/minshawi.mp3';
-      else if (muezzinName.contains('مشاري') || muezzinName.contains('العفاسي')) audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/mishary.mp3';
-      else if (muezzinName.contains('مصطفى') || muezzinName.contains('اسماعيل')) audioUrl = 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/mustafa_ismail.mp3';
+      // Fallback for notification service - using embedded assets
+      audioPath = 'asset:///assets/audio/al_aqsa.m4a';
+      if (muezzinName.contains('عبد الباسط') || muezzinName.contains('عبدالباسط')) audioPath = 'asset:///assets/audio/abdulbasit.m4a';
+      else if (muezzinName.contains('المنشاوي')) audioPath = 'asset:///assets/audio/minshawi.m4a';
+      else if (muezzinName.contains('مشاري') || muezzinName.contains('العفاسي')) audioPath = 'asset:///assets/audio/mishary.m4a';
+      else if (muezzinName.contains('مصطفى') || muezzinName.contains('اسماعيل')) audioPath = 'asset:///assets/audio/mustafa_ismail.m4a';
     }
 
-    final uri = audioPath != null ? Uri.file(audioPath) : Uri.parse(audioUrl ?? 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/makkah.mp3');
+    final uri = (audioPath != null && audioPath.startsWith('asset:///'))
+        ? Uri.parse(audioPath) 
+        : (audioPath != null && audioPath.startsWith('assets/'))
+            ? Uri.parse('asset:///$audioPath')
+            : Uri.file(audioPath ?? '');
 
     await globalAdhanPlayer.setAudioSource(
       AudioSource.uri(
@@ -147,7 +154,8 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
 
   Future<void> _startAdhan() async {
     try {
-      final muezzins = await ref.read(muezzinsProvider.future);
+      final muezzins = ref.read(muezzinsProvider);
+      final settings = ref.read(prayerSettingsProvider);
       Muezzin? selected;
       for (var m in muezzins) {
         if (m.name == widget.muezzinName) selected = m;
@@ -155,9 +163,16 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
       selected ??= muezzins.isNotEmpty ? muezzins.first : null;
 
       if (selected != null) {
-        final manager = ref.read(downloadManagerProvider.notifier);
-        final path = await manager.getAdhanPath(selected.id);
-        final uri = path != null ? Uri.file(path) : Uri.parse(selected.url);
+        String audioPath;
+        if (selected.id == 'custom' && settings.customAdhanPath.isNotEmpty) {
+          audioPath = settings.customAdhanPath;
+        } else {
+          audioPath = selected.assetPath;
+        }
+        
+        final uri = audioPath.startsWith('assets/') 
+            ? Uri.parse('asset:///$audioPath') 
+            : Uri.file(audioPath);
 
         await globalAdhanPlayer.setAudioSource(
           AudioSource.uri(
@@ -211,10 +226,17 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
             ),
 
           // 1. Blurred Background overlay to make text readable
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.5),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.7),
+                  Colors.black.withValues(alpha: 0.3),
+                  Colors.black.withValues(alpha: 0.7),
+                ],
+              ),
             ),
           ),
           

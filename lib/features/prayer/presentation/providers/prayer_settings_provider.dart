@@ -10,33 +10,42 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
 class Muezzin {
   final String id;
   final String name;
-  final String url;
+  final String assetPath;
 
-  const Muezzin({required this.id, required this.name, required this.url});
-  factory Muezzin.fromJson(Map<String, dynamic> json) {
-    return Muezzin(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      url: json['url'] ?? '',
-    );
-  }
+  const Muezzin({required this.id, required this.name, required this.assetPath});
 }
 
-final muezzinsProvider = FutureProvider<List<Muezzin>>((ref) async {
-  try {
-    final response = await http.get(Uri.parse('https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans_catalog.json'));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
-      return data.map((json) => Muezzin.fromJson(json)).toList();
-    }
-  } catch (e) {
-    // Fallback to local
-  }
+final muezzinsProvider = Provider<List<Muezzin>>((ref) {
   return const [
     Muezzin(
-      id: 'makkah',
-      name: 'أذان مكة المكرمة',
-      url: 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/makkah.mp3',
+      id: 'abdulbasit',
+      name: 'عبدالباسط عبدالصمد',
+      assetPath: 'assets/audio/abdulbasit.m4a',
+    ),
+    Muezzin(
+      id: 'minshawi',
+      name: 'محمد صديق المنشاوي',
+      assetPath: 'assets/audio/minshawi.m4a',
+    ),
+    Muezzin(
+      id: 'mishary',
+      name: 'مشاري راشد العفاسي',
+      assetPath: 'assets/audio/mishary.m4a',
+    ),
+    Muezzin(
+      id: 'mustafa_ismail',
+      name: 'مصطفى إسماعيل',
+      assetPath: 'assets/audio/mustafa_ismail.m4a',
+    ),
+    Muezzin(
+      id: 'al_aqsa',
+      name: 'أذان المسجد الأقصى',
+      assetPath: 'assets/audio/al_aqsa.m4a',
+    ),
+    Muezzin(
+      id: 'custom',
+      name: 'أذان مخصص (من الجهاز)',
+      assetPath: '', // Handled separately
     ),
   ];
 });
@@ -46,6 +55,7 @@ class PrayerSettings {
   final bool globalNotifications;
   final bool locationEnabled;
   final String selectedMuezzin;
+  final String customAdhanPath; // Path to the custom adhan file chosen by user
   final String adhanDisplayMode; // 'animated' or 'audio_only'
   final String calculationMethod;
   final Map<String, bool> prayerToggles;
@@ -62,7 +72,8 @@ class PrayerSettings {
   PrayerSettings({
     this.globalNotifications = true,
     this.locationEnabled = true,
-    this.selectedMuezzin = 'أذان مكة المكرمة',
+    this.selectedMuezzin = 'عبدالباسط عبدالصمد',
+    this.customAdhanPath = '',
     this.adhanDisplayMode = 'animated',
     this.calculationMethod = 'Umm Al-Qura Univ., Makkah',
     this.prayerToggles = const {
@@ -107,6 +118,7 @@ class PrayerSettings {
     bool? globalNotifications,
     bool? locationEnabled,
     String? selectedMuezzin,
+    String? customAdhanPath,
     String? adhanDisplayMode,
     String? calculationMethod,
     Map<String, bool>? prayerToggles,
@@ -122,6 +134,7 @@ class PrayerSettings {
       globalNotifications: globalNotifications ?? this.globalNotifications,
       locationEnabled: locationEnabled ?? this.locationEnabled,
       selectedMuezzin: selectedMuezzin ?? this.selectedMuezzin,
+      customAdhanPath: customAdhanPath ?? this.customAdhanPath,
       adhanDisplayMode: adhanDisplayMode ?? this.adhanDisplayMode,
       calculationMethod: calculationMethod ?? this.calculationMethod,
       prayerToggles: prayerToggles ?? this.prayerToggles,
@@ -146,7 +159,8 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
   void _loadSettings() {
     final global = _prefs.getBool('globalNotifications') ?? true;
     final loc = _prefs.getBool('locationEnabled') ?? true;
-    final muezzin = _prefs.getString('selectedMuezzin') ?? 'أذان مكة المكرمة';
+    final muezzin = _prefs.getString('selectedMuezzin') ?? 'عبدالباسط عبدالصمد';
+    final customPath = _prefs.getString('customAdhanPath') ?? '';
     final adhanMode = _prefs.getString('adhanDisplayMode') ?? 'animated';
     final calcMethod = _prefs.getString('calculationMethod') ?? 'Umm Al-Qura Univ., Makkah';
     
@@ -171,6 +185,7 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
       globalNotifications: global,
       locationEnabled: loc,
       selectedMuezzin: muezzin,
+      customAdhanPath: customPath,
       adhanDisplayMode: adhanMode,
       calculationMethod: calcMethod,
       prayerToggles: toggles,
@@ -197,6 +212,11 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
   void setSelectedMuezzin(String value) {
     _prefs.setString('selectedMuezzin', value);
     state = state.copyWith(selectedMuezzin: value);
+  }
+
+  void setCustomAdhanPath(String path) {
+    _prefs.setString('customAdhanPath', path);
+    state = state.copyWith(customAdhanPath: path);
   }
   
   void setAdhanDisplayMode(String value) {

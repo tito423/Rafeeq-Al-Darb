@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../widgets/alerts_customization_sheet.dart';
 import '../widgets/theme_customization_sheet.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../downloads/presentation/screens/downloads_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -131,6 +132,30 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
 
+
+          // ── التنزيلات ──────────────────────────────────────────────────
+          sectionHeader('إدارة البيانات'),
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: ListTile(
+              leading: Icon(Icons.download_rounded, color: theme.colorScheme.primary, size: 28),
+              title: Text(
+                'مدير التنزيلات',
+                style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+              subtitle: Text(
+                'إدارة المصاحف والكتب المحملة',
+                style: GoogleFonts.amiri(fontSize: 13),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const DownloadsScreen()),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 24),
 
           // ── النسخ الاحتياطي السحابي ──────────────────────────────────
           sectionHeader('النسخ الاحتياطي السحابي'),

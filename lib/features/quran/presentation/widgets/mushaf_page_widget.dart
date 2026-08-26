@@ -9,6 +9,7 @@ import '../../../../core/models/mushaf_style.dart';
 import '../../domain/models/ayah.dart';
 import '../providers/page_verse_provider.dart';
 import '../../data/datasources/quran_db_helper.dart';
+import '../screens/mushaf_browser_screen.dart';
 
 class MushaafPageWidget extends ConsumerWidget {
   final int pageNumber;
@@ -564,7 +565,7 @@ class _DownloadPromptView extends StatelessWidget {
               onPressed: onDownload,
               icon: const Icon(Icons.download_rounded),
               label: Text(
-                'تحميل الصفحة',
+                'تحميل الصفحة فقط',
                 style: GoogleFonts.amiri(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -573,6 +574,34 @@ class _DownloadPromptView extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryBlue,
                 foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 14,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MushafBrowserScreen()),
+                );
+              },
+              icon: const Icon(Icons.library_books_rounded),
+              label: Text(
+                'تحميل المصحف كاملًا',
+                style: GoogleFonts.amiri(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primaryBlue,
+                side: const BorderSide(color: AppColors.primaryBlue, width: 1.5),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 14,
