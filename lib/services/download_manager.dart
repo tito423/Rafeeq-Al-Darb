@@ -468,15 +468,24 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     final file = File('${dir.path}/$adhanId.mp3');
 
     if (await file.exists()) {
-      _completeTask(taskId, url, '$adhanId.mp3', DownloadCategory.audioAdhan);
+      _updateTask(
+        taskId,
+        DownloadTask(
+          id: taskId,
+          url: url,
+          filename: '$adhanId.mp3',
+          category: DownloadCategory.audioAdhan,
+          isCompleted: true,
+          progress: 1.0,
+        ),
+      );
       return;
     }
 
     await _startDownload(
-      taskId: taskId,
+      id: taskId,
       url: url,
       savePath: file.path,
-      filename: '$adhanId.mp3',
       category: DownloadCategory.audioAdhan,
     );
   }
