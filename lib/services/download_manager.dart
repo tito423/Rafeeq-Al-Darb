@@ -458,6 +458,51 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     }
   }
 
+  // ── Adhan Downloads ─────────────────────────────────────────────────────────
+
+  Future<void> downloadAdhan(String adhanId, String url) async {
+    final taskId = 'adhan_$adhanId';
+    if (state.tasks[taskId]?.isDownloading == true) return;
+
+    final dir = await _getAdhansDirectory();
+    final file = File('${dir.path}/$adhanId.mp3');
+
+    if (await file.exists()) {
+      _completeTask(taskId, url, '$adhanId.mp3', DownloadCategory.audioAdhan);
+      return;
+    }
+
+    await _startDownload(
+      taskId: taskId,
+      url: url,
+      savePath: file.path,
+      filename: '$adhanId.mp3',
+      category: DownloadCategory.audioAdhan,
+    );
+  }
+
+  Future<bool> isAdhanDownloaded(String adhanId) async {
+    final dir = await _getAdhansDirectory();
+    final file = File('${dir.path}/$adhanId.mp3');
+    return file.exists();
+  }
+
+  Future<String?> getAdhanPath(String adhanId) async {
+    final dir = await _getAdhansDirectory();
+    final file = File('${dir.path}/$adhanId.mp3');
+    if (await file.exists()) return file.path;
+    return null;
+  }
+
+  Future<Directory> _getAdhansDirectory() async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final dir = Directory('${appDir.path}/adhans');
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
+    return dir;
+  }
+
   void _updateTask(String id, DownloadTask task) {
     final newTasks = Map<String, DownloadTask>.from(state.tasks);
     newTasks[id] = task;

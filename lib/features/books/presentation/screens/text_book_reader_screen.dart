@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -10,7 +10,7 @@ import '../../data/models/text_book_model.dart';
 import '../providers/reader_settings_provider.dart';
 import '../widgets/book_index_drawer.dart';
 
-class TextBookReaderScreen extends StatefulWidget {
+class TextBookReaderScreen extends ConsumerStatefulWidget {
   final String bookId;
   final String title;
   final String bookUrl; // URL or local asset path for the JSON file
@@ -23,10 +23,10 @@ class TextBookReaderScreen extends StatefulWidget {
   });
 
   @override
-  State<TextBookReaderScreen> createState() => _TextBookReaderScreenState();
+  ConsumerState<TextBookReaderScreen> createState() => _TextBookReaderScreenState();
 }
 
-class _TextBookReaderScreenState extends State<TextBookReaderScreen> {
+class _TextBookReaderScreenState extends ConsumerState<TextBookReaderScreen> {
   TextBookModel? _book;
   bool _isLoading = true;
   String? _error;
@@ -112,15 +112,12 @@ class _TextBookReaderScreenState extends State<TextBookReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ReaderSettingsProvider(),
-      child: Consumer<ReaderSettingsProvider>(
-        builder: (context, settings, _) {
-          final bgColor = settings.isNightMode ? AppColors.darkBackground : AppColors.lightBackground;
-          final textColor = settings.isNightMode ? Colors.white70 : Colors.black87;
-          final appBarColor = settings.isNightMode ? AppColors.darkSurface : Colors.white;
+    final settings = ref.watch(readerSettingsProvider);
+    final bgColor = settings.isNightMode ? AppColors.darkBackground : AppColors.lightBackground;
+    final textColor = settings.isNightMode ? Colors.white70 : Colors.black87;
+    final appBarColor = settings.isNightMode ? AppColors.darkSurface : Colors.white;
 
-          return Scaffold(
+    return Scaffold(
             backgroundColor: bgColor,
             endDrawer: _book != null 
                 ? BookIndexDrawer(
@@ -185,12 +182,9 @@ class _TextBookReaderScreenState extends State<TextBookReaderScreen> {
               ],
             ),
           );
-        },
-      ),
-    );
   }
 
-  Widget _buildSettingsBar(ReaderSettingsProvider settings, Color bgColor) {
+  Widget _buildSettingsBar(ReaderSettings notifier, Color bgColor) {
     return Container(
       color: bgColor,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -198,26 +192,36 @@ class _TextBookReaderScreenState extends State<TextBookReaderScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-            icon: Icon(
-              settings.isNightMode ? Icons.wb_sunny : Icons.nightlight_round,
-              color: AppColors.primaryBlue,
-            ),
-            onPressed: settings.toggleNightMode,
+            icon: Icon(notifier.isNightMode ? Icons.wb_sunny : Icons.nightlight_round,
+                color: AppColors.accentGold),
+            onPressed: () => ref.read(readerSettingsProvider.notifier).toggleNightMode(),
           ),
-          IconButton(
-            icon: const Icon(Icons.text_increase, color: AppColors.primaryBlue),
-            onPressed: settings.increaseFontSize,
-          ),
-          IconButton(
-            icon: const Icon(Icons.text_decrease, color: AppColors.primaryBlue),
-            onPressed: settings.decreaseFontSize,
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.remove, color: AppColors.accentGold),
+                onPressed: () => ref.read(readerSettingsProvider.notifier).decreaseFontSize(),
+              ),
+              Text(
+                'A',
+                style: GoogleFonts.amiri(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.accentGold,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.add, color: AppColors.accentGold),
+                onPressed: () => ref.read(readerSettingsProvider.notifier).increaseFontSize(),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildReaderBody(Color textColor, ReaderSettingsProvider settings) {
+  Widget _buildReaderBody(Color textColor, ReaderSettings settings) {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator(color: AppColors.accentGold));
     }
