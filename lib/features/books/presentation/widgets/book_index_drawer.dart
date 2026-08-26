@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/text_book_model.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/reader_settings_provider.dart';
 
-class BookIndexDrawer extends StatelessWidget {
+class BookIndexDrawer extends ConsumerWidget {
   final TextBookModel book;
   final int currentIndex;
   final Function(int) onChapterSelected;
@@ -20,8 +20,8 @@ class BookIndexDrawer extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final settings = context.watch<ReaderSettingsProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(readerSettingsProvider);
     final isDark = settings.isNightMode;
     final bgColor = isDark ? AppColors.darkSurface : Colors.white;
     final textColor = isDark ? Colors.white : Colors.black87;
