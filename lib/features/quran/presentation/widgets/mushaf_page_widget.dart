@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../services/download_manager.dart';
 import '../../../../core/models/mushaf_style.dart';
+import '../providers/page_verse_provider.dart';
 
 class MushaafPageWidget extends ConsumerWidget {
   final int pageNumber;
@@ -38,7 +39,11 @@ class MushaafPageWidget extends ConsumerWidget {
         // If file exists locally, show it
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
-          return _LocalPageImage(filePath: snapshot.data!, isDark: isDark);
+          return _LocalPageImage(
+            filePath: snapshot.data!,
+            isDark: isDark,
+            pageNumber: pageNumber,
+          );
         }
 
         // If currently downloading, show progress
@@ -74,49 +79,355 @@ class MushaafPageWidget extends ConsumerWidget {
   }
 }
 
-// ── Local image display ───────────────────────────────────────────────────────
+// ── Local image display with Quranflash-style verse highlighting ──────────────
 
-class _LocalPageImage extends StatelessWidget {
+class _LocalPageImage extends ConsumerStatefulWidget {
   final String filePath;
   final bool isDark;
+  final int pageNumber;
 
-  const _LocalPageImage({required this.filePath, required this.isDark});
+  const _LocalPageImage({
+    required this.filePath,
+    required this.isDark,
+    required this.pageNumber,
+  });
+
+  @override
+  ConsumerState<_LocalPageImage> createState() => _LocalPageImageState();
+}
+
+class _LocalPageImageState extends ConsumerState<_LocalPageImage>
+    with SingleTickerProviderStateMixin {
+  // Standard Mushaf Uthmani: pages 1-2 special, rest have 15 lines
+  static const int _linesPerPage = 15;
+
+  VerseInfo? _selectedVerse;
+  late AnimationController _cardAnimCtrl;
+  late Animation<double> _cardAnim;
+
+  // Track image rendered bounds for accurate line calculation
+  final GlobalKey _imageKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _cardAnimCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+    );
+    _cardAnim = CurvedAnimation(parent: _cardAnimCtrl, curve: Curves.easeOutBack);
+  }
+
+  @override
+  void dispose() {
+    _cardAnimCtrl.dispose();
+    super.dispose();
+  }
+
+  void _onTapImage(TapDownDetails details, PageVerseMap verseMap) {
+    // Get the rendered size of the image widget
+    final RenderBox? box =
+        _imageKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null) return;
+
+    final size = box.size;
+    final localY = details.localPosition.dy;
+
+    // Calculate which line was tapped (1-indexed, top to bottom)
+    final double lineHeight = size.height / _linesPerPage;
+    final int tappedLine = (localY / lineHeight).floor() + 1;
+
+    final VerseInfo? verse = verseMap.lineToVerse[tappedLine];
+
+    if (verse == null) {
+      // Tap on empty area — dismiss
+      if (_selectedVerse != null) {
+        setState(() => _selectedVerse = null);
+        _cardAnimCtrl.reverse();
+      }
+      return;
+    }
+
+    if (_selectedVerse?.verseKey == verse.verseKey) {
+      // Same verse tapped — toggle off
+      setState(() => _selectedVerse = null);
+      _cardAnimCtrl.reverse();
+    } else {
+      setState(() => _selectedVerse = verse);
+      _cardAnimCtrl.forward(from: 0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final verseMapAsync = ref.watch(pageVerseMapProvider(widget.pageNumber));
+
+    return verseMapAsync.when(
+      loading: () => _buildImageOnly(),
+      error: (_, __) => _buildImageOnly(),
+      data: (verseMap) => _buildInteractiveImage(verseMap),
+    );
+  }
+
+  Widget _buildImageOnly() {
     return InteractiveViewer(
       minScale: 0.8,
       maxScale: 4.0,
       child: Image.file(
-        File(filePath),
+        File(widget.filePath),
         fit: BoxFit.contain,
         width: double.infinity,
         height: double.infinity,
-        errorBuilder: (context, error, stackTrace) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.broken_image_rounded,
-                  size: 48,
-                  color: Colors.orange,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'خطأ في تحميل الصورة، يرجى إعادة المحاولة',
-                  style: TextStyle(
-                    color: isDark ? Colors.white70 : Colors.black87,
-                  ),
-                ),
-              ],
+        errorBuilder: (_, __, ___) => const _ImageErrorWidget(),
+      ),
+    );
+  }
+
+  Widget _buildInteractiveImage(PageVerseMap verseMap) {
+    return Stack(
+      children: [
+        // ── Zoomable / Pannable mushaf image ──────────────────────────────
+        InteractiveViewer(
+          minScale: 0.8,
+          maxScale: 4.0,
+          child: GestureDetector(
+            onTapDown: (details) => _onTapImage(details, verseMap),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Stack(
+                  children: [
+                    // Mushaf image
+                    SizedBox(
+                      key: _imageKey,
+                      width: constraints.maxWidth,
+                      height: constraints.maxHeight,
+                      child: Image.file(
+                        File(widget.filePath),
+                        fit: BoxFit.contain,
+                        width: double.infinity,
+                        height: double.infinity,
+                        errorBuilder: (_, __, ___) => const _ImageErrorWidget(),
+                      ),
+                    ),
+
+                    // ── Golden highlight overlay ──────────────────────────
+                    if (_selectedVerse != null)
+                      _buildHighlightOverlay(constraints, verseMap),
+                  ],
+                );
+              },
             ),
-          );
-        },
+          ),
+        ),
+
+        // ── Verse card (bottom sheet style) ──────────────────────────────
+        if (_selectedVerse != null)
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: ScaleTransition(
+              scale: _cardAnim,
+              alignment: Alignment.bottomCenter,
+              child: _VerseCard(
+                verse: _selectedVerse!,
+                isDark: widget.isDark,
+                onClose: () {
+                  setState(() => _selectedVerse = null);
+                  _cardAnimCtrl.reverse();
+                },
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildHighlightOverlay(
+      BoxConstraints constraints, PageVerseMap verseMap) {
+    final double lineHeight = constraints.maxHeight / _linesPerPage;
+    final verse = _selectedVerse!;
+
+    // Find all lines belonging to this verse
+    final List<int> highlightedLines = verseMap.lineToVerse.entries
+        .where((e) => e.value.verseKey == verse.verseKey)
+        .map((e) => e.key)
+        .toList();
+
+    if (highlightedLines.isEmpty) return const SizedBox.shrink();
+
+    final minLine = highlightedLines.reduce((a, b) => a < b ? a : b);
+    final maxLine = highlightedLines.reduce((a, b) => a > b ? a : b);
+
+    final double top = (minLine - 1) * lineHeight;
+    final double height = (maxLine - minLine + 1) * lineHeight;
+
+    return Positioned(
+      top: top,
+      left: 0,
+      right: 0,
+      height: height,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: const Color(0xFFD4AF37).withValues(alpha: 0.25),
+          border: Border(
+            top: BorderSide(
+              color: const Color(0xFFD4AF37).withValues(alpha: 0.7),
+              width: 1.5,
+            ),
+            bottom: BorderSide(
+              color: const Color(0xFFD4AF37).withValues(alpha: 0.7),
+              width: 1.5,
+            ),
+          ),
+        ),
       ),
     );
   }
 }
+
+// ── Verse info card ───────────────────────────────────────────────────────────
+
+class _VerseCard extends StatelessWidget {
+  final VerseInfo verse;
+  final bool isDark;
+  final VoidCallback onClose;
+
+  const _VerseCard({
+    required this.verse,
+    required this.isDark,
+    required this.onClose,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          colors: isDark
+              ? [const Color(0xFF0F1714), const Color(0xFF14251D)]
+              : [const Color(0xFF1B4D3E), const Color(0xFF102118)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(
+          color: const Color(0xFFD4AF37).withValues(alpha: 0.5),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.4),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // ── Header ────────────────────────────────────────────────────
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFD4AF37).withValues(alpha: 0.15),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD4AF37).withValues(alpha: 0.25),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFFD4AF37).withValues(alpha: 0.5),
+                    ),
+                  ),
+                  child: Text(
+                    'الآية ${verse.verseNumber} • سورة ${verse.surahNumber}',
+                    style: GoogleFonts.amiri(
+                      fontSize: 13,
+                      color: const Color(0xFFD4AF37),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: onClose,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close_rounded,
+                      color: Colors.white70,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ── Arabic Text ───────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+            child: Text(
+              verse.textUthmani,
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl,
+              style: GoogleFonts.scheherazadeNew(
+                fontSize: 22,
+                color: Colors.white,
+                height: 2.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+
+          // ── Translation ───────────────────────────────────────────────
+          if (verse.translation.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.07),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  verse.translation,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    fontSize: 13,
+                    color: Colors.white70,
+                    height: 1.6,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ImageErrorWidget extends StatelessWidget {
+  const _ImageErrorWidget();
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Icon(Icons.broken_image_rounded, size: 48, color: Colors.orange),
+    );
+  }
+}
+
 
 // ── Download progress ─────────────────────────────────────────────────────────
 

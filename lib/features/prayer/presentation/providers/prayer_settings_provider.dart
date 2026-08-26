@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,35 +13,34 @@ class Muezzin {
   final String url;
 
   const Muezzin({required this.id, required this.name, required this.url});
+  factory Muezzin.fromJson(Map<String, dynamic> json) {
+    return Muezzin(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      url: json['url'] ?? '',
+    );
+  }
 }
 
-const kMuezzins = [
-  Muezzin(
-    id: 'makkah',
-    name: 'أذان مكة المكرمة',
-    url: 'https://download.quranicaudio.com/adhan/makkah.mp3',
-  ),
-  Muezzin(
-    id: 'abdulbasit',
-    name: 'الشيخ عبد الباسط عبد الصمد',
-    url: 'https://download.quranicaudio.com/adhan/abdulbasit.mp3',
-  ),
-  Muezzin(
-    id: 'minshawi',
-    name: 'الشيخ محمد صديق المنشاوي',
-    url: 'https://download.quranicaudio.com/adhan/minshawi.mp3',
-  ),
-  Muezzin(
-    id: 'husary',
-    name: 'الشيخ محمود خليل الحصري',
-    url: 'https://download.quranicaudio.com/adhan/husary.mp3',
-  ),
-  Muezzin(
-    id: 'hafez',
-    name: 'أذان حافظ',
-    url: 'https://download.quranicaudio.com/adhan/hafez.mp3',
-  ),
-];
+final muezzinsProvider = FutureProvider<List<Muezzin>>((ref) async {
+  try {
+    final response = await http.get(Uri.parse('https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans_catalog.json'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+      return data.map((json) => Muezzin.fromJson(json)).toList();
+    }
+  } catch (e) {
+    // Fallback to local
+  }
+  return const [
+    Muezzin(
+      id: 'makkah',
+      name: 'أذان مكة المكرمة',
+      url: 'https://raw.githubusercontent.com/tito423/rafeeq-api/main/downloads/adhans/makkah.mp3',
+    ),
+  ];
+});
+
 
 class PrayerSettings {
   final bool globalNotifications;

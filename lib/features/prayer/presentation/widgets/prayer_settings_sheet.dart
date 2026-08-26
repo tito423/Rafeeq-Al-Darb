@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart';
 
 import '../providers/prayer_settings_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../services/download_manager.dart';
 
 class PrayerSettingsSheet extends ConsumerWidget {
   const PrayerSettingsSheet({super.key});
@@ -437,7 +438,13 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
 
     try {
       await _player.stop();
-      await _player.setUrl(muezzin.url);
+      final manager = ref.read(downloadManagerProvider.notifier);
+      final path = await manager.getAdhanPath(muezzin.id);
+      if (path != null) {
+        await _player.setFilePath(path);
+      } else {
+        await _player.setUrl(muezzin.url);
+      }
       await _player.play();
     } catch (e) {
       debugPrint('Error previewing adhan: $e');
@@ -456,6 +463,9 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
     final isDark = theme.brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
     final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+    final muezzinsAsync = ref.watch(muezzinsProvider);
+    final downloadState = ref.watch(downloadManagerProvider);
+
 
     return Container(
       decoration: BoxDecoration(
@@ -492,65 +502,109 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            ...kMuezzins.map((m) {
-              final isSelected = settings.selectedMuezzin == m.name;
-              final isPlayingThis = _currentlyPlayingId == m.id && _player.playing;
-              final isLoadingThis = _currentlyPlayingId == m.id && _isLoadingAudio;
+            muezzinsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator(color: AppColors.accentGold)),
+              error: (err, _) => Center(child: Text('خطأ في التحميل', style: GoogleFonts.amiri(color: Colors.red))),
+              data: (muezzins) {
+                return Column(
+                  children: muezzins.map((m) {
+                    final isSelected = settings.selectedMuezzin == m.name;
+                    final isPlayingThis = _currentlyPlayingId == m.id && _player.playing;
+                    final isLoadingThis = _currentlyPlayingId == m.id && _isLoadingAudio;
+                    
+                    final taskId = 'adhan_${m.id}';
+                    final task = downloadState.tasks[taskId];
+                    final isDownloading = task?.isDownloading == true;
 
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.accentGold.withValues(alpha: 0.12) : cardBg,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: isSelected ? AppColors.accentGold : Colors.transparent,
-                    width: 1.5,
-                  ),
-                ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  leading: IconButton(
-                    icon: isLoadingThis
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accentGold),
-                          )
-                        : Icon(
-                            isPlayingThis ? Icons.pause_circle_filled_rounded : Icons.play_circle_fill_rounded,
-                            color: AppColors.accentGold,
-                            size: 36,
-                          ),
-                    onPressed: () => _previewAudio(m),
-                  ),
-                  title: Text(
-                    m.name,
-                    style: GoogleFonts.scheherazadeNew(
-                      fontSize: 20,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color: isSelected ? AppColors.accentGold : textColor,
-                    ),
-                  ),
-                  trailing: isSelected
-                      ? const Icon(Icons.check_circle_rounded, color: AppColors.accentGold, size: 24)
-                      : TextButton(
-                          onPressed: () {
-                            notifier.setSelectedMuezzin(m.name);
-                            _player.stop();
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'اختيار',
-                            style: GoogleFonts.amiri(color: AppColors.accentGold, fontWeight: FontWeight.bold),
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isSelected ? AppColors.accentGold.withValues(alpha: 0.12) : cardBg,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isSelected ? AppColors.accentGold : Colors.transparent,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        leading: IconButton(
+                          icon: isLoadingThis
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accentGold),
+                                )
+                              : Icon(
+                                  isPlayingThis ? Icons.pause_circle_filled_rounded : Icons.play_circle_fill_rounded,
+                                  color: AppColors.accentGold,
+                                  size: 36,
+                                ),
+                          onPressed: () => _previewAudio(m),
+                        ),
+                        title: Text(
+                          m.name,
+                          style: GoogleFonts.scheherazadeNew(
+                            fontSize: 20,
+                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected ? AppColors.accentGold : textColor,
                           ),
                         ),
-                  onTap: () {
-                    notifier.setSelectedMuezzin(m.name);
-                    _previewAudio(m);
-                  },
-                ),
-              );
-            }),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FutureBuilder<bool>(
+                              future: ref.read(downloadManagerProvider.notifier).isAdhanDownloaded(m.id),
+                              builder: (context, snapshot) {
+                                final isDownloaded = snapshot.data ?? false;
+                                if (isDownloaded) return const SizedBox();
+                                
+                                if (isDownloading) {
+                                  return SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      value: task?.progress,
+                                      strokeWidth: 2,
+                                      color: AppColors.accentGold,
+                                    ),
+                                  );
+                                }
+                                
+                                return IconButton(
+                                  icon: const Icon(Icons.download_rounded, color: AppColors.accentGold),
+                                  onPressed: () {
+                                    ref.read(downloadManagerProvider.notifier).downloadAdhan(m.id, m.url);
+                                  },
+                                );
+                              },
+                            ),
+                            if (isSelected)
+                              const Icon(Icons.check_circle_rounded, color: AppColors.accentGold, size: 24)
+                            else
+                              TextButton(
+                                onPressed: () {
+                                  notifier.setSelectedMuezzin(m.name);
+                                  _player.stop();
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  'اختيار',
+                                  style: GoogleFonts.amiri(color: AppColors.accentGold, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                          ],
+                        ),
+                        onTap: () {
+                          notifier.setSelectedMuezzin(m.name);
+                          _previewAudio(m);
+                        },
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
           ],
         ),
       ),
