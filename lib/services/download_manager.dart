@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:archive/archive_io.dart';
 import '../core/models/mushaf_style.dart';
 import 'r2_storage_service.dart';
 
@@ -250,15 +251,15 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     );
   }
 
-  /// Download all 604 Mushaaf pages concurrently (bulk)
+  /// Download all Mushaaf pages concurrently (bulk) using ZIP extraction from R2
   Future<void> downloadAllMushaafPages({
     required MushafStyleInfo styleInfo,
     void Function(int completed, int total)? onProgress,
     int concurrency = 5,
   }) async {
     const total = 604;
-    int completed = 0;
     final styleName = styleInfo.style.name;
+    final id = 'mushaf_${styleName}_zip';
 
     state = state.copyWith(
       isBulkDownloading: true,
@@ -266,36 +267,60 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
       bulkCompleted: 0,
     );
 
-    // Filter out already downloaded pages first
-    final pendingPages = <int>[];
-    for (int page = 1; page <= total; page++) {
-      if (!await isPageDownloaded(page, styleName)) {
-        pendingPages.add(page);
-      } else {
-        completed++;
+    try {
+      // Cloudflare R2 zip url pattern:
+      final zipUrl = 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf_${styleName}.zip';
+      final dir = await getApplicationDocumentsDirectory();
+      final zipPath = '${dir.path}/$id.zip';
+      final extractDir = await _mushaafDir(styleName);
+
+      // We'll update progress to 10% on download start, then 50% during download, 
+      // then 100% on extraction. 
+      await _startDownload(
+        id: id,
+        url: zipUrl,
+        savePath: zipPath,
+        category: DownloadCategory.mushaafPage,
+      );
+
+      // Wait for it
+      while (state.tasks[id]?.isDownloading == true) {
+        final prog = state.tasks[id]?.progress ?? 0.0;
+        final simulatedPages = (prog * (total * 0.8)).toInt();
+        state = state.copyWith(bulkCompleted: simulatedPages);
+        onProgress?.call(simulatedPages, total);
+        await Future.delayed(const Duration(milliseconds: 200));
       }
+      
+      final task = state.tasks[id];
+      if (task?.isCompleted == true && File(zipPath).existsSync()) {
+        state = state.copyWith(bulkCompleted: (total * 0.9).toInt()); 
+        onProgress?.call((total * 0.9).toInt(), total);
+        
+        // Extracting zip in the background
+        final bytes = File(zipPath).readAsBytesSync();
+        final archive = ZipDecoder().decodeBytes(bytes);
+        for (final file in archive) {
+          if (file.isFile) {
+            // file.name usually looks like "medina1/page_001.png" or "page_001.png"
+            final filename = file.name.split('/').last; 
+            final data = file.content as List<int>;
+            File('${extractDir.path}/$filename')
+              ..createSync(recursive: true)
+              ..writeAsBytesSync(data);
+          }
+        }
+        File(zipPath).deleteSync();
+        
+        state = state.copyWith(bulkCompleted: total, isBulkDownloading: false);
+        onProgress?.call(total, total);
+      } else {
+        // Failed
+        state = state.copyWith(isBulkDownloading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isBulkDownloading: false);
     }
-
-    state = state.copyWith(bulkCompleted: completed);
-    onProgress?.call(completed, total);
-
-    // Process in chunks
-    for (int i = 0; i < pendingPages.length; i += concurrency) {
-      if (!state.isBulkDownloading) break;
-
-      final end = (i + concurrency < pendingPages.length) ? i + concurrency : pendingPages.length;
-      final chunk = pendingPages.sublist(i, end);
-
-      await Future.wait(chunk.map((page) async {
-        await downloadMushaafPage(page, styleInfo: styleInfo);
-        await _waitForTask('page_${styleName}_$page');
-        completed++;
-        state = state.copyWith(bulkCompleted: completed);
-        onProgress?.call(completed, total);
-      }));
-    }
-
-    state = state.copyWith(isBulkDownloading: false);
   }
 
   void cancelBulkDownload() {

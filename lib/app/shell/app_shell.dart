@@ -29,7 +29,7 @@ const _tabs = [
   _Tab('الأذكار',  Icons.auto_awesome_outlined,   Icons.auto_awesome_rounded),
   _Tab('المسبحة',  Icons.loop_outlined,           Icons.loop_rounded),
   _Tab('المكتبة',  Icons.local_library_outlined,  Icons.local_library_rounded),
-  _Tab('المزيد',   Icons.settings_outlined,       Icons.settings_rounded),
+  _Tab('الإعدادات', Icons.settings_outlined,       Icons.settings_rounded),
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
