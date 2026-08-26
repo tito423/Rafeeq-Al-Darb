@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import '../../../../services/download_manager.dart';
 
 // ── Verse Info Model ──────────────────────────────────────────────────────────
 
@@ -21,6 +23,66 @@ class VerseInfo {
     required this.translation,
   });
 }
+
+// ── QuranFlash Coordinates Model ──────────────────────────────────────────────
+
+class MushafAyahCoord {
+  final int surah;
+  final int ayah;
+  final int part;
+  final int x;
+  final int y;
+  final int w;
+  final int h;
+
+  const MushafAyahCoord({
+    required this.surah,
+    required this.ayah,
+    required this.part,
+    required this.x,
+    required this.y,
+    required this.w,
+    required this.h,
+  });
+
+  factory MushafAyahCoord.fromJson(Map<String, dynamic> json) {
+    return MushafAyahCoord(
+      surah: json['s'] as int,
+      ayah: json['a'] as int,
+      part: json['p'] is int ? json['p'] as int : int.tryParse(json['p'].toString()) ?? 1,
+      x: json['x'] as int,
+      y: json['y'] as int,
+      w: json['w'] as int,
+      h: json['h'] as int,
+    );
+  }
+}
+
+// ── Provider ──────────────────────────────────────────────────────────────────
+
+final mushafCoordsProvider = FutureProvider.family<Map<String, List<MushafAyahCoord>>?, String>((ref, styleName) async {
+  final downloadManager = ref.read(downloadManagerProvider.notifier);
+  final path = await downloadManager.downloadMushafCoords(styleName);
+  if (path == null) return null;
+  
+  final file = File(path);
+  if (!file.existsSync()) return null;
+  
+  final jsonString = await file.readAsString();
+  final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+  
+  return jsonData.map((page, list) {
+    final coords = (list as List).map((e) => MushafAyahCoord.fromJson(e)).toList();
+    return MapEntry(page.toString(), coords);
+  });
+});
+
+final pageCoordsProvider = FutureProvider.family<List<MushafAyahCoord>, ({String styleName, int pageNumber})>((ref, arg) async {
+  final coordsMap = await ref.watch(mushafCoordsProvider(arg.styleName).future);
+  if (coordsMap == null) return [];
+  return coordsMap[arg.pageNumber.toString()] ?? [];
+});
+
 
 /// Maps each line number on a mushaf page to its verse info.
 /// Returned from the provider below.

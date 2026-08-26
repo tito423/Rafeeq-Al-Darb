@@ -197,13 +197,14 @@ class SebhaScreen extends ConsumerWidget {
                 controller: PageController(initialPage: sebha.presetIndex, viewportFraction: 0.85),
                 itemBuilder: (context, i) {
                   final isSelected = i == sebha.presetIndex;
-                  return Center(
-                    child: AnimatedScale(
-                      scale: isSelected ? 1.0 : 0.85,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOutBack,
-                      child: GestureDetector(
-                        onTap: isSelected ? () => ref.read(_sebhaProvider.notifier).increment() : null,
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: isSelected ? () => ref.read(_sebhaProvider.notifier).increment() : null,
+                    child: Center(
+                      child: AnimatedScale(
+                        scale: isSelected ? 1.0 : 0.85,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOutBack,
                         child: AnimatedOpacity(
                           opacity: isSelected ? 1.0 : 0.5,
                           duration: const Duration(milliseconds: 300),
@@ -251,7 +252,7 @@ class SebhaScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      child: Icon(Icons.refresh_rounded, color: subtext, size: 26),
+                      child: Icon(Icons.restart_alt, color: subtext, size: 26),
                     ),
                   ),
                 ],

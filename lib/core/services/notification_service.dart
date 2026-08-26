@@ -61,23 +61,10 @@ class NotificationService {
       onDidReceiveNotificationResponse: _onNotificationTap,
     );
 
-    // Create the high-priority Adhan sound channel (Android only)
-    if (Platform.isAndroid) {
-      await _plugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(
-            const AndroidNotificationChannel(
-              _adhanChannelId,
-              _adhanChannelName,
-              description: _adhanChannelDesc,
-              importance: Importance.max,
-              playSound: true,
-              enableVibration: true,
-              enableLights: true,
-            ),
-          );
-    }
+    // The channel will be created automatically when scheduling with the dynamic ID and custom sound.
+    // if (Platform.isAndroid) {
+    //   ...
+    // }
 
     _initialized = true;
   }
@@ -149,13 +136,16 @@ class NotificationService {
     final userName = prefs.getString('user_name') ?? '';
     final greeting = userName.isNotEmpty ? 'يا $userName' : '';
 
+    final muezzinId = prefs.getString('selectedMuezzin') ?? 'makkah';
+    
     final androidDetails = AndroidNotificationDetails(
-      _adhanChannelId,
+      '${_adhanChannelId}_$muezzinId', // Distinct channel per muezzin so sound applies correctly
       _adhanChannelName,
       channelDescription: _adhanChannelDesc,
       importance: Importance.max,
       priority: Priority.high,
       playSound: true,
+      sound: RawResourceAndroidNotificationSound('adhan_$muezzinId'),
       enableVibration: true,
       category: AndroidNotificationCategory.alarm,
       fullScreenIntent: true, // Wake device and bypass keyguard
@@ -410,11 +400,16 @@ class NotificationService {
   }
 
   // Check if app was launched via notification (e.g. from fullScreenIntent)
-  Future<void> checkInitialNotification() async {
+  Future<bool> checkInitialNotification() async {
     final details = await _plugin.getNotificationAppLaunchDetails();
     if (details != null && details.didNotificationLaunchApp && details.notificationResponse != null) {
-      _onNotificationTap(details.notificationResponse!);
+      // Delay to ensure the navigator is mounted when launching from cold start
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _onNotificationTap(details.notificationResponse!);
+      });
+      return true;
     }
+    return false;
   }
 
   DateTime? _parseToDateTime(String timeStr) {

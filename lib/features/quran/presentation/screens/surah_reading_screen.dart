@@ -65,13 +65,15 @@ class SurahReadingScreen extends ConsumerStatefulWidget {
   final String surahNameAr;
   final String surahNameEn;
   final int startPage;
+  final bool showAppBar;
 
   const SurahReadingScreen({
     super.key,
     required this.surahId,
-    required this.surahNameAr,
-    required this.surahNameEn,
+    this.surahNameAr = '',
+    this.surahNameEn = '',
     this.startPage = 1,
+    this.showAppBar = true,
   });
 
   @override
@@ -176,7 +178,7 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen>
 
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: _buildAppBar(isDark, mode, ayahsAsync, audioState),
+      appBar: widget.showAppBar ? _buildAppBar(isDark, mode, ayahsAsync, audioState) : null,
       body: FadeTransition(
         opacity: _fadeAnim,
         child: Column(

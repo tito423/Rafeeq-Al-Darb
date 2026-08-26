@@ -67,14 +67,27 @@ final qiblaStreamProvider = StreamProvider<QiblaData>((ref) async* {
   
   if (bearingAsync.hasValue) {
     final bearing = bearingAsync.value!;
+    double? lastHeading;
     
     await for (final event in FlutterCompass.events!) {
-      if (event.heading != null) {
-        final diff = (bearing - event.heading! + 360) % 360;
+      final currentHeading = event.heading;
+      if (currentHeading != null) {
+        // Low-pass filter for smoother needle movement
+        double smoothedHeading = currentHeading;
+        if (lastHeading != null) {
+          // Handle 360-degree wrap-around
+          double diff = currentHeading - lastHeading;
+          if (diff > 180) diff -= 360;
+          if (diff < -180) diff += 360;
+          smoothedHeading = (lastHeading + (diff * 0.1)) % 360;
+        }
+        lastHeading = smoothedHeading;
+
+        final diff = (bearing - smoothedHeading + 360) % 360;
         final isAccurate = diff < 2 || diff > 358; // 2 degrees tolerance
         
         yield QiblaData(
-          heading: event.heading!,
+          heading: smoothedHeading,
           qiblaDirection: bearing,
           isAccurate: isAccurate,
         );

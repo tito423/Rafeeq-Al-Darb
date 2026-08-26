@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+
 import '../widgets/alerts_customization_sheet.dart';
 import '../widgets/theme_customization_sheet.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../library/presentation/screens/library_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -130,36 +130,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-          // ── المكتبة ──────────────────────────────────────────────────────
-          sectionHeader('المكتبة الإسلامية'),
 
-          Card(
-            clipBehavior: Clip.antiAlias,
-            child: ListTile(
-              leading: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.accentGold.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.local_library_rounded, color: AppColors.accentGold),
-              ),
-              title: Text(
-                'المكتبة الإسلامية',
-                style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w700),
-              ),
-              subtitle: Text(
-                'الكتب والأحاديث والمواقع الإسلامية',
-                style: GoogleFonts.amiri(fontSize: 13),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const LibraryScreen()),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
 
           // ── النسخ الاحتياطي السحابي ──────────────────────────────────
           sectionHeader('النسخ الاحتياطي السحابي'),

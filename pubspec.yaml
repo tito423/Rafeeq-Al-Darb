@@ -86,7 +86,6 @@ flutter:
     - assets/books/
     - assets/quran/quran_images.zip
     - assets/data/
-    - assets/data/hadith/
     - lib/features/books/data/
     - assets/books/
     - assets/mushaf_thumbs/douri/
