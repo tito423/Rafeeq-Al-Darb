@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:video_player/video_player.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,6 +76,7 @@ class FullScreenAdhanScreen extends ConsumerStatefulWidget {
 class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
     with TickerProviderStateMixin {
   late AnimationController _rgbController;
+  VideoPlayerController? _videoController;
   
   int _activePhraseIndex = 0;
   Duration _duration = Duration.zero;
@@ -90,8 +92,24 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
       duration: const Duration(seconds: 3),
     )..repeat();
 
+    _setupVideoPlayer();
     _setupAudioStreams();
     _startAdhan();
+  }
+
+  Future<void> _setupVideoPlayer() async {
+    try {
+      _videoController = VideoPlayerController.asset('assets/videos/kaaba_loop.mp4');
+      await _videoController!.initialize();
+      await _videoController!.setLooping(true);
+      await _videoController!.setVolume(0.0);
+      if (mounted) {
+        setState(() {});
+        _videoController!.play();
+      }
+    } catch (e) {
+      debugPrint("Video initialization failed: $e");
+    }
   }
 
   void _setupAudioStreams() {
@@ -161,6 +179,7 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
   @override
   void dispose() {
     _rgbController.dispose();
+    _videoController?.dispose();
     super.dispose();
   }
 
@@ -174,15 +193,28 @@ class _FullScreenAdhanScreenState extends ConsumerState<FullScreenAdhanScreen>
     final currentPhrase = phrases[_activePhraseIndex].text;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Blurred Background
+          // 0. Background Video
+          if (_videoController != null && _videoController!.value.isInitialized)
+            SizedBox.expand(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: _videoController!.value.size.width,
+                  height: _videoController!.value.size.height,
+                  child: VideoPlayer(_videoController!),
+                ),
+              ),
+            ),
+
+          // 1. Blurred Background overlay to make text readable
           BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
             child: Container(
-              color: Colors.black.withValues(alpha: 0.6),
+              color: Colors.black.withValues(alpha: 0.5),
             ),
           ),
           
