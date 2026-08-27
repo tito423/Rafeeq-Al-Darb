@@ -14,57 +14,67 @@ import 'app/rafeeq_app.dart';
 import 'core/services/notification_service.dart';
 import 'features/prayer/presentation/providers/prayer_settings_provider.dart';
 
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // Essential initializations needed before first frame
   await Firebase.initializeApp();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  
+  // Start the app
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: const RafeeqApp(),
+    ),
+  );
 
-  // Initialize Arabic locale data for date/time formatting (intl package).
-  await initializeDateFormatting('ar');
+  // Defer heavy non-essential initializations until after the first frame is rendered
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    await _deferredInitializations();
+  });
+}
 
-  // Initialize timezone data
-  tz.initializeTimeZones();
+Future<void> _deferredInitializations() async {
   try {
+    await initializeDateFormatting('ar');
+    tz.initializeTimeZones();
     final String timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName));
   } catch (e) {
-    debugPrint('Could not initialize local timezone: $e');
+    debugPrint('Could not initialize date formatting or timezone: $e');
   }
 
-  // Initialize background audio
-  await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
-    androidNotificationChannelName: 'Audio playback',
-    androidNotificationOngoing: true,
-  );
+  try {
+    await JustAudioBackground.init(
+      androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+      androidNotificationChannelName: 'Audio playback',
+      androidNotificationOngoing: true,
+    );
+  } catch (e) {
+    debugPrint('Could not init background audio: $e');
+  }
 
-  // Initialize notifications
-  await NotificationService().initialize();
-
-  // Lock to portrait by default; can be unlocked per-screen later.
+  try {
+    await NotificationService().initialize();
+  } catch (e) {
+    debugPrint('Could not init notification service: $e');
+  }
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // Transparent status bar for an edge-to-edge premium feel.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-    ),
-  );
-
-  // Initialize SharedPreferences
-  final sharedPreferences = await SharedPreferences.getInstance();
-
-  runApp(
-    // ProviderScope is the root of the Riverpod dependency graph.
-    ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-      ],
-      child: const RafeeqApp(),
     ),
   );
 }

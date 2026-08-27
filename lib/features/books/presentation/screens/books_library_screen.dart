@@ -2,19 +2,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../services/download_manager.dart';
 import 'book_reader_screen.dart';
 import 'text_book_reader_screen.dart';
 
-class BooksLibraryScreen extends StatefulWidget {
+class BooksLibraryScreen extends ConsumerStatefulWidget {
   const BooksLibraryScreen({super.key});
 
   @override
-  State<BooksLibraryScreen> createState() => _BooksLibraryScreenState();
+  ConsumerState<BooksLibraryScreen> createState() => _BooksLibraryScreenState();
 }
 
-class _BooksLibraryScreenState extends State<BooksLibraryScreen> {
+class _BooksLibraryScreenState extends ConsumerState<BooksLibraryScreen> {
   List<dynamic> _books = [];
   bool _isLoading = true;
 
@@ -42,6 +44,7 @@ class _BooksLibraryScreenState extends State<BooksLibraryScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final downloadState = ref.watch(downloadManagerProvider);
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
@@ -78,26 +81,53 @@ class _BooksLibraryScreenState extends State<BooksLibraryScreen> {
                   itemCount: _books.length,
                   itemBuilder: (context, index) {
                     final book = _books[index];
-                    return _buildBookCard(book, isDark);
+                    return _buildBookCard(book, isDark, downloadState);
                   },
                 ),
     );
   }
 
-  Widget _buildBookCard(Map<String, dynamic> book, bool isDark) {
+  Widget _buildBookCard(Map<String, dynamic> book, bool isDark, DownloadState downloadState) {
     final coverUrl = book['cover_url'] as String?;
     final title = book['title'] as String;
     final author = book['author'] as String;
+    final bookId = book['id'] ?? '';
+    final downloadUrl = book['download_url'] ?? '';
+    final format = book['format'] ?? 'text';
+    
+    final taskId = 'book_$bookId';
+    final task = downloadState.tasks[taskId];
+    final isDownloaded = ref.read(downloadManagerProvider.notifier).isDownloadedLocally(taskId);
+    final isDownloading = task?.isDownloading ?? false;
+    final progress = task?.progress ?? 0.0;
 
     return GestureDetector(
       onTap: () {
-        if (book['format'] == 'text') {
+        if (!isDownloaded && !downloadUrl.startsWith('assets/')) {
+          if (!isDownloading) {
+            if (format == 'pdf') {
+              ref.read(downloadManagerProvider.notifier).downloadBookPdf(
+                bookId,
+                downloadUrl,
+                title,
+              );
+            } else {
+              ref.read(downloadManagerProvider.notifier).downloadBook(
+                bookId: bookId, 
+                downloadUrl: downloadUrl,
+              );
+            }
+          }
+          return;
+        }
+
+        if (format == 'text') {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => TextBookReaderScreen(
-                bookId: book['id'] ?? '',
+                bookId: bookId,
                 title: title,
-                bookUrl: book['download_url'],
+                bookUrl: downloadUrl,
               ),
             ),
           );
@@ -105,9 +135,9 @@ class _BooksLibraryScreenState extends State<BooksLibraryScreen> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => BookReaderScreen(
-                bookId: book['id'] ?? '',
+                bookId: bookId,
                 title: title,
-                pdfUrl: book['download_url'],
+                pdfUrl: downloadUrl,
               ),
             ),
           );
@@ -125,8 +155,8 @@ class _BooksLibraryScreenState extends State<BooksLibraryScreen> {
             ),
           ],
           border: Border.all(
-            color: AppColors.accentGold.withValues(alpha: 0.3),
-            width: 1,
+            color: isDownloaded ? AppColors.primaryBlue : AppColors.accentGold.withValues(alpha: 0.3),
+            width: isDownloaded ? 2 : 1,
           ),
         ),
         child: Column(
@@ -134,15 +164,55 @@ class _BooksLibraryScreenState extends State<BooksLibraryScreen> {
           children: [
             Expanded(
               flex: 4,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-                child: coverUrl != null && coverUrl.isNotEmpty
-                    ? Image.network(
-                        coverUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (ctx, err, stack) => _buildPlaceholderCover(),
-                      )
-                    : _buildPlaceholderCover(),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                    child: coverUrl != null && coverUrl.isNotEmpty
+                        ? Image.network(
+                            coverUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (ctx, err, stack) => _buildPlaceholderCover(),
+                          )
+                        : _buildPlaceholderCover(),
+                  ),
+                  if (isDownloading)
+                    Container(
+                      color: Colors.black54,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        value: progress > 0 ? progress : null,
+                        color: AppColors.accentGold,
+                      ),
+                    ),
+                  if (!isDownloaded && !isDownloading && !downloadUrl.startsWith('assets/'))
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryBlue.withValues(alpha: 0.9),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.download_rounded, color: Colors.white, size: 18),
+                      ),
+                    ),
+                  if (isDownloaded)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                      ),
+                    ),
+                ],
               ),
             ),
             Expanded(

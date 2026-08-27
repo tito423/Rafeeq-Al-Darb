@@ -72,48 +72,64 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
           // Muezzin Selection
           Text(
             'صوت المؤذن والأذان',
-            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.accentGold, fontWeight: FontWeight.bold),
+            style: GoogleFonts.amiri(
+              fontSize: 14,
+              color: AppColors.accentGold,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
               color: cardBg,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.2)),
+              border: Border.all(
+                color: AppColors.accentGold.withValues(alpha: 0.2),
+              ),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Consumer(
               builder: (context, ref, child) {
-                final muezzinsAsync = ref.watch(muezzinsProvider);
-                return muezzinsAsync.when(
-                  loading: () => const Center(child: CircularProgressIndicator(color: AppColors.accentGold)),
-                  error: (err, _) => Text('خطأ في التحميل', style: GoogleFonts.amiri(color: Colors.red)),
-                  data: (muezzins) {
-                    final selected = muezzins.any((m) => m.name == settings.selectedMuezzin)
-                        ? settings.selectedMuezzin
-                        : muezzins.first.name;
+                final muezzins = ref.watch(muezzinsProvider);
 
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: selected,
-                        isExpanded: true,
-                        icon: const Icon(Icons.arrow_drop_down_rounded, color: AppColors.accentGold),
-                        dropdownColor: cardBg,
-                        style: GoogleFonts.scheherazadeNew(color: textColor, fontWeight: FontWeight.bold, fontSize: 18),
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            notifier.setSelectedMuezzin(newValue);
-                          }
-                        },
-                        items: muezzins.map<DropdownMenuItem<String>>((m) {
-                          return DropdownMenuItem<String>(
-                            value: m.name,
-                            child: Text(m.name),
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  },
+                if (muezzins.isEmpty) {
+                  return Text(
+                    'لا يوجد مؤذنين متاحين',
+                    style: GoogleFonts.amiri(color: Colors.grey),
+                  );
+                }
+
+                final selected =
+                    muezzins.any((m) => m.name == settings.selectedMuezzin)
+                    ? settings.selectedMuezzin
+                    : muezzins.first.name;
+
+                return DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: selected,
+                    isExpanded: true,
+                    icon: const Icon(
+                      Icons.arrow_drop_down_rounded,
+                      color: AppColors.accentGold,
+                    ),
+                    dropdownColor: cardBg,
+                    style: GoogleFonts.scheherazadeNew(
+                      color: textColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        notifier.setSelectedMuezzin(newValue);
+                      }
+                    },
+                    items: muezzins.map<DropdownMenuItem<String>>((m) {
+                      return DropdownMenuItem<String>(
+                        value: m.name,
+                        child: Text(m.name),
+                      );
+                    }).toList(),
+                  ),
                 );
               },
             ),
@@ -123,42 +139,60 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
           // Adhan Display Mode
           Text(
             'نوع تنبيه الأذان',
-            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.accentGold, fontWeight: FontWeight.bold),
+            style: GoogleFonts.amiri(
+              fontSize: 14,
+              color: AppColors.accentGold,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
               color: cardBg,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.2)),
+              border: Border.all(
+                color: AppColors.accentGold.withValues(alpha: 0.2),
+              ),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Consumer(
               builder: (context, ref, child) {
-                // Read directly from SharedPreferences since it's used directly in notification_service
                 return FutureBuilder<SharedPreferences>(
                   future: SharedPreferences.getInstance(),
                   builder: (context, snapshot) {
                     final prefs = snapshot.data;
-                    final mode = prefs?.getString('adhanDisplayMode') ?? 'animated';
+                    final mode =
+                        prefs?.getString('adhanDisplayMode') ?? 'animated';
 
                     return DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: mode,
                         isExpanded: true,
-                        icon: const Icon(Icons.arrow_drop_down_rounded, color: AppColors.accentGold),
+                        icon: const Icon(
+                          Icons.arrow_drop_down_rounded,
+                          color: AppColors.accentGold,
+                        ),
                         dropdownColor: cardBg,
-                        style: GoogleFonts.amiri(color: textColor, fontWeight: FontWeight.bold, fontSize: 16),
+                        style: GoogleFonts.amiri(
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                         onChanged: (String? newValue) {
                           if (newValue != null && prefs != null) {
                             prefs.setString('adhanDisplayMode', newValue);
-                            // Force rebuild
                             (context as Element).markNeedsBuild();
                           }
                         },
                         items: const [
-                          DropdownMenuItem(value: 'animated', child: Text('شاشة أذان متحركة')),
-                          DropdownMenuItem(value: 'audio_only', child: Text('صوت في الخلفية فقط')),
+                          DropdownMenuItem(
+                            value: 'animated',
+                            child: Text('شاشة أذان متحركة'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'audio_only',
+                            child: Text('صوت في الخلفية فقط'),
+                          ),
                         ],
                       ),
                     );
@@ -172,19 +206,41 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
           // Calculation Method Selection
           Text(
             'طريقة الحساب الفلكي',
-            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.accentGold, fontWeight: FontWeight.bold),
+            style: GoogleFonts.amiri(
+              fontSize: 14,
+              color: AppColors.accentGold,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
               color: cardBg,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.2)),
+              border: Border.all(
+                color: AppColors.accentGold.withValues(alpha: 0.2),
+              ),
             ),
             child: ListTile(
-              title: Text(settings.calculationMethod, style: GoogleFonts.outfit(color: textColor, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr),
-              subtitle: Text('Calculation Method', style: GoogleFonts.outfit(color: AppColors.lightSubtext, fontSize: 12)),
-              trailing: const Icon(Icons.calculate_rounded, color: AppColors.accentGold),
+              title: Text(
+                settings.calculationMethod,
+                style: GoogleFonts.outfit(
+                  color: textColor,
+                  fontWeight: FontWeight.bold,
+                ),
+                textDirection: TextDirection.ltr,
+              ),
+              subtitle: Text(
+                'Calculation Method',
+                style: GoogleFonts.outfit(
+                  color: AppColors.lightSubtext,
+                  fontSize: 12,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.calculate_rounded,
+                color: AppColors.accentGold,
+              ),
               onTap: () {
                 showModalBottomSheet(
                   context: context,
@@ -199,7 +255,11 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
           // Prayer Times list
           Text(
             'تخصيص تنبيهات الصلوات المفردة',
-            style: GoogleFonts.amiri(fontSize: 14, color: AppColors.accentGold, fontWeight: FontWeight.bold),
+            style: GoogleFonts.amiri(
+              fontSize: 14,
+              color: AppColors.accentGold,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
 
@@ -210,7 +270,9 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
               decoration: BoxDecoration(
                 color: cardBg,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.15)),
+                border: Border.all(
+                  color: AppColors.accentGold.withValues(alpha: 0.15),
+                ),
               ),
               child: ListTile(
                 onTap: () {
@@ -231,14 +293,17 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
                 ),
                 subtitle: Text(
                   'اضغط لتعديل الوقت وتنبيه الإقامة',
-                  style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext),
+                  style: GoogleFonts.amiri(
+                    fontSize: 12,
+                    color: AppColors.lightSubtext,
+                  ),
                 ),
                 trailing: Switch(
                   value: isEnabled,
                   onChanged: settings.globalNotifications
                       ? (v) => notifier.setPrayerToggle(p, v)
                       : null,
-                  activeColor: AppColors.accentGold,
+                  activeThumbColor: AppColors.accentGold,
                 ),
               ),
             );
@@ -271,7 +336,9 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
                   end: Alignment.bottomRight,
                 ),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.4)),
+          border: Border.all(
+            color: AppColors.accentGold.withValues(alpha: 0.4),
+          ),
           boxShadow: [
             BoxShadow(
               color: AppColors.accentGold.withValues(alpha: 0.15),
@@ -287,9 +354,15 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
               decoration: BoxDecoration(
                 color: AppColors.accentGold.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.4)),
+                border: Border.all(
+                  color: AppColors.accentGold.withValues(alpha: 0.4),
+                ),
               ),
-              child: const Icon(Icons.explore_rounded, color: AppColors.accentGold, size: 30),
+              child: const Icon(
+                Icons.explore_rounded,
+                color: AppColors.accentGold,
+                size: 30,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -315,7 +388,11 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.accentGold, size: 18),
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: AppColors.accentGold,
+              size: 18,
+            ),
           ],
         ),
       ),
@@ -342,7 +419,11 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
       child: SwitchListTile(
         title: Text(
           title,
-          style: GoogleFonts.scheherazadeNew(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+          style: GoogleFonts.scheherazadeNew(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: textColor,
+          ),
         ),
         subtitle: Text(
           subtitle,
@@ -350,7 +431,7 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
         ),
         value: value,
         onChanged: onChanged,
-        activeColor: AppColors.accentGold,
+        activeThumbColor: AppColors.accentGold,
         secondary: Icon(icon, color: AppColors.accentGold),
       ),
     );

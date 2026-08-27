@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart' as import_flutter_native_splash;
 
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -34,6 +35,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      import_flutter_native_splash.FlutterNativeSplash.remove();
+    });
 
     // Continuous rotation for Islamic arabesque pattern
     _rotationCtrl = AnimationController(
