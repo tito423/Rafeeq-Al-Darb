@@ -120,8 +120,7 @@ class DownloadManagerState {
     }).toList();
   }
   
-  bool isAssetDownloaded(String assetId) => localRegistry.contains(assetId);
-}
+  }
 
 // ── Manager ───────────────────────────────────────────────────────────────────
 
