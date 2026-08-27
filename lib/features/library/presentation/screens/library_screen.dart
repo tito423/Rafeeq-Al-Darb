@@ -57,9 +57,9 @@ class LibraryScreen extends ConsumerWidget {
             unselectedLabelColor: isDark ? AppColors.darkSubtext : AppColors.lightSubtext,
             labelStyle: GoogleFonts.amiri(fontSize: 15, fontWeight: FontWeight.bold),
             tabs: const [
-              Tab(text: 'الكتب الإسلامية'),
-              Tab(text: 'كتب الحديث'),
-              Tab(text: 'المواقع الإسلامية'),
+              Tab(text: 'المتاحة للتحميل'),
+              Tab(text: 'مكتبتي'),
+              Tab(text: 'التصنيفات'),
             ],
           ),
         ),

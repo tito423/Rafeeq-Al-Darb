@@ -87,7 +87,7 @@ class _BooksLibraryScreenState extends ConsumerState<BooksLibraryScreen> {
     );
   }
 
-  Widget _buildBookCard(Map<String, dynamic> book, bool isDark, DownloadState downloadState) {
+  Widget _buildBookCard(Map<String, dynamic> book, bool isDark, DownloadManagerState downloadState) {
     final coverUrl = book['cover_url'] as String?;
     final title = book['title'] as String;
     final author = book['author'] as String;
