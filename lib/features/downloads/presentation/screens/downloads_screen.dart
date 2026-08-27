@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../services/download_manager.dart';
+import '../../../quran/presentation/widgets/mushaf_selection_gallery.dart';
 import '../../../../core/services/audio_service.dart';
 import '../../../../core/models/tafseer.dart';
 import '../../../../core/services/tafseer_service.dart';
@@ -74,6 +75,16 @@ class DownloadsScreen extends ConsumerWidget {
               ),
             ),
 
+            // ── Mushaf section ──────────────────────────────────────────────
+            SliverToBoxAdapter(
+              child: _MushafDownloadSection(
+                isDark: isDark,
+                cardBg: cardBg,
+                textColor: textColor,
+                subtext: subtext,
+              ),
+            ),
+
             // ── Tafseer section ───────────────────────────────────────────
             SliverToBoxAdapter(
               child: _TafseerDownloadSection(
@@ -105,7 +116,7 @@ class DownloadsScreen extends ConsumerWidget {
             ),
 
             // ── Active downloads ──────────────────────────────────────────
-            if (downloadState.activeTasks.isNotEmpty) ...[
+            if (downloadState.isBulkDownloading || downloadState.activeTasks.isNotEmpty) ...[
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
@@ -119,21 +130,168 @@ class DownloadsScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate((_, i) {
-                  final task = downloadState.activeTasks[i];
-                  return _ActiveTaskTile(
-                    task: task,
-                    isDark: isDark,
-                    cardBg: cardBg,
-                  );
-                }, childCount: downloadState.activeTasks.length),
-              ),
+              if (downloadState.isBulkDownloading)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: cardBg,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.3)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${(downloadState.bulkProgress * 100).toInt()}%',
+                                style: GoogleFonts.outfit(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.accentGold,
+                                ),
+                              ),
+                              Text(
+                                'جاري التنزيل المجمع (${downloadState.bulkCompleted}/${downloadState.bulkTotal})',
+                                style: GoogleFonts.amiri(
+                                  fontWeight: FontWeight.w700,
+                                  color: textColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: LinearProgressIndicator(
+                              value: downloadState.bulkProgress,
+                              minHeight: 8,
+                              backgroundColor: AppColors.accentGold.withValues(alpha: 0.2),
+                              color: AppColors.accentGold,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          OutlinedButton(
+                            onPressed: () {
+                              ref.read(downloadManagerProvider.notifier).cancelBulkDownload();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.error,
+                              side: const BorderSide(color: AppColors.error),
+                            ),
+                            child: Text(
+                              'إلغاء التنزيل المجمع',
+                              style: GoogleFonts.amiri(fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              if (downloadState.activeTasks.isNotEmpty)
+                SliverList(
+                  delegate: SliverChildBuilderDelegate((_, i) {
+                    final task = downloadState.activeTasks[i];
+                    return _ActiveTaskTile(
+                      task: task,
+                      isDark: isDark,
+                      cardBg: cardBg,
+                    );
+                  }, childCount: downloadState.activeTasks.length),
+                ),
             ],
 
             const SliverToBoxAdapter(child: SizedBox(height: 40)),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ── Mushaf download section ───────────────────────────────────────────────────
+
+class _MushafDownloadSection extends StatelessWidget {
+  final bool isDark;
+  final Color cardBg;
+  final Color textColor;
+  final Color subtext;
+
+  const _MushafDownloadSection({
+    required this.isDark,
+    required this.cardBg,
+    required this.textColor,
+    required this.subtext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.menu_book_rounded,
+                color: Color(0xFF0984E3),
+                size: 22,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'تنزيل المصاحف المصورة',
+                style: GoogleFonts.amiri(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'حمّل صفحات المصحف بالروايات والطبعات المختلفة للقراءة بدون إنترنت (17 مصحفاً).',
+            style: GoogleFonts.amiri(fontSize: 14, color: subtext, height: 1.7),
+            textDirection: TextDirection.rtl,
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                MushafSelectionGallery.show(context);
+              },
+              icon: const Icon(Icons.download_rounded, size: 20),
+              label: Text(
+                'استعراض وتحميل المصاحف',
+                style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0984E3),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -19,7 +18,9 @@ class PrayerSettingsSheet extends ConsumerWidget {
     final notifier = ref.read(prayerSettingsProvider.notifier);
     final isDark = theme.brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
-    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+    final textColor = isDark
+        ? AppColors.darkOnSurface
+        : AppColors.lightOnSurface;
 
     final prayers = ['الفجر', 'الشروق', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
 
@@ -85,18 +86,34 @@ class PrayerSettingsSheet extends ConsumerWidget {
               Card(
                 color: cardBg,
                 margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: ListTile(
-                  leading: const Icon(Icons.record_voice_over_rounded, color: AppColors.accentGold),
+                  leading: const Icon(
+                    Icons.record_voice_over_rounded,
+                    color: AppColors.accentGold,
+                  ),
                   title: Text(
                     settings.selectedMuezzin,
-                    style: GoogleFonts.scheherazadeNew(fontSize: 18, fontWeight: FontWeight.w700, color: textColor),
+                    style: GoogleFonts.scheherazadeNew(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: textColor,
+                    ),
                   ),
                   subtitle: Text(
                     'اضغط لمعاينة وتغيير صوت الأذان',
-                    style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext),
+                    style: GoogleFonts.amiri(
+                      fontSize: 12,
+                      color: AppColors.lightSubtext,
+                    ),
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.accentGold),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 16,
+                    color: AppColors.accentGold,
+                  ),
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
@@ -108,7 +125,7 @@ class PrayerSettingsSheet extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Adhan Display Mode Toggle
               Text(
                 'طريقة عرض الأذان',
@@ -122,7 +139,9 @@ class PrayerSettingsSheet extends ConsumerWidget {
               Card(
                 color: cardBg,
                 margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Column(
                   children: [
                     RadioListTile<String>(
@@ -131,10 +150,22 @@ class PrayerSettingsSheet extends ConsumerWidget {
                       activeColor: AppColors.accentGold,
                       title: Text(
                         'صوت وفيديو تفاعلي',
-                        style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w600, color: textColor),
+                        style: GoogleFonts.amiri(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
+                        ),
                       ),
-                      subtitle: Text('عرض فيديو تفاعلي متزامن مع صوت المؤذن', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
-                      onChanged: (val) => notifier.setAdhanDisplayMode(val!),
+                      subtitle: Text(
+                        'عرض فيديو تفاعلي متزامن مع صوت المؤذن',
+                        style: GoogleFonts.amiri(
+                          fontSize: 12,
+                          color: AppColors.lightSubtext,
+                        ),
+                      ),
+                      onChanged: (val) {
+                        if (val != null) notifier.setAdhanDisplayMode(val);
+                      },
                     ),
                     const Divider(height: 1, indent: 56),
                     RadioListTile<String>(
@@ -143,10 +174,22 @@ class PrayerSettingsSheet extends ConsumerWidget {
                       activeColor: AppColors.accentGold,
                       title: Text(
                         'صوت فقط (في الخلفية)',
-                        style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w600, color: textColor),
+                        style: GoogleFonts.amiri(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
+                        ),
                       ),
-                      subtitle: Text('تشغيل الأذان صوتياً فقط دون إظهار الشاشة الكاملة', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
-                      onChanged: (val) => notifier.setAdhanDisplayMode(val!),
+                      subtitle: Text(
+                        'تشغيل الأذان صوتياً فقط دون إظهار الشاشة الكاملة',
+                        style: GoogleFonts.amiri(
+                          fontSize: 12,
+                          color: AppColors.lightSubtext,
+                        ),
+                      ),
+                      onChanged: (val) {
+                        if (val != null) notifier.setAdhanDisplayMode(val);
+                      },
                     ),
                   ],
                 ),
@@ -166,55 +209,111 @@ class PrayerSettingsSheet extends ConsumerWidget {
               Card(
                 color: cardBg,
                 margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Column(
                   children: [
                     SwitchListTile(
-                      secondary: const Icon(Icons.wb_sunny_rounded, color: Color(0xFFE17055)),
+                      secondary: const Icon(
+                        Icons.wb_sunny_rounded,
+                        color: Color(0xFFE17055),
+                      ),
                       title: Text(
                         'أذكار الصباح (05:00 ص)',
-                        style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w600, color: textColor),
+                        style: GoogleFonts.amiri(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
+                        ),
                       ),
-                      subtitle: Text('تذكير يومي في بداية الصباح', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
+                      subtitle: Text(
+                        'تذكير يومي في بداية الصباح',
+                        style: GoogleFonts.amiri(
+                          fontSize: 12,
+                          color: AppColors.lightSubtext,
+                        ),
+                      ),
                       value: settings.morningAthkarEnabled,
                       activeThumbColor: AppColors.accentGold,
                       onChanged: (val) => notifier.setMorningAthkarEnabled(val),
                     ),
                     const Divider(height: 1, indent: 56),
                     SwitchListTile(
-                      secondary: const Icon(Icons.nights_stay_rounded, color: Color(0xFF6C5CE7)),
+                      secondary: const Icon(
+                        Icons.nights_stay_rounded,
+                        color: Color(0xFF6C5CE7),
+                      ),
                       title: Text(
                         'أذكار المساء (16:30 م)',
-                        style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w600, color: textColor),
+                        style: GoogleFonts.amiri(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
+                        ),
                       ),
-                      subtitle: Text('تذكير يومي في وقت العصر', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
+                      subtitle: Text(
+                        'تذكير يومي في وقت العصر',
+                        style: GoogleFonts.amiri(
+                          fontSize: 12,
+                          color: AppColors.lightSubtext,
+                        ),
+                      ),
                       value: settings.eveningAthkarEnabled,
                       activeThumbColor: AppColors.accentGold,
                       onChanged: (val) => notifier.setEveningAthkarEnabled(val),
                     ),
                     const Divider(height: 1, indent: 56),
                     SwitchListTile(
-                      secondary: const Icon(Icons.menu_book_rounded, color: Color(0xFF00B894)),
+                      secondary: const Icon(
+                        Icons.menu_book_rounded,
+                        color: Color(0xFF00B894),
+                      ),
                       title: Text(
                         'الورد القرآني الصباحي (05:00 ص)',
-                        style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w600, color: textColor),
+                        style: GoogleFonts.amiri(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
+                        ),
                       ),
-                      subtitle: Text('تذكير بقراءة الورد اليومي', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
+                      subtitle: Text(
+                        'تذكير بقراءة الورد اليومي',
+                        style: GoogleFonts.amiri(
+                          fontSize: 12,
+                          color: AppColors.lightSubtext,
+                        ),
+                      ),
                       value: settings.morningQuranWirdEnabled,
                       activeThumbColor: AppColors.accentGold,
-                      onChanged: (val) => notifier.setMorningQuranWirdEnabled(val),
+                      onChanged: (val) =>
+                          notifier.setMorningQuranWirdEnabled(val),
                     ),
                     const Divider(height: 1, indent: 56),
                     SwitchListTile(
-                      secondary: const Icon(Icons.auto_stories_rounded, color: Color(0xFF0984E3)),
+                      secondary: const Icon(
+                        Icons.auto_stories_rounded,
+                        color: Color(0xFF0984E3),
+                      ),
                       title: Text(
                         'الورد القرآني المسائي (16:30 م)',
-                        style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w600, color: textColor),
+                        style: GoogleFonts.amiri(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
+                        ),
                       ),
-                      subtitle: Text('تذكير بختام اليوم مع كتاب الله', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.lightSubtext)),
+                      subtitle: Text(
+                        'تذكير بختام اليوم مع كتاب الله',
+                        style: GoogleFonts.amiri(
+                          fontSize: 12,
+                          color: AppColors.lightSubtext,
+                        ),
+                      ),
                       value: settings.eveningQuranWirdEnabled,
                       activeThumbColor: AppColors.accentGold,
-                      onChanged: (val) => notifier.setEveningQuranWirdEnabled(val),
+                      onChanged: (val) =>
+                          notifier.setEveningQuranWirdEnabled(val),
                     ),
                   ],
                 ),
@@ -234,14 +333,27 @@ class PrayerSettingsSheet extends ConsumerWidget {
               Card(
                 color: cardBg,
                 margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: ListTile(
-                  leading: const Icon(Icons.calculate_rounded, color: AppColors.primaryBlue),
+                  leading: const Icon(
+                    Icons.calculate_rounded,
+                    color: AppColors.primaryBlue,
+                  ),
                   title: Text(
                     settings.calculationMethod,
-                    style: GoogleFonts.scheherazadeNew(fontSize: 16, fontWeight: FontWeight.w700, color: textColor),
+                    style: GoogleFonts.scheherazadeNew(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: textColor,
+                    ),
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.accentGold),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 16,
+                    color: AppColors.accentGold,
+                  ),
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
@@ -263,7 +375,7 @@ class PrayerSettingsSheet extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              
+
               ...prayers.map((prayer) {
                 final offset = settings.prayerOffsets[prayer] ?? 0;
                 final preAdhan = settings.preAdhanAlarms[prayer] ?? 0;
@@ -274,27 +386,40 @@ class PrayerSettingsSheet extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Card(
                     color: cardBg,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     margin: EdgeInsets.zero,
                     clipBehavior: Clip.hardEdge,
                     child: ExpansionTile(
-                      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      tilePadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
                       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       leading: Switch(
                         value: isEnabled,
                         activeThumbColor: AppColors.accentGold,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        onChanged: (val) => notifier.setPrayerToggle(prayer, val),
+                        onChanged: (val) =>
+                            notifier.setPrayerToggle(prayer, val),
                       ),
                       title: Text(
                         prayer,
                         style: GoogleFonts.scheherazadeNew(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: isEnabled ? AppColors.accentGold : (isDark ? AppColors.darkSubtext : AppColors.lightSubtext),
+                          color: isEnabled
+                              ? AppColors.accentGold
+                              : (isDark
+                                    ? AppColors.darkSubtext
+                                    : AppColors.lightSubtext),
                         ),
                       ),
-                      trailing: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.accentGold),
+                      trailing: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: AppColors.accentGold,
+                      ),
                       children: [
                         // Offset dropdown
                         _buildDropdownRow(
@@ -302,7 +427,9 @@ class PrayerSettingsSheet extends ConsumerWidget {
                           icon: Icons.tune_rounded,
                           value: offset,
                           items: List.generate(61, (i) => i - 30), // -30 to +30
-                          labelFn: (v) => v > 0 ? '+$v دق' : (v < 0 ? '$v دق' : 'بدون تعديل'),
+                          labelFn: (v) => v > 0
+                              ? '+$v دق'
+                              : (v < 0 ? '$v دق' : 'بدون تعديل'),
                           onChanged: (v) => notifier.setPrayerOffset(prayer, v),
                           textColor: textColor,
                           isDark: isDark,
@@ -315,7 +442,8 @@ class PrayerSettingsSheet extends ConsumerWidget {
                           value: preAdhan,
                           items: [0, 5, 10, 15, 20, 30, 45, 60],
                           labelFn: (v) => v == 0 ? 'لا يوجد' : 'قبل $v دق',
-                          onChanged: (v) => notifier.setPreAdhanAlarm(prayer, v),
+                          onChanged: (v) =>
+                              notifier.setPreAdhanAlarm(prayer, v),
                           textColor: textColor,
                           isDark: isDark,
                         ),
@@ -328,7 +456,8 @@ class PrayerSettingsSheet extends ConsumerWidget {
                             value: iqamah,
                             items: [0, 5, 10, 15, 20, 25, 30, 45],
                             labelFn: (v) => v == 0 ? 'لا يوجد' : 'بعد $v دق',
-                            onChanged: (v) => notifier.setIqamahAlarm(prayer, v),
+                            onChanged: (v) =>
+                                notifier.setIqamahAlarm(prayer, v),
                             textColor: textColor,
                             isDark: isDark,
                           ),
@@ -355,7 +484,6 @@ class PrayerSettingsSheet extends ConsumerWidget {
     required Color textColor,
     required bool isDark,
   }) {
-    // Clamp value to available items to avoid assertion errors
     final safeValue = items.contains(value) ? value : items.first;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -376,7 +504,11 @@ class PrayerSettingsSheet extends ConsumerWidget {
             value: safeValue,
             underline: const SizedBox(),
             dropdownColor: isDark ? AppColors.darkCardBackground : Colors.white,
-            icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: AppColors.accentGold),
+            icon: const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              size: 18,
+              color: AppColors.accentGold,
+            ),
             style: GoogleFonts.amiri(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -385,17 +517,25 @@ class PrayerSettingsSheet extends ConsumerWidget {
             onChanged: (v) {
               if (v != null) onChanged(v);
             },
-            items: items.map((v) => DropdownMenuItem(
-              value: v,
-              child: Text(
-                labelFn(v),
-                style: GoogleFonts.amiri(
-                  fontSize: 14,
-                  color: v == safeValue ? AppColors.accentGold : textColor,
-                  fontWeight: v == safeValue ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-            )).toList(),
+            items: items
+                .map(
+                  (v) => DropdownMenuItem(
+                    value: v,
+                    child: Text(
+                      labelFn(v),
+                      style: GoogleFonts.amiri(
+                        fontSize: 14,
+                        color: v == safeValue
+                            ? AppColors.accentGold
+                            : textColor,
+                        fontWeight: v == safeValue
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ],
       ),
@@ -408,7 +548,8 @@ class MuezzinSelectionSheet extends ConsumerStatefulWidget {
   const MuezzinSelectionSheet({super.key});
 
   @override
-  ConsumerState<MuezzinSelectionSheet> createState() => _MuezzinSelectionSheetState();
+  ConsumerState<MuezzinSelectionSheet> createState() =>
+      _MuezzinSelectionSheetState();
 }
 
 class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
@@ -429,7 +570,7 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
       } else {
         await _player.play();
       }
-      setState(() {});
+      if (mounted) setState(() {});
       return;
     }
 
@@ -466,10 +607,10 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
     final notifier = ref.read(prayerSettingsProvider.notifier);
     final isDark = theme.brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
-    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
-    final muezzinsAsync = ref.watch(muezzinsProvider);
-    final downloadState = ref.watch(downloadManagerProvider);
-
+    final textColor = isDark
+        ? AppColors.darkOnSurface
+        : AppColors.lightOnSurface;
+    final muezzins = ref.watch(muezzinsProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -506,109 +647,243 @@ class _MuezzinSelectionSheetState extends ConsumerState<MuezzinSelectionSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            muezzinsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator(color: AppColors.accentGold)),
-              error: (err, _) => Center(child: Text('خطأ في التحميل', style: GoogleFonts.amiri(color: Colors.red))),
-              data: (muezzins) {
-                return Column(
-                  children: muezzins.map((m) {
-                    final isSelected = settings.selectedMuezzin == m.name;
-                    final isPlayingThis = _currentlyPlayingId == m.id && _player.playing;
-                    final isLoadingThis = _currentlyPlayingId == m.id && _isLoadingAudio;
-                    
-                    final taskId = 'adhan_${m.id}';
-                    final task = downloadState.tasks[taskId];
-                    final isDownloading = task?.isDownloading == true;
+            if (muezzins.isEmpty)
+              Center(
+                child: Text(
+                  'لا يوجد مؤذنين متاحين',
+                  style: GoogleFonts.amiri(color: textColor),
+                ),
+              )
+            else
+              Column(
+                children: muezzins.map((m) {
+                  final isSelected = settings.selectedMuezzin == m.name;
+                  final isPlayingThis =
+                      _currentlyPlayingId == m.id && _player.playing;
+                  final isLoadingThis =
+                      _currentlyPlayingId == m.id && _isLoadingAudio;
 
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.accentGold.withValues(alpha: 0.12) : cardBg,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: isSelected ? AppColors.accentGold : Colors.transparent,
-                          width: 1.5,
-                        ),
+                  return Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.accentGold.withValues(alpha: 0.12)
+                          : cardBg,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.accentGold
+                            : Colors.transparent,
+                        width: 1.5,
                       ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        leading: IconButton(
-                          icon: isLoadingThis
-                              ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accentGold),
-                                )
-                              : Icon(
-                                  isPlayingThis ? Icons.pause_circle_filled_rounded : Icons.play_circle_fill_rounded,
-                                  color: AppColors.accentGold,
-                                  size: 36,
-                                ),
-                          onPressed: () => _previewAudio(m),
-                        ),
-                        title: Text(
-                          m.name,
-                          style: GoogleFonts.scheherazadeNew(
-                            fontSize: 20,
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                            color: isSelected ? AppColors.accentGold : textColor,
+                    ),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                        ),
-                        subtitle: m.id == 'custom' && settings.customAdhanPath.isNotEmpty
-                            ? Text('مسار الملف مخصص', style: GoogleFonts.amiri(fontSize: 12, color: AppColors.accentGold))
-                            : null,
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (isSelected)
-                              const Icon(Icons.check_circle_rounded, color: AppColors.accentGold, size: 24)
-                            else
-                              TextButton(
-                                onPressed: () async {
-                                  if (m.id == 'custom') {
-                                    final result = await FilePicker.platform.pickFiles(type: FileType.audio);
-                                    if (result != null && result.files.single.path != null) {
-                                      notifier.setCustomAdhanPath(result.files.single.path!);
+                          title: Text(
+                            m.name,
+                            style: GoogleFonts.scheherazadeNew(
+                              fontSize: 20,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: isSelected ? AppColors.accentGold : textColor,
+                            ),
+                          ),
+                          subtitle:
+                              m.id == 'custom' &&
+                                  settings.customAdhanPath.isNotEmpty
+                              ? Text(
+                                  'مسار الملف مخصص',
+                                  style: GoogleFonts.amiri(
+                                    fontSize: 12,
+                                    color: AppColors.accentGold,
+                                  ),
+                                )
+                              : null,
+                          trailing: isSelected
+                              ? const Icon(
+                                  Icons.check_circle_rounded,
+                                  color: AppColors.accentGold,
+                                  size: 24,
+                                )
+                              : TextButton(
+                                  onPressed: () async {
+                                    if (m.id == 'custom') {
+                                      final result = await FilePicker.pickFiles(type: FileType.audio);
+                                      if (result != null &&
+                                          result.files.single.path != null) {
+                                        notifier.setCustomAdhanPath(
+                                          result.files.single.path!,
+                                        );
+                                        notifier.setSelectedMuezzin(m.name);
+                                      }
+                                    } else {
                                       notifier.setSelectedMuezzin(m.name);
-                                      _player.stop();
-                                      if (mounted) Navigator.pop(context);
                                     }
-                                  } else {
-                                    notifier.setSelectedMuezzin(m.name);
-                                    _player.stop();
-                                    if (mounted) Navigator.pop(context);
-                                  }
-                                },
-                                child: Text(
-                                  m.id == 'custom' ? 'اختيار ملف' : 'اختيار',
-                                  style: GoogleFonts.amiri(color: AppColors.accentGold, fontWeight: FontWeight.bold),
+                                  },
+                                  child: Text(
+                                    m.id == 'custom' ? 'اختيار ملف' : 'تحديد',
+                                    style: GoogleFonts.amiri(
+                                      color: AppColors.accentGold,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                          ],
-                        ),
-                        onTap: () async {
-                          if (m.id == 'custom') {
-                            if (settings.customAdhanPath.isEmpty) {
-                              final result = await FilePicker.platform.pickFiles(type: FileType.audio);
-                              if (result != null && result.files.single.path != null) {
-                                notifier.setCustomAdhanPath(result.files.single.path!);
+                          onTap: () async {
+                            if (m.id == 'custom') {
+                              if (settings.customAdhanPath.isEmpty) {
+                                final result = await FilePicker.pickFiles(
+                                  type: FileType.audio,
+                                );
+                                if (result != null &&
+                                    result.files.single.path != null) {
+                                  notifier.setCustomAdhanPath(
+                                    result.files.single.path!,
+                                  );
+                                  notifier.setSelectedMuezzin(m.name);
+                                }
+                              } else {
                                 notifier.setSelectedMuezzin(m.name);
-                                _previewAudio(m);
                               }
                             } else {
                               notifier.setSelectedMuezzin(m.name);
-                              _previewAudio(m);
                             }
-                          } else {
-                            notifier.setSelectedMuezzin(m.name);
-                            _previewAudio(m);
-                          }
-                        },
-                      ),
-                    );
-                  }).toList(),
-                );
-              },
+                          },
+                        ),
+                        if (isSelected)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(16),
+                                bottomRight: Radius.circular(16),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                // Play/Pause Preview Button
+                                InkWell(
+                                  onTap: () => _previewAudio(m),
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accentGold.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        isLoadingThis
+                                            ? const SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  color: AppColors.accentGold,
+                                                ),
+                                              )
+                                            : Icon(
+                                                isPlayingThis
+                                                    ? Icons.pause_circle_filled_rounded
+                                                    : Icons.play_circle_fill_rounded,
+                                                color: AppColors.accentGold,
+                                                size: 24,
+                                              ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'معاينة',
+                                          style: GoogleFonts.amiri(
+                                            color: AppColors.accentGold,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // Adhan Sound Mode Options
+                                _buildAdhanModeOption(
+                                  icon: Icons.volume_up_rounded,
+                                  label: 'صوت',
+                                  mode: 'sound',
+                                  currentMode: settings.adhanSoundMode,
+                                  onTap: () => notifier.setAdhanSoundMode('sound'),
+                                  textColor: textColor,
+                                ),
+                                _buildAdhanModeOption(
+                                  icon: Icons.vibration_rounded,
+                                  label: 'هزاز',
+                                  mode: 'vibrate',
+                                  currentMode: settings.adhanSoundMode,
+                                  onTap: () => notifier.setAdhanSoundMode('vibrate'),
+                                  textColor: textColor,
+                                ),
+                                _buildAdhanModeOption(
+                                  icon: Icons.volume_off_rounded,
+                                  label: 'صامت',
+                                  mode: 'silent',
+                                  currentMode: settings.adhanSoundMode,
+                                  onTap: () => notifier.setAdhanSoundMode('silent'),
+                                  textColor: textColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdhanModeOption({
+    required IconData icon,
+    required String label,
+    required String mode,
+    required String currentMode,
+    required VoidCallback onTap,
+    required Color textColor,
+  }) {
+    final isSelected = mode == currentMode;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.accentGold.withValues(alpha: 0.1) : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? AppColors.accentGold : textColor.withValues(alpha: 0.5),
+              size: 20,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: GoogleFonts.amiri(
+                color: isSelected ? AppColors.accentGold : textColor.withValues(alpha: 0.5),
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontSize: 14,
+              ),
             ),
           ],
         ),
@@ -637,7 +912,9 @@ class CalculationMethodSheet extends ConsumerWidget {
     final settings = ref.watch(prayerSettingsProvider);
     final notifier = ref.read(prayerSettingsProvider.notifier);
     final isDark = theme.brightness == Brightness.dark;
-    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+    final textColor = isDark
+        ? AppColors.darkOnSurface
+        : AppColors.lightOnSurface;
 
     return Container(
       decoration: BoxDecoration(
@@ -671,14 +948,19 @@ class CalculationMethodSheet extends ConsumerWidget {
                     m,
                     style: GoogleFonts.outfit(
                       fontSize: 16,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
                       color: isSelected ? AppColors.accentGold : textColor,
                     ),
                     textDirection: TextDirection.ltr,
                   ),
-                  trailing: isSelected 
-                    ? const Icon(Icons.check_circle_rounded, color: AppColors.accentGold)
-                    : null,
+                  trailing: isSelected
+                      ? const Icon(
+                          Icons.check_circle_rounded,
+                          color: AppColors.accentGold,
+                        )
+                      : null,
                   onTap: () {
                     notifier.setCalculationMethod(m);
                     Navigator.pop(context);
@@ -704,7 +986,9 @@ class SinglePrayerConfigSheet extends ConsumerWidget {
     final settings = ref.watch(prayerSettingsProvider);
     final notifier = ref.read(prayerSettingsProvider.notifier);
     final isDark = theme.brightness == Brightness.dark;
-    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+    final textColor = isDark
+        ? AppColors.darkOnSurface
+        : AppColors.lightOnSurface;
 
     final offset = settings.prayerOffsets[prayer] ?? 0;
     final preAdhan = settings.preAdhanAlarms[prayer] ?? 0;
@@ -730,12 +1014,26 @@ class SinglePrayerConfigSheet extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 24),
-            _buildNumberRow('تعديل الوقت (دقائق):', offset, (val) => notifier.setPrayerOffset(prayer, val)),
+            _buildNumberRow(
+              'تعديل الوقت (دقائق):',
+              offset,
+              (val) => notifier.setPrayerOffset(prayer, val),
+            ),
             const SizedBox(height: 12),
-            _buildNumberRow('تنبيه قبل الأذان:', preAdhan, (val) => notifier.setPreAdhanAlarm(prayer, val), allowNegative: false),
+            _buildNumberRow(
+              'تنبيه قبل الأذان:',
+              preAdhan,
+              (val) => notifier.setPreAdhanAlarm(prayer, val),
+              allowNegative: false,
+            ),
             if (prayer != 'الشروق') ...[
               const SizedBox(height: 12),
-              _buildNumberRow('تنبيه الإقامة:', iqamah, (val) => notifier.setIqamahAlarm(prayer, val), allowNegative: false),
+              _buildNumberRow(
+                'تنبيه الإقامة:',
+                iqamah,
+                (val) => notifier.setIqamahAlarm(prayer, val),
+                allowNegative: false,
+              ),
             ],
           ],
         ),
@@ -743,14 +1041,16 @@ class SinglePrayerConfigSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildNumberRow(String label, int value, ValueChanged<int> onChanged, {bool allowNegative = true}) {
+  Widget _buildNumberRow(
+    String label,
+    int value,
+    ValueChanged<int> onChanged, {
+    bool allowNegative = true,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: GoogleFonts.amiri(fontSize: 15),
-        ),
+        Text(label, style: GoogleFonts.amiri(fontSize: 15)),
         Row(
           children: [
             IconButton(

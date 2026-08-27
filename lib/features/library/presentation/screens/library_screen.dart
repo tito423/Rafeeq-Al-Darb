@@ -187,128 +187,189 @@ class _IslamicBooksTabState extends State<_IslamicBooksTab> {
                     return Consumer(
                       builder: (context, ref, child) {
                         final downloadState = ref.watch(downloadManagerProvider);
-                        final taskId = 'book_';
+                        final taskId = 'book_$bookId';
                         final task = downloadState.tasks[taskId];
                         final isDownloaded = downloadState.isAssetDownloaded(taskId);
                         final isDownloading = task?.isDownloading == true;
                         final progress = task?.progress ?? 0.0;
 
                         return GestureDetector(
-                      onTap: () {
-                        final isText = book['format'] == 'text' || (book['download_url']?.endsWith('.json') ?? false);
-                        final downloadUrl = book['download_url'] ?? '';
-                        
-                        if (!isDownloaded && !isDownloading && downloadUrl.isNotEmpty) {
-                          // Start download
-                          if (isText) {
-                            ref.read(downloadManagerProvider.notifier).downloadBook(bookId: bookId, downloadUrl: downloadUrl);
-                          } else {
-                            ref.read(downloadManagerProvider.notifier).downloadBookPdf(bookId, downloadUrl, book['title'] ?? '');
-                          }
-                          return;
-                        }
+                          onLongPress: isDownloaded
+                              ? () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: Text('إدارة الكتاب', style: GoogleFonts.amiri(fontWeight: FontWeight.bold)),
+                                      content: Text('هل ترغب في حذف "${book['title']}" من ذاكرة الجهاز لتوفير المساحة؟', style: GoogleFonts.cairo()),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(ctx),
+                                          child: Text('إلغاء', style: GoogleFonts.cairo()),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            ref.read(downloadManagerProvider.notifier).deleteBook(bookId);
+                                            Navigator.pop(ctx);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(content: Text('تم حذف الكتاب من الجهاز')),
+                                            );
+                                          },
+                                          child: Text('حذف', style: GoogleFonts.cairo(color: Colors.red)),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              : null,
+                          onTap: () {
+                            final isText = book['format'] == 'text' || (book['download_url']?.endsWith('.json') ?? false);
+                            final downloadUrl = book['download_url'] ?? '';
+                            
+                            if (!isDownloaded && !isDownloading && downloadUrl.isNotEmpty) {
+                              // Start download
+                              if (isText) {
+                                ref.read(downloadManagerProvider.notifier).downloadBook(bookId: bookId, downloadUrl: downloadUrl);
+                              } else {
+                                ref.read(downloadManagerProvider.notifier).downloadBookPdf(bookId, downloadUrl, book['title'] ?? '');
+                              }
+                              return;
+                            }
 
-                        if (isDownloading) {
-                          // Ignore tap while downloading
-                          return;
-                        }
-                        
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => isText
-                                ? TextBookReaderScreen(
-                                    bookId: bookId,
-                                    title: book['title'] ?? '',
-                                    bookUrl: downloadUrl,
-                                  )
-                                : BookReaderScreen(
-                                    bookId: bookId,
-                                    title: book['title'] ?? '',
-                                    pdfUrl: downloadUrl,
+                            if (isDownloading) {
+                              // Ignore tap while downloading
+                              return;
+                            }
+                            
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => isText
+                                    ? TextBookReaderScreen(
+                                        bookId: bookId,
+                                        title: book['title'] ?? '',
+                                        bookUrl: downloadUrl,
+                                      )
+                                    : BookReaderScreen(
+                                        bookId: bookId,
+                                        title: book['title'] ?? '',
+                                        pdfUrl: downloadUrl,
+                                      ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: cardBg,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                              border: Border.all(
+                                color: isDownloaded
+                                    ? AppColors.accentGold
+                                    : (isDownloading ? AppColors.primaryBlue : AppColors.accentGold.withValues(alpha: 0.2)),
+                                width: isDownloaded ? 1.5 : 1,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              AppColors.primaryBlue.withValues(alpha: 0.8),
+                                              AppColors.primaryBlue2.withValues(alpha: 0.9),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.menu_book_rounded,
+                                            size: 42,
+                                            color: AppColors.accentGold.withValues(alpha: 0.85),
+                                          ),
+                                        ),
+                                      ),
+                                      // Status icon badge
+                                      Positioned(
+                                        top: 8,
+                                        right: 8,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            color: Colors.black54,
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          child: Icon(
+                                            isDownloaded
+                                                ? Icons.check_circle_rounded
+                                                : (isDownloading ? Icons.downloading_rounded : Icons.cloud_download_outlined),
+                                            size: 16,
+                                            color: isDownloaded
+                                                ? AppColors.accentGold
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
+                                ),
+                                if (isDownloading)
+                                  LinearProgressIndicator(
+                                    value: progress > 0 ? progress : null,
+                                    backgroundColor: Colors.grey[300],
+                                    color: AppColors.accentGold,
+                                    minHeight: 4,
+                                  ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          book['title'] ?? '',
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.scheherazadeNew(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            height: 1.2,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          book['author'] ?? '',
+                                          textAlign: TextAlign.center,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.amiri(
+                                            fontSize: 12,
+                                            color: AppColors.accentGold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: cardBg,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                          border: Border.all(
-                            color: AppColors.accentGold.withValues(alpha: 0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      AppColors.primaryBlue.withValues(alpha: 0.8),
-                                      AppColors.primaryBlue2.withValues(alpha: 0.9),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    Icons.menu_book_rounded,
-                                    size: 42,
-                                    color: AppColors.accentGold.withValues(alpha: 0.85),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      book['title'] ?? '',
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.scheherazadeNew(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.2,
-                                        color: textColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      book['author'] ?? '',
-                                      textAlign: TextAlign.center,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.amiri(
-                                        fontSize: 12,
-                                        color: AppColors.accentGold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
                       },
                     );
                   },

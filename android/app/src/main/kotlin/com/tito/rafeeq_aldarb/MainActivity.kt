@@ -42,7 +42,7 @@ class MainActivity: AudioServiceActivity() {
     private fun showCustomNotification(nextPrayerName: String, nextPrayerTimeMs: Long, times: List<String>, activeIndex: Int) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION.SDK_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
                 "الصلاة القادمة",
@@ -60,7 +60,7 @@ class MainActivity: AudioServiceActivity() {
         
         // Setup Chronometer
         remoteViews.setChronometer(R.id.chronometer, nextPrayerTimeMs, "باقي %s", true)
-        if (Build.VERSION.SDK_INT >= Build.VERSION.SDK_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             remoteViews.setChronometerCountDown(R.id.chronometer, true)
         }
 

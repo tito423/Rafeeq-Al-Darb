@@ -61,10 +61,14 @@ class MushafStyleInfo {
     required this.baseHeight,
   });
 
+  static const int mushafPageOffset = 3;
+
   String pageUrl(int pageNumber) {
-    final pg = pageNumber.toString();
-    final pg3 = pg.padLeft(3, '0');
-    final pg4 = pg.padLeft(4, '0');
+    // Apply offset: physical image page = logical Quran page + offset (cover + intro pages)
+    final actualPage = pageNumber + mushafPageOffset;
+    final pg = actualPage.toString();
+    final pg3 = actualPage.toString().padLeft(3, '0');
+    final pg4 = actualPage.toString().padLeft(4, '0');
     return r2Url
         .replaceAll('{page}', pg)
         .replaceAll('{page3}', pg3)
@@ -72,7 +76,8 @@ class MushafStyleInfo {
   }
 
   String fallbackUrl(int pageNumber) {
-    final pg4 = pageNumber.toString().padLeft(4, '0');
+    final actualPage = pageNumber + mushafPageOffset;
+    final pg4 = actualPage.toString().padLeft(4, '0');
     return s3FallbackUrl.replaceAll('{page4}', pg4);
   }
 }

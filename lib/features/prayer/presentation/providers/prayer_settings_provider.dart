@@ -57,9 +57,11 @@ class PrayerSettings {
   final String selectedMuezzin;
   final String customAdhanPath; // Path to the custom adhan file chosen by user
   final String adhanDisplayMode; // 'animated' or 'audio_only'
+  final String adhanSoundMode; // 'sound', 'vibrate', 'silent'
   final String calculationMethod;
   final Map<String, bool> prayerToggles;
   final Map<String, int> prayerOffsets;
+  final Map<String, String> prayerAdhanModes; // 'animated', 'audio_only', 'vibrate_only', 'silent'
   final Map<String, int> preAdhanAlarms; // Minutes before
   final Map<String, int> iqamahAlarms;   // Minutes after
 
@@ -75,6 +77,7 @@ class PrayerSettings {
     this.selectedMuezzin = 'عبدالباسط عبدالصمد',
     this.customAdhanPath = '',
     this.adhanDisplayMode = 'animated',
+    this.adhanSoundMode = 'sound',
     this.calculationMethod = 'Umm Al-Qura Univ., Makkah',
     this.prayerToggles = const {
       'الفجر': true,
@@ -91,6 +94,13 @@ class PrayerSettings {
       'العصر': 0,
       'المغرب': 0,
       'العشاء': 0,
+    },
+    this.prayerAdhanModes = const {
+      'الفجر': 'animated',
+      'الظهر': 'animated',
+      'العصر': 'animated',
+      'المغرب': 'animated',
+      'العشاء': 'animated',
     },
     this.preAdhanAlarms = const {
       'الفجر': 15,
@@ -120,9 +130,11 @@ class PrayerSettings {
     String? selectedMuezzin,
     String? customAdhanPath,
     String? adhanDisplayMode,
+    String? adhanSoundMode,
     String? calculationMethod,
     Map<String, bool>? prayerToggles,
     Map<String, int>? prayerOffsets,
+    Map<String, String>? prayerAdhanModes,
     Map<String, int>? preAdhanAlarms,
     Map<String, int>? iqamahAlarms,
     bool? morningAthkarEnabled,
@@ -136,9 +148,11 @@ class PrayerSettings {
       selectedMuezzin: selectedMuezzin ?? this.selectedMuezzin,
       customAdhanPath: customAdhanPath ?? this.customAdhanPath,
       adhanDisplayMode: adhanDisplayMode ?? this.adhanDisplayMode,
+      adhanSoundMode: adhanSoundMode ?? this.adhanSoundMode,
       calculationMethod: calculationMethod ?? this.calculationMethod,
       prayerToggles: prayerToggles ?? this.prayerToggles,
       prayerOffsets: prayerOffsets ?? this.prayerOffsets,
+      prayerAdhanModes: prayerAdhanModes ?? this.prayerAdhanModes,
       preAdhanAlarms: preAdhanAlarms ?? this.preAdhanAlarms,
       iqamahAlarms: iqamahAlarms ?? this.iqamahAlarms,
       morningAthkarEnabled: morningAthkarEnabled ?? this.morningAthkarEnabled,
@@ -162,16 +176,19 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
     final muezzin = _prefs.getString('selectedMuezzin') ?? 'عبدالباسط عبدالصمد';
     final customPath = _prefs.getString('customAdhanPath') ?? '';
     final adhanMode = _prefs.getString('adhanDisplayMode') ?? 'animated';
+    final adhanSound = _prefs.getString('adhanSoundMode') ?? 'sound';
     final calcMethod = _prefs.getString('calculationMethod') ?? 'Umm Al-Qura Univ., Makkah';
     
     final toggles = <String, bool>{};
     final offsets = <String, int>{};
+    final adhanModes = <String, String>{};
     final preAdhans = <String, int>{};
     final iqamahs = <String, int>{};
     final prayers = ['الفجر', 'الشروق', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
     for (final p in prayers) {
       toggles[p] = _prefs.getBool('prayer_$p') ?? (p != 'الشروق');
       offsets[p] = _prefs.getInt('prayer_offset_$p') ?? 0;
+      adhanModes[p] = _prefs.getString('prayer_adhan_mode_$p') ?? 'animated';
       preAdhans[p] = _prefs.getInt('prayer_preadhan_$p') ?? (p == 'الفجر' ? 15 : 0);
       iqamahs[p] = _prefs.getInt('prayer_iqamah_$p') ?? (p == 'المغرب' ? 10 : (p == 'الشروق' ? 0 : 15));
     }
@@ -187,9 +204,11 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
       selectedMuezzin: muezzin,
       customAdhanPath: customPath,
       adhanDisplayMode: adhanMode,
+      adhanSoundMode: adhanSound,
       calculationMethod: calcMethod,
       prayerToggles: toggles,
       prayerOffsets: offsets,
+      prayerAdhanModes: adhanModes,
       preAdhanAlarms: preAdhans,
       iqamahAlarms: iqamahs,
       morningAthkarEnabled: mAthkar,
@@ -219,14 +238,19 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
     state = state.copyWith(customAdhanPath: path);
   }
   
-  void setAdhanDisplayMode(String value) {
-    _prefs.setString('adhanDisplayMode', value);
-    state = state.copyWith(adhanDisplayMode: value);
+  Future<void> setAdhanDisplayMode(String mode) async {
+    await _prefs.setString('adhanDisplayMode', mode);
+    state = state.copyWith(adhanDisplayMode: mode);
   }
 
-  void setCalculationMethod(String value) {
-    _prefs.setString('calculationMethod', value);
-    state = state.copyWith(calculationMethod: value);
+  Future<void> setAdhanSoundMode(String mode) async {
+    await _prefs.setString('adhanSoundMode', mode);
+    state = state.copyWith(adhanSoundMode: mode);
+  }
+
+  Future<void> setCalculationMethod(String method) async {
+    _prefs.setString('calculationMethod', method);
+    state = state.copyWith(calculationMethod: method);
   }
 
   void setPrayerToggle(String prayer, bool value) {
@@ -241,6 +265,13 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
     final newOffsets = Map<String, int>.from(state.prayerOffsets);
     newOffsets[prayer] = offset;
     state = state.copyWith(prayerOffsets: newOffsets);
+  }
+
+  void setPrayerAdhanMode(String prayer, String mode) {
+    _prefs.setString('prayer_adhan_mode_$prayer', mode);
+    final newModes = Map<String, String>.from(state.prayerAdhanModes);
+    newModes[prayer] = mode;
+    state = state.copyWith(prayerAdhanModes: newModes);
   }
 
   void setPreAdhanAlarm(String prayer, int minutes) {

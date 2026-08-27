@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart' as import_permission;
 import 'prayer_times_service.dart';
 import '../models/prayer_times.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -73,10 +74,28 @@ class NotificationService {
   // ── Request permissions ───────────────────────────────────────────────────
 
   Future<bool> requestPermissions() async {
+    bool granted = false;
     if (Platform.isAndroid) {
       final plugin = _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
-      return await plugin?.requestNotificationsPermission() ?? false;
+      granted = await plugin?.requestNotificationsPermission() ?? false;
+      
+      // Request battery exemption and exact alarms for smooth background adhan
+      try {
+        final batteryStatus = await import_permission.Permission.ignoreBatteryOptimizations.status;
+        if (!batteryStatus.isGranted) {
+          await import_permission.Permission.ignoreBatteryOptimizations.request();
+        }
+        
+        final alarmStatus = await import_permission.Permission.scheduleExactAlarm.status;
+        if (!alarmStatus.isGranted) {
+          await import_permission.Permission.scheduleExactAlarm.request();
+        }
+      } catch (e) {
+        debugPrint('Error requesting background permissions: $e');
+      }
+      
+      return granted;
     } else if (Platform.isIOS) {
       final plugin = _plugin.resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin>();
@@ -139,17 +158,24 @@ class NotificationService {
 
     final muezzinId = prefs.getString('selectedMuezzin') ?? 'makkah';
     
+    // Check per-prayer adhan mode
+    final prayerMode = prefs.getString('prayer_adhan_mode_$prayerName') ?? 'animated';
+    final bool playSound = prayerMode != 'silent' && prayerMode != 'vibrate_only';
+    final bool enableVibration = prayerMode != 'silent';
+    final bool fullScreen = prayerMode == 'animated';
+    final bool isSilentMode = prayerMode == 'silent';
+    
     final androidDetails = AndroidNotificationDetails(
-      '${_adhanChannelId}_$muezzinId', // Distinct channel per muezzin so sound applies correctly
+      '${_adhanChannelId}_$muezzinId',
       _adhanChannelName,
       channelDescription: _adhanChannelDesc,
-      importance: Importance.max,
-      priority: Priority.high,
-      playSound: true,
-      sound: RawResourceAndroidNotificationSound('adhan_$muezzinId'),
-      enableVibration: true,
+      importance: isSilentMode ? Importance.low : Importance.max,
+      priority: isSilentMode ? Priority.low : Priority.high,
+      playSound: playSound,
+      sound: playSound ? RawResourceAndroidNotificationSound('adhan_$muezzinId') : null,
+      enableVibration: enableVibration,
       category: AndroidNotificationCategory.alarm,
-      fullScreenIntent: true, // Wake device and bypass keyguard
+      fullScreenIntent: fullScreen,
       actions: <AndroidNotificationAction>[
         const AndroidNotificationAction(
           'dismiss',
@@ -170,10 +196,10 @@ class NotificationService {
     );
 
     final iosDetails = DarwinNotificationDetails(
-      sound: 'adhan.aiff',
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
+      sound: playSound ? 'adhan.aiff' : null,
+      presentAlert: !isSilentMode,
+      presentBadge: !isSilentMode,
+      presentSound: playSound,
     );
 
     final notifDetails = NotificationDetails(
@@ -191,7 +217,7 @@ class NotificationService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
-        payload: 'adhan_${prayerName}_${prefs.getString('selectedMuezzin') ?? 'makkah'}',
+        payload: 'adhan_${prayerName}_${muezzinId}_$prayerMode',
       );
     } catch (e) {
       debugPrint('NotificationService: failed to schedule $prayerName — $e');
@@ -345,14 +371,20 @@ class NotificationService {
       final parts = response.payload!.split('_');
       final pName = parts.length > 1 ? parts[1] : 'الصلاة';
       final mMuezzin = parts.length > 2 ? parts[2] : 'مكة';
+      // Mode is at index 3: 'animated', 'audio_only', 'vibrate_only', or 'silent'
+      final mode = parts.length > 3 ? parts[3] : 'animated';
       
-      final prefs = await SharedPreferences.getInstance();
-      final mode = prefs.getString('adhanDisplayMode') ?? 'animated';
-      
-      if (mode == 'audio_only') {
-        // Just play it in background
+      if (mode == 'silent') {
+        // Silent mode - do nothing, just dismiss
+        return;
+      } else if (mode == 'vibrate_only') {
+        // Vibrate only - no audio, no screen
+        return;
+      } else if (mode == 'audio_only') {
+        // Just play in background
         playAdhanInBackground(pName, mMuezzin);
       } else {
+        // 'animated' - Full screen adhan with animation
         import_app.navigatorKey.currentState?.push(
           import_material.MaterialPageRoute(
             builder: (_) => FullScreenAdhanScreen(

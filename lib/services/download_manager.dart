@@ -94,8 +94,32 @@ class DownloadManagerState {
     localRegistry: localRegistry ?? this.localRegistry,
   );
 
-  double get bulkProgress => bulkTotal > 0 ? bulkCompleted / bulkTotal : 0.0;
-  List<DownloadTask> get activeTasks => tasks.values.where((t) => t.isDownloading).toList();
+  double get bulkProgress {
+    if (bulkTotal <= 0) return 0.0;
+    if (bulkCompleted >= bulkTotal) return 1.0;
+    
+    double activeProgressSum = 0.0;
+    if (isBulkDownloading) {
+      for (final task in tasks.values) {
+        if (task.isDownloading && task.category == DownloadCategory.audioSurah) {
+          activeProgressSum += task.progress;
+        }
+      }
+    }
+    
+    return ((bulkCompleted + activeProgressSum) / bulkTotal).clamp(0.0, 1.0);
+  }
+
+  bool isAssetDownloaded(String assetId) => localRegistry.contains(assetId);
+
+  List<DownloadTask> get activeTasks {
+    return tasks.values.where((t) {
+      if (!t.isDownloading) return false;
+      if (isBulkDownloading && t.category == DownloadCategory.audioSurah) return false;
+      return true;
+    }).toList();
+  }
+  
   bool isAssetDownloaded(String assetId) => localRegistry.contains(assetId);
 }
 
@@ -122,6 +146,13 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
   Future<void> _registerAsset(String assetId) async {
     final prefs = await SharedPreferences.getInstance();
     final updatedRegistry = Set<String>.from(state.localRegistry)..add(assetId);
+    await prefs.setStringList(_registryKey, updatedRegistry.toList());
+    state = state.copyWith(localRegistry: updatedRegistry);
+  }
+
+  Future<void> _unregisterAsset(String assetId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final updatedRegistry = Set<String>.from(state.localRegistry)..remove(assetId);
     await prefs.setStringList(_registryKey, updatedRegistry.toList());
     state = state.copyWith(localRegistry: updatedRegistry);
   }
@@ -215,8 +246,16 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     );
 
     try {
+      String finalUrl = url;
+      if (url.contains('.r2.dev') || url.contains('cloudflarestorage.com')) {
+        final uri = Uri.parse(url);
+        final objectName = uri.path.startsWith('/') ? uri.path.substring(1) : uri.path;
+        final r2 = R2StorageService();
+        finalUrl = await r2.getPresignedUrl('rafeeq-aldarb-data', objectName);
+      }
+
       await _dio.download(
-        url,
+        finalUrl,
         savePath,
         cancelToken: cancelToken,
         options: Options(
@@ -234,22 +273,40 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
       if (autoExtractZip && savePath.toLowerCase().endsWith('.zip')) {
         _updateTask(id, state.tasks[id]!.copyWith(progress: 0.99)); // Extraction phase
         
-        // Extract to parent directory
         final File zipFile = File(savePath);
         final extractDir = zipFile.parent;
         
-        final bytes = zipFile.readAsBytesSync();
-        final archive = ZipDecoder().decodeBytes(bytes);
+        final inputStream = InputFileStream(savePath);
+        final archive = ZipDecoder().decodeStream(inputStream);
         
         for (final file in archive) {
           if (file.isFile) {
-            final outputFilename = file.name.split('/').last; 
-            final data = file.content as List<int>;
-            File('${extractDir.path}/$outputFilename')
-              ..createSync(recursive: true)
-              ..writeAsBytesSync(data);
+            String outputFilename = file.name.split('/').last; 
+            
+            // If extracting a Mushaf page (1.png), rename it to page_001.png
+            if (category == DownloadCategory.mushaafPage && outputFilename.endsWith('.png')) {
+              final numStr = outputFilename.replaceAll('.png', '');
+              final pageNum = int.tryParse(numStr);
+              if (pageNum != null) {
+                outputFilename = 'page_${pageNum.toString().padLeft(3, '0')}.png';
+              } else if (outputFilename.startsWith('page')) {
+                final numPart = outputFilename.replaceAll('page', '').replaceAll('.png', '');
+                final pn = int.tryParse(numPart);
+                if (pn != null) {
+                   outputFilename = 'page_${pn.toString().padLeft(3, '0')}.png';
+                }
+              }
+            }
+            
+            final targetFile = File('${extractDir.path}/$outputFilename');
+            targetFile.createSync(recursive: true);
+            final outputStream = OutputFileStream(targetFile.path);
+            file.writeContent(outputStream);
+            outputStream.close();
           }
         }
+        
+        inputStream.close();
         
         // Delete zip to save storage
         zipFile.deleteSync();
@@ -325,6 +382,18 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
     );
   }
 
+  Future<void> deleteBook(String bookId) async {
+    final id = 'book_$bookId';
+    await _unregisterAsset(id);
+    final jsonPath = await getBookPath(bookId);
+    final pdfPath = await getBookPdfPath(bookId);
+    final jsonFile = File(jsonPath);
+    final pdfFile = File(pdfPath);
+    if (jsonFile.existsSync()) jsonFile.deleteSync();
+    if (pdfFile.existsSync()) pdfFile.deleteSync();
+    removeTask(id);
+  }
+
   // ── Download Mushaf Page ──────────────────────────────────────────────────
 
   Future<void> downloadMushaafPage(int pageNumber, {required MushafStyleInfo styleInfo}) async {
@@ -360,9 +429,12 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
 
     try {
       if (!isDownloadedLocally(id)) {
+        // Pointing to the newly uploaded R2 zip files
         final zipUrl = 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/mushaf_${styleName}.zip';
-        final dir = await getApplicationDocumentsDirectory();
-        final zipPath = '${dir.path}/$id.zip';
+        final baseDir = await getApplicationDocumentsDirectory();
+        final extractDir = Directory('${baseDir.path}/mushaaf_pages/$styleName');
+        if (!extractDir.existsSync()) extractDir.createSync(recursive: true);
+        final zipPath = '${extractDir.path}/$id.zip';
 
         await _startDownload(
           id: id,
@@ -508,23 +580,27 @@ class DownloadManager extends StateNotifier<DownloadManagerState> {
       bulkCompleted: 0,
     );
 
-    for (int surah = 1; surah <= total; surah++) {
+    for (int chunkStart = 1; chunkStart <= total; chunkStart += 5) {
       if (!state.isBulkDownloading) break;
 
-      final id = 'audio_${reciterId}_$surah';
-      await downloadSurahAudio(
-        surahNumber: surah,
-        reciterId: reciterId,
-        mp3quranBaseUrl: mp3quranBaseUrl,
-      );
-      
-      while (state.tasks[id]?.isDownloading == true) {
-        await Future.delayed(const Duration(milliseconds: 200));
+      final chunkEnd = (chunkStart + 4) > total ? total : (chunkStart + 4);
+      final futures = <Future<void>>[];
+
+      for (int surah = chunkStart; surah <= chunkEnd; surah++) {
+        futures.add(
+          downloadSurahAudio(
+            surahNumber: surah,
+            reciterId: reciterId,
+            mp3quranBaseUrl: mp3quranBaseUrl,
+          ).then((_) {
+            completed++;
+            state = state.copyWith(bulkCompleted: completed);
+            onProgress?.call(completed, total);
+          })
+        );
       }
-      
-      completed++;
-      state = state.copyWith(bulkCompleted: completed);
-      onProgress?.call(completed, total);
+
+      await Future.wait(futures);
     }
 
     state = state.copyWith(isBulkDownloading: false);

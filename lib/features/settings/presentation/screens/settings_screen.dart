@@ -8,7 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../widgets/alerts_customization_sheet.dart';
 import '../widgets/theme_customization_sheet.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../downloads/presentation/screens/downloads_screen.dart';
+import '../../../downloads/presentation/screens/downloads_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -131,32 +131,6 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-
-
-          // ── التنزيلات ──────────────────────────────────────────────────
-          sectionHeader('إدارة البيانات'),
-          Card(
-            clipBehavior: Clip.antiAlias,
-            child: ListTile(
-              leading: Icon(Icons.download_rounded, color: theme.colorScheme.primary, size: 28),
-              title: Text(
-                'مدير التنزيلات',
-                style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w700),
-              ),
-              subtitle: Text(
-                'إدارة المصاحف والكتب المحملة',
-                style: GoogleFonts.amiri(fontSize: 13),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const DownloadsScreen()),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-
           // ── النسخ الاحتياطي السحابي ──────────────────────────────────
           sectionHeader('النسخ الاحتياطي السحابي'),
 
@@ -194,7 +168,7 @@ class SettingsScreen extends ConsumerWidget {
                               ),
                               Text(
                                 user != null
-                                    ? '✅ ${user.displayName?.isNotEmpty == true ? user.displayName! : user.email ?? "مسجّل الدخول"}'
+                                    ? 'تم الدخول ✅ - ${user.displayName?.isNotEmpty == true ? user.displayName! : user.email ?? "مسجّل الدخول"}'
                                     : 'سجّل دخولك لحفظ إعداداتك ومزامنتها',
                                 style: GoogleFonts.amiri(
                                   fontSize: 13,
@@ -214,7 +188,21 @@ class SettingsScreen extends ConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                          onPressed: () => authNotifier.signIn(),
+                          onPressed: () async {
+                            await authNotifier.signIn();
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'تم تسجيل الدخول واستعادة بياناتك. يرجى إعادة تشغيل التطبيق لتطبيق الإعدادات بالكامل.',
+                                    style: GoogleFonts.amiri(fontSize: 15),
+                                  ),
+                                  backgroundColor: AppColors.primaryBlue,
+                                  duration: const Duration(seconds: 4),
+                                ),
+                              );
+                            }
+                          },
                           icon: const Icon(Icons.login_rounded),
                           label: Text(
                             'تسجيل الدخول بجوجل',
@@ -234,15 +222,17 @@ class SettingsScreen extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: OutlinedButton.icon(
-                              onPressed: () {
-                                authNotifier.manualSyncUp();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('تمت المزامنة بنجاح',
-                                        style: GoogleFonts.amiri(fontSize: 16)),
-                                    backgroundColor: AppColors.accentGold,
-                                  ),
-                                );
+                              onPressed: () async {
+                                await authNotifier.manualSyncUp();
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('تمت المزامنة السحابية بنجاح',
+                                          style: GoogleFonts.amiri(fontSize: 16)),
+                                      backgroundColor: AppColors.accentGold,
+                                    ),
+                                  );
+                                }
                               },
                               icon: const Icon(Icons.sync_rounded),
                               label: Text('مزامنة الآن',
@@ -274,6 +264,57 @@ class SettingsScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          
+          // ── مدير التحميلات ───────────────────────────────────────────────────
+          sectionHeader('إدارة الملفات'),
+          
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const DownloadsScreen()),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.accentGold.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.download_rounded, color: AppColors.accentGold),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'مدير التحميلات',
+                            style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                          Text(
+                            'إدارة الملفات المحملة والمصاحف المصورة والتفاسير',
+                            style: GoogleFonts.amiri(
+                              fontSize: 13,
+                              color: themeState.themeMode == ThemeMode.dark ? AppColors.darkSubtext : AppColors.lightSubtext,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right_rounded, color: Colors.grey),
                   ],
                 ),
               ),

@@ -136,16 +136,30 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
     final localX = details.localPosition.dx;
     final localY = details.localPosition.dy;
 
-    // Scale factors
-    final double scaleX = size.width / styleInfo.baseWidth;
-    final double scaleY = size.height / styleInfo.baseHeight;
+    final double imageAspect = styleInfo.baseWidth / styleInfo.baseHeight;
+    final double containerAspect = size.width / size.height;
+
+    double renderedWidth, renderedHeight, offsetX, offsetY;
+    if (containerAspect > imageAspect) {
+      renderedHeight = size.height;
+      renderedWidth = renderedHeight * imageAspect;
+      offsetX = (size.width - renderedWidth) / 2;
+      offsetY = 0;
+    } else {
+      renderedWidth = size.width;
+      renderedHeight = renderedWidth / imageAspect;
+      offsetX = 0;
+      offsetY = (size.height - renderedHeight) / 2;
+    }
+
+    final double scale = renderedWidth / styleInfo.baseWidth;
 
     MushafAyahCoord? tappedCoord;
     for (final coord in coordsList) {
-      final double left = coord.x * scaleX;
-      final double top = coord.y * scaleY;
-      final double right = (coord.x + coord.w) * scaleX;
-      final double bottom = (coord.y + coord.h) * scaleY;
+      final double left = offsetX + (coord.x * scale);
+      final double top = offsetY + (coord.y * scale);
+      final double right = offsetX + ((coord.x + coord.w) * scale);
+      final double bottom = offsetY + ((coord.y + coord.h) * scale);
 
       if (localX >= left && localX <= right && localY >= top && localY <= bottom) {
         tappedCoord = coord;
@@ -279,13 +293,27 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
   Widget _buildHighlightBox(
       BoxConstraints constraints, MushafAyahCoord coord, MushafStyleInfo styleInfo) {
     
-    final double scaleX = constraints.maxWidth / styleInfo.baseWidth;
-    final double scaleY = constraints.maxHeight / styleInfo.baseHeight;
+    final double imageAspect = styleInfo.baseWidth / styleInfo.baseHeight;
+    final double containerAspect = constraints.maxWidth / constraints.maxHeight;
 
-    final double left = coord.x * scaleX;
-    final double top = coord.y * scaleY;
-    final double width = coord.w * scaleX;
-    final double height = coord.h * scaleY;
+    double renderedWidth, renderedHeight, offsetX, offsetY;
+    if (containerAspect > imageAspect) {
+      renderedHeight = constraints.maxHeight;
+      renderedWidth = renderedHeight * imageAspect;
+      offsetX = (constraints.maxWidth - renderedWidth) / 2;
+      offsetY = 0;
+    } else {
+      renderedWidth = constraints.maxWidth;
+      renderedHeight = renderedWidth / imageAspect;
+      offsetX = 0;
+      offsetY = (constraints.maxHeight - renderedHeight) / 2;
+    }
+
+    final double scale = renderedWidth / styleInfo.baseWidth;
+    final double left = offsetX + (coord.x * scale);
+    final double top = offsetY + (coord.y * scale);
+    final double width = coord.w * scale;
+    final double height = coord.h * scale;
 
     return Positioned(
       top: top,
@@ -295,10 +323,10 @@ class _LocalPageImageState extends ConsumerState<_LocalPageImage>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: const Color(0xFFD4AF37).withValues(alpha: 0.25),
+          color: const Color(0xFFD4AF37).withValues(alpha: 0.30),
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
-            color: const Color(0xFFD4AF37).withValues(alpha: 0.7),
+            color: const Color(0xFFD4AF37).withValues(alpha: 0.8),
             width: 1.5,
           ),
         ),

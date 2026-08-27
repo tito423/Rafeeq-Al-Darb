@@ -18,6 +18,7 @@ import '../providers/home_provider.dart';
 import '../../../khatma/presentation/providers/khatma_provider.dart';
 import '../../../khatma/presentation/screens/khatma_setup_screen.dart';
 import '../../../khatma/presentation/screens/khatma_dashboard_screen.dart';
+import '../../../../features/prayer/presentation/screens/prayer_settings_screen.dart' as import_prayer_settings;
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -219,8 +220,10 @@ class _PrayerTimesHero extends ConsumerWidget {
                     final next = PrayerTimesService().getNextPrayer(pt);
                     return GestureDetector(
                       onTap: () {
-                        // Navigate to Prayer Screen (Index 2)
-                        ref.read(currentTabProvider.notifier).state = 2;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const import_prayer_settings.PrayerSettingsScreen()),
+                        );
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(24),
@@ -408,7 +411,10 @@ class _PrayerTimesStrip extends ConsumerWidget {
                   color: p.$3,
                   isNext: isNext,
                   isDark: isDark,
-                  onTap: () => ref.read(currentTabProvider.notifier).state = 1,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const import_prayer_settings.PrayerSettingsScreen()),
+                  ),
                 );
               }).toList(),
             ),
@@ -470,51 +476,82 @@ class _PrayerTimeChip extends StatefulWidget {
   State<_PrayerTimeChip> createState() => _PrayerTimeChipState();
 }
 
-class _PrayerTimeChipState extends State<_PrayerTimeChip> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+class _PrayerTimeChipState extends State<_PrayerTimeChip> with TickerProviderStateMixin {
+  late AnimationController _tapController;
+  late Animation<double> _tapScaleAnimation;
+  
+  late AnimationController _pulseController;
+  late Animation<double> _glowAnimation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(_controller);
+    _tapController = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
+    _tapScaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(_tapController);
+    
+    _pulseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    _glowAnimation = Tween<double>(begin: 0.2, end: 0.7).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+    
+    if (widget.isNext) {
+      _pulseController.repeat(reverse: true);
+    }
+  }
+  
+  @override
+  void didUpdateWidget(_PrayerTimeChip oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isNext != oldWidget.isNext) {
+      if (widget.isNext) {
+        _pulseController.repeat(reverse: true);
+      } else {
+        _pulseController.stop();
+        _pulseController.reset();
+      }
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _tapController.dispose();
+    _pulseController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onPanDown: (_) => _controller.forward(),
-      onPanEnd: (_) => _controller.reverse(),
-      onPanCancel: () => _controller.reverse(),
+      onPanDown: (_) => _tapController.forward(),
+      onPanEnd: (_) => _tapController.reverse(),
+      onPanCancel: () => _tapController.reverse(),
       onTap: () {
-        // Navigate to Prayer settings (Index 1)
         widget.onTap();
-        _controller.forward().then((_) => _controller.reverse());
+        _tapController.forward().then((_) => _tapController.reverse());
       },
       child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Container(
-          margin: const EdgeInsets.only(left: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: widget.isNext ? widget.color : widget.color.withValues(alpha: widget.isDark ? 0.15 : 0.08),
-            borderRadius: BorderRadius.circular(16),
-            border: widget.isNext ? Border.all(color: widget.color, width: 2) : Border.all(color: widget.color.withValues(alpha: 0.2), width: 1),
-            boxShadow: widget.isNext ? [
-              BoxShadow(
-                color: widget.color.withValues(alpha: 0.4),
-                blurRadius: 10,
-                spreadRadius: 1,
-              )
-            ] : null,
-          ),
+        scale: _tapScaleAnimation,
+        child: AnimatedBuilder(
+          animation: _pulseController,
+          builder: (context, child) {
+            return Container(
+              margin: const EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: widget.isNext ? widget.color : widget.color.withValues(alpha: widget.isDark ? 0.15 : 0.08),
+                borderRadius: BorderRadius.circular(16),
+                border: widget.isNext ? Border.all(color: widget.color, width: 2) : Border.all(color: widget.color.withValues(alpha: 0.2), width: 1),
+                boxShadow: widget.isNext ? [
+                  BoxShadow(
+                    color: widget.color.withValues(alpha: _glowAnimation.value),
+                    blurRadius: 15,
+                    spreadRadius: 2,
+                  )
+                ] : null,
+              ),
+              child: child,
+            );
+          },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

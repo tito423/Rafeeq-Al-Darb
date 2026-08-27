@@ -61,7 +61,7 @@ class TafseerService {
 
   // ── Download ──────────────────────────────────────────────────────────────
 
-  /// Download all 114 surahs for a tafseer via a ZIP file from R2.
+  /// Download all 114 surahs for a tafseer sequentially from quran.com API.
   /// Calls [onProgress] with (completed, total) as extraction happens.
   /// Returns true on full success.
   Future<bool> downloadTafseer(
@@ -70,67 +70,38 @@ class TafseerService {
     bool Function()? isCancelled,
   }) async {
     const total = 114;
-
+    int completed = 0;
+    
     try {
-      final zipUrl = 'https://pub-b9273af6154c4a618f813447e8a9fc09.r2.dev/tafseer_$tafseerID.zip';
-      final dir = await getApplicationDocumentsDirectory();
-      final zipPath = '${dir.path}/tafseer_$tafseerID.zip';
       final extractDir = await _tafseerDir;
-
-      // 1. Download the ZIP file
       final dio = Dio();
-      await dio.download(
-        zipUrl,
-        zipPath,
-        onReceiveProgress: (received, totalBytes) {
-          if (isCancelled?.call() == true) {
-            dio.close(force: true);
-          }
-          if (totalBytes > 0) {
-            // Update progress up to 50% during download
-            final p = (received / totalBytes * 50).toInt();
-            onProgress?.call(p, total);
-          }
-        },
-      );
-
-      if (isCancelled?.call() == true) {
-        if (File(zipPath).existsSync()) File(zipPath).deleteSync();
-        return false;
-      }
-
-      // 2. Extract the ZIP file
-      if (File(zipPath).existsSync()) {
-        final bytes = File(zipPath).readAsBytesSync();
-        final archive = ZipDecoder().decodeBytes(bytes);
-        
-        int extracted = 0;
-        final totalFiles = archive.length;
-
-        for (final file in archive) {
-          if (isCancelled?.call() == true) {
-            File(zipPath).deleteSync();
-            return false;
-          }
-
-          if (file.isFile) {
-            final filename = file.name.split('/').last;
-            final data = file.content as List<int>;
-            File('${extractDir.path}/$filename')
-              ..createSync(recursive: true)
-              ..writeAsBytesSync(data);
-            
-            extracted++;
-            // Update progress from 50% to 100% during extraction
-            final p = 50 + (extracted / totalFiles * 64).toInt();
-            onProgress?.call(p > total ? total : p, total);
-          }
+      
+      for (int s = 1; s <= 114; s++) {
+        if (isCancelled?.call() == true) {
+          return false;
         }
-        File(zipPath).deleteSync();
-        onProgress?.call(total, total);
-        return true;
+
+        // Find the quran.com numeric ID
+        final book = kTafseers.firstWhere((b) => b.id == tafseerID, orElse: () => kTafseers.first);
+        final quranComId = book.quranComId;
+        
+        final url = 'https://api.quran.com/api/v4/quran/tafsirs/$quranComId?chapter_number=$s';
+        final response = await dio.get(url);
+        
+        if (response.statusCode == 200) {
+          final data = response.data;
+          final filename = _tafseerFilename(tafseerID, s);
+          final file = File('${extractDir.path}/$filename');
+          await file.writeAsString(jsonEncode(data));
+          
+          completed++;
+          onProgress?.call(completed, total);
+        } else {
+          // If a single surah fails, we could retry or just abort. Let's abort to be safe.
+          return false;
+        }
       }
-      return false;
+      return true;
     } catch (e) {
       debugPrint('TafseerService: error downloading $tafseerID — $e');
       return false;
