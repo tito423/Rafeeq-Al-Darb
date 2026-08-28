@@ -13,7 +13,6 @@ import '../../features/quran/presentation/screens/surah_reading_screen.dart' as 
 import '../../features/azkar/presentation/screens/azkar_detail_screen.dart' as import_azkar;
 import '../../features/prayer/presentation/screens/full_screen_adhan_screen.dart';
 import '../../features/prayer/domain/adhan_player_controller.dart';
-import 'package:hijri/hijri.dart';
 import 'package:flutter/services.dart';
 
 // ── Notification IDs ──────────────────────────────────────────────────────────

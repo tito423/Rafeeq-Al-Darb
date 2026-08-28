@@ -1,0 +1,60 @@
+[  +11 ms] Package geolocator:windows references geolocator_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of geolocator to either avoid referencing a default implementation via `platforms: windows: default_package: geolocator_windows` or create a plugin named geolocator_windows.
+
+[   +2 ms] Package path_provider:windows references path_provider_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of path_provider to either avoid referencing a default implementation via `platforms: windows: default_package: path_provider_windows` or create a plugin named path_provider_windows.
+
+[        ] Package permission_handler:windows references permission_handler_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of permission_handler to either avoid referencing a default implementation via `platforms: windows: default_package: permission_handler_windows` or create a plugin named permission_handler_windows.
+
+[        ] Package shared_preferences:windows references shared_preferences_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of shared_preferences to either avoid referencing a default implementation via `platforms: windows: default_package: shared_preferences_windows` or create a plugin named shared_preferences_windows.
+
+[        ] Package url_launcher:windows references url_launcher_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of url_launcher to either avoid referencing a default implementation via `platforms: windows: default_package: url_launcher_windows` or create a plugin named url_launcher_windows.
+
+[   +6 ms] Package url_launcher:windows references url_launcher_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of url_launcher to either avoid referencing a default implementation via `platforms: windows: default_package: url_launcher_windows` or create a plugin named url_launcher_windows.
+
+[        ] Package shared_preferences:windows references shared_preferences_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of shared_preferences to either avoid referencing a default implementation via `platforms: windows: default_package: shared_preferences_windows` or create a plugin named shared_preferences_windows.
+
+[        ] Package permission_handler:windows references permission_handler_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of permission_handler to either avoid referencing a default implementation via `platforms: windows: default_package: permission_handler_windows` or create a plugin named permission_handler_windows.
+
+[        ] Package path_provider:windows references path_provider_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of path_provider to either avoid referencing a default implementation via `platforms: windows: default_package: path_provider_windows` or create a plugin named path_provider_windows.
+
+[        ] Package geolocator:windows references geolocator_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of geolocator to either avoid referencing a default implementation via `platforms: windows: default_package: geolocator_windows` or create a plugin named geolocator_windows.
+
+[   +5 ms] Package url_launcher:windows references url_launcher_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of url_launcher to either avoid referencing a default implementation via `platforms: windows: default_package: url_launcher_windows` or create a plugin named url_launcher_windows.
+
+[        ] Package shared_preferences:windows references shared_preferences_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of shared_preferences to either avoid referencing a default implementation via `platforms: windows: default_package: shared_preferences_windows` or create a plugin named shared_preferences_windows.
+
+[        ] Package permission_handler:windows references permission_handler_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of permission_handler to either avoid referencing a default implementation via `platforms: windows: default_package: permission_handler_windows` or create a plugin named permission_handler_windows.
+
+[        ] Package path_provider:windows references path_provider_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of path_provider to either avoid referencing a default implementation via `platforms: windows: default_package: path_provider_windows` or create a plugin named path_provider_windows.
+
+[        ] Package geolocator:windows references geolocator_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of geolocator to either avoid referencing a default implementation via `platforms: windows: default_package: geolocator_windows` or create a plugin named geolocator_windows.
+
+[        ] Package url_launcher:windows references url_launcher_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of url_launcher to either avoid referencing a default implementation via `platforms: windows: default_package: url_launcher_windows` or create a plugin named url_launcher_windows.
+
+[        ] Package shared_preferences:windows references shared_preferences_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of shared_preferences to either avoid referencing a default implementation via `platforms: windows: default_package: shared_preferences_windows` or create a plugin named shared_preferences_windows.
+
+[        ] Package permission_handler:windows references permission_handler_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of permission_handler to either avoid referencing a default implementation via `platforms: windows: default_package: permission_handler_windows` or create a plugin named permission_handler_windows.
+
+[        ] Package path_provider:windows references path_provider_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of path_provider to either avoid referencing a default implementation via `platforms: windows: default_package: path_provider_windows` or create a plugin named path_provider_windows.
+
+[        ] Package geolocator:windows references geolocator_windows:windows as the default plugin, but the package does not exist, or is not a plugin package.
+           Ask the maintainers of geolocator to either avoid referencing a default implementation via `platforms: windows: default_package: geolocator_windows` or create a plugin named geolocator_windows.
+

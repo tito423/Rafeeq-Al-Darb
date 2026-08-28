@@ -5,7 +5,19 @@ allprojects {
     }
 }
 
-// The newBuildDir override was removed to prevent Kotlin compiler "different roots" errors when using AGP.
+// Redirect the Gradle build directory to the project-level `build/` folder
+// (as in the official Flutter template) so the `flutter` tool can locate the
+// generated APK under build/app/outputs/flutter-apk/.
+val newBuildDir: Directory =
+    rootProject.layout.buildDirectory
+        .dir("../../build")
+        .get()
+rootProject.layout.buildDirectory.value(newBuildDir)
+
+subprojects {
+    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
+    project.layout.buildDirectory.value(newSubprojectBuildDir)
+}
 subprojects {
     project.evaluationDependsOn(":app")
 }

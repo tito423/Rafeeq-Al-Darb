@@ -1,0 +1,536 @@
+[ +274 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[  +13 ms] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[   +2 ms] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[   +1 ms] executing: [C:\Users\Asus\flutter/] git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[ +110 ms] Exit code 0 from: git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[        ] 2026-01-13 13:47:42 -0800
+[  +15 ms] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[   +3 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[  +62 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[   +4 ms] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[  +80 ms] Skipping pub get: version match.
+[  +88 ms] Found plugin flutter_native_splash at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_native_splash-2.4.7\
+[  +36 ms] Found plugin wakelock_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\wakelock_plus-1.5.2\
+[  +12 ms] Found plugin package_info_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\package_info_plus-9.0.1\
+[   +8 ms] Found plugin video_player at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player-2.11.1\
+[   +2 ms] Found plugin video_player_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_web-2.4.0\
+[   +3 ms] Found plugin video_player_avfoundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_avfoundation-2.11.0\
+[   +2 ms] Found plugin video_player_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_android-2.9.5\
+[   +2 ms] Found plugin url_launcher at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[   +4 ms] Found plugin url_launcher_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.3\
+[   +3 ms] Found plugin url_launcher_macos at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[   +2 ms] Found plugin url_launcher_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[   +2 ms] Found plugin url_launcher_ios at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.4.1\
+[   +4 ms] Found plugin url_launcher_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.30\
+[   +4 ms] Found plugin syncfusion_flutter_pdfviewer at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_flutter_pdfviewer-33.2.13\
+[   +7 ms] Found plugin syncfusion_pdfviewer_windows at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_windows-33.2.15\
+[   +2 ms] Found plugin syncfusion_pdfviewer_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_web-33.2.15\
+[   +2 ms] Found plugin syncfusion_pdfviewer_macos at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_macos-33.2.15\
+[   +1 ms] Found plugin syncfusion_pdfviewer_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_linux-33.2.15\
+[  +11 ms] Found plugin device_info_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\device_info_plus-12.4.0\
+[  +27 ms] Found plugin sqflite at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite-2.4.2+1\
+[   +4 ms] Found plugin sqflite_darwin at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite_darwin-2.4.2\
+[   +2 ms] Found plugin sqflite_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite_android-2.4.2+3\
+[   +1 ms] Found plugin shared_preferences at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.5\
+[   +5 ms] Found plugin shared_preferences_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[   +2 ms] Found plugin shared_preferences_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.2\
+[   +3 ms] Found plugin shared_preferences_foundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.2.3\
+[   +1 ms] Found plugin sensors_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sensors_plus-7.1.0\
+[   +3 ms] Found plugin permission_handler at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-11.4.0\
+[   +3 ms] Found plugin permission_handler_html at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.4+1\
+[   +1 ms] Found plugin permission_handler_apple at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.6.1\
+[   +1 ms] Found plugin permission_handler_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-12.1.0\
+[   +1 ms] Found plugin path_provider at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.6\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +3 ms] Found plugin path_provider_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.14\
+[   +8 ms] Found plugin audio_session at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_session-0.1.25\
+[   +1 ms] Found plugin audio_service at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_service-0.18.19\
+[   +3 ms] Found plugin audio_service_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_service_web-0.1.4\
+[   +2 ms] Found plugin just_audio at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\just_audio-0.9.46\
+[   +1 ms] Found plugin just_audio_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\just_audio_web-0.4.16\
+[   +2 ms] Found plugin google_sign_in at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in-6.3.0\
+[   +2 ms] Found plugin google_sign_in_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_web-0.12.4+4\
+[   +3 ms] Found plugin google_sign_in_ios at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_ios-5.9.0\
+[   +1 ms] Found plugin google_sign_in_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_android-6.2.1\
+[   +3 ms] Found plugin geolocator at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator-13.0.4\
+[   +3 ms] Found plugin geolocator_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_web-4.1.4\
+[   +2 ms] Found plugin geolocator_apple at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_apple-2.3.14\
+[   +2 ms] Found plugin geolocator_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_android-4.6.2\
+[   +1 ms] Found plugin flutter_timezone at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_timezone-3.0.1\
+[  +11 ms] Found plugin flutter_local_notifications at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_local_notifications-18.0.1\
+[   +3 ms] Found plugin flutter_local_notifications_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_local_notifications_linux-5.0.0\
+[   +1 ms] Found plugin flutter_compass at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_compass-0.8.1\
+[   +1 ms] Found plugin firebase_core at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-4.14.0\
+[   +1 ms] Found plugin firebase_core_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core_web-3.11.0\
+[   +3 ms] Found plugin firebase_auth at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_auth-6.6.0\
+[   +1 ms] Found plugin firebase_auth_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_auth_web-6.2.7\
+[   +3 ms] Found plugin file_picker at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\file_picker-11.0.3\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.35\
+[   +5 ms] Found plugin cloud_firestore at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-6.9.0\
+[   +2 ms] Found plugin cloud_firestore_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore_web-5.7.3\
+[  +55 ms] Found plugin flutter_native_splash at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_native_splash-2.4.7\
+[  +18 ms] Found plugin wakelock_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\wakelock_plus-1.5.2\
+[   +6 ms] Found plugin package_info_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\package_info_plus-9.0.1\
+[   +5 ms] Found plugin video_player at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player-2.11.1\
+[   +1 ms] Found plugin video_player_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_web-2.4.0\
+[   +2 ms] Found plugin video_player_avfoundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_avfoundation-2.11.0\
+[   +1 ms] Found plugin video_player_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_android-2.9.5\
+[   +2 ms] Found plugin url_launcher at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[   +2 ms] Found plugin url_launcher_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.3\
+[   +1 ms] Found plugin url_launcher_macos at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[   +1 ms] Found plugin url_launcher_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[   +1 ms] Found plugin url_launcher_ios at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.4.1\
+[   +1 ms] Found plugin url_launcher_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.30\
+[   +2 ms] Found plugin syncfusion_flutter_pdfviewer at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_flutter_pdfviewer-33.2.13\
+[   +5 ms] Found plugin syncfusion_pdfviewer_windows at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_windows-33.2.15\
+[   +2 ms] Found plugin syncfusion_pdfviewer_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_web-33.2.15\
+[   +2 ms] Found plugin syncfusion_pdfviewer_macos at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_macos-33.2.15\
+[   +1 ms] Found plugin syncfusion_pdfviewer_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_linux-33.2.15\
+[   +6 ms] Found plugin device_info_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\device_info_plus-12.4.0\
+[  +16 ms] Found plugin sqflite at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite-2.4.2+1\
+[   +3 ms] Found plugin sqflite_darwin at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite_darwin-2.4.2\
+[   +1 ms] Found plugin sqflite_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite_android-2.4.2+3\
+[   +1 ms] Found plugin shared_preferences at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.5\
+[   +3 ms] Found plugin shared_preferences_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[   +1 ms] Found plugin shared_preferences_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.2\
+[   +2 ms] Found plugin shared_preferences_foundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.2.3\
+[   +1 ms] Found plugin sensors_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sensors_plus-7.1.0\
+[   +2 ms] Found plugin permission_handler at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-11.4.0\
+[   +2 ms] Found plugin permission_handler_html at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.4+1\
+[   +1 ms] Found plugin permission_handler_apple at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.6.1\
+[   +1 ms] Found plugin permission_handler_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-12.1.0\
+[   +1 ms] Found plugin path_provider at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.6\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +2 ms] Found plugin path_provider_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.14\
+[   +6 ms] Found plugin audio_session at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_session-0.1.25\
+[   +1 ms] Found plugin audio_service at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_service-0.18.19\
+[   +2 ms] Found plugin audio_service_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_service_web-0.1.4\
+[   +2 ms] Found plugin just_audio at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\just_audio-0.9.46\
+[   +1 ms] Found plugin just_audio_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\just_audio_web-0.4.16\
+[   +2 ms] Found plugin google_sign_in at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in-6.3.0\
+[   +1 ms] Found plugin google_sign_in_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_web-0.12.4+4\
+[   +3 ms] Found plugin google_sign_in_ios at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_ios-5.9.0\
+[   +1 ms] Found plugin google_sign_in_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_android-6.2.1\
+[   +2 ms] Found plugin geolocator at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator-13.0.4\
+[   +2 ms] Found plugin geolocator_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_web-4.1.4\
+[   +1 ms] Found plugin geolocator_apple at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_apple-2.3.14\
+[   +1 ms] Found plugin geolocator_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_android-4.6.2\
+[   +1 ms] Found plugin flutter_timezone at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_timezone-3.0.1\
+[   +8 ms] Found plugin flutter_local_notifications at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_local_notifications-18.0.1\
+[   +2 ms] Found plugin flutter_local_notifications_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_local_notifications_linux-5.0.0\
+[   +1 ms] Found plugin flutter_compass at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_compass-0.8.1\
+[   +1 ms] Found plugin firebase_core at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-4.14.0\
+[   +1 ms] Found plugin firebase_core_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core_web-3.11.0\
+[   +2 ms] Found plugin firebase_auth at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_auth-6.6.0\
+[   +1 ms] Found plugin firebase_auth_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_auth_web-6.2.7\
+[   +3 ms] Found plugin file_picker at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\file_picker-11.0.3\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.35\
+[   +5 ms] Found plugin cloud_firestore at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-6.9.0\
+[   +2 ms] Found plugin cloud_firestore_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore_web-5.7.3\
+[  +12 ms] Skipping generating web_plugin_registrant.dart because it is up-to-date.
+[  +32 ms] Found plugin flutter_native_splash at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_native_splash-2.4.7\
+[  +21 ms] Found plugin wakelock_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\wakelock_plus-1.5.2\
+[   +5 ms] Found plugin package_info_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\package_info_plus-9.0.1\
+[   +5 ms] Found plugin video_player at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player-2.11.1\
+[   +1 ms] Found plugin video_player_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_web-2.4.0\
+[   +2 ms] Found plugin video_player_avfoundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_avfoundation-2.11.0\
+[   +1 ms] Found plugin video_player_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_android-2.9.5\
+[   +1 ms] Found plugin url_launcher at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[   +2 ms] Found plugin url_launcher_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.3\
+[   +1 ms] Found plugin url_launcher_macos at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[   +1 ms] Found plugin url_launcher_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[   +1 ms] Found plugin url_launcher_ios at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.4.1\
+[   +1 ms] Found plugin url_launcher_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.30\
+[   +2 ms] Found plugin syncfusion_flutter_pdfviewer at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_flutter_pdfviewer-33.2.13\
+[   +4 ms] Found plugin syncfusion_pdfviewer_windows at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_windows-33.2.15\
+[   +1 ms] Found plugin syncfusion_pdfviewer_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_web-33.2.15\
+[   +2 ms] Found plugin syncfusion_pdfviewer_macos at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_macos-33.2.15\
+[   +1 ms] Found plugin syncfusion_pdfviewer_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_pdfviewer_linux-33.2.15\
+[   +5 ms] Found plugin device_info_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\device_info_plus-12.4.0\
+[  +16 ms] Found plugin sqflite at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite-2.4.2+1\
+[   +2 ms] Found plugin sqflite_darwin at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite_darwin-2.4.2\
+[   +1 ms] Found plugin sqflite_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite_android-2.4.2+3\
+[   +1 ms] Found plugin shared_preferences at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.5\
+[   +3 ms] Found plugin shared_preferences_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[   +1 ms] Found plugin shared_preferences_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.2\
+[   +2 ms] Found plugin shared_preferences_foundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.2.3\
+[   +1 ms] Found plugin sensors_plus at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sensors_plus-7.1.0\
+[   +2 ms] Found plugin permission_handler at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-11.4.0\
+[   +3 ms] Found plugin permission_handler_html at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.4+1\
+[   +1 ms] Found plugin permission_handler_apple at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.6.1\
+[   +1 ms] Found plugin permission_handler_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-12.1.0\
+[   +1 ms] Found plugin path_provider at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.6\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +2 ms] Found plugin path_provider_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.14\
+[   +6 ms] Found plugin audio_session at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_session-0.1.25\
+[   +2 ms] Found plugin audio_service at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_service-0.18.19\
+[   +3 ms] Found plugin audio_service_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_service_web-0.1.4\
+[   +2 ms] Found plugin just_audio at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\just_audio-0.9.46\
+[   +1 ms] Found plugin just_audio_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\just_audio_web-0.4.16\
+[   +2 ms] Found plugin google_sign_in at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in-6.3.0\
+[   +1 ms] Found plugin google_sign_in_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_web-0.12.4+4\
+[   +2 ms] Found plugin google_sign_in_ios at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_ios-5.9.0\
+[   +1 ms] Found plugin google_sign_in_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_android-6.2.1\
+[   +2 ms] Found plugin geolocator at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator-13.0.4\
+[   +2 ms] Found plugin geolocator_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_web-4.1.4\
+[   +1 ms] Found plugin geolocator_apple at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_apple-2.3.14\
+[   +1 ms] Found plugin geolocator_android at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_android-4.6.2\
+[   +1 ms] Found plugin flutter_timezone at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_timezone-3.0.1\
+[   +9 ms] Found plugin flutter_local_notifications at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_local_notifications-18.0.1\
+[   +2 ms] Found plugin flutter_local_notifications_linux at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_local_notifications_linux-5.0.0\
+[   +1 ms] Found plugin flutter_compass at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_compass-0.8.1\
+[   +1 ms] Found plugin firebase_core at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-4.14.0\
+[   +1 ms] Found plugin firebase_core_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core_web-3.11.0\
+[   +2 ms] Found plugin firebase_auth at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_auth-6.6.0\
+[   +2 ms] Found plugin firebase_auth_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_auth_web-6.2.7\
+[   +3 ms] Found plugin file_picker at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\file_picker-11.0.3\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.35\
+[   +5 ms] Found plugin cloud_firestore at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-6.9.0\
+[   +1 ms] Found plugin cloud_firestore_web at C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore_web-5.7.3\
+[  +22 ms] Generating E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\app\src\main\java\io\flutter\plugins\GeneratedPluginRegistrant.java
+[   +2 ms] Skipping generating GeneratedPluginRegistrant.java because it is up-to-date.
+[   +6 ms] Skipping generating generated_plugin_registrant.h because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugin_registrant.cc because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugins.cmake because it is up-to-date.
+[   +3 ms] Skipping generating generated_plugin_registrant.h because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugin_registrant.cc because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugins.cmake because it is up-to-date.
+[   +3 ms] Skipping generating GeneratedPluginRegistrant.h because it is up-to-date.
+[   +2 ms] Skipping generating GeneratedPluginRegistrant.m because it is up-to-date.
+[   +1 ms] Skipping generating GeneratedPluginRegistrant.swift because it is up-to-date.
+[ +113 ms] executing: C:\Program Files\Android\Android Studio\jbr\bin\java -version
+[ +158 ms] Exit code 0 from: C:\Program Files\Android\Android Studio\jbr\bin\java -version
+[        ] openjdk version "21.0.8" 2025-07-15
+           OpenJDK Runtime Environment (build 21.0.8+-14196175-b1038.72)
+           OpenJDK 64-Bit Server VM (build 21.0.8+-14196175-b1038.72, mixed mode)
+[  +12 ms] Top-level Gradle build file not found, skipping migration of task "clean".
+[   +4 ms] executing: C:\Program Files\Android\Android Studio\jbr\bin\java --version
+[ +154 ms] Exit code 0 from: C:\Program Files\Android\Android Studio\jbr\bin\java --version
+[        ] openjdk 21.0.8 2025-07-15
+           OpenJDK Runtime Environment (build 21.0.8+-14196175-b1038.72)
+           OpenJDK 64-Bit Server VM (build 21.0.8+-14196175-b1038.72, mixed mode)
+[   +2 ms] Version of Java is different than impacted version, no migration attempted.
+[  +17 ms] CMake project not found, skipping support Android 15 16k page size migration.
+[   +6 ms] Using gradle from E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\gradlew.bat.
+[  +14 ms] LocalFile: 'E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\build.gradle.kts' doesn't provide an AGP version. Checking settings.
+[   +1 ms] LocalFile: 'E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\settings.gradle.kts' provides AGP version: 8.11.1
+[  +16 ms] Running Gradle task 'assembleRelease'...
+[   +1 ms] executing: [E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android/] E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\gradlew.bat --full-stacktrace --info -Pverbose=true -Ptarget-platform=android-arm,android-arm64,android-x64 -Ptarget=lib\main.dart -Pbase-application-name=android.app.Application -Pdart-defines=RkxVVFRFUl9WRVJTSU9OPTMuMzguNw==,RkxVVFRFUl9DSEFOTkVMPXN0YWJsZQ==,RkxVVFRFUl9HSVRfVVJMPWh0dHBzOi8vZ2l0aHViLmNvbS9mbHV0dGVyL2ZsdXR0ZXIuZ2l0,RkxVVFRFUl9GUkFNRVdPUktfUkVWSVNJT049M2I2MmVmYzJhMw==,RkxVVFRFUl9FTkdJTkVfUkVWSVNJT049NzhmYzMwMTJlNA==,RkxVVFRFUl9EQVJUX1ZFUlNJT049My4xMC43 -Pdart-obfuscation=false -Ptrack-widget-creation=true -Ptree-shake-icons=true assembleRelease
+[ +958 ms] Initialized native services in: C:\Users\Asus\.gradle\native
+[  +13 ms] Initialized jansi services in: C:\Users\Asus\.gradle\native
+[ +417 ms] Removing daemon from the registry due to communication failure. Daemon information: DaemonInfo{pid=30136, address=[413239e4-aef1-49f7-974d-fa5649fa5ece port:61852, addresses:[/127.0.0.1]], state=Idle, lastBusy=1787900860973, context=DefaultDaemonContext[uid=7fbd10ca-0084-4b0e-ad50-2c8f47389ace,javaHome=C:\Program Files\Android\Android Studio\jbr,javaVersion=21,javaVendor=JetBrains s.r.o.,daemonRegistryDir=C:\Users\Asus\.gradle\daemon,pid=30136,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=4G,-XX:ReservedCodeCacheSize=512m,-XX:+HeapDumpOnOutOfMemoryError,-Xmx8G,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]}
+[  +89 ms] Removing 1 daemon stop events from registry
+[   +1 ms] Previous Daemon (30136) stopped at Fri Aug 28 13:23:43 GST 2026 by user or operating system
+[        ] Starting a Gradle Daemon, 6 busy and 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
+[ +106 ms] Starting process 'Gradle build daemon'. Working directory: C:\Users\Asus\.gradle\daemon\8.14 Command: C:\Program Files\Android\Android Studio\jbr\bin\java.exe --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -XX:MaxMetaspaceSize=4G -XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError -Xmx8G -Dfile.encoding=UTF-8 -Duser.country=US -Duser.language=en -Duser.variant -cp C:\Users\Asus\.gradle\wrapper\dists\gradle-8.14-all\c2qonpi39x1mddn7hk5gh9iqj\gradle-8.14\lib\gradle-daemon-main-8.14.jar -javaagent:C:\Users\Asus\.gradle\wrapper\dists\gradle-8.14-all\c2qonpi39x1mddn7hk5gh9iqj\gradle-8.14\lib\agents\gradle-instrumentation-agent-8.14.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.14
+[        ] Successfully started process 'Gradle build daemon'
+[+2000 ms] An attempt to start the daemon took 2.005 secs.
+[  +93 ms] The client will now receive all logging from the daemon (pid: 13916). The daemon log file: C:\Users\Asus\.gradle\daemon\8.14\daemon-13916.out.log
+[        ] Starting build in new daemon [memory: 8 GiB]
+[ +494 ms] Using 16 worker leases.
+[ +309 ms] Received JVM installation metadata from 'C:\Program Files\Android\Android Studio\jbr': {JAVA_HOME=C:\Program Files\Android\Android Studio\jbr, JAVA_VERSION=21.0.8, JAVA_VENDOR=JetBrains s.r.o., RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.8+-14196175-b1038.72, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.8+-14196175-b1038.72, VM_VENDOR=JetBrains s.r.o., OS_ARCH=amd64}
+[ +389 ms] Watching the file system is configured to be enabled if available
+[        ] Now considering [E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android] as hierarchies to watch
+[        ] File system watching is active
+[ +603 ms] Starting Build
+[+1202 ms] Now considering [C:\Users\Asus\flutter\packages\flutter_tools\gradle, E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android] as hierarchies to watch
+[+2201 ms] > Configure project :gradle
+[        ] Evaluating project ':gradle' using build file 'C:\Users\Asus\flutter\packages\flutter_tools\gradle\build.gradle.kts'.
+[   +1 ms] Resolved plugin [id: 'org.gradle.java-gradle-plugin']
+[        ] Resolved plugin [id: 'org.gradle.groovy']
+[        ] Resolved plugin [id: 'org.gradle.kotlin.kotlin-dsl', version: '5.2.0']
+[        ] Resolved plugin [id: 'org.jetbrains.kotlin.jvm', version: '1.9.20']
+[        ] Using Kotlin Gradle Plugin gradle85 variant
+[ +289 ms] kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+[ +109 ms] kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+[ +197 ms] file or directory 'C:\Users\Asus\flutter\packages\flutter_tools\gradle\src\main\java', not found
+[ +491 ms] Resolved plugin [id: 'dev.flutter.flutter-plugin-loader', version: '1.0.0']
+[  +12 ms] Resolved plugin [id: 'com.android.application', version: '8.11.1', apply: false]
+[        ] Resolved plugin [id: 'org.jetbrains.kotlin.android', version: '2.2.20', apply: false]
+[        ] Resolved plugin [id: 'com.google.gms.google-services', version: '4.4.2', apply: false]
+[ +188 ms] Resolve mutations for :gradle:checkKotlinGradlePluginConfigurationErrors (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] :gradle:checkKotlinGradlePluginConfigurationErrors (Thread[#118,Execution worker Thread 3,5,main]) started.
+[ +108 ms] > Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+[        ] Skipping task ':gradle:checkKotlinGradlePluginConfigurationErrors' as task onlyIf 'errorDiagnostics are present' is false.
+[        ] Resolve mutations for :gradle:compileKotlin (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] :gradle:compileKotlin (Thread[#118,Execution worker Thread 3,5,main]) started.
+[ +289 ms] > Task :gradle:compileKotlin UP-TO-DATE
+[  +12 ms] Caching disabled for task ':gradle:compileKotlin' because:
+[        ]   Build cache is disabled
+[        ] Skipping task ':gradle:compileKotlin' as it is up-to-date.
+[        ] Resolve mutations for :gradle:compileJava (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] :gradle:compileJava (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] > Task :gradle:compileJava NO-SOURCE
+[        ] Skipping task ':gradle:compileJava' as it has no source files and no previous output files.
+[        ] Resolve mutations for :gradle:compileGroovy (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] :gradle:compileGroovy (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] > Task :gradle:compileGroovy NO-SOURCE
+[        ] Skipping task ':gradle:compileGroovy' as it has no source files and no previous output files.
+[        ] Resolve mutations for :gradle:pluginDescriptors (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] :gradle:pluginDescriptors (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] > Task :gradle:pluginDescriptors UP-TO-DATE
+[        ] Caching disabled for task ':gradle:pluginDescriptors' because:
+[        ]   Build cache is disabled
+[        ]   Not worth caching
+[        ] Skipping task ':gradle:pluginDescriptors' as it is up-to-date.
+[        ] Resolve mutations for :gradle:processResources (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] :gradle:processResources (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] > Task :gradle:processResources UP-TO-DATE
+[        ] Caching disabled for task ':gradle:processResources' because:
+[        ]   Build cache is disabled
+[        ]   Not worth caching
+[        ] Skipping task ':gradle:processResources' as it is up-to-date.
+[        ] Resolve mutations for :gradle:classes (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] :gradle:classes (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] > Task :gradle:classes UP-TO-DATE
+[        ] Skipping task ':gradle:classes' as it has no actions.
+[        ] Resolve mutations for :gradle:jar (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] :gradle:jar (Thread[#118,Execution worker Thread 3,5,main]) started.
+[        ] > Task :gradle:jar UP-TO-DATE
+[        ] Caching disabled for task ':gradle:jar' because:
+[        ]   Build cache is disabled
+[        ]   Not worth caching
+[        ] Skipping task ':gradle:jar' as it is up-to-date.
+[ +887 ms] Settings evaluated using settings file 'E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\settings.gradle.kts'.
+[  +12 ms] Projects loaded. Root project using build file 'E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\build.gradle.kts'.
+[        ] Included projects: [root project 'android', project ':app', project ':audio_service', project ':audio_session', project ':cloud_firestore', project ':device_info_plus', project ':file_picker', project ':firebase_auth', project ':firebase_core', project ':flutter_compass', project ':flutter_local_notifications', project ':flutter_native_splash', project ':flutter_plugin_android_lifecycle', project ':flutter_timezone', project ':geolocator_android', project ':google_sign_in_android', project ':just_audio', project ':package_info_plus', project ':path_provider_android', project ':permission_handler_android', project ':sensors_plus', project ':shared_preferences_android', project ':sqflite_android', project ':syncfusion_flutter_pdfviewer', project ':url_launcher_android', project ':video_player_android', project ':wakelock_plus']
+[+1981 ms] > Configure project :
+[  +12 ms] Evaluating root project 'android' using build file 'E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\build.gradle.kts'.
+[+1890 ms] > Configure project :app
+[        ] Evaluating project ':app' using build file 'E:\My Projects\Rafiq-Al-Darb\rafeeq_app\android\app\build.gradle.kts'.
+[        ] Resolved plugin [id: 'com.android.application']
+[        ] Resolved plugin [id: 'kotlin-android']
+[        ] Resolved plugin [id: 'dev.flutter.flutter-gradle-plugin']
+[        ] Resolved plugin [id: 'com.google.gms.google-services']
+[        ] Using default execution profile
+[        ] Build 12dc1aa9-4f32-4efd-bd2c-c3824ea7a671 is started
+[        ] Using Kotlin Gradle Plugin gradle813 variant
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[   +1 ms] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[        ] C/C++: android.ndkVersion from module build.gradle is [28.2.13676358]
+[        ] C/C++: android.ndkPath from module build.gradle is not set
+[        ] C/C++: ndk.dir in local.properties is not set
+[        ] C/C++: Not considering ANDROID_NDK_HOME because support was removed after deprecation period.
+[        ] C/C++: sdkFolder is C:\Users\Asus\AppData\Local\Android\sdk
+[ +751 ms] > Configure project :audio_service
+[        ] Evaluating project ':audio_service' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_service-0.18.19\android\build.gradle.kts'.
+[        ] Resolved plugin [id: 'com.android.library']
+[        ] Using default execution profile
+[+1003 ms] > Configure project :audio_session
+[        ] Evaluating project ':audio_session' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\audio_session-0.1.25\android\build.gradle'.
+[        ] Using default execution profile
+[ +291 ms] > Configure project :cloud_firestore
+[  +11 ms] Evaluating project ':cloud_firestore' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-6.9.0\android\build.gradle'.
+[        ] Using default execution profile
+[ +592 ms] > Configure project :device_info_plus
+[        ] Evaluating project ':device_info_plus' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\device_info_plus-12.4.0\android\build.gradle'.
+[        ] Using default execution profile
+[        ] Using Kotlin Gradle Plugin gradle813 variant
+[ +902 ms] > Configure project :file_picker
+[        ] Evaluating project ':file_picker' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\file_picker-11.0.3\android\build.gradle'.
+[        ] Using default execution profile
+[        ] Using Kotlin Gradle Plugin gradle813 variant
+[ +398 ms] > Configure project :firebase_auth
+[  +12 ms] Evaluating project ':firebase_auth' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_auth-6.6.0\android\build.gradle'.
+[        ] Using default execution profile
+[        ] Using Kotlin Gradle Plugin gradle813 variant
+[ +172 ms] > Configure project :firebase_core
+[        ] Evaluating project ':firebase_core' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-4.14.0\android\build.gradle'.
+[        ] Using default execution profile
+[        ] Using Kotlin Gradle Plugin gradle813 variant
+[ +308 ms] > Configure project :flutter_compass
+[        ] Evaluating project ':flutter_compass' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_compass-0.8.1\android\build.gradle'.
+[        ] Using default execution profile
+[ +403 ms] > Configure project :flutter_local_notifications
+[  +12 ms] Evaluating project ':flutter_local_notifications' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_local_notifications-18.0.1\android\build.gradle'.
+[        ] Using default execution profile
+[ +287 ms] > Configure project :flutter_native_splash
+[  +12 ms] Evaluating project ':flutter_native_splash' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_native_splash-2.4.7\android\build.gradle'.
+[        ] Using default execution profile
+[ +385 ms] > Configure project :flutter_plugin_android_lifecycle
+[        ] Evaluating project ':flutter_plugin_android_lifecycle' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.35\android\build.gradle.kts'.
+[        ] Resolved plugin [id: 'com.android.library']
+[        ] Using default execution profile
+[ +495 ms] > Configure project :flutter_timezone
+[  +11 ms] Evaluating project ':flutter_timezone' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_timezone-3.0.1\android\build.gradle'.
+[        ] Using default execution profile
+[        ] Using Kotlin Gradle Plugin gradle813 variant
+[ +281 ms] > Configure project :geolocator_android
+[  +12 ms] Evaluating project ':geolocator_android' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_android-4.6.2\android\build.gradle'.
+[        ] Using default execution profile
+[ +387 ms] > Configure project :google_sign_in_android
+[   +1 ms] Evaluating project ':google_sign_in_android' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\google_sign_in_android-6.2.1\android\build.gradle'.
+[        ] Using default execution profile
+[ +200 ms] > Configure project :just_audio
+[        ] Evaluating project ':just_audio' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\just_audio-0.9.46\android\build.gradle'.
+[        ] Using default execution profile
+[  +92 ms] > Configure project :package_info_plus
+[        ] Evaluating project ':package_info_plus' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\package_info_plus-9.0.1\android\build.gradle'.
+[        ] Using default execution profile
+[        ] Using Kotlin Gradle Plugin gradle813 variant
+[ +198 ms] > Configure project :path_provider_android
+[        ] Evaluating project ':path_provider_android' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.14\android\build.gradle'.
+[        ] Using default execution profile
+[ +200 ms] > Configure project :permission_handler_android
+[        ] Evaluating project ':permission_handler_android' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-12.1.0\android\build.gradle'.
+[        ] Using default execution profile
+[ +306 ms] > Configure project :sensors_plus
+[  +13 ms] Evaluating project ':sensors_plus' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sensors_plus-7.1.0\android\build.gradle.kts'.
+[   +1 ms] Resolved plugin [id: 'com.android.library']
+[   +1 ms] Using default execution profile
+[        ] Using Kotlin Gradle Plugin gradle813 variant
+[ +382 ms] > Configure project :shared_preferences_android
+[  +12 ms] Evaluating project ':shared_preferences_android' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.2.3\android\build.gradle'.
+[   +1 ms] Using default execution profile
+[ +281 ms] > Configure project :sqflite_android
+[        ] Evaluating project ':sqflite_android' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite_android-2.4.2+3\android\build.gradle'.
+[        ] Using default execution profile
+[ +293 ms] > Configure project :syncfusion_flutter_pdfviewer
+[  +12 ms] Evaluating project ':syncfusion_flutter_pdfviewer' using build file 'C:\Users\Asus\AppData\Local\Pub\Cache\hosted\pub.dev\syncfusion_flutter_pdfviewer-33.2.13\android\build.gradle'.
+[   +1 ms] Using default execution profile
