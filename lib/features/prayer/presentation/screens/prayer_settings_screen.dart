@@ -178,7 +178,7 @@ Widget _buildCustomAdhanCard(
                   icon: const Icon(Icons.upload_file),
                   label: Text(customPath.isEmpty ? 'اختر ملف صوتي' : 'تغيير الملف'),
                   onPressed: () async {
-                    final result = await FilePicker.platform.pickFiles(
+                    final result = await FilePicker.pickFiles(
                       type: FileType.audio,
                       allowMultiple: false,
                     );
