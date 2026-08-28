@@ -1,0 +1,9 @@
+T5: authentic i18n (easy_localization ar/en) + catalog encoding fix + Gradle APK-path fix
+
+- easy_localization wired in main (persisted locale, ar/en real JSON, key parity verified)
+- AppShell + Home/Quran/Azkar/Hadith/Settings now fully localized (.tr())
+- Settings: language switch (live locale change), theme (light/dark/system), about/credits
+- Fixed audio_editions.json + reciters_full.json double-encoded Arabic (alquran.cloud data)
+- android/settings.gradle.kts: :app + root build dirs redirect to rafeeq_app/build so
+  'flutter build apk' finds the artifact (was one level too shallow before)
+- Verified: flutter analyze 0 issues; release APK builds (58.9MB)

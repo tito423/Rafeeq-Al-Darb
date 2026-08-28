@@ -5,19 +5,11 @@ allprojects {
     }
 }
 
-// Redirect the Gradle build directory to the project-level `build/` folder
-// (as in the official Flutter template) so the `flutter` tool can locate the
-// generated APK under build/app/outputs/flutter-apk/.
-val newBuildDir: Directory =
-    rootProject.layout.buildDirectory
-        .dir("../../build")
-        .get()
-rootProject.layout.buildDirectory.value(newBuildDir)
+// Build directory redirect is handled in settings.gradle.kts via
+// gradle.beforeProject — only root and :app are redirected (plugin
+// subprojects on C:\ drive are left at their default to avoid the
+// Kotlin "different roots" cross-drive crash).
 
-subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
-}
 subprojects {
     project.evaluationDependsOn(":app")
 }
