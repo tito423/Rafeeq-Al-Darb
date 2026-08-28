@@ -7,6 +7,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../domain/models/ayah.dart';
 import '../../domain/models/surah.dart';
 import '../../domain/models/zikr.dart';
+import 'quran_sciences_db_helper.dart';
 
 class QuranDbHelper {
   static const _dbAssetPath = 'assets/quran_local.db';
@@ -116,6 +117,18 @@ class QuranDbHelper {
     return rows.map(Ayah.fromMap).toList();
   }
 
+  Future<({int startPage, int endPage})> getSurahPageRange(int surahId) async {
+    final db = await database;
+    final rows = await db.rawQuery('''
+      SELECT MIN(page_number) AS start, MAX(page_number) AS end
+      FROM ayahs WHERE surah_number = ?
+    ''', [surahId]);
+    if (rows.isEmpty) return (startPage: 1, endPage: 1);
+    final start = rows.first['start'] as int? ?? 1;
+    final end = rows.first['end'] as int? ?? 1;
+    return (startPage: start, endPage: end);
+  }
+
   Future<List<Ayah>> searchAyahs(String query) async {
     final db = await database;
     final rows = await db.rawQuery(
@@ -131,6 +144,10 @@ class QuranDbHelper {
     final ayah = await getAyah(ayahId);
     if (ayah == null) return [];
 
+    // Try to fetch from sciences database first (for irab, asbab, word meanings)
+    final sciencesDb = QuranSciencesDbHelper();
+    final sciencesData = await sciencesDb.getAyahSciences(ayah.surahId, ayah.ayahNumber);
+
     switch (type) {
       case 'tafsir':
         final t = ayah.tafsir.trim();
@@ -143,14 +160,24 @@ class QuranDbHelper {
         return t.isNotEmpty ? [t] : ['No translation available.'];
       case 'meaning':
       case 'word_meanings':
+        // If sciences database has word meanings, use them
+        if (sciencesData != null && sciencesData.wordMeanings.isNotEmpty) {
+          return sciencesData.wordMeanings.map((item) => '${item.word}: ${item.meaning}').toList();
+        }
         final t = ayah.wordMeanings.trim();
         if (t.isNotEmpty) return [t];
         return [ayah.translation.trim()].where((s) => s.isNotEmpty).toList()
           ..add('معاني الكلمات غير متوفرة حالياً.');
       case 'irab':
+        if (sciencesData != null && sciencesData.irab.isNotEmpty) {
+          return [sciencesData.irab];
+        }
         final t = ayah.irab.trim();
         return t.isNotEmpty ? [t] : ['الإعراب غير متوفر حالياً.'];
       case 'asbab_nuzul':
+        if (sciencesData != null && sciencesData.asbabNuzul.isNotEmpty) {
+          return [sciencesData.asbabNuzul];
+        }
         final t = ayah.asbab.trim();
         return t.isNotEmpty ? [t] : ['أسباب النزول غير متوفرة لهذه الآية.'];
       default:

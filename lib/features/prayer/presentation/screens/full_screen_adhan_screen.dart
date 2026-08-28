@@ -11,9 +11,10 @@ import '../../domain/adhan_sync_data.dart';
 import '../../../../services/download_manager.dart';
 import '../providers/prayer_settings_provider.dart';
 import '../widgets/adhan_animated_background.dart';
+import '../../domain/adhan_player_controller.dart';
 
 // Global player so audio continues if screen is dismissed
-final AudioPlayer globalAdhanPlayer = AudioPlayer();
+final AudioPlayer globalAdhanPlayer = AdhanPlayerController.player;
 
 Future<void> playAdhanInBackground(String prayerName, String muezzinName, [WidgetRef? ref]) async {
   try {

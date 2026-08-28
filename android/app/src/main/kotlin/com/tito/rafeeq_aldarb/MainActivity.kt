@@ -26,8 +26,9 @@ class MainActivity: AudioServiceActivity() {
                 val nextPrayerTimeMs = call.argument<Long>("nextPrayerTimeMs") ?: 0L
                 val times = call.argument<List<String>>("times") ?: listOf("00:00","00:00","00:00","00:00","00:00","00:00")
                 val activeIndex = call.argument<Int>("activeIndex") ?: 0
+                val hijriDate = call.argument<String>("hijriDate") ?: ""
 
-                showCustomNotification(nextPrayerName, nextPrayerTimeMs, times, activeIndex)
+                showCustomNotification(nextPrayerName, nextPrayerTimeMs, times, activeIndex, hijriDate)
                 result.success(null)
             } else if (call.method == "cancelNotification") {
                 val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -39,7 +40,7 @@ class MainActivity: AudioServiceActivity() {
         }
     }
 
-    private fun showCustomNotification(nextPrayerName: String, nextPrayerTimeMs: Long, times: List<String>, activeIndex: Int) {
+    private fun showCustomNotification(nextPrayerName: String, nextPrayerTimeMs: Long, times: List<String>, activeIndex: Int, hijriDate: String) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -56,6 +57,7 @@ class MainActivity: AudioServiceActivity() {
         val remoteViews = RemoteViews(packageName, R.layout.notification_salatuk)
 
         // Set Top Row
+remoteViews.setTextViewText(R.id.tv_hijri_date, hijriDate)
         remoteViews.setTextViewText(R.id.tv_next_prayer_label, "الصلاة القادمة: $nextPrayerName")
         
         // Setup Chronometer

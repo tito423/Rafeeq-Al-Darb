@@ -36,6 +36,16 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_hijri_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="١ محرم ١٤٤٦"
+        android:textColor="#AAAAAA"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

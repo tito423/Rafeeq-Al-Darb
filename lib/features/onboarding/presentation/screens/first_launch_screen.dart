@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/models/mushaf_style.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/localization/locale_provider.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../../../services/download_manager.dart';
 import '../../../quran/presentation/widgets/mushaf_selection_gallery.dart';
 
@@ -94,11 +96,108 @@ class _FirstLaunchScreenState extends ConsumerState<FirstLaunchScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primary = AppColors.primaryBlue;
 
+String _getLanguageName(String code) {
+    const names = {
+      'ar': 'العربية',
+      'en': 'English',
+      'fr': 'Français',
+      'id': 'Bahasa Indonesia',
+      'ms': 'Bahasa Melayu',
+      'tr': 'Türkçe',
+      'ur': 'اردو',
+      'hi': 'हिन्दी',
+      'bn': 'বাংলা',
+      'fa': 'فارسی',
+      'es': 'Español',
+      'ru': 'Русский',
+      'zh': '中文',
+      'de': 'Deutsch',
+      'it': 'Italiano',
+      'pt': 'Português',
+      'ha': 'Hausa',
+    };
+    return names[code] ?? code;
+  }
+
+  void _showLanguageSelectionSheet() {
+    final supported = ['ar', 'en', 'fr', 'id', 'ms', 'tr', 'ur', 'hi', 'bn', 'fa', 'es', 'ru', 'zh', 'de', 'it', 'pt', 'ha'];
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  const Icon(Icons.language, color: AppColors.accentGold),
+                  const SizedBox(width: 12),
+                  Text(
+                    'اختر لغة التطبيق',
+                    style: GoogleFonts.amiri(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            ...supported.map((code) => RadioListTile(
+              value: code,
+              groupValue: ref.read(localeProvider).languageCode,
+              onChanged: (value) {
+                if (value != null) {
+                  ref.read(localeProvider.notifier).setLocale(value);
+                  Navigator.pop(context);
+                }
+              },
+              title: Text(_getLanguageName(code)),
+              secondary: Text(code.toUpperCase()),
+            )).toList(),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFFAF7F0),
       body: SafeArea(
         child: Column(
           children: [
+// Language selector
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final locale = ref.watch(localeProvider);
+                      return TextButton.icon(
+                        icon: const Icon(Icons.language, size: 20),
+                        label: Text(
+                          _getLanguageName(locale.languageCode),
+                          style: GoogleFonts.amiri(fontSize: 14),
+                        ),
+                        onPressed: _showLanguageSelectionSheet,
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppColors.accentGold,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
             // Content Area
             Expanded(
               child: _buildMushafStep(isDark, primary),

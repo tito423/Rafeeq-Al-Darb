@@ -23,7 +23,7 @@ class LibraryScreen extends ConsumerWidget {
     final bgColor = isDark ? AppColors.darkBackground : const Color(0xFFFAF7F0);
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         backgroundColor: bgColor,
         appBar: AppBar(
@@ -57,17 +57,19 @@ class LibraryScreen extends ConsumerWidget {
             unselectedLabelColor: isDark ? AppColors.darkSubtext : AppColors.lightSubtext,
             labelStyle: GoogleFonts.amiri(fontSize: 15, fontWeight: FontWeight.bold),
             tabs: const [
-              Tab(text: 'المتاحة للتحميل'),
-              Tab(text: 'مكتبتي'),
-              Tab(text: 'التصنيفات'),
+              Tab(text: 'مكتبة الكتب العامة'),
+              Tab(text: 'مكتبتي المحملة'),
+              Tab(text: 'كتب الحديث التسعة'),
+              Tab(text: 'دليل المسلم الجديد'),
             ],
           ),
         ),
         body: const TabBarView(
           children: [
-            _IslamicBooksTab(),
-            _HadithBooksTab(),
-            _WebsitesTab(),
+            _IslamicBooksCatalogTab(),
+            _MyOfflineLibraryTab(),
+            _HadithBooksHubTab(),
+_NewMuslimGuideTab(),
           ],
         ),
       ),
@@ -76,14 +78,14 @@ class LibraryScreen extends ConsumerWidget {
 }
 
 // ── Islamic Books Catalog Tab ────────────────────────────────────────────────
-class _IslamicBooksTab extends StatefulWidget {
-  const _IslamicBooksTab();
+class _IslamicBooksCatalogTab extends StatefulWidget {
+  const _IslamicBooksCatalogTab();
 
   @override
-  State<_IslamicBooksTab> createState() => _IslamicBooksTabState();
+  State<_IslamicBooksCatalogTab> createState() => _IslamicBooksCatalogTabState();
 }
 
-class _IslamicBooksTabState extends State<_IslamicBooksTab> {
+class _IslamicBooksCatalogTabState extends State<_IslamicBooksCatalogTab> {
   List<dynamic> _books = [];
   String _selectedCategory = 'الكل';
   bool _isLoading = true;
@@ -381,14 +383,14 @@ class _IslamicBooksTabState extends State<_IslamicBooksTab> {
 }
 
 // ── Hadith Books Tab ──────────────────────────────────────────────────────────
-class _HadithBooksTab extends StatefulWidget {
-  const _HadithBooksTab();
+class _HadithBooksHubTab extends StatefulWidget {
+  const _HadithBooksHubTab();
 
   @override
-  State<_HadithBooksTab> createState() => _HadithBooksTabState();
+  State<_HadithBooksHubTab> createState() => _HadithBooksHubTabState();
 }
 
-class _HadithBooksTabState extends State<_HadithBooksTab> {
+class _HadithBooksHubTabState extends State<_HadithBooksHubTab> {
   final _dbHelper = HadithDbHelper();
   List<Map<String, dynamic>> _collections = [];
   bool _isLoading = true;
@@ -526,6 +528,130 @@ class _HadithBooksTabState extends State<_HadithBooksTab> {
   }
 }
 
+// ── My Offline Library Tab ─────────────────────────────────────────────────────
+class _MyOfflineLibraryTab extends ConsumerStatefulWidget {
+  const _MyOfflineLibraryTab();
+
+  @override
+  ConsumerState<_MyOfflineLibraryTab> createState() => _MyOfflineLibraryTabState();
+}
+
+class _MyOfflineLibraryTabState extends ConsumerState<_MyOfflineLibraryTab> {
+  List<Map<String, dynamic>> _books = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDownloadedBooks();
+  }
+
+  Future<void> _loadDownloadedBooks() async {
+    try {
+      final jsonString = await rootBundle.loadString('lib/features/books/data/books_catalog.json');
+      final catalog = json.decode(jsonString) as List<dynamic>;
+      final downloadState = ref.read(downloadManagerProvider);
+      final downloadedBooks = <Map<String, dynamic>>[];
+      for (final book in catalog) {
+        final bookMap = book as Map<String, dynamic>;
+        final bookId = bookMap['id'] as String? ?? '';
+        final taskId = 'book_$bookId';
+        if (downloadState.localRegistry.contains(taskId)) {
+          downloadedBooks.add(bookMap);
+        }
+      }
+      if (mounted) {
+        setState(() {
+          _books = downloadedBooks;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading downloaded books: $e');
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : const Color(0xFFFAF7F0);
+    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator(color: AppColors.accentGold))
+          : _books.isEmpty
+              ? Center(
+                  child: Text(
+                    'لا توجد كتب محملة حالياً',
+                    style: GoogleFonts.amiri(fontSize: 18, color: textColor),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _books.length,
+                  itemBuilder: (context, index) {
+                    final book = _books[index];
+                    return _buildBookCard(book, isDark);
+                  },
+                ),
+    );
+  }
+
+  Widget _buildBookCard(Map<String, dynamic> book, bool isDark) {
+    final title = book['title'] as String? ?? '';
+    final author = book['author'] as String? ?? '';
+    final format = book['format'] as String? ?? 'text';
+    final coverUrl = book['cover_url'] as String?;
+    final downloadUrl = book['download_url'] as String? ?? '';
+    final bookId = book['id'] as String? ?? '';
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        leading: coverUrl != null && coverUrl.isNotEmpty
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(coverUrl, width: 50, height: 70, fit: BoxFit.cover),
+              )
+            : Icon(Icons.menu_book_rounded, size: 40, color: AppColors.accentGold),
+        title: Text(title, style: GoogleFonts.amiri(fontSize: 16, fontWeight: FontWeight.bold)),
+        subtitle: Text(author, style: GoogleFonts.amiri(fontSize: 14, color: Colors.grey)),
+        trailing: Icon(Icons.chevron_right, color: AppColors.accentGold),
+        onTap: () {
+          // Open reader based on format
+          if (format == 'pdf') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BookReaderScreen(
+                  bookId: bookId,
+                  title: title,
+                  pdfUrl: downloadUrl,
+                ),
+              ),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TextBookReaderScreen(
+                  bookId: bookId,
+                  title: title,
+                  bookUrl: downloadUrl,
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
 // ── Islamic Websites Tab ──────────────────────────────────────────────────────
 class _WebsitesTab extends ConsumerWidget {
   const _WebsitesTab();
@@ -609,6 +735,106 @@ class _WebsitesTab extends ConsumerWidget {
           },
         );
       },
+    );
+  }
+}
+// ── New Muslim Guide Tab ─────────────────────────────────────────────────────
+class _NewMuslimGuideTab extends StatelessWidget {
+  const _NewMuslimGuideTab();
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? AppColors.darkCardBackground : Colors.white;
+    final textColor = isDark ? AppColors.darkOnSurface : AppColors.lightOnSurface;
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        // Prayer guide card
+        Card(
+          color: cardBg,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.flag, color: AppColors.accentGold),
+                    SizedBox(width: 12),
+                    Text(
+                      'كيفية الصلاة بالصور التوضيحية',
+                      style: GoogleFonts.amiri(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                Text(
+                  'تعلم خطوات الصلاة بالترتيب مع صور توضيحية لكل ركن.',
+                  style: GoogleFonts.amiri(fontSize: 14, color: textColor.withOpacity(0.8)),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 16),
+        // Pillars of Islam & Iman
+        Card(
+          color: cardBg,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.architecture, color: AppColors.accentGold),
+                    SizedBox(width: 12),
+                    Text(
+                      'أركان الإسلام والإيمان',
+                      style: GoogleFonts.amiri(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                Text(
+                  'تعرف على أركان الإسلام الخمسة وأركان الإيمان الستة.',
+                  style: GoogleFonts.amiri(fontSize: 14, color: textColor.withOpacity(0.8)),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 16),
+        // Daily supplications
+        Card(
+          color: cardBg,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.favorite, color: AppColors.accentGold),
+                    SizedBox(width: 12),
+                    Text(
+                      'أدعية يومية مبسطة',
+                      style: GoogleFonts.amiri(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                Text(
+                  'مجموعة من الأدعية المأثورة لكل وقت من أوقات اليوم.',
+                  style: GoogleFonts.amiri(fontSize: 14, color: textColor.withOpacity(0.8)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

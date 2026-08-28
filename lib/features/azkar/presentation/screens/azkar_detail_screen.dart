@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/datasources/quran_db_helper.dart';
 import '../../../quran/domain/models/zikr.dart';
+import '../providers/azkar_settings_provider.dart';
 
 // ── Azkar detail — card-based swipeable reader ────────────────────────────────
 
@@ -94,7 +95,9 @@ class _AzkarDetailScreenState extends ConsumerState<AzkarDetailScreen>
     final zikr = _azkar[_currentIndex];
     final current = _counters[zikr.id] ?? 0;
 
-    HapticFeedback.lightImpact();
+    if (ref.read(azkarSettingsProvider).hapticFeedbackEnabled) {
+      HapticFeedback.lightImpact();
+    }
     _pulseCtrl.forward().then((_) => _pulseCtrl.reverse());
 
     setState(() => _counters[zikr.id] = current + 1);
@@ -273,7 +276,18 @@ class _AzkarAppBar extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 48),
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final hapticEnabled = ref.watch(azkarSettingsProvider).hapticFeedbackEnabled;
+                      return IconButton(
+                        icon: Icon(
+                          hapticEnabled ? Icons.notifications_active : Icons.notifications_off,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => ref.read(azkarSettingsProvider.notifier).toggleHapticFeedback(),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

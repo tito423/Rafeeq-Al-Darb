@@ -12,6 +12,8 @@ import '../../app/rafeeq_app.dart' as import_app;
 import '../../features/quran/presentation/screens/surah_reading_screen.dart' as import_surah;
 import '../../features/azkar/presentation/screens/azkar_detail_screen.dart' as import_azkar;
 import '../../features/prayer/presentation/screens/full_screen_adhan_screen.dart';
+import '../../features/prayer/domain/adhan_player_controller.dart';
+import 'package:hijri/hijri.dart';
 import 'package:flutter/services.dart';
 
 // ── Notification IDs ──────────────────────────────────────────────────────────
@@ -176,6 +178,7 @@ class NotificationService {
       enableVibration: enableVibration,
       category: AndroidNotificationCategory.alarm,
       fullScreenIntent: fullScreen,
+      ongoing: true,
       actions: <AndroidNotificationAction>[
         const AndroidNotificationAction(
           'dismiss',
@@ -183,8 +186,8 @@ class NotificationService {
           cancelNotification: true,
         ),
         const AndroidNotificationAction(
-          'snooze',
-          'تأجيل ١٠ دقائق',
+          'mute',
+          'صامت',
           cancelNotification: false,
         ),
       ],
@@ -426,16 +429,12 @@ class NotificationService {
     // Handle tap / action buttons
     switch (response.actionId) {
       case 'dismiss':
-        // Already cancelled by cancelNotification: true
+        // Stop audio and cancel notification (already cancelled by cancelNotification: true)
+        AdhanPlayerController.stop();
         break;
-      case 'snooze':
-        // Re-schedule 10 minutes later
-        final snoozeTime = DateTime.now().add(const Duration(minutes: 10));
-        _schedulePrayerNotification(
-          id: response.id ?? 99,
-          prayerName: 'الصلاة',
-          prayerTime: snoozeTime,
-        );
+      case 'mute':
+        // Mute audio (toggle mute)
+        AdhanPlayerController.mute();
         break;
     }
   }

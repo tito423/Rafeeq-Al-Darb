@@ -73,9 +73,6 @@ class MushaafPageWidget extends ConsumerWidget {
         return _DownloadPromptView(
           pageNumber: pageNumber,
           isDark: isDark,
-          onDownload: () => ref
-              .read(downloadManagerProvider.notifier)
-              .downloadMushaafPage(pageNumber, styleInfo: styleInfo),
         );
       },
     );
@@ -536,12 +533,10 @@ class _DownloadProgressView extends StatelessWidget {
 class _DownloadPromptView extends StatelessWidget {
   final int pageNumber;
   final bool isDark;
-  final VoidCallback onDownload;
 
   const _DownloadPromptView({
     required this.pageNumber,
     required this.isDark,
-    required this.onDownload,
   });
 
   @override
@@ -580,7 +575,7 @@ class _DownloadPromptView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'الصفحة $pageNumber غير محملة بعد.\nاضغط لتحميل صورة المصحف.',
+              'لم يتم تحميل مصحف الصور بعد.\nافتح مدير التنزيلات لتحميل المصحف كاملًا.',
               textAlign: TextAlign.center,
               style: GoogleFonts.amiri(
                 fontSize: 15,
@@ -590,29 +585,6 @@ class _DownloadPromptView extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             ElevatedButton.icon(
-              onPressed: onDownload,
-              icon: const Icon(Icons.download_rounded),
-              label: Text(
-                'تحميل الصفحة فقط',
-                style: GoogleFonts.amiri(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryBlue,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 14,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            OutlinedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
@@ -621,15 +593,15 @@ class _DownloadPromptView extends StatelessWidget {
               },
               icon: const Icon(Icons.library_books_rounded),
               label: Text(
-                'تحميل المصحف كاملًا',
+                'فتح مدير التنزيلات',
                 style: GoogleFonts.amiri(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primaryBlue,
-                side: const BorderSide(color: AppColors.primaryBlue, width: 1.5),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accentGold,
+                foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 14,

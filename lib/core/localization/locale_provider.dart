@@ -12,14 +12,16 @@ class LocaleNotifier extends StateNotifier<Locale> {
 
   void _loadLocale() {
     if (_prefs == null) return;
-    final code = _prefs!.getString('app_language_code') ?? 'ar';
-    if (['ar', 'en', 'fr'].contains(code)) {
+    final code = _prefs.getString('app_language_code') ?? 'ar';
+    final supported = ['ar', 'en', 'fr', 'id', 'ms', 'tr', 'ur', 'hi', 'bn', 'fa', 'es', 'ru', 'zh', 'de', 'it', 'pt', 'ha'];
+    if (supported.contains(code)) {
       state = Locale(code);
     }
   }
 
   Future<void> setLocale(String languageCode) async {
-    if (['ar', 'en', 'fr'].contains(languageCode)) {
+    final supported = ['ar', 'en', 'fr', 'id', 'ms', 'tr', 'ur', 'hi', 'bn', 'fa', 'es', 'ru', 'zh', 'de', 'it', 'pt', 'ha'];
+    if (supported.contains(languageCode)) {
       state = Locale(languageCode);
       await _prefs?.setString('app_language_code', languageCode);
     }
