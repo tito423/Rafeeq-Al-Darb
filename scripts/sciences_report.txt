@@ -1,0 +1,21 @@
+surah counts: 114
+muyassar: 1013 range entries
+jalalayn: 1062 range entries
+qurtubi: 1062 range entries
+tafseer_saadi: 0 ayah rows (fetch complete=True, missing=0)
+tafseer_ibn_kathir: 0 ayah rows (fetch complete=True, missing=0)
+tafseer muyassar: 1013 ranges
+tafseer jalalayn: 1062 ranges
+tafseer qurtubi: 1062 ranges
+col tafseer_saadi: 0
+col tafseer_ibn_kathir: 0
+word_meanings rows: 83665
+word_grammar rows: 75973
+azkar sections: 134, items: 298
+table tafseer_texts: 3137
+table ayah_sciences: 0
+table word_meanings: 83665
+table word_grammar: 75973
+table azkar_sections: 134
+table azkar_items: 298
+DB size: 18919424 bytes

@@ -1,0 +1,30 @@
+=== tafseer_ar_muyassar.json (415577 bytes) ===
+  dict keys: ['slug', 'id', 'verses']
+  verses type: list, count: 1013
+  sample verse: {"s": 1, "a": 1, "text": "أبتدئ قراءة القرآن باسم الله مستعينا به، <span class=\"green\">(اللهِ)</span> علم على الرب -تبارك وتعالى- المعبود بحق دون سواه، وهو أخص أسماء الله تعالى، ولا يسمى به غيره سبحانه. <span class=\"green\">(الرَّحْمَنِ)</span> ذي الرحمة العامة الذي وسعت رحمته جميع الخلق، <span c
+
+=== tafseer_ar_jalalayn.json (3660869 bytes) ===
+  dict keys: ['slug', 'id', 'verses']
+  verses type: list, count: 1062
+  sample verse: {"s": 1, "a": 1, "text": "<p><span class=\"arabic qpc-hafs\">( بسم الله الرحمن الرحيم )</span></p><p lang=\"ar\" class=\"ar \">يقال لها : الفاتحة ، أي فاتحة الكتاب خطا ، وبها تفتح القراءة في الصلاة ،<span class=\"blue\"> ويقال لها أيضا :</span> أم الكتاب عند الجمهور ، وكره أنس ، والحسن وابن سيرين كر
+
+=== tafseer_ar_qurtubi.json (3768218 bytes) ===
+  dict keys: ['slug', 'id', 'verses']
+  verses type: list, count: 1062
+  sample verse: {"s": 1, "a": 1, "text": "القول في الاستعاذةوفيها اثنتا عشرة مسألة :الأولى : أمر الله تعالى بالاستعاذة عند أول كل قراءة فقال تعالى : فإذا قرأت القرآن فاستعذ بالله من الشيطان الرجيم [ النحل : 98 ] أي إذا أردت أن تقرأ ; فأوقع الماضي موقع المستقبل كما قال الشاعر :وإني لآتيكم لذكري الذي مضى من الود واست
+
+=== tafseer_en_kathir.json (10438494 bytes) ===
+  dict keys: ['slug', 'id', 'verses']
+  verses type: list, count: 701
+  sample verse: {"s": 1, "a": 1, "text": "<p>এই সূরাটির নাম ‘সূরা-ই-আল ফাতিহাহ্। কোন কিছু আরম্ভ করার নাম ‘ফাতিহাহ’ বা উদ্ঘাটিকা। কুরআন কারীমের মধ্যে প্রথম এই সূরাটি লিখিত হয়েছে বলে একে সূরা-ই-আল ফাতিহাহ্ বলা হয়। তাছাড়া নামাযের মধ্যে এর দ্বারাই কিরাআত আরম্ভ করা হয় বলেও একে এই নামে অভিহিত করা হয়েছে। উম্মুল কিতাব
+
+=== word_meanings.json (4994746 bytes) ===
+  dict keys: ['words']
+  sample['words'] = [{"s": 1, "a": 1, "pos": 1, "ar": "", "en": "In (the) name"}, {"s": 1, "a": 1, "pos": 2, "ar": "", "en": "(of) Allah"}, {"s": 1, "a": 1, "pos": 3, "ar": "", "en": "the Most Gracious"}, {"s": 1, "a": 1, "pos": 4, "ar": "", "en": "the Most Merciful"}, {"s": 1, "a": 1, "pos": 5, "ar": "", "en": "(1)"}, {"s": 1, "a": 2, "pos": 1, "ar": "", "en": "All praises and thanks"}, {"s": 1, "a": 2, "pos": 2, "a
+
+=== asbab_al_nuzul.json (1742 bytes) ===
+  dict keys: ['entries']
+  sample['entries'] = [{"s": 1, "a": 1, "t": "Nuzilat bi-Makkah. Awwalu surah kamilah nuzilat min al-Quran. Qala Ibn Abbas: baynama Jibril qaid inda an-nabi samia naqidan min fawqihi..."}, {"s": 2, "a": 285, "t": "Lamma nuzilat hadhihi al-ayah shaqqa dhalika ala as-sahabah wa qalu: ayyuna la yuhaddith nafsahu? fa-qala an-nabi: aw qad wajadtum dhalik? qalu: naam. qala: dhalikum sarih al-iman."}, {"s": 3, "a": 154, "t": 
+
+=== irab_data.json (15 bytes) ===
+  content: {"entries": []}

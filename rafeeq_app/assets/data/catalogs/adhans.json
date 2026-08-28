@@ -1,0 +1,12 @@
+[
+  {"id": "azan1", "name": "أذان 1", "asset": "assets/audio/adhan/azan1.mp3", "source": "islamcan.com"},
+  {"id": "azan2", "name": "أذان 2", "asset": "assets/audio/adhan/azan2.mp3", "source": "islamcan.com"},
+  {"id": "azan3", "name": "أذان 3", "asset": "assets/audio/adhan/azan3.mp3", "source": "islamcan.com"},
+  {"id": "azan4", "name": "أذان 4", "asset": "assets/audio/adhan/azan4.mp3", "source": "islamcan.com"},
+  {"id": "azan5", "name": "أذان 5", "asset": "assets/audio/adhan/azan5.mp3", "source": "islamcan.com"},
+  {"id": "azan6", "name": "أذان 6", "asset": "assets/audio/adhan/azan6.mp3", "source": "islamcan.com"},
+  {"id": "azan7", "name": "أذان 7", "asset": "assets/audio/adhan/azan7.mp3", "source": "islamcan.com"},
+  {"id": "azan8", "name": "أذان 8", "asset": "assets/audio/adhan/azan8.mp3", "source": "islamcan.com"},
+  {"id": "azan9", "name": "أذان 9", "asset": "assets/audio/adhan/azan9.mp3", "source": "islamcan.com"},
+  {"id": "azan10", "name": "أذان 10", "asset": "assets/audio/adhan/azan10.mp3", "source": "islamcan.com"}
+]
