@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:archive/archive_io.dart';
 import '../models/tafseer.dart';
+import '../../features/quran/data/datasources/quran_sciences_db_helper.dart';
 
 // ── Tafseer Service ───────────────────────────────────────────────────────────
 
@@ -39,6 +40,16 @@ class TafseerService {
 
   /// Returns true if all 114 surahs of this tafseer are downloaded
   Future<bool> isTafseerDownloaded(String tafseerID) async {
+    // For sciences tafseers (saadi, muyassar), check if sciences database exists
+    if (tafseerID == 'saadi' || tafseerID == 'muyassar') {
+      try {
+        final sciencesDb = QuranSciencesDbHelper();
+        return await sciencesDb.isDatabaseAvailable();
+      } catch (e) {
+        return false;
+      }
+    }
+
     final dir = await _tafseerDir;
     // Check a sample — surahs 1, 2, 36, 114
     for (final surahId in [1, 2, 36, 114]) {
@@ -50,6 +61,17 @@ class TafseerService {
 
   /// Returns the number of surahs downloaded for a given tafseer (0-114)
   Future<int> downloadedSurahCount(String tafseerID) async {
+    // For sciences tafseers, if database exists, assume all surahs available
+    if (tafseerID == 'saadi' || tafseerID == 'muyassar') {
+      try {
+        final sciencesDb = QuranSciencesDbHelper();
+        final available = await sciencesDb.isDatabaseAvailable();
+        return available ? 114 : 0;
+      } catch (e) {
+        return 0;
+      }
+    }
+
     final dir = await _tafseerDir;
     int count = 0;
     for (int s = 1; s <= 114; s++) {
@@ -69,6 +91,12 @@ class TafseerService {
     void Function(int completed, int total)? onProgress,
     bool Function()? isCancelled,
   }) async {
+    // Sciences tafseers (saadi, muyassar) are already available via local database
+    if (tafseerID == 'saadi' || tafseerID == 'muyassar') {
+      onProgress?.call(114, 114);
+      return true;
+    }
+
     const total = 114;
     int completed = 0;
     
@@ -108,8 +136,13 @@ class TafseerService {
     }
   }
 
-  /// Delete all files for a tafseer
+/// Delete all files for a tafseer
   Future<void> deleteTafseer(String tafseerID) async {
+    // Sciences tafseers are stored in the common sciences database; skip deletion
+    if (tafseerID == 'saadi' || tafseerID == 'muyassar') {
+      return;
+    }
+
     final dir = await _tafseerDir;
     for (int s = 1; s <= 114; s++) {
       final f = File('${dir.path}/${_tafseerFilename(tafseerID, s)}');
@@ -126,6 +159,21 @@ class TafseerService {
     required int surahId,
     required int ayahNumber,
   }) async {
+    // First, check if this is a sciences tafseer (saadi, muyassar) from local sciences database
+    if (tafseerID == 'saadi' || tafseerID == 'muyassar') {
+      try {
+        final sciencesDb = QuranSciencesDbHelper();
+        final data = await sciencesDb.getAyahSciences(surahId, ayahNumber);
+        if (data != null) {
+          final text = tafseerID == 'saadi' ? data.tafseerSaadi : data.tafseerMoyassar;
+          if (text.isNotEmpty) return text;
+        }
+      } catch (e) {
+        debugPrint('TafseerService: error reading sciences DB — $e');
+      }
+    }
+
+    // Otherwise, fallback to downloaded tafseer files (quran.com API)
     final filePath = await _tafseerFilePath(tafseerID, surahId);
     final file = File(filePath);
     if (!file.existsSync()) return null;

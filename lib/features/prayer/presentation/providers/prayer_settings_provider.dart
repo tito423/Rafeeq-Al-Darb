@@ -43,6 +43,31 @@ final muezzinsProvider = Provider<List<Muezzin>>((ref) {
       assetPath: 'assets/audio/al_aqsa.m4a',
     ),
     Muezzin(
+      id: 'makkah',
+      name: 'أذان الحرم المكي',
+      assetPath: 'assets/audio/makkah.m4a',
+    ),
+    Muezzin(
+      id: 'madinah',
+      name: 'أذان الحرم المدني',
+      assetPath: 'assets/audio/madinah.m4a',
+    ),
+    Muezzin(
+      id: 'mansour',
+      name: 'منصور السليمي',
+      assetPath: 'assets/audio/mansour.m4a',
+    ),
+    Muezzin(
+      id: 'ali_jaber',
+      name: 'علي بن عبد الله جابر',
+      assetPath: 'assets/audio/ali_jaber.m4a',
+    ),
+    Muezzin(
+      id: 'ahmed_ajmi',
+      name: 'أحمد العجمي',
+      assetPath: 'assets/audio/ahmed_ajmi.m4a',
+    ),
+    Muezzin(
       id: 'custom',
       name: 'أذان مخصص (من الجهاز)',
       assetPath: '', // Handled separately
@@ -56,6 +81,8 @@ class PrayerSettings {
   final bool locationEnabled;
   final String selectedMuezzin;
   final String customAdhanPath; // Path to the custom adhan file chosen by user
+  final bool customAdhanUsesVisualizer; // true for animated visualizer, false for audio-only layout
+  final String customAdhanDisplayMode; // 'animated' or 'audio_only' (overrides per-prayer mode for custom adhan)
   final String adhanDisplayMode; // 'animated' or 'audio_only'
   final String adhanSoundMode; // 'sound', 'vibrate', 'silent'
   final String calculationMethod;
@@ -76,6 +103,8 @@ class PrayerSettings {
     this.locationEnabled = true,
     this.selectedMuezzin = 'عبدالباسط عبدالصمد',
     this.customAdhanPath = '',
+    this.customAdhanUsesVisualizer = true,
+    this.customAdhanDisplayMode = 'animated',
     this.adhanDisplayMode = 'animated',
     this.adhanSoundMode = 'sound',
     this.calculationMethod = 'Umm Al-Qura Univ., Makkah',
@@ -129,6 +158,8 @@ class PrayerSettings {
     bool? locationEnabled,
     String? selectedMuezzin,
     String? customAdhanPath,
+    bool? customAdhanUsesVisualizer,
+    String? customAdhanDisplayMode,
     String? adhanDisplayMode,
     String? adhanSoundMode,
     String? calculationMethod,
@@ -147,6 +178,8 @@ class PrayerSettings {
       locationEnabled: locationEnabled ?? this.locationEnabled,
       selectedMuezzin: selectedMuezzin ?? this.selectedMuezzin,
       customAdhanPath: customAdhanPath ?? this.customAdhanPath,
+      customAdhanUsesVisualizer: customAdhanUsesVisualizer ?? this.customAdhanUsesVisualizer,
+      customAdhanDisplayMode: customAdhanDisplayMode ?? this.customAdhanDisplayMode,
       adhanDisplayMode: adhanDisplayMode ?? this.adhanDisplayMode,
       adhanSoundMode: adhanSoundMode ?? this.adhanSoundMode,
       calculationMethod: calculationMethod ?? this.calculationMethod,
@@ -175,6 +208,8 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
     final loc = _prefs.getBool('locationEnabled') ?? true;
     final muezzin = _prefs.getString('selectedMuezzin') ?? 'عبدالباسط عبدالصمد';
     final customPath = _prefs.getString('customAdhanPath') ?? '';
+    final customUsesVisualizer = _prefs.getBool('customAdhanUsesVisualizer') ?? true;
+    final customDisplayMode = _prefs.getString('customAdhanDisplayMode') ?? 'animated';
     final adhanMode = _prefs.getString('adhanDisplayMode') ?? 'animated';
     final adhanSound = _prefs.getString('adhanSoundMode') ?? 'sound';
     final calcMethod = _prefs.getString('calculationMethod') ?? 'Umm Al-Qura Univ., Makkah';
@@ -203,6 +238,8 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
       locationEnabled: loc,
       selectedMuezzin: muezzin,
       customAdhanPath: customPath,
+      customAdhanUsesVisualizer: customUsesVisualizer,
+      customAdhanDisplayMode: customDisplayMode,
       adhanDisplayMode: adhanMode,
       adhanSoundMode: adhanSound,
       calculationMethod: calcMethod,
@@ -236,6 +273,16 @@ class PrayerSettingsNotifier extends StateNotifier<PrayerSettings> {
   void setCustomAdhanPath(String path) {
     _prefs.setString('customAdhanPath', path);
     state = state.copyWith(customAdhanPath: path);
+  }
+
+  void setCustomAdhanUsesVisualizer(bool value) {
+    _prefs.setBool('customAdhanUsesVisualizer', value);
+    state = state.copyWith(customAdhanUsesVisualizer: value);
+  }
+
+  void setCustomAdhanDisplayMode(String mode) {
+    _prefs.setString('customAdhanDisplayMode', mode);
+    state = state.copyWith(customAdhanDisplayMode: mode);
   }
   
   Future<void> setAdhanDisplayMode(String mode) async {

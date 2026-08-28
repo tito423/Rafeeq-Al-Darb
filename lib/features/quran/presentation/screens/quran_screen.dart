@@ -18,16 +18,18 @@ class QuranScreen extends ConsumerStatefulWidget {
 class _QuranScreenState extends ConsumerState<QuranScreen> with SingleTickerProviderStateMixin {
   late final PageController _pageController;
   late final TabController _tabController;
-  int _currentPage = 1;
-  int _currentSurahId = 1;
+  int _imageCurrentPage = 1;
+  int _textCurrentSurahId = 1;
+  int _textCurrentPage = 1;
 
   @override
   void initState() {
     super.initState();
     final lastRead = ref.read(lastReadProvider);
-    _currentPage = lastRead.pageNumber;
-    _currentSurahId = lastRead.surahId;
-    _pageController = PageController(initialPage: _currentPage - 1);
+    _textCurrentSurahId = lastRead.surahId;
+    _textCurrentPage = lastRead.pageNumber;
+    _imageCurrentPage = lastRead.pageNumber;
+    _pageController = PageController(initialPage: _imageCurrentPage - 1);
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -39,13 +41,16 @@ class _QuranScreenState extends ConsumerState<QuranScreen> with SingleTickerProv
   }
 
   void _goToSuraOrPage(int surahId, int pageNumber) {
+    final activeTabIndex = _tabController.index;
     setState(() {
-      _currentSurahId = surahId;
-      _currentPage = pageNumber;
+      if (activeTabIndex == 0) { // Text Mushaf
+        _textCurrentSurahId = surahId;
+        _textCurrentPage = pageNumber;
+      } else { // Image Mushaf
+        _imageCurrentPage = pageNumber;
+        _pageController.jumpToPage(pageNumber - 1);
+      }
     });
-    if (_tabController.index == 1) { // Image Mushaf
-      _pageController.jumpToPage(pageNumber - 1);
-    }
   }
 
   @override
@@ -97,8 +102,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> with SingleTickerProv
         children: [
           // Text Mushaf
           SurahReadingScreen(
-            surahId: _currentSurahId,
-            startPage: _currentPage,
+            surahId: _textCurrentSurahId,
+            startPage: _textCurrentPage,
             showAppBar: false,
           ),
           
@@ -113,14 +118,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> with SingleTickerProv
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'الصفحة $_currentPage من ٦٠٤',
+                      'الصفحة $_imageCurrentPage من ٦٠٤',
                       style: GoogleFonts.amiri(
                         fontSize: 13,
                         color: isDark ? AppColors.darkSubtext : AppColors.lightSubtext,
                       ),
                     ),
                     LinearProgressIndicator(
-                      value: _currentPage / 604,
+                      value: _imageCurrentPage / 604,
                       minHeight: 3,
                       backgroundColor: AppColors.primaryBlue.withAlpha(25),
                       color: AppColors.accentGold,
@@ -134,7 +139,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> with SingleTickerProv
                   itemCount: 604,
                   reverse: true, // Right to left scrolling
                   onPageChanged: (index) {
-                    setState(() => _currentPage = index + 1);
+                    setState(() => _imageCurrentPage = index + 1);
                   },
                   itemBuilder: (context, index) {
                     return MushaafPageWidget(

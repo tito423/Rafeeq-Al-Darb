@@ -66,6 +66,7 @@ class SurahReadingScreen extends ConsumerStatefulWidget {
   final String surahNameEn;
   final int startPage;
   final bool showAppBar;
+  final bool isolateSurah;
 
   const SurahReadingScreen({
     super.key,
@@ -74,6 +75,7 @@ class SurahReadingScreen extends ConsumerStatefulWidget {
     this.surahNameEn = '',
     this.startPage = 1,
     this.showAppBar = true,
+    this.isolateSurah = false,
   });
 
   @override
@@ -86,6 +88,8 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen>
   late final Animation<double> _fadeAnim;
   late final PageController _pageCtrl;
   late int _currentPage;
+  late int _surahStartPage = 1;
+  late int _surahEndPage = 604;
   _ShadowingState _shadowing = const _ShadowingState();
 
   @override
@@ -99,6 +103,30 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen>
     );
     _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeOut);
     _fadeCtrl.forward();
+
+    // Load surah page range for isolation mode
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final range = await QuranDbHelper().getSurahPageRange(widget.surahId);
+      if (mounted) {
+        setState(() {
+          _surahStartPage = range.startPage;
+          _surahEndPage = range.endPage;
+        });
+        if (widget.isolateSurah) {
+          // Ensure current page is within range
+          int current = _currentPage;
+          if (current < _surahStartPage) current = _surahStartPage;
+          if (current > _surahEndPage) current = _surahEndPage;
+          if (current != _currentPage) {
+            setState(() => _currentPage = current);
+          }
+          final pageOffset = current - _surahStartPage;
+          if (_pageCtrl.hasClients) {
+            _pageCtrl.jumpToPage(pageOffset);
+          }
+        }
+      }
+    });
   }
 
   @override
@@ -456,6 +484,16 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen>
   // ── MUSHAAF MODE ──────────────────────────────────────────────────────────
 
   Widget _buildMushaafMode(bool isDark) {
+    final int itemCount;
+    final int startPage;
+    if (widget.isolateSurah) {
+      startPage = _surahStartPage;
+      final endPage = _surahEndPage;
+      itemCount = endPage - startPage + 1;
+    } else {
+      startPage = 1;
+      itemCount = 604;
+    }
     return Column(
       children: [
         // Page number strip
@@ -464,9 +502,10 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen>
         Expanded(
           child: PageView.builder(
             controller: _pageCtrl,
-            itemCount: 604,
+            itemCount: itemCount,
             onPageChanged: (index) {
-              setState(() => _currentPage = index + 1);
+              final actualPage = widget.isolateSurah ? startPage + index : index + 1;
+              setState(() => _currentPage = actualPage);
               // Save last read
               ref
                   .read(lastReadProvider.notifier)
@@ -475,11 +514,13 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen>
                     surahNameAr: widget.surahNameAr,
                     surahNameEn: widget.surahNameEn,
                     ayahNumber: 1,
-                    pageNumber: index + 1,
+                    pageNumber: actualPage,
                   );
             },
-            itemBuilder: (_, index) =>
-                MushaafPageWidget(pageNumber: index + 1, isDark: isDark),
+            itemBuilder: (_, index) {
+              final pageNumber = widget.isolateSurah ? startPage + index : index + 1;
+              return MushaafPageWidget(pageNumber: pageNumber, isDark: isDark);
+            },
           ),
         ),
       ],

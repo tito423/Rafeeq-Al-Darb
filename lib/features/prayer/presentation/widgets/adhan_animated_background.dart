@@ -101,6 +101,8 @@ class _AdhanBackgroundPainter extends CustomPainter {
     
     // 4. Draw Mosque Silhouette at bottom
     _drawMosqueSilhouette(canvas, size);
+    // 5. Draw subtle arabesque pattern
+    _drawArabesque(canvas, size, animationValue);
   }
 
   void _drawRays(Canvas canvas, Offset center, double radius) {
@@ -180,6 +182,31 @@ class _AdhanBackgroundPainter extends CustomPainter {
     canvas.drawPath(path, silhouettePaint);
   }
 
+void _drawArabesque(Canvas canvas, Size size, double animationValue) {
+    final Paint arabesquePaint = Paint()
+      ..color = isDaytime ? Colors.white.withOpacity(0.08) : Colors.teal.shade200.withOpacity(0.05)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+    final double centerX = size.width / 2;
+    final double topY = size.height * 0.15;
+    final double waveAmplitude = size.width * 0.1;
+    final double waveFrequency = 3.0;
+    final double phase = animationValue * 2 * math.pi;
+    final Path path = Path();
+    path.moveTo(0, topY);
+    for (double x = 0; x <= size.width; x += 1) {
+      final double y = topY + waveAmplitude * math.sin(phase + x / size.width * waveFrequency * math.pi);
+      path.lineTo(x, y);
+    }
+    canvas.drawPath(path, arabesquePaint);
+    // Draw symmetrical arches
+    final double archHeight = size.height * 0.2;
+    for (int i = 0; i < 5; i++) {
+      final double dx = centerX + (i - 2) * size.width * 0.15;
+      final Rect archRect = Rect.fromCenter(center: Offset(dx, topY + archHeight), width: size.width * 0.1, height: archHeight);
+      canvas.drawArc(archRect, math.pi, math.pi, false, arabesquePaint);
+    }
+  }
   @override
   bool shouldRepaint(covariant _AdhanBackgroundPainter oldDelegate) {
     return oldDelegate.animationValue != animationValue || 

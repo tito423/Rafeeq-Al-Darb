@@ -2,7 +2,7 @@ name: rafeeq_app
 description: "رفيق الدرب — تطبيق إسلامي شامل للقرآن والأذكار ومواقيت الصلاة"
 publish_to: 'none'
 
-version: 2.1.0+2
+version: 2.1.2+3
 
 environment:
   sdk: ^3.10.7
