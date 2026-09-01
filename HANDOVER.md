@@ -1,8 +1,19 @@
 # HANDOVER — Rafiq Al-Darb (رفيق الدرب)
 
 **For:** the next AI agent picking up this project (Antigravity IDE, Cline, or any other).
-**Written by:** the previous agent, at commit `238caad`.
 **Read this file completely before touching anything.**
+
+| | |
+|---|---|
+| **Last updated** | 2026-09-01 |
+| **State at** | commit `6448768` |
+| **Build verified?** | **No** — see §7 |
+
+> **If you are an agent working on this project: keeping this file current is
+> part of the job.** After every meaningful change, update the relevant section,
+> bump the stamp above, and commit it in the same commit as the work. The owner
+> hands this file to whoever continues, so a stale handover is a broken handover.
+> Do not describe work as verified here unless you actually ran it.
 
 ---
 
