@@ -3,10 +3,27 @@
 /// Every URL here is a real, public endpoint. No credentials live in the
 /// client (the old build embedded Cloudflare R2 keys — removed for good).
 abstract final class AppConfig {
-  /// Real Madani mushaf page images (King Fahd Complex scans, 1024px),
-  /// served by the Quran Android project CDN.
-  static const String mushafImageBase =
-      'https://android.quran.com/data/width1024';
+  /// Mushaf pages as vector SVG, each carrying the `ayahPolygon` hit layer
+  /// that `assets/data/mushaf/*_polygons.json` was derived from.
+  ///
+  /// Source: quranpedia/quran-svg (polygon metadata CC0-1.0; KFQC glyphs free
+  /// for digital use), pinned to a commit so page geometry can never drift
+  /// away from the bundled polygon asset.
+  ///
+  /// TODO(release): this default points at GitHub raw, which is fine for
+  /// development but is not a CDN and will rate-limit under real traffic.
+  /// Mirror `scripts/mushaf_build/hafs_kfqc/svg` to our own bucket and ship
+  /// production builds with:
+  ///   --dart-define=RAFEEQ_MUSHAF_BASE=https://<bucket>/mushaf/hafs_kfqc
+  static const String mushafPin = 'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6';
+
+  static const String mushafEdition = 'hafs_kfqc';
+
+  static const String mushafPageBase = String.fromEnvironment(
+    'RAFEEQ_MUSHAF_BASE',
+    defaultValue: 'https://raw.githubusercontent.com/quranpedia/quran-svg/'
+        'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6/mushafs/hafs/kfqc/svg',
+  );
 
   /// Ayah-level recitation (real CDN by islamic.network).
   static const String quranAudioBase =
@@ -30,8 +47,8 @@ abstract final class AppConfig {
         'https://raw.githubusercontent.com/tito423/rafeeq-api/main',
   );
 
-  static String mushafImageUrl(int page) =>
-      '$mushafImageBase/page${page.toString().padLeft(3, '0')}.png';
+  static String mushafPageUrl(int page) =>
+      '$mushafPageBase/${page.toString().padLeft(3, '0')}.svg';
 
   /// [editionIdentifier] e.g. "ar.alafasy". Tries 128kbps then 64kbps.
   static List<String> ayahAudioUrls(String editionIdentifier, int globalAyah) =>

@@ -41,3 +41,6 @@ local.properties
 # --- OS ---
 .DS_Store
 Thumbs.db
+
+# Mushaf SVG staging (downloaded, uploaded to R2, regenerable)
+scripts/mushaf_build/

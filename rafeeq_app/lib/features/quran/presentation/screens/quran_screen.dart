@@ -7,15 +7,15 @@ import '../../../../core/db/models.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../widgets/ayah_sciences_sheet.dart';
-import '../widgets/mushaf_image_page.dart';
+import '../widgets/mushaf_page_view.dart';
 import '../widgets/mushaf_nav_sheets.dart';
 import '../widgets/mushaf_text_page.dart';
 
 /// Quran tab — a real mushaf browser.
 ///  • Text mode: real Uthmani ayahs laid out by their real Madani page
 ///    boundaries from the bundled database (works fully offline).
-///  • Image mode: the authentic Madani page scans fetched from the CDN and
-///    cached on device, with the official quran.com ayah-coordinate overlay.
+///  • Image mode: the authentic KFQC mushaf pages as vector art, cached on
+///    device, with the real ayah polygons layered on top for tap/highlight.
 enum MushafMode { text, image }
 
 class QuranScreen extends ConsumerStatefulWidget {
@@ -107,9 +107,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return null;
   }
 
-  AyahRect? _highlightRect(int page) {
+  AyahRegion? _highlightRegion(int page) {
     if (_highlightSurah == null || _current != page) return null;
-    for (final r in _coords.rectsForPage(page)) {
+    for (final r in _coords.regionsForPage(page)) {
       if (r.surah == _highlightSurah && r.ayah == _highlightAyah) return r;
     }
     return null;
@@ -221,10 +221,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
             final ayahs = snap.data!;
             final headerId = _surahHeaderIdForPage(page, data.surahStartPages);
             if (_mode == MushafMode.image) {
-              return MushafImagePage(
+              return MushafPageView(
                 page: page,
-                highlight: _highlightRect(page),
-                onAyahTap: (rect) => _onImageAyahTap(rect, ayahs, data),
+                highlight: _highlightRegion(page),
+                onAyahTap: (region) => _onImageAyahTap(region, ayahs, data),
                 onLoadFailed: () =>
                     setState(() => _mode = MushafMode.text),
               );
@@ -243,9 +243,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     );
   }
 
-  void _onImageAyahTap(AyahRect rect, List<Ayah> ayahs, MushafData data) {
+  void _onImageAyahTap(AyahRegion region, List<Ayah> ayahs, MushafData data) {
     for (final ayah in ayahs) {
-      if (ayah.surahId == rect.surah && ayah.ayahNumber == rect.ayah) {
+      if (ayah.surahId == region.surah && ayah.ayahNumber == region.ayah) {
         _openSciences(ayah, data);
         return;
       }

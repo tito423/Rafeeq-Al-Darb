@@ -6,7 +6,8 @@
   "common": {
     "coming_soon": "Coming soon…",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "retry": "Retry"
   },
   "nav": {
     "home": "Home",
