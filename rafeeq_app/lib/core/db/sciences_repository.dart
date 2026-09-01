@@ -4,11 +4,35 @@ import 'package:sqflite/sqflite.dart';
 import 'db_helper.dart';
 import 'models.dart';
 
-/// Read access to quran_sciences.db:
-/// tafseer ranges, word-by-word meanings, i'rab (corpus morphology), azkar.
+/// One ayah rendered in another language.
+class AyahTranslation {
+  /// ISO code: 'en', 'fr', 'ur'.
+  final String lang;
+
+  /// Source edition, e.g. 'en.sahih'.
+  final String edition;
+
+  /// Human-readable translator name.
+  final String translator;
+
+  final String text;
+
+  const AyahTranslation({
+    required this.lang,
+    required this.edition,
+    required this.translator,
+    required this.text,
+  });
+}
+
+/// Read access to quran_sciences.db: tafseer ranges, word-by-word meanings,
+/// i'rab (corpus morphology), ayah translations, azkar.
 class SciencesRepository {
   final Database _db;
   SciencesRepository(this._db);
+
+  /// Languages the bundled database can render an ayah in.
+  static const supportedTranslationLangs = ['en', 'fr', 'ur'];
 
   static const tafseerSources = {
     'muyassar': 'التفسير الميسّر',
@@ -51,6 +75,36 @@ class SciencesRepository {
     return rows.map(WordGrammar.fromRow).toList();
   }
 
+  /// Every bundled translation of one ayah, keyed by language code.
+  Future<Map<String, AyahTranslation>> translationsForAyah(
+      int surah, int ayah) async {
+    final rows = await _db.rawQuery(
+      'SELECT t.lang, t.edition, t.text, e.name AS translator '
+      'FROM translations t '
+      'LEFT JOIN translation_editions e ON e.lang = t.lang '
+      'WHERE t.surah = ? AND t.ayah = ?',
+      [surah, ayah],
+    );
+    final out = <String, AyahTranslation>{};
+    for (final r in rows) {
+      final lang = r['lang'] as String;
+      out[lang] = AyahTranslation(
+        lang: lang,
+        edition: r['edition'] as String? ?? '',
+        translator: r['translator'] as String? ?? '',
+        text: r['text'] as String? ?? '',
+      );
+    }
+    return out;
+  }
+
+  /// One ayah in a single language, or null when that language is absent.
+  Future<AyahTranslation?> translationForAyah(
+      int surah, int ayah, String lang) async {
+    final all = await translationsForAyah(surah, ayah);
+    return all[lang];
+  }
+
   Future<List<AzkarSection>> azkarSections() async {
     final rows = await _db.query('azkar_sections', orderBy: 'id');
     return rows.map(AzkarSection.fromRow).toList();
@@ -70,6 +124,6 @@ class SciencesRepository {
 final sciencesRepositoryProvider =
     FutureProvider<SciencesRepository>((ref) async {
   final db = await DbHelper.instance.openBundled('data/quran_sciences.db',
-      stamp: 'sciences-v1');
+      stamp: 'sciences-v2');
   return SciencesRepository(db);
 });

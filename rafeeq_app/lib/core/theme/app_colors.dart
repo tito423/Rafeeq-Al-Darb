@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Rafeeq Al-Darb — Master Color System
 /// Mix: Sakinati's calm night-teal + Ayat's authentic paper reading +
-/// QuranFlash's gold illumination accents.
+/// Gold illumination accents in the classic mushaf tradition.
 abstract final class AppColors {
   // ── Brand core (night mode first) ────────────────────────────────
   static const Color night = Color(0xFF071625); // deep navy — scaffold
@@ -15,7 +15,7 @@ abstract final class AppColors {
   static const Color primarySoft = Color(0xFF16A085);
   static const Color primaryContainer = Color(0xFF0F3D33);
 
-  // ── Accent (illuminated gold — QuranFlash) ───────────────────────
+  // ── Accent (illuminated gold) ────────────────────────────────────
   static const Color gold = Color(0xFFD4AF37);
   static const Color goldSoft = Color(0xFFE8C96A);
   static const Color goldContainer = Color(0xFF3A2F14);

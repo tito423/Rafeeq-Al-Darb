@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/services/mushaf_page_service.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/ayah_coords_repository.dart';
 
 /// One mushaf page: the authentic KFQC page as vector art, with the real ayah
@@ -76,7 +77,7 @@ class _MushafPageViewState extends State<MushafPageView> {
 
     // The mushaf glyphs are monochrome, so a single srcIn recolour carries the
     // whole page into the active theme.
-    final ink = isDark ? const Color(0xFFEDE3CC) : const Color(0xFF14110B);
+    final ink = isDark ? AppColors.paperDark : AppColors.ink;
 
     return FutureBuilder<String>(
       future: _ready,
@@ -146,7 +147,6 @@ class _MushafPageViewState extends State<MushafPageView> {
                             CustomPaint(
                               painter: _AyahHighlightPainter(
                                 region: widget.highlight!,
-                                color: theme.colorScheme.primary,
                               ),
                             ),
                         ],
@@ -177,19 +177,18 @@ class _MushafPageViewState extends State<MushafPageView> {
 /// blanketing the rectangle that encloses it.
 class _AyahHighlightPainter extends CustomPainter {
   final AyahRegion region;
-  final Color color;
 
-  const _AyahHighlightPainter({required this.region, required this.color});
+  const _AyahHighlightPainter({required this.region});
 
   @override
   void paint(Canvas canvas, Size size) {
     final fill = Paint()
       ..style = PaintingStyle.fill
-      ..color = color.withValues(alpha: 0.20);
+      ..color = AppColors.ayahHighlight;
     final stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2
-      ..color = color.withValues(alpha: 0.65);
+      ..color = AppColors.gold.withValues(alpha: 0.7);
 
     final path = Path();
     for (final ring in region.rings) {
@@ -206,7 +205,7 @@ class _AyahHighlightPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _AyahHighlightPainter old) =>
-      old.region != region || old.color != color;
+      old.region != region;
 }
 
 class _Centered extends StatelessWidget {
