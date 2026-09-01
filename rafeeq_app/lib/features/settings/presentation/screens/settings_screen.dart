@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/rafeeq_app.dart';
+import '../../../downloads/presentation/screens/downloads_screen.dart';
 
 /// Settings tab — language, theme, and app info.
 class SettingsScreen extends ConsumerWidget {
@@ -70,6 +71,24 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
+          // Offline content
+          _SectionLabel('downloads.title'.tr()),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.download_for_offline_outlined,
+                  color: scheme.primary),
+              title: Text('downloads.title'.tr()),
+              subtitle: Text('downloads.offline_ready'.tr()),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const DownloadsScreen(),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
           // About
           _SectionLabel('settings.about'.tr()),
           Card(
@@ -86,7 +105,8 @@ class SettingsScreen extends ConsumerWidget {
               title: Text('settings.credits'.tr()),
               subtitle: Text(
                 'api.quran.com • api.alquran.cloud • api.aladhan.com • '
-                'cdn.islamic.network • mp3quran.net • islamcan.com',
+                'cdn.islamic.network • mp3quran.net • islamcan.com • '
+                'quranpedia/quran-svg (CC0)',
               ),
             ),
           ),

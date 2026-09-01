@@ -85,6 +85,49 @@ class MushafPageService {
     return svg;
   }
 
+  /// Downloads a whole edition for offline reading.
+  ///
+  /// Pages already cached are skipped, so an interrupted download resumes
+  /// where it stopped rather than starting over. Failures on individual pages
+  /// are tolerated: the reader can still open everything that did arrive, and
+  /// a later run fills the gaps.
+  Future<void> prefetchEdition({
+    required String editionId,
+    required String sourcePath,
+    int fromPage = firstPage,
+    int toPage = lastPage,
+    void Function(int done, int total)? onProgress,
+  }) async {
+    if (_prefetching.contains(editionId)) return;
+    _prefetching.add(editionId);
+    try {
+      final total = toPage - fromPage + 1;
+      var done = 0;
+      for (var page = fromPage; page <= toPage; page++) {
+        if (!_prefetching.contains(editionId)) break; // cancelled
+        try {
+          await svgForPage(
+            editionId: editionId,
+            sourcePath: sourcePath,
+            page: page,
+          );
+        } catch (_) {
+          // leave this page for a later run
+        }
+        done++;
+        onProgress?.call(done, total);
+      }
+    } finally {
+      _prefetching.remove(editionId);
+    }
+  }
+
+  final Set<String> _prefetching = {};
+
+  bool isPrefetching(String editionId) => _prefetching.contains(editionId);
+
+  void cancelPrefetch(String editionId) => _prefetching.remove(editionId);
+
   /// True when [page] of [editionId] is already readable with no network.
   Future<bool> isCached(String editionId, int page) async {
     if (_memory.containsKey('$editionId/$page')) return true;

@@ -15,7 +15,8 @@
     "library": "Library",
     "azkar": "Adhkar",
     "hadith": "Hadith",
-    "settings": "Settings"
+    "settings": "Settings",
+    "downloads": "Downloads"
   },
   "home": {
     "greeting_morning": "Good morning, companion of the path",
@@ -150,7 +151,18 @@
     "completed": "Downloaded",
     "failed": "Download failed",
     "no_downloads": "No downloads yet",
-    "requires_internet": "Only the first download needs internet"
+    "requires_internet": "Only the first download needs internet",
+    "mushafs": "Mushafs",
+    "recitations": "Recitations",
+    "download": "Download",
+    "downloading": "Downloading",
+    "downloaded": "Downloaded",
+    "delete": "Delete",
+    "pages_cached": "pages saved",
+    "choose_reciter": "Choose a reciter",
+    "storage_used": "Storage used",
+    "offline_ready": "Ready to use offline",
+    "delete_confirm": "Delete downloaded files?"
   },
   "new_muslim": {
     "title": "New Muslim Guide",

@@ -15,7 +15,8 @@
     "library": "المكتبة",
     "azkar": "الأذكار",
     "hadith": "الحديث",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "downloads": "التحميلات"
   },
   "home": {
     "greeting_morning": "صباح الخير، رفيق الدرب",
@@ -150,7 +151,18 @@
     "completed": "تم التنزيل",
     "failed": "فشل التنزيل",
     "no_downloads": "لا توجد تنزيلات بعد",
-    "requires_internet": "يتطلب اتصالاً بالإنترنت للمرة الأولى فقط"
+    "requires_internet": "يتطلب اتصالاً بالإنترنت للمرة الأولى فقط",
+    "mushafs": "المصاحف",
+    "recitations": "التلاوات",
+    "download": "تحميل",
+    "downloading": "جارٍ التحميل",
+    "downloaded": "مُحمَّل",
+    "delete": "حذف",
+    "pages_cached": "صفحة محفوظة",
+    "choose_reciter": "اختر القارئ",
+    "storage_used": "المساحة المستخدمة",
+    "offline_ready": "جاهز للعمل بدون إنترنت",
+    "delete_confirm": "حذف الملفات المحمّلة؟"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",
