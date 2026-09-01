@@ -6,7 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/db/models.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
+import '../../data/mushaf_edition.dart';
 import '../widgets/ayah_sciences_sheet.dart';
+import '../widgets/mushaf_edition_sheet.dart';
 import '../widgets/mushaf_page_view.dart';
 import '../widgets/mushaf_nav_sheets.dart';
 import '../widgets/mushaf_text_page.dart';
@@ -57,7 +59,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   @override
   void initState() {
     super.initState();
-    _coords.ensureLoaded();
     _restoreLastPage();
   }
 
@@ -84,7 +85,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _persistPage();
   }
 
-  void _openSciences(Ayah ayah, MushafData data) {
+  void _openSciences(Ayah ayah, MushafData data,
+      {bool sciencesAvailable = true}) {
     setState(() {
       _highlightSurah = ayah.surahId;
       _highlightAyah = ayah.ayahNumber;
@@ -94,6 +96,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       ayah: ayah,
       surahNameAr: data.surahNameAr(ayah.surahId),
       quranRepo: data.repo,
+      sciencesAvailable: sciencesAvailable,
     );
   }
 
@@ -107,9 +110,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return null;
   }
 
-  AyahRegion? _highlightRegion(int page) {
+  AyahRegion? _highlightRegion(String editionId, int page) {
     if (_highlightSurah == null || _current != page) return null;
-    for (final r in _coords.regionsForPage(page)) {
+    for (final r in _coords.regionsForPage(editionId, page)) {
       if (r.surah == _highlightSurah && r.ayah == _highlightAyah) return r;
     }
     return null;
@@ -151,6 +154,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               ),
             ),
             IconButton(
+              tooltip: 'quran.editions'.tr(),
+              icon: const Icon(Icons.auto_stories_outlined),
+              onPressed: () => MushafEditionSheet.show(context),
+            ),
+            IconButton(
               tooltip: _mode == MushafMode.text
                   ? 'quran.mushaf_mode'.tr()
                   : 'quran.text_mode'.tr(),
@@ -170,7 +178,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       body: mushaf.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, _) => Center(child: Text('errors.generic'.tr())),
-        data: _buildViewer,
+        data: (data) => _buildViewer(data, ref.watch(
+            currentMushafEditionProvider).valueOrNull),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -201,7 +210,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     );
   }
 
-  Widget _buildViewer(MushafData data) {
+  Widget _buildViewer(MushafData data, MushafEdition? edition) {
     _pages ??= PageController(initialPage: _initialPage - 1);
     return PageView.builder(
       controller: _pages,
@@ -221,10 +230,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
             final ayahs = snap.data!;
             final headerId = _surahHeaderIdForPage(page, data.surahStartPages);
             if (_mode == MushafMode.image) {
+              if (edition == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
               return MushafPageView(
+                edition: edition,
                 page: page,
-                highlight: _highlightRegion(page),
-                onAyahTap: (region) => _onImageAyahTap(region, ayahs, data),
+                highlight: _highlightRegion(edition.id, page),
+                onAyahTap: (region) =>
+                    _onImageAyahTap(region, ayahs, data, edition),
                 onLoadFailed: () =>
                     setState(() => _mode = MushafMode.text),
               );
@@ -243,10 +257,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     );
   }
 
-  void _onImageAyahTap(AyahRegion region, List<Ayah> ayahs, MushafData data) {
+  void _onImageAyahTap(AyahRegion region, List<Ayah> ayahs, MushafData data,
+      MushafEdition edition) {
     for (final ayah in ayahs) {
       if (ayah.surahId == region.surah && ayah.ayahNumber == region.ayah) {
-        _openSciences(ayah, data);
+        _openSciences(ayah, data,
+            sciencesAvailable: edition.sciencesAvailableFor(region.surah));
         return;
       }
     }

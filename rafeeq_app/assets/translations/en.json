@@ -62,7 +62,14 @@
     "copy": "Copy",
     "share": "Share",
     "jump_to": "Jump to",
-    "loading_page": "Loading page…"
+    "loading_page": "Loading page…",
+    "editions": "Mushafs",
+    "choose_edition": "Choose a mushaf",
+    "riwayah": "Riwayah",
+    "sciences_hafs_only": "Verse numbering in this riwayah differs from Hafs, so tafsir and translation are unavailable in some surahs",
+    "sciences_unavailable_here": "Tafsir and translation are unavailable for this surah in this riwayah",
+    "pages_count": "pages",
+    "ayahs_count": "ayahs"
   },
   "library": {
     "title": "Library",

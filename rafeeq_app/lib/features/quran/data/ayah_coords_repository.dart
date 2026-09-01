@@ -78,38 +78,35 @@ class AyahRegion {
   }
 }
 
-/// Real ayah tap regions for the mushaf pages.
+/// Real ayah tap regions for the mushaf pages, one set per edition.
 ///
 /// Source: the `ayahPolygon` hit layer shipped inside the quranpedia/quran-svg
 /// pages (CC0-1.0), rebuilt by `scripts/build_mushaf_svg.py` into normalized
-/// page space. Coverage is verified against the bundled `quran_local.db`:
+/// page space. The Hafs set is verified against the bundled `quran_local.db`:
 /// 6,236 / 6,236 ayahs. Nothing here is estimated or hand-drawn.
 class AyahCoordsRepository {
   AyahCoordsRepository._();
   static final AyahCoordsRepository instance = AyahCoordsRepository._();
 
-  static const String assetPath =
-      'assets/data/mushaf/hafs_kfqc_polygons.json';
+  final Map<String, Map<int, List<AyahRegion>>> _byEdition = {};
+  final Map<String, Future<void>> _loading = {};
 
-  final Map<int, List<AyahRegion>> _byPage = {};
-  Future<void>? _loading;
-  bool _loaded = false;
+  bool isLoaded(String editionId) => _byEdition.containsKey(editionId);
 
-  bool get isLoaded => _loaded;
-
-  /// Parses the polygon asset once. Concurrent callers share one future, so
-  /// several page widgets building at the same time cannot each kick off a
+  /// Parses one edition's polygon asset. Concurrent callers share a single
+  /// future, so several page widgets building at once cannot each kick off a
   /// duplicate decode of the ~0.7 MB asset.
-  Future<void> ensureLoaded() {
-    if (_loaded) return Future.value();
-    return _loading ??= _load();
+  Future<void> ensureLoaded(String editionId, String assetPath) {
+    if (_byEdition.containsKey(editionId)) return Future.value();
+    return _loading[editionId] ??= _load(editionId, assetPath);
   }
 
-  Future<void> _load() async {
+  Future<void> _load(String editionId, String assetPath) async {
     try {
       final raw = await rootBundle.loadString(assetPath);
       final doc = jsonDecode(raw) as Map<String, dynamic>;
       final pages = doc['pages'] as Map<String, dynamic>;
+      final parsed = <int, List<AyahRegion>>{};
       for (final entry in pages.entries) {
         final page = int.tryParse(entry.key);
         if (page == null) continue;
@@ -131,31 +128,22 @@ class AyahCoordsRepository {
           if (rings.isEmpty) continue;
           regions.add(AyahRegion(row[0] as int, row[1] as int, rings));
         }
-        _byPage[page] = regions;
+        parsed[page] = regions;
       }
-      _loaded = true;
+      _byEdition[editionId] = parsed;
     } finally {
-      _loading = null;
+      _loading.remove(editionId);
     }
   }
 
-  List<AyahRegion> regionsForPage(int page) => _byPage[page] ?? const [];
+  List<AyahRegion> regionsForPage(String editionId, int page) =>
+      _byEdition[editionId]?[page] ?? const [];
 
   /// The ayah under a normalized tap point, or null when the tap lands in a
   /// margin, a surah header, or between lines.
-  AyahRegion? hitTest(int page, double nx, double ny) {
-    for (final region in regionsForPage(page)) {
+  AyahRegion? hitTest(String editionId, int page, double nx, double ny) {
+    for (final region in regionsForPage(editionId, page)) {
       if (region.contains(nx, ny)) return region;
-    }
-    return null;
-  }
-
-  /// First page carrying the given ayah, or null when it is not indexed.
-  int? pageOf(int surah, int ayah) {
-    for (final entry in _byPage.entries) {
-      for (final r in entry.value) {
-        if (r.surah == surah && r.ayah == ayah) return entry.key;
-      }
     }
     return null;
   }

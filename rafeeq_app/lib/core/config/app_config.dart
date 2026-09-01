@@ -8,22 +8,27 @@ abstract final class AppConfig {
   ///
   /// Source: quranpedia/quran-svg (polygon metadata CC0-1.0; KFQC glyphs free
   /// for digital use), pinned to a commit so page geometry can never drift
-  /// away from the bundled polygon asset.
+  /// away from the bundled polygon assets.
   ///
   /// TODO(release): this default points at GitHub raw, which is fine for
   /// development but is not a CDN and will rate-limit under real traffic.
-  /// Mirror `scripts/mushaf_build/hafs_kfqc/svg` to our own bucket and ship
+  /// Mirror `scripts/mushaf_build/<edition>/svg` to our own bucket and ship
   /// production builds with:
-  ///   --dart-define=RAFEEQ_MUSHAF_BASE=https://<bucket>/mushaf/hafs_kfqc
+  ///   --dart-define=RAFEEQ_MUSHAF_BASE=https://<bucket>/mushafs
   static const String mushafPin = 'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6';
 
-  static const String mushafEdition = 'hafs_kfqc';
+  /// Edition used until the reader picks another one.
+  static const String defaultMushafEdition = 'hafs_kfqc';
 
-  static const String mushafPageBase = String.fromEnvironment(
+  static const String mushafBase = String.fromEnvironment(
     'RAFEEQ_MUSHAF_BASE',
     defaultValue: 'https://raw.githubusercontent.com/quranpedia/quran-svg/'
-        'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6/mushafs/hafs/kfqc/svg',
+        'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6/mushafs',
   );
+
+  /// [sourcePath] is the edition's upstream folder, e.g. 'hafs/kfqc'.
+  static String mushafPageUrl(String sourcePath, int page) =>
+      '$mushafBase/$sourcePath/svg/${page.toString().padLeft(3, '0')}.svg';
 
   /// Ayah-level recitation (real CDN by islamic.network).
   static const String quranAudioBase =
@@ -47,8 +52,6 @@ abstract final class AppConfig {
         'https://raw.githubusercontent.com/tito423/rafeeq-api/main',
   );
 
-  static String mushafPageUrl(int page) =>
-      '$mushafPageBase/${page.toString().padLeft(3, '0')}.svg';
 
   /// [editionIdentifier] e.g. "ar.alafasy". Tries 128kbps then 64kbps.
   static List<String> ayahAudioUrls(String editionIdentifier, int globalAyah) =>

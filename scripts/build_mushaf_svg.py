@@ -15,10 +15,16 @@ Outputs
   rafeeq_app/assets/data/mushaf/<id>_polygons.json  normalized tap regions
 """
 import json, os, re, sys, time, urllib.request, urllib.error
+from concurrent.futures import ThreadPoolExecutor
 
 EDITION   = os.environ.get("EDITION", "hafs/kfqc")
 EDITION_ID= EDITION.replace("/", "_")
 PAGES     = int(os.environ.get("PAGES", "604"))
+WORKERS   = int(os.environ.get("WORKERS", "8"))
+# Pages are served from the CDN at runtime, so the staged SVGs are only
+# needed if you intend to mirror them to your own bucket. KEEP_SVG=0
+# parses each page then discards it (~350 MB saved per edition).
+KEEP_SVG  = os.environ.get("KEEP_SVG", "1") != "0"
 ROOT      = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW       = "https://raw.githubusercontent.com/quranpedia/quran-svg/master/mushafs/" + EDITION
 SVG_DIR   = os.path.join(ROOT, "scripts", "mushaf_build", EDITION_ID, "svg")
@@ -93,12 +99,20 @@ def parse_rings(d):
 
 def main():
     pages_out, stats = {}, {"polys": 0, "rings": 0, "multiline": 0, "downloaded": 0}
+
+    # Fetch in parallel first; 604 sequential round-trips dominate the runtime.
+    def grab(p):
+        name = "%03d.svg" % p
+        return fetch(RAW + "/svg/" + name, os.path.join(SVG_DIR, name))
+
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        for got in pool.map(grab, range(1, PAGES + 1)):
+            if got:
+                stats["downloaded"] += 1
+
     for p in range(1, PAGES + 1):
         name = "%03d.svg" % p
         dest = os.path.join(SVG_DIR, name)
-        if fetch(RAW + "/svg/" + name, dest):
-            stats["downloaded"] += 1
-
         svg = open(dest, encoding="utf-8").read()
         vb = VB_RE.search(svg)
         if not vb:
@@ -125,6 +139,8 @@ def main():
 
         ayahs.sort(key=lambda a: (a[0], a[1]))
         pages_out[str(p)] = ayahs
+        if not KEEP_SVG and p > 2:  # keep the first pages for thumbnails
+            os.remove(dest)
         if p % 50 == 0 or p == PAGES:
             print("page %d/%d  polys=%d" % (p, PAGES, stats["polys"]), flush=True)
 

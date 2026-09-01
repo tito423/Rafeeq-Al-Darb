@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/ayah_coords_repository.dart';
+import '../../data/mushaf_edition.dart';
 
 /// One mushaf page: the authentic KFQC page as vector art, with the real ayah
 /// polygons layered on top for tap and highlight.
@@ -15,6 +16,7 @@ import '../../data/ayah_coords_repository.dart';
 /// from the very same file the page is drawn from, so a highlight can never
 /// drift out of alignment with the text.
 class MushafPageView extends StatefulWidget {
+  final MushafEdition edition;
   final int page;
   final AyahRegion? highlight;
   final void Function(AyahRegion region) onAyahTap;
@@ -22,6 +24,7 @@ class MushafPageView extends StatefulWidget {
 
   const MushafPageView({
     super.key,
+    required this.edition,
     required this.page,
     required this.highlight,
     required this.onAyahTap,
@@ -51,7 +54,7 @@ class _MushafPageViewState extends State<MushafPageView> {
   @override
   void didUpdateWidget(covariant MushafPageView old) {
     super.didUpdateWidget(old);
-    if (old.page != widget.page) {
+    if (old.page != widget.page || old.edition.id != widget.edition.id) {
       _transform.value = Matrix4.identity();
       _ready = _load();
     }
@@ -64,8 +67,13 @@ class _MushafPageViewState extends State<MushafPageView> {
   }
 
   Future<String> _load() async {
-    await _coords.ensureLoaded();
-    return MushafPageService.instance.svgForPage(widget.page);
+    await _coords.ensureLoaded(
+        widget.edition.id, widget.edition.polygonsAsset);
+    return MushafPageService.instance.svgForPage(
+      editionId: widget.edition.id,
+      sourcePath: widget.edition.sourcePath,
+      page: widget.page,
+    );
   }
 
   void _retry() => setState(() => _ready = _load());
@@ -114,8 +122,6 @@ class _MushafPageViewState extends State<MushafPageView> {
         }
 
         final svg = snapshot.data!;
-        final regions = _coords.regionsForPage(widget.page);
-
         return ClipRect(
           child: InteractiveViewer(
             transformationController: _transform,
@@ -167,7 +173,7 @@ class _MushafPageViewState extends State<MushafPageView> {
     final nx = local.dx / width;
     final ny = local.dy / height;
     if (nx < 0 || nx > 1 || ny < 0 || ny > 1) return;
-    final hit = _coords.hitTest(widget.page, nx, ny);
+    final hit = _coords.hitTest(widget.edition.id, widget.page, nx, ny);
     if (hit != null) widget.onAyahTap(hit);
   }
 }

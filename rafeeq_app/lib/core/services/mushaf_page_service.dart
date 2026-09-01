@@ -17,7 +17,9 @@ class MushafPageService {
   static final MushafPageService instance = MushafPageService._();
 
   final Dio _dio = Dio();
-  final Map<int, String> _memory = {};
+  /// Keyed '<editionId>/<page>' so switching edition cannot serve a
+  /// cached page from the previous one.
+  final Map<String, String> _memory = {};
 
   static const int firstPage = 1;
   static const int lastPage = 604;
@@ -28,9 +30,9 @@ class MushafPageService {
   static bool _isIntact(String svg) =>
       svg.length > 4096 && svg.trimRight().endsWith('</svg>');
 
-  Future<Directory> _pageDir() async {
+  Future<Directory> _pageDir(String editionId) async {
     final base = await getApplicationDocumentsDirectory();
-    final dir = Directory(p.join(base.path, 'mushaf', AppConfig.mushafEdition));
+    final dir = Directory(p.join(base.path, 'mushaf', editionId));
     if (!dir.existsSync()) await dir.create(recursive: true);
     return dir;
   }
@@ -38,23 +40,28 @@ class MushafPageService {
   File _fileFor(Directory dir, int page) =>
       File(p.join(dir.path, '${page.toString().padLeft(3, '0')}.svg'));
 
-  /// Returns the SVG markup for [page], from memory, then disk, then network.
-  /// Throws when the page is not cached and cannot be fetched.
-  Future<String> svgForPage(int page) async {
-    final cached = _memory[page];
+  /// Returns the SVG markup for [page] of [editionId], from memory, then disk,
+  /// then network. Throws when the page is not cached and cannot be fetched.
+  Future<String> svgForPage({
+    required String editionId,
+    required String sourcePath,
+    required int page,
+  }) async {
+    final key = '$editionId/$page';
+    final cached = _memory[key];
     if (cached != null) return cached;
 
-    final dir = await _pageDir();
+    final dir = await _pageDir(editionId);
     final file = _fileFor(dir, page);
 
     if (file.existsSync()) {
       final onDisk = await file.readAsString();
-      if (_isIntact(onDisk)) return _remember(page, onDisk);
+      if (_isIntact(onDisk)) return _remember(key, onDisk);
       await file.delete(); // partial write from an interrupted download
     }
 
     final res = await _dio.get<String>(
-      AppConfig.mushafPageUrl(page),
+      AppConfig.mushafPageUrl(sourcePath, page),
       options: Options(
         responseType: ResponseType.plain,
         receiveTimeout: const Duration(seconds: 30),
@@ -65,29 +72,29 @@ class MushafPageService {
       throw StateError('Incomplete mushaf page $page (${svg.length} bytes)');
     }
     await file.writeAsString(svg, flush: true);
-    return _remember(page, svg);
+    return _remember(key, svg);
   }
 
-  String _remember(int page, String svg) {
+  String _remember(String key, String svg) {
     // Small ring buffer: neighbouring pages stay hot while paging, without
     // holding all 604 pages (~350 MB uncompressed) in memory.
     if (_memory.length > 12) {
       _memory.remove(_memory.keys.first);
     }
-    _memory[page] = svg;
+    _memory[key] = svg;
     return svg;
   }
 
-  /// True when [page] is already readable with no network.
-  Future<bool> isCached(int page) async {
-    if (_memory.containsKey(page)) return true;
-    final file = _fileFor(await _pageDir(), page);
+  /// True when [page] of [editionId] is already readable with no network.
+  Future<bool> isCached(String editionId, int page) async {
+    if (_memory.containsKey('$editionId/$page')) return true;
+    final file = _fileFor(await _pageDir(editionId), page);
     return file.existsSync() && await file.length() > 4096;
   }
 
-  /// Pages already stored on this device.
-  Future<Set<int>> cachedPages() async {
-    final dir = await _pageDir();
+  /// Pages of [editionId] already stored on this device.
+  Future<Set<int>> cachedPages(String editionId) async {
+    final dir = await _pageDir(editionId);
     if (!dir.existsSync()) return <int>{};
     final pages = <int>{};
     for (final entity in dir.listSync()) {
@@ -98,9 +105,9 @@ class MushafPageService {
     return pages;
   }
 
-  /// Bytes the cached mushaf currently occupies.
-  Future<int> cacheSizeBytes() async {
-    final dir = await _pageDir();
+  /// Bytes the cached copy of [editionId] currently occupies.
+  Future<int> cacheSizeBytes(String editionId) async {
+    final dir = await _pageDir(editionId);
     if (!dir.existsSync()) return 0;
     var total = 0;
     for (final entity in dir.listSync()) {
@@ -109,9 +116,9 @@ class MushafPageService {
     return total;
   }
 
-  Future<void> clearCache() async {
-    _memory.clear();
-    final dir = await _pageDir();
+  Future<void> clearCache(String editionId) async {
+    _memory.removeWhere((k, _) => k.startsWith('$editionId/'));
+    final dir = await _pageDir(editionId);
     if (dir.existsSync()) await dir.delete(recursive: true);
   }
 }

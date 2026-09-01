@@ -17,11 +17,17 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
   final String surahNameAr;
   final QuranRepository quranRepo;
 
+  /// False when the mushaf being read numbers this surah differently from the
+  /// sciences database, in which case Hafs-keyed tafsir, translation and i'rab
+  /// would belong to a different verse and must not be shown.
+  final bool sciencesAvailable;
+
   const AyahSciencesSheet({
     super.key,
     required this.ayah,
     required this.surahNameAr,
     required this.quranRepo,
+    this.sciencesAvailable = true,
   });
 
   static Future<void> show(
@@ -29,6 +35,7 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
     required Ayah ayah,
     required String surahNameAr,
     required QuranRepository quranRepo,
+    bool sciencesAvailable = true,
   }) {
     return showModalBottomSheet<void>(
       context: context,
@@ -38,6 +45,7 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
         ayah: ayah,
         surahNameAr: surahNameAr,
         quranRepo: quranRepo,
+        sciencesAvailable: sciencesAvailable,
       ),
     );
   }
@@ -98,31 +106,40 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                 quranRepo: widget.quranRepo,
               ),
               _AyahPanel(text: widget.ayah.textUthmani),
-              TabBar(
-                controller: _tabs,
-                isScrollable: true,
-                tabAlignment: TabAlignment.center,
-                indicatorColor: gold,
-                labelColor: gold,
-                dividerColor: gold.withValues(alpha: 0.18),
-                tabs: [
-                  Tab(text: 'quran.tafseer'.tr()),
-                  Tab(text: 'quran.translation'.tr()),
-                  Tab(text: 'quran.irab'.tr()),
-                  Tab(text: 'quran.meanings'.tr()),
-                ],
-              ),
-              Expanded(
-                child: TabBarView(
+              if (!widget.sciencesAvailable)
+                Expanded(
+                  child: _Notice(
+                    icon: Icons.info_outline,
+                    message: 'quran.sciences_unavailable_here'.tr(),
+                  ),
+                )
+              else ...[
+                TabBar(
                   controller: _tabs,
-                  children: [
-                    _TafseerTab(future: _tafseer),
-                    _TranslationTab(future: _translations),
-                    _IrabTab(future: _grammar),
-                    _MeaningsTab(future: _meanings),
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.center,
+                  indicatorColor: gold,
+                  labelColor: gold,
+                  dividerColor: gold.withValues(alpha: 0.18),
+                  tabs: [
+                    Tab(text: 'quran.tafseer'.tr()),
+                    Tab(text: 'quran.translation'.tr()),
+                    Tab(text: 'quran.irab'.tr()),
+                    Tab(text: 'quran.meanings'.tr()),
                   ],
                 ),
-              ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabs,
+                    children: [
+                      _TafseerTab(future: _tafseer),
+                      _TranslationTab(future: _translations),
+                      _IrabTab(future: _grammar),
+                      _MeaningsTab(future: _meanings),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),
