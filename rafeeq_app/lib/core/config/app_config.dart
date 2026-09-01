@@ -14,7 +14,7 @@ abstract final class AppConfig {
   /// development but is not a CDN and will rate-limit under real traffic.
   /// Mirror `scripts/mushaf_build/<edition>/svg` to our own bucket and ship
   /// production builds with:
-  ///   --dart-define=RAFEEQ_MUSHAF_BASE=https://<bucket>/mushafs
+  ///   `--dart-define=RAFEEQ_MUSHAF_BASE=https://<bucket>/mushafs`
   static const String mushafPin = 'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6';
 
   /// Edition used until the reader picks another one.

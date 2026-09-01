@@ -1,4 +1,6 @@
-import 'package:easy_localization/easy_localization.dart';
+// easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
+// collides with the `dart:ui` enum (rtl/ltr) used throughout this file.
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

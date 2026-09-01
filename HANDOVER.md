@@ -5,9 +5,9 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-01 |
-| **State at** | commit `6448768` |
-| **Build verified?** | **No** — see §7 |
+| **Last updated** | 2026-09-02 |
+| **State at** | commit `6448768` + this analyzer-cleanup commit |
+| **Build verified?** | **`flutter analyze` clean** (Flutter 3.38.7 / Dart 3.10.7, Windows). Not yet `flutter build` or run on a device — see §7 |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** After every meaningful change, update the relevant section,
@@ -245,7 +245,38 @@ keep the old copy.
 
 ## 7. THE CURRENT BLOCKER
 
-**Nothing in commits `bb6d0f2` → `9b32116` has been compiled.**
+### Update 2026-09-02 — `flutter analyze` is now CLEAN
+
+Ran on Windows with Flutter 3.38.7 / Dart 3.10.7:
+```
+flutter pub get      # OK (63 packages have newer versions, all held by constraints — not touched)
+flutter analyze      # No issues found!
+```
+
+The static-analysis pass the previous sandbox could not do is done: type
+checking, null-safety, package API signatures and lints all pass. Only **13
+issues** turned up, all real, all fixed in the analyzer-cleanup commit:
+
+- **`ayah_sciences_sheet.dart` (10 errors).** `easy_localization` re-exports
+  `package:intl`, whose `TextDirection` (`LTR`/`RTL`) shadowed the `dart:ui`
+  enum (`rtl`/`ltr`) this file uses for text direction. Fixed with
+  `import '...easy_localization.dart' hide TextDirection;`. No behaviour change —
+  the file never used the intl one.
+- **`app_config.dart`, `mushaf_page_service.dart` (3 info).**
+  `unintended_html_in_doc_comment` — wrapped `<bucket>` / `<editionId>/<page>`
+  in backticks inside doc comments.
+- **`downloads_screen.dart` (1 info).** `curly_braces_in_flow_control_structures`
+  — wrapped a one-line `if (mounted) setState(...)` in a block.
+
+None of the "likely places" the previous note guessed at (flutter_svg /
+just_audio / dio / FutureBuilder generics / Riverpod) actually had problems.
+
+**What is STILL not verified:** `flutter build`, widget-tree behaviour at
+runtime, and everything in §8 step 2 (device run — ayah highlight on multi-line
+verses, sciences card content, riwayah divergence notice, offline downloads).
+That is the next job.
+
+### Original context (why analysis had never run)
 
 The previous agent worked from an isolated Linux sandbox with only the project
 folder mounted: no Flutter, no Windows shell, and the Dart/Flutter SDK downloads
@@ -253,32 +284,17 @@ were blocked by that sandbox's network policy (403). Computer control was no
 help either — terminals can only be granted click-only access, so commands
 could not be typed.
 
-**What WAS verified across all 35 Dart files:**
-- bracket/paren/bracket balance (comment- and string-aware)
-- every local import resolves to a real file
-- every `AppColors.x` member exists
-- every `'key'.tr()` exists in `ar.json`; ar/en parity 168/168
-- polygon coverage 6,236/6,236 against `quran_local.db`
-- catalog divergence figures recomputed from the built polygon sets
-- pinned CDN URL returns the exact bytes of the local build
-
-**What was NOT verified:** type checking, widget-tree validity at runtime,
-null-safety, package API signatures, and anything runtime.
-
-### Likely places the analyzer will complain
-Check these first — they are the newest and least-exercised:
-1. `flutter_svg` API: `SvgPicture.string(..., colorFilter:, placeholderBuilder:)`
-2. `just_audio` / `dio` signatures in `ayah_audio_service.dart`
-3. `FutureBuilder<String>` generics in `mushaf_page_view.dart`
-4. The collection-`if`/`else ...[ ]` block in `ayah_sciences_sheet.dart`
-5. Riverpod `StateNotifierProvider` usage in `mushaf_edition.dart`
-6. Unused imports/locals left after refactors
+**What that agent verified by hand across all 35 Dart files:** bracket balance,
+local imports resolve, `AppColors.x` members exist, `'key'.tr()` keys exist with
+ar/en parity 168/168, polygon coverage 6,236/6,236, catalog divergence figures,
+pinned CDN bytes. All of that still holds and is now backed by the analyzer.
 
 ---
 
 ## 8. NEXT TASKS, in priority order
 
-1. **Make it compile.** `.\check.bat` → fix → repeat until `analyze` is CLEAN.
+1. ~~**Make it compile.** `.\check.bat` → fix → repeat until `analyze` is CLEAN.~~
+   **DONE 2026-09-02** — `flutter analyze` reports no issues (see §7).
 2. **Run it on a device.** Verify, in this order:
    - Quran tab → switch to image mode → a page renders
    - **Tap an ayah → the highlight lands on the right words** (test a

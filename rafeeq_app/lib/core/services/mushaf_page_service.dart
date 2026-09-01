@@ -17,7 +17,7 @@ class MushafPageService {
   static final MushafPageService instance = MushafPageService._();
 
   final Dio _dio = Dio();
-  /// Keyed '<editionId>/<page>' so switching edition cannot serve a
+  /// Keyed `'<editionId>/<page>'` so switching edition cannot serve a
   /// cached page from the previous one.
   final Map<String, String> _memory = {};
 

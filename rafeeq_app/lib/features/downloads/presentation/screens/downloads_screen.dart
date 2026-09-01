@@ -88,10 +88,12 @@ class _MushafDownloadTileState extends State<_MushafDownloadTile> {
   Future<void> _refresh() async {
     final pages = await _service.cachedPages(widget.edition.id);
     final size = await _service.cacheSizeBytes(widget.edition.id);
-    if (mounted) setState(() {
-      _cached = pages.length;
-      _bytes = size;
-    });
+    if (mounted) {
+      setState(() {
+        _cached = pages.length;
+        _bytes = size;
+      });
+    }
   }
 
   Future<void> _download() async {
