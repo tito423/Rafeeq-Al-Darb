@@ -1,0 +1,20 @@
+# Normalize text files to LF in the repository; Git converts on checkout.
+* text=auto
+
+# Explicit binaries — never touch line endings.
+*.db     binary
+*.zip    binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.webp   binary
+*.svg    text
+*.mp3    binary
+*.m4a    binary
+*.ttf    binary
+*.otf    binary
+*.jks    binary
+*.keystore binary
+*.jar    binary
+*.so     binary
+*.apk    binary

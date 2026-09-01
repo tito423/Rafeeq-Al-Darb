@@ -1,28 +1,254 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// Quran tab — Mushaf viewer with page-flip navigation.
-class QuranScreen extends StatelessWidget {
+import '../../../../core/db/models.dart';
+import '../../data/ayah_coords_repository.dart';
+import '../../data/mushaf_data_provider.dart';
+import '../widgets/ayah_sciences_sheet.dart';
+import '../widgets/mushaf_image_page.dart';
+import '../widgets/mushaf_nav_sheets.dart';
+import '../widgets/mushaf_text_page.dart';
+
+/// Quran tab — a real mushaf browser.
+///  • Text mode: real Uthmani ayahs laid out by their real Madani page
+///    boundaries from the bundled database (works fully offline).
+///  • Image mode: the authentic Madani page scans fetched from the CDN and
+///    cached on device, with the official quran.com ayah-coordinate overlay.
+enum MushafMode { text, image }
+
+class QuranScreen extends ConsumerStatefulWidget {
   const QuranScreen({super.key});
 
   @override
+  ConsumerState<QuranScreen> createState() => _QuranScreenState();
+}
+
+class _QuranScreenState extends ConsumerState<QuranScreen> {
+  static const _totalPages = 604;
+
+  PageController? _pages;
+  final Map<int, Future<List<Ayah>>> _pageFutures = {};
+  final AyahCoordsRepository _coords = AyahCoordsRepository.instance;
+
+  MushafMode _mode = MushafMode.text;
+  int _current = 1;
+  int _initialPage = 1;
+  int? _highlightSurah;
+  int? _highlightAyah;
+
+  Future<void> _persistPage() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('quran_last_page', _current);
+  }
+
+  Future<void> _restoreLastPage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final p = prefs.getInt('quran_last_page') ?? 1;
+    if (p >= 1 && p <= _totalPages && mounted) {
+      setState(() {
+        _initialPage = p;
+        _current = p;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _coords.ensureLoaded();
+    _restoreLastPage();
+  }
+
+  @override
+  void dispose() {
+    _pages?.dispose();
+    super.dispose();
+  }
+
+  void _goToPage(int page, {bool animate = true}) {
+    final pages = _pages;
+    if (pages == null) return;
+    final p = page.clamp(1, _totalPages);
+    if (animate) {
+      pages.animateToPage(
+        p - 1,
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      pages.jumpToPage(p - 1);
+    }
+    setState(() => _current = p);
+    _persistPage();
+  }
+
+  void _openSciences(Ayah ayah, MushafData data) {
+    setState(() {
+      _highlightSurah = ayah.surahId;
+      _highlightAyah = ayah.ayahNumber;
+    });
+    AyahSciencesSheet.show(
+      context,
+      ayah: ayah,
+      surahNameAr: data.surahNameAr(ayah.surahId),
+      quranRepo: data.repo,
+    );
+  }
+
+  Future<List<Ayah>> _ayahsOfPage(int page, MushafData data) =>
+      _pageFutures.putIfAbsent(page, () => data.repo.ayahsOfPage(page));
+
+  String? _surahHeaderIdForPage(int page, Map<int, int> startPages) {
+    for (final e in startPages.entries) {
+      if (e.value == page) return e.key.toString();
+    }
+    return null;
+  }
+
+  AyahRect? _highlightRect(int page) {
+    if (_highlightSurah == null || _current != page) return null;
+    for (final r in _coords.rectsForPage(page)) {
+      if (r.surah == _highlightSurah && r.ayah == _highlightAyah) return r;
+    }
+    return null;
+  }
+@override
   Widget build(BuildContext context) {
+    final mushaf = ref.watch(mushafDataProvider);
     return Scaffold(
-      appBar: AppBar(title: Text('nav.quran'.tr())),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.menu_book,
-              size: 72,
-              color: Theme.of(context).colorScheme.primary,
+      appBar: AppBar(
+        title: Text('nav.quran'.tr()),
+        actions: [
+          if (mushaf.hasValue) ...[
+            IconButton(
+              tooltip: 'quran.surah_list'.tr(),
+              icon: const Icon(Icons.format_list_numbered),
+              onPressed: () => showSurahSheet(
+                context,
+                surahs: mushaf.value!.surahs,
+                startPages: mushaf.value!.surahStartPages,
+                onSelect: _goToPage,
+              ),
             ),
-            const SizedBox(height: 12),
-            Text('common.coming_soon'.tr()),
+            IconButton(
+              tooltip: 'quran.juz'.tr(),
+              icon: const Icon(Icons.filter_9_plus),
+              onPressed: () => showJuzSheet(
+                context,
+                juzStartPages: mushaf.value!.juzStartPages,
+                onSelect: _goToPage,
+              ),
+            ),
+            IconButton(
+              tooltip: 'quran.jump_to'.tr(),
+              icon: const Icon(Icons.pin_drop_outlined),
+              onPressed: () => showGotoPageSheet(
+                context,
+                current: _current,
+                onSelect: _goToPage,
+              ),
+            ),
+            IconButton(
+              tooltip: _mode == MushafMode.text
+                  ? 'quran.mushaf_mode'.tr()
+                  : 'quran.text_mode'.tr(),
+              icon: Icon(_mode == MushafMode.text
+                  ? Icons.image_outlined
+                  : Icons.notes),
+              onPressed: () => setState(() {
+                _mode = _mode == MushafMode.text
+                    ? MushafMode.image
+                    : MushafMode.text;
+              }),
+            ),
           ],
+          const SizedBox(width: 4),
+        ],
+      ),
+      body: mushaf.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, _) => Center(child: Text('errors.generic'.tr())),
+        data: _buildViewer,
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.chevron_left),
+                onPressed: _current > 1 ? () => _goToPage(_current - 1) : null,
+              ),
+              Text(
+                '${'quran.page'.tr()}  $_current / $_totalPages',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.chevron_right),
+                onPressed: _current < _totalPages
+                    ? () => _goToPage(_current + 1)
+                    : null,
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildViewer(MushafData data) {
+    _pages ??= PageController(initialPage: _initialPage - 1);
+    return PageView.builder(
+      controller: _pages,
+      onPageChanged: (i) {
+        setState(() => _current = i + 1);
+        _persistPage();
+      },
+      itemCount: _totalPages,
+      itemBuilder: (context, index) {
+        final page = index + 1;
+        return FutureBuilder<List<Ayah>>(
+          future: _ayahsOfPage(page, data),
+          builder: (context, snap) {
+            if (!snap.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final ayahs = snap.data!;
+            final headerId = _surahHeaderIdForPage(page, data.surahStartPages);
+            if (_mode == MushafMode.image) {
+              return MushafImagePage(
+                page: page,
+                highlight: _highlightRect(page),
+                onAyahTap: (rect) => _onImageAyahTap(rect, ayahs, data),
+                onLoadFailed: () =>
+                    setState(() => _mode = MushafMode.text),
+              );
+            }
+            return MushafTextPage(
+              ayahs: ayahs,
+              surahHeader: headerId == null
+                  ? null
+                  : (int.parse(headerId),
+                      data.surahNameAr(int.parse(headerId))),
+              onAyahTap: (a) => _openSciences(a, data),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _onImageAyahTap(AyahRect rect, List<Ayah> ayahs, MushafData data) {
+    for (final ayah in ayahs) {
+      if (ayah.surahId == rect.surah && ayah.ayahNumber == rect.ayah) {
+        _openSciences(ayah, data);
+        return;
+      }
+    }
   }
 }

@@ -70,6 +70,27 @@ class QuranRepository {
     );
     return rows.map(Ayah.fromRow).toList();
   }
+/// First actual page of each surah (real Madani page boundaries).
+  Future<Map<int, int>> surahStartPages() async {
+    final rows = await _db.rawQuery(
+      'SELECT surah_id, MIN(page_number) AS p FROM ayahs '
+      'GROUP BY surah_id ORDER BY surah_id',
+    );
+    return {
+      for (final r in rows) r['surah_id'] as int: r['p'] as int,
+    };
+  }
+
+  /// First page of each juz.
+  Future<Map<int, int>> juzStartPages() async {
+    final rows = await _db.rawQuery(
+      'SELECT juz_number, MIN(page_number) AS p FROM ayahs '
+      'GROUP BY juz_number ORDER BY juz_number',
+    );
+    return {
+      for (final r in rows) r['juz_number'] as int: r['p'] as int,
+    };
+  }
 }
 
 final quranRepositoryProvider = FutureProvider<QuranRepository>((ref) async {

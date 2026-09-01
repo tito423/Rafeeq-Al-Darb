@@ -1,0 +1,43 @@
+# --- Secrets (never commit) ---
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+key.properties
+google-services.json
+serviceAccountKey.json
+
+# --- Scratch / research artifacts ---
+ksu_home.html
+quran_android_resp.html
+page1_test.png
+*_test.png
+analyze*.txt
+gradle_err.txt
+
+# --- Pipeline caches & logs (large, regenerable) ---
+scripts/quran_com_coords.sql
+scripts/sql_sample.sql
+scripts/*.log
+scripts/*.err
+scripts/temp_phase1/
+scripts/pipeline_temp/
+scripts/pipeline_zips/
+
+# --- Flutter/Dart build output ---
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+*.iml
+
+# --- Android ---
+android/.gradle/
+.gradle/
+local.properties
+
+# --- OS ---
+.DS_Store
+Thumbs.db
