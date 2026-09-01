@@ -1,5 +1,9 @@
 # RAFIQ AL-DARB — Autonomous Rebuild Pipeline
 
+> **Handing this project to another agent?** Read `HANDOVER.md` in this
+> folder first — it carries the design decisions, the hard rules, and the
+> current blocker.
+
 > Mission: Rebuild "Rafeeq Al-Darb" as a masterpiece mix of Sakinati + Ayat + QuranFlash + Al-Quran Al-Azeem.
 > Rules: ZERO mock data • flutter analyze gate after every task • real SQLite/API/R2 only • no stopping.
 
