@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 19:04 — IN PROGRESS — resume here**
+**2026-09-02 19:15 — IN PROGRESS — resume here**
 
-P2-4 structural DONE + emulator-verified: Library redesign — Home المكتبة card -> LibraryScreen; top tabs [الكتب المتوفرة|الحديث]; 3 sub-tabs (كل الكتب abc-sorted / التصنيفات grouped / مكتبتي = downloaded w/ category+size+فتح+حذف). BookCategory enum + LibraryBook.category/sortKey. Fixed DownloadManager.remove() not purging the registry (real bug) + artifactSize(). Full download->مكتبتي->قراءة(real PDF)->حذف flow verified live incl. registry purge. +13 keys x5 (parity 237). analyze clean, test 13/13. CARRIED OVER: catalog expansion (needs real archive.org IDs, curl-guessing hit 503s).
+P2-4 catalog: added ابن تيمية - العبودية (aqidah). archive.org id 20201231_20201231_1341, URL verified live (curl: 200 application/pdf 3382545) AND end-to-end on emulator (download -> مكتبتي 'العقيدة · 3.2 MB' -> فتح renders). Catalog now 5 books, 3 categories. (Ibn Abi al-Dunya candidate 404'd on the filename; al-Hakim al-Tirmidhi not yet searched.)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

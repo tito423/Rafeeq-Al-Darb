@@ -136,4 +136,26 @@ const List<LibraryBook> libraryBookCatalog = [
     approxSizeBytes: 16347265, // measured with curl 2026-09-02: 16.35 MB
     sourceUrl: 'https://archive.org/details/aakamel18_gmail_20190131',
   ),
+  LibraryBook(
+    id: 'al_ubudiyyah',
+    titleAr: 'العبودية',
+    titleEn: "Al-'Ubudiyyah",
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'رسالة ابن تيمية في تحقيق معنى العبودية لله وحده، وأن كمال العبد في '
+        'كمال عبوديته لربه؛ من أهم ما كُتب في هذا الباب.',
+    category: BookCategory.aqidah,
+    // Verified with curl -L GET on 2026-09-02: HTTP 200, application/pdf,
+    // Content-Length 3382545 (item is an image-container scan; the underlying
+    // text is public domain — Ibn Taymiyyah d. 728 AH — and the item carries
+    // no license restriction).
+    downloadUrl: 'https://archive.org/download/20201231_20201231_1341/'
+        '%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%AF%D9%8A%D8%A9%20-%20'
+        '%D8%A7%D8%A8%D9%86%20%D8%AA%D9%8A%D9%85%D9%8A%D8%A9.pdf',
+    fileName: 'al_ubudiyyah.pdf',
+    approxSizeBytes: 3382545,
+    sourceUrl: 'https://archive.org/details/20201231_20201231_1341',
+  ),
 ];
