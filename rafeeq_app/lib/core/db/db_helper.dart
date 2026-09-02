@@ -52,11 +52,11 @@ class DbHelper {
       File(stampPath).writeAsStringSync(stamp);
     }
 
-    final db = await openDatabase(
-      dbPath,
-      readOnly: readOnly,
-      version: 1,
-    );
+    // A read-only bundled DB must not be opened with `version:` — sqflite would
+    // run `PRAGMA user_version = …`, a write, and fail with SQLITE_READONLY.
+    final db = readOnly
+        ? await openReadOnlyDatabase(dbPath)
+        : await openDatabase(dbPath, version: 1);
     _cache[assetName] = db;
     return db;
   }

@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | commit `6448768` + this analyzer-cleanup commit |
-| **Build verified?** | **`flutter analyze` clean** (Flutter 3.38.7 / Dart 3.10.7, Windows). Not yet `flutter build` or run on a device — see §7 |
+| **State at** | commit `6448768` + analyzer-cleanup + STAGE-0 runtime-fixes commit |
+| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · app runs on Android emulator.** STAGE 0 gate **partially** passed — network-dependent checks are blocked by a host TLS-interception issue, not an app bug. See §7. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,10 +33,17 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**(no checkpoint yet)**
+**2026-09-02 — STAGE 0 IN PROGRESS — blocked, waiting on owner decision**
 
-Nothing in flight. If this section ever says IN PROGRESS, the previous session
-stopped there — read it before doing anything else.
+Analyzer clean, first `flutter build apk --debug` OK, app runs on an Android
+emulator. Fixed 2 real runtime bugs (sciences DB not bundled in pubspec;
+read-only DB opened with `version:` → `SQLITE_READONLY`). STAGE-0 checks that
+work offline are verified (text mode, sciences card 0.4). **The rest (0.2, 0.3,
+0.5–0.10) need the network and are blocked:** this PC's Avast "Web/Mail Shield"
+MITM-intercepts TLS, and the emulator won't trust the re-signed cert, so every
+HTTPS fetch from the app fails with `CERTIFICATE_VERIFY_FAILED`. Not an app bug.
+Owner must choose: pause Avast HTTPS scanning / trust its root CA in the
+emulator / test on a physical device. Full detail in §7.
 <!-- WIP:END -->
 
 ---
@@ -295,10 +302,53 @@ issues** turned up, all real, all fixed in the analyzer-cleanup commit:
 None of the "likely places" the previous note guessed at (flutter_svg /
 just_audio / dio / FutureBuilder generics / Riverpod) actually had problems.
 
-**What is STILL not verified:** `flutter build`, widget-tree behaviour at
-runtime, and everything in §8 step 2 (device run — ayah highlight on multi-line
-verses, sciences card content, riwayah divergence notice, offline downloads).
-That is the next job.
+### Update 2026-09-02 (later) — first build + first device run (STAGE 0, partial)
+
+`flutter build apk --debug` **succeeds** (first build ever; only Java-8
+obsolete-option warnings from a plugin). Installed and run on an Android
+emulator (Medium Phone API 36). Two real runtime bugs found and fixed:
+
+1. **`quran_sciences.db` was never bundled.** `pubspec.yaml` listed
+   `assets/data/quran_local.db` explicitly but not the sciences DB, so the
+   whole ayah-sciences card (tafsir / translation / i'rab / meanings) would
+   have thrown `Unable to load asset` on every device. Added the asset line.
+2. **Read-only DBs crashed on open.** `DbHelper.openBundled` called
+   `openDatabase(path, readOnly: true, version: 1)`. Passing `version:` makes
+   sqflite run `PRAGMA user_version = 1` — a write — which fails with
+   `SQLITE_READONLY (code 8)`. This broke the **entire Quran tab** (error
+   state) and every sciences lookup. Fixed: read-only opens now use
+   `openReadOnlyDatabase(path)` with no version.
+
+**Verified working on the emulator after the fixes:**
+- App launches, no crash; all 5 tabs reachable. (Azkar & Hadith are honest
+  "قريباً…" stubs — expected, they are STAGES 2–3.)
+- Quran **text mode**: real Uthmani Al-Fātiḥa, page 1/604, ayah numbers.
+- Ayah **sciences card** (STAGE-0 check 0.4): real Muyassar + Jalalayn tafsir,
+  EN (Saheeh) + FR (Hamidullah) + UR (Jalandhry) translation, per-word i'rab
+  (root/lemma/case from the corpus), per-word English meanings. No placeholders.
+- Settings screen: language toggle, theme toggle, downloads entry, real
+  source list.
+
+**Blocked — could NOT verify on this machine (needs a decision):** every
+STAGE-0 check that needs the network — 0.2 (image-mode page render), 0.3
+(multi-line ayah highlight), 0.5 / 0.6 (edition picker + Warsh divergence
+notice, both in image mode), 0.7 / 0.8 (downloads), 0.9 (offline), 0.10 (paging
+perf). Image mode fails with `HandshakeException: CERTIFICATE_VERIFY_FAILED`.
+**Cause is the host, not the app:** this Windows box runs Avast "Web/Mail
+Shield", which MITM-intercepts all TLS and re-signs it with
+`Avast Web/Mail Shield Root`. The host cert store trusts that root; the Android
+emulator does not, so every HTTPS fetch from the emulator fails. `Dio()` usage
+in `mushaf_page_service.dart` / `ayah_audio_service.dart` is correct and needs
+no change. To finish STAGE 0 someone must either (a) pause Avast HTTPS scanning
+while testing, (b) install the Avast root CA into the emulator's system trust
+store, or (c) run on a physical Android device on normal Wi-Fi.
+
+**Cosmetic issues seen in passing (not STAGE-0 blockers, fix later):**
+- Text-mode surah header renders `سورة سورةُ الفاتحة` (the word "سورة" is
+  prepended to a name that already contains it).
+- A stray `()` prints under the last ayah on a text-mode page.
+- Settings: `المصادر والمأسى` should read `المصادر والمراجع`.
+- Launcher icon is a square JPG with no alpha/adaptive shape.
 
 ### Original context (why analysis had never run)
 
@@ -319,16 +369,17 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
 
 1. ~~**Make it compile.** `.\check.bat` → fix → repeat until `analyze` is CLEAN.~~
    **DONE 2026-09-02** — `flutter analyze` reports no issues (see §7).
-2. **Run it on a device.** Verify, in this order:
-   - Quran tab → switch to image mode → a page renders
+2. **Run it on a device.** (Partly done 2026-09-02 — see §7.) Remaining:
+   - ~~Ayah card shows real tafsir / EN + FR translation / i'rab / meanings~~ ✅
+   - Quran tab → switch to image mode → a page renders **(blocked by host TLS
+     interception; unblock per §7 then verify)**
    - **Tap an ayah → the highlight lands on the right words** (test a
      multi-line ayah, e.g. 2:6 on page 3 — it must highlight *two* line
-     fragments, not one big box)
-   - Ayah card shows real tafsir / EN + FR translation / i'rab / meanings
+     fragments, not one big box) — needs image mode
    - Switch to Warsh → open a diverging surah → card must show the
-     "unavailable for this riwayah" notice, **not** tafsir
+     "unavailable for this riwayah" notice, **not** tafsir — needs image mode
    - Settings → Downloads → download a mushaf and a surah's recitation,
-     then turn off the network and confirm both still work
+     then turn off the network and confirm both still work — needs network
 3. **Performance check.** `flutter_svg` parses each page at runtime and pages
    have thousands of paths. If paging feels slow, precompile to
    `vector_graphics` `.vec` — do **not** revert to raster.
