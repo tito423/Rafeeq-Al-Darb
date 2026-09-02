@@ -23,6 +23,15 @@ $root     = Split-Path -Parent $PSScriptRoot
 $handover = Join-Path $root 'HANDOVER.md'
 Push-Location $root
 
+# HANDOVER.md is UTF-8 with Arabic text and em-dashes. Windows PowerShell 5.1's
+# Get-Content/Set-Content default to the system ANSI codepage, which silently
+# mangles every non-ASCII byte on a read/write round-trip (this corrupted the
+# whole file once — restored from git). Always go through these two helpers.
+function Read-Utf8 ($path) { [System.IO.File]::ReadAllText($path, [System.Text.Encoding]::UTF8) }
+function Write-Utf8 ($path, $content) {
+    [System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding($false)))
+}
+
 if ($Status) {
     Write-Host "`n=== last 5 commits ===" -ForegroundColor Cyan
     git log --oneline -5
@@ -30,7 +39,7 @@ if ($Status) {
     $st = git status --short
     if ($st) { $st } else { Write-Host "(clean)" -ForegroundColor Green }
     Write-Host "`n=== work in progress (from HANDOVER.md) ===" -ForegroundColor Cyan
-    $t = Get-Content $handover -Raw
+    $t = Read-Utf8 $handover
     if ($t -match '(?s)<!-- WIP:START -->(.*?)<!-- WIP:END -->') { $Matches[1].Trim() }
     Pop-Location; exit 0
 }
@@ -40,11 +49,18 @@ if (-not $Note) {
     Pop-Location; exit 1
 }
 
+# Guard: Git Bash turns a bare "/s" / "/status" into a path like "S:/". If that
+# reaches here as the note, the caller meant -Status, not a checkpoint.
+if ($Note -match '^[A-Za-z]:[\\/]?$') {
+    Write-Host "Looks like a mangled '/s' ('$Note'). Run 'cp /s' from cmd/PowerShell for status." -ForegroundColor Yellow
+    Pop-Location; exit 1
+}
+
 $stamp = Get-Date -Format 'yyyy-MM-dd HH:mm'
 $state = if ($Done) { "COMPLETE" } else { "IN PROGRESS — resume here" }
 
 # Rewrite the WIP block so a dead session always leaves a readable note.
-$text = Get-Content $handover -Raw
+$text = Read-Utf8 $handover
 $block = @"
 <!-- WIP:START -->
 **$stamp — $state**
@@ -67,7 +83,7 @@ if ($text -match '(?s)<!-- WIP:START -->.*?<!-- WIP:END -->') {
 $today = Get-Date -Format 'yyyy-MM-dd'
 $text = $text -replace '(?m)^\| \*\*Last updated\*\* \|.*$', "| **Last updated** | $today |"
 
-Set-Content -Path $handover -Value $text -Encoding UTF8
+Write-Utf8 $handover $text
 
 git add -A | Out-Null
 $prefix = if ($Done) { "checkpoint(done)" } else { "checkpoint(wip)" }
