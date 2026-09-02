@@ -420,8 +420,9 @@ font control. "لو مش لقيتهم اتصرف" — use the best real source a
   `TextEdition { url, format (epub | openitiMarkdown | plainText), sourceLabel,
   isOcr }`. A book with no `TextEdition` simply shows only the image PDF.
 - **Primary source: al-Maktaba al-Shamela (`shamela.ws`)** — the owner chose it
-  explicitly (2026-09-02): "الأفضل إنك تستخدم الشاملة لأنها جاهزة بس اتأكد إن
-  مافيش فيها أي مشاكل". So:
+  explicitly (2026-09-02) and **confirmed** downloading Shamela's book texts is
+  fine ("كل حاجة مرفوعة عليه"). So use Shamela text for every catalog book.
+  "اتأكد إن مافيش فيها أي مشاكل" — still verify each title (below). So:
   1. For each title, find it on Shamela, pick the **best muḥaqqaq / منقّح
      edition** it offers (the owner asked: "ابحث على النت شوف أفضل الطبعات
      المنقحة والمحققة" — research each book's respected critical edition, then
@@ -825,23 +826,24 @@ narrator (بيان الراوي), and its **grade / درجة الصحة** — pi
 **re-rolled every app launch**, with a **"حديث آخر"** button to re-roll on
 demand. The card grows to fit the whole hadith.
 
-**The data problem — read this first.** The bundled `hadith.db` (9 books,
-40,943 hadiths, downloaded on demand) has **no per-hadith grading** — HANDOVER
-is explicit that the source JSON carries none, and "never invent a grading"
-is a hard rule. The owner wants the six canonical books + **Muwatta Malik**
-(7 total) and a shown grade. So this stage is **blocked on a graded source**:
-- **Option A:** a hadith source that ships gradings — e.g. **sunnah.com**'s
-  data (many hadiths carry `grade`/`grades` with the grader named), or a
-  vetted graded dataset. Would mean rebuilding / augmenting `hadith.db` with a
-  `grade` + `grader` column for at least these 7 books, via a new
-  `scripts/…` builder, and re-hosting.
-- **Option B:** ship the grade **only where the source has one**, and for the
-  rest show an honest "الدرجة: غير مذكورة في المصدر" (never a guess). For
-  Bukhari/Muslim, "صحيح — من الصحيحين" is true by the collection's definition
-  and may be shown as such.
-- **Decide with the owner** which option before building. Until then the card
-  can ship showing text + narrator + book, with the grade line as the honest
-  "غير مذكورة" until the graded data lands.
+**The data problem + the owner's decision.** The bundled `hadith.db` (9 books,
+40,943 hadiths, downloaded on demand) has **no per-hadith grading** — the source
+JSON carries none, and "never invent a grading" is a hard rule. The owner wants
+the six canonical books + **Muwatta Malik** (7) with a shown grade, and on
+2026-09-02 **chose Option A: rebuild `hadith.db` with real gradings**:
+- Find a **graded** hadith dataset that covers these 7 books with the grade
+  **and the grader named** — e.g. sunnah.com's data (`grades: [{name, grade}]`),
+  or a vetted open dataset (check `github.com` for "hadith graded json" /
+  sunnah.com dumps; verify coverage + that it's redistributable).
+- Extend `scripts/build_hadith_db.py` (or a new builder) to add `grade` (text,
+  nullable) + `grader` (text, nullable) columns, populated only where the
+  dataset actually has them — **null stays null**, and the UI then shows
+  "الدرجة: غير مذكورة" (never a guess). Bukhari/Muslim may additionally show
+  "صحيح — من الصحيحين" (true by the collection's definition).
+- Bump the DB copy stamp / `AppConfig.hadithDbUrl` version, re-run the build,
+  re-host on `tito423/rafeeq-api`, re-verify the download end-to-end.
+- `HadithItem` / `HadithRepository` gain `grade` + `grader`; the hadith detail
+  screen and the new daily-hadith card show them.
 
 **Do:**
 - Remove the `_QuickCard` grid from `home_screen.dart`.
@@ -872,7 +874,7 @@ anywhere.
 | P2‑8 | pick the competitor-feature shortlist before it's built |
 | P2‑9 | do the Cloudflare / Firebase / GitHub console steps; rotate the R2 token — an agent session **cannot** log into these accounts (no passwords/OAuth/account-settings, even with the owner's say-so) |
 | P2‑10 | provide the real release keystore (alias + passwords) |
-| P2‑4b | accepted using al-Maktaba al-Shamela text despite its unclear redistribution licence (recorded); still may want a specific muḥaqqaq edition confirmed per book |
-| P2‑13 | pick the graded-hadith approach (rebuild `hadith.db` with gradings from a graded source, vs. show grade only where the source has one) |
+| P2‑4b | ✅ decided — al-Maktaba al-Shamela text (owner confirmed download is fine); still research the best muḥaqqaq edition per book |
+| P2‑13 | ✅ decided — Option A: rebuild `hadith.db` with real gradings (grade + grader) from a graded dataset |
 
 Everything else in Phase 2 is buildable without him — go.

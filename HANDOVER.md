@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 19:35 — IN PROGRESS — resume here**
+**2026-09-02 19:42 — IN PROGRESS — resume here**
 
-PHASE2.md + HANDOVER.md: captured the owner's big 2026-09-02 batch. P2-4b now = al-Maktaba al-Shamela primary (owner's pick; verify no issues + research best muhaqqaq edition per book; licence flagged). NEW stages: P2-11 Quran Khatma card (Home top, khatma features only), P2-12 Sunan as-Suwar card (4 surahs Baqarah/Kahf/Mulk/Sajdah -> single-surah LOCKED reader + per-surah day/hour/min reminders), P2-13 random-hadith card (Home bottom, full text+narrator+grade, re-rolls each launch, 'حديث آخر' btn) — the Home quick-access grid gets removed for these 3. P2-13 BLOCKED on a graded hadith source (hadith.db has no gradings). HANDOVER now has a full Phase-2 progress table. No code changed.
+PHASE2.md: locked 2 owner decisions. P2-4b: Shamela text confirmed (download is fine, still verify each title + research best muhaqqaq edition). P2-13: Option A chosen — rebuild hadith.db with real grade+grader columns from a graded dataset (sunnah.com-style), null stays null, bump version + re-host + re-verify; HadithItem/Repository/detail/daily-card gain grade+grader. Owner-blockers table updated. No code changed.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
