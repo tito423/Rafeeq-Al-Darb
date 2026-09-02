@@ -10,10 +10,34 @@
 | **Build verified?** | **`flutter analyze` clean** (Flutter 3.38.7 / Dart 3.10.7, Windows). Not yet `flutter build` or run on a device — see §7 |
 
 > **If you are an agent working on this project: keeping this file current is
-> part of the job.** After every meaningful change, update the relevant section,
-> bump the stamp above, and commit it in the same commit as the work. The owner
-> hands this file to whoever continues, so a stale handover is a broken handover.
-> Do not describe work as verified here unless you actually ran it.
+> part of the job.** The owner hands this file to whoever continues, so a stale
+> handover is a broken handover. Do not describe work as verified here unless
+> you actually ran it.
+>
+> **Sessions here die from quota exhaustion, usually mid-task.** So do not save
+> the write-up for the end. After every meaningful edit run:
+>
+> ```
+> .\cp.bat "what you just did"
+> ```
+>
+> That updates the work-in-progress note above, stamps the date, and commits —
+> in one step. A session that dies right after a checkpoint loses nothing. A
+> session that dies an hour after its last one loses an hour.
+>
+> Use `.\cp.bat "..." -Done` when a stage is finished, and `.\cp.bat /s` to see
+> where things stand.
+
+---
+
+## Current work in progress
+
+<!-- WIP:START -->
+**(no checkpoint yet)**
+
+Nothing in flight. If this section ever says IN PROGRESS, the previous session
+stopped there — read it before doing anything else.
+<!-- WIP:END -->
 
 ---
 

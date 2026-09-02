@@ -80,6 +80,7 @@ flutter:
   assets:
     - assets/translations/
     - assets/data/quran_local.db
+    - assets/data/quran_sciences.db
     - assets/data/mushaf/
     - assets/data/catalogs/
     - assets/audio/adhan/
