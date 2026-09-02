@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 18:23 — IN PROGRESS — resume here**
+**2026-09-02 18:36 — IN PROGRESS — resume here**
 
-P2-3 DONE: added Spanish/Russian/Portuguese locales (es/ru/pt.json, 224 keys each, real translations). main.dart supportedLocales -> 5. Settings language + theme pickers converted to ChoiceChip Wrap (no clip). Fixed const-AppShell bug so nav/whole shell retranslates on setLocale (key by locale, clean RTL<->LTR flip). New test/translation_parity_test.dart. scripts/build_locales_es_ru_pt.py saved. Emulator-verified es+ru+back-to-ar. analyze clean, test 13/13. Dart-authored religious content (guide_content, adhan_text) left ar/en-only - flagged.
+PHASE2.md: owner added 2 requirements for the next session. (1) folded into P2-5: every download must post a live progress notification (app icon + progress bar + %/MB, auto-clears). (2) NEW stage P2-6 'Persistent prayer notification' — ongoing status-bar card: next prayer + Hijri date + live countdown, professional, app icon, opt-in toggle, offline-first, 5 locales. Renumbered old P2-6..9 -> P2-7..10; updated summary table (now 10 stages), owner-blockers table, and the intro (P2-1/2/3 DONE). Next session starts at P2-4. No code changed this checkpoint.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

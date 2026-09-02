@@ -26,19 +26,22 @@ Then read completely:
 3. `RAFEEQ_PIPELINE.md` — the 20 completed tasks (T1–T20).
 4. This file.
 
-**Continue from your colleague's work — do not restart it.** Phase 1 (T1–T20)
-is done and live-verified on the emulator. `flutter analyze` and `flutter test`
-are clean. The session that wrote this file had already started **Stage P2‑1**
-(the bug sweep) — those edits are on disk, uncommitted or in the last
-checkpoint:
+**Continue from your colleagues' work — do not restart it.** Phase 1 (T1–T20)
+is done and live-verified on the emulator.
 
-- `rafeeq_app/lib/features/quran/presentation/widgets/mushaf_text_page.dart`
-  — fixed the doubled "سورة" header and removed the stray `﴿ ﴾` glyph.
-- `rafeeq_app/lib/features/quran/presentation/screens/quran_screen.dart`
-  — reader mode (text/image) now persists via `SharedPreferences`
-  (`quran_reader_mode`), same pattern as `quran_last_page`.
+**As of 2026-09-02, P2‑1, P2‑2 and P2‑3 are COMPLETE and emulator-verified**
+(see the ✅ blocks in each section below; `flutter analyze` clean, `flutter
+test` 13/13, last checkpoint `ec15d06`):
+- **P2‑1** — all 6 bugs fixed; the launcher icon was designed in-house
+  (`rafeeq_app/assets/icon/src/`).
+- **P2‑2** — 4 themes (`theme_controller.dart`, `app_theme.dart` `rgb()`,
+  `rgb_backdrop.dart`), animated RGB backdrop, persisted.
+- **P2‑3** — `es` / `ru` / `pt` locales (224 keys each), 5-way parity test,
+  `const AppShell` locale-refresh bug fixed.
 
-Pick up P2‑1 from its remaining items (§P2‑1 below), then go in order.
+**Start at P2‑4** and go in order. Do the two owner add-ons noted in **P2‑5**
+(every download → a live progress notification) and the new **P2‑6**
+(persistent next-prayer / Hijri / countdown notification).
 
 ### Non-negotiable rules (from `HANDOVER.md` §3 — repeated because they bind you)
 
@@ -77,23 +80,23 @@ Pick up P2‑1 from its remaining items (§P2‑1 below), then go in order.
 
 ---
 
-## The nine stages
+## The ten stages
 
 | Stage | Title | Depends on | Owner-blocked? |
 |---|---|---|---|
-| P2‑1 | Small-bug sweep | — | no |
-| P2‑2 | Theme system: 4 themes (system / light / dark / **RGB**) + extensible registry | — | no |
-| P2‑3 | Localization: add **Spanish, Russian, Portuguese** (full coverage) | — | no |
+| P2‑1 | Small-bug sweep | — | ✅ done |
+| P2‑2 | Theme system: 4 themes (system / light / dark / **RGB**) + extensible registry | — | ✅ done |
+| P2‑3 | Localization: add **Spanish, Russian, Portuguese** (full coverage) | — | ✅ done |
 | P2‑4 | Library redesign (home entry, 3 sub-tabs, "My Library") + catalog expansion | P2‑2, P2‑3 | partial (al-Jaziri licensing) |
-| P2‑5 | Professional download manager (unified, pause/resume, storage view) | P2‑2, P2‑3 | no |
-| P2‑6 | Professional Adhan: **audio-or-video** choice, video composite, up to **30** adhans | P2‑5 | **yes** (video source/licensing) |
-| P2‑7 | Competitor feature mix (Sakinah, Ayat, QuranFlash, Khatmah) — research → propose → build | P2‑2..P2‑5 | check-in required |
-| P2‑8 | Hosting & cost guardrails (Cloudflare R2 / Firebase / GitHub) | — | **yes** (console access) |
-| P2‑9 | Lightweight / fast / secure / maintainable pass + release prep | all above | **yes** (release keystore) |
+| P2‑5 | Professional download manager (unified, pause/resume, storage view) **+ every download shows a live progress notification with a progress bar** | P2‑2, P2‑3 | no |
+| **P2‑6** | **Persistent prayer notification** — ongoing status-bar notification: next prayer, Hijri date, live countdown; professional, with the app icon | P2‑2 | no |
+| P2‑7 | Professional Adhan: **audio-or-video** choice, video composite, up to **30** adhans | P2‑5 | **yes** (video source/licensing) |
+| P2‑8 | Competitor feature mix (Sakinah, Ayat, QuranFlash, Khatmah) — research → propose → build | P2‑2..P2‑5 | check-in required |
+| P2‑9 | Hosting & cost guardrails (Cloudflare R2 / Firebase / GitHub) | — | **yes** (console access) |
+| P2‑10 | Lightweight / fast / secure / maintainable pass + release prep | all above | **yes** (release keystore) |
 
-Do them in order. P2‑2 and P2‑3 are foundational (they touch every screen) —
-land them before the big new UI in P2‑4/P2‑6 so new screens are built
-theme-aware and fully localized from the start.
+Do them in order. P2‑2 and P2‑3 were foundational (they touch every screen) and
+are done. P2‑6 depends only on P2‑2 — it can be slotted earlier if you prefer.
 
 ---
 
@@ -364,7 +367,18 @@ progress survives navigation; the user can see and reclaim storage.
   no longer drives.
 - **`DownloadManager`:** add `pause` / `resume` / `cancel` (dio `CancelToken` +
   HTTP `Range` resume — partial-file resume already exists for mushaf pages,
-  generalize it). Keep the existing Android progress notification.
+  generalize it).
+- **Owner add-on — every download shows a live progress notification.** Any
+  `DownloadJob` that starts (mushaf edition, per-surah recitation, `hadith.zip`,
+  a book PDF, the adhan video) posts an Android notification via
+  `flutter_local_notifications` with: the app icon, the item's real name, a
+  determinate **progress bar** (`showProgress: true, maxProgress, progress`),
+  and a `%` / `MB of MB` line — updated as bytes arrive (throttle to ~1/sec so
+  it doesn't spam). It clears itself on completion (or flips to a short
+  "downloaded" that auto-dismisses) and on cancel. One notification per job,
+  grouped under a "Downloads" channel. `hadith.zip` already does a basic
+  version of this — make it the shared path for all job kinds, not a per-caller
+  reimplementation. Tapping the notification opens the unified `DownloadsScreen`.
 - **Unified `DownloadsScreen`:** sections `المصاحف · التلاوات · الحديث · الكتب ·
   الأذان (فيديو)`. Each item shows size, a real progress bar, and
   contextual actions (download / pause / resume / cancel / delete-to-free).
@@ -376,14 +390,80 @@ progress survives navigation; the user can see and reclaim storage.
   (compare to the Phase-1 figures in `HANDOVER.md` §7 STAGE 8).
 
 **Acceptance (emulator):** queue two downloads → both show progress; navigate
-away and back → still running; pause one → it stops and resumes from where it
-was (verify received bytes don't reset); cancel → partial file removed; storage
-view shows real numbers and "free space" actually deletes; airplane-mode replay
-of everything downloaded still works.
+away and back → still running; **each download shows a notification with a live
+progress bar + the app icon, and it clears on finish/cancel**; pause one → it
+stops and resumes from where it was (verify received bytes don't reset); cancel
+→ partial file removed; storage view shows real numbers and "free space"
+actually deletes; airplane-mode replay of everything downloaded still works.
 
 ---
 
-## P2‑6 — Professional Adhan: audio-or-video, composite, up to 30
+## P2‑6 — Persistent prayer notification (ongoing status-bar card)
+
+**Goal (owner's words):** a **fixed notification in the status bar** showing the
+**next prayer**, the **Hijri date**, and a **live countdown** to that prayer.
+"احترافي مع أيقونة التطبيق" — it must look polished and carry the app icon.
+
+**Start from these files:**
+- `lib/core/services/adhan_alarm_service.dart` (owns `flutter_local_notifications`,
+  channels, the app-icon notification setup)
+- `lib/features/home/data/prayer_controller.dart` (location → `PrayerTimesService`
+  → the five prayer times; this is where "next prayer" is already computed)
+- `lib/core/services/prayer_times_service.dart`, `lib/core/models/prayer_times.dart`
+- `lib/features/adhan/data/adhan_settings_provider.dart` (add the on/off toggle)
+- `lib/features/adhan/presentation/screens/adhan_settings_screen.dart` (the toggle UI)
+- `hijri` package — already in `pubspec.yaml`; use it for the Hijri date
+- `android/app/src/main/AndroidManifest.xml` (permissions already cover
+  `POST_NOTIFICATIONS`; no foreground-service permission unless you go that route)
+- new: `lib/core/services/prayer_status_notification.dart`
+
+**Do:**
+- **An ongoing, non-dismissible notification** (`ongoing: true`,
+  `autoCancel: false`, low priority so it sits quietly, `showWhen: false`,
+  `category: CategoryStatus`). Content:
+  - **title:** next prayer name + its clock time — e.g. `العصر ‏· 15:42`
+  - **body / big-text:** Hijri date (`hijri` pkg, localized digits) + the
+    countdown — e.g. `٨ ربيع الآخر ١٤٤٧ — باقٍ ٠١:١٧:٤٥`
+  - **largeIcon / smallIcon:** the app icon (`@mipmap/ic_launcher` /
+    a monochrome `@drawable` small icon — add one if the launcher icon
+    doesn't downscale cleanly to a status-bar glyph).
+  - a subtle progress bar of "how far through the current interval" is a nice
+    touch (`showProgress`, indeterminate off) — optional.
+- **Keep it fresh.** The countdown must tick down. Options, pick the simplest
+  that survives the app being backgrounded/killed:
+  1. Re-post the notification every 60 s from a periodic `zonedSchedule` /
+     `AndroidAlarmManager`-style repeat, recomputing text each time (minute
+     resolution on the countdown is fine — `باقٍ ١ س ١٧ د`).
+  2. Or a real foreground service (heavier; needs
+     `FOREGROUND_SERVICE` + `FOREGROUND_SERVICE_SPECIAL_USE` on API 34+ and a
+     Play policy declaration — avoid unless (1) proves unreliable).
+  Recompute "next prayer" at each tick so it rolls over correctly (after Isha →
+  tomorrow's Fajr; refresh the day's times at midnight / on the first tick of a
+  new day).
+- **Toggle in Adhan settings** — `prayer.persistent_notification` /
+  `..._desc`, persisted, default **off** (opt-in — an always-on notification is
+  a strong choice to make for the user). When off, cancel the notification.
+- **Locale-aware** — all 5 languages; Arabic-Indic digits when locale is `ar`.
+  Add the keys to every locale (parity test will enforce it).
+- **Offline-first** — it must keep working with no network: prayer times come
+  from the last successful `PrayerTimesService` fetch (already cached for the
+  Home screen) or the device's last known location; if there is genuinely no
+  data yet, show an honest "enable location" one-liner instead of fake times.
+- Wire it into `main.dart` startup (post/refresh on launch if the toggle is on)
+  and into `PrayerController` (re-post when the times get recalculated after a
+  location change).
+
+**Acceptance (real device preferred; emulator OK for the visual):** turn the
+toggle on → a persistent notification appears with the app icon, the correct
+next prayer + time, the real Hijri date, and a countdown that visibly decreases
+minute to minute; it survives swiping the notification shade and an app
+restart; after a prayer time passes it rolls to the next prayer (and Isha →
+Fajr next day); turning the toggle off removes it; airplane mode → still shows
+(cached times), no fake data.
+
+---
+
+## P2‑7 — Professional Adhan: audio-or-video, composite, up to 30
 
 **Goal:** when choosing an adhan the user picks **صوت** or **فيديو**; video mode
 plays the chosen adhan **audio** over a beautiful looping Islamic-scenery
@@ -446,7 +526,7 @@ message; per-prayer mode survives an app restart.
 
 ---
 
-## P2‑7 — Competitor feature mix
+## P2‑8 — Competitor feature mix
 
 **Goal:** study **Sakinah (سكينتي)**, **Ayat (آيات / KSU)**, **QuranFlash (قرآن
 فلاش)**, **Khatmah (ختمة)**; propose a concrete shortlist; build the subset the
@@ -476,7 +556,7 @@ features work on the emulator against real data with no mock content.
 
 ---
 
-## P2‑8 — Hosting & cost guardrails (Cloudflare R2 / Firebase / GitHub)
+## P2‑9 — Hosting & cost guardrails (Cloudflare R2 / Firebase / GitHub)
 
 **Goal:** a written hosting plan the owner can act on, the client wired to
 whatever he provisions, and **nothing that can cost money**.
@@ -512,7 +592,7 @@ that will bill; a build with the mushaf base override still works.
 
 ---
 
-## P2‑9 — Lightweight / fast / secure / maintainable pass + release prep
+## P2‑10 — Lightweight / fast / secure / maintainable pass + release prep
 
 **Goal:** the qualities the owner asked for, since he will study this codebase.
 
@@ -545,11 +625,11 @@ not larger than Phase 1; analyze + test clean; the architecture doc exists.
 
 | Stage | Needs the owner to… |
 |---|---|
-| P2‑1.5 | supply a logo PNG if none exists for the adaptive launcher icon |
+| ~~P2‑1.5~~ | ~~logo PNG~~ — resolved: icon designed in-house |
 | P2‑4 | clear the licence on al-Jaziri's *al-Fiqh ʿalā al-Madhāhib al-Arbaʿa* (1941) before it ships |
-| P2‑6 | approve/provide a licence-clean background video for the video-adhan |
-| P2‑7 | pick the competitor-feature shortlist before it's built |
-| P2‑8 | do the Cloudflare / Firebase / GitHub console steps; rotate the R2 token |
-| P2‑9 | provide the real release keystore (alias + passwords) |
+| P2‑7 | approve/provide a licence-clean background video for the video-adhan |
+| P2‑8 | pick the competitor-feature shortlist before it's built |
+| P2‑9 | do the Cloudflare / Firebase / GitHub console steps; rotate the R2 token — an agent session **cannot** log into these accounts (no passwords/OAuth/account-settings, even with the owner's say-so) |
+| P2‑10 | provide the real release keystore (alias + passwords) |
 
 Everything else in Phase 2 is buildable without him — go.
