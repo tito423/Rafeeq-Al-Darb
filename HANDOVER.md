@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 01:08 — IN PROGRESS — resume here**
+**2026-09-03 01:10 — IN PROGRESS — resume here**
 
-P2-7: 5 Pixabay adhan clips uploaded+hosted on rafeeq-api (all 5 URLs curl-verified 200 + byte-exact). Emulator-verified: download->auto-select->persists across app force-stop/relaunch; test notification fires w/ correct title+sound channel; video-download-complete notif. NOT verified: full-screen video-behind-karaoke render - tried extensively (notification tap w/ uiautomator-exact coords, USE_FULL_SCREEN_INTENT app-op grant, real PIN lock to force genuine keyguard) but this AVD/ADB combo never triggers the full-screen-intent auto-launch; no crash in logcat either. Code review of the nav wiring (AdhanPayload/rootNavigatorKey/onDidReceiveNotificationResponse) shows nothing wrong, and it's the same underlying mechanism STAGE 1 already verified on a real device. HANDOVER Sec7 has the full blow-by-blow. Next: verify on a real Android phone. analyze clean, test 13/13. No code changed this session.
+P2-7: NEXT_SESSION_PROMPT.md updated to match the new state (clips uploaded+verified, download/select/persist verified, only the real-device full-screen-render check left). No code changed.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

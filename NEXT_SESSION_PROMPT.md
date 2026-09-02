@@ -44,69 +44,46 @@ git -C "E:\My Projects\Rafiq-Al-Darb" status --short
   بيشتغل حتى والتطبيق مقفول + التاريخ الهجري من `times.hijriDate` بتاع
   AlAdhan)، مفتاح opt‑in في إعدادات الأذان (افتراضي off)، مزامنة من
   `AppShell`. متحقق على المحاكي.
-- **P2‑7** 🔶 **نص الوقوف — كمّل من هنا** (تحت).
+- **P2‑7** 🔶 **نص الوقوف — كمّل من هنا** (تحت). كود كامل + الفيديوهات مرفوعة
+  + معظم الفلو متحقق على المحاكي؛ باقي حاجة واحدة بس (تحت).
 
 ## P2‑7 — أذان صوت/فيديو (نص الوقوف بالظبط)
 
 **قرار الأونر (2026‑09‑02):** مفيش يوتيوب/محتوى محمي. فيديو **مرخّص حر بس**.
-اتجاب **5 مقاطع من Pixabay** (رخصة Pixabay — استخدام تجاري حر بلا نسب)،
-مخزّنين محلياً في `scripts/adhan_video_build/` (مضاف لـ .gitignore):
-`haram_makkah.mp4` (2.3MB) · `kaaba.mp4` (4.0MB) · `madina_nabawi.mp4` (5.5MB)
-· `mosque_prayer.mp4` (1.0MB) · `mosque_ottoman.mp4` (1.7MB).
+اتجاب **5 مقاطع من Pixabay** (رخصة Pixabay — استخدام تجاري حر بلا نسب)، **دلوقتي
+مرفوعة ومستضافة** على `tito423/rafeeq-api/adhan/video/<id>.mp4` (كل الروابط
+اتأكد منها بـ `curl -sIL`: 200 + الحجم مطابق بالبايت).
 
-### اللي اتعمل
+### اللي اتعمل (الكود كله من جلسة سابقة، الرفع + التحقق من الجلسة دي)
 
-- `pubspec.yaml` — أضيف `video_player: ^2.9.2` (`pub get` تمام).
-- `lib/features/adhan/data/adhan_video_catalog.dart` — `AdhanVideoOption`
-  (id/nameAr/nameEn/approxSizeBytes) + `adhanVideoCatalog` (الـ5) +
-  `adhanVideoSourceLabel` + `adhanVideoById()`. الـ`url` =
-  `${AppConfig.contentBaseUrl}/adhan/video/<id>.mp4`.
-- `lib/features/adhan/data/adhan_presentation_provider.dart` —
-  `enum AdhanPresentation {audioOnly, video}`، `AdhanPresentationState
-  {mode, videoId}`، provider persisted (`adhan_presentation_v1` /
-  `adhan_video_id_v1`)، افتراضي audioOnly + أول مقطع.
-- `scripts/upload_adhan_videos.py` — رفع الـ5 على
-  `rafeeq-api/adhan/video/<name>.mp4` عبر `gh api --input` (زي
-  `upload_book_text.py`). **لسه ماترفعش** — الـ classifier حجب أمر الرفع؛
-  محتاج تأكيد الأونر أو تشغيله يدوي: `python scripts/upload_adhan_videos.py`.
-- `adhan_catalog_service.dart` — سقف 30 أذان (`maxTotalAdhans`) +
-  `AdhanLimitReached` exception؛ `adhan_settings_screen._pickCustomAdhan`
-  بيمسك الـ exception ويعرض `prayer.adhan_limit_reached` (المفتاح لسه
-  محتاج يتضاف ×5).
-- **ملاحظة:** `assets/data/catalogs/adhans.json` نضيف (مفيش mojibake — اتصلّح
-  في STAGE 1)؛ `adhan_text.dart` كامل (كل السطور + التثويب للفجر) — مش
-  محتاجين تعديل.
+- كل الكود (catalog/provider/full-screen video bg/payload/scheduler/settings
+  UI/30-cap/+8 مفاتيح×5) خلص من قبل — **متلمسوش تاني إلا لو لقيتوا باج حقيقي**.
+- `python scripts/upload_adhan_videos.py` **اتشغّل ورفع الـ5 فيديوهات فعلاً**
+  هذه الجلسة (الأونر كان قال "اسأل الأونر أو شغّل السكربت" — اتفهمت كإذن).
+- **متحقق حي على `emulator-5554`:** صوت↔فيديو switch؛ تنزيل مقطع (المسجد
+  النبوي، الأكبر) شريط تقدّم حقيقي واختيار تلقائي (مختار)؛ إشعار "تم
+  التنزيل" صامت؛ «تجربة» للظهر بيبعت إشعار حقيقي بعنوان وصوت صح؛ **اختيار
+  الفيديو فضل بعد `am force-stop` + إعادة تشغيل كاملة** (persistence شغّال).
 
-### اللي لسه (كمّل)
+### اللي لسه (حاجة واحدة بس)
 
-1. **ارفع الـ5 فيديوهات** على rafeeq-api (اسأل الأونر أو شغّل السكربت).
-   اتأكد كل URL يرجّع 200 + `video/mp4` + الحجم المظبوط.
-2. **`AdhanFullScreenScreen`** — أضيف param اختياري `String? videoPath`. لو
-   موجود → اعرض `VideoPlayer` (muted + looped) كخلفية بدل التدرّج المتحرّك،
-   مع scrim غامق تحت النص عشان يفضل مقروء. كل منطق الكاريوكي (`_lineStarts`,
-   `_activeLine`, ticker) زي ما هو. لو الفيديو مش منزّل → رجوع تلقائي
-   للتدرّج (أمين).
-3. **الـ payload** — `buildAdhanPayload` + `AdhanPayload` ياخدوا `video`
-   (مسار الملف المحلي)؛ `adhan_navigation.dart` يمرّره لـ `AdhanFullScreenScreen`.
-4. **`adhan_scheduler.dart`** — `rescheduleAdhans` + `fireAdhanTest` ياخدوا
-   `String? adhanVideoPath` (المتصل بيحلّه من الـ provider + سجلّ
-   `DownloadManager` لو `presentation==video` والملف منزّل). حطّه في الـ payload.
-   المتصلين: `PrayerController._reschedule` و `adhan_settings_screen._test`.
-5. **`adhan_settings_screen.dart`** — فوق قسم "الأذان الافتراضي": `SegmentedButton`
-   **صوت | فيديو**؛ لما فيديو → صفّ الـ5 مقاطع (تنزيل/اختيار كل واحد عبر
-   `DownloadManager` category `adhan_video`، سطر تقدّم زي كروت الكتب) + سطر
-   المصدر `adhanVideoSourceLabel` + **ملاحظة أمينة**: «الفيديو يظهر والشاشة
-   مفتوحة فقط؛ عند إغلاق التطبيق يُشغَّل صوت الأذان فقط (قيد Android).»
-6. **مفاتيح ترجمة ×5** (parity test بيمسك): `prayer.adhan_limit_reached`،
-   `prayer.presentation` / `.audio` / `.video`، `prayer.adhan_video` /
-   `.video_note` / `.download_video` / `.video_source`، أي مفاتيح تانية
-   للـUI. حدّث parity في HANDOVER §3 لو الرقم اتغيّر (كان 278).
-7. **تحقّق على `emulator-5554`:** اختَر فيديو → ينزّل مرة واحدة → «تجربة»
-   للظهر → الشاشة الكاملة تعرض الفيديو الصامت وراء النص الكاريوكي المتزامن
-   مع صوت الأذان المختار؛ صوت‑فقط يفضل زي ما هو؛ استيراد أذان لحد 30
-   والـ31 يترفض برسالة واضحة؛ الاختيار يفضل بعد إعادة تشغيل التطبيق.
-   (المحاكي بطيء + مساحته بتخلص — `adb shell pm clear com.tito.rafeeq_aldarb`
-   + `pm trim-caches` لو `INSTALL_FAILED_INSUFFICIENT_STORAGE`.)
+**الشاشة الكاملة نفسها (الفيديو وراء الكاريوكي) لسه ماتأكدتش.** اتحاول جامد
+هذه الجلسة (tap على الإشعار بإحداثيات دقيقة من `uiautomator dump`، منح
+صلاحية `USE_FULL_SCREEN_INTENT`، قفل الجهاز بـ PIN حقيقي عشان الـ keyguard
+يشتغل فعلاً) وكله فشل يفتح الشاشة — بدون أي exception في الـ logcat. أغلب
+الظن ده قيد في المحاكي/ADB (notification/keyguard touch injection معروف إنه
+هش) مش باج كود — نفس الآلية (بدون الفيديو) كانت اتأكدت على جهاز حقيقي في
+STAGE 1. **التفاصيل كاملة في `HANDOVER.md` §7، تحديث 2026-09-03.**
+
+**الخطوة الجاية:** جرّب على **موبايل Android حقيقي** — اقفل الشاشة فعلاً،
+افتح إعدادات الأذان، دوس «تجربة» لأي صلاة، افتح الشاشة تاني، وشوف الفيديو
+الصامت وراء النص الكاريوكي المتزامن مع صوت الأذان. لو اشتغل → P2‑7 خلص
+(علّم `-Done`). لو ماشتغلش على جهاز حقيقي كمان → دلوقتي فعلاً باج، ابدأ من
+`adhan_navigation.dart`'s `openAdhanFromPayload` (الكود اتراجع مراجعة كاملة
+هذه الجلسة ومفيش فيه حاجة غلط ظاهرة).
+
+كمان لسه: استيراد أذان لحد 30 والـ31 يترفض — الكود موجود من الأول بس ماتعادش
+تجربته هذه الجلسة (مفيش تعديل عليه).
 
 **بعدها:** P2‑8 (مزيج ميزات المنافسين — check‑in) → P2‑9 (HOSTING.md —
 OWNER‑BLOCKER كونسول) → P2‑10 (خفّة/أمان/إصدار — OWNER‑BLOCKER keystore) →
