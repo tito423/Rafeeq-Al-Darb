@@ -20,7 +20,7 @@
 | P2‑4b book **text editions** (Shamela) | ✅ done, emulator-verified — 5 Shamela text editions (`build_book_text.py` → `rafeeq-api/books/text/*.json`), `book_text_reader_screen.dart` (فهرس/search/font/bookmarks/provenance), `مصوّر\|نص` switch per card, one مكتبتي row per (book, edition). `printReliable` gates printed-page UI (false for Riyad/12014). §5.7. |
 | P2‑5 pro download manager | ✅ done, emulator-verified — unified `DownloadsScreen` (نظرة عامة tab: storage total + per-category تفريغ + downloaded-items list), `downloads_controller.dart` aggregator, **live progress notification for every download kind** (`DownloadNotifications` generalized + wired into mushaf-prefetch & surah-audio, requests POST_NOTIFICATIONS), and **pause/resume** for mushaf + audio. Minor: 3 tabs not the 5 labelled sections; a few toasts not re-shot. |
 | P2‑6 persistent prayer notification (next prayer + Hijri + countdown) | ✅ done, emulator-verified — `prayer_status_notification.dart` (ongoing LOW card, native chronometer countdown, Hijri from AlAdhan cache, one scheduled rollover, honest "enable location" fallback), opt-in toggle in Adhan settings (default off), synced from `AppShell` on times-resolve / toggle / resume. |
-| P2‑7 Adhan audio/video + 30 slots | ⬜ not started · OWNER-BLOCKER: video source |
+| P2‑7 Adhan audio/video + 30 slots | 🔶 code done (analyze clean, test 13/13) — owner ruled out YouTube, chose licence-clean; 5 Pixabay clips staged in `scripts/adhan_video_build/`. `AdhanFullScreenScreen` gains a muted looped `VideoPlayer` bg (else gradient); `صوت\|فيديو` SegmentedButton + clip picker in Adhan settings; 30-adhan cap. **Left:** upload the 5 clips to `rafeeq-api/adhan/video/` (`scripts/upload_adhan_videos.py` — push was classifier-blocked in-session) + emulator-verify. |
 | P2‑8 competitor feature mix | ⬜ not started · check-in required |
 | P2‑9 hosting doc (R2/Firebase/GitHub) | ⬜ not started · OWNER-BLOCKER: console access (agent cannot log in) |
 | P2‑10 perf / size / security / release prep | ⬜ not started · OWNER-BLOCKER: keystore |
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 23:55 — IN PROGRESS — resume here**
+**2026-09-02 23:56 — IN PROGRESS — resume here**
 
-P2-7 code DONE (analyze clean, test 13/13): AdhanFullScreenScreen gains optional videoPath -> muted looped VideoPlayer bg + scrim (else gradient); payload/scheduler/navigation carry 'video'; PrayerController + settings._test resolve it via resolveAdhanVideoPath. adhan_settings _PresentationCard: صوت|فيديو SegmentedButton + 5-clip download/pick list + Pixabay source line + honest 'video only while screen on' note. 30-adhan cap. +8 keys x5 (parity 286). LEFT: upload 5 Pixabay clips to rafeeq-api/adhan/video/ (gh push was classifier-blocked - needs owner OK or manual run) + emulator verify.
+P2-7: HANDOVER + PHASE2 updated with code-done state + what's left. NEXT_SESSION_PROMPT.md current. Waiting on owner OK to push 5 Pixabay clips to rafeeq-api for end-to-end verify.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -765,6 +765,29 @@ each run** (one such corruption, commit `a57ac7b`, was caught and the file
 restored from `10dbd35`); it now forces UTF-8 both directions and `cp.bat` is
 hardened so a Git-Bash-mangled `/s` can't become a junk commit. **Run `cp.bat`
 from PowerShell/cmd, not Git Bash.**
+
+### Update 2026-09-02 — P2‑7 (Adhan audio/video): code done, verification pending the video upload
+
+Owner ruled out YouTube/copyrighted content (the no-scraping rule stands) and
+asked for a **licence-clean** mosque video. Got **5 Pixabay clips** (Pixabay
+Content License — free commercial use, no attribution): `haram_makkah`,
+`kaaba`, `madina_nabawi`, `mosque_prayer`, `mosque_ottoman` (1–5.5 MB each),
+staged in `scripts/adhan_video_build/` (gitignored).
+
+Code: `video_player` added; `adhan_video_catalog.dart` +
+`adhan_presentation_provider.dart` (`audioOnly|video` + `videoId`, persisted,
+default audio; `resolveAdhanVideoPath`); `AdhanFullScreenScreen` gains an
+optional `videoPath` → muted looped `VideoPlayer` behind the karaoke text
+(BoxFit.cover + scrim), gradient fallback; payload/scheduler/navigation carry
+`video`; `adhan_settings_screen` `_PresentationCard` (`صوت | فيديو` +
+5-clip download/pick + Pixabay source line + honest "video only while the
+screen is on" note); 30-adhan cap (`AdhanCatalogService.maxTotalAdhans` +
+`AdhanLimitReached`). +8 keys ×5 (parity 286). `analyze` clean, `test` 13/13.
+
+**Left:** run `python scripts/upload_adhan_videos.py` to host the 5 clips on
+`rafeeq-api/adhan/video/` (the in-session `gh api` push was classifier-blocked
+— needs owner OK or a manual run), then emulator-verify the pick → download →
+"تجربة" → video-behind-karaoke flow and the 30-adhan refusal.
 
 ### Update 2026-09-02 — P2‑5 (unified download manager) & P2‑6 (persistent prayer card): done, emulator-verified
 
