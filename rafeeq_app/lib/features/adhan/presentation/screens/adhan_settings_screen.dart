@@ -15,6 +15,7 @@ import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_catalog_provider.dart';
 import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
+import '../../data/prayer_status_enabled_provider.dart';
 
 const _prayerLabels = {
   'fajr': 'prayer.fajr',
@@ -157,6 +158,17 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
                 }
               },
             ),
+            Card(
+              child: SwitchListTile(
+                secondary: const Icon(Icons.push_pin_outlined),
+                title: Text('prayer.status_notification'.tr()),
+                subtitle: Text('prayer.status_notification_desc'.tr()),
+                value: ref.watch(prayerStatusEnabledProvider),
+                onChanged: (v) =>
+                    ref.read(prayerStatusEnabledProvider.notifier).set(v),
+              ),
+            ),
+            const SizedBox(height: 20),
             Text('prayer.default_adhan_label'.tr(),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),

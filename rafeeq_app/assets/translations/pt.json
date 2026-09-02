@@ -198,7 +198,9 @@
     "today_times": "Horários de hoje",
     "test_scheduled": "Um alerta de teste chegará dentro de alguns segundos",
     "battery_exempted": "App isenta da otimização da bateria",
-    "no_custom_adhans": "Ainda não há adhan personalizado"
+    "no_custom_adhans": "Ainda não há adhan personalizado",
+    "status_notification": "Cartão de oração fixo",
+    "status_notification_desc": "Um cartão fixo na barra de status com a próxima oração, a data híjri e uma contagem regressiva — funciona offline"
   },
   "settings": {
     "title": "Definições",

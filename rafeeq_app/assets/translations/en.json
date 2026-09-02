@@ -198,7 +198,9 @@
     "today_times": "Today's times",
     "test_scheduled": "A test alert will arrive in a few seconds",
     "battery_exempted": "App exempted from battery optimization",
-    "no_custom_adhans": "No custom adhan yet"
+    "no_custom_adhans": "No custom adhan yet",
+    "status_notification": "Persistent prayer card",
+    "status_notification_desc": "An ongoing status-bar card with the next prayer, the Hijri date and a live countdown — works offline"
   },
   "settings": {
     "title": "Settings",

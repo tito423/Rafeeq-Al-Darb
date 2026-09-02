@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 22:40 — COMPLETE**
+**2026-09-02 22:58 — IN PROGRESS — resume here**
 
-P2-5 DONE + emulator-verified: added pause/resume to MushafPageService (pausePrefetch/resumePrefetch + PrefetchProgress.paused) + AyahAudioService (pauseDownload/resumeDownload); loops idle while paused (job alive, notif cleared) until resume/cancel; Downloads tiles show pause<->resume toggle beside cancel. Verified: mushaf download paused at p.5 (bar greyed 'متوقف مؤقتاً'), resumed -> continued to p.11, cancel stopped it. Earlier verified: unified overview tab (storage total + per-cat size/count/تفريغ-confirm + downloaded items), live notif for mushaf+audio+DownloadManager downloads (icon+bar+clears on cancel), تفريغ frees+refreshes. +12 keys x5 (parity 272). analyze clean, test 13/13. Minor left: 3 tabs vs 5 sections, a few toasts not re-shot. Next: P2-6.
+P2-6 (wip): persistent prayer notification. New prayer_status_notification.dart (ongoing LOW-importance status card: title = 'الفجر · 05:12' localized+arabic digits, body = Hijri date via hijri pkg, native chronometer countdown that ticks even when app killed; one zonedSchedule rollover to next prayer; honest 'enable location' card when enabled+no times; hide when off). prayer_status_enabled_provider (default off). SwitchListTile in adhan_settings_screen. AppShell -> ConsumerStatefulWidget + WidgetsBindingObserver: re-syncs card on prayer-times resolve / toggle change / app resume. +2 keys x5 (parity 276). analyze clean, parity green. Not yet emulator-tested.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -1,24 +1,33 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/home/presentation/screens/home_screen.dart';
-import '../../features/quran/presentation/screens/quran_screen.dart';
+import '../../core/models/prayer_times.dart';
+import '../../core/services/prayer_status_notification.dart';
+import '../../features/adhan/data/prayer_status_enabled_provider.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
+import '../../features/home/data/prayer_controller.dart';
+import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
+import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
 /// sections (Home, Quran, Azkar, Library, Settings). "Library" holds the
-/// Hadith hub and (once the owner confirms a source list) the books
-/// catalog — WORK_QUEUE Stage 2 frames these as one destination.
-class AppShell extends StatefulWidget {
+/// Hadith hub and the books catalog.
+///
+/// Also the single place the persistent "next prayer" status card (P2‑6) is
+/// kept in sync: whenever the prayer times resolve, the opt-in toggle flips,
+/// or the app is resumed, [_syncPrayerStatus] re-posts (or clears) the card.
+class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key});
 
   @override
-  State<AppShell> createState() => _AppShellState();
+  ConsumerState<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends ConsumerState<AppShell>
+    with WidgetsBindingObserver {
   int _index = 0;
 
   void _goTo(int index, {int? tab}) {
@@ -26,7 +35,40 @@ class _AppShellState extends State<AppShell> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncPrayerStatus());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _syncPrayerStatus();
+  }
+
+  /// Push the current prayer times + toggle state to the status-bar card.
+  void _syncPrayerStatus() {
+    final enabled = ref.read(prayerStatusEnabledProvider);
+    final result = ref.read(prayerControllerProvider).valueOrNull;
+    PrayerStatusNotification.instance.refresh(
+      times: result?.times ?? PrayerTimes.empty(),
+      localeCode: context.locale.languageCode,
+      enabled: enabled,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Re-sync when the real times arrive or the toggle changes.
+    ref.listen(prayerControllerProvider, (_, _) => _syncPrayerStatus());
+    ref.listen(prayerStatusEnabledProvider, (_, _) => _syncPrayerStatus());
+
     final screens = [
       HomeScreen(onNavigate: (t) => _goTo(t, tab: t)),
       const QuranScreen(),

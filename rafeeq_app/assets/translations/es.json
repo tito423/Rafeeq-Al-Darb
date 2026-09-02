@@ -198,7 +198,9 @@
     "today_times": "Horarios de hoy",
     "test_scheduled": "Llegará una alerta de prueba en unos segundos",
     "battery_exempted": "App eximida de la optimización de batería",
-    "no_custom_adhans": "Aún no hay adhán personalizado"
+    "no_custom_adhans": "Aún no hay adhán personalizado",
+    "status_notification": "Tarjeta de oración fija",
+    "status_notification_desc": "Una tarjeta fija en la barra de estado con la próxima oración, la fecha híjri y una cuenta atrás — funciona sin conexión"
   },
   "settings": {
     "title": "Ajustes",
