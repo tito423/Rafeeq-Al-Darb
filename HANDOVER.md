@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 02:39 — IN PROGRESS — resume here**
+**2026-09-03 02:40 — IN PROGRESS — resume here**
 
-Owner asks: redesigned Quran text-mode Mushaf display + renamed search screen. mushaf_text_page.dart rewritten: continuous flowing justified RTL paragraph (real mushaf style) instead of one-ayah-per-row, elegant inline 8-point rosette ayah markers (CustomPainter) with Arabic-Indic numbers, paper-toned card (AppColors.paper/ink, theme-aware) with gold border+shadow, ornamental gradient-bordered surah banner. Fixed the real missing-scroll bug (old code used FittedBox to shrink-to-fit instead of scrolling) - now SingleChildScrollView, verified: content overflow scrolls correctly. Added font-size A+/A- control in quran_screen.dart AppBar (persisted, same pattern as book_text_reader_screen), verified crisp reflow at multiple sizes. Added InteractiveViewer pinch-zoom matching image-mode's MushafPageView (dynamic panEnabled, only pans past 1x zoom). Verified live on emulator-5554 (had to re-verify swipe-to-turn-page twice - first pass wrongly concluded InteractiveViewer ate the gesture, but that was emulator animation lag from screenshotting too fast, not a real conflict - retested with longer waits and swipe genuinely turns the page, comment corrected). Tap-to-open-sciences still works through the new RichText/TextSpan recognizers. Renamed search.title ar.json 'البحث الثيمي' -> 'البحث الموضوعي' (more natural Arabic) per owner ask. +2 keys x5 locales (font_smaller/font_larger). analyze clean, test 13/13.
+PHASE2_RESEARCH.md updated: owner picked the full first batch + both second-batch items. Marked #1/#2/#7/#3 (batch 1) and #4 (batch 2) DONE+verified. #9 (more translation languages) picked but not started - needs a quran_sciences.db rebuild, bigger task. #8/#11/#12/#13 still owner-decision-blocked, #11 explicitly not picked by owner this round.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

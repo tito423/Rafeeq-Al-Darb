@@ -53,25 +53,37 @@ already-approved upcoming stages:
 ## Proposed shortlist (owner check-in required before building anything)
 
 Per the stage rule ("check in with the owner on the shortlist before
-building"), nothing below has been built. Recommended **first batch** —
-small, self-contained, no new licensing questions, no architecture changes:
+building"). **Owner picked the full first batch (all 4) + both second-batch
+items** (2026‑09‑03).
 
-- **#1 memorization repeat-loop**
-- **#2 share ayah as image**
-- **#7 per-ayah private notes**
-- **#3 multi-tafsir compare view**
+### ✅ First batch — DONE, emulator-verified
 
-**Second batch, worth doing but bigger:** **#4 topical audio playlists**,
-**#9 more translation languages** (both still S–M, no new licensing risk,
-just more content-curation time).
+- **#1 memorization repeat-loop** — `AyahAudioService.playQueue`/
+  `playRepeated`/`stopQueue`; repeat dialog (count/gap chips) in the ayah
+  sheet's "⋮" menu. Verified live: 3 real playbacks with the chosen gap via
+  `dumpsys audio` timestamps.
+- **#2 share ayah as image** — `ayah_share_card.dart` (`RepaintBoundary` →
+  PNG → `share_plus`' native chooser). Verified live: real thumbnail +
+  reference text in the Android share sheet.
+- **#7 per-ayah private notes** — `ayah_notes_store.dart`
+  (`SharedPreferences`-backed). Verified live: note persists, menu item
+  relabels + turns gold when a note exists.
+- **#3 multi-tafsir compare view** — a list↔columns toggle in `_TafseerTab`.
+  Verified live: 3 real sources (Qurtubi/Jalalayn/Muyassar) side by side.
 
-**Explicitly flagged as NOT ready to build** — each needs an owner decision
-first, not just engineering time: **#8** (no clean tajweed-colour source
-found yet), **#11** and **#12** (both need the owner to explicitly approve a
-scope jump — invasive permissions for #11, real accounts/backend for #12 —
-before any design work starts), **#13** (no verified-legal radio stream
-source found yet). **#10** (prayer widget) is good but native-platform-sized;
-suggest scheduling it as its own stage rather than folding into P2‑8.
+### ✅ Second batch — DONE, emulator-verified
 
-**Owner: pick which of the first/second batch to build (all of them / a
-subset / none), and rule on #8/#11/#12/#13 before they're touched.**
+- **#4 topical audio playlists** — reuses Stage 6's `topic_tree.dart` data;
+  a "play all" + per-ayah play buttons in the topics tab, via the same
+  `playQueue`. Verified live: sequential real playback advancing ayah to
+  ayah.
+- **#9 more translation languages** — **not yet started** (this one needs a
+  `quran_sciences.db` rebuild + new `ingest_translations.py` run, a bigger
+  content-pipeline task than the others; the owner picked it but it's still
+  open — pick up next).
+
+**Still NOT ready to build** — unchanged, still need an owner decision
+first: **#8** (tajweed-colour mushaf source), **#11** (app-locking
+permission model — owner did **not** pick this one to explore), **#12**
+(group-khatma accounts/backend), **#13** (radio stream licensing). #10
+(prayer widget) still suggested as its own later stage.
