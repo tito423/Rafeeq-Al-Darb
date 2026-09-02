@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 21:27 — IN PROGRESS — resume here**
+**2026-09-02 21:33 — IN PROGRESS — resume here**
 
-P2-4b: keep built text-edition JSONs out of the repo (gitignore scripts/book_text_build/) - regenerable + hosted on rafeeq-api like hadith.zip. Removes the 5.6MB the previous checkpoint added to the tree.
+P2-4b: 5 text editions hosted on tito423/rafeeq-api/books/text/*.json (owner OK'd the push). All 5 raw URLs verified HTTP 200 + exact byte size. upload_book_text.py uses gh api --input (stdin body) since base64 is too big for argv.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

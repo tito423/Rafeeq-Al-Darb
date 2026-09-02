@@ -18,41 +18,48 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 
 BUILD_DIR = os.path.join(os.path.dirname(__file__), "book_text_build")
 REPO = "tito423/rafeeq-api"
 BRANCH = "master"
 
 
-def _gh_json(args):
-    res = subprocess.run(["gh", "api", *args], capture_output=True, text=True)
-    return res.returncode, res.stdout, res.stderr
-
-
 def existing_sha(repo_path):
-    code, out, _ = _gh_json([
-        f"/repos/{REPO}/contents/{repo_path}?ref={BRANCH}",
-        "--jq", ".sha",
-    ])
-    return out.strip() if code == 0 and out.strip() else None
+    res = subprocess.run(
+        ["gh", "api", f"/repos/{REPO}/contents/{repo_path}?ref={BRANCH}",
+         "--jq", ".sha"],
+        capture_output=True, text=True,
+    )
+    return res.stdout.strip() if res.returncode == 0 and res.stdout.strip() else None
 
 
 def upload(local_path, repo_path, message):
     with open(local_path, "rb") as f:
         content_b64 = base64.b64encode(f.read()).decode("ascii")
     sha = existing_sha(repo_path)
-    args = [
-        "-X", "PUT", f"/repos/{REPO}/contents/{repo_path}",
-        "-f", f"message={message}",
-        "-f", f"branch={BRANCH}",
-        "-f", f"content={content_b64}",
-    ]
+    body = {"message": message, "branch": BRANCH, "content": content_b64}
     if sha:
-        args += ["-f", f"sha={sha}"]
-    code, out, err = _gh_json(args)
-    if code != 0:
-        raise RuntimeError(f"upload failed for {repo_path}: {err}")
-    j = json.loads(out)
+        body["sha"] = sha
+
+    # The base64 blob is ~MB — far past the Windows command-line limit — so
+    # hand `gh api` the request body on stdin via a temp file, not as -f args.
+    with tempfile.NamedTemporaryFile(
+        "w", suffix=".json", delete=False, encoding="utf-8"
+    ) as tf:
+        json.dump(body, tf)
+        body_path = tf.name
+    try:
+        res = subprocess.run(
+            ["gh", "api", "--method", "PUT",
+             f"/repos/{REPO}/contents/{repo_path}", "--input", body_path],
+            capture_output=True, text=True,
+        )
+    finally:
+        os.unlink(body_path)
+    if res.returncode != 0:
+        raise RuntimeError(f"upload failed for {repo_path}: {res.stderr}")
+    j = json.loads(res.stdout)
     commit = j.get("commit", {}).get("sha", "?")[:9]
     action = "updated" if sha else "created"
     print(f"  {action} books/text/{os.path.basename(repo_path)}  "
