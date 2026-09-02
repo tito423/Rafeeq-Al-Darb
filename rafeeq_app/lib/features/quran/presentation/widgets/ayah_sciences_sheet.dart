@@ -10,6 +10,7 @@ import '../../../../core/db/quran_repository.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../data/translation_lang_provider.dart';
 
 /// "علوم الآية" — tafsir, translation, i'rab and word meanings for one ayah,
 /// served straight from the bundled quran_sciences.db so the whole card works
@@ -436,14 +437,17 @@ class _TafseerTab extends StatelessWidget {
   }
 }
 
-class _TranslationTab extends StatelessWidget {
+/// WORK_QUEUE Stage 4: a persisted language selector, one translation shown
+/// at a time, instead of stacking en/fr/ur every time the card opens.
+class _TranslationTab extends ConsumerWidget {
   final Future<Map<String, AyahTranslation>> future;
   const _TranslationTab({required this.future});
 
   static const _labels = {'en': 'English', 'fr': 'Français', 'ur': 'اردو'};
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(selectedTranslationLangProvider);
     return _AsyncTab<Map<String, AyahTranslation>>(
       future: future,
       isEmpty: (d) => d.isEmpty,
@@ -451,19 +455,53 @@ class _TranslationTab extends StatelessWidget {
         final langs = SciencesRepository.supportedTranslationLangs
             .where(data.containsKey)
             .toList();
-        return ListView.builder(
-          padding: const EdgeInsets.only(bottom: 24),
-          itemCount: langs.length,
-          itemBuilder: (context, i) {
-            final t = data[langs[i]]!;
-            return _SourceBlock(
-              title: _labels[t.lang] ?? t.lang.toUpperCase(),
-              subtitle: t.translator,
-              body: t.text,
-              direction:
-                  t.lang == 'ur' ? TextDirection.rtl : TextDirection.ltr,
-            );
-          },
+        final active = langs.contains(selected) ? selected : langs.first;
+        final t = data[active]!;
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'quran.translation'.tr(),
+                  isDense: true,
+                  border: const OutlineInputBorder(),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: active,
+                    items: [
+                      for (final lang in langs)
+                        DropdownMenuItem(
+                          value: lang,
+                          child: Text(_labels[lang] ?? lang.toUpperCase()),
+                        ),
+                    ],
+                    onChanged: (v) {
+                      if (v != null) {
+                        ref.read(selectedTranslationLangProvider.notifier).select(v);
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: 24),
+                children: [
+                  _SourceBlock(
+                    title: _labels[t.lang] ?? t.lang.toUpperCase(),
+                    subtitle: t.translator,
+                    body: t.text,
+                    direction:
+                        t.lang == 'ur' ? TextDirection.rtl : TextDirection.ltr,
+                  ),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );

@@ -183,11 +183,16 @@ was exercised live vs. code-reviewed.
 
 ---
 
-## STAGE 4 — Translation selector in the reader  (rest of T9)
+## STAGE 4 — Translation selector in the reader  (rest of T9) — ✅ done 2026-09-02
 
-`quran_sciences.db` holds en / fr / ur, all 6,236 ayahs each. The card shows all
-of them stacked. Add a language selector so the reader picks which translation
-shows, persisted. Keep the existing elegant dropdown style.
+`lib/features/quran/data/translation_lang_provider.dart` (persisted,
+SharedPreferences, same `StateNotifier` pattern as the existing reciter
+selector) + a dropdown in the translation tab of `AyahSciencesSheet`, styled
+like the existing reciter dropdown (`InputDecorator` + `DropdownButton`). The
+card now shows exactly one translation at a time instead of en/fr/ur stacked.
+**2026-09-02: emulator-verified** — opened ayah 1:1, the translation tab
+showed a "الترجمة" dropdown defaulted to English with only the Saheeh
+International text below it (not all three languages).
 
 ---
 

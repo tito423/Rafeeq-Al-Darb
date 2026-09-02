@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | commit `2fbe5c6` (STAGE 2) + STAGE 3 Azkar commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0/1 passed on the emulator (§7) · STAGE 2 Hadith hub verified via direct DB injection (§7) · STAGE 3 Azkar built and fully emulator-verified live, including the historical "first tap doesn't count" bug and the real embedded repeat-count parsing (§7 STAGE 3 table).** The STAGE 2 download-path TLS problem (§7) doesn't affect Stage 3 — Azkar is 100% offline, bundled data. |
+| **State at** | commit `0399a3b` (STAGE 3) + STAGE 4 translation-selector commit |
+| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0/1 passed on the emulator (§7) · STAGE 2 Hadith hub verified via direct DB injection (§7) · STAGE 3 Azkar fully emulator-verified live (§7) · STAGE 4 translation selector emulator-verified (§7).** The STAGE 2 download-path TLS problem (§7) doesn't affect Stages 3/4 — both are 100% offline, bundled data. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,8 +33,23 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 — STAGE 3 (Azkar & Tasbeeh) built and fully verified live on the
-emulator. Next: STAGE 4 (translation selector in the reader).**
+**2026-09-02 — STAGE 4 (translation selector) done. Next: STAGE 5 (New Muslim
+guide — owner already said to use trusted sources directly, no further gate)
+or STAGE 6 (thematic search).**
+
+Small, contained change: the ayah-sciences card's translation tab used to
+stack en/fr/ur every time it opened. Added
+`lib/features/quran/data/translation_lang_provider.dart` (persisted,
+same `StateNotifier` pattern as the existing reciter selector) and a dropdown
+in the translation tab, styled like the existing reciter dropdown. Now shows
+exactly one language, remembered across sessions. **Emulator-verified**:
+opened ayah 1:1's translation tab and saw the dropdown default to English
+with only the Saheeh International text below it, not all three stacked.
+
+---
+
+**2026-09-02 (earlier) — STAGE 3 (Azkar & Tasbeeh) built and fully verified
+live on the emulator.**
 
 Built all of WORK_QUEUE T16 against the real, already-bundled Hisn al-Muslim
 data (134 sections / 298 items in `quran_sciences.db` — no new data needed):
@@ -693,6 +708,13 @@ this was affected by the TLS problem above.
 | custom reminder times (no hardcoded 05:00/16:30) | ✅ live-verified: both reminders default to "متوقف" (off); picking a real time via the Material time picker (not a placeholder) updates the row and arms a real `zonedSchedule` |
 | digital tasbeeh (free counter) | ✅ 33/100/1000 targets, matches Home's existing "السبحة" quick-access card |
 
+### Update 2026-09-02 — STAGE 4 translation selector: done, emulator-verified
+
+`AyahSciencesSheet`'s translation tab showed en/fr/ur stacked; now a
+persisted dropdown (`translation_lang_provider.dart`) shows one at a time.
+Verified live: ayah 1:1's translation tab opened with the dropdown on
+English and only the Saheeh International text below it.
+
 ### Original context (why analysis had never run)
 
 The previous agent worked from an isolated Linux sandbox with only the project
@@ -740,8 +762,11 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
 8. ~~**STAGE 3 — Azkar & Tasbeeh.**~~ **DONE 2026-09-02, fully verified live**
    (§7 STAGE 3 table) — no network involved, so nothing here was blocked by
    item 6.
-9. Continue `WORK_QUEUE.md` STAGE 4+ (translation selector in the reader,
-   new-Muslim guide, thematic search, security/guest-mode check, release).
+9. ~~**STAGE 4 — Translation selector.**~~ **DONE 2026-09-02, emulator-verified**
+   (§7).
+10. Continue `WORK_QUEUE.md` STAGE 5+ (new-Muslim guide — owner already
+    approved using trusted sources directly — thematic search,
+    security/guest-mode check, release).
 
 ---
 
