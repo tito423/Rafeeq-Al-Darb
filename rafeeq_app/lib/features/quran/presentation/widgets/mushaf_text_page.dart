@@ -46,7 +46,9 @@ class MushafTextPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(999),
                       ),
                       child: Text(
-                        'سُورَة ${surahHeader!.$2}',
+                        // The DB `name_ar` already reads "سُورَةُ ٱلْفَاتِحَةِ" —
+                        // prefixing another "سورة" produced the doubled header.
+                        surahHeader!.$2,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: theme.colorScheme.onPrimaryContainer,
                           fontFamily: 'AmiriQuran',
@@ -102,13 +104,6 @@ class MushafTextPage extends StatelessWidget {
                       ),
                     );
                   }),
-                  const SizedBox(height: 10),
-                  Text(
-                    '﴿ ﴾',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
                 ],
               ),
             ),

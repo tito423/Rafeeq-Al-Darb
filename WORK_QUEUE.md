@@ -7,6 +7,11 @@ This file is the ordered backlog. It exists because every previous agent that
 tried to do the whole roadmap in one pass produced screens that looked finished
 and were wired to nothing. Work **one stage at a time**.
 
+> **Phase 1 (STAGE 0–8 below / pipeline T1–T20) is complete.** The owner's
+> 2026-09-02 expansion request is a separate document: **`PHASE2.md`** in the
+> repo root — 9 stages (P2‑1 … P2‑9), same rules of engagement as this file.
+> Start there. This file stays as the Phase-1 record.
+
 ---
 
 ## Rules of engagement

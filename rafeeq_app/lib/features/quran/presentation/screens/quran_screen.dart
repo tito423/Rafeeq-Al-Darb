@@ -46,21 +46,32 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     await prefs.setInt('quran_last_page', _current);
   }
 
-  Future<void> _restoreLastPage() async {
+  Future<void> _persistMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('quran_reader_mode', _mode.name);
+  }
+
+  Future<void> _restoreState() async {
     final prefs = await SharedPreferences.getInstance();
     final p = prefs.getInt('quran_last_page') ?? 1;
-    if (p >= 1 && p <= _totalPages && mounted) {
-      setState(() {
+    final modeName = prefs.getString('quran_reader_mode');
+    if (!mounted) return;
+    setState(() {
+      if (p >= 1 && p <= _totalPages) {
         _initialPage = p;
         _current = p;
-      });
-    }
+      }
+      _mode = MushafMode.values.firstWhere(
+        (m) => m.name == modeName,
+        orElse: () => MushafMode.text,
+      );
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    _restoreLastPage();
+    _restoreState();
   }
 
   @override
@@ -178,11 +189,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               icon: Icon(_mode == MushafMode.text
                   ? Icons.image_outlined
                   : Icons.notes),
-              onPressed: () => setState(() {
-                _mode = _mode == MushafMode.text
-                    ? MushafMode.image
-                    : MushafMode.text;
-              }),
+              onPressed: () {
+                setState(() {
+                  _mode = _mode == MushafMode.text
+                      ? MushafMode.image
+                      : MushafMode.text;
+                });
+                _persistMode();
+              },
             ),
           ],
           const SizedBox(width: 4),

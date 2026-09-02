@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 15:40 — COMPLETE**
+**2026-09-02 16:58 — IN PROGRESS — resume here**
 
-STAGE 2 Library Books catalog verified live end-to-end on the emulator: download al-Fawaid from archive.org -> card flips to Open -> real PDF renders in SfPdfViewer (6285456 bytes, %PDF-1.5) -> airplane-mode ON -> still opens from cache and page-scrolls. T14 done -> STAGE 2 done -> all 20 pipeline tasks complete. HANDOVER/PIPELINE/WORK_QUEUE updated.
+PHASE2.md: turned the owner's expansion request into a 9-stage build prompt (P2-1..P2-9) with per-stage file lists, acceptance criteria and owner-blockers; wired pointers into HANDOVER + WORK_QUEUE. Started P2-1: fixed doubled surah header + stray brackets in mushaf_text_page.dart, persisted reader mode in quran_screen.dart.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
