@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/db/models.dart';
+import '../../../search/presentation/screens/search_screen.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
@@ -125,6 +126,18 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         title: Text('nav.quran'.tr()),
         actions: [
           if (mushaf.hasValue) ...[
+            IconButton(
+              tooltip: 'search.title'.tr(),
+              icon: const Icon(Icons.travel_explore_outlined),
+              onPressed: () async {
+                final page = await Navigator.of(context).push<int>(
+                  MaterialPageRoute<int>(
+                    builder: (_) => SearchScreen(repo: mushaf.value!.repo),
+                  ),
+                );
+                if (page != null) _goToPage(page);
+              },
+            ),
             IconButton(
               tooltip: 'quran.surah_list'.tr(),
               icon: const Icon(Icons.format_list_numbered),

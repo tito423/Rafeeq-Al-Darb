@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | commit `6490761` (STAGE 4) + STAGE 5 New-Muslim-Guide commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0/1 passed on the emulator (§7) · STAGE 2 Hadith hub verified via direct DB injection (§7) · STAGE 3/4/5 fully emulator-verified live (§7).** The STAGE 2 download-path TLS problem (§7) doesn't affect Stages 3–5 — all three are 100% offline. |
+| **State at** | commit `2efc519` (STAGE 5) + STAGE 6 thematic-search commit |
+| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0–5 verified (§7) · STAGE 2's TLS blocker is gone (owner disabled Avast) and the real hadith download is now confirmed end-to-end · STAGE 6 (thematic search) built and mostly live-verified.** Two real, previously-hidden bugs were found and fixed once live testing could finally go deep enough — see the WIP note and §7. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,8 +33,75 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 — STAGE 5 (New Muslim Guide) built and emulator-verified. Next:
-STAGE 6 (thematic Quran search).**
+**2026-09-02 — Owner disabled Avast (TeamViewer) so the real STAGE 2 download
+could finally be tested; that testing surfaced two real, previously-hidden
+bugs, both fixed. STAGE 6 (thematic search) also built. Next: STAGE 7
+(security/guest-mode check) and STAGE 8 (release) — both need the owner's own
+credentials for parts of them; see below.**
+
+Owner's message mid-session: use al-Maktaba al-Shamela or another free
+Islamic-books source for the Library catalog (Stage 2's remaining piece, no
+further gate), and "خلّص كل حاجة … اتصرف من نفسك بحكمة" (finish everything,
+use your own judgment) — read as: keep going through the remaining stages
+without pausing for confirmation except where a real external blocker (an
+account/credential only the owner has) makes that impossible.
+
+**STAGE 2's hadith download — now actually verified, not just architecturally
+sound.** With Avast off, the very first real attempt hit a genuine bug:
+`AppConfig.hadithDbUrl` pointed at `hadith/hadith.db` — a file that was never
+pushed to `rafeeq-api`; only `hadith/hadith.zip` was. Fixed the URL. After
+that, a fresh install → tap download → real 17 MB transfer → unzip →
+`hadith.db` in place → the full 9-book list rendering with correct counts,
+**twice**, from a clean app install each time. This is the first real,
+end-to-end confirmation of the whole pipeline (previous "verification" was
+the repository/UI layer only, via a manually `adb push`-ed file).
+
+**Two real bugs found by that same testing, both now fixed — the class of
+bug matters more than the specific instance:**
+1. Typing into the hadith search box crashed with *"setState() callback
+   argument returned a Future."* Cause: `setState(() => _future =
+   widget.repo.search(...))` — that arrow form's body is the assignment
+   *expression*, which evaluates to the assigned value (a `Future`), so the
+   closure returns a `Future` instead of `void`, which `setState` explicitly
+   rejects. Grepping for the same shape found an **identical, independent,
+   pre-existing bug** in `mushaf_page_view.dart`'s `_retry()` — never
+   triggered before because retrying a failed mushaf page load was never
+   exercised. Both fixed the same way: a block body
+   (`setState(() { _future = ...; })`), which returns void.
+2. Once that no longer crashed, hadith search still hung on a permanent
+   spinner. Cause: **`sqflite` on this Android build has no FTS5 module at
+   all** (`SQLiteLog: (1) no such module: fts5`), so `hadiths_fts`/
+   `ayahs_search` — both real FTS5 tables, built successfully with Python's
+   sqlite3, which does bundle FTS5 — silently fail every query on-device.
+   `HadithRepository.search()` and `QuranRepository.search()` (the one this
+   session's new Stage 6 keyword tab uses) were both rewritten to plain
+   `LIKE` queries, which do run. Verified live: searching hadiths for "Umar"
+   now returns real matches (Bukhari #23, #45, #82, #92, #93, all genuinely
+   about Umar) instead of an infinite spinner or a crash.
+
+Also added `hasError` handling to both search screens' `FutureBuilder`s — a
+spinner that never resolves on error is itself a real class of bug this
+exact screen had just hit, from checking only `hasData`.
+
+**STAGE 6 — thematic Quran search, built and mostly live-verified.** A topic
+tree (`lib/features/search/data/topic_tree.dart`) grouping real, verifiable
+ayah ranges under 5 categories (aqeedah, akhlaq, prophets' stories, rulings,
+the hereafter) — this, not a fake "semantic search," is the honest way to
+satisfy "find ayahs by meaning": this app has no offline embedding/semantic
+model, and mislabeling keyword search as conceptual would be exactly the
+kind of thing zero-mock-data rules out. A keyword tab reuses
+`QuranRepository.search()` (now `LIKE`-based, see above). Reachable from a
+new icon in the Quran reader's toolbar. **Verified live:** opening "الصبر"
+(patience) lists the real curated ayahs (2:153, 2:155–157, 3:200, 39:10) with
+correct text and references. **Not verified:** tapping a result ayah to jump
+the reader to its page — two taps at different coordinates had no visible
+effect and logcat showed no exception, so this reads as more likely a
+tap-precision issue in testing than a confirmed bug, but it was not run down
+to a conclusion either way; check this by hand before relying on it.
+
+---
+
+**2026-09-02 (earlier) — STAGE 5 (New Muslim Guide) built and emulator-verified.**
 
 Five topics WORK_QUEUE names: pillars of Islam, articles of faith, wudu,
 prayer steps, a Quran introduction. Per the owner's explicit direction
@@ -714,6 +781,20 @@ Avast Web/Mail Shield's Web Shield is still enabled the same way it was
 during STAGE 0, or just test on a physical device to sidestep the whole
 question — a phone's own network never goes through the PC's Avast at all.
 
+**Update, later the same day: the TLS blocker is gone and the download is
+now actually verified.** The owner disabled Avast Web/Mail Shield entirely
+(remotely, via TeamViewer) specifically to unblock this. The very first real
+attempt afterward still failed — but with a plain `404`, not a TLS error,
+immediately proving Avast really was the whole story. The 404 was a real,
+separate bug of its own: `AppConfig.hadithDbUrl` pointed at `hadith/hadith.db`,
+which was never pushed to `rafeeq-api` — only `hadith/hadith.zip` was. Fixed
+the constant. After that: fresh install → tap download → real ~17 MB
+transfer → unzip → the full 9-book list rendering with correct counts,
+**repeated twice from a clean install each time**. The "❌ not verified" row
+above is now ✅. See the WIP note at the top of this file for the two further
+bugs (`setState`/Future, missing FTS5) that this real download testing then
+surfaced and got fixed.
+
 ### Update 2026-09-02 — STAGE 3 Azkar & Tasbeeh: built and fully verified
 
 Entirely offline (reads the already-bundled `quran_sciences.db`), so none of
@@ -748,6 +829,42 @@ explicit go-ahead, not fetched or scraped from anywhere.
 | reachable from Home | ✅ **and a real pre-existing bug fixed**: the quick-access card called `onNavigate(3)`, which STAGE 2 had silently repointed to Library when it renamed that tab slot — now pushes `NewMuslimGuideScreen` directly |
 | Wudu detail renders correctly, in order | ✅ live-verified: all 8 real steps, ending with the Shahada dua shown in a Quran-font phrase box |
 | bilingual (ar/en) | ✅ written by hand for each item (not through the easy_localization key system, matching how Quran/azkar/hadith text is content rather than UI chrome) |
+
+### Update 2026-09-02 — STAGE 6 thematic search: built, mostly live-verified;
+### 2 real repository-level bugs found and fixed along the way
+
+`lib/features/search/data/topic_tree.dart` — a curated topic tree over real,
+independently-verifiable ayah ranges (5 categories: aqeedah, akhlaq,
+prophets' stories, rulings, the hereafter), which is the honest way to do
+"find ayahs by meaning" without an offline semantic/embedding model this app
+doesn't have — mislabeling keyword search as conceptual would itself be a
+zero-mock-data violation. A second tab reuses `QuranRepository.search()`.
+Reachable from a new icon in the Quran reader's toolbar, returning the
+tapped ayah's page number so the reader can jump straight there.
+
+| # | check | result |
+|---|---|---|
+| topic tree renders, all 5 categories | ✅ live-verified: العقيدة / الأخلاق / قصص الأنبياء / الأحكام / الآخرة all list with their real topics |
+| a topic's real ayahs load correctly | ✅ live-verified: "الصبر" (patience) shows exactly the curated set — 2:153, 2:155, 2:156, 2:157, 3:200, 39:10 — correct Arabic text and references |
+| keyword search (Quran) | 🔶 implemented, not interactively confirmed this session (ran out of time after fixing the FTS5 bug below — same fix applies here as to hadith search) |
+| tapping a result jumps the reader to that page | 🔶 **not confirmed** — two taps at different coordinates on a result ayah had no visible effect, and logcat showed no exception either time. Reads as more likely a tap-precision problem in adb-driven testing than a real bug (the back-navigation button one row above worked fine at a similarly-guessed coordinate), but it was not run down to a conclusion — check this by hand before relying on it |
+
+**Two real, repository-level bugs found while testing this against the now-
+unblocked hadith download (both explained in full in the WIP note above,
+summarized here since they were caught by Stage 6 code as much as Stage 2's):**
+1. `setState(() => _future = someAsyncCall())` returns the assignment's value
+   (a `Future`), which `setState` rejects at runtime — found via the hadith
+   search box crashing, and it turned out an **identical, independent,
+   pre-existing bug** was sitting in `mushaf_page_view.dart`'s `_retry()`
+   too. Both fixed with a block body.
+2. **`sqflite` on this Android build has no FTS5 module** — both
+   `hadiths_fts` and `ayahs_search` (the FTS5 tables this app already
+   shipped, built successfully with Python's own sqlite3) fail every query
+   on-device with `SQLiteLog: (1) no such module: fts5`. Both
+   `HadithRepository.search()` and `QuranRepository.search()` were rewritten
+   to plain `LIKE` queries. Verified for hadith (searching "Umar" returns
+   real matches); the Quran side shares the identical fix but wasn't
+   re-exercised live before time ran out this session.
 
 ### Original context (why analysis had never run)
 
@@ -801,11 +918,32 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
 10. ~~**STAGE 5 — New Muslim Guide.**~~ **DONE 2026-09-02, emulator-verified**
     (§7) — content written by hand from mainstream Sunni teaching, per the
     owner's explicit approval.
-11. Continue `WORK_QUEUE.md` STAGE 6+ (thematic search, security/guest-mode
-    check, release). Release (STAGE 8) and Google sign-in (part of STAGE 7)
-    both need the owner's own credentials/accounts (a signing keystore; a
-    Firebase/Google Cloud OAuth client) that no agent session has — flag
-    that plainly rather than attempting a broken version of either.
+11. ~~**Fix or work around the TLS blocker.**~~ **RESOLVED 2026-09-02** —
+    owner disabled Avast entirely. The real hadith download now works
+    end-to-end (§7). Re-verify mushaf image-mode fetching too when next on
+    the emulator — it hit the identical TLS error earlier and was never
+    re-confirmed after Avast was turned off.
+12. ~~**STAGE 6 — Thematic search.**~~ **DONE 2026-09-02, mostly live-verified**
+    (§7) — the topic tree and a topic's ayahs are confirmed live; the
+    keyword tab and tap-to-jump-to-page were not (out of time, not because
+    either is known broken).
+13. **Two bug classes worth a quick sweep before trusting more of this
+    codebase:** (a) `setState(() => x = someAsyncCall())` — found twice
+    independently (`library_screen.dart`, `mushaf_page_view.dart`) already;
+    grep for the shape if adding more. (b) any other spot assuming FTS5
+    works — `sqflite` has no FTS5 module on this Android build; both search
+    repositories are now `LIKE`-based, but don't add a new FTS5 MATCH query
+    without testing it live first.
+14. **STAGE 2's Library "Books" catalog is still open.** Owner said to use
+    al-Maktaba al-Shamela or another free Islamic-books source (no further
+    STOP AND ASK) — real archive.org sources were already found for every
+    named title (see WORK_QUEUE Stage 2); still needs building the actual
+    catalog + download flow.
+15. Continue `WORK_QUEUE.md` STAGE 7+ (security/guest-mode check, release).
+    Google sign-in (part of STAGE 7) and the release signing keystore
+    (STAGE 8) both need the owner's own credentials/accounts that no agent
+    session has — flag that plainly rather than attempting a broken version
+    of either; everything else in both stages is doable.
 
 ---
 

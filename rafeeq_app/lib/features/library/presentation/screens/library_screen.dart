@@ -266,7 +266,13 @@ class _SearchResultsState extends State<_SearchResults> {
   void didUpdateWidget(covariant _SearchResults old) {
     super.didUpdateWidget(old);
     if (old.query != widget.query) {
-      setState(() => _future = widget.repo.search(widget.query));
+      // A block body, not `=> _future = ...` — that arrow form returns the
+      // assignment's value (a Future), and setState() asserts its callback
+      // must return void. Caught live: typing in the hadith search field
+      // threw "setState() callback argument returned a Future."
+      setState(() {
+        _future = widget.repo.search(widget.query);
+      });
     }
   }
 
@@ -275,6 +281,12 @@ class _SearchResultsState extends State<_SearchResults> {
     return FutureBuilder(
       future: Future.wait([_future, _booksFuture]),
       builder: (context, snapshot) {
+        // A spinner that never resolves on error is itself a real bug this
+        // screen already hit once (an FTS5 query throwing left it spinning
+        // forever, since only hasData was checked) — handle hasError too.
+        if (snapshot.hasError) {
+          return Center(child: Text('errors.generic'.tr()));
+        }
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }

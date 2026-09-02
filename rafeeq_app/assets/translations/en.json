@@ -226,7 +226,21 @@
     "knowledge": "Knowledge",
     "parents": "Kindness to parents",
     "honesty": "Honesty",
-    "prayer_topic": "Prayer"
+    "prayer_topic": "Prayer",
+    "tab_topics": "Topics",
+    "tab_keyword": "Keyword search",
+    "search_hint": "Search for a word in the Quran…",
+    "no_results": "No results",
+    "cat_aqeedah": "Creed (Aqeedah)",
+    "cat_akhlaq": "Character (Akhlaq)",
+    "cat_prophets": "Stories of the Prophets",
+    "cat_rulings": "Rulings",
+    "cat_hereafter": "The Hereafter",
+    "tawheed": "The Oneness of Allah",
+    "prophet_nuh": "Nuh (Noah), peace be upon him",
+    "prophet_ibrahim": "Ibrahim (Abraham), peace be upon him",
+    "prophet_musa": "Musa (Moses), peace be upon him",
+    "prophet_yusuf": "Yusuf (Joseph), peace be upon him"
   },
   "errors": {
     "offline": "No internet connection",

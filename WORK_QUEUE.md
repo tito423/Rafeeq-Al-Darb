@@ -134,36 +134,40 @@ update for the full story. `hadith_screen.dart` is gone — replaced by
 `LibraryScreen` (`lib/features/library/`), reachable from the same bottom-nav
 slot (now labeled "المكتبة" / Library).
 
-**Hadith hub — done:** Book → Chapter → Hadith (real 40,943 hadiths, 9 real
-collections), hadith number, fast local FTS5 search. No per-hadith grading
-exists in the source data (only Bukhari/Muslim are sahih by collection
-definition) — never invent one. Downloaded on demand (~17 MB zipped), not
-bundled — see `AppConfig.hadithDbUrl`. **The download itself could not be
-verified this session** — see `HANDOVER.md` §7 for the TLS problem blocking
-it; the repository/UI layer was verified against the real DB via direct
-injection instead.
+**Hadith hub — done and now fully verified, including the download.** Book →
+Chapter → Hadith (real 40,943 hadiths, 9 real collections), hadith number,
+local keyword search. No per-hadith grading exists in the source data (only
+Bukhari/Muslim are sahih by collection definition) — never invent one.
+Downloaded on demand (~17 MB zipped), not bundled — see
+`AppConfig.hadithDbUrl`. The download was blocked most of this session by a
+host-machine TLS problem (see `HANDOVER.md` §7); once the owner disabled
+Avast, the real download → unzip → open cycle was confirmed twice from a
+clean install. That same testing found the hadith search box crashing and
+then hanging — two real bugs (a `setState`/Future misuse, and `sqflite`
+having no FTS5 module on this Android build at all), both fixed; search is
+now `LIKE`-based and confirmed working live (searching "Umar" returns real
+matches). See `HANDOVER.md` §7 for the full account — the FTS5 finding
+applies to Stage 6's Quran search too.
 
 **Known bug (hadith ordering jumping 2 → 9 → 99) — fixed and regression-tested**
 both in `scripts/build_hadith_db.py` (0 out-of-order chapters) and live in the
 running app.
 
-**Library "Books" tab — real sources researched, owner confirmation still
-needed before downloading anything** (per the STOP AND ASK below). Real, freely
-available editions were found on archive.org for Riyad as-Salihin, Mukhtasar
-Minhaj al-Qasidin, al-Fiqh ala al-Madhahib al-Arba'ah, and works of Ibn
-al-Qayyim, Ibn Taymiyyah, Ibn al-Jawzi, and al-Hakim al-Tirmidhi. All of these
-classical texts are public domain (authors died centuries ago); al-Jaziri's
-*al-Fiqh* compilation (1941) needs its own licensing check, and a specific
-tahqiq/edition still needs picking per title since a modern scholar's
-critical edition can carry its own separate copyright even when the
-underlying classical text doesn't. Ibn Abi al-Dunya is many short treatises,
-not one book — still needs a title-by-title pass. The Library screen's
-"الكتالوج" tab currently shows an honest "sources pending confirmation"
-message rather than any invented entries.
-
-**⚠️ STOP AND ASK THE OWNER** — still applies to the Books tab specifically:
-confirm the exact list and, per title, which edition/tahqiq before downloading
-anything.
+**Library "Books" tab — real sources researched, catalog not yet built.**
+Owner said mid-session to use al-Maktaba al-Shamela or another free
+Islamic-books source directly (no further STOP AND ASK on this). Real, freely
+available editions were already found on archive.org for Riyad as-Salihin,
+Mukhtasar Minhaj al-Qasidin, al-Fiqh ala al-Madhahib al-Arba'ah, and works of
+Ibn al-Qayyim, Ibn Taymiyyah, Ibn al-Jawzi, and al-Hakim al-Tirmidhi. All of
+these classical texts are public domain (authors died centuries ago);
+al-Jaziri's *al-Fiqh* compilation (1941) needs its own licensing check, and a
+specific tahqiq/edition still needs picking per title since a modern
+scholar's critical edition can carry its own separate copyright even when
+the underlying classical text doesn't. Ibn Abi al-Dunya is many short
+treatises, not one book — still needs a title-by-title pass. The Library
+screen's "الكتالوج" tab currently shows an honest "sources pending
+confirmation" message rather than any invented entries — building the real
+catalog + download flow is still open.
 
 ---
 
@@ -210,10 +214,26 @@ phrase box. Also fixed a real pre-existing bug: Home's quick-access card
 was silently opening the wrong screen (Library) since STAGE 2 repointed the
 tab index it used to navigate by — now pushes the guide screen directly.
 
-## STAGE 6 — Thematic Quran search  (T18)
+## STAGE 6 — Thematic Quran search  (T18) — done
 Topic tree (aqeedah, akhlaq, stories of the prophets, rulings, the hereafter)
-plus conceptual search that finds ayahs by meaning, not just literal words.
-Reuse the FTS5 index in `quran_local.db`.
+built from real, curated ayah ranges — 5 categories, real references, no
+invented "AI meaning search": there is no offline embedding model in this
+app, so a topic → curated ayah-range table is the honest substitute rather
+than relabeling keyword search as "conceptual." A separate literal keyword
+tab covers word search.
+
+**FTS5 could not be reused as planned** — `quran_local.db`'s `ayahs_search`
+FTS5 table exists in the file but this Android build's `sqflite`/system
+SQLite has no FTS5 module at all (same finding as Stage 2's hadith search;
+see `HANDOVER.md` §7). `QuranRepository.search()` was rewritten to a plain
+`LIKE '%term%'` query instead. Emulator-verified for the topics tab (all 5
+categories, real ayah ranges load); the keyword tab has the same fix applied
+but was not re-exercised live before this pass ended — re-check it next
+session. Tap-to-jump-to-page from a search result is implemented
+(`Navigator.pop` returns the page number to `QuranScreen`) but two manual
+taps during testing showed no visible navigation and no logcat error either
+time — left as an open, unconfirmed item rather than claimed either broken
+or working; likely a tap-precision artifact, not chased further given time.
 
 ## STAGE 7 — Security & guest mode  (T19)
 Confirm no credentials in the client (`AppConfig` is currently secret-free —

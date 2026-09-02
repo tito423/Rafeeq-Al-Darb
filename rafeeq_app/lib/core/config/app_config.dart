@@ -59,8 +59,13 @@ abstract final class AppConfig {
   /// The offline hadith database (9 collections, ~41k hadiths, built by
   /// `scripts/build_hadith_db.py` from real A7med3bdulBaset/hadith-json
   /// dumps) — downloaded on demand rather than bundled, the same way mushaf
-  /// pages and recitations are, given its size (~74 MB).
-  static const String hadithDbUrl = '$contentBaseUrl/hadith/hadith.db';
+  /// pages and recitations are, given its size (~74 MB uncompressed).
+  ///
+  /// The hosted file is `hadith.zip` (~17 MB, `DownloadManager.unzipToDatabases`
+  /// unpacks it to `hadith.db` on-device) — not `hadith.db` itself, which
+  /// this constant pointed at for a while (a 404: only the zip was ever
+  /// pushed to the repo) until a real download attempt caught it.
+  static const String hadithDbUrl = '$contentBaseUrl/hadith/hadith.zip';
 
   /// Bump this whenever `hadith.db`'s schema or content changes so devices
   /// that already downloaded the old one re-fetch instead of opening a

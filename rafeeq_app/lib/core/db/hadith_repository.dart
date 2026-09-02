@@ -148,25 +148,32 @@ class HadithRepository {
     return rows.isEmpty ? null : HadithItem.fromRow(rows.first);
   }
 
-  /// FTS5 search across Arabic + English text. The index was built with
-  /// `detail='none'` to keep the download small, which drops SQLite's
-  /// snippet()/highlight() support and phrase-query precision — this does a
-  /// plain term MATCH and returns full rows; the UI builds its own "around
-  /// the match" preview from the raw text instead of an FTS snippet.
+  /// Search across Arabic + English text, returning full rows — the UI
+  /// builds its own "around the match" preview from the raw text since
+  /// there's no FTS snippet() available (see why below).
+  ///
+  /// Plain `LIKE`, not the bundled `hadiths_fts` FTS5 table — caught live on a
+  /// real device/emulator: `sqflite` here uses Android's own system SQLite,
+  /// which on this build has no FTS5 module at all
+  /// (`SQLiteLog: (1) no such module: fts5`), even though the table exists
+  /// in the file (it was built with Python's sqlite3, which does bundle
+  /// FTS5). A 41k-row `LIKE` scan is not as fast as a real index, but it is
+  /// the version that actually runs — reported after a full rebuild via
+  /// `%wildcards%` for every whitespace-separated term, so a multi-word
+  /// query still narrows results down (all terms required, hadith found by
+  /// substring, not full-text ranking).
   Future<List<HadithItem>> search(String query, {int limit = 100}) async {
-    final terms = query
-        .trim()
-        .split(RegExp(r'\s+'))
-        .where((t) => t.isNotEmpty)
-        .map((t) => '"${t.replaceAll('"', '""')}"*')
-        .join(' ');
+    final terms =
+        query.trim().split(RegExp(r'\s+')).where((t) => t.isNotEmpty).toList();
     if (terms.isEmpty) return [];
-    final rows = await _db.rawQuery(
-      'SELECT h.* FROM hadiths h '
-      'JOIN hadiths_fts f ON f.rowid = h.id '
-      'WHERE hadiths_fts MATCH ? '
-      'ORDER BY h.book_id, h.number_in_book LIMIT ?',
-      [terms, limit],
+    final where = terms.map((_) => '(arabic LIKE ? OR text_en LIKE ?)').join(' AND ');
+    final args = [for (final t in terms) ...['%$t%', '%$t%']];
+    final rows = await _db.query(
+      'hadiths',
+      where: where,
+      whereArgs: args,
+      orderBy: 'book_id, number_in_book',
+      limit: limit,
     );
     return rows.map(HadithItem.fromRow).toList();
   }

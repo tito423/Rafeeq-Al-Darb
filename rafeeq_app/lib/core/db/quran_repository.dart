@@ -5,7 +5,8 @@ import 'db_helper.dart';
 import 'models.dart';
 
 /// Read access to the bundled Quran database
-/// (ayahs / surahs / FTS5 search — all real, verified text).
+/// (ayahs / surahs / keyword search — all real, verified text; search() is
+/// LIKE-based, not the bundled `ayahs_search` FTS5 table — see its own doc).
 class QuranRepository {
   final Database _db;
   QuranRepository(this._db);
@@ -49,6 +50,18 @@ class QuranRepository {
     return rows.isEmpty ? null : Ayah.fromRow(rows.first);
   }
 
+  /// [from]..[to] inclusive, within one surah — used by the thematic search's
+  /// curated topic references (e.g. Surah Yusuf 12:1-101).
+  Future<List<Ayah>> ayahRange(int surah, int from, int to) async {
+    final rows = await _db.query(
+      'ayahs',
+      where: 'surah_id = ? AND ayah_number >= ? AND ayah_number <= ?',
+      whereArgs: [surah, from, to],
+      orderBy: 'ayah_number',
+    );
+    return rows.map(Ayah.fromRow).toList();
+  }
+
   /// Global ayah number (1..6236) used by the audio CDN.
   Future<int> globalAyahNumber(int surah, int ayah) async {
     final rows = await _db.rawQuery(
@@ -59,14 +72,22 @@ class QuranRepository {
     return rows.first['c'] as int? ?? 1;
   }
 
-  /// Full-text search over the FTS5 index (real ranking).
+  /// Plain `LIKE` over `text_uthmani`, not the bundled `ayahs_search` FTS5
+  /// table — caught live on a real device/emulator while building the
+  /// Stage 6 thematic search screen: `sqflite` here runs on Android's own
+  /// system SQLite, which on this build has no FTS5 module at all
+  /// (`SQLiteLog: (1) no such module: fts5`), even though the table exists
+  /// in the file (built with Python's sqlite3, which does bundle FTS5). A
+  /// 6,236-row `LIKE` scan has no real-ranking benefit `MATCH` would give,
+  /// but it is the version that actually runs.
   Future<List<Ayah>> search(String query, {int limit = 50}) async {
-    final sanitized = query.trim().replaceAll(RegExp('[*"()]'), ' ').trim();
+    final sanitized = query.trim();
     if (sanitized.isEmpty) return [];
-    final rows = await _db.rawQuery(
-      'SELECT a.* FROM ayahs_search s JOIN ayahs a ON a.id = s.ayah_id '
-      'WHERE ayahs_search MATCH ? LIMIT ?',
-      [sanitized, limit],
+    final rows = await _db.query(
+      'ayahs',
+      where: 'text_uthmani LIKE ?',
+      whereArgs: ['%$sanitized%'],
+      limit: limit,
     );
     return rows.map(Ayah.fromRow).toList();
   }

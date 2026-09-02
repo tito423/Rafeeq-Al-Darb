@@ -76,7 +76,14 @@ class _MushafPageViewState extends State<MushafPageView> {
     );
   }
 
-  void _retry() => setState(() => _ready = _load());
+  // A block body, not `=> _ready = _load()` — that arrow form returns the
+  // assignment's value (a Future), and setState() asserts its callback must
+  // return void. Pre-existing bug caught this session while chasing an
+  // identical one in library_screen.dart: retrying a failed mushaf page
+  // load would have thrown "setState() callback argument returned a Future."
+  void _retry() => setState(() {
+        _ready = _load();
+      });
 
   @override
   Widget build(BuildContext context) {

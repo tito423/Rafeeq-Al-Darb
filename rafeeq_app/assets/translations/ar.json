@@ -226,7 +226,21 @@
     "knowledge": "العلم",
     "parents": "بر الوالدين",
     "honesty": "الصدق",
-    "prayer_topic": "الصلاة"
+    "prayer_topic": "الصلاة",
+    "tab_topics": "الموضوعات",
+    "tab_keyword": "بحث بالكلمة",
+    "search_hint": "ابحث عن كلمة في القرآن…",
+    "no_results": "لا نتائج",
+    "cat_aqeedah": "العقيدة",
+    "cat_akhlaq": "الأخلاق",
+    "cat_prophets": "قصص الأنبياء",
+    "cat_rulings": "الأحكام",
+    "cat_hereafter": "الآخرة",
+    "tawheed": "التوحيد",
+    "prophet_nuh": "نوح عليه السلام",
+    "prophet_ibrahim": "إبراهيم عليه السلام",
+    "prophet_musa": "موسى عليه السلام",
+    "prophet_yusuf": "يوسف عليه السلام"
   },
   "errors": {
     "offline": "لا يوجد اتصال بالإنترنت",

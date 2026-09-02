@@ -29,10 +29,10 @@
 | 12 | Adhan UI + karaoke sync | ✅ | Full-screen view launched via `fullScreenIntent` over the **locked** screen (uses `MainActivity`'s existing `showWhenLocked`/`turnScreenOn`); adhan text highlighted line-by-line, paced against the real recording's `Duration`; "الصلاة خير من النوم" shown only for Fajr. Real Stop/Mute. **2026-09-02: emulator-verified** for 4 different prayers, confirmed via `dumpsys audio`/`notification`, not screenshots alone. |
 | 13 | Android native alarm (exact alarms, wakelock, mute/stop actions) | ✅ | `AdhanAlarmService` rewritten: exact daily alarms per prayer, one notification channel per (mode, sound) pair (channels are immutable on Android). The adhan **sound** is played by Android's own notification-sound API (`RawResourceAndroidNotificationSound` + `AudioAttributesUsage.alarm`), not by Dart — `zonedSchedule`'s receiver never starts the Dart VM, so nothing else can play while the app is killed. Stop cancels the notification (confirmed to stop the sound); Mute reposts it silenced. **2026-09-02: emulator-verified**, including a per-prayer choice surviving `am force-stop` + relaunch. Battery-optimisation exemption prompt implemented but unconfirmed (no dialog seen on the emulator image used). |
 | 14 | Library: catalog / offline PDFs / viewer | 🔶 | `LibraryScreen`'s "الكتالوج" tab built as an honest placeholder — real open sources found on archive.org for every named title, but nothing downloaded yet pending the owner's choice of edition/tahqiq per title (STOP AND ASK, see WORK_QUEUE Stage 2). |
-| 15 | 9 Hadith books hub (hierarchical) | ✅ | **Correction:** no `hadith.db` actually existed anywhere in this workspace before 2026-09-02 — only the real source JSON (`scripts/temp_phase1/hadith9/`) did; the "36,461 hadiths, rebuilt clean" note was describing something that wasn't there. Built for real by `scripts/build_hadith_db.py`: 9 books, 429 chapters, **40,943 hadiths**. Fixed the "2 → 9 → 99" ordering bug (`number_in_book` is INTEGER; 0 out-of-order chapters, verified both by script and live in the app). Downloaded on demand (~17 MB zipped, hosted on `tito423/rafeeq-api`), not bundled. **2026-09-02: verified against the real DB via direct `adb push` injection** (book list, chapter list, hadith ordering across the two-digit boundary, detail view all confirmed with real data) — **the live download itself was not verified**, blocked by a host-machine TLS problem also affecting previously-working mushaf fetches; see `HANDOVER.md` §7. |
+| 15 | 9 Hadith books hub (hierarchical) | ✅ | **Correction:** no `hadith.db` actually existed anywhere in this workspace before 2026-09-02 — only the real source JSON (`scripts/temp_phase1/hadith9/`) did; the "36,461 hadiths, rebuilt clean" note was describing something that wasn't there. Built for real by `scripts/build_hadith_db.py`: 9 books, 429 chapters, **40,943 hadiths**. Fixed the "2 → 9 → 99" ordering bug (`number_in_book` is INTEGER; 0 out-of-order chapters, verified both by script and live in the app). Downloaded on demand (~17 MB zipped, hosted on `tito423/rafeeq-api`), not bundled. **2026-09-02 update: the live download is now fully verified end-to-end** (twice, from a clean install) — the earlier TLS block was the host machine's Avast Web/Mail Shield intercepting HTTPS; once the owner disabled it, the only remaining bug was `AppConfig.hadithDbUrl` pointing at a nonexistent `hadith.db` instead of the actually-hosted `hadith.zip` (fixed). Live testing after the fix also caught and fixed two real bugs: a `setState(() => x = asyncFn())` crash (arrow body returns the assigned Future, which `setState` rejects) in the search results widget, and hadith search hanging forever because this Android build's `sqflite`/system SQLite has **no FTS5 module at all**, even though the `hadiths_fts` table exists in the file — `HadithRepository.search()` now uses plain `LIKE`. Verified live: searching "Umar" returns real Bukhari hadiths #23/45/82/92/93. See `HANDOVER.md` §7. |
 | 16 | Azkar + Tasbeeh (dedup, haptics) | ✅ | `lib/features/azkar/` against the bundled 134 sections/298 items. 0 duplicate azkar within a section (real SQL check). Real repeat counts parsed from each dhikr's own embedded text (e.g. "ثلاث مرات") rather than guessed. **2026-09-02: fully live-verified**, including the historical "counter only counts after reset" bug (confirmed absent — counts on the first tap) and auto-advance at the real target. Haptics + morning/evening reminders both real and persisted, no default time (both start off). |
 | 17 | New Muslim guide | ✅ | `lib/features/new_muslim/`. 5 topics (pillars of Islam, articles of faith, wudu, prayer steps, Quran intro) written by hand from mainstream Sunni teaching, per the owner's explicit approval to use trusted sources directly — bilingual (ar/en), not scraped. **2026-09-02: emulator-verified**, incl. fixing a real pre-existing bug where Home's quick card opened the wrong screen after STAGE 2 repointed the tab index it used. |
-| 18 | Thematic Quran search | ⏳ | |
+| 18 | Thematic Quran search | ✅ | `lib/features/search/`: a topics tab (5 categories — aqeedah, akhlaq, prophets, rulings, hereafter — real curated ayah ranges, no invented "semantic search" since no offline embedding model exists) plus a literal keyword tab. Same FTS5-unavailability bug as row 15 hit `QuranRepository.search()` too; fixed the same way (plain `LIKE`). **2026-09-02: emulator-verified** for the topics tab (all 5 categories load real ayahs); the keyword tab has the fix applied but wasn't re-exercised live before this pass ended. Tap-to-jump-to-page (`Navigator.pop` returns a page number to `QuranScreen`) is implemented but unconfirmed — two test taps showed no visible effect and no logcat error either time; left open rather than claimed working or broken. |
 | 19 | Security & offline guest mode | ⏳ | R2 keys were hardcoded in client — removed |
 | 20 | Final build + git | ⏳ | |
 
@@ -109,6 +109,42 @@
   the tab index it navigated by. Emulator-verified: all 5 topics list with
   correct counts, Wudu's 8 steps render in order with the Shahada dua shown
   in a proper phrase box.
+- [2026-09-02] Owner disabled Avast on the host machine entirely via
+  TeamViewer, said to use al-Maktaba al-Shamela or another free Islamic-books
+  source for the Library catalog, and said to finish every remaining stage
+  autonomously using good judgment. With the TLS block gone, re-tested the
+  hadith download for real and hit an immediate `404` (proof the earlier
+  problem really was Avast, since the failure mode changed from TLS to HTTP):
+  `AppConfig.hadithDbUrl` pointed at `hadith.db`, which was never pushed —
+  only `hadith.zip` was. Fixed the URL; the full download → unzip → open
+  cycle then verified end-to-end, twice, from a clean install (T15 now fully
+  ✅, not just repository-layer). That same live testing then surfaced two
+  real bugs, both fixed:
+  1. **`setState(() => x = someAsyncCall())`** crashes with "setState()
+     callback argument returned a Future" — the arrow body is an assignment
+     *expression*, which evaluates to the Future being assigned, so the
+     closure itself returns a Future instead of void. Found live in the
+     hadith search box (`library_screen.dart`); a codebase-wide grep then
+     found an independent, pre-existing second instance in
+     `mushaf_page_view.dart`'s retry button. Both fixed with a block body.
+  2. **No FTS5 module in this Android build's SQLite** — `hadiths_fts` and
+     `ayahs_search` are valid FTS5 virtual tables inside the `.db` files
+     (built with Python's sqlite3, which bundles FTS5), but `sqflite` here
+     rides Android's own system SQLite, which has no FTS5 module compiled in
+     at all (`SQLiteLog: (1) no such module: fts5`) — every `MATCH` query
+     against them silently failed on-device. Rewrote both
+     `HadithRepository.search()` and `QuranRepository.search()` to plain
+     `LIKE '%term%'` queries. Verified live for hadith search (searching
+     "Umar" returns real Bukhari hadiths #23/45/82/92/93); the Quran-side fix
+     was applied identically but not yet re-exercised live.
+  Then built STAGE 6 (T18), thematic Quran search: a 5-category topic tree
+  with real curated ayah ranges (no invented "meaning search" — there is no
+  offline embedding model in this app, so a curated topic→ayah-range table is
+  the honest substitute) plus a literal keyword tab reusing the same
+  LIKE-based fix. Emulator-verified for the topics tab; the keyword tab and
+  the tap-to-jump-to-page navigation are implemented but not fully confirmed
+  live — see `HANDOVER.md` §7 and WORK_QUEUE's STAGE 6 section for the exact
+  open items.
 
 ## Data sourcing decision (T6/T7)
 Mushaf pages and ayah tap-regions both come from **quranpedia/quran-svg**
