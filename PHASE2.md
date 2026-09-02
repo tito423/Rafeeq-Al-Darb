@@ -90,7 +90,7 @@ test` 13/13, last checkpoint `ec15d06`):
 | P2‑4 | Library redesign (home entry, 3 sub-tabs, "My Library") + catalog expansion | P2‑2, P2‑3 | ✅ structural done · catalog + al-Jaziri carried |
 | **P2‑4b** | **Book text editions** — every book also as a structured text edition (فهرس, in-book search, selectable text) beside the image PDF | P2‑4 | ✅ done, emulator-verified (5 Shamela text editions built + hosted on rafeeq-api; `book_text_reader_screen`; `مصوّر\|نص` switch) |
 | P2‑5 | Professional download manager (unified, pause/resume, storage view) **+ every download shows a live progress notification with a progress bar** | P2‑2, P2‑3 | ✅ done, emulator-verified (unified hub + storage view + تفريغ; live notification for **every** download kind; pause/resume for mushaf + audio). Minor: 3 tabs not 5 sections; a few toasts not re-shot. |
-| **P2‑6** | **Persistent prayer notification** — ongoing status-bar notification: next prayer, Hijri date, live countdown; professional, with the app icon | P2‑2 | no |
+| **P2‑6** | **Persistent prayer notification** — ongoing status-bar notification: next prayer, Hijri date, live countdown; professional, with the app icon | P2‑2 | ✅ done, emulator-verified |
 | P2‑7 | Professional Adhan: **audio-or-video** choice, video composite, up to **30** adhans | P2‑5 | **yes** (video source/licensing) |
 | P2‑8 | Competitor feature mix (Sakinah, Ayat, QuranFlash, Khatmah) — research → propose → build | P2‑2..P2‑5 | check-in required |
 | P2‑9 | Hosting & cost guardrails (Cloudflare R2 / Firebase / GitHub) | — | **yes** (console access) |
@@ -670,6 +670,58 @@ it to 11**, cancel then stopped it.
 ---
 
 ## P2‑6 — Persistent prayer notification (ongoing status-bar card)
+
+### ✅ P2‑6 DONE (2026-09-02, emulator-verified)
+
+- **`lib/core/services/prayer_status_notification.dart`** — `refresh({times,
+  localeCode, enabled})` posts an **ongoing, LOW-importance** card
+  (`flags=ONGOING_EVENT|ONLY_ALERT_ONCE`, `category=status`, own channel
+  `rafeeq_prayer_status`, `@mipmap/ic_launcher`):
+  - **title** = `${prayerName} · ${clock}` (localized prayer name; Arabic-Indic
+    digits when `ar`), next of the five prayers, never sunrise, rolls to
+    tomorrow's Fajr after Isha (`PrayerTimesService.nextPrayer` + a sunrise
+    skip).
+  - **countdown** = Android's native **chronometer** (`usesChronometer` +
+    `chronometerCountDown` + a future `when`) — ticks even with the app killed,
+    no background Dart, no foreground service.
+  - **body** = Hijri date. Uses **AlAdhan's `times.hijriDate`** (Umm al-Qura,
+    matches the Home card, cached → offline) mapped to a localized month name +
+    localized digits + `هـ`/`AH`; the `hijri` package is only a fallback if that
+    string is missing.
+  - **rollover while closed** = one `zonedSchedule` re-post at the current
+    prayer's time carrying the *next* prayer (same id → replaces); anything
+    longer is corrected when the app is next opened.
+  - **enabled but no real times** → an honest "فعّل الموقع لعرض مواقيت الصلاة"
+    card, never invented times. **Disabled** → card removed.
+- **`lib/features/adhan/data/prayer_status_enabled_provider.dart`** — opt-in
+  toggle, `prayer_status_enabled_v1`, **default off**.
+- **`adhan_settings_screen.dart`** — a `SwitchListTile` "إشعار الصلاة الثابت"
+  at the top.
+- **`app_shell.dart`** → `ConsumerStatefulWidget` + `WidgetsBindingObserver`:
+  `_syncPrayerStatus()` re-posts / clears the card on first frame, whenever the
+  prayer times resolve (`ref.listen(prayerControllerProvider)`), whenever the
+  toggle flips, and on `AppLifecycleState.resumed`.
+- +2 keys × 5 locales (`prayer.status_notification` / `_desc`), parity
+  **278/278**. `flutter analyze` clean, `flutter test` 13/13.
+
+**Emulator-verified (`emulator-5554`, mock GPS = Makkah):** toggle in Adhan
+settings, default off; ON → card appears with the app icon, "الفجر · ٠٥:٠٨",
+a chronometer visibly counting down (6:06:24 → 5:59:29 …), body "٢٠ ربيع
+الأول ١٤٤٨ هـ" (matches the Home card's `20-03-1448`); `dumpsys notification`
+confirms `ONGOING_EVENT|ONLY_ALERT_ONCE`, `category=status`, LOW importance,
+`chronometerCountDown=true`, tap opens the app; OFF → `dumpsys` shows id 6100
+gone.
+
+**Not re-verified this run:** survives an app restart / shade-swipe (the
+`ongoing` flag should hold), the actual prayer rollover (needs a real time
+boundary), the airplane-mode path (the Hijri now comes from the cached
+`times.hijriDate`, so it should hold), the "enable location" fallback card
+(code path exists, location was granted in the test). **Cosmetic:** the Arabic
+month name ("ربيع الأول") shows slight bidi garbling in the notification shade
+on this emulator image — the underlying string is correct (`dumpsys`), renders
+fine with proper system Arabic fonts.
+
+---
 
 **Goal (owner's words):** a **fixed notification in the status bar** showing the
 **next prayer**, the **Hijri date**, and a **live countdown** to that prayer.

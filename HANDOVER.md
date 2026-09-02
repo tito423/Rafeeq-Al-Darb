@@ -19,7 +19,7 @@
 | P2‑4 Library redesign | ✅ structural done, verified — Home المكتبة card → `LibraryScreen`; tabs [الكتب المتوفرة \| الحديث]; 3 sub-tabs (كل الكتب abc / التصنيفات / مكتبتي w/ فتح+حذف). `BookCategory` enum, `LibraryBook.category/sortKey`. **Fixed real bug:** `DownloadManager.remove()` didn't purge the SharedPreferences registry. Added `العبودية` (Ibn Taymiyyah) — 5 books / 3 categories now. |
 | P2‑4b book **text editions** (Shamela) | ✅ done, emulator-verified — 5 Shamela text editions (`build_book_text.py` → `rafeeq-api/books/text/*.json`), `book_text_reader_screen.dart` (فهرس/search/font/bookmarks/provenance), `مصوّر\|نص` switch per card, one مكتبتي row per (book, edition). `printReliable` gates printed-page UI (false for Riyad/12014). §5.7. |
 | P2‑5 pro download manager | ✅ done, emulator-verified — unified `DownloadsScreen` (نظرة عامة tab: storage total + per-category تفريغ + downloaded-items list), `downloads_controller.dart` aggregator, **live progress notification for every download kind** (`DownloadNotifications` generalized + wired into mushaf-prefetch & surah-audio, requests POST_NOTIFICATIONS), and **pause/resume** for mushaf + audio. Minor: 3 tabs not the 5 labelled sections; a few toasts not re-shot. |
-| P2‑6 persistent prayer notification (next prayer + Hijri + countdown) | ⬜ not started |
+| P2‑6 persistent prayer notification (next prayer + Hijri + countdown) | ✅ done, emulator-verified — `prayer_status_notification.dart` (ongoing LOW card, native chronometer countdown, Hijri from AlAdhan cache, one scheduled rollover, honest "enable location" fallback), opt-in toggle in Adhan settings (default off), synced from `AppShell` on times-resolve / toggle / resume. |
 | P2‑7 Adhan audio/video + 30 slots | ⬜ not started · OWNER-BLOCKER: video source |
 | P2‑8 competitor feature mix | ⬜ not started · check-in required |
 | P2‑9 hosting doc (R2/Firebase/GitHub) | ⬜ not started · OWNER-BLOCKER: console access (agent cannot log in) |
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 22:58 — IN PROGRESS — resume here**
+**2026-09-02 23:12 — COMPLETE**
 
-P2-6 (wip): persistent prayer notification. New prayer_status_notification.dart (ongoing LOW-importance status card: title = 'الفجر · 05:12' localized+arabic digits, body = Hijri date via hijri pkg, native chronometer countdown that ticks even when app killed; one zonedSchedule rollover to next prayer; honest 'enable location' card when enabled+no times; hide when off). prayer_status_enabled_provider (default off). SwitchListTile in adhan_settings_screen. AppShell -> ConsumerStatefulWidget + WidgetsBindingObserver: re-syncs card on prayer-times resolve / toggle change / app resume. +2 keys x5 (parity 276). analyze clean, parity green. Not yet emulator-tested.
+P2-6 DONE + emulator-verified: prayer_status_notification.dart — ongoing LOW status card (title 'الفجر · ٠٥:٠٨' localized+arabic digits, native chronometer countdown that ticks when app killed, body = Hijri from AlAdhan cached times.hijriDate w/ localized month name [not hijri pkg — was a month off], one zonedSchedule rollover, honest 'enable location' fallback, removed when off). prayer_status_enabled_provider default off + SwitchListTile in adhan settings. AppShell -> ConsumerStatefulWidget + WidgetsBindingObserver: re-syncs on times-resolve/toggle/resume. Verified: card w/ icon + countdown 6:06->5:59 + '٢٠ ربيع الأول ١٤٤٨ هـ'; dumpsys confirms ONGOING|ONLY_ALERT_ONCE + category=status + LOW; toggle off -> id 6100 gone. +2 keys x5 (parity 278). analyze clean, test 13/13. P2-7 next is OWNER-BLOCKED (video source).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -765,6 +765,36 @@ each run** (one such corruption, commit `a57ac7b`, was caught and the file
 restored from `10dbd35`); it now forces UTF-8 both directions and `cp.bat` is
 hardened so a Git-Bash-mangled `/s` can't become a junk commit. **Run `cp.bat`
 from PowerShell/cmd, not Git Bash.**
+
+### Update 2026-09-02 — P2‑5 (unified download manager) & P2‑6 (persistent prayer card): done, emulator-verified
+
+**P2‑5.** `DownloadNotifications` (in `download_manager.dart`) grew generic
+`showProgress`/`showComplete`/`clear` (app icon, determinate bar, ~900 ms
+throttle, requests `POST_NOTIFICATIONS`) and is now called from
+`MushafPageService.prefetchEdition` and `AyahAudioService.downloadSurah` too —
+so **every** download kind posts a live status-bar notification, not just
+`DownloadManager` files. `MushafPageService` / `AyahAudioService` also gained
+`pause*`/`resume*` (the page/ayah loop idles while paused). New
+`downloads/data/downloads_controller.dart` = a read-only `storageSummaryProvider`
+aggregator + `freeCategory`. `DownloadsScreen` → 3 tabs
+`[نظرة عامة | المصاحف | التلاوات]`; the overview tab shows total storage, a
+row per category (size · count · تفريغ with confirm), free-all, and a
+downloaded hadith/books item list. Verified live: notification advances +
+clears on cancel; `تفريغ` frees + refreshes; **pause froze a mushaf DL at
+p.5, resume continued to p.11**. Minor: 3 tabs not the 5 labelled sections;
+some toasts not re-shot.
+
+**P2‑6.** New `core/services/prayer_status_notification.dart` — an ongoing
+LOW-importance status card: title `${prayer} · ${clock}` (localized + Arabic
+digits), a **native chronometer countdown** (ticks with the app killed), body
+= Hijri date from **AlAdhan's cached `times.hijriDate`** (localized month name,
+not the `hijri` package's calc, which was a month off), one `zonedSchedule`
+rollover, and an honest "enable location" card when there are no times. Opt-in
+`prayer_status_enabled_provider` (default off) + a `SwitchListTile` in Adhan
+settings. `AppShell` is now a `ConsumerStatefulWidget` +
+`WidgetsBindingObserver` that re-syncs the card on times-resolve / toggle /
+resume. Verified live (mock GPS): card appears with the icon, "الفجر · ٠٥:٠٨",
+a countdown ticking 6:06→5:59, "٢٠ ربيع الأول ١٤٤٨ هـ"; toggle off → gone.
 
 ### Update 2026-09-02 — P2‑4b book **text editions**: built, hosted, emulator-verified
 

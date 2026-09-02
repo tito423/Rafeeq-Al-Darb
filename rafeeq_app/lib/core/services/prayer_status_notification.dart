@@ -102,10 +102,15 @@ class PrayerStatusNotification {
       return;
     }
 
+    // Prefer the AlAdhan Hijri date already in [times] (Umm al-Qura, matches
+    // the Home card and works from cache offline); fall back to the `hijri`
+    // package only if that string is missing/old-format.
+    final hijriToday = _hijriLine(times.hijriDate, now, localeCode);
+
     await _plugin.show(
       _liveId,
       _titleFor(next.$1, next.$2, localeCode),
-      _hijriLine(now, localeCode),
+      hijriToday,
       NotificationDetails(android: _details(next.$2)),
     );
 
@@ -114,10 +119,15 @@ class PrayerStatusNotification {
     final after = _nextPrayer(svc, times, next.$2.add(const Duration(minutes: 1)));
     await _plugin.cancel(_rolloverId);
     if (after != null) {
+      // If the rollover crosses midnight the printed Hijri day advances by one.
+      final crossesMidnight = after.$2.day != next.$2.day;
+      final hijriRollover = crossesMidnight
+          ? _hijriLine('', after.$2, localeCode)
+          : hijriToday;
       await _plugin.zonedSchedule(
         _rolloverId,
         _titleFor(after.$1, after.$2, localeCode),
-        _hijriLine(after.$2, localeCode),
+        hijriRollover,
         tz.TZDateTime.from(next.$2, tz.local),
         NotificationDetails(android: _details(after.$2)),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
@@ -212,13 +222,42 @@ class PrayerStatusNotification {
         _ => 'Enable location to see prayer times',
       };
 
-  String _hijriLine(DateTime day, String localeCode) {
+  /// The 12 Hijri months (indices 1..12).
+  static const _hijriMonths = {
+    'ar': [
+      '', 'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى',
+      'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة',
+    ],
+    'en': [
+      '', 'Muharram', 'Safar', 'Rabiʿ al-Awwal', 'Rabiʿ al-Akhir',
+      'Jumada al-Awwal', 'Jumada al-Akhira', 'Rajab', 'Shaʿban', 'Ramadan',
+      'Shawwal', 'Dhu al-Qaʿda', 'Dhu al-Hijja',
+    ],
+  };
+
+  /// Formats the Hijri line. [aladhanHijri] is AlAdhan's "DD-MM-YYYY" string
+  /// (Umm al-Qura — authoritative, offline via cache); when it's empty/bad we
+  /// fall back to the `hijri` package computed from [day].
+  String _hijriLine(String aladhanHijri, DateTime day, String localeCode) {
+    final lang = localeCode == 'ar' ? 'ar' : 'en';
+    final months = _hijriMonths[lang]!;
+    final suffix = localeCode == 'ar' ? ' هـ' : ' AH';
+
+    final m = RegExp(r'^(\d{1,2})-(\d{1,2})-(\d{3,4})').firstMatch(aladhanHijri);
+    if (m != null) {
+      final d = int.parse(m.group(1)!);
+      final mo = int.parse(m.group(2)!);
+      final y = int.parse(m.group(3)!);
+      if (mo >= 1 && mo <= 12) {
+        final line = '$d ${months[mo]} $y$suffix';
+        return localeCode == 'ar' ? _toArabicDigits(line) : line;
+      }
+    }
     try {
-      final lang = localeCode == 'ar' ? 'ar' : 'en';
       HijriCalendar.setLocal(lang);
       final h = HijriCalendar.fromDate(day);
-      final suffix = localeCode == 'ar' ? ' هـ' : ' AH';
-      return '${h.toFormat('dd MMMM yyyy')}$suffix';
+      final line = '${h.hDay} ${months[h.hMonth]} ${h.hYear}$suffix';
+      return localeCode == 'ar' ? _toArabicDigits(line) : line;
     } catch (_) {
       return '';
     }
