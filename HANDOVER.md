@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 16:58 — IN PROGRESS — resume here**
+**2026-09-02 17:00 — IN PROGRESS — resume here**
 
-PHASE2.md: turned the owner's expansion request into a 9-stage build prompt (P2-1..P2-9) with per-stage file lists, acceptance criteria and owner-blockers; wired pointers into HANDOVER + WORK_QUEUE. Started P2-1: fixed doubled surah header + stray brackets in mushaf_text_page.dart, persisted reader mode in quran_screen.dart.
+P2-1.6: i'rab root/lemma now shown in Arabic, not Buckwalter (Hmd->حمد). New lib/core/utils/buckwalter.dart + test/buckwalter_test.dart (6 cases, pass). Wired into ayah_sciences_sheet _IrabTab. flutter analyze clean.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -10,6 +10,7 @@ import '../../../../core/db/quran_repository.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/buckwalter.dart';
 import '../../data/translation_lang_provider.dart';
 
 /// "علوم الآية" — tafsir, translation, i'rab and word meanings for one ayah,
@@ -565,9 +566,15 @@ class _IrabTab extends StatelessWidget {
                       spacing: 8,
                       children: [
                         if (w.root.isNotEmpty)
-                          _Chip(label: 'quran.root'.tr(), value: w.root),
+                          _Chip(
+                            label: 'quran.root'.tr(),
+                            value: buckwalterForDisplay(w.root),
+                          ),
                         if (w.lemma.isNotEmpty)
-                          _Chip(label: 'quran.word'.tr(), value: w.lemma),
+                          _Chip(
+                            label: 'quran.word'.tr(),
+                            value: buckwalterForDisplay(w.lemma),
+                          ),
                       ],
                     ),
                   ],
