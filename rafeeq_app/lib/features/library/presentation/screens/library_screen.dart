@@ -11,6 +11,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_category.dart';
 import 'book_reader_screen.dart';
+import 'book_text_reader_screen.dart';
 import 'hadith_book_screen.dart';
 import 'hadith_detail_screen.dart';
 
@@ -62,14 +63,21 @@ class _BooksTab extends StatefulWidget {
   State<_BooksTab> createState() => _BooksTabState();
 }
 
+/// Which edition of a book a catalog card is currently acting on.
+enum BookEdition { image, text }
+
 class _BooksTabState extends State<_BooksTab> {
   StreamSubscription<List<DownloadTask>>? _sub;
 
-  /// book id -> local file path (once known on disk).
+  /// download id -> local file path (once on disk). Keyed by `book.id` for the
+  /// image PDF and by `book.textDownloadId` for the text edition.
   final Map<String, String> _paths = {};
 
-  /// book id -> bytes on disk.
+  /// download id -> bytes on disk.
   final Map<String, int> _sizes = {};
+
+  /// book id -> which edition its card is showing (default: image PDF).
+  final Map<String, BookEdition> _edition = {};
 
   @override
   void initState() {
@@ -82,10 +90,15 @@ class _BooksTabState extends State<_BooksTab> {
     final paths = <String, String>{};
     final sizes = <String, int>{};
     for (final book in libraryBookCatalog) {
-      final path = await DownloadManager.instance.registeredPath(book.id);
-      if (path != null) {
-        paths[book.id] = path;
-        sizes[book.id] = await DownloadManager.instance.artifactSize(book.id);
+      for (final id in [
+        book.id,
+        if (book.hasText) book.textDownloadId,
+      ]) {
+        final path = await DownloadManager.instance.registeredPath(id);
+        if (path != null) {
+          paths[id] = path;
+          sizes[id] = await DownloadManager.instance.artifactSize(id);
+        }
       }
     }
     if (mounted) {
@@ -106,15 +119,40 @@ class _BooksTabState extends State<_BooksTab> {
     super.dispose();
   }
 
-  Future<void> _download(LibraryBook book) => DownloadManager.instance.enqueue(
-        id: book.id,
-        url: book.downloadUrl,
-        category: 'books',
-        fileName: book.fileName,
-        title: book.titleAr,
-      );
+  BookEdition _editionOf(LibraryBook b) => _edition[b.id] ?? BookEdition.image;
 
-  void _open(LibraryBook book) {
+  void _setEdition(LibraryBook b, BookEdition e) =>
+      setState(() => _edition[b.id] = e);
+
+  Future<void> _download(LibraryBook book, BookEdition edition) {
+    if (edition == BookEdition.text) {
+      final te = book.textEdition!;
+      return DownloadManager.instance.enqueue(
+        id: book.textDownloadId,
+        url: te.url,
+        category: 'books_text',
+        fileName: te.fileName,
+        title: '${book.titleAr} · ${'library.edition_text'.tr()}',
+      );
+    }
+    return DownloadManager.instance.enqueue(
+      id: book.id,
+      url: book.downloadUrl,
+      category: 'books',
+      fileName: book.fileName,
+      title: book.titleAr,
+    );
+  }
+
+  void _open(LibraryBook book, BookEdition edition) {
+    if (edition == BookEdition.text) {
+      final path = _paths[book.textDownloadId];
+      if (path == null) return;
+      Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => BookTextReaderScreen(book: book, path: path),
+      ));
+      return;
+    }
     final path = _paths[book.id];
     if (path == null) return;
     Navigator.of(context).push(MaterialPageRoute<void>(
@@ -122,11 +160,14 @@ class _BooksTabState extends State<_BooksTab> {
     ));
   }
 
-  Future<void> _delete(LibraryBook book) async {
+  Future<void> _delete(LibraryBook book, BookEdition edition) async {
+    final label = edition == BookEdition.text
+        ? 'library.edition_text'.tr()
+        : 'library.edition_image'.tr();
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(book.titleAr),
+        title: Text('${book.titleAr} · $label'),
         content: Text('library.delete_confirm'.tr()),
         actions: [
           TextButton(
@@ -141,7 +182,9 @@ class _BooksTabState extends State<_BooksTab> {
       ),
     );
     if (ok == true) {
-      await DownloadManager.instance.remove(book.id);
+      await DownloadManager.instance.remove(
+        edition == BookEdition.text ? book.textDownloadId : book.id,
+      );
       await _loadRegistry();
     }
   }
@@ -169,11 +212,15 @@ class _BooksTabState extends State<_BooksTab> {
               children: [
                 _AllBooksView(
                   paths: _paths,
+                  editionOf: _editionOf,
+                  onSetEdition: _setEdition,
                   onDownload: _download,
                   onOpen: _open,
                 ),
                 _CategoriesView(
                   paths: _paths,
+                  editionOf: _editionOf,
+                  onSetEdition: _setEdition,
                   onDownload: _download,
                   onOpen: _open,
                 ),
@@ -194,10 +241,17 @@ class _BooksTabState extends State<_BooksTab> {
 
 class _AllBooksView extends StatelessWidget {
   final Map<String, String> paths;
-  final void Function(LibraryBook) onDownload;
-  final void Function(LibraryBook) onOpen;
-  const _AllBooksView(
-      {required this.paths, required this.onDownload, required this.onOpen});
+  final BookEdition Function(LibraryBook) editionOf;
+  final void Function(LibraryBook, BookEdition) onSetEdition;
+  final void Function(LibraryBook, BookEdition) onDownload;
+  final void Function(LibraryBook, BookEdition) onOpen;
+  const _AllBooksView({
+    required this.paths,
+    required this.editionOf,
+    required this.onSetEdition,
+    required this.onDownload,
+    required this.onOpen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -209,10 +263,11 @@ class _AllBooksView extends StatelessWidget {
       separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (_, i) => _BookCard(
         book: books[i],
-        task: DownloadManager.instance.taskById(books[i].id),
-        downloaded: paths.containsKey(books[i].id),
-        onDownload: () => onDownload(books[i]),
-        onOpen: () => onOpen(books[i]),
+        paths: paths,
+        edition: editionOf(books[i]),
+        onSetEdition: (e) => onSetEdition(books[i], e),
+        onDownload: (e) => onDownload(books[i], e),
+        onOpen: (e) => onOpen(books[i], e),
       ),
     );
   }
@@ -220,10 +275,17 @@ class _AllBooksView extends StatelessWidget {
 
 class _CategoriesView extends StatelessWidget {
   final Map<String, String> paths;
-  final void Function(LibraryBook) onDownload;
-  final void Function(LibraryBook) onOpen;
-  const _CategoriesView(
-      {required this.paths, required this.onDownload, required this.onOpen});
+  final BookEdition Function(LibraryBook) editionOf;
+  final void Function(LibraryBook, BookEdition) onSetEdition;
+  final void Function(LibraryBook, BookEdition) onDownload;
+  final void Function(LibraryBook, BookEdition) onOpen;
+  const _CategoriesView({
+    required this.paths,
+    required this.editionOf,
+    required this.onSetEdition,
+    required this.onDownload,
+    required this.onOpen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -257,10 +319,11 @@ class _CategoriesView extends StatelessWidget {
               (x, y) => x.sortKey.compareTo(y.sortKey))) ...[
             _BookCard(
               book: b,
-              task: DownloadManager.instance.taskById(b.id),
-              downloaded: paths.containsKey(b.id),
-              onDownload: () => onDownload(b),
-              onOpen: () => onOpen(b),
+              paths: paths,
+              edition: editionOf(b),
+              onSetEdition: (e) => onSetEdition(b, e),
+              onDownload: (e) => onDownload(b, e),
+              onOpen: (e) => onOpen(b, e),
             ),
             const SizedBox(height: 10),
           ],
@@ -274,8 +337,8 @@ class _CategoriesView extends StatelessWidget {
 class _MyLibraryView extends StatelessWidget {
   final Map<String, String> paths;
   final Map<String, int> sizes;
-  final void Function(LibraryBook) onOpen;
-  final void Function(LibraryBook) onDelete;
+  final void Function(LibraryBook, BookEdition) onOpen;
+  final void Function(LibraryBook, BookEdition) onDelete;
   const _MyLibraryView({
     required this.paths,
     required this.sizes,
@@ -285,10 +348,19 @@ class _MyLibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mine =
-        libraryBookCatalog.where((b) => paths.containsKey(b.id)).toList()
-          ..sort((a, b) => a.sortKey.compareTo(b.sortKey));
-    if (mine.isEmpty) {
+    // One entry per (book, edition) actually on disk.
+    final rows = <({LibraryBook book, BookEdition edition})>[];
+    for (final b in [...libraryBookCatalog]
+      ..sort((a, b) => a.sortKey.compareTo(b.sortKey))) {
+      if (paths.containsKey(b.id)) {
+        rows.add((book: b, edition: BookEdition.image));
+      }
+      if (b.hasText && paths.containsKey(b.textDownloadId)) {
+        rows.add((book: b, edition: BookEdition.text));
+      }
+    }
+
+    if (rows.isEmpty) {
       final scheme = Theme.of(context).colorScheme;
       return Center(
         child: Padding(
@@ -307,17 +379,26 @@ class _MyLibraryView extends StatelessWidget {
     }
     return ListView.separated(
       padding: const EdgeInsets.all(14),
-      itemCount: mine.length,
+      itemCount: rows.length,
       separatorBuilder: (_, _) => const SizedBox(height: 8),
       itemBuilder: (_, i) {
-        final b = mine[i];
+        final b = rows[i].book;
+        final edition = rows[i].edition;
+        final isText = edition == BookEdition.text;
         final scheme = Theme.of(context).colorScheme;
-        final size = _fmtSize(sizes[b.id] ?? 0);
+        final size = _fmtSize(
+            sizes[isText ? b.textDownloadId : b.id] ?? 0);
+        final editionLabel = isText
+            ? 'library.edition_text'.tr()
+            : 'library.edition_image'.tr();
         return Card(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
             child: Row(
               children: [
+                Icon(isText ? Icons.article_outlined : Icons.image_outlined,
+                    size: 18, color: AppColors.gold),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,8 +408,11 @@ class _MyLibraryView extends StatelessWidget {
                               fontWeight: FontWeight.w700, fontSize: 15)),
                       const SizedBox(height: 3),
                       Text(
-                        [b.category.labelKey.tr(), if (size.isNotEmpty) size]
-                            .join(' · '),
+                        [
+                          editionLabel,
+                          b.category.labelKey.tr(),
+                          if (size.isNotEmpty) size,
+                        ].join(' · '),
                         style: TextStyle(
                             color: scheme.onSurfaceVariant, fontSize: 12),
                       ),
@@ -336,13 +420,13 @@ class _MyLibraryView extends StatelessWidget {
                   ),
                 ),
                 TextButton.icon(
-                  onPressed: () => onOpen(b),
+                  onPressed: () => onOpen(b, edition),
                   icon: const Icon(Icons.menu_book_outlined, size: 18),
                   label: Text('library.open'.tr()),
                 ),
                 IconButton(
                   tooltip: 'library.delete'.tr(),
-                  onPressed: () => onDelete(b),
+                  onPressed: () => onDelete(b, edition),
                   icon: Icon(Icons.delete_outline, color: scheme.error),
                 ),
               ],
@@ -356,15 +440,17 @@ class _MyLibraryView extends StatelessWidget {
 
 class _BookCard extends StatelessWidget {
   final LibraryBook book;
-  final DownloadTask? task;
-  final bool downloaded;
-  final VoidCallback onDownload;
-  final VoidCallback onOpen;
+  final Map<String, String> paths;
+  final BookEdition edition;
+  final void Function(BookEdition) onSetEdition;
+  final void Function(BookEdition) onDownload;
+  final void Function(BookEdition) onOpen;
 
   const _BookCard({
     required this.book,
-    required this.task,
-    required this.downloaded,
+    required this.paths,
+    required this.edition,
+    required this.onSetEdition,
     required this.onDownload,
     required this.onOpen,
   });
@@ -372,11 +458,19 @@ class _BookCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+
+    // Everything below is about the *selected* edition.
+    final isText = edition == BookEdition.text;
+    final dlId = isText ? book.textDownloadId : book.id;
+    final task = DownloadManager.instance.taskById(dlId);
     final busy = task != null &&
-        (task!.status == DownloadStatus.downloading ||
-            task!.status == DownloadStatus.queued);
+        (task.status == DownloadStatus.downloading ||
+            task.status == DownloadStatus.queued);
     final failed = task?.status == DownloadStatus.failed;
-    final sizeMb = (book.approxSizeBytes / 1000000).toStringAsFixed(1);
+    final downloaded = paths.containsKey(dlId);
+    final approxBytes =
+        isText ? (book.textEdition?.approxSizeBytes ?? 0) : book.approxSizeBytes;
+    final sizeMb = (approxBytes / 1000000).toStringAsFixed(1);
 
     return Card(
       child: Padding(
@@ -403,34 +497,59 @@ class _BookCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(book.descriptionAr, style: const TextStyle(fontSize: 13)),
             const SizedBox(height: 10),
+            if (book.hasText) ...[
+              SegmentedButton<BookEdition>(
+                showSelectedIcon: false,
+                style: const ButtonStyle(
+                  visualDensity: VisualDensity.compact,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                segments: [
+                  ButtonSegment(
+                    value: BookEdition.image,
+                    icon: const Icon(Icons.image_outlined, size: 16),
+                    label: Text('library.edition_image'.tr()),
+                  ),
+                  ButtonSegment(
+                    value: BookEdition.text,
+                    icon: const Icon(Icons.article_outlined, size: 16),
+                    label: Text('library.edition_text'.tr()),
+                  ),
+                ],
+                selected: {edition},
+                onSelectionChanged: (s) => onSetEdition(s.first),
+              ),
+              const SizedBox(height: 8),
+            ],
             if (busy) ...[
               LinearProgressIndicator(
-                value: task!.total == null ? null : task!.progress,
+                value: task.total == null ? null : task.progress,
                 color: AppColors.gold,
               ),
               const SizedBox(height: 6),
               Text(
-                task!.total != null
-                    ? '${(task!.progress * 100).round()}%'
+                task.total != null
+                    ? '${(task.progress * 100).round()}%'
                     : '…',
                 style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
               ),
             ] else
               Row(
                 children: [
-                  Text('${'library.size'.tr()}: $sizeMb MB',
-                      style: TextStyle(
-                          color: scheme.onSurfaceVariant, fontSize: 12)),
+                  if (approxBytes > 0)
+                    Text('${'library.size'.tr()}: $sizeMb MB',
+                        style: TextStyle(
+                            color: scheme.onSurfaceVariant, fontSize: 12)),
                   const Spacer(),
                   if (downloaded)
                     FilledButton.icon(
-                      onPressed: onOpen,
+                      onPressed: () => onOpen(edition),
                       icon: const Icon(Icons.menu_book_outlined, size: 18),
                       label: Text('library.open'.tr()),
                     )
                   else
                     OutlinedButton.icon(
-                      onPressed: onDownload,
+                      onPressed: () => onDownload(edition),
                       icon: const Icon(Icons.download_rounded, size: 18),
                       label: Text('library.download'.tr()),
                     ),

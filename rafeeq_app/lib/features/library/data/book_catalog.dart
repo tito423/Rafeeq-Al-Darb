@@ -1,4 +1,47 @@
+import '../../../core/config/app_config.dart';
 import 'book_category.dart';
+
+/// A structured **text** edition of a book (P2-4b) — the companion to the
+/// scanned image PDF ([LibraryBook.downloadUrl]).
+///
+/// Source is always al-Maktaba al-Shamela (`shamela.ws`), the owner's chosen
+/// source (2026-09-02). The file is the structured JSON produced by
+/// `scripts/build_book_text.py` and hosted on `tito423/rafeeq-api`
+/// (`books/text/<id>.json`); [BookText] parses it and
+/// `BookTextReaderScreen` renders it (فهرس, in-book search, selectable text,
+/// font control, bookmarks).
+///
+/// Downloaded and cached independently of the image PDF, under the
+/// [DownloadManager] id `"<book id>_text"`, so a reader can have one edition,
+/// the other, or both offline.
+class TextEdition {
+  /// Structured JSON URL (raw, not zipped — a few hundred KB per book).
+  final String url;
+  final String fileName;
+  final int approxSizeBytes;
+
+  /// Full printed-edition + editor line, shown in the reader at all times
+  /// (e.g. "المكتبة الشاملة — ت. شعيب الأرنؤوط، مؤسسة الرسالة، ط٣ ١٤١٩هـ").
+  final String sourceLabel;
+
+  /// True only when the text is machine-extracted (OCR). Never true for a
+  /// Shamela edition — Shamela is typed text — but the reader honours it with
+  /// an honest "نص مستخرَج آلياً" badge if a future OCR source is ever added.
+  final bool isOcr;
+
+  const TextEdition({
+    required this.url,
+    required this.fileName,
+    required this.approxSizeBytes,
+    required this.sourceLabel,
+    this.isOcr = false,
+  });
+}
+
+/// Text editions live at `<contentBaseUrl>/books/text/<id>.json` on
+/// `tito423/rafeeq-api` — `AppConfig.contentBaseUrl` is a compile-time
+/// constant (overridable with `--dart-define=RAFEEQ_CONTENT_BASE=…`, the same
+/// seam the hadith DB uses), so the `url:` strings below stay `const`.
 
 /// The Library "Books" catalog (WORK_QUEUE Stage 2's remaining piece).
 ///
@@ -37,6 +80,10 @@ class LibraryBook {
   /// — kept so provenance is always one tap away from the UI, never buried.
   final String sourceUrl;
 
+  /// The structured text edition (P2-4b), or null if the book ships only as a
+  /// scanned image PDF. When present the Library shows a `مصوّر | نص` switch.
+  final TextEdition? textEdition;
+
   const LibraryBook({
     required this.id,
     required this.titleAr,
@@ -50,7 +97,14 @@ class LibraryBook {
     required this.fileName,
     required this.approxSizeBytes,
     required this.sourceUrl,
+    this.textEdition,
   });
+
+  /// [DownloadManager] id for this book's text edition (distinct from the
+  /// image PDF, whose id is just [id]).
+  String get textDownloadId => '${id}_text';
+
+  bool get hasText => textEdition != null;
 
   /// Arabic-collation-friendly sort handle: drops a leading "ال" so
   /// "الفوائد" files under fā', not alif, and normalises alef forms.
@@ -80,6 +134,13 @@ const List<LibraryBook> libraryBookCatalog = [
     fileName: 'riyad_as_salihin.pdf',
     approxSizeBytes: 15770224, // measured with curl 2026-09-02: 15.77 MB
     sourceUrl: 'https://archive.org/details/rsnawwy',
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/riyad_as_salihin.json',
+      fileName: 'riyad_as_salihin_text.json',
+      approxSizeBytes: 0, // set from the real built file — see build_book_text.py
+      sourceLabel: 'المكتبة الشاملة — رياض الصالحين، تحقيق شعيب الأرنؤوط، '
+          'مؤسسة الرسالة، بيروت، الطبعة الثالثة ١٤١٩هـ/١٩٩٨م',
+    ),
   ),
   LibraryBook(
     id: 'mukhtasar_minhaj_al_qasidin',
@@ -100,6 +161,13 @@ const List<LibraryBook> libraryBookCatalog = [
     fileName: 'mukhtasar_minhaj_al_qasidin.pdf',
     approxSizeBytes: 29648193, // measured with curl 2026-09-02: 29.65 MB
     sourceUrl: 'https://archive.org/details/menhaj-alkasdeen-dar-alhejaz',
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/mukhtasar_minhaj_al_qasidin.json',
+      fileName: 'mukhtasar_minhaj_al_qasidin_text.json',
+      approxSizeBytes: 0,
+      sourceLabel: 'المكتبة الشاملة — مختصر منهاج القاصدين، تقديم محمد أحمد '
+          'دهمان، مكتبة دار البيان، دمشق، ١٣٩٨هـ/١٩٧٨م',
+    ),
   ),
   LibraryBook(
     id: 'al_fawaid',
@@ -116,6 +184,13 @@ const List<LibraryBook> libraryBookCatalog = [
     fileName: 'al_fawaid.pdf',
     approxSizeBytes: 6285456, // measured with curl 2026-09-02: 6.29 MB
     sourceUrl: 'https://archive.org/details/fawaeedIbnqaem',
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_fawaid.json',
+      fileName: 'al_fawaid_text.json',
+      approxSizeBytes: 0,
+      sourceLabel: 'المكتبة الشاملة — الفوائد لابن القيم، دار الكتب العلمية، '
+          'بيروت، الطبعة الثانية ١٣٩٣هـ/١٩٧٣م',
+    ),
   ),
   LibraryBook(
     id: 'sayd_al_khatir',
@@ -135,6 +210,13 @@ const List<LibraryBook> libraryBookCatalog = [
     fileName: 'sayd_al_khatir.pdf',
     approxSizeBytes: 16347265, // measured with curl 2026-09-02: 16.35 MB
     sourceUrl: 'https://archive.org/details/aakamel18_gmail_20190131',
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/sayd_al_khatir.json',
+      fileName: 'sayd_al_khatir_text.json',
+      approxSizeBytes: 0,
+      sourceLabel: 'المكتبة الشاملة — صيد الخاطر، بعناية حسن المساحي سويدان، '
+          'دار القلم، دمشق، الطبعة الأولى ١٤٢٥هـ/٢٠٠٤م',
+    ),
   ),
   LibraryBook(
     id: 'al_ubudiyyah',
@@ -157,5 +239,12 @@ const List<LibraryBook> libraryBookCatalog = [
     fileName: 'al_ubudiyyah.pdf',
     approxSizeBytes: 3382545,
     sourceUrl: 'https://archive.org/details/20201231_20201231_1341',
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_ubudiyyah.json',
+      fileName: 'al_ubudiyyah_text.json',
+      approxSizeBytes: 0,
+      sourceLabel: 'المكتبة الشاملة — العبودية لابن تيمية، تحقيق محمد زهير '
+          'الشاويش، المكتب الإسلامي، بيروت، الطبعة السابعة ١٤٢٦هـ/٢٠٠٥م',
+    ),
   ),
 ];

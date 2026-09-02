@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 20:41 — IN PROGRESS — resume here**
+**2026-09-02 20:57 — IN PROGRESS — resume here**
 
-P2-4b research: chose 5 Shamela editions (rec. muhaqqaq / plain-PD per book) + documented the shamela.ws ajax/pageContent scrape model + licence mitigations. Table in PHASE2.md P2-4b. No code yet.
+P2-4b code (scrape still running): book_text.dart model + book_text_reader_screen.dart (page-at-a-time reader: فهرس drawer, in-book search w/ arabic_normalize, font size, per-book bookmarks, always-visible sourceLabel/provenance, OCR badge hook). LibraryBook.textEdition + textDownloadId. library_screen.dart: مصوّر|نص SegmentedButton per book card, both editions download/cache/open independently, مكتبتي shows one row per (book,edition). +22 keys x5 (parity 259). analyze clean, parity test green. Catalog textEdition sizes still 0 pending scrape.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
