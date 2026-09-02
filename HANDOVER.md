@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 01:26 — IN PROGRESS — resume here**
+**2026-09-03 01:31 — IN PROGRESS — resume here**
 
-Launcher icon redesigned per owner request: mosque silhouette (dome+crescent, 2 side domes, 2 minarets, arched doorway) on the app's actual AppColors palette (night #071625 -> primary teal #16A085/#0F3D33 -> gold #D4AF37-family mark), replacing the rub-el-hizb+path mark. Found+fixed a real pre-existing bug along the way: the adaptive foreground PNG had zero alpha (Chrome headless --screenshot bakes opaque white unless --default-background-color=00000000 is passed) - this bug was already present in the P2-1.5 icon too, just never caught. README regen recipe updated with the fix + a pixel-alpha sanity check. dart run flutter_launcher_icons regenerated all Android densities + adaptive xml + iOS assets. Emulator-verified: built+installed APK, app drawer icon shows the teal gradient genuinely showing through the mask with the gold mosque mark legible; also checked flat icon readability at 96x96 and 48x48 downscales. analyze clean, test 13/13.
+P2-8: PHASE2_RESEARCH.md written - researched Sakinah/Ayat(KSU)/QuranFlash/Khatmah (+ a group-khatma app) via app-store listings, ideas/descriptions only per rule 2. 13-row feature table w/ build effort + fit + data-source-needed; cross-referenced against what Rafiq already has or already has spec'd (P2-11/12, themes, mushaf editions, tafsir, azkar) to avoid re-proposing. Proposed a first-batch shortlist (memorization repeat-loop, share-ayah-as-image, per-ayah notes, multi-tafsir compare) + flagged 4 items as owner-decision-blocked before any code (tajweed-colour mushaf source, app-locking permission model, group-khatma accounts/backend, radio stream licensing). No code changed - waiting on owner's shortlist pick per the stage's own check-in rule.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
