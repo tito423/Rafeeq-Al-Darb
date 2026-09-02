@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/rafeeq_app.dart';
+import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 
 /// Settings tab — language, theme, and app info.
@@ -68,6 +69,24 @@ class SettingsScreen extends ConsumerWidget {
             onSelectionChanged: (sel) {
               ref.read(themeModeProvider.notifier).set(sel.first);
             },
+          ),
+          const SizedBox(height: 24),
+
+          // Adhan
+          _SectionLabel('prayer.adhan_settings'.tr()),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.notifications_active_outlined,
+                  color: scheme.primary),
+              title: Text('prayer.adhan_settings'.tr()),
+              subtitle: Text('prayer.choose_adhan'.tr()),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const AdhanSettingsScreen(),
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: 24),
 

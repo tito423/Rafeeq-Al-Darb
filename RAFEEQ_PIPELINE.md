@@ -24,10 +24,10 @@
 | 7 | Real ayah coordinates (replace fake JSON) | ✅ | `scripts/build_mushaf_svg.py` extracts the `ayahPolygon` hit layer from the source SVGs → `assets/data/mushaf/<edition>_polygons.json` (normalized 0..1 per-page viewBox). 6,236/6,236 ayahs, verified against quran_local.db. Polygons, not boxes: 4,221 ayahs (68%) span multiple lines. Hit-test = even-odd ray cast per ring. **2026-09-02: runtime-verified on emulator** — tapping ayah 2:6 on page 3 highlights **two** separate line fragments, not one bounding box. This was the make-or-break check; it passes. |
 | 8 | Ayah sciences bottom sheet (real SQLite tafseer/i'rab/meanings) | ✅ | 4 tabs — tafsir (3 sources), translation (en/fr/ur), i'rab (corpus morphology per word), word meanings — all from quran_sciences.db. Gated by riwayah alignment. **Do not rebuild.** **2026-09-02: runtime-verified on Android emulator** (Muyassar+Jalalayn tafsir, EN/FR/UR translation, per-word i'rab + meanings all render real data). Required two fixes first: `quran_sciences.db` was missing from `pubspec.yaml` assets, and `DbHelper` opened read-only DBs with `version:` → `SQLITE_READONLY`. Both fixed. |
 | 9 | Professional dropdowns (reciters/translations) | 🔶 | Reciter dropdown done (176 Arabic editions) in the Downloads screen. Missing: translation-language selector in the reader — WORK_QUEUE Stage 4. **2026-09-02: fixed a real bug — ayah recitation never played** because `AyahAudioService` set audio sources without a `MediaItem` tag, which `just_audio_background` (init'd in `main()`) rejects. Now tagged; playback verified online and offline on the emulator. |
-| 10 | 10 authentic adhans (no music) | ⏳ | rafeeq-api/downloads/adhans = 10 real MP3s verified (ID3, 0.4–1.9MB) |
-| 11 | Custom adhan MP3 from device | ⏳ | |
-| 12 | Adhan UI + karaoke sync | ⏳ | |
-| 13 | Android native alarm (exact alarms, wakelock, mute/stop actions) | ⏳ | |
+| 10 | 10 authentic adhans (no music) | ✅ | The 10 MP3s now also live as Android raw resources (`res/raw/azan*.mp3`), needed for the native alarm sound — see T13. The 6 old fake placeholder `.m4a` files in `res/raw/` are deleted. |
+| 11 | Custom adhan MP3 from device | 🔶 | `file_picker` wired; import → selection confirmed to open the real system document picker. A full pick-to-firing-alarm cycle (native content:// URI sound) not carried through to completion this session. |
+| 12 | Adhan UI + karaoke sync | ✅ | Full-screen view launched via `fullScreenIntent` over the **locked** screen (uses `MainActivity`'s existing `showWhenLocked`/`turnScreenOn`); adhan text highlighted line-by-line, paced against the real recording's `Duration`; "الصلاة خير من النوم" shown only for Fajr. Real Stop/Mute. **2026-09-02: emulator-verified** for 4 different prayers, confirmed via `dumpsys audio`/`notification`, not screenshots alone. |
+| 13 | Android native alarm (exact alarms, wakelock, mute/stop actions) | ✅ | `AdhanAlarmService` rewritten: exact daily alarms per prayer, one notification channel per (mode, sound) pair (channels are immutable on Android). The adhan **sound** is played by Android's own notification-sound API (`RawResourceAndroidNotificationSound` + `AudioAttributesUsage.alarm`), not by Dart — `zonedSchedule`'s receiver never starts the Dart VM, so nothing else can play while the app is killed. Stop cancels the notification (confirmed to stop the sound); Mute reposts it silenced. **2026-09-02: emulator-verified**, including a per-prayer choice surviving `am force-stop` + relaunch. Battery-optimisation exemption prompt implemented but unconfirmed (no dialog seen on the emulator image used). |
 | 14 | Library: catalog / offline PDFs / viewer | ⏳ | |
 | 15 | 9 Hadith books hub (hierarchical) | ⏳ | hadith.db has 9 collections, 36,461 hadiths — rebuilt clean |
 | 16 | Azkar + Tasbeeh (dedup, haptics) | ⏳ | |
@@ -53,6 +53,21 @@
   playback. See `HANDOVER.md` §7 for the table and the list of out-of-scope bugs
   still open (download-stops-on-tab-switch, mode not persisted, raw/ .m4a
   placeholders, a couple of Arabic-string typos).
+- [2026-09-02] Owner asked whether the emulator-only STAGE 0 result was
+  acceptable or a physical device was required; chose to accept it and start
+  STAGE 1. Built the whole Adhan system (T10–T13): real per-prayer alarms with
+  a native (not Dart) alarm sound so it can fire while the app is killed,
+  full-screen karaoke UI over the lock screen, real Stop/Mute, per-prayer
+  mode + sound persisted across a restart, adhan picker with real preview,
+  custom-adhan import wired to the real file picker. Deleted the 6 fake
+  placeholder `.m4a` files and fixed the `settings.credits` typo — both from
+  STAGE 0's open-bugs list. **Emulator-verified** the same rigorous way as
+  STAGE 0 (`dumpsys audio`/`media_session`/`notification`, not screenshots
+  alone) for 4 different prayers; found and fixed 2 real bugs along the way
+  (a `PopScope` blocking Stop's own pop; a preview player's `await play()`
+  never resolving before Dart moved on). Open: physical device, the battery-
+  exemption button's effect, a custom adhan's native sound end-to-end. See
+  `HANDOVER.md` §7's STAGE 1 table for the full breakdown.
 
 ## Data sourcing decision (T6/T7)
 Mushaf pages and ayah tap-regions both come from **quranpedia/quran-svg**

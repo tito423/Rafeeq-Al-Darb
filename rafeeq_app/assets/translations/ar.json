@@ -123,7 +123,27 @@
     "mute": "كتم",
     "stop": "إيقاف",
     "god_is_greatest": "الله أكبر",
-    "prayer_times": "مواقيت الصلاة"
+    "prayer_times": "مواقيت الصلاة",
+    "mode_full": "أذان + شاشة كاملة",
+    "mode_audio": "صوت فقط",
+    "mode_vibrate": "اهتزاز فقط",
+    "mode_silent": "صامت",
+    "use_default": "استخدام الأذان الافتراضي",
+    "default_adhan_label": "الأذان الافتراضي",
+    "per_prayer": "تخصيص كل صلاة",
+    "imported": "مستورد",
+    "remove_custom": "حذف الأذان المخصص",
+    "schedule_saved": "تم تحديث تنبيهات الصلاة",
+    "location_denied": "تعذّر تحديد موقعك. فعّل صلاحية الموقع من إعدادات الجهاز",
+    "battery_optimization": "لضمان عمل الأذان في الخلفية، يُستحسن استثناء التطبيق من تحسين البطارية",
+    "battery_optimization_action": "استثناء التطبيق",
+    "notification_mode": "طريقة التنبيه",
+    "playing": "قيد التشغيل…",
+    "fajr_phrase": "الصلاة خير من النوم",
+    "today_times": "مواقيت اليوم",
+    "test_scheduled": "سيصلك تنبيه تجريبي خلال ثوانٍ",
+    "battery_exempted": "تم استثناء التطبيق من تحسين البطارية",
+    "no_custom_adhans": "لا يوجد أذان مخصص بعد"
   },
   "settings": {
     "title": "الإعدادات",
@@ -140,7 +160,7 @@
     "about_desc": "رفيق الدرب — تطبيق إسلامي شامل بمحتوى حقيقي ومصادر موثوقة",
     "guest_mode": "وضع الزائر",
     "guest_active": "الوضع الحالي: زائر (يعمل بدون إنترنت)",
-    "credits": "المصادر والمأسى"
+    "credits": "المصادر والمراجع"
   },
   "downloads": {
     "title": "التنزيلات",

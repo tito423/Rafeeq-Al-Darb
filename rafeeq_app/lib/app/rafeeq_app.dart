@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/theme/app_theme.dart';
+import 'navigation.dart';
 import 'shell/app_shell.dart';
 
 /// Injected from main() so sync reads are possible anywhere.
@@ -18,6 +19,7 @@ class RafeeqApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     return MaterialApp(
+      navigatorKey: rootNavigatorKey,
       title: 'app.name'.tr(),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,

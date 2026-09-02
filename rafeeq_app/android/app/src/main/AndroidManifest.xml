@@ -81,6 +81,20 @@
             </intent-filter>
         </service>
 
+        <!-- Exposes app-private files (a user-imported custom adhan MP3) as a
+             content:// URI so the native notification sound API — which
+             cannot read Flutter asset paths or app-private file paths — can
+             play it when an alarm fires while the app is killed. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

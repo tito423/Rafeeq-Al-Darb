@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Paths FileProvider is allowed to expose as content:// URIs. Covers the
+     whole app-private files directory, which is where path_provider's
+     getApplicationDocumentsDirectory() (used to store an imported custom
+     adhan MP3) and getApplicationSupportDirectory() live. -->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <files-path name="internal_files" path="." />
+</paths>

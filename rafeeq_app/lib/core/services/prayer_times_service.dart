@@ -138,4 +138,13 @@ class PrayerTimesService {
     return DateTime(now.year, now.month, now.day, int.parse(m.group(1)!),
         int.parse(m.group(2)!));
   }
+
+  /// Parses "HH:mm" (as returned in [PrayerTimes]) into (hour, minute), or
+  /// null if the string isn't a valid time — e.g. the "--:--" placeholder
+  /// used when no real reading is available yet.
+  static (int, int)? parseHM(String hhmm) {
+    final m = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(hhmm);
+    if (m == null) return null;
+    return (int.parse(m.group(1)!), int.parse(m.group(2)!));
+  }
 }

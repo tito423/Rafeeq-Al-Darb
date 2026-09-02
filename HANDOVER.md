@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | commit `6448768` + analyzer-cleanup + STAGE-0 runtime-fixes commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0 gate PASSED — all 10 acceptance checks verified on the Android emulator (§7 table).** Not yet run on a physical device. |
+| **State at** | commit `bf8a327` + STAGE 1 (Adhan) commit |
+| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0 gate PASSED (all 10 checks, §7) · STAGE 1 (Adhan) core pipeline built and verified firing/Stop/Mute/persistence on the Android emulator (§7 STAGE 1 table).** Owner decision 2026-09-02: emulator verification accepted as sufficient for the STAGE 0 gate; a physical-device pass is still open for both stages. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,16 +33,53 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 — STAGE 0 gate PASSED. Next: STAGE 1 (Adhan).**
+**2026-09-02 — STAGE 1 (Adhan) core pipeline built and emulator-verified. Next: STAGE 2 (Library & Hadith), or a physical-device pass first.**
 
-All 10 STAGE-0 acceptance checks verified on the Android emulator (see §7 table).
-Fixes made to get there: read-only DB open (`956ec5e`), debug TLS trust config
-for Avast (`e7b8728`), sciences DB asset (owner, `dd7db4b`), audio `MediaItem`
-tag so `just_audio_background` actually plays (this commit).
+Owner was asked whether STAGE 0's emulator-only verification was acceptable or
+a physical device was required; owner chose to accept the emulator and proceed
+to STAGE 1. Built the whole Adhan system (WORK_QUEUE T10–T13):
 
-Not done: real-device run (only emulator), and the out-of-scope bugs listed at
-the end of §7 — the mushaf-download-stops-on-tab-switch one is the most worth
-fixing early.
+- Adhan picker with real preview playback (`AdhanSettingsScreen`), custom
+  adhan import via `file_picker`, per-prayer notification mode (full /
+  audio-only / vibrate / silent) + per-prayer sound override, all persisted.
+- Real prayer times on Home (`PrayerController`): location → AlAdhan API →
+  reschedules every prayer's native exact alarm on every fetch and on every
+  settings change.
+- The Adhan **sound** is played natively by Android's own notification-sound
+  API (`RawResourceAndroidNotificationSound` + `AudioAttributesUsage.alarm`),
+  not by Dart/just_audio — required because the alarm can fire with the app
+  fully killed, and `zonedSchedule`'s receiver never starts the Dart VM. This
+  meant moving the 10 real adhans into `android/.../res/raw/` as well as
+  assets, and deleting the 6 fake placeholder `.m4a` files that lived there
+  (§7's oldest open bug — now actually fixed, not just flagged).
+- Full-screen karaoke Adhan screen (`fullScreenIntent`, wakes/shows over the
+  lock screen using `MainActivity`'s existing `showWhenLocked`/`turnScreenOn`),
+  with real Stop/Mute wired to the same notification.
+- Fixed `settings.credits` typo (`المصادر والمأسى` → `المصادر والمراجع`),
+  also flagged in §7.
+
+**Verified for real, on the Android emulator** (method: adb screenshots +
+`dumpsys audio`/`media_session`/`notification` to confirm actual playback and
+cancellation, not just UI appearance — see the STAGE 1 table in §7): alarms
+fire with real native sound and the full-screen UI over a **locked** screen
+for four different prayers; Stop cancels the notification and audibly stops
+the sound in one tap; Mute silences it and updates the UI; a per-prayer mode
+change survives a full `am force-stop` + relaunch. Two real bugs were caught
+and fixed by this testing, not left in: `Navigator.maybePop()` blocked by its
+own `PopScope(canPop: false)` (Stop looked like it did nothing), and the
+preview player's `await play()` never resolving before Dart returns (icon
+looked stuck — same class of just_audio gotcha already documented in
+`ayah_audio_service.dart`, this time in the probe player too).
+
+**Not verified / open:** a physical device (still emulator-only); the battery-
+optimization exemption button (`Permission.ignoreBatteryOptimizations`) — the
+tap produced no dialog and no whitelist change on this emulator image, most
+likely an emulator limitation given the standard API and correct manifest
+permission, but unconfirmed; a custom (user-imported) adhan's *native*
+background sound via the FileProvider content URI — the file-picker import
+flow itself was confirmed to open the real system document picker, but a full
+custom file was not carried through to a firing alarm in this session. See
+§7's STAGE 1 table for the full breakdown.
 <!-- WIP:END -->
 
 ---
@@ -367,19 +404,87 @@ passes a real "سورة • s:a" title so the media notification reads properly.
   Recitations tab mid-download and the prefetch halts (got to 205/604, no
   resume on return; the tile shows the Download button again instead of
   progress). `MushafPageService.prefetchEdition` is fire-and-forget but the
-  Downloads tile drives/observes it and loses that on tab switch.
+  Downloads tile drives/observes it and loses that on tab switch. **Still
+  open** — highest-priority remaining bug, undermines offline-first.
 - **Reader mode (text/image) is not persisted** — always starts in text mode.
-  Only the page number is saved. Minor UX.
-- `android/app/src/main/res/raw/` still ships **6 `.m4a` "adhan" files** (~25 MB,
-  several byte-identical = placeholders) — the §2 "fake adhans" that T1 was
-  supposed to purge. The real adhans are the 10 mp3s in `assets/audio/adhan/`.
-  Delete the raw/ ones in STAGE 1.
-- Text-mode surah header renders `سورة سورةُ الفاتحة` (doubled "سورة").
-- Stray `()` under the last ayah on a text-mode page.
-- Settings: `المصادر والمأسى` should be `المصادر والمراجع`.
-- Launcher icon is a square JPG, no alpha / adaptive shape.
+  Only the page number is saved. Minor UX. **Still open.**
+- ~~`android/app/src/main/res/raw/` still ships 6 `.m4a` "adhan" files~~ —
+  **fixed in STAGE 1**: the fake files are deleted; the 10 real adhans now
+  also live in `res/raw/` (needed for the native alarm sound, see below).
+- Text-mode surah header renders `سورة سورةُ الفاتحة` (doubled "سورة"). **Still open.**
+- Stray `()` under the last ayah on a text-mode page. **Still open.**
+- ~~Settings: `المصادر والمأسى` should be `المصادر والمراجع`~~ — **fixed in STAGE 1.**
+- Launcher icon is a square JPG, no alpha / adaptive shape. **Still open.**
 - i'rab root/lemma show Buckwalter translit ("Hmd", "rbb") not Arabic — that's
-  how the corpus stores them; a transliteration pass would be nicer.
+  how the corpus stores them; a transliteration pass would be nicer. **Still open.**
+
+### Update 2026-09-02 — STAGE 1 (Adhan system), built and emulator-verified
+
+Owner approved treating the STAGE 0 emulator run as sufficient and moving on
+(rather than requiring a physical device first) — see the WIP note above.
+Built all of WORK_QUEUE T10–T13:
+
+- **`lib/features/adhan/`** — `AdhanSettingsScreen` (picker with real preview
+  via a tagged `just_audio` player, custom-adhan import via `file_picker`,
+  per-prayer mode + sound override, a battery-optimization-exemption card,
+  per-prayer "تجربة" test button), `AdhanFullScreenScreen` (karaoke text,
+  Stop/Mute), `adhan_scheduler.dart` (resolves settings + catalog into real
+  `AdhanAlarmService.scheduleDaily` calls), `adhan_settings_provider.dart` /
+  `adhan_catalog_provider.dart` (Riverpod, SharedPreferences-backed).
+- **`lib/core/services/adhan_alarm_service.dart`** rewritten: one small
+  notification channel per (mode, sound) pair — channels are immutable on
+  Android, so the sound/vibration config lives in the channel id, not in a
+  per-prayer channel. `AndroidNotificationCategory.alarm` +
+  `AudioAttributesUsage.alarm`, `fullScreenIntent` only for mode "full".
+- **`lib/features/home/` real prayer times**: `PrayerController` fetches
+  location → `PrayerTimesService` → reschedules every prayer's alarm; Home
+  shows an honest "enable location" card when denied (never a fake city).
+- **Native additions**: `MainActivity.kt` gained a `contentUriForFile` method
+  channel (FileProvider, for a custom adhan's sound URI) and a `FileProvider`
+  + `res/xml/file_paths.xml` in the manifest. The 6 fake `res/raw/*.m4a`
+  files are gone; the 10 real `assets/audio/adhan/azan*.mp3` are now **also**
+  `res/raw/azan*.mp3` — required because `RawResourceAndroidNotificationSound`
+  needs a compiled Android resource, not a Flutter asset path.
+
+**Why the sound is native, not Dart:** `zonedSchedule`'s alarm fires through
+`flutter_local_notifications`' own Java `BroadcastReceiver`, which does not
+start the Dart VM. If the app is killed, no Dart code runs — so only Android's
+own notification-sound API can possibly play the adhan. This is also why
+Stop/Mute act on the *notification* (cancel it / repost it silenced) rather
+than on a Dart audio player.
+
+**STAGE 1 acceptance (WORK_QUEUE) — verified on the Android emulator, not a
+physical device.** Verification method matters here: every claim below was
+confirmed with `adb shell dumpsys audio` (to see the actual native
+`AudioTrack`/`MediaPlayer` start/stop events, not just a UI state), `dumpsys
+media_session`, and `dumpsys notification`, alongside screenshots — not
+screenshots alone.
+
+| # | check | result |
+|---|---|---|
+| set a prayer 2 min ahead → lock the phone → adhan fires with sound + full-screen UI | ✅ fired 4 separate times for 4 different prayers (Dhuhr, Asr, Maghrib, Fajr), each time waking the locked emulator into the full-screen karaoke view; `dumpsys audio` showed a real `com.android.systemui` `MediaPlayer` with `usage=USAGE_ALARM` starting each time |
+| Fajr shows "الصلاة خير من النوم" | ✅ present in the Fajr firing, absent from the other three |
+| Stop works from the alert | ✅ — but only after a real bug fix (below); confirmed via `dumpsys audio` (`event:stopped` at the tap instant) and `dumpsys notification` (`numRemovedByApp` incrementing) |
+| Mute works from the alert | ✅ confirmed via `dumpsys audio` `event:stopped` at the tap instant, plus the UI switching to a "كتم" label and a disabled Mute button |
+| per-prayer choice survives an app restart | ✅ set Isha to "اهتزاز فقط" (vibrate only), ran `adb shell am force-stop`, relaunched, navigated back — still vibrate-only, not reverted to the "full" default |
+| preview playback in the picker | ✅ real play/stop, confirmed via `dumpsys media_session` (`state=PLAYING` with an advancing `position`) — the icon lags the real audio state by a second or two (buffering latency), not a bug |
+| custom adhan from device (file picker) | 🔶 the picker button opens the real Android document picker (`com.android.documentsui`) — a full import → selection → firing alarm with the custom sound was not carried through to completion in this session |
+| battery-optimization exemption button | 🔶 tap produced no dialog and no change in `dumpsys deviceidle`/whitelist on this emulator image; the manifest permission and `permission_handler` call are both standard and correct, so this reads as an emulator limitation, but it is **not confirmed** — re-test on a physical device |
+
+**Two real bugs found by this testing and fixed, not left in:**
+1. `AdhanFullScreenScreen` wrapped itself in `PopScope(canPop: false)` to stop
+   an accidental back-swipe — which also blocked the Stop button's own
+   `Navigator.maybePop()`, so Stop silenced the alarm but visibly did nothing.
+   Fixed with `canPop: _stopped` plus `popUntil((r) => r.isFirst)` (a
+   fullScreenIntent launch over a locked screen was observed to sometimes
+   deliver its notification-response twice, stacking two copies of the
+   screen — `popUntil` clears all of them in one Stop tap, `maybePop` only
+   cleared one).
+2. The adhan-picker preview's `await _preview.play()` doesn't resolve until
+   playback *finishes*, not when it starts (documented in
+   `ayah_audio_service.dart` for a different player, missed here first time)
+   — the play/stop icon looked stuck for the whole track. Fixed with
+   `unawaited(_preview.play())`, same as the existing pattern.
 
 ### Original context (why analysis had never run)
 
@@ -407,9 +512,17 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
    have thousands of paths. No jank seen paging cached pages on the emulator; if
    it feels slow on a real device, precompile to `vector_graphics` `.vec` — do
    **not** revert to raster.
-4. **Then** continue `WORK_QUEUE.md` STAGE 1+ (adhan, library, hadith, azkar,
-   new-Muslim guide, thematic search, release). Consider fixing the
-   download-stops-on-tab-switch bug (§7) first — it undermines "offline-first".
+4. ~~**STAGE 1 — Adhan system.**~~ **DONE 2026-09-02 on the emulator** — full
+   pipeline built and verified (§7 STAGE 1 table): real native alarm sound,
+   full-screen lock-screen UI, Stop/Mute, per-prayer persistence. Still open
+   from Stage 1 itself: a physical-device pass, the battery-optimization
+   button's effect (no visible dialog on the emulator), and carrying a custom
+   imported adhan through to an actual firing alarm.
+5. **Next:** the mushaf download-stops-on-tab-switch bug (§7) is the
+   highest-priority remaining bug outside Stage 1 — it undermines
+   "offline-first" and has been open since STAGE 0. Then continue
+   `WORK_QUEUE.md` STAGE 2+ (library, hadith, azkar, new-Muslim guide,
+   thematic search, release).
 
 ---
 

@@ -11,6 +11,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 
 import 'app/rafeeq_app.dart';
 import 'core/services/adhan_alarm_service.dart';
+import 'features/adhan/presentation/adhan_navigation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +47,9 @@ Future<void> main() async {
   } catch (_) {}
 
   await AdhanAlarmService.instance.initialize();
+  AdhanAlarmService.onOpenAdhan = openAdhanFromPayload;
+  final coldLaunchPayload =
+      await AdhanAlarmService.instance.consumeColdLaunchPayload();
 
   runApp(
     EasyLocalization(
@@ -62,4 +66,14 @@ Future<void> main() async {
       ),
     ),
   );
+
+  // The app was launched by tapping an Adhan notification while fully
+  // killed — the live tap callback (`onOpenAdhan`, wired above) only fires
+  // for a running/backgrounded app, so a cold launch needs this one-time
+  // check instead. Deferred a frame so the navigator is actually mounted.
+  if (coldLaunchPayload != null) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      openAdhanFromPayload(coldLaunchPayload);
+    });
+  }
 }

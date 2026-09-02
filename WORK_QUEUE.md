@@ -79,7 +79,15 @@ That table is stale. Before starting Stage 1, fix it:
 
 ---
 
-## STAGE 1 — Adhan system  (pipeline T10–T13)
+## STAGE 1 — Adhan system  (pipeline T10–T13) — ✅ built & emulator-verified 2026-09-02
+
+See `HANDOVER.md` §7's STAGE 1 table for the acceptance-criteria results and
+verification method (`dumpsys audio`/`media_session`/`notification`, not
+screenshots alone). Open from this stage: a physical-device pass, the
+battery-optimization exemption button's effect (no visible dialog on the
+emulator image used), and a custom imported adhan's native background sound
+was not carried through to an actual firing alarm (the import flow itself —
+opening the real system file picker — was confirmed).
 
 The owner has raised this more times than anything else. Treat it as top
 priority after Stage 0.
@@ -90,22 +98,26 @@ is in `assets/data/catalogs/`. `adhan_alarm_service.dart` and
 `prayer_times_service.dart` exist from earlier work.
 
 **Build:**
-1. **Adhan picker with working preview.** A dropdown listing the 10 muezzins;
-   the play button must actually play the audio immediately. Bundle the audio
-   as assets so preview works offline.
-2. **Custom adhan from device.** File picker for an MP3 from the phone; once
-   chosen it becomes selectable like any built-in adhan.
-3. **Per-prayer notification mode.** For each of the 5 prayers independently:
-   audio + full screen / audio only / vibrate only / silent. Persisted.
-4. **Exact background alarms.** `SCHEDULE_EXACT_ALARM`, `USE_EXACT_ALARM`,
-   `POST_NOTIFICATIONS`, `FOREGROUND_SERVICE`, `WAKE_LOCK`,
-   `RECEIVE_BOOT_COMPLETED`, `USE_FULL_SCREEN_INTENT` in the manifest, plus a
-   battery-optimisation exemption prompt.
-5. **Adhan notification** that is ongoing (not auto-dismissed) with working
-   **Stop** and **Mute** actions.
-6. **Full-screen adhan** with a calm Islamic animated background and the adhan
-   text synced to the audio (karaoke style). Include
-   "الصلاة خير من النوم" for Fajr.
+1. ✅ **Adhan picker with working preview.** Built as a selectable list (not a
+   dropdown widget) with a real play/stop preview per row, offline via the
+   bundled assets. The 10 files have no verified per-reciter attribution, so
+   they're honestly labeled "أذان 1"–"أذان 10" rather than inventing names.
+2. 🔶 **Custom adhan from device.** File picker wired and confirmed to open
+   the real system document picker; a full pick → import → firing-alarm cycle
+   was not carried through to completion in this session.
+3. ✅ **Per-prayer notification mode.** All 4 modes, all 5 prayers, persisted —
+   confirmed to survive an app restart.
+4. ✅/🔶 **Exact background alarms.** All 7 manifest permissions were already
+   present; the exact-alarm request is wired in `AdhanAlarmService.initialize()`.
+   The battery-optimisation exemption **prompt** is implemented
+   (`Permission.ignoreBatteryOptimizations`) but produced no visible dialog on
+   the emulator image tested — needs a physical-device check.
+5. ✅ **Adhan notification**, ongoing, with working **Stop** and **Mute** —
+   both confirmed via `dumpsys audio` to actually stop the native sound, not
+   just change the UI.
+6. ✅ **Full-screen adhan** with an animated gradient background and the adhan
+   text highlighted karaoke-style against the real audio duration, including
+   "الصلاة خير من النوم" for Fajr only.
 
 **Acceptance:** set a prayer time 2 minutes ahead, **lock the phone**, and
 confirm the adhan fires with sound and the full-screen UI; Stop and Mute work
