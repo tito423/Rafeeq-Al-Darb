@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/services/prayer_times_service.dart';
+import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../data/prayer_controller.dart';
 
 const _prayerOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -117,7 +118,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   _QuickCard(
                     icon: Icons.library_books,
                     label: 'new_muslim.title'.tr(),
-                    onTap: () => widget.onNavigate(3),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const NewMuslimGuideScreen(),
+                      ),
+                    ),
                   ),
                   _QuickCard(
                     icon: Icons.settings,

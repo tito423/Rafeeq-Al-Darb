@@ -31,7 +31,7 @@
 | 14 | Library: catalog / offline PDFs / viewer | 🔶 | `LibraryScreen`'s "الكتالوج" tab built as an honest placeholder — real open sources found on archive.org for every named title, but nothing downloaded yet pending the owner's choice of edition/tahqiq per title (STOP AND ASK, see WORK_QUEUE Stage 2). |
 | 15 | 9 Hadith books hub (hierarchical) | ✅ | **Correction:** no `hadith.db` actually existed anywhere in this workspace before 2026-09-02 — only the real source JSON (`scripts/temp_phase1/hadith9/`) did; the "36,461 hadiths, rebuilt clean" note was describing something that wasn't there. Built for real by `scripts/build_hadith_db.py`: 9 books, 429 chapters, **40,943 hadiths**. Fixed the "2 → 9 → 99" ordering bug (`number_in_book` is INTEGER; 0 out-of-order chapters, verified both by script and live in the app). Downloaded on demand (~17 MB zipped, hosted on `tito423/rafeeq-api`), not bundled. **2026-09-02: verified against the real DB via direct `adb push` injection** (book list, chapter list, hadith ordering across the two-digit boundary, detail view all confirmed with real data) — **the live download itself was not verified**, blocked by a host-machine TLS problem also affecting previously-working mushaf fetches; see `HANDOVER.md` §7. |
 | 16 | Azkar + Tasbeeh (dedup, haptics) | ✅ | `lib/features/azkar/` against the bundled 134 sections/298 items. 0 duplicate azkar within a section (real SQL check). Real repeat counts parsed from each dhikr's own embedded text (e.g. "ثلاث مرات") rather than guessed. **2026-09-02: fully live-verified**, including the historical "counter only counts after reset" bug (confirmed absent — counts on the first tap) and auto-advance at the real target. Haptics + morning/evening reminders both real and persisted, no default time (both start off). |
-| 17 | New Muslim guide | ⏳ | |
+| 17 | New Muslim guide | ✅ | `lib/features/new_muslim/`. 5 topics (pillars of Islam, articles of faith, wudu, prayer steps, Quran intro) written by hand from mainstream Sunni teaching, per the owner's explicit approval to use trusted sources directly — bilingual (ar/en), not scraped. **2026-09-02: emulator-verified**, incl. fixing a real pre-existing bug where Home's quick card opened the wrong screen after STAGE 2 repointed the tab index it used. |
 | 18 | Thematic Quran search | ⏳ | |
 | 19 | Security & offline guest mode | ⏳ | R2 keys were hardcoded in client — removed |
 | 20 | Final build + git | ⏳ | |
@@ -100,6 +100,15 @@
   selector for the ayah card, replacing the old en/fr/ur-all-stacked view.
   Emulator-verified: ayah 1:1's translation tab defaulted to English with
   only the Saheeh International text shown.
+- [2026-09-02] Built STAGE 5 (T17), New Muslim Guide, per the owner's
+  approval to use known trusted Islamic sources directly. Wrote 5 topics by
+  hand (pillars of Islam, articles of faith, wudu, prayer steps, Quran
+  intro) from mainstream, uncontroversial Sunni teaching, bilingual (ar/en).
+  Fixed a real pre-existing bug along the way: Home's quick-access card
+  opened the wrong screen (Library) because STAGE 2 had silently repointed
+  the tab index it navigated by. Emulator-verified: all 5 topics list with
+  correct counts, Wudu's 8 steps render in order with the Shahada dua shown
+  in a proper phrase box.
 
 ## Data sourcing decision (T6/T7)
 Mushaf pages and ayah tap-regions both come from **quranpedia/quran-svg**

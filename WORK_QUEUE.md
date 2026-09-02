@@ -196,10 +196,19 @@ International text below it (not all three languages).
 
 ---
 
-## STAGE 5 — New Muslim guide  (T17)
-Visual guide: how to pray (illustrated steps), wudu, pillars of Islam and iman,
-basic daily supplications — in the app's active language.
-**STOP AND ASK** about content sources before writing religious instruction.
+## STAGE 5 — New Muslim guide  (T17) — ✅ done 2026-09-02
+
+Owner approved using known trusted Islamic sources directly (no further
+gate). `lib/features/new_muslim/data/guide_content.dart` — pillars of Islam,
+articles of faith, wudu, prayer steps, a Quran introduction, written by hand
+from mainstream, uncontroversial Sunni teaching, bilingual (ar/en). Not
+illustrated (text + the Arabic phrase/dua for each step, in the Quran font)
+— an illustrated version is a possible future enhancement, not done here.
+**2026-09-02: emulator-verified** — all 5 topics list with correct item
+counts; Wudu's 8 steps render in order with the Shahada dua in a proper
+phrase box. Also fixed a real pre-existing bug: Home's quick-access card
+was silently opening the wrong screen (Library) since STAGE 2 repointed the
+tab index it used to navigate by — now pushes the guide screen directly.
 
 ## STAGE 6 — Thematic Quran search  (T18)
 Topic tree (aqeedah, akhlaq, stories of the prophets, rulings, the hereafter)

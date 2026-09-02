@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | commit `0399a3b` (STAGE 3) + STAGE 4 translation-selector commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0/1 passed on the emulator (§7) · STAGE 2 Hadith hub verified via direct DB injection (§7) · STAGE 3 Azkar fully emulator-verified live (§7) · STAGE 4 translation selector emulator-verified (§7).** The STAGE 2 download-path TLS problem (§7) doesn't affect Stages 3/4 — both are 100% offline, bundled data. |
+| **State at** | commit `6490761` (STAGE 4) + STAGE 5 New-Muslim-Guide commit |
+| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0/1 passed on the emulator (§7) · STAGE 2 Hadith hub verified via direct DB injection (§7) · STAGE 3/4/5 fully emulator-verified live (§7).** The STAGE 2 download-path TLS problem (§7) doesn't affect Stages 3–5 — all three are 100% offline. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,9 +33,30 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 — STAGE 4 (translation selector) done. Next: STAGE 5 (New Muslim
-guide — owner already said to use trusted sources directly, no further gate)
-or STAGE 6 (thematic search).**
+**2026-09-02 — STAGE 5 (New Muslim Guide) built and emulator-verified. Next:
+STAGE 6 (thematic Quran search).**
+
+Five topics WORK_QUEUE names: pillars of Islam, articles of faith, wudu,
+prayer steps, a Quran introduction. Per the owner's explicit direction
+("استخدم مصادر إسلامية معروفة وموثوقة") the content is written directly in
+`lib/features/new_muslim/data/guide_content.dart`, bilingually (ar/en, by
+hand — not through easy_localization's UI-chrome key system, the same way
+Quran/azkar/hadith text stays as content rather than a translation key) —
+every fact in it (the five pillars, the six articles of faith, the wudu
+sequence, the prayer structure) is universally agreed-upon core Sunni
+teaching, not a specific scholar's disputed position, and nothing was
+scraped from any site. Also fixed a real, pre-existing bug while wiring
+this up: Home's "دليل المسلم الجديد" quick-access card called
+`onNavigate(3)`, which after STAGE 2 renamed slot 3 to Library, meant the
+card silently opened the wrong screen — it now pushes
+`NewMuslimGuideScreen` directly instead of going through a tab index.
+**Emulator-verified**: opened the guide from Home, all 5 sections listed
+with correct item counts, opened Wudu and confirmed all 8 real steps render
+in order with the Shahada dua shown in a proper Quran-font phrase box.
+
+---
+
+**2026-09-02 (earlier) — STAGE 4 (translation selector) done.**
 
 Small, contained change: the ayah-sciences card's translation tab used to
 stack en/fr/ur every time it opened. Added
@@ -715,6 +736,19 @@ persisted dropdown (`translation_lang_provider.dart`) shows one at a time.
 Verified live: ayah 1:1's translation tab opened with the dropdown on
 English and only the Saheeh International text below it.
 
+### Update 2026-09-02 — STAGE 5 New Muslim Guide: written and emulator-verified
+
+Content lives in `lib/features/new_muslim/data/guide_content.dart` — written
+by hand from mainstream, uncontroversial Sunni teaching per the owner's
+explicit go-ahead, not fetched or scraped from anywhere.
+
+| # | check | result |
+|---|---|---|
+| 5 topics, correct real content | ✅ pillars of Islam (5), articles of faith (6), wudu (8 steps), prayer steps (10), Quran intro (3 points) — all standard, universally-agreed teaching |
+| reachable from Home | ✅ **and a real pre-existing bug fixed**: the quick-access card called `onNavigate(3)`, which STAGE 2 had silently repointed to Library when it renamed that tab slot — now pushes `NewMuslimGuideScreen` directly |
+| Wudu detail renders correctly, in order | ✅ live-verified: all 8 real steps, ending with the Shahada dua shown in a Quran-font phrase box |
+| bilingual (ar/en) | ✅ written by hand for each item (not through the easy_localization key system, matching how Quran/azkar/hadith text is content rather than UI chrome) |
+
 ### Original context (why analysis had never run)
 
 The previous agent worked from an isolated Linux sandbox with only the project
@@ -764,9 +798,14 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
    item 6.
 9. ~~**STAGE 4 — Translation selector.**~~ **DONE 2026-09-02, emulator-verified**
    (§7).
-10. Continue `WORK_QUEUE.md` STAGE 5+ (new-Muslim guide — owner already
-    approved using trusted sources directly — thematic search,
-    security/guest-mode check, release).
+10. ~~**STAGE 5 — New Muslim Guide.**~~ **DONE 2026-09-02, emulator-verified**
+    (§7) — content written by hand from mainstream Sunni teaching, per the
+    owner's explicit approval.
+11. Continue `WORK_QUEUE.md` STAGE 6+ (thematic search, security/guest-mode
+    check, release). Release (STAGE 8) and Google sign-in (part of STAGE 7)
+    both need the owner's own credentials/accounts (a signing keystore; a
+    Firebase/Google Cloud OAuth client) that no agent session has — flag
+    that plainly rather than attempting a broken version of either.
 
 ---
 
