@@ -7,7 +7,7 @@
 |---|---|
 | **Last updated** | 2026-09-02 |
 | **State at** | commit `2efc519` (STAGE 5) + STAGE 6 thematic-search commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter test` clean (incl. a new `arabic_normalize_test.dart`) · `flutter build apk --debug` OK · STAGE 0–5 verified (§7) · STAGE 2's TLS blocker is gone (owner disabled Avast) and the real hadith download is confirmed end-to-end · STAGE 6 (thematic search) built and now fully live-verified, including tap-to-jump-to-page.** Four real, previously-hidden bugs were found and fixed once live testing could finally go deep enough — see the WIP note and §7. |
+| **Build verified?** | **`flutter analyze` clean · `flutter test` clean · `flutter build apk --debug` and `--release --split-per-abi` both OK · STAGE 0–6 all fully live-verified (§7) · STAGE 7 (security/guest-mode) verified, one real gap fixed · STAGE 8 (release) pipeline verified, only real keystore signing still blocked.** See the WIP note and §7 for the full list of real bugs found and fixed this session. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -96,6 +96,66 @@ screen navigated to page 23/604 and rendered that exact ayah at the bottom of
 the page. The earlier "not confirmed" note in this file and in WORK_QUEUE was
 overly cautious, not wrong to flag — it was real tap-precision uncertainty at
 the time, now resolved by a clean repeat test.
+
+**Mushaf image mode re-verified live, now that Avast is off.** This was the
+one item left over from the TLS saga that had never been re-checked after
+the owner disabled Avast (only the hadith download path had been). Switched
+to image mode from a fresh install (so nothing could be cached) and it
+rendered page 23 as the real vector SVG mushaf on the first try — a genuine
+network fetch, not a fluke. Also re-confirmed the multi-line ayah-polygon
+highlight (tapping ayah 2:151, which spans three lines, highlighted all
+three) and the sciences bottom sheet's real tafsir text (Muyassar +
+Jalalayn) both still work. Nothing here needed a fix; it was purely
+Avast that broke it.
+
+**STAGE 7 (security & guest mode) — verified, one real gap fixed.** Grepped
+all of `lib/` for `signIn`/`login`/`auth`/`FirebaseAuth`: there is no
+authentication code anywhere, so "every offline feature works without an
+account" is completely true by construction — guest mode isn't a mode here,
+it's the only mode. `AppConfig` re-confirmed secret-free. Found one real gap
+though: `rafeeq_app/android/app/google-services.json` — a real, live
+Firebase config (project `rafeeq-aldarb`, real API key + OAuth client ID) —
+had been committed to git since the very first commit and was never
+gitignored, even though this file's category was already named in the
+STAGE 8 checklist below. Untracked it (`git rm --cached`; the local file is
+untouched, so nothing that needs it breaks) and extended
+`rafeeq_app/.gitignore` to also cover `.env`, `GoogleService-Info.plist`,
+`android/key.properties`, and `*.jks`/`*.keystore`. To be clear about the
+actual risk level (so this doesn't get over-read as another R2-style leak):
+a Firebase Android API key is designed to ship inside client apps — Google's
+own guidance is that it's not confidential the way a server secret is; real
+protection is API-key restrictions + Firebase Security Rules, not secrecy of
+the key. Still, it shouldn't be sitting in git per this project's own
+checklist, and it already is in git history from that first commit, which
+is worth the owner knowing. **Google sign-in itself is still not built** —
+the Firebase project exists, but `pubspec.yaml` has no `firebase_auth`/
+`google_sign_in` packages yet, and finishing this needs the owner to
+register a release SHA-1 fingerprint in that Firebase project's console,
+which no agent session can do. Flagged rather than half-built.
+
+**STAGE 8 (release) — the build pipeline works end-to-end; only real signing
+is blocked.** Ran `flutter clean` → `pub get` → `analyze` → `build apk
+--release --split-per-abi` for real: it succeeds
+(armeabi-v7a/arm64-v8a/x86_64 APKs, 35.8/37.8/39.2 MB), and the x86_64 one
+installs and runs correctly on a fresh emulator install — Arabic UI intact,
+an honest "enable location" empty state where prayer times go rather than
+fake data. While building this, found `AndroidManifest.xml`'s
+`<application>` tag had `android:usesCleartextTraffic="true"` applying to
+**every** build type including release, despite a full `lib/` grep finding
+zero `http://` URLs anywhere in the app (everything is `https://`). This
+looks like a leftover from the earlier Avast/TLS debugging (which is an
+unrelated mechanism — a TLS-intercepting proxy is still HTTPS with a
+different root CA, which the debug-only `network_security_config` already
+handles correctly; cleartext is a separate permission for plain, unencrypted
+HTTP). Removed it from the main manifest so release now defaults to
+disallowing cleartext, matching what the app actually uses; re-built and
+re-installed to confirm this didn't break anything. **What's still blocked:**
+the release build is signed with the **debug** keystore (a
+`// TODO: Add your own signing config` comment already sits in
+`android/app/build.gradle.kts`) — real release signing needs the owner's own
+keystore, alias, and passwords, which no agent session should generate on
+its own (a self-generated one would mean nobody but this session could ever
+re-sign an update).
 
 Owner's message mid-session: use al-Maktaba al-Shamela or another free
 Islamic-books source for the Library catalog (Stage 2's remaining piece, no
@@ -1009,16 +1069,28 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
     nothing; and never load a whole large table into memory at once on this
     device — page it (see `HadithRepository.search()`'s doc for the real OOM
     crash this caused and how it was fixed).
-14. **STAGE 2's Library "Books" catalog is still open.** Owner said to use
-    al-Maktaba al-Shamela or another free Islamic-books source (no further
-    STOP AND ASK) — real archive.org sources were already found for every
-    named title (see WORK_QUEUE Stage 2); still needs building the actual
-    catalog + download flow.
-15. Continue `WORK_QUEUE.md` STAGE 7+ (security/guest-mode check, release).
-    Google sign-in (part of STAGE 7) and the release signing keystore
-    (STAGE 8) both need the owner's own credentials/accounts that no agent
-    session has — flag that plainly rather than attempting a broken version
-    of either; everything else in both stages is doable.
+14. **STAGE 2's Library "Books" catalog is still open — the one real
+    remaining feature gap.** Owner said to use al-Maktaba al-Shamela or
+    another free Islamic-books source (no further STOP AND ASK) — real
+    archive.org sources were already found for every named title (see
+    WORK_QUEUE Stage 2); `syncfusion_flutter_pdfviewer` is already a pubspec
+    dependency (unused so far) suggesting a PDF-based reader was the
+    original plan. Still needs: picking a specific edition/tahqiq per title,
+    the actual catalog data structure, download wiring (reuse
+    `DownloadManager`), and a reader screen.
+15. ~~**STAGE 7 — Security & guest mode.**~~ **DONE 2026-09-02** — no
+    credentials in the client, no auth code at all (so guest mode is total
+    by construction), and a real pre-existing gap fixed (an untracked
+    `google-services.json`, see §9). **Still blocked:** actually building
+    Google sign-in needs the owner to register a release SHA-1 in the
+    already-existing `rafeeq-aldarb` Firebase project's console.
+16. ~~**STAGE 8 — Release.**~~ **DONE 2026-09-02** — `flutter clean` → `pub
+    get` → `analyze` → `build apk --release --split-per-abi` all succeed and
+    the resulting APK installs and runs correctly; a real
+    `usesCleartextTraffic="true"` release-security gap was found and fixed
+    along the way (§7). **Still blocked:** the release build is signed with
+    the debug keystore — real signing needs the owner's own keystore file,
+    alias, and passwords; no agent session should generate one itself.
 
 ---
 
@@ -1031,6 +1103,17 @@ must be treated as public.
 `rafeeq-aldarb-data` token → create a new one → update `.env`.
 
 No credentials live in the client; `AppConfig` is secret-free. Keep it so.
+
+**2026-09-02:** `rafeeq_app/android/app/google-services.json` (a real
+Firebase config for project `rafeeq-aldarb`, incl. a real API key and OAuth
+client ID) had been committed since this project's very first commit and was
+never gitignored. Untracked it and added it (plus `.env`,
+`GoogleService-Info.plist`, `android/key.properties`, `*.jks`/`*.keystore`)
+to `rafeeq_app/.gitignore` — see §7's STAGE 7 note for the full account,
+including why this one is lower-severity than the R2 key above (Firebase
+Android API keys are meant to ship in-app; they still shouldn't sit in git
+per this project's own convention, and this one already is in git history
+from that first commit).
 
 ---
 

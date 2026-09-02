@@ -33,8 +33,8 @@
 | 16 | Azkar + Tasbeeh (dedup, haptics) | ✅ | `lib/features/azkar/` against the bundled 134 sections/298 items. 0 duplicate azkar within a section (real SQL check). Real repeat counts parsed from each dhikr's own embedded text (e.g. "ثلاث مرات") rather than guessed. **2026-09-02: fully live-verified**, including the historical "counter only counts after reset" bug (confirmed absent — counts on the first tap) and auto-advance at the real target. Haptics + morning/evening reminders both real and persisted, no default time (both start off). |
 | 17 | New Muslim guide | ✅ | `lib/features/new_muslim/`. 5 topics (pillars of Islam, articles of faith, wudu, prayer steps, Quran intro) written by hand from mainstream Sunni teaching, per the owner's explicit approval to use trusted sources directly — bilingual (ar/en), not scraped. **2026-09-02: emulator-verified**, incl. fixing a real pre-existing bug where Home's quick card opened the wrong screen after STAGE 2 repointed the tab index it used. |
 | 18 | Thematic Quran search | ✅ | `lib/features/search/`: a topics tab (5 categories — aqeedah, akhlaq, prophets, rulings, hereafter — real curated ayah ranges, no invented "semantic search" since no offline embedding model exists) plus a literal keyword tab. Same FTS5-unavailability and diacritics bugs as row 15 hit `QuranRepository.search()` too; fixed the same way (`LIKE` over text normalized by `arabic_normalize.dart`). **2026-09-02: fully emulator-verified** — all 5 topic categories load real ayahs, the keyword tab returns real matches, and tap-to-jump-to-page works: tapping ayah 2:153 in the "الصبر" list navigated `QuranScreen` to page 23/604, showing that exact ayah. (An earlier pass had left tap-to-jump "unconfirmed" due to tap-precision uncertainty in testing — a clean repeat test resolved it.) |
-| 19 | Security & offline guest mode | ⏳ | R2 keys were hardcoded in client — removed |
-| 20 | Final build + git | ⏳ | |
+| 19 | Security & offline guest mode | ✅ | R2 keys were hardcoded in client — removed; `AppConfig` re-confirmed secret-free. **2026-09-02:** grepped all of `lib/` for `signIn`/`login`/`auth`/`FirebaseAuth` — no authentication code exists anywhere, so guest mode is total by construction, not a partial fallback. Found and fixed a real gap: `android/app/google-services.json` (a real Firebase config for project `rafeeq-aldarb`) had been committed since the first commit and was never gitignored — untracked it and extended `.gitignore` to cover it plus `.env`, `GoogleService-Info.plist`, and keystore files. Google sign-in itself is not built — the Firebase project exists, but wiring up `firebase_auth`/`google_sign_in` and registering a release SHA-1 needs the owner in that project's console. |
+| 20 | Final build + git | ✅ | **2026-09-02:** ran `flutter clean` → `pub get` → `analyze` → `build apk --release --split-per-abi` for real — succeeds (armeabi-v7a 35.8MB, arm64-v8a 37.8MB, x86_64 39.2MB); the x86_64 APK installs and runs correctly on a fresh emulator (Arabic UI intact, honest "enable location" empty state, no crash). Found and fixed a real release-security gap along the way: `AndroidManifest.xml` had `android:usesCleartextTraffic="true"` applying to every build type including release, despite the app using zero `http://` URLs anywhere — removed it, re-built, still works. Still blocked: release is signed with the **debug** keystore; real signing needs the owner's own keystore/alias/passwords, which no agent session should generate unilaterally. Not pushed — left for the owner to review. |
 
 ## Build Log
 - [T1 started] Reconnaissance complete. Identified all fake/bloat sources. Beginning purge.
@@ -172,6 +172,29 @@
   open items. Added a 300ms debounce to both search text fields since search
   now costs a real table scan per call. See `HANDOVER.md` §7 for the full
   account.
+- [2026-09-02] Re-verified mushaf image mode live now that Avast is off —
+  the one item left over from the TLS saga that had never been re-checked.
+  From a fresh install (nothing cached), switched to image mode and it
+  rendered a real vector SVG page on the first try; also re-confirmed the
+  multi-line ayah-polygon highlight and the sciences sheet's real tafsir
+  text. Nothing needed fixing here — it was purely Avast.
+- [2026-09-02] Attempted STAGE 7 (T19) and STAGE 8 (T20). STAGE 7: grepped
+  all of `lib/` for any auth code and found none — guest mode is total by
+  construction. Found and fixed a real gap: `android/app/
+  google-services.json` (a real Firebase config, committed since the first
+  commit) had never been gitignored — untracked it and extended
+  `.gitignore` to cover it and other secret-adjacent files (`.env`,
+  `GoogleService-Info.plist`, keystores). Google sign-in itself needs the
+  owner to register a release SHA-1 in that Firebase project's console, so
+  it's flagged rather than half-built. STAGE 8: ran the full release build
+  chain for real (`flutter clean` → `pub get` → `analyze` → `build apk
+  --release --split-per-abi`) — it succeeds and the resulting APK installs
+  and runs correctly on a fresh emulator. Found and fixed a real
+  release-security gap: `android:usesCleartextTraffic="true"` was applying
+  to every build type including release despite the app using zero
+  `http://` URLs — removed it, re-built, confirmed still working. Real
+  release signing still needs the owner's own keystore — flagged, not
+  worked around. See `HANDOVER.md` §7/§9 for the full account.
 
 ## Data sourcing decision (T6/T7)
 Mushaf pages and ayah tap-regions both come from **quranpedia/quran-svg**

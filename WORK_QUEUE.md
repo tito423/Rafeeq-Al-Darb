@@ -249,16 +249,82 @@ jumps `QuranScreen` to its page (confirmed: tapping 2:153 landed on page
 23/604 showing that exact ayah) — the earlier "not confirmed" note about
 tap-to-jump was tap-precision uncertainty in testing, not a real bug.
 
-## STAGE 7 — Security & guest mode  (T19)
-Confirm no credentials in the client (`AppConfig` is currently secret-free —
-keep it). Google sign-in optional with full guest mode: every offline feature
-must work without an account. When signed in, show the account name with
-sign-out / switch-account.
+## STAGE 7 — Security & guest mode  (T19) — verified, one piece blocked
+Confirmed no credentials in the client: `AppConfig` is secret-free (checked
+again — only public API/CDN base URLs). Grepped the whole `lib/` tree for
+`signIn`/`login`/`auth`/`FirebaseAuth` and found **no authentication code of
+any kind** — the app has zero account system, so "every offline feature
+works without an account" is trivially and completely true: there is nothing
+that could gate a feature behind sign-in. Guest mode isn't a partial mode
+here, it's the only mode that exists.
 
-## STAGE 8 — Release  (T20)
-`flutter clean` → `pub get` → `analyze` → `build apk --release --split-per-abi`.
-Confirm `.gitignore` still covers `.env`, keystores, `google-services.json`,
-`serviceAccountKey.json`. Push.
+**Found and fixed a real gap along the way:** `rafeeq_app/android/app/
+google-services.json` — a real, live Firebase config (project
+`rafeeq-aldarb`, real API key and OAuth client ID) — was committed to git
+back in the very first T1-T3 commit and never gitignored, even though this
+file's category was already named in this stage's own release checklist.
+Untracked it (`git rm --cached`, the local file itself is untouched so
+nothing breaks) and added `google-services.json`, `GoogleService-Info.plist`,
+`*.env`/`.env`, `android/key.properties`, and `*.jks`/`*.keystore` to
+`.gitignore`. Unlike the Cloudflare R2 secret key incident, a Firebase
+Android API key is designed to ship inside client apps and isn't a secret in
+the same sense (Google's own guidance says so) — real protection comes from
+Google Cloud Console API-key restrictions (package name + SHA-1) and
+Firebase Security Rules, not from hiding the key — but it should still not
+be sitting in git per this project's own checklist, and it already is in
+git history from the earlier commit, which the owner may want to know.
+
+**Google sign-in itself is not built — real credentials exist but building
+this needs the owner in the loop, not just a session with API access.** The
+`rafeeq-aldarb` Firebase project already exists (per the config file above)
+and `pubspec.yaml` has no `firebase_auth`/`google_sign_in` packages yet, so
+wiring it up would mean: adding those packages, registering the app's
+release SHA-1 fingerprint(s) in that Firebase project's console, and
+building the actual sign-in/sign-out UI. The package additions and UI are
+buildable by any session; the SHA-1 registration is a Firebase-console step
+that needs whoever owns that Firebase project's login. Flagged rather than
+half-built with a broken sign-in button, per this project's own rule against
+shipping something unverified as if it worked.
+
+## STAGE 8 — Release  (T20) — pipeline verified, real signing still blocked
+Ran the full chain for real: `flutter clean` → `pub get` → `analyze` (clean)
+→ `build apk --release --split-per-abi`. **Succeeds**: `app-armeabi-v7a-
+release.apk` (35.8MB), `app-arm64-v8a-release.apk` (37.8MB),
+`app-x86_64-release.apk` (39.2MB). Installed the x86_64 one fresh on the
+emulator and it runs correctly — no crash, correct Arabic UI, an honest
+"enable location" empty state where prayer times would go (location wasn't
+granted this run) rather than any placeholder data.
+
+While building this, found and hardened a real release-security gap:
+`AndroidManifest.xml`'s `<application>` tag had
+`android:usesCleartextTraffic="true"` **applying to every build type,
+release included** — even though a grep of the whole `lib/` tree found zero
+`http://` URLs anywhere (everything is `https://`). This flag was almost
+certainly left over from debugging the Avast TLS-interception problem, but
+it doesn't actually do what that needed (TLS interception is still HTTPS
+with a different root CA — that's what the debug-only
+`network_security_config` already handles correctly; cleartext is a
+different, unrelated permission). Removed it from the main manifest, so
+release (and every variant) now defaults to disallowing cleartext HTTP,
+matching what the app actually needs. Re-built after the fix — still
+succeeds, still runs correctly.
+
+Also confirmed `.gitignore` now covers `.env`, keystores (`*.jks`/
+`*.keystore`/`android/key.properties`), `google-services.json`,
+`GoogleService-Info.plist`, and `serviceAccountKey.json` — see the STAGE 7
+section above for the real `google-services.json` that had to be untracked
+to make that true.
+
+**Still blocked on the owner:** the release build is signed with the
+**debug** keystore (`signingConfig = signingConfigs.getByName("debug")` in
+`android/app/build.gradle.kts`, with a `// TODO: Add your own signing
+config` comment already in place) — this produces a real, installable APK
+for testing, but it is not what should ship to users or an app store. Real
+release signing needs the owner's own keystore file, key alias, and
+passwords — no agent session can generate those (a self-generated keystore
+would mean nobody but this session could ever re-sign an update, which is
+worse than not shipping). Not pushed anywhere per usual convention — the
+owner should review the diff first.
 
 ---
 
