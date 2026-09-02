@@ -250,6 +250,35 @@ Home, Settings, Quran sheets, Adhan settings, Library, Downloads, errors, empty
 states) shows in that language, no raw `some.key` strings; `flutter test` parity
 test passes.
 
+### ✅ P2‑3 DONE (2026-09-02, emulator-verified)
+
+- `assets/translations/{es,ru,pt}.json` — all **224 keys**, real human-quality
+  translations (Islamic terms follow each language's convention: es *Corán/
+  adhán/Wudú*, ru *Коран/азан/вуду*, pt *Alcorão/adhan/Wudu*). Built from
+  `en.json`'s exact structure by a one-off script (kept in the scratchpad).
+- `main.dart` `supportedLocales` → `[ar, en, es, ru, pt]`, `fallbackLocale: ar`.
+- `settings_screen.dart` — language picker is now a **`Wrap` of `ChoiceChip`**
+  (5, each labelled in its own script via a `_languageNames` const); the theme
+  picker was **also** converted from `SegmentedButton` to a `ChoiceChip` `Wrap`
+  because 4 segments + longer translated words clipped ("Siste​ma").
+- **Bug found & fixed:** `RafeeqApp` passed `const AppShell()` as `home`, so a
+  `MaterialApp` rebuild after `context.setLocale` never re-ran `AppShell.build`
+  and the bottom-nav labels stayed in the old language. Now
+  `AppShell(key: ValueKey(context.locale.languageCode))` — the shell refreshes
+  fully on a language change (also gives a clean RTL↔LTR flip).
+- `test/translation_parity_test.dart` — identical-key-set + no-empty-value
+  checks across all 5 files. `flutter test` = **13/13**.
+- Verified live on `emulator-5554`: **Spanish** (Settings + Library, LTR),
+  **Russian** (Home, full Cyrillic, LTR), back to **Arabic** (RTL restored,
+  nav order flipped back). `flutter analyze` clean.
+
+**Left ar/en-only on purpose:** the hand-authored Dart content —
+`new_muslim/data/guide_content.dart` (fiqh of wudu/salah, pillars, ‘aqidah)
+and `adhan/data/adhan_text.dart` (the adhan words). Auto-translating
+religious teaching into 3 more languages without a native/scholarly review
+would violate the "no unverified content" rule. Flagged for the owner: needs
+real translators if es/ru/pt coverage of that screen is wanted.
+
 ---
 
 ## P2‑4 — Library redesign + catalog expansion

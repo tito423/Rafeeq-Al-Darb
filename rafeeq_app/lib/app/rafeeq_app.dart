@@ -43,7 +43,9 @@ class RafeeqApp extends ConsumerWidget {
       builder: variant == ThemeVariant.rgb
           ? (context, child) => RgbScaffoldBackground(child: child!)
           : null,
-      home: const AppShell(),
+      // Keyed by locale so `context.setLocale` rebuilds the whole shell —
+      // otherwise a `const AppShell` keeps its old bottom-nav labels.
+      home: AppShell(key: ValueKey(context.locale.languageCode)),
     );
   }
 }

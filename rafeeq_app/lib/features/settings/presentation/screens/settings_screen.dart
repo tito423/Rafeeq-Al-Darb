@@ -6,6 +6,15 @@ import '../../../../core/theme/theme_controller.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 
+/// Every locale the app ships, labelled in its own script.
+const _languageNames = <String, String>{
+  'ar': 'العربية',
+  'en': 'English',
+  'es': 'Español',
+  'ru': 'Русский',
+  'pt': 'Português',
+};
+
 /// Settings tab — language, theme, and app info.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -20,47 +29,50 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Language
+          // Language — each shown in its own script, independent of the
+          // current locale (P2‑3 added es / ru / pt).
           _SectionLabel('settings.language'.tr()),
-          SegmentedButton<String>(
-            segments: [
-              ButtonSegment(
-                value: 'ar',
-                label: Text('settings.arabic'.tr()),
-                icon: const Icon(Icons.language),
-              ),
-              ButtonSegment(
-                value: 'en',
-                label: Text('settings.english'.tr()),
-                icon: const Icon(Icons.translate),
-              ),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final e in _languageNames.entries)
+                ChoiceChip(
+                  label: Text(e.value),
+                  selected: context.locale.languageCode == e.key,
+                  onSelected: (_) {
+                    if (context.locale.languageCode != e.key) {
+                      context.setLocale(Locale(e.key));
+                    }
+                  },
+                ),
             ],
-            selected: {context.locale.languageCode},
-            onSelectionChanged: (sel) {
-              final code = sel.first;
-              if (code != context.locale.languageCode) {
-                context.setLocale(Locale(code));
-              }
-            },
           ),
           const SizedBox(height: 24),
 
           // Theme
           _SectionLabel('settings.theme'.tr()),
-          SegmentedButton<ThemeVariant>(
-            showSelectedIcon: false,
-            segments: [
+          // A Wrap (not SegmentedButton) so longer translated labels never
+          // clip — matches the language selector above.
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
               for (final v in ThemeVariant.values)
-                ButtonSegment(
-                  value: v,
+                ChoiceChip(
+                  avatar: Icon(
+                    v.icon,
+                    size: 18,
+                    color: themeVariant == v
+                        ? scheme.onSecondaryContainer
+                        : scheme.onSurfaceVariant,
+                  ),
                   label: Text(v.labelKey.tr()),
-                  icon: Icon(v.icon, size: 18),
+                  selected: themeVariant == v,
+                  onSelected: (_) =>
+                      ref.read(themeControllerProvider.notifier).set(v),
                 ),
             ],
-            selected: {themeVariant},
-            onSelectionChanged: (sel) {
-              ref.read(themeControllerProvider.notifier).set(sel.first);
-            },
           ),
           if (themeVariant == ThemeVariant.rgb) ...[
             const SizedBox(height: 8),

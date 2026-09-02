@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 18:06 — IN PROGRESS — resume here**
+**2026-09-02 18:23 — IN PROGRESS — resume here**
 
-P2-2 DONE: 4-theme system (system/light/dark/RGB). New theme_controller.dart (ThemeVariant enum, persisted theme_variant_v2 + theme_mode_v1 migration, MotionEffectsController), AppTheme.rgb() (transparent scaffold, electric-teal accent), rgb_backdrop.dart (animated rub-el-hizb star lattice + drifting teal/violet/gold aurora, respects reduce-motion + toggle). rafeeq_app.dart rewired; settings 4-segment selector + motion toggle. +3 translation keys (ar/en parity 224). Emulator-verified all 4, RGB persisted across force-stop. analyze + test 11/11 clean.
+P2-3 DONE: added Spanish/Russian/Portuguese locales (es/ru/pt.json, 224 keys each, real translations). main.dart supportedLocales -> 5. Settings language + theme pickers converted to ChoiceChip Wrap (no clip). Fixed const-AppShell bug so nav/whole shell retranslates on setLocale (key by locale, clean RTL<->LTR flip). New test/translation_parity_test.dart. scripts/build_locales_es_ru_pt.py saved. Emulator-verified es+ru+back-to-ar. analyze clean, test 13/13. Dart-authored religious content (guide_content, adhan_text) left ar/en-only - flagged.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
