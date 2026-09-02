@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 18:36 — IN PROGRESS — resume here**
+**2026-09-02 18:53 — IN PROGRESS — resume here**
 
-PHASE2.md: owner added 2 requirements for the next session. (1) folded into P2-5: every download must post a live progress notification (app icon + progress bar + %/MB, auto-clears). (2) NEW stage P2-6 'Persistent prayer notification' — ongoing status-bar card: next prayer + Hijri date + live countdown, professional, app icon, opt-in toggle, offline-first, 5 locales. Renumbered old P2-6..9 -> P2-7..10; updated summary table (now 10 stages), owner-blockers table, and the intro (P2-1/2/3 DONE). Next session starts at P2-4. No code changed this checkpoint.
+P2-4 (wip): Library redesign. New book_category.dart (BookCategory enum). LibraryBook gains category + sortKey (Arabic-collation). library_screen.dart restructured: top tabs [الكتب المتوفرة | الحديث]; books tab has 3 sub-tabs (كل الكتب abc / التصنيفات grouped / مكتبتي = downloaded, with قراءة + حذف + confirm dialog). Home gets a المكتبة quick card -> pushes LibraryScreen. DownloadManager.remove() now purges the SharedPreferences registry (was a real bug) + new artifactSize(). +13 translation keys x5 locales (parity 237). analyze clean. NOT built/tested yet.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

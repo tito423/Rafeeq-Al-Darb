@@ -96,7 +96,20 @@
     "no_results": "Sem resultados",
     "downloading_hadith_db": "A transferir a base de dados de hadith",
     "previous": "Anterior",
-    "next": "Seguinte"
+    "next": "Seguinte",
+    "tab_books": "Livros disponíveis",
+    "sub_all": "Todos os livros",
+    "sub_categories": "Categorias",
+    "sub_mine": "A minha biblioteca",
+    "empty_mine": "A tua biblioteca está vazia — transfere um livro para o ler offline",
+    "delete_confirm": "Eliminar o livro transferido deste dispositivo?",
+    "cat_hadith": "Hadith",
+    "cat_fiqh": "Fiqh",
+    "cat_aqidah": "Credo",
+    "cat_tafsir": "Tafsir",
+    "cat_seerah": "Sira",
+    "cat_tazkiyah": "Purificação espiritual",
+    "cat_adab": "Boas maneiras"
   },
   "azkar": {
     "title": "Adhkar",

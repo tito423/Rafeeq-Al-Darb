@@ -177,6 +177,19 @@ class DownloadManager {
   Future<void> remove(String id) async {
     cancel(id);
     final t = _tasks.remove(id);
+
+    // Delete the on-disk artifact. Prefer the registry's recorded path (it may
+    // be a `.db` under `databases/` or an unzipped folder, not just
+    // `downloads/<fileName>`), then also sweep the raw download names.
+    final registered = await registeredPath(id);
+    if (registered != null) {
+      final entity = FileSystemEntity.typeSync(registered);
+      if (entity == FileSystemEntityType.directory) {
+        await Directory(registered).delete(recursive: true);
+      } else if (entity == FileSystemEntityType.file) {
+        await File(registered).delete();
+      }
+    }
     if (t != null) {
       final dir = await downloadDir;
       for (final name in [t.fileName, '${t.fileName}.part']) {
@@ -184,7 +197,38 @@ class DownloadManager {
         if (f.existsSync()) await f.delete();
       }
     }
+
+    // Purge the completed-artifacts registry entry — without this the item
+    // still reads as "downloaded" on the next launch (P2‑4's حذف button).
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(registryKey);
+    if (raw != null) {
+      try {
+        final list = (jsonDecode(raw) as List<dynamic>)
+          ..removeWhere((e) => e is Map && e['id'] == id);
+        await prefs.setString(registryKey, jsonEncode(list));
+      } catch (_) {}
+    }
+
     _notify();
+  }
+
+  /// Bytes an already-downloaded artifact occupies on disk (0 if unknown).
+  Future<int> artifactSize(String id) async {
+    final path = await registeredPath(id);
+    if (path == null) return 0;
+    try {
+      final type = FileSystemEntity.typeSync(path);
+      if (type == FileSystemEntityType.file) return File(path).lengthSync();
+      if (type == FileSystemEntityType.directory) {
+        var total = 0;
+        for (final e in Directory(path).listSync(recursive: true)) {
+          if (e is File) total += e.lengthSync();
+        }
+        return total;
+      }
+    } catch (_) {}
+    return 0;
   }
 
   void dispose() => _controller.close();

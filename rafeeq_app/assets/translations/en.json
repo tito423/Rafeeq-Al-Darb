@@ -96,7 +96,20 @@
     "no_results": "No results",
     "downloading_hadith_db": "Downloading the hadith database",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "tab_books": "Available books",
+    "sub_all": "All books",
+    "sub_categories": "Categories",
+    "sub_mine": "My library",
+    "empty_mine": "Your library is empty — download a book to read it offline",
+    "delete_confirm": "Delete the downloaded book from this device?",
+    "cat_hadith": "Hadith",
+    "cat_fiqh": "Fiqh",
+    "cat_aqidah": "Creed",
+    "cat_tafsir": "Tafsir",
+    "cat_seerah": "Seerah",
+    "cat_tazkiyah": "Spiritual purification",
+    "cat_adab": "Manners"
   },
   "azkar": {
     "title": "Adhkar",

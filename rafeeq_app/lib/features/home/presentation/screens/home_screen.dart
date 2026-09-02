@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/services/prayer_times_service.dart';
+import '../../../library/presentation/screens/library_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../data/prayer_controller.dart';
 
@@ -109,6 +110,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     icon: Icons.menu_book,
                     label: 'home.mushaf'.tr(),
                     onTap: () => widget.onNavigate(1),
+                  ),
+                  _QuickCard(
+                    icon: Icons.local_library_outlined,
+                    label: 'nav.library'.tr(),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const LibraryScreen(),
+                      ),
+                    ),
                   ),
                   _QuickCard(
                     icon: Icons.auto_awesome,

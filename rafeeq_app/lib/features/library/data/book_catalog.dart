@@ -1,3 +1,5 @@
+import 'book_category.dart';
+
 /// The Library "Books" catalog (WORK_QUEUE Stage 2's remaining piece).
 ///
 /// Every entry here is a real, classical, public-domain Islamic text (each
@@ -26,6 +28,7 @@ class LibraryBook {
   /// work.
   final String authorDeathAr;
   final String descriptionAr;
+  final BookCategory category;
   final String downloadUrl;
   final String fileName;
   final int approxSizeBytes;
@@ -42,11 +45,23 @@ class LibraryBook {
     required this.authorEn,
     required this.authorDeathAr,
     required this.descriptionAr,
+    required this.category,
     required this.downloadUrl,
     required this.fileName,
     required this.approxSizeBytes,
     required this.sourceUrl,
   });
+
+  /// Arabic-collation-friendly sort handle: drops a leading "ال" so
+  /// "الفوائد" files under fā', not alif, and normalises alef forms.
+  String get sortKey {
+    var s = titleAr.trim();
+    if (s.startsWith('ال')) s = s.substring(2);
+    return s
+        .replaceAll(RegExp('[إأآٱ]'), 'ا')
+        .replaceAll('ى', 'ي')
+        .replaceAll('ة', 'ه');
+  }
 }
 
 const List<LibraryBook> libraryBookCatalog = [
@@ -60,6 +75,7 @@ const List<LibraryBook> libraryBookCatalog = [
     descriptionAr:
         'أشهر مختصرات الحديث في الأخلاق والآداب والرقائق، جمعه الإمام النووي '
         'من أحاديث الصحيحين وغيرهما من كتب السنة.',
+    category: BookCategory.hadith,
     downloadUrl: 'https://archive.org/download/rsnawwy/rs-mohaqaq.pdf',
     fileName: 'riyad_as_salihin.pdf',
     approxSizeBytes: 15770224, // measured with curl 2026-09-02: 15.77 MB
@@ -75,6 +91,7 @@ const List<LibraryBook> libraryBookCatalog = [
     descriptionAr:
         'اختصار ابن قدامة المقدسي لكتاب "منهاج القاصدين" لابن الجوزي في '
         'التزكية والأخلاق والزهد، من أهم كتب السلوك عند أهل السنة.',
+    category: BookCategory.tazkiyah,
     downloadUrl:
         'https://archive.org/download/menhaj-alkasdeen-dar-alhejaz/'
         '%D9%85%D8%AE%D8%AA%D8%B5%D8%B1%20%D9%85%D9%86%D9%87%D8%A7%D8%AC%20'
@@ -94,6 +111,7 @@ const List<LibraryBook> libraryBookCatalog = [
     descriptionAr:
         'من أنفس كتب ابن القيم، فوائد ومواعظ وحكم متفرقة في العقيدة والسلوك '
         'والتربية، غير مرتبة على أبواب بل على خواطر الإيمان.',
+    category: BookCategory.tazkiyah,
     downloadUrl: 'https://archive.org/download/fawaeedIbnqaem/fawaeed.pdf',
     fileName: 'al_fawaid.pdf',
     approxSizeBytes: 6285456, // measured with curl 2026-09-02: 6.29 MB
@@ -109,6 +127,7 @@ const List<LibraryBook> libraryBookCatalog = [
     descriptionAr:
         'خواطر ابن الجوزي وتأملاته في النفس والدين والدنيا، من أرقّ ما كُتب '
         'في الوعظ والتربية الروحية عند علماء أهل السنة.',
+    category: BookCategory.tazkiyah,
     downloadUrl:
         'https://archive.org/download/aakamel18_gmail_20190131/'
         '%D8%B5%D9%8A%D8%AF%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B7%D8%B1%20-%20'

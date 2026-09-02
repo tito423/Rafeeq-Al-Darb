@@ -96,7 +96,20 @@
     "no_results": "لا نتائج",
     "downloading_hadith_db": "جارٍ تنزيل قاعدة بيانات الحديث",
     "previous": "السابق",
-    "next": "التالي"
+    "next": "التالي",
+    "tab_books": "الكتب المتوفرة",
+    "sub_all": "كل الكتب",
+    "sub_categories": "التصنيفات",
+    "sub_mine": "مكتبتي",
+    "empty_mine": "مكتبتك فارغة — نزّل كتابًا لتقرأه بدون إنترنت",
+    "delete_confirm": "حذف الكتاب المحمّل من الجهاز؟",
+    "cat_hadith": "الحديث",
+    "cat_fiqh": "الفقه",
+    "cat_aqidah": "العقيدة",
+    "cat_tafsir": "التفسير",
+    "cat_seerah": "السيرة",
+    "cat_tazkiyah": "التزكية والرقائق",
+    "cat_adab": "الآداب"
   },
   "azkar": {
     "title": "الأذكار",

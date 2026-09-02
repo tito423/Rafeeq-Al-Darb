@@ -9,16 +9,23 @@ import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/book_catalog.dart';
+import '../../data/book_category.dart';
 import 'book_reader_screen.dart';
 import 'hadith_book_screen.dart';
 import 'hadith_detail_screen.dart';
 
 const _hadithDownloadId = 'hadith_db';
 
-/// Library — the Hadith hub (9 real collections, downloaded on demand) and
-/// a Books catalog of real, public-domain classical texts hosted on
-/// archive.org (see `../../data/book_catalog.dart` for sourcing/licensing
-/// notes), downloaded on demand exactly like the hadith database.
+String _fmtSize(int bytes) {
+  if (bytes <= 0) return '';
+  if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(0)} KB';
+  return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+}
+
+/// Library — two top tabs:
+///  • "الكتب المتوفرة" — the books catalog, itself split into
+///    (كل الكتب · التصنيفات · مكتبتي).
+///  • "الحديث" — the 9-collection hadith hub (downloaded on demand).
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
 
@@ -33,48 +40,63 @@ class LibraryScreen extends ConsumerWidget {
             indicatorColor: AppColors.gold,
             labelColor: AppColors.gold,
             tabs: [
+              Tab(text: 'library.tab_books'.tr()),
               Tab(text: 'library.tab_hadith'.tr()),
-              Tab(text: 'library.tab_catalog'.tr()),
             ],
           ),
         ),
         body: const TabBarView(
-          children: [_HadithTab(), _CatalogTab()],
+          children: [_BooksTab(), _HadithTab()],
         ),
       ),
     );
   }
 }
 
-class _CatalogTab extends StatefulWidget {
-  const _CatalogTab();
+// ── Books ──────────────────────────────────────────────────────────────────
+
+class _BooksTab extends StatefulWidget {
+  const _BooksTab();
 
   @override
-  State<_CatalogTab> createState() => _CatalogTabState();
+  State<_BooksTab> createState() => _BooksTabState();
 }
 
-class _CatalogTabState extends State<_CatalogTab> {
+class _BooksTabState extends State<_BooksTab> {
   StreamSubscription<List<DownloadTask>>? _sub;
 
-  /// book id -> local file path, once known to be on disk (either from a
-  /// previous session's registry, or a download that just completed).
-  final Map<String, String> _downloadedPaths = {};
+  /// book id -> local file path (once known on disk).
+  final Map<String, String> _paths = {};
+
+  /// book id -> bytes on disk.
+  final Map<String, int> _sizes = {};
 
   @override
   void initState() {
     super.initState();
     _loadRegistry();
-    _sub = DownloadManager.instance.stream.listen((_) {
-      _loadRegistry();
-    });
+    _sub = DownloadManager.instance.stream.listen((_) => _loadRegistry());
   }
 
   Future<void> _loadRegistry() async {
+    final paths = <String, String>{};
+    final sizes = <String, int>{};
     for (final book in libraryBookCatalog) {
       final path = await DownloadManager.instance.registeredPath(book.id);
-      if (path != null && mounted) {
-        setState(() => _downloadedPaths[book.id] = path);
+      if (path != null) {
+        paths[book.id] = path;
+        sizes[book.id] = await DownloadManager.instance.artifactSize(book.id);
       }
+    }
+    if (mounted) {
+      setState(() {
+        _paths
+          ..clear()
+          ..addAll(paths);
+        _sizes
+          ..clear()
+          ..addAll(sizes);
+      });
     }
   }
 
@@ -84,42 +106,248 @@ class _CatalogTabState extends State<_CatalogTab> {
     super.dispose();
   }
 
-  Future<void> _download(LibraryBook book) async {
-    await DownloadManager.instance.enqueue(
-      id: book.id,
-      url: book.downloadUrl,
-      category: 'books',
-      fileName: book.fileName,
-      title: book.titleAr,
-    );
+  Future<void> _download(LibraryBook book) => DownloadManager.instance.enqueue(
+        id: book.id,
+        url: book.downloadUrl,
+        category: 'books',
+        fileName: book.fileName,
+        title: book.titleAr,
+      );
+
+  void _open(LibraryBook book) {
+    final path = _paths[book.id];
+    if (path == null) return;
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (_) => BookReaderScreen(book: book, path: path),
+    ));
   }
 
-  void _open(LibraryBook book, String path) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => BookReaderScreen(book: book, path: path),
+  Future<void> _delete(LibraryBook book) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(book.titleAr),
+        content: Text('library.delete_confirm'.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('common.cancel'.tr()),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text('library.delete'.tr()),
+          ),
+        ],
       ),
     );
+    if (ok == true) {
+      await DownloadManager.instance.remove(book.id);
+      await _loadRegistry();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Column(
+        children: [
+          Material(
+            color: Theme.of(context).colorScheme.surface,
+            child: TabBar(
+              labelColor: AppColors.gold,
+              indicatorColor: AppColors.gold,
+              tabs: [
+                Tab(text: 'library.sub_all'.tr()),
+                Tab(text: 'library.sub_categories'.tr()),
+                Tab(text: 'library.sub_mine'.tr()),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                _AllBooksView(
+                  paths: _paths,
+                  onDownload: _download,
+                  onOpen: _open,
+                ),
+                _CategoriesView(
+                  paths: _paths,
+                  onDownload: _download,
+                  onOpen: _open,
+                ),
+                _MyLibraryView(
+                  paths: _paths,
+                  sizes: _sizes,
+                  onOpen: _open,
+                  onDelete: _delete,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AllBooksView extends StatelessWidget {
+  final Map<String, String> paths;
+  final void Function(LibraryBook) onDownload;
+  final void Function(LibraryBook) onOpen;
+  const _AllBooksView(
+      {required this.paths, required this.onDownload, required this.onOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    final books = [...libraryBookCatalog]
+      ..sort((a, b) => a.sortKey.compareTo(b.sortKey));
     return ListView.separated(
       padding: const EdgeInsets.all(14),
-      itemCount: libraryBookCatalog.length,
+      itemCount: books.length,
       separatorBuilder: (_, _) => const SizedBox(height: 10),
-      itemBuilder: (context, i) {
-        final book = libraryBookCatalog[i];
-        final task = DownloadManager.instance.taskById(book.id);
-        final downloadedPath = _downloadedPaths[book.id];
-        return _BookCard(
-          book: book,
-          task: task,
-          downloadedPath: downloadedPath,
-          onDownload: () => _download(book),
-          onOpen: downloadedPath == null
-              ? null
-              : () => _open(book, downloadedPath),
+      itemBuilder: (_, i) => _BookCard(
+        book: books[i],
+        task: DownloadManager.instance.taskById(books[i].id),
+        downloaded: paths.containsKey(books[i].id),
+        onDownload: () => onDownload(books[i]),
+        onOpen: () => onOpen(books[i]),
+      ),
+    );
+  }
+}
+
+class _CategoriesView extends StatelessWidget {
+  final Map<String, String> paths;
+  final void Function(LibraryBook) onDownload;
+  final void Function(LibraryBook) onOpen;
+  const _CategoriesView(
+      {required this.paths, required this.onDownload, required this.onOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    final byCat = <BookCategory, List<LibraryBook>>{};
+    for (final b in libraryBookCatalog) {
+      byCat.putIfAbsent(b.category, () => []).add(b);
+    }
+    final cats = byCat.keys.toList()
+      ..sort((a, b) => a.index.compareTo(b.index));
+    return ListView(
+      padding: const EdgeInsets.all(14),
+      children: [
+        for (final cat in cats) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(2, 8, 2, 8),
+            child: Row(
+              children: [
+                Icon(cat.icon, size: 18, color: AppColors.gold),
+                const SizedBox(width: 8),
+                Text(
+                  cat.labelKey.tr(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(color: AppColors.gold),
+                ),
+              ],
+            ),
+          ),
+          for (final b in byCat[cat]!..sort(
+              (x, y) => x.sortKey.compareTo(y.sortKey))) ...[
+            _BookCard(
+              book: b,
+              task: DownloadManager.instance.taskById(b.id),
+              downloaded: paths.containsKey(b.id),
+              onDownload: () => onDownload(b),
+              onOpen: () => onOpen(b),
+            ),
+            const SizedBox(height: 10),
+          ],
+          const SizedBox(height: 6),
+        ],
+      ],
+    );
+  }
+}
+
+class _MyLibraryView extends StatelessWidget {
+  final Map<String, String> paths;
+  final Map<String, int> sizes;
+  final void Function(LibraryBook) onOpen;
+  final void Function(LibraryBook) onDelete;
+  const _MyLibraryView({
+    required this.paths,
+    required this.sizes,
+    required this.onOpen,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final mine =
+        libraryBookCatalog.where((b) => paths.containsKey(b.id)).toList()
+          ..sort((a, b) => a.sortKey.compareTo(b.sortKey));
+    if (mine.isEmpty) {
+      final scheme = Theme.of(context).colorScheme;
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.download_done_outlined,
+                  size: 56, color: scheme.onSurfaceVariant),
+              const SizedBox(height: 12),
+              Text('library.empty_mine'.tr(), textAlign: TextAlign.center),
+            ],
+          ),
+        ),
+      );
+    }
+    return ListView.separated(
+      padding: const EdgeInsets.all(14),
+      itemCount: mine.length,
+      separatorBuilder: (_, _) => const SizedBox(height: 8),
+      itemBuilder: (_, i) {
+        final b = mine[i];
+        final scheme = Theme.of(context).colorScheme;
+        final size = _fmtSize(sizes[b.id] ?? 0);
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(b.titleAr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 15)),
+                      const SizedBox(height: 3),
+                      Text(
+                        [b.category.labelKey.tr(), if (size.isNotEmpty) size]
+                            .join(' · '),
+                        style: TextStyle(
+                            color: scheme.onSurfaceVariant, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () => onOpen(b),
+                  icon: const Icon(Icons.menu_book_outlined, size: 18),
+                  label: Text('library.open'.tr()),
+                ),
+                IconButton(
+                  tooltip: 'library.delete'.tr(),
+                  onPressed: () => onDelete(b),
+                  icon: Icon(Icons.delete_outline, color: scheme.error),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -129,14 +357,14 @@ class _CatalogTabState extends State<_CatalogTab> {
 class _BookCard extends StatelessWidget {
   final LibraryBook book;
   final DownloadTask? task;
-  final String? downloadedPath;
+  final bool downloaded;
   final VoidCallback onDownload;
-  final VoidCallback? onOpen;
+  final VoidCallback onOpen;
 
   const _BookCard({
     required this.book,
     required this.task,
-    required this.downloadedPath,
+    required this.downloaded,
     required this.onDownload,
     required this.onOpen,
   });
@@ -156,9 +384,17 @@ class _BookCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(book.titleAr,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w700, fontSize: 16)),
+            Row(
+              children: [
+                Icon(book.category.icon, size: 16, color: AppColors.gold),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(book.titleAr,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 16)),
+                ),
+              ],
+            ),
             const SizedBox(height: 4),
             Text(
               '${book.authorAr} · ${book.authorDeathAr}',
@@ -186,7 +422,7 @@ class _BookCard extends StatelessWidget {
                       style: TextStyle(
                           color: scheme.onSurfaceVariant, fontSize: 12)),
                   const Spacer(),
-                  if (downloadedPath != null)
+                  if (downloaded)
                     FilledButton.icon(
                       onPressed: onOpen,
                       icon: const Icon(Icons.menu_book_outlined, size: 18),
@@ -212,6 +448,8 @@ class _BookCard extends StatelessWidget {
   }
 }
 
+// ── Hadith hub (unchanged from Phase 1) ────────────────────────────────────
+
 class _HadithTab extends ConsumerStatefulWidget {
   const _HadithTab();
 
@@ -223,11 +461,6 @@ class _HadithTabState extends ConsumerState<_HadithTab> {
   final _searchCtrl = TextEditingController();
   String _query = '';
   StreamSubscription<List<DownloadTask>>? _sub;
-
-  // Debounced, not fired on every keystroke — search() now rescans the
-  // ~41k-hadith table per call (see HadithRepository.search()'s doc for
-  // why it no longer caches an in-memory index), so typing fast would
-  // otherwise queue up many redundant full scans in a row.
   Timer? _debounce;
 
   @override
@@ -421,10 +654,6 @@ class _SearchResultsState extends State<_SearchResults> {
   void didUpdateWidget(covariant _SearchResults old) {
     super.didUpdateWidget(old);
     if (old.query != widget.query) {
-      // A block body, not `=> _future = ...` — that arrow form returns the
-      // assignment's value (a Future), and setState() asserts its callback
-      // must return void. Caught live: typing in the hadith search field
-      // threw "setState() callback argument returned a Future."
       setState(() {
         _future = widget.repo.search(widget.query);
       });
@@ -436,9 +665,6 @@ class _SearchResultsState extends State<_SearchResults> {
     return FutureBuilder(
       future: Future.wait([_future, _booksFuture]),
       builder: (context, snapshot) {
-        // A spinner that never resolves on error is itself a real bug this
-        // screen already hit once (an FTS5 query throwing left it spinning
-        // forever, since only hasData was checked) — handle hasError too.
         if (snapshot.hasError) {
           return Center(child: Text('errors.generic'.tr()));
         }
@@ -446,7 +672,9 @@ class _SearchResultsState extends State<_SearchResults> {
           return const Center(child: CircularProgressIndicator());
         }
         final items = snapshot.data![0] as List<HadithItem>;
-        final books = {for (final b in snapshot.data![1] as List<HadithBook>) b.id: b};
+        final books = {
+          for (final b in snapshot.data![1] as List<HadithBook>) b.id: b
+        };
         if (items.isEmpty) {
           return Center(child: Text('library.no_results'.tr()));
         }

@@ -96,7 +96,20 @@
     "no_results": "Sin resultados",
     "downloading_hadith_db": "Descargando la base de datos de hadices",
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "tab_books": "Libros disponibles",
+    "sub_all": "Todos los libros",
+    "sub_categories": "Categorías",
+    "sub_mine": "Mi biblioteca",
+    "empty_mine": "Tu biblioteca está vacía — descarga un libro para leerlo sin conexión",
+    "delete_confirm": "¿Eliminar el libro descargado de este dispositivo?",
+    "cat_hadith": "Hadiz",
+    "cat_fiqh": "Fiqh",
+    "cat_aqidah": "Credo",
+    "cat_tafsir": "Tafsir",
+    "cat_seerah": "Sira",
+    "cat_tazkiyah": "Purificación espiritual",
+    "cat_adab": "Modales"
   },
   "azkar": {
     "title": "Adhkar",
