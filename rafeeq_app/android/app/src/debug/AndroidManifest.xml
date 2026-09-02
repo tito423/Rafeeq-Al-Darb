@@ -4,4 +4,10 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- DEBUG ONLY: trust a TLS-inspecting proxy's root CA so the app can be
+         tested on a machine running one (see res/xml/network_security_config).
+         Never merged into release builds. -->
+    <application
+        android:networkSecurityConfig="@xml/network_security_config" />
 </manifest>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DEBUG BUILDS ONLY. This file lives in src/debug/ and is never merged into a
+  release APK.
+
+  Why it exists: some development machines run a TLS-inspecting antivirus/proxy
+  (e.g. Avast "Web/Mail Shield") that re-signs every HTTPS response with its own
+  root CA. The Windows host trusts that root; a stock Android emulator does not,
+  so every https fetch from the app fails with CERTIFICATE_VERIFY_FAILED and the
+  mushaf image pages / downloads look "offline" during testing.
+
+  The bundled proxy_debug_ca.pem is that interception root. Trusting it here —
+  alongside the normal system and user trust anchors — lets the debug build be
+  tested on such a machine. It has zero effect on release builds and does not
+  weaken production security.
+
+  If your machine has no TLS interception you can ignore this; trusting an extra
+  root that never signs anything is harmless. To refresh the cert for a
+  different proxy, replace res/raw/proxy_debug_ca.pem with that proxy's root.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+            <certificates src="@raw/proxy_debug_ca" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
