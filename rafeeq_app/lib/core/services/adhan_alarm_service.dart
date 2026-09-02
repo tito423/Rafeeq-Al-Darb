@@ -366,12 +366,14 @@ String buildAdhanPayload({
   required String prayerLabel,
   required int notificationId,
   String? previewAssetPath,
+  String? videoPath,
 }) =>
     jsonEncode({
       'prayer': prayerKey,
       'label': prayerLabel,
       'id': notificationId,
       'asset': ?previewAssetPath,
+      'video': ?videoPath,
     });
 
 /// Parses a payload built by [buildAdhanPayload].
@@ -381,11 +383,15 @@ class AdhanPayload {
   final int notificationId;
   final String? previewAssetPath;
 
+  /// P2‑7 — local path of a downloaded background clip for video-mode adhan.
+  final String? videoPath;
+
   const AdhanPayload({
     required this.prayerKey,
     required this.prayerLabel,
     required this.notificationId,
     this.previewAssetPath,
+    this.videoPath,
   });
 
   static AdhanPayload? tryParse(String? raw) {
@@ -397,6 +403,7 @@ class AdhanPayload {
         prayerLabel: m['label'] as String,
         notificationId: m['id'] as int,
         previewAssetPath: m['asset'] as String?,
+        videoPath: m['video'] as String?,
       );
     } catch (_) {
       return null;

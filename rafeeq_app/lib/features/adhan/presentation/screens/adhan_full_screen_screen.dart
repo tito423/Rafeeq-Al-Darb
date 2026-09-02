@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
+import 'package:video_player/video_player.dart';
 
 import '../../../../core/services/adhan_alarm_service.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -37,6 +39,13 @@ class AdhanFullScreenScreen extends StatefulWidget {
   /// second decode of a file we don't control the format of ahead of time.
   final String? previewAsset;
 
+  /// P2‑7 — local path of a downloaded, licence-clean mosque clip. When set
+  /// (and the file exists), it plays **muted + looped** behind the karaoke
+  /// text instead of the animated gradient. The adhan **sound** is unchanged
+  /// (still played natively by `adhan_alarm_service.dart`). Null / missing
+  /// file → the gradient, honestly.
+  final String? videoPath;
+
   const AdhanFullScreenScreen({
     super.key,
     required this.prayerKey,
@@ -44,6 +53,7 @@ class AdhanFullScreenScreen extends StatefulWidget {
     required this.notificationId,
     required this.rawPayload,
     this.previewAsset,
+    this.videoPath,
   });
 
   @override
@@ -61,6 +71,8 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
   bool _muted = false;
   bool _stopped = false;
 
+  VideoPlayerController? _video;
+
   @override
   void initState() {
     super.initState();
@@ -71,7 +83,27 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
 
     _lines = adhanLines(isFajr: widget.prayerKey == 'fajr');
     _lineStarts = [];
+    _initVideo();
     _probeDurationThenStart();
+  }
+
+  Future<void> _initVideo() async {
+    final path = widget.videoPath;
+    if (path == null || !File(path).existsSync()) return;
+    try {
+      final c = VideoPlayerController.file(File(path));
+      await c.initialize();
+      await c.setVolume(0); // sound comes from the adhan recording, not this
+      await c.setLooping(true);
+      await c.play();
+      if (mounted) {
+        setState(() => _video = c);
+      } else {
+        await c.dispose();
+      }
+    } catch (_) {
+      // fall back to the animated gradient
+    }
   }
 
   Future<void> _probeDurationThenStart() async {
@@ -155,7 +187,59 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
   void dispose() {
     _ticker?.cancel();
     _bgController.dispose();
+    _video?.dispose();
     super.dispose();
+  }
+
+  /// Background layer: the muted looping mosque clip when ready, else the
+  /// original animated gradient. A dark scrim goes on top for text contrast.
+  Widget _background() {
+    final v = _video;
+    if (v != null && v.value.isInitialized) {
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: v.value.size.width,
+              height: v.value.size.height,
+              child: VideoPlayer(v),
+            ),
+          ),
+          // top + bottom scrim so the prayer name / karaoke text stays legible
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xCC000000), Color(0x55000000), Color(0xDD000000)],
+                stops: [0.0, 0.45, 1.0],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return AnimatedBuilder(
+      animation: _bgController,
+      builder: (context, _) {
+        final t = _bgController.value;
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: Alignment(0, -0.3 + 0.15 * t),
+              radius: 1.3,
+              colors: [
+                Color.lerp(
+                    AppColors.primaryContainer, AppColors.nightSurface, t)!,
+                AppColors.night,
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -169,25 +253,10 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
       canPop: _stopped,
       child: Scaffold(
         backgroundColor: AppColors.night,
-        body: AnimatedBuilder(
-          animation: _bgController,
-          builder: (context, child) {
-            final t = _bgController.value;
-            return Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment(0, -0.3 + 0.15 * t),
-                  radius: 1.3,
-                  colors: [
-                    Color.lerp(AppColors.primaryContainer, AppColors.nightSurface, t)!,
-                    AppColors.night,
-                  ],
-                ),
-              ),
-              child: child,
-            );
-          },
-          child: SafeArea(
+        body: Stack(
+          children: [
+            Positioned.fill(child: _background()),
+            SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: Column(
@@ -274,7 +343,8 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
                 ],
               ),
             ),
-          ),
+            ),
+          ],
         ),
       ),
     );

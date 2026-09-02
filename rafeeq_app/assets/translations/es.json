@@ -200,7 +200,15 @@
     "battery_exempted": "App eximida de la optimización de batería",
     "no_custom_adhans": "Aún no hay adhán personalizado",
     "status_notification": "Tarjeta de oración fija",
-    "status_notification_desc": "Una tarjeta fija en la barra de estado con la próxima oración, la fecha híjri y una cuenta atrás — funciona sin conexión"
+    "status_notification_desc": "Una tarjeta fija en la barra de estado con la próxima oración, la fecha híjri y una cuenta atrás — funciona sin conexión",
+    "adhan_limit_reached": "Has alcanzado el límite (30 adhanes)",
+    "presentation": "Presentación",
+    "presentation_audio": "Audio",
+    "presentation_video": "Vídeo",
+    "adhan_video": "Vídeo del adhán",
+    "video_note": "El vídeo se muestra solo con la pantalla encendida. Con la app cerrada solo suena el adhán (limitación de Android).",
+    "video_select": "Elegir",
+    "video_selected": "Elegido"
   },
   "settings": {
     "title": "Ajustes",

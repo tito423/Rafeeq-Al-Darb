@@ -12,10 +12,14 @@ import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
 import '../../../../core/services/adhan_alarm_service.dart';
 import '../../../../core/services/adhan_catalog_service.dart';
+import '../../../../core/services/download_manager.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_catalog_provider.dart';
+import '../../data/adhan_presentation_provider.dart';
 import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
+import '../../data/adhan_video_catalog.dart';
 import '../../data/prayer_status_enabled_provider.dart';
 
 const _prayerLabels = {
@@ -128,11 +132,14 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final settings = ref.read(adhanSettingsProvider);
     final catalog = ref.read(adhanCatalogProvider).value ?? const [];
+    final videoPath =
+        await resolveAdhanVideoPath(ref.read(adhanPresentationProvider));
     await fireAdhanTest(
       prayerKey: prayerKey,
       mode: mode,
       settings: settings,
       catalog: catalog,
+      adhanVideoPath: videoPath,
     );
     if (mounted) {
       messenger.showSnackBar(SnackBar(content: Text('prayer.test_scheduled'.tr())));
@@ -178,6 +185,8 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
                     ref.read(prayerStatusEnabledProvider.notifier).set(v),
               ),
             ),
+            const SizedBox(height: 20),
+            const _PresentationCard(),
             const SizedBox(height: 20),
             Text('prayer.default_adhan_label'.tr(),
                 style: Theme.of(context).textTheme.titleMedium),
@@ -403,6 +412,203 @@ class _PrayerModeCard extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ── P2‑7: صوت | فيديو presentation + the background-clip picker ──────────────
+
+class _PresentationCard extends ConsumerStatefulWidget {
+  const _PresentationCard();
+
+  @override
+  ConsumerState<_PresentationCard> createState() => _PresentationCardState();
+}
+
+class _PresentationCardState extends ConsumerState<_PresentationCard> {
+  StreamSubscription<List<DownloadTask>>? _sub;
+
+  /// video id -> local file path (once downloaded).
+  final Map<String, String> _paths = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPaths();
+    _sub = DownloadManager.instance.stream.listen((_) => _loadPaths());
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadPaths() async {
+    final paths = <String, String>{};
+    for (final v in adhanVideoCatalog) {
+      final p = await DownloadManager.instance.registeredPath(v.downloadId);
+      if (p != null) paths[v.id] = p;
+    }
+    if (mounted) {
+      setState(() => _paths
+        ..clear()
+        ..addAll(paths));
+    }
+  }
+
+  Future<void> _download(AdhanVideoOption v) => DownloadManager.instance.enqueue(
+        id: v.downloadId,
+        url: v.url,
+        category: 'adhan_video',
+        fileName: v.fileName,
+        title: 'prayer.adhan_video'.tr(),
+      );
+
+  Future<void> _reschedule() =>
+      ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final state = ref.watch(adhanPresentationProvider);
+    final isVideo = state.mode == AdhanPresentation.video;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('prayer.presentation'.tr(),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 8),
+            SegmentedButton<AdhanPresentation>(
+              showSelectedIcon: false,
+              segments: [
+                ButtonSegment(
+                  value: AdhanPresentation.audioOnly,
+                  icon: const Icon(Icons.graphic_eq, size: 16),
+                  label: Text('prayer.presentation_audio'.tr()),
+                ),
+                ButtonSegment(
+                  value: AdhanPresentation.video,
+                  icon: const Icon(Icons.movie_outlined, size: 16),
+                  label: Text('prayer.presentation_video'.tr()),
+                ),
+              ],
+              selected: {state.mode},
+              onSelectionChanged: (s) async {
+                await ref
+                    .read(adhanPresentationProvider.notifier)
+                    .setMode(s.first);
+                await _reschedule();
+              },
+            ),
+            if (isVideo) ...[
+              const SizedBox(height: 12),
+              Text('prayer.video_note'.tr(),
+                  style: TextStyle(
+                      color: scheme.onSurfaceVariant, fontSize: 12, height: 1.5)),
+              const SizedBox(height: 8),
+              for (final v in adhanVideoCatalog)
+                _VideoRow(
+                  option: v,
+                  selected: state.videoId == v.id,
+                  downloadedPath: _paths[v.id],
+                  task: DownloadManager.instance.taskById(v.downloadId),
+                  onSelect: () async {
+                    await ref
+                        .read(adhanPresentationProvider.notifier)
+                        .setVideo(v.id);
+                    await _reschedule();
+                  },
+                  onDownload: () => _download(v),
+                ),
+              const SizedBox(height: 8),
+              Text(adhanVideoSourceLabel,
+                  style: TextStyle(
+                      color: scheme.onSurfaceVariant, fontSize: 11)),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _VideoRow extends StatelessWidget {
+  final AdhanVideoOption option;
+  final bool selected;
+  final String? downloadedPath;
+  final DownloadTask? task;
+  final VoidCallback onSelect;
+  final VoidCallback onDownload;
+
+  const _VideoRow({
+    required this.option,
+    required this.selected,
+    required this.downloadedPath,
+    required this.task,
+    required this.onSelect,
+    required this.onDownload,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final busy = task != null &&
+        (task!.status == DownloadStatus.downloading ||
+            task!.status == DownloadStatus.queued);
+    final downloaded = downloadedPath != null;
+    final sizeMb = (option.approxSizeBytes / 1000000).toStringAsFixed(1);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(
+            downloaded
+                ? (selected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked)
+                : Icons.movie_outlined,
+            size: 20,
+            color: selected ? AppColors.gold : scheme.onSurfaceVariant,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: GestureDetector(
+              onTap: downloaded ? onSelect : null,
+              child: Text(option.nameAr,
+                  style: TextStyle(
+                      fontWeight:
+                          selected ? FontWeight.w700 : FontWeight.w400)),
+            ),
+          ),
+          if (busy)
+            SizedBox(
+              width: 90,
+              child: LinearProgressIndicator(
+                value: task!.total == null ? null : task!.progress,
+                color: AppColors.gold,
+              ),
+            )
+          else if (downloaded)
+            TextButton(
+              onPressed: onSelect,
+              child: Text(selected
+                  ? 'prayer.video_selected'.tr()
+                  : 'prayer.video_select'.tr()),
+            )
+          else
+            OutlinedButton.icon(
+              onPressed: onDownload,
+              icon: const Icon(Icons.download_rounded, size: 16),
+              label: Text('$sizeMb MB'),
+            ),
+        ],
       ),
     );
   }

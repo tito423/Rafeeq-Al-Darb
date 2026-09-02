@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/rafeeq_app.dart';
+import '../../../core/services/download_manager.dart';
 import 'adhan_video_catalog.dart';
 
 /// How the full-screen Adhan looks: just the karaoke text on the animated
@@ -53,3 +54,13 @@ final adhanPresentationProvider = StateNotifierProvider<
     AdhanPresentationNotifier, AdhanPresentationState>((ref) {
   return AdhanPresentationNotifier(ref.watch(sharedPrefsProvider));
 });
+
+/// The on-disk path of the selected background clip, or null when the user is
+/// on audio-only mode or the chosen clip isn't downloaded yet (in which case
+/// the full-screen adhan honestly falls back to the animated gradient).
+Future<String?> resolveAdhanVideoPath(AdhanPresentationState state) async {
+  if (state.mode != AdhanPresentation.video) return null;
+  final opt = adhanVideoById(state.videoId);
+  if (opt == null) return null;
+  return DownloadManager.instance.registeredPath(opt.downloadId);
+}

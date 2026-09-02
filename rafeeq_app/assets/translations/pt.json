@@ -200,7 +200,15 @@
     "battery_exempted": "App isenta da otimização da bateria",
     "no_custom_adhans": "Ainda não há adhan personalizado",
     "status_notification": "Cartão de oração fixo",
-    "status_notification_desc": "Um cartão fixo na barra de status com a próxima oração, a data híjri e uma contagem regressiva — funciona offline"
+    "status_notification_desc": "Um cartão fixo na barra de status com a próxima oração, a data híjri e uma contagem regressiva — funciona offline",
+    "adhan_limit_reached": "Você atingiu o limite (30 adhans)",
+    "presentation": "Apresentação",
+    "presentation_audio": "Áudio",
+    "presentation_video": "Vídeo",
+    "adhan_video": "Vídeo do adhan",
+    "video_note": "O vídeo aparece apenas com a tela ligada. Com o app fechado, só o som do adhan é reproduzido (limitação do Android).",
+    "video_select": "Selecionar",
+    "video_selected": "Selecionado"
   },
   "settings": {
     "title": "Definições",

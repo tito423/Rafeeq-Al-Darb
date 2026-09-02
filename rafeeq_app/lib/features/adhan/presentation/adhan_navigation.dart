@@ -20,6 +20,7 @@ void openAdhanFromPayload(String rawPayload) {
         notificationId: payload.notificationId,
         rawPayload: rawPayload,
         previewAsset: payload.previewAssetPath,
+        videoPath: payload.videoPath,
       ),
     ),
   );

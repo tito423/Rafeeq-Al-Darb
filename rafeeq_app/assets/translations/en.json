@@ -200,7 +200,15 @@
     "battery_exempted": "App exempted from battery optimization",
     "no_custom_adhans": "No custom adhan yet",
     "status_notification": "Persistent prayer card",
-    "status_notification_desc": "An ongoing status-bar card with the next prayer, the Hijri date and a live countdown — works offline"
+    "status_notification_desc": "An ongoing status-bar card with the next prayer, the Hijri date and a live countdown — works offline",
+    "adhan_limit_reached": "You've reached the limit (30 adhans)",
+    "presentation": "Presentation",
+    "presentation_audio": "Audio",
+    "presentation_video": "Video",
+    "adhan_video": "Adhan video",
+    "video_note": "The video shows only while the screen is on. When the app is closed only the adhan sound plays (an Android limitation).",
+    "video_select": "Select",
+    "video_selected": "Selected"
   },
   "settings": {
     "title": "Settings",

@@ -44,8 +44,9 @@ Future<(String?, String?)> _resolveSound(AdhanMode mode, AdhanOption option) asy
 Future<void> rescheduleAdhans(
   PrayerTimes times,
   AdhanSettings settings,
-  List<AdhanOption> catalog,
-) async {
+  List<AdhanOption> catalog, {
+  String? adhanVideoPath,
+}) async {
   if (times.isEmpty || catalog.isEmpty) return;
 
   for (final key in adhanPrayerKeys) {
@@ -70,6 +71,7 @@ Future<void> rescheduleAdhans(
         prayerLabel: _prayerLabelsAr[key]!,
         notificationId: AdhanAlarmService.instance.idFor(key),
         previewAssetPath: option.assetPath,
+        videoPath: adhanVideoPath,
       ),
     );
   }
@@ -84,6 +86,7 @@ Future<void> fireAdhanTest({
   required AdhanSettings settings,
   required List<AdhanOption> catalog,
   Duration from = const Duration(seconds: 8),
+  String? adhanVideoPath,
 }) async {
   if (catalog.isEmpty) return;
 
@@ -102,6 +105,7 @@ Future<void> fireAdhanTest({
       prayerLabel: _prayerLabelsAr[prayerKey]!,
       notificationId: AdhanAlarmService.instance.testIdFor(prayerKey),
       previewAssetPath: option.assetPath,
+      videoPath: adhanVideoPath,
     ),
   );
 }

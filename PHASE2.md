@@ -796,23 +796,39 @@ attribution), staged in `scripts/adhan_video_build/` (gitignored):
 `haram_makkah` 2.3 MB · `kaaba` 4.0 MB · `madina_nabawi` 5.5 MB ·
 `mosque_prayer` 1.0 MB · `mosque_ottoman` 1.7 MB.
 
-**Done:** `pubspec.yaml` +`video_player: ^2.9.2`; `adhan_video_catalog.dart`
-(`AdhanVideoOption`, the 5, `adhanVideoSourceLabel`); `adhan_presentation_provider.dart`
-(`enum AdhanPresentation{audioOnly,video}` + `{mode,videoId}` persisted,
-default audioOnly); `scripts/upload_adhan_videos.py` (**not run yet** — the
-classifier blocked the `gh api` push; needs owner OK or a manual run);
-`adhan_catalog_service.dart` 30-adhan cap (`maxTotalAdhans` + `AdhanLimitReached`)
-+ `_pickCustomAdhan` catches it. `adhans.json` is already clean (no mojibake);
-`adhan_text.dart` is already complete.
+**Code done (2026-09-02), `flutter analyze` clean, `flutter test` 13/13:**
+- `pubspec.yaml` +`video_player: ^2.9.2`.
+- `adhan_video_catalog.dart` — `AdhanVideoOption` (id/name/size/`url`/`downloadId`),
+  the 5 clips, `adhanVideoSourceLabel`, `adhanVideoById`.
+- `adhan_presentation_provider.dart` — `enum AdhanPresentation{audioOnly,video}`,
+  `{mode, videoId}` persisted (`adhan_presentation_v1`/`adhan_video_id_v1`),
+  default audioOnly; `resolveAdhanVideoPath()` → downloaded clip path or null.
+- `AdhanFullScreenScreen` — optional `videoPath`; `_initVideo()` plays it
+  **muted + looped**, `_background()` shows it (BoxFit.cover + a top/bottom
+  scrim) instead of the animated gradient; missing/failed file → gradient,
+  honestly. All karaoke timing logic unchanged.
+- `buildAdhanPayload`/`AdhanPayload`/`adhan_navigation.dart` carry `video`.
+- `adhan_scheduler.dart` — `rescheduleAdhans`/`fireAdhanTest` take
+  `adhanVideoPath`; `PrayerController._reschedule` + `adhan_settings._test`
+  resolve it via `resolveAdhanVideoPath`.
+- `adhan_settings_screen.dart` — a `_PresentationCard`: `صوت | فيديو`
+  SegmentedButton; in video mode, the 5-clip list (download w/ progress bar,
+  then radio-select), the `adhanVideoSourceLabel` line, and the honest
+  "video only while the screen is on (Android limitation)" note.
+- `adhan_catalog_service.dart` — 30-adhan cap (`maxTotalAdhans` +
+  `AdhanLimitReached`), `_pickCustomAdhan` catches it → snackbar.
+- +8 keys × 5 locales (`prayer.presentation*` / `.adhan_video` / `.video_*` /
+  `.adhan_limit_reached`), parity **286/286**.
+- `adhans.json` was already clean (no mojibake); `adhan_text.dart` already
+  complete.
 
-**Left:** upload the 5 clips → `AdhanFullScreenScreen` gains an optional
-`videoPath` (muted looped `VideoPlayer` bg + scrim, else the gradient) →
-`buildAdhanPayload`/`AdhanPayload`/`adhan_navigation` carry `video` →
-`adhan_scheduler` (`rescheduleAdhans`/`fireAdhanTest`) take `adhanVideoPath`
-resolved by the caller → `adhan_settings_screen` gets a `صوت | فيديو`
-SegmentedButton + the 5-clip download/pick row + source line + the honest
-"video only while the screen is on" note → +translation keys ×5 → emulator
-verify. Full step list in `NEXT_SESSION_PROMPT.md`.
+**Left:** (1) **upload the 5 clips** to `rafeeq-api/adhan/video/<id>.mp4`
+(`python scripts/upload_adhan_videos.py` — the `gh api` push was classifier-
+blocked in-session, needs owner OK / manual run); verify each URL 200 +
+`video/mp4` + size. (2) **emulator-verify**: pick a clip → downloads once →
+"تجربة" for Dhuhr → the full-screen adhan shows the muted looping video
+behind the synced karaoke text + the chosen audio; audio-only unchanged;
+import adhans to 30, the 31st refused; selection survives a restart.
 
 ---
 
