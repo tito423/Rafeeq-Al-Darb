@@ -84,7 +84,9 @@ flutter:
     - assets/data/mushaf/
     - assets/data/catalogs/
     - assets/audio/adhan/
-    - assets/icon/
+    # assets/icon/ is intentionally NOT bundled — the PNGs there are consumed
+    # by flutter_launcher_icons at build time only, never at runtime. Bundling
+    # them would just bloat the install.
 
   fonts:
     - family: AmiriQuran
@@ -94,5 +96,9 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: 'assets/icon/app_icon.jpg'
+  image_path: 'assets/icon/app_icon.png'
+  adaptive_icon_background: 'assets/icon/app_icon_background.png'
+  adaptive_icon_foreground: 'assets/icon/app_icon_foreground.png'
+  background_color_ios: '#0C2C29'
   remove_alpha_ios: true
+  min_sdk_android: 21

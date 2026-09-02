@@ -118,7 +118,7 @@ list so it stops rotting.
 | 1.2 ✅ | Stray `﴿ ﴾` under the last ayah in text mode | Removed the trailing decorative `Text`. **Done.** |
 | 1.3 ✅ | Reader mode (text/image) not persisted — always starts in text | Persist `_mode` to `SharedPreferences` on toggle, restore in `initState`. **Done.** |
 | 1.4 ✅ | **Mushaf download stops when you leave the Mushafs tab** (highest priority — breaks offline-first; open since STAGE 0) | **DONE, emulator-verified.** `MushafPageService` now owns a `PrefetchProgress` (`ChangeNotifier`) per edition; the job is `unawaited` on the singleton and `_MushafDownloadTile` re-attaches to it in `initState`. `// P2‑5` note left on `PrefetchProgress`. Verified live: 3 → 27 → 39 → 51 across a tab switch, tile kept the progress bar. P2‑5 folds this into the unified manager. |
-| 1.5 ⛔ | Launcher icon is a square JPG, no alpha / no adaptive shape | **OWNER-BLOCKER — the only P2‑1 item left.** No logo art in the repo (`assets/icon/app_icon.jpg` is the square JPG). Need a transparent 1024×1024 logo PNG from the owner, then: produce the adaptive foreground/background pair, update `flutter_launcher_icons` config, run `dart run flutter_launcher_icons`, rebuild, verify the masked icon. |
+| 1.5 ✅ | Launcher icon is a square JPG, no alpha / no adaptive shape | **DONE — icon designed in-house (owner said "design it yourself").** New emblem: rub‑el‑hizb guiding star + a receding path, in the app's teal/gold palette. Source SVGs + regen instructions in `rafeeq_app/assets/icon/src/`. Rendered via headless Chrome → `app_icon.png` / `app_icon_foreground.png` / `app_icon_background.png`; `flutter_launcher_icons` config updated (adaptive fg/bg, `background_color_ios`); `dart run flutter_launcher_icons` produced `mipmap-anydpi-v26/ic_launcher.xml` (16% inset). Old `app_icon.jpg` deleted and `assets/icon/` removed from the Flutter bundle (build-time only — saves ~0.9 MB install). Verified on the emulator app drawer: proper adaptive icon, masks to a circle, branded mark. |
 | 1.6 ✅ | I'rab tab shows Buckwalter transliteration (`Hmd`, `rbb`, `r~aHoma\`n`) for root/lemma instead of Arabic | **DONE, emulator-verified + unit-tested (11/11).** `word_grammar.root` / `.lemma` are stored in Buckwalter (verified: `Hmd`, `rbb`, `{som`, `r~aHoma\`n`). Added `lib/core/utils/buckwalter.dart` — a `buckwalterToArabic(String)` using the standard Tim Buckwalter map (`'`→ء `|`→آ `>`→أ `&`→ؤ `<`→إ `}`→ئ `A`→ا `b`→ب `p`→ة `t`→ت `v`→ث `j`→ج `H`→ح `x`→خ `d`→د `*`→ذ `r`→ر `z`→ز `s`→س `$`→ش `S`→ص `D`→ض `T`→ط `Z`→ظ `E`→ع `g`→غ `f`→ف `q`→ق `k`→ك `l`→ل `m`→م `n`→ن `h`→ه `w`→و `Y`→ى `y`→ي `F`→ً `N`→ٌ `K`→ٍ `a`→َ `u`→ُ `i`→ِ `~`→ّ `o`→ْ `` ` ``→ٰ `{`→ٱ `_`→ـ). Apply it to `w.root` and `w.lemma` in `_IrabTab` (the token is already Arabic — leave it). Cover with `test/buckwalter_test.dart` (`Hmd`→`حمد`, `rbb`→`ربب`, `r~aHoma\`n`→`رَّحمٰن`, round-trip a couple of real rows). Note in `HANDOVER.md` §7 that roots are now transliterated for display. |
 
 **Acceptance — met on the emulator (`emulator-5554`, 2026-09-02):** header
@@ -127,8 +127,8 @@ download kept running across a Downloads-tab switch and the tile re-attached;
 i'rab for 1:1 shows الجذر: سمو / الكلمة: ٱسْم. `flutter analyze` clean,
 `flutter test` 11/11.
 
-**Status: P2‑1 is complete except 1.5 (launcher icon), which is blocked on a
-logo PNG from the owner.** Next stage: P2‑2 (theme system).
+**Status: P2‑1 is COMPLETE** (1.1–1.6 all done, emulator-verified; icon
+designed in-house). Next stage: P2‑2 (theme system).
 
 ---
 

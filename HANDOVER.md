@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 17:12 — IN PROGRESS — resume here**
+**2026-09-02 17:53 — IN PROGRESS — resume here**
 
-P2-1 bug sweep DONE except launcher icon (owner-blocked): 1.1 doubled surah header, 1.2 stray brackets, 1.3 reader-mode persistence, 1.4 mushaf download survives tab switch (new PrefetchProgress ChangeNotifier on MushafPageService + tile re-attach), 1.6 Buckwalter->Arabic i'rab (+buckwalter.dart +test). All emulator-verified on emulator-5554; analyze clean; flutter test 11/11. HANDOVER 7 + PHASE2 P2-1 updated.
+P2-1.5 DONE: designed the app launcher icon in-house (rub-el-hizb guiding star + path, teal/gold). Source SVGs in assets/icon/src/ + regen README. Adaptive fg/bg via flutter_launcher_icons (anydpi-v26). Deleted old app_icon.jpg, removed assets/icon/ from Flutter bundle (~0.9MB lighter install). Emulator-verified in app drawer. P2-1 now 100% complete. analyze clean.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -399,9 +399,13 @@ updated 2026-09-02._
 - ~~Stray `()` under the last ayah on a text-mode page.~~ **FIXED (P2‑1.2),
   emulator-verified.** Removed the trailing decorative `﴿ ﴾` `Text` widget.
 - ~~Settings: `المصادر والمأسى` should be `المصادر والمراجع`~~ — **fixed in STAGE 1.**
-- **Launcher icon is a square JPG, no alpha / adaptive shape.** **STILL OPEN
-  (P2‑1.5)** — needs a real logo PNG source from the owner to produce the
-  adaptive foreground/background pair. Small owner-blocker.
+- ~~Launcher icon is a square JPG, no alpha / adaptive shape.~~ **FIXED
+  (P2‑1.5), emulator-verified.** Icon designed in-house (owner: "design it
+  yourself") — a rub‑el‑hizb guiding star over a receding path, teal/gold.
+  Source SVGs + regen steps in `rafeeq_app/assets/icon/src/`. Adaptive
+  fg/bg via `flutter_launcher_icons` (`mipmap-anydpi-v26/ic_launcher.xml`,
+  16% inset). Old `app_icon.jpg` deleted; `assets/icon/` dropped from the
+  Flutter bundle (build-time only, ~0.9 MB lighter).
 - ~~i'rab root/lemma show Buckwalter translit ("Hmd", "rbb") not Arabic.~~
   **FIXED (P2‑1.6), emulator-verified + unit-tested.** New
   `lib/core/utils/buckwalter.dart` (`buckwalterToArabic` / `buckwalterForDisplay`)

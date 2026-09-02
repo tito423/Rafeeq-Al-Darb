@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="road" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#9C7625"/>
+      <stop offset="42%" stop-color="#CFAA34"/>
+      <stop offset="100%" stop-color="#F5E4A6"/>
+    </linearGradient>
+    <linearGradient id="sqA" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#F7E7AC"/>
+      <stop offset="55%" stop-color="#E1BF53"/>
+      <stop offset="100%" stop-color="#C99E2E"/>
+    </linearGradient>
+    <linearGradient id="sqB" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#EFD98C"/>
+      <stop offset="55%" stop-color="#D3B142"/>
+      <stop offset="100%" stop-color="#BC9026"/>
+    </linearGradient>
+    <clipPath id="roadClip">
+      <path d="M 302 898 C 334 772 434 686 474 648 L 550 648 C 590 686 690 772 722 898 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- adaptive foreground: same mark, scaled into the centre safe zone -->
+  <g transform="translate(512 512) scale(0.82) translate(-512 -560)">
+    <path d="M 302 898 C 334 772 434 686 474 648 L 550 648 C 590 686 690 772 722 898 Z"
+          fill="url(#road)"/>
+    <g clip-path="url(#roadClip)">
+      <path d="M486 650 L538 650 L545 700 L479 700 Z" fill="#FAF4E6" fill-opacity="0.9"/>
+      <path d="M493 742 L531 742 L539 804 L485 804 Z" fill="#FAF4E6" fill-opacity="0.85"/>
+      <path d="M500 838 L524 838 L532 902 L492 902 Z" fill="#FAF4E6" fill-opacity="0.8"/>
+    </g>
+    <rect x="368" y="266" width="288" height="288" rx="16" fill="url(#sqB)"
+          transform="rotate(45 512 410)"/>
+    <rect x="368" y="266" width="288" height="288" rx="16" fill="url(#sqA)"/>
+    <circle cx="512" cy="410" r="58" fill="#0C2C29"/>
+    <circle cx="512" cy="410" r="33" fill="#F7E7AC"/>
+  </g>
+</svg>
