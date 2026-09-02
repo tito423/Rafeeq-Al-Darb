@@ -400,6 +400,11 @@ class DownloadNotifications {
         const InitializationSettings(android: android),
         onDidReceiveNotificationResponse: (_) {},
       );
+      // Android 13+ needs the runtime POST_NOTIFICATIONS grant before any
+      // progress notification will show. Ask once, on the first download.
+      final androidImpl = plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      await androidImpl?.requestNotificationsPermission();
       _ready = true;
     } catch (_) {
       // Notifications are optional; downloads still work without them.
