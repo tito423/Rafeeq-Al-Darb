@@ -6,8 +6,27 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | STAGE 2 Library "Books" catalog finished — the last open pipeline task |
-| **Build verified?** | **`flutter analyze` clean · `flutter test` clean · `flutter build apk --debug` and `--release --split-per-abi` both OK · ALL 20 pipeline tasks now done: STAGE 0–6 fully live-verified, STAGE 2 Books catalog live-verified end-to-end incl. offline (§7), STAGE 7 (security/guest-mode) verified + one gap fixed, STAGE 8 (release) pipeline verified.** The only real external blockers left are owner-only: a real release keystore, and registering a Firebase SHA-1 if Google sign-in is ever wanted. |
+| **State at** | **PHASE 2 in progress** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. |
+| **Build verified?** | `flutter analyze` clean · `flutter test` **13/13** · Phase-1 release build OK. Phase 2 so far: **P2‑1, P2‑2, P2‑3, P2‑4 done and emulator-verified** on `emulator-5554`. |
+
+### PHASE 2 progress (2026-09-02) — details in `PHASE2.md`
+
+| Stage | State |
+|---|---|
+| P2‑1 small-bug sweep | ✅ done, verified (6 bugs; launcher icon designed in-house, src in `rafeeq_app/assets/icon/src/`) |
+| P2‑2 4 themes (system/light/dark/**RGB** animated) | ✅ done, verified — `lib/core/theme/theme_controller.dart` + `app_theme.rgb()` + `rgb_backdrop.dart`. §5.6. |
+| P2‑3 es / ru / pt locales | ✅ done, verified — 237-key parity, `test/translation_parity_test.dart`. Fixed `const AppShell` not re-translating on `setLocale`. |
+| P2‑4 Library redesign | ✅ structural done, verified — Home المكتبة card → `LibraryScreen`; tabs [الكتب المتوفرة \| الحديث]; 3 sub-tabs (كل الكتب abc / التصنيفات / مكتبتي w/ فتح+حذف). `BookCategory` enum, `LibraryBook.category/sortKey`. **Fixed real bug:** `DownloadManager.remove()` didn't purge the SharedPreferences registry. Added `العبودية` (Ibn Taymiyyah) — 5 books / 3 categories now. |
+| P2‑4b book **text editions** (Shamela) | 📋 spec'd only — owner chose al-Maktaba al-Shamela; needs per-book edition research + a text-reader screen. |
+| P2‑5 pro download manager | ⬜ not started. Owner add-on: every download → live progress notification (code already exists in `DownloadManager.DownloadNotifications`, needs verifying). |
+| P2‑6 persistent prayer notification (next prayer + Hijri + countdown) | ⬜ not started |
+| P2‑7 Adhan audio/video + 30 slots | ⬜ not started · OWNER-BLOCKER: video source |
+| P2‑8 competitor feature mix | ⬜ not started · check-in required |
+| P2‑9 hosting doc (R2/Firebase/GitHub) | ⬜ not started · OWNER-BLOCKER: console access (agent cannot log in) |
+| P2‑10 perf / size / security / release prep | ⬜ not started · OWNER-BLOCKER: keystore |
+| **P2‑11** Quran Khatma card (Home top) | 📋 spec'd only — owner wants the Home quick-access grid **removed** and replaced with 3 cards |
+| **P2‑12** Sunan as-Suwar card (Home middle) — 4 surahs, single-surah locked reader, per-surah reminders | 📋 spec'd only |
+| **P2‑13** Random-hadith card (Home bottom) — full hadith + narrator + grade, re-rolls each launch | 📋 spec'd only · **needs a graded hadith source** (`hadith.db` has no gradings — hard rule: never invent one) |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 19:17 — IN PROGRESS — resume here**
+**2026-09-02 19:35 — IN PROGRESS — resume here**
 
-PHASE2.md: owner wants every book in BOTH image PDF + a structured text edition (فهرس, in-book search, selectable text). Recorded as new stage P2-4b with sourcing order (OpenITI > PD epub > Shamela > OCR _djvu.txt, each labelled; reject any -nc-/-nd- CC), a book_text_reader_screen spec, and honesty constraints (no fabricated text, OCR badged). Also documented the working archive.org lookup method in P2-4's carried-over note. No code changed.
+PHASE2.md + HANDOVER.md: captured the owner's big 2026-09-02 batch. P2-4b now = al-Maktaba al-Shamela primary (owner's pick; verify no issues + research best muhaqqaq edition per book; licence flagged). NEW stages: P2-11 Quran Khatma card (Home top, khatma features only), P2-12 Sunan as-Suwar card (4 surahs Baqarah/Kahf/Mulk/Sajdah -> single-surah LOCKED reader + per-surah day/hour/min reminders), P2-13 random-hadith card (Home bottom, full text+narrator+grade, re-rolls each launch, 'حديث آخر' btn) — the Home quick-access grid gets removed for these 3. P2-13 BLOCKED on a graded hadith source (hadith.db has no gradings). HANDOVER now has a full Phase-2 progress table. No code changed.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -95,9 +95,15 @@ test` 13/13, last checkpoint `ec15d06`):
 | P2‑8 | Competitor feature mix (Sakinah, Ayat, QuranFlash, Khatmah) — research → propose → build | P2‑2..P2‑5 | check-in required |
 | P2‑9 | Hosting & cost guardrails (Cloudflare R2 / Firebase / GitHub) | — | **yes** (console access) |
 | P2‑10 | Lightweight / fast / secure / maintainable pass + release prep | all above | **yes** (release keystore) |
+| **P2‑11** | **Quran Khatma tracker** card — Home, top (khatma features only, not prayer/qibla) | P2‑2 | no |
+| **P2‑12** | **Sunan as-Suwar** card — Home, middle; 4 surahs → single-surah locked reader + per-surah reminders | P2‑2 | no |
+| **P2‑13** | **Random-hadith card** — Home, bottom; full hadith + narrator + grade, re-rolls each launch | P2‑4 | **yes** — needs a graded hadith source (see stage) |
 
 Do them in order. P2‑2 and P2‑3 were foundational (they touch every screen) and
 are done. P2‑6 depends only on P2‑2 — it can be slotted earlier if you prefer.
+**P2‑11/12/13 are the Home-screen redesign** (remove the quick-access grid;
+stack Khatma card / Sunan-as-Suwar card / Random-hadith card above the nav bar
+— full spec in their sections).
 
 ---
 
@@ -413,20 +419,29 @@ font control. "لو مش لقيتهم اتصرف" — use the best real source a
 - **Model:** add to `LibraryBook` an optional
   `TextEdition { url, format (epub | openitiMarkdown | plainText), sourceLabel,
   isOcr }`. A book with no `TextEdition` simply shows only the image PDF.
-- **Source each title's text**, in this order of preference (stop at the first
-  clean hit, record which one in `sourceLabel`):
-  1. **OpenITI corpus** (`github.com/OpenITI`, the `*-ara1` releases) —
-     machine-readable classical Arabic in mARkdown, provenance-tracked, texts
-     are public domain. Best structure. Check per title.
-  2. A **public-domain EPUB** on archive.org whose item has **no `*-nc-*` /
-     `*-nd-*` licence** (auto-EPUB derivatives are OCR — mark `isOcr: true`).
-  3. **al-Maktaba al-Shamela** text (`shamela.ws`) — widely used, but it grants
-     no explicit redistribution licence and some entries are keyed to a
-     specific muḥaqqaq edition. Use only the plain classical text, credit
-     "المكتبة الشاملة", and prefer 1–2 where possible.
-  4. **archive.org `_djvu.txt` OCR** of the same scan we already ship — always
-     available, but Arabic OCR is rough. `isOcr: true`, and the reader shows a
-     one-line "نص مستخرَج آلياً وقد يحوي أخطاء" badge.
+- **Primary source: al-Maktaba al-Shamela (`shamela.ws`)** — the owner chose it
+  explicitly (2026-09-02): "الأفضل إنك تستخدم الشاملة لأنها جاهزة بس اتأكد إن
+  مافيش فيها أي مشاكل". So:
+  1. For each title, find it on Shamela, pick the **best muḥaqqaq / منقّح
+     edition** it offers (the owner asked: "ابحث على النت شوف أفضل الطبعات
+     المنقحة والمحققة" — research each book's respected critical edition, then
+     use the Shamela copy that matches it), and record edition + editor in
+     `sourceLabel` (e.g. "المكتبة الشاملة — ط. مؤسسة الرسالة، تحقيق شعيب
+     الأرناؤوط").
+  2. **Verify the Shamela text has no problems** before shipping it: complete
+     (no truncated chapters), correct encoding, page markers intact, فهرس
+     present. Spot-check against the image PDF we already ship.
+  3. **Licence reality — flag, don't hide.** Shamela grants no explicit
+     redistribution licence; the base classical texts are public domain but a
+     modern muḥaqqiq's footnotes/text-establishment can carry copyright
+     (§5.3's Libya-edition rule). The owner accepted Shamela knowingly — record
+     that in `HANDOVER.md` §5 as a decision, keep every book's provenance
+     visible in the UI, and if a specific edition looks heavily
+     apparatus-dependent, prefer a plainer PD edition of the same text.
+  - Fallbacks if a title genuinely isn't clean on Shamela: **OpenITI**
+    (`github.com/OpenITI`, PD, structured) → a **PD EPUB** on archive.org
+    (no `*-nc-*`/`*-nd-*`) → the **`_djvu.txt` OCR** of our own scan
+    (`isOcr: true`, reader shows "نص مستخرَج آلياً وقد يحوي أخطاء").
   - **Never** present OCR or a raw dump as a critical edition. **Never** invent
     an editor, chapter titles, or footnotes.
 - **`book_text_reader_screen.dart`:** parse the source into a section tree,
@@ -726,6 +741,127 @@ not larger than Phase 1; analyze + test clean; the architecture doc exists.
 
 ---
 
+# Home-screen redesign (owner, 2026-09-02)
+
+The owner wants the Home tab reworked. **Remove the quick-access card grid**
+(`_QuickCard`s in `home_screen.dart`) entirely and replace it with a stack of
+three purpose-built cards, in this order from the top:
+
+1. **Quran Khatma card** (`P2‑11`) — top
+2. **Sunan as-Suwar card** (`P2‑12`) — middle
+3. **Random-hadith card** (`P2‑13`) — bottom, sits just above the bottom nav bar
+
+The existing prayer-times `_PrayerCard` stays at the very top (above card 1).
+
+---
+
+## P2‑11 — Quran Khatma tracker card (Home, top)
+
+**Goal:** a Home card with "كل إمكانيات برنامج ختمة" — but **only the khatma
+features**, explicitly **not** prayer times / qibla (Rafiq already has those).
+
+**Do:**
+- Research the **Khatmah (ختمة)** app and list its khatma-planning features
+  (write them into `PHASE2_RESEARCH.md`): create a khatma with a target end
+  date or a daily amount (juz / hizb / pages), progress ring + % + days left,
+  "read today" marker, streak, catch-up/behind indicator, multiple concurrent
+  khatmas, a gentle daily reminder, history of finished khatmas.
+- Build it as pure **local state** over the mushaf's existing page/juz data
+  (`mushaf_data_provider`, `quran_local.db`) + `SharedPreferences` — no new
+  content, no network. New:
+  `lib/features/khatma/data/khatma_store.dart`,
+  `lib/features/khatma/presentation/khatma_card.dart`,
+  `lib/features/khatma/presentation/khatma_screen.dart` (tap the card → full
+  manager).
+- "Read today" advances the khatma by that day's amount and jumps the reader
+  there; opening the reader from a khatma should land on the right page.
+- Reminder = one `zonedSchedule` per active khatma (reuse the azkar-reminder
+  pattern).
+- Localize (5 locales; parity test enforces).
+
+**Acceptance (emulator):** create a khatma (target date or daily juz) → card
+shows the ring, today's portion, days left; "read today" opens the mushaf at
+the right page and advances progress; progress + streak persist across restart;
+reminder fires; finishing a khatma moves it to history; no prayer/qibla
+content anywhere in this feature.
+
+---
+
+## P2‑12 — Sunan as-Suwar card (Home, middle)
+
+**Goal:** a card "سنن السور في اليوم والليلة" listing **four** surahs —
+**البقرة، الكهف، المُلك، السجدة** — each opening a **single-surah locked
+reader** with its own reminder.
+
+**Do:**
+- The card lists the 4 (name + a one-line note on its virtue, sourced —
+  al-Kahf on Friday, al-Mulk before sleep, as-Sajdah + al-Mulk, al-Baqarah in
+  the home; keep the notes short and referenced, no invented fadl).
+- Tap a surah → open the reader **scoped to that surah only**: the user can page
+  **within** the surah (text *or* image mode, same toggle) but **cannot
+  navigate to the rest of the mushaf** — no surah/juz/goto sheets, `PageView`
+  bounded to that surah's pages, no next/prev past its edges. Reuse
+  `QuranScreen`'s rendering; add a `restrictToSurah` mode (or a thin
+  `SingleSurahScreen` that composes the same `MushafTextPage` /
+  `MushafPageView`).
+- **Per-surah reminder:** for each of the 4, the user picks day-of-week + hour +
+  minute; arm a real `zonedSchedule`; tapping the notification opens that
+  surah's locked reader. Persist per surah.
+- New: `lib/features/sunan_suwar/…` (card, the 4-entry config, the reminder
+  wiring). Localize (5 locales).
+
+**Acceptance (emulator):** card shows the 4 surahs; tapping البقرة opens it and
+paging stops at its start/end — no way to reach al-Fatiha or Aal-Imran; text
+and image modes both work inside it; setting a reminder for al-Kahf on Friday
+20:00 arms a schedule that survives restart and opens al-Kahf when it fires;
+all four have independent reminders.
+
+---
+
+## P2‑13 — Random-hadith card (Home, bottom, above the nav bar)
+
+**Goal:** a large card that shows **one full hadith** — complete text, the
+narrator (بيان الراوي), and its **grade / درجة الصحة** — picked at random,
+**re-rolled every app launch**, with a **"حديث آخر"** button to re-roll on
+demand. The card grows to fit the whole hadith.
+
+**The data problem — read this first.** The bundled `hadith.db` (9 books,
+40,943 hadiths, downloaded on demand) has **no per-hadith grading** — HANDOVER
+is explicit that the source JSON carries none, and "never invent a grading"
+is a hard rule. The owner wants the six canonical books + **Muwatta Malik**
+(7 total) and a shown grade. So this stage is **blocked on a graded source**:
+- **Option A:** a hadith source that ships gradings — e.g. **sunnah.com**'s
+  data (many hadiths carry `grade`/`grades` with the grader named), or a
+  vetted graded dataset. Would mean rebuilding / augmenting `hadith.db` with a
+  `grade` + `grader` column for at least these 7 books, via a new
+  `scripts/…` builder, and re-hosting.
+- **Option B:** ship the grade **only where the source has one**, and for the
+  rest show an honest "الدرجة: غير مذكورة في المصدر" (never a guess). For
+  Bukhari/Muslim, "صحيح — من الصحيحين" is true by the collection's definition
+  and may be shown as such.
+- **Decide with the owner** which option before building. Until then the card
+  can ship showing text + narrator + book, with the grade line as the honest
+  "غير مذكورة" until the graded data lands.
+
+**Do:**
+- Remove the `_QuickCard` grid from `home_screen.dart`.
+- New `lib/features/hadith_daily/…`: a provider that, on app launch, picks a
+  random hadith from the 7 books (needs `hadith.db` downloaded — if it isn't,
+  the card shows a compact "download the hadith library" prompt reusing the
+  existing gate), caches today's pick, and re-rolls on a fresh launch or the
+  "حديث آخر" tap. The card renders full Arabic text (`AmiriQuran`), narrator,
+  book + hadith number, and the grade line per the option chosen above. Tapping
+  the card opens the full `HadithDetailScreen`.
+- Localize (5 locales).
+
+**Acceptance (emulator):** with `hadith.db` present, Home shows a full hadith
+card (complete text, narrator, book/number, grade line); "حديث آخر" swaps it;
+relaunching the app shows a different hadith; without `hadith.db` the card
+shows an honest download prompt, not a blank/fake card; no invented gradings
+anywhere.
+
+---
+
 ## Owner-blockers, collected
 
 | Stage | Needs the owner to… |
@@ -736,5 +872,7 @@ not larger than Phase 1; analyze + test clean; the architecture doc exists.
 | P2‑8 | pick the competitor-feature shortlist before it's built |
 | P2‑9 | do the Cloudflare / Firebase / GitHub console steps; rotate the R2 token — an agent session **cannot** log into these accounts (no passwords/OAuth/account-settings, even with the owner's say-so) |
 | P2‑10 | provide the real release keystore (alias + passwords) |
+| P2‑4b | accepted using al-Maktaba al-Shamela text despite its unclear redistribution licence (recorded); still may want a specific muḥaqqaq edition confirmed per book |
+| P2‑13 | pick the graded-hadith approach (rebuild `hadith.db` with gradings from a graded source, vs. show grade only where the source has one) |
 
 Everything else in Phase 2 is buildable without him — go.
