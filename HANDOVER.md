@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | commit `2efc519` (STAGE 5) + STAGE 6 thematic-search commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter test` clean · `flutter build apk --debug` and `--release --split-per-abi` both OK · STAGE 0–6 all fully live-verified (§7) · STAGE 7 (security/guest-mode) verified, one real gap fixed · STAGE 8 (release) pipeline verified, only real keystore signing still blocked.** See the WIP note and §7 for the full list of real bugs found and fixed this session. |
+| **State at** | STAGE 2 Library "Books" catalog finished — the last open pipeline task |
+| **Build verified?** | **`flutter analyze` clean · `flutter test` clean · `flutter build apk --debug` and `--release --split-per-abi` both OK · ALL 20 pipeline tasks now done: STAGE 0–6 fully live-verified, STAGE 2 Books catalog live-verified end-to-end incl. offline (§7), STAGE 7 (security/guest-mode) verified + one gap fixed, STAGE 8 (release) pipeline verified.** The only real external blockers left are owner-only: a real release keystore, and registering a Firebase SHA-1 if Google sign-in is ever wanted. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 15:25 — IN PROGRESS — resume here**
+**2026-09-02 15:40 — COMPLETE**
 
-Library Books catalog: finished the previous session's half-written _BookCard (was non-compiling), removed unused import, verified all 4 archive.org PDF URLs return HTTP 200 application/pdf and set exact measured sizes. Also fixed checkpoint.ps1 (was corrupting HANDOVER.md's UTF-8 on every run) and hardened cp.bat against Git-Bash mangling /s. analyze clean. NOT yet built or run on device.
+STAGE 2 Library Books catalog verified live end-to-end on the emulator: download al-Fawaid from archive.org -> card flips to Open -> real PDF renders in SfPdfViewer (6285456 bytes, %PDF-1.5) -> airplane-mode ON -> still opens from cache and page-scrolls. T14 done -> STAGE 2 done -> all 20 pipeline tasks complete. HANDOVER/PIPELINE/WORK_QUEUE updated.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -612,6 +612,77 @@ could not be typed.
 local imports resolve, `AppColors.x` members exist, `'key'.tr()` keys exist with
 ar/en parity 168/168, polygon coverage 6,236/6,236, catalog divergence figures,
 pinned CDN bytes. All of that still holds and is now backed by the analyzer.
+
+### Update 2026-09-02 — STAGE 7 (security/guest mode) & STAGE 8 (release)
+
+Condensed here from a longer WIP note; full detail is in git at
+`git show 10dbd35:HANDOVER.md`.
+
+**STAGE 7.** Grepped all of `lib/` for `signIn`/`login`/`auth`/`FirebaseAuth`:
+there is no authentication code anywhere, so "every offline feature works
+without an account" is true by construction — guest mode is the only mode.
+`AppConfig` re-confirmed secret-free. **One real gap fixed:**
+`rafeeq_app/android/app/google-services.json` (a live Firebase config for
+project `rafeeq-aldarb` — real API key + OAuth client id) had been committed
+since the first commit and never gitignored. `git rm --cached`'d it (local
+file untouched) and extended `rafeeq_app/.gitignore` to also cover `.env`,
+`GoogleService-Info.plist`, `android/key.properties`, `*.jks`/`*.keystore`.
+Risk note: a Firebase **Android** API key is designed to ship in-client and is
+not a server secret (protection is API-key restrictions + Security Rules), but
+it shouldn't be in git per this project's own checklist and it is in history
+from commit 1 — worth the owner knowing. **Google sign-in itself is still not
+built** — no `firebase_auth`/`google_sign_in` in `pubspec.yaml`; finishing it
+needs the owner to register a release SHA-1 in the Firebase console (no agent
+can do that). Flagged, not half-built.
+
+**STAGE 8.** Ran `flutter clean` → `pub get` → `analyze` → `build apk --release
+--split-per-abi` for real: succeeds (armeabi-v7a / arm64-v8a / x86_64 =
+35.8 / 37.8 / 39.2 MB); the x86_64 APK installs and runs on a fresh emulator
+(Arabic UI intact, honest "enable location" empty state, no fake data). Removed
+`android:usesCleartextTraffic="true"` from the **main** manifest — a full `lib/`
+grep finds zero `http://` URLs, so it was a leftover (unrelated to the
+debug-only `network_security_config`, which handles the Avast TLS root and is a
+separate mechanism); release now defaults to disallowing cleartext. **Still
+blocked:** the release build is signed with the **debug** keystore (a
+`// TODO: Add your own signing config` sits in `android/app/build.gradle.kts`).
+Real signing needs the owner's own keystore/alias/passwords — an agent
+generating one would lock everyone else out of re-signing updates.
+
+### Update 2026-09-02 (next session) — STAGE 2 Library "Books" catalog finished + emulator-verified end to end
+
+Picked up an in-flight, non-compiling edit (previous session died mid-write in
+`library_screen.dart`'s `_BookCard`). Finished it: `_CatalogTab` is now a real
+download/open catalog over `lib/features/library/data/book_catalog.dart` — 4
+real public-domain classical texts (Riyad as-Salihin, Mukhtasar Minhaj
+al-Qasidin, Ibn al-Qayyim's al-Fawaid, Ibn al-Jawzi's Sayd al-Khatir) hosted
+as PDFs on archive.org. **All 4 `downloadUrl`s checked with a real `curl -L`
+GET on 2026-09-02: HTTP 200, `application/pdf`;** `approxSizeBytes` is each
+response's measured Content-Length (the previous session's guesses were off —
+al-Fawaid was 15 MB in the catalog, actually 6.29 MB — all four are now exact).
+Download reuses the same `DownloadManager` as the hadith DB; `BookReaderScreen`
+opens the file with `SfPdfViewer.file`.
+
+**Verified live on the Android emulator (Medium Phone API 36):** المكتبة →
+الكتالوج lists the 4 books with real metadata and sizes; tapped تنزيل on
+al-Fawaid → real download → the card flipped to فتح → the reader opened the
+**real archive.org PDF** (title page: "الفوائد لابن القيم، تحقيق عصام الدين
+الصبابطي، دار الحديث القاهرة"). File on disk is exactly 6,285,456 bytes,
+`%PDF-1.5`. Then **airplane mode ON**, reopened from the catalog → still
+renders, page-scroll to page 2 works. This is T14 done → STAGE 2 done → the
+whole 20-task pipeline is now complete.
+
+Catalog is 4 titles, honestly labeled "a starting set" — the owner's list also
+named Ibn Taymiyyah, al-Hakim al-Tirmidhi, Ibn Abi al-Dunya, and al-Jaziri's
+*al-Fiqh ala al-Madhahib al-Arba'ah* (1941 — needs its own licensing check,
+not public-domain by author death). More can be added the same way: one
+`LibraryBook` entry per title, `downloadUrl` verified with a real GET.
+
+Also fixed `scripts/checkpoint.ps1` — it read/wrote `HANDOVER.md` through
+PowerShell 5.1's ANSI default and **corrupted every Arabic char + em-dash on
+each run** (one such corruption, commit `a57ac7b`, was caught and the file
+restored from `10dbd35`); it now forces UTF-8 both directions and `cp.bat` is
+hardened so a Git-Bash-mangled `/s` can't become a junk commit. **Run `cp.bat`
+from PowerShell/cmd, not Git Bash.**
 
 ---
 

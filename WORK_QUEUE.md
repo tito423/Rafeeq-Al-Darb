@@ -125,7 +125,7 @@ from the notification; the choice per prayer is respected after an app restart.
 
 ---
 
-## STAGE 2 — Library & Hadith  (T14, T15) — Hadith half ✅ done 2026-09-02; Library half pending owner
+## STAGE 2 — Library & Hadith  (T14, T15) — ✅ DONE 2026-09-02 (both halves; Books catalog live-verified end-to-end incl. offline)
 
 **Correction:** `hadith.db` and the "17 books in `rafeeq-api/downloads/books`"
 did **not** actually exist anywhere in this workspace — only the real source
