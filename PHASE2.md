@@ -80,14 +80,15 @@ test` 13/13, last checkpoint `ec15d06`):
 
 ---
 
-## The ten stages
+## The stages (10 + P2‑4b)
 
 | Stage | Title | Depends on | Owner-blocked? |
 |---|---|---|---|
 | P2‑1 | Small-bug sweep | — | ✅ done |
 | P2‑2 | Theme system: 4 themes (system / light / dark / **RGB**) + extensible registry | — | ✅ done |
 | P2‑3 | Localization: add **Spanish, Russian, Portuguese** (full coverage) | — | ✅ done |
-| P2‑4 | Library redesign (home entry, 3 sub-tabs, "My Library") + catalog expansion | P2‑2, P2‑3 | partial (al-Jaziri licensing) |
+| P2‑4 | Library redesign (home entry, 3 sub-tabs, "My Library") + catalog expansion | P2‑2, P2‑3 | ✅ structural done · catalog + al-Jaziri carried |
+| **P2‑4b** | **Book text editions** — every book also as a structured text edition (فهرس, in-book search, selectable text) beside the image PDF | P2‑4 | no (source-research task) |
 | P2‑5 | Professional download manager (unified, pause/resume, storage view) **+ every download shows a live progress notification with a progress bar** | P2‑2, P2‑3 | no |
 | **P2‑6** | **Persistent prayer notification** — ongoing status-bar notification: next prayer, Hijri date, live countdown; professional, with the app icon | P2‑2 | no |
 | P2‑7 | Professional Adhan: **audio-or-video** choice, video composite, up to **30** adhans | P2‑5 | **yes** (video source/licensing) |
@@ -372,16 +373,78 @@ freed; hadith hub still works.
   (registry purge works).
 
 **Still open (carried into a follow-up, not blocking P2‑5):**
-- **Catalog expansion** — adding Ibn Taymiyyah / al-Hakim al-Tirmidhi / Ibn Abi
-  al-Dunya. Blind `curl` guesses at archive.org item IDs kept returning 503;
-  this needs a proper archive.org identifier lookup (WebSearch/WebFetch or the
-  archive.org advanced-search API) to get real verified `downloadUrl`s. The
-  model + UI already support any number of entries — it's pure data.
+- **Catalog expansion** — using the archive.org advanced-search + `/metadata/`
+  API (WebFetch), **Ibn Taymiyyah's *al-'Ubudiyyah* was added and verified**
+  end-to-end (curl 200 `application/pdf` 3.38 MB, + downloaded/opened on the
+  emulator). Catalog is now 5 books / 3 categories. Still wanted: **al-Hakim
+  al-Tirmidhi**, another **Ibn Abi al-Dunya** treatise (the first candidate
+  404'd on its filename). Method that works: `archive.org/advancedsearch.php?q=…&output=json`
+  → pick a `mediatype:texts` id → `archive.org/metadata/<id>` for the exact PDF
+  filename → build `archive.org/download/<id>/<urlencoded name>` → `curl -sIL`
+  must be 200 + `application/pdf`; watch for `licenseurl` = any `*-nc-*` /
+  `*-nd-*` CC (non-commercial → **reject**, same rule as §5.3's Libya edition).
 - al-Jaziri 1941 stays an **OWNER-BLOCKER** (licence).
 - The download **progress notification** (owner add-on) already exists in
   `DownloadManager.DownloadNotifications` (app icon + progress bar + %), but was
   not visually confirmed this run — notification permission was denied in the
   test and the book downloaded too fast. That verification is **P2‑5's** job.
+
+---
+
+## P2‑4b — Book text editions (نص + فهارس) alongside the image PDF
+
+**Goal (owner, 2026-09-02):** every library book should be available in **two
+editions** — the **scanned image PDF** (done) *and* a **text edition** with
+proper structure: table of contents / فهرس, in-book search, selectable text,
+font control. "لو مش لقيتهم اتصرف" — use the best real source available, but
+**never fabricate or 'polish' text**, and label provenance + quality honestly.
+
+**Start from these files:**
+- `lib/features/library/data/book_catalog.dart` (`LibraryBook`)
+- `lib/features/library/presentation/screens/library_screen.dart` (the card +
+  مكتبتي row get an edition switch)
+- `lib/features/library/presentation/screens/book_reader_screen.dart` (image PDF
+  reader; the text reader is a sibling)
+- `lib/core/services/download_manager.dart` (text file is another `DownloadJob`)
+- new: `lib/features/library/data/book_text_source.dart`,
+  `lib/features/library/presentation/screens/book_text_reader_screen.dart`
+
+**Do:**
+- **Model:** add to `LibraryBook` an optional
+  `TextEdition { url, format (epub | openitiMarkdown | plainText), sourceLabel,
+  isOcr }`. A book with no `TextEdition` simply shows only the image PDF.
+- **Source each title's text**, in this order of preference (stop at the first
+  clean hit, record which one in `sourceLabel`):
+  1. **OpenITI corpus** (`github.com/OpenITI`, the `*-ara1` releases) —
+     machine-readable classical Arabic in mARkdown, provenance-tracked, texts
+     are public domain. Best structure. Check per title.
+  2. A **public-domain EPUB** on archive.org whose item has **no `*-nc-*` /
+     `*-nd-*` licence** (auto-EPUB derivatives are OCR — mark `isOcr: true`).
+  3. **al-Maktaba al-Shamela** text (`shamela.ws`) — widely used, but it grants
+     no explicit redistribution licence and some entries are keyed to a
+     specific muḥaqqaq edition. Use only the plain classical text, credit
+     "المكتبة الشاملة", and prefer 1–2 where possible.
+  4. **archive.org `_djvu.txt` OCR** of the same scan we already ship — always
+     available, but Arabic OCR is rough. `isOcr: true`, and the reader shows a
+     one-line "نص مستخرَج آلياً وقد يحوي أخطاء" badge.
+  - **Never** present OCR or a raw dump as a critical edition. **Never** invent
+    an editor, chapter titles, or footnotes.
+- **`book_text_reader_screen.dart`:** parse the source into a section tree,
+  render with — a فهرس drawer (jump to section), printed-page markers where the
+  source has them, in-book search (reuse `arabic_normalize.dart`), font-size
+  control, bookmarks. Theme-aware, RTL, offline after first download.
+- **Library UI:** on the book card and the مكتبتي row, a `مصوّر | نص` switch
+  (only shown when a `TextEdition` exists); each edition downloads & caches
+  independently and appears in مكتبتي as its own line (or one line with two
+  size chips). Provenance ("المصدر: …") always one tap away, per the existing
+  `sourceUrl` convention.
+- Translations for the new strings in all 5 locales (parity test enforces it).
+
+**Acceptance (emulator):** a book with a text edition shows the `مصوّر | نص`
+switch; downloading نص → opens the text reader with a working فهرس, real
+selectable Arabic text, working in-book search and font control; OCR editions
+carry the honest badge; both editions work offline; provenance is visible;
+hadith hub + image PDF path untouched.
 
 ---
 

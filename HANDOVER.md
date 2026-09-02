@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 19:15 — IN PROGRESS — resume here**
+**2026-09-02 19:17 — IN PROGRESS — resume here**
 
-P2-4 catalog: added ابن تيمية - العبودية (aqidah). archive.org id 20201231_20201231_1341, URL verified live (curl: 200 application/pdf 3382545) AND end-to-end on emulator (download -> مكتبتي 'العقيدة · 3.2 MB' -> فتح renders). Catalog now 5 books, 3 categories. (Ibn Abi al-Dunya candidate 404'd on the filename; al-Hakim al-Tirmidhi not yet searched.)
+PHASE2.md: owner wants every book in BOTH image PDF + a structured text edition (فهرس, in-book search, selectable text). Recorded as new stage P2-4b with sourcing order (OpenITI > PD epub > Shamela > OCR _djvu.txt, each labelled; reject any -nc-/-nd- CC), a book_text_reader_screen spec, and honesty constraints (no fabricated text, OCR badged). Also documented the working archive.org lookup method in P2-4's carried-over note. No code changed.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
