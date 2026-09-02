@@ -240,7 +240,18 @@
     "choose_reciter": "اختر القارئ",
     "storage_used": "المساحة المستخدمة",
     "offline_ready": "جاهز للعمل بدون إنترنت",
-    "delete_confirm": "حذف الملفات المحمّلة؟"
+    "delete_confirm": "حذف الملفات المحمّلة؟",
+    "tab_overview": "نظرة عامة",
+    "cat_mushafs": "المصاحف",
+    "cat_recitations": "التلاوات",
+    "cat_hadith": "الحديث",
+    "cat_books": "الكتب",
+    "cat_adhan": "الأذان (فيديو)",
+    "free": "تفريغ",
+    "free_all": "تفريغ الكل",
+    "free_confirm": "حذف الملفات المنزَّلة لهذا القسم من الجهاز؟",
+    "nothing_downloaded": "لا يوجد محتوى منزَّل",
+    "downloaded_items": "العناصر المنزَّلة"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",

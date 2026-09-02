@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/ayah_audio_service.dart';
+import '../../../../core/services/download_manager.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran/data/mushaf_edition.dart';
+import '../../data/downloads_controller.dart';
 import '../../data/reciters_provider.dart';
 
 String _fmtSize(int bytes) {
@@ -17,30 +19,258 @@ String _fmtSize(int bytes) {
   return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
 }
 
-/// Offline content: whole mushafs and ayah-by-ayah recitations.
+/// The unified offline-content hub (P2‑5): a storage overview + free-space
+/// per category, then the mushaf and recitation download lists.
 class DownloadsScreen extends ConsumerWidget {
   const DownloadsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text('downloads.title'.tr()),
           bottom: TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.center,
             indicatorColor: AppColors.gold,
             labelColor: AppColors.gold,
             tabs: [
+              Tab(text: 'downloads.tab_overview'.tr()),
               Tab(text: 'downloads.mushafs'.tr()),
               Tab(text: 'downloads.recitations'.tr()),
             ],
           ),
         ),
         body: const TabBarView(
-          children: [_MushafsTab(), _RecitationsTab()],
+          children: [_OverviewTab(), _MushafsTab(), _RecitationsTab()],
         ),
       ),
+    );
+  }
+}
+
+// ── Overview / storage ─────────────────────────────────────────────────────
+
+class _OverviewTab extends ConsumerWidget {
+  const _OverviewTab();
+
+  Future<void> _confirmFree(
+    BuildContext context,
+    WidgetRef ref,
+    DownloadCategory? category, // null = everything
+  ) async {
+    final label = category == null
+        ? 'downloads.free_all'.tr()
+        : category.labelKey.tr();
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(label),
+        content: Text('downloads.free_confirm'.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('common.cancel'.tr()),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text('downloads.free'.tr()),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    if (category != null) {
+      await freeCategory(ref, category);
+    } else {
+      for (final c in DownloadCategory.values) {
+        await freeCategory(ref, c);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(storageSummaryProvider);
+    final scheme = Theme.of(context).colorScheme;
+
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, _) => Center(child: Text('errors.generic'.tr())),
+      data: (summary) => RefreshIndicator(
+        onRefresh: () async => ref.invalidate(storageSummaryProvider),
+        child: ListView(
+          padding: const EdgeInsets.all(14),
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('downloads.storage_used'.tr(),
+                        style: TextStyle(
+                            color: scheme.onSurfaceVariant, fontSize: 12)),
+                    const SizedBox(height: 2),
+                    Text(
+                      _fmtSize(summary.totalBytes),
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.w800),
+                    ),
+                    if (summary.totalBytes > 0) ...[
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: TextButton.icon(
+                          onPressed: () => _confirmFree(context, ref, null),
+                          icon: Icon(Icons.delete_sweep_outlined,
+                              size: 18, color: scheme.error),
+                          label: Text('downloads.free_all'.tr(),
+                              style: TextStyle(color: scheme.error)),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            for (final c in DownloadCategory.values)
+              _CategoryRow(
+                usage: summary.usage(c),
+                onFree: summary.usage(c).bytes > 0
+                    ? () => _confirmFree(context, ref, c)
+                    : null,
+              ),
+            const SizedBox(height: 16),
+            _ArtifactList(
+              ref: ref,
+              categories: const [
+                DownloadCategory.hadith,
+                DownloadCategory.books,
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CategoryRow extends StatelessWidget {
+  final CategoryUsage usage;
+  final VoidCallback? onFree;
+  const _CategoryRow({required this.usage, this.onFree});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return ListTile(
+      dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 6),
+      leading: Icon(switch (usage.category) {
+        DownloadCategory.mushafs => Icons.menu_book_outlined,
+        DownloadCategory.recitations => Icons.headphones_outlined,
+        DownloadCategory.hadith => Icons.format_quote_outlined,
+        DownloadCategory.books => Icons.auto_stories_outlined,
+        DownloadCategory.adhan => Icons.campaign_outlined,
+      }, size: 20, color: AppColors.gold),
+      title: Text(usage.category.labelKey.tr()),
+      subtitle: Text(
+        usage.bytes == 0
+            ? 'downloads.nothing_downloaded'.tr()
+            : '${usage.itemCount} · ${_fmtSize(usage.bytes)}',
+        style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
+      ),
+      trailing: onFree == null
+          ? null
+          : IconButton(
+              tooltip: 'downloads.free'.tr(),
+              icon: Icon(Icons.delete_outline, color: scheme.error),
+              onPressed: onFree,
+            ),
+    );
+  }
+}
+
+/// The per-item list for the DownloadManager-backed categories (hadith, books)
+/// — title + on-disk size + individual delete.
+class _ArtifactList extends StatefulWidget {
+  final WidgetRef ref;
+  final List<DownloadCategory> categories;
+  const _ArtifactList({required this.ref, required this.categories});
+
+  @override
+  State<_ArtifactList> createState() => _ArtifactListState();
+}
+
+class _ArtifactListState extends State<_ArtifactList> {
+  List<Map<String, dynamic>> _items = const [];
+  final Map<String, int> _sizes = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final all = await DownloadManager.instance.registeredArtifacts();
+    final wanted = {
+      for (final c in widget.categories) ...c.managerCategories,
+    };
+    final items =
+        all.where((a) => wanted.contains(a['category'])).toList();
+    final sizes = <String, int>{};
+    for (final a in items) {
+      sizes[a['id'] as String] =
+          await DownloadManager.instance.artifactSize(a['id'] as String);
+    }
+    if (mounted) {
+      setState(() {
+        _items = items;
+        _sizes
+          ..clear()
+          ..addAll(sizes);
+      });
+    }
+  }
+
+  Future<void> _delete(String id) async {
+    await DownloadManager.instance.remove(id);
+    widget.ref.invalidate(storageSummaryProvider);
+    await _load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_items.isEmpty) return const SizedBox.shrink();
+    final scheme = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(6, 0, 6, 4),
+          child: Text('downloads.downloaded_items'.tr(),
+              style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
+        ),
+        for (final a in _items)
+          Card(
+            child: ListTile(
+              dense: true,
+              title: Text((a['title'] ?? a['fileName'] ?? '') as String),
+              subtitle: Text(_fmtSize(_sizes[a['id']] ?? 0),
+                  style: TextStyle(
+                      color: scheme.onSurfaceVariant, fontSize: 12)),
+              trailing: IconButton(
+                icon: Icon(Icons.delete_outline, color: scheme.error),
+                onPressed: () => _delete(a['id'] as String),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -146,6 +376,7 @@ class _MushafDownloadTileState extends State<_MushafDownloadTile> {
     unawaited(_service.prefetchEdition(
       editionId: widget.edition.id,
       sourcePath: widget.edition.sourcePath,
+      title: widget.edition.nameAr,
     ));
   }
 
@@ -354,6 +585,7 @@ class _SurahAudioTileState extends State<_SurahAudioTile> {
       ayahCount: widget.ayahCount,
       repo: widget.data.repo,
       edition: widget.edition,
+      title: '${widget.surahId}. ${widget.surahName}',
       onProgress: (p) {
         if (mounted) setState(() => _progress = p);
       },

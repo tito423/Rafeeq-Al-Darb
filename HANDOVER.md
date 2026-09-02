@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 21:57 — COMPLETE**
+**2026-09-02 22:09 — IN PROGRESS — resume here**
 
-P2-4b DONE: book text editions (نص) for all 5 library books from al-Maktaba al-Shamela, hosted on rafeeq-api, book_text_reader_screen (فهرس/search/font/bookmarks/provenance), مصوّر|نص switch per card, one مكتبتي row per (book,edition). printReliable gates printed-page UI (false for Riyad/12014). Emulator-verified incl. offline. Docs: PHASE2 P2-4b DONE block + HANDOVER §5.7 (Shamela licence decision) + §7 + Phase-2 table. analyze clean, test 13/13. Search query->results not testable via adb (Arabic input). Next: P2-5.
+P2-5 (wip): DownloadNotifications generalized (showProgress/showComplete/clear + 900ms throttle) and wired into MushafPageService.prefetchEdition + AyahAudioService.downloadSurah (both took a title param) -> every download kind now posts a live status-bar progress notification, not just DownloadManager ones. New downloads_controller.dart (storageSummaryProvider aggregator + freeCategory across mushaf/recite/DownloadManager). DownloadsScreen -> 3 tabs [نظرة عامة|المصاحف|التلاوات]: overview tab = storage total + per-category rows (size/count/تفريغ) + free-all + downloaded hadith/books artifact list w/ per-item delete. +11 keys x5 (parity 271). analyze clean, parity green. Not yet emulator-tested.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

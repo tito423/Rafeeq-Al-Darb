@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import '../config/app_config.dart';
 import '../db/models.dart';
 import '../db/quran_repository.dart';
+import 'download_manager.dart' show DownloadNotifications;
 
 /// Progress of a surah recitation download.
 class RecitationProgress {
@@ -157,11 +158,18 @@ class AyahAudioService {
     required QuranRepository repo,
     String edition = defaultEdition,
     void Function(RecitationProgress)? onProgress,
+    String? title,
   }) async {
     final key = _jobKey(edition, surah);
     if (_downloads.containsKey(key)) return;
     final token = CancelToken();
     _downloads[key] = token;
+
+    // P2‑5: every download posts a live status-bar progress notification.
+    final notifId = 'recite_$key';
+    final notifTitle = title ?? 'سورة $surah';
+    await DownloadNotifications.instance.ensureInitialized();
+    var cancelled = false;
 
     try {
       final dir = await _editionDir(edition);
@@ -169,11 +177,17 @@ class AyahAudioService {
       var done = 0;
 
       for (var i = 0; i < ayahCount; i++) {
-        if (token.isCancelled) break;
+        if (token.isCancelled) {
+          cancelled = true;
+          break;
+        }
         final file = _fileFor(dir, first + i);
         if (_looksComplete(file)) {
           done++;
           onProgress?.call(RecitationProgress(done, ayahCount));
+          await DownloadNotifications.instance.showProgress(
+            id: notifId, title: notifTitle, done: done, total: ayahCount,
+            detail: '$done / $ayahCount');
           continue;
         }
         for (final url in AppConfig.ayahAudioUrls(edition, first + i)) {
@@ -193,11 +207,22 @@ class AyahAudioService {
           }
         }
         onProgress?.call(RecitationProgress(done, ayahCount));
+        await DownloadNotifications.instance.showProgress(
+          id: notifId, title: notifTitle, done: done, total: ayahCount,
+          detail: '$done / $ayahCount');
       }
     } on DioException {
       // cancelled or network failure — partial files stay for the next resume
+      cancelled = true;
     } finally {
       _downloads.remove(key);
+      final p = await surahProgress(surah, ayahCount, repo, edition: edition);
+      if (!cancelled && p.done >= ayahCount) {
+        await DownloadNotifications.instance
+            .showComplete(id: notifId, title: notifTitle);
+      } else {
+        await DownloadNotifications.instance.clear(notifId);
+      }
     }
   }
 

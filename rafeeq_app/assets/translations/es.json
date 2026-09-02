@@ -240,7 +240,18 @@
     "choose_reciter": "Elige un recitador",
     "storage_used": "Almacenamiento usado",
     "offline_ready": "Listo para usar sin conexión",
-    "delete_confirm": "¿Eliminar los archivos descargados?"
+    "delete_confirm": "¿Eliminar los archivos descargados?",
+    "tab_overview": "Resumen",
+    "cat_mushafs": "Ejemplares del Corán",
+    "cat_recitations": "Recitaciones",
+    "cat_hadith": "Hadiz",
+    "cat_books": "Libros",
+    "cat_adhan": "Adhán (vídeo)",
+    "free": "Liberar",
+    "free_all": "Liberar todo",
+    "free_confirm": "¿Eliminar del dispositivo los archivos descargados de esta categoría?",
+    "nothing_downloaded": "Nada descargado",
+    "downloaded_items": "Elementos descargados"
   },
   "new_muslim": {
     "title": "Guía del nuevo musulmán",

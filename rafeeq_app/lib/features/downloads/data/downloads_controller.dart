@@ -1,0 +1,134 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/services/ayah_audio_service.dart';
+import '../../../core/services/download_manager.dart';
+import '../../../core/services/mushaf_page_service.dart';
+import '../../quran/data/mushaf_edition.dart';
+import 'reciters_provider.dart';
+
+/// P2‑5 — a read-only aggregator over every place the app stores downloaded
+/// content, so the Downloads hub can show one storage picture and free space
+/// per category. It does **not** own the downloads: each service keeps its own
+/// engine (`MushafPageService`, `AyahAudioService`, `DownloadManager`); this
+/// only observes them and delegates "free space" back to the owner.
+enum DownloadCategory { mushafs, recitations, hadith, books, adhan }
+
+extension DownloadCategoryX on DownloadCategory {
+  String get labelKey => switch (this) {
+        DownloadCategory.mushafs => 'downloads.cat_mushafs',
+        DownloadCategory.recitations => 'downloads.cat_recitations',
+        DownloadCategory.hadith => 'downloads.cat_hadith',
+        DownloadCategory.books => 'downloads.cat_books',
+        DownloadCategory.adhan => 'downloads.cat_adhan',
+      };
+
+  /// [DownloadManager] `category` string(s) that map to this bucket
+  /// (empty for the two that don't go through DownloadManager).
+  List<String> get managerCategories => switch (this) {
+        DownloadCategory.hadith => const ['hadith'],
+        DownloadCategory.books => const ['books', 'books_text'],
+        DownloadCategory.adhan => const ['adhan', 'adhan_video'],
+        _ => const [],
+      };
+}
+
+class CategoryUsage {
+  final DownloadCategory category;
+  final int bytes;
+  final int itemCount;
+  const CategoryUsage(this.category, this.bytes, this.itemCount);
+}
+
+class StorageSummary {
+  final List<CategoryUsage> categories;
+  const StorageSummary(this.categories);
+
+  int get totalBytes =>
+      categories.fold(0, (sum, c) => sum + c.bytes);
+  int get totalItems =>
+      categories.fold(0, (sum, c) => sum + c.itemCount);
+
+  CategoryUsage usage(DownloadCategory c) => categories.firstWhere(
+        (u) => u.category == c,
+        orElse: () => CategoryUsage(c, 0, 0),
+      );
+}
+
+/// Recomputed on demand (invalidate it after a download finishes or a
+/// "free space" action).
+final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
+  final out = <CategoryUsage>[];
+
+  // ── Mushafs (MushafPageService, one cache dir per edition) ──
+  final editions = await ref.watch(mushafEditionsProvider.future);
+  var mushafBytes = 0;
+  var mushafItems = 0;
+  for (final e in editions) {
+    final b = await MushafPageService.instance.cacheSizeBytes(e.id);
+    if (b > 0) {
+      mushafBytes += b;
+      mushafItems++;
+    }
+  }
+  out.add(CategoryUsage(DownloadCategory.mushafs, mushafBytes, mushafItems));
+
+  // ── Recitations (AyahAudioService, one dir per reciter identifier) ──
+  final reciters = await ref.watch(recitersProvider.future);
+  var reciteBytes = 0;
+  var reciteItems = 0;
+  for (final r in reciters) {
+    final b = await AyahAudioService.instance.cacheSizeBytes(r.identifier);
+    if (b > 0) {
+      reciteBytes += b;
+      reciteItems++;
+    }
+  }
+  out.add(
+      CategoryUsage(DownloadCategory.recitations, reciteBytes, reciteItems));
+
+  // ── DownloadManager-backed buckets (hadith / books / adhan) ──
+  final artifacts = await DownloadManager.instance.registeredArtifacts();
+  for (final cat in [
+    DownloadCategory.hadith,
+    DownloadCategory.books,
+    DownloadCategory.adhan,
+  ]) {
+    final ids = artifacts
+        .where((a) => cat.managerCategories.contains(a['category']))
+        .map((a) => a['id'] as String)
+        .toList();
+    var bytes = 0;
+    for (final id in ids) {
+      bytes += await DownloadManager.instance.artifactSize(id);
+    }
+    out.add(CategoryUsage(cat, bytes, ids.length));
+  }
+
+  return StorageSummary(out);
+});
+
+/// Free every byte in [category] and refresh the summary.
+Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
+  switch (category) {
+    case DownloadCategory.mushafs:
+      final editions = await ref.read(mushafEditionsProvider.future);
+      for (final e in editions) {
+        await MushafPageService.instance.clearCache(e.id);
+      }
+    case DownloadCategory.recitations:
+      final reciters = await ref.read(recitersProvider.future);
+      for (final r in reciters) {
+        await AyahAudioService.instance.clearCache(r.identifier);
+      }
+    case DownloadCategory.hadith:
+    case DownloadCategory.books:
+    case DownloadCategory.adhan:
+      final artifacts = await DownloadManager.instance.registeredArtifacts();
+      for (final a in artifacts) {
+        if (category.managerCategories.contains(a['category'])) {
+          await DownloadManager.instance.remove(a['id'] as String);
+        }
+      }
+  }
+  ref.invalidate(storageSummaryProvider);
+}

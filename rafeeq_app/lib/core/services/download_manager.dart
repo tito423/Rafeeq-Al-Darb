@@ -416,11 +416,37 @@ class DownloadNotifications {
     return h % 300;
   }
 
-  Future<void> progress(DownloadTask task) async {
+  /// Last time a progress notification was posted for an id — used to throttle
+  /// updates to ~1/sec so a fast download doesn't spam the shade.
+  final Map<String, DateTime> _lastPost = {};
+
+  // ── generic entry points (used by every download kind: DownloadManager
+  //    files, mushaf-page prefetch, per-surah recitation, …) ──────────────
+
+  /// Post/refresh an ongoing progress notification for [id]. [done]/[total]
+  /// drive a determinate bar; pass [total] <= 0 for an indeterminate one.
+  /// [detail] overrides the auto "NN%" line (e.g. "١٢ / ١١٤ صفحة").
+  Future<void> showProgress({
+    required String id,
+    required String title,
+    required int done,
+    required int total,
+    String? detail,
+    bool force = false,
+  }) async {
     if (!_ready || !Platform.isAndroid) return;
+    final now = DateTime.now();
+    final last = _lastPost[id];
+    final complete = total > 0 && done >= total;
+    if (!force && !complete && last != null &&
+        now.difference(last) < const Duration(milliseconds: 900)) {
+      return;
+    }
+    _lastPost[id] = now;
     try {
       final plugin = FlutterLocalNotificationsPlugin();
-      final hasSize = task.total != null && task.total! > 0;
+      final hasSize = total > 0;
+      final pct = hasSize ? ((done / total) * 100).round() : 0;
       final android = AndroidNotificationDetails(
         _channelId,
         _channelName,
@@ -431,24 +457,27 @@ class DownloadNotifications {
         ongoing: true,
         showProgress: hasSize,
         maxProgress: 100,
-        progress: hasSize ? (task.progress * 100).round() : 0,
+        progress: pct,
         indeterminate: !hasSize,
       );
       await plugin.show(
-        _notificationId(task.id),
-        task.title,
-        hasSize ? '${(task.progress * 100).round()}%' : '${task.received} bytes',
+        _notificationId(id),
+        title,
+        detail ?? (hasSize ? '$pct%' : '$done'),
         NotificationDetails(android: android),
       );
     } catch (_) {}
   }
 
-  Future<void> complete(DownloadTask task) async {
+  /// Replace the ongoing notification for [id] with a short auto-dismissing
+  /// "downloaded" one.
+  Future<void> showComplete({required String id, required String title}) async {
     if (!_ready || !Platform.isAndroid) return;
+    _lastPost.remove(id);
     try {
       final plugin = FlutterLocalNotificationsPlugin();
-      await plugin.cancel(_notificationId(task.id));
-      final android = AndroidNotificationDetails(
+      await plugin.cancel(_notificationId(id));
+      const android = AndroidNotificationDetails(
         _channelId,
         _channelName,
         channelDescription: 'Offline content download progress',
@@ -456,22 +485,37 @@ class DownloadNotifications {
         priority: Priority.low,
       );
       await plugin.show(
-        _notificationId(task.id) + 1000,
-        task.title,
-        // Was garbled mojibake before (double-encoded UTF-8) — the
-        // completion notification showed unreadable characters instead of
-        // this real Arabic text.
+        _notificationId(id) + 1000,
+        title,
         'تم التنزيل — جاهز للاستخدام بدون إنترنت',
-        NotificationDetails(android: android),
+        const NotificationDetails(android: android),
       );
     } catch (_) {}
   }
 
-  Future<void> failed(DownloadTask task) async {
+  /// Remove the ongoing notification for [id] (cancel / failure — no toast).
+  Future<void> clear(String id) async {
+    _lastPost.remove(id);
     if (!_ready || !Platform.isAndroid) return;
     try {
-      final plugin = FlutterLocalNotificationsPlugin();
-      await plugin.cancel(_notificationId(task.id));
+      await FlutterLocalNotificationsPlugin().cancel(_notificationId(id));
     } catch (_) {}
   }
+
+  // ── DownloadManager convenience wrappers ────────────────────────────────
+
+  Future<void> progress(DownloadTask task) => showProgress(
+        id: task.id,
+        title: task.title,
+        done: task.received,
+        total: task.total ?? 0,
+        detail: (task.total != null && task.total! > 0)
+            ? '${(task.progress * 100).round()}%'
+            : '${task.received} bytes',
+      );
+
+  Future<void> complete(DownloadTask task) =>
+      showComplete(id: task.id, title: task.title);
+
+  Future<void> failed(DownloadTask task) => clear(task.id);
 }

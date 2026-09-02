@@ -240,7 +240,18 @@
     "choose_reciter": "Выберите чтеца",
     "storage_used": "Использовано памяти",
     "offline_ready": "Готово к работе офлайн",
-    "delete_confirm": "Удалить загруженные файлы?"
+    "delete_confirm": "Удалить загруженные файлы?",
+    "tab_overview": "Обзор",
+    "cat_mushafs": "Мусхафы",
+    "cat_recitations": "Чтения",
+    "cat_hadith": "Хадисы",
+    "cat_books": "Книги",
+    "cat_adhan": "Азан (видео)",
+    "free": "Очистить",
+    "free_all": "Очистить всё",
+    "free_confirm": "Удалить загруженные файлы этой категории с устройства?",
+    "nothing_downloaded": "Ничего не загружено",
+    "downloaded_items": "Загруженные элементы"
   },
   "new_muslim": {
     "title": "Руководство для нового мусульманина",

@@ -240,7 +240,18 @@
     "choose_reciter": "Choose a reciter",
     "storage_used": "Storage used",
     "offline_ready": "Ready to use offline",
-    "delete_confirm": "Delete downloaded files?"
+    "delete_confirm": "Delete downloaded files?",
+    "tab_overview": "Overview",
+    "cat_mushafs": "Mushafs",
+    "cat_recitations": "Recitations",
+    "cat_hadith": "Hadith",
+    "cat_books": "Books",
+    "cat_adhan": "Adhan (video)",
+    "free": "Free up",
+    "free_all": "Free up all",
+    "free_confirm": "Delete this category's downloaded files from the device?",
+    "nothing_downloaded": "Nothing downloaded",
+    "downloaded_items": "Downloaded items"
   },
   "new_muslim": {
     "title": "New Muslim Guide",

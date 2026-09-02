@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../config/app_config.dart';
+import 'download_manager.dart' show DownloadNotifications;
 
 /// Live state of a whole-edition download. Lives on [MushafPageService] (not
 /// on any widget) so a Downloads tile that is rebuilt — a tab switch, a list
@@ -124,15 +125,24 @@ class MushafPageService {
     int fromPage = firstPage,
     int toPage = lastPage,
     void Function(int done, int total)? onProgress,
+    String? title,
   }) async {
     if (_prefetching.contains(editionId)) return;
     _prefetching.add(editionId);
     final total = toPage - fromPage + 1;
     final progress = progressFor(editionId).._set(done: 0, total: total, running: true);
+    // P2‑5: every download posts a live status-bar progress notification.
+    final notifId = 'mushaf_$editionId';
+    final notifTitle = title ?? editionId;
+    await DownloadNotifications.instance.ensureInitialized();
+    var cancelled = false;
     try {
       var done = 0;
       for (var page = fromPage; page <= toPage; page++) {
-        if (!_prefetching.contains(editionId)) break; // cancelled
+        if (!_prefetching.contains(editionId)) {
+          cancelled = true;
+          break;
+        }
         try {
           await svgForPage(
             editionId: editionId,
@@ -145,10 +155,23 @@ class MushafPageService {
         done++;
         progress._set(done: done);
         onProgress?.call(done, total);
+        await DownloadNotifications.instance.showProgress(
+          id: notifId,
+          title: notifTitle,
+          done: done,
+          total: total,
+          detail: '$done / $total',
+        );
       }
     } finally {
       _prefetching.remove(editionId);
       progress._set(running: false); // always notifies — listeners settle here
+      if (cancelled) {
+        await DownloadNotifications.instance.clear(notifId);
+      } else {
+        await DownloadNotifications.instance
+            .showComplete(id: notifId, title: notifTitle);
+      }
     }
   }
 
