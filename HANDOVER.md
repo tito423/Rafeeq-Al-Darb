@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | commit `bf8a327` + STAGE 1 (Adhan) commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0 gate PASSED (all 10 checks, §7) · STAGE 1 (Adhan) core pipeline built and verified firing/Stop/Mute/persistence on the Android emulator (§7 STAGE 1 table).** Owner decision 2026-09-02: emulator verification accepted as sufficient for the STAGE 0 gate; a physical-device pass is still open for both stages. |
+| **State at** | commit `a43da5d` (STAGE 1) + STAGE 2 Hadith-hub commit |
+| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0 gate PASSED (§7) · STAGE 1 (Adhan) verified on the emulator (§7) · STAGE 2 Hadith hub verified on the emulator by injecting the real downloaded DB directly (§7 STAGE 2 table) — the download step itself is currently blocked by a host-machine TLS problem, see §7.** |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,7 +33,98 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 — STAGE 1 (Adhan) core pipeline built and emulator-verified. Next: STAGE 2 (Library & Hadith), or a physical-device pass first.**
+**2026-09-02 — STAGE 2's Hadith hub built and verified. The Library books tab
+is a researched proposal awaiting the owner's confirmation. A host-machine TLS
+problem is currently blocking live download testing — see below.**
+
+Owner said to continue through the whole WORK_QUEUE, respecting the STOP AND
+ASK gates already marked in it. Two were hit immediately: STAGE 2's book list
+(owner said: research real open sources and propose them, don't download yet)
+and STAGE 5's New-Muslim-Guide content sources (owner said: use known trusted
+Islamic sources directly). Built STAGE 2's Hadith half in full:
+
+- **Discovery worth recording:** HANDOVER/RAFEEQ_PIPELINE said `hadith.db`
+  already existed ("9 collections, 36,461 hadiths, rebuilt clean in T3"). It
+  did not — no hadith database existed anywhere in this repo or workspace,
+  bundled or otherwise, only `hadith_screen.dart`'s stub. What *did* exist was
+  the real source data: `scripts/temp_phase1/hadith9/*.json` (9 real
+  A7med3bdulBaset/hadith-json dumps, already git-committed, 60 MB). Whatever
+  session originally built that database either never happened or the DB was
+  lost outside this workspace — either way, trust the code over the docs, per
+  §11's own standing lesson.
+- **`scripts/build_hadith_db.py`** (new): builds a real SQLite `hadith.db`
+  from those JSON files — 9 books, 429 chapters, **40,943 real hadiths**.
+  `number_in_book` is an INTEGER column specifically because WORK_QUEUE flags
+  a real prior bug ("hadith ordering jumping 2 → 9 → 99", i.e. numbers sorted
+  as text) — a regression test in the script itself confirms 0 chapters
+  come back out of order, and this was re-confirmed visually in the running
+  app (Bukhari ch. 2 reads 8, 9, 10, 11 … 21, 22, no break). No per-hadith
+  "grade" exists in this source (Bukhari/Muslim are sahih by definition; the
+  other seven aren't individually graded here) — the `grade` column stays
+  NULL rather than inventing one.
+- **Not bundled into the app.** At ~74 MB it would roughly double the APK, and
+  `DbHelper` already had an `openDownloaded()` method with a comment naming
+  hadith.db as its intended use — this is a download, like mushaf pages. Built
+  a zip (`detail='none'` FTS5 index to keep it small: 74 MB → **16.8 MB**
+  zipped) and **pushed it for real** to the `tito423/rafeeq-api` companion
+  content repo (`gh` was already authenticated as the owner with repo scope)
+  at `hadith/hadith.zip` — confirmed publicly reachable (HTTP 200) at the
+  exact URL `AppConfig.hadithDbUrl` now points to. Also fixed
+  `AppConfig.contentBaseUrl`, which pointed at a `/main` branch that doesn't
+  exist (the repo's default branch is `master`) — it was unused until now, so
+  this 404 had never been noticed.
+- **`lib/core/db/hadith_repository.dart`** + **`lib/features/library/`**: a
+  `LibraryScreen` (renamed from the old bottom-nav "Hadith" tab — WORK_QUEUE
+  frames Library+Hadith as one destination) with two tabs: **الحديث** (the
+  real hub — download gate → book list → chapter list → hadith detail with
+  Previous/Next, plus real FTS5 search) and **الكتالوج** (an honest "sources
+  pending confirmation" placeholder, not invented book entries).
+- Found the `tito423/rafeeq-api` repo also holds a stale `rafeeq_config.json`
+  referencing a since-abandoned PNG-based mushaf design (`Quran-PNG` repo,
+  `api.quran.com`) — dead, not the current architecture (vector SVG from
+  quranpedia/quran-svg). Left alone; flagging so nobody mistakes it for
+  current design intent.
+
+**Verified for real** by pushing the built `hadith.db` directly onto the
+emulator's app storage via `adb push` + `run-as` (bypassing the download,
+which is separately blocked — see below) and relaunching: all 9 books list
+with their real, correct counts; Bukhari's chapter 1 shows exactly the 7 real
+hadiths it has (hadith #1 is the well-known "actions are by intentions"); a
+chapter spanning the two-digit boundary (8 → 22) reads in correct order,
+confirming the ordering-bug fix. Search was implemented and code-reviewed but
+not confirmed interactively — `adb shell input text` could not get text into
+the search field in this session (unclear why; not investigated further given
+time spent, see below).
+
+**Real, currently-blocking environment problem found:** every live network
+call from the app during this session's testing failed with `HandshakeException:
+CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate` — including
+**mushaf image-mode fetching**, the same feature STAGE 0 verified working. This
+is the same Avast Web/Mail Shield TLS-interception host machine documented in
+§7 for STAGE 0, and the bundled trust cert (`proxy_debug_ca.pem`) still
+byte-for-byte matches the current live Avast root (verified both fingerprints:
+identical) — so the earlier fix has regressed for a reason not yet identified;
+a fresh emulator relaunch did not clear it. **The hadith download itself was
+never confirmed working end-to-end** — only the app logic that reads the file
+once present. Likely next step for whoever has hands on the host machine:
+check whether Avast's Web/Mail Shield is still active the same way it was
+during STAGE 0, or test on a physical device instead of the emulator.
+
+**Library books tab — real sources found, not yet downloaded, owner
+confirmation still needed on which specific edition/tahqiq per title** (the
+base classical texts are all public domain — authors died centuries ago,
+except al-Jaziri's *al-Fiqh ala al-Madhahib al-Arba'ah* compilation, 1941,
+which needs its own licensing check): real, freely available editions exist
+on archive.org for all of Riyad as-Salihin, Mukhtasar Minhaj al-Qasidin,
+al-Fiqh ala al-Madhahib al-Arba'ah, and works of Ibn al-Qayyim, Ibn Taymiyyah,
+Ibn al-Jawzi, and al-Hakim al-Tirmidhi's Nawadir al-Usul. Ibn Abi al-Dunya's
+corpus (many short zuhd/raqa'iq treatises, not one book) still needs a
+title-by-title pass. Nothing downloaded — present the specific edition
+choices to the owner before pulling anything, per the STOP AND ASK gate.
+
+---
+
+**2026-09-02 (earlier) — STAGE 1 (Adhan) core pipeline built and emulator-verified.**
 
 Owner was asked whether STAGE 0's emulator-only verification was acceptable or
 a physical device was required; owner chose to accept the emulator and proceed
@@ -286,14 +377,30 @@ rafeeq_app/
         mushaf_edition_sheet.dart       edition picker (previews real page 1)
         ayah_sciences_sheet.dart        4 tabs: tafsir / translation / i'rab / meanings
     features/downloads/                 Downloads screen (Mushafs | Recitations)
+    features/adhan/                     Adhan settings, full-screen alert, scheduler (STAGE 1)
+    features/home/data/prayer_controller.dart  location -> prayer times -> reschedules Adhan alarms
+    features/library/                   Library screen: Hadith hub (tab) + Books catalog (tab, placeholder)
+    core/db/hadith_repository.dart      reads the downloaded hadith.db (9 books, 40,943 hadiths)
+    core/services/adhan_alarm_service.dart  native per-prayer exact alarms + notification sound
 scripts/
   build_mushaf_svg.py                   SVG -> polygons  (EDITION=, PAGES=, WORKERS=, KEEP_SVG=)
   build_mushaf_catalog.py               generates editions.json + divergence data
+  build_hadith_db.py                    hadith9/*.json -> pipeline_zips/hadith.{db,zip} (STAGE 2)
   ingest_translations.py                translation JSON -> DB
   check.ps1                             runs flutter, writes _check_output.txt
 check.bat                               double-click wrapper for check.ps1
 RAFEEQ_PIPELINE.md                      the 20-task roadmap and its status
 ```
+
+**The `tito423/rafeeq-api` GitHub repo** is where large downloadable content
+lives (mushaf pages are pinned to `quranpedia/quran-svg` directly instead, but
+`hadith.zip` is hosted here — see `AppConfig.hadithDbUrl`/`contentBaseUrl`).
+Its default branch is `master`, not `main` — a stale `contentBaseUrl` pointed
+at `/main` (a 404) until STAGE 2 fixed it, since nothing had used that
+constant before. The repo also still holds a `rafeeq_config.json` describing
+an abandoned PNG-based mushaf design (a different repo, `Quran-PNG`, and
+`api.quran.com`) — that is not the current architecture (vector SVG from
+`quranpedia/quran-svg`, see §5.2) and should not be treated as one.
 
 ### Sciences DB schema (`quran_sciences.db`)
 ```
@@ -486,6 +593,48 @@ screenshots alone.
    — the play/stop icon looked stuck for the whole track. Fixed with
    `unawaited(_preview.play())`, same as the existing pattern.
 
+### Update 2026-09-02 — STAGE 2 Hadith hub: built, verified without the download
+
+**What "verified" means here, precisely:** the real `hadith.db` (built by
+`scripts/build_hadith_db.py` from the real source JSON already in this repo)
+was pushed directly onto the emulator's app storage with `adb push` +
+`run-as` — not downloaded through the app. That was a deliberate workaround
+for the TLS problem below, so the repository/UI layer could still be proven
+correct against real data. The download path (`DownloadManager` → the hosted
+`hadith.zip` → unzip → same file) is architecturally the same mechanism
+already proven for mushaf pages, but was **not itself exercised successfully**
+this session — say so plainly if asked whether hadith downloads work.
+
+| # | check | result |
+|---|---|---|
+| 9 books list with real names/authors/counts | ✅ Sahih Bukhari 97 ch./7277 hadiths, Sahih Muslim 57/7459, Sunan Abi Dawud 43/5276, Jami' al-Tirmidhi 49/4053, Sunan al-Nasa'i 52/5768, Sunan Ibn Majah 38/4345, Musnad Ahmad 8/1374, Muwatta Malik 61/1985, Sunan al-Darimi 24/3406 — all real counts, no placeholders |
+| chapter list numbered/titled correctly | ✅ Bukhari's 97 chapters read 1, 2, 3 … in order with real Arabic **and** English titles ("كتاب بدء الوحى" / "Revelation", etc.) |
+| hadith numbering — the "2 → 9 → 99" bug | ✅ **fixed and re-confirmed live**: Bukhari chapter 1 shows exactly its real 7 hadiths (hadith #1 is the famous "actions are by intentions"); chapter 2 crosses the two-digit boundary (8, 9, 10, 11 … 21, 22) with no break |
+| hadith detail (Arabic + English narrator/text, Previous/Next) | ✅ real text both languages, navigation works |
+| FTS5 search | 🔶 implemented, code-reviewed, **not interactively confirmed** — `adb shell input text` would not put text into the search field this session (Arabic input isn't supported by that adb command at all; even an ASCII term didn't register, cause not diagnosed) |
+| the actual hadith.db **download** (network → zip → unzip → open) | ❌ **not verified** — blocked by the TLS problem below on every attempt |
+| battery/library "Books" catalog tab | N/A — intentionally an honest placeholder, see the WIP note above |
+
+**The TLS blocker, in detail:** `HandshakeException: CERTIFICATE_VERIFY_FAILED:
+unable to get local issuer certificate` on every HTTPS call the app made this
+session, including mushaf image-mode fetching (previously verified working in
+STAGE 0). Checked and ruled out: the manifest's debug `networkSecurityConfig`
+merge is present in the built APK (confirmed via `aapt2 dump xmltree`); the
+bundled `proxy_debug_ca.pem`'s SHA-1 fingerprint is byte-identical to the
+live Avast Web/Mail Shield root currently in Windows' trust store *and* to
+the actual certificate `openssl s_client` observed being served for
+`raw.githubusercontent.com` right now (a flat root→leaf chain, no missing
+intermediate); a full emulator kill + relaunch did not clear it. The cause is
+still unidentified — something about how the Avast interception is or isn't
+reaching this specific emulator process changed since STAGE 0, or Dart's
+engine and Android's Java networking layer handle the bundled trust anchor
+differently in some case not yet isolated (mushaf pages use the same `Dio()`
+client as the hadith download, which is why "different HTTP client" isn't the
+answer either). Whoever has hands on the host machine next: check whether
+Avast Web/Mail Shield's Web Shield is still enabled the same way it was
+during STAGE 0, or just test on a physical device to sidestep the whole
+question — a phone's own network never goes through the PC's Avast at all.
+
 ### Original context (why analysis had never run)
 
 The previous agent worked from an isolated Linux sandbox with only the project
@@ -520,9 +669,18 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
    imported adhan through to an actual firing alarm.
 5. **Next:** the mushaf download-stops-on-tab-switch bug (§7) is the
    highest-priority remaining bug outside Stage 1 — it undermines
-   "offline-first" and has been open since STAGE 0. Then continue
-   `WORK_QUEUE.md` STAGE 2+ (library, hadith, azkar, new-Muslim guide,
-   thematic search, release).
+   "offline-first" and has been open since STAGE 0.
+6. **Fix or work around the TLS blocker (§7)** before trusting any more
+   network-verification results — it silently invalidates re-checks of
+   already-passed items (mushaf image mode) too, not just new work.
+7. ~~**STAGE 2 — Hadith hub.**~~ **DONE 2026-09-02 on the emulator** (verified
+   via direct DB injection, not the live download — §7 STAGE 2 table). Still
+   open: the download itself (blocked by item 6), FTS5 search interactive
+   confirmation, and the Library "Books" catalog (real sources researched,
+   owner needs to pick a specific edition per title before anything
+   downloads — see the WIP note above).
+8. Continue `WORK_QUEUE.md` STAGE 3+ (azkar, translation selector, new-Muslim
+   guide, thematic search, security/guest-mode check, release).
 
 ---
 
@@ -548,7 +706,7 @@ No credentials live in the client; `AppConfig` is secret-free. Keep it so.
 | I'rab / word meanings | Quranic Arabic Corpus | open |
 | Translations en/fr/ur | alquran.cloud editions | public |
 | Azkar | Hisn al-Muslim JSON | open |
-| Hadith (9 books) | A7med3bdulBaset/hadith-json | open |
+| Hadith (9 books, 40,943 hadiths) | A7med3bdulBaset/hadith-json, built into `hadith.db` by `scripts/build_hadith_db.py`, hosted on `tito423/rafeeq-api` | open |
 | Adhan audio | islamcan (10 verified, no music) | — |
 | Recitation | cdn.islamic.network, mp3quran.net | public |
 | Prayer times | api.aladhan.com | public |

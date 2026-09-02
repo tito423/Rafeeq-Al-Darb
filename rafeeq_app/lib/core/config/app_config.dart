@@ -46,11 +46,26 @@ abstract final class AppConfig {
   /// Content origin (catalogs, offline packs). Configurable at build time
   /// via --dart-define. The staging folder in this repo is what gets
   /// published to this location.
+  ///
+  /// The repo's default branch is `master`, not `main` — this constant
+  /// pointed at `/main` for a while (a 404) because nothing actually used it
+  /// yet; fixed when `hadithDbUrl` below became the first real user of it.
   static const String contentBaseUrl = String.fromEnvironment(
     'RAFEEQ_CONTENT_BASE',
     defaultValue:
-        'https://raw.githubusercontent.com/tito423/rafeeq-api/main',
+        'https://raw.githubusercontent.com/tito423/rafeeq-api/master',
   );
+
+  /// The offline hadith database (9 collections, ~41k hadiths, built by
+  /// `scripts/build_hadith_db.py` from real A7med3bdulBaset/hadith-json
+  /// dumps) — downloaded on demand rather than bundled, the same way mushaf
+  /// pages and recitations are, given its size (~74 MB).
+  static const String hadithDbUrl = '$contentBaseUrl/hadith/hadith.db';
+
+  /// Bump this whenever `hadith.db`'s schema or content changes so devices
+  /// that already downloaded the old one re-fetch instead of opening a
+  /// stale/incompatible file.
+  static const String hadithDbVersion = 'v1';
 
 
   /// [editionIdentifier] e.g. "ar.alafasy". Tries 128kbps then 64kbps.

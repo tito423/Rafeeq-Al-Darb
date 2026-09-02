@@ -28,8 +28,8 @@
 | 11 | Custom adhan MP3 from device | 🔶 | `file_picker` wired; import → selection confirmed to open the real system document picker. A full pick-to-firing-alarm cycle (native content:// URI sound) not carried through to completion this session. |
 | 12 | Adhan UI + karaoke sync | ✅ | Full-screen view launched via `fullScreenIntent` over the **locked** screen (uses `MainActivity`'s existing `showWhenLocked`/`turnScreenOn`); adhan text highlighted line-by-line, paced against the real recording's `Duration`; "الصلاة خير من النوم" shown only for Fajr. Real Stop/Mute. **2026-09-02: emulator-verified** for 4 different prayers, confirmed via `dumpsys audio`/`notification`, not screenshots alone. |
 | 13 | Android native alarm (exact alarms, wakelock, mute/stop actions) | ✅ | `AdhanAlarmService` rewritten: exact daily alarms per prayer, one notification channel per (mode, sound) pair (channels are immutable on Android). The adhan **sound** is played by Android's own notification-sound API (`RawResourceAndroidNotificationSound` + `AudioAttributesUsage.alarm`), not by Dart — `zonedSchedule`'s receiver never starts the Dart VM, so nothing else can play while the app is killed. Stop cancels the notification (confirmed to stop the sound); Mute reposts it silenced. **2026-09-02: emulator-verified**, including a per-prayer choice surviving `am force-stop` + relaunch. Battery-optimisation exemption prompt implemented but unconfirmed (no dialog seen on the emulator image used). |
-| 14 | Library: catalog / offline PDFs / viewer | ⏳ | |
-| 15 | 9 Hadith books hub (hierarchical) | ⏳ | hadith.db has 9 collections, 36,461 hadiths — rebuilt clean |
+| 14 | Library: catalog / offline PDFs / viewer | 🔶 | `LibraryScreen`'s "الكتالوج" tab built as an honest placeholder — real open sources found on archive.org for every named title, but nothing downloaded yet pending the owner's choice of edition/tahqiq per title (STOP AND ASK, see WORK_QUEUE Stage 2). |
+| 15 | 9 Hadith books hub (hierarchical) | ✅ | **Correction:** no `hadith.db` actually existed anywhere in this workspace before 2026-09-02 — only the real source JSON (`scripts/temp_phase1/hadith9/`) did; the "36,461 hadiths, rebuilt clean" note was describing something that wasn't there. Built for real by `scripts/build_hadith_db.py`: 9 books, 429 chapters, **40,943 hadiths**. Fixed the "2 → 9 → 99" ordering bug (`number_in_book` is INTEGER; 0 out-of-order chapters, verified both by script and live in the app). Downloaded on demand (~17 MB zipped, hosted on `tito423/rafeeq-api`), not bundled. **2026-09-02: verified against the real DB via direct `adb push` injection** (book list, chapter list, hadith ordering across the two-digit boundary, detail view all confirmed with real data) — **the live download itself was not verified**, blocked by a host-machine TLS problem also affecting previously-working mushaf fetches; see `HANDOVER.md` §7. |
 | 16 | Azkar + Tasbeeh (dedup, haptics) | ⏳ | |
 | 17 | New Muslim guide | ⏳ | |
 | 18 | Thematic Quran search | ⏳ | |
@@ -68,6 +68,22 @@
   never resolving before Dart moved on). Open: physical device, the battery-
   exemption button's effect, a custom adhan's native sound end-to-end. See
   `HANDOVER.md` §7's STAGE 1 table for the full breakdown.
+- [2026-09-02] Owner said to continue through the whole WORK_QUEUE, honoring
+  its STOP AND ASK gates. Hit two: STAGE 2's book list (told to research real
+  sources and propose them, not download yet) and STAGE 5's content sources
+  (told to use known trusted Islamic sources directly). Built STAGE 2's
+  Hadith half: discovered `hadith.db` never actually existed in this
+  workspace despite the docs saying so (only the real source JSON did);
+  built it for real (T15, 9 books, 40,943 hadiths, ordering bug fixed and
+  regression-tested), hosted it on `tito423/rafeeq-api` (also fixing that
+  repo's URL, which pointed at a nonexistent `/main` branch), and built
+  `LibraryScreen` (Hadith hub done; Books catalog an honest placeholder,
+  T14 🔶). Verified the hub against the real DB by pushing it directly onto
+  the emulator's storage — the live download itself is blocked by a
+  host-machine TLS problem that also broke previously-working mushaf
+  fetching; see `HANDOVER.md` §7 for the full diagnosis. Researched real
+  archive.org sources for every named Library book; none downloaded yet,
+  pending the owner's edition/tahqiq choice per title.
 
 ## Data sourcing decision (T6/T7)
 Mushaf pages and ayah tap-regions both come from **quranpedia/quran-svg**

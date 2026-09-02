@@ -125,26 +125,45 @@ from the notification; the choice per prayer is respected after an app restart.
 
 ---
 
-## STAGE 2 — Library & Hadith  (T14, T15)
+## STAGE 2 — Library & Hadith  (T14, T15) — Hadith half ✅ done 2026-09-02; Library half pending owner
 
-**What exists:** `hadith.db` with 9 collections / 36,461 hadiths (rebuilt clean
-in T3). 17 books were downloaded to `rafeeq-api/downloads/books` in T1.
-`hadith_screen.dart` is currently a stub.
+**Correction:** `hadith.db` and the "17 books in `rafeeq-api/downloads/books`"
+did **not** actually exist anywhere in this workspace — only the real source
+JSON (`scripts/temp_phase1/hadith9/`) did. See `HANDOVER.md` §7's STAGE 2
+update for the full story. `hadith_screen.dart` is gone — replaced by
+`LibraryScreen` (`lib/features/library/`), reachable from the same bottom-nav
+slot (now labeled "المكتبة" / Library).
 
-**Build:** the Library as a main destination with three tabs —
-*Available to download* / *My library* (downloaded, offline) / *Categories*.
-Catalog driven by a `books_catalog.json`, never hardcoded. Download + delete per
-book with real progress. Hadith hub: Book → Chapter → Hadith, with hadith
-number, grading, and fast local search.
+**Hadith hub — done:** Book → Chapter → Hadith (real 40,943 hadiths, 9 real
+collections), hadith number, fast local FTS5 search. No per-hadith grading
+exists in the source data (only Bukhari/Muslim are sahih by collection
+definition) — never invent one. Downloaded on demand (~17 MB zipped), not
+bundled — see `AppConfig.hadithDbUrl`. **The download itself could not be
+verified this session** — see `HANDOVER.md` §7 for the TLS problem blocking
+it; the repository/UI layer was verified against the real DB via direct
+injection instead.
 
-**Known bug to fix:** hadith ordering was previously broken (jumping 2 → 9 → 99).
-Verify sequencing is correct before calling this done.
+**Known bug (hadith ordering jumping 2 → 9 → 99) — fixed and regression-tested**
+both in `scripts/build_hadith_db.py` (0 out-of-order chapters) and live in the
+running app.
 
-**⚠️ STOP AND ASK THE OWNER** before populating the books list. He has a
-specific list (Riyad as-Salihin, Mukhtasar Minhaj al-Qasidin, Fiqh ala
-al-Madhahib al-Arba'ah, Ibn al-Qayyim, Ibn al-Jawzi, Ibn Taymiyyah, Ibn Abi
-al-Dunya, al-Tirmidhi al-Hakim, and zuhd/raqa'iq works). Confirm the list and
-the sources before downloading anything.
+**Library "Books" tab — real sources researched, owner confirmation still
+needed before downloading anything** (per the STOP AND ASK below). Real, freely
+available editions were found on archive.org for Riyad as-Salihin, Mukhtasar
+Minhaj al-Qasidin, al-Fiqh ala al-Madhahib al-Arba'ah, and works of Ibn
+al-Qayyim, Ibn Taymiyyah, Ibn al-Jawzi, and al-Hakim al-Tirmidhi. All of these
+classical texts are public domain (authors died centuries ago); al-Jaziri's
+*al-Fiqh* compilation (1941) needs its own licensing check, and a specific
+tahqiq/edition still needs picking per title since a modern scholar's
+critical edition can carry its own separate copyright even when the
+underlying classical text doesn't. Ibn Abi al-Dunya is many short treatises,
+not one book — still needs a title-by-title pass. The Library screen's
+"الكتالوج" tab currently shows an honest "sources pending confirmation"
+message rather than any invented entries.
+
+**⚠️ STOP AND ASK THE OWNER** — still applies to the Books tab specifically:
+confirm the exact list and, per title, which edition/tahqiq before downloading
+anything.
 
 ---
 

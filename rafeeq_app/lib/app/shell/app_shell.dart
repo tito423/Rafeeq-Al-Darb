@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
-import '../../features/hadith/presentation/screens/hadith_screen.dart';
+import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
-/// sections (Home, Quran, Azkar, Hadith, Settings).
+/// sections (Home, Quran, Azkar, Library, Settings). "Library" holds the
+/// Hadith hub and (once the owner confirms a source list) the books
+/// catalog — WORK_QUEUE Stage 2 frames these as one destination.
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
 
@@ -29,7 +31,7 @@ class _AppShellState extends State<AppShell> {
       HomeScreen(onNavigate: (t) => _goTo(t, tab: t)),
       const QuranScreen(),
       const AzkarScreen(),
-      const HadithScreen(),
+      const LibraryScreen(),
       const SettingsScreen(),
     ];
 
@@ -57,7 +59,7 @@ class _AppShellState extends State<AppShell> {
           NavigationDestination(
             icon: const Icon(Icons.library_books_outlined),
             selectedIcon: const Icon(Icons.library_books),
-            label: 'nav.hadith'.tr(),
+            label: 'nav.library'.tr(),
           ),
           NavigationDestination(
             icon: const Icon(Icons.settings_outlined),

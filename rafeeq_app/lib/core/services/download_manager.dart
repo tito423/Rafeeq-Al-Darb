@@ -270,7 +270,11 @@ class DownloadManager {
     } on DioException catch (e) {
       if (!CancelToken.isCancel(e)) {
         task.status = DownloadStatus.failed;
-        task.error = e.message ?? 'network error';
+        // e.message is frequently null for connectionError/badCertificate
+        // types — the real detail lives on e.error (the wrapped underlying
+        // exception, e.g. a SocketException or HandshakeException). Falling
+        // straight to the generic "network error" string hid that detail.
+        task.error = e.message ?? e.error?.toString() ?? e.type.name;
         await DownloadNotifications.instance.failed(task);
       }
       _notify();

@@ -91,7 +91,12 @@
     "chapters": "الأبواب",
     "hadith_number": "حديث رقم",
     "grade": "الدرجة",
-    "search_hadith": "ابحث في الأحاديث…"
+    "search_hadith": "ابحث في الأحاديث…",
+    "sources_pending": "قائمة الكتب قيد المراجعة مع صاحب التطبيق قبل تنزيل أي محتوى",
+    "no_results": "لا نتائج",
+    "downloading_hadith_db": "جارٍ تنزيل قاعدة بيانات الحديث",
+    "previous": "السابق",
+    "next": "التالي"
   },
   "azkar": {
     "title": "الأذكار",

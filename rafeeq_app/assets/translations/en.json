@@ -91,7 +91,12 @@
     "chapters": "Chapters",
     "hadith_number": "Hadith no.",
     "grade": "Grade",
-    "search_hadith": "Search hadiths…"
+    "search_hadith": "Search hadiths…",
+    "sources_pending": "The book list is under review with the app owner before anything is downloaded",
+    "no_results": "No results",
+    "downloading_hadith_db": "Downloading the hadith database",
+    "previous": "Previous",
+    "next": "Next"
   },
   "azkar": {
     "title": "Adhkar",
