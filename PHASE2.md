@@ -88,7 +88,7 @@ test` 13/13, last checkpoint `ec15d06`):
 | P2‑2 | Theme system: 4 themes (system / light / dark / **RGB**) + extensible registry | — | ✅ done |
 | P2‑3 | Localization: add **Spanish, Russian, Portuguese** (full coverage) | — | ✅ done |
 | P2‑4 | Library redesign (home entry, 3 sub-tabs, "My Library") + catalog expansion | P2‑2, P2‑3 | ✅ structural done · catalog + al-Jaziri carried |
-| **P2‑4b** | **Book text editions** — every book also as a structured text edition (فهرس, in-book search, selectable text) beside the image PDF | P2‑4 | no (source-research task) |
+| **P2‑4b** | **Book text editions** — every book also as a structured text edition (فهرس, in-book search, selectable text) beside the image PDF | P2‑4 | ✅ done, emulator-verified (5 Shamela text editions built + hosted on rafeeq-api; `book_text_reader_screen`; `مصوّر\|نص` switch) |
 | P2‑5 | Professional download manager (unified, pause/resume, storage view) **+ every download shows a live progress notification with a progress bar** | P2‑2, P2‑3 | no |
 | **P2‑6** | **Persistent prayer notification** — ongoing status-bar notification: next prayer, Hijri date, live countdown; professional, with the app icon | P2‑2 | no |
 | P2‑7 | Professional Adhan: **audio-or-video** choice, video composite, up to **30** adhans | P2‑5 | **yes** (video source/licensing) |
@@ -497,6 +497,66 @@ paras:[{t:"…", k:"body|aya|ref"}]}]}`), hosted on `tito423/rafeeq-api` under
 `books/text/<id>.json` (raw, no zip — a few hundred KB each). `LibraryBook` gets
 an optional `TextEdition {url, sizeBytes, sourceLabel, format:'shamelaJson',
 isOcr:false}`. New `book_text_reader_screen.dart` renders it.
+
+### ✅ P2‑4b DONE (2026-09-02, emulator-verified)
+
+All 5 catalog books now ship a **نص** edition beside the **مصوّر** PDF.
+
+- **`scripts/build_book_text.py`** — walks `shamela.ws/ajax/pageContent`'s
+  `nextId` chain, parses each page's `nass` (drops the `btn_tag` copy buttons,
+  the `anchor` spans, and any `div.hamesh` footnote apparatus; tags `c3`→`aya`
+  with its `c4` ref, bracket-only lines→`head`), collapses repeated section
+  titles into a فهرس, and emits `{meta, toc[{title,page,pageIndex,level}],
+  pages[{p,paras[{t,k,r?}]}]}`. `meta.printReliable` = موافق-للمطبوع flag AND
+  ≥98.5 % monotonic page numbers AND no backward jump > 3 — **false for Riyad
+  (book 12014): its `pageNum` drops ~100 four times through the book** (reading
+  order via `nextId` is still correct — verified: Nawawi's chapter order is
+  intact). `finalize_book_text.py` back-fills `printReliable`;
+  `upload_book_text.py` PUTs to `tito423/rafeeq-api` via `gh api --input`.
+  Build dir is gitignored (regenerable, hosted, like `hadith.zip`).
+- **Built + hosted** (`rafeeq-api/books/text/<id>.json`, all HTTP 200,
+  byte-size verified): riyad 810p/387§/1.8 MB · sayd_al_khatir 893p/394§/1.5 MB
+  · mukhtasar 408p/226§/1.2 MB · al_fawaid 209p/105§/0.7 MB · al_ubudiyyah
+  109p/107§/0.2 MB. 0 empty pages, no HTML/entity leakage, text fully
+  vocalised.
+- **`book_text.dart`** — `BookText.fromFile/fromJson`, filters Shamela's
+  stray `...` paragraphs.
+- **`book_text_reader_screen.dart`** — one printed page at a time (mirrors the
+  print edition + Shamela). فهرس drawer (filter box, level-0/1 indent,
+  bookmark chips at top, trailing = printed page when `printReliable` else
+  sequence #), in-book search sheet (`normalizeArabic` both sides, one hit per
+  page), A+/A− font (persisted), per-book bookmarks keyed on **pageIndex**
+  (stable when print numbers aren't), an always-visible tappable provenance
+  strip (`sourceLabel` + "فتح في الشاملة"), OCR badge hook (`isOcr`, never true
+  for Shamela). RTL, offline after first download.
+- **`book_catalog.dart`** — `TextEdition {url, fileName, approxSizeBytes,
+  sourceLabel, isOcr}` (const; `url` = `${AppConfig.contentBaseUrl}/books/text/
+  <id>.json`), `LibraryBook.textEdition` + `.textDownloadId` (`<id>_text`) +
+  `.hasText`. mukhtasar's `sourceLabel` also credits the Arnaut taʿlīq the
+  title page revealed.
+- **`library_screen.dart`** — every card with a text edition gets a
+  `مصوّر | نص` `SegmentedButton`; the size line + download/open/progress act on
+  the selected edition; each downloads & caches under its own id; مكتبتي shows
+  one row per (book, edition) with an edition badge + category + on-disk size +
+  فتح + حذف.
+- +23 keys × 5 locales (`library.text_*` / `.edition_*`), parity **260/260**,
+  `test/translation_parity_test.dart` green. `flutter analyze` clean,
+  `flutter test` 13/13.
+
+**Verified live on `emulator-5554`:** مصوّر↔نص switch flips the size + action;
+downloaded صيد الخاطر + رياض + العبودية(existing) + مختصر editions — مكتبتي
+listed each with the right badge/size; **صيد الخاطر** (`printReliable`) shows
+"صفحة N", فهرس trailing = printed pages; **رياض** (`!printReliable`) shows
+sequence only, فهرس trailing = seq #, and the chapter order matched Nawawi
+despite the `pageNum` chaos; فهرس jump, font A+/A−, bookmark toggle + strip +
+jump, provenance strip all work; **airplane-mode** relaunch → نص opens from
+cache with page + font + bookmark restored. mukhtasar's 2-level فهرس
+(كتاب→فصل) renders indented.
+
+**Not verified:** the in-book *search* query→results — `adb shell input text`
+can't inject Arabic (same limitation hit on the hadith search, `HANDOVER` §7);
+the sheet opens and the code reuses the exact `normalizeArabic` +
+`.contains()` path Stage 6's search uses. Needs a real device or an Arabic IME.
 
 ---
 
@@ -910,7 +970,7 @@ anywhere.
 | P2‑8 | pick the competitor-feature shortlist before it's built |
 | P2‑9 | do the Cloudflare / Firebase / GitHub console steps; rotate the R2 token — an agent session **cannot** log into these accounts (no passwords/OAuth/account-settings, even with the owner's say-so) |
 | P2‑10 | provide the real release keystore (alias + passwords) |
-| P2‑4b | ✅ decided — al-Maktaba al-Shamela text (owner confirmed download is fine); still research the best muḥaqqaq edition per book |
+| ~~P2‑4b~~ | ✅ **done** — 5 Shamela text editions chosen per-book (rec. muḥaqqaq / plain-PD), built, hosted on `tito423/rafeeq-api`, reader + `مصوّر\|نص` switch shipped & emulator-verified |
 | P2‑13 | ✅ decided — Option A: rebuild `hadith.db` with real gradings (grade + grader) from a graded dataset |
 
 Everything else in Phase 2 is buildable without him — go.

@@ -166,7 +166,8 @@ const List<LibraryBook> libraryBookCatalog = [
       fileName: 'mukhtasar_minhaj_al_qasidin_text.json',
       approxSizeBytes: 1214930,  // built by scripts/build_book_text.py
       sourceLabel: 'المكتبة الشاملة — مختصر منهاج القاصدين، تقديم محمد أحمد '
-          'دهمان، مكتبة دار البيان، دمشق، ١٣٩٨هـ/١٩٧٨م',
+          'دهمان وتعليق شعيب وعبد القادر الأرناؤوط، مكتبة دار البيان، دمشق، '
+          '١٣٩٨هـ/١٩٧٨م',
     ),
   ),
   LibraryBook(

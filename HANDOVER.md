@@ -15,9 +15,9 @@
 |---|---|
 | P2‑1 small-bug sweep | ✅ done, verified (6 bugs; launcher icon designed in-house, src in `rafeeq_app/assets/icon/src/`) |
 | P2‑2 4 themes (system/light/dark/**RGB** animated) | ✅ done, verified — `lib/core/theme/theme_controller.dart` + `app_theme.rgb()` + `rgb_backdrop.dart`. §5.6. |
-| P2‑3 es / ru / pt locales | ✅ done, verified — 237-key parity, `test/translation_parity_test.dart`. Fixed `const AppShell` not re-translating on `setLocale`. |
+| P2‑3 es / ru / pt locales | ✅ done, verified — 5-locale parity (260 keys after P2‑4/4b), `test/translation_parity_test.dart`. Fixed `const AppShell` not re-translating on `setLocale`. |
 | P2‑4 Library redesign | ✅ structural done, verified — Home المكتبة card → `LibraryScreen`; tabs [الكتب المتوفرة \| الحديث]; 3 sub-tabs (كل الكتب abc / التصنيفات / مكتبتي w/ فتح+حذف). `BookCategory` enum, `LibraryBook.category/sortKey`. **Fixed real bug:** `DownloadManager.remove()` didn't purge the SharedPreferences registry. Added `العبودية` (Ibn Taymiyyah) — 5 books / 3 categories now. |
-| P2‑4b book **text editions** (Shamela) | 📋 spec'd only — owner chose al-Maktaba al-Shamela; needs per-book edition research + a text-reader screen. |
+| P2‑4b book **text editions** (Shamela) | ✅ done, emulator-verified — 5 Shamela text editions (`build_book_text.py` → `rafeeq-api/books/text/*.json`), `book_text_reader_screen.dart` (فهرس/search/font/bookmarks/provenance), `مصوّر\|نص` switch per card, one مكتبتي row per (book, edition). `printReliable` gates printed-page UI (false for Riyad/12014). §5.7. |
 | P2‑5 pro download manager | ⬜ not started. Owner add-on: every download → live progress notification (code already exists in `DownloadManager.DownloadNotifications`, needs verifying). |
 | P2‑6 persistent prayer notification (next prayer + Hijri + countdown) | ⬜ not started |
 | P2‑7 Adhan audio/video + 30 slots | ⬜ not started · OWNER-BLOCKER: video source |
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 21:46 — IN PROGRESS — resume here**
+**2026-09-02 21:57 — COMPLETE**
 
-P2-4b VERIFIED on emulator-5554: مصوّر|نص switch + per-edition size + download from rafeeq-api + مكتبتي rows; text reader (صيد الخاطر printReliable=true: shows صفحة N; رياض printReliable=false: shows seq only, فهرس trailing = seq, Nawawi chapter order intact despite Shamela pageNum jumps); فهرس jump, font A+/A-, bookmark toggle+strip+jump, provenance strip, page nav (RTL: right=prev left=next); airplane-mode relaunch -> نص opens from cache, page+font+bookmark restored. Filtered Shamela '...' noise paras. Arabic in-book search NOT interactively testable (adb can't inject Arabic - same as hadith search, HANDOVER §7). analyze clean, test 13/13.
+P2-4b DONE: book text editions (نص) for all 5 library books from al-Maktaba al-Shamela, hosted on rafeeq-api, book_text_reader_screen (فهرس/search/font/bookmarks/provenance), مصوّر|نص switch per card, one مكتبتي row per (book,edition). printReliable gates printed-page UI (false for Riyad/12014). Emulator-verified incl. offline. Docs: PHASE2 P2-4b DONE block + HANDOVER §5.7 (Shamela licence decision) + §7 + Phase-2 table. analyze clean, test 13/13. Search query->results not testable via adb (Arabic input). Next: P2-5.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -111,7 +111,7 @@ from that clean base. **Do not reintroduce any of the above.**
 | 3 | **Never claim something is verified when it is not.** Say plainly what you tested and what you did not. |
 | 4 | **Offline-first.** Downloaded content must work with the network off. |
 | 5 | **Don't commit secrets.** `.env`, keystores, `google-services.json`, `serviceAccountKey.json` are gitignored. Keep it that way. |
-| 6 | **Keep translation keys at exact parity across every locale.** Currently `ar` / `en` at 224/224 (P2‑3 adds `es` / `ru` / `pt`). Adding a key to one locale without the others is a bug — `test/translation_parity_test.dart` (added in P2‑3) guards this. |
+| 6 | **Keep translation keys at exact parity across every locale.** 5 locales (`ar` / `en` / `es` / `ru` / `pt`), **260 keys each** as of P2‑4b. Adding a key to one locale without the others is a bug — `test/translation_parity_test.dart` guards this. |
 
 ---
 
@@ -249,6 +249,37 @@ an opaque colour. Adding a 5th theme = one enum case + one `AppTheme.xxx()` +
 one arm in `RafeeqApp`'s `switch`; no screen changes. The RGB backdrop
 animation stops itself when the OS "reduce motion" setting is on or the
 `settings.motion_effects` toggle is off.
+
+### 5.7 Library book **text** editions come from al-Maktaba al-Shamela (P2‑4b)
+
+Owner decision, 2026-09-02: the **نص** edition of every library book is
+sourced from `shamela.ws` (owner confirmed downloading Shamela's book texts is
+fine — "كل حاجة مرفوعة عليه"). `scripts/build_book_text.py` scrapes it into
+`books/text/<id>.json` on `tito423/rafeeq-api`; `book_text_reader_screen.dart`
+renders it.
+
+**Licence reality — flagged, not hidden.** All 5 underlying classical texts
+are public domain (authors d. 597–751 AH). A modern *muḥaqqiq*'s apparatus can
+still carry copyright: the Arnaut editions (Riyad / book 12014, and the taʿlīq
+on Mukhtasar Minhaj al-Qasidin / 98087) and the Shawish edition (al-ʿUbudiyya
+/ 22647) are in copyright for the *taḥqīq*. Mitigations in place:
+`build_book_text.py` extracts only the author's running text + section
+headings and **drops the `div.hamesh` footnote apparatus**; each book's full
+edition + editor line (`TextEdition.sourceLabel`) is shown in the reader at
+all times and is one tap from "فتح في الشاملة". The owner chose Shamela
+knowingly on this basis. If a future edition looks heavily
+apparatus-dependent, prefer a plainer PD edition of the same text (that is
+why al-Fawaid uses Shamela 6832 / دار الكتب العلمية 1973, **not** the
+apparatus-heavy 2019 عطاءات العلم edition 212).
+
+**`printReliable`** (`meta.printReliable` in the JSON): some Shamela books
+carry the `[ترقيم موافق للمطبوع]` flag yet their `pageNum` values are out of
+order in stretches — **Riyad as-Salihin (book 12014) drops ~100 pages four
+times through the book.** The `nextId` walk still yields the correct *reading*
+order (Nawawi's chapter sequence is intact — verified). So the reader shows
+printed-page numbers / "go to printed page" **only when `printReliable`**;
+otherwise it navigates by sequence position + the فهرس, and bookmarks are
+keyed on `pageIndex` (stable) not the printed number.
 
 ---
 
@@ -735,6 +766,47 @@ restored from `10dbd35`); it now forces UTF-8 both directions and `cp.bat` is
 hardened so a Git-Bash-mangled `/s` can't become a junk commit. **Run `cp.bat`
 from PowerShell/cmd, not Git Bash.**
 
+### Update 2026-09-02 — P2‑4b book **text editions**: built, hosted, emulator-verified
+
+Every library book now has a **نص** (structured text) edition beside the
+**مصوّر** PDF. Source: al-Maktaba al-Shamela (owner's pick — §5.7). Pipeline:
+`scripts/build_book_text.py` (walks `shamela.ws/ajax/pageContent`'s `nextId`
+chain, strips copy-buttons/anchors/`div.hamesh` footnotes, tags ayat, builds a
+فهرس from section titles, computes `printReliable`) → `finalize_book_text.py`
+(back-fills `printReliable`) → `upload_book_text.py` (`gh api --input` PUT to
+`tito423/rafeeq-api/books/text/<id>.json`; base64 is too big for argv). Build
+dir `scripts/book_text_build/` is gitignored — regenerable + hosted, like
+`hadith.zip`.
+
+Built & hosted (all raw URLs HTTP 200, byte-size matched): riyad 810p/387§,
+sayd_al_khatir 893p/394§, mukhtasar 408p/226§, al_fawaid 209p/105§,
+al_ubudiyyah 109p/107§ (~5.6 MB total). 0 empty pages, no HTML leakage, text
+fully vocalised, spot-checked against the known openings of each work.
+
+New: `book_text.dart` (model + `...`-noise filter), `book_text_reader_screen.dart`
+(page-at-a-time; فهرس drawer w/ filter + level indent + bookmark chips;
+in-book search sheet w/ `normalizeArabic`; A+/A− font; per-book bookmarks on
+`pageIndex`; always-visible tappable provenance strip; OCR-badge hook).
+`LibraryBook.textEdition` / `.textDownloadId` / `.hasText`. `library_screen.dart`
+gains a `مصوّر | نص` `SegmentedButton` per card (size + action follow the
+selection; independent download/cache per edition); مكتبتي lists one row per
+(book, edition). +23 keys ×5 (parity 260). `flutter analyze` clean,
+`flutter test` 13/13.
+
+**Emulator-verified (`emulator-5554`):** switch flips size/action; downloaded
+صيد الخاطر + رياض + مختصر text editions from rafeeq-api; مكتبتي rows correct;
+**صيد الخاطر** (`printReliable`) shows "صفحة N" + فهرس trailing = printed pages;
+**رياض** (`!printReliable` — its Shamela `pageNum` drops ~100 four times) shows
+sequence only + فهرس trailing = seq #, and the chapter order matched Nawawi
+despite that; فهرس jump, font, bookmark toggle/strip/jump, provenance sheet all
+work; **airplane-mode** relaunch → نص opens from cache with page + font +
+bookmark restored; mukhtasar's 2-level فهرس renders indented.
+
+**Not verified:** in-book *search* query→results — `adb shell input text`
+can't inject Arabic (same as the hadith FTS5 search above). Sheet opens; code
+reuses Stage 6's verified `normalizeArabic` + `.contains()` path. Needs a real
+device or an Arabic IME.
+
 ---
 
 ## 8. NEXT TASKS, in priority order
@@ -854,6 +926,8 @@ from that first commit).
 | Translations en/fr/ur | alquran.cloud editions | public |
 | Azkar | Hisn al-Muslim JSON | open |
 | Hadith (9 books, 40,943 hadiths) | A7med3bdulBaset/hadith-json, built into `hadith.db` by `scripts/build_hadith_db.py`, hosted on `tito423/rafeeq-api` | open |
+| Library book **image PDFs** | archive.org public-domain scans (downloaded direct on demand) | PD (authors d. 597–751 AH) |
+| Library book **text editions** | al-Maktaba al-Shamela (`shamela.ws`), via `scripts/build_book_text.py` → `rafeeq-api/books/text/*.json` | classical text PD; muḥaqqiq apparatus stripped — owner decision, see §5.7 |
 | Adhan audio | islamcan (10 verified, no music) | — |
 | Recitation | cdn.islamic.network, mp3quran.net | public |
 | Prayer times | api.aladhan.com | public |

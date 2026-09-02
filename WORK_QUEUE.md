@@ -165,7 +165,12 @@ table scan with no crash). See `HANDOVER.md` §7 for the full account — bugs
 both in `scripts/build_hadith_db.py` (0 out-of-order chapters) and live in the
 running app.
 
-**Library "Books" tab — real sources researched, catalog not yet built.**
+**Library "Books" tab — image PDFs live (5 books); text editions added in
+PHASE2 P2‑4b** (al-Maktaba al-Shamela → `rafeeq-api/books/text/*.json`,
+`book_text_reader_screen.dart`, `مصوّر | نص` switch). Catalog *expansion*
+(more titles) is still the open carried-over item — see PHASE2 P2‑4's note.
+
+**Historical note (superseded):** real sources researched, catalog not yet built.
 Owner said mid-session to use al-Maktaba al-Shamela or another free
 Islamic-books source directly (no further STOP AND ASK on this). Real, freely
 available editions were already found on archive.org for Riyad as-Salihin,

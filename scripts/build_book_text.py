@@ -83,8 +83,12 @@ BOOKS = {
     },
     "mukhtasar_minhaj_al_qasidin": {
         "shamela_id": 98087,
+        # The title page credits a taʿlīq by the Arnaut brothers on top of
+        # Dahman's تقديم — recorded here for honest provenance (the muḥaqqiq
+        # footnote apparatus itself is stripped by parse_nass's hamesh removal).
         "source_label": "المكتبة الشاملة — مختصر منهاج القاصدين، تقديم محمد "
-        "أحمد دهمان، مكتبة دار البيان، دمشق، ١٣٩٨هـ/١٩٧٨م",
+        "أحمد دهمان وتعليق شعيب وعبد القادر الأرناؤوط، مكتبة دار البيان، "
+        "دمشق، ١٣٩٨هـ/١٩٧٨م",
     },
     "al_fawaid": {
         "shamela_id": 6832,
