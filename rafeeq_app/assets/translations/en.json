@@ -123,6 +123,7 @@
     "text_page": "Page",
     "text_goto": "Go",
     "text_goto_page": "Go to printed page",
+    "text_goto_seq": "Go to sequence number",
     "text_bookmark": "Bookmark",
     "text_font_larger": "Larger text",
     "text_font_smaller": "Smaller text",

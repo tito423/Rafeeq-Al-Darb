@@ -41,6 +41,7 @@ class BookText {
         sourceLabel: (m['sourceLabel'] ?? '') as String,
         shamelaUrl: (m['shamelaUrl'] ?? '') as String,
         printMatches: (m['printMatches'] ?? false) as bool,
+        printReliable: (m['printReliable'] ?? false) as bool,
         pageCount: (m['pageCount'] ?? 0) as int,
         sectionCount: (m['sectionCount'] ?? 0) as int,
       ),
@@ -93,9 +94,15 @@ class BookTextMeta {
   final String sourceLabel;
   final String shamelaUrl;
 
-  /// Shamela flag `[ترقيم الكتاب موافق للمطبوع]` — when true the `printedPage`
-  /// numbers are the real print-edition pages and worth showing.
+  /// Shamela flag `[ترقيم الكتاب موافق للمطبوع]`.
   final bool printMatches;
+
+  /// True only when [printMatches] AND the `printedPage` numbers actually run
+  /// monotonically (some Shamela books carry the flag but have out-of-order
+  /// page numbers in stretches — e.g. Riyad as-Salihin / book 12014). The
+  /// reader only shows printed-page numbers / "go to printed page" when this
+  /// is true; otherwise it navigates by sequence position + the فهرس.
+  final bool printReliable;
   final int pageCount;
   final int sectionCount;
 
@@ -105,6 +112,7 @@ class BookTextMeta {
     required this.sourceLabel,
     required this.shamelaUrl,
     required this.printMatches,
+    required this.printReliable,
     required this.pageCount,
     required this.sectionCount,
   });

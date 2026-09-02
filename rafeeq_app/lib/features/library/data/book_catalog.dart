@@ -137,7 +137,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/riyad_as_salihin.json',
       fileName: 'riyad_as_salihin_text.json',
-      approxSizeBytes: 0, // set from the real built file — see build_book_text.py
+      approxSizeBytes: 1840046, // built by scripts/build_book_text.py
       sourceLabel: 'المكتبة الشاملة — رياض الصالحين، تحقيق شعيب الأرنؤوط، '
           'مؤسسة الرسالة، بيروت، الطبعة الثالثة ١٤١٩هـ/١٩٩٨م',
     ),
@@ -164,7 +164,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/mukhtasar_minhaj_al_qasidin.json',
       fileName: 'mukhtasar_minhaj_al_qasidin_text.json',
-      approxSizeBytes: 0,
+      approxSizeBytes: 1214930,  // built by scripts/build_book_text.py
       sourceLabel: 'المكتبة الشاملة — مختصر منهاج القاصدين، تقديم محمد أحمد '
           'دهمان، مكتبة دار البيان، دمشق، ١٣٩٨هـ/١٩٧٨م',
     ),
@@ -187,7 +187,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_fawaid.json',
       fileName: 'al_fawaid_text.json',
-      approxSizeBytes: 0,
+      approxSizeBytes: 738171,  // built by scripts/build_book_text.py
       sourceLabel: 'المكتبة الشاملة — الفوائد لابن القيم، دار الكتب العلمية، '
           'بيروت، الطبعة الثانية ١٣٩٣هـ/١٩٧٣م',
     ),
@@ -213,7 +213,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sayd_al_khatir.json',
       fileName: 'sayd_al_khatir_text.json',
-      approxSizeBytes: 0,
+      approxSizeBytes: 1559023,  // built by scripts/build_book_text.py
       sourceLabel: 'المكتبة الشاملة — صيد الخاطر، بعناية حسن المساحي سويدان، '
           'دار القلم، دمشق، الطبعة الأولى ١٤٢٥هـ/٢٠٠٤م',
     ),
@@ -242,7 +242,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ubudiyyah.json',
       fileName: 'al_ubudiyyah_text.json',
-      approxSizeBytes: 0,
+      approxSizeBytes: 238715,  // built by scripts/build_book_text.py
       sourceLabel: 'المكتبة الشاملة — العبودية لابن تيمية، تحقيق محمد زهير '
           'الشاويش، المكتب الإسلامي، بيروت، الطبعة السابعة ١٤٢٦هـ/٢٠٠٥م',
     ),

@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 21:02 — IN PROGRESS — resume here**
+**2026-09-02 21:27 — IN PROGRESS — resume here**
 
-build_book_text.py: switched from per-page curl.exe spawn to one keep-alive https.client conn (unverified ctx — read-only public scrape, msys python has no CA bundle). ~3x faster (al_ubudiyyah 96s->32s, identical output). Delay 0.4->0.15s. Full 5-book run now ~12min.
+P2-4b: all 5 Shamela text editions built (riyad 810p/387 sec, mukhtasar 408/226, al_fawaid 209/105, sayd_al_khatir 893/394, al_ubudiyyah 109/107; ~5.6MB total; 0 empty pages; clean text no HTML leak). printReliable=false for riyad (pageNum drops ~100 four times) -> reader navigates by seq+فهرس; true for the other 4. Real sizes in catalog. +printReliable in model/reader/builder. finalize_book_text.py + upload_book_text.py added. analyze clean.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

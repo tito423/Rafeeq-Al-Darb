@@ -283,6 +283,11 @@ def build_book(book_id, shamela_id, source_label):
             "shamelaId": shamela_id,
             "shamelaUrl": f"https://shamela.ws/book/{shamela_id}",
             "printMatches": meta_card["print_matches"],
+            # Some Shamela books (e.g. 12014) carry the موافق للمطبوع flag but
+            # their `pageNum` values are still out of order in stretches — see
+            # `print_reliable()`. The reader only *shows* printed-page numbers
+            # and enables "go to printed page" when this is true.
+            "printReliable": print_reliable(pages, meta_card["print_matches"]),
             "editionCard": meta_card["card"],
             "pageCount": len(pages),
             "sectionCount": len(toc),
@@ -293,6 +298,20 @@ def build_book(book_id, shamela_id, source_label):
         "pages": pages,
     }
     return doc
+
+
+def print_reliable(pages, print_matches):
+    """True when the printed page numbers can be trusted (safe to show and to
+    navigate by). Requires the موافق-للمطبوع flag, near-perfect monotonicity,
+    AND no large backward jump — Riyad as-Salihin / book 12014 keeps the flag
+    yet its `pageNum` drops ~100 four times through the book."""
+    nums = [p["p"] for p in pages if p["p"]]
+    if not print_matches or len(nums) < 10:
+        return False
+    deltas = [b - a for a, b in zip(nums, nums[1:])]
+    ok = sum(1 for d in deltas if d >= 0)
+    min_delta = min(deltas)
+    return ok / len(deltas) >= 0.985 and min_delta >= -3
 
 
 def verify_and_print(doc):
@@ -306,6 +325,7 @@ def verify_and_print(doc):
     print("  ---- verification ----")
     print(f"  edition card:\n    " + doc["meta"]["editionCard"].replace("\n", "\n    "))
     print(f"  printMatches (ترقيم موافق للمطبوع): {doc['meta']['printMatches']}")
+    print(f"  printReliable (page numbers monotonic): {doc['meta']['printReliable']}")
     print(f"  pages: {len(pages)}   sections(فهرس): {len(toc)}   "
           f"paragraphs: {n_paras}   chars: {n_chars}")
     if printed_nums:

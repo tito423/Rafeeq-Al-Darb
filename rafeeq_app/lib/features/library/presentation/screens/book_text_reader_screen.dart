@@ -42,7 +42,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
 
   int _pageIndex = 0;
   double _fontScale = 1.0;
-  Set<int> _bookmarks = {}; // printed page numbers
+  Set<int> _bookmarks = {}; // page *indices* (stable even when print nums aren't)
 
   String get _kPage => 'booktext_${widget.book.id}_page';
   String get _kFont => 'booktext_${widget.book.id}_font';
@@ -65,6 +65,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
       final doc = await BookText.fromFile(widget.path);
       final prefs = await SharedPreferences.getInstance();
       final savedPage = prefs.getInt(_kPage) ?? 0;
+      if (!mounted) return;
       setState(() {
         _doc = doc;
         _pageIndex = savedPage.clamp(0, doc.pages.length - 1);
@@ -75,6 +76,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
             .toSet();
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _error = e);
     }
   }
@@ -103,10 +105,9 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   }
 
   void _toggleBookmark() {
-    final page = _doc?.pages[_pageIndex].printedPage;
-    if (page == null) return;
+    if (_doc == null) return;
     setState(() {
-      if (!_bookmarks.remove(page)) _bookmarks.add(page);
+      if (!_bookmarks.remove(_pageIndex)) _bookmarks.add(_pageIndex);
     });
     _persist();
   }
@@ -114,18 +115,28 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   Future<void> _openGotoDialog() async {
     final doc = _doc;
     if (doc == null) return;
+    final byPrinted = doc.meta.printReliable;
     final ctrl = TextEditingController(
-      text: '${doc.pages[_pageIndex].printedPage}',
+      text: byPrinted
+          ? '${doc.pages[_pageIndex].printedPage}'
+          : '${_pageIndex + 1}',
     );
-    final printed = await showDialog<int>(
+    final n = await showDialog<int>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('library.text_goto_page'.tr()),
+        title: Text(byPrinted
+            ? 'library.text_goto_page'.tr()
+            : 'library.text_goto_seq'.tr()),
         content: TextField(
           controller: ctrl,
           autofocus: true,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(prefixIcon: Icon(Icons.tag)),
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.tag),
+            helperText: byPrinted
+                ? null
+                : '1 – ${doc.pages.length}',
+          ),
           onSubmitted: (v) => Navigator.pop(ctx, int.tryParse(v.trim())),
         ),
         actions: [
@@ -140,15 +151,26 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
         ],
       ),
     );
-    if (printed == null) return;
-    // Nearest page whose printed number is >= the requested one.
+    if (n == null) return;
+
+    if (!byPrinted) {
+      _goToPageIndex(n - 1);
+      return;
+    }
+    // Reading order is Shamela's page order; when printed numbers ARE reliable
+    // find an exact match, else the closest.
     var target = 0;
+    var bestDiff = 1 << 30;
     for (var i = 0; i < doc.pages.length; i++) {
-      if (doc.pages[i].printedPage >= printed) {
+      final diff = (doc.pages[i].printedPage - n).abs();
+      if (diff == 0) {
         target = i;
         break;
       }
-      target = i;
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        target = i;
+      }
     }
     _goToPageIndex(target);
   }
@@ -180,7 +202,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
             const SizedBox(height: 10),
             Text(te.sourceLabel, style: const TextStyle(height: 1.7)),
             const SizedBox(height: 8),
-            if (_doc?.meta.printMatches ?? false)
+            if (_doc?.meta.printReliable ?? false)
               Text('library.text_print_matches'.tr(),
                   style: TextStyle(
                       color: Theme.of(ctx).colorScheme.onSurfaceVariant,
@@ -265,7 +287,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
     final scheme = Theme.of(context).colorScheme;
     final page = doc.pages[_pageIndex];
     final section = doc.sectionTitleForPageIndex(_pageIndex);
-    final bookmarked = _bookmarks.contains(page.printedPage);
+    final bookmarked = _bookmarks.contains(_pageIndex);
 
     return Column(
       children: [
@@ -287,7 +309,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                         fontSize: 13),
                   ),
                 ),
-                if (doc.meta.printMatches)
+                if (doc.meta.printReliable)
                   Text(
                     '${'library.text_page'.tr()} ${page.printedPage}',
                     style: TextStyle(
@@ -557,6 +579,47 @@ class _IndexDrawerState extends State<_IndexDrawer> {
                 onChanged: (v) => setState(() => _filter = v),
               ),
             ),
+            if (widget.bookmarks.isNotEmpty && _filter.trim().isEmpty) ...[
+              const Divider(height: 1),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 8, 14, 4),
+                child: Row(
+                  children: [
+                    Icon(Icons.bookmark, size: 15, color: AppColors.gold),
+                    const SizedBox(width: 6),
+                    Text('quran.bookmarks'.tr(),
+                        style: TextStyle(
+                            fontSize: 12, color: scheme.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 96),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Wrap(
+                    spacing: 6,
+                    runSpacing: 2,
+                    children: [
+                      for (final idx in (widget.bookmarks.toList()..sort()))
+                        if (idx >= 0 && idx < widget.doc.pages.length)
+                          ActionChip(
+                            visualDensity: VisualDensity.compact,
+                            label: Text(
+                              widget.doc.meta.printReliable
+                                  ? '${'library.text_page'.tr()} '
+                                      '${widget.doc.pages[idx].printedPage}'
+                                  : '${idx + 1}',
+                              style: const TextStyle(fontSize: 11),
+                            ),
+                            onPressed: () => widget.onPick(idx),
+                          ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+            ],
             const Divider(height: 1),
             Expanded(
               child: sections.isEmpty
@@ -583,7 +646,9 @@ class _IndexDrawerState extends State<_IndexDrawer> {
                             ),
                           ),
                           trailing: Text(
-                            '${'library.text_page'.tr()} ${s.page}',
+                            widget.doc.meta.printReliable
+                                ? '${'library.text_page'.tr()} ${s.page}'
+                                : '${s.pageIndex + 1}',
                             style: TextStyle(
                                 fontSize: 11, color: scheme.onSurfaceVariant),
                           ),
