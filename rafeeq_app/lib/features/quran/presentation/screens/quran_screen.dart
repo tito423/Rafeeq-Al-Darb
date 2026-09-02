@@ -41,6 +41,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   int? _highlightSurah;
   int? _highlightAyah;
 
+  /// Text-mode font scale (1.0 = the page's own base size). Persisted like
+  /// `book_text_reader_screen.dart`'s A+/A− — a plain `SharedPreferences`
+  /// double, not a provider, since only this screen reads it.
+  double _fontScale = 1.0;
+  static const _kFontScale = 'quran_text_font_scale_v1';
+
   Future<void> _persistPage() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('quran_last_page', _current);
@@ -55,6 +61,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final prefs = await SharedPreferences.getInstance();
     final p = prefs.getInt('quran_last_page') ?? 1;
     final modeName = prefs.getString('quran_reader_mode');
+    final fontScale = prefs.getDouble(_kFontScale);
     if (!mounted) return;
     setState(() {
       if (p >= 1 && p <= _totalPages) {
@@ -65,7 +72,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         (m) => m.name == modeName,
         orElse: () => MushafMode.text,
       );
+      if (fontScale != null) _fontScale = fontScale;
     });
+  }
+
+  void _changeFontScale(double delta) {
+    setState(() => _fontScale = (_fontScale + delta).clamp(0.75, 1.8));
+    SharedPreferences.getInstance()
+        .then((p) => p.setDouble(_kFontScale, _fontScale));
   }
 
   @override
@@ -137,6 +151,18 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         title: Text('nav.quran'.tr()),
         actions: [
           if (mushaf.hasValue) ...[
+            if (_mode == MushafMode.text) ...[
+              IconButton(
+                tooltip: 'quran.font_smaller'.tr(),
+                icon: const Icon(Icons.text_decrease),
+                onPressed: () => _changeFontScale(-0.1),
+              ),
+              IconButton(
+                tooltip: 'quran.font_larger'.tr(),
+                icon: const Icon(Icons.text_increase),
+                onPressed: () => _changeFontScale(0.1),
+              ),
+            ],
             IconButton(
               tooltip: 'search.title'.tr(),
               icon: const Icon(Icons.travel_explore_outlined),
@@ -277,6 +303,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   : (int.parse(headerId),
                       data.surahNameAr(int.parse(headerId))),
               onAyahTap: (a) => _openSciences(a, data),
+              fontScale: _fontScale,
             );
           },
         );

@@ -84,7 +84,9 @@
     "note_delete": "حذف الملاحظة",
     "share_failed": "تعذّرت المشاركة",
     "tafseer_compare_view": "مقارنة جنبًا لجنب",
-    "tafseer_list_view": "عرض القائمة"
+    "tafseer_list_view": "عرض القائمة",
+    "font_smaller": "تصغير الخط",
+    "font_larger": "تكبير الخط"
   },
   "library": {
     "title": "المكتبة",
@@ -287,7 +289,7 @@
     "quran_basics": "مقدمة في القرآن"
   },
   "search": {
-    "title": "البحث الثيمي",
+    "title": "البحث الموضوعي",
     "themes": "الثيمات",
     "keyword": "بحث بالكلمة",
     "theme_hint": "اختر موضوعاً لتظهر لك آياته",

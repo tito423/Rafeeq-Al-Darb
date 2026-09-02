@@ -84,7 +84,9 @@
     "note_delete": "Delete note",
     "share_failed": "Couldn't share",
     "tafseer_compare_view": "Compare side by side",
-    "tafseer_list_view": "List view"
+    "tafseer_list_view": "List view",
+    "font_smaller": "Smaller text",
+    "font_larger": "Larger text"
   },
   "library": {
     "title": "Library",
