@@ -11,8 +11,13 @@ and were wired to nothing. Work **one stage at a time**.
 
 ## Rules of engagement
 
+0. **Checkpoint constantly.** Quota runs out mid-task on this project. After
+   every meaningful edit run `.\cp.bat "what you just did"` — it writes a
+   work-in-progress note into `HANDOVER.md` and commits, in one step. When a
+   stage is finished use `.\cp.bat "..." -Done`. A session that dies right
+   after a checkpoint costs nothing; one that dies an hour later costs an hour.
 1. **One stage at a time.** Finish it, verify it against its acceptance
-   criteria, commit it, update `HANDOVER.md` (stamp + relevant section) and
+   criteria, checkpoint it as done, update `HANDOVER.md` (relevant section) and
    `RAFEEQ_PIPELINE.md`, then start the next.
 2. **Acceptance criteria are not optional.** A stage is done when its criteria
    are demonstrably met on a running device — not when the code looks right.
