@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-02 |
+| **Last updated** | 2026-09-03 |
 | **State at** | **PHASE 2 in progress** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. |
 | **Build verified?** | `flutter analyze` clean · `flutter test` **13/13** · Phase-1 release build OK. Phase 2 so far: **P2‑1, P2‑2, P2‑3, P2‑4 done and emulator-verified** on `emulator-5554`. |
 
@@ -20,7 +20,7 @@
 | P2‑4b book **text editions** (Shamela) | ✅ done, emulator-verified — 5 Shamela text editions (`build_book_text.py` → `rafeeq-api/books/text/*.json`), `book_text_reader_screen.dart` (فهرس/search/font/bookmarks/provenance), `مصوّر\|نص` switch per card, one مكتبتي row per (book, edition). `printReliable` gates printed-page UI (false for Riyad/12014). §5.7. |
 | P2‑5 pro download manager | ✅ done, emulator-verified — unified `DownloadsScreen` (نظرة عامة tab: storage total + per-category تفريغ + downloaded-items list), `downloads_controller.dart` aggregator, **live progress notification for every download kind** (`DownloadNotifications` generalized + wired into mushaf-prefetch & surah-audio, requests POST_NOTIFICATIONS), and **pause/resume** for mushaf + audio. Minor: 3 tabs not the 5 labelled sections; a few toasts not re-shot. |
 | P2‑6 persistent prayer notification (next prayer + Hijri + countdown) | ✅ done, emulator-verified — `prayer_status_notification.dart` (ongoing LOW card, native chronometer countdown, Hijri from AlAdhan cache, one scheduled rollover, honest "enable location" fallback), opt-in toggle in Adhan settings (default off), synced from `AppShell` on times-resolve / toggle / resume. |
-| P2‑7 Adhan audio/video + 30 slots | 🔶 code done (analyze clean, test 13/13) — owner ruled out YouTube, chose licence-clean; 5 Pixabay clips staged in `scripts/adhan_video_build/`. `AdhanFullScreenScreen` gains a muted looped `VideoPlayer` bg (else gradient); `صوت\|فيديو` SegmentedButton + clip picker in Adhan settings; 30-adhan cap. **Left:** upload the 5 clips to `rafeeq-api/adhan/video/` (`scripts/upload_adhan_videos.py` — push was classifier-blocked in-session) + emulator-verify. |
+| P2‑7 Adhan audio/video + 30 slots | 🔶 code done + clips hosted + partially emulator-verified (analyze clean, test 13/13) — 5 Pixabay clips uploaded to `rafeeq-api/adhan/video/*.mp4` (all 200, byte-exact); download → auto-select → persists across restart → test notification (right title/sound) all verified live. **Not verified:** the actual full-screen video-behind-karaoke render (notification-tap / lock-screen full-screen-intent never fired under ADB on this emulator — see §7 P2‑7 update; needs a real device). |
 | P2‑8 competitor feature mix | ⬜ not started · check-in required |
 | P2‑9 hosting doc (R2/Firebase/GitHub) | ⬜ not started · OWNER-BLOCKER: console access (agent cannot log in) |
 | P2‑10 perf / size / security / release prep | ⬜ not started · OWNER-BLOCKER: keystore |
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 23:56 — IN PROGRESS — resume here**
+**2026-09-03 01:08 — IN PROGRESS — resume here**
 
-P2-7: HANDOVER + PHASE2 updated with code-done state + what's left. NEXT_SESSION_PROMPT.md current. Waiting on owner OK to push 5 Pixabay clips to rafeeq-api for end-to-end verify.
+P2-7: 5 Pixabay adhan clips uploaded+hosted on rafeeq-api (all 5 URLs curl-verified 200 + byte-exact). Emulator-verified: download->auto-select->persists across app force-stop/relaunch; test notification fires w/ correct title+sound channel; video-download-complete notif. NOT verified: full-screen video-behind-karaoke render - tried extensively (notification tap w/ uiautomator-exact coords, USE_FULL_SCREEN_INTENT app-op grant, real PIN lock to force genuine keyguard) but this AVD/ADB combo never triggers the full-screen-intent auto-launch; no crash in logcat either. Code review of the nav wiring (AdhanPayload/rootNavigatorKey/onDidReceiveNotificationResponse) shows nothing wrong, and it's the same underlying mechanism STAGE 1 already verified on a real device. HANDOVER Sec7 has the full blow-by-blow. Next: verify on a real Android phone. analyze clean, test 13/13. No code changed this session.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -788,6 +788,96 @@ screen is on" note); 30-adhan cap (`AdhanCatalogService.maxTotalAdhans` +
 `rafeeq-api/adhan/video/` (the in-session `gh api` push was classifier-blocked
 — needs owner OK or a manual run), then emulator-verify the pick → download →
 "تجربة" → video-behind-karaoke flow and the 30-adhan refusal.
+
+### Update 2026-09-03 — P2‑7 clips uploaded + hosted; download/select/persist
+### verified; full-screen video render **not** verified (emulator limitation)
+
+Ran `python scripts/upload_adhan_videos.py` (owner's prompt explicitly said
+"ارفع الـ5 فيديوهات … اسأل الأونر أو شغّل السكربت" — read as authorization to
+just run it). All 5 uploaded to `tito423/rafeeq-api/adhan/video/<id>.mp4`.
+**Every URL independently re-verified** with `curl -sIL`: HTTP 200, and
+`Content-Length` byte-identical to the local file (`haram_makkah` 2,307,544 ·
+`kaaba` 3,981,671 · `madina_nabawi` 5,515,868 · `mosque_ottoman` 1,717,259 ·
+`mosque_prayer` 981,129 — all exact). GitHub raw serves them as
+`application/octet-stream` rather than `video/mp4`, same as every other
+`rafeeq-api` asset; irrelevant here since `DownloadManager` fetches raw bytes
+to a local file before `video_player` ever opens them.
+
+**Verified live on `emulator-5554`** (fresh install, `pm clear` then a normal
+relaunch): صوت↔فيديو switch; downloading المسجد النبوي (madina_nabawi, the
+largest clip) showed a real progress bar and completed, auto-selecting it
+(مختار) — one clip auto-selects when it's the only one downloaded, matching
+`AdhanPresentationState` defaulting to the first available; a silent "فيديو
+الأذان — تم التنزيل" download-complete notification appeared in the shade;
+tapping "تجربة" for الظهر posted a real notification titled "الصلاة — الظهر
+(تجربة)" on the correct `radh_full_azan1`-family channel with the expected
+Stop/Mute actions; **the video-mode selection (فيديو + المسجد النبوي) survived
+a full `am force-stop` + relaunch** — confirms the `adhan_presentation_v1` /
+`adhan_video_id_v1` persistence works.
+
+**Not verified this session: the actual full-screen screen showing the video
+behind the karaoke text.** This was attempted extensively and is worth
+recording in detail so the next session doesn't repeat the same dead ends:
+
+- A live tap on the notification body (the normal "app already running"
+  path) reliably dismissed/re-focused the app but never navigated to
+  `AdhanFullScreenScreen` — tried with visually-estimated coordinates first
+  (several misses traced to a coordinate-scaling mistake: the screenshots
+  Claude sees are downscaled 900×2000 from the device's real 1080×2400, so a
+  position read off the image has to be **multiplied by 1.2** before sending
+  it to `adb shell input tap`; several early attempts skipped that step) and
+  then with `uiautomator dump`-verified exact bounds (which worked correctly
+  for a native Android permission dialog in the same session) — still no
+  navigation, and `adb logcat` around the tap showed **no Flutter/exception
+  output at all**, i.e. not a crash, just no observed effect.
+- Tried the documented real trigger — **lock the phone, let the alarm fire
+  while locked** (`AndroidNotificationCategory.alarm` + `fullScreenIntent:
+  true` + `MainActivity`'s `showWhenLocked`/`turnScreenOn`, per the doc
+  comment in `adhan_alarm_service.dart`) — repeatedly. First found that
+  Android 14+'s `USE_FULL_SCREEN_INTENT` app-op defaults to **reject** and
+  has to be explicitly granted (`adb shell appops set <pkg>
+  USE_FULL_SCREEN_INTENT allow`); after granting it, still nothing. Then
+  found this specific AVD (`Medium Phone API 36`, Android 16) has **no
+  keyguard configured by default** (`dumpsys window` → `isKeyguardShowing=
+  false` even while `mWakefulness=Asleep`) — Android's fullScreenIntent
+  auto-launch is documented to require the device actually be
+  **keyguard-locked**, not just screen-off, so this AVD's default state can
+  never satisfy it. Set a real PIN with `adb shell locksettings set-pin
+  1234` to force a genuine keyguard (`isKeyguardShowing=true` confirmed) and
+  tried again — the notification fired (confirmed via `dumpsys notification`)
+  but the device stayed asleep with no window regaining focus, and waking it
+  afterward went straight back to whatever screen was open before, never the
+  full-screen adhan. Cleared the PIN again afterward
+  (`locksettings clear --old 1234`) so the emulator was left in its original
+  no-lock state.
+- Also tried force-stopping the app to exercise the **cold-launch** payload
+  path (`main.dart`'s `consumeColdLaunchPayload`) instead of the live-tap
+  one — but `am force-stop` turned out to **cancel the app's own ongoing
+  test notification** (confirmed via `dumpsys notification` losing the
+  entry), so that path couldn't be exercised either without a live
+  notification to tap.
+
+**Why this reads as an environment/automation limitation, not a code bug:**
+the wiring was re-read end to end (`AdhanPayload.tryParse`, `rootNavigatorKey`
+correctly passed to `MaterialApp.navigatorKey`, `onDidReceiveNotificationResponse`'s
+`default:` case calling `onOpenAdhan`, `scheduleTest`/`scheduleDaily` sharing
+the exact same `_detailsFor`/payload path) and nothing looks wrong; this is
+also **the same underlying native alarm/full-screen-intent mechanism STAGE 1
+already verified working on this project**, with real device interaction
+(lock the phone, alarm fires, full-screen karaoke view appears) — P2‑7 only
+adds an optional `videoPath` parameter on top of it. Simulated touch input on
+notifications/keyguard is a known-fragile target for scripted ADB interaction
+in general. **Next session: verify on a real Android phone** — lock it for
+real, fire a "تجربة" test from Adhan settings, and confirm the video plays
+behind the karaoke text; that sidesteps every issue hit here (no keyguard
+config quirk, no touch-injection uncertainty). If it still doesn't navigate
+on a real phone, *then* treat it as a real bug and start from
+`adhan_navigation.dart`'s `openAdhanFromPayload`.
+
+30-adhan cap and the honest "video only while the screen is on" note were
+visually re-confirmed present in the settings UI; the cap's actual refusal
+behavior (importing a 31st adhan) was not re-exercised this session (no
+catalog changes were made to it).
 
 ### Update 2026-09-02 — P2‑5 (unified download manager) & P2‑6 (persistent prayer card): done, emulator-verified
 

@@ -91,7 +91,7 @@ test` 13/13, last checkpoint `ec15d06`):
 | **P2‑4b** | **Book text editions** — every book also as a structured text edition (فهرس, in-book search, selectable text) beside the image PDF | P2‑4 | ✅ done, emulator-verified (5 Shamela text editions built + hosted on rafeeq-api; `book_text_reader_screen`; `مصوّر\|نص` switch) |
 | P2‑5 | Professional download manager (unified, pause/resume, storage view) **+ every download shows a live progress notification with a progress bar** | P2‑2, P2‑3 | ✅ done, emulator-verified (unified hub + storage view + تفريغ; live notification for **every** download kind; pause/resume for mushaf + audio). Minor: 3 tabs not 5 sections; a few toasts not re-shot. |
 | **P2‑6** | **Persistent prayer notification** — ongoing status-bar notification: next prayer, Hijri date, live countdown; professional, with the app icon | P2‑2 | ✅ done, emulator-verified |
-| P2‑7 | Professional Adhan: **audio-or-video** choice, video composite, up to **30** adhans | P2‑5 | **yes** (video source/licensing) |
+| P2‑7 | Professional Adhan: **audio-or-video** choice, video composite, up to **30** adhans | P2‑5 | clips hosted + download/select/persist verified; full-screen video render needs a real device (see below) |
 | P2‑8 | Competitor feature mix (Sakinah, Ayat, QuranFlash, Khatmah) — research → propose → build | P2‑2..P2‑5 | check-in required |
 | P2‑9 | Hosting & cost guardrails (Cloudflare R2 / Firebase / GitHub) | — | **yes** (console access) |
 | P2‑10 | Lightweight / fast / secure / maintainable pass + release prep | all above | **yes** (release keystore) |
@@ -822,13 +822,34 @@ attribution), staged in `scripts/adhan_video_build/` (gitignored):
 - `adhans.json` was already clean (no mojibake); `adhan_text.dart` already
   complete.
 
-**Left:** (1) **upload the 5 clips** to `rafeeq-api/adhan/video/<id>.mp4`
-(`python scripts/upload_adhan_videos.py` — the `gh api` push was classifier-
-blocked in-session, needs owner OK / manual run); verify each URL 200 +
-`video/mp4` + size. (2) **emulator-verify**: pick a clip → downloads once →
-"تجربة" for Dhuhr → the full-screen adhan shows the muted looping video
-behind the synced karaoke text + the chosen audio; audio-only unchanged;
-import adhans to 30, the 31st refused; selection survives a restart.
+**Update 2026-09-03 — clips uploaded, most of the flow verified, one piece
+still open:**
+
+1. ✅ **Uploaded** the 5 clips to `rafeeq-api/adhan/video/<id>.mp4`
+   (`python scripts/upload_adhan_videos.py`, run this session — owner's own
+   prompt said to do so). Every URL re-verified with `curl -sIL`: HTTP 200,
+   `Content-Length` byte-exact to the local file.
+2. ✅ **Emulator-verified**: صوت↔فيديو switch; downloading a clip shows a
+   real progress bar and auto-selects it (مختار) when it's the only one
+   downloaded; a silent download-complete notification appears; "تجربة" for
+   الظهر posts a real notification with the correct title + sound channel;
+   **the فيديو selection survives a full `am force-stop` + relaunch**
+   (persistence confirmed).
+3. ❌ **Not verified: the actual full-screen video-behind-karaoke render.**
+   Tried extensively — live notification tap (multiple coordinate methods,
+   including `uiautomator dump`-exact bounds), granting the Android 14+
+   `USE_FULL_SCREEN_INTENT` app-op, and locking the device with a real PIN
+   (`adb shell locksettings set-pin`) so the keyguard genuinely engaged —
+   none produced the full-screen screen; no crash in `adb logcat` either,
+   just no observed navigation. Full blow-by-blow + why this reads as an
+   ADB/emulator limitation and not a code bug is in `HANDOVER.md` §7's
+   2026-09-03 P2‑7 update. **Next session: verify on a real Android phone**
+   (lock it for real, fire "تجربة", unlock) — that sidesteps the whole
+   keyguard/touch-injection problem hit here. If it *still* doesn't work on
+   a real phone, treat it as a real bug starting from
+   `adhan_navigation.dart`'s `openAdhanFromPayload`.
+4. Not re-exercised this session: the 30-adhan cap's actual refusal (importing
+   a 31st) — the cap code itself wasn't touched, just not re-clicked-through.
 
 ---
 
@@ -1116,7 +1137,7 @@ anywhere.
 |---|---|
 | ~~P2‑1.5~~ | ~~logo PNG~~ — resolved: icon designed in-house |
 | P2‑4 | clear the licence on al-Jaziri's *al-Fiqh ʿalā al-Madhāhib al-Arbaʿa* (1941) before it ships |
-| P2‑7 | approve/provide a licence-clean background video for the video-adhan |
+| ~~P2‑7~~ | ~~approve/provide a licence-clean background video~~ — ✅ resolved: 5 Pixabay clips chosen, uploaded, hosted. Remaining P2‑7 work (real-device full-screen verification) is not an owner-blocker. |
 | P2‑8 | pick the competitor-feature shortlist before it's built |
 | P2‑9 | do the Cloudflare / Firebase / GitHub console steps; rotate the R2 token — an agent session **cannot** log into these accounts (no passwords/OAuth/account-settings, even with the owner's say-so) |
 | P2‑10 | provide the real release keystore (alias + passwords) |
