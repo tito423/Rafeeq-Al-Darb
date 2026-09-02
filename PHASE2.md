@@ -178,6 +178,42 @@ re-renders correctly, no unreadable text, no white flash in RGB; kill & relaunch
 → same theme; RGB animates smoothly and freezes when motion effects are off;
 "system" follows the OS light/dark toggle.
 
+### ✅ P2‑2 DONE (2026-09-02, emulator-verified)
+
+Built slightly differently from the sketch above — simpler, same result:
+
+- **`lib/core/theme/theme_controller.dart`** — `enum ThemeVariant {system,light,dark,rgb}`
+  (carries its own `labelKey` + `icon`), `ThemeController` persists
+  `theme_variant_v2` and migrates `theme_mode_v1` once. Also
+  `MotionEffectsController` → `motion_effects_v1` (default on). No separate
+  registry file — the enum + the `switch` in `RafeeqApp` IS the seam; a 5th
+  theme is one enum case + one `AppTheme.xxx()` + one `switch` arm.
+- **`lib/core/theme/app_theme.dart`** — added `AppTheme.rgb()`: dark, electric-
+  teal accent (`#22E0C6`), **transparent scaffold**, ~90%-opaque cards/sheets,
+  dark-scrim app bar (new optional `appBarColor` param on `_build`).
+- **`lib/core/theme/rgb_backdrop.dart`** — `RgbScaffoldBackground` (a
+  `ConsumerWidget`, reads `motionEffectsProvider` + `MediaQuery.maybeDisableAnimationsOf`)
+  wraps the navigator via `MaterialApp.builder` **only** when variant == rgb.
+  `_RgbPainter`: near-black base + 3 drifting radial colour fields (teal/violet/
+  gold) on Lissajous paths + a faint **rub‑el‑hizb 8‑point-star lattice**
+  (`Path.combine` of two squares) slowly counter-rotating + a top/bottom
+  vignette for app-bar legibility. `RepaintBoundary`, `shouldRepaint` gated on
+  `t`. Motion off (toggle or OS reduce-motion) → still frame, controller stopped.
+- **`lib/app/rafeeq_app.dart`** — removed `ThemeModeNotifier`; `RafeeqApp` now
+  resolves `ThemeVariant` → `(light, dark, mode)` + conditional `builder`.
+- **`settings_screen.dart`** — 4-segment `SegmentedButton<ThemeVariant>`
+  (fits, no overflow); the motion-effects `SwitchListTile` shows only for RGB.
+- Translations: `settings.rgb` / `settings.motion_effects` / `.._desc` added to
+  ar + en (parity 224/224).
+
+Verified on `emulator-5554`: dark (migrated default), **RGB** (animated
+lattice + aurora, neon accent, all text readable over the motion — Home /
+Quran text / Settings spot-checked), light; theme **persisted** across
+`am force-stop` (RGB survived once given ~5 s to flush the async write); motion
+toggle present & persisted; `flutter analyze` clean, `flutter test` 11/11.
+Not separately shot: "system" following a live OS light/dark flip (it only
+picks light/dark, both verified), and every last sheet under RGB.
+
 **Checkpoint** each sub-step; `-Done` when the acceptance list passes.
 
 ---

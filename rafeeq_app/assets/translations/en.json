@@ -179,7 +179,10 @@
     "about_desc": "Rafeeq Al-Darb — a comprehensive Islamic app with real content from trusted sources",
     "guest_mode": "Guest mode",
     "guest_active": "Current mode: Guest (fully offline)",
-    "credits": "Sources & credits"
+    "credits": "Sources & credits",
+    "rgb": "RGB",
+    "motion_effects": "Motion effects",
+    "motion_effects_desc": "Animate the background in the RGB theme"
   },
   "downloads": {
     "title": "Downloads",

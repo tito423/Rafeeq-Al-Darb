@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/theme/app_theme.dart';
+import '../core/theme/rgb_backdrop.dart';
+import '../core/theme/theme_controller.dart';
 import 'navigation.dart';
 import 'shell/app_shell.dart';
 
@@ -17,7 +19,17 @@ class RafeeqApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
+    final variant = ref.watch(themeControllerProvider);
+
+    // Resolve the active variant into MaterialApp's theme slots. Only `rgb`
+    // needs the animated backdrop; the other three are plain.
+    final (ThemeData light, ThemeData dark, ThemeMode mode) = switch (variant) {
+      ThemeVariant.system => (AppTheme.light(), AppTheme.dark(), ThemeMode.system),
+      ThemeVariant.light => (AppTheme.light(), AppTheme.dark(), ThemeMode.light),
+      ThemeVariant.dark => (AppTheme.light(), AppTheme.dark(), ThemeMode.dark),
+      ThemeVariant.rgb => (AppTheme.rgb(), AppTheme.rgb(), ThemeMode.dark),
+    };
+
     return MaterialApp(
       navigatorKey: rootNavigatorKey,
       title: 'app.name'.tr(),
@@ -25,43 +37,13 @@ class RafeeqApp extends ConsumerWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: themeMode,
+      theme: light,
+      darkTheme: dark,
+      themeMode: mode,
+      builder: variant == ThemeVariant.rgb
+          ? (context, child) => RgbScaffoldBackground(child: child!)
+          : null,
       home: const AppShell(),
     );
   }
 }
-
-/// Theme mode state (persisted).
-class ThemeModeNotifier extends StateNotifier<ThemeMode> {
-  ThemeModeNotifier(this._prefs) : super(ThemeMode.dark) {
-    _load();
-  }
-
-  final SharedPreferences _prefs;
-  static const _key = 'theme_mode_v1';
-
-  void _load() {
-    switch (_prefs.getString(_key)) {
-      case 'light':
-        state = ThemeMode.light;
-        break;
-      case 'system':
-        state = ThemeMode.system;
-        break;
-      default:
-        state = ThemeMode.dark;
-    }
-  }
-
-  Future<void> set(ThemeMode mode) async {
-    state = mode;
-    await _prefs.setString(_key, mode.name);
-  }
-}
-
-final themeModeProvider =
-    StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
-  return ThemeModeNotifier(ref.watch(sharedPrefsProvider));
-});

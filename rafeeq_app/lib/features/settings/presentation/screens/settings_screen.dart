@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../app/rafeeq_app.dart';
+import '../../../../core/theme/theme_controller.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 
@@ -12,7 +12,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
+    final themeVariant = ref.watch(themeControllerProvider);
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -47,29 +47,35 @@ class SettingsScreen extends ConsumerWidget {
 
           // Theme
           _SectionLabel('settings.theme'.tr()),
-          SegmentedButton<ThemeMode>(
+          SegmentedButton<ThemeVariant>(
+            showSelectedIcon: false,
             segments: [
-              ButtonSegment(
-                value: ThemeMode.light,
-                label: Text('settings.light'.tr()),
-                icon: const Icon(Icons.light_mode),
-              ),
-              ButtonSegment(
-                value: ThemeMode.dark,
-                label: Text('settings.dark'.tr()),
-                icon: const Icon(Icons.dark_mode),
-              ),
-              ButtonSegment(
-                value: ThemeMode.system,
-                label: Text('settings.system'.tr()),
-                icon: const Icon(Icons.settings_brightness),
-              ),
+              for (final v in ThemeVariant.values)
+                ButtonSegment(
+                  value: v,
+                  label: Text(v.labelKey.tr()),
+                  icon: Icon(v.icon, size: 18),
+                ),
             ],
-            selected: {themeMode},
+            selected: {themeVariant},
             onSelectionChanged: (sel) {
-              ref.read(themeModeProvider.notifier).set(sel.first);
+              ref.read(themeControllerProvider.notifier).set(sel.first);
             },
           ),
+          if (themeVariant == ThemeVariant.rgb) ...[
+            const SizedBox(height: 8),
+            Card(
+              child: SwitchListTile(
+                secondary: Icon(Icons.motion_photos_on_outlined,
+                    color: scheme.primary),
+                title: Text('settings.motion_effects'.tr()),
+                subtitle: Text('settings.motion_effects_desc'.tr()),
+                value: ref.watch(motionEffectsProvider),
+                onChanged: (v) =>
+                    ref.read(motionEffectsProvider.notifier).set(v),
+              ),
+            ),
+          ],
           const SizedBox(height: 24),
 
           // Adhan

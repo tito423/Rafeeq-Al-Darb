@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 17:53 — IN PROGRESS — resume here**
+**2026-09-02 18:06 — IN PROGRESS — resume here**
 
-P2-1.5 DONE: designed the app launcher icon in-house (rub-el-hizb guiding star + path, teal/gold). Source SVGs in assets/icon/src/ + regen README. Adaptive fg/bg via flutter_launcher_icons (anydpi-v26). Deleted old app_icon.jpg, removed assets/icon/ from Flutter bundle (~0.9MB lighter install). Emulator-verified in app drawer. P2-1 now 100% complete. analyze clean.
+P2-2 DONE: 4-theme system (system/light/dark/RGB). New theme_controller.dart (ThemeVariant enum, persisted theme_variant_v2 + theme_mode_v1 migration, MotionEffectsController), AppTheme.rgb() (transparent scaffold, electric-teal accent), rgb_backdrop.dart (animated rub-el-hizb star lattice + drifting teal/violet/gold aurora, respects reduce-motion + toggle). rafeeq_app.dart rewired; settings 4-segment selector + motion toggle. +3 translation keys (ar/en parity 224). Emulator-verified all 4, RGB persisted across force-stop. analyze + test 11/11 clean.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -92,7 +92,7 @@ from that clean base. **Do not reintroduce any of the above.**
 | 3 | **Never claim something is verified when it is not.** Say plainly what you tested and what you did not. |
 | 4 | **Offline-first.** Downloaded content must work with the network off. |
 | 5 | **Don't commit secrets.** `.env`, keystores, `google-services.json`, `serviceAccountKey.json` are gitignored. Keep it that way. |
-| 6 | **Keep `ar` / `en` translation keys at exact parity.** Currently 168/168. Adding a key to one locale without the other is a bug. |
+| 6 | **Keep translation keys at exact parity across every locale.** Currently `ar` / `en` at 224/224 (P2‑3 adds `es` / `ru` / `pt`). Adding a key to one locale without the others is a bug — `test/translation_parity_test.dart` (added in P2‑3) guards this. |
 
 ---
 
@@ -216,6 +216,20 @@ project's own bucket and build with:
 ```
 --dart-define=RAFEEQ_MUSHAF_BASE=https://<bucket>/mushafs
 ```
+
+### 5.6 Theme system — four variants, one seam (P2‑2)
+
+`enum ThemeVariant { system, light, dark, rgb }` in
+`lib/core/theme/theme_controller.dart` is the single source of truth
+(persisted `theme_variant_v2`). `RafeeqApp` resolves it to MaterialApp's
+`theme`/`darkTheme`/`themeMode`; **only `rgb`** also gets a global
+`builder` that wraps the navigator in `RgbScaffoldBackground` (the animated
+Islamic-geometry backdrop). `AppTheme.rgb()`'s scaffold is **transparent on
+purpose** so the backdrop shows through every screen — do not "fix" that to
+an opaque colour. Adding a 5th theme = one enum case + one `AppTheme.xxx()` +
+one arm in `RafeeqApp`'s `switch`; no screen changes. The RGB backdrop
+animation stops itself when the OS "reduce motion" setting is on or the
+`settings.motion_effects` toggle is off.
 
 ---
 

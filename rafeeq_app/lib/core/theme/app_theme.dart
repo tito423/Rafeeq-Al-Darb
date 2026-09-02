@@ -35,6 +35,25 @@ class AppTheme {
         onPrimaryContainer: const Color(0xFF0B3B2E),
       );
 
+  /// P2‑2: dark + electric-teal accent. The scaffold is transparent so the
+  /// animated `RgbBackdrop` (painted by `RafeeqApp`'s builder) shows through
+  /// every screen; cards/sheets/bars stay ~90% opaque so text is readable
+  /// over the moving gradient. The app bar gets its own dark scrim.
+  static ThemeData rgb() => _build(
+        brightness: Brightness.dark,
+        scaffold: Colors.transparent,
+        appBarColor: const Color(0x73070B14),
+        surface: const Color(0xF00A0E1A),
+        card: const Color(0xE60C1322),
+        border: const Color(0x3322E0C6),
+        onSurface: const Color(0xFFEFFCFA),
+        onSurfaceVar: const Color(0xFFA9CCC7),
+        primary: const Color(0xFF22E0C6),
+        primarySoft: const Color(0xFF5CF2DC),
+        primaryContainer: const Color(0xFF103A32),
+        onPrimaryContainer: const Color(0xFFEFFCFA),
+      );
+
   static ThemeData _build({
     required Brightness brightness,
     required Color scaffold,
@@ -47,6 +66,7 @@ class AppTheme {
     required Color primarySoft,
     required Color primaryContainer,
     required Color onPrimaryContainer,
+    Color? appBarColor,
   }) {
     final scheme = ColorScheme(
       brightness: brightness,
@@ -77,7 +97,7 @@ class AppTheme {
       scaffoldBackgroundColor: scaffold,
       textTheme: AppTypography.apply(brightness),
       appBarTheme: AppBarTheme(
-        backgroundColor: scaffold,
+        backgroundColor: appBarColor ?? scaffold,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
