@@ -341,6 +341,48 @@ alphabetical; `التصنيفات` groups correctly; download a new title → it
 (`SfPdfViewer`), airplane mode → still opens, `حذف` removes it and the space is
 freed; hadith hub still works.
 
+### ✅ P2‑4 DONE — structural (2026-09-02, emulator-verified). Catalog expansion carried over.
+
+- **`lib/features/library/data/book_category.dart`** — `enum BookCategory
+  {hadith, fiqh, aqidah, tafsir, seerah, tazkiyah, adab}` (labelKey + icon).
+- **`book_catalog.dart`** — `LibraryBook` gains `category` + a computed
+  `sortKey` (drops leading "ال", normalises alef/ya/ta-marbuta). The 4 existing
+  books categorised (riyad→hadith, the other 3→tazkiyah).
+- **`library_screen.dart`** rebuilt — top tabs **[الكتب المتوفرة | الحديث]**;
+  the books tab is a nested 3-tab `DefaultTabController`: **كل الكتب**
+  (alphabetical by `sortKey`), **التصنيفات** (grouped, section header + icon
+  per category), **مكتبتي** (only downloaded books — row = title, category +
+  on-disk size under it, `فتح` + `حذف`-with-confirm-dialog). Hadith hub
+  (`_HadithTab` + helpers) unchanged.
+- **`home_screen.dart`** — added a `المكتبة` quick-access card that
+  `Navigator.push`es `LibraryScreen` (grid is now 5 cards).
+- **`download_manager.dart` — real bug fixed:** `remove()` deleted the file but
+  **never purged the SharedPreferences registry**, so a "deleted" book still
+  read as downloaded next launch. Now it purges the registry entry, deletes the
+  registered path (file *or* unzipped dir), and there's a new `artifactSize(id)`
+  for the "مكتبتي" size line.
+- +13 translation keys × 5 locales (`library.tab_books`, `.sub_all/_categories/
+  _mine`, `.empty_mine`, `.delete_confirm`, `.cat_*`) — parity **237/237**,
+  `flutter test` 13/13, `flutter analyze` clean.
+- **Verified live** on `emulator-5554`: Home card → screen; كل الكتب order
+  ر→ص→ف→م (correct Arabic collation); التصنيفات grouped under الحديث /
+  التزكية والرقائق; downloaded الفوائد → shows in مكتبتي with
+  "التزكية والرقائق · 6.0 MB", `فتح` rendered the real archive.org PDF, `حذف`
+  → confirm → gone from مكتبتي **and** flipped back to `تنزيل` in كل الكتب
+  (registry purge works).
+
+**Still open (carried into a follow-up, not blocking P2‑5):**
+- **Catalog expansion** — adding Ibn Taymiyyah / al-Hakim al-Tirmidhi / Ibn Abi
+  al-Dunya. Blind `curl` guesses at archive.org item IDs kept returning 503;
+  this needs a proper archive.org identifier lookup (WebSearch/WebFetch or the
+  archive.org advanced-search API) to get real verified `downloadUrl`s. The
+  model + UI already support any number of entries — it's pure data.
+- al-Jaziri 1941 stays an **OWNER-BLOCKER** (licence).
+- The download **progress notification** (owner add-on) already exists in
+  `DownloadManager.DownloadNotifications` (app icon + progress bar + %), but was
+  not visually confirmed this run — notification permission was denied in the
+  test and the book downloaded too fast. That verification is **P2‑5's** job.
+
 ---
 
 ## P2‑5 — Professional download manager

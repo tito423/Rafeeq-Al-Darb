@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 18:53 — IN PROGRESS — resume here**
+**2026-09-02 19:04 — IN PROGRESS — resume here**
 
-P2-4 (wip): Library redesign. New book_category.dart (BookCategory enum). LibraryBook gains category + sortKey (Arabic-collation). library_screen.dart restructured: top tabs [الكتب المتوفرة | الحديث]; books tab has 3 sub-tabs (كل الكتب abc / التصنيفات grouped / مكتبتي = downloaded, with قراءة + حذف + confirm dialog). Home gets a المكتبة quick card -> pushes LibraryScreen. DownloadManager.remove() now purges the SharedPreferences registry (was a real bug) + new artifactSize(). +13 translation keys x5 locales (parity 237). analyze clean. NOT built/tested yet.
+P2-4 structural DONE + emulator-verified: Library redesign — Home المكتبة card -> LibraryScreen; top tabs [الكتب المتوفرة|الحديث]; 3 sub-tabs (كل الكتب abc-sorted / التصنيفات grouped / مكتبتي = downloaded w/ category+size+فتح+حذف). BookCategory enum + LibraryBook.category/sortKey. Fixed DownloadManager.remove() not purging the registry (real bug) + artifactSize(). Full download->مكتبتي->قراءة(real PDF)->حذف flow verified live incl. registry purge. +13 keys x5 (parity 237). analyze clean, test 13/13. CARRIED OVER: catalog expansion (needs real archive.org IDs, curl-guessing hit 503s).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
