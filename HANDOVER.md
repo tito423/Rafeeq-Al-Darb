@@ -54,7 +54,7 @@
 <!-- WIP:START -->
 **2026-09-02 21:27 — IN PROGRESS — resume here**
 
-P2-4b: all 5 Shamela text editions built (riyad 810p/387 sec, mukhtasar 408/226, al_fawaid 209/105, sayd_al_khatir 893/394, al_ubudiyyah 109/107; ~5.6MB total; 0 empty pages; clean text no HTML leak). printReliable=false for riyad (pageNum drops ~100 four times) -> reader navigates by seq+فهرس; true for the other 4. Real sizes in catalog. +printReliable in model/reader/builder. finalize_book_text.py + upload_book_text.py added. analyze clean.
+P2-4b: keep built text-edition JSONs out of the repo (gitignore scripts/book_text_build/) - regenerable + hosted on rafeeq-api like hadith.zip. Removes the 5.6MB the previous checkpoint added to the tree.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
