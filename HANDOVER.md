@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 01:10 — IN PROGRESS — resume here**
+**2026-09-03 01:26 — IN PROGRESS — resume here**
 
-P2-7: NEXT_SESSION_PROMPT.md updated to match the new state (clips uploaded+verified, download/select/persist verified, only the real-device full-screen-render check left). No code changed.
+Launcher icon redesigned per owner request: mosque silhouette (dome+crescent, 2 side domes, 2 minarets, arched doorway) on the app's actual AppColors palette (night #071625 -> primary teal #16A085/#0F3D33 -> gold #D4AF37-family mark), replacing the rub-el-hizb+path mark. Found+fixed a real pre-existing bug along the way: the adaptive foreground PNG had zero alpha (Chrome headless --screenshot bakes opaque white unless --default-background-color=00000000 is passed) - this bug was already present in the P2-1.5 icon too, just never caught. README regen recipe updated with the fix + a pixel-alpha sanity check. dart run flutter_launcher_icons regenerated all Android densities + adaptive xml + iOS assets. Emulator-verified: built+installed APK, app drawer icon shows the teal gradient genuinely showing through the mask with the gold mosque mark legible; also checked flat icon readability at 96x96 and 48x48 downscales. analyze clean, test 13/13.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -465,11 +465,16 @@ updated 2026-09-02._
 - ~~Settings: `المصادر والمأسى` should be `المصادر والمراجع`~~ — **fixed in STAGE 1.**
 - ~~Launcher icon is a square JPG, no alpha / adaptive shape.~~ **FIXED
   (P2‑1.5), emulator-verified.** Icon designed in-house (owner: "design it
-  yourself") — a rub‑el‑hizb guiding star over a receding path, teal/gold.
-  Source SVGs + regen steps in `rafeeq_app/assets/icon/src/`. Adaptive
-  fg/bg via `flutter_launcher_icons` (`mipmap-anydpi-v26/ic_launcher.xml`,
-  16% inset). Old `app_icon.jpg` deleted; `assets/icon/` dropped from the
-  Flutter bundle (build-time only, ~0.9 MB lighter).
+  yourself") — originally a rub‑el‑hizb guiding star over a receding path,
+  teal/gold. **Redesigned again 2026‑09‑03** (owner ask) into a mosque
+  silhouette on the app's real `AppColors` palette — see the 2026‑09‑03 §7
+  update below; that pass also found and fixed a real bug in this icon's
+  render pipeline (the adaptive foreground PNG had no alpha channel at all,
+  present since this original P2‑1.5 commit). Source SVGs + regen steps in
+  `rafeeq_app/assets/icon/src/`. Adaptive fg/bg via `flutter_launcher_icons`
+  (`mipmap-anydpi-v26/ic_launcher.xml`). Old `app_icon.jpg` deleted;
+  `assets/icon/` dropped from the Flutter bundle (build-time only,
+  ~0.9 MB lighter).
 - ~~i'rab root/lemma show Buckwalter translit ("Hmd", "rbb") not Arabic.~~
   **FIXED (P2‑1.6), emulator-verified + unit-tested.** New
   `lib/core/utils/buckwalter.dart` (`buckwalterToArabic` / `buckwalterForDisplay`)
@@ -878,6 +883,51 @@ on a real phone, *then* treat it as a real bug and start from
 visually re-confirmed present in the settings UI; the cap's actual refusal
 behavior (importing a 31st adhan) was not re-exercised this session (no
 catalog changes were made to it).
+
+### Update 2026-09-03 — launcher icon redesigned: mosque silhouette,
+### real `AppColors` palette; a real transparency bug found + fixed
+
+Owner ask: make the launcher icon "لايق يشبه الثيم بتاع التطبيق ويكون فيها
+شكل المسجد" (fitting, matching the app's theme, with a mosque shape).
+Redesigned `assets/icon/src/{icon_full,icon_fg,icon_bg}.svg` — a flat gold
+mosque silhouette (central onion-free hemispherical dome + crescent finial,
+two smaller flanking domes, two minarets with balcony rings, an arched
+doorway) over a radial background gradient now built from the **actual**
+`AppColors` constants (`night` `#071625` → `primaryContainer`-ish `#0F3D33`
+→ `primarySoft` `#16A085` at the centre) instead of the previous
+hand-picked approximation — this is the literal reason it now "matches the
+theme": same numbers as `lib/core/theme/app_colors.dart`, not just a similar
+green. Gold gradients (`#F7E7AC`→`#C99E2E`/`#B4841F`) unchanged in spirit
+from the original icon.
+
+**A real bug found while doing this (present in the *previous* icon too,
+not something this change introduced):** the documented regen command
+(`chrome --headless --screenshot=...`) bakes an **opaque white** page
+background into the PNG unless `--default-background-color=00000000` is
+passed — confirmed by checking a corner pixel's alpha (`A=255`, not `0`) on
+both the new render *and* the already-shipped `app_icon_foreground.png`
+from the P2‑1.5 commit. For an **adaptive-icon foreground** layer this is a
+real defect: without alpha, the foreground fully occludes the background
+layer instead of letting it show through outside the mark. It evidently
+went unnoticed in P2‑1.5's own verification. Fixed by adding the flag for
+the foreground render only (`icon_full`/`icon_bg` don't need transparency,
+they're meant to be fully opaque); `assets/icon/src/README.md`'s regen
+recipe now includes the flag and a one-line pixel-alpha sanity check so
+this can't silently regress again.
+
+**Verified live on `emulator-5554`:** `dart run flutter_launcher_icons` →
+`flutter build apk --debug` → install → home screen → app drawer: the
+"Rafeeq AlDarb" icon shows the teal→navy gradient (now real `AppColors`
+values) genuinely showing through the adaptive mask, with the gold mosque
+mark (dome, crescent, two side domes, two minarets, dark doorway arch) all
+clearly legible — cropped and zoomed in from a real screenshot to confirm,
+not just eyeballed at native size. Also rendered the flat `icon_full.png` at
+96×96 and 48×48 (downscaled with .NET `System.Drawing`, since Chrome's
+`--window-size` doesn't rescale an SVG's own `width`/`height`) to confirm
+the silhouette stays readable at realistic launcher sizes — it does at
+both. `flutter analyze` clean after the rebuild. Not re-verified: iOS (no
+iOS toolchain on this Windows box — `flutter_launcher_icons` regenerated
+the `Assets.xcassets` PNGs the same way as before, un-tested since Phase 1).
 
 ### Update 2026-09-02 — P2‑5 (unified download manager) & P2‑6 (persistent prayer card): done, emulator-verified
 

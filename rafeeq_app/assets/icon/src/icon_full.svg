@@ -1,51 +1,65 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="40%" r="82%">
-      <stop offset="0%" stop-color="#17564A"/>
-      <stop offset="52%" stop-color="#0C2C29"/>
-      <stop offset="100%" stop-color="#06121E"/>
+    <radialGradient id="bg" cx="50%" cy="48%" r="85%">
+      <stop offset="0%" stop-color="#16A085"/>
+      <stop offset="30%" stop-color="#0F3D33"/>
+      <stop offset="65%" stop-color="#0A2620"/>
+      <stop offset="100%" stop-color="#071625"/>
     </radialGradient>
-    <linearGradient id="road" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0%" stop-color="#9C7625"/>
-      <stop offset="42%" stop-color="#CFAA34"/>
-      <stop offset="100%" stop-color="#F5E4A6"/>
-    </linearGradient>
-    <linearGradient id="sqA" x1="0" y1="0" x2="0.2" y2="1">
+    <linearGradient id="gA" x1="0" y1="0" x2="0.15" y2="1">
       <stop offset="0%" stop-color="#F7E7AC"/>
       <stop offset="55%" stop-color="#E1BF53"/>
       <stop offset="100%" stop-color="#C99E2E"/>
     </linearGradient>
-    <linearGradient id="sqB" x1="0" y1="0" x2="0.2" y2="1">
+    <linearGradient id="gB" x1="0" y1="0" x2="0.15" y2="1">
       <stop offset="0%" stop-color="#EFD98C"/>
       <stop offset="55%" stop-color="#D3B142"/>
-      <stop offset="100%" stop-color="#BC9026"/>
+      <stop offset="100%" stop-color="#B4841F"/>
     </linearGradient>
     <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#F6DE94" stop-opacity="0.40"/>
-      <stop offset="55%" stop-color="#D4AF37" stop-opacity="0.09"/>
+      <stop offset="0%" stop-color="#F6DE94" stop-opacity="0.38"/>
+      <stop offset="55%" stop-color="#D4AF37" stop-opacity="0.08"/>
       <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
     </radialGradient>
-    <clipPath id="roadClip">
-      <path d="M 302 898 C 334 772 434 686 474 648 L 550 648 C 590 686 690 772 722 898 Z"/>
-    </clipPath>
+
+    <g id="minaret">
+      <rect x="-11" y="-330" width="22" height="330" fill="url(#gB)"/>
+      <rect x="-19" y="-142" width="38" height="10" rx="2" fill="url(#gA)"/>
+      <path d="M -14 -330 A 14 14 0 0 1 14 -330 Z" fill="url(#gA)"/>
+      <rect x="-3" y="-346" width="6" height="16" fill="url(#gA)"/>
+      <circle cx="0" cy="-350" r="5" fill="#F7E7AC"/>
+    </g>
+
+    <g id="sidedome">
+      <rect x="-23" y="-18" width="46" height="18" fill="url(#gB)"/>
+      <path d="M -42 -18 A 42 42 0 0 1 42 -18 Z" fill="url(#gA)"/>
+      <rect x="-3" y="-68" width="6" height="14" fill="url(#gA)"/>
+      <circle cx="0" cy="-72" r="5" fill="#F7E7AC"/>
+    </g>
 
     <g id="mark">
-      <path d="M 302 898 C 334 772 434 686 474 648 L 550 648 C 590 686 690 772 722 898 Z"
-            fill="url(#road)"/>
-      <g clip-path="url(#roadClip)">
-        <path d="M486 650 L538 650 L545 700 L479 700 Z" fill="#FAF4E6" fill-opacity="0.9"/>
-        <path d="M493 742 L531 742 L539 804 L485 804 Z" fill="#FAF4E6" fill-opacity="0.85"/>
-        <path d="M500 838 L524 838 L532 902 L492 902 Z" fill="#FAF4E6" fill-opacity="0.8"/>
-      </g>
-      <rect x="368" y="266" width="288" height="288" rx="16" fill="url(#sqB)"
-            transform="rotate(45 512 410)"/>
-      <rect x="368" y="266" width="288" height="288" rx="16" fill="url(#sqA)"/>
-      <circle cx="512" cy="410" r="58" fill="#0C2C29"/>
-      <circle cx="512" cy="410" r="33" fill="#F7E7AC"/>
+      <!-- minarets flanking the hall, flush with its corners -->
+      <use href="#minaret" transform="translate(330 902)"/>
+      <use href="#minaret" transform="translate(698 902)"/>
+      <!-- main prayer hall -->
+      <rect x="330" y="766" width="368" height="136" rx="6" fill="url(#gA)"/>
+      <!-- side domes on the roofline -->
+      <use href="#sidedome" transform="translate(396 766)"/>
+      <use href="#sidedome" transform="translate(628 766)"/>
+      <!-- central dome + drum -->
+      <rect x="474" y="712" width="76" height="54" fill="url(#gB)"/>
+      <path d="M 424 712 A 88 88 0 0 1 600 712 Z" fill="url(#gA)"/>
+      <rect x="507" y="584" width="10" height="40" rx="2" fill="url(#gA)"/>
+      <!-- crescent finial -->
+      <path fill-rule="evenodd" fill="#F7E7AC"
+            d="M 538 548 A 26 26 0 1 1 486 548 A 26 26 0 1 1 538 548
+               M 544 548 A 20 20 0 1 0 504 548 A 20 20 0 1 0 544 548"/>
+      <!-- doorway, cut into the hall -->
+      <path d="M 468 902 L 468 820 A 44 44 0 0 1 556 820 L 556 902 Z" fill="#0C2C29"/>
     </g>
   </defs>
 
   <rect width="1024" height="1024" fill="url(#bg)"/>
-  <circle cx="512" cy="420" r="366" fill="url(#glow)"/>
+  <circle cx="512" cy="700" r="380" fill="url(#glow)"/>
   <use href="#mark"/>
 </svg>
