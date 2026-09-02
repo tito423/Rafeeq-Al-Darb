@@ -788,6 +788,34 @@ Fajr next day); turning the toggle off removes it; airplane mode → still shows
 
 ## P2‑7 — Professional Adhan: audio-or-video, composite, up to 30
 
+### 🔶 P2‑7 IN PROGRESS (2026-09-02) — resume here
+
+**Owner decision:** NO YouTube / copyrighted content. Licence-clean video only.
+Got **5 Pixabay clips** (Pixabay Content License — free commercial use, no
+attribution), staged in `scripts/adhan_video_build/` (gitignored):
+`haram_makkah` 2.3 MB · `kaaba` 4.0 MB · `madina_nabawi` 5.5 MB ·
+`mosque_prayer` 1.0 MB · `mosque_ottoman` 1.7 MB.
+
+**Done:** `pubspec.yaml` +`video_player: ^2.9.2`; `adhan_video_catalog.dart`
+(`AdhanVideoOption`, the 5, `adhanVideoSourceLabel`); `adhan_presentation_provider.dart`
+(`enum AdhanPresentation{audioOnly,video}` + `{mode,videoId}` persisted,
+default audioOnly); `scripts/upload_adhan_videos.py` (**not run yet** — the
+classifier blocked the `gh api` push; needs owner OK or a manual run);
+`adhan_catalog_service.dart` 30-adhan cap (`maxTotalAdhans` + `AdhanLimitReached`)
++ `_pickCustomAdhan` catches it. `adhans.json` is already clean (no mojibake);
+`adhan_text.dart` is already complete.
+
+**Left:** upload the 5 clips → `AdhanFullScreenScreen` gains an optional
+`videoPath` (muted looped `VideoPlayer` bg + scrim, else the gradient) →
+`buildAdhanPayload`/`AdhanPayload`/`adhan_navigation` carry `video` →
+`adhan_scheduler` (`rescheduleAdhans`/`fireAdhanTest`) take `adhanVideoPath`
+resolved by the caller → `adhan_settings_screen` gets a `صوت | فيديو`
+SegmentedButton + the 5-clip download/pick row + source line + the honest
+"video only while the screen is on" note → +translation keys ×5 → emulator
+verify. Full step list in `NEXT_SESSION_PROMPT.md`.
+
+---
+
 **Goal:** when choosing an adhan the user picks **صوت** or **فيديو**; video mode
 plays the chosen adhan **audio** over a beautiful looping Islamic-scenery
 **video**, composited at playback time; the app ships light and supports **up to

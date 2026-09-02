@@ -11,6 +11,7 @@ import 'package:path/path.dart' as p;
 import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
 import '../../../../core/services/adhan_alarm_service.dart';
+import '../../../../core/services/adhan_catalog_service.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_catalog_provider.dart';
 import '../../data/adhan_scheduler.dart';
@@ -88,6 +89,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
   }
 
   Future<void> _pickCustomAdhan() async {
+    final messenger = ScaffoldMessenger.of(context);
     final result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp3'],
@@ -95,8 +97,16 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
     final path = result?.files.single.path;
     if (path == null) return;
     final name = p.basenameWithoutExtension(path);
-    await ref.read(adhanCatalogProvider.notifier).addCustom(path, name);
-    await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
+    try {
+      await ref.read(adhanCatalogProvider.notifier).addCustom(path, name);
+      await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
+    } on AdhanLimitReached {
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('prayer.adhan_limit_reached'.tr())),
+        );
+      }
+    }
   }
 
   Future<void> _saveDefault(String id) async {

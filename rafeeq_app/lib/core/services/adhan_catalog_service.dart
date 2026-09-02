@@ -20,6 +20,10 @@ class AdhanCatalogService {
   static const _catalogAsset = 'assets/data/catalogs/adhans.json';
   static const _customPrefsKey = 'adhan_custom_v1';
 
+  /// The hard ceiling on selectable adhans — bundled + custom (P2‑7). At 30
+  /// the import is refused with a clear message rather than growing unbounded.
+  static const maxTotalAdhans = 30;
+
   Future<List<AdhanOption>> loadAll() async {
     final bundled = await _loadBundled();
     final custom = await _loadCustom();
@@ -60,6 +64,9 @@ class AdhanCatalogService {
   /// Copies [sourcePath] (from the file picker's cache) into the app's own
   /// documents directory and registers it as a selectable adhan.
   Future<AdhanOption> addCustom(String sourcePath, String displayName) async {
+    if ((await loadAll()).length >= maxTotalAdhans) {
+      throw const AdhanLimitReached();
+    }
     final docs = await getApplicationDocumentsDirectory();
     final dir = Directory(p.join(docs.path, 'custom_adhans'));
     if (!dir.existsSync()) await dir.create(recursive: true);
@@ -101,4 +108,12 @@ class AdhanCatalogService {
       } catch (_) {}
     }
   }
+}
+
+/// Thrown by [AdhanCatalogService.addCustom] when the 30-adhan ceiling
+/// ([AdhanCatalogService.maxTotalAdhans]) is already reached.
+class AdhanLimitReached implements Exception {
+  const AdhanLimitReached();
+  @override
+  String toString() => 'adhan limit reached';
 }

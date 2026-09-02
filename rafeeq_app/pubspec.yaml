@@ -60,6 +60,10 @@ dependencies:
   # PDF viewer (Islamic library)
   syncfusion_flutter_pdfviewer: ^33.2.13
 
+  # Background video for the video-mode Adhan (P2‑7) — clip downloaded on
+  # demand, played muted + looped behind the karaoke text.
+  video_player: ^2.9.2
+
   # File picking (custom Adhan audio)
   file_picker: ^11.0.3
 

@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 23:12 — COMPLETE**
+**2026-09-02 23:47 — IN PROGRESS — resume here**
 
-P2-6 DONE + emulator-verified: prayer_status_notification.dart — ongoing LOW status card (title 'الفجر · ٠٥:٠٨' localized+arabic digits, native chronometer countdown that ticks when app killed, body = Hijri from AlAdhan cached times.hijriDate w/ localized month name [not hijri pkg — was a month off], one zonedSchedule rollover, honest 'enable location' fallback, removed when off). prayer_status_enabled_provider default off + SwitchListTile in adhan settings. AppShell -> ConsumerStatefulWidget + WidgetsBindingObserver: re-syncs on times-resolve/toggle/resume. Verified: card w/ icon + countdown 6:06->5:59 + '٢٠ ربيع الأول ١٤٤٨ هـ'; dumpsys confirms ONGOING|ONLY_ALERT_ONCE + category=status + LOW; toggle off -> id 6100 gone. +2 keys x5 (parity 278). analyze clean, test 13/13. P2-7 next is OWNER-BLOCKED (video source).
+P2-7 (wip): NEXT_SESSION_PROMPT.md written (handover). Owner: no youtube, licence-clean video only -> got 5 Pixabay clips (Pixabay License) staged in scripts/adhan_video_build/ (gitignored). video_player ^2.9.2 added. adhan_video_catalog.dart (5 clips + source label) + adhan_presentation_provider.dart (audioOnly|video + videoId, persisted, default audio). upload_adhan_videos.py (NOT run - classifier blocked the gh push, needs owner OK). 30-adhan cap + AdhanLimitReached in adhan_catalog_service + _pickCustomAdhan catch. adhans.json already clean, adhan_text.dart already complete. analyze clean. LEFT: upload clips, video bg in AdhanFullScreenScreen, payload+scheduler wiring, settings صوت|فيديو UI, +keys x5, emulator verify.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
