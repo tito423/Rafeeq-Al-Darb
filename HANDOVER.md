@@ -21,7 +21,7 @@
 | P2‑5 pro download manager | ✅ done, emulator-verified — unified `DownloadsScreen` (نظرة عامة tab: storage total + per-category تفريغ + downloaded-items list), `downloads_controller.dart` aggregator, **live progress notification for every download kind** (`DownloadNotifications` generalized + wired into mushaf-prefetch & surah-audio, requests POST_NOTIFICATIONS), and **pause/resume** for mushaf + audio. Minor: 3 tabs not the 5 labelled sections; a few toasts not re-shot. |
 | P2‑6 persistent prayer notification (next prayer + Hijri + countdown) | ✅ done, emulator-verified — `prayer_status_notification.dart` (ongoing LOW card, native chronometer countdown, Hijri from AlAdhan cache, one scheduled rollover, honest "enable location" fallback), opt-in toggle in Adhan settings (default off), synced from `AppShell` on times-resolve / toggle / resume. |
 | P2‑7 Adhan audio/video + 30 slots | 🔶 code done + clips hosted + partially emulator-verified (analyze clean, test 13/13) — 5 Pixabay clips uploaded to `rafeeq-api/adhan/video/*.mp4` (all 200, byte-exact); download → auto-select → persists across restart → test notification (right title/sound) all verified live. **Not verified:** the actual full-screen video-behind-karaoke render (notification-tap / lock-screen full-screen-intent never fired under ADB on this emulator — see §7 P2‑7 update; needs a real device). |
-| P2‑8 competitor feature mix | ⬜ not started · check-in required |
+| P2‑8 competitor feature mix | 🔶 research done — `PHASE2_RESEARCH.md` (13-feature table from Sakinah/Ayat/QuranFlash/Khatmah + a proposed shortlist + 4 owner-decision-blocked items). **No code** — the stage's own rule is STOP until the owner picks the shortlist. |
 | P2‑9 hosting doc (R2/Firebase/GitHub) | ⬜ not started · OWNER-BLOCKER: console access (agent cannot log in) |
 | P2‑10 perf / size / security / release prep | ⬜ not started · OWNER-BLOCKER: keystore |
 | **P2‑11** Quran Khatma card (Home top) | 📋 spec'd only — owner wants the Home quick-access grid **removed** and replaced with 3 cards |
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 01:31 — IN PROGRESS — resume here**
+**2026-09-03 01:34 — IN PROGRESS — resume here**
 
-P2-8: PHASE2_RESEARCH.md written - researched Sakinah/Ayat(KSU)/QuranFlash/Khatmah (+ a group-khatma app) via app-store listings, ideas/descriptions only per rule 2. 13-row feature table w/ build effort + fit + data-source-needed; cross-referenced against what Rafiq already has or already has spec'd (P2-11/12, themes, mushaf editions, tafsir, azkar) to avoid re-proposing. Proposed a first-batch shortlist (memorization repeat-loop, share-ayah-as-image, per-ayah notes, multi-tafsir compare) + flagged 4 items as owner-decision-blocked before any code (tajweed-colour mushaf source, app-locking permission model, group-khatma accounts/backend, radio stream licensing). No code changed - waiting on owner's shortlist pick per the stage's own check-in rule.
+Handoff: NEXT_SESSION_PROMPT.md + HANDOVER refreshed to true state — P2-4b/5/6 DONE+verified; P2-7 code+clips done, only real-device full-screen render left (emulator can't fire the full-screen-intent); launcher icon redesigned+verified; P2-8 research done (PHASE2_RESEARCH.md), STOP for owner shortlist pick. Tree green (analyze clean). Next agent starts from NEXT_SESSION_PROMPT.md.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
