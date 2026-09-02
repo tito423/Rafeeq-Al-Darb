@@ -117,16 +117,18 @@ list so it stops rotting.
 | 1.1 ✅ | Text-mode surah header shows `سُورَة سُورَةُ الفاتحة` (doubled) | DB `name_ar` already contains "سُورَةُ …" — render it directly. **Done.** |
 | 1.2 ✅ | Stray `﴿ ﴾` under the last ayah in text mode | Removed the trailing decorative `Text`. **Done.** |
 | 1.3 ✅ | Reader mode (text/image) not persisted — always starts in text | Persist `_mode` to `SharedPreferences` on toggle, restore in `initState`. **Done.** |
-| 1.4 | **Mushaf download stops when you leave the Mushafs tab** (highest priority — breaks offline-first; open since STAGE 0) | `MushafPageService.prefetchEdition` is fire-and-forget and the Downloads tile drives/observes it, losing it on tab switch. Minimum fix here: make the prefetch job outlive the widget (own it in a provider / the service's own state, expose a progress stream the tile just *reads*). The full unification is P2‑5 — leave a `// P2-5:` note where they meet. Verify: start a mushaf download, switch to Recitations, come back → progress continued, no reset to the Download button. |
-| 1.5 | Launcher icon is a square JPG, no alpha / no adaptive shape | Produce a real 1024×1024 PNG with transparency + an adaptive foreground/background pair. Update `flutter_launcher_icons` config (`image_path` → PNG, add `adaptive_icon_foreground` / `adaptive_icon_background`), run `dart run flutter_launcher_icons`, rebuild. Verify the launcher shows a proper masked icon. **If no source art exists, this is a small OWNER-BLOCKER — ask for a logo PNG.** |
-| 1.6 | I'rab tab shows Buckwalter transliteration (`Hmd`, `rbb`, `r~aHoma\`n`) for root/lemma instead of Arabic | `word_grammar.root` / `.lemma` are stored in Buckwalter (verified: `Hmd`, `rbb`, `{som`, `r~aHoma\`n`). Add `lib/core/utils/buckwalter.dart` — a `buckwalterToArabic(String)` using the standard Tim Buckwalter map (`'`→ء `|`→آ `>`→أ `&`→ؤ `<`→إ `}`→ئ `A`→ا `b`→ب `p`→ة `t`→ت `v`→ث `j`→ج `H`→ح `x`→خ `d`→د `*`→ذ `r`→ر `z`→ز `s`→س `$`→ش `S`→ص `D`→ض `T`→ط `Z`→ظ `E`→ع `g`→غ `f`→ف `q`→ق `k`→ك `l`→ل `m`→م `n`→ن `h`→ه `w`→و `Y`→ى `y`→ي `F`→ً `N`→ٌ `K`→ٍ `a`→َ `u`→ُ `i`→ِ `~`→ّ `o`→ْ `` ` ``→ٰ `{`→ٱ `_`→ـ). Apply it to `w.root` and `w.lemma` in `_IrabTab` (the token is already Arabic — leave it). Cover with `test/buckwalter_test.dart` (`Hmd`→`حمد`, `rbb`→`ربب`, `r~aHoma\`n`→`رَّحمٰن`, round-trip a couple of real rows). Note in `HANDOVER.md` §7 that roots are now transliterated for display. |
+| 1.4 ✅ | **Mushaf download stops when you leave the Mushafs tab** (highest priority — breaks offline-first; open since STAGE 0) | **DONE, emulator-verified.** `MushafPageService` now owns a `PrefetchProgress` (`ChangeNotifier`) per edition; the job is `unawaited` on the singleton and `_MushafDownloadTile` re-attaches to it in `initState`. `// P2‑5` note left on `PrefetchProgress`. Verified live: 3 → 27 → 39 → 51 across a tab switch, tile kept the progress bar. P2‑5 folds this into the unified manager. |
+| 1.5 ⛔ | Launcher icon is a square JPG, no alpha / no adaptive shape | **OWNER-BLOCKER — the only P2‑1 item left.** No logo art in the repo (`assets/icon/app_icon.jpg` is the square JPG). Need a transparent 1024×1024 logo PNG from the owner, then: produce the adaptive foreground/background pair, update `flutter_launcher_icons` config, run `dart run flutter_launcher_icons`, rebuild, verify the masked icon. |
+| 1.6 ✅ | I'rab tab shows Buckwalter transliteration (`Hmd`, `rbb`, `r~aHoma\`n`) for root/lemma instead of Arabic | **DONE, emulator-verified + unit-tested (11/11).** `word_grammar.root` / `.lemma` are stored in Buckwalter (verified: `Hmd`, `rbb`, `{som`, `r~aHoma\`n`). Added `lib/core/utils/buckwalter.dart` — a `buckwalterToArabic(String)` using the standard Tim Buckwalter map (`'`→ء `|`→آ `>`→أ `&`→ؤ `<`→إ `}`→ئ `A`→ا `b`→ب `p`→ة `t`→ت `v`→ث `j`→ج `H`→ح `x`→خ `d`→د `*`→ذ `r`→ر `z`→ز `s`→س `$`→ش `S`→ص `D`→ض `T`→ط `Z`→ظ `E`→ع `g`→غ `f`→ف `q`→ق `k`→ك `l`→ل `m`→م `n`→ن `h`→ه `w`→و `Y`→ى `y`→ي `F`→ً `N`→ٌ `K`→ٍ `a`→َ `u`→ُ `i`→ِ `~`→ّ `o`→ْ `` ` ``→ٰ `{`→ٱ `_`→ـ). Apply it to `w.root` and `w.lemma` in `_IrabTab` (the token is already Arabic — leave it). Cover with `test/buckwalter_test.dart` (`Hmd`→`حمد`, `rbb`→`ربب`, `r~aHoma\`n`→`رَّحمٰن`, round-trip a couple of real rows). Note in `HANDOVER.md` §7 that roots are now transliterated for display. |
 
-**Acceptance (emulator):** open a text-mode page with a surah start → header
-reads once; no `﴿ ﴾`; switch to image mode, kill & relaunch → still image mode;
-start a mushaf download, tab away and back → it kept going; i'rab tab for 1:2
-shows `حمد` / `ربب`, not `Hmd` / `rbb`; launcher icon is properly shaped.
+**Acceptance — met on the emulator (`emulator-5554`, 2026-09-02):** header
+reads once; no `﴿ ﴾`; image mode survived `am force-stop` + relaunch; a mushaf
+download kept running across a Downloads-tab switch and the tile re-attached;
+i'rab for 1:1 shows الجذر: سمو / الكلمة: ٱسْم. `flutter analyze` clean,
+`flutter test` 11/11.
 
-**Checkpoint:** `.\cp.bat "P2-1 bug sweep: <list>" ` then `-Done` when the table is green.
+**Status: P2‑1 is complete except 1.5 (launcher icon), which is blocked on a
+logo PNG from the owner.** Next stage: P2‑2 (theme system).
 
 ---
 

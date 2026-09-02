@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,10 +81,47 @@ class _MushafDownloadTileState extends State<_MushafDownloadTile> {
   bool _busy = false;
   int _done = 0;
 
+  PrefetchProgress? _progress;
+
   @override
   void initState() {
     super.initState();
     _refresh();
+    // The download runs on MushafPageService, not on this widget. If one is
+    // already in flight (e.g. this tile was rebuilt after a tab switch),
+    // re-attach to it instead of showing the Download button again.
+    if (_service.isPrefetching(widget.edition.id)) {
+      _busy = true;
+      _bind();
+      _done = _progress!.done;
+    }
+  }
+
+  void _bind() {
+    _progress = _service.progressFor(widget.edition.id);
+    _progress!.addListener(_onProgress);
+  }
+
+  void _unbind() {
+    _progress?.removeListener(_onProgress);
+    _progress = null;
+  }
+
+  void _onProgress() {
+    if (!mounted) return;
+    final p = _progress!;
+    setState(() => _done = p.done);
+    if (!p.running) {
+      _unbind();
+      setState(() => _busy = false);
+      _refresh();
+    }
+  }
+
+  @override
+  void dispose() {
+    _unbind();
+    super.dispose();
   }
 
   Future<void> _refresh() async {
@@ -101,15 +140,13 @@ class _MushafDownloadTileState extends State<_MushafDownloadTile> {
       _busy = true;
       _done = 0;
     });
-    await _service.prefetchEdition(
+    _bind();
+    // Fire-and-forget: the job is owned by the service and _onProgress drives
+    // this tile to completion, so it survives this widget being disposed.
+    unawaited(_service.prefetchEdition(
       editionId: widget.edition.id,
       sourcePath: widget.edition.sourcePath,
-      onProgress: (done, _) {
-        if (mounted) setState(() => _done = done);
-      },
-    );
-    if (mounted) setState(() => _busy = false);
-    await _refresh();
+    ));
   }
 
   Future<void> _delete() async {

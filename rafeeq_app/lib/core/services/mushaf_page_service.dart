@@ -1,10 +1,31 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../config/app_config.dart';
+
+/// Live state of a whole-edition download. Lives on [MushafPageService] (not
+/// on any widget) so a Downloads tile that is rebuilt — a tab switch, a list
+/// recycle — can re-attach to a running job instead of losing it. This is the
+/// root fix for the P2‑1.4 "download stops when you leave the Mushafs tab"
+/// bug; P2‑5 folds it into a unified download manager.
+class PrefetchProgress extends ChangeNotifier {
+  int done = 0;
+  int total = 0;
+  bool running = false;
+
+  double get fraction => total == 0 ? 0 : done / total;
+
+  void _set({int? done, int? total, bool? running}) {
+    if (done != null) this.done = done;
+    if (total != null) this.total = total;
+    if (running != null) this.running = running;
+    notifyListeners();
+  }
+}
 
 /// Fetches mushaf pages and keeps them on disk, so a page opened once stays
 /// readable with no network (offline-first mushaf).
@@ -91,6 +112,12 @@ class MushafPageService {
   /// where it stopped rather than starting over. Failures on individual pages
   /// are tolerated: the reader can still open everything that did arrive, and
   /// a later run fills the gaps.
+  ///
+  /// The job lives on this singleton, not on any widget, and its progress is
+  /// published through [progressFor]. A Downloads tile that gets rebuilt
+  /// (tab switch, list recycle — the P2‑1.4 bug) can therefore re-attach to a
+  /// running download instead of losing it. P2‑5 folds this into a unified
+  /// download manager.
   Future<void> prefetchEdition({
     required String editionId,
     required String sourcePath,
@@ -100,8 +127,9 @@ class MushafPageService {
   }) async {
     if (_prefetching.contains(editionId)) return;
     _prefetching.add(editionId);
+    final total = toPage - fromPage + 1;
+    final progress = progressFor(editionId).._set(done: 0, total: total, running: true);
     try {
-      final total = toPage - fromPage + 1;
       var done = 0;
       for (var page = fromPage; page <= toPage; page++) {
         if (!_prefetching.contains(editionId)) break; // cancelled
@@ -115,14 +143,23 @@ class MushafPageService {
           // leave this page for a later run
         }
         done++;
+        progress._set(done: done);
         onProgress?.call(done, total);
       }
     } finally {
       _prefetching.remove(editionId);
+      progress._set(running: false); // always notifies — listeners settle here
     }
   }
 
   final Set<String> _prefetching = {};
+
+  /// Live progress of an in-flight [prefetchEdition], per edition id. Created
+  /// on first request; a widget listens to re-sync after being rebuilt.
+  final Map<String, PrefetchProgress> _progress = {};
+
+  PrefetchProgress progressFor(String editionId) =>
+      _progress.putIfAbsent(editionId, PrefetchProgress.new);
 
   bool isPrefetching(String editionId) => _prefetching.contains(editionId);
 

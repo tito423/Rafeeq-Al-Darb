@@ -33,9 +33,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 17:00 — IN PROGRESS — resume here**
+**2026-09-02 17:12 — IN PROGRESS — resume here**
 
-P2-1.6: i'rab root/lemma now shown in Arabic, not Buckwalter (Hmd->حمد). New lib/core/utils/buckwalter.dart + test/buckwalter_test.dart (6 cases, pass). Wired into ayah_sciences_sheet _IrabTab. flutter analyze clean.
+P2-1 bug sweep DONE except launcher icon (owner-blocked): 1.1 doubled surah header, 1.2 stray brackets, 1.3 reader-mode persistence, 1.4 mushaf download survives tab switch (new PrefetchProgress ChangeNotifier on MushafPageService + tile re-attach), 1.6 Buckwalter->Arabic i'rab (+buckwalter.dart +test). All emulator-verified on emulator-5554; analyze clean; flutter test 11/11. HANDOVER 7 + PHASE2 P2-1 updated.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -376,23 +376,37 @@ passes a real "سورة • s:a" title so the media notification reads properly.
 | 0.10 | paging smooth | ✅ no dropped-frame/Davey logs paging cached pages; re-judge feel on a real low-end device — fix if needed is `vector_graphics` `.vec`, not raster |
 
 **Bugs found but NOT fixed (out of STAGE-0 scope — track separately):**
-- **Mushaf download stops when you leave the Mushafs tab.** Switch to the
-  Recitations tab mid-download and the prefetch halts (got to 205/604, no
-  resume on return; the tile shows the Download button again instead of
-  progress). `MushafPageService.prefetchEdition` is fire-and-forget but the
-  Downloads tile drives/observes it and loses that on tab switch. **Still
-  open** — highest-priority remaining bug, undermines offline-first.
-- **Reader mode (text/image) is not persisted** — always starts in text mode.
-  Only the page number is saved. Minor UX. **Still open.**
+_Most of these were the PHASE 2 Stage P2‑1 sweep — see `PHASE2.md`. Status
+updated 2026-09-02._
+- ~~**Mushaf download stops when you leave the Mushafs tab.**~~ **FIXED (P2‑1.4),
+  emulator-verified.** Root cause: `prefetchEdition` was fire-and-forget and the
+  Downloads tile owned the observation, losing it when the tile was rebuilt on a
+  tab switch. Now `MushafPageService` publishes a `PrefetchProgress`
+  (`ChangeNotifier`) per edition; the tile re-attaches to a running job in
+  `initState`. Verified live: started Hafs, switched to التلاوات and back —
+  progress had continued 3 → 27 → 39 → 51 and the tile still showed the bar, not
+  the Download button. (P2‑5 folds this into a unified manager.)
+- ~~**Reader mode (text/image) is not persisted.**~~ **FIXED (P2‑1.3),
+  emulator-verified.** `quran_screen.dart` persists `_mode` under
+  `SharedPreferences` key `quran_reader_mode`; restored in `initState`. Verified:
+  switched to image mode → `am force-stop` → relaunch → still image mode.
 - ~~`android/app/src/main/res/raw/` still ships 6 `.m4a` "adhan" files~~ —
   **fixed in STAGE 1**: the fake files are deleted; the 10 real adhans now
   also live in `res/raw/` (needed for the native alarm sound, see below).
-- Text-mode surah header renders `سورة سورةُ الفاتحة` (doubled "سورة"). **Still open.**
-- Stray `()` under the last ayah on a text-mode page. **Still open.**
+- ~~Text-mode surah header renders `سورة سورةُ الفاتحة` (doubled "سورة").~~
+  **FIXED (P2‑1.1), emulator-verified.** The DB `name_ar` already contains
+  "سُورَةُ …"; `mushaf_text_page.dart` now renders it directly.
+- ~~Stray `()` under the last ayah on a text-mode page.~~ **FIXED (P2‑1.2),
+  emulator-verified.** Removed the trailing decorative `﴿ ﴾` `Text` widget.
 - ~~Settings: `المصادر والمأسى` should be `المصادر والمراجع`~~ — **fixed in STAGE 1.**
-- Launcher icon is a square JPG, no alpha / adaptive shape. **Still open.**
-- i'rab root/lemma show Buckwalter translit ("Hmd", "rbb") not Arabic — that's
-  how the corpus stores them; a transliteration pass would be nicer. **Still open.**
+- **Launcher icon is a square JPG, no alpha / adaptive shape.** **STILL OPEN
+  (P2‑1.5)** — needs a real logo PNG source from the owner to produce the
+  adaptive foreground/background pair. Small owner-blocker.
+- ~~i'rab root/lemma show Buckwalter translit ("Hmd", "rbb") not Arabic.~~
+  **FIXED (P2‑1.6), emulator-verified + unit-tested.** New
+  `lib/core/utils/buckwalter.dart` (`buckwalterToArabic` / `buckwalterForDisplay`)
+  + `test/buckwalter_test.dart` (6 cases). `_IrabTab` now shows الجذر: سمو /
+  الكلمة: ٱسْم etc. `flutter test` = 11/11 green.
 
 ### Update 2026-09-02 — STAGE 1 (Adhan system), built and emulator-verified
 
