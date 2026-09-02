@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,18 +23,25 @@ class SearchScreen extends ConsumerStatefulWidget {
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _controller = TextEditingController();
   List<Ayah>? _keywordResults;
+  Timer? _debounce;
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     super.dispose();
   }
 
-  Future<void> _runKeywordSearch(String q) async {
+  void _onKeywordChanged(String q) {
+    _debounce?.cancel();
     if (q.trim().isEmpty) {
       setState(() => _keywordResults = null);
       return;
     }
+    _debounce = Timer(const Duration(milliseconds: 300), () => _runKeywordSearch(q));
+  }
+
+  Future<void> _runKeywordSearch(String q) async {
     final results = await widget.repo.search(q);
     if (mounted) setState(() => _keywordResults = results);
   }
@@ -61,7 +70,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             _KeywordTab(
               controller: _controller,
               results: _keywordResults,
-              onChanged: _runKeywordSearch,
+              onChanged: _onKeywordChanged,
               onOpen: _openAyah,
             ),
           ],

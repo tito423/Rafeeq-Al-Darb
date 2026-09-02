@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../utils/arabic_normalize.dart';
 import 'db_helper.dart';
 import 'models.dart';
 
@@ -10,6 +11,24 @@ import 'models.dart';
 class QuranRepository {
   final Database _db;
   QuranRepository(this._db);
+
+  /// (normalized `text_uthmani`, the ayah) for every ayah, built once and
+  /// reused — see `search()`'s doc for why normalization is needed at all.
+  /// 6,236 short strings; trivial to keep in memory for this repository's
+  /// lifetime.
+  List<(String, Ayah)>? _searchIndex;
+
+  Future<List<(String, Ayah)>> _index() async {
+    final cached = _searchIndex;
+    if (cached != null) return cached;
+    final rows = await _db.query('ayahs');
+    final built = [
+      for (final r in rows)
+        (normalizeArabic(r['text_uthmani'] as String), Ayah.fromRow(r)),
+    ];
+    _searchIndex = built;
+    return built;
+  }
 
   Future<List<Surah>> surahs() async {
     final rows = await _db.query(
@@ -72,24 +91,33 @@ class QuranRepository {
     return rows.first['c'] as int? ?? 1;
   }
 
-  /// Plain `LIKE` over `text_uthmani`, not the bundled `ayahs_search` FTS5
-  /// table — caught live on a real device/emulator while building the
-  /// Stage 6 thematic search screen: `sqflite` here runs on Android's own
-  /// system SQLite, which on this build has no FTS5 module at all
-  /// (`SQLiteLog: (1) no such module: fts5`), even though the table exists
-  /// in the file (built with Python's sqlite3, which does bundle FTS5). A
-  /// 6,236-row `LIKE` scan has no real-ranking benefit `MATCH` would give,
-  /// but it is the version that actually runs.
+  /// Normalized substring match over `text_uthmani`, not the bundled
+  /// `ayahs_search` FTS5 table — caught live on a real device/emulator while
+  /// building the Stage 6 thematic search screen: `sqflite` here runs on
+  /// Android's own system SQLite, which on this build has no FTS5 module at
+  /// all (`SQLiteLog: (1) no such module: fts5`), even though the table
+  /// exists in the file (built with Python's sqlite3, which does bundle
+  /// FTS5).
+  ///
+  /// A plain SQL `LIKE '%term%'` was tried first but does not actually work:
+  /// `text_uthmani` is stored fully diacritized (e.g. "ٱلرَّحْمَٰنِ", with alef
+  /// wasla U+0671), so an ordinary undiacritized query like "الرحمن" never
+  /// matches — confirmed directly against the bundled db with sqlite3.
+  /// Matching is done in Dart instead, over both sides normalized by
+  /// `normalizeArabic` (see its doc). 6,236 ayahs is small enough to hold a
+  /// normalized index in memory for the whole app session.
   Future<List<Ayah>> search(String query, {int limit = 50}) async {
-    final sanitized = query.trim();
+    final sanitized = normalizeArabic(query.trim());
     if (sanitized.isEmpty) return [];
-    final rows = await _db.query(
-      'ayahs',
-      where: 'text_uthmani LIKE ?',
-      whereArgs: ['%$sanitized%'],
-      limit: limit,
-    );
-    return rows.map(Ayah.fromRow).toList();
+    final idx = await _index();
+    final matches = <Ayah>[];
+    for (final (normalized, ayah) in idx) {
+      if (normalized.contains(sanitized)) {
+        matches.add(ayah);
+        if (matches.length >= limit) break;
+      }
+    }
+    return matches;
   }
 /// First actual page of each surah (real Madani page boundaries).
   Future<Map<int, int>> surahStartPages() async {

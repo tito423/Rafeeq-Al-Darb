@@ -142,12 +142,19 @@ Downloaded on demand (~17 MB zipped), not bundled — see
 `AppConfig.hadithDbUrl`. The download was blocked most of this session by a
 host-machine TLS problem (see `HANDOVER.md` §7); once the owner disabled
 Avast, the real download → unzip → open cycle was confirmed twice from a
-clean install. That same testing found the hadith search box crashing and
-then hanging — two real bugs (a `setState`/Future misuse, and `sqflite`
-having no FTS5 module on this Android build at all), both fixed; search is
-now `LIKE`-based and confirmed working live (searching "Umar" returns real
-matches). See `HANDOVER.md` §7 for the full account — the FTS5 finding
-applies to Stage 6's Quran search too.
+clean install. That same testing chain then found four real bugs in
+sequence, all fixed: (1) a `setState`/Future misuse crashing the search box,
+(2) `sqflite` having no FTS5 module on this Android build at all, (3) the
+LIKE-based fix for (2) still not matching real Arabic input because
+`arabic`/`text_uthmani` are stored fully diacritized — fixed with
+`lib/core/utils/arabic_normalize.dart`, covered by
+`test/arabic_normalize_test.dart`, (4) a real `OutOfMemoryError` crash from
+loading all ~41k hadiths into memory at once — fixed by paging the search
+scan instead of caching the whole table. Search is confirmed working live
+end-to-end after all four fixes (searching "Umar" returns real Bukhari
+hadiths #23/45/82/92/93, and a deliberate no-match query completes a full
+table scan with no crash). See `HANDOVER.md` §7 for the full account — bugs
+(2) and (3) apply to Stage 6's Quran search too.
 
 **Known bug (hadith ordering jumping 2 → 9 → 99) — fixed and regression-tested**
 both in `scripts/build_hadith_db.py` (0 out-of-order chapters) and live in the
@@ -225,15 +232,22 @@ tab covers word search.
 **FTS5 could not be reused as planned** — `quran_local.db`'s `ayahs_search`
 FTS5 table exists in the file but this Android build's `sqflite`/system
 SQLite has no FTS5 module at all (same finding as Stage 2's hadith search;
-see `HANDOVER.md` §7). `QuranRepository.search()` was rewritten to a plain
-`LIKE '%term%'` query instead. Emulator-verified for the topics tab (all 5
-categories, real ayah ranges load); the keyword tab has the same fix applied
-but was not re-exercised live before this pass ended — re-check it next
-session. Tap-to-jump-to-page from a search result is implemented
-(`Navigator.pop` returns the page number to `QuranScreen`) but two manual
-taps during testing showed no visible navigation and no logcat error either
-time — left as an open, unconfirmed item rather than claimed either broken
-or working; likely a tap-precision artifact, not chased further given time.
+see `HANDOVER.md` §7). A plain `LIKE '%term%'` was tried next but doesn't
+work either for Arabic: `text_uthmani` (and `hadith.db`'s `arabic` column)
+are stored fully diacritized, so ordinary undiacritized user input never
+matches — confirmed directly with sqlite3 against the real data. Fixed with
+`lib/core/utils/arabic_normalize.dart` (strips harakat/tatweel, unifies alef
+forms), covered by `test/arabic_normalize_test.dart`, used by both
+`QuranRepository.search()` and `HadithRepository.search()`. Loading the
+whole 41k-row hadith table into memory for this also caused a real
+`OutOfMemoryError` crash at one point — fixed by paging the scan
+(`LIMIT`/`OFFSET`) with no persistent cache rather than caching everything;
+see `HadithRepository.search()`'s doc. Everything in this stage is now
+**fully emulator-verified**: all 5 topic categories load real ayah ranges,
+the keyword tab returns real matches, and tapping a result ayah correctly
+jumps `QuranScreen` to its page (confirmed: tapping 2:153 landed on page
+23/604 showing that exact ayah) — the earlier "not confirmed" note about
+tap-to-jump was tap-precision uncertainty in testing, not a real bug.
 
 ## STAGE 7 — Security & guest mode  (T19)
 Confirm no credentials in the client (`AppConfig` is currently secret-free —

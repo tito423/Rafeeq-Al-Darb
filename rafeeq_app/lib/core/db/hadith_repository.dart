@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../utils/arabic_normalize.dart';
 import 'db_helper.dart';
 
 /// One of the 9 collections (real: source is A7med3bdulBaset/hadith-json,
@@ -152,30 +153,78 @@ class HadithRepository {
   /// builds its own "around the match" preview from the raw text since
   /// there's no FTS snippet() available (see why below).
   ///
-  /// Plain `LIKE`, not the bundled `hadiths_fts` FTS5 table — caught live on a
-  /// real device/emulator: `sqflite` here uses Android's own system SQLite,
+  /// Not the bundled `hadiths_fts` FTS5 table — caught live on a real
+  /// device/emulator: `sqflite` here uses Android's own system SQLite,
   /// which on this build has no FTS5 module at all
   /// (`SQLiteLog: (1) no such module: fts5`), even though the table exists
   /// in the file (it was built with Python's sqlite3, which does bundle
-  /// FTS5). A 41k-row `LIKE` scan is not as fast as a real index, but it is
-  /// the version that actually runs — reported after a full rebuild via
-  /// `%wildcards%` for every whitespace-separated term, so a multi-word
-  /// query still narrows results down (all terms required, hadith found by
-  /// substring, not full-text ranking).
+  /// FTS5).
+  ///
+  /// Also not a plain SQL `LIKE '%term%'` — that was tried first and does
+  /// not actually work for Arabic: the `arabic` column is stored fully
+  /// diacritized (e.g. "عُمَرَ"), so an ordinary undiacritized query like "عمر"
+  /// never matches. Confirmed directly against the real downloaded
+  /// `hadith.db` with sqlite3: `LIKE '%عمر%'` returned 0 rows even though
+  /// the very first hadith contains "عُمَرَ بْنَ الْخَطَّابِ". Matching is done in
+  /// Dart instead, over `arabic` normalized by `normalizeArabic` (see its
+  /// doc) and `text_en` lowercased; all whitespace-separated terms are
+  /// required (a term may hit either column), so a multi-word query still
+  /// narrows results down.
+  ///
+  /// Read in small pages (`LIMIT`/`OFFSET`), not `_db.query('hadiths')` in
+  /// one call, and nothing is cached across calls — caught live with a real
+  /// crash: a single `_db.query()` over all ~41k hadiths (long isnad chains,
+  /// ~22M characters of Arabic text total) makes sqflite hand the whole
+  /// result set across the platform channel as one message, which tried a
+  /// single ~83MB allocation and threw `OutOfMemoryError` on this device's
+  /// heap. A first attempt at fixing it by caching a normalized copy of
+  /// every hadith in memory just moved the same problem from a one-time
+  /// spike to a permanent ~100MB+ duplicate of the whole book (original +
+  /// normalized Arabic + lowercased English) sitting in RAM for the rest of
+  /// the session. Paging keeps every step small: only one page of rows
+  /// exists in memory at a time, and nothing outlives a single `search()`
+  /// call except the matches themselves — the cost is rescanning the table
+  /// on every call rather than once, which is the right trade for a mobile
+  /// memory budget.
   Future<List<HadithItem>> search(String query, {int limit = 100}) async {
     final terms =
         query.trim().split(RegExp(r'\s+')).where((t) => t.isNotEmpty).toList();
     if (terms.isEmpty) return [];
-    final where = terms.map((_) => '(arabic LIKE ? OR text_en LIKE ?)').join(' AND ');
-    final args = [for (final t in terms) ...['%$t%', '%$t%']];
-    final rows = await _db.query(
-      'hadiths',
-      where: where,
-      whereArgs: args,
-      orderBy: 'book_id, number_in_book',
-      limit: limit,
-    );
-    return rows.map(HadithItem.fromRow).toList();
+    final normTerms = terms.map(normalizeArabic).toList();
+    final lowerTerms = terms.map((t) => t.toLowerCase()).toList();
+
+    const pageSize = 2000;
+    final matches = <HadithItem>[];
+    var offset = 0;
+    while (matches.length < limit) {
+      final page = await _db.query(
+        'hadiths',
+        orderBy: 'book_id, number_in_book',
+        limit: pageSize,
+        offset: offset,
+      );
+      if (page.isEmpty) break;
+      for (final r in page) {
+        final normArabic = normalizeArabic(r['arabic'] as String);
+        final lowerEn = (r['text_en'] as String?)?.toLowerCase();
+        var allTermsMatch = true;
+        for (var i = 0; i < terms.length; i++) {
+          final hit = normArabic.contains(normTerms[i]) ||
+              (lowerEn?.contains(lowerTerms[i]) ?? false);
+          if (!hit) {
+            allTermsMatch = false;
+            break;
+          }
+        }
+        if (allTermsMatch) {
+          matches.add(HadithItem.fromRow(r));
+          if (matches.length >= limit) break;
+        }
+      }
+      if (page.length < pageSize) break;
+      offset += pageSize;
+    }
+    return matches;
   }
 }
 

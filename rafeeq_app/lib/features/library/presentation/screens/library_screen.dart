@@ -83,6 +83,12 @@ class _HadithTabState extends ConsumerState<_HadithTab> {
   String _query = '';
   StreamSubscription<List<DownloadTask>>? _sub;
 
+  // Debounced, not fired on every keystroke — search() now rescans the
+  // ~41k-hadith table per call (see HadithRepository.search()'s doc for
+  // why it no longer caches an in-memory index), so typing fast would
+  // otherwise queue up many redundant full scans in a row.
+  Timer? _debounce;
+
   @override
   void initState() {
     super.initState();
@@ -98,8 +104,16 @@ class _HadithTabState extends ConsumerState<_HadithTab> {
   @override
   void dispose() {
     _sub?.cancel();
+    _debounce?.cancel();
     _searchCtrl.dispose();
     super.dispose();
+  }
+
+  void _onSearchChanged(String v) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) setState(() => _query = v.trim());
+    });
   }
 
   Future<void> _startDownload() async {
@@ -133,7 +147,7 @@ class _HadithTabState extends ConsumerState<_HadithTab> {
                   prefixIcon: const Icon(Icons.search),
                   isDense: true,
                 ),
-                onChanged: (v) => setState(() => _query = v.trim()),
+                onChanged: _onSearchChanged,
               ),
             ),
             Expanded(
