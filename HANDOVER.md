@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 20:57 — IN PROGRESS — resume here**
+**2026-09-02 21:02 — IN PROGRESS — resume here**
 
-P2-4b code (scrape still running): book_text.dart model + book_text_reader_screen.dart (page-at-a-time reader: فهرس drawer, in-book search w/ arabic_normalize, font size, per-book bookmarks, always-visible sourceLabel/provenance, OCR badge hook). LibraryBook.textEdition + textDownloadId. library_screen.dart: مصوّر|نص SegmentedButton per book card, both editions download/cache/open independently, مكتبتي shows one row per (book,edition). +22 keys x5 (parity 259). analyze clean, parity test green. Catalog textEdition sizes still 0 pending scrape.
+build_book_text.py: switched from per-page curl.exe spawn to one keep-alive https.client conn (unverified ctx — read-only public scrape, msys python has no CA bundle). ~3x faster (al_ubudiyyah 96s->32s, identical output). Delay 0.4->0.15s. Full 5-book run now ~12min.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

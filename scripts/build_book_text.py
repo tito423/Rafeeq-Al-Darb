@@ -63,10 +63,11 @@ Only the Python standard library is used (matches build_hadith_db.py).
 """
 
 import html
+import http.client
 import json
 import os
 import re
-import subprocess
+import ssl
 import sys
 import time
 from datetime import datetime, timezone
@@ -107,32 +108,49 @@ UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 )
-REQUEST_DELAY_S = 0.4  # be polite to shamela.ws
+REQUEST_DELAY_S = 0.15  # be polite to shamela.ws (~1.5 req/s incl. latency)
+HOST = "shamela.ws"
 
-
-# --- fetch -----------------------------------------------------------------
 # This box's bundled Python has no CA bundle (and the machine has had TLS
-# interception issues before — see HANDOVER.md §7), so fetch through curl.exe,
-# which is present on Windows 10+ and already trusts the system store.
-def _get(url, tries=4):
+# interception trouble before — HANDOVER.md §7). Certificate verification adds
+# nothing for a read-only scrape of public pages, so use an unverified context
+# and a single keep-alive connection (much faster than spawning curl per page).
+_CTX = ssl._create_unverified_context()
+_conn = None  # type: http.client.HTTPSConnection | None
+
+
+def _get(path, tries=4):
+    """`path` is the URL path (e.g. '/ajax/pageContent/12014/1')."""
+    global _conn
     last = None
     for attempt in range(tries):
         try:
-            res = subprocess.run(
-                ["curl.exe", "-sS", "--fail", "--compressed", "-A", UA,
-                 "--max-time", "40", url],
-                capture_output=True, check=True,
-            )
-            return res.stdout.decode("utf-8", "replace")
-        except subprocess.CalledProcessError as e:  # noqa: PERF203
-            last = e.stderr.decode("utf-8", "replace").strip() or e
-            time.sleep(1.5 * (attempt + 1))
-    raise RuntimeError(f"GET failed after {tries} tries: {url} ({last})")
+            if _conn is None:
+                _conn = http.client.HTTPSConnection(HOST, timeout=30, context=_CTX)
+            _conn.request("GET", path, headers={
+                "User-Agent": UA,
+                "Accept": "*/*",
+                "Connection": "keep-alive",
+            })
+            resp = _conn.getresponse()
+            body = resp.read()
+            if resp.status != 200:
+                raise RuntimeError(f"HTTP {resp.status}")
+            return body.decode("utf-8", "replace")
+        except Exception as e:  # noqa: BLE001, PERF203 — reconnect and retry
+            last = e
+            try:
+                if _conn:
+                    _conn.close()
+            finally:
+                _conn = None
+            time.sleep(1.0 * (attempt + 1))
+    raise RuntimeError(f"GET failed after {tries} tries: {path} ({last})")
 
 
 def fetch_meta_card(shamela_id):
     """The بطاقة الكتاب block on the book landing page (edition, page count…)."""
-    h = _get(f"https://shamela.ws/book/{shamela_id}")
+    h = _get(f"/book/{shamela_id}")
     m = re.search(r'<div style="line-height: 1\.8;">(.*?)</div>', h, re.S)
     card = ""
     if m:
@@ -214,7 +232,7 @@ def parse_nass(nass):
 
 # --- walk a whole book ------------------------------------------------------
 def build_book(book_id, shamela_id, source_label):
-    base = f"https://shamela.ws/ajax/pageContent/{shamela_id}"
+    base = f"/ajax/pageContent/{shamela_id}"
     meta_card = fetch_meta_card(shamela_id)
 
     pages = []
