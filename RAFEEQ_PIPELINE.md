@@ -1,6 +1,9 @@
 # RAFIQ AL-DARB — Autonomous Rebuild Pipeline
 
 > **Handing this project to another agent?** Read `HANDOVER.md` in this
+> folder first, then `WORK_QUEUE.md` for the ordered backlog.
+>
+> **Original note:** Read `HANDOVER.md` in this
 > folder first — it carries the design decisions, the hard rules, and the
 > current blocker.
 
@@ -19,8 +22,8 @@
 | 5 | Authentic i18n via easy_localization (real ar/en JSON) | ✅ | easy_localization wired (persisted locale), ar/en real JSON with verified key parity, AppShell + all 5 tabs fully `.tr()`-localized, Settings language switch live. Fixed double-encoded Arabic in audio_editions.json + reciters_full.json. analyze: 0 |
 | 6 | Mushaf viewer, dynamic page fetch + cache | 🔶 | Switched from raster scans to **vector SVG pages** (quranpedia/quran-svg, CC0-1.0, pinned commit b91d39e). `MushafPageService`: memory+disk cache, integrity-validated (rejects truncated pages), offline after first view. `MushafPageView`: SvgPicture + InteractiveViewer, glyphs recoloured via srcIn so night mode is a real night mode. Whole mushaf ≈350MB raw / ~24MB brotli vs the 233MB PNG zip purged in T1. **Not yet compile-verified — needs `flutter analyze`.** |
 | 7 | Real ayah coordinates (replace fake JSON) | 🔶 | **Resolved with real data.** `scripts/build_mushaf_svg.py` extracts the `ayahPolygon` hit layer shipped inside the source SVGs → `assets/data/mushaf/hafs_kfqc_polygons.json` (0.73MB, normalized 0..1 per-page viewBox). **6,236/6,236 ayahs covered, verified against quran_local.db.** Polygons, not boxes: 4,221 ayahs (68%) span multiple lines, so a union bounding box would mis-highlight most of the Quran. Hit-testing is even-odd ray cast per ring. Abandoned the earlier `build_ayah_coords.py` (quran.com-images `glyph_ayah_bbox` is declared but ships **zero rows**). QuranFlash was explicitly ruled out — reverse-engineering a licensed product. **Not yet compile-verified.** |
-| 8 | Ayah sciences bottom sheet (real SQLite tafseer/i'rab/meanings) | ⏳ | |
-| 9 | Professional dropdowns (reciters/translations) | ⏳ | |
+| 8 | Ayah sciences bottom sheet (real SQLite tafseer/i'rab/meanings) | ✅ | 4 tabs — tafsir (3 sources), translation (en/fr/ur), i'rab (corpus morphology per word), word meanings — all from quran_sciences.db. Gated by riwayah alignment. **Do not rebuild.** |
+| 9 | Professional dropdowns (reciters/translations) | 🔶 | Reciter dropdown done (176 Arabic editions) in the Downloads screen. Missing: translation-language selector in the reader — WORK_QUEUE Stage 4 |
 | 10 | 10 authentic adhans (no music) | ⏳ | rafeeq-api/downloads/adhans = 10 real MP3s verified (ID3, 0.4–1.9MB) |
 | 11 | Custom adhan MP3 from device | ⏳ | |
 | 12 | Adhan UI + karaoke sync | ⏳ | |
