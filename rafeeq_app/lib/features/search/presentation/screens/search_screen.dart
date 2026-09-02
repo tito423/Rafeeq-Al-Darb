@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/db/quran_repository.dart';
+import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/topic_tree.dart';
 
@@ -151,6 +152,12 @@ class _TopicsTabState extends State<_TopicsTab> {
   Topic? _openTopic;
   Future<List<Ayah>>? _future;
 
+  /// P2‑8 #4 (Sakinah-style topical audio playlist) — true while this
+  /// topic's ayahs are being played back-to-back via `playQueue`. Reuses the
+  /// exact same curated `TopicRef`s the reading list already shows — no new
+  /// content, just a way to listen to them in order instead of reading.
+  bool _playingAll = false;
+
   Future<List<Ayah>> _loadTopic(Topic topic) async {
     final all = <Ayah>[];
     for (final ref in topic.refs) {
@@ -166,9 +173,44 @@ class _TopicsTabState extends State<_TopicsTab> {
     });
   }
 
+  void _closeTopic() {
+    AyahAudioService.instance.stopQueue();
+    setState(() {
+      _openTopic = null;
+      _future = null;
+      _playingAll = false;
+    });
+  }
+
+  Future<void> _togglePlayAll(String label) async {
+    if (_playingAll) {
+      await AyahAudioService.instance.stopQueue();
+      if (mounted) setState(() => _playingAll = false);
+      return;
+    }
+    final future = _future;
+    if (future == null) return;
+    setState(() => _playingAll = true);
+    final ayahs = await future;
+    if (!mounted) return;
+    await AyahAudioService.instance.playQueue(
+      ayahs,
+      widget.repo,
+      titleFor: (a, i) => '$label • ${a.surahId}:${a.ayahNumber}',
+    );
+    if (mounted) setState(() => _playingAll = false);
+  }
+
+  @override
+  void dispose() {
+    AyahAudioService.instance.stopQueue();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_openTopic != null) {
+      final label = _openTopic!.labelKey.tr();
       return Column(
         children: [
           Padding(
@@ -177,19 +219,25 @@ class _TopicsTabState extends State<_TopicsTab> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_forward),
-                  onPressed: () => setState(() {
-                    _openTopic = null;
-                    _future = null;
-                  }),
+                  onPressed: _closeTopic,
                 ),
                 Expanded(
                   child: Text(
-                    _openTopic!.labelKey.tr(),
+                    label,
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(width: 48),
+                IconButton(
+                  tooltip: _playingAll
+                      ? 'search.stop_playing'.tr()
+                      : 'search.play_topic'.tr(),
+                  icon: Icon(_playingAll
+                      ? Icons.stop_circle_outlined
+                      : Icons.playlist_play_rounded),
+                  color: _playingAll ? AppColors.gold : null,
+                  onPressed: () => _togglePlayAll(label),
+                ),
               ],
             ),
           ),
@@ -210,6 +258,14 @@ class _TopicsTabState extends State<_TopicsTab> {
                   itemBuilder: (context, i) {
                     final a = ayahs[i];
                     return ListTile(
+                      leading: IconButton(
+                        icon: const Icon(Icons.play_circle_outline),
+                        onPressed: () => AyahAudioService.instance.play(
+                          a,
+                          widget.repo,
+                          title: '$label • ${a.surahId}:${a.ayahNumber}',
+                        ),
+                      ),
                       title: Text(
                         a.textUthmani,
                         style: const TextStyle(

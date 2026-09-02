@@ -70,7 +70,21 @@
     "sciences_hafs_only": "Verse numbering in this riwayah differs from Hafs, so tafsir and translation are unavailable in some surahs",
     "sciences_unavailable_here": "Tafsir and translation are unavailable for this surah in this riwayah",
     "pages_count": "pages",
-    "ayahs_count": "ayahs"
+    "ayahs_count": "ayahs",
+    "repeat": "Repeat",
+    "repeat_dialog_title": "Repeat for memorization",
+    "repeat_count": "Number of repetitions",
+    "repeat_gap": "Gap between repeats",
+    "repeat_start": "Start",
+    "repeat_playing": "Repeating the ayah…",
+    "repeat_stop": "Stop",
+    "note": "Note",
+    "note_edit": "Edit note",
+    "note_hint": "Write your note here…",
+    "note_delete": "Delete note",
+    "share_failed": "Couldn't share",
+    "tafseer_compare_view": "Compare side by side",
+    "tafseer_list_view": "List view"
   },
   "library": {
     "title": "Library",
@@ -301,7 +315,9 @@
     "prophet_nuh": "Nuh (Noah), peace be upon him",
     "prophet_ibrahim": "Ibrahim (Abraham), peace be upon him",
     "prophet_musa": "Musa (Moses), peace be upon him",
-    "prophet_yusuf": "Yusuf (Joseph), peace be upon him"
+    "prophet_yusuf": "Yusuf (Joseph), peace be upon him",
+    "play_topic": "Play all",
+    "stop_playing": "Stop"
   },
   "errors": {
     "offline": "No internet connection",

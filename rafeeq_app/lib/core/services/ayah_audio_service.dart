@@ -42,6 +42,82 @@ class AyahAudioService {
   bool get isPlaying => _player.playing;
   Stream<PlayerState> get playerState => _player.playerStateStream;
 
+  // ── Queue playback (P2‑8: memorization repeat-loop + topic playlists) ────
+
+  /// Bumped on every `stopQueue()`/new `playQueue()` call so an in-flight
+  /// loop notices it has been superseded and stops advancing instead of
+  /// racing a newer one.
+  int _queueToken = 0;
+
+  bool get isQueuePlaying => _queueToken != 0;
+
+  /// Plays [ayahs] one after another, waiting for each to finish before
+  /// starting the next. Used for both the memorization repeat-loop (the same
+  /// ayah repeated N times) and a topic's audio playlist (Stage 6's curated
+  /// `topic_tree.dart` ranges, played in order).
+  Future<void> playQueue(
+    List<Ayah> ayahs,
+    QuranRepository repo, {
+    String edition = defaultEdition,
+    Duration gap = Duration.zero,
+    String Function(Ayah ayah, int index)? titleFor,
+    void Function(int index)? onIndex,
+  }) async {
+    final token = ++_queueToken;
+    for (var i = 0; i < ayahs.length; i++) {
+      if (token != _queueToken) return; // superseded by a newer call/stop
+      onIndex?.call(i);
+      await play(
+        ayahs[i],
+        repo,
+        edition: edition,
+        title: titleFor?.call(ayahs[i], i),
+      );
+      await _waitForCompletionOrToken(token);
+      if (token != _queueToken) return;
+      if (gap > Duration.zero) await Future<void>.delayed(gap);
+    }
+    if (token == _queueToken) _queueToken = 0;
+  }
+
+  /// Convenience for the memorization loop: the same ayah, [times] times,
+  /// with [gap] of silence between repetitions.
+  Future<void> playRepeated(
+    Ayah ayah,
+    QuranRepository repo, {
+    required int times,
+    required Duration gap,
+    String edition = defaultEdition,
+    String? title,
+  }) {
+    return playQueue(
+      List.filled(times, ayah),
+      repo,
+      edition: edition,
+      gap: gap,
+      titleFor: title == null ? null : (a, i) => title,
+    );
+  }
+
+  Future<void> _waitForCompletionOrToken(int token) async {
+    final completer = Completer<void>();
+    late final StreamSubscription<PlayerState> sub;
+    sub = _player.playerStateStream.listen((s) {
+      if (token != _queueToken ||
+          s.processingState == ProcessingState.completed) {
+        sub.cancel();
+        if (!completer.isCompleted) completer.complete();
+      }
+    });
+    await completer.future;
+  }
+
+  /// Cancels any in-flight `playQueue`/`playRepeated` loop and stops audio.
+  Future<void> stopQueue() async {
+    _queueToken = 0;
+    await stop();
+  }
+
   Future<Directory> _editionDir(String edition) async {
     final base = await getApplicationDocumentsDirectory();
     final dir = Directory(p.join(base.path, 'recitations', edition));

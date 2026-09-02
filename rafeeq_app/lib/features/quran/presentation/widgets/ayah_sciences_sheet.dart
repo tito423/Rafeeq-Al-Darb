@@ -1,3 +1,5 @@
+import 'dart:async';
+
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (rtl/ltr) used throughout this file.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -11,7 +13,9 @@ import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/buckwalter.dart';
+import '../../data/ayah_notes_store.dart';
 import '../../data/translation_lang_provider.dart';
+import 'ayah_share_card.dart';
 
 /// "علوم الآية" — tafsir, translation, i'rab and word meanings for one ayah,
 /// served straight from the bundled quran_sciences.db so the whole card works
@@ -108,6 +112,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                 surahNameAr: widget.surahNameAr,
                 ayah: widget.ayah,
                 quranRepo: widget.quranRepo,
+                translationsFuture: _translations,
               ),
               _AyahPanel(text: widget.ayah.textUthmani),
               if (!widget.sciencesAvailable)
@@ -167,21 +172,103 @@ class _DragHandle extends StatelessWidget {
       );
 }
 
-class _Header extends StatelessWidget {
+class _Header extends ConsumerWidget {
   final String surahNameAr;
   final Ayah ayah;
   final QuranRepository quranRepo;
+  final Future<Map<String, AyahTranslation>> translationsFuture;
 
   const _Header({
     required this.surahNameAr,
     required this.ayah,
     required this.quranRepo,
+    required this.translationsFuture,
   });
 
+  String get _reference => '$surahNameAr • ${ayah.surahId}:${ayah.ayahNumber}';
+
+  Future<void> _handleAction(
+    BuildContext context,
+    WidgetRef ref,
+    String action,
+    String? existingNote,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    switch (action) {
+      case 'copy':
+        await Clipboard.setData(ClipboardData(text: ayah.textUthmani));
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('quran.copy'.tr()),
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      case 'repeat':
+        // The dialog only picks the config and returns it — it must not
+        // start playback or show a SnackBar itself, since its own
+        // BuildContext is torn down the instant it pops and a SnackBar
+        // scheduled through it can end up stuck (never auto-dismissing).
+        // This header's context outlives the sheet, so it owns both.
+        final config = await showDialog<(int, int)>(
+          context: context,
+          builder: (_) => const _RepeatDialog(),
+        );
+        if (config == null) return;
+        final (times, gapSeconds) = config;
+        unawaited(AyahAudioService.instance.playRepeated(
+          ayah,
+          quranRepo,
+          times: times,
+          gap: Duration(seconds: gapSeconds),
+          title: _reference,
+        ));
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('quran.repeat_playing'.tr()),
+            duration: const Duration(seconds: 4),
+            action: SnackBarAction(
+              label: 'quran.repeat_stop'.tr(),
+              onPressed: () {
+                AyahAudioService.instance.stopQueue();
+                messenger.hideCurrentSnackBar();
+              },
+            ),
+          ),
+        );
+      case 'note':
+        await showDialog<void>(
+          context: context,
+          builder: (_) => _NoteDialog(
+            ayah: ayah,
+            initialText: existingNote ?? '',
+          ),
+        );
+      case 'share':
+        final translations = await translationsFuture;
+        final lang = ref.read(selectedTranslationLangProvider);
+        final translation = translations[lang]?.text;
+        if (!context.mounted) return;
+        final ok = await shareAyahAsImage(
+          context,
+          ayahText: ayah.textUthmani,
+          reference: _reference,
+          translation: translation,
+        );
+        if (!ok && context.mounted) {
+          messenger.showSnackBar(
+            SnackBar(content: Text('quran.share_failed'.tr())),
+          );
+        }
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final gold = AppColors.gold;
+    final notes = ref.watch(ayahNotesProvider);
+    final note = notes[AyahNotesNotifier.keyFor(ayah.surahId, ayah.ayahNumber)];
+    final hasNote = note != null && note.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(14, 4, 6, 4),
@@ -228,29 +315,203 @@ class _Header extends StatelessWidget {
             onPressed: () => AyahAudioService.instance.play(
               ayah,
               quranRepo,
-              title: '$surahNameAr • ${ayah.surahId}:${ayah.ayahNumber}',
+              title: _reference,
             ),
           ),
           IconButton(
             tooltip: 'quran.stop'.tr(),
             icon: const Icon(Icons.stop_circle_outlined),
-            onPressed: AyahAudioService.instance.stop,
+            onPressed: AyahAudioService.instance.stopQueue,
           ),
-          IconButton(
-            tooltip: 'quran.copy'.tr(),
-            icon: const Icon(Icons.copy_rounded),
-            onPressed: () {
-              Clipboard.setData(ClipboardData(text: ayah.textUthmani));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('quran.copy'.tr()),
-                  duration: const Duration(seconds: 1),
+          PopupMenuButton<String>(
+            tooltip: '',
+            icon: Icon(Icons.more_vert, color: hasNote ? gold : null),
+            onSelected: (v) => _handleAction(context, ref, v, note),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'copy',
+                child: ListTile(
+                  leading: const Icon(Icons.copy_rounded),
+                  title: Text('quran.copy'.tr()),
+                  contentPadding: EdgeInsets.zero,
                 ),
-              );
-            },
+              ),
+              PopupMenuItem(
+                value: 'repeat',
+                child: ListTile(
+                  leading: const Icon(Icons.repeat_rounded),
+                  title: Text('quran.repeat'.tr()),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              PopupMenuItem(
+                value: 'note',
+                child: ListTile(
+                  leading: Icon(
+                    hasNote ? Icons.edit_note : Icons.note_add_outlined,
+                    color: hasNote ? gold : null,
+                  ),
+                  title: Text(hasNote ? 'quran.note_edit'.tr() : 'quran.note'.tr()),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              PopupMenuItem(
+                value: 'share',
+                child: ListTile(
+                  leading: const Icon(Icons.ios_share_rounded),
+                  title: Text('quran.share'.tr()),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+            ],
           ),
         ],
       ),
+    );
+  }
+}
+
+/// P2‑8 #1 (Ayat-style memorization loop) — picks how many times to repeat
+/// the current ayah's recitation and the gap between repetitions, and pops
+/// `(times, gapSeconds)`. Deliberately does **not** start playback or touch
+/// `ScaffoldMessenger` itself — this dialog's own context is torn down the
+/// instant it pops, and a SnackBar scheduled through a closing dialog's
+/// context can end up stuck on screen (observed live: it never
+/// auto-dismissed). The caller, whose context outlives the dialog, does
+/// both once this returns.
+class _RepeatDialog extends StatefulWidget {
+  const _RepeatDialog();
+
+  @override
+  State<_RepeatDialog> createState() => _RepeatDialogState();
+}
+
+class _RepeatDialogState extends State<_RepeatDialog> {
+  int _times = 3;
+  int _gapSeconds = 1;
+
+  static const _timeOptions = [3, 5, 10];
+  static const _gapOptions = [0, 1, 2, 3];
+
+  @override
+  Widget build(BuildContext context) {
+    final gold = AppColors.gold;
+    return AlertDialog(
+      title: Text('quran.repeat_dialog_title'.tr()),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('quran.repeat_count'.tr()),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final n in _timeOptions)
+                ChoiceChip(
+                  label: Text('$n'),
+                  selected: _times == n,
+                  selectedColor: gold.withValues(alpha: 0.25),
+                  onSelected: (_) => setState(() => _times = n),
+                ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text('quran.repeat_gap'.tr()),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final g in _gapOptions)
+                ChoiceChip(
+                  label: Text('${g}s'),
+                  selected: _gapSeconds == g,
+                  selectedColor: gold.withValues(alpha: 0.25),
+                  onSelected: (_) => setState(() => _gapSeconds = g),
+                ),
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text('common.cancel'.tr()),
+        ),
+        FilledButton(
+          onPressed: () =>
+              Navigator.of(context).pop((_times, _gapSeconds)),
+          child: Text('quran.repeat_start'.tr()),
+        ),
+      ],
+    );
+  }
+}
+
+/// P2‑8 #7 — a private free-text note attached to this ayah.
+class _NoteDialog extends ConsumerStatefulWidget {
+  final Ayah ayah;
+  final String initialText;
+
+  const _NoteDialog({required this.ayah, required this.initialText});
+
+  @override
+  ConsumerState<_NoteDialog> createState() => _NoteDialogState();
+}
+
+class _NoteDialogState extends ConsumerState<_NoteDialog> {
+  late final _controller = TextEditingController(text: widget.initialText);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('quran.note'.tr()),
+      content: TextField(
+        controller: _controller,
+        maxLines: 5,
+        minLines: 3,
+        textDirection: TextDirection.rtl,
+        decoration: InputDecoration(
+          hintText: 'quran.note_hint'.tr(),
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      actions: [
+        if (widget.initialText.isNotEmpty)
+          TextButton(
+            onPressed: () async {
+              await ref
+                  .read(ayahNotesProvider.notifier)
+                  .clearNote(widget.ayah.surahId, widget.ayah.ayahNumber);
+              if (context.mounted) Navigator.of(context).pop();
+            },
+            child: Text(
+              'quran.note_delete'.tr(),
+              style: const TextStyle(color: AppColors.error),
+            ),
+          ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text('common.cancel'.tr()),
+        ),
+        FilledButton(
+          onPressed: () async {
+            await ref.read(ayahNotesProvider.notifier).setNote(
+                  widget.ayah.surahId,
+                  widget.ayah.ayahNumber,
+                  _controller.text,
+                );
+            if (context.mounted) Navigator.of(context).pop();
+          },
+          child: Text('common.save'.tr()),
+        ),
+      ],
     );
   }
 }
@@ -412,26 +673,85 @@ class _SourceBlock extends StatelessWidget {
   }
 }
 
-class _TafseerTab extends StatelessWidget {
+/// P2‑8 #3 (QuranFlash-style "view several tafsirs at once") — the sources
+/// are always all loaded together (no per-source fetch); this just toggles
+/// how they're laid out: a scrollable list (default, reads well on a phone)
+/// or side-by-side columns when there are exactly two, for a real compare.
+class _TafseerTab extends StatefulWidget {
   final Future<Map<String, String>> future;
   const _TafseerTab({required this.future});
 
   @override
+  State<_TafseerTab> createState() => _TafseerTabState();
+}
+
+class _TafseerTabState extends State<_TafseerTab> {
+  bool _compare = false;
+
+  @override
   Widget build(BuildContext context) {
     return _AsyncTab<Map<String, String>>(
-      future: future,
+      future: widget.future,
       isEmpty: (d) => d.isEmpty,
       builder: (context, data) {
         final entries = data.entries.toList();
-        return ListView.builder(
-          padding: const EdgeInsets.only(bottom: 24),
-          itemCount: entries.length,
-          itemBuilder: (context, i) => _SourceBlock(
-            title: SciencesRepository.tafseerSources[entries[i].key] ??
-                entries[i].key,
-            body: entries[i].value,
-            direction: TextDirection.rtl,
-          ),
+        final blocks = [
+          for (final e in entries)
+            _SourceBlock(
+              title: SciencesRepository.tafseerSources[e.key] ?? e.key,
+              body: e.value,
+              direction: TextDirection.rtl,
+            ),
+        ];
+
+        if (entries.length < 2) {
+          return ListView(
+            padding: const EdgeInsets.only(bottom: 24),
+            children: blocks,
+          );
+        }
+
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton.icon(
+                  onPressed: () => setState(() => _compare = !_compare),
+                  icon: Icon(
+                      _compare ? Icons.view_agenda_outlined : Icons.view_column_outlined),
+                  label: Text(_compare
+                      ? 'quran.tafseer_list_view'.tr()
+                      : 'quran.tafseer_compare_view'.tr()),
+                ),
+              ),
+            ),
+            Expanded(
+              child: _compare
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (var i = 0; i < blocks.length; i++) ...[
+                          if (i > 0)
+                            VerticalDivider(
+                                width: 1,
+                                color: AppColors.gold.withValues(alpha: 0.2)),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.only(bottom: 24),
+                              child: blocks[i],
+                            ),
+                          ),
+                        ],
+                      ],
+                    )
+                  : ListView(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      children: blocks,
+                    ),
+            ),
+          ],
         );
       },
     );

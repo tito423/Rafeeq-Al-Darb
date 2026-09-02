@@ -70,7 +70,21 @@
     "sciences_hafs_only": "A numeração dos versículos nesta riwaya difere da de Hafs, por isso o tafsir e a tradução não estão disponíveis em algumas suratas",
     "sciences_unavailable_here": "O tafsir e a tradução não estão disponíveis para esta surata nesta riwaya",
     "pages_count": "páginas",
-    "ayahs_count": "versículos"
+    "ayahs_count": "versículos",
+    "repeat": "Repetir",
+    "repeat_dialog_title": "Repetir para memorização",
+    "repeat_count": "Número de repetições",
+    "repeat_gap": "Pausa entre repetições",
+    "repeat_start": "Iniciar",
+    "repeat_playing": "A repetir o versículo…",
+    "repeat_stop": "Parar",
+    "note": "Nota",
+    "note_edit": "Editar nota",
+    "note_hint": "Escreva a sua nota aqui…",
+    "note_delete": "Eliminar nota",
+    "share_failed": "Não foi possível partilhar",
+    "tafseer_compare_view": "Comparar lado a lado",
+    "tafseer_list_view": "Vista de lista"
   },
   "library": {
     "title": "Biblioteca",
@@ -301,7 +315,9 @@
     "prophet_nuh": "Nuh (Noé), a paz esteja com ele",
     "prophet_ibrahim": "Ibrahim (Abraão), a paz esteja com ele",
     "prophet_musa": "Musa (Moisés), a paz esteja com ele",
-    "prophet_yusuf": "Yusuf (José), a paz esteja com ele"
+    "prophet_yusuf": "Yusuf (José), a paz esteja com ele",
+    "play_topic": "Reproduzir tudo",
+    "stop_playing": "Parar"
   },
   "errors": {
     "offline": "Sem ligação à internet",

@@ -70,7 +70,21 @@
     "sciences_hafs_only": "ترقيم الآيات في هذه الرواية يختلف عن حفص، فالتفسير والترجمة غير متاحين في بعض السور",
     "sciences_unavailable_here": "التفسير والترجمة غير متاحين لهذه السورة في هذه الرواية",
     "pages_count": "صفحة",
-    "ayahs_count": "آية"
+    "ayahs_count": "آية",
+    "repeat": "تكرار",
+    "repeat_dialog_title": "تكرار الآية للحفظ",
+    "repeat_count": "عدد مرات التكرار",
+    "repeat_gap": "الفاصل بين كل مرة",
+    "repeat_start": "ابدأ",
+    "repeat_playing": "جارٍ تكرار الآية…",
+    "repeat_stop": "إيقاف",
+    "note": "ملاحظة",
+    "note_edit": "تعديل الملاحظة",
+    "note_hint": "اكتب ملاحظتك هنا…",
+    "note_delete": "حذف الملاحظة",
+    "share_failed": "تعذّرت المشاركة",
+    "tafseer_compare_view": "مقارنة جنبًا لجنب",
+    "tafseer_list_view": "عرض القائمة"
   },
   "library": {
     "title": "المكتبة",
@@ -301,7 +315,9 @@
     "prophet_nuh": "نوح عليه السلام",
     "prophet_ibrahim": "إبراهيم عليه السلام",
     "prophet_musa": "موسى عليه السلام",
-    "prophet_yusuf": "يوسف عليه السلام"
+    "prophet_yusuf": "يوسف عليه السلام",
+    "play_topic": "تشغيل الكل",
+    "stop_playing": "إيقاف"
   },
   "errors": {
     "offline": "لا يوجد اتصال بالإنترنت",

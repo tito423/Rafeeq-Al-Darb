@@ -72,6 +72,9 @@ dependencies:
 
   url_launcher: ^6.3.2
 
+  # Share an ayah card as an image (P2‑8)
+  share_plus: ^12.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

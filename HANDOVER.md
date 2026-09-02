@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 01:34 — IN PROGRESS — resume here**
+**2026-09-03 02:12 — IN PROGRESS — resume here**
 
-Handoff: NEXT_SESSION_PROMPT.md + HANDOVER refreshed to true state — P2-4b/5/6 DONE+verified; P2-7 code+clips done, only real-device full-screen render left (emulator can't fire the full-screen-intent); launcher icon redesigned+verified; P2-8 research done (PHASE2_RESEARCH.md), STOP for owner shortlist pick. Tree green (analyze clean). Next agent starts from NEXT_SESSION_PROMPT.md.
+P2-8 batch 1 + topical playlist DONE + emulator-verified: memorization repeat-loop (AyahAudioService.playQueue/playRepeated/stopQueue, repeat dialog w/ count+gap chips, confirmed 3 real playbacks w/ 1s gaps via dumpsys audio), share-ayah-as-image (ayah_share_card.dart, RepaintBoundary capture + share_plus native chooser, real thumbnail confirmed), per-ayah private notes (ayah_notes_store.dart SharedPreferences-backed, note dialog, menu icon turns gold+relabels when a note exists - verified persists), multi-tafsir side-by-side compare toggle in _TafseerTab (verified 3 sources Qurtubi/Jalalayn/Muyassar rendered in columns). Search screen topics tab: play-all + per-ayah play icons reusing existing topic_tree.dart curated ranges (verified real sequential playback advancing ayah to ayah via dumpsys audio). Real bug found+fixed: repeat's SnackBar was scheduled through the closing dialog's own context and got stuck forever (never auto-dismissed) - refactored _RepeatDialog to just return (times,gap) and let the long-lived Header context own playback+snackbar+hideCurrentSnackBar. +16 keys x5 locales. analyze clean, test 13/13. Batch 2 (translation languages) and the 3 research-only items (tajweed mushaf source, group khatma design, radio streaming source) still open.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

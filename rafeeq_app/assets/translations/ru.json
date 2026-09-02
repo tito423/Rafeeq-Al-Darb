@@ -70,7 +70,21 @@
     "sciences_hafs_only": "Нумерация аятов в этой ривае отличается от ривая Хафса, поэтому тафсир и перевод недоступны в некоторых сурах",
     "sciences_unavailable_here": "Тафсир и перевод недоступны для этой суры в данной ривае",
     "pages_count": "страниц",
-    "ayahs_count": "аятов"
+    "ayahs_count": "аятов",
+    "repeat": "Повтор",
+    "repeat_dialog_title": "Повтор для заучивания",
+    "repeat_count": "Количество повторов",
+    "repeat_gap": "Пауза между повторами",
+    "repeat_start": "Начать",
+    "repeat_playing": "Повтор аята…",
+    "repeat_stop": "Стоп",
+    "note": "Заметка",
+    "note_edit": "Изменить заметку",
+    "note_hint": "Напишите свою заметку здесь…",
+    "note_delete": "Удалить заметку",
+    "share_failed": "Не удалось поделиться",
+    "tafseer_compare_view": "Сравнить рядом",
+    "tafseer_list_view": "Список"
   },
   "library": {
     "title": "Библиотека",
@@ -301,7 +315,9 @@
     "prophet_nuh": "Нух (Ной), мир ему",
     "prophet_ibrahim": "Ибрахим (Авраам), мир ему",
     "prophet_musa": "Муса (Моисей), мир ему",
-    "prophet_yusuf": "Юсуф (Иосиф), мир ему"
+    "prophet_yusuf": "Юсуф (Иосиф), мир ему",
+    "play_topic": "Воспроизвести всё",
+    "stop_playing": "Стоп"
   },
   "errors": {
     "offline": "Нет подключения к интернету",
