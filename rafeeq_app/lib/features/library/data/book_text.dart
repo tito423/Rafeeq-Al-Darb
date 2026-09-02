@@ -32,6 +32,14 @@ class BookText {
     return BookText.fromJson(jsonDecode(raw) as Map<String, dynamic>);
   }
 
+  /// Shamela occasionally serves a paragraph that is only "..." / "…" / a lone
+  /// separator on the first page of a book — skip those so the reader doesn't
+  /// open on a stray line of dots.
+  static bool _isNoise(String t) {
+    final s = t.trim();
+    return s.isEmpty || RegExp(r'^[.…·\-_*\s]{1,4}$').hasMatch(s);
+  }
+
   factory BookText.fromJson(Map<String, dynamic> j) {
     final m = (j['meta'] as Map).cast<String, dynamic>();
     return BookText(
@@ -60,11 +68,12 @@ class BookText {
             printedPage: (p['p'] ?? 0) as int,
             paras: [
               for (final a in (p['paras'] as List? ?? const []))
-                BookPara(
-                  text: (a['t'] ?? '') as String,
-                  kind: (a['k'] ?? 'body') as String,
-                  ref: a['r'] as String?,
-                ),
+                if (!_isNoise((a['t'] ?? '') as String))
+                  BookPara(
+                    text: (a['t'] ?? '') as String,
+                    kind: (a['k'] ?? 'body') as String,
+                    ref: a['r'] as String?,
+                  ),
             ],
           ),
       ],

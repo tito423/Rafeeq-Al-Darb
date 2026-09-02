@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 21:33 — IN PROGRESS — resume here**
+**2026-09-02 21:46 — IN PROGRESS — resume here**
 
-P2-4b: 5 text editions hosted on tito423/rafeeq-api/books/text/*.json (owner OK'd the push). All 5 raw URLs verified HTTP 200 + exact byte size. upload_book_text.py uses gh api --input (stdin body) since base64 is too big for argv.
+P2-4b VERIFIED on emulator-5554: مصوّر|نص switch + per-edition size + download from rafeeq-api + مكتبتي rows; text reader (صيد الخاطر printReliable=true: shows صفحة N; رياض printReliable=false: shows seq only, فهرس trailing = seq, Nawawi chapter order intact despite Shamela pageNum jumps); فهرس jump, font A+/A-, bookmark toggle+strip+jump, provenance strip, page nav (RTL: right=prev left=next); airplane-mode relaunch -> نص opens from cache, page+font+bookmark restored. Filtered Shamela '...' noise paras. Arabic in-book search NOT interactively testable (adb can't inject Arabic - same as hadith search, HANDOVER §7). analyze clean, test 13/13.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
