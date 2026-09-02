@@ -417,7 +417,39 @@ No credentials live in the client; `AppConfig` is secret-free. Keep it so.
 
 ---
 
-## 11. Working notes for whoever continues
+## 11. Mistakes already made here — don't repeat them
+
+These are real errors from this project's own history, not generic advice. Each
+one cost time or money.
+
+**Verify what a tool currently does before asserting it.** An agent told the
+owner that Antigravity had no Claude models while Opus 4.6 was selected in his
+own model picker. The claim came from an older transcript instead of a check.
+The owner can see his screen; you cannot.
+
+**Check identifiers against the current code, not against chat history.** Code
+was written using `AppColors.accentGold`, an API that existed in an older
+transcript of this project but not in the rebuilt palette. Read the file.
+
+**Re-read the result of any bulk mechanical edit.** A careless regex replacement
+produced an invalid widget (`painter:` plus a bogus `foregroundPainter:`) and a
+quoted heredoc leaked literal `\$` escapes into Dart string interpolation. Both
+needed a second pass to undo.
+
+**Static checks are not compilation.** An agent hand-verified brackets, imports,
+colour members and translation keys across 35 files and reported exactly that —
+then `flutter analyze` found 13 real issues, 10 of them a single import
+collision (`easy_localization` re-exporting `package:intl`, whose
+`TextDirection` shadows the `dart:ui` one). Substitute verification catches a
+narrow class of problems. Name the method you used and its limits.
+
+**Never report unverified work as done.** This project lost roughly $20 and
+several rebuilds to agents that produced finished-looking screens wired to
+nothing. The owner checks. Say plainly what you ran and what you did not.
+
+---
+
+## 12. Working notes for whoever continues
 
 - **Work in small verified steps.** The failures in §2 all came from agents
   trying to do 20 tasks in one shot and losing track.
