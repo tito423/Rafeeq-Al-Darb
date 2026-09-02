@@ -223,8 +223,11 @@ class _Header extends StatelessWidget {
           IconButton(
             tooltip: 'quran.play'.tr(),
             icon: const Icon(Icons.play_circle_outline),
-            onPressed: () =>
-                AyahAudioService.instance.play(ayah, quranRepo),
+            onPressed: () => AyahAudioService.instance.play(
+              ayah,
+              quranRepo,
+              title: '$surahNameAr • ${ayah.surahId}:${ayah.ayahNumber}',
+            ),
           ),
           IconButton(
             tooltip: 'quran.stop'.tr(),

@@ -7,7 +7,7 @@
 |---|---|
 | **Last updated** | 2026-09-02 |
 | **State at** | commit `6448768` + analyzer-cleanup + STAGE-0 runtime-fixes commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · app runs on Android emulator.** STAGE 0 gate **partially** passed — network-dependent checks are blocked by a host TLS-interception issue, not an app bug. See §7. |
+| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0 gate PASSED — all 10 acceptance checks verified on the Android emulator (§7 table).** Not yet run on a physical device. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,17 +33,16 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 — STAGE 0 IN PROGRESS — blocked, waiting on owner decision**
+**2026-09-02 — STAGE 0 gate PASSED. Next: STAGE 1 (Adhan).**
 
-Analyzer clean, first `flutter build apk --debug` OK, app runs on an Android
-emulator. Fixed 2 real runtime bugs (sciences DB not bundled in pubspec;
-read-only DB opened with `version:` → `SQLITE_READONLY`). STAGE-0 checks that
-work offline are verified (text mode, sciences card 0.4). **The rest (0.2, 0.3,
-0.5–0.10) need the network and are blocked:** this PC's Avast "Web/Mail Shield"
-MITM-intercepts TLS, and the emulator won't trust the re-signed cert, so every
-HTTPS fetch from the app fails with `CERTIFICATE_VERIFY_FAILED`. Not an app bug.
-Owner must choose: pause Avast HTTPS scanning / trust its root CA in the
-emulator / test on a physical device. Full detail in §7.
+All 10 STAGE-0 acceptance checks verified on the Android emulator (see §7 table).
+Fixes made to get there: read-only DB open (`956ec5e`), debug TLS trust config
+for Avast (`e7b8728`), sciences DB asset (owner, `dd7db4b`), audio `MediaItem`
+tag so `just_audio_background` actually plays (this commit).
+
+Not done: real-device run (only emulator), and the out-of-scope bugs listed at
+the end of §7 — the mushaf-download-stops-on-tab-switch one is the most worth
+fixing early.
 <!-- WIP:END -->
 
 ---
@@ -329,26 +328,58 @@ emulator (Medium Phone API 36). Two real runtime bugs found and fixed:
 - Settings screen: language toggle, theme toggle, downloads entry, real
   source list.
 
-**Blocked — could NOT verify on this machine (needs a decision):** every
-STAGE-0 check that needs the network — 0.2 (image-mode page render), 0.3
-(multi-line ayah highlight), 0.5 / 0.6 (edition picker + Warsh divergence
-notice, both in image mode), 0.7 / 0.8 (downloads), 0.9 (offline), 0.10 (paging
-perf). Image mode fails with `HandshakeException: CERTIFICATE_VERIFY_FAILED`.
-**Cause is the host, not the app:** this Windows box runs Avast "Web/Mail
-Shield", which MITM-intercepts all TLS and re-signs it with
-`Avast Web/Mail Shield Root`. The host cert store trusts that root; the Android
-emulator does not, so every HTTPS fetch from the emulator fails. `Dio()` usage
-in `mushaf_page_service.dart` / `ayah_audio_service.dart` is correct and needs
-no change. To finish STAGE 0 someone must either (a) pause Avast HTTPS scanning
-while testing, (b) install the Avast root CA into the emulator's system trust
-store, or (c) run on a physical Android device on normal Wi-Fi.
+### Update 2026-09-02 (later still) — STAGE 0 GATE PASSED, all 10 on the emulator
 
-**Cosmetic issues seen in passing (not STAGE-0 blockers, fix later):**
-- Text-mode surah header renders `سورة سورةُ الفاتحة` (the word "سورة" is
-  prepended to a name that already contains it).
-- A stray `()` prints under the last ayah on a text-mode page.
-- Settings: `المصادر والمأسى` should read `المصادر والمراجع`.
-- Launcher icon is a square JPG with no alpha/adaptive shape.
+The network wall was a **host** problem: this Windows box runs Avast "Web/Mail
+Shield", which MITM-intercepts all TLS and re-signs it with
+`Avast Web/Mail Shield Root`. Windows trusts that root; the emulator did not, so
+every HTTPS fetch failed `CERTIFICATE_VERIFY_FAILED`. Owner approved trusting
+that root in **debug** builds only — see `android/app/src/debug/` (commit
+`e7b8728`): a `networkSecurityConfig` that adds the bundled Avast root next to
+the system/user anchors. `src/main/` is untouched; release builds never see it.
+`Dio()` usage in the app was always correct.
+
+After that, one more **real app bug** found and fixed (commit with the audio
+fix): recitation playback did nothing. `main()` initialises
+`just_audio_background`, which throws on any audio source that has no
+`MediaItem` tag — and `AyahAudioService` was calling `setFilePath` / `setUrl`
+untagged, so every play silently caught the exception. Now it uses
+`setAudioSource(AudioSource.file/uri(..., tag: MediaItem(...)))`; the sheet
+passes a real "سورة • s:a" title so the media notification reads properly.
+
+**STAGE 0 acceptance — all verified on the emulator (Medium Phone API 36):**
+
+| # | check | result |
+|---|---|---|
+| 0.1 | launches, 5 tabs, no crash | ✅ (Azkar/Hadith are honest "قريباً…" stubs) |
+| 0.2 | image-mode page renders, light **and** dark | ✅ glyphs recolour per theme |
+| 0.3 | tap 2:6 on p.3 → **two** line fragments highlighted, not one box | ✅ — the polygon pipeline is correct |
+| 0.4 | ayah card: real tafsir (Muyassar+Jalalayn) / EN+FR+UR / i'rab / meanings | ✅ no placeholders |
+| 0.5 | edition picker → Warsh; picker shows the numbering warning | ✅ warning on Warsh/Qalun/Duri, not Hafs/Shubah |
+| 0.6 | Warsh + a diverging surah (2) → "غير متاحين لهذه السورة في هذه الرواية", **not** tafsir | ✅ |
+| 0.7 | download a mushaf → real incrementing progress | ✅ 14→88→205 pages, resumable |
+| 0.8 | download one surah's recitation | ✅ 7 real per-ayah mp3s on disk |
+| 0.9 | network OFF → cached pages render, uncached show honest error, downloaded audio plays | ✅ (audio only after the MediaItem fix) |
+| 0.10 | paging smooth | ✅ no dropped-frame/Davey logs paging cached pages; re-judge feel on a real low-end device — fix if needed is `vector_graphics` `.vec`, not raster |
+
+**Bugs found but NOT fixed (out of STAGE-0 scope — track separately):**
+- **Mushaf download stops when you leave the Mushafs tab.** Switch to the
+  Recitations tab mid-download and the prefetch halts (got to 205/604, no
+  resume on return; the tile shows the Download button again instead of
+  progress). `MushafPageService.prefetchEdition` is fire-and-forget but the
+  Downloads tile drives/observes it and loses that on tab switch.
+- **Reader mode (text/image) is not persisted** — always starts in text mode.
+  Only the page number is saved. Minor UX.
+- `android/app/src/main/res/raw/` still ships **6 `.m4a` "adhan" files** (~25 MB,
+  several byte-identical = placeholders) — the §2 "fake adhans" that T1 was
+  supposed to purge. The real adhans are the 10 mp3s in `assets/audio/adhan/`.
+  Delete the raw/ ones in STAGE 1.
+- Text-mode surah header renders `سورة سورةُ الفاتحة` (doubled "سورة").
+- Stray `()` under the last ayah on a text-mode page.
+- Settings: `المصادر والمأسى` should be `المصادر والمراجع`.
+- Launcher icon is a square JPG, no alpha / adaptive shape.
+- i'rab root/lemma show Buckwalter translit ("Hmd", "rbb") not Arabic — that's
+  how the corpus stores them; a transliteration pass would be nicer.
 
 ### Original context (why analysis had never run)
 
@@ -369,22 +400,16 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
 
 1. ~~**Make it compile.** `.\check.bat` → fix → repeat until `analyze` is CLEAN.~~
    **DONE 2026-09-02** — `flutter analyze` reports no issues (see §7).
-2. **Run it on a device.** (Partly done 2026-09-02 — see §7.) Remaining:
-   - ~~Ayah card shows real tafsir / EN + FR translation / i'rab / meanings~~ ✅
-   - Quran tab → switch to image mode → a page renders **(blocked by host TLS
-     interception; unblock per §7 then verify)**
-   - **Tap an ayah → the highlight lands on the right words** (test a
-     multi-line ayah, e.g. 2:6 on page 3 — it must highlight *two* line
-     fragments, not one big box) — needs image mode
-   - Switch to Warsh → open a diverging surah → card must show the
-     "unavailable for this riwayah" notice, **not** tafsir — needs image mode
-   - Settings → Downloads → download a mushaf and a surah's recitation,
-     then turn off the network and confirm both still work — needs network
+2. ~~**Run it on a device.**~~ **DONE 2026-09-02 on the emulator** — all 10
+   STAGE-0 checks pass (§7 table). Still worth a physical-device pass before
+   release, especially 0.10 paging feel on low-end hardware.
 3. **Performance check.** `flutter_svg` parses each page at runtime and pages
-   have thousands of paths. If paging feels slow, precompile to
-   `vector_graphics` `.vec` — do **not** revert to raster.
-4. **Then** continue `RAFEEQ_PIPELINE.md` tasks 8–20 (adhan, library, hadith,
-   azkar, new-Muslim guide, thematic search, release).
+   have thousands of paths. No jank seen paging cached pages on the emulator; if
+   it feels slow on a real device, precompile to `vector_graphics` `.vec` — do
+   **not** revert to raster.
+4. **Then** continue `WORK_QUEUE.md` STAGE 1+ (adhan, library, hadith, azkar,
+   new-Muslim guide, thematic search, release). Consider fixing the
+   download-stops-on-tab-switch bug (§7) first — it undermines "offline-first".
 
 ---
 

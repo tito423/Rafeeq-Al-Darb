@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -52,29 +53,42 @@ class AyahAudioService {
 
   static bool _looksComplete(File f) => f.existsSync() && f.lengthSync() > 2048;
 
+  /// Every audio source must carry a [MediaItem] tag: `main()` initialises
+  /// `just_audio_background`, which throws on any untagged source (that was why
+  /// playback silently did nothing).
+  MediaItem _tag(String edition, int global, Ayah ayah, String? title) =>
+      MediaItem(
+        id: '$edition:$global',
+        album: 'رفيق الدرب',
+        title: title ?? '${ayah.surahId}:${ayah.ayahNumber}',
+      );
+
   /// Plays one ayah, preferring the cached file so a downloaded surah works
   /// offline; otherwise streams and caches in the background for next time.
   Future<void> play(
     Ayah ayah,
     QuranRepository repo, {
     String edition = defaultEdition,
+    String? title,
   }) async {
     try {
       final global = await repo.globalAyahNumber(ayah.surahId, ayah.ayahNumber);
       final dir = await _editionDir(edition);
       final file = _fileFor(dir, global);
+      final tag = _tag(edition, global, ayah, title);
 
       await _player.stop();
 
       if (_looksComplete(file)) {
-        await _player.setFilePath(file.path);
+        await _player.setAudioSource(AudioSource.file(file.path, tag: tag));
         unawaited(_player.play());
         return;
       }
 
       for (final url in AppConfig.ayahAudioUrls(edition, global)) {
         try {
-          await _player.setUrl(url);
+          await _player
+              .setAudioSource(AudioSource.uri(Uri.parse(url), tag: tag));
           unawaited(_player.play());
           unawaited(_cache(url, file));
           return;
