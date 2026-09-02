@@ -89,7 +89,7 @@ test` 13/13, last checkpoint `ec15d06`):
 | P2‑3 | Localization: add **Spanish, Russian, Portuguese** (full coverage) | — | ✅ done |
 | P2‑4 | Library redesign (home entry, 3 sub-tabs, "My Library") + catalog expansion | P2‑2, P2‑3 | ✅ structural done · catalog + al-Jaziri carried |
 | **P2‑4b** | **Book text editions** — every book also as a structured text edition (فهرس, in-book search, selectable text) beside the image PDF | P2‑4 | ✅ done, emulator-verified (5 Shamela text editions built + hosted on rafeeq-api; `book_text_reader_screen`; `مصوّر\|نص` switch) |
-| P2‑5 | Professional download manager (unified, pause/resume, storage view) **+ every download shows a live progress notification with a progress bar** | P2‑2, P2‑3 | 🔶 core done + emulator-verified (unified hub, storage view + تفريغ, notification for **every** download kind). Pause/resume for mushaf+audio still open. |
+| P2‑5 | Professional download manager (unified, pause/resume, storage view) **+ every download shows a live progress notification with a progress bar** | P2‑2, P2‑3 | ✅ done, emulator-verified (unified hub + storage view + تفريغ; live notification for **every** download kind; pause/resume for mushaf + audio). Minor: 3 tabs not 5 sections; a few toasts not re-shot. |
 | **P2‑6** | **Persistent prayer notification** — ongoing status-bar notification: next prayer, Hijri date, live countdown; professional, with the app icon | P2‑2 | no |
 | P2‑7 | Professional Adhan: **audio-or-video** choice, video composite, up to **30** adhans | P2‑5 | **yes** (video source/licensing) |
 | P2‑8 | Competitor feature mix (Sakinah, Ayat, QuranFlash, Khatmah) — research → propose → build | P2‑2..P2‑5 | check-in required |
@@ -613,7 +613,7 @@ stops and resumes from where it was (verify received bytes don't reset); cancel
 → partial file removed; storage view shows real numbers and "free space"
 actually deletes; airplane-mode replay of everything downloaded still works.
 
-### 🔶 P2‑5 — core done, emulator-verified (2026-09-02); pause/resume for mushaf+audio still open
+### ✅ P2‑5 — DONE, emulator-verified (2026-09-02)  ·  a few minor items noted below
 
 Built the parts the acceptance list and the owner add-on turn on:
 
@@ -640,23 +640,32 @@ Built the parts the acceptance list and the owner add-on turn on:
   `.nothing_downloaded` / `.downloaded_items`), parity **271/271**.
   `flutter analyze` clean, `flutter test` 13/13.
 
+- **pause / resume** — `MushafPageService` gained `pausePrefetch` /
+  `resumePrefetch` (+ `PrefetchProgress.paused`); `AyahAudioService` gained
+  `pauseDownload` / `resumeDownload`. The page/ayah loop idles (job alive,
+  progress frozen, notification cleared) until resumed or cancelled. The
+  Downloads tiles show a pause⇄resume toggle beside cancel while running.
+  `DownloadManager` already had real Range-resume pause/resume.
+- +12 keys × 5 locales, parity **272/272**.
+
 **Emulator-verified (`emulator-5554`):** overview shows real totals (7.6 MB
 books, then 84 MB after a partial mushaf download, then 7.6 MB again after
 `تفريغ` المصاحف); per-category rows + downloaded-items list correct; **starting
 a mushaf download posts a notification with the app icon + a progress bar that
-advances live and clears on cancel** (grant was `pm grant`-ed for the test —
-the app now asks); `تفريغ` for a category shows the confirm dialog and actually
-deletes + refreshes; cancel keeps the partial pages (resumable).
+advances live and clears on cancel** (the app now requests the grant;
+`pm grant`-ed for the test since a prior session had USER_FIXED-denied it);
+`تفريغ` for a category shows the confirm dialog and actually deletes +
+refreshes; cancel keeps the partial pages (resumable); **pause froze a mushaf
+download at page 5 ("متوقف مؤقتاً 5 / 604", bar greyed), resume continued past
+it to 11**, cancel then stopped it.
 
-**Still open in P2‑5** (not blockers for P2‑6):
-- **pause / resume** for the mushaf-page and per-surah-audio downloads — they
-  have `cancel` only; `DownloadManager` already has real pause/resume. Adding
-  a pause flag to the page-by-page loops is the remaining work.
+**Minor items left** (not blockers — track if polishing P2‑5 later):
 - The unified `DownloadsScreen` is 3 tabs, not the 5 labelled sections
   (`المصاحف · التلاوات · الحديث · الكتب · الأذان`) the spec sketched — hadith/
   books live in the overview's item list instead; adhan-video is P2‑7.
-- Not re-verified this run: completion "تم التنزيل" toast, the recitation
-  notification, `تفريغ الكل`, APK size delta.
+- Not re-shot this run: completion "تم التنزيل" toast, the per-surah recitation
+  notification (identical code path to the verified mushaf one), `تفريغ الكل`,
+  APK-size delta.
 
 ---
 

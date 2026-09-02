@@ -127,11 +127,25 @@ class AyahAudioService {
 
   String _jobKey(String edition, int surah) => '$edition/$surah';
 
+  /// Surah download jobs the user has paused (job key -> paused).
+  final Set<String> _paused = {};
+
   bool isDownloading(String edition, int surah) =>
       _downloads.containsKey(_jobKey(edition, surah));
 
+  bool isDownloadPaused(String edition, int surah) =>
+      _paused.contains(_jobKey(edition, surah));
+
+  void pauseDownload(String edition, int surah) =>
+      _paused.add(_jobKey(edition, surah));
+
+  void resumeDownload(String edition, int surah) =>
+      _paused.remove(_jobKey(edition, surah));
+
   void cancelDownload(String edition, int surah) {
-    _downloads.remove(_jobKey(edition, surah))?.cancel('cancelled');
+    final key = _jobKey(edition, surah);
+    _paused.remove(key);
+    _downloads.remove(key)?.cancel('cancelled');
   }
 
   /// How many of [surah]'s ayahs are already on disk.
@@ -181,6 +195,19 @@ class AyahAudioService {
           cancelled = true;
           break;
         }
+        // Pause: idle here until resumed or cancelled.
+        var wasPaused = false;
+        while (_paused.contains(key) && !token.isCancelled) {
+          if (!wasPaused) {
+            wasPaused = true;
+            await DownloadNotifications.instance.clear(notifId);
+          }
+          await Future<void>.delayed(const Duration(milliseconds: 400));
+        }
+        if (token.isCancelled) {
+          cancelled = true;
+          break;
+        }
         final file = _fileFor(dir, first + i);
         if (_looksComplete(file)) {
           done++;
@@ -216,6 +243,7 @@ class AyahAudioService {
       cancelled = true;
     } finally {
       _downloads.remove(key);
+      _paused.remove(key);
       final p = await surahProgress(surah, ayahCount, repo, edition: edition);
       if (!cancelled && p.done >= ayahCount) {
         await DownloadNotifications.instance
@@ -247,5 +275,6 @@ class AyahAudioService {
     for (final k in _downloads.keys.toList()) {
       if (k.startsWith('$edition/')) _downloads.remove(k)?.cancel('cleared');
     }
+    _paused.removeWhere((k) => k.startsWith('$edition/'));
   }
 }

@@ -18,7 +18,7 @@
 | P2‑3 es / ru / pt locales | ✅ done, verified — 5-locale parity (260 keys after P2‑4/4b), `test/translation_parity_test.dart`. Fixed `const AppShell` not re-translating on `setLocale`. |
 | P2‑4 Library redesign | ✅ structural done, verified — Home المكتبة card → `LibraryScreen`; tabs [الكتب المتوفرة \| الحديث]; 3 sub-tabs (كل الكتب abc / التصنيفات / مكتبتي w/ فتح+حذف). `BookCategory` enum, `LibraryBook.category/sortKey`. **Fixed real bug:** `DownloadManager.remove()` didn't purge the SharedPreferences registry. Added `العبودية` (Ibn Taymiyyah) — 5 books / 3 categories now. |
 | P2‑4b book **text editions** (Shamela) | ✅ done, emulator-verified — 5 Shamela text editions (`build_book_text.py` → `rafeeq-api/books/text/*.json`), `book_text_reader_screen.dart` (فهرس/search/font/bookmarks/provenance), `مصوّر\|نص` switch per card, one مكتبتي row per (book, edition). `printReliable` gates printed-page UI (false for Riyad/12014). §5.7. |
-| P2‑5 pro download manager | 🔶 core done, emulator-verified — unified `DownloadsScreen` (نظرة عامة tab: storage total + per-category تفريغ + downloaded-items list), `downloads_controller.dart` aggregator, and **every download kind now posts a live progress notification** (`DownloadNotifications` generalized + wired into mushaf-prefetch & surah-audio, requests POST_NOTIFICATIONS). **Open:** pause/resume for mushaf+audio (they have cancel only). |
+| P2‑5 pro download manager | ✅ done, emulator-verified — unified `DownloadsScreen` (نظرة عامة tab: storage total + per-category تفريغ + downloaded-items list), `downloads_controller.dart` aggregator, **live progress notification for every download kind** (`DownloadNotifications` generalized + wired into mushaf-prefetch & surah-audio, requests POST_NOTIFICATIONS), and **pause/resume** for mushaf + audio. Minor: 3 tabs not the 5 labelled sections; a few toasts not re-shot. |
 | P2‑6 persistent prayer notification (next prayer + Hijri + countdown) | ⬜ not started |
 | P2‑7 Adhan audio/video + 30 slots | ⬜ not started · OWNER-BLOCKER: video source |
 | P2‑8 competitor feature mix | ⬜ not started · check-in required |
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 22:26 — IN PROGRESS — resume here**
+**2026-09-02 22:40 — COMPLETE**
 
-P2-5 core DONE + emulator-verified: (1) DownloadNotifications generalized (showProgress/showComplete/clear, 900ms throttle, requests POST_NOTIFICATIONS) + wired into MushafPageService.prefetchEdition + AyahAudioService.downloadSurah -> every download kind posts a live status-bar notification w/ app icon + progress bar (was DownloadManager-only). Verified: mushaf download notif advances live + clears on cancel. (2) downloads_controller.dart storageSummaryProvider aggregator. (3) DownloadsScreen -> [نظرة عامة|المصاحف|التلاوات]; overview = storage total + per-category size/count/تفريغ(confirm) + free-all + downloaded hadith/books items w/ delete. Verified: totals live-update (7.6->84->7.6MB), تفريغ frees + refreshes. +11 keys x5 (parity 271). analyze clean, test 13/13. OPEN: pause/resume for mushaf+audio (cancel only).
+P2-5 DONE + emulator-verified: added pause/resume to MushafPageService (pausePrefetch/resumePrefetch + PrefetchProgress.paused) + AyahAudioService (pauseDownload/resumeDownload); loops idle while paused (job alive, notif cleared) until resume/cancel; Downloads tiles show pause<->resume toggle beside cancel. Verified: mushaf download paused at p.5 (bar greyed 'متوقف مؤقتاً'), resumed -> continued to p.11, cancel stopped it. Earlier verified: unified overview tab (storage total + per-cat size/count/تفريغ-confirm + downloaded items), live notif for mushaf+audio+DownloadManager downloads (icon+bar+clears on cancel), تفريغ frees+refreshes. +12 keys x5 (parity 272). analyze clean, test 13/13. Minor left: 3 tabs vs 5 sections, a few toasts not re-shot. Next: P2-6.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

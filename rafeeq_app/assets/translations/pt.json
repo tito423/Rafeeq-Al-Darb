@@ -251,7 +251,8 @@
     "free_all": "Liberar tudo",
     "free_confirm": "Excluir do dispositivo os arquivos baixados desta categoria?",
     "nothing_downloaded": "Nada baixado",
-    "downloaded_items": "Itens baixados"
+    "downloaded_items": "Itens baixados",
+    "paused": "Em pausa"
   },
   "new_muslim": {
     "title": "Guia do novo muçulmano",

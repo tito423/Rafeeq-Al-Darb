@@ -309,6 +309,7 @@ class _MushafDownloadTileState extends State<_MushafDownloadTile> {
   int _cached = 0;
   int _bytes = 0;
   bool _busy = false;
+  bool _paused = false;
   int _done = 0;
 
   PrefetchProgress? _progress;
@@ -340,10 +341,16 @@ class _MushafDownloadTileState extends State<_MushafDownloadTile> {
   void _onProgress() {
     if (!mounted) return;
     final p = _progress!;
-    setState(() => _done = p.done);
+    setState(() {
+      _done = p.done;
+      _paused = p.paused;
+    });
     if (!p.running) {
       _unbind();
-      setState(() => _busy = false);
+      setState(() {
+        _busy = false;
+        _paused = false;
+      });
       _refresh();
     }
   }
@@ -427,22 +434,41 @@ class _MushafDownloadTileState extends State<_MushafDownloadTile> {
             const SizedBox(height: 10),
             LinearProgressIndicator(
               value: total == 0 ? null : _done / total,
-              color: AppColors.gold,
+              color: _paused ? theme.colorScheme.outline : AppColors.gold,
             ),
             const SizedBox(height: 6),
-            Text('${'downloads.downloading'.tr()}  $_done / $total',
-                style: theme.textTheme.labelSmall),
+            Text(
+              _paused
+                  ? '${'downloads.paused'.tr()}  $_done / $total'
+                  : '${'downloads.downloading'.tr()}  $_done / $total',
+              style: theme.textTheme.labelSmall,
+            ),
           ],
           const SizedBox(height: 10),
           Row(
             children: [
-              if (_busy)
+              if (_busy) ...[
+                TextButton.icon(
+                  onPressed: () => setState(() {
+                    if (_paused) {
+                      _service.resumePrefetch(e.id);
+                    } else {
+                      _service.pausePrefetch(e.id);
+                    }
+                  }),
+                  icon: Icon(
+                      _paused ? Icons.play_arrow_rounded : Icons.pause_rounded,
+                      size: 18),
+                  label: Text(_paused
+                      ? 'downloads.resume'.tr()
+                      : 'downloads.pause'.tr()),
+                ),
                 TextButton.icon(
                   onPressed: () => _service.cancelPrefetch(e.id),
                   icon: const Icon(Icons.stop_circle_outlined, size: 18),
                   label: Text('downloads.cancel'.tr()),
-                )
-              else
+                ),
+              ] else
                 FilledButton.tonalIcon(
                   onPressed: complete ? null : _download,
                   icon: const Icon(Icons.download_rounded, size: 18),
@@ -561,6 +587,7 @@ class _SurahAudioTileState extends State<_SurahAudioTile> {
   final _audio = AyahAudioService.instance;
   RecitationProgress _progress = const RecitationProgress(0, 0);
   bool _busy = false;
+  bool _paused = false;
 
   @override
   void initState() {
@@ -590,7 +617,23 @@ class _SurahAudioTileState extends State<_SurahAudioTile> {
         if (mounted) setState(() => _progress = p);
       },
     );
-    if (mounted) setState(() => _busy = false);
+    if (mounted) {
+      setState(() {
+        _busy = false;
+        _paused = false;
+      });
+    }
+  }
+
+  void _togglePause() {
+    setState(() {
+      _paused = !_paused;
+      if (_paused) {
+        _audio.pauseDownload(widget.edition, widget.surahId);
+      } else {
+        _audio.resumeDownload(widget.edition, widget.surahId);
+      }
+    });
   }
 
   @override
@@ -606,7 +649,7 @@ class _SurahAudioTileState extends State<_SurahAudioTile> {
               padding: const EdgeInsets.only(top: 6),
               child: LinearProgressIndicator(
                 value: _progress.fraction,
-                color: AppColors.gold,
+                color: _paused ? theme.colorScheme.outline : AppColors.gold,
               ),
             )
           : Text(
@@ -619,10 +662,27 @@ class _SurahAudioTileState extends State<_SurahAudioTile> {
       trailing: complete
           ? Icon(Icons.offline_pin, color: AppColors.success)
           : _busy
-              ? IconButton(
-                  icon: const Icon(Icons.stop_circle_outlined),
-                  onPressed: () => _audio.cancelDownload(
-                      widget.edition, widget.surahId),
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      tooltip: _paused
+                          ? 'downloads.resume'.tr()
+                          : 'downloads.pause'.tr(),
+                      icon: Icon(_paused
+                          ? Icons.play_arrow_rounded
+                          : Icons.pause_rounded),
+                      onPressed: _togglePause,
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      tooltip: 'downloads.cancel'.tr(),
+                      icon: const Icon(Icons.stop_circle_outlined),
+                      onPressed: () => _audio.cancelDownload(
+                          widget.edition, widget.surahId),
+                    ),
+                  ],
                 )
               : IconButton(
                   icon: const Icon(Icons.download_rounded),

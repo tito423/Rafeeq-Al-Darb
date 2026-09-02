@@ -251,7 +251,8 @@
     "free_all": "تفريغ الكل",
     "free_confirm": "حذف الملفات المنزَّلة لهذا القسم من الجهاز؟",
     "nothing_downloaded": "لا يوجد محتوى منزَّل",
-    "downloaded_items": "العناصر المنزَّلة"
+    "downloaded_items": "العناصر المنزَّلة",
+    "paused": "متوقف مؤقتاً"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",

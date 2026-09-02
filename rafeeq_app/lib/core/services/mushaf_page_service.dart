@@ -17,13 +17,15 @@ class PrefetchProgress extends ChangeNotifier {
   int done = 0;
   int total = 0;
   bool running = false;
+  bool paused = false;
 
   double get fraction => total == 0 ? 0 : done / total;
 
-  void _set({int? done, int? total, bool? running}) {
+  void _set({int? done, int? total, bool? running, bool? paused}) {
     if (done != null) this.done = done;
     if (total != null) this.total = total;
     if (running != null) this.running = running;
+    if (paused != null) this.paused = paused;
     notifyListeners();
   }
 }
@@ -143,6 +145,21 @@ class MushafPageService {
           cancelled = true;
           break;
         }
+        // Pause: idle here (job stays alive, progress frozen) until resumed
+        // or cancelled. Notification is cleared while paused, re-posted after.
+        while (_paused.contains(editionId) &&
+            _prefetching.contains(editionId)) {
+          if (!progress.paused) {
+            progress._set(paused: true);
+            await DownloadNotifications.instance.clear(notifId);
+          }
+          await Future<void>.delayed(const Duration(milliseconds: 400));
+        }
+        if (progress.paused) progress._set(paused: false);
+        if (!_prefetching.contains(editionId)) {
+          cancelled = true;
+          break;
+        }
         try {
           await svgForPage(
             editionId: editionId,
@@ -165,7 +182,8 @@ class MushafPageService {
       }
     } finally {
       _prefetching.remove(editionId);
-      progress._set(running: false); // always notifies — listeners settle here
+      _paused.remove(editionId);
+      progress._set(running: false, paused: false); // listeners settle here
       if (cancelled) {
         await DownloadNotifications.instance.clear(notifId);
       } else {
@@ -176,6 +194,11 @@ class MushafPageService {
   }
 
   final Set<String> _prefetching = {};
+  final Set<String> _paused = {};
+
+  void pausePrefetch(String editionId) => _paused.add(editionId);
+  void resumePrefetch(String editionId) => _paused.remove(editionId);
+  bool isPrefetchPaused(String editionId) => _paused.contains(editionId);
 
   /// Live progress of an in-flight [prefetchEdition], per edition id. Created
   /// on first request; a widget listens to re-sync after being rebuilt.
