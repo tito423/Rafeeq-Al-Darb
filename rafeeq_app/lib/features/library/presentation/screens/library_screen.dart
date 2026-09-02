@@ -8,16 +8,17 @@ import '../../../../core/config/app_config.dart';
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../data/book_catalog.dart';
+import 'book_reader_screen.dart';
 import 'hadith_book_screen.dart';
 import 'hadith_detail_screen.dart';
 
 const _hadithDownloadId = 'hadith_db';
 
 /// Library — the Hadith hub (9 real collections, downloaded on demand) and
-/// a Books catalog whose source list is still pending the owner's
-/// confirmation (WORK_QUEUE Stage 2: "STOP AND ASK" before downloading any
-/// book), so that tab stays an honest placeholder rather than invented
-/// entries.
+/// a Books catalog of real, public-domain classical texts hosted on
+/// archive.org (see `../../data/book_catalog.dart` for sourcing/licensing
+/// notes), downloaded on demand exactly like the hadith database.
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
 
@@ -45,25 +46,165 @@ class LibraryScreen extends ConsumerWidget {
   }
 }
 
-class _CatalogTab extends StatelessWidget {
+class _CatalogTab extends StatefulWidget {
   const _CatalogTab();
+
+  @override
+  State<_CatalogTab> createState() => _CatalogTabState();
+}
+
+class _CatalogTabState extends State<_CatalogTab> {
+  StreamSubscription<List<DownloadTask>>? _sub;
+
+  /// book id -> local file path, once known to be on disk (either from a
+  /// previous session's registry, or a download that just completed).
+  final Map<String, String> _downloadedPaths = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRegistry();
+    _sub = DownloadManager.instance.stream.listen((_) {
+      _loadRegistry();
+    });
+  }
+
+  Future<void> _loadRegistry() async {
+    for (final book in libraryBookCatalog) {
+      final path = await DownloadManager.instance.registeredPath(book.id);
+      if (path != null && mounted) {
+        setState(() => _downloadedPaths[book.id] = path);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _download(LibraryBook book) async {
+    await DownloadManager.instance.enqueue(
+      id: book.id,
+      url: book.downloadUrl,
+      category: 'books',
+      fileName: book.fileName,
+      title: book.titleAr,
+    );
+  }
+
+  void _open(LibraryBook book, String path) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => BookReaderScreen(book: book, path: path),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(14),
+      itemCount: libraryBookCatalog.length,
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
+      itemBuilder: (context, i) {
+        final book = libraryBookCatalog[i];
+        final task = DownloadManager.instance.taskById(book.id);
+        final downloadedPath = _downloadedPaths[book.id];
+        return _BookCard(
+          book: book,
+          task: task,
+          downloadedPath: downloadedPath,
+          onDownload: () => _download(book),
+          onOpen: downloadedPath == null
+              ? null
+              : () => _open(book, downloadedPath),
+        );
+      },
+    );
+  }
+}
+
+class _BookCard extends StatelessWidget {
+  final LibraryBook book;
+  final DownloadTask? task;
+  final String? downloadedPath;
+  final VoidCallback onDownload;
+  final VoidCallback? onOpen;
+
+  const _BookCard({
+    required this.book,
+    required this.task,
+    required this.downloadedPath,
+    required this.onDownload,
+    required this.onOpen,
+  });
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Center(
+    final busy = task != null &&
+        (task!.status == DownloadStatus.downloading ||
+            task!.status == DownloadStatus.queued);
+    final failed = task?.status == DownloadStatus.failed;
+    final sizeMb = (book.approxSizeBytes / 1000000).toStringAsFixed(1);
+
+    return Card(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(14),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Icon(Icons.hourglass_top, size: 56, color: scheme.onSurfaceVariant),
-            const SizedBox(height: 16),
+            Text(book.titleAr,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w700, fontSize: 16)),
+            const SizedBox(height: 4),
             Text(
-              'library.sources_pending'.tr(),
-              textAlign: TextAlign.center,
-              style: TextStyle(color: scheme.onSurfaceVariant),
+              '${book.authorAr} · ${book.authorDeathAr}',
+              style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
             ),
+            const SizedBox(height: 8),
+            Text(book.descriptionAr, style: const TextStyle(fontSize: 13)),
+            const SizedBox(height: 10),
+            if (busy) ...[
+              LinearProgressIndicator(
+                value: task!.total == null ? null : task!.progress,
+                color: AppColors.gold,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                task!.total != null
+                    ? '${(task!.progress * 100).round()}%'
+                    : '…',
+                style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
+              ),
+            ] else
+              Row(
+                children: [
+                  Text('${'library.size'.tr()}: $sizeMb MB',
+                      style: TextStyle(
+                          color: scheme.onSurfaceVariant, fontSize: 12)),
+                  const Spacer(),
+                  if (downloadedPath != null)
+                    FilledButton.icon(
+                      onPressed: onOpen,
+                      icon: const Icon(Icons.menu_book_outlined, size: 18),
+                      label: Text('library.open'.tr()),
+                    )
+                  else
+                    OutlinedButton.icon(
+                      onPressed: onDownload,
+                      icon: const Icon(Icons.download_rounded, size: 18),
+                      label: Text('library.download'.tr()),
+                    ),
+                ],
+              ),
+            if (failed) ...[
+              const SizedBox(height: 6),
+              Text(task?.error ?? 'errors.generic'.tr(),
+                  style: TextStyle(color: scheme.error, fontSize: 12)),
+            ],
           ],
         ),
       ),

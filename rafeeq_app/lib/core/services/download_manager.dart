@@ -414,7 +414,10 @@ class DownloadNotifications {
       await plugin.show(
         _notificationId(task.id) + 1000,
         task.title,
-        'طھظ… ط§ظ„طھظ†ط²ظٹظ„ â€” ط¬ط§ظ‡ط² ظ„ظ„ط§ط³طھط®ط¯ط§ظ… ط¨ط¯ظˆظ† ط¥ظ†طھط±ظ†طھ',
+        // Was garbled mojibake before (double-encoded UTF-8) — the
+        // completion notification showed unreadable characters instead of
+        // this real Arabic text.
+        'تم التنزيل — جاهز للاستخدام بدون إنترنت',
         NotificationDetails(android: android),
       );
     } catch (_) {}

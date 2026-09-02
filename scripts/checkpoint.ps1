@@ -1,4 +1,4 @@
-<#
+﻿<#
   One command that makes a dead session survivable.
 
   Agents run out of quota mid-task. Whatever lives only in the agent's head at
