@@ -462,6 +462,42 @@ selectable Arabic text, working in-book search and font control; OCR editions
 carry the honest badge; both editions work offline; provenance is visible;
 hadith hub + image PDF path untouched.
 
+### Sourcing decisions — done 2026-09-02 (research pass)
+
+All 5 catalog books were found on `shamela.ws`. Shamela serves each book as one
+JSON blob per printed page at `https://shamela.ws/ajax/pageContent/<bookId>/<pageId>`
+→ `{nass:"<p>…</p>", pageNum:<printed page>, title:"<section title or ''>",
+nextId, prevId, pageId}`. `nass` spans: `c3` = Qur'an ayah, `c4` =
+citation/reference (`[٢٥ الأنبياء]`), `c5` = bold lead-in. Every one of the 5
+chosen editions carries `[ترقيم الكتاب موافق للمطبوع]` → printed-page numbers
+are real and can be shown as page markers. Walk `nextId` from pageId 1 until
+null to get the whole book; the pages that carry a non-empty `title` give the
+chapter tree with its start page.
+
+| # | Book | Shamela id | Edition used (→ `sourceLabel`) | Why this one |
+|---|---|---|---|---|
+| 1 | رياض الصالحين | **12014** | المكتبة الشاملة — ت. شعيب الأرنؤوط، مؤسسة الرسالة، ط٣ ١٤١٩هـ/١٩٩٨م (٥٢٧ ص) | The recognised gold-standard muḥaqqaq edition of this book. |
+| 2 | مختصر منهاج القاصدين | **98087** | المكتبة الشاملة — تقديم محمد أحمد دهمان، مكتبة دار البيان، دمشق، ١٣٩٨هـ/١٩٧٨م (٤٠٨ ص) | Old, lightly-apparatused edition (a تقديم, no heavy taḥqīq) — the "plainer PD edition" the stage asks to prefer over a modern apparatus-heavy one. Image PDF we ship is the دار الحجاز/طارق عبد الواحد ed. — same abridgement text, different pagination. |
+| 3 | الفوائد | **6832** | المكتبة الشاملة — دار الكتب العلمية، بيروت، ط٢ ١٣٩٣هـ/١٩٧٣م (٢١٢ ص) | Deliberately **not** Shamela 212 (ت. محمد عزير شمس، دار عطاءات العلم/ابن حزم، ٢٠١٩) — that is a very recent, heavily-annotated critical edition with a live taḥqīq copyright. 6832 is the plain 1973 text. |
+| 4 | صيد الخاطر | **12028** | المكتبة الشاملة — بعناية حسن المساحي سويدان، دار القلم، دمشق، ط١ ١٤٢٥هـ/٢٠٠٤م (٥٦٠ ص) | "بعناية" (light editing, not a heavy taḥqīq). Note: our image PDF is the مدار الوطن ed., which is known to drop ~half the book — the دار القلم text is **more complete**, a point in favour of the text edition. |
+| 5 | العبودية | **22647** | المكتبة الشاملة — ت. محمد زهير الشاويش، المكتب الإسلامي، بيروت، ط٧ المجددة ١٤٢٦هـ/٢٠٠٥م (١٥١ ص) | The standard reference edition of this risāla; light apparatus. |
+
+**Licence note (record in `HANDOVER.md` §5):** all 5 underlying texts are public
+domain (authors d. 597–751 AH). The muḥaqqiq's apparatus can carry copyright —
+Arnaut (d. 1438/2016, book 1) and Shawish (d. 1434/2013, book 5) editions still
+in copyright for the *taḥqīq*. Owner chose Shamela knowingly (2026-09-02).
+Mitigations applied by the builder: extract **only the author's running text +
+section headings**; drop Shamela's separate footnote/تعليق block (`div.hamesh`)
+where it is separable; keep `sourceLabel` (full edition + editor) visible in the
+reader at all times.
+
+**Build mechanism:** `scripts/build_book_text.py` scrapes the 5 books → one
+structured JSON each (`{meta, toc:[{title,page,idx}], pages:[{p:<printed>,
+paras:[{t:"…", k:"body|aya|ref"}]}]}`), hosted on `tito423/rafeeq-api` under
+`books/text/<id>.json` (raw, no zip — a few hundred KB each). `LibraryBook` gets
+an optional `TextEdition {url, sizeBytes, sourceLabel, format:'shamelaJson',
+isOcr:false}`. New `book_text_reader_screen.dart` renders it.
+
 ---
 
 ## P2‑5 — Professional download manager

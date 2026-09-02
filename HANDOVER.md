@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 19:42 — IN PROGRESS — resume here**
+**2026-09-02 20:41 — IN PROGRESS — resume here**
 
-PHASE2.md: locked 2 owner decisions. P2-4b: Shamela text confirmed (download is fine, still verify each title + research best muhaqqaq edition). P2-13: Option A chosen — rebuild hadith.db with real grade+grader columns from a graded dataset (sunnah.com-style), null stays null, bump version + re-host + re-verify; HadithItem/Repository/detail/daily-card gain grade+grader. Owner-blockers table updated. No code changed.
+P2-4b research: chose 5 Shamela editions (rec. muhaqqaq / plain-PD per book) + documented the shamela.ws ajax/pageContent scrape model + licence mitigations. Table in PHASE2.md P2-4b. No code yet.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
