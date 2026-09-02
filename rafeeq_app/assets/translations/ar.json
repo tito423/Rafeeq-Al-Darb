@@ -109,7 +109,21 @@
     "vibration": "الاهتزاز عند العدّ",
     "zikr": "الذكر",
     "source": "المصدر",
-    "repeat": "التكرار"
+    "repeat": "التكرار",
+    "tab_azkar": "الأذكار",
+    "tab_tasbeeh": "السبحة",
+    "items_count": "ذكر",
+    "progress": "التقدّم",
+    "next": "التالي",
+    "previous": "السابق",
+    "section_done": "أتممت أذكار هذا القسم بحمد الله",
+    "back_to_sections": "العودة للأقسام",
+    "reminders": "تذكير الأذكار",
+    "morning_reminder": "تذكير أذكار الصباح",
+    "evening_reminder": "تذكير أذكار المساء",
+    "reminder_off": "متوقف",
+    "choose_time": "اختر الوقت",
+    "auto_advance": "الانتقال التلقائي عند اكتمال العدد"
   },
   "prayer": {
     "fajr": "الفجر",

@@ -30,7 +30,7 @@
 | 13 | Android native alarm (exact alarms, wakelock, mute/stop actions) | ✅ | `AdhanAlarmService` rewritten: exact daily alarms per prayer, one notification channel per (mode, sound) pair (channels are immutable on Android). The adhan **sound** is played by Android's own notification-sound API (`RawResourceAndroidNotificationSound` + `AudioAttributesUsage.alarm`), not by Dart — `zonedSchedule`'s receiver never starts the Dart VM, so nothing else can play while the app is killed. Stop cancels the notification (confirmed to stop the sound); Mute reposts it silenced. **2026-09-02: emulator-verified**, including a per-prayer choice surviving `am force-stop` + relaunch. Battery-optimisation exemption prompt implemented but unconfirmed (no dialog seen on the emulator image used). |
 | 14 | Library: catalog / offline PDFs / viewer | 🔶 | `LibraryScreen`'s "الكتالوج" tab built as an honest placeholder — real open sources found on archive.org for every named title, but nothing downloaded yet pending the owner's choice of edition/tahqiq per title (STOP AND ASK, see WORK_QUEUE Stage 2). |
 | 15 | 9 Hadith books hub (hierarchical) | ✅ | **Correction:** no `hadith.db` actually existed anywhere in this workspace before 2026-09-02 — only the real source JSON (`scripts/temp_phase1/hadith9/`) did; the "36,461 hadiths, rebuilt clean" note was describing something that wasn't there. Built for real by `scripts/build_hadith_db.py`: 9 books, 429 chapters, **40,943 hadiths**. Fixed the "2 → 9 → 99" ordering bug (`number_in_book` is INTEGER; 0 out-of-order chapters, verified both by script and live in the app). Downloaded on demand (~17 MB zipped, hosted on `tito423/rafeeq-api`), not bundled. **2026-09-02: verified against the real DB via direct `adb push` injection** (book list, chapter list, hadith ordering across the two-digit boundary, detail view all confirmed with real data) — **the live download itself was not verified**, blocked by a host-machine TLS problem also affecting previously-working mushaf fetches; see `HANDOVER.md` §7. |
-| 16 | Azkar + Tasbeeh (dedup, haptics) | ⏳ | |
+| 16 | Azkar + Tasbeeh (dedup, haptics) | ✅ | `lib/features/azkar/` against the bundled 134 sections/298 items. 0 duplicate azkar within a section (real SQL check). Real repeat counts parsed from each dhikr's own embedded text (e.g. "ثلاث مرات") rather than guessed. **2026-09-02: fully live-verified**, including the historical "counter only counts after reset" bug (confirmed absent — counts on the first tap) and auto-advance at the real target. Haptics + morning/evening reminders both real and persisted, no default time (both start off). |
 | 17 | New Muslim guide | ⏳ | |
 | 18 | Thematic Quran search | ⏳ | |
 | 19 | Security & offline guest mode | ⏳ | R2 keys were hardcoded in client — removed |
@@ -84,6 +84,18 @@
   fetching; see `HANDOVER.md` §7 for the full diagnosis. Researched real
   archive.org sources for every named Library book; none downloaded yet,
   pending the owner's edition/tahqiq choice per title.
+- [2026-09-02] Built STAGE 3 (T16), Azkar & Tasbeeh, against the real bundled
+  Hisn al-Muslim data — no new data needed. Confirmed 0 duplicate azkar
+  within any section via a real SQL query. Parsed each dhikr's real repeat
+  count from its own embedded text (e.g. "ثلاث مرات") instead of guessing.
+  **Fully live-verified on the emulator**, not just code-reviewed: the
+  historical "counter only counts after reset" bug does not reproduce (a
+  3x-repeat dhikr showed 1/3 after the very first tap) and auto-advance
+  fires exactly at the real target; the settings sheet's haptics toggle and
+  both reminder time pickers (real Material time picker) were exercised,
+  and neither reminder defaults to a time — both start off, per this
+  stage's own instruction not to hardcode 05:00/16:30. Entirely offline, so
+  unaffected by the STAGE 2 TLS problem.
 
 ## Data sourcing decision (T6/T7)
 Mushaf pages and ayah tap-regions both come from **quranpedia/quran-svg**

@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-02 |
-| **State at** | commit `a43da5d` (STAGE 1) + STAGE 2 Hadith-hub commit |
-| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0 gate PASSED (§7) · STAGE 1 (Adhan) verified on the emulator (§7) · STAGE 2 Hadith hub verified on the emulator by injecting the real downloaded DB directly (§7 STAGE 2 table) — the download step itself is currently blocked by a host-machine TLS problem, see §7.** |
+| **State at** | commit `2fbe5c6` (STAGE 2) + STAGE 3 Azkar commit |
+| **Build verified?** | **`flutter analyze` clean · `flutter build apk --debug` OK · STAGE 0/1 passed on the emulator (§7) · STAGE 2 Hadith hub verified via direct DB injection (§7) · STAGE 3 Azkar built and fully emulator-verified live, including the historical "first tap doesn't count" bug and the real embedded repeat-count parsing (§7 STAGE 3 table).** The STAGE 2 download-path TLS problem (§7) doesn't affect Stage 3 — Azkar is 100% offline, bundled data. |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -33,9 +33,52 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-02 — STAGE 2's Hadith hub built and verified. The Library books tab
-is a researched proposal awaiting the owner's confirmation. A host-machine TLS
-problem is currently blocking live download testing — see below.**
+**2026-09-02 — STAGE 3 (Azkar & Tasbeeh) built and fully verified live on the
+emulator. Next: STAGE 4 (translation selector in the reader).**
+
+Built all of WORK_QUEUE T16 against the real, already-bundled Hisn al-Muslim
+data (134 sections / 298 items in `quran_sciences.db` — no new data needed):
+
+- **No duplicate azkar within a section** — checked with a real SQL query
+  (`GROUP BY section_id, body HAVING COUNT(*) > 1`): **0 duplicates**, so
+  nothing to fix here, just confirm it stays that way.
+- **`lib/features/azkar/data/azkar_repeat.dart`**: real dhikr texts embed
+  their own repeat count inline (e.g. "...( ثلاث مرات )", "...(مائة مرة)")
+  — parses that phrase into a real target instead of guessing one; defaults
+  to 1 (said once) only when a dhikr's text carries no such phrase.
+- **`AzkarSectionScreen`**: one dhikr at a time, a real tap-to-count counter
+  that increments on the very first tap (WORK_QUEUE flags an old build that
+  only counted after a reset — re-verified live that this doesn't happen
+  here), auto-advancing once the parsed target is reached, with the real
+  source/attribution (the bundled `footnote` field) shown under the text.
+- **Haptics toggle** and **morning/evening reminder times** — both real,
+  persisted (`AzkarSettingsProvider` + `AzkarReminderService`, a plain daily
+  `zonedSchedule` notification, no full-screen/native-sound complexity since
+  this is a reminder to open the app, not an alarm). Neither reminder has a
+  default time — WORK_QUEUE explicitly calls out hardcoded 05:00/16:30 as a
+  mistake not to repeat, so a reminder is "متوقف" (off) until the user picks
+  one.
+- Free digital tasbeeh counter (33 / 100 / 1000 targets) as the Azkar
+  screen's second tab, matching Home's existing "السبحة" quick-access card.
+
+**Verified live on the emulator**, not just code-reviewed: opened "أذكار
+الصباح والمساء" (25 real items) — item 1 (target 1) advanced automatically on
+one tap; item 3 is literally the three Quls with "( ثلاث مرات )" in its own
+text, and the app correctly showed a 0→3 counter (not a "done" button),
+counted 3/1 after the very first tap (confirming the historical "only counts
+after reset" bug is not present), and auto-advanced to item 4 exactly at
+count 3. The settings sheet's haptics toggle and both reminder time pickers
+(real Material time picker, not a placeholder) were exercised — setting the
+morning reminder updated its row to show "8:33 م" and armed a real
+`zonedSchedule` call. This feature needs no network at all, so it was
+unaffected by the STAGE 2 TLS problem below.
+
+---
+
+**2026-09-02 (earlier) — STAGE 2's Hadith hub built and verified. The Library
+books tab is a researched proposal awaiting the owner's confirmation. A
+host-machine TLS problem is currently blocking live download testing — see
+below.**
 
 Owner said to continue through the whole WORK_QUEUE, respecting the STOP AND
 ASK gates already marked in it. Two were hit immediately: STAGE 2's book list
@@ -635,6 +678,21 @@ Avast Web/Mail Shield's Web Shield is still enabled the same way it was
 during STAGE 0, or just test on a physical device to sidestep the whole
 question — a phone's own network never goes through the PC's Avast at all.
 
+### Update 2026-09-02 — STAGE 3 Azkar & Tasbeeh: built and fully verified
+
+Entirely offline (reads the already-bundled `quran_sciences.db`), so none of
+this was affected by the TLS problem above.
+
+| # | check | result |
+|---|---|---|
+| no duplicate azkar within a section | ✅ verified with a real SQL query — 0 duplicate `(section_id, body)` pairs across all 134 sections |
+| tasbeeh counter counts on the **first** tap | ✅ **live-verified**: tapping the three-Quls dhikr (real target 3, parsed from its own "( ثلاث مرات )" text) once showed "3 / 1" immediately — the historical bug this check exists for (only counting after a reset) does not reproduce |
+| auto-advance at the real target count | ✅ live-verified: the same item auto-advanced to item 4/25 exactly at the 3rd tap |
+| fadl/source shown per dhikr | ✅ the bundled `footnote` field, shown under every dhikr's text (e.g. real Abu Dawud/Tirmidhi references) |
+| haptics toggle | ✅ live-verified in the settings sheet, persisted |
+| custom reminder times (no hardcoded 05:00/16:30) | ✅ live-verified: both reminders default to "متوقف" (off); picking a real time via the Material time picker (not a placeholder) updates the row and arms a real `zonedSchedule` |
+| digital tasbeeh (free counter) | ✅ 33/100/1000 targets, matches Home's existing "السبحة" quick-access card |
+
 ### Original context (why analysis had never run)
 
 The previous agent worked from an isolated Linux sandbox with only the project
@@ -679,8 +737,11 @@ pinned CDN bytes. All of that still holds and is now backed by the analyzer.
    confirmation, and the Library "Books" catalog (real sources researched,
    owner needs to pick a specific edition per title before anything
    downloads — see the WIP note above).
-8. Continue `WORK_QUEUE.md` STAGE 3+ (azkar, translation selector, new-Muslim
-   guide, thematic search, security/guest-mode check, release).
+8. ~~**STAGE 3 — Azkar & Tasbeeh.**~~ **DONE 2026-09-02, fully verified live**
+   (§7 STAGE 3 table) — no network involved, so nothing here was blocked by
+   item 6.
+9. Continue `WORK_QUEUE.md` STAGE 4+ (translation selector in the reader,
+   new-Muslim guide, thematic search, security/guest-mode check, release).
 
 ---
 

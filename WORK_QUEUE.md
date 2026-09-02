@@ -167,16 +167,19 @@ anything.
 
 ---
 
-## STAGE 3 — Azkar & Tasbeeh  (T16)
+## STAGE 3 — Azkar & Tasbeeh  (T16) — ✅ done 2026-09-02, fully verified live
 
-**What exists:** 134 sections / 298 items from Hisn al-Muslim in
-`quran_sciences.db`, plus `azkar_screen.dart`.
-
-**Build:** verify there are no duplicate azkar within a section; smart tasbeeh
-counter that increments on the **first** tap (an old build only counted after
-reset — check this), haptics toggle, auto-advance at target count, and the
-fadl/source for each dhikr. Custom reminder times chosen by the user — no
-hardcoded 05:00 / 16:30.
+`lib/features/azkar/` (replaces the old stub). No duplicate azkar within a
+section (verified: 0 via a real SQL query). The tasbeeh counter increments on
+the **first** tap (live-verified this doesn't reproduce the old only-counts-
+after-reset bug), auto-advances at each dhikr's **real** repeat count (parsed
+from the dhikr's own text, e.g. "( ثلاث مرات )" — see
+`lib/features/azkar/data/azkar_repeat.dart`), and shows the bundled
+`footnote` field as its fadl/source. Haptics toggle and morning/evening
+reminder times are both real and persisted, with **no default time** — both
+start "off" until the user picks one, per this stage's own instruction not to
+hardcode 05:00/16:30. See `HANDOVER.md` §7's STAGE 3 table for exactly what
+was exercised live vs. code-reviewed.
 
 ---
 

@@ -109,7 +109,21 @@
     "vibration": "Vibrate on tap",
     "zikr": "Dhikr",
     "source": "Source",
-    "repeat": "Repeat"
+    "repeat": "Repeat",
+    "tab_azkar": "Adhkar",
+    "tab_tasbeeh": "Tasbeeh",
+    "items_count": "dhikr",
+    "progress": "Progress",
+    "next": "Next",
+    "previous": "Previous",
+    "section_done": "You've completed this section's adhkar",
+    "back_to_sections": "Back to sections",
+    "reminders": "Adhkar reminders",
+    "morning_reminder": "Morning adhkar reminder",
+    "evening_reminder": "Evening adhkar reminder",
+    "reminder_off": "Off",
+    "choose_time": "Choose time",
+    "auto_advance": "Auto-advance when the count is reached"
   },
   "prayer": {
     "fajr": "Fajr",
