@@ -775,12 +775,25 @@ regressed, that's a real bug to find) plus wanting a scroll-speed control,
 and the toolbar icons need a visual refresh + a caption under each +
 animation on interaction. Not started.
 
-## P3-35 — Ayah card: one play/stop toggle button, not two separate buttons
+## P3-35 — Ayah card: one play/stop toggle button ✅ DONE, live-verified
 
-When the ayah-sciences card/sheet shows playback controls, collapse
-play + stop into a single button that flips state (matches the existing
-tasbeeh circle / khatma pattern of one affordance that toggles). Not
-started.
+`ayah_sciences_sheet.dart`'s `_Header` had two separate `IconButton`s
+(play, stop); collapsed into one `StreamBuilder<bool>`-driven toggle that
+flips its icon/tooltip/action between play and stop (matches the tasbeeh
+circle / khatma "read today" pattern of one affordance that toggles
+state). New `AyahAudioService.isPlayingStream` (`Stream<bool>`, wraps the
+existing `playerState` stream) keeps `package:just_audio`'s `PlayerState`
+type out of the widget file. Because it's driven by the service's actual
+playback stream rather than local per-button state, it also correctly
+reflects audio started elsewhere in the same sheet (e.g. the "repeat"
+menu action). `flutter analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`:** opened سورة الفاتحة in text mode,
+tapped ayah 1 to open the sheet — one button, play icon. Tapped it:
+icon flipped to a filled stop-square (confirmed both visually and via
+`uiautomator`'s content-desc, which read "إيقاف"/stop) while audio played.
+Tapped again: flipped back to the play icon, audio stopped. Single button,
+both directions confirmed.
 
 ## P3-36 — Home: hadith reroll ✅ DONE, live-verified
 
@@ -842,6 +855,6 @@ language `easy_localization` starts in, shown top of a dropdown as
 | P3-32 | Ayah-end marker misaligned in text mode | ✅ **done, live-verified** — `PlaceholderAlignment.middle` → `.baseline` |
 | P3-33 | Tafsir tab → single dropdown + inline download | queued, unblocked, ties to P3-31 |
 | P3-34 | Text mode: scroll/speed control + toolbar icon redesign+captions+animation | queued, unblocked (re-verify scroll didn't regress) |
-| P3-35 | Ayah card: single play/stop toggle button | queued, unblocked |
+| P3-35 | Ayah card: single play/stop toggle button | ✅ **done, live-verified** |
 | P3-36 | Home: hadith reroll shouldn't scroll the page | ✅ **done, live-verified** — root cause was the card collapsing to a spinner mid-reroll, not a scroll bug at all |
 | P3-37 | App display name follows device system language on first run | queued, unblocked |

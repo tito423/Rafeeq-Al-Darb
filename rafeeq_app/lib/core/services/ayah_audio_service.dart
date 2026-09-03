@@ -42,6 +42,12 @@ class AyahAudioService {
   bool get isPlaying => _player.playing;
   Stream<PlayerState> get playerState => _player.playerStateStream;
 
+  /// P3‑35: a plain `Stream<bool>` for UI code that only cares whether
+  /// *something* is playing right now (e.g. the ayah card's single
+  /// play/stop toggle) — keeps `package:just_audio`'s `PlayerState` type out
+  /// of widget files that don't otherwise need it.
+  Stream<bool> get isPlayingStream => _player.playerStateStream.map((s) => s.playing);
+
   // ── Queue playback (P2‑8: memorization repeat-loop + topic playlists) ────
 
   /// Bumped on every `stopQueue()`/new `playQueue()` call so an in-flight

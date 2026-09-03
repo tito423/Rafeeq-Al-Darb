@@ -316,19 +316,31 @@ class _Header extends ConsumerWidget {
               ],
             ),
           ),
-          IconButton(
-            tooltip: 'quran.play'.tr(),
-            icon: const Icon(Icons.play_circle_outline),
-            onPressed: () => AyahAudioService.instance.play(
-              ayah,
-              quranRepo,
-              title: _reference,
-            ),
-          ),
-          IconButton(
-            tooltip: 'quran.stop'.tr(),
-            icon: const Icon(Icons.stop_circle_outlined),
-            onPressed: AyahAudioService.instance.stopQueue,
+          // P3‑35: one button that flips state instead of two separate
+          // play/stop buttons — matches the tasbeeh circle / khatma "read
+          // today" pattern elsewhere of a single affordance that toggles.
+          // Driven by the audio service's own playback stream rather than
+          // local widget state, so it also reflects playback started
+          // elsewhere (e.g. the "repeat" menu action below).
+          StreamBuilder<bool>(
+            stream: AyahAudioService.instance.isPlayingStream,
+            initialData: AyahAudioService.instance.isPlaying,
+            builder: (context, snapshot) {
+              final playing = snapshot.data ?? false;
+              return IconButton(
+                tooltip: (playing ? 'quran.stop' : 'quran.play').tr(),
+                icon: Icon(playing
+                    ? Icons.stop_circle_outlined
+                    : Icons.play_circle_outline),
+                onPressed: playing
+                    ? AyahAudioService.instance.stopQueue
+                    : () => AyahAudioService.instance.play(
+                          ayah,
+                          quranRepo,
+                          title: _reference,
+                        ),
+              );
+            },
           ),
           PopupMenuButton<String>(
             tooltip: '',
