@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 00:26 — IN PROGRESS — resume here**
+**2026-09-04 01:03 — IN PROGRESS — resume here**
 
-P3-33 dropdown part DONE + live-verified: tafsir tab rewritten to a single persisted dropdown (mirrors _TranslationTab's pattern exactly, new selectedTafseerSourceProvider), compare-view toggle + its dead keys removed; inline per-source download deliberately deferred to P3-31 since no real download mechanism for tafsir sources exists yet
+P3-9 tafsir-ayah-link MAJOR bug fixed + live-verified: root-caused two real bugs via direct DB queries - (1) every tafsir source only ever had the first ~10 ayahs/surah (api pagination never handled), with a range-fallback bug silently showing an earlier ayah's tafsir for ~83% of the Quran; (2) the 'jalalayn' source was never real Jalalayn, verified against the API's own resource list it was always Ibn Kathir mislabeled. Full rebuild: new fetch_tafsirs_complete.py (per_page=300, real per-ayah data), build_sciences_db.py rewritten to never extrapolate past real data, dead ayah_sciences/tafseer_saadi/tafseer_ibn_kathir table+columns removed (independently broken, never read by app). Recovered translations/translation_editions from git history after the rebuild wiped them. tafseer_texts now 17718 real rows (was ~3000 truncated). SciencesRepository relabeled to the verified identity. Live-verified 2:254/2:255 on emulator - correct ayah-specific content, correct source label in the dropdown.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -37,9 +37,19 @@ class SciencesRepository {
   /// existed, so an es/ru/pt-reading user had no Quran translation at all.
   static const supportedTranslationLangs = ['en', 'fr', 'ur', 'es', 'ru', 'pt'];
 
+  /// P3‑9: the source that shipped as "jalalayn" was never really Tafsir
+  /// al-Jalalayn — verified against api.quran.com's own `/resources/
+  /// tafsirs` listing, the id that had been fetched (14) is, and always
+  /// has been, Tafsir Ibn Kathir; real Jalalayn isn't offered by that
+  /// provider at all. Relabelled to its real, verified identity rather
+  /// than ship mislabeled content (see `scripts/build_sciences_db.py`'s
+  /// `load_tafsir_complete` for the full writeup, including the separate,
+  /// much larger bug this same rebuild fixed — the old data only ever had
+  /// the first ~10 ayahs of every surah, silently backfilled with an
+  /// earlier ayah's tafsir for the rest via a range-fallback bug).
   static const tafseerSources = {
     'muyassar': 'التفسير الميسّر',
-    'jalalayn': 'تفسير الجلالين',
+    'ibn_kathir': 'تفسير ابن كثير',
     'qurtubi': 'تفسير القرطبي',
   };
 

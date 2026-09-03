@@ -39,7 +39,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
 | P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
 | P3‑8 | Mushaf reader: confirmed real bugs + feature requests | queued, some unblocked now |
-| P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed (فاسقين dagger-alif bug + نشورا/منشورا word-boundary bug); tafsir-ayah-link + non-Hafs-gating still open |
+| P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed; ✅ **tafsir-ayah-link fixed — was a major bug: ~83% of the Quran showed an earlier ayah's tafsir, plus one whole source was mislabeled (real content = Ibn Kathir, not Jalalayn) — full data rebuild, live-verified**; non-Hafs-gating still open |
 | P3‑10 | "معاني الكلمات" tab — remove unless a real source is found | ✅ done — tab removed |
 | P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | ✅ **done, live-verified on emulator** — المقدمة filtered, swipe nav, and the grid-hub redesign (2-column card grid, all 133 real sections after المقدمة, each card icon-matched by keyword) all shipped and confirmed on-device |
 | P3‑12 | Tasbeeh redesign to match reference | ✅ **done, live-verified on emulator** — matches `ref_tasbeeh.jpg` closely |
@@ -260,10 +260,83 @@ pass; flag it again with a screenshot if it still shows up.
   for "فاسقين" after the fix, vs. 1 spurious hit before). `arabic_normalize_test.dart`
   covers all three cases now. **Not yet re-verified on-device/emulator** —
   will show up in the next build.
-- **Still open:** tafsir not linked to the right ayahs (a real lookup/data
-  mismatch, separate from the two fixes above) and tafsir/translation
-  gating for non-Hafs riwayat editions (`MushafEdition.sciencesAvailableFor`
-  — re-check the gating message logic).
+- ✅ **Fixed: "tafsir not linked to the right ayahs" — root-caused precisely,
+  not just patched.** This was much bigger and more serious than the vague
+  report suggested. Investigated by directly querying `quran_sciences.db`'s
+  `tafseer_texts` table rather than guessing, and found **two separate real
+  bugs**, both now fixed by a full data rebuild:
+  1. **Every source only ever had real per-ayah data for roughly the first
+     ~10 ayahs of every surah** (~1,000–1,060 rows total per source, when
+     the Quran needs 6,236). Root cause: api.quran.com's tafsir endpoint
+     paginates at 10 results/page by default, and the original one-off
+     fetch never handled pagination. `build_sciences_db.py`'s range-
+     grouping logic then made it far worse: whenever a surah's source data
+     ran out early, it silently stretched the *last present* verse's range
+     all the way to that surah's final ayah — so roughly **83% of the
+     Quran was showing an earlier, unrelated ayah's tafsir**, not a gap.
+     Confirmed directly: querying 2:255 (Ayat al-Kursi) against the old DB
+     returned a row spanning ayahs 10–286 whose text was actually about
+     2:10 ("في قلوبهم مرض"), nothing to do with Ayat al-Kursi at all.
+  2. **The source labelled "جلالايين" (Tafsir al-Jalalayn) was never
+     actually Tafsir al-Jalalayn.** Verified against api.quran.com's own
+     `/resources/tafsirs` listing: the id that had been fetched (14) is,
+     and has always been, **Tafsir Ibn Kathir** — confirmed independently
+     by the content itself (extensive hadith citations with full isnad
+     chains, comparing scholarly opinions at length — Jalalayn's whole
+     reputation is being a hyper-terse word-by-word gloss; what shipped
+     was neither terse nor Jalalayn). Real Jalalayn isn't offered by this
+     provider at all currently, so rather than fabricate/guess a
+     replacement, the source was relabelled to its real, verified
+     identity: **تفسير ابن كثير**.
+
+  **The fix, in full:** new `scripts/fetch_tafsirs_complete.py` re-fetches
+  all 3 sources (Muyassar=16, Qurtubi=90, Ibn Kathir=14 — verified ids)
+  complete, per ayah, via `?per_page=300` (covers even Al-Baqarah's 286
+  ayahs in one request per chapter — the actual working shape of the API,
+  found by testing it directly rather than assuming). `build_sciences_
+  db.py`'s tafsir-loading rewritten (`load_tafsir_complete`): ranges are
+  now inferred **only** from the real, complete sequence of ayahs present
+  per source (a legitimate real behaviour — Muyassar genuinely comments on
+  several consecutive ayahs together sometimes) and are **never** stretched
+  past the last real entry to a surah's end — the exact "assume it
+  continues" logic that caused bug #1 is now structurally impossible. Also
+  removed the `ayah_sciences`/`tafseer_saadi`/`tafseer_ibn_kathir` table +
+  columns entirely — confirmed completely dead (not in the shipped DB, no
+  Dart code ever read them, and their own fetch mechanism was independently
+  broken too, returning `0` tafsirs every time it ran).
+
+  **Results, verified directly against the rebuilt DB:** muyassar 5,278
+  real entries (up from ~1,013 — genuinely groups ayahs, as expected),
+  ibn_kathir 6,205 (near-total 1:1 coverage), qurtubi 6,235 (essentially
+  exactly 1:1, only 1 ayah of the whole Quran ungrouped-and-uncovered).
+  Zero overlapping ranges anywhere. Only muyassar has any real coverage
+  gap left (61 ayahs total across the whole Quran, all honestly at
+  chapter-tail edges where the source data itself stops — left blank
+  rather than guessed, unlike the old bug). Re-ran `2:255` directly: all 3
+  sources now correctly return Ayat al-Kursi's own text (Ibn Kathir opens
+  literally naming it — "هذه آية الكرسي ولها شأن عظيم..."). `SciencesRepository.
+  tafseerSources` updated to the corrected key + label. Had to separately
+  recover `translations`/`translation_editions` (37,416 rows, 6 editions)
+  from the last git-committed DB after `build_sciences_db.py`'s
+  `os.remove(OUTDB)` step wiped them — their own source JSON files had
+  already been deleted after the original ingest, so they weren't
+  re-derivable; merged back in via `ATTACH DATABASE`, verified row counts
+  match exactly. `flutter analyze` clean, `flutter test` 15/15.
+
+  **Live-verified on `emulator-5554`:** navigated to page 42 (real 2:254,
+  one ayah before Kursi — deep into the surah, far past the old ~10-ayah
+  cutoff), opened the ayah sheet's Tafsir tab: Muyassar's text accurately
+  paraphrases **this specific ayah** ("أخرجوا الزكاة المفروضة... قبل
+  مجيء يوم القيامة" — matches 2:254's actual content about spending
+  before a day with no trade/friendship/intercession, not some earlier
+  ayah); confirmed the dropdown now lists **"تفسير ابن كثير"** (not
+  "تفسير الجلالين") as the third option. The Translation tab's English
+  text for the same ayah also checked out independently correct ("O you
+  who have believed, spend from that which We have provided...").
+
+- **Still open:** tafsir/translation gating for non-Hafs riwayat editions
+  (`MushafEdition.sciencesAvailableFor` — re-check the gating message
+  logic).
 
 ## P3‑10 — "معاني الكلمات" tab
 

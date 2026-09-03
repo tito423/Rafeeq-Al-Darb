@@ -3,7 +3,6 @@ import json, os, re, sqlite3, html, io, sys
 BASE = r"e:\My Projects\Rafiq-Al-Darb\scripts\temp_phase1"
 APPDATA = r"e:\My Projects\Rafiq-Al-Darb\rafeeq_app\assets\data"
 OUTDB = os.path.join(APPDATA, "quran_sciences.db")
-QC = os.path.join(BASE, "tafsir_qc")
 
 report = io.StringIO()
 def out(s=""):
@@ -46,10 +45,6 @@ CREATE TABLE tafseer_texts(
   source TEXT NOT NULL, surah INTEGER NOT NULL,
   ayah_start INTEGER NOT NULL, ayah_end INTEGER NOT NULL,
   text TEXT NOT NULL);
-CREATE TABLE ayah_sciences(
-  surah INTEGER NOT NULL, ayah INTEGER NOT NULL,
-  tafseer_saadi TEXT, tafseer_ibn_kathir TEXT,
-  PRIMARY KEY(surah, ayah));
 CREATE TABLE word_meanings(
   surah INTEGER NOT NULL, ayah INTEGER NOT NULL, pos INTEGER NOT NULL,
   en TEXT, PRIMARY KEY(surah, ayah, pos));
@@ -67,59 +62,50 @@ CREATE INDEX idx_wg ON word_grammar(surah, ayah);
 CREATE INDEX idx_tt ON tafseer_texts(source, surah, ayah_start, ayah_end);
 """)
 
-# ── 3) tafseer sources (grouped ranges stored once — normalized) ────
-def load_grouped(fname, source):
-    d = json.load(open(os.path.join(BASE, fname), encoding="utf-8"))
-    verses = sorted(d["verses"], key=lambda v: (v["s"], v["a"]))
-    by_surah = {}
-    for v in verses:
-        by_surah.setdefault(v["s"], []).append(v)
-    n = 0
-    for s, lst in by_surah.items():
-        if s not in counts:
-            continue
-        end = counts[s]
-        for i, v in enumerate(lst):
-            nxt = lst[i + 1]["a"] if i + 1 < len(lst) and lst[i + 1]["s"] == s else end + 1
-            a_hi = min(nxt - 1, end)
-            if a_hi < v["a"]:
-                a_hi = v["a"]
-            txt = clean_html(v["text"])
-            if not txt:
-                continue
-            cur.execute(
-                "INSERT INTO tafseer_texts(source,surah,ayah_start,ayah_end,text) VALUES(?,?,?,?,?)",
-                (source, s, v["a"], a_hi, txt))
-            n += 1
-    out(f"{source}: {n} range entries")
-    return n
+# ── 3) tafseer sources, real per-ayah data ──────────────────────────
+# P3‑9: this used to read 3 "grouped ranges" files that turned out to only
+# ever contain the first ~10 ayahs of every surah (api.quran.com's
+# by_chapter endpoint paginates at 10/page by default; the original fetch
+# never handled pagination) — load_grouped()'s range-fallback then silently
+# stretched the *last present* verse's range to the end of the surah
+# whenever a surah ran out of source data early, so ~83% of the Quran was
+# showing an earlier, unrelated ayah's tafsir. Separately, the source
+# labelled "jalalayn" was never real Tafsir al-Jalalayn at all — verified
+# against api.quran.com's own `/resources/tafsirs` listing, id 14 (what was
+# fetched) is and has always been Tafsir Ibn Kathir; real Jalalayn isn't
+# offered by this provider. `fetch_tafsirs_complete.py` re-fetched all 3
+# sources complete (`?per_page=300`, one request per chapter — covers even
+# Al-Baqarah's 286 ayahs in one page) as real per-ayah JSON, and gives the
+# third source its real, verified identity instead of a fabricated one.
+TAFSIR_COMPLETE = os.path.join(BASE, "tafsir_complete")
 
-load_grouped("tafseer_ar_muyassar.json", "muyassar")
-load_grouped("tafseer_ar_jalalayn.json", "jalalayn")
-load_grouped("tafseer_ar_qurtubi.json", "qurtubi")
-
-# quran.com tafsirs (per-verse)
-def load_qc(tafsir_id, col):
-    done = os.path.exists(os.path.join(QC, "_complete.txt"))
-    if not os.path.isdir(QC):
-        out(f"{col}: FETCH PENDING (background fetch not complete)")
-        return
+def load_tafsir_complete(key, source):
+    # Sources like Muyassar genuinely group several consecutive ayahs under
+    # one shared commentary entry (a real characteristic of how the tafsir
+    # itself is written, not missing data) — the entry then only carries
+    # the *last* ayah of that group as its verse_key. Each entry's real
+    # coverage is therefore (previous entry's ayah + 1) through its own
+    # ayah, inferred from the actual sorted sequence of ayahs present.
+    # Deliberately NOT extended past the last present entry to a surah's
+    # final ayah — that exact "stretch to the end" fallback is what caused
+    # the original bug (silently showing an earlier ayah's tafsir for
+    # ~83% of the Quran once source data ran out early). If a surah's tail
+    # genuinely has no entry, it's left with no tafsir for that source
+    # rather than a fabricated/misattributed one.
+    src_dir = os.path.join(TAFSIR_COMPLETE, key)
+    if not os.path.isdir(src_dir):
+        out(f"{source}: MISSING ({src_dir} not found — run fetch_tafsirs_complete.py first)")
+        return 0
     n = 0
     missing = []
     for ch in range(1, 115):
-        p = os.path.join(QC, f"{tafsir_id}_ch{ch}.json")
+        p = os.path.join(src_dir, f"ch{ch}.json")
         if not os.path.exists(p):
             missing.append(ch)
             continue
-        try:
-            d = json.load(open(p, encoding="utf-8-sig"))
-        except Exception as e:
-            out(f"{col} ch{ch} PARSE ERROR {e}")
-            continue
-        items = d.get("tafsirs") if isinstance(d, dict) else None
-        if items is None and isinstance(d, dict):
-            items = d.get("verses") or []
-        for it in items or []:
+        items = json.load(open(p, encoding="utf-8"))
+        parsed = []
+        for it in items:
             vk = str(it.get("verse_key", ""))
             try:
                 s, a = (int(x) for x in vk.split(":"))
@@ -128,26 +114,29 @@ def load_qc(tafsir_id, col):
             txt = clean_html(it.get("text", ""))
             if not txt:
                 continue
+            parsed.append((s, a, txt))
+        parsed.sort(key=lambda r: r[1])
+        prev_a = 0
+        for s, a, txt in parsed:
+            a_lo = prev_a + 1 if a > prev_a else a
             cur.execute(
-                f"INSERT INTO ayah_sciences(surah,ayah,{col}) VALUES(?,?,?) "
-                f"ON CONFLICT(surah,ayah) DO UPDATE SET {col}=excluded.{col}",
-                (s, a, txt))
+                "INSERT INTO tafseer_texts(source,surah,ayah_start,ayah_end,text) VALUES(?,?,?,?,?)",
+                (source, s, a_lo, a, txt))
             n += 1
-    out(f"{col}: {n} ayah rows (fetch complete={done}, missing={len(missing)})")
+            prev_a = a
+    out(f"{source}: {n} ayah entries (missing chapters: {missing or 'none'})")
+    return n
 
-load_qc(91, "tafseer_saadi")
-load_qc(14, "tafseer_ibn_kathir")
+load_tafsir_complete("muyassar", "muyassar")
+load_tafsir_complete("ibn_kathir", "ibn_kathir")
+load_tafsir_complete("qurtubi", "qurtubi")
 
 con.commit()
 
 # report partial counts
-for src in ("muyassar", "jalalayn", "qurtubi"):
+for src in ("muyassar", "ibn_kathir", "qurtubi"):
     c = cur.execute("SELECT COUNT(*) FROM tafseer_texts WHERE source=?", (src,)).fetchone()[0]
     out(f"tafseer {src}: {c} ranges")
-for col in ("tafseer_saadi", "tafseer_ibn_kathir"):
-    c = cur.execute(f"SELECT COUNT({col}) FROM ayah_sciences WHERE {col} IS NOT NULL").fetchone()[0]
-    out(f"col {col}: {c}")
-
 # ── 4) word-by-word meanings (Quranic Arabic Corpus glosses) ────────
 wm = json.load(open(os.path.join(BASE, "word_meanings.json"), encoding="utf-8"))
 rows = [(w["s"], w["a"], w["pos"], w.get("en", "").strip())
@@ -222,7 +211,7 @@ out(f"azkar sections: {n_sections}, items: {n_items}")
 con.commit()
 cur.execute("VACUUM")
 con.commit()
-for t in ("tafseer_texts", "ayah_sciences", "word_meanings", "word_grammar", "azkar_sections", "azkar_items"):
+for t in ("tafseer_texts", "word_meanings", "word_grammar", "azkar_sections", "azkar_items"):
     c = cur.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
     out(f"table {t}: {c}")
 con.close()
