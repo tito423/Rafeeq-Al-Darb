@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  P3-37: the OS-level app name (launcher, recent-apps, notifications —
+  Android's `android:label`) used to be a hardcoded literal in
+  AndroidManifest.xml, so it never followed the device's system language.
+  Android already resolves this natively via `values-<lang>/strings.xml`
+  resource qualifiers, picked by the OS's own language setting — entirely
+  independent of the in-app easy_localization state (see main.dart's
+  `startLocale`, fixed separately for the *in-app* first-run default).
+  This `values/strings.xml` (no qualifier) is the fallback for every
+  language without its own dedicated file below — the Latin spelling
+  matches `app.name` in en/es/ru/pt's translation JSON exactly, since none
+  of those actually translate the name (it's a proper noun).
+-->
+<resources>
+    <string name="app_name">Rafeeq Al-Darb</string>
+</resources>

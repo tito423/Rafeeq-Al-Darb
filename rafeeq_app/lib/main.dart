@@ -67,7 +67,15 @@ Future<void> main() async {
       ],
       path: 'assets/translations',
       fallbackLocale: const Locale('ar'),
-      startLocale: const Locale('ar'),
+      // P3‑37: `startLocale` used to be hardcoded to Arabic, so a fresh
+      // install always opened in Arabic regardless of the device's own
+      // language — omitting it lets easy_localization detect the device's
+      // system locale on the very first launch (matched against
+      // `supportedLocales`, falling back to `fallbackLocale` above for any
+      // device language this app doesn't ship a translation for). Once the
+      // user picks a language explicitly (or this auto-detected default is
+      // used once), `saveLocale: true` persists it — this only affects the
+      // *very first* launch before anything is saved.
       saveLocale: true,
       child: ProviderScope(
         overrides: [

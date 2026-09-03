@@ -855,22 +855,51 @@ book, and grade all changed completely (سنن النسائي #5012 → جامع
 #544) while the visible scroll position stayed pixel-identical (same cards
 visible above/below, no jump).
 
-## P3-37 — App display name follows the device's system language, not just the app's own locale setting
+## P3-37 — App display name follows device system language ✅ DONE, live-verified
 
-On first install, before the user picks anything, the OS-level app name
-("Rafeeq AlDarb" in the launcher, notifications, etc. — Android's
-`android:label`) should reflect the **device's** system language (detect
-once at install/first-run: Arabic device → "رفيق الدرب" as the *initial*
-in-app locale selection, English device → "Rafeeq AlDarb", etc.) rather
-than defaulting to a fixed value. Note: Android's launcher label
-(`AndroidManifest.xml`'s `android:label`) is a single static string per
-locale via `res/values-<lang>/strings.xml` resource qualifiers — Android
-*does* already support this natively (multiple `strings.xml` per locale
-folder, picked by the OS's own language, independent of in-app
-`easy_localization` state) — check whether that's already wired before
-assuming it needs new code; the in-app **first-run locale default** (which
-language `easy_localization` starts in, shown top of a dropdown as
-"detected") is the part that's more likely actually missing. Not started.
+Both halves, confirmed independently:
+
+- **OS-level launcher label:** wasn't wired at all —
+  `AndroidManifest.xml`'s `android:label` was a hardcoded literal string
+  (`"Rafeeq AlDarb"`, no hyphen — also inconsistent with `app.name` in the
+  translation JSONs, which all spell it "Rafeeq Al-Darb"), not a
+  `@string/app_name` resource reference, so there was no `strings.xml` at
+  all to pick up the OS's own language. Added
+  `res/values/strings.xml` (default/fallback — "Rafeeq Al-Darb", matching
+  en/es/ru/pt's `app.name` exactly since none of them actually translate
+  the proper noun) and `res/values-ar/strings.xml` ("رفيق الدرب", byte-
+  verified against `ar.json`'s `app.name` via a Python script rather than
+  eyeballing it), then pointed the manifest at `@string/app_name`. No
+  values-es/ru/pt needed — they already resolve to the same default file.
+- **In-app first-run locale:** `main.dart`'s `EasyLocalization` had
+  `startLocale: const Locale('ar')` hardcoded, so a fresh install always
+  opened in Arabic no matter the device's language — this was the part
+  actually missing, as suspected. Removed it entirely: omitting
+  `startLocale` makes easy_localization auto-detect the device's own
+  locale on the very first launch (matched against `supportedLocales`,
+  falling back to `fallbackLocale` for any unsupported device language),
+  and `saveLocale: true` (already set) persists whatever gets picked from
+  then on — this only changes the *very first* launch's default.
+
+Verified with a real `flutter build apk --debug` (not just `flutter
+analyze`, which can't see manifest/resource errors) since this touches
+native Android resources. `flutter analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`:** this AVD's actual system locale is
+`en-US` (`adb shell getprop ro.product.locale`) — a fresh install (after
+`adb uninstall`) opened the whole app in **English** by default, no
+locale ever chosen: Home screen showed "Welcome" / "Quran Khatma" /
+"Sunnah of the Surahs (Day & Night)" / "Hadith of the Day", LTR-mirrored
+bottom nav (Home on the *left* this time, correctly following LTR), dates
+in English ("Sep 3, 2026"). The location permission dialog itself also
+read "Allow **Rafeeq Al-Darb** to access this device's location" —
+confirming the manifest's `@string/app_name` resolved correctly (and
+picked up the corrected hyphenated spelling, not the old hardcoded one).
+**Note for future sessions on this AVD:** because `saveLocale: true`
+persists the auto-detected choice, a fresh install here will keep opening
+in English (matching this AVD's real system locale) unless the app's own
+language switcher is used — that's the fix working as intended, not a
+regression from the rest of this session's Arabic-default testing.
 
 ## Status table addition
 
@@ -893,4 +922,4 @@ language `easy_localization` starts in, shown top of a dropdown as
 | P3-34 | Text mode: scroll/speed control + toolbar icon redesign+captions+animation | queued, unblocked (re-verify scroll didn't regress) |
 | P3-35 | Ayah card: single play/stop toggle button | ✅ **done, live-verified** |
 | P3-36 | Home: hadith reroll shouldn't scroll the page | ✅ **done, live-verified** — root cause was the card collapsing to a spinner mid-reroll, not a scroll bug at all |
-| P3-37 | App display name follows device system language on first run | queued, unblocked |
+| P3-37 | App display name follows device system language on first run | ✅ **done, live-verified** |

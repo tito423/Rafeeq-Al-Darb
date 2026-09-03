@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- P3-37: Arabic-language devices see this launcher name instead of the
+     default `values/strings.xml` — matches `app.name` in ar.json exactly. -->
+<resources>
+    <string name="app_name">رفيق الدرب</string>
+</resources>
