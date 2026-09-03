@@ -212,6 +212,8 @@
     "location_denied": "No se pudo determinar tu ubicación. Activa el permiso de ubicación en los ajustes del dispositivo",
     "battery_optimization": "Para que el adhán suene con fiabilidad en segundo plano, conviene eximir la app de la optimización de batería",
     "battery_optimization_action": "Eximir la app",
+    "full_screen_intent": "Tu sistema requiere un permiso adicional para que la alerta de adhán a pantalla completa se abra sobre la pantalla de bloqueo",
+    "full_screen_intent_action": "Conceder permiso",
     "notification_mode": "Modo de notificación",
     "playing": "Reproduciendo…",
     "fajr_phrase": "La oración es mejor que el sueño",

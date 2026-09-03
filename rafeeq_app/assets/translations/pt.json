@@ -212,6 +212,8 @@
     "location_denied": "Não foi possível determinar a sua localização. Ative a permissão de localização nas definições do dispositivo",
     "battery_optimization": "Para que o adhan toque de forma fiável em segundo plano, é melhor isentar a app da otimização da bateria",
     "battery_optimization_action": "Isentar a app",
+    "full_screen_intent": "O seu sistema exige uma permissão adicional para que o alerta de adhan em ecrã inteiro abra sobre o ecrã de bloqueio",
+    "full_screen_intent_action": "Conceder permissão",
     "notification_mode": "Modo de notificação",
     "playing": "A reproduzir…",
     "fajr_phrase": "A oração é melhor do que o sono",

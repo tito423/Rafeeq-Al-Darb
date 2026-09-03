@@ -212,6 +212,8 @@
     "location_denied": "Couldn't determine your location. Enable location permission in device settings",
     "battery_optimization": "For the Adhan to fire reliably in the background, it's best to exempt the app from battery optimization",
     "battery_optimization_action": "Exempt app",
+    "full_screen_intent": "Your system requires an extra permission for the full-screen Adhan alert to open over the lock screen",
+    "full_screen_intent_action": "Grant permission",
     "notification_mode": "Notification mode",
     "playing": "Playing…",
     "fajr_phrase": "Prayer is better than sleep",

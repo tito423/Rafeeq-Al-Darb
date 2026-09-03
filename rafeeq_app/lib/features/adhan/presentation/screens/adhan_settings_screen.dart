@@ -12,6 +12,7 @@ import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
 import '../../../../core/services/adhan_alarm_service.dart';
 import '../../../../core/services/adhan_catalog_service.dart';
+import '../../../../core/services/adhan_uri_bridge.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
@@ -42,14 +43,17 @@ class AdhanSettingsScreen extends ConsumerStatefulWidget {
   ConsumerState<AdhanSettingsScreen> createState() => _AdhanSettingsScreenState();
 }
 
-class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
+class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
+    with WidgetsBindingObserver {
   final AudioPlayer _preview = AudioPlayer();
   String? _playingId;
   bool? _batteryExempt;
+  bool? _fullScreenIntentOk;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _preview.playerStateStream.listen((s) {
       if (s.processingState == ProcessingState.completed && mounted) {
         setState(() => _playingId = null);
@@ -58,10 +62,25 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
     AdhanAlarmService.instance.isBatteryOptimizationExempt().then((v) {
       if (mounted) setState(() => _batteryExempt = v);
     });
+    _checkFullScreenIntent();
+  }
+
+  Future<void> _checkFullScreenIntent() async {
+    final v = await AdhanUriBridge.canUseFullScreenIntent();
+    if (mounted) setState(() => _fullScreenIntentOk = v);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // The user grants the P3‑19 full-screen-intent toggle from a system
+    // settings screen, not a dialog — re-check when they come back rather
+    // than assuming it worked.
+    if (state == AppLifecycleState.resumed) _checkFullScreenIntent();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _preview.dispose();
     super.dispose();
   }
@@ -161,6 +180,10 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
         data: (catalog) => ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            if (_fullScreenIntentOk == false)
+              _FullScreenIntentCard(
+                onGrant: AdhanUriBridge.openFullScreenIntentSettings,
+              ),
             if (_batteryExempt == false) _BatteryCard(
               onExempt: () async {
                 final messenger = ScaffoldMessenger.of(context);
@@ -247,6 +270,52 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
                 onTest: () => _test(key, settings.modeFor(key)),
                 accent: scheme.primary,
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// P3‑19: on Android 14+, shown when the OS reports the app doesn't yet
+/// have the separate full-screen-intent grant — mirrors [_BatteryCard]'s
+/// look exactly, same "here's a real gap, here's the one button that fixes
+/// it" pattern.
+class _FullScreenIntentCard extends StatelessWidget {
+  final VoidCallback onGrant;
+  const _FullScreenIntentCard({required this.onGrant});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      color: scheme.secondaryContainer,
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.fullscreen, color: scheme.onSecondaryContainer),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'prayer.full_screen_intent'.tr(),
+                    style: TextStyle(color: scheme.onSecondaryContainer),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: FilledButton(
+                onPressed: onGrant,
+                child: Text('prayer.full_screen_intent_action'.tr()),
+              ),
+            ),
           ],
         ),
       ),

@@ -47,7 +47,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑16 | New "الصلاة" bottom-nav tab incl. professional Qibla compass | queued, unblocked (feeds P3‑4) |
 | P3‑17 | R2 hosting migration | ✅ done this session, see `HOSTING.md` — rotate token / old-bucket decision still open |
 | P3‑18 | P2‑8 items already approved (#11 app-lock, #12 group khatma w/ real sign-in) | queued, **#12 folds into P3‑5** |
-| P3‑19 | Dead native notification code found + removed; Android-14 full-screen-intent permission gap found | ✅ cleanup done; the permission-prompt card itself not yet built |
+| P3‑19 | Dead native notification code found + removed; Android-14 full-screen-intent permission gap found + fixed | ✅ all done — cleanup, native check/settings-launch methods, and the settings card all shipped |
 
 ---
 
@@ -368,11 +368,22 @@ notifications" toggle** per app
 on a fresh install targeting API 34+; without it, Android silently
 downgrades a full-screen-intent notification to an ordinary heads-up one,
 which matches "a notification appears but full-screen never does" exactly.
-Not yet built: a check (`NotificationManager.canUseFullScreenIntent()`) +
-a settings card prompting the user to grant it, mirroring the existing
-battery-optimization-exemption card's pattern. Worth doing regardless of
-whether it turns out to be *the* cause here — it's a real gap either way
-on a modern Android target.
+**✅ Built the same session, not left as a finding:** `MainActivity.kt`
+gained `canUseFullScreenIntent` (native check, always `true` below API 34)
+and `openFullScreenIntentSettings` (launches
+`Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT`), bridged through
+`AdhanUriBridge`; `adhan_settings_screen.dart` shows a card — same visual
+pattern as the existing battery-optimization-exemption one — when the OS
+reports the grant is missing, and re-checks on app resume (the grant is
+made from a system settings screen, not an in-app dialog, so there's no
+synchronous result to read). +4 keys × 5 locales
+(`prayer.full_screen_intent` / `_action`). `flutter analyze` clean,
+`flutter test` 15/15, and — unlike the pure-Dart changes elsewhere this
+session — this one touches native Kotlin, so it was also verified with a
+real `flutter build apk --debug` (not just `flutter analyze`, which can't
+see Kotlin errors at all) to confirm it actually compiles. **Not yet
+verified on-device** whether granting this actually fixes the reported
+full-screen symptom — that still needs the real phone.
 
 ## P3‑16 — New "الصلاة" (Prayer) bottom-nav tab
 
