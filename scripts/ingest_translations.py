@@ -19,6 +19,18 @@ EDITIONS = [
     ('en', 'en.sahih',      'Saheeh International', 'translation_en.sahih.json'),
     ('fr', 'fr.hamidullah', 'Muhammad Hamidullah',  'translation_fr.hamidullah.json'),
     ('ur', 'ur.jalandhry',  'Fateh Muhammad Jalandhry', 'translation_ur.jalandhry.json'),
+    # P2‑8 #9 (2026‑09‑03) — es/ru/pt added so Rafiq's own es/ru/pt UI
+    # locales get a Quran translation in their own language too (previously
+    # only en/fr/ur existed, so an es/ru/pt-reading user had none). Same
+    # trusted alquran.cloud source, one edition per language chosen for
+    # being the standard/most-used scholarly translation in that language:
+    # Kuliev for Russian (the most widely used Russian Quran translation
+    # among Muslims), Cortés for Spanish (a standard academic reference
+    # translation), El-Hayek for Portuguese (the only major one on
+    # alquran.cloud, long-standing standard Portuguese translation).
+    ('es', 'es.cortes',  'Julio Cortés',  'translation_es.cortes.json'),
+    ('ru', 'ru.kuliev',  'Эльмир Кулиев (Elmir Kuliev)', 'translation_ru.kuliev.json'),
+    ('pt', 'pt.elhayek', 'Samir El-Hayek', 'translation_pt.elhayek.json'),
 ]
 
 con = sqlite3.connect(DB)
@@ -63,12 +75,22 @@ for lang, edition, name, fname in EDITIONS:
     print('%-3s %-16s %5d ayahs' % (lang, edition, len(rows)))
     total += len(rows)
 
-# ayah_sciences was created empty by an earlier run and duplicates
-# tafseer_texts; drop it so the schema has one obvious source of truth.
-cur.execute("SELECT COUNT(*) FROM ayah_sciences")
-if cur.fetchone()[0] == 0:
-    cur.execute("DROP TABLE ayah_sciences")
-    print('dropped empty placeholder table ayah_sciences')
+# Commit the real ingestion before the maintenance step below, so a bug in
+# that unrelated cleanup can never roll back a whole run's worth of real
+# translation rows again (exactly what happened 2026‑09‑03).
+con.commit()
+
+# ayah_sciences was created empty by an earlier run and duplicated
+# tafseer_texts; dropped once already, so this is a no-op on every run
+# since (real bug caught 2026‑09‑03: an unconditional SELECT here crashed
+# with "no such table" on a second run and rolled back that whole run's
+# inserts, since it ran before the commit below).
+cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='ayah_sciences'")
+if cur.fetchone():
+    cur.execute("SELECT COUNT(*) FROM ayah_sciences")
+    if cur.fetchone()[0] == 0:
+        cur.execute("DROP TABLE ayah_sciences")
+        print('dropped empty placeholder table ayah_sciences')
 
 con.commit()
 cur.execute('VACUUM')

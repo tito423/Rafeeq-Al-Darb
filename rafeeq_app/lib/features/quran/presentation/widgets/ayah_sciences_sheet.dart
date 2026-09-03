@@ -764,7 +764,14 @@ class _TranslationTab extends ConsumerWidget {
   final Future<Map<String, AyahTranslation>> future;
   const _TranslationTab({required this.future});
 
-  static const _labels = {'en': 'English', 'fr': 'Français', 'ur': 'اردو'};
+  static const _labels = {
+    'en': 'English',
+    'fr': 'Français',
+    'ur': 'اردو',
+    'es': 'Español',
+    'ru': 'Русский',
+    'pt': 'Português',
+  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

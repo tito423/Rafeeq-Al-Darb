@@ -77,10 +77,20 @@ items** (2026‑09‑03).
   a "play all" + per-ayah play buttons in the topics tab, via the same
   `playQueue`. Verified live: sequential real playback advancing ayah to
   ayah.
-- **#9 more translation languages** — **not yet started** (this one needs a
-  `quran_sciences.db` rebuild + new `ingest_translations.py` run, a bigger
-  content-pipeline task than the others; the owner picked it but it's still
-  open — pick up next).
+- **#9 more translation languages** — ✅ **DONE, emulator-verified.** Added
+  es/ru/pt (Julio Cortés, Elmir Kuliev, Samir El-Hayek — same trusted
+  `alquran.cloud` source as the existing en/fr/ur, one edition per language
+  chosen for being the standard/most-used scholarly translation in it), so
+  Rafiq's own es/ru/pt UI locales finally have a Quran translation in their
+  own language (previously only en/fr/ur existed). `ingest_translations.py`
+  extended + a real bug in it fixed (an unconditional cleanup-step query
+  crashed and rolled back a whole run's inserts on a second run — moved the
+  real commit earlier so that can't happen again). DB copy stamp bumped
+  `sciences-v2`→`v3` so existing installs actually pick up the new rows.
+  Verified live: the language dropdown lists all 6, Russian selected showed
+  real Cyrillic text with correct translator attribution (Эльмир Кулиев),
+  French (pre-existing) still correct. `quran_sciences.db` grew
+  23.2 MB → 26.1 MB (+2.9 MB for 3 more full Quran translations — reasonable).
 
 **#11** (app-locking permission model) — owner did **not** pick this one to
 explore; untouched. #10 (prayer widget) still suggested as its own later

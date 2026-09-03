@@ -31,8 +31,11 @@ class SciencesRepository {
   final Database _db;
   SciencesRepository(this._db);
 
-  /// Languages the bundled database can render an ayah in.
-  static const supportedTranslationLangs = ['en', 'fr', 'ur'];
+  /// Languages the bundled database can render an ayah in. es/ru/pt added
+  /// P2‑8 #9 (2026‑09‑03) so Rafiq's own es/ru/pt UI locales get a Quran
+  /// translation in their own language too — previously only en/fr/ur
+  /// existed, so an es/ru/pt-reading user had no Quran translation at all.
+  static const supportedTranslationLangs = ['en', 'fr', 'ur', 'es', 'ru', 'pt'];
 
   static const tafseerSources = {
     'muyassar': 'التفسير الميسّر',
@@ -123,7 +126,9 @@ class SciencesRepository {
 
 final sciencesRepositoryProvider =
     FutureProvider<SciencesRepository>((ref) async {
+  // Bumped for P2‑8 #9 (es/ru/pt translations added) — devices holding an
+  // already-copied v2 file would otherwise never see the new languages.
   final db = await DbHelper.instance.openBundled('data/quran_sciences.db',
-      stamp: 'sciences-v2');
+      stamp: 'sciences-v3');
   return SciencesRepository(db);
 });
