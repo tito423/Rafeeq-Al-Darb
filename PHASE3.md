@@ -71,9 +71,44 @@ Supersedes/completes the open half of **P3-4**. Exact target now confirmed
 from the video, not just `ref_home.jpg`'s static mock: live `HH:MM:SS`
 clock ticking every second, "الصلاة القادمة: <name>" + "متبقي X ساعة و Y
 دقيقة" pill, a location line, then 4 coloured chips (one colour per prayer,
-matching the video's palette) with a "القادمة" badge on the next one. Not
-started — highest-value remaining P3-4 piece, now unblocked by a precise
-reference.
+matching the video's palette) with a "القادمة" badge on the next one.
+
+**✅ Built.** `_PrayerTimesTable` in `home_screen.dart` rebuilt to this
+exact spec: a fixed dark/teal/violet gradient card (same family as
+`_HeaderCard`), a live per-second `HH:MM:SS` clock (Home's own `_clock`
+`Timer` changed from a 30s to a 1s tick for this), the existing
+`_remaining()`/`nextPrayer()` logic reused for the countdown pill, and 6
+colour-coded `_PrayerChip`s (kept all 6 prayers, not just 4 — the video's 4
+looked like whatever fit that scroll position, not a deliberate cut) in a
+horizontally scrollable row with a glow + "القادمة" badge on the next one.
+`flutter analyze` clean, `flutter test` 15/15.
+
+**Real location line, added properly, not stubbed:** `cityName` already
+existed on `PrayerTimes` but was **always empty in practice** —
+`location_service.dart` hard-coded `locality: null`, no reverse-geocoding
+ever ran. Added the `geocoding` package (the platform's own Geocoder, no
+API key) and a real `_reverseGeocode()` call, threaded a new `countryName`
+field through `PrayerTimes`/`PrayerTimesService`/`PrayerController` so the
+line can read "city، country" like the video's "دبي، الإمارات العربية
+المتحدة" — best-effort, never a fake city if geocoding fails.
+
+**Verification, precisely:** live-tested on `emulator-5554` through a full
+install → grant notifications → grant location ("While using the app")
+flow. The **honest fallback path renders correctly** — "فعّل الموقع لحساب
+مواقيت صلاتك" shows with no crash, confirmed on screen. The **populated
+path (real prayer times + clock + chips) was not visually confirmed this
+session** — `Geolocator.getCurrentPosition()` never resolved on this
+specific AVD despite location permission genuinely being granted
+(confirmed via `dumpsys package`) and `adb emu geo fix` being sent
+repeatedly; `dumpsys location` showed the "gps" provider's last fix frozen
+on a stale reading from an earlier, unrelated session and never updating —
+this looks like a Play-Store-image emulator quirk (classic console GPS
+injection not reaching the Fused Location Provider on this image), not a
+bug in `LocationService`/`PrayerController`, which are simple, already-
+analyzed-clean code following the exact pattern `_HeaderCard` already uses
+successfully. Says so plainly rather than claiming a verification that
+didn't happen — needs either a real device or a differently-configured
+AVD/Extended-Controls location fix to finish confirming.
 
 ## P3-23 — Icon replacement, round 2
 
@@ -224,7 +259,7 @@ language `easy_localization` starts in, shown top of a dropdown as
 |---|---|---|
 | P3-20 | Splash screen + early onboarding screens, restyled (new art) | queued, unblocked |
 | P3-21 | First-run mushaf pick+download onboarding (real 5 editions) | queued, unblocked (extends P3-8 G4/G5) |
-| P3-22 | Home: animated interactive prayer card (frame-verified target) | queued, unblocked — completes P3-4 |
+| P3-22 | Home: animated interactive prayer card (frame-verified target) | 🔶 built, analyze/test clean; fallback path live-verified, **populated path blocked on this emulator's location fix** (see notes) |
 | P3-23 | Icon replacement round 2 | **blocked on owner's reference image** |
 | P3-24 | Book download button → cancel state while downloading | queued, unblocked |
 | P3-25 | Downloads overview rows jump to their own tab | queued, unblocked |

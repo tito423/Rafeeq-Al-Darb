@@ -40,7 +40,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     Future.microtask(() => ref.read(prayerControllerProvider.notifier).refresh());
-    _clock = Timer.periodic(const Duration(seconds: 30), (_) {
+    // P3‑22: ticks every second so the new prayer card's live HH:MM:SS clock
+    // actually moves (was 30s, fine for the old static "متبقي" text but not
+    // for a real ticking clock).
+    _clock = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) setState(() {});
     });
   }
@@ -234,65 +237,136 @@ class _MessageCard extends StatelessWidget {
   }
 }
 
+/// One colour per prayer, matching `design_refs/old_app_frames`' chip
+/// palette (green/blue/brown/purple…) — cosmetic only, doesn't encode
+/// anything.
+const _prayerChipColors = {
+  'fajr': Color(0xFF7C4DFF), // violet
+  'sunrise': Color(0xFF8D6E63), // brown
+  'dhuhr': Color(0xFF2F80A9), // blue
+  'asr': Color(0xFF2E9D6F), // green
+  'maghrib': Color(0xFFD4AF37), // gold
+  'isha': Color(0xFF15C7B0), // teal
+};
+
+/// P3‑4/P3‑22: the animated, interactive prayer card — rebuilt to match a
+/// video the owner sent of an earlier working build of this same app
+/// (`design_refs/old_app_video.mp4`, frames in `old_app_frames/`), which
+/// turned out to be a much more precise target than the static
+/// `ref_home.jpg` mock: a live ticking `HH:MM:SS` clock, a "next prayer +
+/// countdown" pill, a real location line, and coloured per-prayer chips
+/// with a badge on the next one.
 class _PrayerTimesTable extends StatelessWidget {
   final PrayerTimes times;
   const _PrayerTimesTable({required this.times});
 
+  String _clockDigits(String localeCode) {
+    final now = DateTime.now();
+    String two(int n) => n.toString().padLeft(2, '0');
+    final s = '${two(now.hour)}:${two(now.minute)}:${two(now.second)}';
+    if (localeCode != 'ar') return s;
+    const west = '0123456789';
+    const east = '٠١٢٣٤٥٦٧٨٩';
+    final b = StringBuffer();
+    for (final ch in s.split('')) {
+      final i = west.indexOf(ch);
+      b.write(i >= 0 ? east[i] : ch);
+    }
+    return b.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final next = PrayerTimesService().nextPrayer(times, DateTime.now());
+    final location = [times.cityName, times.countryName]
+        .where((s) => s.isNotEmpty)
+        .join('، ');
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            if (next != null) ...[
-              Text('home.next_prayer'.tr(),
-                  style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13)),
-              const SizedBox(height: 4),
-              Text(
-                '${_prayerLabelKeys[next.$1]!.tr()} • ${times.byName(next.$1)}',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(color: scheme.primary, fontWeight: FontWeight.bold),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        // P3‑4: "RGB في جميع الثيمات" — same fixed dark/teal/violet gradient
+        // as the Home header card, so this reads as one visual family
+        // regardless of the app's selected theme.
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)],
+        ),
+        border: Border.all(color: const Color(0xFF15C7B0).withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            _clockDigits(context.locale.languageCode),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
+            ),
+          ),
+          if (next != null) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(14),
               ),
-              const SizedBox(height: 4),
-              Text(_remaining(next), style: TextStyle(color: scheme.onSurfaceVariant)),
-              const Divider(height: 28),
-            ],
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                for (final key in _prayerOrder)
-                  Expanded(
-                    child: Column(
+              child: Column(
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      text: '${'home.next_prayer'.tr()}: ',
+                      style: const TextStyle(color: Colors.white70),
                       children: [
-                        Text(_prayerLabelKeys[key]!.tr(),
-                            style: TextStyle(
-                                fontSize: 11, color: scheme.onSurfaceVariant)),
-                        const SizedBox(height: 4),
-                        Text(
-                          times.byName(key),
+                        TextSpan(
+                          text: _prayerLabelKeys[next.$1]!.tr(),
                           style: TextStyle(
-                            fontWeight: next?.$1 == key ? FontWeight.bold : FontWeight.normal,
-                            color: next?.$1 == key ? scheme.primary : null,
+                            color: _prayerChipColors[next.$1],
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(height: 2),
+                  Text(_remaining(next),
+                      style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                ],
+              ),
+            ),
+          ],
+          if (location.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.location_on, size: 14, color: Colors.white54),
+                const SizedBox(width: 4),
+                Text(location, style: const TextStyle(color: Colors.white54, fontSize: 12)),
               ],
             ),
-            if (times.hijriDate.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              Text(times.hijriDate,
-                  style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
-            ],
           ],
-        ),
+          const SizedBox(height: 16),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            reverse: Directionality.of(context) == TextDirection.rtl,
+            child: Row(
+              children: [
+                for (final key in _prayerOrder)
+                  _PrayerChip(
+                    label: _prayerLabelKeys[key]!.tr(),
+                    time: times.byName(key),
+                    color: _prayerChipColors[key]!,
+                    isNext: next?.$1 == key,
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -305,6 +379,66 @@ class _PrayerTimesTable extends StatelessWidget {
     final label = 'home.remaining'.tr();
     if (h > 0) return '$label: $hس $mد';
     return '$label: $mد';
+  }
+}
+
+class _PrayerChip extends StatelessWidget {
+  final String label;
+  final String time;
+  final Color color;
+  final bool isNext;
+  const _PrayerChip({
+    required this.label,
+    required this.time,
+    required this.color,
+    required this.isNext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 84,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 3),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: isNext ? color : color.withValues(alpha: 0.16),
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: isNext
+              ? [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 10)]
+              : null,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: isNext ? Colors.white : color,
+                )),
+            const SizedBox(height: 4),
+            Text(time,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: isNext ? Colors.white : Colors.white70,
+                )),
+            if (isNext) ...[
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text('home.upcoming'.tr(),
+                    style: const TextStyle(fontSize: 9, color: Colors.white)),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }
 

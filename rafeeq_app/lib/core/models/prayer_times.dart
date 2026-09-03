@@ -7,6 +7,11 @@ class PrayerTimes {
   final String maghrib;
   final String isha;
   final String cityName;
+
+  /// Real reverse-geocoded country name (P3‑22's Home location line,
+  /// "دبي، الإمارات العربية المتحدة") — empty when geocoding failed/was
+  /// unavailable; never invented.
+  final String countryName;
   final String hijriDate;
   final String gregorianDate;
 
@@ -18,6 +23,7 @@ class PrayerTimes {
     required this.maghrib,
     required this.isha,
     required this.cityName,
+    this.countryName = '',
     required this.hijriDate,
     required this.gregorianDate,
   });
@@ -30,6 +36,7 @@ class PrayerTimes {
         maghrib: '--:--',
         isha: '--:--',
         cityName: '',
+        countryName: '',
         hijriDate: '',
         gregorianDate: '',
       );

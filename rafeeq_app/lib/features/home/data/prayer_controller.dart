@@ -57,6 +57,7 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       lat: pos.latitude,
       lon: pos.longitude,
       cityName: pos.locality ?? '',
+      countryName: pos.country ?? '',
     );
     if (!times.isEmpty) {
       await _reschedule(times);

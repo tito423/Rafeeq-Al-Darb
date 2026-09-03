@@ -44,6 +44,10 @@ dependencies:
   # Location (prayer times & qibla)
   geolocator: ^13.0.2
   flutter_compass: ^0.8.1
+  # Real reverse-geocoding for the Home prayer card's location line (P3‑22)
+  # — geolocator only returns lat/lon, this turns that into a real city
+  # name via the platform's own Geocoder, no third-party API/key needed.
+  geocoding: ^3.0.0
 
   # Permissions
   permission_handler: ^11.3.1

@@ -15,6 +15,7 @@ class PrayerTimesService {
     required double lat,
     required double lon,
     String cityName = '',
+    String countryName = '',
     int method = 4,
   }) async {
     final prefs = await SharedPreferences.getInstance();
@@ -24,7 +25,7 @@ class PrayerTimesService {
     if (prefs.getString(_cacheDateKey) == today) {
       final cached = prefs.getString(_cacheKey);
       if (cached != null) {
-        final pt = _decode(cached, cityName);
+        final pt = _decode(cached, cityName, countryName);
         if (pt != null) return pt;
       }
     }
@@ -56,6 +57,7 @@ class PrayerTimesService {
             maghrib: _clean(timings['Maghrib']),
             isha: _clean(timings['Isha']),
             cityName: cityName,
+            countryName: countryName,
             hijriDate: hijri,
             gregorianDate: gregorian,
           );
@@ -83,13 +85,13 @@ class PrayerTimesService {
     // Stale cache is still real measured data — better than nothing offline.
     final stale = prefs.getString(_cacheKey);
     if (stale != null) {
-      final pt = _decode(stale, cityName);
+      final pt = _decode(stale, cityName, countryName);
       if (pt != null) return pt;
     }
     return PrayerTimes.empty();
   }
 
-  PrayerTimes? _decode(String raw, String cityName) {
+  PrayerTimes? _decode(String raw, String cityName, String countryName) {
     try {
       final m = jsonDecode(raw) as Map<String, dynamic>;
       return PrayerTimes(
@@ -100,6 +102,7 @@ class PrayerTimesService {
         maghrib: m['maghrib'] as String? ?? '--:--',
         isha: m['isha'] as String? ?? '--:--',
         cityName: cityName,
+        countryName: countryName,
         hijriDate: m['hijri'] as String? ?? '',
         gregorianDate: m['gregorian'] as String? ?? '',
       );
