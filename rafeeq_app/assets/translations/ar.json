@@ -297,7 +297,8 @@
     "free_confirm": "حذف الملفات المنزَّلة لهذا القسم من الجهاز؟",
     "nothing_downloaded": "لا يوجد محتوى منزَّل",
     "downloaded_items": "العناصر المنزَّلة",
-    "paused": "متوقف مؤقتاً"
+    "paused": "متوقف مؤقتاً",
+    "download_all_recitation": "تحميل التلاوة كاملة"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",

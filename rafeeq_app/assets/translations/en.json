@@ -297,7 +297,8 @@
     "free_confirm": "Delete this category's downloaded files from the device?",
     "nothing_downloaded": "Nothing downloaded",
     "downloaded_items": "Downloaded items",
-    "paused": "Paused"
+    "paused": "Paused",
+    "download_all_recitation": "Download the full recitation"
   },
   "new_muslim": {
     "title": "New Muslim Guide",

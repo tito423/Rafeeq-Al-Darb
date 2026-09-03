@@ -297,7 +297,8 @@
     "free_confirm": "¿Eliminar del dispositivo los archivos descargados de esta categoría?",
     "nothing_downloaded": "Nada descargado",
     "downloaded_items": "Elementos descargados",
-    "paused": "En pausa"
+    "paused": "En pausa",
+    "download_all_recitation": "Descargar la recitación completa"
   },
   "new_muslim": {
     "title": "Guía del nuevo musulmán",

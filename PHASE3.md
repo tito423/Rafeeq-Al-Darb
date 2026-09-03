@@ -680,12 +680,40 @@ working before — **still genuinely needs the real device** to diagnose
 further; nothing new to try without it. Keep flagging until a real-device
 logcat session happens.
 
-## P3-27 — Recitation downloads: a small "download full recitation" card
+## P3-27 — "Download full recitation" card ✅ DONE, live-verified
 
-In التلاوات downloads, after picking a reciter, show a small card directly
-under the picker offering to download that reciter's **entire** recitation
-in one action (today: presumably per-surah only within the reader — verify
-current behaviour before building). Not started.
+Confirmed the assumption first: التلاوات downloads only ever offered one
+surah at a time (a `ListView` of 114 individually-downloadable tiles),
+exactly as suspected — no bulk action existed. Added
+`_FullRecitationCard` directly under the reciter dropdown (`downloads_
+screen.dart`), showing real "`done` / 114 سورة" status computed from the
+actual on-disk files (`AyahAudioService.surahProgress`, not a guess), a
+تحميل button that walks all 114 surahs **sequentially** (kinder to the
+device/network than 114 at once) reusing `downloadSurah`'s own per-ayah
+resume logic — so re-running it after a partial/cancelled run only
+downloads what's still missing — and a cancel button that stops the loop
+and immediately cancels whatever surah was mid-download. `flutter analyze`
+clean, `flutter test` 15/15.
+
+**A real staleness bug was found and fixed during this build, not left
+for later:** the 114 individual `_SurahAudioTile`s each check their own
+on-disk state exactly once, in `initState` — after a bulk run changes
+files out from under them, they'd keep showing "not downloaded" until the
+user did something to force a remount. Fixed with a `_generation` counter
+in `_RecitationsTab`, bumped once the bulk run finishes/cancels and folded
+into each tile's `ValueKey`, forcing them to remount and re-check reality.
++1 key (`downloads.download_all_recitation`) × 5 locales.
+
+**Live-verified on `emulator-5554`:** picked مشاري العفاسي, confirmed the
+card correctly showed "0 / 114 سورة" (not "0 / 0" or a placeholder),
+tapped تحميل — button flipped to a stop icon, progress advanced through
+سورة الفاتحة then partway into سورة البقرة (286 ayahs, so genuinely slow —
+expected); tapped cancel — card reverted to تحميل showing "2 / 114 سورة",
+**and the الفاتحة tile below immediately showed a real green "جاهز للعمل
+بدون إنترنت" checkmark** (proving the generation-remount fix actually
+works, not just that the card's own counter incremented), while سورة
+البقرة's tile showed its own genuine partial progress bar rather than
+resetting to blank.
 
 ## P3-28 — Mushaf edition thumbnails on their cards
 
@@ -912,7 +940,7 @@ regression from the rest of this session's Arabic-default testing.
 | P3-24 | Book download button → cancel state while downloading | ✅ **done, live-verified** |
 | P3-25 | Downloads overview rows jump to their own tab | ✅ **done, live-verified** |
 | P3-26 | Persistent prayer notification still reported absent | **blocked on live device** (see P3-13/P3-19) |
-| P3-27 | "Download full recitation" card under the reciter picker | queued, unblocked |
+| P3-27 | "Download full recitation" card under the reciter picker | ✅ **done, live-verified** |
 | P3-28 | Mushaf edition thumbnails | queued, **needs a per-edition licence/sourcing pass first** (see the QuranFlash warning above) |
 | P3-29 | Book text reader nav/visual redesign | 🔶 nav part ✅ **done, live-verified** (swipe + fast-jump slider, a real `SelectionArea`-vs-`GestureDetector` bug found+fixed along the way); visual part still open — **ask the owner to resend the Shamela reference image** |
 | P3-30 | "Azkar/Tasbeeh still old" | likely stale — **ask the owner to re-check on the batch-2+ APK** before rebuilding |

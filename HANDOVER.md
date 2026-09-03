@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-03 |
+| **Last updated** | 2026-09-04 |
 | **State at** | **PHASE 2 nearly done** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. Every P2 stage is done and emulator-verified **except P2‑7's last piece, which needs a real Android phone** (see its row below) and P2‑8, which is stopped waiting on the owner's shortlist pick. |
 | **Build verified?** | `flutter analyze` clean · `flutter test` **13/13**. All of P2‑1/2/3/4/4b/5/6/9/10/11/12/13 emulator-verified live (not just built) on `emulator-5554`. |
 
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 23:43 — IN PROGRESS — resume here**
+**2026-09-04 00:13 — IN PROGRESS — resume here**
 
-Safety-net checkpoint: released phase3-batch5-2026-09-03 APK (P3-24, P3-25, P3-37 added on top of batch4, all live-verified). NEXT_SESSION_PROMPT.md updated with new APK link.
+P3-27 DONE + live-verified: new download-all-recitation card under the reciter picker, sequential + resumable + cancellable; found+fixed a real staleness bug where per-surah tiles never refreshed after a bulk run changed their files (new _generation-keyed remount)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
