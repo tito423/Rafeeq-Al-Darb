@@ -34,10 +34,10 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | queued — see notes |
 | P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | queued, blocked in part by P3‑5 |
 | P3‑5 | **Login / accounts — architecture decision** | **blocked on owner: mandatory vs optional** |
-| P3‑6 | Khatma card bugs + redesign | queued |
+| P3‑6 | Khatma card bugs + redesign | 🔶 both real bugs fixed ("افتح المصحف"/nav + undo snackbar); label-dup fix + full redesign still open |
 | P3‑7 | Adhan: confirmed real bugs + feature requests | **blocked on live device/logcat for the bug half**; feature half unblocked |
 | P3‑8 | Mushaf reader: confirmed real bugs + feature requests | queued, some unblocked now |
-| P3‑9 | Search & tafsir correctness bugs | queued, unblocked |
+| P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed (فاسقين dagger-alif bug + نشورا/منشورا word-boundary bug); tafsir-ayah-link + non-Hafs-gating still open |
 | P3‑10 | "معاني الكلمات" tab — remove unless a real source is found | queued, unblocked |
 | P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | queued, unblocked |
 | P3‑12 | Tasbeeh redesign to match reference | queued, unblocked |
@@ -137,16 +137,25 @@ signed-in" migration path, and how big this task actually is.
 
 ## P3‑6 — Khatma card
 
-- Fix the duplicated "ختمة جديدة" label (shows both below and inside/on the
-  button).
-- Add an **undo** for "قرأت اليوم" (mark today's reading), for accidental
-  taps.
-- Fix: **"افتح المصحف" does nothing** — taps fall through to Home instead of
-  opening the reader. Real navigation bug, self-contained, unblocked.
-- Redesign to the "ختمة" app's visual style the owner referenced (no image
-  of that specific app was attached, but `design_refs/ref_home.jpg`'s
-  compact card language is the closer, actually-in-hand reference — use
-  it).
+- ✅ **Fixed: "افتح المصحف" (and "قرأت اليوم" from inside the full
+  `KhatmaScreen`) did nothing but pop back to Home.** Root cause:
+  `AppShell`'s bottom-nav tab index was local `State`, reachable only via a
+  `HomeNavigate` `InheritedWidget` scoped to `HomeScreen`'s own subtree —
+  `KhatmaScreen`, pushed as a separate route sitting in the `Navigator`'s
+  `Overlay`, isn't a descendant of it, so the callback was always null there.
+  New `lib/app/shell/tab_request_provider.dart` (`requestedTabProvider`)
+  mirrors the existing `quranJumpRequestProvider` seam — any pushed screen
+  sets a target tab, `AppShell` listens and switches, then resets to null.
+- ✅ **Added an undo for "قرأت اليوم".** `KhatmaStore.restore(previous)`
+  reverts to the exact pre-tap snapshot; a snackbar with a "تراجع" action
+  (new `common.undo` key, all 5 locales) shows right after marking today
+  read, from both the Home card's inline button and the full manager's
+  tile. `flutter analyze` clean, `flutter test` 15/15 (2 new cases added in
+  the same pass for the search fixes below).
+- Still open: the duplicated "ختمة جديدة" label (shows both below and
+  inside/on the button), and the full redesign to `design_refs/ref_home.jpg`'s
+  compact card language (no image of the specific "ختمة" app referenced was
+  attached — that reference image is the closer, actually-in-hand one).
 
 ## P3‑7 — Adhan
 
@@ -195,16 +204,29 @@ mistake the `AdhanFullScreenScreen` `PopScope(canPop:false)` bug was, per
 
 ## P3‑9 — Search & tafsir correctness
 
-- **Substring-match bug:** searching "نشورا" returns ayahs containing
-  "منشورا" (a longer word containing the query as a substring). Needs
-  word-boundary-aware matching, not bare `LIKE '%term%'`.
-- **"فاسقين" returns nothing/wrong** — re-check `arabic_normalize.dart`
-  against this real query (emulator couldn't type Arabic before; a real
-  device now can, so this is finally properly testable).
-- **Tafsir not linked to the right ayahs** — a real lookup/data mismatch,
-  separate from the non-Hafs-numbering gating.
-- **Tafsir/translation broken for non-Hafs riwayat editions** — re-check
-  `MushafEdition.sciencesAvailableFor` and the gating message logic.
+- ✅ **Fixed: substring-match bug** ("نشورا" matching inside "منشورا"). New
+  `arabicWordBoundaryContains()` (`arabic_normalize.dart`) requires a match
+  to start at a word boundary (index 0 or right after a space) in both
+  `QuranRepository.search()` and `HadithRepository.search()` — a useful
+  *prefix* match within a word (e.g. "رحم" → "الرحمن") still works, since
+  only the start is constrained.
+- ✅ **Fixed: "فاسقين" returned nothing.** Root cause found by querying
+  `quran_local.db` directly with sqlite3 rather than guessing: U+0670 (the
+  Quranic "dagger alif", the small mark inside "ٱلْفَٰسِقِينَ") was being
+  stripped to nothing instead of expanded to ا — so the correctly-spelled
+  query could never match. Fixed in `normalizeArabic`, but that alone
+  breaks a small, separate, well-known exception list (الرحمن, هذا, ذلك,
+  لكن, السماوات, …) where modern typed Arabic *omits* that same letter —
+  so a new `normalizeArabicLoose` was added alongside it, and both
+  search functions now check a query against both normalized forms. Full
+  before/after verified directly against the real bundled DB (19 real hits
+  for "فاسقين" after the fix, vs. 1 spurious hit before). `arabic_normalize_test.dart`
+  covers all three cases now. **Not yet re-verified on-device/emulator** —
+  will show up in the next build.
+- **Still open:** tafsir not linked to the right ayahs (a real lookup/data
+  mismatch, separate from the two fixes above) and tafsir/translation
+  gating for non-Hafs riwayat editions (`MushafEdition.sciencesAvailableFor`
+  — re-check the gating message logic).
 
 ## P3‑10 — "معاني الكلمات" tab
 

@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 19:26 — IN PROGRESS — resume here**
+**2026-09-03 19:27 — IN PROGRESS — resume here**
 
-PHASE3 P3-6 + P3-9 real bugs fixed, all emulator-untested-but-analyze+test-verified (analyze clean, test 15/15 incl. 2 new cases): P3-6 khatma nav bug root-caused - KhatmaScreen's 'read today'/'open reader' set the jump provider correctly but Navigator.pop()'d back to Home without ever switching AppShell's tab (HomeNavigate InheritedWidget only reaches HomeScreen's own subtree, not a pushed route) - new app/shell/tab_request_provider.dart mirrors quranJumpRequestProvider's set-once/consume-once shape, AppShell now listens+switches. Also added 'undo' snackbar (common.undo key x5 locales) after 'read today', backed by new KhatmaStore.restore(previousSnapshot). P3-9: two real bugs found+fixed in arabic_normalize.dart, root-caused by actually querying quran_local.db with sqlite3 instead of guessing - (1) U+0670 dagger-alif was in the stripped-diacritics set, silently deleting a real letter from words like the owner's reported 'فاسقين' (ٱلْفَٰسِقِينَ -> فسقين instead of فاسقين, 0 matches for the correct spelling); fixed by moving it to the alef-variant set, BUT this alone breaks a known small exception-word-list (الرحمن etc, where modern typing omits that same letter) - so added normalizeArabicLoose alongside normalizeArabic and both search()s (Quran+Hadith) now check both forms. (2) substring-not-word-boundary matching (owner's 'نشورا' matching inside 'منشورا') - new shared arabicWordBoundaryContains() requires a match start at index 0 or after a space (prefix-within-word still works, e.g. 'رحم' still finds 'الرحمن'). Verified via a direct sqlite3 repro against the real bundled DB before AND after (19 real فاسقين hits post-fix vs 1 spurious pre-fix). Not yet re-tested live on device/emulator - next session or a build should confirm the actual UI flows.
+PHASE3.md status table + P3-6/P3-9 sections updated to reflect the real fixes just shipped (khatma nav+undo, both search bugs). Docs only, no code change this step.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
