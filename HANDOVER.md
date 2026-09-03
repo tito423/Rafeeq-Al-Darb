@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 03:05 — IN PROGRESS — resume here**
+**2026-09-04 03:07 — IN PROGRESS — resume here**
 
-P3-15 page-nav investigation: confirmed via source (pdf_scrollable.dart's InteractiveViewer-style onInteractionUpdate) + official docs that scroll, fast-jump (canShowScrollHead, already set), and pinch-zoom are all already built into SfPdfViewer - none needed new code. Only the visual theming pass remains a genuinely open, under-specified ask (no reference image). Docs only, no code change this step.
+Safety-net checkpoint: released phase3-batch8-2026-09-04 APK (P3-8 surah-jump strip, live-verified; P3-15 investigation findings). NEXT_SESSION_PROMPT.md fully rewritten with a comprehensive, accurate status summary covering everything done across this extended session (~20 items live-verified) - new APK link + reorganized done/verified-without-code/blocked/untouched sections.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
