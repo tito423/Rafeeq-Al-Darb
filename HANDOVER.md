@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 02:44 — IN PROGRESS — resume here**
+**2026-09-04 02:45 — IN PROGRESS — resume here**
 
-P3-16 DONE + live-verified: new 6th bottom-nav 'Prayer' tab with a real Qibla compass (great-circle bearing to the Kaaba, live flutter_compass needle, honest loading/no-permission/no-sensor states, Adhan-settings link). Found+fixed two real bugs along the way: (1) inserting a 6th tab silently broke a hardcoded Library=3 tab index elsewhere - fixed properly with a new named AppTab constant everywhere instead of magic numbers, (2) LocationService.getCurrentPosition could hang indefinitely on this AVD past its own timeout - now wraps the whole permission+fetch+geocode chain in one outer timeout, benefits Home's prayer card too. Also traced and ruled out a genuine Android ANR as emulator degradation (12.5h uptime, load avg ~6-8) not a code bug, via adb shell uptime.
+Safety-net checkpoint: released phase3-batch7-2026-09-04 APK (P3-16 Qibla compass tab, live-verified). NEXT_SESSION_PROMPT.md updated with new APK link + a note that the emulator can hit a genuine ANR after 12+ hours of continuous uptime (not a code bug).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
