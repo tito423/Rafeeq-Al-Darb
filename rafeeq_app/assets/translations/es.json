@@ -324,5 +324,33 @@
   "errors": {
     "offline": "Sin conexión a internet",
     "generic": "Algo salió mal, inténtalo de nuevo"
+  },
+  "khatma": {
+    "title": "Jatma del Corán",
+    "start_invite": "Empieza una jatma y sigue tu progreso diario",
+    "days_left": "Quedan {} días",
+    "pages_read": "{} páginas leídas",
+    "streak": "Racha de {} días",
+    "read_today": "Leer hoy ({} páginas)",
+    "read_today_done": "Leído hoy",
+    "new": "Nueva jatma",
+    "history": "Jatmas completadas",
+    "delete_confirm": "¿Eliminar esta jatma? El progreso no se puede recuperar.",
+    "delete": "Eliminar",
+    "set_reminder": "Recordatorio diario",
+    "reminder_at": "Recordatorio a las {}",
+    "pages_read_of": "{} de {} páginas",
+    "daily_amount": "Porción diaria: {} páginas",
+    "open_reader": "Abrir el mushaf",
+    "completed_on": "Completada el {}",
+    "started_on": "Iniciada el {}",
+    "mode_pages": "Páginas al día",
+    "mode_juz": "Yuz al día",
+    "mode_date": "Fecha objetivo",
+    "pages_per_day": "Páginas por día",
+    "juz_per_day": "Yuz por día",
+    "pick_date": "Elige una fecha de finalización",
+    "no_reminder": "Sin recordatorio",
+    "create": "Crear jatma"
   }
 }

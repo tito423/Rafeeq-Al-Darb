@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/services/prayer_times_service.dart';
+import '../../../khatma/presentation/khatma_card.dart';
 import '../../../library/presentation/screens/library_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../data/prayer_controller.dart';
@@ -62,7 +63,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final theme = Theme.of(context);
     final prayerState = ref.watch(prayerControllerProvider);
 
-    return Scaffold(
+    return HomeNavigate(
+      onNavigate: widget.onNavigate,
+      child: Scaffold(
       appBar: AppBar(
         title: Text('app.name'.tr()),
         centerTitle: true,
@@ -92,6 +95,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               const SizedBox(height: 20),
               _PrayerCard(state: prayerState),
+              const SizedBox(height: 16),
+              const KhatmaCard(),
               const SizedBox(height: 28),
               Text(
                 'home.quick_access'.tr(),
@@ -144,6 +149,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

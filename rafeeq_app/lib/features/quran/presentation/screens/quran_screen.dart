@@ -8,6 +8,7 @@ import '../../../search/presentation/screens/search_screen.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
+import '../../data/quran_jump_provider.dart';
 import '../widgets/ayah_sciences_sheet.dart';
 import '../widgets/mushaf_edition_sheet.dart';
 import '../widgets/mushaf_page_view.dart';
@@ -146,6 +147,16 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 @override
   Widget build(BuildContext context) {
     final mushaf = ref.watch(mushafDataProvider);
+    // P2‑11: a khatma's "اقرأ اليوم" (or its card) asks for a page here,
+    // then switches to this tab — consume it once and clear it so it
+    // doesn't re-fire on every rebuild.
+    ref.listen<int?>(quranJumpRequestProvider, (_, page) {
+      if (page != null) {
+        _goToPage(page, animate: false);
+        Future.microtask(
+            () => ref.read(quranJumpRequestProvider.notifier).state = null);
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text('nav.quran'.tr()),

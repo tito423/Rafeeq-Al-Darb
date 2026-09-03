@@ -324,5 +324,33 @@
   "errors": {
     "offline": "No internet connection",
     "generic": "Something went wrong, try again"
+  },
+  "khatma": {
+    "title": "Quran Khatma",
+    "start_invite": "Start a khatma and track your daily progress",
+    "days_left": "{} days left",
+    "pages_read": "{} pages read",
+    "streak": "{}-day streak",
+    "read_today": "Read today ({} pages)",
+    "read_today_done": "Read today",
+    "new": "New khatma",
+    "history": "Completed khatmas",
+    "delete_confirm": "Delete this khatma? Progress cannot be recovered.",
+    "delete": "Delete",
+    "set_reminder": "Daily reminder",
+    "reminder_at": "Reminder at {}",
+    "pages_read_of": "{} of {} pages",
+    "daily_amount": "Daily portion: {} pages",
+    "open_reader": "Open the mushaf",
+    "completed_on": "Completed on {}",
+    "started_on": "Started on {}",
+    "mode_pages": "Pages per day",
+    "mode_juz": "Juz per day",
+    "mode_date": "Target date",
+    "pages_per_day": "Pages per day",
+    "juz_per_day": "Juz per day",
+    "pick_date": "Pick a finish date",
+    "no_reminder": "No reminder",
+    "create": "Create khatma"
   }
 }

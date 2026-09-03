@@ -324,5 +324,33 @@
   "errors": {
     "offline": "Sem ligação à internet",
     "generic": "Algo correu mal, tente novamente"
+  },
+  "khatma": {
+    "title": "Khatma do Alcorão",
+    "start_invite": "Comece uma khatma e acompanhe o seu progresso diário",
+    "days_left": "Faltam {} dias",
+    "pages_read": "{} páginas lidas",
+    "streak": "{} dias seguidos",
+    "read_today": "Ler hoje ({} páginas)",
+    "read_today_done": "Lido hoje",
+    "new": "Nova khatma",
+    "history": "Khatmas concluídas",
+    "delete_confirm": "Eliminar esta khatma? O progresso não pode ser recuperado.",
+    "delete": "Eliminar",
+    "set_reminder": "Lembrete diário",
+    "reminder_at": "Lembrete às {}",
+    "pages_read_of": "{} de {} páginas",
+    "daily_amount": "Porção diária: {} páginas",
+    "open_reader": "Abrir o mushaf",
+    "completed_on": "Concluída em {}",
+    "started_on": "Iniciada em {}",
+    "mode_pages": "Páginas por dia",
+    "mode_juz": "Juz por dia",
+    "mode_date": "Data-alvo",
+    "pages_per_day": "Páginas por dia",
+    "juz_per_day": "Juz por dia",
+    "pick_date": "Escolha a data de conclusão",
+    "no_reminder": "Sem lembrete",
+    "create": "Criar khatma"
   }
 }

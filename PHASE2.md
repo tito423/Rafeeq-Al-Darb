@@ -978,6 +978,43 @@ console steps.
 **Acceptance:** `HOSTING.md` reviewed by the owner; `AppConfig` has no host
 that will bill; a build with the mushaf base override still works.
 
+### ✅ P2‑9 — document + client wiring DONE (2026‑09‑03); console provisioning still owner-only
+
+Owner asked directly (2026‑09‑02 recollection, confirmed correct): Cloudflare
+for static content, Firebase Firestore (Spark/**free** plan, never Blaze) for
+any future dynamic/shared data. That's exactly what's now written up.
+
+- **`HOSTING.md`** (repo root) — the two-service split (R2 for files
+  everyone downloads as-is, Firestore for anything that changes/syncs),
+  a real inventory table of everything currently hosted and where
+  (~38 MB total across `hadith.zip` + book texts + adhan videos on
+  `tito423/rafeeq-api`, the migration candidate; mushaf SVGs/audio/PDFs stay
+  on their existing upstream hosts, not ours to move), the exact
+  provisioning steps for the owner (create bucket → copy content → **rotate
+  the exposed R2 token first** → ship with one `--dart-define`), and a
+  direct answer to the scale/cost question (R2's free egress means content
+  serving costs $0 regardless of user count; Firestore Spark's daily quota
+  just stops serving rather than billing, so nothing in this plan can
+  charge the owner without an explicit later Blaze opt-in).
+- **Client wiring re-confirmed by reading the actual source**, not assumed:
+  `AppConfig.mushafBase` and `.contentBaseUrl` **both already** read
+  `--dart-define` overrides (`RAFEEQ_MUSHAF_BASE` / `RAFEEQ_CONTENT_BASE`)
+  with today's working URLs as defaults — the R2 migration needs zero
+  client code changes, just one build flag once the bucket exists.
+- **Firebase project state checked directly, not guessed:** the real
+  `rafeeq-aldarb` project + its `google-services.json` already exist
+  (from STAGE 7, for a Google Sign-In that was never built) and are
+  correctly gitignored; **confirmed by `grep` there are zero Firebase
+  packages in `pubspec.yaml`** — nothing talks to it yet, which is the
+  right state until a real feature (the clear candidate: group khatma,
+  P2‑8 #12, researched but not approved to build) actually needs Firestore.
+  Adding the SDK now with nothing using it would just be dead weight.
+
+**Still owner-only (console access an agent session cannot have):**
+creating the R2 bucket, copying the ~38 MB in, rotating the R2 API token,
+and separately, whenever it comes up: deciding to actually build a
+Firestore-backed feature.
+
 ---
 
 ## P2‑10 — Lightweight / fast / secure / maintainable pass + release prep
@@ -1052,6 +1089,48 @@ shows the ring, today's portion, days left; "read today" opens the mushaf at
 the right page and advances progress; progress + streak persist across restart;
 reminder fires; finishing a khatma moves it to history; no prayer/qibla
 content anywhere in this feature.
+
+### ✅ P2‑11 DONE (2026‑09‑03), emulator-verified
+
+- **`khatma_store.dart`** — `Khatma` model (3 modes: `targetDate`/
+  `dailyPages`/`dailyJuz`), pure local `SharedPreferences` JSON persistence,
+  `duePages()` recomputes the day's target dynamically from what's actually
+  left and how many days actually remain (so falling behind raises
+  tomorrow's due amount instead of silently missing the target — the
+  "catch-up" behaviour the Khatmah-app research asked for), streak tracked
+  by comparing `lastReadDate` to yesterday. `khatma_reminder_service.dart`
+  mirrors `AzkarReminderService` exactly (one `zonedSchedule`/khatma, id
+  derived from the khatma's own id so it's stable without an allocation
+  table).
+- **Cross-tab jump:** `quran_jump_provider.dart` — a `StateProvider<int?>`
+  `QuranScreen` listens to via `ref.listen` and consumes once; needed
+  because `HomeScreen`/`QuranScreen` are `IndexedStack` siblings with no
+  push/pop relationship for "open the reader on page X" the way
+  `SearchScreen`'s `Navigator.pop(page)` gets away with.
+- **`khatma_card.dart`** (Home, top, right under `_PrayerCard`) — ring +
+  today's due amount + streak + "اقرأ اليوم", or an honest "ابدأ ختمة"
+  invite when none exist. **`khatma_screen.dart`** — full manager: every
+  active khatma with its own read-today/open-reader/reminder/delete, a "+"
+  create sheet (mode picker, stepper or date picker, optional reminder
+  time), and a completed-khatma history section.
+- +26 keys × 5 locales (`khatma.*`), parity test green. `flutter analyze`
+  clean, `flutter test` 13/13.
+
+**Emulator-verified live (`emulator-5554`):** created a daily-pages khatma
+(4 pages/day) from the card → full create sheet rendered correctly; tapped
+"اقرأ اليوم" → card updated to "قرأت اليوم ✓ / قرأت 4 صفحة / 1%" instantly;
+switched to the Quran tab → **reader opened on page 5/604 exactly**
+(4 pages read from page 1 → next page 5), confirming the cross-tab jump
+works end to end. Not separately re-shot this session: the target-date
+mode's catch-up math, the reminder actually firing, multi-khatma ordering,
+and restart-persistence (all use patterns already verified elsewhere in
+this codebase — `zonedSchedule` reminders and `SharedPreferences` JSON
+persistence are both established, tested mechanisms here — but not
+re-clicked-through specifically for khatma this session).
+
+**Not yet done:** the quick-access grid removal — the stage spec removes it
+only once all of P2‑11/12/13 exist together, so it stays until P2‑12/13
+land too.
 
 ---
 
