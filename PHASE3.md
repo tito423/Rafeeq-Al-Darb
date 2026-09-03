@@ -662,17 +662,53 @@ produced the QuranFlash contamination flagged above. Not started; needs a
 sourcing pass with the same rigor §5.7/P2-4 already established, per
 edition, before any image ships.
 
-## P3-29 — Book text reader: still has old arrow-nav, no swipe/quick-scroll-bar
+## P3-29 — Book text reader: nav part ✅ DONE, live-verified; visual part still open
 
-`book_text_reader_screen.dart` wasn't touched this round (P3-15's "page
-navigation redesign" item, still open) — owner re-confirms on a freshly
-downloaded book: arrows still there, no swipe, no fast-jump strip. A new
-reference is coming ("هارفعلك صورة للمكتبة الشاملة" — Shamela's own reader,
-"استخدم نفس التصميم اجمل وارقى لكن بنفس الثيماتنا" — adapt its layout
-quality, keep our own theme/colours, not a literal skin). **Blocked on that
-reference image** for the visual redesign; the swipe+scroll-bar navigation
-change itself is unblocked and can proceed independently (same technique as
-`azkar_section_screen.dart`'s new swipe handling, P3-11).
+`book_text_reader_screen.dart`'s navigation half is now fixed — the two
+chevron page-turn buttons are gone, replaced by **swipe** (same
+direction-aware logic as `azkar_section_screen.dart`/P3-11: a rightward
+swipe is "forward" under RTL) plus a **fast-jump slider** in the bottom bar
+for scrubbing across a whole book in one drag (a real "شريط تمرير سريع",
+exactly what was asked for) — the typed goto-page dialog is kept underneath
+it as a precise alternative. New `library.text_swipe_hint` key, +1 key × 5
+locales. `flutter analyze` clean, `flutter test` 15/15.
+
+**A real bug was found and fixed during live verification, not by static
+review alone:** the first implementation used a `GestureDetector`'s
+`onHorizontalDragEnd` wrapped around the page body — analyze-clean, but on
+the emulator the swipe silently did nothing. Root cause: the page body sits
+inside a `SelectionArea` (existing selectable-text feature), whose own drag
+recognizer competes for the same gesture-arena slot as the outer
+`GestureDetector` and was winning it, so the swipe handler never fired.
+Fixed by switching to a raw `Listener` (`onPointerDown`/`onPointerUp`)
+instead — `Listener` doesn't enter the gesture arena at all, so it always
+sees the pointer stream regardless of what `SelectionArea` claims. This is
+exactly the kind of defect the project's "must live-verify, not just build"
+rule exists to catch.
+
+**Live-verified on `emulator-5554`:** downloaded "الصمت وآداب اللسان" (a
+small نص-only book), opened it, confirmed the arrows are gone and the swipe
+hint text renders correctly; a rightward `adb shell input swipe` moved
+page 1→2, a leftward one moved back 2→1 (direction-aware, confirmed both
+ways); dragging the slider thumb from position 1 to 546/787 jumped straight
+there in one motion — content, breadcrumb section title ("باب حفظ اللسان
+وفضل الصمت" → "باب ذم الكذب"), and the printed-page label all updated
+correctly together. One testing-only gotcha worth recording: an `adb`
+swipe starting within Android's system edge-gesture zone (roughly the outer
+~60px of a 1080px-wide screen) gets intercepted as an OS back-gesture before
+it ever reaches the app — not a bug, just something to avoid when scripting
+future slider/edge-swipe tests on this AVD.
+
+**Still open, visual redesign only:** the owner sent a reference image of
+al-Maktaba al-Shamela's own reader (light paper-toned background, a 6-icon
+top toolbar, a bottom bar with a page-number box + "الصفحة" + book icon +
+"الجزء" + progress bar) with "استخدم نفس التصميم اجمل وارقى لكن بنفس
+الثيماتنا" (adapt its layout quality, keep our own theme/colours, not a
+literal skin) — that image wasn't saved to `design_refs/` before this
+session's context was summarized, so the *exact* pixel design isn't
+in hand; the description above is what was actually seen and can guide a
+build, but ask the owner to resend the image before matching it precisely
+rather than guessing further.
 
 ## P3-30 — Azkar / Tasbeeh "still old style" — likely stale, already shipped this session
 
@@ -769,7 +805,7 @@ language `easy_localization` starts in, shown top of a dropdown as
 | P3-26 | Persistent prayer notification still reported absent | **blocked on live device** (see P3-13/P3-19) |
 | P3-27 | "Download full recitation" card under the reciter picker | queued, unblocked |
 | P3-28 | Mushaf edition thumbnails | queued, **needs a per-edition licence/sourcing pass first** (see the QuranFlash warning above) |
-| P3-29 | Book text reader nav/visual redesign | 🔶 nav part unblocked; visual part **blocked on owner's Shamela-app reference image** |
+| P3-29 | Book text reader nav/visual redesign | 🔶 nav part ✅ **done, live-verified** (swipe + fast-jump slider, a real `SelectionArea`-vs-`GestureDetector` bug found+fixed along the way); visual part still open — **ask the owner to resend the Shamela reference image** |
 | P3-30 | "Azkar/Tasbeeh still old" | likely stale — **ask the owner to re-check on the batch-2+ APK** before rebuilding |
 | P3-31 | ~20-source تفسير download section | queued, **needs a research/licence pass first**, same rigor as every other content source |
 | P3-32 | Ayah-end marker misaligned in text mode | queued, unblocked |

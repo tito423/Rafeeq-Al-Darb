@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 21:54 — IN PROGRESS — resume here**
+**2026-09-03 22:38 — IN PROGRESS — resume here**
 
-Safety-net checkpoint: built+released phase3-batch3-2026-09-03 APK (khatma Russian-fix + interactive prayer card). NEXT_SESSION_PROMPT.md fully rewritten to point at PHASE3.md as the primary/authoritative doc (37+ tracked items), with an accurate done/blocked/untouched summary, the new APK link, the two known emulator limitations found this session (storage + adb emu geo fix not reaching this AVD's Fused Location Provider), and the QuranFlash-in-old-video warning repeated so it can't be missed on a fresh read. No code change this step.
+P3-29 nav DONE + live-verified: book text reader swipe+fast-jump-slider replace the old chevron buttons (SelectionArea-vs-GestureDetector gesture-arena bug found+fixed via Listener); PHASE3.md P3-1..19 content recovered after an earlier truncation bug
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

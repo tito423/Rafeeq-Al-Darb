@@ -44,6 +44,10 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   double _fontScale = 1.0;
   Set<int> _bookmarks = {}; // page *indices* (stable even when print nums aren't)
 
+  // Swipe-to-turn-page tracking (see `_handlePointerDown`/`_handlePointerUp`).
+  Offset? _dragStart;
+  DateTime? _dragStartTime;
+
   String get _kPage => 'booktext_${widget.book.id}_page';
   String get _kFont => 'booktext_${widget.book.id}_font';
   String get _kMarks => 'booktext_${widget.book.id}_bookmarks';
@@ -97,6 +101,48 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
     setState(() => _pageIndex = i.clamp(0, doc.pages.length - 1));
     if (_scrollCtrl.hasClients) _scrollCtrl.jumpTo(0);
     _persist();
+  }
+
+  /// P3‑29/P3‑34: the two chevron page-turn buttons are gone, replaced by a
+  /// swipe (same direction-aware logic as `azkar_section_screen.dart`/P3‑11:
+  /// a rightward swipe is "forward" under RTL, the mirror image under LTR)
+  /// plus the fast-jump slider in the bottom bar for long-range scrubbing.
+  ///
+  /// Tracked via raw `Listener` pointer events rather than a
+  /// `GestureDetector`'s `onHorizontalDragEnd`: the page body sits inside a
+  /// `SelectionArea` (for selectable text, an existing feature), whose own
+  /// drag recognizer competes for the same gesture-arena slot and was found
+  /// to win it — a `GestureDetector` wrapping `SelectionArea` never actually
+  /// saw the swipe. `Listener` doesn't enter the gesture arena at all, so it
+  /// always sees the raw pointer stream regardless of what `SelectionArea`
+  /// does with it.
+  void _handlePointerDown(PointerDownEvent e) {
+    _dragStart = e.position;
+    _dragStartTime = DateTime.now();
+  }
+
+  void _handlePointerUp(PointerUpEvent e) {
+    final start = _dragStart;
+    final startTime = _dragStartTime;
+    _dragStart = null;
+    _dragStartTime = null;
+    final doc = _doc;
+    if (start == null || startTime == null || doc == null) return;
+
+    final dx = e.position.dx - start.dx;
+    final elapsedMs =
+        DateTime.now().difference(startTime).inMilliseconds.clamp(1, 1 << 30);
+    final velocity = dx / elapsedMs * 1000; // px/s, matches DragEndDetails'
+
+    if (dx.abs() < 40 || velocity.abs() < 200) return; // slow drag/near-tap
+
+    final direction = Directionality.of(context);
+    final isNext = direction == TextDirection.rtl ? dx > 0 : dx < 0;
+    if (isNext) {
+      if (_pageIndex < doc.pages.length - 1) _goToPageIndex(_pageIndex + 1);
+    } else if (_pageIndex > 0) {
+      _goToPageIndex(_pageIndex - 1);
+    }
   }
 
   void _changeFont(double delta) {
@@ -338,27 +384,38 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
           ),
         ),
 
-        // ── the page body (selectable) ──
+        // ── the page body (selectable, swipe to turn pages) ──
         Expanded(
-          child: SelectionArea(
-            child: SingleChildScrollView(
-              controller: _scrollCtrl,
-              padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final para in page.paras) ...[
-                    _Paragraph(para: para, scale: _fontScale),
-                    const SizedBox(height: 12),
-                  ],
-                  if (page.paras.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
-                      child: Text('library.text_blank_page'.tr(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: scheme.onSurfaceVariant)),
+          child: Listener(
+            onPointerDown: _handlePointerDown,
+            onPointerUp: _handlePointerUp,
+            child: SelectionArea(
+              child: SingleChildScrollView(
+                controller: _scrollCtrl,
+                padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final para in page.paras) ...[
+                      _Paragraph(para: para, scale: _fontScale),
+                      const SizedBox(height: 12),
+                    ],
+                    if (page.paras.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Text('library.text_blank_page'.tr(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: scheme.onSurfaceVariant)),
+                      ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'library.text_swipe_hint'.tr(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 11, color: scheme.outline),
                     ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -402,34 +459,85 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
           ),
         ),
 
-        // ── page navigation ──
+        // ── page navigation: fast-jump slider (P3‑29/P3‑34) ──
+        // The two chevron buttons the owner flagged as still there are gone
+        // — turning pages now happens by swipe (`_onSwipe` above) or by
+        // dragging this slider for long-range scrubbing across the whole
+        // book, same "شريط تمرير سريع" (fast scroll bar) the feedback asked
+        // for. Dragging updates the visible page live; the position is only
+        // persisted once the drag ends, so a long scrub doesn't spam prefs.
         Material(
           color: scheme.surface,
           elevation: 8,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Row(
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  onPressed: _pageIndex > 0
-                      ? () => _goToPageIndex(_pageIndex - 1)
-                      : null,
-                  icon: const Icon(Icons.chevron_right), // RTL: prev = right
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 44,
+                        child: Text(
+                          '${_pageIndex + 1}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 11, color: scheme.onSurfaceVariant),
+                        ),
+                      ),
+                      Expanded(
+                        child: SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            trackHeight: 2.5,
+                            thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 7),
+                            overlayShape: const RoundSliderOverlayShape(
+                                overlayRadius: 16),
+                          ),
+                          child: Slider(
+                            min: 0,
+                            max: (doc.pages.length - 1).toDouble(),
+                            value: _pageIndex.toDouble(),
+                            divisions: doc.pages.length > 1
+                                ? doc.pages.length - 1
+                                : null,
+                            onChanged: (v) =>
+                                setState(() => _pageIndex = v.round()),
+                            onChangeEnd: (v) {
+                              if (_scrollCtrl.hasClients) {
+                                _scrollCtrl.jumpTo(0);
+                              }
+                              _persist();
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 44,
+                        child: Text(
+                          '${doc.pages.length}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 11, color: scheme.onSurfaceVariant),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Expanded(
+                // typed goto, kept as a precise alternative to the slider
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
                   child: TextButton(
                     onPressed: _openGotoDialog,
                     child: Text(
-                      '${_pageIndex + 1} / ${doc.pages.length}',
+                      doc.meta.printReliable
+                          ? '${'library.text_page'.tr()} ${page.printedPage}'
+                          : '${_pageIndex + 1} / ${doc.pages.length}',
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
-                ),
-                IconButton(
-                  onPressed: _pageIndex < doc.pages.length - 1
-                      ? () => _goToPageIndex(_pageIndex + 1)
-                      : null,
-                  icon: const Icon(Icons.chevron_left), // RTL: next = left
                 ),
               ],
             ),
