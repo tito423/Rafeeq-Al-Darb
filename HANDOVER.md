@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 01:05 — IN PROGRESS — resume here**
+**2026-09-04 01:15 — IN PROGRESS — resume here**
 
-Safety-net checkpoint: released phase3-batch6-2026-09-04 APK (P3-27 full-recitation download, P3-33 tafsir dropdown, and the major P3-9 tafsir data-integrity fix). NEXT_SESSION_PROMPT.md updated with a prominent warning about the P3-9 finding + new APK link.
+P3-34 toolbar redesign DONE + live-verified: Quran tab's 8 plain IconButtons replaced with a captioned, animated row (new _ToolbarAction, icon+label+press-scale) in AppBar.bottom (full-width, horizontally scrollable, can't overflow-crash); scroll re-confirmed not regressed; scroll-speed-control left unbuilt pending owner clarification on what it means
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -926,15 +926,43 @@ once **P3-31** (the ~20-source tafsir download section, still needing its
 licence-research pass first) introduces real per-source availability —
 tracked there, not invented here ahead of it.
 
-## P3-34 — Text-mode mushaf: no scroll, no speed control; toolbar icons need a redesign + captions + animation
+## P3-34 — Text-mode mushaf: toolbar redesigned ✅ DONE, live-verified; scroll re-confirmed fine; "speed control" needs owner clarification
 
-Extends the already-tracked P3-8 (bottom jump-strip, pinch-zoom) and G3
-(icon captions): owner specifically flags **no scrolling at all** in text
-mode currently (re-verify — `mushaf_text_page.dart` should already be
-`SingleChildScrollView`-based per `HANDOVER.md` §7's earlier fix; if it
-regressed, that's a real bug to find) plus wanting a scroll-speed control,
-and the toolbar icons need a visual refresh + a caption under each +
-animation on interaction. Not started.
+- ✅ **Toolbar icons redesigned with captions + a tap animation.** The
+  Quran tab's `AppBar` used to hold up to 8 plain, unlabelled
+  `IconButton`s in `actions:` (font ±, search, surah list, juz, jump-to-
+  page, edition picker, mode toggle). Moved into `AppBar.bottom` instead
+  of `actions:` as a new captioned row (new `_ToolbarAction` widget: icon
+  + a short label underneath, using the exact same string each action
+  already had as its tooltip — nothing new translated, just made
+  visible), with a small scale-down press animation
+  (`AnimatedScale`/`GestureDetector`). Deliberately placed in `bottom:`
+  rather than widened `actions:` — that spans the **full** screen width
+  independent of the title, so with 6-8 captioned actions it can never
+  overflow-crash on a narrow phone; wrapped in
+  `SingleChildScrollView(scrollDirection: Axis.horizontal)` so it simply
+  scrolls instead. `flutter analyze` clean, `flutter test` 15/15.
+- ✅ **Scroll re-verified, not regressed.** `mushaf_text_page.dart` is
+  still `SingleChildScrollView`-based, confirmed both by reading the code
+  and by direct use during this same session's P3-32 work (scrolled
+  through and zoomed into different lines of a real page). The "no
+  scrolling at all" part of the report does not reproduce as filed.
+- **"Scroll-speed control" — not built, needs the owner's own
+  clarification before guessing further.** Text mode has no auto-scroll
+  today (it's plain manual finger-scroll), so it's unclear whether this
+  means a teleprompter-style auto-advancing scroll (a genuinely new
+  feature, not a fix) or something else entirely — building either
+  without knowing which risks wasted work or the wrong feature.
+
+**Live-verified on `emulator-5554`:** opened the Quran tab in text mode —
+all 8 captioned actions render and read correctly ("Smaller/Larger text",
+"Thematic Search", "Surahs", "Juz", "Jump to", "Mushafs", "Mushaf mode"),
+scrolled the row horizontally to confirm nothing is cut off/lost; tapped
+"Mushaf mode" — correctly switched to the real image mushaf (a genuine
+page render, not a placeholder), the caption itself flipped to "Text
+mode" live, and the two font-size actions correctly disappeared from the
+row (they're text-mode-only) — confirming the mode-dependent conditional
+logic still works correctly inside the new widget structure.
 
 ## P3-35 — Ayah card: one play/stop toggle button ✅ DONE, live-verified
 
@@ -1044,7 +1072,7 @@ regression from the rest of this session's Arabic-default testing.
 | P3-31 | ~20-source تفسير download section | queued, **needs a research/licence pass first**, same rigor as every other content source |
 | P3-32 | Ayah-end marker misaligned in text mode | ✅ **done, live-verified** — `PlaceholderAlignment.middle` → `.baseline` |
 | P3-33 | Tafsir tab → single dropdown + inline download | 🔶 dropdown ✅ **done, live-verified**; inline download intentionally deferred — no real per-source download mechanism exists yet, see **P3-31** |
-| P3-34 | Text mode: scroll/speed control + toolbar icon redesign+captions+animation | queued, unblocked (re-verify scroll didn't regress) |
+| P3-34 | Text mode: scroll/speed control + toolbar icon redesign+captions+animation | 🔶 toolbar redesign ✅ **done, live-verified**; scroll re-confirmed fine (not regressed); "speed control" **needs owner clarification** — unclear what it refers to |
 | P3-35 | Ayah card: single play/stop toggle button | ✅ **done, live-verified** |
 | P3-36 | Home: hadith reroll shouldn't scroll the page | ✅ **done, live-verified** — root cause was the card collapsing to a spinner mid-reroll, not a scroll bug at all |
 | P3-37 | App display name follows device system language on first run | ✅ **done, live-verified** |

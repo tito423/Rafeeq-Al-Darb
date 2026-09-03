@@ -161,84 +161,98 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('nav.quran'.tr()),
-        actions: [
-          if (mushaf.hasValue) ...[
-            if (_mode == MushafMode.text) ...[
-              IconButton(
-                tooltip: 'quran.font_smaller'.tr(),
-                icon: const Icon(Icons.text_decrease),
-                onPressed: () => _changeFontScale(-0.1),
-              ),
-              IconButton(
-                tooltip: 'quran.font_larger'.tr(),
-                icon: const Icon(Icons.text_increase),
-                onPressed: () => _changeFontScale(0.1),
-              ),
-            ],
-            IconButton(
-              tooltip: 'search.title'.tr(),
-              icon: const Icon(Icons.travel_explore_outlined),
-              onPressed: () async {
-                final page = await Navigator.of(context).push<int>(
-                  MaterialPageRoute<int>(
-                    builder: (_) => SearchScreen(repo: mushaf.value!.repo),
+        // P3‑34: the toolbar used to be plain unlabelled IconButtons —
+        // moved into a captioned, animated row of its own (`bottom:`,
+        // not `actions:`, so it spans the full screen width and can
+        // never overflow regardless of how many actions there are or how
+        // narrow the device is — it scrolls horizontally instead).
+        bottom: mushaf.hasValue
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(60),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsetsDirectional.only(start: 4, end: 12),
+                  child: Row(
+                    children: [
+                      if (_mode == MushafMode.text) ...[
+                        _ToolbarAction(
+                          icon: Icons.text_decrease,
+                          label: 'quran.font_smaller'.tr(),
+                          onPressed: () => _changeFontScale(-0.1),
+                        ),
+                        _ToolbarAction(
+                          icon: Icons.text_increase,
+                          label: 'quran.font_larger'.tr(),
+                          onPressed: () => _changeFontScale(0.1),
+                        ),
+                      ],
+                      _ToolbarAction(
+                        icon: Icons.travel_explore_outlined,
+                        label: 'search.title'.tr(),
+                        onPressed: () async {
+                          final page = await Navigator.of(context).push<int>(
+                            MaterialPageRoute<int>(
+                              builder: (_) =>
+                                  SearchScreen(repo: mushaf.value!.repo),
+                            ),
+                          );
+                          if (page != null) _goToPage(page);
+                        },
+                      ),
+                      _ToolbarAction(
+                        icon: Icons.format_list_numbered,
+                        label: 'quran.surah_list'.tr(),
+                        onPressed: () => showSurahSheet(
+                          context,
+                          surahs: mushaf.value!.surahs,
+                          startPages: mushaf.value!.surahStartPages,
+                          onSelect: _goToPage,
+                        ),
+                      ),
+                      _ToolbarAction(
+                        icon: Icons.filter_9_plus,
+                        label: 'quran.juz'.tr(),
+                        onPressed: () => showJuzSheet(
+                          context,
+                          juzStartPages: mushaf.value!.juzStartPages,
+                          onSelect: _goToPage,
+                        ),
+                      ),
+                      _ToolbarAction(
+                        icon: Icons.pin_drop_outlined,
+                        label: 'quran.jump_to'.tr(),
+                        onPressed: () => showGotoPageSheet(
+                          context,
+                          current: _current,
+                          onSelect: _goToPage,
+                        ),
+                      ),
+                      _ToolbarAction(
+                        icon: Icons.auto_stories_outlined,
+                        label: 'quran.editions'.tr(),
+                        onPressed: () => MushafEditionSheet.show(context),
+                      ),
+                      _ToolbarAction(
+                        icon: _mode == MushafMode.text
+                            ? Icons.image_outlined
+                            : Icons.notes,
+                        label: _mode == MushafMode.text
+                            ? 'quran.mushaf_mode'.tr()
+                            : 'quran.text_mode'.tr(),
+                        onPressed: () {
+                          setState(() {
+                            _mode = _mode == MushafMode.text
+                                ? MushafMode.image
+                                : MushafMode.text;
+                          });
+                          _persistMode();
+                        },
+                      ),
+                    ],
                   ),
-                );
-                if (page != null) _goToPage(page);
-              },
-            ),
-            IconButton(
-              tooltip: 'quran.surah_list'.tr(),
-              icon: const Icon(Icons.format_list_numbered),
-              onPressed: () => showSurahSheet(
-                context,
-                surahs: mushaf.value!.surahs,
-                startPages: mushaf.value!.surahStartPages,
-                onSelect: _goToPage,
-              ),
-            ),
-            IconButton(
-              tooltip: 'quran.juz'.tr(),
-              icon: const Icon(Icons.filter_9_plus),
-              onPressed: () => showJuzSheet(
-                context,
-                juzStartPages: mushaf.value!.juzStartPages,
-                onSelect: _goToPage,
-              ),
-            ),
-            IconButton(
-              tooltip: 'quran.jump_to'.tr(),
-              icon: const Icon(Icons.pin_drop_outlined),
-              onPressed: () => showGotoPageSheet(
-                context,
-                current: _current,
-                onSelect: _goToPage,
-              ),
-            ),
-            IconButton(
-              tooltip: 'quran.editions'.tr(),
-              icon: const Icon(Icons.auto_stories_outlined),
-              onPressed: () => MushafEditionSheet.show(context),
-            ),
-            IconButton(
-              tooltip: _mode == MushafMode.text
-                  ? 'quran.mushaf_mode'.tr()
-                  : 'quran.text_mode'.tr(),
-              icon: Icon(_mode == MushafMode.text
-                  ? Icons.image_outlined
-                  : Icons.notes),
-              onPressed: () {
-                setState(() {
-                  _mode = _mode == MushafMode.text
-                      ? MushafMode.image
-                      : MushafMode.text;
-                });
-                _persistMode();
-              },
-            ),
-          ],
-          const SizedBox(width: 4),
-        ],
+                ),
+              )
+            : null,
       ),
       body: mushaf.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -332,5 +346,61 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         return;
       }
     }
+  }
+}
+
+/// P3‑34: one toolbar action — icon + a short caption underneath, with a
+/// small scale-down "press" animation instead of a plain flat `IconButton`.
+/// Each label reuses the exact same string already used as that action's
+/// tooltip, so nothing new was translated — just made visible instead of
+/// hover/long-press-only.
+class _ToolbarAction extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+  const _ToolbarAction({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  @override
+  State<_ToolbarAction> createState() => _ToolbarActionState();
+}
+
+class _ToolbarActionState extends State<_ToolbarAction> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTap: widget.onPressed,
+      child: AnimatedScale(
+        scale: _pressed ? 0.86 : 1.0,
+        duration: const Duration(milliseconds: 110),
+        curve: Curves.easeOut,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(widget.icon, size: 22, color: scheme.onSurface),
+              const SizedBox(height: 3),
+              Text(
+                widget.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 10, color: scheme.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
