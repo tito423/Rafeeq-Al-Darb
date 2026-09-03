@@ -54,7 +54,7 @@
 <!-- WIP:START -->
 **2026-09-03 20:28 — IN PROGRESS — resume here**
 
-P3-14 Russian layout bug FIXED - owner sent the screenshot: Khatma card's Home title ('Хатм Корана') was rendering one Cyrillic letter per line down the whole card. Root cause: _ActiveKhatmaRow put the progress ring, an Expanded title column, AND the 'read today' FilledButton all in one Row - the button isn't width-constrained so it takes its full natural width, and Russian's much-longer button label ('Читать сегодня (4 стр.)' vs Arabic's short 'اقرأ اليوم (٤)') squeezed the Expanded title column down to near-zero, and Flutter wrapped it one character per line. Fixed generically (not a Russian-specific patch): split into two rows - progress+title on top (always gets the card's full width), the action button on its own row below (Align centerEnd), matching the same pattern _BatteryCard/_FullScreenIntentCard already use. Checked khatma_screen.dart's own tile for the same anti-pattern - it already wraps both its buttons in Expanded(50/50), safe as-is, no change needed there. P3-5 answered by owner: login is OPTIONAL (guest mode stays default, sign-in only adds sync) - unblocks the Home redesign's personalized-card work. analyze clean, test 15/15.
+PHASE3.md docs updated: P3-5 marked answered (optional login), P3-14 Russian bug marked fixed with root-cause writeup. No code change this step.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

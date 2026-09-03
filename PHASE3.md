@@ -32,8 +32,8 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑1 | New app icon (crescent + open Quran, glowing blue/gold) | ✅ done, `flutter analyze` clean |
 | P3‑2 | Rename "السبحة" → "المسبحة" everywhere | ✅ done |
 | P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | queued — see notes |
-| P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | queued, blocked in part by P3‑5 |
-| P3‑5 | **Login / accounts — architecture decision** | **blocked on owner: mandatory vs optional** |
+| P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | queued, unblocked (P3‑5 answered) |
+| P3‑5 | **Login / accounts — architecture decision** | ✅ **answered: optional** (guest mode stays default, sign-in adds sync) — not yet built |
 | P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
 | P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
 | P3‑8 | Mushaf reader: confirmed real bugs + feature requests | queued, some unblocked now |
@@ -42,7 +42,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | 🔶 intro filtered + swipe nav DONE; grid-hub visual redesign to match reference still open |
 | P3‑12 | Tasbeeh redesign to match reference | queued, unblocked |
 | P3‑13 | Persistent prayer notification — confirmed real bug + "must not be dismissible" | **blocked on live device/logcat** — a dead second implementation found + removed along the way, see P3‑19 |
-| P3‑14 | Settings: Russian bug (screenshot still owed), French locale | partially blocked (screenshot) |
+| P3‑14 | Settings: Russian layout bug, French locale | 🔶 Russian bug ✅ fixed (was a Khatma-card layout bug, not a Settings screen bug — see below); French still open |
 | P3‑15 | Library: slow reader, page-nav redesign, مكتبتي split, catalog scope | 🔶 catalog +3 books DONE, مكتبتي split DONE; reader speed + page-nav redesign still open |
 | P3‑16 | New "الصلاة" bottom-nav tab incl. professional Qibla compass | queued, unblocked (feeds P3‑4) |
 | P3‑17 | R2 hosting migration | ✅ done this session, see `HOSTING.md` — rotate token / old-bucket decision still open |
@@ -277,8 +277,23 @@ redesign matching this reference, and ties into P3‑2's rename.
 
 ## P3‑14 — Settings
 
-- **Russian locale bug/"catastrophe"** — screenshot still owed by the
-  owner; don't guess at this one, wait for it.
+- ✅ **Russian locale bug FIXED.** The screenshot the owner sent showed it
+  wasn't actually a Settings-screen bug at all — it was the Home screen's
+  Khatma card title ("Хатм Корана") rendering **one Cyrillic letter per
+  line** down the whole card. Root cause: `KhatmaCard._ActiveKhatmaRow` put
+  the progress ring, an `Expanded` title column, *and* the "read today"
+  button in one `Row` — the button isn't width-constrained, so it claims
+  its full natural width, and Russian's button label is far longer than
+  Arabic's ("Читать сегодня (4 стр.)" vs. "اقرأ اليوم (٤)"), squeezing the
+  `Expanded` title down to a couple of pixels. Fixed generically (this
+  wasn't a Russian-only patch — any locale with a long enough label would
+  trigger it): the button moved to its own row below instead of sharing one
+  with the title, mirroring the same layout `_BatteryCard`/
+  `_FullScreenIntentCard` already use. `khatma_screen.dart`'s own tile was
+  checked for the same anti-pattern and is already safe (both its buttons
+  are individually `Expanded`, 50/50). **Not yet checked:** other Home
+  cards for the identical anti-pattern — this was fixed where the owner's
+  screenshot pointed, not swept for everywhere else it might also exist.
 - **French** is apparently listed as supported but not actually wired in —
   needs scoping: Phase 2's 5 locales were ar/en/es/ru/pt (`fr` was never
   one of them). Check whether the owner means adding French as a genuine
