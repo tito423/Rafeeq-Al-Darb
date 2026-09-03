@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 20:13 — IN PROGRESS — resume here**
+**2026-09-03 20:28 — IN PROGRESS — resume here**
 
-Safety-net checkpoint per owner request: built + released a fresh debug APK (phase3-batch1-2026-09-03 on tito423/rafeeq-api) bundling every PHASE3 fix from this session (icon, khatma nav+undo+dedup, meanings-tab removal, azkar intro-filter+swipe, both search bugs, +3 library books, dead-code cleanup, Android-14 full-screen-intent permission card, adhan auto-play-on-select). NEXT_SESSION_PROMPT.md fully rewritten to point at PHASE3.md as the primary doc, with an accurate status summary (done/blocked/untouched), the new APK link, the R2 credential-handling lesson, and explicit note that no real device is available to this agent (owner is on Claude Code Remote from the phone itself, not USB-connected). HANDOVER.md's WIP block already current via cp.bat's own auto-update. No code change this step - pure handover/safety-net documentation as explicitly requested.
+P3-14 Russian layout bug FIXED - owner sent the screenshot: Khatma card's Home title ('Хатм Корана') was rendering one Cyrillic letter per line down the whole card. Root cause: _ActiveKhatmaRow put the progress ring, an Expanded title column, AND the 'read today' FilledButton all in one Row - the button isn't width-constrained so it takes its full natural width, and Russian's much-longer button label ('Читать сегодня (4 стр.)' vs Arabic's short 'اقرأ اليوم (٤)') squeezed the Expanded title column down to near-zero, and Flutter wrapped it one character per line. Fixed generically (not a Russian-specific patch): split into two rows - progress+title on top (always gets the card's full width), the action button on its own row below (Align centerEnd), matching the same pattern _BatteryCard/_FullScreenIntentCard already use. Checked khatma_screen.dart's own tile for the same anti-pattern - it already wraps both its buttons in Expanded(50/50), safe as-is, no change needed there. P3-5 answered by owner: login is OPTIONAL (guest mode stays default, sign-in only adds sync) - unblocks the Home redesign's personalized-card work. analyze clean, test 15/15.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

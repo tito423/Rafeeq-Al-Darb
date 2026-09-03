@@ -83,79 +83,97 @@ class _ActiveKhatmaRow extends ConsumerWidget {
     final due = mushaf == null ? 0 : khatma.duePages(mushaf.juzStartPages);
     final daysLeft = khatma.daysLeft;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    // P3‑14: this used to be one Row with the progress ring, the title
+    // column (in an Expanded), and the action button all side by side. A
+    // button label that's long in a given locale (e.g. Russian "Читать
+    // сегодня (4 стр.)" vs. Arabic's short "اقرأ اليوم (٤)") takes its full
+    // natural width since it isn't itself constrained — that squeezed the
+    // Expanded title column down to a couple of pixels, and Flutter wrapped
+    // its text one character per line (a real screenshot from the owner
+    // showed exactly this on Russian). Splitting the button onto its own
+    // row below removes the competition for width entirely — the title row
+    // always gets the card's full width, in every locale.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(
-          width: 54,
-          height: 54,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              CircularProgressIndicator(
-                value: khatma.progress,
-                strokeWidth: 5,
-                backgroundColor: gold.withValues(alpha: 0.15),
-                color: gold,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 54,
+              height: 54,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    value: khatma.progress,
+                    strokeWidth: 5,
+                    backgroundColor: gold.withValues(alpha: 0.15),
+                    color: gold,
+                  ),
+                  Text('${(khatma.progress * 100).round()}%',
+                      style: theme.textTheme.labelSmall),
+                ],
               ),
-              Text('${(khatma.progress * 100).round()}%',
-                  style: theme.textTheme.labelSmall),
-            ],
-          ),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('khatma.title'.tr(), style: theme.textTheme.titleMedium),
-              const SizedBox(height: 2),
-              Text(
-                daysLeft != null
-                    ? 'khatma.days_left'.tr(args: ['$daysLeft'])
-                    : 'khatma.pages_read'.tr(args: ['${khatma.pagesRead}']),
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-              ),
-              if (khatma.streak > 1) ...[
-                const SizedBox(height: 2),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.local_fire_department, size: 14, color: gold),
-                    const SizedBox(width: 2),
-                    Text('khatma.streak'.tr(args: ['${khatma.streak}']),
-                        style: theme.textTheme.labelSmall?.copyWith(color: gold)),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('khatma.title'.tr(), style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 2),
+                  Text(
+                    daysLeft != null
+                        ? 'khatma.days_left'.tr(args: ['$daysLeft'])
+                        : 'khatma.pages_read'.tr(args: ['${khatma.pagesRead}']),
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                  if (khatma.streak > 1) ...[
+                    const SizedBox(height: 2),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.local_fire_department, size: 14, color: gold),
+                        const SizedBox(width: 2),
+                        Text('khatma.streak'.tr(args: ['${khatma.streak}']),
+                            style: theme.textTheme.labelSmall
+                                ?.copyWith(color: gold)),
+                      ],
+                    ),
                   ],
-                ),
-              ],
-            ],
-          ),
+                ],
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 8),
-        if (khatma.readToday)
-          Chip(
-            label: Text('khatma.read_today_done'.tr()),
-            avatar: const Icon(Icons.check, size: 16),
-            visualDensity: VisualDensity.compact,
-          )
-        else
-          FilledButton.tonal(
-            onPressed: mushaf == null
-                ? null
-                : () async {
-                    final before = khatma;
-                    final updated = await ref
-                        .read(khatmaStoreProvider.notifier)
-                        .readToday(khatma, mushaf.juzStartPages);
-                    if (!context.mounted) return;
-                    ref.read(quranJumpRequestProvider.notifier).state =
-                        updated.currentPage;
-                    _switchToQuranTab(context);
-                    showKhatmaUndoSnackBar(context, ref, before);
-                  },
-            child: Text('khatma.read_today'.tr(args: ['$due'])),
-          ),
+        const SizedBox(height: 10),
+        Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: khatma.readToday
+              ? Chip(
+                  label: Text('khatma.read_today_done'.tr()),
+                  avatar: const Icon(Icons.check, size: 16),
+                  visualDensity: VisualDensity.compact,
+                )
+              : FilledButton.tonal(
+                  onPressed: mushaf == null
+                      ? null
+                      : () async {
+                          final before = khatma;
+                          final updated = await ref
+                              .read(khatmaStoreProvider.notifier)
+                              .readToday(khatma, mushaf.juzStartPages);
+                          if (!context.mounted) return;
+                          ref.read(quranJumpRequestProvider.notifier).state =
+                              updated.currentPage;
+                          _switchToQuranTab(context);
+                          showKhatmaUndoSnackBar(context, ref, before);
+                        },
+                  child: Text('khatma.read_today'.tr(args: ['$due'])),
+                ),
+        ),
       ],
     );
   }
