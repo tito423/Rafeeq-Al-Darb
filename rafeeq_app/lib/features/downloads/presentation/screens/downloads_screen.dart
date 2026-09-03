@@ -115,13 +115,13 @@ class _OverviewTab extends ConsumerWidget {
       case DownloadCategory.hadith:
         return () {
           Navigator.of(context).pop();
-          ref.read(requestedTabProvider.notifier).state = 3;
+          ref.read(requestedTabProvider.notifier).state = AppTab.library;
           ref.read(requestedLibraryTabProvider.notifier).state = 1;
         };
       case DownloadCategory.books:
         return () {
           Navigator.of(context).pop();
-          ref.read(requestedTabProvider.notifier).state = 3;
+          ref.read(requestedTabProvider.notifier).state = AppTab.library;
           ref.read(requestedLibraryTabProvider.notifier).state = 0;
         };
       case DownloadCategory.adhan:

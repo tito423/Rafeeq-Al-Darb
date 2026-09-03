@@ -18,7 +18,8 @@
     "azkar": "Adhkar",
     "hadith": "Hadith",
     "settings": "Definições",
-    "downloads": "Transferências"
+    "downloads": "Transferências",
+    "prayer": "Oração"
   },
   "home": {
     "greeting_morning": "Bom dia, companheiro do caminho",
@@ -242,6 +243,21 @@
     "video_note": "O vídeo aparece apenas com a tela ligada. Com o app fechado, só o som do adhan é reproduzido (limitação do Android).",
     "video_select": "Selecionar",
     "video_selected": "Selecionado"
+  },
+  "qibla": {
+    "locating": "A localizar...",
+    "location_needed": "É necessário acesso à localização para calcular a direção da Qibla",
+    "enable_location": "Tentar novamente",
+    "open_settings": "Abrir definições da app",
+    "no_compass": "O seu dispositivo não tem sensor de bússola, não é possível mostrar a direção da Qibla",
+    "reading_compass": "A ler a bússola...",
+    "north": "N",
+    "east": "E",
+    "south": "S",
+    "west": "O",
+    "aligned": "Está virado para a Qibla",
+    "bearing_info": "Direção da Qibla:",
+    "adhan_settings_hint": "Som do adhan, modo de exibição e alertas"
   },
   "settings": {
     "title": "Definições",

@@ -1,5 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// `AppShell`'s bottom-nav tab indices, named — P3‑16 (inserting the new
+/// "الصلاة" tab between Quran and Azkar) silently broke a hardcoded `= 3`
+/// for Library elsewhere in the codebase (`downloads_screen.dart`) that
+/// nothing caught until it was traced by hand; every screen that jumps to
+/// a specific tab should use these constants instead of a bare int, so the
+/// next tab insertion is a compile-time-visible one-line change here
+/// rather than a silent runtime misnavigation.
+abstract final class AppTab {
+  static const home = 0;
+  static const quran = 1;
+  static const prayer = 2;
+  static const azkar = 3;
+  static const library = 4;
+  static const settings = 5;
+}
+
 /// Cross-route "switch the bottom-nav tab to N" seam.
 ///
 /// `HomeScreen`'s own cards can call `HomeNavigate.of(context)` (an

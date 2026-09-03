@@ -18,7 +18,8 @@
     "azkar": "Adhkar",
     "hadith": "Hadith",
     "settings": "Settings",
-    "downloads": "Downloads"
+    "downloads": "Downloads",
+    "prayer": "Prayer"
   },
   "home": {
     "greeting_morning": "Good morning, companion of the path",
@@ -242,6 +243,21 @@
     "video_note": "The video shows only while the screen is on. When the app is closed only the adhan sound plays (an Android limitation).",
     "video_select": "Select",
     "video_selected": "Selected"
+  },
+  "qibla": {
+    "locating": "Locating you...",
+    "location_needed": "Location access is needed to calculate the Qibla direction",
+    "enable_location": "Try again",
+    "open_settings": "Open app settings",
+    "no_compass": "Your device has no compass sensor, so the Qibla direction can't be shown",
+    "reading_compass": "Reading the compass...",
+    "north": "N",
+    "east": "E",
+    "south": "S",
+    "west": "W",
+    "aligned": "You're facing the Qibla",
+    "bearing_info": "Qibla direction:",
+    "adhan_settings_hint": "Adhan sound, display mode, and alerts"
   },
   "settings": {
     "title": "Settings",

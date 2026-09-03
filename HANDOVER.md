@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 02:00 — IN PROGRESS — resume here**
+**2026-09-04 02:44 — IN PROGRESS — resume here**
 
-P3-8 investigation: mushaf page caching re-verified live on emulator (paged forward then back, revisited pages rendered instantly with zero delay, no re-fetch) - does not reproduce, likely stale; text-mode pinch-zoom already exists in code (InteractiveViewer), needs a live pinch-gesture check not more review; toolbar captions item marked done (delivered by P3-34). Docs only, no code change this step.
+P3-16 DONE + live-verified: new 6th bottom-nav 'Prayer' tab with a real Qibla compass (great-circle bearing to the Kaaba, live flutter_compass needle, honest loading/no-permission/no-sensor states, Adhan-settings link). Found+fixed two real bugs along the way: (1) inserting a 6th tab silently broke a hardcoded Library=3 tab index elsewhere - fixed properly with a new named AppTab constant everywhere instead of magic numbers, (2) LocationService.getCurrentPosition could hang indefinitely on this AVD past its own timeout - now wraps the whole permission+fetch+geocode chain in one outer timeout, benefits Home's prayer card too. Also traced and ruled out a genuine Android ANR as emulator degradation (12.5h uptime, load avg ~6-8) not a code bug, via adb shell uptime.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

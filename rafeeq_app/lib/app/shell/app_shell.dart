@@ -9,6 +9,7 @@ import '../../features/azkar/presentation/screens/azkar_screen.dart';
 import '../../features/home/data/prayer_controller.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
+import '../../features/qibla/presentation/screens/qibla_screen.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import 'tab_request_provider.dart';
@@ -81,6 +82,7 @@ class _AppShellState extends ConsumerState<AppShell>
     final screens = [
       HomeScreen(onNavigate: (t) => _goTo(t, tab: t)),
       const QuranScreen(),
+      const QiblaScreen(),
       const AzkarScreen(),
       const LibraryScreen(),
       const SettingsScreen(),
@@ -101,6 +103,11 @@ class _AppShellState extends ConsumerState<AppShell>
             icon: const Icon(Icons.menu_book_outlined),
             selectedIcon: const Icon(Icons.menu_book),
             label: 'nav.quran'.tr(),
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.explore_outlined),
+            selectedIcon: const Icon(Icons.explore),
+            label: 'nav.prayer'.tr(),
           ),
           NavigationDestination(
             icon: const Icon(Icons.auto_awesome_outlined),

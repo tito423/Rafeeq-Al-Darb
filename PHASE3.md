@@ -46,7 +46,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑13 | Persistent prayer notification — confirmed real bug + "must not be dismissible" | **blocked on live device/logcat** — a dead second implementation found + removed along the way, see P3‑19 |
 | P3‑14 | Settings: Russian layout bug, French locale | 🔶 Russian bug ✅ fixed (was a Khatma-card layout bug, not a Settings screen bug — see below); French still open |
 | P3‑15 | Library: slow reader, page-nav redesign, مكتبتي split, catalog scope | 🔶 catalog +3 books DONE, مكتبتي split DONE; reader speed + page-nav redesign still open |
-| P3‑16 | New "الصلاة" bottom-nav tab incl. professional Qibla compass | queued, unblocked (feeds P3‑4) |
+| P3‑16 | New "الصلاة" bottom-nav tab incl. professional Qibla compass | ✅ **done, live-verified** — real great-circle Qibla bearing + live compass needle, honest fallback states, Adhan-settings link; found+fixed a real cross-cutting tab-index bug + a real location-hang bug along the way; only the "populated" (real GPS) needle state is unverified, same emulator-location limitation as P3‑22 |
 | P3‑17 | R2 hosting migration | ✅ done this session, see `HOSTING.md` — rotate token / old-bucket decision still open |
 | P3‑18 | P2‑8 items already approved (#11 app-lock, #12 group khatma w/ real sign-in) | queued, **#12 folds into P3‑5** |
 | P3‑19 | Dead native notification code found + removed; Android-14 full-screen-intent permission gap found + fixed | ✅ all done — cleanup, native check/settings-launch methods, and the settings card all shipped |
@@ -559,16 +559,73 @@ see Kotlin errors at all) to confirm it actually compiles. **Not yet
 verified on-device** whether granting this actually fixes the reported
 full-screen symptom — that still needs the real phone.
 
-## P3‑16 — New "الصلاة" (Prayer) bottom-nav tab
+## P3‑16 — New "الصلاة" (Prayer) bottom-nav tab ✅ DONE, live-verified
 
-Consolidates what's scattered today (Adhan settings, P2‑6's notification
-toggle, reminders) into one tab, **plus a new, visually polished Qibla
-compass** — a real compass using the device magnetometer + location, "روعه
-بصريا... باحترافية شديدة جدا" (owner was explicit this should look
-genuinely professional, not a placeholder arrow). `design_refs/ref_home.jpg`
-and `ref_tasbeeh.jpg`'s bottom nav both already show a "الصلاة" tab slot
-between المسبحة and القرآن, matching where this should sit. Feeds P3‑4 (the
-Home prayer card should navigate here on tap).
+New 6th bottom-nav tab (`QiblaScreen`, between Quran and Azkar — matches
+where `ref_home.jpg`/`ref_tasbeeh.jpg`'s bottom nav already showed a
+"الصلاة" slot), built around a real Qibla compass:
+
+- **The compass itself**: one needle (not a rotating dial face — much
+  easier to read at a glance), pointing at the real great-circle bearing
+  to the Kaaba (`21.4225°N, 39.8262°E`, the standard initial-bearing
+  formula) offset live by `flutter_compass`'s device heading, with a
+  gold→green glow + haptic pulse once the user is actually facing it
+  (±5°). A plain geometric cube marks the needle tip — original art, no
+  photo/trademarked Kaaba image, per this project's own content rule.
+  N/E/S/W tick marks are fixed in place; only the needle rotates.
+- **Every real-world failure state handled honestly, never faked**:
+  locating (spinner), no location permission (message + retry + "open app
+  settings", reusing `Geolocator.openAppSettings()`), no magnetometer on
+  this device (a real possibility on some devices/emulators — a 3s probe
+  on `FlutterCompass.events` tells "never granted a sensor" apart from
+  "granted but silent").
+- **Consolidation**: a card linking straight to the existing
+  `AdhanSettingsScreen` (reusing `prayer.adhan_settings`, an existing
+  key) — the full settings migration wasn't attempted this pass (real
+  scope risk for a single session), but the new tab is now a real,
+  working entry point to it rather than just the compass alone.
+- **A real, cross-cutting bug found and fixed along the way**: inserting
+  a 6th tab shifted every index after it, and `downloads_screen.dart`
+  (this same session's P3‑25 work) had `requestedTabProvider`'s Library
+  index hardcoded as a bare `3` — silently wrong the moment this tab
+  landed. Fixed properly, not just patched: new `AppTab` (`tab_request_
+  provider.dart`) names every bottom-nav index; `downloads_screen.dart`
+  and `khatma_screen.dart`'s local `_quranTabIndex` were both moved onto
+  it, so the *next* tab insertion is a one-line change here instead of a
+  silent runtime misnavigation somewhere else.
+- **A second real bug found live-testing, not by code review**: location
+  fetches could hang indefinitely on at least this AVD image — well past
+  `Geolocator`'s own `timeLimit`, and even wrapping just that one call in
+  an explicit `.timeout()` wasn't enough (the earlier `checkPermission`/
+  `requestPermission` awaits could apparently also stall, upstream of
+  that fix). `LocationService.getCurrentPosition()` now wraps the *entire*
+  permission-check-through-geocode chain in one outer 15s `.timeout()` —
+  benefits this screen **and** the Home prayer card, which shares the
+  exact same service. During this investigation the emulator also hit a
+  genuine Android ANR ("Input dispatching timed out... FocusEvent") —
+  traced via `adb shell uptime` (12.5h continuous uptime, load average
+  ~6–8, ~200MB free of 2GB) to this specific AVD being heavily degraded
+  after a very long session, confirmed not code-related by a clean
+  relaunch working normally afterward; noted here rather than silently
+  dismissed, in case it recurs.
+- +1 key (`nav.prayer`) + a new `qibla.*` namespace (11 keys) × 5 locales.
+  `flutter analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`:** the new 6-tab bottom nav renders
+correctly (compass icon, "Prayer"/"الصلاة" label, both LTR and RTL —
+confirmed in both English and Arabic device-locale runs); opened the tab —
+"Locating you…" shows correctly; after the fix, a location-denied/failed
+attempt correctly settles into the honest fallback card every time (not
+just once), "Try again" correctly re-attempts and correctly times out
+again the same way, "Open app settings" correctly opens the real Android
+App Info screen for this app; the Adhan-settings link correctly opens the
+real, existing `AdhanSettingsScreen` with all its content intact. **Not
+verified**: the actual rotating needle against a real GPS fix + real
+compass heading — this specific AVD's location provider never resolves a
+position at all (the same limitation P3‑22 already documented for the
+Home prayer card), so the "populated" compass state needs either a real
+device or a differently-configured AVD to see rendered, same caveat as
+P3‑22's own still-open item.
 
 ## P3‑17 — R2 hosting migration ✅ DONE (this session)
 
