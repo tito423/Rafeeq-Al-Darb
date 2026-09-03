@@ -8,6 +8,7 @@ import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_retry.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/downloads_controller.dart';
@@ -98,7 +99,7 @@ class _OverviewTab extends ConsumerWidget {
 
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => Center(child: Text('errors.generic'.tr())),
+      error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(storageSummaryProvider)),
       data: (summary) => RefreshIndicator(
         onRefresh: () async => ref.invalidate(storageSummaryProvider),
         child: ListView(
@@ -285,7 +286,7 @@ class _MushafsTab extends ConsumerWidget {
     final editions = ref.watch(mushafEditionsProvider);
     return editions.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => Center(child: Text('errors.generic'.tr())),
+      error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(mushafEditionsProvider)),
       data: (list) => ListView.separated(
         padding: const EdgeInsets.all(14),
         itemCount: list.length,
@@ -502,7 +503,7 @@ class _RecitationsTab extends ConsumerWidget {
 
     return reciters.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => Center(child: Text('errors.generic'.tr())),
+      error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(recitersProvider)),
       data: (list) => Column(
         children: [
           Padding(
@@ -542,7 +543,7 @@ class _RecitationsTab extends ConsumerWidget {
           Expanded(
             child: mushaf.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, _) => Center(child: Text('errors.generic'.tr())),
+              error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
               data: (data) => ListView.builder(
                 padding: const EdgeInsets.fromLTRB(14, 4, 14, 24),
                 itemCount: data.surahs.length,

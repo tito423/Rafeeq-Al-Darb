@@ -14,6 +14,7 @@ import '../../../../core/services/adhan_alarm_service.dart';
 import '../../../../core/services/adhan_catalog_service.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_retry.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_catalog_provider.dart';
 import '../../data/adhan_presentation_provider.dart';
@@ -156,7 +157,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
       appBar: AppBar(title: Text('prayer.adhan_settings'.tr())),
       body: catalogAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('errors.generic'.tr())),
+        error: (e, _) => ErrorRetry(onRetry: () => ref.invalidate(adhanCatalogProvider)),
         data: (catalog) => ListView(
           padding: const EdgeInsets.all(16),
           children: [

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/db/models.dart';
+import '../../../../core/widgets/error_retry.dart';
 import '../../../search/presentation/screens/search_screen.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
@@ -241,7 +242,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       ),
       body: mushaf.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Center(child: Text('errors.generic'.tr())),
+        error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
         data: (data) => _buildViewer(data, ref.watch(
             currentMushafEditionProvider).valueOrNull),
       ),

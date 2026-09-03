@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/db/models.dart';
+import '../../../core/widgets/error_retry.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/mushaf_edition.dart';
 import '../../quran/presentation/widgets/ayah_sciences_sheet.dart';
@@ -45,7 +46,9 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
 
     return mushaf.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (_, _) => Scaffold(body: Center(child: Text('errors.generic'.tr()))),
+      error: (_, _) => Scaffold(
+        body: ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
+      ),
       data: (data) {
         final startPage = data.surahStartPages[widget.surahId];
         if (startPage == null) {

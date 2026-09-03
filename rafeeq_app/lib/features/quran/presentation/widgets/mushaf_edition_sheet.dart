@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_retry.dart';
 import '../../data/mushaf_edition.dart';
 
 /// Picker for the printed mushaf being read.
@@ -63,7 +64,7 @@ class MushafEditionSheet extends ConsumerWidget {
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (_, _) =>
-                      Center(child: Text('errors.generic'.tr())),
+                      ErrorRetry(onRetry: () => ref.invalidate(mushafEditionsProvider)),
                   data: (list) => ListView.separated(
                     padding: const EdgeInsets.fromLTRB(14, 4, 14, 24),
                     itemCount: list.length,

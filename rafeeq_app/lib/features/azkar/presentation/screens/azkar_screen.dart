@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_retry.dart';
 import '../../data/azkar_settings_provider.dart';
 import 'azkar_section_screen.dart';
 
@@ -46,7 +47,7 @@ class _SectionsTab extends ConsumerWidget {
     final repoAsync = ref.watch(sciencesRepositoryProvider);
     return repoAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => Center(child: Text('errors.generic'.tr())),
+      error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(sciencesRepositoryProvider)),
       data: (repo) => FutureBuilder<List<AzkarSection>>(
         future: repo.azkarSections(),
         builder: (context, snapshot) {

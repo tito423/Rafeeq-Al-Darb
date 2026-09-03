@@ -1044,6 +1044,53 @@ Firestore-backed feature.
 **Acceptance:** release APK builds and runs on a real phone; size documented and
 not larger than Phase 1; analyze + test clean; the architecture doc exists.
 
+### ✅ P2‑10 — DONE except the owner-blocker (2026‑09‑03); analyze clean, test 13/13
+
+- **Size, measured honestly, not hidden:** `flutter build apk --release
+  --split-per-abi` → **armeabi-v7a 41.8 MB, arm64-v8a 43.2 MB, x86_64 44.8 MB**
+  — real growth of ~6 MB per ABI over the documented Phase‑1 baseline
+  (35.8/37.8/39.2 MB), attributable to everything P2‑1 through P2‑13 added
+  (khatma/sunan-suwar/adhan-video features, new fonts, extra locales). Nothing
+  heavy was found sitting in `pubspec.yaml` `assets:` that should have been
+  on-demand instead — the download-vs-bundle split from `ARCHITECTURE.md` §3
+  already holds.
+- **Security re-confirmed by grep, not assumed:** zero `http://` URLs in
+  `lib/`, no `usesCleartextTraffic` in the manifest, no secret/token/password
+  literal in `core/config/`, `.gitignore` covers `.env`/keystores/
+  `google-services.json` and `git ls-files` confirms none of them are tracked.
+- **`ARCHITECTURE.md`** (repo root, new) — layers (`core/` vs `features/` vs
+  `app/`), the three Riverpod shapes in use and which to reach for, the three
+  data sources (bundled/downloaded/local-only) and why each is shaped that
+  way, why `AppShell` is an `IndexedStack` (and the cross-tab-navigation seam
+  that choice requires), why notifications are five separate services instead
+  of one shared class, and a "copy the shape of…" table pointing at a real
+  working example for each common kind of feature.
+- **Doc-comments spot-checked** across every public class added in P2‑11/12
+  (khatma + sunan-suwar) and the P2‑8 mushaf-reader rewrite — all present and
+  in the same explain-the-why style as the rest of the codebase.
+- **Dead code found and removed:** `lib/features/downloads/presentation/
+  widgets/download_tile.dart` (a `DownloadTile` widget + `downloadTasksProvider`
+  from an earlier downloads-screen iteration) was never imported or
+  instantiated anywhere — confirmed by grep, then deleted; `flutter analyze`
+  stayed clean after removal.
+- **Usability gap found and fixed, not just spot-checked:** every
+  `AsyncValue.when(error: …)` branch across the app (8 call sites: azkar,
+  adhan settings, the single-surah locked reader, three tabs of the downloads
+  screen, the library hadith tab, the Quran reader, the edition-picker sheet)
+  rendered a bare "something went wrong" text with **no way to recover**
+  short of leaving the screen — a real miss against this stage's own written
+  "error+retry" acceptance line. Added `lib/core/widgets/error_retry.dart`
+  (message + a real Retry button that calls `ref.invalidate(...)` on the
+  failed provider) and wired it into all 8. The Home prayer-card error state
+  was left as-is — it already sits under `HomeScreen`'s pull-to-refresh, which
+  is a legitimate retry affordance on its own.
+- `flutter analyze` clean, `flutter test` 13/13 green after every change above.
+
+**Still open — OWNER-BLOCKER, unchanged:** the release build still signs with
+the debug keystore (`android/app/build.gradle.kts` `// TODO`). No agent
+session can generate or hold the owner's real signing keystore/alias/
+passwords; nothing above attempted to work around that.
+
 ---
 
 # Home-screen redesign (owner, 2026-09-02)

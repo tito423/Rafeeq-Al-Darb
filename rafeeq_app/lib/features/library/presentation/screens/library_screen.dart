@@ -8,6 +8,7 @@ import '../../../../core/config/app_config.dart';
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_retry.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_category.dart';
 import 'book_reader_screen.dart';
@@ -626,7 +627,7 @@ class _HadithTabState extends ConsumerState<_HadithTab> {
 
     return repoAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => Center(child: Text('errors.generic'.tr())),
+      error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(hadithRepositoryProvider)),
       data: (repo) {
         if (repo == null) return _DownloadGate(onDownload: _startDownload);
         return Column(
