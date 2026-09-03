@@ -76,7 +76,11 @@ git -C "E:\My Projects\Rafiq-Al-Darb" status --short
 
 ## APK للتجربة (آخر نسخة، فيها كل حاجة اتعملت)
 
-`https://github.com/tito423/rafeeq-api/releases/download/phase3-batch4-2026-09-03/app-debug.apk`
+`https://github.com/tito423/rafeeq-api/releases/download/phase3-batch5-2026-09-03/app-debug.apk`
+
+(batch 5 فيها كمان: P3‑24 زرار إلغاء تحميل الكتب، P3‑25 تنقّل قسم
+التنزيلات، P3‑37 اسم التطبيق/اللغة الأولى بيتبعوا لغة الجهاز — كلها
+اتعملت لايف-فيريفاي.)
 
 ## قواعد ملزمة إضافية اتعلمناها هذه الجلسة
 

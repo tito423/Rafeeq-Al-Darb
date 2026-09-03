@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 23:42 — IN PROGRESS — resume here**
+**2026-09-03 23:43 — IN PROGRESS — resume here**
 
-P3-37 DONE + live-verified: OS-level launcher label wired to a real @string/app_name resource (values/ + values-ar/, was a hardcoded literal), main.dart's hardcoded startLocale removed so easy_localization auto-detects device locale on first launch; confirmed fresh-install-on-en-US-AVD opens fully in English (label included), verified with a real flutter build apk --debug since this touches native resources
+Safety-net checkpoint: released phase3-batch5-2026-09-03 APK (P3-24, P3-25, P3-37 added on top of batch4, all live-verified). NEXT_SESSION_PROMPT.md updated with new APK link.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
