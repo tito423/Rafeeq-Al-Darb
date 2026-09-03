@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 23:20 — IN PROGRESS — resume here**
+**2026-09-03 23:33 — IN PROGRESS — resume here**
 
-Safety-net checkpoint: released phase3-batch4-2026-09-03 APK (cumulative: P3-11 grid, P3-29 swipe+slider, P3-32 marker alignment, P3-35 toggle, P3-36 reroll fix, P3-24 cancel button, all live-verified). NEXT_SESSION_PROMPT.md updated with current status + new APK link + PHASE3.md recovery note.
+P3-25 DONE + live-verified: downloads overview rows jump to their real section - mushafs/recitations switch DownloadsScreen's own tab locally, hadith/books pop out to LibraryScreen's matching inner tab via a new requestedLibraryTabProvider seam (mirrors the P3-6 khatma-nav fix's pattern)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

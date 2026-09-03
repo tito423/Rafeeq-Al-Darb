@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/services/download_manager.dart';
@@ -26,28 +27,53 @@ String _fmtSize(int bytes) {
 ///  • "الكتب المتوفرة" — the books catalog, itself split into
 ///    (كل الكتب · التصنيفات · مكتبتي).
 ///  • "الحديث" — the 9-collection hadith hub (downloaded on demand).
-class LibraryScreen extends ConsumerWidget {
+class LibraryScreen extends ConsumerStatefulWidget {
   const LibraryScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('nav.library'.tr()),
-          bottom: TabBar(
-            indicatorColor: AppColors.gold,
-            labelColor: AppColors.gold,
-            tabs: [
-              Tab(text: 'library.tab_books'.tr()),
-              Tab(text: 'library.tab_hadith'.tr()),
-            ],
-          ),
+  ConsumerState<LibraryScreen> createState() => _LibraryScreenState();
+}
+
+/// P3‑25: an explicit `TabController` instead of `DefaultTabController` —
+/// `DownloadsScreen`'s overview rows need to jump straight to "تحميل
+/// الكتب"/"الحديث" from outside this screen entirely (a separate pushed
+/// route), which `DefaultTabController` has no way to reach; this exposes
+/// a controller `build()` can drive from `requestedLibraryTabProvider`.
+class _LibraryScreenState extends ConsumerState<LibraryScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController =
+      TabController(length: 2, vsync: this);
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen<int?>(requestedLibraryTabProvider, (prev, next) {
+      if (next == null) return;
+      _tabController.animateTo(next);
+      ref.read(requestedLibraryTabProvider.notifier).state = null;
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('nav.library'.tr()),
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: AppColors.gold,
+          labelColor: AppColors.gold,
+          tabs: [
+            Tab(text: 'library.tab_books'.tr()),
+            Tab(text: 'library.tab_hadith'.tr()),
+          ],
         ),
-        body: const TabBarView(
-          children: [_BooksTab(), _HadithTab()],
-        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [_BooksTab(), _HadithTab()],
       ),
     );
   }

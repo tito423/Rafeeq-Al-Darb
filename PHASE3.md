@@ -638,11 +638,38 @@ the in-progress "…" while the progress bar filled; tapped it — download
 stopped immediately, the row cleanly reverted to the normal "تنزيل" button
 (not stuck in a half-cancelled state).
 
-## P3-25 — Downloads "نظرة عامة" rows should jump to their own section
+## P3-25 — Downloads "نظرة عامة" rows ✅ DONE, live-verified
 
-Tapping a category row (e.g. "الكتب") in the overview tab should switch the
-`DownloadsScreen`'s `TabController` to that category's own tab, not just
-show a static summary. Not started.
+Two different destinations, since مصاحف/تلاوات and حديث/كتب aren't
+actually the same *kind* of "section":
+
+- **مصاحف/تلاوات** have their own tab right here on `DownloadsScreen`
+  itself — tapping the row calls `DefaultTabController.of(context)
+  .animateTo(1|2)`, a purely local switch.
+- **حديث/كتب** are managed on a completely different screen
+  (`LibraryScreen`, its own bottom-nav tab) — `DownloadsScreen` isn't
+  where you'd ever download a book or the hadith DB from in the first
+  place, so "jump to its section" has to mean leaving this screen. Tapping
+  the row pops `DownloadsScreen` and sets **two** provider requests: the
+  existing `requestedTabProvider` (bottom-nav → Library, index 3) and a
+  new `requestedLibraryTabProvider` (`LibraryScreen`'s *own* inner
+  `TabController` → الكتب/الحديث). `LibraryScreen` converted from
+  `DefaultTabController` to an explicit `TabController` so it has
+  something to drive from outside itself — same two-provider seam
+  documented in `tab_request_provider.dart`, mirroring the P3‑6 khatma-nav
+  fix's pattern exactly, not a new mechanism invented from scratch.
+  الأذان's row has no download-browsing UI anywhere in the app to jump
+  to yet, so it stays inert rather than pointing at a destination that
+  doesn't exist. `flutter analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`:** from Settings → التنزيلات → نظرة
+عامة — tapping "التلاوات" switched straight to the التلاوات tab in
+place (no navigation, confirmed by the reciter picker + surah list
+appearing instantly); tapping "الكتب" popped back out and landed on
+`LibraryScreen`'s الكتب المتوفرة tab; tapping "الحديث" did the same but
+landed on الحديث instead, confirming `requestedLibraryTabProvider`
+actually drives the right inner tab and not just "whichever library tab
+happened to be open."
 
 ## P3-26 — Persistent prayer notification — owner still reports it absent
 
@@ -854,7 +881,7 @@ language `easy_localization` starts in, shown top of a dropdown as
 | P3-22 | Home: animated interactive prayer card (frame-verified target) | 🔶 built, analyze/test clean; fallback path live-verified, **populated path blocked on this emulator's location fix** (see notes) |
 | P3-23 | Icon replacement round 2 | **blocked on owner's reference image** |
 | P3-24 | Book download button → cancel state while downloading | ✅ **done, live-verified** |
-| P3-25 | Downloads overview rows jump to their own tab | queued, unblocked |
+| P3-25 | Downloads overview rows jump to their own tab | ✅ **done, live-verified** |
 | P3-26 | Persistent prayer notification still reported absent | **blocked on live device** (see P3-13/P3-19) |
 | P3-27 | "Download full recitation" card under the reciter picker | queued, unblocked |
 | P3-28 | Mushaf edition thumbnails | queued, **needs a per-edition licence/sourcing pass first** (see the QuranFlash warning above) |

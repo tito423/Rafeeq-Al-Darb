@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/services/mushaf_page_service.dart';
@@ -92,6 +93,42 @@ class _OverviewTab extends ConsumerWidget {
     }
   }
 
+  /// P3‑25: each overview row jumps to where that category is actually
+  /// managed. Mushafs/recitations have their own tab right here on this
+  /// screen — a local `TabController` switch. Hadith/books are managed on
+  /// a completely different screen (`LibraryScreen`, its own bottom-nav
+  /// tab) — pop back out to `AppShell` and request both the bottom-nav tab
+  /// and `LibraryScreen`'s own inner tab (same two-provider seam
+  /// `tab_request_provider.dart` documents). Adhan has no download-browsing
+  /// UI anywhere in the app yet, so its row stays inert rather than
+  /// pointing at a destination that doesn't exist.
+  VoidCallback? _goToCategory(
+    BuildContext context,
+    WidgetRef ref,
+    DownloadCategory category,
+  ) {
+    switch (category) {
+      case DownloadCategory.mushafs:
+        return () => DefaultTabController.of(context).animateTo(1);
+      case DownloadCategory.recitations:
+        return () => DefaultTabController.of(context).animateTo(2);
+      case DownloadCategory.hadith:
+        return () {
+          Navigator.of(context).pop();
+          ref.read(requestedTabProvider.notifier).state = 3;
+          ref.read(requestedLibraryTabProvider.notifier).state = 1;
+        };
+      case DownloadCategory.books:
+        return () {
+          Navigator.of(context).pop();
+          ref.read(requestedTabProvider.notifier).state = 3;
+          ref.read(requestedLibraryTabProvider.notifier).state = 0;
+        };
+      case DownloadCategory.adhan:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(storageSummaryProvider);
@@ -144,6 +181,7 @@ class _OverviewTab extends ConsumerWidget {
                 onFree: summary.usage(c).bytes > 0
                     ? () => _confirmFree(context, ref, c)
                     : null,
+                onTap: _goToCategory(context, ref, c),
               ),
             const SizedBox(height: 16),
             _ArtifactList(
@@ -163,7 +201,8 @@ class _OverviewTab extends ConsumerWidget {
 class _CategoryRow extends StatelessWidget {
   final CategoryUsage usage;
   final VoidCallback? onFree;
-  const _CategoryRow({required this.usage, this.onFree});
+  final VoidCallback? onTap;
+  const _CategoryRow({required this.usage, this.onFree, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -171,6 +210,7 @@ class _CategoryRow extends StatelessWidget {
     return ListTile(
       dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 6),
+      onTap: onTap,
       leading: Icon(switch (usage.category) {
         DownloadCategory.mushafs => Icons.menu_book_outlined,
         DownloadCategory.recitations => Icons.headphones_outlined,
