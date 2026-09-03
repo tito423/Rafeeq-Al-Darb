@@ -15,26 +15,92 @@ is sorted/stored as TEXT ("2" < "9" < "99" lexicographically breaks the moment
 you hit two digits). `number_in_book` here is INTEGER, and every query in the
 app must ORDER BY it as a number, never as a string.
 
-No per-hadith "grade" (sahih/da'if) field exists in this source. Bukhari and
-Muslim are sahih by definition (that's what "sahih" in their titles means);
-for the other seven, grading is a separate scholarly layer this dataset does
-not carry, and zero-mock-data means we do not invent one. The `grade` column
-is left NULL everywhere and the app must not display a grade it doesn't have.
+P2‑13 (2026‑09‑03): real per-hadith gradings, from a second real source —
+scripts/temp_phase1/hadith_grades/{abudawud,tirmidhi,nasai,ibnmajah}.json,
+an MIT-licensed sunnah.com-derived dataset (huggingface.co/datasets/
+meeAtif/hadith_datasets) that carries a "Grade" string like "Hasan Sahih
+(Al-Albani)" or "Sahih (Darussalam)" per hadith. It has no idInBook numbering
+compatible with this build's own dataset (confirmed: Ibn Majah's global
+sunnah.com numbering starts at 267, 266 ahead of this dataset's book-local
+count, and the other three books' numbering only coincidentally lines up for
+their first few hadiths) — so hadiths are matched between the two sources by
+normalized Arabic text instead (see `_norm_arabic`), which measured a 93.9–
+100% match rate per book (`scripts/temp_phase1/match_results2.txt`); anything
+that doesn't match — including, for Ibn Majah, its ~266-hadith Muqaddimah,
+which this grading source doesn't cover at all — keeps `grade`/`grader` NULL,
+never a guess. Bukhari and Muslim stay NULL too: they're sahih by definition
+(that's what "sahih" in their titles means, and is exactly what the grading
+source itself encodes by leaving every one of their rows blank) — the app
+shows a "من الصحيحين" badge for those two books directly, not from this
+column. No graded, redistributable source was found for Muwatta Malik (or
+for Ahmad/al-Darimi, the two extra books beyond the Home card's needed 7) —
+their `grade`/`grader` are honestly NULL, not invented.
 """
 import glob
 import io
 import json
 import os
+import re
 import sqlite3
+import unicodedata
 import zipfile
 
 BASE = r"e:\My Projects\Rafiq-Al-Darb\scripts\temp_phase1\hadith9"
+GRADES_DIR = r"e:\My Projects\Rafiq-Al-Darb\scripts\temp_phase1\hadith_grades"
 # Not under rafeeq_app/ — this is a regenerable ~74 MB pipeline artifact,
 # never bundled into the app (hadith.db is downloaded, see AppConfig.hadithDbUrl
 # and DbHelper.openDownloaded). scripts/pipeline_zips/ is already gitignored.
 OUT_DIR = r"e:\My Projects\Rafiq-Al-Darb\scripts\pipeline_zips"
 OUTDB = os.path.join(OUT_DIR, "hadith.db")
 OUTZIP = os.path.join(OUT_DIR, "hadith.zip")
+
+_TASHKIL = re.compile("[\u064b-\u0652\u0670\u0640]")
+_STRIP_CATS = {"Cf", "Po", "Pd", "Pi", "Pf", "Ps", "Pe"}
+
+
+def _norm_arabic(s):
+    """Content-only fingerprint for matching the same hadith across two
+    independent sunnah.com scrapes: strips harakat/tatweel, every Unicode
+    "format" control char (RLM/LRM — the two sources differ here, e.g. one
+    has a bare newline where the other has an RTL-marked space around a
+    quoted saying) and all punctuation, then collapses whitespace. Verified
+    (scripts/temp_phase1/match_test2.py) to raise the match rate from ~50%
+    with a naive whitespace-only normalize to 93.9–100%.
+    """
+    if not s:
+        return ""
+    s = _TASHKIL.sub("", s)
+    s = "".join(ch for ch in s if unicodedata.category(ch) not in _STRIP_CATS)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _split_grade(raw):
+    """'Hasan Sahih (Al-Albani)' -> ('Hasan Sahih', 'Al-Albani'). Falls back
+    to (raw, None) if there's no trailing "(...)" to read a grader from."""
+    m = re.match(r"^(.*?)\s*\(([^()]+)\)\s*$", raw)
+    if m:
+        return m.group(1).strip(), m.group(2).strip()
+    return raw.strip(), None
+
+
+def load_grades(book_key):
+    """book_key -> {normalized_arabic: (grade_text, grader)}. Empty dict for
+    books with no graded source (see module docstring)."""
+    path = os.path.join(GRADES_DIR, f"{book_key}.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        rows = json.load(f)
+    index = {}
+    for r in rows:
+        raw_grade = (r.get("Grade") or "").strip()
+        if not raw_grade:
+            continue
+        key = _norm_arabic(r.get("Arabic_Text", ""))
+        if not key:
+            continue
+        index[key] = _split_grade(raw_grade)
+    return index
 
 report = io.StringIO()
 
@@ -83,7 +149,8 @@ CREATE TABLE hadiths(
   arabic TEXT NOT NULL,
   narrator_en TEXT,
   text_en TEXT,
-  grade TEXT
+  grade TEXT,
+  grader TEXT
 );
 CREATE INDEX idx_hadiths_book_chapter_num
   ON hadiths(book_id, chapter_no, number_in_book);
@@ -101,6 +168,7 @@ CREATE VIRTUAL TABLE hadiths_fts USING fts5(
 
 total_hadiths = 0
 total_chapters = 0
+total_graded = 0
 for order, key in enumerate(BOOK_ORDER, start=1):
     path = os.path.join(BASE, f"{key}.json")
     with open(path, encoding="utf-8") as f:
@@ -109,6 +177,8 @@ for order, key in enumerate(BOOK_ORDER, start=1):
     meta = data["metadata"]
     chapters = data["chapters"]
     hadiths = data["hadiths"]
+    grades = load_grades(key)
+    book_graded = 0
 
     cur.execute(
         "INSERT INTO books(id, book_key, sort_order, name_ar, name_en, "
@@ -136,15 +206,22 @@ for order, key in enumerate(BOOK_ORDER, start=1):
         text_en = eng.get("text") if isinstance(eng, dict) else (
             eng if isinstance(eng, str) else None
         )
+        grade_text = grader = None
+        hit = grades.get(_norm_arabic(h["arabic"] or ""))
+        if hit:
+            grade_text, grader = hit
+            book_graded += 1
         cur.execute(
             "INSERT INTO hadiths(book_id, chapter_no, number_in_book, "
-            "arabic, narrator_en, text_en, grade) VALUES(?,?,?,?,?,?,NULL)",
+            "arabic, narrator_en, text_en, grade, grader) VALUES(?,?,?,?,?,?,?,?)",
             (order, h["chapterId"], h["idInBook"], h["arabic"] or "",
-             narrator, text_en),
+             narrator, text_en, grade_text, grader),
         )
     total_hadiths += len(hadiths)
+    total_graded += book_graded
     out(f"{key}: {meta['english']['title']} — "
-        f"{len(chapters)} chapters, {len(hadiths)} hadiths")
+        f"{len(chapters)} chapters, {len(hadiths)} hadiths, "
+        f"{book_graded} graded" + (" (no graded source)" if not grades else ""))
 
 cur.execute("INSERT INTO hadiths_fts(rowid, arabic, text_en) "
             "SELECT id, arabic, text_en FROM hadiths")
@@ -154,7 +231,8 @@ con.commit()
 # ── sanity checks ────────────────────────────────────────────────────
 out()
 out(f"TOTAL: {len(BOOK_ORDER)} books, {total_chapters} chapters, "
-    f"{total_hadiths} hadiths")
+    f"{total_hadiths} hadiths, {total_graded} graded "
+    f"({100*total_graded/total_hadiths:.1f}%)")
 
 # The ordering-bug regression check: within any chapter that has >=10
 # hadiths, number_in_book must come back strictly increasing when sorted

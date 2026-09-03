@@ -97,7 +97,7 @@ test` 13/13, last checkpoint `ec15d06`):
 | P2‑10 | Lightweight / fast / secure / maintainable pass + release prep | all above | **yes** (release keystore) |
 | **P2‑11** | **Quran Khatma tracker** card — Home, top (khatma features only, not prayer/qibla) | P2‑2 | no |
 | **P2‑12** | **Sunan as-Suwar** card — Home, middle; 4 surahs → single-surah locked reader + per-surah reminders | P2‑2 | no |
-| **P2‑13** | **Random-hadith card** — Home, bottom; full hadith + narrator + grade, re-rolls each launch | P2‑4 | **yes** — needs a graded hadith source (see stage) |
+| **P2‑13** | **Random-hadith card** — Home, bottom; full hadith + narrator + grade, re-rolls each launch | P2‑4 | ~~yes~~ — resolved, a real graded source was found (see stage) |
 
 Do them in order. P2‑2 and P2‑3 were foundational (they touch every screen) and
 are done. P2‑6 depends only on P2‑2 — it can be slotted earlier if you prefer.
@@ -1258,8 +1258,8 @@ already proven elsewhere in this codebase, but not re-clicked for
 Sunan Suwar specifically), and the image-mode toggle inside the locked
 reader.
 
-**Still open:** the Home quick-access grid removal — waits for P2‑13 too,
-per the stage's own combined framing.
+~~**Still open:** the Home quick-access grid removal — waits for P2‑13 too,
+per the stage's own combined framing.~~ Done in P2‑13 (see its own section).
 
 ---
 
@@ -1306,6 +1306,86 @@ relaunching the app shows a different hadith; without `hadith.db` the card
 shows an honest download prompt, not a blank/fake card; no invented gradings
 anywhere.
 
+### ✅ P2‑13 — DONE + emulator-verified (2026‑09‑03)
+
+- **Real graded source found, researched, and verified redistributable**
+  before any code was written: `huggingface.co/datasets/meeAtif/hadith_datasets`
+  (MIT-licensed, sunnah.com-derived) carries a real "Grade" string per hadith
+  — e.g. "Hasan Sahih (Al-Albani)" or "Sahih (Darussalam)" — for Abu Dawud,
+  Tirmidhi, an-Nasa'i and Ibn Majah. No graded, redistributable source was
+  found for Muwatta Malik (or Ahmad/al-Darimi) despite real searching — those
+  stay honestly null, not guessed.
+- **Real problem found and solved before trusting the join:** this source's
+  hadith numbering does **not** line up with this project's existing dataset
+  (confirmed: Ibn Majah's global sunnah.com numbering starts at 267, 266
+  ahead of the book-local numbering already in `hadith.db`) — a naive
+  number-based join would have silently attached the wrong grade to the
+  wrong hadith. Switched to matching by normalized Arabic text instead;
+  round 1 (whitespace-only normalization) measured only ~40–55% matches,
+  traced to a real cosmetic difference between the two scrapes (stray RLM
+  marks / a bare newline vs a space around quoted sayings); round 2 (strip
+  all diacritics + Unicode format chars + punctuation, keep letters and
+  spaces only) raised it to 93.9–100% per book — the shortfall for Ibn
+  Majah is exactly its ~266-hadith Muqaddimah, which this grading source
+  doesn't cover at all, not a matching failure.
+- **`scripts/build_hadith_db.py`** extended: new `grader` column, real
+  join logic (`_norm_arabic`/`_split_grade`/`load_grades`, all documented in
+  the module's own docstring), sanity output per book. Rebuilt for real:
+  **18,047 of 40,943 hadiths now carry a real grade** (Abu Dawud 4896/5276,
+  Tirmidhi 3898/4053, an-Nasa'i 5321/5768, Ibn Majah 3932/4345); Bukhari/
+  Muslim/Malik/Ahmad/al-Darimi stay null, honestly, exactly as planned.
+- **A real, previously-dormant bug found and fixed along the way:**
+  `AppConfig.hadithDbVersion` existed and was documented as "bump this so
+  stale downloads re-fetch" — but nothing in `DownloadManager`/`DbHelper`
+  ever actually read it; bumping it had always done nothing. Fixed for
+  real: `DownloadTask.dbVersion` now stamps a `<file>.version` marker next
+  to the extracted DB, and `DbHelper.openDownloaded(expectedVersion: ...)`
+  deletes + treats as "not downloaded" any copy whose stamp doesn't match —
+  so a device that already has the old (ungraded) `hadith.db` gets prompted
+  to re-download, not stuck on stale content forever. `hadithDbVersion`
+  bumped v1 → v2.
+- **Re-hosted for real:** rebuilt `hadith.zip` (16.1 MB) pushed to
+  `tito423/rafeeq-api` (`gh api` Contents endpoint, the same proven pattern
+  P2‑4b's book-text uploads used — no classifier block this time) and
+  **verified byte-for-byte** — downloaded the newly-hosted file straight
+  back and `sha256sum` matched the local build exactly, then unzipped and
+  confirmed the live file's schema and grade counts match.
+- **`lib/features/hadith_daily/`** (new): `daily_hadith_provider.dart`
+  (`AsyncNotifier` — picks once per app process via `HadithRepository
+  .randomDailyHadith()`, a single `ORDER BY RANDOM() LIMIT 1` scoped to
+  `dailyHadithBookIds` rather than loading candidates into Dart, for the
+  same memory-budget reason `search()`'s own doc explains) and
+  `daily_hadith_card.dart` (download-prompt / loading / picked states,
+  reusing the exact same `hadithDbDownloadId` task `LibraryScreen`'s hadith
+  tab already offers so the two screens can't disagree about progress).
+  `HadithItem`/`HadithRepository` gained `grade`+`grader` and doc updates;
+  `hadith_detail_screen.dart` now shows a real grade+grader chip, or a
+  "صحيح — من الصحيحين" badge for Bukhari/Muslim specifically (from
+  `book.id`, never from the null `grade` column).
+- **Quick-access grid removed** from `home_screen.dart` per the Home
+  redesign; the one entry point that grid was solely responsible for (New
+  Muslim Guide) was **not** left orphaned — it got a real new home as a
+  Settings list item (`settings_screen.dart`) rather than silently losing
+  its only way to be reached.
+- Localized (5 locales: `hadith_daily.*` + `library.sahihayn_badge`/
+  `.grade_unstated`), parity test green.
+- **Emulator-verified live, end-to-end, not just built:** installed fresh,
+  tapped the card's download prompt, watched the real 16.1 MB download +
+  unzip complete, then confirmed: a Bukhari hadith (#7272) showed the
+  "صحيح — من الصحيحين" badge; "حديث آخر" rerolled to a different hadith
+  (Muslim #2064, then Sunan an-Nasa'i #268 showing a real
+  "الدرجة: Sahih (Darussalam)" chip — a real book/grader combination, not
+  Al-Albani-for-everything, proving the per-book grader attribution is
+  actually read from the data rather than hardcoded); tapping the card
+  opened the full `HadithDetailScreen` with the same text/grade. `flutter
+  analyze` clean, `flutter test` 13/13 green throughout.
+
+**Known, honest gap:** the grade/grader text shown (e.g. "Sahih
+(Darussalam)") is in English even in the Arabic locale — the source
+dataset has no Arabic-language grading terms, and inventing an Arabic
+translation of a scholarly grading term would risk misrepresenting it.
+Left as real English text rather than a fabricated Arabic one.
+
 ---
 
 ## Owner-blockers, collected
@@ -1319,6 +1399,6 @@ anywhere.
 | P2‑9 | do the Cloudflare / Firebase / GitHub console steps; rotate the R2 token — an agent session **cannot** log into these accounts (no passwords/OAuth/account-settings, even with the owner's say-so) |
 | P2‑10 | provide the real release keystore (alias + passwords) |
 | ~~P2‑4b~~ | ✅ **done** — 5 Shamela text editions chosen per-book (rec. muḥaqqaq / plain-PD), built, hosted on `tito423/rafeeq-api`, reader + `مصوّر\|نص` switch shipped & emulator-verified |
-| P2‑13 | ✅ decided — Option A: rebuild `hadith.db` with real gradings (grade + grader) from a graded dataset |
+| ~~P2‑13~~ | ✅ **done** — Option A carried out: real gradings (grade + grader) for Abu Dawud/Tirmidhi/an-Nasa'i/Ibn Majah joined into `hadith.db`, re-hosted, card shipped & emulator-verified |
 
 Everything else in Phase 2 is buildable without him — go.

@@ -63,10 +63,35 @@ class DbHelper {
 
   /// Opens a downloaded database (e.g. hadith.db placed by the download
   /// engine). Returns null when the file isn't present yet.
-  Future<Database?> openDownloaded(String fileName) async {
-    if (_cache[fileName] != null) return _cache[fileName]!;
+  ///
+  /// [expectedVersion], when given, is compared against the `fileName +
+  /// ".version"` stamp `DownloadManager` writes next to the file once a
+  /// version-tagged download finishes (see `DownloadTask.dbVersion`). A
+  /// mismatch — or no stamp at all, meaning the file predates this
+  /// mechanism — means the on-disk copy is stale content, not just an old
+  /// build: it's deleted and this returns null exactly as if nothing had
+  /// been downloaded yet, so the caller's existing "not downloaded" UI
+  /// (a download prompt, never a silent open of outdated data) handles it
+  /// with no extra code. Without this, a device that downloaded `hadith.db`
+  /// before a content change (e.g. P2‑13 adding real hadith gradings) would
+  /// keep opening the old file forever — nothing else in the download path
+  /// re-checks a file that already exists on disk.
+  Future<Database?> openDownloaded(String fileName, {String? expectedVersion}) async {
     final supportDir = await getApplicationSupportDirectory();
     final dbPath = p.join(supportDir.path, 'databases', fileName);
+
+    if (expectedVersion != null) {
+      final versionFile = File('$dbPath.version');
+      final current =
+          versionFile.existsSync() ? versionFile.readAsStringSync() : null;
+      if (current != expectedVersion && File(dbPath).existsSync()) {
+        _cache.remove(fileName);
+        await File(dbPath).delete();
+        if (versionFile.existsSync()) await versionFile.delete();
+      }
+    }
+
+    if (_cache[fileName] != null) return _cache[fileName]!;
     if (!File(dbPath).existsSync()) return null;
     final db = await openDatabase(dbPath, readOnly: false, version: 1);
     _cache[fileName] = db;

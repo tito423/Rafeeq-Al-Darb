@@ -148,7 +148,9 @@
     "text_open_shamela": "Abrir en al-Maktaba al-Shamela",
     "text_empty": "Sin texto",
     "text_blank_page": "Página en blanco",
-    "text_ocr_badge": "Texto extraído automáticamente"
+    "text_ocr_badge": "Texto extraído automáticamente",
+    "sahihayn_badge": "Sahih — de los Dos Sahihs",
+    "grade_unstated": "Grado: no indicado"
   },
   "azkar": {
     "title": "Adhkar",
@@ -373,5 +375,11 @@
     "source_mulk": "Sunan Abi Dawud y al-Tirmidhi (hasan)",
     "note_sajdah": "El Profeta ﷺ solía recitarla junto con la Surah al-Insan en la oración del Fayr del viernes",
     "source_sajdah": "Sahih al-Bujari"
+  },
+  "hadith_daily": {
+    "title": "Hadiz del día",
+    "download_prompt": "Descarga la biblioteca de hadices para ver uno aleatorio aquí",
+    "downloading": "Descargando…",
+    "another": "Otro hadiz"
   }
 }

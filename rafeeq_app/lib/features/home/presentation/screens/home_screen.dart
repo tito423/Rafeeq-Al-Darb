@@ -6,9 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/services/prayer_times_service.dart';
+import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../khatma/presentation/khatma_card.dart';
-import '../../../library/presentation/screens/library_screen.dart';
-import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
 
@@ -100,55 +99,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               const KhatmaCard(),
               const SizedBox(height: 16),
               const SunanSuwarCard(),
-              const SizedBox(height: 28),
-              Text(
-                'home.quick_access'.tr(),
-                style: theme.textTheme.titleMedium,
-              ),
+              const SizedBox(height: 16),
+              const DailyHadithCard(),
               const SizedBox(height: 12),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 1.35,
-                children: [
-                  _QuickCard(
-                    icon: Icons.menu_book,
-                    label: 'home.mushaf'.tr(),
-                    onTap: () => widget.onNavigate(1),
-                  ),
-                  _QuickCard(
-                    icon: Icons.local_library_outlined,
-                    label: 'nav.library'.tr(),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const LibraryScreen(),
-                      ),
-                    ),
-                  ),
-                  _QuickCard(
-                    icon: Icons.auto_awesome,
-                    label: 'home.tasbeeh'.tr(),
-                    onTap: () => widget.onNavigate(2),
-                  ),
-                  _QuickCard(
-                    icon: Icons.library_books,
-                    label: 'new_muslim.title'.tr(),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const NewMuslimGuideScreen(),
-                      ),
-                    ),
-                  ),
-                  _QuickCard(
-                    icon: Icons.settings,
-                    label: 'nav.settings'.tr(),
-                    onTap: () => widget.onNavigate(4),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -291,40 +244,3 @@ class _PrayerTimesTable extends StatelessWidget {
   }
 }
 
-class _QuickCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _QuickCard({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 32, color: scheme.primary),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

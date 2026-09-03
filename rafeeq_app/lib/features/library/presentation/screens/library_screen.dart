@@ -16,8 +16,6 @@ import 'book_text_reader_screen.dart';
 import 'hadith_book_screen.dart';
 import 'hadith_detail_screen.dart';
 
-const _hadithDownloadId = 'hadith_db';
-
 String _fmtSize(int bytes) {
   if (bytes <= 0) return '';
   if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(0)} KB';
@@ -587,7 +585,7 @@ class _HadithTabState extends ConsumerState<_HadithTab> {
   void initState() {
     super.initState();
     _sub = DownloadManager.instance.stream.listen((tasks) {
-      final t = DownloadManager.instance.taskById(_hadithDownloadId);
+      final t = DownloadManager.instance.taskById(hadithDbDownloadId);
       if (t != null && t.status == DownloadStatus.completed) {
         ref.invalidate(hadithRepositoryProvider);
       }
@@ -612,11 +610,12 @@ class _HadithTabState extends ConsumerState<_HadithTab> {
 
   Future<void> _startDownload() async {
     await DownloadManager.instance.enqueue(
-      id: _hadithDownloadId,
+      id: hadithDbDownloadId,
       url: AppConfig.hadithDbUrl,
       category: 'hadith',
       fileName: 'hadith.zip',
       unzipToDatabases: true,
+      dbVersion: AppConfig.hadithDbVersion,
       title: 'library.hadith_db'.tr(),
     );
   }
@@ -662,7 +661,7 @@ class _DownloadGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final task = DownloadManager.instance.taskById(_hadithDownloadId);
+    final task = DownloadManager.instance.taskById(hadithDbDownloadId);
     final busy = task != null &&
         (task.status == DownloadStatus.downloading ||
             task.status == DownloadStatus.queued);

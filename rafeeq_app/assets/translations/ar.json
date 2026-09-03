@@ -148,7 +148,9 @@
     "text_open_shamela": "فتح في المكتبة الشاملة",
     "text_empty": "لا يوجد نص",
     "text_blank_page": "صفحة بلا نص",
-    "text_ocr_badge": "نص مستخرَج آلياً"
+    "text_ocr_badge": "نص مستخرَج آلياً",
+    "sahihayn_badge": "صحيح — من الصحيحين",
+    "grade_unstated": "الدرجة: غير مذكورة"
   },
   "azkar": {
     "title": "الأذكار",
@@ -373,5 +375,11 @@
     "source_mulk": "سنن أبي داود والترمذي (حسن)",
     "note_sajdah": "كان النبي ﷺ يقرؤها مع سورة الإنسان في فجر يوم الجمعة",
     "source_sajdah": "صحيح البخاري"
+  },
+  "hadith_daily": {
+    "title": "حديث اليوم",
+    "download_prompt": "نزّل مكتبة الحديث لعرض حديث عشوائي هنا",
+    "downloading": "جارٍ التنزيل…",
+    "another": "حديث آخر"
   }
 }

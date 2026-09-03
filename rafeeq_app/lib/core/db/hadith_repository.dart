@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../config/app_config.dart';
 import '../utils/arabic_normalize.dart';
 import 'db_helper.dart';
 
@@ -75,10 +76,19 @@ class HadithItem {
   final String? narratorEn;
   final String? textEn;
 
-  /// Always null in this dataset (see HadithRepository doc). Kept as a field
-  /// so a real grading source can be layered in later without a schema
-  /// change — never render a placeholder value when this is null.
+  /// Real per-hadith authenticity grading (P2‑13), e.g. "Sahih" / "Hasan" /
+  /// "Da'if" — null wherever no graded source covers this hadith. Currently
+  /// populated for Abu Dawud, Tirmidhi, an-Nasa'i and Ibn Majah only (see
+  /// `HadithRepository` doc for the other five books' honest reasons for
+  /// staying null). Never render a placeholder when this is null — show
+  /// "الدرجة: غير مذكورة" instead.
   final String? grade;
+
+  /// Who issued [grade] — e.g. "Al-Albani" or "Darussalam" (the source
+  /// dataset uses different graders per book; never invented, always
+  /// whatever that dataset actually attributes). Null exactly when [grade]
+  /// is null.
+  final String? grader;
 
   const HadithItem({
     required this.id,
@@ -89,6 +99,7 @@ class HadithItem {
     this.narratorEn,
     this.textEn,
     this.grade,
+    this.grader,
   });
 
   factory HadithItem.fromRow(Map<String, Object?> r) => HadithItem(
@@ -100,16 +111,38 @@ class HadithItem {
         narratorEn: r['narrator_en'] as String?,
         textEn: r['text_en'] as String?,
         grade: r['grade'] as String?,
+        grader: r['grader'] as String?,
       );
 }
 
+/// The 7 books the Home random-hadith card (P2‑13) draws from — the Six
+/// Books plus Muwatta Malik, per the owner's own framing of the feature.
+/// `hadiths_daily.dart` (not this file) owns *when* to reroll; this is just
+/// the pool of `book_id`s a fair random pick is drawn across.
+const dailyHadithBookIds = [1, 2, 3, 4, 5, 6, 8]; // 7=Ahmad, 9=Darimi excluded
+
+/// `DownloadManager` task id for `hadith.db` — one shared constant so
+/// `LibraryScreen`'s hadith tab and the Home daily-hadith card (P2‑13) are
+/// always talking about the very same download (a second, differently-named
+/// id would make `DownloadManager` track it as an unrelated second
+/// download, and the two screens' progress/"already downloaded" state would
+/// disagree with each other).
+const hadithDbDownloadId = 'hadith_db';
+
 /// Read access to the downloaded `hadith.db` (9 collections, ~41k hadiths).
 ///
-/// No per-hadith authenticity grade exists in the source data. Bukhari and
-/// Muslim are "sahih" collections by definition (that's what the name
-/// means); the other seven are not individually graded here. Never invent
-/// a grade to fill the gap — `HadithItem.grade` stays null and the UI must
-/// treat null as "no grade to show", not as a reason to guess one.
+/// Per-hadith authenticity grading (P2‑13, `HadithItem.grade`/`.grader`) is
+/// real where it exists and honestly null where it doesn't: populated for
+/// Abu Dawud, Tirmidhi, an-Nasa'i and Ibn Majah from a real graded source
+/// (see `scripts/build_hadith_db.py`'s docstring for exactly which one, its
+/// license, and the text-matching method used to join it onto this
+/// dataset). Bukhari and Muslim are "sahih" collections by definition
+/// (that's what the name means) and carry no per-hadith grade in this
+/// column — the UI shows a "من الصحيحين" badge for those two directly from
+/// `book_id`, not from `grade`. Muwatta Malik, Musnad Ahmad and al-Darimi
+/// have no redistributable per-hadith graded source found; their `grade`/
+/// `grader` are null, not guessed. The UI must always treat null as "no
+/// grade to show", never a reason to invent one.
 class HadithRepository {
   final Database _db;
   const HadithRepository(this._db);
@@ -137,6 +170,24 @@ class HadithRepository {
       orderBy: 'number_in_book', // INTEGER column — see HadithItem doc.
     );
     return rows.map(HadithItem.fromRow).toList();
+  }
+
+  /// One random hadith from [dailyHadithBookIds] (P2‑13's Home card) — a
+  /// single `ORDER BY RANDOM() LIMIT 1` rather than loading candidates into
+  /// Dart first, for the same memory-budget reason `search()`'s doc explains
+  /// at length: this table's rows are large (full isnad chains) and a
+  /// ~36k-row in-memory shuffle is real, avoidable weight for a one-row
+  /// result. The existing `(book_id, number_in_book)` index lets SQLite
+  /// narrow to the 7 books before it has to sort randomly.
+  Future<HadithItem?> randomDailyHadith() async {
+    final placeholders =
+        List.filled(dailyHadithBookIds.length, '?').join(',');
+    final rows = await _db.rawQuery(
+      'SELECT * FROM hadiths WHERE book_id IN ($placeholders) '
+      'ORDER BY RANDOM() LIMIT 1',
+      dailyHadithBookIds,
+    );
+    return rows.isEmpty ? null : HadithItem.fromRow(rows.first);
   }
 
   Future<HadithItem?> hadithByNumber(int bookId, int numberInBook) async {
@@ -232,7 +283,10 @@ class HadithRepository {
 /// downloaded" state, never a fabricated empty book list. Invalidate this
 /// provider after a download completes (see `LibraryScreen`).
 final hadithRepositoryProvider = FutureProvider<HadithRepository?>((ref) async {
-  final db = await DbHelper.instance.openDownloaded('hadith.db');
+  final db = await DbHelper.instance.openDownloaded(
+    'hadith.db',
+    expectedVersion: AppConfig.hadithDbVersion,
+  );
   if (db == null) return null;
   return HadithRepository(db);
 });

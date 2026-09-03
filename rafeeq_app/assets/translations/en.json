@@ -148,7 +148,9 @@
     "text_open_shamela": "Open in al-Maktaba al-Shamela",
     "text_empty": "No text",
     "text_blank_page": "Blank page",
-    "text_ocr_badge": "Auto-extracted text"
+    "text_ocr_badge": "Auto-extracted text",
+    "sahihayn_badge": "Sahih — from the Two Sahihs",
+    "grade_unstated": "Grade: not stated"
   },
   "azkar": {
     "title": "Adhkar",
@@ -373,5 +375,11 @@
     "source_mulk": "Sunan Abi Dawud & al-Tirmidhi (hasan)",
     "note_sajdah": "The Prophet ﷺ used to recite it with Surah al-Insan in the Friday Fajr prayer",
     "source_sajdah": "Sahih al-Bukhari"
+  },
+  "hadith_daily": {
+    "title": "Hadith of the Day",
+    "download_prompt": "Download the hadith library to see a random hadith here",
+    "downloading": "Downloading…",
+    "another": "Another hadith"
   }
 }

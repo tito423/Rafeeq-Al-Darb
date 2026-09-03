@@ -58,10 +58,12 @@ abstract final class AppConfig {
 
   /// The offline hadith database (9 collections, ~41k hadiths, built by
   /// `scripts/build_hadith_db.py` from real A7med3bdulBaset/hadith-json
-  /// dumps) — downloaded on demand rather than bundled, the same way mushaf
-  /// pages and recitations are, given its size (~74 MB uncompressed).
+  /// dumps, plus real per-hadith grading for 4 of the 9 books as of P2‑13 —
+  /// see that script's doc) — downloaded on demand rather than bundled, the
+  /// same way mushaf pages and recitations are, given its size (~74 MB
+  /// uncompressed).
   ///
-  /// The hosted file is `hadith.zip` (~17 MB, `DownloadManager.unzipToDatabases`
+  /// The hosted file is `hadith.zip` (~16 MB, `DownloadManager.unzipToDatabases`
   /// unpacks it to `hadith.db` on-device) — not `hadith.db` itself, which
   /// this constant pointed at for a while (a 404: only the zip was ever
   /// pushed to the repo) until a real download attempt caught it.
@@ -69,8 +71,14 @@ abstract final class AppConfig {
 
   /// Bump this whenever `hadith.db`'s schema or content changes so devices
   /// that already downloaded the old one re-fetch instead of opening a
-  /// stale/incompatible file.
-  static const String hadithDbVersion = 'v1';
+  /// stale/incompatible file. Actually enforced (P2‑13): `DownloadTask
+  /// .dbVersion` stamps this value next to the extracted file, and
+  /// `DbHelper.openDownloaded(expectedVersion: ...)` deletes + treats as
+  /// "not downloaded" anything whose stamp doesn't match — before P2‑13 this
+  /// constant existed but nothing ever read it, so bumping it did nothing.
+  ///
+  /// v1 -> v2 (2026‑09‑03, P2‑13): added real `grade`/`grader` columns.
+  static const String hadithDbVersion = 'v2';
 
 
   /// [editionIdentifier] e.g. "ar.alafasy". Tries 128kbps then 64kbps.

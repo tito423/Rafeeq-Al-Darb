@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
+import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 
 /// Every locale the app ships, labelled in its own script.
 const _languageNames = <String, String>{
@@ -102,6 +103,26 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => const AdhanSettingsScreen(),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // New Muslim Guide — used to be a Home quick-access card; the
+          // Home redesign (P2‑11/12/13) replaced that grid with the khatma
+          // / sunan-suwar / daily-hadith cards, so this needed a new home
+          // rather than losing its only entry point.
+          _SectionLabel('new_muslim.title'.tr()),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.library_books_outlined, color: scheme.primary),
+              title: Text('new_muslim.title'.tr()),
+              subtitle: Text('home.tap_to_open'.tr()),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const NewMuslimGuideScreen(),
                 ),
               ),
             ),

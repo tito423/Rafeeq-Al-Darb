@@ -22,6 +22,14 @@ class DownloadTask {
   final bool unzipToDatabases;
   final String title;
 
+  /// For `unzipToDatabases` tasks only: written next to the extracted `.db`
+  /// as `<dbPath>.version` once the download completes, so `DbHelper
+  /// .openDownloaded(expectedVersion: ...)` can tell a stale copy (already
+  /// on disk from before this content changed) from a current one and
+  /// prompt a re-download instead of silently opening old data — see
+  /// `AppConfig.hadithDbVersion`'s doc for why this exists.
+  final String? dbVersion;
+
   int received = 0;
   int? total;
   DownloadStatus status = DownloadStatus.queued;
@@ -33,6 +41,7 @@ class DownloadTask {
     required this.category,
     required this.fileName,
     this.unzipToDatabases = false,
+    this.dbVersion,
     String? title,
   }) : title = title ?? fileName;
 
@@ -123,6 +132,7 @@ class DownloadManager {
     required String category,
     required String fileName,
     bool unzipToDatabases = false,
+    String? dbVersion,
     String? title,
   }) async {
     final current = _tasks[id];
@@ -137,6 +147,7 @@ class DownloadManager {
       category: category,
       fileName: fileName,
       unzipToDatabases: unzipToDatabases,
+      dbVersion: dbVersion,
       title: title,
     );
     _tasks[id] = task;
@@ -305,6 +316,10 @@ class DownloadManager {
       if (task.unzipToDatabases &&
           task.fileName.toLowerCase().endsWith('.zip')) {
         registeredPath = await _unzipToDatabases(finalPath);
+        if (task.dbVersion != null) {
+          await File('$registeredPath.version')
+              .writeAsString(task.dbVersion!, flush: true);
+        }
       }
 
       task.status = DownloadStatus.completed;

@@ -80,12 +80,33 @@ class _HadithDetailScreenState extends State<HadithDetailScreen> {
                           ?.copyWith(height: 1.6),
                     ),
                   ],
-                  // grade is deliberately never shown when null — see
-                  // HadithRepository's doc on why this dataset has none.
-                  if (_item.grade != null) ...[
-                    const SizedBox(height: 16),
-                    Chip(label: Text('${'library.grade'.tr()}: ${_item.grade}')),
-                  ],
+                  // Bukhari (id 1) / Muslim (id 2) are sahih by definition —
+                  // that badge comes from the book itself, never from a
+                  // per-hadith `grade` (which stays null for both, see
+                  // HadithRepository's doc). The other 7 books show the
+                  // real per-hadith grade+grader where the source has one,
+                  // and an honest "not stated" chip where it doesn't — never
+                  // silence, which could read as "ungraded because weak".
+                  if (widget.book.id == 1 || widget.book.id == 2)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Chip(
+                        avatar: const Icon(Icons.verified, size: 18),
+                        label: Text('library.sahihayn_badge'.tr()),
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Chip(
+                        label: Text(_item.grade != null
+                            ? (_item.grader != null
+                                ? '${'library.grade'.tr()}: ${_item.grade} '
+                                    '(${_item.grader})'
+                                : '${'library.grade'.tr()}: ${_item.grade}')
+                            : 'library.grade_unstated'.tr()),
+                      ),
+                    ),
                 ],
               ),
             ),
