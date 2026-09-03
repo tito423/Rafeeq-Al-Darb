@@ -35,18 +35,46 @@ infrastructure instead of features.
 | Content | Size | Currently hosted at | Status |
 |---|---|---|---|
 | Mushaf page SVGs (5 editions: Hafs/Shubah/Warsh/Qalun/Duri) | ~24 MB total (brotli), pinned commit `b91d39e1…` | `raw.githubusercontent.com/quranpedia/quran-svg` (upstream repo, not ours) | Fine as-is — it's someone else's CC0 repo, pinned so it can never drift; **not** something to mirror unless upstream disappears |
-| `hadith.zip` (9 books, ~41k hadiths) | ~17 MB | `tito423/rafeeq-api` (GitHub raw, our repo) | **Should move to R2** before real traffic — GitHub raw has no bandwidth SLA (§5.5) |
-| Book text editions (5 books, Shamela-sourced JSON) | ~5.6 MB total | `tito423/rafeeq-api/books/text/*.json` | Should move to R2 |
-| Adhan video clips (5 Pixabay clips) | ~15.5 MB total | `tito423/rafeeq-api/adhan/video/*.mp4` | Should move to R2 |
+| `hadith.zip` (9 books, ~41k hadiths) | ~17 MB | **Cloudflare R2, `rafeeq-content` bucket** (`hadith/hadith.zip`) | ✅ **migrated 2026‑09‑03** |
+| Book text editions (5 books, Shamela-sourced JSON) | ~5.6 MB total | **R2** `rafeeq-content/books/text/*.json` | ✅ **migrated 2026‑09‑03** |
+| Adhan video clips (5 Pixabay clips) | ~15.5 MB total | **R2** `rafeeq-content/adhan/video/*.mp4` | ✅ **migrated 2026‑09‑03** |
 | Book image PDFs (5 books) | ~3–20 MB each | `archive.org` (their own hosting, external) | Fine as-is — not ours to move |
 | Quran translations (en/fr/ur/es/ru/pt), tafsir, i'rab, word meanings | inside `quran_sciences.db`, 26.1 MB | **bundled in the APK**, not downloaded | Not a hosting concern — ships with the app itself |
 | Mushaf audio (per-ayah recitation) | streamed per-ayah, cached on device | `cdn.islamic.network` / `everyayah.com` (external CDNs) | Fine as-is — not ours to host |
 
-**Everything `tito423/rafeeq-api` currently serves (`hadith.zip`, book texts,
-adhan videos — ~38 MB combined) is the actual migration candidate.** GitHub
-raw works today because traffic is effectively zero (this project's own
-testing); it is explicitly not a CDN and has no bandwidth guarantee once
-real users show up (already flagged, HANDOVER §5.5).
+**The R2 migration (2026‑09‑03):** owner provisioned a Cloudflare account
+and handed over an R2 API token (S3-compatible access key/secret + a
+Cloudflare API token) directly in chat. Stored immediately in
+`scripts/.env` (gitignored, never committed, never echoed back) — see §7 for
+the full record of this and why it should still be rotated.
+
+- Created a fresh bucket, **`rafeeq-content`** (the old `rafeeq-aldarb-data`
+  bucket already existed from before this session but turned out to be
+  contaminated — see §7, do not reuse it).
+- Enabled the bucket's public **r2.dev** managed domain via the Cloudflare
+  API (`PUT /accounts/{id}/r2/buckets/{bucket}/domains/managed`,
+  `{"enabled": true}`): `https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev`.
+- Migrated the exact 11 files the app actually reads (same relative paths:
+  `hadith/hadith.zip`, `books/text/*.json` ×5, `adhan/video/*.mp4` ×5) from
+  `tito423/rafeeq-api` GitHub raw into the bucket — each verified byte-size
+  match via S3 `head_object` **and** a live `curl -I` against the public
+  r2.dev URL (200, correct `Content-Length`/`Content-Type`).
+- `AppConfig.contentBaseUrl`'s default now points at the R2 public URL
+  (previously GitHub raw); the `RAFEEQ_CONTENT_BASE` `--dart-define` override
+  seam is unchanged, so nothing else in the client needed to change.
+  `flutter analyze` clean after the edit.
+- **Deliberately not migrated:** the rest of `tito423/rafeeq-api`
+  (raw per-book hadith JSON — pipeline source files, not what the app
+  downloads; `downloads/adhans/*.mp3` — superseded, the 10 real adhans now
+  ship as bundled assets; `mushaf/*.png`, 1.57 GB, 11,760 files — the
+  abandoned PNG mushaf design already flagged as dead in §6 below). None of
+  it is referenced by `AppConfig`. It costs nothing sitting in a GitHub repo
+  (unlike R2, GitHub doesn't bill by storage/egress for a normal repo this
+  size), so it was left alone rather than acted on unilaterally — flagged
+  for the owner as a repo-cleanup candidate, not urgent.
+
+**GitHub raw is no longer the production content host** — the point of this
+migration is exactly the risk §5.5 already named (no CDN, no bandwidth SLA).
 
 ---
 
@@ -160,7 +188,63 @@ PHASE2.md's original P2‑9 spec asked for.
 
 ---
 
-## 6. Acceptance checklist
+## 7. The R2 credential handoff, and a contaminated old bucket found along the way (2026‑09‑03)
+
+**How the credentials arrived.** The owner pasted a Cloudflare R2 API token
+(Cloudflare API token + S3-compatible access key/secret pair) directly into
+the chat with the agent, in response to being asked to provision R2 access
+per §3. This is the **second time** this exact thing has happened on this
+project — §3 already carries a scar from the first one ("a prior R2 Secret
+Access Key was pasted into a chat transcript and must be treated as
+compromised"). What was done with it this time: written straight to
+`scripts/.env` (already `.gitignore`d via the `.env`/`.env.*` rule, confirmed
+with `git check-ignore` before any other action), never echoed back in any
+message or committed anywhere. **Recommendation, unresolved:** rotate this
+token too once the owner is done with any further R2 admin work this
+session — pasting a live secret into any chat transcript should be treated
+as exposure regardless of how carefully the receiving side handles it
+afterward, the same standard §3 already states.
+
+**The old bucket, `rafeeq-aldarb-data`, is contaminated — do not reuse it.**
+Listing it (before creating `rafeeq-content`) turned up, among other things:
+`mushaf_medina1.zip`, `mushaf_medina2.zip`, `mushaf_shamarly.zip`,
+`mushaf_tahajod.zip`, `mushaf_naskh_taleek.zip`, `mushaf_urdu12/13/15.zip` —
+**these are the exact QuranFlash internal edition names §5.1 (this
+project's own hard rule 2) already identified and purged from the codebase
+once.** Their presence in this bucket means they were re-introduced at some
+point by a session this HANDOVER's history doesn't otherwise document, sitting
+unused in cloud storage rather than in the app — still a rule‑2 violation to
+leave in place. Alongside them: a 2.6 GB `tafsir.zip`, a 2.9 GB `audio.zip`, ~20 more
+multi-hundred-MB `mushaf_*.zip` files (the same abandoned PNG-mushaf design
+flagged in §2's own table), and — the actual bulk of the object count — a
+3.8 GB `tafsir/` prefix that is almost certainly an **entire git
+repository's `.git/objects` tree uploaded object-by-object** (hundreds of
+thousands of small loose-object blobs, not real content files). **Full
+inventory, paginated to completion:**
+
+```
+TOTAL_COUNT: 254,971 objects
+TOTAL_SIZE:  11,442,728,193 bytes  =  10.66 GB
+```
+
+**This is already past the R2 free tier's 10 GB storage ceiling** — this
+bucket, alone, may already be an active line item on the Cloudflare account,
+or will become one the moment a payment method is attached for any reason.
+Nothing in `AppConfig` or any script in this repo references
+`rafeeq-aldarb-data` — it is not serving the app anything today, just
+sitting there accruing storage.
+
+**Not deleted without asking.** Deleting real cloud storage is exactly the
+kind of hard-to-reverse action this project's own working style (checkpoint,
+verify, don't act past what's confirmed) says to surface rather than assume.
+Left the bucket as-is; the owner should decide directly — deleting the whole
+bucket is the straightforward recommendation, since nothing in it is used —
+and can do it from the Cloudflare dashboard or ask the agent to do it via the
+same R2 API once confirmed. **Check the Cloudflare billing/usage page now,
+independent of the cleanup decision** — 10.66 GB stored is a real number
+worth confirming isn't already generating a charge.
+
+## 8. Acceptance checklist
 
 - [x] `HOSTING.md` exists (this file).
 - [x] `AppConfig` re-confirmed secret-free (read directly, §4).
@@ -169,7 +253,10 @@ PHASE2.md's original P2‑9 spec asked for.
 - [x] Firebase project state confirmed by direct inspection: real project,
       correctly unused, correctly gitignored, correctly zero-SDK-weight
       until a feature needs it.
-- [ ] **Owner:** create the R2 bucket, migrate the ~38 MB, rotate the R2
-      token (§3) — needs console access no agent session has.
+- [x] **R2 bucket created (`rafeeq-content`), the app's real ~38 MB migrated,
+      public r2.dev domain enabled, `AppConfig.contentBaseUrl` repointed at
+      it.** (2026‑09‑03 — §2, §7.) **Still open:** rotate the token that was
+      pasted into chat to provision this (§7); decide the old contaminated
+      `rafeeq-aldarb-data` bucket's fate (§7).
 - [ ] **Owner:** decide whether/when to approve a Firestore-backed feature
       (e.g. group khatma) — a design/scope decision, not a hosting one.

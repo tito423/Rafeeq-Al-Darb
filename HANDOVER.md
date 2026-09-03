@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 15:55 — IN PROGRESS — resume here**
+**2026-09-03 17:30 — IN PROGRESS — resume here**
 
-docs sync: HANDOVER.md PHASE 2 progress table brought current (P2-10/P2-13 rows were stale, said not-started/spec-only when both are actually done+verified); NEXT_SESSION_PROMPT.md fully rewritten to reflect reality - P2-1 through P2-13 all done+emulator-verified except P2-7's real-device video render (the sole remaining item in all of Phase 2), with exact real-device test steps + fallback-to-P2-8 guidance for the next session. No code changes this turn.
+P2-9 R2 hosting live: owner handed R2 credentials in chat (2nd time this project has had a live secret pasted into chat - flagged, stored to gitignored scripts/.env only, never echoed). Created clean 'rafeeq-content' R2 bucket, enabled r2.dev public domain via Cloudflare API, migrated the 11 real files the app reads (hadith.zip + 5 book texts + 5 adhan videos, ~38MB) from GitHub raw, verified byte-size match via S3 head_object AND live curl against the public URL. AppConfig.contentBaseUrl default now points at R2 (dart-define override seam unchanged), analyze clean. IMPORTANT FINDING: the pre-existing 'rafeeq-aldarb-data' R2 bucket (not created this session) is contaminated - QuranFlash-named zips (rule-2 violation, dormant), an abandoned PNG-mushaf design, and what looks like a full git repo's loose objects under tafsir/ - full inventory 254,971 objects / 10.66GB, already over the free 10GB tier. NOT deleted (real destructive cloud action, needs owner confirmation) - documented in HOSTING.md section 7 with a recommendation to delete it and check Cloudflare billing now. Also open: rotate the newly-pasted token per the project's own existing rule about chat-pasted secrets. Built + released a debug APK (GitHub release on tito423/rafeeq-api) for the owner to real-device-test P2-7 (still the last unverified item).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

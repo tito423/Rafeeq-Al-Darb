@@ -44,16 +44,23 @@ abstract final class AppConfig {
   static const String alquranCloudApi = 'https://api.alquran.cloud/v1';
 
   /// Content origin (catalogs, offline packs). Configurable at build time
-  /// via --dart-define. The staging folder in this repo is what gets
-  /// published to this location.
+  /// via --dart-define.
   ///
-  /// The repo's default branch is `master`, not `main` — this constant
-  /// pointed at `/main` for a while (a 404) because nothing actually used it
-  /// yet; fixed when `hadithDbUrl` below became the first real user of it.
+  /// Migrated 2026‑09‑03 (P2‑9 follow-up, HOSTING.md) from GitHub raw to a
+  /// dedicated Cloudflare R2 bucket (`rafeeq-content`, public r2.dev domain,
+  /// free egress — GitHub raw was never meant to serve real download
+  /// traffic, see HOSTING.md §2/§5.5). R2 holds only the three folders the
+  /// app actually reads (`hadith/hadith.zip`, `books/text/*.json`,
+  /// `adhan/video/*.mp4`) — the rest of `tito423/rafeeq-api` (raw per-book
+  /// hadith JSON, the abandoned PNG mushaf set, spare adhan mp3s) is build
+  /// pipeline / historical cruft, never referenced by this constant, and was
+  /// deliberately not mirrored. No credentials of any kind live in the
+  /// client — R2 access keys stay in `scripts/.env` (gitignored) and are
+  /// only ever used by the one-off migration/upload scripts run from a dev
+  /// machine, never shipped in a build.
   static const String contentBaseUrl = String.fromEnvironment(
     'RAFEEQ_CONTENT_BASE',
-    defaultValue:
-        'https://raw.githubusercontent.com/tito423/rafeeq-api/master',
+    defaultValue: 'https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev',
   );
 
   /// The offline hadith database (9 collections, ~41k hadiths, built by
