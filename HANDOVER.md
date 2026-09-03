@@ -6,8 +6,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-09-03 |
-| **State at** | **PHASE 2 in progress** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. |
-| **Build verified?** | `flutter analyze` clean · `flutter test` **13/13** · Phase-1 release build OK. Phase 2 so far: **P2‑1, P2‑2, P2‑3, P2‑4 done and emulator-verified** on `emulator-5554`. |
+| **State at** | **PHASE 2 nearly done** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. Every P2 stage is done and emulator-verified **except P2‑7's last piece, which needs a real Android phone** (see its row below) and P2‑8, which is stopped waiting on the owner's shortlist pick. |
+| **Build verified?** | `flutter analyze` clean · `flutter test` **13/13**. All of P2‑1/2/3/4/4b/5/6/9/10/11/12/13 emulator-verified live (not just built) on `emulator-5554`. |
 
 ### PHASE 2 progress (2026-09-02) — details in `PHASE2.md`
 
@@ -23,10 +23,10 @@
 | P2‑7 Adhan audio/video + 30 slots | 🔶 code done + clips hosted + partially emulator-verified (analyze clean, test 13/13) — 5 Pixabay clips uploaded to `rafeeq-api/adhan/video/*.mp4` (all 200, byte-exact); download → auto-select → persists across restart → test notification (right title/sound) all verified live. **Not verified:** the actual full-screen video-behind-karaoke render (notification-tap / lock-screen full-screen-intent never fired under ADB on this emulator — see §7 P2‑7 update; needs a real device). |
 | P2‑8 competitor feature mix | 🔶 research done — `PHASE2_RESEARCH.md` (13-feature table from Sakinah/Ayat/QuranFlash/Khatmah + a proposed shortlist + 4 owner-decision-blocked items). **No code** — the stage's own rule is STOP until the owner picks the shortlist. |
 | P2‑9 hosting doc (R2/Firebase/GitHub) | ✅ `HOSTING.md` written + client wiring re-confirmed (§4 there) · console provisioning (R2 bucket, token rotation) still OWNER-BLOCKER |
-| P2‑10 perf / size / security / release prep | ⬜ not started · OWNER-BLOCKER: keystore |
-| **P2‑11** Quran Khatma card (Home top) | ✅ done, emulator-verified — create/read-today/jump-to-reader/progress all confirmed live. Quick-access grid not yet removed (waiting on P2‑12/13 to also land, per the stage's own combined acceptance) |
+| P2‑10 perf / size / security / release prep | ✅ done — `ARCHITECTURE.md` written, real size measured (+~6MB vs Phase‑1, documented honestly), security re-swept clean, dead code found+removed, a real usability gap found+fixed (every error state got a working Retry button). OWNER-BLOCKER unchanged: release keystore. |
+| **P2‑11** Quran Khatma card (Home top) | ✅ done, emulator-verified — create/read-today/jump-to-reader/progress all confirmed live. |
 | **P2‑12** Sunan as-Suwar card (Home middle) — 4 surahs, single-surah locked reader, per-surah reminders | ✅ done, emulator-verified — locked reader confirmed to stop exactly at the surah boundary (Al-Baqarah: 48/48, no leak into Aal-Imran) |
-| **P2‑13** Random-hadith card (Home bottom) — full hadith + narrator + grade, re-rolls each launch | 📋 spec'd only · **needs a graded hadith source** (`hadith.db` has no gradings — hard rule: never invent one) |
+| **P2‑13** Random-hadith card (Home bottom) — full hadith + narrator + grade, re-rolls each launch | ✅ done, emulator-verified — real graded source found for 4 of 7 books (Abu Dawud/Tirmidhi/an-Nasa'i/Ibn Majah), joined by normalized-Arabic-text matching, `hadith.db` rebuilt + re-hosted + verified byte-exact. Quick-access grid removed from Home (New Muslim Guide rehomed to Settings, not orphaned). |
 
 > **If you are an agent working on this project: keeping this file current is
 > part of the job.** The owner hands this file to whoever continues, so a stale
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 15:10 — COMPLETE**
+**2026-09-03 15:55 — IN PROGRESS — resume here**
 
-P2-13 DONE + emulator-verified: real graded hadith source found (huggingface.co/meeAtif/hadith_datasets, MIT, sunnah.com-derived) for AbuDawud/Tirmidhi/Nasai/IbnMajah; discovered its numbering doesn't match hadith.db's (IbnMajah offset by 266 - its Muqaddimah), switched to normalized-Arabic-text matching (round1 whitespace-only ~40-55%, round2 strip-diacritics+format-chars+punctuation -> 93.9-100%); build_hadith_db.py joins real grade+grader (18047/40943 graded), Malik/Ahmad/Darimi honestly null (no source found). Fixed a real dormant bug: hadithDbVersion was declared but never read anywhere - wired DownloadTask.dbVersion + DbHelper.openDownloaded(expectedVersion) so stale downloads actually get replaced now. Rebuilt hadith.zip (16.1MB) re-hosted to tito423/rafeeq-api, verified byte-exact via sha256. New hadith_daily feature (AsyncNotifier random pick via ORDER BY RANDOM, card w/ download-gate/loading/picked states). Quick-access grid removed from Home; New Muslim Guide (its only entry point) rehomed to Settings, not orphaned. hadith_detail_screen shows real grade+grader chip or Sahihayn badge. +6 keys x5 locales. Emulator-verified live end-to-end: real download, Bukhari 7272 Sahihayn badge, reroll to Muslim 2064 then Nasai 268 showing real 'Sahih (Darussalam)' grade, detail screen opens correctly. analyze clean, test 13/13. Only P2-7 (real-device video verification) remains, per owner's own ordering - it is the last step.
+docs sync: HANDOVER.md PHASE 2 progress table brought current (P2-10/P2-13 rows were stale, said not-started/spec-only when both are actually done+verified); NEXT_SESSION_PROMPT.md fully rewritten to reflect reality - P2-1 through P2-13 all done+emulator-verified except P2-7's real-device video render (the sole remaining item in all of Phase 2), with exact real-device test steps + fallback-to-P2-8 guidance for the next session. No code changes this turn.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
