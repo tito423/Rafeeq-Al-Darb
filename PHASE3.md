@@ -45,7 +45,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑12 | Tasbeeh redesign to match reference | ✅ **done, live-verified on emulator** — matches `ref_tasbeeh.jpg` closely |
 | P3‑13 | Persistent prayer notification — confirmed real bug + "must not be dismissible" | **blocked on live device/logcat** — a dead second implementation found + removed along the way, see P3‑19 |
 | P3‑14 | Settings: Russian layout bug, French locale | 🔶 Russian bug ✅ fixed (was a Khatma-card layout bug, not a Settings screen bug — see below); French still open |
-| P3‑15 | Library: slow reader, page-nav redesign, مكتبتي split, catalog scope | 🔶 catalog +3 books DONE, مكتبتي split DONE; reader speed investigated — **does not reproduce with a real 15.8MB book on this emulator**, code already lean, see notes; page-nav redesign still open |
+| P3‑15 | Library: slow reader, page-nav redesign, مكتبتي split, catalog scope | 🔶 catalog +3 books DONE, مكتبتي split DONE; reader speed investigated — **does not reproduce with a real 15.8MB book on this emulator**, code already lean; scroll/fast-jump/pinch-zoom **all confirmed already built in** to the PDF viewer library — only the visual theming pass is genuinely still open |
 | P3‑16 | New "الصلاة" bottom-nav tab incl. professional Qibla compass | ✅ **done, live-verified** — real great-circle Qibla bearing + live compass needle, honest fallback states, Adhan-settings link; found+fixed a real cross-cutting tab-index bug + a real location-hang bug along the way; only the "populated" (real GPS) needle state is unverified, same emulator-location limitation as P3‑22 |
 | P3‑17 | R2 hosting migration | ✅ done this session, see `HOSTING.md` — rotate token / old-bucket decision still open |
 | P3‑18 | P2‑8 items already approved (#11 app-lock, #12 group khatma w/ real sign-in) | queued, **#12 folds into P3‑5** |
@@ -495,10 +495,22 @@ button, haptics (emulator has no haptic feedback to observe).
   since it wasn't confirmed necessary, and it would need reconciling with
   the "scroll + fast jump strip" navigation ask directly below (continuous
   scroll is presumably still wanted as the primary way to read).
-- Page navigation redesign: scroll + a fast jump strip, refreshed visual
-  design, add pinch-zoom (echoes P3‑8's mushaf zoom ask — consider sharing
-  a zoom-wrapper widget between the two readers if the code ends up
-  similar). Still open.
+- Page navigation redesign: **scroll already exists** (`SfPdfViewer`'s
+  default `PdfPageLayoutMode.continuous`) **and a fast-jump control
+  already exists too** (`canShowScrollHead: true`, already set — a
+  draggable scroll thumb with a live page number, Syncfusion's own
+  equivalent of the surah strip just built for the mushaf reader in
+  P3‑8). ✅ **Pinch-zoom is also already built in**, confirmed by reading
+  the package source (`syncfusion_flutter_pdfviewer` 33.2.13):
+  `pdf_scrollable.dart` wires an `InteractiveViewer`-style
+  `onInteractionUpdate` handler gated on `scaleEnabled`, and the public
+  API's own docs list "when pinch zoom is performed" as one of three
+  documented triggers for `onZoomLevelChanged` — not something added this
+  pass, just confirmed present rather than assumed missing (a real
+  two-finger pinch isn't practical to simulate over `adb`, so this is
+  source+docs verification, not a live gesture test). **Only "refreshed
+  visual design" is still a real, open ask** — a plain default
+  `SfPdfViewer` today, no theming pass done on it yet.
 - ✅ **DONE.** "مكتبتي" now shows two clearly separate, headed sections
   (مصوّر then نصي) instead of one flat list interleaving both editions of
   the same book.

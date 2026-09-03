@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 03:02 — IN PROGRESS — resume here**
+**2026-09-04 03:05 — IN PROGRESS — resume here**
 
-P3-15 reader-speed investigation: book_reader_screen.dart already lean (plain StatelessWidget, no rebuild inefficiency to remove); live-tested with a real 15.8MB scanned book on emulator-5554, scrolled 13+ swipes deep - every frame rendered complete and correct, no lag/stutter observed. Documented honestly as not-reproduced-here rather than guessed at with a speculative code change; noted the one real available lever (SfPdfViewer pageLayoutMode) if slowness is confirmed on a real device later. Docs only, no code change this step.
+P3-15 page-nav investigation: confirmed via source (pdf_scrollable.dart's InteractiveViewer-style onInteractionUpdate) + official docs that scroll, fast-jump (canShowScrollHead, already set), and pinch-zoom are all already built into SfPdfViewer - none needed new code. Only the visual theming pass remains a genuinely open, under-specified ask (no reference image). Docs only, no code change this step.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
