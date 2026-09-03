@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/services/prayer_times_service.dart';
@@ -50,50 +51,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.dispose();
   }
 
-  String get _greeting {
-    final hour = DateTime.now().hour;
-    if (hour >= 4 && hour < 12) return 'home.greeting_morning'.tr();
-    if (hour >= 12 && hour < 18) return 'home.greeting_evening'.tr();
-    return 'home.greeting_night'.tr();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final theme = Theme.of(context);
     final prayerState = ref.watch(prayerControllerProvider);
 
     return HomeNavigate(
       onNavigate: widget.onNavigate,
       child: Scaffold(
-      appBar: AppBar(
-        title: Text('app.name'.tr()),
-        centerTitle: true,
-      ),
+      // P3‑4: the old AppBar just repeated "app.name" as a plain title —
+      // dropped in favour of the header card below carrying the app's
+      // identity through its own presence, freeing a full row of vertical
+      // space for content.
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => ref.read(prayerControllerProvider.notifier).refresh(),
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              const SizedBox(height: 8),
-              Text(
-                _greeting,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  color: scheme.primary,
-                  fontFamily: 'AmiriQuran',
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'app.tagline'.tr(),
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 4),
+              const _HeaderCard(),
+              const SizedBox(height: 16),
               _PrayerCard(state: prayerState),
               const SizedBox(height: 16),
               const KhatmaCard(),
@@ -106,6 +83,93 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
       ),
+      ),
+    );
+  }
+}
+
+/// P3‑4: replaces the old "رفيق الدرب" title + time-of-day greeting with a
+/// single fixed card — same look in every app theme (a static version of
+/// the RGB theme's own teal/violet/gold palette, `rgb_backdrop.dart`), the
+/// Hijri date at the row's start, a centred welcome, the Gregorian date at
+/// the end. "Start"/"end" (not literal left/right) so this reads correctly
+/// mirrored in both RTL and LTR locales without special-casing either.
+///
+/// The welcome text is honestly generic ("مرحبا بك") rather than a fake
+/// name — P3‑5 (login, answered: optional) hasn't been built yet, so there
+/// is no real username to show for a guest session. Once accounts exist,
+/// swap this for the signed-in user's real name; do **not** invent one in
+/// the meantime — that would be exactly the kind of placeholder data rule
+/// 1 forbids.
+class _HeaderCard extends StatelessWidget {
+  const _HeaderCard();
+
+  String _hijriLine(String localeCode) {
+    final lang = localeCode == 'ar' ? 'ar' : 'en';
+    HijriCalendar.setLocal(lang);
+    final h = HijriCalendar.now();
+    const monthsAr = [
+      '', 'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى',
+      'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة',
+    ];
+    const monthsEn = [
+      '', 'Muharram', 'Safar', 'Rabiʿ al-Awwal', 'Rabiʿ al-Akhir',
+      'Jumada al-Awwal', 'Jumada al-Akhira', 'Rajab', 'Shaʿban', 'Ramadan',
+      'Shawwal', 'Dhu al-Qaʿda', 'Dhu al-Hijja',
+    ];
+    final months = lang == 'ar' ? monthsAr : monthsEn;
+    final suffix = lang == 'ar' ? ' هـ' : ' AH';
+    return '${h.hDay} ${months[h.hMonth]} ${h.hYear}$suffix';
+  }
+
+  String _gregorianLine(BuildContext context) {
+    final now = DateTime.now();
+    return DateFormat.yMMMd(context.locale.toString()).format(now);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)],
+        ),
+        border: Border.all(color: const Color(0xFF15C7B0).withValues(alpha: 0.35)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFD4AF37).withValues(alpha: 0.12),
+            blurRadius: 22,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Text(_hijriLine(context.locale.languageCode),
+              style: const TextStyle(
+                  color: Color(0xFF7DEBDA), fontSize: 12, fontWeight: FontWeight.w600)),
+          Expanded(
+            child: Text(
+              'home.welcome_guest'.tr(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'AmiriQuran',
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Text(_gregorianLine(context),
+              style: TextStyle(
+                  color: const Color(0xFFD4AF37).withValues(alpha: 0.9),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600)),
+        ],
       ),
     );
   }

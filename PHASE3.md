@@ -32,7 +32,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑1 | New app icon (crescent + open Quran, glowing blue/gold) | ✅ done, `flutter analyze` clean |
 | P3‑2 | Rename "السبحة" → "المسبحة" everywhere | ✅ done |
 | P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | queued — see notes |
-| P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | queued, unblocked (P3‑5 answered) |
+| P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | 🔶 header card ✅ done + live-verified; per-card patterns + animated/interactive prayer card still open |
 | P3‑5 | **Login / accounts — architecture decision** | ✅ **answered: optional** (guest mode stays default, sign-in adds sync) — not yet built |
 | P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
 | P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
@@ -115,10 +115,30 @@ Two different asks layer on top of each other here — keep them straight:
    card, the live countdown clock, the ornamental hadith frame) and the new
    date/greeting header, not new data plumbing.
 
-**Blocked in part:** the "مرحبا بك يا `<username>`" piece needs P3‑5
-resolved first (there is no username to show without accounts). Everything
-else (date row, calm card backgrounds, hadith-card ornamentation, prayer
-chips) can proceed independently.
+**✅ Header card done + live-verified.** New `_HeaderCard` in
+`home_screen.dart` replaces the old AppBar title + time-of-day greeting
+entirely: a fixed dark navy→teal→violet gradient card (same in every app
+theme, a static echo of the RGB theme's own palette, gold-tinted border
+glow) with the real Hijri date (`hijri` package, `HijriCalendar.now()`) at
+the row's start, "مرحبا بك" centred, the real Gregorian date
+(`DateFormat.yMMMd`, locale-aware) at the end — "start"/"end" not literal
+left/right, so it mirrors correctly in both RTL and LTR locales rather than
+hardcoding a side. P3‑5 was answered (optional login) but **login itself
+isn't built yet**, so the welcome text is honestly generic ("مرحبا بك"),
+not a placeholder name — swap it for the real signed-in name once accounts
+exist, per rule 1 (never invent data). +6 keys × 5 locales
+(`home.welcome_guest`). `flutter analyze` clean, `flutter test` 15/15,
+**and live-verified on `emulator-5554`**: installed a fresh debug build,
+confirmed the card renders exactly as intended — "٢١ ربيع الأول ١٤٤٨ هـ"
+right, "مرحبًا بك" centre, "٣ سبتمبر ٢٠٢٦" left, correct real dates for
+today.
+
+**Still open:** per-card calm Islamic-pattern backgrounds (app-wide, not
+just Home), the animated/interactive prayer-times card + live countdown
+clock (`ref_home.jpg`'s `HH:MM:SS` + "متبقي 1 ساعة و 7 دقيقة" pill), the
+ornamental "حديث شريف" card framing, the "متابعة القراءة" continue-reading
+card (doesn't exist yet as its own card — currently folded into the Khatma
+card's "اقرأ اليوم").
 
 ## P3‑5 — Login / accounts — owner decision needed
 
