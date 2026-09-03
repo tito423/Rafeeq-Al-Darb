@@ -352,5 +352,26 @@
     "pick_date": "Pick a finish date",
     "no_reminder": "No reminder",
     "create": "Create khatma"
+  },
+  "sunan_suwar": {
+    "title": "Sunnah of the Surahs (Day & Night)",
+    "reminder": "Weekly reminder",
+    "mon": "Monday",
+    "tue": "Tuesday",
+    "wed": "Wednesday",
+    "thu": "Thursday",
+    "fri": "Friday",
+    "sat": "Saturday",
+    "sun": "Sunday",
+    "remove_reminder": "Remove reminder",
+    "save_reminder": "Save reminder",
+    "note_baqarah": "“Recite it, for taking it up is a blessing and abandoning it is a loss”; it drives devils from the home where it's recited",
+    "source_baqarah": "Sahih Muslim",
+    "note_kahf": "Reciting it on Friday brings light between the two Fridays; memorizing its first ten verses protects from the Dajjal",
+    "source_kahf": "al-Hakim & al-Bayhaqi (graded sahih by al-Albani) and Sahih Muslim",
+    "note_mulk": "Thirty verses that intercede for their reciter until he is forgiven",
+    "source_mulk": "Sunan Abi Dawud & al-Tirmidhi (hasan)",
+    "note_sajdah": "The Prophet ﷺ used to recite it with Surah al-Insan in the Friday Fajr prayer",
+    "source_sajdah": "Sahih al-Bukhari"
   }
 }

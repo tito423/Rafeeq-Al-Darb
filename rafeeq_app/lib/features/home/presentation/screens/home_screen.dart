@@ -9,6 +9,7 @@ import '../../../../core/services/prayer_times_service.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../library/presentation/screens/library_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
+import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
 
 const _prayerOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -97,6 +98,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               _PrayerCard(state: prayerState),
               const SizedBox(height: 16),
               const KhatmaCard(),
+              const SizedBox(height: 16),
+              const SunanSuwarCard(),
               const SizedBox(height: 28),
               Text(
                 'home.quick_access'.tr(),

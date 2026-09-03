@@ -11,7 +11,9 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 
 import 'app/rafeeq_app.dart';
 import 'core/services/adhan_alarm_service.dart';
+import 'core/services/sunan_suwar_reminder_service.dart';
 import 'features/adhan/presentation/adhan_navigation.dart';
+import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +52,9 @@ Future<void> main() async {
   AdhanAlarmService.onOpenAdhan = openAdhanFromPayload;
   final coldLaunchPayload =
       await AdhanAlarmService.instance.consumeColdLaunchPayload();
+
+  await SunanSuwarReminderService.instance.initialize();
+  SunanSuwarReminderService.onOpenSurah = openSunanSuwarFromPayload;
 
   runApp(
     EasyLocalization(

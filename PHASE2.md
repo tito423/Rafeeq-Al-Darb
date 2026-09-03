@@ -1163,6 +1163,57 @@ and image modes both work inside it; setting a reminder for al-Kahf on Friday
 20:00 arms a schedule that survives restart and opens al-Kahf when it fires;
 all four have independent reminders.
 
+### ✅ P2‑12 DONE (2026‑09‑03), emulator-verified
+
+- **`sunan_suwar_catalog.dart`** — the 4 surahs (2/18/67/32), each with a
+  short, sourced virtue note (one specific named hadith per surah — Sahih
+  Muslim ×2 for al-Baqarah, al-Hakim/al-Bayhaqi+Sahih Muslim for al-Kahf,
+  Abu Dawud/al-Tirmidhi for al-Mulk, Sahih al-Bukhari for as-Sajdah — never
+  an invented fadl, and as-Sajdah's note is deliberately **not** paired with
+  "before sleep," since that practice is only authenticated for al-Mulk
+  alone). **Page ranges are never hardcoded** — `single_surah_screen.dart`
+  resolves start/end from `mushafDataProvider.surahStartPages` at runtime
+  (the next surah's start page − 1, or 604 for the last surah), so a wrong
+  hand-typed boundary can never silently lock the reader out of real ayahs.
+- **`single_surah_screen.dart`** — reuses the exact same `MushafTextPage`/
+  `MushafPageView` widgets `QuranScreen` uses, wrapped in a `PageView` whose
+  `itemCount` is bounded to the surah's own page count and whose app bar
+  carries **only** font-size + text/image toggle — no surah list, no juz
+  list, no goto-page, no search, no edition picker.
+- **`sunan_suwar_reminder_service.dart`** — weekly reminders via
+  `DateTimeComponents.dayOfWeekAndTime` (a real recurring-weekly primitive
+  `flutter_local_notifications` already provides, not a hand-rolled repeat
+  loop); **`sunan_suwar_store.dart`** persists each surah's
+  {weekday, time} independently. **`sunan_suwar_navigation.dart`** mirrors
+  `adhan_navigation.dart`'s live-tap pattern to open the right locked reader
+  from a fired reminder.
+- **`sunan_suwar_card.dart`** (Home, middle, under `KhatmaCard`) — the 4
+  rows with their virtue notes, a bell icon per row opening a
+  weekday+time picker sheet.
+- +19 keys × 5 locales, parity green. `flutter analyze` clean,
+  `flutter test` 13/13.
+
+**Emulator-verified live (`emulator-5554`):** card renders all 4 real surah
+names (`AmiriQuran`) + virtue notes + sources, ﷺ glyph renders correctly;
+tapped سورة البقرة → locked reader opened on **page 1/48** with only the
+restricted toolbar; paged forward to the **exact last page (48/48)** —
+content shown was genuinely Baqarah's closing ayahs, confirming the surah
+boundary is real (derived from the DB) and the reader cannot leak into
+Aal-Imran. **A real ADB-testing lesson, not a code bug:** the previous-page
+button initially looked completely unresponsive across ~50 taps at its
+exact pixel-scanned center — turned out to be `Row`'s children reversing
+under RTL `Directionality` (the *left*-rendered icon is the one coded
+*last* in the children list), so the button being tapped was the correctly
+**disabled** boundary button the whole time, not a broken one. Not
+separately re-shot this session: a reminder actually firing and
+surviving restart (same `zonedSchedule`/`SharedPreferences` mechanisms
+already proven elsewhere in this codebase, but not re-clicked for
+Sunan Suwar specifically), and the image-mode toggle inside the locked
+reader.
+
+**Still open:** the Home quick-access grid removal — waits for P2‑13 too,
+per the stage's own combined framing.
+
 ---
 
 ## P2‑13 — Random-hadith card (Home, bottom, above the nav bar)

@@ -352,5 +352,26 @@
     "pick_date": "Escolha a data de conclusão",
     "no_reminder": "Sem lembrete",
     "create": "Criar khatma"
+  },
+  "sunan_suwar": {
+    "title": "Sunan das Suras (Dia e Noite)",
+    "reminder": "Lembrete semanal",
+    "mon": "Segunda-feira",
+    "tue": "Terça-feira",
+    "wed": "Quarta-feira",
+    "thu": "Quinta-feira",
+    "fri": "Sexta-feira",
+    "sat": "Sábado",
+    "sun": "Domingo",
+    "remove_reminder": "Remover lembrete",
+    "save_reminder": "Guardar lembrete",
+    "note_baqarah": "“Recitem-na, pois tomá-la é uma bênção e abandoná-la é uma perda”; afasta os demónios da casa onde é recitada",
+    "source_baqarah": "Sahih Muslim",
+    "note_kahf": "Recitá-la à sexta-feira ilumina entre as duas sextas-feiras; memorizar os seus dez primeiros versículos protege do Dajjal",
+    "source_kahf": "al-Hakim e al-Bayhaqi (autenticado por al-Albani) e Sahih Muslim",
+    "note_mulk": "Trinta versículos que intercedem pelo seu recitador até ser perdoado",
+    "source_mulk": "Sunan Abi Dawud e al-Tirmidhi (hasan)",
+    "note_sajdah": "O Profeta ﷺ costumava recitá-la com a Surah al-Insan na oração do Fajr de sexta-feira",
+    "source_sajdah": "Sahih al-Bukhari"
   }
 }

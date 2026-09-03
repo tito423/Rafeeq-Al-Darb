@@ -352,5 +352,26 @@
     "pick_date": "Elige una fecha de finalización",
     "no_reminder": "Sin recordatorio",
     "create": "Crear jatma"
+  },
+  "sunan_suwar": {
+    "title": "Sunan de las Suras (Día y Noche)",
+    "reminder": "Recordatorio semanal",
+    "mon": "Lunes",
+    "tue": "Martes",
+    "wed": "Miércoles",
+    "thu": "Jueves",
+    "fri": "Viernes",
+    "sat": "Sábado",
+    "sun": "Domingo",
+    "remove_reminder": "Quitar recordatorio",
+    "save_reminder": "Guardar recordatorio",
+    "note_baqarah": "“Recítenla, pues tomarla es una bendición y abandonarla una pérdida”; aleja a los demonios del hogar donde se recita",
+    "source_baqarah": "Sahih Muslim",
+    "note_kahf": "Recitarla en viernes ilumina entre los dos viernes; memorizar sus diez primeros versículos protege del Dajjal",
+    "source_kahf": "al-Hakim y al-Bayhaqi (autenticado por al-Albani) y Sahih Muslim",
+    "note_mulk": "Treinta versículos que interceden por quien la recita hasta que es perdonado",
+    "source_mulk": "Sunan Abi Dawud y al-Tirmidhi (hasan)",
+    "note_sajdah": "El Profeta ﷺ solía recitarla junto con la Surah al-Insan en la oración del Fayr del viernes",
+    "source_sajdah": "Sahih al-Bujari"
   }
 }
