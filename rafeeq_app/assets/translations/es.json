@@ -8,7 +8,8 @@
     "cancel": "Cancelar",
     "save": "Guardar",
     "retry": "Reintentar",
-    "undo": "Deshacer"
+    "undo": "Deshacer",
+    "reset_all": "Restablecer todo"
   },
   "nav": {
     "home": "Inicio",
@@ -172,6 +173,13 @@
     "next": "Siguiente",
     "previous": "Anterior",
     "swipe_hint": "Desliza para pasar entre adhkar",
+    "tasbeeh_subhanallah": "سُبْحَانَ اللهِ",
+    "tasbeeh_alhamdulillah": "الْحَمْدُ لِلَّهِ",
+    "tasbeeh_allahuakbar": "اللهُ أَكْبَرُ",
+    "tasbeeh_lailahaillallah": "لَا إِلَٰهَ إِلَّا اللهُ",
+    "tasbeeh_total": "Total: {}",
+    "tap_to_count": "Toca para contar",
+    "rounds_count": "Rondas: {}",
     "section_done": "Has completado los adhkar de esta sección",
     "back_to_sections": "Volver a las secciones",
     "reminders": "Recordatorios de adhkar",

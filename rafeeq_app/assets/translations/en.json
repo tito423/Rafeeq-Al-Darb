@@ -8,7 +8,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "retry": "Retry",
-    "undo": "Undo"
+    "undo": "Undo",
+    "reset_all": "Reset all"
   },
   "nav": {
     "home": "Home",
@@ -172,6 +173,13 @@
     "next": "Next",
     "previous": "Previous",
     "swipe_hint": "Swipe to move between adhkar",
+    "tasbeeh_subhanallah": "سُبْحَانَ اللهِ",
+    "tasbeeh_alhamdulillah": "الْحَمْدُ لِلَّهِ",
+    "tasbeeh_allahuakbar": "اللهُ أَكْبَرُ",
+    "tasbeeh_lailahaillallah": "لَا إِلَٰهَ إِلَّا اللهُ",
+    "tasbeeh_total": "Total: {}",
+    "tap_to_count": "Tap to count",
+    "rounds_count": "Rounds: {}",
     "section_done": "You've completed this section's adhkar",
     "back_to_sections": "Back to sections",
     "reminders": "Adhkar reminders",

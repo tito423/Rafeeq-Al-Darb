@@ -39,8 +39,8 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑8 | Mushaf reader: confirmed real bugs + feature requests | queued, some unblocked now |
 | P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed (فاسقين dagger-alif bug + نشورا/منشورا word-boundary bug); tafsir-ayah-link + non-Hafs-gating still open |
 | P3‑10 | "معاني الكلمات" tab — remove unless a real source is found | ✅ done — tab removed |
-| P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | 🔶 intro filtered + swipe nav DONE; grid-hub visual redesign to match reference still open |
-| P3‑12 | Tasbeeh redesign to match reference | queued, unblocked |
+| P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | 🔶 intro filtered + swipe nav ✅ **live-verified on emulator** (المقدمة really gone, item #1 is now فضل الذكر); grid-hub visual redesign to match reference still open |
+| P3‑12 | Tasbeeh redesign to match reference | ✅ **done, live-verified on emulator** — matches `ref_tasbeeh.jpg` closely |
 | P3‑13 | Persistent prayer notification — confirmed real bug + "must not be dismissible" | **blocked on live device/logcat** — a dead second implementation found + removed along the way, see P3‑19 |
 | P3‑14 | Settings: Russian layout bug, French locale | 🔶 Russian bug ✅ fixed (was a Khatma-card layout bug, not a Settings screen bug — see below); French still open |
 | P3‑15 | Library: slow reader, page-nav redesign, مكتبتي split, catalog scope | 🔶 catalog +3 books DONE, مكتبتي split DONE; reader speed + page-nav redesign still open |
@@ -183,11 +183,25 @@ signed-in" migration path, and how big this task actually is.
 
 ## P3‑8 — Mushaf reader (text/image/Sunan as-Suwar)
 
-**Confirmed real bug:** no working back button in the reader — an error
-indicator shows top-right on open, and the phone's back gesture **exits the
-whole app** instead of closing the reader (very likely the same class of
-mistake the `AdhanFullScreenScreen` `PopScope(canPop:false)` bug was, per
-`HANDOVER.md` STAGE 1 — check there first for the pattern).
+**Re-investigated live on `emulator-5554` — the back button itself turned
+out to work correctly, at least for the Sunan as-Suwar single-surah
+reader:** opened سورة السجدة from Home, the AppBar's auto-generated back
+arrow (mirrored to the top-right under RTL — correct Material behaviour,
+not a bug) was there and, once tapped at its actual coordinates (a first
+attempt missed — its real hit-box is `[943,74]-[1070,200]` in a
+1080×2400 frame, easy to eyeball wrong), it returned cleanly to Home. No
+`PopScope` override anywhere in `single_surah_screen.dart`, so there was
+nothing to have broken it in the first place. **This makes the "no back
+button" complaint most likely a description of the already-fixed P3‑6
+khatma navigation bug** (tapping "افتح المصحف" used to silently strand the
+user on Home with the reader never really opening, which could easily read
+as "opened somewhere with no way back") rather than a separate defect in
+the mushaf/Sunan-as-Suwar chrome itself. Left open, not closed: the plain
+Quran tab (`QuranScreen`) is a bottom-nav **root** tab, not a pushed route —
+Android backing out of a root tab to the home screen/launcher is standard,
+expected behavour there, not a bug to fix. The "error indicator top-right"
+part of the original report is still unexplained — not reproduced this
+pass; flag it again with a screenshot if it still shows up.
 
 **Other bugs / gaps, all unblocked:**
 - No pinch-to-zoom in text **or** image mode.
@@ -254,16 +268,31 @@ the tab.)
   (134 real sections, sourced), this is mainly a visual-layer redesign, not
   new content.
 
-## P3‑12 — Tasbeeh redesign
+## P3‑12 — Tasbeeh redesign ✅ DONE, live-verified
 
-`design_refs/ref_tasbeeh.jpg` is the reference: a big glowing circular
-counter (dark card, teal glow ring, large Arabic-Indic digit, "اضغط
-للتسبيح" hint), 4 colored pill buttons above for the four standard dhikr
-(different color per one — gold/violet/green/blue), a round count reset
-button below, "عدد الجولات" (rounds) counter, a "المجموع" total chip
-top-left, a trash/clear icon top-right. Existing `تسبيح` feature (STAGE 3,
-33/100/1000 targets) has the real data/logic already — this is a visual
-redesign matching this reference, and ties into P3‑2's rename.
+Rebuilt `_TasbeehTab` (`azkar_screen.dart`) to match `design_refs/ref_tasbeeh.jpg`
+— this changed the actual interaction model, not just decoration: the old
+33/100/1000 numeric-target chips are gone, replaced with **4 colour-coded
+dhikr-phrase pills** (سبحان الله blue / الحمد لله green / الله أكبر purple
+/ لا إله إلا الله gold — new `_DhikrOption`/`_DhikrPill`), a glowing circle
+(colour + border + `BoxShadow` matching the selected pill) showing the
+phrase + a live count + "اضغط للتسبيح", a fixed classical target of 33 that
+rolls the count back to 0 and advances "عدد الجولات" (rounds) instead of
+climbing to an arbitrary ceiling, a "المجموع" chip tracking the running
+total across every dhikr/round this session, and a trash icon that clears
+everything. +9 keys × 5 locales (the 4 dhikr phrases are religious content,
+kept identically Arabic in every locale file — same convention as
+`adhan_text.dart`/du'a text elsewhere; only the UI-chrome keys are actually
+translated per locale). `flutter analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`, not just built:** installed the debug
+build, opened الأذكار → المسبحة, confirmed all 4 pills render with the
+right colours and the selected one (سبحان الله) glows; tapped the circle 3
+times → count went to 3, المجموع went to 3; switched to الحمد لله → circle
+re-coloured green, its own phrase shown, count reset to 0, **المجموع stayed
+at 3** (confirmed the running total is per-session not per-dhikr, as
+intended). Not yet exercised: reaching a full round of 33, the trash-clear
+button, haptics (emulator has no haptic feedback to observe).
 
 ## P3‑13 — Persistent prayer status notification
 

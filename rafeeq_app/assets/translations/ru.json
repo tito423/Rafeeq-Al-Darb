@@ -8,7 +8,8 @@
     "cancel": "Отмена",
     "save": "Сохранить",
     "retry": "Повторить",
-    "undo": "Отменить"
+    "undo": "Отменить",
+    "reset_all": "Сбросить всё"
   },
   "nav": {
     "home": "Главная",
@@ -172,6 +173,13 @@
     "next": "Далее",
     "previous": "Назад",
     "swipe_hint": "Проведите пальцем для перехода между зикрами",
+    "tasbeeh_subhanallah": "سُبْحَانَ اللهِ",
+    "tasbeeh_alhamdulillah": "الْحَمْدُ لِلَّهِ",
+    "tasbeeh_allahuakbar": "اللهُ أَكْبَرُ",
+    "tasbeeh_lailahaillallah": "لَا إِلَٰهَ إِلَّا اللهُ",
+    "tasbeeh_total": "Всего: {}",
+    "tap_to_count": "Нажмите для счёта",
+    "rounds_count": "Кругов: {}",
     "section_done": "Вы завершили азкары этого раздела",
     "back_to_sections": "Назад к разделам",
     "reminders": "Напоминания об азкарах",

@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 20:28 — IN PROGRESS — resume here**
+**2026-09-03 20:43 — IN PROGRESS — resume here**
 
-PHASE3.md docs updated: P3-5 marked answered (optional login), P3-14 Russian bug marked fixed with root-cause writeup. No code change this step.
+P3-12 Tasbeeh redesign DONE (real interaction-model change, not just visual: 4 dhikr-phrase colored pills replacing the old 33/100/1000 target chips, classical-33-per-round with a rounds counter, running total chip, trash-clear) - LIVE-VERIFIED on emulator-5554: installed the debug build, confirmed pill colors/glow, tapped counter 3x (count+total both updated), switched dhikr (color+phrase changed, count reset, total correctly stayed at 3 - confirmed total is session-wide not per-dhikr). +9 keys x5 locales (dhikr phrases kept identically Arabic across all locales per the adhan_text.dart convention - they're religious content, not UI chrome). Also live-verified P3-11's المقدمة filter (item #1 is really فضل الذكر now, not the author's preface) and re-investigated the 'no back button in mushaf reader' report - the Sunan as-Suwar single-surah reader's back button actually works fine (traced my own first tap missing its real hit-box via uiautomator dump, not an app bug), most likely the original complaint was describing the already-fixed P3-6 khatma nav bug rather than a separate mushaf-chrome defect. QuranScreen (bottom-nav root tab) correctly has no back button by design - not a bug. The 'error indicator top-right' half of the original report did not reproduce this pass. PHASE3.md updated with all these live findings. analyze clean, test 15/15 (no code change needed for the verification pass itself, all pre-existing from the prior checkpoint).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
