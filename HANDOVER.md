@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 02:40 — IN PROGRESS — resume here**
+**2026-09-03 11:07 — IN PROGRESS — resume here**
 
-PHASE2_RESEARCH.md updated: owner picked the full first batch + both second-batch items. Marked #1/#2/#7/#3 (batch 1) and #4 (batch 2) DONE+verified. #9 (more translation languages) picked but not started - needs a quran_sciences.db rebuild, bigger task. #8/#11/#12/#13 still owner-decision-blocked, #11 explicitly not picked by owner this round.
+Real bug found live on emulator + fixed: 'معاني الكلمات' tab showed only a bare position number + English word gloss, no Arabic word - impossible to tell which meaning belonged to which word. _MeaningsTab now joins word_meanings with word_grammar.token (same pos, already loaded for the i'rab tab) and renders compact word-chip cards (Arabic word + English meaning), verified live on emulator-5554. Owner then clarified 'معاني الكلمات' should mean real ARABIC word explanations (gharib al-Quran style), not English translation - researched a live source: KSU's Ayat app sources this from 'معاني الكلمات لحسنين مخلوف' (d.1990, twice Grand Mufti of Egypt) - verified this is still actively commercially published today with no free-use waiver found, so almost certainly still under copyright (protected to ~2040-2060 depending on jurisdiction) - categorically different from the P2-4b Shamela case since there's no PD layer to extract, the whole content is Makhlouf's own 20th-century work. Owner confirmed: do not use it. Found one real free alternative (al-Raghib al-Isfahani's classical, unambiguously-PD Mufradat fi Gharib al-Quran on Shamela) but it's root-indexed not ayah-indexed, needs real matching tooling against word_grammar.root. Owner decision: leave the Arabic-meanings feature for later, wait for a better ayah-aligned free source. Documented fully in PHASE2_RESEARCH.md. analyze clean, test 13/13.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -144,7 +144,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                       _TafseerTab(future: _tafseer),
                       _TranslationTab(future: _translations),
                       _IrabTab(future: _grammar),
-                      _MeaningsTab(future: _meanings),
+                      _MeaningsTab(future: _meanings, grammarFuture: _grammar),
                     ],
                   ),
                 ),
@@ -908,44 +908,83 @@ class _IrabTab extends StatelessWidget {
   }
 }
 
-class _MeaningsTab extends StatelessWidget {
+/// Real bug found live 2026‑09‑03: this tab used to show only a bare
+/// position number (`1`, `2`, `3`…) next to each English meaning — with a
+/// 15–20-word ayah, that's a wall of numbered English lines with no way to
+/// tell which Arabic word a given meaning belongs to short of counting
+/// words in the ayah panel above. `word_meanings` genuinely has no Arabic
+/// column of its own (HANDOVER §6 schema), but `word_grammar` — already
+/// loaded for the ‏الإعراب tab — carries the real token at the same `pos`
+/// for the same ayah, so this joins the two by position instead of adding
+/// any new data. Small word-chip cards (Arabic word + its meaning) replace
+/// the one-per-line list, so the whole ayah's vocabulary reads at a glance.
+class _MeaningsTab extends StatefulWidget {
   final Future<List<WordMeaning>> future;
-  const _MeaningsTab({required this.future});
+  final Future<List<WordGrammar>> grammarFuture;
+  const _MeaningsTab({required this.future, required this.grammarFuture});
+
+  @override
+  State<_MeaningsTab> createState() => _MeaningsTabState();
+}
+
+class _MeaningsTabState extends State<_MeaningsTab> {
+  late final Future<(List<WordMeaning>, List<WordGrammar>)> _combined =
+      Future.wait([widget.future, widget.grammarFuture]).then(
+    (r) => (r[0] as List<WordMeaning>, r[1] as List<WordGrammar>),
+  );
 
   @override
   Widget build(BuildContext context) {
-    return _AsyncTab<List<WordMeaning>>(
-      future: future,
-      isEmpty: (d) => d.isEmpty,
+    return _AsyncTab<(List<WordMeaning>, List<WordGrammar>)>(
+      future: _combined,
+      isEmpty: (d) => d.$1.isEmpty,
       builder: (context, data) {
         final theme = Theme.of(context);
-        return ListView.separated(
-          padding: const EdgeInsets.fromLTRB(14, 10, 14, 24),
-          itemCount: data.length,
-          separatorBuilder: (_, _) => const Divider(height: 1),
-          itemBuilder: (context, i) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+        final gold = AppColors.gold;
+        final (meanings, grammar) = data;
+        final tokenByPos = {for (final g in grammar) g.pos: g.token};
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 24),
+          child: Wrap(
+            alignment: WrapAlignment.end,
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final m in meanings)
                 Container(
-                  width: 26,
-                  alignment: Alignment.center,
-                  child: Text(
-                    '${data[i].pos}',
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: theme.colorScheme.outline),
+                  constraints: const BoxConstraints(minWidth: 84, maxWidth: 168),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: gold.withValues(alpha: 0.25)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (tokenByPos[m.pos] case final token?
+                          when token.isNotEmpty)
+                        Text(
+                          token,
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontFamily: 'AmiriQuran',
+                            color: gold,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      if (tokenByPos[m.pos]?.isNotEmpty ?? false)
+                        const SizedBox(height: 4),
+                      Text(
+                        m.en,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(height: 1.3),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    data[i].en,
-                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
-                  ),
-                ),
-              ],
-            ),
+            ],
           ),
         );
       },

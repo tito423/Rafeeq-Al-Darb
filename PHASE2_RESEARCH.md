@@ -82,8 +82,155 @@ items** (2026‑09‑03).
   content-pipeline task than the others; the owner picked it but it's still
   open — pick up next).
 
-**Still NOT ready to build** — unchanged, still need an owner decision
-first: **#8** (tajweed-colour mushaf source), **#11** (app-locking
-permission model — owner did **not** pick this one to explore), **#12**
-(group-khatma accounts/backend), **#13** (radio stream licensing). #10
-(prayer widget) still suggested as its own later stage.
+**#11** (app-locking permission model) — owner did **not** pick this one to
+explore; untouched. #10 (prayer widget) still suggested as its own later
+stage.
+
+### Research/design pass on #8, #12, #13 (2026‑09‑03) — findings, no code
+
+Owner approved *researching/designing* these three (not building). Findings:
+
+#### #8 — tajweed-colour mushaf: reframed, now genuinely buildable (for text mode)
+
+Getting a tajweed-**colour vector mushaf image** (matching the existing
+`quranpedia/quran-svg` pipeline's *pages*) turned out to be the wrong target:
+`quran-svg` doesn't expose per-character glyph paths, only per-ayah/per-line
+polygons, so there's no clean way to recolour individual letters within its
+existing SVGs — that would need an entirely different upstream *image*
+source (candidates found: [mushafdatabase/MushafDatabase-Ligature-Based-SVG](https://github.com/mushafdatabase/MushafDatabase-Ligature-Based-SVG)
+and [zeeyado/quran-ebook](https://github.com/zeeyado/quran-ebook), the latter
+baking tajweed colour into an OpenType COLR/CPAL font) — a real project of
+its own, licence terms not yet checked.
+
+**But P2‑8's own mushaf **text mode** got redesigned this session** (real
+Unicode text, not fixed vector paths) — and for *text*, a clean, real,
+CC‑licensed data source exists: [cpfair/quran-tajweed](https://github.com/cpfair/quran-tajweed)
+ships `output/tajweed.hafs.uthmani-pause-sajdah.json`, one entry per
+surah/ayah with named tajweed rules and **character start/end indices**,
+under **CC BY 4.0** (redistributable with attribution — compatible with this
+project's licensing bar). Applying it is a text-coloring problem, not a new
+mushaf edition: split each ayah's `textUthmani` into `TextSpan`s at the
+annotated indices and colour by rule, inside `mushaf_text_page.dart`'s
+existing `Text.rich`. **Recommended next step, not yet built:** verify the
+JSON's ayah text matches this project's own `quran_local.db` text
+byte-for-byte (Uthmani encodings vary source to source — a mismatch would
+misalign every colour boundary), then add it as a text-mode toggle. Effort
+**S–M** once that alignment is confirmed; the "6th mushaf edition" framing
+from the original research row was the wrong shape for this — it's a
+text-mode feature, not an edition.
+
+#### #12 — group/shared khatma: real design, still owner-blocked on the accounts question
+
+A group khatma (create a group, split 30 Juz, sync live) fundamentally needs
+**a persistent identity per member across their own devices** — Rafiq has
+**zero auth today** (HANDOVER §7 STAGE 7: no `firebase_auth`/`google_sign_in`
+in `pubspec.yaml`, confirmed by grep, "guest mode is the only mode"). Two
+honest options, not one clean "small feature":
+
+1. **Anonymous, device-local identity** (Firebase Anonymous Auth or a random
+   UUID) — no sign-in flow to build, but a group member who reinstalls the
+   app or switches phones **loses their slot in the group permanently**. Bad
+   UX for a feature people would use across Ramadan.
+2. **Real sign-in** (finish the Google Sign-In that STAGE 7 registered a
+   Firebase project for but never built — `rafeeq-aldarb` already exists,
+   just needs the owner to register a release SHA‑1 in its console, same
+   blocker STAGE 7 already flagged) — survives reinstalls, the honest choice
+   for real UX, but is real new scope: an auth flow, a privacy-policy
+   question (this project has had none), and it turns "guest mode only" into
+   "guest mode **and** accounts," a bigger architectural line to cross than
+   anything else in Phase 2 so far.
+
+**Backend:** the existing `rafeeq-aldarb` Firebase project (already
+registered, never used) makes **Firestore** the path of least new
+infrastructure — group documents are small and low-frequency
+(`{code, members: {uid: {name, progress}}, juzAssignments}`, updated once
+per reading session, not streamed), comfortably inside the free tier
+P2‑9's `HOSTING.md` already budgets for (1 GiB / 50k reads/day) — no new
+service to provision, "just" turn on what's sitting unused.
+
+**Not building this**: it needs the owner to explicitly decide (1) real
+Google Sign-In now (register that release SHA‑1), not just "researched" —
+this is the same blocker STAGE 7 already surfaced, now with a second feature
+riding on it — and (2) confirm using the existing Firebase project's
+Firestore is acceptable. Effort **L**: new auth flow + Firestore
+integration + create/join-group UI + a juz-distribution algorithm + a
+member-progress view. Recommend scheduling as its own stage after P2‑9
+(hosting) is settled, not folded into P2‑8.
+
+#### #13 — live Quran radio: a real source exists, but it's currently unreliable — don't ship it as-is
+
+`mp3quran.net` — **already this project's own trusted recitation source**
+(HANDOVER §10) — publishes an official `/api/v3/radios` endpoint listing
+~190 live stations with real stream URLs, so the *source* itself is legitimate
+and already-vetted. But every stream URL it currently returns points at
+`backup.qurango.net` (a third-party relay, not mp3quran.net's own audio CDN
+that `ayahAudioUrls`/`surahAudioUrl` already use reliably) — **tested live,
+repeatedly**: the exact same station URL returned `200`, then `500`, then
+`200` again across consecutive requests seconds apart, and one station
+(`alafasy`) `404`'d outright. That's not a licensing problem, it's a
+**reliability** one: a "radio" feature built on this endpoint would
+frequently fail to play, which is worse than not having the feature.
+**Recommendation:** don't build against `backup.qurango.net` as the primary
+URL. Before building, either (a) ask mp3quran.net (or check their site
+source/app) for their actual production CDN domain for radio, the way this
+project already found reliable per-ayah/per-surah URLs from them, or
+(b) build it anyway but with an explicit, honest "الإذاعة غير متاحة الآن —
+حاول لاحقًا" fallback and a retry, treating intermittent failure as a
+normal, expected state for a live stream rather than something to hide.
+Effort **S** once a reliable URL is confirmed; unchanged from the original
+estimate, just now backed by an actual reliability test instead of a guess.
+
+---
+
+## Word-meanings tab — real Arabic-gloss source check (2026‑09‑03, owner-initiated)
+
+Not a P2‑8 item — a live bug report on the *existing* `_MeaningsTab` (ayah
+sciences sheet, "معاني الكلمات"): it showed a bare position number next to
+an **English** word gloss (`word_meanings.en`, Quranic Arabic Corpus) with
+no Arabic word shown at all, so there was no way to tell which meaning
+belonged to which word short of counting. **Fixed same session:** the tab
+now joins that data with `word_grammar.token` (already loaded for the
+الإعراب tab, same `pos` key) and shows small word-chip cards — Arabic word
++ its English meaning — instead of a bare numbered list.
+
+**Owner then clarified the deeper ask:** "معاني الكلمات" should mean a real
+**Arabic** explanation of the word (غريب القرآن-style), not an English
+translation dressed up next to the Arabic word. Checked whether a free,
+legitimately-licensed Arabic source exists:
+
+- **KSU's own "Ayat" app** (the same app P2‑8 researched) ships exactly this
+  — Arabic word meanings per ayah — and **cites its source directly**:
+  "معاني الكلمات لحسنين مخلوف" (the real title is *كلمات القرآن: تفسير
+  وبيان*, Sheikh Hassanein Muhammad Makhlouf, twice Grand Mufti of Egypt,
+  d. 1990).
+- **Checked whether it's actually protected, not assumed:** confirmed d. 1990
+  (multiple independent Arabic sources agree), confirmed the book is
+  **still actively published and sold today** by more than one commercial
+  publisher (دار ابن حزم and others — real, current print runs, not an
+  out-of-print relic), and found **no evidence anywhere** of a waqf-style
+  free-distribution waiver the way some government mushaf print runs
+  carry. Under Egyptian copyright (life + 50) that's protected until
+  **2040**; under life‑+70 regimes, **2060**. Categorically different from
+  the P2‑4b Shamela decision — there, only a *modern taḥqīq's apparatus*
+  around a 700-plus-year-dead author's text was in question and could be
+  stripped out; here the **entire content** is Makhlouf's own 20th-century
+  authored work, no public-domain layer underneath to extract.
+- **Owner decision, told directly: do not use it.** Confirmed correct — this
+  is not a source Rafiq is allowed to scrape or redistribute.
+
+**The one real free alternative found:** *al-Mufradat fī Gharīb al-Qurʾān*
+by al-Rāghib al-Iṣfahānī (d. 502 AH / 1108 CE) — genuinely old enough to be
+unambiguously public domain, and available on `shamela.ws` (the project's
+already-approved source, §5.7). The catch: it's organized **alphabetically
+by root**, not by ayah, so using it means matching each Quranic word's
+existing `word_grammar.root` (already in the DB, Buckwalter-encoded) to the
+matching root entry in the lexicon — real new build tooling, not a drop-in
+data file.
+
+**Owner decision (2026‑09‑03): leave this feature alone for now** rather
+than build the root-matching pipeline immediately — wait for a better,
+more directly ayah-aligned free source to turn up first. The `_MeaningsTab`
+UI fix (Arabic word + its English gloss, paired and legible) ships as-is in
+the meantime; it's still honest — real English-translation data, just
+finally shown next to the word it belongs to — it just isn't the Arabic
+explanation feature the owner actually wants long-term.
