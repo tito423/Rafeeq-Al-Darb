@@ -819,15 +819,39 @@ lines (via a small Pillow script, not just eyeballing the full screenshot)
 — all 3 rosette markers visible sit centered on the letter-body height,
 consistent line to line, clearly not "dropped low" any more.
 
-## P3-33 — Ayah sciences sheet: remove multi-tafsir compare, redesign tafsir tab as a dropdown
+## P3-33 — Ayah sciences sheet tafsir tab ✅ DONE, live-verified (dropdown part)
 
-Reverses part of P2-8 #3 (multi-tafsir compare view) — owner doesn't like
-it. New ask: the tafsir tab should show **one dropdown** to pick a source;
-if the picked source isn't downloaded yet, show a download button /
-shortcut next to the dropdown instead of the text, and once downloaded it
-becomes available in place. Ties into **P3-31**'s bigger tafsir-download
-section — likely the same underlying mechanism (a tafsir source is either
-bundled, downloaded, or offered for download inline). Not started.
+Reversed P2-8 #3's multi-tafsir compare/stacked-list view entirely —
+`_TafseerTab` rewritten from scratch to exactly mirror `_TranslationTab`'s
+already-established pattern just below it in the same file: one persisted
+dropdown, one source shown at a time. New
+`selected­TafseerSourceProvider` (`tafseer_source_provider.dart`,
+identical shape to `translation_lang_provider.dart` — same
+`StateNotifier` + `SharedPreferences` persistence pair), picks from
+whichever of `SciencesRepository.tafseerSources`'s 3 bundled sources
+(التفسير الميسّر / الجلالين / القرطبي) actually have text for the current
+ayah, falling back to the first available one if the persisted choice
+doesn't cover it. The now-dead compare-view toggle and its 2 translation
+keys were removed outright (`tafseer_compare_view`/`tafseer_list_view`, ×5
+locales) rather than left unused. `flutter analyze` clean, `flutter test`
+15/15.
+
+**Live-verified on `emulator-5554`:** opened سورة الفاتحة's ayah 2 sheet,
+confirmed the Tafsir tab shows one dropdown ("Tafsir: التفسير الميسّر")
+and one text card, no compare toggle anywhere; opened the dropdown —
+confirmed all 3 real sources listed; picked تفسير القرطبي — dropdown and
+card both updated together to the (correctly much longer, real classical)
+Qurtubi text, single source only.
+
+**Deliberately not done — the "if not downloaded, show a download
+button" half:** there is currently **no per-source tafsir download
+mechanism at all** — all 3 bundled sources ship together in
+`quran_sciences.db` with no concept of a "missing" one to offer a
+download for. Building a fake download button with nothing real behind it
+would violate rule 1 (no fabricated affordances). This slots in naturally
+once **P3-31** (the ~20-source tafsir download section, still needing its
+licence-research pass first) introduces real per-source availability —
+tracked there, not invented here ahead of it.
 
 ## P3-34 — Text-mode mushaf: no scroll, no speed control; toolbar icons need a redesign + captions + animation
 
@@ -946,7 +970,7 @@ regression from the rest of this session's Arabic-default testing.
 | P3-30 | "Azkar/Tasbeeh still old" | likely stale — **ask the owner to re-check on the batch-2+ APK** before rebuilding |
 | P3-31 | ~20-source تفسير download section | queued, **needs a research/licence pass first**, same rigor as every other content source |
 | P3-32 | Ayah-end marker misaligned in text mode | ✅ **done, live-verified** — `PlaceholderAlignment.middle` → `.baseline` |
-| P3-33 | Tafsir tab → single dropdown + inline download | queued, unblocked, ties to P3-31 |
+| P3-33 | Tafsir tab → single dropdown + inline download | 🔶 dropdown ✅ **done, live-verified**; inline download intentionally deferred — no real per-source download mechanism exists yet, see **P3-31** |
 | P3-34 | Text mode: scroll/speed control + toolbar icon redesign+captions+animation | queued, unblocked (re-verify scroll didn't regress) |
 | P3-35 | Ayah card: single play/stop toggle button | ✅ **done, live-verified** |
 | P3-36 | Home: hadith reroll shouldn't scroll the page | ✅ **done, live-verified** — root cause was the card collapsing to a spinner mid-reroll, not a scroll bug at all |

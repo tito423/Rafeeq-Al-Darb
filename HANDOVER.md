@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 00:13 — IN PROGRESS — resume here**
+**2026-09-04 00:26 — IN PROGRESS — resume here**
 
-P3-27 DONE + live-verified: new download-all-recitation card under the reciter picker, sequential + resumable + cancellable; found+fixed a real staleness bug where per-surah tiles never refreshed after a bulk run changed their files (new _generation-keyed remount)
+P3-33 dropdown part DONE + live-verified: tafsir tab rewritten to a single persisted dropdown (mirrors _TranslationTab's pattern exactly, new selectedTafseerSourceProvider), compare-view toggle + its dead keys removed; inline per-source download deliberately deferred to P3-31 since no real download mechanism for tafsir sources exists yet
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

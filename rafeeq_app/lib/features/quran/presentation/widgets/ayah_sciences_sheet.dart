@@ -14,6 +14,7 @@ import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/buckwalter.dart';
 import '../../data/ayah_notes_store.dart';
+import '../../data/tafseer_source_provider.dart';
 import '../../data/translation_lang_provider.dart';
 import 'ayah_share_card.dart';
 
@@ -692,83 +693,79 @@ class _SourceBlock extends StatelessWidget {
   }
 }
 
-/// P2‑8 #3 (QuranFlash-style "view several tafsirs at once") — the sources
-/// are always all loaded together (no per-source fetch); this just toggles
-/// how they're laid out: a scrollable list (default, reads well on a phone)
-/// or side-by-side columns when there are exactly two, for a real compare.
-class _TafseerTab extends StatefulWidget {
+/// P3‑33: reverses P2‑8 #3's "view several tafsirs at once" (with an
+/// optional side-by-side compare layout) — the owner didn't like it. Now:
+/// one persisted dropdown, one source shown at a time, exactly mirroring
+/// `_TranslationTab`'s already-established "single persisted choice"
+/// pattern below. Every source in `SciencesRepository.tafseerSources` is
+/// bundled in `quran_sciences.db` already (no per-source download exists
+/// yet — that's P3‑31's job, a separate ~20-source tafsir download section
+/// still needing a licence-research pass first); once that lands, a source
+/// with no data for a given ayah is the natural place to show a download
+/// affordance instead of just falling back silently, as this does for now.
+class _TafseerTab extends ConsumerWidget {
   final Future<Map<String, String>> future;
   const _TafseerTab({required this.future});
 
   @override
-  State<_TafseerTab> createState() => _TafseerTabState();
-}
-
-class _TafseerTabState extends State<_TafseerTab> {
-  bool _compare = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(selectedTafseerSourceProvider);
     return _AsyncTab<Map<String, String>>(
-      future: widget.future,
+      future: future,
       isEmpty: (d) => d.isEmpty,
       builder: (context, data) {
-        final entries = data.entries.toList();
-        final blocks = [
-          for (final e in entries)
-            _SourceBlock(
-              title: SciencesRepository.tafseerSources[e.key] ?? e.key,
-              body: e.value,
-              direction: TextDirection.rtl,
-            ),
-        ];
-
-        if (entries.length < 2) {
-          return ListView(
-            padding: const EdgeInsets.only(bottom: 24),
-            children: blocks,
-          );
-        }
+        // Not every bundled source necessarily covers every ayah — only
+        // offer sources that actually have text here, and fall back to the
+        // first one available if the persisted choice doesn't.
+        final available = SciencesRepository.tafseerSources.keys
+            .where(data.containsKey)
+            .toList();
+        final active = available.contains(selected) ? selected : available.first;
 
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
-              child: Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: TextButton.icon(
-                  onPressed: () => setState(() => _compare = !_compare),
-                  icon: Icon(
-                      _compare ? Icons.view_agenda_outlined : Icons.view_column_outlined),
-                  label: Text(_compare
-                      ? 'quran.tafseer_list_view'.tr()
-                      : 'quran.tafseer_compare_view'.tr()),
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'quran.tafseer'.tr(),
+                  isDense: true,
+                  border: const OutlineInputBorder(),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: active,
+                    items: [
+                      for (final source in available)
+                        DropdownMenuItem(
+                          value: source,
+                          child: Text(
+                            SciencesRepository.tafseerSources[source] ?? source,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
+                    onChanged: (v) {
+                      if (v != null) {
+                        ref.read(selectedTafseerSourceProvider.notifier).select(v);
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
             Expanded(
-              child: _compare
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (var i = 0; i < blocks.length; i++) ...[
-                          if (i > 0)
-                            VerticalDivider(
-                                width: 1,
-                                color: AppColors.gold.withValues(alpha: 0.2)),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              padding: const EdgeInsets.only(bottom: 24),
-                              child: blocks[i],
-                            ),
-                          ),
-                        ],
-                      ],
-                    )
-                  : ListView(
-                      padding: const EdgeInsets.only(bottom: 24),
-                      children: blocks,
-                    ),
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: 24),
+                children: [
+                  _SourceBlock(
+                    title: SciencesRepository.tafseerSources[active] ?? active,
+                    body: data[active]!,
+                    direction: TextDirection.rtl,
+                  ),
+                ],
+              ),
             ),
           ],
         );
