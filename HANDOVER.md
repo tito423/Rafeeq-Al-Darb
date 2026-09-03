@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 23:18 — IN PROGRESS — resume here**
+**2026-09-03 23:20 — IN PROGRESS — resume here**
 
-P3-24 DONE + live-verified: library book cards get a real cancel button while downloading (DownloadManager.cancel wiring was missing, method already existed) - same TextButton.icon pattern as the mushaf/recitation download tiles, confirmed on emulator
+Safety-net checkpoint: released phase3-batch4-2026-09-03 APK (cumulative: P3-11 grid, P3-29 swipe+slider, P3-32 marker alignment, P3-35 toggle, P3-36 reroll fix, P3-24 cancel button, all live-verified). NEXT_SESSION_PROMPT.md updated with current status + new APK link + PHASE3.md recovery note.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
