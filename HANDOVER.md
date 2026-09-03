@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 22:50 — IN PROGRESS — resume here**
+**2026-09-03 22:58 — IN PROGRESS — resume here**
 
-P3-36 DONE + live-verified: hadith reroll no longer collapses the card to a spinner (root cause of the reported scroll-jump) - reroll() drops the intermediate AsyncLoading state, button gets its own small local spinner instead
+P3-32 DONE + live-verified: text-mode mushaf ayah-end rosette marker switched from PlaceholderAlignment.middle to .baseline (alphabetic) - fixes the reported low-sitting marker, confirmed via zoomed screenshot crops on al-Fatiha
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

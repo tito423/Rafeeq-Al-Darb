@@ -735,11 +735,25 @@ individual copyright verification, not an assumption). Not started — a real
 research pass (Shamela sourcing + licence check per title, same rigor as
 P3-15's library books) is the prerequisite before any build work.
 
-## P3-32 — Text-mode mushaf: ayah-end marker sits too low, needs alignment fix
+## P3-32 — Text-mode mushaf: ayah-end marker ✅ DONE, live-verified
 
-`mushaf_text_page.dart`'s end-of-ayah ornament (the small numbered marker)
-renders visually low relative to the text baseline — a real, fixable CSS/
-layout-alignment bug. Not started.
+Root cause: the marker was a `WidgetSpan` using
+`PlaceholderAlignment.middle`, which centers it within the *whole line's*
+ascent+descent box — for `AmiriQuran`, whose metrics reserve a lot of
+headroom above the baseline for tashkeel, that box sits noticeably higher
+than the base letters' actual visible body, so the marker read as sitting
+low relative to the letters next to it. Switched to
+`PlaceholderAlignment.baseline` (`baseline: TextBaseline.alphabetic`) in
+`mushaf_text_page.dart`, which pins the marker to the alphabetic baseline
+instead — a stable reference the base letters actually sit on, independent
+of how much extra headroom the font reserves for diacritics. `flutter
+analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`:** opened the text-mode mushaf on
+سورة الفاتحة, cropped and zoomed screenshots of both the first and second
+lines (via a small Pillow script, not just eyeballing the full screenshot)
+— all 3 rosette markers visible sit centered on the letter-body height,
+consistent line to line, clearly not "dropped low" any more.
 
 ## P3-33 — Ayah sciences sheet: remove multi-tafsir compare, redesign tafsir tab as a dropdown
 
@@ -825,7 +839,7 @@ language `easy_localization` starts in, shown top of a dropdown as
 | P3-29 | Book text reader nav/visual redesign | 🔶 nav part ✅ **done, live-verified** (swipe + fast-jump slider, a real `SelectionArea`-vs-`GestureDetector` bug found+fixed along the way); visual part still open — **ask the owner to resend the Shamela reference image** |
 | P3-30 | "Azkar/Tasbeeh still old" | likely stale — **ask the owner to re-check on the batch-2+ APK** before rebuilding |
 | P3-31 | ~20-source تفسير download section | queued, **needs a research/licence pass first**, same rigor as every other content source |
-| P3-32 | Ayah-end marker misaligned in text mode | queued, unblocked |
+| P3-32 | Ayah-end marker misaligned in text mode | ✅ **done, live-verified** — `PlaceholderAlignment.middle` → `.baseline` |
 | P3-33 | Tafsir tab → single dropdown + inline download | queued, unblocked, ties to P3-31 |
 | P3-34 | Text mode: scroll/speed control + toolbar icon redesign+captions+animation | queued, unblocked (re-verify scroll didn't regress) |
 | P3-35 | Ayah card: single play/stop toggle button | queued, unblocked |

@@ -140,8 +140,21 @@ class _MushafTextPageState extends State<MushafTextPage> {
                             text: widget.ayahs[i].textUthmani,
                             recognizer: _recognizers[i],
                           ),
+                          // P3‑32: `PlaceholderAlignment.middle` centers the
+                          // marker within the *line's* full ascent+descent
+                          // box — for `AmiriQuran`, whose metrics reserve a
+                          // lot of extra room above the baseline for
+                          // tashkeel, that box is taller and sits higher
+                          // than the visible base letters, so the marker
+                          // read as sitting low relative to the actual
+                          // Arabic glyphs next to it. `baseline` pins it to
+                          // the alphabetic baseline instead — a stable
+                          // reference line the base letters actually sit
+                          // on, independent of how much tashkeel headroom
+                          // the font reserves.
                           WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
+                            alignment: PlaceholderAlignment.baseline,
+                            baseline: TextBaseline.alphabetic,
                             child: _AyahMarker(
                               number: widget.ayahs[i].ayahNumber,
                               fontScale: widget.fontScale,
