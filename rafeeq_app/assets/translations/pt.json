@@ -7,7 +7,8 @@
     "coming_soon": "Em breve…",
     "cancel": "Cancelar",
     "save": "Guardar",
-    "retry": "Tentar novamente"
+    "retry": "Tentar novamente",
+    "undo": "Desfazer"
   },
   "nav": {
     "home": "Início",

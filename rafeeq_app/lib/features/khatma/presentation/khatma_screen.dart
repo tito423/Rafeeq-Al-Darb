@@ -2,10 +2,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../data/khatma_store.dart';
+import 'khatma_card.dart' show showKhatmaUndoSnackBar;
+
+/// Bottom-nav index of the Quran tab in `AppShell`'s `screens` list.
+const _quranTabIndex = 1;
 
 /// The full khatma manager (P2‑11) — every active khatma with its own
 /// progress/read-today/reminder controls, a "+" to start a new one, and a
@@ -38,17 +43,26 @@ class KhatmaScreen extends ConsumerWidget {
                     onReadToday: mushaf == null
                         ? null
                         : () async {
+                            final before = k;
                             final updated = await ref
                                 .read(khatmaStoreProvider.notifier)
                                 .readToday(k, mushaf.juzStartPages);
                             if (!context.mounted) return;
                             ref.read(quranJumpRequestProvider.notifier).state =
                                 updated.currentPage;
+                            ref.read(requestedTabProvider.notifier).state =
+                                _quranTabIndex;
+                            // Shown via the root ScaffoldMessenger (this
+                            // Scaffold doesn't nest its own), so it survives
+                            // the pop below and appears over Home.
+                            showKhatmaUndoSnackBar(context, ref, before);
                             Navigator.of(context).pop();
                           },
                     onOpenReader: () {
                       ref.read(quranJumpRequestProvider.notifier).state =
                           k.currentPage;
+                      ref.read(requestedTabProvider.notifier).state =
+                          _quranTabIndex;
                       Navigator.of(context).pop();
                     },
                     onSetReminder: () => _pickReminder(context, ref, k),

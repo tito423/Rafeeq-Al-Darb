@@ -4,33 +4,102 @@
 ///
 /// Found necessary live while building Stage 6's keyword search: both
 /// `hadith.db`'s `arabic` column and `quran_local.db`'s `text_uthmani`
-/// column are stored **fully diacritized** (e.g. "عُمَرَ", "ٱلرَّحْمَٰنِ" — the
+/// column are stored **fully diacritized** (e.g. "عُمَرَ", "ٱلرَّحْمَٰنِ" — the
 /// latter also uses alef wasla U+0671, not plain alef). A plain
 /// `LIKE '%عمر%'` — which is exactly what the LIKE-based fix for the missing
 /// FTS5 module used at first — never matches ordinary user input, since the
 /// diacritic marks sit *between* the letters and the alef forms differ.
 /// Confirmed directly against the real downloaded `hadith.db` via sqlite3:
 /// `SELECT COUNT(*) FROM hadiths WHERE arabic LIKE '%عمر%'` returned 0 even
-/// though the very first hadith contains "عُمَرَ بْنَ الْخَطَّابِ". Normalizing both
+/// though the very first hadith contains "عُمَرَ بْنَ الْخَطَّابِ". Normalizing both
 /// sides before comparing fixes it.
 ///
+/// **A real bug found + fixed (P3‑9), caught via a live search the owner
+/// reported returning nothing for "فاسقين":** U+0670 (the superscript
+/// alef / "dagger alif", e.g. the mark inside "ٱلْفَٰسِقِينَ") used to sit in
+/// the *stripped* class below, alongside real diacritics like fatha/kasra/
+/// sukun. But a dagger alif isn't decoration — for most words it **is** the
+/// "ا" of the word in Quranic Uthmani spelling (Qur'anic orthography omits
+/// the full alef letter in these words and writes this small mark instead).
+/// Stripping it to nothing turned "فَٰسِقِينَ" into "فسقين" (the ا silently
+/// vanished), so a search for the correctly-spelled "فاسقين" could never
+/// match it — confirmed directly against `quran_local.db` with sqlite3:
+/// under the old normalization, 5:25's "ٱلْفَٰسِقِينَ" became "الفسقين", not
+/// "الفاسقين". Fixed by moving U+0670 out of the stripped class below and
+/// into the alef-variant class (it now normalizes to ا, same as the other
+/// alef forms).
+///
+/// **This alone isn't the whole story, though — a second real edge case
+/// found while verifying the fix above:** a small, well-known, closed set
+/// of very common Quranic words (اللَّٰه, الرَّحْمَٰن, هَـذَا, ذَٰلِك,
+/// لَـكِن, السَّمَـوَٰت, …) carry a dagger alif that *modern conventional
+/// typed Arabic simply omits* — most people type "الرحمن", not "الرحمان",
+/// even though the Quranic spelling's dagger alif genuinely represents that
+/// extra "ا" sound. Mapping U+0670 → ا (correct for "فاسقين" and the
+/// general case) makes exactly these words fail to match the way most
+/// people actually type them. There's no single normalization that gets
+/// every word right, so [normalizeArabic] (dagger alif → ا, the
+/// linguistically literal reading, right for the common case) and
+/// [normalizeArabicLoose] (dagger alif → nothing, right for this
+/// exception list) are both exported; search call sites should match
+/// against **both** — see `QuranRepository.search()`.
+///
 /// Unicode escapes are used throughout (rather than literal combining
-/// characters in the source) so the exact codepoints stripped are
-/// unambiguous on review: U+0610-U+061A (Quranic honorific/annotation
-/// signs), U+064B-U+065F (the harakat: fatha/damma/kasra/tanwin/
-/// shadda/sukun + small Quranic marks), U+0670 (superscript alef),
+/// characters in the source, which is exactly what let the first bug above
+/// hide — literal-character ranges are much harder to audit than explicit
+/// codepoints) so the exact codepoints stripped are unambiguous on review:
+/// U+0610-U+061A (Quranic honorific/annotation signs), U+064B-U+065F (the
+/// harakat: fatha/damma/kasra/tanwin/shadda/sukun + small Quranic marks),
 /// U+06D6-U+06ED (further Quranic annotation/small marks), U+0640
-/// (tatweel).
+/// (tatweel). U+0670 is deliberately **not** here — see the alef-variant
+/// class below.
 final RegExp _arabicDiacritics = RegExp(
-  '[ؐ-ًؚ-ٰٟۖ-ۭـ]',
+  '[ؐ-ًؚ-ٟۖ-ۭـ]',
 );
 
-/// آ (U+0622) أ (U+0623) إ (U+0625) ٱ (U+0671) -> ا (U+0627)
-final RegExp _alefVariants = RegExp('[آأإٱ]');
+/// آ (U+0622) أ (U+0623) إ (U+0625) ٱ (U+0671) ٰ (U+0670, dagger alif) -> ا (U+0627)
+final RegExp _alefVariants = RegExp('[آأإٰٱ]');
+
+/// Same alef unification as [normalizeArabic] but WITHOUT U+0670 (dagger
+/// alif) in it — used only by [normalizeArabicLoose].
+final RegExp _alefVariantsNoDagger = RegExp('[آأإٱ]');
 
 String normalizeArabic(String s) {
   var out = s.replaceAll(_arabicDiacritics, '');
   out = out.replaceAll(_alefVariants, 'ا');
   out = out.replaceAll('ى', 'ي'); // ى (alef maksura) -> ي
   return out;
+}
+
+/// The "loose" counterpart of [normalizeArabic]: drops the dagger alif
+/// (U+0670) entirely instead of expanding it to ا, matching how most people
+/// actually type the small, closed set of Quranic words where modern
+/// convention omits it (الرحمن, هذا, ذلك, لكن, السماوات, …) — see
+/// [normalizeArabic]'s doc for the full explanation. Search call sites
+/// should try a query against both variants, not just one.
+String normalizeArabicLoose(String s) {
+  var out = s.replaceAll(_arabicDiacritics, '');
+  out = out.replaceAll('ٰ', ''); // dagger alif: dropped, not expanded
+  out = out.replaceAll(_alefVariantsNoDagger, 'ا');
+  out = out.replaceAll('ى', 'ي');
+  return out;
+}
+
+/// True if [needle] occurs in [haystack] starting at a word boundary (index
+/// 0, or right after a space) — not merely anywhere `.contains()` would
+/// find it, which also matches inside an unrelated longer word (P3‑9: e.g.
+/// searching "نشورا" matching inside "منشورا", a different word that just
+/// happens to share every letter after its leading م). Shared by
+/// `QuranRepository.search()` and `HadithRepository.search()`. Still allows
+/// a useful *prefix* match within a word (e.g. "رحم" finding "الرحمن"),
+/// since only where the match starts is constrained, not where it ends.
+bool arabicWordBoundaryContains(String haystack, String needle) {
+  if (needle.isEmpty) return false;
+  var from = 0;
+  while (true) {
+    final i = haystack.indexOf(needle, from);
+    if (i == -1) return false;
+    if (i == 0 || haystack[i - 1] == ' ') return true;
+    from = i + 1;
+  }
 }

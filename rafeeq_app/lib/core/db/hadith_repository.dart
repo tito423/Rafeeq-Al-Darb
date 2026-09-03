@@ -237,11 +237,19 @@ class HadithRepository {
   /// call except the matches themselves — the cost is rescanning the table
   /// on every call rather than once, which is the right trade for a mobile
   /// memory budget.
+  /// Two real bugs found + fixed here (P3‑9), mirroring the identical fix in
+  /// `QuranRepository.search()` — see that doc for the full explanation:
+  /// (1) a term is only considered a hit for the Arabic side if it starts at
+  /// a word boundary, not merely anywhere (`_wordBoundaryContains`); (2)
+  /// each term is checked against both `normalizeArabic` and
+  /// `normalizeArabicLoose`, since a single normalization of the dagger
+  /// alif (U+0670) can't be right for every word.
   Future<List<HadithItem>> search(String query, {int limit = 100}) async {
     final terms =
         query.trim().split(RegExp(r'\s+')).where((t) => t.isNotEmpty).toList();
     if (terms.isEmpty) return [];
     final normTerms = terms.map(normalizeArabic).toList();
+    final looseTerms = terms.map(normalizeArabicLoose).toList();
     final lowerTerms = terms.map((t) => t.toLowerCase()).toList();
 
     const pageSize = 2000;
@@ -257,10 +265,12 @@ class HadithRepository {
       if (page.isEmpty) break;
       for (final r in page) {
         final normArabic = normalizeArabic(r['arabic'] as String);
+        final looseArabic = normalizeArabicLoose(r['arabic'] as String);
         final lowerEn = (r['text_en'] as String?)?.toLowerCase();
         var allTermsMatch = true;
         for (var i = 0; i < terms.length; i++) {
-          final hit = normArabic.contains(normTerms[i]) ||
+          final hit = arabicWordBoundaryContains(normArabic, normTerms[i]) ||
+              arabicWordBoundaryContains(looseArabic, looseTerms[i]) ||
               (lowerEn?.contains(lowerTerms[i]) ?? false);
           if (!hit) {
             allTermsMatch = false;

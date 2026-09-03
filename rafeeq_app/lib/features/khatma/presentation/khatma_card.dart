@@ -144,6 +144,7 @@ class _ActiveKhatmaRow extends ConsumerWidget {
             onPressed: mushaf == null
                 ? null
                 : () async {
+                    final before = khatma;
                     final updated = await ref
                         .read(khatmaStoreProvider.notifier)
                         .readToday(khatma, mushaf.juzStartPages);
@@ -151,6 +152,7 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                     ref.read(quranJumpRequestProvider.notifier).state =
                         updated.currentPage;
                     _switchToQuranTab(context);
+                    showKhatmaUndoSnackBar(context, ref, before);
                   },
             child: Text('khatma.read_today'.tr(args: ['$due'])),
           ),
@@ -164,6 +166,23 @@ class _ActiveKhatmaRow extends ConsumerWidget {
   void _switchToQuranTab(BuildContext context) {
     HomeNavigate.of(context)?.call(1);
   }
+}
+
+/// Shared "قرأت اليوم" undo snackbar (P3‑6) — a "تراجع" action that restores
+/// the exact pre-update [before] snapshot, for an accidental tap. Used by
+/// both this card's inline button and `KhatmaScreen`'s tile.
+void showKhatmaUndoSnackBar(BuildContext context, WidgetRef ref, Khatma before) {
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('khatma.read_today_done'.tr()),
+      action: SnackBarAction(
+        label: 'common.undo'.tr(),
+        onPressed: () =>
+            ref.read(khatmaStoreProvider.notifier).restore(before),
+      ),
+    ),
+  );
 }
 
 /// A tiny inherited callback so cards below `HomeScreen` (this one) can ask

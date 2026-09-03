@@ -12,19 +12,23 @@ class QuranRepository {
   final Database _db;
   QuranRepository(this._db);
 
-  /// (normalized `text_uthmani`, the ayah) for every ayah, built once and
-  /// reused — see `search()`'s doc for why normalization is needed at all.
-  /// 6,236 short strings; trivial to keep in memory for this repository's
-  /// lifetime.
-  List<(String, Ayah)>? _searchIndex;
+  /// (strict-normalized, loose-normalized, the ayah) for every ayah, built
+  /// once and reused — see `search()`'s doc for why two normalized forms are
+  /// kept, not one. 6,236 short strings each; trivial to keep in memory for
+  /// this repository's lifetime.
+  List<(String, String, Ayah)>? _searchIndex;
 
-  Future<List<(String, Ayah)>> _index() async {
+  Future<List<(String, String, Ayah)>> _index() async {
     final cached = _searchIndex;
     if (cached != null) return cached;
     final rows = await _db.query('ayahs');
     final built = [
       for (final r in rows)
-        (normalizeArabic(r['text_uthmani'] as String), Ayah.fromRow(r)),
+        (
+          normalizeArabic(r['text_uthmani'] as String),
+          normalizeArabicLoose(r['text_uthmani'] as String),
+          Ayah.fromRow(r),
+        ),
     ];
     _searchIndex = built;
     return built;
@@ -106,13 +110,30 @@ class QuranRepository {
   /// Matching is done in Dart instead, over both sides normalized by
   /// `normalizeArabic` (see its doc). 6,236 ayahs is small enough to hold a
   /// normalized index in memory for the whole app session.
+  ///
+  /// Two real bugs found + fixed here (P3‑9), both reported live by the
+  /// owner:
+  ///
+  /// 1. **Word-boundary matching.** Searching "نشورا" was returning 17:13's
+  ///    "…وَتَجِدُونَهُۥ عِندَ ٱللَّهِ خَيْرًا وَأَعْظَمَ أَجْرًا…مَّنشُورًا" — a plain
+  ///    `.contains()` happily matches "نشورا" *inside* "منشورا" (they share
+  ///    every letter except the leading م), which is a different word
+  ///    entirely. Fixed by requiring the match start at a word boundary
+  ///    (index 0 or right after a space) — this still allows useful
+  ///    *prefix* search within a word (e.g. "رحم" finding "الرحمن"), since
+  ///    only where the match *starts* is constrained, not where it ends.
+  /// 2. **The dagger-alif ambiguity** — see `normalizeArabic`'s doc. A query
+  ///    is checked against both the strict and loose normalized index, so
+  ///    both "فاسقين" (strict) and "الرحمن" (loose) find their ayahs.
   Future<List<Ayah>> search(String query, {int limit = 50}) async {
-    final sanitized = normalizeArabic(query.trim());
-    if (sanitized.isEmpty) return [];
+    final strict = normalizeArabic(query.trim());
+    final loose = normalizeArabicLoose(query.trim());
+    if (strict.isEmpty) return [];
     final idx = await _index();
     final matches = <Ayah>[];
-    for (final (normalized, ayah) in idx) {
-      if (normalized.contains(sanitized)) {
+    for (final (normStrict, normLoose, ayah) in idx) {
+      if (arabicWordBoundaryContains(normStrict, strict) ||
+          arabicWordBoundaryContains(normLoose, loose)) {
         matches.add(ayah);
         if (matches.length >= limit) break;
       }

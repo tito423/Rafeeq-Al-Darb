@@ -11,6 +11,7 @@ import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import 'tab_request_provider.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
 /// sections (Home, Quran, Azkar, Library, Settings). "Library" holds the
@@ -68,6 +69,14 @@ class _AppShellState extends ConsumerState<AppShell>
     // Re-sync when the real times arrive or the toggle changes.
     ref.listen(prayerControllerProvider, (_, _) => _syncPrayerStatus());
     ref.listen(prayerStatusEnabledProvider, (_, _) => _syncPrayerStatus());
+    // A screen pushed on top of the shell (e.g. KhatmaScreen) asking to
+    // switch tabs — see tab_request_provider.dart for why this exists.
+    ref.listen<int?>(requestedTabProvider, (_, tab) {
+      if (tab == null) return;
+      setState(() => _index = tab);
+      Future.microtask(
+          () => ref.read(requestedTabProvider.notifier).state = null);
+    });
 
     final screens = [
       HomeScreen(onNavigate: (t) => _goTo(t, tab: t)),

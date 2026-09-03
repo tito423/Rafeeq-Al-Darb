@@ -257,6 +257,21 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     return updated;
   }
 
+  /// Reverts a [readToday] call — backs the "تراجع" undo action on the
+  /// snackbar shown right after marking today read, for an accidental tap
+  /// (P3‑6). Takes the exact pre-update [previous] snapshot the caller
+  /// already has in scope, rather than re-deriving the inverse of
+  /// [readToday]'s due-amount/streak math here.
+  Future<void> restore(Khatma previous) async {
+    state = [for (final k in state) if (k.id == previous.id) previous else k];
+    await _persist();
+    // readToday() cancels the reminder on completion; undo that too if the
+    // tap being undone was the one that completed this khatma.
+    if (previous.reminderTime != null && !previous.isCompleted) {
+      await _armReminder(previous);
+    }
+  }
+
   Future<void> setReminder(Khatma khatma, TimeOfDay? time) async {
     final updated = khatma.copyWith(reminderTime: time);
     state = [for (final k in state) if (k.id == khatma.id) updated else k];
