@@ -1,4 +1,507 @@
+# PHASE 3 — Real-device feedback pass (owner, 2026-09-03)
 
+> **Recovery note (2026-09-03):** the original P3-1..19 section below was briefly, accidentally truncated by a buggy append-script mid-session (it opened the file in write mode, which empties it immediately, then hit an encoding error before finishing — a retry then built on top of the already-emptied file). Recovered in full from git history (commit 5048241, the last fully-intact version) and merged back with the ROUND 2 section, which was never affected. Flagging this here in case anything looks slightly re-flowed compared to what was on screen before.
+
+**This is the working task list for Phase 3.** It consolidates the owner's
+last 3 content messages from the same real-device testing session, in order:
+
+1. One long message covering nearly every screen — verbatim, organized, in
+   `PHASE3_FEEDBACK.md`.
+2. A new app-icon reference image + "restyle the RGB theme toward the
+   tasbeeh reference's look."
+3. Four reference screenshots — tasbeeh, Azkar hub, Home screen, and the new
+   icon installed — with "take the design of the rest of the images and
+   build typical/similar ones," saved to `design_refs/`.
+
+Work through this the same way `PHASE2.md` was worked: one task at a time,
+`flutter analyze` after each, checkpoint (`.\cp.bat`) after every meaningful
+edit, mark a task `-Done` only once it's actually verified (device where the
+bug was device-specific, emulator where that's sufficient). **P3‑7 (Adhan)
+and P3‑13 (persistent prayer notification) are confirmed real bugs on a real
+device** — not emulator limitations — the highest-value next step for both
+is a live `adb logcat` while the owner reproduces them on his connected
+phone.
+
+Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
+`ref_home.jpg`, `ref_icon_installed.jpg`.
+
+---
+
+## Status table
+
+| # | Task | Status |
+|---|---|---|
+| P3‑1 | New app icon (crescent + open Quran, glowing blue/gold) | ✅ done, `flutter analyze` clean |
+| P3‑2 | Rename "السبحة" → "المسبحة" everywhere | ✅ done |
+| P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | queued — see notes |
+| P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | 🔶 header card ✅ done + live-verified; per-card patterns + animated/interactive prayer card still open (animated prayer card superseded by round-2 **P3-22**, see below) |
+| P3‑5 | **Login / accounts — architecture decision** | ✅ **answered: optional** (guest mode stays default, sign-in adds sync) — not yet built |
+| P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
+| P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
+| P3‑8 | Mushaf reader: confirmed real bugs + feature requests | queued, some unblocked now |
+| P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed (فاسقين dagger-alif bug + نشورا/منشورا word-boundary bug); tafsir-ayah-link + non-Hafs-gating still open |
+| P3‑10 | "معاني الكلمات" tab — remove unless a real source is found | ✅ done — tab removed |
+| P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | ✅ **done, live-verified on emulator** — المقدمة filtered, swipe nav, and the grid-hub redesign (2-column card grid, all 133 real sections after المقدمة, each card icon-matched by keyword) all shipped and confirmed on-device |
+| P3‑12 | Tasbeeh redesign to match reference | ✅ **done, live-verified on emulator** — matches `ref_tasbeeh.jpg` closely |
+| P3‑13 | Persistent prayer notification — confirmed real bug + "must not be dismissible" | **blocked on live device/logcat** — a dead second implementation found + removed along the way, see P3‑19 |
+| P3‑14 | Settings: Russian layout bug, French locale | 🔶 Russian bug ✅ fixed (was a Khatma-card layout bug, not a Settings screen bug — see below); French still open |
+| P3‑15 | Library: slow reader, page-nav redesign, مكتبتي split, catalog scope | 🔶 catalog +3 books DONE, مكتبتي split DONE; reader speed + page-nav redesign still open |
+| P3‑16 | New "الصلاة" bottom-nav tab incl. professional Qibla compass | queued, unblocked (feeds P3‑4) |
+| P3‑17 | R2 hosting migration | ✅ done this session, see `HOSTING.md` — rotate token / old-bucket decision still open |
+| P3‑18 | P2‑8 items already approved (#11 app-lock, #12 group khatma w/ real sign-in) | queued, **#12 folds into P3‑5** |
+| P3‑19 | Dead native notification code found + removed; Android-14 full-screen-intent permission gap found + fixed | ✅ all done — cleanup, native check/settings-launch methods, and the settings card all shipped |
+
+---
+
+## P3‑1 — App icon ✅ DONE
+
+New mark: a crescent moon (glowing blue→gold gradient) cradling an open
+Quran/mus-haf (gold pages, gilt spine), a few soft stars, on a deep-navy
+radial glow field — matching the owner's reference image and reasonably
+close to `design_refs/ref_icon_installed.jpg`. Rebuilt as code, same
+reproducible pipeline as the P2‑1.5/mosque redesigns:
+
+- `rafeeq_app/assets/icon/src/icon_full.svg` / `icon_fg.svg` / `icon_bg.svg`
+  rewritten (crescent via the standard two-arc "moon" construction — **not**
+  two full circles combined with `evenodd`, which XORs instead of
+  subtracting whenever the discs aren't fully nested; found this the hard
+  way rendering an intermediate version and fixed it before finalizing).
+- Rendered via headless Chrome per `assets/icon/src/README.md`'s existing
+  recipe (transparent-background flag on the foreground layer, alpha
+  sanity-checked: corner pixel `A=0`), `dart run flutter_launcher_icons`
+  regenerated all Android densities + adaptive XML + iOS. `flutter analyze`
+  clean.
+- Visually reviewed by rendering + reading the SVG/PNG at each step (not
+  just assumed) — iterated once on the crescent geometry after the first
+  pass came out as a near-full ring instead of an open crescent.
+
+**Not yet re-verified on-device** — will show up in the next APK build.
+
+## P3‑2 — "السبحة" → "المسبحة" ✅ DONE
+
+All 3 occurrences in `ar.json` (`home.tasbeeh`, `azkar.tasbeeh`,
+`azkar.tab_tasbeeh`) updated. Parity unaffected (values changed, not keys).
+
+## P3‑3 — RGB theme restyle
+
+Owner: "خلي ثيم التطبيق rgb قريب للثيم اللي انت شايف في صورة المسبحة" (make
+the RGB theme close to the theme in the tasbeeh reference image). Looking at
+`design_refs/ref_tasbeeh.jpg`: a near-black background, a soft emerald/teal
+glowing ring around the counter circle, small scattered star-dots, warm gold/
+purple/teal/blue pill buttons for the four dhikr choices — calmer and darker
+than the current `rgb_backdrop.dart` (which leans brighter neon teal/violet/
+gold aurora). Plan: keep the existing seam (`AppTheme.rgb()` +
+`RgbScaffoldBackground`/`_RgbPainter`, §5.6 of `HANDOVER.md`) but tone the
+palette darker/calmer and make the "glow ring" motif (seen around the
+tasbeeh counter and echoed faintly in the Home reference's cards) a
+recurring accent rather than a full aurora wash. Not started.
+
+## P3‑4 — Home screen redesign
+
+Two different asks layer on top of each other here — keep them straight:
+
+1. **From the long feedback message:** replace the "رفيق الدرب" title +
+   "صباح/مساء الخير" greeting with **one fixed RGB card**, same in every
+   theme, showing: Hijri date (right, RTL "far side"), "مرحبا بك يا
+   `<username>`" (center — needs P3‑5), Gregorian date (left). All cards
+   app-wide get a calm, theme-aware Islamic-pattern background.
+2. **From `design_refs/ref_home.jpg`:** the actual reference layout — top:
+   Hijri + Gregorian date row, a live `HH:MM:SS` clock, "الصلاة القادمة"
+   pill with countdown ("متبقي 1 ساعة و 7 دقيقة"), location line; a row of
+   4 colored prayer-time chips; a "متابعة القراءة" (continue-reading) card;
+   the Khatma card (redesign, see P3‑6); an ornate "حديث شريف" card with
+   decorative corner flourishes. This is the concrete shape to build
+   toward — closer to the existing Home's *content* (next-prayer, khatma,
+   random-hadith cards already exist per P2‑6/11/13) than to a wholesale
+   redesign; the work here is mostly the visual language (the RGB glow
+   card, the live countdown clock, the ornamental hadith frame) and the new
+   date/greeting header, not new data plumbing.
+
+**✅ Header card done + live-verified.** New `_HeaderCard` in
+`home_screen.dart` replaces the old AppBar title + time-of-day greeting
+entirely: a fixed dark navy→teal→violet gradient card (same in every app
+theme, a static echo of the RGB theme's own palette, gold-tinted border
+glow) with the real Hijri date (`hijri` package, `HijriCalendar.now()`) at
+the row's start, "مرحبا بك" centred, the real Gregorian date
+(`DateFormat.yMMMd`, locale-aware) at the end — "start"/"end" not literal
+left/right, so it mirrors correctly in both RTL and LTR locales rather than
+hardcoding a side. P3‑5 was answered (optional login) but **login itself
+isn't built yet**, so the welcome text is honestly generic ("مرحبا بك"),
+not a placeholder name — swap it for the real signed-in name once accounts
+exist, per rule 1 (never invent data). +6 keys × 5 locales
+(`home.welcome_guest`). `flutter analyze` clean, `flutter test` 15/15,
+**and live-verified on `emulator-5554`**: installed a fresh debug build,
+confirmed the card renders exactly as intended — "٢١ ربيع الأول ١٤٤٨ هـ"
+right, "مرحبًا بك" centre, "٣ سبتمبر ٢٠٢٦" left, correct real dates for
+today.
+
+**Still open:** per-card calm Islamic-pattern backgrounds (app-wide, not
+just Home), the animated/interactive prayer-times card + live countdown
+clock (`ref_home.jpg`'s `HH:MM:SS` + "متبقي 1 ساعة و 7 دقيقة" pill), the
+ornamental "حديث شريف" card framing, the "متابعة القراءة" continue-reading
+card (doesn't exist yet as its own card — currently folded into the Khatma
+card's "اقرأ اليوم").
+
+## P3‑5 — Login / accounts — owner decision needed
+
+The long feedback message says login should happen "في بداية التطبيق" (at
+the start of the app) so khatma/azkar/settings persist per user — this is a
+bigger claim than P2‑8 #12's "group khatma needs accounts" (already
+approved with real Google Sign-In, `PHASE2_RESEARCH.md` §12): it asks for
+accounts to gate **the whole app**, reversing the deliberately-documented
+"guest mode is the only mode" architecture (`HANDOVER.md` STAGE 7).
+
+**Ask the owner directly before writing any of this:** is login
+**mandatory** (no using the app at all pre-sign-in) or **optional** (guest
+mode still works exactly as today; signing in adds the personalized
+card + lets data follow the account across devices)? This one answer
+determines the onboarding flow, whether local-only data needs a "guest →
+signed-in" migration path, and how big this task actually is.
+
+## P3‑6 — Khatma card
+
+- ✅ **Fixed: "افتح المصحف" (and "قرأت اليوم" from inside the full
+  `KhatmaScreen`) did nothing but pop back to Home.** Root cause:
+  `AppShell`'s bottom-nav tab index was local `State`, reachable only via a
+  `HomeNavigate` `InheritedWidget` scoped to `HomeScreen`'s own subtree —
+  `KhatmaScreen`, pushed as a separate route sitting in the `Navigator`'s
+  `Overlay`, isn't a descendant of it, so the callback was always null there.
+  New `lib/app/shell/tab_request_provider.dart` (`requestedTabProvider`)
+  mirrors the existing `quranJumpRequestProvider` seam — any pushed screen
+  sets a target tab, `AppShell` listens and switches, then resets to null.
+- ✅ **Added an undo for "قرأت اليوم".** `KhatmaStore.restore(previous)`
+  reverts to the exact pre-tap snapshot; a snackbar with a "تراجع" action
+  (new `common.undo` key, all 5 locales) shows right after marking today
+  read, from both the Home card's inline button and the full manager's
+  tile. `flutter analyze` clean, `flutter test` 15/15 (2 new cases added in
+  the same pass for the search fixes below).
+- Still open: the duplicated "ختمة جديدة" label (shows both below and
+  inside/on the button), and the full redesign to `design_refs/ref_home.jpg`'s
+  compact card language (no image of the specific "ختمة" app referenced was
+  attached — that reference image is the closer, actually-in-hand one).
+
+## P3‑7 — Adhan
+
+**Confirmed real bugs (need live device/logcat, not guesswork):**
+- Full-screen video/karaoke screen **never appears at all** on a real
+  device, tapping "تجربة" only shows a notification.
+- Stop/Mute buttons on that notification **do nothing**.
+- Selecting a different adhan while one is previewing/playing doesn't stop
+  the previous one — can overlap.
+
+**Feature requests (unblocked, no device debugging needed to build):**
+- Setting: let the alert go full-screen **regardless of lock state**, not
+  only when locked.
+- Auto-play a preview immediately on selecting an adhan (no separate play
+  tap).
+- A dedicated **preview button for adhan video** clips (audio already has
+  one).
+- Redesign the "طريقة العرض" / "الأذان الافتراضي" pickers as a card with a
+  dropdown; also let the user choose **how** pickers present app-wide —
+  popup/dropdown vs. full-screen.
+- Owner will supply **10 of his own adhan audio files** to replace all
+  currently-bundled ones ("مش عاجباني" — he doesn't like any of the current
+  sounds). Wait for the files before removing the current 10.
+
+## P3‑8 — Mushaf reader (text/image/Sunan as-Suwar)
+
+**Re-investigated live on `emulator-5554` — the back button itself turned
+out to work correctly, at least for the Sunan as-Suwar single-surah
+reader:** opened سورة السجدة from Home, the AppBar's auto-generated back
+arrow (mirrored to the top-right under RTL — correct Material behaviour,
+not a bug) was there and, once tapped at its actual coordinates (a first
+attempt missed — its real hit-box is `[943,74]-[1070,200]` in a
+1080×2400 frame, easy to eyeball wrong), it returned cleanly to Home. No
+`PopScope` override anywhere in `single_surah_screen.dart`, so there was
+nothing to have broken it in the first place. **This makes the "no back
+button" complaint most likely a description of the already-fixed P3‑6
+khatma navigation bug** (tapping "افتح المصحف" used to silently strand the
+user on Home with the reader never really opening, which could easily read
+as "opened somewhere with no way back") rather than a separate defect in
+the mushaf/Sunan-as-Suwar chrome itself. Left open, not closed: the plain
+Quran tab (`QuranScreen`) is a bottom-nav **root** tab, not a pushed route —
+Android backing out of a root tab to the home screen/launcher is standard,
+expected behavour there, not a bug to fix. The "error indicator top-right"
+part of the original report is still unexplained — not reproduced this
+pass; flag it again with a screenshot if it still shows up.
+
+**Other bugs / gaps, all unblocked:**
+- No pinch-to-zoom in text **or** image mode.
+- Paging feels like it re-fetches per page rather than reading the local
+  cache — re-verify `MushafPageService`'s disk-cache hit path; the owner
+  flagged this as high priority.
+- Missing: a bottom surah-name scroll strip for fast jump-navigation.
+- Missing: captions under the Quran-tab toolbar icons.
+- Missing: first-open-of-Quran-tab prompt to pick + download a mushaf
+  edition immediately, saved locally.
+- Missing: first-app-install onboarding prompting the user to pick +
+  download an image mushaf edition **and** a recitation — flagged
+  "أساسيين" (essential), i.e. should happen up front, not be left to
+  discover.
+
+## P3‑9 — Search & tafsir correctness
+
+- ✅ **Fixed: substring-match bug** ("نشورا" matching inside "منشورا"). New
+  `arabicWordBoundaryContains()` (`arabic_normalize.dart`) requires a match
+  to start at a word boundary (index 0 or right after a space) in both
+  `QuranRepository.search()` and `HadithRepository.search()` — a useful
+  *prefix* match within a word (e.g. "رحم" → "الرحمن") still works, since
+  only the start is constrained.
+- ✅ **Fixed: "فاسقين" returned nothing.** Root cause found by querying
+  `quran_local.db` directly with sqlite3 rather than guessing: U+0670 (the
+  Quranic "dagger alif", the small mark inside "ٱلْفَٰسِقِينَ") was being
+  stripped to nothing instead of expanded to ا — so the correctly-spelled
+  query could never match. Fixed in `normalizeArabic`, but that alone
+  breaks a small, separate, well-known exception list (الرحمن, هذا, ذلك,
+  لكن, السماوات, …) where modern typed Arabic *omits* that same letter —
+  so a new `normalizeArabicLoose` was added alongside it, and both
+  search functions now check a query against both normalized forms. Full
+  before/after verified directly against the real bundled DB (19 real hits
+  for "فاسقين" after the fix, vs. 1 spurious hit before). `arabic_normalize_test.dart`
+  covers all three cases now. **Not yet re-verified on-device/emulator** —
+  will show up in the next build.
+- **Still open:** tafsir not linked to the right ayahs (a real lookup/data
+  mismatch, separate from the two fixes above) and tafsir/translation
+  gating for non-Hafs riwayat editions (`MushafEdition.sciencesAvailableFor`
+  — re-check the gating message logic).
+
+## P3‑10 — "معاني الكلمات" tab
+
+Owner repeats a decision already recorded in `PHASE2_RESEARCH.md`'s
+word-meanings section: this tab should be real *gharib al-Qur'an* (Arabic
+word explanations), not the English-gloss stopgap currently shown. **Now
+explicit: if no real ayah-aligned free source is wired in, remove the tab
+entirely** rather than keep shipping the English version dressed up next to
+the Arabic word. (`al-Mufradat fī Gharīb al-Qurʾān` by al-Rāghib al-Iṣfahānī
+is the one real PD candidate found so far, root-indexed — needs a matching
+pipeline against `word_grammar.root` that was never built; build it or pull
+the tab.)
+
+## P3‑11 — Azkar redesign ✅ DONE, live-verified
+
+- ✅ "المقدمة" (intro) section filtered out entirely.
+- ✅ Bottom arrow-navigation buttons removed; navigation is by **swipe**
+  now, direction-aware (RTL-correct for Arabic).
+- ✅ **Grid-hub redesign shipped.** Investigated the real `azkar_sections`
+  table directly (134 real Hisn al-Muslim sections, sqlite3 query against
+  the bundled DB) before building anything: `ref_azkar_hub.jpg`'s apparent
+  6-category taxonomy (أذكار الصباح /
+  المساء / التسبيح والتحميد /
+  أذكار النوم / أدعية قرآنية /
+  الاستغفار as separate cards) does **not** map cleanly
+  onto the real 133-section data — correctly declined to invent that
+  structure (rule 1: no fabricated data), and instead rebuilt `_SectionsTab`
+  (`azkar_screen.dart`) to show all 133 real sections as a 2-column
+  `SliverGrid` of new `_AzkarSectionCard`s, each with a real section title
+  and an icon picked by a new keyword-matching `_azkarIcon()` helper (~23
+  keyword→icon mappings), plus a "من حصن المسلم
+  وكتب السنة" subtitle and a "اختر نوع
+  الذكر" header (new `azkar.hub_subtitle`/`azkar.choose_type`
+  keys, +2 keys × 5 locales). `flutter analyze` clean, `flutter test`
+  15/15.
+
+**Live-verified on `emulator-5554`, not just built:** installed a fresh
+debug build (worked around an `INSTALL_FAILED_INSUFFICIENT_STORAGE` error
+via `adb uninstall` before install — emulator disk was near-full), walked
+the notification + location permission dialogs (`uiautomator dump`-derived
+exact coordinates), confirmed the grid renders with real section titles/
+icons starting right after المقدمة (item #1 is really
+"فضل الذكر", not the old intro), and confirmed tapping a
+card ("فضل الذكر") opens its section reader correctly — which
+also showed the earlier swipe-nav work rendering correctly there (no arrow
+buttons, "مرّر للتنقل بين الأذكار" hint
+visible, working back button, real ayah/dhikr content, "تم بحمد
+الله" completion button).
+
+## P3‑12 — Tasbeeh redesign ✅ DONE, live-verified
+
+Rebuilt `_TasbeehTab` (`azkar_screen.dart`) to match `design_refs/ref_tasbeeh.jpg`
+— this changed the actual interaction model, not just decoration: the old
+33/100/1000 numeric-target chips are gone, replaced with **4 colour-coded
+dhikr-phrase pills** (سبحان الله blue / الحمد لله green / الله أكبر purple
+/ لا إله إلا الله gold — new `_DhikrOption`/`_DhikrPill`), a glowing circle
+(colour + border + `BoxShadow` matching the selected pill) showing the
+phrase + a live count + "اضغط للتسبيح", a fixed classical target of 33 that
+rolls the count back to 0 and advances "عدد الجولات" (rounds) instead of
+climbing to an arbitrary ceiling, a "المجموع" chip tracking the running
+total across every dhikr/round this session, and a trash icon that clears
+everything. +9 keys × 5 locales (the 4 dhikr phrases are religious content,
+kept identically Arabic in every locale file — same convention as
+`adhan_text.dart`/du'a text elsewhere; only the UI-chrome keys are actually
+translated per locale). `flutter analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`, not just built:** installed the debug
+build, opened الأذكار → المسبحة, confirmed all 4 pills render with the
+right colours and the selected one (سبحان الله) glows; tapped the circle 3
+times → count went to 3, المجموع went to 3; switched to الحمد لله → circle
+re-coloured green, its own phrase shown, count reset to 0, **المجموع stayed
+at 3** (confirmed the running total is per-session not per-dhikr, as
+intended). Not yet exercised: reaching a full round of 33, the trash-clear
+button, haptics (emulator has no haptic feedback to observe).
+
+## P3‑13 — Persistent prayer status notification
+
+**Confirmed real bugs, need live device/logcat:**
+- Doesn't appear at all on the real device ("مش شغال يا معلم").
+- When swiped away from the shade, it must **not** be removable — should
+  behave as a true always-on notification Android can't casually dismiss
+  (current code already sets `ongoing`/`autoCancel:false` — either that
+  isn't taking effect on this OS version, or the notification isn't being
+  posted at all; same investigation as P3‑7).
+
+## P3‑14 — Settings
+
+- ✅ **Russian locale bug FIXED.** The screenshot the owner sent showed it
+  wasn't actually a Settings-screen bug at all — it was the Home screen's
+  Khatma card title ("Хатм Корана") rendering **one Cyrillic letter per
+  line** down the whole card. Root cause: `KhatmaCard._ActiveKhatmaRow` put
+  the progress ring, an `Expanded` title column, *and* the "read today"
+  button in one `Row` — the button isn't width-constrained, so it claims
+  its full natural width, and Russian's button label is far longer than
+  Arabic's ("Читать сегодня (4 стр.)" vs. "اقرأ اليوم (٤)"), squeezing the
+  `Expanded` title down to a couple of pixels. Fixed generically (this
+  wasn't a Russian-only patch — any locale with a long enough label would
+  trigger it): the button moved to its own row below instead of sharing one
+  with the title, mirroring the same layout `_BatteryCard`/
+  `_FullScreenIntentCard` already use. `khatma_screen.dart`'s own tile was
+  checked for the same anti-pattern and is already safe (both its buttons
+  are individually `Expanded`, 50/50). **Not yet checked:** other Home
+  cards for the identical anti-pattern — this was fixed where the owner's
+  screenshot pointed, not swept for everywhere else it might also exist.
+- **French** is apparently listed as supported but not actually wired in —
+  needs scoping: Phase 2's 5 locales were ar/en/es/ru/pt (`fr` was never
+  one of them). Check whether the owner means adding French as a genuine
+  6th locale (full `fr.json` at parity, `main.dart` `supportedLocales`,
+  language picker, translation-parity test update) or whether something is
+  already half-there and just broken — grep for `fr.json`/`'fr'` before
+  assuming which.
+
+## P3‑15 — Library
+
+- Book (image PDF) reader is **very slow** — profile `SfPdfViewer` usage,
+  check for unnecessary rebuilds/full-file loads vs. lazy paging. Still open.
+- Page navigation redesign: scroll + a fast jump strip, refreshed visual
+  design, add pinch-zoom (echoes P3‑8's mushaf zoom ask — consider sharing
+  a zoom-wrapper widget between the two readers if the code ends up
+  similar). Still open.
+- ✅ **DONE.** "مكتبتي" now shows two clearly separate, headed sections
+  (مصوّر then نصي) instead of one flat list interleaving both editions of
+  the same book.
+- ✅ **DONE (first batch).** Catalog expansion ("زي الشاملة") resolved —
+  the owner clarified, once asked, that this meant *the نص reading design*
+  for the specific authors already requested back in P2-4 (Ibn Taymiyyah,
+  al-Hakim al-Tirmidhi, Ibn Abi al-Dunya), not a literal full mirror of
+  Shamela. Added all 3, built with the exact same `build_book_text.py`
+  pipeline and provenance discipline as the original 5, نص-only (no
+  مصوّر hunted for these — the owner's explicit call; `LibraryBook`'s
+  image-PDF fields are now nullable, a new `hasImage` getter gates the
+  مصوّر|نص switch so it only shows when both editions actually exist):
+  - **العقيدة الواسطية** (Ibn Taymiyyah, d. 728 AH) — Shamela 22665, ed.
+    Ashraf ʿAbd al-Maqsud, Aḍwā’ al-Salaf. 72 pages, `printReliable: true`.
+  - **نوادر الأصول في أحاديث الرسول** (al-Ḥakīm al-Tirmidhī, d. ~320 AH)
+    — Shamela 720, ed. ʿAbd al-Raḥmān ʿUmayra, Dār al-Jīl (4 volumes).
+    1237 pages. Honesty flag carried into `descriptionAr` itself, not
+    hidden: this specific book is one classical hadith scholarship itself
+    flags as containing a number of weak/unverified narrations alongside
+    sound ones — a real characteristic of this book in any edition,
+    unrelated to Shamela or this project.
+  - **الصمت وآداب اللسان** (Ibn Abi al-Dunya, d. 281 AH) — Shamela
+    13039, ed. Abū Isḥāq al-Ḥuwaynī al-Athari, Dār al-Kitāb al-ʿArabī.
+    787 pages.
+  - All 3 uploaded to R2 (`rafeeq-content/books/text/*.json`, the migrated
+    host from P3‑17/`HOSTING.md` — not GitHub), byte-verified via
+    `head_object` **and** a live `curl -I` against the public URL, same
+    discipline as the R2 content migration. `flutter analyze` clean,
+    `flutter test` 15/15.
+  - **Not yet done:** more titles beyond these 3 (the owner's "زي
+    الشاملة" reads as "keep growing this," not "these 3 and stop"), and
+    the "if you find a مصوّر too, fine" half of the instruction — none of
+    the 3 new books had an image edition specifically sought this pass.
+
+## P3‑19 — Dead code found & removed (not owner-reported)
+
+While investigating why the persistent prayer notification (P6/P3‑13)
+might not fire on a real device, `MainActivity.kt` turned out to carry a
+**second, completely different, entirely dead** native implementation of
+essentially the same feature: a `com.tito.rafeeq_aldarb/salatuk_notification`
+method channel building a custom `RemoteViews` notification
+(`notification_salatuk.xml`, 6 prayer-time chips + a native chronometer) —
+**never called from any Dart code** (confirmed by grep — no
+`MethodChannel('...salatuk_notification')` anywhere under `lib/`). This
+doesn't explain the reported bug (dead code can't misfire), but its
+existence — completely undocumented in `HANDOVER.md`'s P2‑6 history — is
+worth the owner knowing: it strongly suggests an earlier, undocumented
+attempt at this exact feature before `prayer_status_notification.dart`'s
+pure-Dart approach (the one `HANDOVER.md` actually describes) was built.
+Removed the method channel handler, the now-orphaned
+`showCustomNotification` function, and the unused layout XML — real APK
+bloat and a real source of confusion for the next reader, owner included.
+`prayer_status_notification.dart` itself was read closely for a live bug
+and none was found by static review — its logic matches exactly what
+`HANDOVER.md` already documented as emulator-verified working; **P6/P3‑13
+genuinely needs a live device/logcat to diagnose further**, not more
+guessing.
+
+Also reviewed the Adhan Stop/Mute action-button wiring
+(`adhan_alarm_service.dart`'s `_onNotificationResponse` /
+`AndroidNotificationAction`s) end to end — structurally correct and
+unchanged from what STAGE 1 already verified working on both emulator and
+a real device. No defect found by static review; **P3‑7's remaining bug
+half also needs a live device**, not another guess. One thing this review
+did turn up as a real, concrete, fixable gap (not confirmed as *the*
+cause here, but a genuine gap regardless): **Android 14+ (API 34) requires
+the user to separately, manually grant a "Turn on full-screen
+notifications" toggle** per app
+(`Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT`) — the
+`USE_FULL_SCREEN_INTENT` manifest permission alone is no longer sufficient
+on a fresh install targeting API 34+; without it, Android silently
+downgrades a full-screen-intent notification to an ordinary heads-up one,
+which matches "a notification appears but full-screen never does" exactly.
+**✅ Built the same session, not left as a finding:** `MainActivity.kt`
+gained `canUseFullScreenIntent` (native check, always `true` below API 34)
+and `openFullScreenIntentSettings` (launches
+`Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT`), bridged through
+`AdhanUriBridge`; `adhan_settings_screen.dart` shows a card — same visual
+pattern as the existing battery-optimization-exemption one — when the OS
+reports the grant is missing, and re-checks on app resume (the grant is
+made from a system settings screen, not an in-app dialog, so there's no
+synchronous result to read). +4 keys × 5 locales
+(`prayer.full_screen_intent` / `_action`). `flutter analyze` clean,
+`flutter test` 15/15, and — unlike the pure-Dart changes elsewhere this
+session — this one touches native Kotlin, so it was also verified with a
+real `flutter build apk --debug` (not just `flutter analyze`, which can't
+see Kotlin errors at all) to confirm it actually compiles. **Not yet
+verified on-device** whether granting this actually fixes the reported
+full-screen symptom — that still needs the real phone.
+
+## P3‑16 — New "الصلاة" (Prayer) bottom-nav tab
+
+Consolidates what's scattered today (Adhan settings, P2‑6's notification
+toggle, reminders) into one tab, **plus a new, visually polished Qibla
+compass** — a real compass using the device magnetometer + location, "روعه
+بصريا... باحترافية شديدة جدا" (owner was explicit this should look
+genuinely professional, not a placeholder arrow). `design_refs/ref_home.jpg`
+and `ref_tasbeeh.jpg`'s bottom nav both already show a "الصلاة" tab slot
+between المسبحة and القرآن, matching where this should sit. Feeds P3‑4 (the
+Home prayer card should navigate here on tap).
+
+## P3‑17 — R2 hosting migration ✅ DONE (this session)
+
+See `HOSTING.md` §2/§7. Still open: rotate the R2 token that was pasted
+into chat to provision this; decide the contaminated old
+`rafeeq-aldarb-data` bucket's fate (recommend: delete it, and check the
+Cloudflare billing page — that bucket alone is already over the free 10 GB
+tier).
+
+## P3‑18 — P2‑8 items already approved
+
+From the same real-device session, before the big feedback message: owner
+approved building **#11** (app-lock during prayer time, sensitive
+Accessibility/UsageStats permission — approved as-is) and **#12** (group
+khatma) with **real Google Sign-In** specifically (not the anonymous-id
+fallback) — which now folds directly into **P3‑5** above; do them together,
+not as two separate accounts efforts. #8 (tajweed-colour text mode) and #13
+(radio) are still just research-confirmed-buildable, not started.
 
 ---
 
