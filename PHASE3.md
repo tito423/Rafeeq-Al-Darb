@@ -226,12 +226,24 @@ part of the original report is still unexplained — not reproduced this
 pass; flag it again with a screenshot if it still shows up.
 
 **Other bugs / gaps, all unblocked:**
-- No pinch-to-zoom in text **or** image mode.
-- Paging feels like it re-fetches per page rather than reading the local
-  cache — re-verify `MushafPageService`'s disk-cache hit path; the owner
-  flagged this as high priority.
+- No pinch-to-zoom in text **or** image mode. — **re-check before assuming**:
+  `mushaf_text_page.dart` already wraps text mode in an `InteractiveViewer`
+  (`minScale: 1, maxScale: 3`), found while working P3-32/P3-34 — needs a
+  live-device/emulator pinch-gesture check, not more code review, to
+  confirm it actually works (or find why it might not).
+- ✅ **Re-verified, does not reproduce — likely stale.** Read
+  `MushafPageService.svgForPage()` closely: it checks an in-memory ring
+  buffer, then disk, then network, in that order, and only writes to disk
+  once a download is confirmed complete (`_isIntact`). Live-tested on
+  `emulator-5554` in image mode: paged forward 1→4 (each new page shows a
+  real "جارِ تحميل الصفحة..." loading state, as expected for a genuine
+  first fetch), then paged back 4→3→1 — **every revisited page rendered
+  instantly, screenshotted with zero delay between the tap and the full
+  page appearing, no loading state at all** — exactly what a cache hit
+  should look like. No re-fetch bug found; flag again with a specific
+  page number/reproduction if it's still felt on a real device.
 - Missing: a bottom surah-name scroll strip for fast jump-navigation.
-- Missing: captions under the Quran-tab toolbar icons.
+- ✅ **Done — captions under the Quran-tab toolbar icons**, see P3-34.
 - Missing: first-open-of-Quran-tab prompt to pick + download a mushaf
   edition immediately, saved locally.
 - Missing: first-app-install onboarding prompting the user to pick +

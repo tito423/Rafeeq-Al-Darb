@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 01:15 — IN PROGRESS — resume here**
+**2026-09-04 02:00 — IN PROGRESS — resume here**
 
-P3-34 toolbar redesign DONE + live-verified: Quran tab's 8 plain IconButtons replaced with a captioned, animated row (new _ToolbarAction, icon+label+press-scale) in AppBar.bottom (full-width, horizontally scrollable, can't overflow-crash); scroll re-confirmed not regressed; scroll-speed-control left unbuilt pending owner clarification on what it means
+P3-8 investigation: mushaf page caching re-verified live on emulator (paged forward then back, revisited pages rendered instantly with zero delay, no re-fetch) - does not reproduce, likely stale; text-mode pinch-zoom already exists in code (InteractiveViewer), needs a live pinch-gesture check not more review; toolbar captions item marked done (delivered by P3-34). Docs only, no code change this step.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
