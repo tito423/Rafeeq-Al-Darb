@@ -768,12 +768,29 @@ play + stop into a single button that flips state (matches the existing
 tasbeeh circle / khatma pattern of one affordance that toggles). Not
 started.
 
-## P3-36 — Home: changing the daily-hadith card should not scroll the page
+## P3-36 — Home: hadith reroll ✅ DONE, live-verified
 
-`daily_hadith_card.dart`'s "reroll" button currently seems to cause the
-whole Home `ListView` to jump/scroll to the top when pressed — should stay
-put, only the card's own content should update. Real, fixable bug once
-reproduced; not started.
+Root cause found by reading `daily_hadith_provider.dart`, not by guessing:
+`reroll()` set `state = const AsyncLoading()` before picking a new hadith,
+and the card's `AsyncValue.when()` reacted to that by swapping the *entire*
+card (several lines of hadith text, chip, etc.) for a 60px spinner box for
+the moment the pick took, then back — on a scrolled-down Home that height
+swing shifted everything below the card, which read as "the screen jumps
+to the top". Fixed at the root: `reroll()` no longer emits an intermediate
+loading state (`_pick()` is a fast local SQLite lookup — there's nothing
+worth showing a loading state for), so the card's layout never changes
+size during a reroll. `_PickedHadith` converted to
+`ConsumerStatefulWidget` with its own small `_rerolling` flag purely for
+the refresh button's own icon (swaps to a tiny in-button spinner while
+awaiting), completely decoupled from the provider's state and the card's
+size. `flutter analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`:** downloaded `hadith.zip`, scrolled
+Home down until the (long, near-max-height) hadith card was fully in view,
+tapped "حديث آخر" and screenshotted immediately after — the hadith text,
+book, and grade all changed completely (سنن النسائي #5012 → جامع الترمذي
+#544) while the visible scroll position stayed pixel-identical (same cards
+visible above/below, no jump).
 
 ## P3-37 — App display name follows the device's system language, not just the app's own locale setting
 
@@ -812,5 +829,5 @@ language `easy_localization` starts in, shown top of a dropdown as
 | P3-33 | Tafsir tab → single dropdown + inline download | queued, unblocked, ties to P3-31 |
 | P3-34 | Text mode: scroll/speed control + toolbar icon redesign+captions+animation | queued, unblocked (re-verify scroll didn't regress) |
 | P3-35 | Ayah card: single play/stop toggle button | queued, unblocked |
-| P3-36 | Home: hadith reroll shouldn't scroll the page | queued, unblocked |
+| P3-36 | Home: hadith reroll shouldn't scroll the page | ✅ **done, live-verified** — root cause was the card collapsing to a spinner mid-reroll, not a scroll bug at all |
 | P3-37 | App display name follows device system language on first run | queued, unblocked |

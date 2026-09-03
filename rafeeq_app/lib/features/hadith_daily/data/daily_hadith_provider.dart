@@ -24,8 +24,18 @@ class DailyHadithNotifier extends AsyncNotifier<DailyHadith?> {
   @override
   Future<DailyHadith?> build() => _pick();
 
+  /// P3‑36: this used to set `state = const AsyncLoading()` before picking —
+  /// harmless in isolation, but the Home card's `AsyncValue.when()` reacted
+  /// to it by collapsing the whole card (several lines of hadith text) down
+  /// to a 60px spinner box for the moment the pick took, then back up once
+  /// it resolved. On a scrolled-down Home screen that height swing shifted
+  /// everything below the card, which read as "the screen jumps to the
+  /// top". `_pick()` is a fast local SQLite lookup, so there's nothing
+  /// worth showing a loading state for — go straight from the old value to
+  /// the new one; the card's UI shows its own small in-button spinner
+  /// instead (`daily_hadith_card.dart`'s `_rerolling`), without touching
+  /// this provider's state or the card's layout at all.
   Future<void> reroll() async {
-    state = const AsyncLoading();
     state = await AsyncValue.guard(_pick);
   }
 

@@ -149,11 +149,28 @@ class _DownloadPromptState extends State<_DownloadPrompt> {
   }
 }
 
-class _PickedHadith extends ConsumerWidget {
+class _PickedHadith extends ConsumerStatefulWidget {
   const _PickedHadith();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_PickedHadith> createState() => _PickedHadithState();
+}
+
+class _PickedHadithState extends ConsumerState<_PickedHadith> {
+  // P3‑36: local, layout-invisible "in flight" flag for the reroll button's
+  // own spinner — deliberately NOT derived from the provider's AsyncValue
+  // (see the doc on `DailyHadithNotifier.reroll`), so a reroll can never
+  // collapse the card itself, only swap this one small icon.
+  bool _rerolling = false;
+
+  Future<void> _reroll() async {
+    setState(() => _rerolling = true);
+    await ref.read(dailyHadithProvider.notifier).reroll();
+    if (mounted) setState(() => _rerolling = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final async = ref.watch(dailyHadithProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -194,9 +211,14 @@ class _PickedHadith extends ConsumerWidget {
                   ),
                   IconButton(
                     tooltip: 'hadith_daily.another'.tr(),
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () =>
-                        ref.read(dailyHadithProvider.notifier).reroll(),
+                    icon: _rerolling
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.refresh),
+                    onPressed: _rerolling ? null : _reroll,
                   ),
                 ],
               ),

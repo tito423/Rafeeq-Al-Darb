@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 22:38 — IN PROGRESS — resume here**
+**2026-09-03 22:50 — IN PROGRESS — resume here**
 
-P3-29 nav DONE + live-verified: book text reader swipe+fast-jump-slider replace the old chevron buttons (SelectionArea-vs-GestureDetector gesture-arena bug found+fixed via Listener); PHASE3.md P3-1..19 content recovered after an earlier truncation bug
+P3-36 DONE + live-verified: hadith reroll no longer collapses the card to a spinner (root cause of the reported scroll-jump) - reroll() drops the intermediate AsyncLoading state, button gets its own small local spinner instead
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
