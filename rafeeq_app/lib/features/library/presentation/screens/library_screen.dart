@@ -560,11 +560,26 @@ class _BookCard extends StatelessWidget {
                 color: AppColors.gold,
               ),
               const SizedBox(height: 6),
-              Text(
-                task.total != null
-                    ? '${(task.progress * 100).round()}%'
-                    : '…',
-                style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
+              Row(
+                children: [
+                  Text(
+                    task.total != null
+                        ? '${(task.progress * 100).round()}%'
+                        : '…',
+                    style: TextStyle(
+                        color: scheme.onSurfaceVariant, fontSize: 12),
+                  ),
+                  const Spacer(),
+                  // P3‑24: the button used to just disappear while
+                  // downloading, with no way to back out — same
+                  // pause/cancel pattern `downloads_screen.dart`'s mushaf
+                  // and recitation tiles already use.
+                  TextButton.icon(
+                    onPressed: () => DownloadManager.instance.cancel(dlId),
+                    icon: const Icon(Icons.stop_circle_outlined, size: 18),
+                    label: Text('common.cancel'.tr()),
+                  ),
+                ],
               ),
             ] else
               Row(

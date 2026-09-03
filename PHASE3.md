@@ -620,14 +620,23 @@ image to copy/adapt. **Blocked on that image** — do not touch the icon
 again until it arrives, guessing a second time without a reference is not
 useful.
 
-## P3-24 — Book download button should flip to a cancel state while downloading
+## P3-24 — Book download button ✅ DONE, live-verified
 
-`library_screen.dart` / `download_manager.dart` — when a book (image or
-text) is downloading, the action button should read/act as "إلغاء" (cancel)
-instead of staying a static "تنزيل". Not started — check whether
-`DownloadManager` already exposes a `cancel(id)` the UI just isn't wired to
-(the Mushaf/Recitation download tiles already have working cancel buttons
-per P2-5 — reuse that pattern here rather than inventing a new one).
+`DownloadManager.cancel(id)` already existed but nothing in
+`library_screen.dart` called it — while a book was downloading, `_BookCard`
+showed only a progress bar and a percentage, no button at all (not even a
+disabled one), matching the report exactly. Added a "إلغاء" `TextButton.icon`
+(`Icons.stop_circle_outlined`) next to the percentage, calling
+`DownloadManager.instance.cancel(dlId)` — same visual pattern
+`downloads_screen.dart`'s mushaf/recitation tiles already use, reused
+rather than inventing a new one, `common.cancel` (existing key, no new
+translations needed). `flutter analyze` clean, `flutter test` 15/15.
+
+**Live-verified on `emulator-5554`:** started downloading رياض الصالحين
+(15.8 MB, image edition), confirmed the "إلغاء" button appeared next to
+the in-progress "…" while the progress bar filled; tapped it — download
+stopped immediately, the row cleanly reverted to the normal "تنزيل" button
+(not stuck in a half-cancelled state).
 
 ## P3-25 — Downloads "نظرة عامة" rows should jump to their own section
 
@@ -844,7 +853,7 @@ language `easy_localization` starts in, shown top of a dropdown as
 | P3-21 | First-run mushaf pick+download onboarding (real 5 editions) | queued, unblocked (extends P3-8 G4/G5) |
 | P3-22 | Home: animated interactive prayer card (frame-verified target) | 🔶 built, analyze/test clean; fallback path live-verified, **populated path blocked on this emulator's location fix** (see notes) |
 | P3-23 | Icon replacement round 2 | **blocked on owner's reference image** |
-| P3-24 | Book download button → cancel state while downloading | queued, unblocked |
+| P3-24 | Book download button → cancel state while downloading | ✅ **done, live-verified** |
 | P3-25 | Downloads overview rows jump to their own tab | queued, unblocked |
 | P3-26 | Persistent prayer notification still reported absent | **blocked on live device** (see P3-13/P3-19) |
 | P3-27 | "Download full recitation" card under the reciter picker | queued, unblocked |

@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 23:10 — IN PROGRESS — resume here**
+**2026-09-03 23:18 — IN PROGRESS — resume here**
 
-P3-35 DONE + live-verified: ayah card play/stop collapsed into one StreamBuilder-driven toggle button (new AyahAudioService.isPlayingStream); confirmed both directions on emulator via icon + uiautomator content-desc
+P3-24 DONE + live-verified: library book cards get a real cancel button while downloading (DownloadManager.cancel wiring was missing, method already existed) - same TextButton.icon pattern as the mushaf/recitation download tiles, confirmed on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
