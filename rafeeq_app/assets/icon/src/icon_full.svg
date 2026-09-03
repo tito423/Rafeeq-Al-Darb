@@ -1,65 +1,82 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="48%" r="85%">
-      <stop offset="0%" stop-color="#16A085"/>
-      <stop offset="30%" stop-color="#0F3D33"/>
-      <stop offset="65%" stop-color="#0A2620"/>
-      <stop offset="100%" stop-color="#071625"/>
+    <radialGradient id="bg" cx="50%" cy="46%" r="72%">
+      <stop offset="0%" stop-color="#123A52"/>
+      <stop offset="45%" stop-color="#0B2338"/>
+      <stop offset="75%" stop-color="#071726"/>
+      <stop offset="100%" stop-color="#03080F"/>
     </radialGradient>
-    <linearGradient id="gA" x1="0" y1="0" x2="0.15" y2="1">
+    <radialGradient id="glow" cx="50%" cy="48%" r="46%">
+      <stop offset="0%" stop-color="#7FD4F2" stop-opacity="0.32"/>
+      <stop offset="55%" stop-color="#4FA9DE" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#4FA9DE" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="crescent" x1="0.1" y1="0" x2="0.95" y2="1">
+      <stop offset="0%" stop-color="#BFEBFF"/>
+      <stop offset="35%" stop-color="#6FC6EE"/>
+      <stop offset="70%" stop-color="#3E8FC4"/>
+      <stop offset="100%" stop-color="#E8C96A"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0.2" y2="1">
       <stop offset="0%" stop-color="#F7E7AC"/>
       <stop offset="55%" stop-color="#E1BF53"/>
-      <stop offset="100%" stop-color="#C99E2E"/>
-    </linearGradient>
-    <linearGradient id="gB" x1="0" y1="0" x2="0.15" y2="1">
-      <stop offset="0%" stop-color="#EFD98C"/>
-      <stop offset="55%" stop-color="#D3B142"/>
       <stop offset="100%" stop-color="#B4841F"/>
     </linearGradient>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#F6DE94" stop-opacity="0.38"/>
-      <stop offset="55%" stop-color="#D4AF37" stop-opacity="0.08"/>
-      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
-    </radialGradient>
+    <linearGradient id="spine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDF6E3"/>
+      <stop offset="100%" stop-color="#D9B24A"/>
+    </linearGradient>
 
-    <g id="minaret">
-      <rect x="-11" y="-330" width="22" height="330" fill="url(#gB)"/>
-      <rect x="-19" y="-142" width="38" height="10" rx="2" fill="url(#gA)"/>
-      <path d="M -14 -330 A 14 14 0 0 1 14 -330 Z" fill="url(#gA)"/>
-      <rect x="-3" y="-346" width="6" height="16" fill="url(#gA)"/>
-      <circle cx="0" cy="-350" r="5" fill="#F7E7AC"/>
-    </g>
-
-    <g id="sidedome">
-      <rect x="-23" y="-18" width="46" height="18" fill="url(#gB)"/>
-      <path d="M -42 -18 A 42 42 0 0 1 42 -18 Z" fill="url(#gA)"/>
-      <rect x="-3" y="-68" width="6" height="14" fill="url(#gA)"/>
-      <circle cx="0" cy="-72" r="5" fill="#F7E7AC"/>
+    <g id="star">
+      <circle r="4.5"/>
     </g>
 
     <g id="mark">
-      <!-- minarets flanking the hall, flush with its corners -->
-      <use href="#minaret" transform="translate(330 902)"/>
-      <use href="#minaret" transform="translate(698 902)"/>
-      <!-- main prayer hall -->
-      <rect x="330" y="766" width="368" height="136" rx="6" fill="url(#gA)"/>
-      <!-- side domes on the roofline -->
-      <use href="#sidedome" transform="translate(396 766)"/>
-      <use href="#sidedome" transform="translate(628 766)"/>
-      <!-- central dome + drum -->
-      <rect x="474" y="712" width="76" height="54" fill="url(#gB)"/>
-      <path d="M 424 712 A 88 88 0 0 1 600 712 Z" fill="url(#gA)"/>
-      <rect x="507" y="584" width="10" height="40" rx="2" fill="url(#gA)"/>
-      <!-- crescent finial -->
-      <path fill-rule="evenodd" fill="#F7E7AC"
-            d="M 538 548 A 26 26 0 1 1 486 548 A 26 26 0 1 1 538 548
-               M 544 548 A 20 20 0 1 0 504 548 A 20 20 0 1 0 544 548"/>
-      <!-- doorway, cut into the hall -->
-      <path d="M 468 902 L 468 820 A 44 44 0 0 1 556 820 L 556 902 Z" fill="#0C2C29"/>
+      <!-- crescent: a single traced outline (outer arc + inner arc sharing
+           two endpoints, the standard crescent-moon construction) — not two
+           full circles combined with evenodd, which XORs instead of
+           subtracting whenever the discs aren't fully nested. Base shape is
+           the well-tested Feather "moon" icon path (24x24), mirrored
+           horizontally so the opening faces right, toward the book. -->
+      <path fill="url(#crescent)" transform="translate(858 122) scale(-27.5 27.5)"
+            d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      <!-- open book, centered slightly low, sitting in the crescent's embrace -->
+      <g>
+        <path d="M 512 452
+                 C 452 440 402 452 372 480
+                 C 362 490 358 505 358 522
+                 L 358 606
+                 C 358 618 366 624 376 618
+                 C 408 600 462 592 512 606 Z" fill="url(#page)"/>
+        <path d="M 512 452
+                 C 572 440 622 452 652 480
+                 C 662 490 666 505 666 522
+                 L 666 606
+                 C 666 618 658 624 648 618
+                 C 616 600 562 592 512 606 Z" fill="url(#page)"/>
+        <rect x="507" y="450" width="10" height="158" rx="4" fill="url(#spine)"/>
+        <g stroke="#7A5C1E" stroke-width="3.4" stroke-linecap="round" opacity="0.55">
+          <path d="M 392 500 L 452 490" fill="none"/>
+          <path d="M 392 524 L 458 514" fill="none"/>
+          <path d="M 392 548 L 452 540" fill="none"/>
+          <path d="M 632 500 L 572 490" fill="none"/>
+          <path d="M 632 524 L 566 514" fill="none"/>
+          <path d="M 632 548 L 572 540" fill="none"/>
+        </g>
+        <circle cx="512" cy="440" r="7" fill="#FDF6E3"/>
+      </g>
+      <!-- scattered stars -->
+      <g fill="#EAF6FF">
+        <use href="#star" x="270" y="330" opacity="0.9"/>
+        <use href="#star" x="742" y="360" opacity="0.75"/>
+        <use href="#star" x="300" y="640" opacity="0.6"/>
+        <use href="#star" x="700" y="660" opacity="0.85"/>
+        <use href="#star" x="512" y="270" opacity="0.7"/>
+      </g>
     </g>
   </defs>
 
   <rect width="1024" height="1024" fill="url(#bg)"/>
-  <circle cx="512" cy="700" r="380" fill="url(#glow)"/>
+  <circle cx="512" cy="512" r="420" fill="url(#glow)"/>
   <use href="#mark"/>
 </svg>
