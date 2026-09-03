@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 02:55 — IN PROGRESS — resume here**
+**2026-09-04 03:02 — IN PROGRESS — resume here**
 
-P3-8 surah-jump strip DONE + live-verified: new horizontally-scrollable surah chip strip above the Quran reader's page-nav bar, current surah auto-highlighted+auto-scrolled, tap to jump; confirmed on a freshly-restarted emulator (jump works, highlight tracks paging, no regression to existing page-turn arrows). Also updated P3-8's status summary to reflect this session's caching re-verification and toolbar-captions completion.
+P3-15 reader-speed investigation: book_reader_screen.dart already lean (plain StatelessWidget, no rebuild inefficiency to remove); live-tested with a real 15.8MB scanned book on emulator-5554, scrolled 13+ swipes deep - every frame rendered complete and correct, no lag/stutter observed. Documented honestly as not-reproduced-here rather than guessed at with a speculative code change; noted the one real available lever (SfPdfViewer pageLayoutMode) if slowness is confirmed on a real device later. Docs only, no code change this step.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
