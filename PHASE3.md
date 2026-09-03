@@ -38,7 +38,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑5 | **Login / accounts — architecture decision** | ✅ **answered: optional** (guest mode stays default, sign-in adds sync) — not yet built |
 | P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
 | P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
-| P3‑8 | Mushaf reader: confirmed real bugs + feature requests | queued, some unblocked now |
+| P3‑8 | Mushaf reader: confirmed real bugs + feature requests | 🔶 surah-jump strip ✅ done + live-verified, caching re-verified as not-a-bug (see notes), toolbar captions done (P3‑34); pinch-zoom needs a live gesture check (code already there); first-open edition prompt + first-install onboarding still open (ties to P3‑21) |
 | P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed; ✅ **tafsir-ayah-link fixed — was a major bug: ~83% of the Quran showed an earlier ayah's tafsir, plus one whole source was mislabeled (real content = Ibn Kathir, not Jalalayn) — full data rebuild, live-verified**; non-Hafs-gating still open |
 | P3‑10 | "معاني الكلمات" tab — remove unless a real source is found | ✅ done — tab removed |
 | P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | ✅ **done, live-verified on emulator** — المقدمة filtered, swipe nav, and the grid-hub redesign (2-column card grid, all 133 real sections after المقدمة, each card icon-matched by keyword) all shipped and confirmed on-device |
@@ -242,7 +242,18 @@ pass; flag it again with a screenshot if it still shows up.
   page appearing, no loading state at all** — exactly what a cache hit
   should look like. No re-fetch bug found; flag again with a specific
   page number/reproduction if it's still felt on a real device.
-- Missing: a bottom surah-name scroll strip for fast jump-navigation.
+- ✅ **Done — a fast surah-jump strip, live-verified.** New `_SurahStrip`
+  in `quran_screen.dart`: a horizontally-scrollable row of all 114 surah
+  chips above the page-number bar, the current surah's chip highlighted
+  gold and auto-scrolled into view as the reader pages through the mushaf,
+  tapping any chip jumps straight to that surah (reuses the same
+  `surahStartPages` lookup the existing full-screen "السور" sheet already
+  uses). `flutter analyze` clean, `flutter test` 15/15. **Live-verified on
+  a freshly-restarted `emulator-5554`:** chip #1 (الفاتحة) correctly
+  highlighted on page 1; tapped chip #2 (البقرة) — jumped straight to page
+  2, correct content, chip #2 highlighted; paged forward with the normal
+  arrow to page 3 (still inside البقرة) — chip #2 correctly stayed
+  highlighted, no regression to the existing page-turn controls.
 - ✅ **Done — captions under the Quran-tab toolbar icons**, see P3-34.
 - Missing: first-open-of-Quran-tab prompt to pick + download a mushaf
   edition immediately, saved locally.

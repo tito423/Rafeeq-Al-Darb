@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 02:45 — IN PROGRESS — resume here**
+**2026-09-04 02:55 — IN PROGRESS — resume here**
 
-Safety-net checkpoint: released phase3-batch7-2026-09-04 APK (P3-16 Qibla compass tab, live-verified). NEXT_SESSION_PROMPT.md updated with new APK link + a note that the emulator can hit a genuine ANR after 12+ hours of continuous uptime (not a code bug).
+P3-8 surah-jump strip DONE + live-verified: new horizontally-scrollable surah chip strip above the Quran reader's page-nav bar, current surah auto-highlighted+auto-scrolled, tap to jump; confirmed on a freshly-restarted emulator (jump works, highlight tracks paging, no regression to existing page-turn arrows). Also updated P3-8's status summary to reflect this session's caching re-verification and toolbar-captions completion.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

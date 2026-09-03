@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/db/models.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../search/presentation/screens/search_screen.dart';
 import '../../data/ayah_coords_repository.dart';
@@ -263,24 +264,42 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                icon: const Icon(Icons.chevron_left),
-                onPressed: _current > 1 ? () => _goToPage(_current - 1) : null,
-              ),
-              Text(
-                '${'quran.page'.tr()}  $_current / $_totalPages',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.chevron_right),
-                onPressed: _current < _totalPages
-                    ? () => _goToPage(_current + 1)
-                    : null,
+              // P3‑8: a fast surah-jump strip — was completely missing,
+              // the only way to jump surahs before this was the toolbar's
+              // full-screen "السور" list sheet. Only shown once real data
+              // is loaded (needs `surahStartPages` to know where to jump).
+              if (mushaf.hasValue)
+                _SurahStrip(
+                  surahs: mushaf.value!.surahs,
+                  surahStartPages: mushaf.value!.surahStartPages,
+                  currentPage: _current,
+                  onSelect: _goToPage,
+                ),
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed:
+                        _current > 1 ? () => _goToPage(_current - 1) : null,
+                  ),
+                  Text(
+                    '${'quran.page'.tr()}  $_current / $_totalPages',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: _current < _totalPages
+                        ? () => _goToPage(_current + 1)
+                        : null,
+                  ),
+                ],
               ),
             ],
           ),
@@ -346,6 +365,137 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         return;
       }
     }
+  }
+}
+
+/// P3‑8: a fast surah-jump strip — before this the only way to jump
+/// between surahs was the toolbar's full-screen "السور" list sheet, a much
+/// heavier interaction for what's often a quick "skip ahead a surah or
+/// two" move. Auto-scrolls to keep the current surah's chip in view as
+/// the reader pages through the mushaf, and tapping any chip jumps
+/// straight there (reusing the exact same `surahStartPages` lookup the
+/// full sheet already uses).
+class _SurahStrip extends StatefulWidget {
+  final List<Surah> surahs;
+  final Map<int, int> surahStartPages;
+  final int currentPage;
+  final void Function(int page) onSelect;
+
+  const _SurahStrip({
+    required this.surahs,
+    required this.surahStartPages,
+    required this.currentPage,
+    required this.onSelect,
+  });
+
+  @override
+  State<_SurahStrip> createState() => _SurahStripState();
+}
+
+class _SurahStripState extends State<_SurahStrip> {
+  static const _itemWidth = 96.0;
+  final _scrollController = ScrollController();
+
+  /// The surah whose own start page is the highest one at or before the
+  /// current page — i.e. "which surah is this page actually inside".
+  int get _currentIndex {
+    var best = 0;
+    for (var i = 0; i < widget.surahs.length; i++) {
+      final start = widget.surahStartPages[widget.surahs[i].id] ?? 1;
+      if (start <= widget.currentPage) {
+        best = i;
+      } else {
+        break;
+      }
+    }
+    return best;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _scrollToCurrent(animate: false));
+  }
+
+  @override
+  void didUpdateWidget(covariant _SurahStrip old) {
+    super.didUpdateWidget(old);
+    if (old.currentPage != widget.currentPage) _scrollToCurrent();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToCurrent({bool animate = true}) {
+    if (!_scrollController.hasClients) return;
+    final target = (_currentIndex * _itemWidth - 140)
+        .clamp(0.0, _scrollController.position.maxScrollExtent);
+    if (animate) {
+      _scrollController.animateTo(target,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+    } else {
+      _scrollController.jumpTo(target);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final curIdx = _currentIndex;
+    return SizedBox(
+      height: 40,
+      child: ListView.builder(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        itemCount: widget.surahs.length,
+        itemExtent: _itemWidth,
+        itemBuilder: (context, i) {
+          final s = widget.surahs[i];
+          final active = i == curIdx;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: Material(
+              color: active
+                  ? AppColors.gold.withValues(alpha: 0.16)
+                  : scheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(10),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () =>
+                    widget.onSelect(widget.surahStartPages[s.id] ?? 1),
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: active
+                          ? AppColors.gold.withValues(alpha: 0.7)
+                          : scheme.outlineVariant,
+                      width: active ? 1.4 : 1,
+                    ),
+                  ),
+                  child: Text(
+                    '${s.id}. ${s.nameAr}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: active ? FontWeight.w700 : FontWeight.w400,
+                      color: active ? AppColors.gold : scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 
