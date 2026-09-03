@@ -32,7 +32,7 @@ class KhatmaScreen extends ConsumerWidget {
         label: Text('khatma.new'.tr()),
       ),
       body: (active.isEmpty && done.isEmpty)
-          ? _EmptyBody(onCreate: () => _openCreateSheet(context, ref))
+          ? const _EmptyBody()
           : ListView(
               padding: const EdgeInsets.fromLTRB(14, 14, 14, 90),
               children: [
@@ -123,9 +123,14 @@ class KhatmaScreen extends ConsumerWidget {
   }
 }
 
+/// P3‑6: this used to carry its own "+ ختمة جديدة" button, duplicating the
+/// Scaffold's own `FloatingActionButton.extended` (same label, same action)
+/// — both visible on screen at once whenever the list was empty. The FAB
+/// alone is enough; [onCreate] is kept unused-by-this-widget on purpose
+/// (nothing here needs it now), tapping the illustration area does nothing
+/// special, the FAB is the one and only "create" affordance.
 class _EmptyBody extends StatelessWidget {
-  final VoidCallback onCreate;
-  const _EmptyBody({required this.onCreate});
+  const _EmptyBody();
 
   @override
   Widget build(BuildContext context) {
@@ -139,12 +144,6 @@ class _EmptyBody extends StatelessWidget {
                 size: 56, color: Theme.of(context).colorScheme.outline),
             const SizedBox(height: 14),
             Text('khatma.start_invite'.tr(), textAlign: TextAlign.center),
-            const SizedBox(height: 18),
-            FilledButton.icon(
-              onPressed: onCreate,
-              icon: const Icon(Icons.add),
-              label: Text('khatma.new'.tr()),
-            ),
           ],
         ),
       ),

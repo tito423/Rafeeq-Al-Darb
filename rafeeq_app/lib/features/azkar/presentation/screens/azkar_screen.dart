@@ -54,7 +54,14 @@ class _SectionsTab extends ConsumerWidget {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
-          final sections = snapshot.data!;
+          // P3‑11: "المقدمة" (section 1) is al-Qahtani's own author's preface
+          // to Hisn al-Muslim — real front-matter, but not a dhikr a user
+          // would ever tap into from a list of dhikr categories. Filtered
+          // out here, not at the DB/repository layer, so the underlying
+          // "134 real sections" count and azkar_items(1) both stay exactly
+          // as bundled — this is a display-only decision.
+          final sections =
+              snapshot.data!.where((s) => s.title != 'المقدمة').toList();
           return ListView.separated(
             padding: const EdgeInsets.all(14),
             itemCount: sections.length,

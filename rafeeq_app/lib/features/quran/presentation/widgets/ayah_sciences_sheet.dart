@@ -64,12 +64,22 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
 
 class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabs = TabController(length: 4, vsync: this);
+  // P3‑10: was 4 (tafseer/translation/i'rab/meanings). The "معاني الكلمات"
+  // tab is gone — it only ever showed `word_meanings`' English gloss next
+  // to the Arabic word, which the owner clarified (twice, `PHASE2_RESEARCH.md`'s
+  // word-meanings section and again in the P3 feedback) is not what "معاني
+  // الكلمات" should mean: a real Arabic *gharib al-Qur'an* explanation. No
+  // clean, ayah-aligned free source for that has been found yet (the one PD
+  // candidate, al-Rāghib al-Iṣfahānī's root-indexed *al-Mufradat*, needs a
+  // matching pipeline against `word_grammar.root` that was never built) —
+  // the owner's explicit call was to pull the tab rather than keep shipping
+  // the English-gloss stand-in. Re-add a 4th tab here (and restore
+  // `wordMeanings`-driven content) if/when that source is built.
+  late final TabController _tabs = TabController(length: 3, vsync: this);
 
   late final Future<Map<String, String>> _tafseer;
   late final Future<Map<String, AyahTranslation>> _translations;
   late final Future<List<WordGrammar>> _grammar;
-  late final Future<List<WordMeaning>> _meanings;
 
   @override
   void initState() {
@@ -80,7 +90,6 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
     _tafseer = repo.then((r) => r.tafseerForAyah(s, a));
     _translations = repo.then((r) => r.translationsForAyah(s, a));
     _grammar = repo.then((r) => r.wordGrammar(s, a));
-    _meanings = repo.then((r) => r.wordMeanings(s, a));
   }
 
   @override
@@ -134,7 +143,6 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                     Tab(text: 'quran.tafseer'.tr()),
                     Tab(text: 'quran.translation'.tr()),
                     Tab(text: 'quran.irab'.tr()),
-                    Tab(text: 'quran.meanings'.tr()),
                   ],
                 ),
                 Expanded(
@@ -144,7 +152,6 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                       _TafseerTab(future: _tafseer),
                       _TranslationTab(future: _translations),
                       _IrabTab(future: _grammar),
-                      _MeaningsTab(future: _meanings, grammarFuture: _grammar),
                     ],
                   ),
                 ),
@@ -909,90 +916,6 @@ class _IrabTab extends StatelessWidget {
               ),
             );
           },
-        );
-      },
-    );
-  }
-}
-
-/// Real bug found live 2026‑09‑03: this tab used to show only a bare
-/// position number (`1`, `2`, `3`…) next to each English meaning — with a
-/// 15–20-word ayah, that's a wall of numbered English lines with no way to
-/// tell which Arabic word a given meaning belongs to short of counting
-/// words in the ayah panel above. `word_meanings` genuinely has no Arabic
-/// column of its own (HANDOVER §6 schema), but `word_grammar` — already
-/// loaded for the ‏الإعراب tab — carries the real token at the same `pos`
-/// for the same ayah, so this joins the two by position instead of adding
-/// any new data. Small word-chip cards (Arabic word + its meaning) replace
-/// the one-per-line list, so the whole ayah's vocabulary reads at a glance.
-class _MeaningsTab extends StatefulWidget {
-  final Future<List<WordMeaning>> future;
-  final Future<List<WordGrammar>> grammarFuture;
-  const _MeaningsTab({required this.future, required this.grammarFuture});
-
-  @override
-  State<_MeaningsTab> createState() => _MeaningsTabState();
-}
-
-class _MeaningsTabState extends State<_MeaningsTab> {
-  late final Future<(List<WordMeaning>, List<WordGrammar>)> _combined =
-      Future.wait([widget.future, widget.grammarFuture]).then(
-    (r) => (r[0] as List<WordMeaning>, r[1] as List<WordGrammar>),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return _AsyncTab<(List<WordMeaning>, List<WordGrammar>)>(
-      future: _combined,
-      isEmpty: (d) => d.$1.isEmpty,
-      builder: (context, data) {
-        final theme = Theme.of(context);
-        final gold = AppColors.gold;
-        final (meanings, grammar) = data;
-        final tokenByPos = {for (final g in grammar) g.pos: g.token};
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(14, 12, 14, 24),
-          child: Wrap(
-            alignment: WrapAlignment.end,
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final m in meanings)
-                Container(
-                  constraints: const BoxConstraints(minWidth: 84, maxWidth: 168),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: gold.withValues(alpha: 0.25)),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (tokenByPos[m.pos] case final token?
-                          when token.isNotEmpty)
-                        Text(
-                          token,
-                          textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontFamily: 'AmiriQuran',
-                            color: gold,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      if (tokenByPos[m.pos]?.isNotEmpty ?? false)
-                        const SizedBox(height: 4),
-                      Text(
-                        m.en,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodySmall?.copyWith(height: 1.3),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
         );
       },
     );

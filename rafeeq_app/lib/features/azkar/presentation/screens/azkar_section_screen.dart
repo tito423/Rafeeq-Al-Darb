@@ -1,4 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
+// easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
+// collides with the `dart:ui` enum (rtl/ltr) this file uses for swipe
+// direction — see the identical fix in ayah_sciences_sheet.dart.
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,6 +73,24 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
     });
   }
 
+  /// P3‑11: the previous/next controls used to be two arrow buttons at the
+  /// bottom of the screen; the owner asked for them gone in favour of a
+  /// swipe, in the direction that matches the app's current reading
+  /// direction rather than a fixed "swipe left = next" assumption — for
+  /// Arabic (RTL) a rightward swipe (`primaryVelocity > 0`) is "forward"
+  /// (matches how the mushaf pager already turns pages under RTL), for an
+  /// LTR locale it's the mirror image.
+  void _onSwipe(DragEndDetails details, TextDirection direction) {
+    final v = details.primaryVelocity ?? 0;
+    if (v.abs() < 200) return; // ignore a slow drag/near-tap
+    final isNext = direction == TextDirection.rtl ? v > 0 : v < 0;
+    if (isNext) {
+      _goTo(_index + 1);
+    } else if (_index > 0) {
+      _goTo(_index - 1);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -108,67 +129,63 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
                         color: AppColors.gold,
                       ),
                       Expanded(
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                items[_index].body,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontFamily: 'AmiriQuran',
-                                  fontSize: 22,
-                                  height: 1.9,
-                                ),
-                              ),
-                              if (items[_index].footnote.isNotEmpty) ...[
-                                const SizedBox(height: 20),
-                                const Divider(),
-                                const SizedBox(height: 8),
+                        child: GestureDetector(
+                          // P3‑11: previous/next used to be two arrow
+                          // buttons; now a swipe, direction-aware (see
+                          // `_onSwipe`'s doc).
+                          onHorizontalDragEnd: (d) =>
+                              _onSwipe(d, Directionality.of(context)),
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
                                 Text(
-                                  '${'azkar.source'.tr()}: ${items[_index].footnote}',
+                                  items[_index].body,
                                   textAlign: TextAlign.center,
-                                  style: theme.textTheme.bodySmall
-                                      ?.copyWith(color: scheme.onSurfaceVariant),
+                                  style: const TextStyle(
+                                    fontFamily: 'AmiriQuran',
+                                    fontSize: 22,
+                                    height: 1.9,
+                                  ),
+                                ),
+                                if (items[_index].footnote.isNotEmpty) ...[
+                                  const SizedBox(height: 20),
+                                  const Divider(),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    '${'azkar.source'.tr()}: ${items[_index].footnote}',
+                                    textAlign: TextAlign.center,
+                                    style: theme.textTheme.bodySmall
+                                        ?.copyWith(color: scheme.onSurfaceVariant),
+                                  ),
+                                ],
+                                const SizedBox(height: 12),
+                                Text(
+                                  'azkar.swipe_hint'.tr(),
+                                  textAlign: TextAlign.center,
+                                  style: theme.textTheme.labelSmall
+                                      ?.copyWith(color: scheme.outline),
                                 ),
                               ],
-                            ],
+                            ),
                           ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                        child: Row(
-                          children: [
-                            IconButton.filledTonal(
-                              onPressed: _index > 0 ? () => _goTo(_index - 1) : null,
-                              icon: const Icon(Icons.arrow_forward),
-                              tooltip: 'azkar.previous'.tr(),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: FilledButton(
-                                onPressed: _tap,
-                                style: FilledButton.styleFrom(
-                                  minimumSize: const Size(0, 64),
-                                  backgroundColor: AppColors.primary,
-                                ),
-                                child: Text(
-                                  _target > 1
-                                      ? '${'azkar.count'.tr()}: $_count'
-                                      : 'azkar.done'.tr(),
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            IconButton.filledTonal(
-                              onPressed: () => _goTo(_index + 1),
-                              icon: const Icon(Icons.arrow_back),
-                              tooltip: 'azkar.next'.tr(),
-                            ),
-                          ],
+                        child: FilledButton(
+                          onPressed: _tap,
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 64),
+                            backgroundColor: AppColors.primary,
+                          ),
+                          child: Text(
+                            _target > 1
+                                ? '${'azkar.count'.tr()}: $_count'
+                                : 'azkar.done'.tr(),
+                            style: const TextStyle(fontSize: 18),
+                          ),
                         ),
                       ),
                     ],

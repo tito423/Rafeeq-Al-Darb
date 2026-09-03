@@ -171,6 +171,7 @@
     "progress": "Progress",
     "next": "Next",
     "previous": "Previous",
+    "swipe_hint": "Swipe to move between adhkar",
     "section_done": "You've completed this section's adhkar",
     "back_to_sections": "Back to sections",
     "reminders": "Adhkar reminders",

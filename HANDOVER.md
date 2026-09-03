@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 19:27 — IN PROGRESS — resume here**
+**2026-09-03 19:41 — IN PROGRESS — resume here**
 
-PHASE3.md status table + P3-6/P3-9 sections updated to reflect the real fixes just shipped (khatma nav+undo, both search bugs). Docs only, no code change this step.
+PHASE3 more real fixes, analyze clean + test 15/15: P3-6 dedup 'ختمة جديدة' (removed the empty-state's own duplicate button, the FAB already does that job). P3-10 DONE: removed the معاني الكلمات tab entirely per the owner's repeated decision (no real gharib-al-Quran source found yet, English-gloss stopgap dropped rather than kept) - TabController 4->3, deleted _MeaningsTab/_MeaningsTabState. P3-11: filtered Hisn al-Muslim's own author's-preface section ('المقدمة', section id 1, real content confirmed by querying quran_sciences.db directly - 5 items, all front-matter, no dhikr) out of the tappable sections list (display-only filter, underlying DB/count untouched); replaced the bottom prev/next arrow buttons in the per-dhikr reader with a direction-aware swipe (RTL: swipe right = next, mirrors how the mushaf pager already turns pages) + a hint label, +6 keys x5 locales (swipe_hint). Also fixed a rename I missed earlier: azkar.tab_tasbeeh was still 'السبحة' in ar.json (only home.tasbeeh + azkar.tasbeeh got fixed the first time).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
