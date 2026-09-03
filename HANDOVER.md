@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-03 20:11 — IN PROGRESS — resume here**
+**2026-09-03 20:13 — IN PROGRESS — resume here**
 
-P3-19 DONE: Android 14+ full-screen-intent permission gap fixed (a real, concrete lead for the P3-7 full-screen-not-showing report, found by code review while investigating the notification bugs). MainActivity.kt: canUseFullScreenIntent (native NotificationManager.canUseFullScreenIntent() check, API>=34, true below that) + openFullScreenIntentSettings (launches Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT) added to the existing adhan method channel. AdhanUriBridge bridges both. New settings card in adhan_settings_screen.dart (mirrors the existing battery-optimization-exemption card pattern exactly), re-checks on app resume since the grant happens in system settings not an in-app dialog. +4 keys x5 locales. analyze clean, test 15/15, AND verified with a real flutter build apk --debug since this touches native Kotlin (analyze alone can't see Kotlin errors) - compiles clean. Not yet verified on a real device whether granting this actually fixes the reported symptom.
+Safety-net checkpoint per owner request: built + released a fresh debug APK (phase3-batch1-2026-09-03 on tito423/rafeeq-api) bundling every PHASE3 fix from this session (icon, khatma nav+undo+dedup, meanings-tab removal, azkar intro-filter+swipe, both search bugs, +3 library books, dead-code cleanup, Android-14 full-screen-intent permission card, adhan auto-play-on-select). NEXT_SESSION_PROMPT.md fully rewritten to point at PHASE3.md as the primary doc, with an accurate status summary (done/blocked/untouched), the new APK link, the R2 credential-handling lesson, and explicit note that no real device is available to this agent (owner is on Claude Code Remote from the phone itself, not USB-connected). HANDOVER.md's WIP block already current via cp.bat's own auto-update. No code change this step - pure handover/safety-net documentation as explicitly requested.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
