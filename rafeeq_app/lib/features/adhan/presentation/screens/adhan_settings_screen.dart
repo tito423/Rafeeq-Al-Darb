@@ -66,8 +66,8 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
     super.dispose();
   }
 
-  Future<void> _togglePreview(AdhanOption option) async {
-    if (_playingId == option.id) {
+  Future<void> _togglePreview(AdhanOption option, {bool forcePlay = false}) async {
+    if (!forcePlay && _playingId == option.id) {
       await _preview.stop();
       setState(() => _playingId = null);
       return;
@@ -196,7 +196,15 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen> {
               child: RadioGroup<String>(
                 groupValue: settings.defaultAdhanId,
                 onChanged: (id) {
-                  if (id != null) _saveDefault(id);
+                  if (id == null) return;
+                  _saveDefault(id);
+                  // P3‑7 (J4): picking an adhan previews it immediately —
+                  // the owner asked not to also require a separate tap on
+                  // the play icon. Reuses the exact same preview player as
+                  // that icon (_togglePreview), so a still-playing preview
+                  // of a *different* adhan is correctly stopped first.
+                  final picked = catalog.where((o) => o.id == id).firstOrNull;
+                  if (picked != null) _togglePreview(picked, forcePlay: true);
                 },
                 child: Column(
                   children: [

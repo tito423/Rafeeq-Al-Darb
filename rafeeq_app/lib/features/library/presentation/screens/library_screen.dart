@@ -118,7 +118,8 @@ class _BooksTabState extends State<_BooksTab> {
     super.dispose();
   }
 
-  BookEdition _editionOf(LibraryBook b) => _edition[b.id] ?? BookEdition.image;
+  BookEdition _editionOf(LibraryBook b) =>
+      _edition[b.id] ?? (b.hasImage ? BookEdition.image : BookEdition.text);
 
   void _setEdition(LibraryBook b, BookEdition e) =>
       setState(() => _edition[b.id] = e);
@@ -134,11 +135,12 @@ class _BooksTabState extends State<_BooksTab> {
         title: '${book.titleAr} · ${'library.edition_text'.tr()}',
       );
     }
+    if (!book.hasImage) return Future.value(); // no مصوّر edition to fetch
     return DownloadManager.instance.enqueue(
       id: book.id,
-      url: book.downloadUrl,
+      url: book.downloadUrl!,
       category: 'books',
-      fileName: book.fileName,
+      fileName: book.fileName!,
       title: book.titleAr,
     );
   }
@@ -347,19 +349,22 @@ class _MyLibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // One entry per (book, edition) actually on disk.
-    final rows = <({LibraryBook book, BookEdition edition})>[];
-    for (final b in [...libraryBookCatalog]
-      ..sort((a, b) => a.sortKey.compareTo(b.sortKey))) {
-      if (paths.containsKey(b.id)) {
-        rows.add((book: b, edition: BookEdition.image));
-      }
-      if (b.hasText && paths.containsKey(b.textDownloadId)) {
-        rows.add((book: b, edition: BookEdition.text));
-      }
-    }
+    // One entry per (book, edition) actually on disk, grouped into two
+    // sections — مصوّر then نصي — instead of one flat list interleaving
+    // both editions of the same book (P3‑15: the owner found that
+    // confusing, "بدل ما يبقى مكررين الاسمين تحت بعض").
+    final sorted = [...libraryBookCatalog]
+      ..sort((a, b) => a.sortKey.compareTo(b.sortKey));
+    final imageRows = <LibraryBook>[
+      for (final b in sorted)
+        if (paths.containsKey(b.id)) b,
+    ];
+    final textRows = <LibraryBook>[
+      for (final b in sorted)
+        if (b.hasText && paths.containsKey(b.textDownloadId)) b,
+    ];
 
-    if (rows.isEmpty) {
+    if (imageRows.isEmpty && textRows.isEmpty) {
       final scheme = Theme.of(context).colorScheme;
       return Center(
         child: Padding(
@@ -376,63 +381,91 @@ class _MyLibraryView extends StatelessWidget {
         ),
       );
     }
-    return ListView.separated(
+    return ListView(
       padding: const EdgeInsets.all(14),
-      itemCount: rows.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 8),
-      itemBuilder: (_, i) {
-        final b = rows[i].book;
-        final edition = rows[i].edition;
-        final isText = edition == BookEdition.text;
-        final scheme = Theme.of(context).colorScheme;
-        final size = _fmtSize(
-            sizes[isText ? b.textDownloadId : b.id] ?? 0);
-        final editionLabel = isText
-            ? 'library.edition_text'.tr()
-            : 'library.edition_image'.tr();
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
-            child: Row(
-              children: [
-                Icon(isText ? Icons.article_outlined : Icons.image_outlined,
-                    size: 18, color: AppColors.gold),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(b.titleAr,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 15)),
-                      const SizedBox(height: 3),
-                      Text(
-                        [
-                          editionLabel,
-                          b.category.labelKey.tr(),
-                          if (size.isNotEmpty) size,
-                        ].join(' · '),
-                        style: TextStyle(
-                            color: scheme.onSurfaceVariant, fontSize: 12),
-                      ),
-                    ],
+      children: [
+        if (imageRows.isNotEmpty) ...[
+          _SectionHeader('library.edition_image'.tr()),
+          for (final b in imageRows) ...[
+            _row(context, b, BookEdition.image),
+            const SizedBox(height: 8),
+          ],
+        ],
+        if (textRows.isNotEmpty) ...[
+          if (imageRows.isNotEmpty) const SizedBox(height: 8),
+          _SectionHeader('library.edition_text'.tr()),
+          for (final b in textRows) ...[
+            _row(context, b, BookEdition.text),
+            const SizedBox(height: 8),
+          ],
+        ],
+      ],
+    );
+  }
+
+  Widget _row(BuildContext context, LibraryBook b, BookEdition edition) {
+    final isText = edition == BookEdition.text;
+    final scheme = Theme.of(context).colorScheme;
+    final size = _fmtSize(sizes[isText ? b.textDownloadId : b.id] ?? 0);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+        child: Row(
+          children: [
+            Icon(isText ? Icons.article_outlined : Icons.image_outlined,
+                size: 18, color: AppColors.gold),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(b.titleAr,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 15)),
+                  const SizedBox(height: 3),
+                  Text(
+                    [
+                      b.category.labelKey.tr(),
+                      if (size.isNotEmpty) size,
+                    ].join(' · '),
+                    style: TextStyle(
+                        color: scheme.onSurfaceVariant, fontSize: 12),
                   ),
-                ),
-                TextButton.icon(
-                  onPressed: () => onOpen(b, edition),
-                  icon: const Icon(Icons.menu_book_outlined, size: 18),
-                  label: Text('library.open'.tr()),
-                ),
-                IconButton(
-                  tooltip: 'library.delete'.tr(),
-                  onPressed: () => onDelete(b, edition),
-                  icon: Icon(Icons.delete_outline, color: scheme.error),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
+            TextButton.icon(
+              onPressed: () => onOpen(b, edition),
+              icon: const Icon(Icons.menu_book_outlined, size: 18),
+              label: Text('library.open'.tr()),
+            ),
+            IconButton(
+              tooltip: 'library.delete'.tr(),
+              onPressed: () => onDelete(b, edition),
+              icon: Icon(Icons.delete_outline, color: scheme.error),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String label;
+  const _SectionHeader(this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+      child: Text(
+        label,
+        style: Theme.of(context)
+            .textTheme
+            .titleSmall
+            ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
+      ),
     );
   }
 }
@@ -467,8 +500,9 @@ class _BookCard extends StatelessWidget {
             task.status == DownloadStatus.queued);
     final failed = task?.status == DownloadStatus.failed;
     final downloaded = paths.containsKey(dlId);
-    final approxBytes =
-        isText ? (book.textEdition?.approxSizeBytes ?? 0) : book.approxSizeBytes;
+    final approxBytes = isText
+        ? (book.textEdition?.approxSizeBytes ?? 0)
+        : (book.approxSizeBytes ?? 0);
     final sizeMb = (approxBytes / 1000000).toStringAsFixed(1);
 
     return Card(
@@ -496,7 +530,7 @@ class _BookCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(book.descriptionAr, style: const TextStyle(fontSize: 13)),
             const SizedBox(height: 10),
-            if (book.hasText) ...[
+            if (book.hasText && book.hasImage) ...[
               SegmentedButton<BookEdition>(
                 showSelectedIcon: false,
                 style: const ButtonStyle(

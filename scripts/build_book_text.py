@@ -105,6 +105,31 @@ BOOKS = {
         "source_label": "المكتبة الشاملة — العبودية لابن تيمية، تحقيق محمد "
         "زهير الشاويش، المكتب الإسلامي، بيروت، الطبعة السابعة ١٤٢٦هـ/٢٠٠٥م",
     },
+    # --- P3-15 catalog expansion (2026-09-03), نص-only (no مصوّر hunted for
+    # these — see book_catalog.dart's LibraryBook.hasImage doc) -------------
+    "al_aqidah_al_wasitiyyah": {
+        "shamela_id": 22665,
+        "source_label": "المكتبة الشاملة — العقيدة الواسطية لابن تيمية، "
+        "تحقيق أشرف بن عبد المقصود",
+    },
+    "nawadir_al_usul": {
+        "shamela_id": 720,
+        # Owner-facing honesty, not a licence flag: classical hadith
+        # scholarship (this DB's own upstream sources, e.g. sunnah.com-style
+        # grading notes) lists this book among the sources that carry a
+        # number of weak/unverified narrations — real for any edition of
+        # this specific book, unrelated to Shamela or this project. Recorded
+        # in LibraryBook.descriptionAr so it's visible in the app, not
+        # buried.
+        "source_label": "المكتبة الشاملة — نوادر الأصول في أحاديث الرسول "
+        "للحكيم الترمذي، تحقيق عبد الرحمن عميرة، دار الجيل، بيروت",
+    },
+    "al_samt_wa_adab_al_lisan": {
+        "shamela_id": 13039,
+        "source_label": "المكتبة الشاملة — الصمت وآداب اللسان لابن أبي "
+        "الدنيا، تحقيق أبو إسحاق الحويني الأثري، دار الكتاب العربي، بيروت، "
+        "الطبعة الأولى ١٤١٠هـ/١٩٩٠م",
+    },
 }
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "book_text_build")

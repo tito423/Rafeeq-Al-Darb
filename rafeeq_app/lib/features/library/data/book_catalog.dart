@@ -72,16 +72,26 @@ class LibraryBook {
   final String authorDeathAr;
   final String descriptionAr;
   final BookCategory category;
-  final String downloadUrl;
-  final String fileName;
-  final int approxSizeBytes;
+
+  /// Null for a book that ships **only** as a text edition (P3‑15: the
+  /// owner asked for a much larger نص-only catalog expansion, sourced the
+  /// same way as the original 5 — Shamela — but without also chasing down
+  /// a clean scanned PDF for every new title; a مصوّر edition stays
+  /// optional, add one later the same way if a good scan turns up). All of
+  /// [downloadUrl] / [fileName] / [approxSizeBytes] / [sourceUrl] describe
+  /// that image PDF together and are only meaningful when it's non-null.
+  final String? downloadUrl;
+  final String? fileName;
+  final int? approxSizeBytes;
 
   /// The archive.org item this came from, e.g. "archive.org/details/rsnawwy"
   /// — kept so provenance is always one tap away from the UI, never buried.
-  final String sourceUrl;
+  final String? sourceUrl;
 
   /// The structured text edition (P2-4b), or null if the book ships only as a
-  /// scanned image PDF. When present the Library shows a `مصوّر | نص` switch.
+  /// scanned image PDF. When both this and [downloadUrl] are set, the
+  /// Library shows a `مصوّر | نص` switch; when only one is, that edition is
+  /// the only one offered, no switch shown.
   final TextEdition? textEdition;
 
   const LibraryBook({
@@ -93,18 +103,20 @@ class LibraryBook {
     required this.authorDeathAr,
     required this.descriptionAr,
     required this.category,
-    required this.downloadUrl,
-    required this.fileName,
-    required this.approxSizeBytes,
-    required this.sourceUrl,
+    this.downloadUrl,
+    this.fileName,
+    this.approxSizeBytes,
+    this.sourceUrl,
     this.textEdition,
-  });
+  }) : assert(downloadUrl != null || textEdition != null,
+            'a book needs at least one edition');
 
   /// [DownloadManager] id for this book's text edition (distinct from the
   /// image PDF, whose id is just [id]).
   String get textDownloadId => '${id}_text';
 
   bool get hasText => textEdition != null;
+  bool get hasImage => downloadUrl != null;
 
   /// Arabic-collation-friendly sort handle: drops a leading "ال" so
   /// "الفوائد" files under fā', not alif, and normalises alef forms.
@@ -246,6 +258,76 @@ const List<LibraryBook> libraryBookCatalog = [
       approxSizeBytes: 238715,  // built by scripts/build_book_text.py
       sourceLabel: 'المكتبة الشاملة — العبودية لابن تيمية، تحقيق محمد زهير '
           'الشاويش، المكتب الإسلامي، بيروت، الطبعة السابعة ١٤٢٦هـ/٢٠٠٥م',
+    ),
+  ),
+
+  // --- P3-15 catalog expansion (2026-09-03): the owner asked to grow the
+  // نص catalog for the authors originally requested back in P2-4 (Ibn
+  // Taymiyyah, al-Hakim al-Tirmidhi, Ibn Abi al-Dunya) using the same
+  // Shamela pipeline and reader design as the original 5 — نص-only, no
+  // مصوّر hunted for these (owner's explicit call; `hasImage` is false,
+  // downloadUrl left null, see the class doc above). Each built +
+  // byte-verified on R2 the same way as the original 5's GitHub hosting was
+  // (scripts/build_book_text.py -> scripts/r2_upload_new_books.py).
+  LibraryBook(
+    id: 'al_aqidah_al_wasitiyyah',
+    titleAr: 'العقيدة الواسطية',
+    titleEn: "Al-'Aqidah al-Wasitiyyah",
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'رسالة ابن تيمية الشهيرة في اعتقاد أهل السنة والجماعة، كتبها إجابة '
+        'لطلب قاضٍ من واسط، ومن أكثر متون العقيدة شرحاً وتداولاً عند أهل السنة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_aqidah_al_wasitiyyah.json',
+      fileName: 'al_aqidah_al_wasitiyyah_text.json',
+      approxSizeBytes: 119516, // built by scripts/build_book_text.py
+      sourceLabel: 'المكتبة الشاملة — العقيدة الواسطية لابن تيمية، تحقيق '
+          'أشرف بن عبد المقصود، أضواء السلف، الرياض، الطبعة الثانية '
+          '١٤٢٠هـ/١٩٩٩م',
+    ),
+  ),
+  LibraryBook(
+    id: 'nawadir_al_usul',
+    titleAr: 'نوادر الأصول في أحاديث الرسول',
+    titleEn: 'Nawadir al-Usul',
+    authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
+    authorEn: 'Al-Hakim al-Tirmidhi',
+    authorDeathAr: 'توفي نحو 320 هـ',
+    descriptionAr:
+        'من أشهر مصنفات الحكيم الترمذي في شرح أصول من الحديث النبوي '
+        'بأسلوبٍ صوفيٍّ تربويٍّ متميز. تنبيه أمانةً: يضم الكتاب — كحال '
+        'مصنفه المعروف عند أهل الحديث — عدداً من الأحاديث الضعيفة وغير '
+        'الثابتة إلى جانب الصحيح، فليُقرأ بهذا الاعتبار.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/nawadir_al_usul.json',
+      fileName: 'nawadir_al_usul_text.json',
+      approxSizeBytes: 2780973, // built by scripts/build_book_text.py
+      sourceLabel: 'المكتبة الشاملة — نوادر الأصول في أحاديث الرسول للحكيم '
+          'الترمذي، تحقيق عبد الرحمن عميرة، دار الجيل، بيروت (4 أجزاء)',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_samt_wa_adab_al_lisan',
+    titleAr: 'الصمت وآداب اللسان',
+    titleEn: 'Al-Samt wa Adab al-Lisan',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف ابن أبي الدنيا في فضل الصمت وحفظ اللسان وآفات الكلام، جمع '
+        'فيه أحاديث وآثاراً في آداب الكلام والصمت عند السلف.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_samt_wa_adab_al_lisan.json',
+      fileName: 'al_samt_wa_adab_al_lisan_text.json',
+      approxSizeBytes: 563635, // built by scripts/build_book_text.py
+      sourceLabel: 'المكتبة الشاملة — الصمت وآداب اللسان لابن أبي الدنيا، '
+          'تحقيق أبو إسحاق الحويني الأثري، دار الكتاب العربي، بيروت، '
+          'الطبعة الأولى ١٤١٠هـ/١٩٩٠م',
     ),
   ),
 ];

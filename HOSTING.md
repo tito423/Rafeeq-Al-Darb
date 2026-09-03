@@ -36,7 +36,7 @@ infrastructure instead of features.
 |---|---|---|---|
 | Mushaf page SVGs (5 editions: Hafs/Shubah/Warsh/Qalun/Duri) | ~24 MB total (brotli), pinned commit `b91d39e1…` | `raw.githubusercontent.com/quranpedia/quran-svg` (upstream repo, not ours) | Fine as-is — it's someone else's CC0 repo, pinned so it can never drift; **not** something to mirror unless upstream disappears |
 | `hadith.zip` (9 books, ~41k hadiths) | ~17 MB | **Cloudflare R2, `rafeeq-content` bucket** (`hadith/hadith.zip`) | ✅ **migrated 2026‑09‑03** |
-| Book text editions (5 books, Shamela-sourced JSON) | ~5.6 MB total | **R2** `rafeeq-content/books/text/*.json` | ✅ **migrated 2026‑09‑03** |
+| Book text editions (8 books, Shamela-sourced JSON) | ~6.5 MB total | **R2** `rafeeq-content/books/text/*.json` | ✅ 5 migrated + 3 new (P3‑15 catalog expansion) 2026‑09‑03. New books upload straight to R2 now (`scripts/r2_upload_new_books.py`), not GitHub — `scripts/upload_book_text.py` (the old GitHub-raw path) is superseded, kept only for its own historical record. |
 | Adhan video clips (5 Pixabay clips) | ~15.5 MB total | **R2** `rafeeq-content/adhan/video/*.mp4` | ✅ **migrated 2026‑09‑03** |
 | Book image PDFs (5 books) | ~3–20 MB each | `archive.org` (their own hosting, external) | Fine as-is — not ours to move |
 | Quran translations (en/fr/ur/es/ru/pt), tafsir, i'rab, word meanings | inside `quran_sciences.db`, 26.1 MB | **bundled in the APK**, not downloaded | Not a hosting concern — ships with the app itself |

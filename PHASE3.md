@@ -34,19 +34,20 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | queued — see notes |
 | P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | queued, blocked in part by P3‑5 |
 | P3‑5 | **Login / accounts — architecture decision** | **blocked on owner: mandatory vs optional** |
-| P3‑6 | Khatma card bugs + redesign | 🔶 both real bugs fixed ("افتح المصحف"/nav + undo snackbar); label-dup fix + full redesign still open |
-| P3‑7 | Adhan: confirmed real bugs + feature requests | **blocked on live device/logcat for the bug half**; feature half unblocked |
+| P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
+| P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
 | P3‑8 | Mushaf reader: confirmed real bugs + feature requests | queued, some unblocked now |
 | P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed (فاسقين dagger-alif bug + نشورا/منشورا word-boundary bug); tafsir-ayah-link + non-Hafs-gating still open |
-| P3‑10 | "معاني الكلمات" tab — remove unless a real source is found | queued, unblocked |
-| P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | queued, unblocked |
+| P3‑10 | "معاني الكلمات" tab — remove unless a real source is found | ✅ done — tab removed |
+| P3‑11 | Azkar redesign (remove intro, swipe nav, grid hub) | 🔶 intro filtered + swipe nav DONE; grid-hub visual redesign to match reference still open |
 | P3‑12 | Tasbeeh redesign to match reference | queued, unblocked |
-| P3‑13 | Persistent prayer notification — confirmed real bug + "must not be dismissible" | **blocked on live device/logcat** |
+| P3‑13 | Persistent prayer notification — confirmed real bug + "must not be dismissible" | **blocked on live device/logcat** — a dead second implementation found + removed along the way, see P3‑19 |
 | P3‑14 | Settings: Russian bug (screenshot still owed), French locale | partially blocked (screenshot) |
-| P3‑15 | Library: slow reader, page-nav redesign, مكتبتي split, catalog scope | queued, catalog scope blocked on a target count |
+| P3‑15 | Library: slow reader, page-nav redesign, مكتبتي split, catalog scope | 🔶 catalog +3 books DONE, مكتبتي split DONE; reader speed + page-nav redesign still open |
 | P3‑16 | New "الصلاة" bottom-nav tab incl. professional Qibla compass | queued, unblocked (feeds P3‑4) |
 | P3‑17 | R2 hosting migration | ✅ done this session, see `HOSTING.md` — rotate token / old-bucket decision still open |
 | P3‑18 | P2‑8 items already approved (#11 app-lock, #12 group khatma w/ real sign-in) | queued, **#12 folds into P3‑5** |
+| P3‑19 | Dead native notification code found + removed; Android-14 full-screen-intent permission gap found | ✅ cleanup done; the permission-prompt card itself not yet built |
 
 ---
 
@@ -289,19 +290,89 @@ redesign matching this reference, and ties into P3‑2's rename.
 ## P3‑15 — Library
 
 - Book (image PDF) reader is **very slow** — profile `SfPdfViewer` usage,
-  check for unnecessary rebuilds/full-file loads vs. lazy paging.
+  check for unnecessary rebuilds/full-file loads vs. lazy paging. Still open.
 - Page navigation redesign: scroll + a fast jump strip, refreshed visual
   design, add pinch-zoom (echoes P3‑8's mushaf zoom ask — consider sharing
   a zoom-wrapper widget between the two readers if the code ends up
-  similar).
-- "مكتبتي" should split into two clear sub-sections — **مصور** and
-  **نصي** — instead of stacking both edition names under one entry
-  confusingly.
-- Catalog expansion ("زي الشاملة") — **needs a scope answer from the
-  owner** (a target count or category list) before scripting anything; a
-  full Shamela-scale mirror is a categorically bigger project than "a few
-  more books," and every title still needs the same individual PD/licence
-  check §5.7 already requires — no bulk import shortcut around that.
+  similar). Still open.
+- ✅ **DONE.** "مكتبتي" now shows two clearly separate, headed sections
+  (مصوّر then نصي) instead of one flat list interleaving both editions of
+  the same book.
+- ✅ **DONE (first batch).** Catalog expansion ("زي الشاملة") resolved —
+  the owner clarified, once asked, that this meant *the نص reading design*
+  for the specific authors already requested back in P2-4 (Ibn Taymiyyah,
+  al-Hakim al-Tirmidhi, Ibn Abi al-Dunya), not a literal full mirror of
+  Shamela. Added all 3, built with the exact same `build_book_text.py`
+  pipeline and provenance discipline as the original 5, نص-only (no
+  مصوّر hunted for these — the owner's explicit call; `LibraryBook`'s
+  image-PDF fields are now nullable, a new `hasImage` getter gates the
+  مصوّر|نص switch so it only shows when both editions actually exist):
+  - **العقيدة الواسطية** (Ibn Taymiyyah, d. 728 AH) — Shamela 22665, ed.
+    Ashraf ʿAbd al-Maqsud, Aḍwā’ al-Salaf. 72 pages, `printReliable: true`.
+  - **نوادر الأصول في أحاديث الرسول** (al-Ḥakīm al-Tirmidhī, d. ~320 AH)
+    — Shamela 720, ed. ʿAbd al-Raḥmān ʿUmayra, Dār al-Jīl (4 volumes).
+    1237 pages. Honesty flag carried into `descriptionAr` itself, not
+    hidden: this specific book is one classical hadith scholarship itself
+    flags as containing a number of weak/unverified narrations alongside
+    sound ones — a real characteristic of this book in any edition,
+    unrelated to Shamela or this project.
+  - **الصمت وآداب اللسان** (Ibn Abi al-Dunya, d. 281 AH) — Shamela
+    13039, ed. Abū Isḥāq al-Ḥuwaynī al-Athari, Dār al-Kitāb al-ʿArabī.
+    787 pages.
+  - All 3 uploaded to R2 (`rafeeq-content/books/text/*.json`, the migrated
+    host from P3‑17/`HOSTING.md` — not GitHub), byte-verified via
+    `head_object` **and** a live `curl -I` against the public URL, same
+    discipline as the R2 content migration. `flutter analyze` clean,
+    `flutter test` 15/15.
+  - **Not yet done:** more titles beyond these 3 (the owner's "زي
+    الشاملة" reads as "keep growing this," not "these 3 and stop"), and
+    the "if you find a مصوّر too, fine" half of the instruction — none of
+    the 3 new books had an image edition specifically sought this pass.
+
+## P3‑19 — Dead code found & removed (not owner-reported)
+
+While investigating why the persistent prayer notification (P6/P3‑13)
+might not fire on a real device, `MainActivity.kt` turned out to carry a
+**second, completely different, entirely dead** native implementation of
+essentially the same feature: a `com.tito.rafeeq_aldarb/salatuk_notification`
+method channel building a custom `RemoteViews` notification
+(`notification_salatuk.xml`, 6 prayer-time chips + a native chronometer) —
+**never called from any Dart code** (confirmed by grep — no
+`MethodChannel('...salatuk_notification')` anywhere under `lib/`). This
+doesn't explain the reported bug (dead code can't misfire), but its
+existence — completely undocumented in `HANDOVER.md`'s P2‑6 history — is
+worth the owner knowing: it strongly suggests an earlier, undocumented
+attempt at this exact feature before `prayer_status_notification.dart`'s
+pure-Dart approach (the one `HANDOVER.md` actually describes) was built.
+Removed the method channel handler, the now-orphaned
+`showCustomNotification` function, and the unused layout XML — real APK
+bloat and a real source of confusion for the next reader, owner included.
+`prayer_status_notification.dart` itself was read closely for a live bug
+and none was found by static review — its logic matches exactly what
+`HANDOVER.md` already documented as emulator-verified working; **P6/P3‑13
+genuinely needs a live device/logcat to diagnose further**, not more
+guessing.
+
+Also reviewed the Adhan Stop/Mute action-button wiring
+(`adhan_alarm_service.dart`'s `_onNotificationResponse` /
+`AndroidNotificationAction`s) end to end — structurally correct and
+unchanged from what STAGE 1 already verified working on both emulator and
+a real device. No defect found by static review; **P3‑7's remaining bug
+half also needs a live device**, not another guess. One thing this review
+did turn up as a real, concrete, fixable gap (not confirmed as *the*
+cause here, but a genuine gap regardless): **Android 14+ (API 34) requires
+the user to separately, manually grant a "Turn on full-screen
+notifications" toggle** per app
+(`Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT`) — the
+`USE_FULL_SCREEN_INTENT` manifest permission alone is no longer sufficient
+on a fresh install targeting API 34+; without it, Android silently
+downgrades a full-screen-intent notification to an ordinary heads-up one,
+which matches "a notification appears but full-screen never does" exactly.
+Not yet built: a check (`NotificationManager.canUseFullScreenIntent()`) +
+a settings card prompting the user to grant it, mirroring the existing
+battery-optimization-exemption card's pattern. Worth doing regardless of
+whether it turns out to be *the* cause here — it's a real gap either way
+on a modern Android target.
 
 ## P3‑16 — New "الصلاة" (Prayer) bottom-nav tab
 
