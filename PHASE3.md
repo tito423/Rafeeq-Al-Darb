@@ -34,7 +34,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑1 | New app icon (crescent + open Quran, glowing blue/gold) | ✅ done, `flutter analyze` clean |
 | P3‑2 | Rename "السبحة" → "المسبحة" everywhere | ✅ done |
 | P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | ✅ **done, live-verified** — calmer near-black backdrop, glow rings instead of filled blobs, sparse star-dots instead of a tiled grid; a real crash (unrelated to the restyle itself, in P3-20/21's navigation code) found+fixed along the way |
-| P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | 🔶 header card ✅ done + live-verified; per-card patterns + animated/interactive prayer card still open (animated prayer card superseded by round-2 **P3-22**, see below) |
+| P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | 🔶 header card, prayer card (**P3-22**), ornate hadith card, and continue-reading card all ✅ done + live-verified; only the app-wide per-card Islamic-pattern background pass (a much larger separate task) still open |
 | P3‑5 | **Login / accounts — architecture decision** | ✅ **answered: optional** (guest mode stays default, sign-in adds sync) — not yet built |
 | P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
 | P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
@@ -182,12 +182,67 @@ confirmed the card renders exactly as intended — "٢١ ربيع الأول ١�
 right, "مرحبًا بك" centre, "٣ سبتمبر ٢٠٢٦" left, correct real dates for
 today.
 
+**Animated/interactive prayer-times card + live countdown clock: ✅ already
+done** (superseded by round-2 **P3-22**, live-verified there).
+
+**✅ Ornamental "حديث شريف" card + "متابعة القراءة" continue-reading card —
+DONE, live-verified.** The owner sent a real reference
+(`design_refs/round2_2026-09-04/ref_hadith_card.jpg` +`ref_home_v2.jpg`)
+with "use pics in new folder and proceed all":
+
+- **`DailyHadithCard` wrapped in a new `_OrnateFrame`** — a gold hairline
+  border, a gold quarter-circle corner flourish (`CustomPainter`, mirrored
+  into all four corners), and small gold stars flanking the title text
+  ("★ حديث اليوم ★"), echoing the reference's own corner-ornament/star
+  motif. Deliberately **not** the reference's near-black-green palette —
+  this app's own navy/gold theme instead (light theme gets a matching
+  light-scaffold/white gradient), same adaptation rule as P3‑29's Shamela
+  reference.
+- **New `ContinueReadingCard`**, split out of `KhatmaCard`'s own "اقرأ
+  اليوم" nudge — the reference shows it as its own, separate
+  bookmark-style "where you left off" card, not tied to any khatma's
+  progress. Built on **real data only**: `quran_screen.dart` already
+  persists the reader's last-open page on every page change
+  (`kQuranLastPageKey`); the card resolves the real first ayah on that
+  page (`data.repo.ayahsOfPage`) for the surah name + ayah number, and
+  renders nothing at all when that key has never been set (a fresh
+  install, Quran tab never opened) — no fabricated "الفاتحة · آية 1"
+  default for every guest. Tapping it jumps straight to that page via the
+  existing `quranJumpRequestProvider` + `HomeNavigate` seam
+  (`KhatmaCard` already uses the same pattern).
+- +2 keys (`home.continue_reading_title`, `home.continue_reading_button`)
+  × 5 locales; reuses the existing `quran.ayah`/`quran.page` keys for the
+  subtitle rather than adding duplicates.
+
+**A real reactivity bug found live, not by static review:** the first
+version had `ContinueReadingCard` read the raw `SharedPreferences` value
+directly on every build. That looks reactive but isn't — `AppShell` keeps
+every tab mounted in an `IndexedStack`, so switching *back* to Home
+doesn't rebuild it; the card kept showing whatever it saw on its *first*
+build (usually "nothing yet"), even after the user read several pages of
+Quran in the same session and returned to Home. Confirmed live on the
+emulator: read Quran page 2, switched back to Home, the card still didn't
+appear. Fixed with a proper `StateNotifierProvider`
+(`quranLastPageProvider` in the new `quran_last_read.dart`) — `set()`
+updates real provider state, which `ref.watch` in the always-mounted
+`ContinueReadingCard` reacts to regardless of which tab is visible.
+`quran_screen.dart`'s `_persistPage()` now goes through this provider
+instead of writing `SharedPreferences` directly.
+
+**Live-verified on `emulator-5554`** (a fresh AVD instance — the previous
+one had degraded to 13.5h uptime / load average 15+, the same known
+emulator-exhaustion pattern documented earlier this project, not a code
+issue): fresh install → Home showed the ornate hadith card correctly, no
+Continue Reading card (honest — nothing read yet); opened Quran, jumped to
+Surah al-Baqarah (page 2); returned to Home — the Continue Reading card
+appeared **live, same session, no restart needed** — "Continue Reading /
+سُورَةُ البَقَرَة / Ayah 1 · Page 2"; tapped the card — navigated straight
+back to page 2 in the Quran tab, confirming the read-position round-trip
+end to end.
+
 **Still open:** per-card calm Islamic-pattern backgrounds (app-wide, not
-just Home), the animated/interactive prayer-times card + live countdown
-clock (`ref_home.jpg`'s `HH:MM:SS` + "متبقي 1 ساعة و 7 دقيقة" pill), the
-ornamental "حديث شريف" card framing, the "متابعة القراءة" continue-reading
-card (doesn't exist yet as its own card — currently folded into the Khatma
-card's "اقرأ اليوم").
+just Home — this is a much larger, separate pass touching many screens,
+not scoped into this round).
 
 ## P3‑5 — Login / accounts — owner decision needed
 

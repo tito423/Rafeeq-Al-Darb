@@ -12,6 +12,7 @@ import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
 import '../../data/quran_jump_provider.dart';
+import '../../data/quran_last_read.dart';
 import '../widgets/ayah_sciences_sheet.dart';
 import '../widgets/mushaf_edition_sheet.dart';
 import '../widgets/mushaf_page_view.dart';
@@ -52,8 +53,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   static const _kFontScale = 'quran_text_font_scale_v1';
 
   Future<void> _persistPage() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('quran_last_page', _current);
+    // Goes through the reactive provider (P3‑4), not a raw prefs write —
+    // see `quran_last_read.dart`'s doc for why: `ContinueReadingCard` on
+    // Home needs to notice this change even though `AppShell` keeps every
+    // tab mounted in an `IndexedStack` and never rebuilds Home just from
+    // switching back to it.
+    await ref.read(quranLastPageProvider.notifier).set(_current);
   }
 
   Future<void> _persistMode() async {
@@ -63,7 +68,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   Future<void> _restoreState() async {
     final prefs = await SharedPreferences.getInstance();
-    final p = prefs.getInt('quran_last_page') ?? 1;
+    final p = prefs.getInt(kQuranLastPageKey) ?? 1;
     final modeName = prefs.getString('quran_reader_mode');
     final fontScale = prefs.getDouble(_kFontScale);
     if (!mounted) return;

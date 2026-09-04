@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/db/hadith_repository.dart';
 import '../../../core/services/download_manager.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../library/presentation/screens/hadith_detail_screen.dart';
 import '../data/daily_hadith_provider.dart';
 
@@ -14,6 +16,14 @@ import '../data/daily_hadith_provider.dart';
 /// book/number, grade line), re-rolled every app launch, with a manual
 /// "حديث آخر" re-roll and a tap-through to the full detail screen. Sits
 /// just above the bottom nav bar per the Home redesign's own ordering.
+///
+/// P3‑4: wrapped in an ornamental frame (gold corner flourishes, a gold
+/// hairline border, small stars flanking the title) — the owner sent a
+/// real reference (`design_refs/round2_2026-09-04/ref_hadith_card.jpg`) of
+/// the old app's own "حديث شريف" card. Followed its *structure* (corner
+/// ornament, gold border, star accents), not its literal near-black-green
+/// palette — this uses the app's own navy/gold theme instead, same
+/// adaptation rule already applied to P3‑29's Shamela reference.
 class DailyHadithCard extends ConsumerStatefulWidget {
   const DailyHadithCard({super.key});
 
@@ -47,19 +57,116 @@ class _DailyHadithCardState extends ConsumerState<DailyHadithCard> {
     final repoAsync = ref.watch(hadithRepositoryProvider);
     final theme = Theme.of(context);
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: repoAsync.when(
-          loading: () => const _Loading(),
-          error: (_, _) => _ErrorState(theme: theme),
-          data: (repo) =>
-              repo == null ? _DownloadPrompt(theme: theme) : const _PickedHadith(),
-        ),
+    return _OrnateFrame(
+      child: repoAsync.when(
+        loading: () => const _Loading(),
+        error: (_, _) => _ErrorState(theme: theme),
+        data: (repo) =>
+            repo == null ? _DownloadPrompt(theme: theme) : const _PickedHadith(),
       ),
     );
   }
+}
+
+/// The ornamental frame itself — a gold hairline border, a subtle navy→gold
+/// gradient fill (this app's own night palette, not the reference's
+/// near-black-green), and a gold quarter-circle flourish mirrored into all
+/// four corners.
+class _OrnateFrame extends StatelessWidget {
+  final Widget child;
+  const _OrnateFrame({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.55)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [AppColors.nightElevated, AppColors.night]
+              : [AppColors.lightScaffold, Colors.white],
+        ),
+      ),
+      child: Stack(
+        children: [
+          const Positioned(top: 6, left: 6, child: _CornerFlourish()),
+          Positioned(
+            top: 6,
+            right: 6,
+            child: Transform.flip(flipX: true, child: const _CornerFlourish()),
+          ),
+          Positioned(
+            bottom: 6,
+            left: 6,
+            child: Transform.flip(flipY: true, child: const _CornerFlourish()),
+          ),
+          Positioned(
+            bottom: 6,
+            right: 6,
+            child: Transform.flip(
+              flipX: true,
+              flipY: true,
+              child: const _CornerFlourish(),
+            ),
+          ),
+          Padding(padding: const EdgeInsets.all(18), child: child),
+        ],
+      ),
+    );
+  }
+}
+
+class _CornerFlourish extends StatelessWidget {
+  const _CornerFlourish();
+  @override
+  Widget build(BuildContext context) => CustomPaint(
+        size: const Size(26, 26),
+        painter: _FlourishPainter(),
+      );
+}
+
+/// Two nested quarter-circle arcs, echoing the reference card's own corner
+/// ornament without trying to pixel-match its specific artwork.
+class _FlourishPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.3
+      ..color = AppColors.gold.withValues(alpha: 0.65);
+    canvas.drawArc(
+      Rect.fromLTWH(-size.width * 0.35, -size.height * 0.35,
+          size.width * 1.35, size.height * 1.35),
+      0,
+      math.pi / 2,
+      false,
+      paint,
+    );
+    canvas.drawArc(
+      Rect.fromLTWH(size.width * 0.05, size.height * 0.05,
+          size.width * 0.7, size.height * 0.7),
+      0,
+      math.pi / 2,
+      false,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _FlourishPainter old) => false;
+}
+
+/// A small gold star, used to flank the title text the same way the
+/// reference's "★ حديث شريف ★" banner does.
+class _TitleStar extends StatelessWidget {
+  const _TitleStar();
+  @override
+  Widget build(BuildContext context) =>
+      Icon(Icons.star, size: 12, color: AppColors.gold.withValues(alpha: 0.8));
 }
 
 class _Loading extends StatelessWidget {
@@ -113,8 +220,17 @@ class _DownloadPromptState extends State<_DownloadPrompt> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('hadith_daily.title'.tr(),
-                  style: widget.theme.textTheme.titleMedium),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const _TitleStar(),
+                  const SizedBox(width: 6),
+                  Text('hadith_daily.title'.tr(),
+                      style: widget.theme.textTheme.titleMedium),
+                  const SizedBox(width: 6),
+                  const _TitleStar(),
+                ],
+              ),
               const SizedBox(height: 2),
               Text(
                 downloading
@@ -205,10 +321,15 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                 children: [
                   Icon(Icons.menu_book_outlined, color: scheme.primary, size: 20),
                   const SizedBox(width: 8),
+                  const _TitleStar(),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: Text('hadith_daily.title'.tr(),
                         style: theme.textTheme.titleMedium),
                   ),
+                  const SizedBox(width: 6),
+                  const _TitleStar(),
+                  const SizedBox(width: 4),
                   IconButton(
                     tooltip: 'hadith_daily.another'.tr(),
                     icon: _rerolling

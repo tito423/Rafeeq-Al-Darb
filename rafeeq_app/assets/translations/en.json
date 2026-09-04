@@ -43,7 +43,9 @@
     "qibla": "Qibla",
     "new_muslim": "New Muslim Guide",
     "location_needed": "Enable location to calculate prayer times",
-    "tap_to_open": "Tap to open"
+    "tap_to_open": "Tap to open",
+    "continue_reading_title": "Continue Reading",
+    "continue_reading_button": "Resume reading"
   },
   "quran": {
     "surah_list": "Surahs",

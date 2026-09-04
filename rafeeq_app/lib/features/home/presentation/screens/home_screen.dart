@@ -9,6 +9,7 @@ import '../../../../core/models/prayer_times.dart';
 import '../../../../core/services/prayer_times_service.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../khatma/presentation/khatma_card.dart';
+import '../../../quran/presentation/widgets/continue_reading_card.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
 
@@ -75,6 +76,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               const _HeaderCard(),
               const SizedBox(height: 16),
               _PrayerCard(state: prayerState),
+              const SizedBox(height: 16),
+              // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
+              // the reference shows a "متابعة القراءة" bookmark-style card
+              // ("where you left off") as its own thing, separate from the
+              // khatma daily-goal card below it. Renders nothing when
+              // there's no real last-read page yet (see its own doc).
+              const ContinueReadingCard(),
               const SizedBox(height: 16),
               const KhatmaCard(),
               const SizedBox(height: 16),
