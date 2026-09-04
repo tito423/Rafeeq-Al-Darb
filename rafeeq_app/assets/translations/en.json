@@ -101,7 +101,9 @@
     "font_smaller": "Smaller text",
     "font_larger": "Larger text",
     "auto_scroll": "Auto-scroll",
-    "auto_scroll_stop": "Stop scrolling"
+    "auto_scroll_stop": "Stop scrolling",
+    "page_fit_full": "Full screen",
+    "page_fit_small": "Normal size"
   },
   "library": {
     "title": "Library",

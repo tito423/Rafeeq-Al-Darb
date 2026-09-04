@@ -101,7 +101,9 @@
     "font_smaller": "تصغير الخط",
     "font_larger": "تكبير الخط",
     "auto_scroll": "تمرير تلقائي",
-    "auto_scroll_stop": "إيقاف التمرير"
+    "auto_scroll_stop": "إيقاف التمرير",
+    "page_fit_full": "ملء الشاشة",
+    "page_fit_small": "حجم عادي"
   },
   "library": {
     "title": "المكتبة",

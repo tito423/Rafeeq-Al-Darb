@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-05 02:11 — IN PROGRESS — resume here**
+**2026-09-05 02:55 — IN PROGRESS — resume here**
 
-P3-41 follow-up: Hafs mushaf (604 pages, 365MB) and hadith library (77MB) now genuinely bundled in the APK via DbHelper.openBundled / MushafPageService's new bundled-asset fast path - zero download ever needed for either. Recitation reverted to manual-only per owner request (essential_content_bootstrap.dart deleted). APK now ~393MB. Also resized test AVD's data partition 6G->16G (real INSUFFICIENT_STORAGE this time, not the usual false positive) to make local verification possible. Live-verified fresh install: Hafs shows 'Ready to use offline' instantly, hadith card shows real content instantly. Batch22 APK shipped. analyze clean, test 15/15.
+P3-42 DONE + live-verified: mushaf toolbar redesign - Wrap 2-row toolbar (all actions visible, no h-scroll), tap-anywhere toggles toolbar visibility (GestureDetector wraps MushafTextPage), ayah selection now long-press only (LongPressGestureRecognizer replaces TapGestureRecognizer per-ayah, quick tap just toggles toolbar), full-screen/normal-size page-fit toggle (tighter padding+border), back-gesture cleanly dismisses sciences sheet. +2 keys x6 locales (page_fit_full/small). analyze clean, test 15/15. Live-verified end to end on emulator: toolbar hide/show, long-press opens real tafsir sheet on ayah 5, full-screen toggle round-trips. Shipped batch23. NEXT_SESSION_PROMPT.md + PHASE3.md updated.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

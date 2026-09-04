@@ -36,8 +36,27 @@ class MushafTextPage extends StatefulWidget {
 
   /// (surahId, surahNameAr) shown as a header when a surah starts on this page.
   final (int, String)? surahHeader;
+
+  /// P3‑41: fires on a **long press** of an ayah, not a plain tap any
+  /// more — real-device feedback: "if I press the page directly it shows
+  /// an ayah and directly shows the ayah card, no, I want if press the
+  /// page options icons show and if I press again it disappear". A plain
+  /// tap anywhere on the page (including on the text itself) now toggles
+  /// the toolbar via [onBackgroundTap] instead; opening the sciences
+  /// sheet needs a deliberate hold.
   final void Function(Ayah ayah) onAyahTap;
   final double fontScale;
+
+  /// A plain tap anywhere on this page that wasn't a long-press on an
+  /// ayah — the toolbar-visibility toggle lives one level up in
+  /// `QuranScreen`, this just reports "the page itself was tapped".
+  final VoidCallback? onBackgroundTap;
+
+  /// P3‑41: "give option so I can change page from small to full fit of
+  /// screen" — when true, the page's own card padding/border shrink
+  /// toward the edges so its real content claims as much of the screen
+  /// as it can, instead of sitting in a smaller bordered card.
+  final bool pageFillScreen;
 
   /// Whether auto-scroll should be running at all right now.
   final bool autoScroll;
@@ -62,6 +81,8 @@ class MushafTextPage extends StatefulWidget {
     required this.surahHeader,
     required this.onAyahTap,
     this.fontScale = 1.0,
+    this.onBackgroundTap,
+    this.pageFillScreen = false,
     this.autoScroll = false,
     this.autoScrollSpeed = 40,
     this.isActive = true,
@@ -74,7 +95,7 @@ class MushafTextPage extends StatefulWidget {
 
 class _MushafTextPageState extends State<MushafTextPage> {
   final TransformationController _transform = TransformationController();
-  final List<TapGestureRecognizer> _recognizers = [];
+  final List<LongPressGestureRecognizer> _recognizers = [];
   final ScrollController _scroll = ScrollController();
   Timer? _autoTimer;
   bool _reachedEndFired = false;
@@ -130,9 +151,10 @@ class _MushafTextPageState extends State<MushafTextPage> {
   void _tickAutoScroll() {
     if (!_scroll.hasClients) return;
     final max = _scroll.position.maxScrollExtent;
-    final next = (_scroll.offset +
-            widget.autoScrollSpeed * _tickInterval.inMilliseconds / 1000)
-        .clamp(0.0, max);
+    final next =
+        (_scroll.offset +
+                widget.autoScrollSpeed * _tickInterval.inMilliseconds / 1000)
+            .clamp(0.0, max);
     _scroll.jumpTo(next);
     if (next >= max && !_reachedEndFired) {
       // Fire once, then stop this page's own timer — the parent decides
@@ -152,9 +174,13 @@ class _MushafTextPageState extends State<MushafTextPage> {
     }
     _recognizers
       ..clear()
-      ..addAll(widget.ayahs.map(
-        (a) => TapGestureRecognizer()..onTap = () => widget.onAyahTap(a),
-      ));
+      ..addAll(
+        widget.ayahs.map(
+          (a) =>
+              LongPressGestureRecognizer()
+                ..onLongPress = () => widget.onAyahTap(a),
+        ),
+      );
   }
 
   @override
@@ -179,77 +205,93 @@ class _MushafTextPageState extends State<MushafTextPage> {
     final paper = isDark ? AppColors.nightSurface : AppColors.paper;
     final ink = isDark ? AppColors.paperDark : AppColors.ink;
     final baseFont = 23.0 * widget.fontScale;
+    // P3‑41: "full fit" shrinks the card's own margins/border toward the
+    // edges instead of changing the text's own font scale (that's what
+    // the A+/A- actions already own) — the real content gets more of the
+    // screen without becoming a second, competing "zoom" control.
+    final fill = widget.pageFillScreen;
 
-    return ClipRect(
-      child: InteractiveViewer(
-        transformationController: _transform,
-        minScale: 1,
-        maxScale: 3,
-        child: SingleChildScrollView(
-          controller: _scroll,
-          padding: const EdgeInsets.fromLTRB(14, 18, 14, 28),
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(18, 22, 18, 22),
-            decoration: BoxDecoration(
-              color: paper,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
-                  blurRadius: 14,
-                  offset: const Offset(0, 6),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: widget.onBackgroundTap,
+      child: ClipRect(
+        child: InteractiveViewer(
+          transformationController: _transform,
+          minScale: 1,
+          maxScale: 3,
+          child: SingleChildScrollView(
+            controller: _scroll,
+            padding: fill
+                ? const EdgeInsets.fromLTRB(4, 8, 4, 16)
+                : const EdgeInsets.fromLTRB(14, 18, 14, 28),
+            child: Container(
+              padding: fill
+                  ? const EdgeInsets.fromLTRB(10, 14, 10, 14)
+                  : const EdgeInsets.fromLTRB(18, 22, 18, 22),
+              decoration: BoxDecoration(
+                color: paper,
+                borderRadius: BorderRadius.circular(fill ? 8 : 20),
+                border: Border.all(
+                  color: AppColors.gold.withValues(alpha: fill ? 0.18 : 0.35),
                 ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (widget.surahHeader != null) _SurahBanner(name: widget.surahHeader!.$2),
-                Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        for (var i = 0; i < widget.ayahs.length; i++) ...[
-                          TextSpan(
-                            text: widget.ayahs[i].textUthmani,
-                            recognizer: _recognizers[i],
-                          ),
-                          // P3‑32: `PlaceholderAlignment.middle` centers the
-                          // marker within the *line's* full ascent+descent
-                          // box — for `AmiriQuran`, whose metrics reserve a
-                          // lot of extra room above the baseline for
-                          // tashkeel, that box is taller and sits higher
-                          // than the visible base letters, so the marker
-                          // read as sitting low relative to the actual
-                          // Arabic glyphs next to it. `baseline` pins it to
-                          // the alphabetic baseline instead — a stable
-                          // reference line the base letters actually sit
-                          // on, independent of how much tashkeel headroom
-                          // the font reserves.
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.baseline,
-                            baseline: TextBaseline.alphabetic,
-                            child: _AyahMarker(
-                              number: widget.ayahs[i].ayahNumber,
-                              fontScale: widget.fontScale,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
+                    blurRadius: 14,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (widget.surahHeader != null)
+                    _SurahBanner(name: widget.surahHeader!.$2),
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          for (var i = 0; i < widget.ayahs.length; i++) ...[
+                            TextSpan(
+                              text: widget.ayahs[i].textUthmani,
+                              recognizer: _recognizers[i],
                             ),
-                          ),
-                          const TextSpan(text: ' '),
+                            // P3‑32: `PlaceholderAlignment.middle` centers the
+                            // marker within the *line's* full ascent+descent
+                            // box — for `AmiriQuran`, whose metrics reserve a
+                            // lot of extra room above the baseline for
+                            // tashkeel, that box is taller and sits higher
+                            // than the visible base letters, so the marker
+                            // read as sitting low relative to the actual
+                            // Arabic glyphs next to it. `baseline` pins it to
+                            // the alphabetic baseline instead — a stable
+                            // reference line the base letters actually sit
+                            // on, independent of how much tashkeel headroom
+                            // the font reserves.
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.baseline,
+                              baseline: TextBaseline.alphabetic,
+                              child: _AyahMarker(
+                                number: widget.ayahs[i].ayahNumber,
+                                fontScale: widget.fontScale,
+                              ),
+                            ),
+                            const TextSpan(text: ' '),
+                          ],
                         ],
-                      ],
-                    ),
-                    textAlign: TextAlign.justify,
-                    style: TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: baseFont,
-                      height: 2.05,
-                      color: ink,
+                      ),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontFamily: 'AmiriQuran',
+                        fontSize: baseFont,
+                        height: 2.05,
+                        color: ink,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

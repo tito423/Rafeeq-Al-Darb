@@ -10,6 +10,7 @@ import '../../../../core/services/prayer_times_service.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
+import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
 
@@ -181,6 +182,25 @@ class _HeaderCard extends StatelessWidget {
                   color: const Color(0xFFD4AF37).withValues(alpha: 0.9),
                   fontSize: 12,
                   fontWeight: FontWeight.w600)),
+          // P3‑41: Settings came off the bottom nav entirely (real-device
+          // feedback) — this is its one remaining entry point, a small
+          // gear tucked into the header card's own trailing edge rather
+          // than a whole extra row that would crowd this already-tight
+          // card. `Navigator.push`, not a tab switch — Settings was never
+          // part of `IndexedStack`'s kept-alive screens even when it was
+          // a tab, so nothing about its own state management changes.
+          const SizedBox(width: 6),
+          InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(4),
+              child: Icon(Icons.settings_outlined,
+                  color: Color(0xFF7DEBDA), size: 18),
+            ),
+          ),
         ],
       ),
     );

@@ -12,16 +12,22 @@ import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/qibla/presentation/screens/qibla_screen.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
-import '../../features/settings/presentation/screens/settings_screen.dart';
 import 'tab_request_provider.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
-/// sections (Home, Quran, Prayer, Azkar, Tasbeeh, Library, Settings).
-/// "Library" holds the Hadith hub and the books catalog. P3‑4 round 2:
-/// Tasbeeh used to be a sub-tab inside Azkar; the owner's real reference
-/// screenshots of the old app's own bottom nav show it as its own separate
-/// tab, so it was split out (`AppTab`/`tab_request_provider.dart` tracks
-/// the indices).
+/// sections (Home, Quran, Prayer, Azkar, Tasbeeh, Library). "Library" holds
+/// the Hadith hub and the books catalog. P3‑4 round 2: Tasbeeh used to be a
+/// sub-tab inside Azkar; the owner's real reference screenshots of the old
+/// app's own bottom nav show it as its own separate tab, so it was split
+/// out (`AppTab`/`tab_request_provider.dart` tracks the indices).
+///
+/// P3‑41: Settings is deliberately **not** one of these tabs any more —
+/// real-device feedback asked directly for it to come off the bottom nav
+/// and live as a button on Home instead (`_SettingsButton` in
+/// `home_screen.dart`, a plain `Navigator.push` to the same
+/// `SettingsScreen` that used to be tab 6). Six tabs read more cleanly
+/// than seven, and Settings is opened rarely enough that it doesn't need
+/// a permanent slot in the bar every other screen fights for space in.
 ///
 /// Also the single place the persistent "next prayer" status card (P2‑6) is
 /// kept in sync: whenever the prayer times resolve, the opt-in toggle flips,
@@ -91,7 +97,6 @@ class _AppShellState extends ConsumerState<AppShell>
       const AzkarScreen(),
       const TasbeehScreen(),
       const LibraryScreen(),
-      const SettingsScreen(),
     ];
 
     return Scaffold(
@@ -129,11 +134,6 @@ class _AppShellState extends ConsumerState<AppShell>
             icon: const Icon(Icons.library_books_outlined),
             selectedIcon: const Icon(Icons.library_books),
             label: 'nav.library'.tr(),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.settings_outlined),
-            selectedIcon: const Icon(Icons.settings),
-            label: 'nav.settings'.tr(),
           ),
         ],
       ),

@@ -1868,7 +1868,8 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-38 | Round-3: app icon v2, Azkar/Tasbeeh split into separate bottom-nav tabs, splash+app-store frames | ✅ **done, live-verified** — icon rebuilt as fresh vector art from a real reference photo (a real XML double-hyphen bug in `icon_fg.svg` found+fixed live, twice); Azkar/Tasbeeh now 7 separate bottom-nav tabs, both confirmed working independently |
 | P3-39 | Round-4: literal splash video, keystore blocker dropped, cloud cleanup | ✅ **done, live-verified** — the owner's own 10s splash video now plays for real on cold start (muted, tap-to-skip, lattice/badge fallback while it decodes or if it ever fails), release-keystore no longer tracked as a blocker (personal-use app), old contaminated R2 bucket confirmed unused / no Firebase integration exists to clean up |
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
-| P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split |
+| P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
+| P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
 
 ## P3-41 — First real-device feedback batch
 
@@ -1989,12 +1990,8 @@ split below, not a blanket "done".
   claimed fixed.
 
 **⏳ Deliberately not rushed — real work, still open:**
-- **Mushaf toolbar redesign** (vertical/2-row icon layout instead of a
-  horizontal scroll strip, hide-on-tap, a page-fit-to-screen toggle, and
-  reworking ayah selection to long-press + a real deselect-on-back
-  gesture instead of a single tap immediately opening the sciences
-  sheet) — a genuine interaction-model change to the mushaf reader, not
-  a small tweak, and deserves its own focused pass.
+- ~~**Mushaf toolbar redesign**~~ — done in its own focused pass, see
+  **P3-42** below.
 - **Removing the Settings tab and relocating it into a Home card**, plus
   **moving Adhan settings into the Prayer tab as a collapsed card and
   giving Qibla its own card there too** — a real navigation-architecture
@@ -2078,3 +2075,67 @@ Download button and a Delete option immediately — no download ever ran;
 the other four editions still correctly showed "0/604 pages saved" with
 active Download buttons. Home's Hadith of the Day card showed a real
 hadith immediately, no download prompt at any point.
+
+### P3-42 — Mushaf toolbar redesign ✅ DONE, live-verified
+
+The interaction-model change P3-41 deliberately deferred: "the quran
+options icon is taking a place from the screen make it shows from side
+vertically or in 2 rows... make it hide when press on page... if i press
+the page directly it shadow an ayah and directly show the ayah card, no,
+i want if press the page options icons shows and i press again it
+disappear and the page be bigger and give option so i can change page
+from small to full fit of screen and make if i want the ayah card long
+press aya and if i use navigation gesture or option for back just
+unselect the ayah."
+
+- **Toolbar layout**: the app bar's `bottom:` toolbar was a horizontal
+  `SingleChildScrollView(Row(...))` — every action technically reachable,
+  but only by scrolling sideways through a strip, which read as "taking
+  up the screen" without the reader ever seeing all of it at once.
+  Rebuilt as a `Wrap(alignment: center)` — all ten actions lay out across
+  two rows and are all visible immediately, no horizontal scroll.
+- **Tap-to-hide, tap-to-show**: new `_toolbarVisible` state in
+  `QuranScreen`, toggled by `_toggleToolbarVisible()`. `MushafTextPage`
+  gained an `onBackgroundTap` callback, wired through a `GestureDetector`
+  (`HitTestBehavior.opaque`) wrapping its entire page content — a plain
+  tap anywhere on the page, including directly on the ayah text, now
+  toggles the toolbar instead of touching the ayah at all.
+- **Long-press replaces tap for ayah selection**: the per-ayah
+  `TapGestureRecognizer`s attached to each `TextSpan` became
+  `LongPressGestureRecognizer`s. Flutter's gesture arena lets both
+  coexist on the same pointer: a quick tap-and-release resolves to the
+  outer `GestureDetector`'s tap (toolbar toggle) since the long-press
+  recognizer never completes in time; a genuine ~500ms hold lets the
+  long-press recognizer self-accept and win instead, opening the ayah
+  sciences sheet. **This needed care to verify correctly** — an early
+  round of manual testing via `adb shell input swipe x y x y <ms>`
+  seemed to show the long-press never firing at all, which looked like a
+  real gesture-arena bug; the actual cause was a coordinate math mistake
+  in testing (tapping a screen point above the actual ayah glyphs, in the
+  gap below the surah banner, where no `TextSpan` recognizer exists at
+  all) — once the hold landed on the real ayah text, it fired correctly
+  and consistently.
+- **Full-fit toggle**: new `pageFillScreen` bool (`QuranScreen`'s
+  `_pageFillScreen`, persisted via `SharedPreferences`), a new toolbar
+  action (`Icons.fullscreen`/`fullscreen_exit`, `quran.page_fit_full`/
+  `quran.page_fit_small` — added across all 6 locales). When on, the
+  page's own `SingleChildScrollView`/`Container` padding shrinks
+  (14/18px → 4/10px) and the border/shadow lighten, so the real Uthmani
+  text claims noticeably more of the screen — deliberately a layout
+  change, not a font-size change (the existing A+/A- actions already own
+  that).
+- **Deselect on back gesture**: already fixed earlier this session
+  (`_openSciences` awaiting the sheet's own dismiss future rather than a
+  specific button's `onPressed`) — re-confirmed live here: closing the
+  sciences sheet via the system back gesture returns cleanly to the page
+  with no sheet residue.
+
+**Live-verified on `emulator-5554`** (page 1, Al-Fatiha): toolbar renders
+as a clean two-row `Wrap`; a quick tap on the page background hides it,
+tapping again shows it; a quick tap directly on ayah 5's text also just
+toggles the toolbar (no sheet); a genuine ~500ms hold on the same text
+opens the sciences sheet on ayah 5 with its real tafsir; the system back
+gesture dismisses it cleanly; the full-screen toggle visibly tightens the
+page's margins and border, and reverts correctly on a second tap.
+`flutter analyze` clean, `flutter test` 15/15 (including translation
+parity for the two new keys across all 6 locales).

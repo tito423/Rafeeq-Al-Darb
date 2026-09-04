@@ -62,6 +62,21 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   double _autoScrollSpeed = 40; // pixels/second
   static const _kAutoScrollSpeed = 'quran_text_autoscroll_speed_v1';
 
+  /// P3‑41: real-device feedback — the toolbar "is taking place from the
+  /// screen"; tapping the page should hide it (and give the page the
+  /// freed space) and tapping again should bring it back. Starts visible
+  /// — hiding it by default on first open would make the reader's own
+  /// controls undiscoverable.
+  bool _toolbarVisible = true;
+
+  /// P3‑41: "give option so I can change page from small to full fit of
+  /// screen" — a persisted, explicit reader preference, independent of
+  /// the toolbar-hide above (that just reclaims the toolbar's own strip;
+  /// this changes how much of *that* remaining space the page itself
+  /// fills).
+  bool _pageFillScreen = false;
+  static const _kPageFillScreen = 'quran_text_page_fill_v1';
+
   Future<void> _persistPage() async {
     // Goes through the reactive provider (P3‑4), not a raw prefs write —
     // see `quran_last_read.dart`'s doc for why: `ContinueReadingCard` on
@@ -82,6 +97,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final modeName = prefs.getString('quran_reader_mode');
     final fontScale = prefs.getDouble(_kFontScale);
     final autoScrollSpeed = prefs.getDouble(_kAutoScrollSpeed);
+    final pageFillScreen = prefs.getBool(_kPageFillScreen);
     if (!mounted) return;
     setState(() {
       if (p >= 1 && p <= _totalPages) {
@@ -94,6 +110,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       );
       if (fontScale != null) _fontScale = fontScale;
       if (autoScrollSpeed != null) _autoScrollSpeed = autoScrollSpeed;
+      if (pageFillScreen != null) _pageFillScreen = pageFillScreen;
     });
   }
 
@@ -101,6 +118,16 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     setState(() => _fontScale = (_fontScale + delta).clamp(0.75, 1.8));
     SharedPreferences.getInstance()
         .then((p) => p.setDouble(_kFontScale, _fontScale));
+  }
+
+  void _toggleToolbarVisible() {
+    setState(() => _toolbarVisible = !_toolbarVisible);
+  }
+
+  void _togglePageFillScreen() {
+    setState(() => _pageFillScreen = !_pageFillScreen);
+    SharedPreferences.getInstance()
+        .then((p) => p.setBool(_kPageFillScreen, _pageFillScreen));
   }
 
   void _toggleAutoScroll() {
@@ -155,19 +182,33 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _persistPage();
   }
 
-  void _openSciences(Ayah ayah, MushafData data,
-      {bool sciencesAvailable = true}) {
+  // P3‑41: real-device feedback — "use logic... if I use navigation
+  // gesture or option for back just unselect the ayah". The highlight
+  // used to just be set and never cleared; `AyahSciencesSheet.show`
+  // already returns a future that resolves on *any* dismissal (the
+  // system back gesture, tapping the scrim, or an explicit close — all
+  // of them go through `Navigator.pop` under a `showModalBottomSheet`),
+  // so awaiting it and clearing the highlight there covers all three the
+  // same way, not just one specific close button.
+  Future<void> _openSciences(Ayah ayah, MushafData data,
+      {bool sciencesAvailable = true}) async {
     setState(() {
       _highlightSurah = ayah.surahId;
       _highlightAyah = ayah.ayahNumber;
     });
-    AyahSciencesSheet.show(
+    await AyahSciencesSheet.show(
       context,
       ayah: ayah,
       surahNameAr: data.surahNameAr(ayah.surahId),
       quranRepo: data.repo,
       sciencesAvailable: sciencesAvailable,
     );
+    if (mounted) {
+      setState(() {
+        _highlightSurah = null;
+        _highlightAyah = null;
+      });
+    }
   }
 
   Future<List<Ayah>> _ayahsOfPage(int page, MushafData data) =>
@@ -203,18 +244,25 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('nav.quran'.tr()),
-        // P3‑34: the toolbar used to be plain unlabelled IconButtons —
-        // moved into a captioned, animated row of its own (`bottom:`,
-        // not `actions:`, so it spans the full screen width and can
-        // never overflow regardless of how many actions there are or how
-        // narrow the device is — it scrolls horizontally instead).
-        bottom: mushaf.hasValue
+        // P3‑34 built this as a single horizontal-scroll row; P3‑41's
+        // real-device feedback was that this "takes place from the
+        // screen" — a long scrolling strip hides most actions until you
+        // scroll to find them. Two changes: a `Wrap` instead of a
+        // `SingleChildScrollView(Row)` so every action is visible at
+        // once across as many rows as it naturally takes (no more
+        // hidden-until-scrolled icons), and the whole thing collapses to
+        // nothing when `_toolbarVisible` is false (tapping the page
+        // itself toggles it — see `_buildViewer`), handing that space
+        // back to the page.
+        bottom: mushaf.hasValue && _toolbarVisible
             ? PreferredSize(
-                preferredSize: const Size.fromHeight(60),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsetsDirectional.only(start: 4, end: 12),
-                  child: Row(
+                preferredSize: Size.fromHeight(_mode == MushafMode.text ? 116 : 58),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 4,
+                    runSpacing: 0,
                     children: [
                       if (_mode == MushafMode.text) ...[
                         ToolbarAction(
@@ -235,6 +283,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               ? 'quran.auto_scroll_stop'.tr()
                               : 'quran.auto_scroll'.tr(),
                           onPressed: _toggleAutoScroll,
+                        ),
+                        ToolbarAction(
+                          icon: _pageFillScreen
+                              ? Icons.fullscreen_exit
+                              : Icons.fullscreen,
+                          label: _pageFillScreen
+                              ? 'quran.page_fit_small'.tr()
+                              : 'quran.page_fit_full'.tr(),
+                          onPressed: _togglePageFillScreen,
                         ),
                       ],
                       ToolbarAction(
@@ -411,6 +468,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               autoScrollSpeed: _autoScrollSpeed,
               isActive: page == _current,
               onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
+              onBackgroundTap: _toggleToolbarVisible,
+              pageFillScreen: _pageFillScreen,
             );
           },
         );

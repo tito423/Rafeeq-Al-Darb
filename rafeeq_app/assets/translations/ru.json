@@ -101,7 +101,9 @@
     "font_smaller": "Уменьшить текст",
     "font_larger": "Увеличить текст",
     "auto_scroll": "Автопрокрутка",
-    "auto_scroll_stop": "Остановить прокрутку"
+    "auto_scroll_stop": "Остановить прокрутку",
+    "page_fit_full": "Во весь экран",
+    "page_fit_small": "Обычный размер"
   },
   "library": {
     "title": "Библиотека",

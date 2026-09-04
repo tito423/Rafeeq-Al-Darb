@@ -15,7 +15,9 @@ abstract final class AppTab {
   static const azkar = 3;
   static const tasbeeh = 4;
   static const library = 5;
-  static const settings = 6;
+  // P3‑41: Settings is no longer a bottom-nav tab at all (see AppShell's
+  // own doc) — reached via a button on Home instead, a real
+  // `Navigator.push`, so there's no tab index for it any more.
 }
 
 /// Cross-route "switch the bottom-nav tab to N" seam.

@@ -101,7 +101,9 @@
     "font_smaller": "Texto menor",
     "font_larger": "Texto maior",
     "auto_scroll": "Rolagem automática",
-    "auto_scroll_stop": "Parar rolagem"
+    "auto_scroll_stop": "Parar rolagem",
+    "page_fit_full": "Tela cheia",
+    "page_fit_small": "Tamanho normal"
   },
   "library": {
     "title": "Biblioteca",

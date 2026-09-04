@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/theme_controller.dart';
-import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../splash/data/splash_video_provider.dart';
@@ -114,23 +113,10 @@ class SettingsScreen extends ConsumerWidget {
           const PermissionsSection(),
           const SizedBox(height: 24),
 
-          // Adhan
-          _SectionLabel('prayer.adhan_settings'.tr()),
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.notifications_active_outlined,
-                  color: scheme.primary),
-              title: Text('prayer.adhan_settings'.tr()),
-              subtitle: Text('prayer.choose_adhan'.tr()),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const AdhanSettingsScreen(),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
+          // P3‑41: the Adhan settings entry that used to live here is
+          // gone — real-device feedback pointed out it duplicated the
+          // Prayer tab's own `_AdhanSettingsLink` card
+          // (`qibla_screen.dart`), which is the one real entry point now.
 
           // New Muslim Guide — used to be a Home quick-access card; the
           // Home redesign (P2‑11/12/13) replaced that grid with the khatma
