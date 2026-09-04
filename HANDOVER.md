@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 17:18 — IN PROGRESS — resume here**
+**2026-09-04 17:20 — IN PROGRESS — resume here**
 
-P3-38 DONE: app icon v2 redesigned from owner's real reference photo (cosmic-swirl crescent+blue book, same reproducible SVG pipeline as P3-1) - found+fixed a real XML double-hyphen comment bug in icon_fg.svg TWICE (Chrome silently wrote an HTML error page as the PNG). Azkar/Tasbeeh split into 7 separate bottom-nav tabs (was 1 tab w/ 2 sub-tabs) per owner's real old-app screenshots - new TasbeehScreen, trimmed AzkarScreen, shared AzkarSettingsButton extracted, AppTab.tasbeeh inserted safely. Saved a real live-captured splash screenshot as app-store candidate frame. analyze clean, test 15/15, live-verified full fresh-install cycle on emulator.
+Released phase3-batch13-2026-09-04 APK (P3-38: new app icon + Azkar/Tasbeeh 7-tab split). NEXT_SESSION_PROMPT.md updated with batch13 link and full details.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
