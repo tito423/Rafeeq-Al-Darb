@@ -62,10 +62,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (_navigated || !mounted) return;
     _navigated = true;
     final done = ref.read(onboardingCompletedProvider);
+    // Read the locale code *before* navigating, not inside `builder:` — the
+    // exact same real crash found live in `OnboardingScreen._finish` (see
+    // its comment): `pushReplacement` can deactivate this screen's element
+    // before the new route's `builder` callback runs, and `context.locale`
+    // accessed from inside that callback then throws "Looking up a
+    // deactivated widget's ancestor is unsafe."
+    final localeCode = context.locale.languageCode;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => done
-            ? AppShell(key: ValueKey(context.locale.languageCode))
+            ? AppShell(key: ValueKey(localeCode))
             : const OnboardingScreen(),
       ),
     );

@@ -33,7 +33,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 |---|---|---|
 | P3‑1 | New app icon (crescent + open Quran, glowing blue/gold) | ✅ done, `flutter analyze` clean |
 | P3‑2 | Rename "السبحة" → "المسبحة" everywhere | ✅ done |
-| P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | queued — see notes |
+| P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | ✅ **done, live-verified** — calmer near-black backdrop, glow rings instead of filled blobs, sparse star-dots instead of a tiled grid; a real crash (unrelated to the restyle itself, in P3-20/21's navigation code) found+fixed along the way |
 | P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | 🔶 header card ✅ done + live-verified; per-card patterns + animated/interactive prayer card still open (animated prayer card superseded by round-2 **P3-22**, see below) |
 | P3‑5 | **Login / accounts — architecture decision** | ✅ **answered: optional** (guest mode stays default, sign-in adds sync) — not yet built |
 | P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
@@ -82,19 +82,66 @@ reproducible pipeline as the P2‑1.5/mosque redesigns:
 All 3 occurrences in `ar.json` (`home.tasbeeh`, `azkar.tasbeeh`,
 `azkar.tab_tasbeeh`) updated. Parity unaffected (values changed, not keys).
 
-## P3‑3 — RGB theme restyle
+## P3‑3 — RGB theme restyle ✅ DONE, live-verified
 
 Owner: "خلي ثيم التطبيق rgb قريب للثيم اللي انت شايف في صورة المسبحة" (make
 the RGB theme close to the theme in the tasbeeh reference image). Looking at
 `design_refs/ref_tasbeeh.jpg`: a near-black background, a soft emerald/teal
 glowing ring around the counter circle, small scattered star-dots, warm gold/
 purple/teal/blue pill buttons for the four dhikr choices — calmer and darker
-than the current `rgb_backdrop.dart` (which leans brighter neon teal/violet/
-gold aurora). Plan: keep the existing seam (`AppTheme.rgb()` +
-`RgbScaffoldBackground`/`_RgbPainter`, §5.6 of `HANDOVER.md`) but tone the
-palette darker/calmer and make the "glow ring" motif (seen around the
-tasbeeh counter and echoed faintly in the Home reference's cards) a
-recurring accent rather than a full aurora wash. Not started.
+than the old `rgb_backdrop.dart` (which leaned brighter neon teal/violet/
+gold aurora, three large filled radial-gradient blobs plus a busy tiled
+rub-el-hizb star grid).
+
+**Restyled `_RgbPainter`** — kept the exact same seam (`AppTheme.rgb()` +
+`RgbScaffoldBackground`/`_RgbPainter`, §5.6 of `HANDOVER.md`), only retuned
+what it paints:
+- The three large filled blobs (`RadialGradient` discs, alpha 0.28,
+  covering most of the screen) → three soft glow **rings** (stroked
+  circles with a blur mask, alpha ~0.11), teal-weighted (teal picked 2× as
+  often as violet/gold) so the dominant colour reads as the reference's
+  emerald glow rather than an even three-way rotation — this directly
+  echoes the reference's actual "glow ring around the counter" motif
+  instead of a filled wash.
+- The tiled rub-el-hizb star grid (repeating every 132px across the whole
+  screen, alpha 0.05) → a small fixed set of 18 twinkling star-dots (a
+  seeded `Random(7)` so positions never jitter, only their alpha pulses) —
+  matching the reference's few scattered dots instead of a busy repeating
+  pattern.
+- Motion slowed down further (phase multiplier 0.4 vs. 1.0) for a calmer
+  drift.
+- `AppTheme.rgb()`'s own `ColorScheme` (primary `0xFF22E0C6` emerald, dark
+  semi-transparent cards) was already close to the reference and left
+  untouched — only the backdrop needed retuning.
+
+`flutter analyze`/`flutter test` clean.
+
+**A real crash found live, not by static review, while testing this** —
+unrelated to the painter itself, but only surfaced through this same
+testing pass: switching to the RGB theme from Settings crashed with
+`Looking up a deactivated widget's ancestor is unsafe` — root-caused via
+`flutter run`'s live stack trace (not guessable from a screenshot alone)
+to `SplashScreen._proceed()` and `OnboardingScreen._finish()` (both P3-20/
+21, this same session): both called `Navigator.of(context).pushReplacement`
+with a `builder:` callback that read `context.locale.languageCode` — but
+that closure runs *later*, once the old screen's element may already be
+mid-deactivation from the `pushReplacement` itself, so the ancestor lookup
+inside `.locale` throws. Fixed in both places by reading
+`context.locale.languageCode` into a local **before** calling
+`pushReplacement`, not inside the `builder:` closure. This crash had
+nothing to do with the RGB restyle itself — it would have fired switching
+*into* RGB from any theme, found only because this task's testing pass
+happened to be the first time that exact navigation path ran after P3-20/21
+shipped.
+
+**Live-verified on `emulator-5554`** (via `flutter run` for the live crash
+trace, then a full rebuild+install to confirm the fix): Settings → RGB
+theme now switches with no crash — confirmed the calmer near-black
+backdrop with faint teal glow rings and scattered star-dots renders behind
+Settings, Home, and the Adhkar tab's Tasbeeh screen (a strong side-by-side
+match to `ref_tasbeeh.jpg`'s own mood, especially next to the tasbeeh
+counter's own already-shipped P3-12 glow-ring styling). "Motion effects"
+toggle (existing, unaffected) still visible and working.
 
 ## P3‑4 — Home screen redesign
 
@@ -778,6 +825,12 @@ Android's AAPT2 XML comment parser rejects outright (`the string "--" is
 not permitted within comments`) — this failed the Gradle build completely
 for all four density/theme variants, not a warning. Fixed by rewording the
 comments to avoid the double-hyphen; confirmed the rebuild succeeds.
+
+**A second real bug, found later during P3-3's testing pass, lived here
+too:** `_proceed()`'s `context.locale.languageCode` was read inside the
+`pushReplacement` `builder:` closure instead of before it — see P3-3's
+writeup for the full root-cause and fix (the same bug, same fix, was in
+`OnboardingScreen._finish()` too).
 
 ## P3-21 — First-run onboarding ✅ DONE, live-verified
 

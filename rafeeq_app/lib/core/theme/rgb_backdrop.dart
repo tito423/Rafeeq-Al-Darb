@@ -80,6 +80,19 @@ class _RgbBackdropState extends State<_RgbBackdrop>
   }
 }
 
+/// P3‑3: restyled toward `design_refs/ref_tasbeeh.jpg`'s own look — the
+/// owner's exact words were "خلي ثيم التطبيق rgb قريب للثيم اللي انت شايف
+/// في صورة المسبحة" (make the RGB theme close to the tasbeeh reference's
+/// theme). That reference is near-black, dominated by one soft emerald/teal
+/// **glow ring** around the tasbeeh counter (not a filled wash), with a
+/// handful of small static star-dots — calmer and darker than this used to
+/// be. Kept the same `CustomPainter`/slow-`AnimationController` seam (per
+/// `HANDOVER.md` §5.6) but replaced the three large filled radial-gradient
+/// blobs with a few soft **ring** strokes (echoing the reference's actual
+/// glow-ring motif, not a solid disc), teal-weighted rather than an equal
+/// three-way rotation, and replaced the tiled rub-el-hizb star grid — which
+/// read as much busier than the reference's few scattered dots — with a
+/// small fixed set of twinkling star-dots.
 class _RgbPainter extends CustomPainter {
   _RgbPainter(this.t);
 
@@ -87,11 +100,13 @@ class _RgbPainter extends CustomPainter {
   final double t;
 
   static const _base = Color(0xFF05060B);
-  static const _blobs = <Color>[
-    Color(0xFF15C7B0), // electric teal
-    Color(0xFF7C4DFF), // violet
-    Color(0xFFD4AF37), // gold
-  ];
+  static const _teal = Color(0xFF15C7B0);
+  static const _violet = Color(0xFF7C4DFF);
+  static const _gold = Color(0xFFD4AF37);
+
+  /// Teal-weighted so the dominant colour reads as the reference's emerald
+  /// glow, with violet/gold only as occasional accents.
+  static const _ringColors = [_teal, _teal, _violet, _gold];
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -101,46 +116,39 @@ class _RgbPainter extends CustomPainter {
     final w = size.width, h = size.height;
     final tau = 2 * math.pi;
 
-    // Three colour fields drifting on slow Lissajous paths.
-    for (var i = 0; i < _blobs.length; i++) {
-      final p = t * tau + i * (tau / 3);
-      final cx = w * (0.5 + 0.32 * math.sin(p * (1 + i * 0.15)));
-      final cy = h * (0.42 + 0.30 * math.cos(p * (0.8 + i * 0.2)));
-      final radius = math.max(w, h) * 0.62;
+    // A few soft glow RINGS drifting on slow, gentle paths — much slower
+    // and much fainter than the old filled blobs, so this reads as a calm
+    // ambient accent rather than a full-screen aurora wash.
+    for (var i = 0; i < 3; i++) {
+      final p = t * tau * 0.4 + i * (tau / 3);
+      final cx = w * (0.5 + 0.30 * math.sin(p * (0.6 + i * 0.1)));
+      final cy = h * (0.35 + 0.22 * math.cos(p * (0.5 + i * 0.15)));
+      final radius = math.min(w, h) * (0.20 + i * 0.06);
+      final color = _ringColors[i % _ringColors.length];
       canvas.drawCircle(
         Offset(cx, cy),
         radius,
         Paint()
-          ..shader = RadialGradient(
-            colors: [
-              _blobs[i].withValues(alpha: 0.28),
-              _blobs[i].withValues(alpha: 0.0),
-            ],
-          ).createShader(Rect.fromCircle(center: Offset(cx, cy), radius: radius)),
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 18
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 26)
+          ..color = color.withValues(alpha: 0.11),
       );
     }
 
-    // A faint rub-el-hizb (8-point star) lattice, slowly counter-rotating.
-    final star = _starPath(26);
-    final stroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2
-      ..color = Colors.white.withValues(alpha: 0.05);
-    const step = 132.0;
-    final angle = math.sin(t * tau) * 0.06;
-    canvas.save();
-    canvas.translate(w / 2, h / 2);
-    canvas.rotate(angle);
-    canvas.translate(-w / 2, -h / 2);
-    for (var y = -step; y < h + step; y += step) {
-      for (var x = -step; x < w + step; x += step) {
-        canvas.save();
-        canvas.translate(x + step / 2, y + step / 2);
-        canvas.drawPath(star, stroke);
-        canvas.restore();
-      }
+    // A small, fixed set of twinkling star-dots — a seeded `Random` so the
+    // positions never jitter frame to frame, only their alpha does.
+    final rnd = math.Random(7);
+    for (var i = 0; i < 18; i++) {
+      final dx = rnd.nextDouble() * w;
+      final dy = rnd.nextDouble() * h;
+      final twinkle = (0.4 + 0.4 * math.sin(t * tau + i)).clamp(0.0, 1.0);
+      canvas.drawCircle(
+        Offset(dx, dy),
+        1.4,
+        Paint()..color = Colors.white.withValues(alpha: 0.28 * twinkle),
+      );
     }
-    canvas.restore();
 
     // Gentle top-down vignette so status-bar / app-bar text stays legible.
     canvas.drawRect(
@@ -152,20 +160,6 @@ class _RgbPainter extends CustomPainter {
           colors: [Color(0x66000000), Color(0x00000000), Color(0x4D000000)],
           stops: [0.0, 0.35, 1.0],
         ).createShader(rect),
-    );
-  }
-
-  /// One 8-point star = two overlapped squares, centred on the origin.
-  static Path _starPath(double r) {
-    final a = Path()
-      ..addRect(Rect.fromCenter(center: Offset.zero, width: r * 2, height: r * 2));
-    final b = Path()
-      ..addRect(Rect.fromCenter(center: Offset.zero, width: r * 2, height: r * 2));
-    final m = Matrix4.rotationZ(math.pi / 4).storage;
-    return Path.combine(
-      PathOperation.union,
-      a,
-      b.transform(m),
     );
   }
 

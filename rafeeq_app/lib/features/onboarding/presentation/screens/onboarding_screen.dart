@@ -40,9 +40,16 @@ class OnboardingScreen extends ConsumerWidget {
     final prefs = ref.read(sharedPrefsProvider);
     await markOnboardingCompleted(prefs);
     if (!context.mounted) return;
+    // Read the locale code *before* navigating, not inside `builder:` — a
+    // real crash caught live: `pushReplacement` starts deactivating this
+    // screen's element, and by the time the new route's `builder` callback
+    // actually runs, `context` here can already be a defunct ancestor, so
+    // `context.locale` (which walks up an `InheritedWidget`) throws
+    // "Looking up a deactivated widget's ancestor is unsafe."
+    final localeCode = context.locale.languageCode;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
-        builder: (_) => AppShell(key: ValueKey(context.locale.languageCode)),
+        builder: (_) => AppShell(key: ValueKey(localeCode)),
       ),
     );
   }

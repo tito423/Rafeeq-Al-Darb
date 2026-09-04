@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 12:31 — IN PROGRESS — resume here**
+**2026-09-04 15:28 — IN PROGRESS — resume here**
 
-Released phase3-batch10-2026-09-04 APK (P3-20+P3-21 splash+onboarding complete). NEXT_SESSION_PROMPT.md updated with full status, batch10 link, both real bugs documented.
+P3-3 DONE: RGB theme restyled toward ref_tasbeeh.jpg (calmer near-black backdrop, glow rings replacing filled aurora blobs, sparse twinkling star-dots replacing tiled star grid, teal-weighted palette). Live-verified on emulator across Settings/Home/Tasbeeh. CRITICAL FIX found live via flutter run stack trace: SplashScreen._proceed() and OnboardingScreen._finish() both read context.locale.languageCode INSIDE a pushReplacement builder: closure, which can run after the old screen's context is deactivated -> 'Looking up a deactivated widget's ancestor is unsafe' crash on any theme switch. Fixed by capturing localeCode as a local before navigating in both files. analyze clean, test 15/15.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
