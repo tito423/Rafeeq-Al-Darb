@@ -190,7 +190,12 @@ git -C "E:\My Projects\Rafiq-Al-Darb" status --short
 
 ## APK للتجربة (آخر نسخة، فيها كل حاجة اتعملت)
 
-`https://github.com/tito423/rafeeq-api/releases/download/phase3-batch17-2026-09-04/app-debug.apk`
+`https://github.com/tito423/rafeeq-api/releases/download/phase3-batch18-2026-09-04/app-debug.apk`
+
+(batch 18 بيصحّح باج قصّ حقيقي في batch17 — الدائرة كانت مقصوصة وناقصة
+من تحت لأنها مش متمركزة في نص المربع العلوي من الصورة الأصلية 896×1181؛
+اتصلح بعد ما رسمت شبكة إحداثيات على الصورة الأصلية ولقيت المركز الحقيقي
+للدائرة (448, 528) مش (448, 448).)
 
 **8. P3‑39 (آخر راوند، ده اللي خلص في الجلسة دي) — فيديو splash حقيقي +
 تصحيح الأيقونة لايف + تنضيف كلاود:**

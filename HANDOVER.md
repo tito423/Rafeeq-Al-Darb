@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 20:54 — IN PROGRESS — resume here**
+**2026-09-04 20:59 — IN PROGRESS — resume here**
 
-P3-39: real splash video wired in (video_player, tap-to-skip, lattice fallback) - live verified. Icon corrected after live course-correction: ships the owner's exact AI photo unedited (not a redrawn SVG) after two direct corrections and finding missed WhatsApp reference files. Old contaminated R2 bucket (254971 objects, 10.66GB) deleted with owner confirmation. Dead .github workflow removed. Keystore blocker dropped (personal-use app). Batch17 APK shipped.
+P3-39 fix: icon crop was off-center, cut off bottom of the circle - found grid-overlay coords, recentered on true circle bounds (448,528). Batch18 APK shipped, live-verified full circle with even margins.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

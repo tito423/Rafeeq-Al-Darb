@@ -1642,9 +1642,22 @@ unedited pixels. `assets/branding/app_mark.png` (the splash badge) is the
 same crop, so the in-app badge matches the launcher icon exactly. The SVG
 files are kept only as prior source history / a reproducible fallback,
 documented as such in `assets/icon/src/README.md` — not the live
-pipeline anymore. **Live-verified on `emulator-5554`:** the real
-home-screen launcher icon and the splash badge both show the exact photo,
-"EST. 1445" text and all, not a redrawn approximation.
+pipeline anymore.
+
+**A real crop bug found live, right after shipping.** The first crop
+(`(0,0,896,896)`, a plain top-square guess) cut off the bottom of the
+circle — the owner caught it immediately from the shipped APK ("you
+corped the icon wrongly"). Root cause: the circle isn't actually centered
+in the top square of the 896×1181 source photo (it's centered around
+`(448, 528)`, not `(448, 448)`) — confirmed precisely by overlaying a
+100px coordinate grid on the source image and reading the true circle
+bounds off it, rather than guessing again. Fixed by cropping
+`(0, 80, 896, 976)`, centered on the circle's real position. **Live-verified
+on `emulator-5554`** both times: the first (wrong) crop and the corrected
+one, so the fix itself — not just the concept — was confirmed against the
+actual home-screen launcher icon and the splash badge, both showing the
+full circle with even margins, the exact photo pixels, "EST. 1445" text
+and all, not a redrawn approximation.
 
 **Khatma-card redesign (P3-6) — reference received, not yet built.** The
 four real competing-app "ختمة" screenshots the owner finally sent
