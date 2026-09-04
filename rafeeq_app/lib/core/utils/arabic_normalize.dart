@@ -85,6 +85,14 @@ String normalizeArabicLoose(String s) {
   return out;
 }
 
+/// P3‑29: strips tashkeel (the same harakat range [normalizeArabic] strips
+/// for search) for **display**, not search — deliberately does *not* touch
+/// letterforms the way [normalizeArabic] does (آ/أ/إ/ٱ all staying as
+/// themselves, ى staying ى), since a "hide diacritics" reading toggle must
+/// only remove the marks, never silently rewrite which letter is on the
+/// page. Used by the book text reader's "التشكيل" toolbar toggle.
+String stripTashkeelForDisplay(String s) => s.replaceAll(_arabicDiacritics, '');
+
 /// True if [needle] occurs in [haystack] starting at a word boundary (index
 /// 0, or right after a space) — not merely anywhere `.contains()` would
 /// find it, which also matches inside an unrelated longer word (P3‑9: e.g.

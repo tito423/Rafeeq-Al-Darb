@@ -8,8 +8,32 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/widgets/toolbar_action.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_text.dart';
+
+/// P3‑29 visual redesign: a small closed set of reading-ink choices offered
+/// by the "لون الخط" toolbar action. Each entry carries both a light- and a
+/// dark-theme color rather than one fixed color, because the reading
+/// background itself flips between [AppColors.paper] (light) and
+/// [AppColors.nightSurface] (dark) — a single fixed ink color picked in one
+/// theme could land unreadable in the other (e.g. near-black text on the
+/// dark navy paper). [defaultChoice] deliberately mirrors the exact
+/// light/dark pair `MushafTextPage` already uses for Quran reading mode
+/// (`AppColors.ink`/`AppColors.paperDark`), so a book read with the default
+/// ink looks consistent with the rest of the app's reading surfaces.
+class _InkChoice {
+  final String labelKey;
+  final Color light;
+  final Color dark;
+  const _InkChoice(this.labelKey, this.light, this.dark);
+}
+
+const _inkChoices = [
+  _InkChoice('library.text_ink_default', AppColors.ink, AppColors.paperDark),
+  _InkChoice('library.text_ink_sepia', Color(0xFF6B4423), Color(0xFFD9B98A)),
+  _InkChoice('library.text_ink_contrast', Color(0xFF000000), Color(0xFFFFFFFF)),
+];
 
 /// Reads a downloaded book's **text** edition (P2-4b) — the structured Shamela
 /// text that sits beside the scanned image PDF.
@@ -44,6 +68,16 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   double _fontScale = 1.0;
   Set<int> _bookmarks = {}; // page *indices* (stable even when print nums aren't)
 
+  // P3‑29: "التشكيل" toggle — hides tashkeel in the book's own prose via
+  // [stripTashkeelForDisplay]. Defaults on (true) since that's the source
+  // data as-is. Quoted Quran ayahs (`para.kind == 'aya'`) are deliberately
+  // exempt in `_Paragraph` below — Quranic text stays fully vocalized
+  // regardless of this toggle, same as everywhere else in the app.
+  bool _showTashkeel = true;
+
+  // P3‑29: "لون الخط" toolbar action — index into [_inkChoices].
+  int _inkIndex = 0;
+
   // Swipe-to-turn-page tracking (see `_handlePointerDown`/`_handlePointerUp`).
   Offset? _dragStart;
   DateTime? _dragStartTime;
@@ -51,6 +85,8 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   String get _kPage => 'booktext_${widget.book.id}_page';
   String get _kFont => 'booktext_${widget.book.id}_font';
   String get _kMarks => 'booktext_${widget.book.id}_bookmarks';
+  String get _kTashkeel => 'booktext_${widget.book.id}_tashkeel';
+  String get _kInk => 'booktext_${widget.book.id}_ink';
 
   @override
   void initState() {
@@ -74,6 +110,8 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
         _doc = doc;
         _pageIndex = savedPage.clamp(0, doc.pages.length - 1);
         _fontScale = prefs.getDouble(_kFont) ?? 1.0;
+        _showTashkeel = prefs.getBool(_kTashkeel) ?? true;
+        _inkIndex = (prefs.getInt(_kInk) ?? 0).clamp(0, _inkChoices.length - 1);
         _bookmarks = (prefs.getStringList(_kMarks) ?? const [])
             .map(int.tryParse)
             .whereType<int>()
@@ -89,6 +127,8 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_kPage, _pageIndex);
     await prefs.setDouble(_kFont, _fontScale);
+    await prefs.setBool(_kTashkeel, _showTashkeel);
+    await prefs.setInt(_kInk, _inkIndex);
     await prefs.setStringList(
       _kMarks,
       _bookmarks.map((e) => e.toString()).toList(),
@@ -156,6 +196,105 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
       if (!_bookmarks.remove(_pageIndex)) _bookmarks.add(_pageIndex);
     });
     _persist();
+  }
+
+  void _toggleTashkeel() {
+    setState(() => _showTashkeel = !_showTashkeel);
+    _persist();
+  }
+
+  /// P3‑29 "حجم الخط" toolbar action — a small sheet with A‑/A+ instead of
+  /// two separate always-visible AppBar buttons, so it fits the same
+  /// one-icon-per-feature toolbar row as the other 5 actions.
+  Future<void> _openFontSizeSheet() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheetState) => Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('library.text_font_size'.tr(),
+                  style: Theme.of(ctx).textTheme.titleMedium),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton.filledTonal(
+                    tooltip: 'library.text_font_smaller'.tr(),
+                    onPressed: () {
+                      _changeFont(-0.1);
+                      setSheetState(() {});
+                    },
+                    icon: const Icon(Icons.text_decrease),
+                  ),
+                  SizedBox(
+                    width: 64,
+                    child: Text(
+                      '${(_fontScale * 100).round()}%',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(ctx).textTheme.titleMedium,
+                    ),
+                  ),
+                  IconButton.filledTonal(
+                    tooltip: 'library.text_font_larger'.tr(),
+                    onPressed: () {
+                      _changeFont(0.1);
+                      setSheetState(() {});
+                    },
+                    icon: const Icon(Icons.text_increase),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// P3‑29 "لون الخط" toolbar action — picks among [_inkChoices].
+  Future<void> _openInkColorSheet() async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text('library.text_font_color'.tr(),
+                      style: Theme.of(ctx).textTheme.titleMedium),
+                ),
+              ),
+              for (var i = 0; i < _inkChoices.length; i++)
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 12,
+                    backgroundColor:
+                        isDark ? _inkChoices[i].dark : _inkChoices[i].light,
+                  ),
+                  title: Text(_inkChoices[i].labelKey.tr()),
+                  trailing: i == _inkIndex
+                      ? Icon(Icons.check, color: AppColors.gold)
+                      : null,
+                  onTap: () {
+                    setState(() => _inkIndex = i);
+                    _persist();
+                    Navigator.pop(ctx);
+                  },
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _openGotoDialog() async {
@@ -276,31 +415,97 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final doc = _doc;
+    final bookmarked = doc != null && _bookmarks.contains(_pageIndex);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.book.titleAr),
-          actions: [
-            IconButton(
-              tooltip: 'library.text_font_smaller'.tr(),
-              onPressed: _doc == null ? null : () => _changeFont(-0.1),
-              icon: const Icon(Icons.text_decrease),
-            ),
-            IconButton(
-              tooltip: 'library.text_font_larger'.tr(),
-              onPressed: _doc == null ? null : () => _changeFont(0.1),
-              icon: const Icon(Icons.text_increase),
-            ),
-            IconButton(
-              tooltip: 'library.text_search'.tr(),
-              onPressed: _doc == null ? null : _openSearch,
-              icon: const Icon(Icons.search),
-            ),
-          ],
+          // No actions, and `automaticallyImplyActions: false` — by
+          // default, when `actions` is null OR empty and this Scaffold
+          // has an `endDrawer` (it does, below, for the فهرس), Flutter's
+          // AppBar auto-inserts its own hamburger button to open it (see
+          // `AppBar.build()`: the auto-button fires whenever
+          // `actions == null || actions.isEmpty`, so passing `const []`
+          // alone doesn't suppress it — confirmed by first trying just
+          // that and still seeing the icon live on the emulator). We
+          // don't want that button: opening the index is already one of
+          // the toolbar row's own actions below, and a second, unlabelled
+          // way to trigger it would be exactly the clutter the Shamela
+          // reference's own clean back-arrow-only header doesn't have.
+          // The old "Text source" icon that used to live here moved out
+          // entirely too — the provenance strip at the bottom of the
+          // reading column already opens that same sheet.
+          automaticallyImplyActions: false,
+          // P3‑29: redesigned as a Shamela-style captioned toolbar row
+          // (icon + label under it) instead of three bare `actions:`
+          // icons — same `ToolbarAction` widget the Quran tab's toolbar
+          // uses (P3‑34), shared via `core/widgets/toolbar_action.dart`
+          // so both screens look and behave identically. Six actions to
+          // match the reference's six, each backed by a real feature:
+          // font size / font color (new) / tashkeel toggle (new) / the
+          // existing in-book search (standing in for the reference's
+          // "التعليقات" slot — this app has no comments feature to back
+          // that icon honestly) / the existing فهرس drawer / the
+          // existing bookmark toggle.
+          bottom: doc == null
+              ? null
+              : PreferredSize(
+                  preferredSize: const Size.fromHeight(60),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsetsDirectional.only(start: 4, end: 12),
+                    child: Row(
+                      children: [
+                        ToolbarAction(
+                          icon: Icons.format_size,
+                          label: 'library.text_font_size'.tr(),
+                          onPressed: _openFontSizeSheet,
+                        ),
+                        ToolbarAction(
+                          icon: Icons.palette_outlined,
+                          label: 'library.text_font_color'.tr(),
+                          onPressed: _openInkColorSheet,
+                        ),
+                        ToolbarAction(
+                          icon: Icons.text_format,
+                          label: 'library.text_tashkeel'.tr(),
+                          active: _showTashkeel,
+                          onPressed: _toggleTashkeel,
+                        ),
+                        ToolbarAction(
+                          icon: Icons.search,
+                          label: 'library.text_search'.tr(),
+                          onPressed: _openSearch,
+                        ),
+                        // `Scaffold.of(context)` needs a context *below*
+                        // the Scaffold in the tree — this `build()`
+                        // method's own `context` sits above it, same
+                        // reason the old breadcrumb row's index button
+                        // needed a `Builder` too.
+                        Builder(
+                          builder: (ctx) => ToolbarAction(
+                            icon: Icons.list_alt,
+                            label: 'library.text_index'.tr(),
+                            onPressed: () => Scaffold.of(ctx).openEndDrawer(),
+                          ),
+                        ),
+                        ToolbarAction(
+                          icon: bookmarked
+                              ? Icons.bookmark
+                              : Icons.bookmark_border,
+                          label: 'library.text_bookmark'.tr(),
+                          active: bookmarked,
+                          onPressed: _toggleBookmark,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
         ),
-        endDrawer: _doc == null ? null : _IndexDrawer(
-          doc: _doc!,
+        endDrawer: doc == null ? null : _IndexDrawer(
+          doc: doc,
           currentPageIndex: _pageIndex,
           bookmarks: _bookmarks,
           onPick: (i) {
@@ -333,88 +538,94 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
     final scheme = Theme.of(context).colorScheme;
     final page = doc.pages[_pageIndex];
     final section = doc.sectionTitleForPageIndex(_pageIndex);
-    final bookmarked = _bookmarks.contains(_pageIndex);
+
+    // P3‑29 visual redesign: the whole reading column — breadcrumb, page
+    // body, provenance strip and bottom nav bar — sits on the same
+    // paper/ink pair `MushafTextPage` already uses for Quran text-reading
+    // mode, so a book read here looks like it belongs to the same app
+    // rather than the neutral `surfaceContainerHighest` grey it used
+    // before. This is "Shamela-style, our theme coloring" (per the
+    // owner's reference): a distinct warm reading surface, gold hairline,
+    // but none of Shamela's own blue.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final paper = isDark ? AppColors.nightSurface : AppColors.paper;
+    final ink = isDark
+        ? _inkChoices[_inkIndex].dark
+        : _inkChoices[_inkIndex].light;
+    final hairline = AppColors.gold.withValues(alpha: 0.28);
 
     return Column(
       children: [
-        // ── breadcrumb / current section + printed page ──
-        Material(
-          color: scheme.surfaceContainerHighest,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(14, 8, 6, 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    section.isEmpty ? widget.book.titleAr : section,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: scheme.onSurfaceVariant,
-                        fontSize: 13),
-                  ),
+        // ── breadcrumb: current section + printed page (the bookmark
+        // and فهرس icons that used to live here moved up into the new
+        // toolbar row so they aren't duplicated in two places) ──
+        Container(
+          padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+          decoration: BoxDecoration(
+            color: paper,
+            border: Border(bottom: BorderSide(color: hairline)),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  section.isEmpty ? widget.book.titleAr : section,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: ink.withValues(alpha: 0.75),
+                      fontSize: 13),
                 ),
-                if (doc.meta.printReliable)
-                  Text(
-                    '${'library.text_page'.tr()} ${page.printedPage}',
-                    style: TextStyle(
-                        color: scheme.onSurfaceVariant, fontSize: 12),
-                  ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  tooltip: 'library.text_bookmark'.tr(),
-                  onPressed: _toggleBookmark,
-                  icon: Icon(
-                    bookmarked ? Icons.bookmark : Icons.bookmark_border,
-                    color: bookmarked ? AppColors.gold : scheme.onSurfaceVariant,
-                    size: 20,
-                  ),
+              ),
+              if (doc.meta.printReliable)
+                Text(
+                  '${'library.text_page'.tr()} ${page.printedPage}',
+                  style: TextStyle(color: ink.withValues(alpha: 0.75), fontSize: 12),
                 ),
-                Builder(
-                  builder: (ctx) => IconButton(
-                    visualDensity: VisualDensity.compact,
-                    tooltip: 'library.text_index'.tr(),
-                    onPressed: () => Scaffold.of(ctx).openEndDrawer(),
-                    icon: const Icon(Icons.list_alt, size: 20),
-                  ),
-                ),
-              ],
-            ),
+            ],
           ),
         ),
 
         // ── the page body (selectable, swipe to turn pages) ──
         Expanded(
-          child: Listener(
-            onPointerDown: _handlePointerDown,
-            onPointerUp: _handlePointerUp,
-            child: SelectionArea(
-              child: SingleChildScrollView(
-                controller: _scrollCtrl,
-                padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (final para in page.paras) ...[
-                      _Paragraph(para: para, scale: _fontScale),
-                      const SizedBox(height: 12),
-                    ],
-                    if (page.paras.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40),
-                        child: Text('library.text_blank_page'.tr(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: scheme.onSurfaceVariant)),
+          child: Container(
+            color: paper,
+            child: Listener(
+              onPointerDown: _handlePointerDown,
+              onPointerUp: _handlePointerUp,
+              child: SelectionArea(
+                child: SingleChildScrollView(
+                  controller: _scrollCtrl,
+                  padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (final para in page.paras) ...[
+                        _Paragraph(
+                          para: para,
+                          scale: _fontScale,
+                          ink: ink,
+                          showTashkeel: _showTashkeel,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                      if (page.paras.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: Text('library.text_blank_page'.tr(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: ink.withValues(alpha: 0.6))),
+                        ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'library.text_swipe_hint'.tr(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 11, color: ink.withValues(alpha: 0.5)),
                       ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'library.text_swipe_hint'.tr(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 11, color: scheme.outline),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -426,11 +637,14 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
           onTap: _openProvenance,
           child: Container(
             width: double.infinity,
-            color: scheme.surfaceContainerHighest,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              color: paper,
+              border: Border(top: BorderSide(color: hairline)),
+            ),
             child: Row(
               children: [
-                Icon(Icons.info_outline, size: 14, color: scheme.onSurfaceVariant),
+                Icon(Icons.info_outline, size: 14, color: ink.withValues(alpha: 0.6)),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -438,7 +652,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: scheme.onSurfaceVariant, fontSize: 11.5),
+                        color: ink.withValues(alpha: 0.6), fontSize: 11.5),
                   ),
                 ),
                 if (widget.book.textEdition?.isOcr ?? false)
@@ -467,7 +681,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
         // for. Dragging updates the visible page live; the position is only
         // persisted once the drag ends, so a long scrub doesn't spam prefs.
         Material(
-          color: scheme.surface,
+          color: paper,
           elevation: 8,
           child: SafeArea(
             top: false,
@@ -484,7 +698,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                           '${_pageIndex + 1}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 11, color: scheme.onSurfaceVariant),
+                              fontSize: 11, color: ink.withValues(alpha: 0.65)),
                         ),
                       ),
                       Expanded(
@@ -520,7 +734,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                           '${doc.pages.length}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 11, color: scheme.onSurfaceVariant),
+                              fontSize: 11, color: ink.withValues(alpha: 0.65)),
                         ),
                       ),
                     ],
@@ -531,6 +745,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                   padding: const EdgeInsets.only(bottom: 6),
                   child: TextButton(
                     onPressed: _openGotoDialog,
+                    style: TextButton.styleFrom(foregroundColor: ink),
                     child: Text(
                       doc.meta.printReliable
                           ? '${'library.text_page'.tr()} ${page.printedPage}'
@@ -552,7 +767,20 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
 class _Paragraph extends StatelessWidget {
   final BookPara para;
   final double scale;
-  const _Paragraph({required this.para, required this.scale});
+  final Color ink;
+  final bool showTashkeel;
+  const _Paragraph({
+    required this.para,
+    required this.scale,
+    required this.ink,
+    required this.showTashkeel,
+  });
+
+  /// P3‑29 "التشكيل" toggle. Quoted Quran ayahs (`kind == 'aya'`) are
+  /// exempt — handled separately below, always shown fully vocalized,
+  /// same as everywhere else in the app Quranic text appears.
+  String get _displayText =>
+      showTashkeel ? para.text : stripTashkeelForDisplay(para.text);
 
   @override
   Widget build(BuildContext context) {
@@ -563,7 +791,7 @@ class _Paragraph extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(top: 4, bottom: 2),
           child: Text(
-            para.text,
+            _displayText,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.w700,
@@ -608,15 +836,14 @@ class _Paragraph extends StatelessWidget {
         );
       case 'ref':
         return Text(
-          para.text,
-          style: TextStyle(
-              fontSize: 12.5 * scale, color: scheme.onSurfaceVariant),
+          _displayText,
+          style: TextStyle(fontSize: 12.5 * scale, color: ink.withValues(alpha: 0.7)),
         );
       default: // body
         return Text(
-          para.text,
+          _displayText,
           textAlign: TextAlign.justify,
-          style: TextStyle(fontSize: 16 * scale, height: 1.95),
+          style: TextStyle(fontSize: 16 * scale, height: 1.95, color: ink),
         );
     }
   }

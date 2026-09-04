@@ -910,7 +910,7 @@ produced the QuranFlash contamination flagged above. Not started; needs a
 sourcing pass with the same rigor §5.7/P2-4 already established, per
 edition, before any image ships.
 
-## P3-29 — Book text reader: nav part ✅ DONE, live-verified; visual part still open
+## P3-29 — Book text reader: nav part ✅ DONE + visual part ✅ DONE, both live-verified
 
 `book_text_reader_screen.dart`'s navigation half is now fixed — the two
 chevron page-turn buttons are gone, replaced by **swipe** (same
@@ -947,16 +947,81 @@ swipe starting within Android's system edge-gesture zone (roughly the outer
 it ever reaches the app — not a bug, just something to avoid when scripting
 future slider/edge-swipe tests on this AVD.
 
-**Still open, visual redesign only:** the owner sent a reference image of
-al-Maktaba al-Shamela's own reader (light paper-toned background, a 6-icon
-top toolbar, a bottom bar with a page-number box + "الصفحة" + book icon +
-"الجزء" + progress bar) with "استخدم نفس التصميم اجمل وارقى لكن بنفس
-الثيماتنا" (adapt its layout quality, keep our own theme/colours, not a
-literal skin) — that image wasn't saved to `design_refs/` before this
-session's context was summarized, so the *exact* pixel design isn't
-in hand; the description above is what was actually seen and can guide a
-build, but ask the owner to resend the image before matching it precisely
-rather than guessing further.
+**Visual redesign — ✅ DONE, live-verified this session.** The owner resent
+the al-Maktaba al-Shamela reference (`design_refs/ref_shamela_reader.jpg`,
+saved immediately this time) with "shamela style but follow our theme
+coloring" — adapt the layout, not the blue accent color. Built:
+
+- **A new captioned toolbar row** (`AppBar.bottom`, same pattern as the
+  Quran tab's P3-34 toolbar) with 6 actions matching the reference's 6-icon
+  row, each backed by a real feature — no decorative icon that doesn't do
+  anything:
+  - **حجم الخط** (font size) — opens a small sheet with A‑/A+ and a live
+    percentage, replacing the two always-visible `AppBar` buttons the nav
+    redesign had used as a placeholder.
+  - **لون الخط** (font color, new) — a sheet offering 3 real reading-ink
+    choices (Default / Warm sepia / High contrast), each carrying separate
+    light- and dark-theme colors so the choice stays readable against
+    whichever paper tone the current theme is showing (a single fixed
+    color risked landing unreadable in the other theme).
+  - **التشكيل** (diacritics toggle, new) — a new exported
+    `stripTashkeelForDisplay()` in `arabic_normalize.dart` (reuses the same
+    harakat range `normalizeArabic` already strips for search, but
+    deliberately touches only marks, never letterforms, since a display
+    toggle must never silently rewrite which letter is on the page).
+    Quoted Quran ayahs (`para.kind == 'aya'`) are exempt — always shown
+    fully vocalized, same as everywhere else in the app.
+  - **بحث** (search) — the existing in-book search, standing in for the
+    reference's "التعليقات" (comments) slot: this app has no comments
+    feature to back that icon honestly, so it was repurposed rather than
+    built as a fake.
+  - **الفهرس** (index) — the existing TOC/bookmarks drawer.
+  - **إشارات مرجعية** (bookmarks) — the existing per-page bookmark toggle.
+- **A shared `ToolbarAction` widget** (`core/widgets/toolbar_action.dart`,
+  new file) extracted from `quran_screen.dart`'s private `_ToolbarAction`
+  so both screens use the exact same icon+caption+press-animation look,
+  with an added `active` bool (gold highlight) for the two toggle-style
+  actions (diacritics, bookmark) that didn't exist in the original P3-34
+  version.
+- **Paper-toned reading surface**: the breadcrumb strip, page body,
+  provenance strip and bottom nav bar now share the same
+  `AppColors.paper`/`AppColors.nightSurface` (light/dark) pair
+  `MushafTextPage` already uses for Quran text-reading mode, with a thin
+  gold hairline border — "our theme coloring", not Shamela's blue.
+- **"الجزء" (volume/part) was deliberately NOT added** — `book_text.dart`'s
+  data model (`BookText`/`BookSection`/`BookPara`) carries no volume/juz
+  field at all, and fabricating one would violate rule 1 (no mock data).
+  The bottom bar keeps its existing real page-number + page-count +
+  typed-goto affordances instead of inventing a fake "الجزء" pill.
+- **AppBar header cleanup**: the old 3 bare `actions:` icons (font-/font+/
+  search) are gone, replaced by the toolbar row; the "Text source" icon
+  that briefly replaced them was then removed too (the existing provenance
+  strip at the bottom already opens that same sheet, so a second entry
+  point was just clutter the reference's own clean header doesn't have).
+  **A real Flutter gotcha found live, not by static review:** passing
+  `actions: const []` to suppress Flutter's automatic `endDrawer`-toggle
+  hamburger button did *not* work — `AppBar.build()`'s actual check is
+  `widget.actions != null && widget.actions!.isNotEmpty`, so an empty (but
+  non-null) list still falls through to the auto-insert branch, confirmed
+  by seeing the hamburger icon live on the emulator after that first fix.
+  The correct fix is `automaticallyImplyActions: false`, verified live
+  afterward — header now shows only the title and back arrow.
+- +6 translation keys × 5 locales (`text_font_size`, `text_font_color`,
+  `text_tashkeel`, `text_ink_default`, `text_ink_sepia`, `text_ink_contrast`).
+
+`flutter analyze` clean (whole project), `flutter test` 15/15 (translation
+parity included). **Live-verified on `emulator-5554`** with a freshly
+downloaded "رياض الصالحين" text edition: all 6 toolbar actions tested by
+hand — font size sheet (100%→120% live, A+/A− both work), font color sheet
+(Warm sepia applied instantly, sheet auto-closes on pick, checkmark tracks
+selection), diacritics toggle (harakat visibly stripped/restored, gold
+highlight tracks state), search sheet (opens, autofocused), index drawer
+(opens, shows the 387-entry TOC plus a live bookmark chip), bookmark toggle
+(icon+label turn gold). Confirmed the reading surface, breadcrumb,
+provenance strip and bottom bar all render in the paper/gold theme instead
+of the old neutral grey. Confirmed the header shows only title + back
+arrow after the `automaticallyImplyActions` fix (first attempt with
+`actions: const []` was caught live, not assumed correct from analyze).
 
 ## P3-30 — Azkar / Tasbeeh "still old style" — likely stale, already shipped this session
 
@@ -1178,7 +1243,7 @@ regression from the rest of this session's Arabic-default testing.
 | P3-26 | Persistent prayer notification still reported absent | **blocked on live device** (see P3-13/P3-19) |
 | P3-27 | "Download full recitation" card under the reciter picker | ✅ **done, live-verified** |
 | P3-28 | Mushaf edition thumbnails | queued, **needs a per-edition licence/sourcing pass first** (see the QuranFlash warning above) |
-| P3-29 | Book text reader nav/visual redesign | 🔶 nav part ✅ **done, live-verified** (swipe + fast-jump slider, a real `SelectionArea`-vs-`GestureDetector` bug found+fixed along the way); visual part still open — **ask the owner to resend the Shamela reference image** |
+| P3-29 | Book text reader nav/visual redesign | ✅ **both parts done, live-verified** — nav (swipe + fast-jump slider, a real `SelectionArea`-vs-`GestureDetector` bug found+fixed) and visual (Shamela-style 6-icon toolbar row + paper theme, all 6 actions live-tested; a real `AppBar.automaticallyImplyActions` gotcha found+fixed along the way) |
 | P3-30 | "Azkar/Tasbeeh still old" | ✅ **confirmed resolved by the owner** — sent real-device screenshots of both, byte-identical to the earlier `ref_azkar_hub.jpg`/`ref_tasbeeh.jpg` reference images, confirming the shipped redesigns match |
 | P3-31 | ~20-source تفسير download section | queued, **needs a research/licence pass first**, same rigor as every other content source |
 | P3-32 | Ayah-end marker misaligned in text mode | ✅ **done, live-verified** — `PlaceholderAlignment.middle` → `.baseline` |

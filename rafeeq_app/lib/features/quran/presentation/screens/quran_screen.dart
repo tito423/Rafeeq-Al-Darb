@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
+import '../../../../core/widgets/toolbar_action.dart';
 import '../../../search/presentation/screens/search_screen.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
@@ -176,18 +177,18 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   child: Row(
                     children: [
                       if (_mode == MushafMode.text) ...[
-                        _ToolbarAction(
+                        ToolbarAction(
                           icon: Icons.text_decrease,
                           label: 'quran.font_smaller'.tr(),
                           onPressed: () => _changeFontScale(-0.1),
                         ),
-                        _ToolbarAction(
+                        ToolbarAction(
                           icon: Icons.text_increase,
                           label: 'quran.font_larger'.tr(),
                           onPressed: () => _changeFontScale(0.1),
                         ),
                       ],
-                      _ToolbarAction(
+                      ToolbarAction(
                         icon: Icons.travel_explore_outlined,
                         label: 'search.title'.tr(),
                         onPressed: () async {
@@ -200,7 +201,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           if (page != null) _goToPage(page);
                         },
                       ),
-                      _ToolbarAction(
+                      ToolbarAction(
                         icon: Icons.format_list_numbered,
                         label: 'quran.surah_list'.tr(),
                         onPressed: () => showSurahSheet(
@@ -210,7 +211,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           onSelect: _goToPage,
                         ),
                       ),
-                      _ToolbarAction(
+                      ToolbarAction(
                         icon: Icons.filter_9_plus,
                         label: 'quran.juz'.tr(),
                         onPressed: () => showJuzSheet(
@@ -219,7 +220,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           onSelect: _goToPage,
                         ),
                       ),
-                      _ToolbarAction(
+                      ToolbarAction(
                         icon: Icons.pin_drop_outlined,
                         label: 'quran.jump_to'.tr(),
                         onPressed: () => showGotoPageSheet(
@@ -228,12 +229,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           onSelect: _goToPage,
                         ),
                       ),
-                      _ToolbarAction(
+                      ToolbarAction(
                         icon: Icons.auto_stories_outlined,
                         label: 'quran.editions'.tr(),
                         onPressed: () => MushafEditionSheet.show(context),
                       ),
-                      _ToolbarAction(
+                      ToolbarAction(
                         icon: _mode == MushafMode.text
                             ? Icons.image_outlined
                             : Icons.notes,
@@ -499,58 +500,6 @@ class _SurahStripState extends State<_SurahStrip> {
   }
 }
 
-/// P3‑34: one toolbar action — icon + a short caption underneath, with a
-/// small scale-down "press" animation instead of a plain flat `IconButton`.
-/// Each label reuses the exact same string already used as that action's
-/// tooltip, so nothing new was translated — just made visible instead of
-/// hover/long-press-only.
-class _ToolbarAction extends StatefulWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onPressed;
-  const _ToolbarAction({
-    required this.icon,
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  State<_ToolbarAction> createState() => _ToolbarActionState();
-}
-
-class _ToolbarActionState extends State<_ToolbarAction> {
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      onTap: widget.onPressed,
-      child: AnimatedScale(
-        scale: _pressed ? 0.86 : 1.0,
-        duration: const Duration(milliseconds: 110),
-        curve: Curves.easeOut,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(widget.icon, size: 22, color: scheme.onSurface),
-              const SizedBox(height: 3),
-              Text(
-                widget.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 10, color: scheme.onSurfaceVariant),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+// P3‑34's `_ToolbarAction` moved to `core/widgets/toolbar_action.dart`
+// (P3‑29) so `book_text_reader_screen.dart` can reuse the exact same
+// widget instead of a second copy — see `ToolbarAction` there.
