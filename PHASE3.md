@@ -2030,3 +2030,51 @@ split below, not a blanket "done".
 
 `flutter analyze` clean, `flutter test` 15/15 for everything in the
 "done" list above.
+
+### P3-41 follow-up — Hafs mushaf + hadith library genuinely built in
+
+The owner's own follow-up sharpened the ask: "at least make mushaf hafs
+madina built in and hadith card, no problem with tellawa make it optional
+download in setting" — i.e. the auto-*download* approach above wasn't
+enough for these two specifically; he wants them truly bundled in the
+APK, with recitation staying manual-only (reverting this session's
+earlier auto-bootstrap for it).
+
+- **Hadith library**: `assets/data/hadith.db` (77MB, the same real 9-book
+  database `build_hadith_db.py` already produces) now ships in the APK
+  and opens through `DbHelper.openBundled` — the exact mechanism
+  `quran_local.db`/`quran_sciences.db` already use, not a new pattern.
+  `hadithRepositoryProvider` no longer calls `openDownloaded` at all.
+- **Hafs mushaf**: all 604 real page SVGs fetched fresh from
+  quranpedia/quran-svg (pinned commit, same source `MushafPageService`
+  already trusted) into `assets/mushaf/hafs_kfqc/` (365MB, zero fetch
+  errors across all 604). `MushafPageService.svgForPage` now checks this
+  bundled path first for any edition in the new `_kBundledMushafEditions`
+  set — deliberately **only** Hafs, not all five editions (the owner
+  named "hafs madina" specifically; bundling all five would be ~5× the
+  size for editions most readers never switch to, and adding a second
+  bundled edition later is just adding its id to that one set).
+  `cachedPages()`/`cacheSizeBytes()` also treat a bundled edition as
+  always-complete, so its own "Download" tile in onboarding/Downloads
+  correctly shows "Ready to use offline" instead of a misleading 0/604.
+- **Recitation reverted to manual-only.** The `essential_content_
+  bootstrap.dart` auto-download this same round added earlier is now
+  deleted outright — mushaf and hadith no longer need it (they're
+  bundled, not fetched), and the owner was explicit that recitation
+  itself should stay a deliberate, optional Downloads/onboarding action,
+  not something that starts itself.
+- **A real environment fix along the way**: this pushed the debug APK to
+  ~393MB, which the test AVD's own 6GB data partition genuinely couldn't
+  install (`INSTALL_FAILED_INSUFFICIENT_STORAGE` this time was a real
+  shortage, not the usual false-positive this project has hit before) —
+  resized `disk.dataPartition.size` to 16G in the AVD's own `config.ini`
+  and cold-booted with `-wipe-data` to apply it. Worth keeping in mind
+  for any future large-asset work on this same AVD.
+
+`flutter analyze` clean, `flutter test` 15/15. **Live-verified on the
+resized `emulator-5554`, a completely fresh install:** the Hafs card in
+onboarding read "Ready to use offline · 348.1 MB" with a disabled
+Download button and a Delete option immediately — no download ever ran;
+the other four editions still correctly showed "0/604 pages saved" with
+active Download buttons. Home's Hadith of the Day card showed a real
+hadith immediately, no download prompt at any point.

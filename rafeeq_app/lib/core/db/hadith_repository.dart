@@ -289,14 +289,25 @@ class HadithRepository {
   }
 }
 
-/// Null when `hadith.db` hasn't been downloaded yet — an honest "not
-/// downloaded" state, never a fabricated empty book list. Invalidate this
-/// provider after a download completes (see `LibraryScreen`).
+/// P3‑41: the owner asked directly for the hadith library "built in" —
+/// bundled inside the APK, not fetched over the network at all. `hadith.db`
+/// (77MB, the same real 9-book database `build_hadith_db.py` already
+/// produced) now ships as `assets/data/hadith.db` and opens through
+/// `DbHelper.openBundled`, the exact mechanism `quran_local.db`/
+/// `quran_sciences.db` already use — materialised into app storage once,
+/// then opened read-only, never re-downloaded. This provider therefore
+/// never actually returns null on a real install any more; the nullable
+/// return type and the `_DownloadPrompt` UI it used to drive
+/// (`daily_hadith_card.dart`) are kept rather than torn out, since a
+/// bundled asset failing to materialise (corrupt install, out of disk) is
+/// still a real failure mode worth an honest "not available" state
+/// instead of a crash.
 final hadithRepositoryProvider = FutureProvider<HadithRepository?>((ref) async {
-  final db = await DbHelper.instance.openDownloaded(
-    'hadith.db',
-    expectedVersion: AppConfig.hadithDbVersion,
-  );
-  if (db == null) return null;
-  return HadithRepository(db);
+  try {
+    final db = await DbHelper.instance
+        .openBundled('data/hadith.db', stamp: AppConfig.hadithDbVersion);
+    return HadithRepository(db);
+  } catch (_) {
+    return null;
+  }
 });

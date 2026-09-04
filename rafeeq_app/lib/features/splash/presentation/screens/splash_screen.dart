@@ -8,7 +8,6 @@ import 'package:video_player/video_player.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
-import '../../../../core/services/essential_content_bootstrap.dart';
 import '../../../onboarding/data/onboarding_state.dart';
 import '../../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../data/splash_video_provider.dart';
@@ -91,11 +90,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   void initState() {
     super.initState();
-    // P3‑41: fire-and-forget, not awaited — this screen's own timing must
-    // never depend on network content that can take minutes. Idempotent
-    // (see the function's own doc), so firing it once per cold start is
-    // both correct and cheap once everything is already cached.
-    bootstrapEssentialContent(ref);
+    // P3‑41: the default mushaf (`assets/mushaf/hafs_kfqc/`) and the
+    // hadith library (`assets/data/hadith.db`) are now bundled directly
+    // in the APK — see `MushafPageService`/`hadith_repository.dart` — so
+    // there is nothing left to auto-fetch here at all. Recitation stays a
+    // deliberate manual, optional download from Downloads/onboarding, per
+    // the owner's own explicit instruction not to auto-start that one.
     final firstRun = !ref.read(splashFirstRunProvider);
     _shouldPlayVideo = firstRun || ref.read(splashVideoEnabledProvider);
     final reduceMotion =

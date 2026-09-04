@@ -2,11 +2,23 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../config/app_config.dart';
 import 'download_manager.dart' show DownloadNotifications;
+
+/// P3‑41: the owner asked directly for the default mushaf to be "built
+/// in" — bundled inside the APK, not fetched over the network at all, the
+/// same way `assets/data/hadith.db` now is. All 604 real pages for the
+/// default edition ship as `assets/mushaf/<id>/NNN.svg`; other editions
+/// (Shubah, Duri, Qalun, Warsh) are deliberately **not** bundled — the
+/// owner only asked for "hafs madina", and bundling all five would be
+/// ~5× the app size for editions most readers never switch to. Keying
+/// this by edition id (not a single `bool`) means bundling a second
+/// edition later is just adding its id here, no other code changes.
+const _kBundledMushafEditions = {'hafs_kfqc'};
 
 /// Live state of a whole-edition download. Lives on [MushafPageService] (not
 /// on any widget) so a Downloads tile that is rebuilt — a tab switch, a list
@@ -74,6 +86,20 @@ class MushafPageService {
     final key = '$editionId/$page';
     final cached = _memory[key];
     if (cached != null) return cached;
+
+    if (_kBundledMushafEditions.contains(editionId)) {
+      try {
+        final asset = await rootBundle.loadString(
+          'assets/mushaf/$editionId/${page.toString().padLeft(3, '0')}.svg',
+        );
+        if (_isIntact(asset)) return _remember(key, asset);
+      } catch (_) {
+        // Asset missing for this page (shouldn't happen for a bundled
+        // edition, but never let that crash the reader) — fall through
+        // to the disk-cache/network path below exactly as if this
+        // edition weren't bundled at all.
+      }
+    }
 
     final dir = await _pageDir(editionId);
     final file = _fileFor(dir, page);
@@ -218,8 +244,16 @@ class MushafPageService {
     return file.existsSync() && await file.length() > 4096;
   }
 
-  /// Pages of [editionId] already stored on this device.
+  /// Pages of [editionId] already stored on this device — bundled editions
+  /// (see `_kBundledMushafEditions`) are unconditionally "all of them",
+  /// since every page ships in the APK itself rather than being written to
+  /// the disk cache this scans; without this, a bundled edition's own
+  /// "Download" tile would misleadingly show 0/604 despite every page
+  /// already being instantly readable.
   Future<Set<int>> cachedPages(String editionId) async {
+    if (_kBundledMushafEditions.contains(editionId)) {
+      return {for (var p = firstPage; p <= lastPage; p++) p};
+    }
     final dir = await _pageDir(editionId);
     if (!dir.existsSync()) return <int>{};
     final pages = <int>{};
@@ -231,8 +265,15 @@ class MushafPageService {
     return pages;
   }
 
-  /// Bytes the cached copy of [editionId] currently occupies.
+  /// Bytes the cached copy of [editionId] currently occupies. For a bundled
+  /// edition this is a fixed, measured constant (the real total of its 604
+  /// bundled SVGs) rather than a disk scan — there's no per-device
+  /// variance to measure, it's exactly what shipped in the APK.
+  static const _bundledSizeBytes = <String, int>{'hafs_kfqc': 365010757};
+
   Future<int> cacheSizeBytes(String editionId) async {
+    final bundled = _bundledSizeBytes[editionId];
+    if (bundled != null) return bundled;
     final dir = await _pageDir(editionId);
     if (!dir.existsSync()) return 0;
     var total = 0;

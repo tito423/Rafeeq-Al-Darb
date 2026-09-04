@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-05 01:46 — IN PROGRESS — resume here**
+**2026-09-05 02:11 — IN PROGRESS — resume here**
 
-P3-41: first real-device feedback batch (12 screenshots + screen recording). DONE+live-verified: hadith card overflow fixed, grade display fixed (no label, redundant Sahihayn badge removed), persistent prayer notification default-on, splash video Settings toggle (off by default after first run), onboarding language card, essential content (Hafs mushaf + Abdul Basit recitation + full hadith DB) auto-bootstraps on first launch via idempotent resumable primitives, new Permissions section (notif/location/battery/full-screen-intent), ayah-marker digit centering fixed, full-screen-adhan root cause identified from owner's video (Android screen-on suppression, not necessarily a bug). Deliberately deferred: mushaf toolbar redesign, Settings-tab relocation, Prayer-tab reorg, more Shamela books, mute/stop repro, azkar reorder (likely already fixed by earlier P3-11, owner's screenshots are from a stale build). Batch21 APK shipped. analyze clean, test 15/15.
+P3-41 follow-up: Hafs mushaf (604 pages, 365MB) and hadith library (77MB) now genuinely bundled in the APK via DbHelper.openBundled / MushafPageService's new bundled-asset fast path - zero download ever needed for either. Recitation reverted to manual-only per owner request (essential_content_bootstrap.dart deleted). APK now ~393MB. Also resized test AVD's data partition 6G->16G (real INSUFFICIENT_STORAGE this time, not the usual false positive) to make local verification possible. Live-verified fresh install: Hafs shows 'Ready to use offline' instantly, hadith card shows real content instantly. Batch22 APK shipped. analyze clean, test 15/15.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
