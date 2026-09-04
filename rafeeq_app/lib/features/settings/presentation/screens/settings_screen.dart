@@ -6,6 +6,8 @@ import '../../../../core/theme/theme_controller.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
+import '../../../splash/data/splash_video_provider.dart';
+import '../widgets/permissions_section.dart';
 
 /// Every locale the app ships, labelled in its own script.
 const _languageNames = <String, String>{
@@ -90,6 +92,26 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ],
+          const SizedBox(height: 8),
+          // P3‑41: the splash video adds real time to every cold start —
+          // off by default after the genuine first run, opt back in here.
+          Card(
+            child: SwitchListTile(
+              secondary: Icon(Icons.smart_display_outlined, color: scheme.primary),
+              title: Text('settings.splash_video'.tr()),
+              subtitle: Text('settings.splash_video_desc'.tr()),
+              value: ref.watch(splashVideoEnabledProvider),
+              onChanged: (v) =>
+                  ref.read(splashVideoEnabledProvider.notifier).set(v),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // P3‑41: one place for every permission the app actually needs,
+          // each re-checked on resume (granted from a system settings
+          // screen, not an in-app dialog).
+          _SectionLabel('settings.permissions'.tr()),
+          const PermissionsSection(),
           const SizedBox(height: 24),
 
           // Adhan

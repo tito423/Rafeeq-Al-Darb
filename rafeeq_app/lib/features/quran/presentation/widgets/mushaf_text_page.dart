@@ -321,13 +321,28 @@ class _AyahMarker extends StatelessWidget {
               size: Size(size, size),
               painter: _RosettePainter(color: gold.withValues(alpha: 0.85)),
             ),
+            // P3‑41: a real-device screenshot showed the digit still
+            // reading off-center inside the rosette even after P3‑32's
+            // fix — that earlier fix was the marker's position relative
+            // to the *text line* (`PlaceholderAlignment.baseline` on the
+            // `WidgetSpan` wrapping this whole widget); this is a
+            // different axis entirely: the digit's position *within its
+            // own marker*. Root cause: `AmiriQuran` is a Quranic display
+            // face tuned for tashkeel headroom on Arabic letters — its
+            // Arabic-Indic digit glyphs carry that same generous
+            // ascent/descent, so a `Stack`-centered `Text` centers the
+            // glyph's oversized *logical* box, not its actual ink, and
+            // the visible numeral sits low. `height: 1.0` with no
+            // explicit font (falling back to the theme's own UI font,
+            // whose digits have ordinary, predictable metrics) centers
+            // the real ink instead.
             Text(
               _arabicNumber(number),
               style: TextStyle(
                 fontSize: size * 0.42,
                 color: gold,
                 fontWeight: FontWeight.w700,
-                fontFamily: 'AmiriQuran',
+                height: 1.0,
               ),
             ),
           ],

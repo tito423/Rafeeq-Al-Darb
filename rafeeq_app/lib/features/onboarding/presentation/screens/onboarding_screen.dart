@@ -13,6 +13,19 @@ import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/onboarding_state.dart';
 
+/// Every locale the app ships, labelled in its own script — same map
+/// `settings_screen.dart` uses, duplicated rather than imported across
+/// features to keep onboarding self-contained (this project's existing
+/// convention, see `mushaf_download_tile.dart`'s own `formatBytes` doc).
+const _onboardingLanguageNames = <String, String>{
+  'ar': 'العربية',
+  'en': 'English',
+  'es': 'Español',
+  'ru': 'Русский',
+  'pt': 'Português',
+  'fr': 'Français',
+};
+
 /// P3‑21: first-run onboarding — structured like the reference video's own
 /// mushaf-choice screen (a heading, a description, a prominent download
 /// action, a closing "ابدأ رحلتك الإيمانية 🚀" CTA) but scoped to this
@@ -104,6 +117,56 @@ class OnboardingScreen extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
                 children: [
+                  // P3‑41: an explicit, visible language choice on the
+                  // very first run — real-device feedback asked for this
+                  // directly. Doesn't replace the existing device-locale
+                  // auto-detect (`main.dart`'s own P3‑37 fix already
+                  // defaults to Arabic whenever the device's own language
+                  // isn't one of the six shipped) — this just makes that
+                  // choice visible and overridable instead of silent.
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.language, color: AppColors.gold, size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              'settings.language'.tr(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textHigh,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            for (final e in _onboardingLanguageNames.entries)
+                              ChoiceChip(
+                                label: Text(e.value),
+                                selected: context.locale.languageCode == e.key,
+                                onSelected: (_) {
+                                  if (context.locale.languageCode != e.key) {
+                                    context.setLocale(Locale(e.key));
+                                  }
+                                },
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 18),
                   editions.when(
                     loading: () => const Padding(
                       padding: EdgeInsets.symmetric(vertical: 24),

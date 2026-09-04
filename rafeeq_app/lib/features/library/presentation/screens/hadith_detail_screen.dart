@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/hadith_repository.dart';
+import '../../../../core/i18n/hadith_grade_i18n.dart';
 
 /// One hadith, full text, with Previous/Next inside its chapter so reading
 /// doesn't require popping back for every hadith.
@@ -95,16 +96,19 @@ class _HadithDetailScreenState extends State<HadithDetailScreen> {
                         label: Text('library.sahihayn_badge'.tr()),
                       ),
                     )
-                  else
+                  else if (_item.grade != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 16),
+                      // P3‑41: no "Grade:" label — just the grade itself,
+                      // localized where honestly possible (see
+                      // hadith_grade_i18n.dart's own doc for why only
+                      // Arabic gets real term restoration).
                       child: Chip(
-                        label: Text(_item.grade != null
-                            ? (_item.grader != null
-                                ? '${'library.grade'.tr()}: ${_item.grade} '
-                                    '(${_item.grader})'
-                                : '${'library.grade'.tr()}: ${_item.grade}')
-                            : 'library.grade_unstated'.tr()),
+                        label: Text(_item.grader != null
+                            ? '${localizedHadithGrade(_item.grade!, context.locale.languageCode)} '
+                                '(${localizedHadithGrader(_item.grader!, context.locale.languageCode)})'
+                            : localizedHadithGrade(
+                                _item.grade!, context.locale.languageCode)),
                       ),
                     ),
                 ],

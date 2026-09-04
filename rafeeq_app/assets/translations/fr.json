@@ -295,7 +295,18 @@
     "credits": "Sources et crédits",
     "rgb": "RGB",
     "motion_effects": "Effets d'animation",
-    "motion_effects_desc": "Animer l'arrière-plan dans le thème RGB"
+    "motion_effects_desc": "Animer l'arrière-plan dans le thème RGB",
+    "splash_video": "Vidéo d'accueil",
+    "splash_video_desc": "Lire la vidéo de bienvenue au lancement (ajoute quelques secondes au démarrage)",
+    "permissions": "Autorisations",
+    "perm_notifications": "Notifications",
+    "perm_notifications_desc": "Pour les alertes de l'Adhan et les rappels d'adhkar",
+    "perm_location": "Localisation",
+    "perm_location_desc": "Pour calculer les horaires de prière et la direction de la Qibla",
+    "perm_battery": "Exemption d'optimisation de la batterie",
+    "perm_battery_desc": "Pour que l'Adhan se déclenche de façon fiable en arrière-plan",
+    "perm_full_screen": "Alerte Adhan plein écran",
+    "perm_full_screen_desc": "Pour que l'alerte Adhan s'ouvre sur l'écran verrouillé"
   },
   "downloads": {
     "title": "Téléchargements",

@@ -8,8 +8,10 @@ import 'package:video_player/video_player.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
+import '../../../../core/services/essential_content_bootstrap.dart';
 import '../../../onboarding/data/onboarding_state.dart';
 import '../../../onboarding/presentation/screens/onboarding_screen.dart';
+import '../../data/splash_video_provider.dart';
 import '../widgets/splash_lattice.dart';
 
 /// P3‑20 (revisited by P3‑38, then again by P3‑39 — still P3‑20's slot in
@@ -22,16 +24,23 @@ import '../widgets/splash_lattice.dart';
 /// reference this time, and the clip already ends on a card carrying our
 /// exact app name and tagline, so it is played as-is rather than
 /// reinterpreted. It's muted (this is a silent brand beat, not a trailer),
-/// plays once, and a tap anywhere skips straight past it — a 10‑second
-/// clip with no skip would be a real annoyance on every cold start, so
-/// that affordance was added even though the owner didn't ask for it in
-/// those words. The original hand-built girih-lattice + glow-badge design
-/// (`SplashLattice`, `_GlowBadge` below) is kept as the fallback shown
-/// while the video is still decoding and if it ever fails to load — never
-/// a blank frame — plus what's still shown outright for reduced-motion
-/// users (system setting or the in-app "Motion effects" toggle), who skip
-/// both the video and the entrance animation entirely and land on the next
-/// screen immediately.
+/// plays once, and a tap anywhere skips straight past it.
+///
+/// P3‑41: real-device use showed the video adds ~8s to *every* cold
+/// start, which reads as slow rather than premium once the novelty wears
+/// off — the owner asked for a way to turn it off. `splash_video_provider
+/// .dart` now gates it: the video always plays once on the genuine first
+/// run (so the brand moment still happens at least once), then defaults
+/// to **off** afterward unless re-enabled from Settings. With the video
+/// off, this still isn't an instant hard cut — the hand-built
+/// girih-lattice + glow-badge design (`SplashLattice`, `_GlowBadge`
+/// below) gets a brief ~1.1s moment of its own, since a real splash beat
+/// (however short) reads as intentional in a way a blank flash doesn't.
+/// That same fallback design is also what's shown while the video is
+/// still decoding and if it ever fails to load — never a blank frame —
+/// plus what's shown outright for reduced-motion users (system setting or
+/// the in-app "Motion effects" toggle), who skip straight to the next
+/// screen with no hold at all.
 ///
 /// This is a deliberate brand pause, not a loading gate: every async
 /// bootstrap step (`SharedPreferences`, translations, timezone data, the
@@ -71,16 +80,39 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   /// on some device/codec combination).
   VideoPlayerController? _video;
 
+  /// P3‑41: the video only actually plays when this is true — either the
+  /// owner's own "Splash video" setting is on, or this is genuinely the
+  /// very first run ever (a one-time welcome regardless of the setting,
+  /// see `splash_video_provider.dart`'s own doc for why). Computed once in
+  /// `initState` so a mid-splash provider read can't change the answer
+  /// partway through.
+  bool _shouldPlayVideo = false;
+
   @override
   void initState() {
     super.initState();
+    // P3‑41: fire-and-forget, not awaited — this screen's own timing must
+    // never depend on network content that can take minutes. Idempotent
+    // (see the function's own doc), so firing it once per cold start is
+    // both correct and cheap once everything is already cached.
+    bootstrapEssentialContent(ref);
+    final firstRun = !ref.read(splashFirstRunProvider);
+    _shouldPlayVideo = firstRun || ref.read(splashVideoEnabledProvider);
     final reduceMotion =
         WidgetsBinding.instance.platformDispatcher.accessibilityFeatures.disableAnimations;
     final motionOn = ref.read(motionEffectsProvider) && !reduceMotion;
-    if (motionOn) {
+    if (motionOn && _shouldPlayVideo) {
       _c.repeat();
       _intro.forward();
       _initVideo();
+    } else if (motionOn) {
+      // Video off (owner's own default after the first run): still worth
+      // a brief, real brand moment rather than a hard instant cut, but
+      // nowhere near the video's own length — the lattice/badge fallback
+      // already exists and reads as "the app's splash", not a placeholder.
+      _c.repeat();
+      _intro.forward();
+      Future<void>.delayed(const Duration(milliseconds: 1100), _proceed);
     } else {
       _intro.value = 1; // reduced motion: appear fully formed, no reveal
       Future<void>.delayed(Duration.zero, _proceed);
@@ -124,6 +156,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void _proceed() {
     if (_navigated || !mounted) return;
     _navigated = true;
+    ref.read(splashFirstRunProvider.notifier).markDone();
     final done = ref.read(onboardingCompletedProvider);
     // Read the locale code *before* navigating, not inside `builder:` — the
     // exact same real crash found live in `OnboardingScreen._finish` (see

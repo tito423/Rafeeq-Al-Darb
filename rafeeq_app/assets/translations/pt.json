@@ -295,7 +295,18 @@
     "credits": "Fontes e créditos",
     "rgb": "RGB",
     "motion_effects": "Efeitos de movimento",
-    "motion_effects_desc": "Animar o fundo no tema RGB"
+    "motion_effects_desc": "Animar o fundo no tema RGB",
+    "splash_video": "Vídeo de abertura",
+    "splash_video_desc": "Reproduzir o vídeo de boas-vindas ao abrir o app (adiciona alguns segundos à inicialização)",
+    "permissions": "Permissões",
+    "perm_notifications": "Notificações",
+    "perm_notifications_desc": "Para alertas do Adhan e lembretes de adhkar",
+    "perm_location": "Localização",
+    "perm_location_desc": "Para calcular os horários de oração e a direção da Qibla",
+    "perm_battery": "Isenção de otimização de bateria",
+    "perm_battery_desc": "Para que o Adhan dispare de forma confiável em segundo plano",
+    "perm_full_screen": "Alerta de Adhan em tela cheia",
+    "perm_full_screen_desc": "Para que o alerta do Adhan abra sobre a tela de bloqueio"
   },
   "downloads": {
     "title": "Transferências",

@@ -295,7 +295,18 @@
     "credits": "Fuentes y créditos",
     "rgb": "RGB",
     "motion_effects": "Efectos de movimiento",
-    "motion_effects_desc": "Animar el fondo en el tema RGB"
+    "motion_effects_desc": "Animar el fondo en el tema RGB",
+    "splash_video": "Video de bienvenida",
+    "splash_video_desc": "Reproducir el video de bienvenida al abrir la app (añade unos segundos al inicio)",
+    "permissions": "Permisos",
+    "perm_notifications": "Notificaciones",
+    "perm_notifications_desc": "Para las alertas del Adhan y los recordatorios de adhkar",
+    "perm_location": "Ubicación",
+    "perm_location_desc": "Para calcular los horarios de oración y la dirección de la Qibla",
+    "perm_battery": "Exención de optimización de batería",
+    "perm_battery_desc": "Para que el Adhan se active de forma fiable en segundo plano",
+    "perm_full_screen": "Alerta de Adhan a pantalla completa",
+    "perm_full_screen_desc": "Para que la alerta del Adhan se abra sobre la pantalla de bloqueo"
   },
   "downloads": {
     "title": "Descargas",

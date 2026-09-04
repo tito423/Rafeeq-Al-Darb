@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-04 |
+| **Last updated** | 2026-09-05 |
 | **State at** | **PHASE 2 nearly done** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. Every P2 stage is done and emulator-verified **except P2‑7's last piece, which needs a real Android phone** (see its row below) and P2‑8, which is stopped waiting on the owner's shortlist pick. |
 | **Build verified?** | `flutter analyze` clean · `flutter test` **13/13**. All of P2‑1/2/3/4/4b/5/6/9/10/11/12/13 emulator-verified live (not just built) on `emulator-5554`. |
 
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 23:11 — IN PROGRESS — resume here**
+**2026-09-05 01:46 — IN PROGRESS — resume here**
 
-P3-40 round-5 'do it all': French added as genuine 6th UI locale (412 keys, live-verified app-wide); real auto-scroll for Quran text reading (toolbar toggle + speed slider 15-120px/s, auto page-turn, live-verified turning real pages unassisted); mushaf edition thumbnails wired into onboarding+Downloads via shared MushafFirstPagePreview (no new licensing needed); tafsir sources 3->7 (added Tabari/Sadi/Baghawi/Tantawi via the same trusted api.quran.com pipeline, ~13 more honestly flagged as needing a new sourcing pipeline). Home-card Islamic-pattern bg deliberately deferred per owner request. Batch20 APK shipped. analyze clean, test 15/15.
+P3-41: first real-device feedback batch (12 screenshots + screen recording). DONE+live-verified: hadith card overflow fixed, grade display fixed (no label, redundant Sahihayn badge removed), persistent prayer notification default-on, splash video Settings toggle (off by default after first run), onboarding language card, essential content (Hafs mushaf + Abdul Basit recitation + full hadith DB) auto-bootstraps on first launch via idempotent resumable primitives, new Permissions section (notif/location/battery/full-screen-intent), ayah-marker digit centering fixed, full-screen-adhan root cause identified from owner's video (Android screen-on suppression, not necessarily a bug). Deliberately deferred: mushaf toolbar redesign, Settings-tab relocation, Prayer-tab reorg, more Shamela books, mute/stop repro, azkar reorder (likely already fixed by earlier P3-11, owner's screenshots are from a stale build). Batch21 APK shipped. analyze clean, test 15/15.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -295,7 +295,18 @@
     "credits": "المصادر والمراجع",
     "rgb": "RGB",
     "motion_effects": "التأثيرات الحركية",
-    "motion_effects_desc": "تشغيل الخلفية المتحركة في ثيم RGB"
+    "motion_effects_desc": "تشغيل الخلفية المتحركة في ثيم RGB",
+    "splash_video": "فيديو البداية",
+    "splash_video_desc": "تشغيل فيديو الترحيب عند فتح التطبيق (يضيف بضع ثوانٍ لبدء التشغيل)",
+    "permissions": "الأذونات",
+    "perm_notifications": "الإشعارات",
+    "perm_notifications_desc": "لتنبيهات الأذان وتذكيرات الأذكار",
+    "perm_location": "الموقع",
+    "perm_location_desc": "لحساب مواقيت الصلاة واتجاه القبلة",
+    "perm_battery": "استثناء تحسين البطارية",
+    "perm_battery_desc": "ليعمل الأذان بموثوقية في الخلفية",
+    "perm_full_screen": "شاشة الأذان الكاملة",
+    "perm_full_screen_desc": "ليظهر تنبيه الأذان كامل الشاشة فوق شاشة القفل"
   },
   "downloads": {
     "title": "التنزيلات",

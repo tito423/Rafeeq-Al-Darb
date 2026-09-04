@@ -295,7 +295,18 @@
     "credits": "Sources & credits",
     "rgb": "RGB",
     "motion_effects": "Motion effects",
-    "motion_effects_desc": "Animate the background in the RGB theme"
+    "motion_effects_desc": "Animate the background in the RGB theme",
+    "splash_video": "Splash video",
+    "splash_video_desc": "Play the welcome video on launch (adds a few seconds to startup)",
+    "permissions": "Permissions",
+    "perm_notifications": "Notifications",
+    "perm_notifications_desc": "For Adhan alerts and adhkar reminders",
+    "perm_location": "Location",
+    "perm_location_desc": "To calculate prayer times and the Qibla direction",
+    "perm_battery": "Battery optimization exemption",
+    "perm_battery_desc": "So the Adhan fires reliably in the background",
+    "perm_full_screen": "Full-screen Adhan alert",
+    "perm_full_screen_desc": "So the Adhan alert can open over the lock screen"
   },
   "downloads": {
     "title": "Downloads",

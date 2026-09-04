@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/db/hadith_repository.dart';
+import '../../../core/i18n/hadith_grade_i18n.dart';
 import '../../../core/services/download_manager.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../library/presentation/screens/hadith_detail_screen.dart';
@@ -324,21 +325,35 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                   const _TitleStar(),
                   const SizedBox(width: 6),
                   Expanded(
-                    child: Text('hadith_daily.title'.tr(),
-                        style: theme.textTheme.titleMedium),
+                    child: Text(
+                      'hadith_daily.title'.tr(),
+                      style: theme.textTheme.titleMedium,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ),
                   const SizedBox(width: 6),
                   const _TitleStar(),
-                  const SizedBox(width: 4),
+                  // P3‑41: a real device screenshot showed this row
+                  // overflowing by 16px on a narrower/scaled-font phone —
+                  // the plain `IconButton`'s default 48×48 tap target was
+                  // the fixed-width cost this Row couldn't always afford
+                  // alongside two star glyphs + the book icon. Shrinking
+                  // its own footprint (not the touch target's visual
+                  // affordance, just the padding around it) removes that
+                  // margin without changing what it does.
                   IconButton(
                     tooltip: 'hadith_daily.another'.tr(),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                     icon: _rerolling
                         ? const SizedBox(
-                            width: 18,
-                            height: 18,
+                            width: 16,
+                            height: 16,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Icon(Icons.refresh),
+                        : const Icon(Icons.refresh, size: 20),
                     onPressed: _rerolling ? null : _reroll,
                   ),
                 ],
@@ -361,29 +376,30 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                 style: theme.textTheme.labelSmall
                     ?.copyWith(color: scheme.onSurfaceVariant),
               ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: [
-                  if (isSahihayn)
+              // P3‑41: the owner's real-device feedback — no "Grade:"
+              // label, just the grade itself, localized where we honestly
+              // can (see hadith_grade_i18n.dart). For Bukhari/Muslim, the
+              // book name shown just above *is* the grade ("صحيح مسلم"
+              // literally reads "Sahih Muslim") — a separate badge
+              // repeating that was pure redundancy, so it's gone rather
+              // than shown twice.
+              if (!isSahihayn && item.grade != null) ...[
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
                     Chip(
                       visualDensity: VisualDensity.compact,
-                      avatar: const Icon(Icons.verified, size: 16),
-                      label: Text('library.sahihayn_badge'.tr()),
-                    )
-                  else
-                    Chip(
-                      visualDensity: VisualDensity.compact,
-                      label: Text(item.grade != null
-                          ? (item.grader != null
-                              ? '${'library.grade'.tr()}: ${item.grade} '
-                                  '(${item.grader})'
-                              : '${'library.grade'.tr()}: ${item.grade}')
-                          : 'library.grade_unstated'.tr()),
+                      label: Text(item.grader != null
+                          ? '${localizedHadithGrade(item.grade!, context.locale.languageCode)} '
+                              '(${localizedHadithGrader(item.grader!, context.locale.languageCode)})'
+                          : localizedHadithGrade(
+                              item.grade!, context.locale.languageCode)),
                     ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ],
           ),
         );
