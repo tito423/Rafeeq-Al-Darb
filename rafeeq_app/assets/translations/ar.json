@@ -99,7 +99,9 @@
     "note_delete": "حذف الملاحظة",
     "share_failed": "تعذّرت المشاركة",
     "font_smaller": "تصغير الخط",
-    "font_larger": "تكبير الخط"
+    "font_larger": "تكبير الخط",
+    "auto_scroll": "تمرير تلقائي",
+    "auto_scroll_stop": "إيقاف التمرير"
   },
   "library": {
     "title": "المكتبة",

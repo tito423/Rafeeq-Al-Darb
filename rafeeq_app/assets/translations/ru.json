@@ -99,7 +99,9 @@
     "note_delete": "Удалить заметку",
     "share_failed": "Не удалось поделиться",
     "font_smaller": "Уменьшить текст",
-    "font_larger": "Увеличить текст"
+    "font_larger": "Увеличить текст",
+    "auto_scroll": "Автопрокрутка",
+    "auto_scroll_stop": "Остановить прокрутку"
   },
   "library": {
     "title": "Библиотека",

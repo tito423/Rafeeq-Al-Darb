@@ -1,12 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../data/mushaf_edition.dart';
+import 'mushaf_first_page_preview.dart';
 
 /// Picker for the printed mushaf being read.
 ///
@@ -123,7 +122,7 @@ class _EditionTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _FirstPagePreview(edition: edition, isDark: isDark),
+            MushafFirstPagePreview(edition: edition, isDark: isDark),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -183,57 +182,3 @@ class _EditionTile extends StatelessWidget {
   }
 }
 
-/// Renders page 1 of the edition, small. Falls back to a neutral placeholder
-/// while loading or when the page cannot be fetched, so the picker stays
-/// usable offline.
-class _FirstPagePreview extends StatelessWidget {
-  final MushafEdition edition;
-  final bool isDark;
-
-  const _FirstPagePreview({required this.edition, required this.isDark});
-
-  static const double _w = 62;
-  static const double _h = 62 * 550 / 345;
-
-  @override
-  Widget build(BuildContext context) {
-    final gold = AppColors.gold;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        width: _w,
-        height: _h,
-        color: isDark ? AppColors.nightSurface : AppColors.paper,
-        child: FutureBuilder<String>(
-          future: MushafPageService.instance.svgForPage(
-            editionId: edition.id,
-            sourcePath: edition.sourcePath,
-            page: 1,
-          ),
-          builder: (context, snap) {
-            if (snap.hasData) {
-              return SvgPicture.string(
-                snap.data!,
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  isDark ? AppColors.paperDark : AppColors.ink,
-                  BlendMode.srcIn,
-                ),
-              );
-            }
-            return Center(
-              child: snap.hasError
-                  ? Icon(Icons.menu_book_outlined,
-                      size: 22, color: gold.withValues(alpha: 0.6))
-                  : const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}

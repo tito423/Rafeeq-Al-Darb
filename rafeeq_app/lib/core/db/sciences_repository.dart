@@ -47,10 +47,25 @@ class SciencesRepository {
   /// much larger bug this same rebuild fixed — the old data only ever had
   /// the first ~10 ayahs of every surah, silently backfilled with an
   /// earlier ayah's tafsir for the rest via a range-fallback bug).
+  /// P3‑31 (2026‑09‑04): the owner asked for ~20 named tafsir sources.
+  /// api.quran.com — the same already-vetted provider the first 3 sources
+  /// come from — only actually offers 7 Arabic tafsirs total (its own
+  /// `/resources/tafsirs` listing, checked live). These 4 are the rest of
+  /// that real, honest total, added via the exact same pipeline
+  /// (`fetch_tafsirs_complete.py` → `build_sciences_db.py`). The other
+  /// ~13 names on the owner's list (ابن الجوزي، الشوكاني، أبو السعود،
+  /// النسفي، الآلوسي، الرازي، etc.) aren't available through this
+  /// pipeline — they'd need a new sourcing pass (e.g. Shamela exports,
+  /// like the Library's books) with the same per-title licence
+  /// verification, not a shortcut taken here.
   static const tafseerSources = {
     'muyassar': 'التفسير الميسّر',
     'ibn_kathir': 'تفسير ابن كثير',
     'qurtubi': 'تفسير القرطبي',
+    'tabari': 'تفسير الطبري',
+    'sadi': 'تفسير السعدي',
+    'baghawi': 'تفسير البغوي',
+    'tantawi': 'التفسير الوسيط (الطنطاوي)',
   };
 
   /// Tafsir of a single ayah across every bundled source.

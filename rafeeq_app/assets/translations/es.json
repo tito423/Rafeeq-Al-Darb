@@ -99,7 +99,9 @@
     "note_delete": "Eliminar nota",
     "share_failed": "No se pudo compartir",
     "font_smaller": "Texto más pequeño",
-    "font_larger": "Texto más grande"
+    "font_larger": "Texto más grande",
+    "auto_scroll": "Desplazamiento automático",
+    "auto_scroll_stop": "Detener desplazamiento"
   },
   "library": {
     "title": "Biblioteca",

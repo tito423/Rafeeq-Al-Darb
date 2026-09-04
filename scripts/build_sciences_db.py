@@ -130,11 +130,19 @@ def load_tafsir_complete(key, source):
 load_tafsir_complete("muyassar", "muyassar")
 load_tafsir_complete("ibn_kathir", "ibn_kathir")
 load_tafsir_complete("qurtubi", "qurtubi")
+# P3‑31 (2026‑09‑04): 4 more real Arabic tafsirs, same trusted pipeline —
+# see fetch_tafsirs_complete.py's own comment for why these 4 specifically
+# (every Arabic tafsir this already-vetted API actually offers) rather
+# than the owner's full ~20-source wishlist.
+load_tafsir_complete("tantawi", "tantawi")
+load_tafsir_complete("tabari", "tabari")
+load_tafsir_complete("sadi", "sadi")
+load_tafsir_complete("baghawi", "baghawi")
 
 con.commit()
 
 # report partial counts
-for src in ("muyassar", "ibn_kathir", "qurtubi"):
+for src in ("muyassar", "ibn_kathir", "qurtubi", "tantawi", "tabari", "sadi", "baghawi"):
     c = cur.execute("SELECT COUNT(*) FROM tafseer_texts WHERE source=?", (src,)).fetchone()[0]
     out(f"tafseer {src}: {c} ranges")
 # ── 4) word-by-word meanings (Quranic Arabic Corpus glosses) ────────

@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 22:09 — IN PROGRESS — resume here**
+**2026-09-04 23:11 — IN PROGRESS — resume here**
 
-P3-6 DONE: full Khatma redesign using the owner's real reference screenshots - Khatma model gained startPage + portionsRead, Home card now shows real surah/ayah/page ranges (resolved from actual mushaf data), previous/upcoming portion counts, separate open-reader/mark-read buttons; new-khatma flow is a real two-step wizard (start point, then duration<->daily-amount live-linked). Live-verified full cycle: create -> read today -> real next range. Batch19 APK shipped. analyze clean, test 15/15, +17 keys x5 locales.
+P3-40 round-5 'do it all': French added as genuine 6th UI locale (412 keys, live-verified app-wide); real auto-scroll for Quran text reading (toolbar toggle + speed slider 15-120px/s, auto page-turn, live-verified turning real pages unassisted); mushaf edition thumbnails wired into onboarding+Downloads via shared MushafFirstPagePreview (no new licensing needed); tafsir sources 3->7 (added Tabari/Sadi/Baghawi/Tantawi via the same trusted api.quran.com pipeline, ~13 more honestly flagged as needing a new sourcing pipeline). Home-card Islamic-pattern bg deliberately deferred per owner request. Batch20 APK shipped. analyze clean, test 15/15.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

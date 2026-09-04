@@ -35,10 +35,32 @@ os.makedirs(BASE, exist_ok=True)
 #   16 = Tafsir Muyassar (correct, matches what's already shipped)
 #   90 = Al-Qurtubi (correct, matches what's already shipped)
 #   14 = Tafsir Ibn Kathir (the *real* identity of what was mislabeled "jalalayn")
+#
+# P3‑31 (2026‑09‑04): the owner asked for ~20 named tafsir sources. This
+# provider's own `/resources/tafsirs` listing (fetched live, saved to
+# `tafsirs_list.txt` in this session's scratchpad) has only 20 tafsirs
+# total across *every* language, and of those only 7 are Arabic — the 3
+# already shipped, plus these 4 real, additional ones. The rest of the
+# owner's named list (ابن الجوزي، الشوكاني، أبو السعود، النسفي، الآلوسي،
+# الرازي، etc.) genuinely isn't available through this already-vetted
+# pipeline — sourcing them would mean a new acquisition pipeline (e.g.
+# Shamela exports, like the Library books use) with its own per-title
+# licence verification, not something to rush alongside this fetch. These
+# 4 are added because they're real, free, already covered by the same
+# trusted API this project already relies on for the existing 3 — not
+# because they complete the ~20-source ask.
+#   93 = Al-Tafsir al-Wasit (al-Tantawi)
+#   15 = Tafsir al-Tabari
+#   91 = Tafsir al-Sa'di
+#   94 = Tafsir al-Baghawi
 SOURCES = {
     16: "muyassar",
     90: "qurtubi",
     14: "ibn_kathir",
+    93: "tantawi",
+    15: "tabari",
+    91: "sadi",
+    94: "baghawi",
 }
 
 session = requests.Session()

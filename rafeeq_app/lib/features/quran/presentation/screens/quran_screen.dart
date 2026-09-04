@@ -52,6 +52,16 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   double _fontScale = 1.0;
   static const _kFontScale = 'quran_text_font_scale_v1';
 
+  /// P3‑39: auto-scroll (the owner's own clarification of P3‑34's
+  /// ambiguous "speed control" — "speed control for scrolling reading for
+  /// quran text"). `_autoScroll` itself always starts off on a fresh open
+  /// of the reader — silently resuming a hands-free scroll the moment the
+  /// tab reopens would be a bad surprise — but the *speed* the reader
+  /// picked last time is worth remembering, same as font scale.
+  bool _autoScroll = false;
+  double _autoScrollSpeed = 40; // pixels/second
+  static const _kAutoScrollSpeed = 'quran_text_autoscroll_speed_v1';
+
   Future<void> _persistPage() async {
     // Goes through the reactive provider (P3‑4), not a raw prefs write —
     // see `quran_last_read.dart`'s doc for why: `ContinueReadingCard` on
@@ -71,6 +81,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final p = prefs.getInt(kQuranLastPageKey) ?? 1;
     final modeName = prefs.getString('quran_reader_mode');
     final fontScale = prefs.getDouble(_kFontScale);
+    final autoScrollSpeed = prefs.getDouble(_kAutoScrollSpeed);
     if (!mounted) return;
     setState(() {
       if (p >= 1 && p <= _totalPages) {
@@ -82,6 +93,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         orElse: () => MushafMode.text,
       );
       if (fontScale != null) _fontScale = fontScale;
+      if (autoScrollSpeed != null) _autoScrollSpeed = autoScrollSpeed;
     });
   }
 
@@ -89,6 +101,29 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     setState(() => _fontScale = (_fontScale + delta).clamp(0.75, 1.8));
     SharedPreferences.getInstance()
         .then((p) => p.setDouble(_kFontScale, _fontScale));
+  }
+
+  void _toggleAutoScroll() {
+    setState(() => _autoScroll = !_autoScroll);
+  }
+
+  void _changeAutoScrollSpeed(double speed) {
+    setState(() => _autoScrollSpeed = speed);
+    SharedPreferences.getInstance()
+        .then((p) => p.setDouble(_kAutoScrollSpeed, speed));
+  }
+
+  /// Called once by the currently-active `MushafTextPage` when auto-scroll
+  /// reaches the bottom of its content. Turns the page and keeps going —
+  /// the whole point of "hands-free reading" is not stopping dead at every
+  /// page boundary — unless this was already the mushaf's last page, where
+  /// there's honestly nowhere further to go.
+  void _onAutoScrollReachedEnd() {
+    if (_current >= _totalPages) {
+      setState(() => _autoScroll = false);
+      return;
+    }
+    _goToPage(_current + 1);
   }
 
   @override
@@ -192,6 +227,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           label: 'quran.font_larger'.tr(),
                           onPressed: () => _changeFontScale(0.1),
                         ),
+                        ToolbarAction(
+                          icon: _autoScroll
+                              ? Icons.pause_circle_outline
+                              : Icons.play_circle_outline,
+                          label: _autoScroll
+                              ? 'quran.auto_scroll_stop'.tr()
+                              : 'quran.auto_scroll'.tr(),
+                          onPressed: _toggleAutoScroll,
+                        ),
                       ],
                       ToolbarAction(
                         icon: Icons.travel_explore_outlined,
@@ -284,6 +328,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   currentPage: _current,
                   onSelect: _goToPage,
                 ),
+              // Only shown once auto-scroll is actually on — no point
+              // occupying screen space with a speed control for a feature
+              // that isn't running.
+              if (_autoScroll && _mode == MushafMode.text)
+                _AutoScrollSpeedBar(
+                  speed: _autoScrollSpeed,
+                  onChanged: _changeAutoScrollSpeed,
+                ),
               const SizedBox(height: 6),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -355,6 +407,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                       data.surahNameAr(int.parse(headerId))),
               onAyahTap: (a) => _openSciences(a, data),
               fontScale: _fontScale,
+              autoScroll: _autoScroll,
+              autoScrollSpeed: _autoScrollSpeed,
+              isActive: page == _current,
+              onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
             );
           },
         );
@@ -371,6 +427,44 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         return;
       }
     }
+  }
+}
+
+/// P3‑39: the auto-scroll speed control — a plain labelled `Slider` over a
+/// real pixels/second range (15–120) rather than an opaque "slow/medium/
+/// fast" enum, so a reader can actually tune it to their own reading pace.
+/// Only ever built while auto-scroll is on (see the call site).
+class _AutoScrollSpeedBar extends StatelessWidget {
+  final double speed;
+  final ValueChanged<double> onChanged;
+  const _AutoScrollSpeedBar({required this.speed, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: [
+          const Icon(Icons.speed, size: 18),
+          Expanded(
+            child: Slider(
+              value: speed.clamp(15, 120),
+              min: 15,
+              max: 120,
+              onChanged: onChanged,
+            ),
+          ),
+          SizedBox(
+            width: 40,
+            child: Text(
+              '${speed.round()}',
+              textAlign: TextAlign.end,
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

@@ -2,15 +2,23 @@ surah counts: 114
 muyassar: 5278 ayah entries (missing chapters: none)
 ibn_kathir: 6205 ayah entries (missing chapters: none)
 qurtubi: 6235 ayah entries (missing chapters: none)
+tantawi: 6108 ayah entries (missing chapters: none)
+tabari: 6196 ayah entries (missing chapters: none)
+sadi: 6177 ayah entries (missing chapters: none)
+baghawi: 6236 ayah entries (missing chapters: none)
 tafseer muyassar: 5278 ranges
 tafseer ibn_kathir: 6205 ranges
 tafseer qurtubi: 6235 ranges
+tafseer tantawi: 6108 ranges
+tafseer tabari: 6196 ranges
+tafseer sadi: 6177 ranges
+tafseer baghawi: 6236 ranges
 word_meanings rows: 83665
 word_grammar rows: 75973
 azkar sections: 134, items: 298
-table tafseer_texts: 17718
+table tafseer_texts: 42435
 table word_meanings: 83665
 table word_grammar: 75973
 table azkar_sections: 134
 table azkar_items: 298
-DB size: 53587968 bytes
+DB size: 129646592 bytes

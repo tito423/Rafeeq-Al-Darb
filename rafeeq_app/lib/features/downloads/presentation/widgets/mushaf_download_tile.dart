@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/mushaf_edition.dart';
+import '../../../quran/presentation/widgets/mushaf_first_page_preview.dart';
 
 String formatBytes(int bytes) {
   if (bytes < 1024) return '$bytes B';
@@ -121,6 +122,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final e = widget.edition;
     final total = e.pages;
     final complete = _cached >= total;
@@ -131,83 +133,97 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  e.nameAr,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.w700),
+          // P3‑28/39: the edition's own real first page as its thumbnail —
+          // already-licensed content (see the widget's own doc), so every
+          // edition card gets a real cover, not a placeholder icon.
+          MushafFirstPagePreview(edition: e, isDark: isDark, width: 46, height: 46 * 550 / 345),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        e.nameAr,
+                        style: theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    if (complete)
+                      Icon(Icons.offline_pin, color: AppColors.success, size: 20),
+                  ],
                 ),
-              ),
-              if (complete)
-                Icon(Icons.offline_pin, color: AppColors.success, size: 20),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            complete
-                ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
-                : '$_cached / $total ${'downloads.pages_cached'.tr()}'
-                    '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.outline),
-          ),
-          if (_busy) ...[
-            const SizedBox(height: 10),
-            LinearProgressIndicator(
-              value: total == 0 ? null : _done / total,
-              color: _paused ? theme.colorScheme.outline : AppColors.gold,
+                const SizedBox(height: 4),
+                Text(
+                  complete
+                      ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
+                      : '$_cached / $total ${'downloads.pages_cached'.tr()}'
+                          '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.outline),
+                ),
+                if (_busy) ...[
+                  const SizedBox(height: 10),
+                  LinearProgressIndicator(
+                    value: total == 0 ? null : _done / total,
+                    color: _paused ? theme.colorScheme.outline : AppColors.gold,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _paused
+                        ? '${'downloads.paused'.tr()}  $_done / $total'
+                        : '${'downloads.downloading'.tr()}  $_done / $total',
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    if (_busy) ...[
+                      TextButton.icon(
+                        onPressed: () => setState(() {
+                          if (_paused) {
+                            _service.resumePrefetch(e.id);
+                          } else {
+                            _service.pausePrefetch(e.id);
+                          }
+                        }),
+                        icon: Icon(
+                            _paused
+                                ? Icons.play_arrow_rounded
+                                : Icons.pause_rounded,
+                            size: 18),
+                        label: Text(_paused
+                            ? 'downloads.resume'.tr()
+                            : 'downloads.pause'.tr()),
+                      ),
+                      TextButton.icon(
+                        onPressed: () => _service.cancelPrefetch(e.id),
+                        icon: const Icon(Icons.stop_circle_outlined, size: 18),
+                        label: Text('downloads.cancel'.tr()),
+                      ),
+                    ] else
+                      FilledButton.tonalIcon(
+                        onPressed: complete ? null : _download,
+                        icon: const Icon(Icons.download_rounded, size: 18),
+                        label: Text('downloads.download'.tr()),
+                      ),
+                    const Spacer(),
+                    if (_cached > 0 && !_busy)
+                      TextButton.icon(
+                        onPressed: _delete,
+                        icon: const Icon(Icons.delete_outline, size: 18),
+                        label: Text('downloads.delete'.tr()),
+                      ),
+                  ],
+                ),
+              ],
             ),
-            const SizedBox(height: 6),
-            Text(
-              _paused
-                  ? '${'downloads.paused'.tr()}  $_done / $total'
-                  : '${'downloads.downloading'.tr()}  $_done / $total',
-              style: theme.textTheme.labelSmall,
-            ),
-          ],
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              if (_busy) ...[
-                TextButton.icon(
-                  onPressed: () => setState(() {
-                    if (_paused) {
-                      _service.resumePrefetch(e.id);
-                    } else {
-                      _service.pausePrefetch(e.id);
-                    }
-                  }),
-                  icon: Icon(
-                      _paused ? Icons.play_arrow_rounded : Icons.pause_rounded,
-                      size: 18),
-                  label: Text(_paused
-                      ? 'downloads.resume'.tr()
-                      : 'downloads.pause'.tr()),
-                ),
-                TextButton.icon(
-                  onPressed: () => _service.cancelPrefetch(e.id),
-                  icon: const Icon(Icons.stop_circle_outlined, size: 18),
-                  label: Text('downloads.cancel'.tr()),
-                ),
-              ] else
-                FilledButton.tonalIcon(
-                  onPressed: complete ? null : _download,
-                  icon: const Icon(Icons.download_rounded, size: 18),
-                  label: Text('downloads.download'.tr()),
-                ),
-              const Spacer(),
-              if (_cached > 0 && !_busy)
-                TextButton.icon(
-                  onPressed: _delete,
-                  icon: const Icon(Icons.delete_outline, size: 18),
-                  label: Text('downloads.delete'.tr()),
-                ),
-            ],
           ),
         ],
       ),
