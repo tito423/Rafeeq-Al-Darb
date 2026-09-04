@@ -1,5 +1,32 @@
 # App icon — source
 
+**P3‑39 update, current state:** the launcher icon is no longer generated
+from the SVGs below. The owner sent a real AI-generated icon photo
+(`E:\New folder\1788536019972.png`) with an explicit instruction to use it
+**exactly, unedited** — not redrawn as vector art (an earlier attempt in
+this same session added a bezel ring and touched-up detail on the old
+SVG-based mark; the owner rejected that and asked for the literal photo
+instead). The actual source now is that photo, square-cropped to just its
+circular badge (dropping the "Rafeeq" text lockup below it, which isn't
+part of the icon itself) with **no other processing** — no recolor, no
+recomposite, no added ring — saved as `../app_icon.png` and
+`../app_icon_foreground.png` (identical copies; `pubspec.yaml`'s
+`adaptive_icon_background` is a plain solid color, `#071625`, not a second
+image, so there's nothing else in the icon's visible art besides the
+owner's own unedited pixels). `../../branding/app_mark.png` (the splash
+badge) is the same crop too, so the badge in-app matches the launcher
+icon exactly.
+
+The SVG pipeline below (`icon_full.svg`/`icon_fg.svg`/`icon_bg.svg`) is
+**not currently wired into the build** — kept as source history and a
+reproducible fallback (e.g. if a future reference photo isn't licensed
+for direct use), not as the live pipeline. Regenerating icons for the
+*current* setup only needs re-cropping the reference photo and rerunning
+`dart run flutter_launcher_icons`; the headless-Chrome steps below don't
+apply until/unless the project switches back to the vector-art approach.
+
+---
+
 The launcher icon is designed as code so it stays reproducible.
 
 | file | role |

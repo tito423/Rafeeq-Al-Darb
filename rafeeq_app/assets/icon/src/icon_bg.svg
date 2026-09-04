@@ -6,6 +6,25 @@
       <stop offset="75%" stop-color="#071726"/>
       <stop offset="100%" stop-color="#03080F"/>
     </radialGradient>
+    <!-- P3‑39: a dark beveled bezel ring, echoing the owner's newest icon
+         reference photo (E:\New folder\1788536019972.png — a polished
+         circular badge with a dark rim). Radius 340 is a deliberate choice:
+         it's just outside Android's strict adaptive-icon "safe zone"
+         (inner 66% of this 108dp layer, ≈r=313 at this canvas's scale) —
+         chosen anyway because the crescent mark's own tips already reach
+         out to ≈r=324, and a ring drawn tighter than that would visibly
+         slice across the mark rather than frame it. This app has no public
+         store listing to satisfy strict OEM-mask guidelines for, so a ring
+         that frames the real mark correctly on this device (and the very
+         common Pixel/stock-launcher full-bleed circular mask) wins over
+         perfect compliance with a guideline aimed at store-published icons. -->
+    <linearGradient id="bezel" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#1C4A66"/>
+      <stop offset="50%" stop-color="#040A11"/>
+      <stop offset="100%" stop-color="#0C2438"/>
+    </linearGradient>
   </defs>
   <rect width="1024" height="1024" fill="url(#bg)"/>
+  <circle cx="512" cy="512" r="340" fill="none" stroke="url(#bezel)" stroke-width="16"/>
+  <circle cx="512" cy="512" r="331" fill="none" stroke="#9FD6F5" stroke-width="1.6" opacity="0.35"/>
 </svg>

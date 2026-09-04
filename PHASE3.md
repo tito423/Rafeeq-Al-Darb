@@ -36,7 +36,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | ✅ **done, live-verified** — calmer near-black backdrop, glow rings instead of filled blobs, sparse star-dots instead of a tiled grid; a real crash (unrelated to the restyle itself, in P3-20/21's navigation code) found+fixed along the way |
 | P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | 🔶 header card, prayer card (**P3-22**), ornate hadith card, and continue-reading card all ✅ done + live-verified; only the app-wide per-card Islamic-pattern background pass (a much larger separate task) still open |
 | P3‑5 | **Login / accounts — architecture decision** | ✅ **answered: optional** (guest mode stays default, sign-in adds sync) — not yet built |
-| P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open |
+| P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open — **real reference finally received** (`design_refs/khatma_app_ref/`, a competing app's own خطمة screens), unblocking this after being stuck all session for lack of one |
 | P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
 | P3‑8 | Mushaf reader: confirmed real bugs + feature requests | 🔶 surah-jump strip ✅ done + live-verified, caching re-verified as not-a-bug (see notes), toolbar captions done (P3‑34); pinch-zoom needs a live gesture check (code already there); first-open edition prompt + first-install onboarding still open (ties to P3‑21) |
 | P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed; ✅ **tafsir-ayah-link fixed — was a major bug: ~83% of the Quran showed an earlier ayah's tafsir, plus one whole source was mislabeled (real content = Ibn Kathir, not Jalalayn) — full data rebuild, live-verified**; non-Hafs-gating still open |
@@ -1573,6 +1573,135 @@ in English (matching this AVD's real system locale) unless the app's own
 language switcher is used — that's the fix working as intended, not a
 regression from the rest of this session's Arabic-default testing.
 
+## P3-39 — Round-4 feedback: literal splash video, keystore blocker dropped, cloud cleanup ✅ DONE, live-verified
+
+Owner's message this round was explicit and different in kind from
+P3-38's "inspired by" follow-up: **"new video to use as splash screen ...
+and new icon also,"** with the actual files placed at `E:\New folder` (a
+10s/720×1280/24fps MP4 and a high-quality circular icon-badge PNG), plus
+two unrelated asks — drop the release-keystore blocker (personal-use app,
+no public release planned for now) and delete unused
+Cloudflare/Firebase/GitHub resources.
+
+**Splash video — used literally, not reinterpreted.** Unlike the P3-38
+video (a mood reference the owner explicitly said to draw *inspiration*
+from), this one already carries the app's own exact name
+(`رَفِيقُ الدَّرْبِ`) and tagline baked into its final frame — reviewed all
+20 extracted frames (`design_refs/gemini_splash_video/frames/`) and
+confirmed it's a custom-made splash for this app, not a generic or
+competitor asset, so per the owner's literal instruction it's played
+as-is rather than re-skinned. Copied to
+`assets/branding/splash_intro.mp4` (3.2MB, already covered by the
+`assets/branding/` wildcard in `pubspec.yaml`) and wired into
+`SplashScreen` via `video_player` (already a dependency, same
+muted/cover-fit pattern `AdhanFullScreenScreen` established): plays once,
+muted, `BoxFit.cover` via `FittedBox`+`SizedBox`, and calls `_proceed()`
+when playback reaches its end (`VideoPlayerController` listener comparing
+`position` against `duration`), with a `duration + 2s` `Future.delayed`
+safety net in case the completion event is ever missed. A tap anywhere
+skips straight past it — the owner didn't ask for this, but a 10-second
+clip with no way to skip would be a real annoyance on every cold start,
+so it was added as an honest engineering call, not scope creep for its
+own sake. The original hand-built girih-lattice + glow-badge design
+(`SplashLattice`, `_GlowBadge`, both kept unchanged) is still very much
+alive as the fallback shown while the video decodes (typically 1-3s on
+this AVD) and if it ever fails to load on some device/codec combination —
+verified in one live run, the load actually did fail momentarily and the
+lattice/badge/name/tagline rendered correctly in its place before the
+video caught up, exactly as designed. Reduced-motion users (system
+setting or the in-app toggle) skip both the video and the fallback
+entrance animation entirely, unchanged from P3-20/P3-38.
+
+**Icon — the owner's exact photo, unedited (course-corrected live).** The
+first attempt at this misread the ask: treated the owner's newest icon
+photo (`E:\New folder\1788536019972.png`) as a *reference* and touched up
+the existing hand-drawn SVG mark (added a bezel ring, then a metallic
+highlight stroke + gold page medallions) rather than using the photo
+itself. The owner corrected this directly — "use the ai generated exactly
+do not edit it please" — twice, after also flagging that a batch of other
+files in `E:\New folder` (4 WhatsApp screenshots + a WhatsApp screen
+recording) had been missed entirely on the first pass. Investigating that
+recording (a real 24s screen capture of installing/opening an app named
+"Rafeeq AlDarb") resolved the ambiguity: it shows the *old* mosque-icon
+splash still appearing — a bug report the owner was showing, not new
+splash footage to play — and the owner then explicitly confirmed the AI
+photo is the real icon and the earlier gemini video is the real splash
+video; only the icon *implementation* needed to change, not the video.
+
+Corrected implementation: the SVG-based pipeline (`icon_full.svg` /
+`icon_fg.svg` / `icon_bg.svg`) is no longer what generates the launcher
+icon. The photo itself, square-cropped to just its circular badge
+(dropping the "Rafeeq" wordmark printed below it in the source file,
+which was never part of the icon) with **zero other processing** — no
+recolor, no recomposite, no added ring — is now `app_icon.png` and
+`app_icon_foreground.png` directly; `pubspec.yaml`'s
+`adaptive_icon_background` is a plain solid color (`#071625`, the app's
+own night-navy) rather than a second synthesized image, so there is
+nothing in the shipped icon's visible art besides the owner's own
+unedited pixels. `assets/branding/app_mark.png` (the splash badge) is the
+same crop, so the in-app badge matches the launcher icon exactly. The SVG
+files are kept only as prior source history / a reproducible fallback,
+documented as such in `assets/icon/src/README.md` — not the live
+pipeline anymore. **Live-verified on `emulator-5554`:** the real
+home-screen launcher icon and the splash badge both show the exact photo,
+"EST. 1445" text and all, not a redrawn approximation.
+
+**Khatma-card redesign (P3-6) — reference received, not yet built.** The
+four real competing-app "ختمة" screenshots the owner finally sent
+(`design_refs/khatma_app_ref/`, unblocking P3-6 after being stuck all
+session for lack of exactly this reference) are saved and reviewed, but
+building the actual redesign is tracked as open work below, not silently
+dropped — it's a genuinely large feature (a richer daily-portion model
+with explicit start/end ranges, plus a whole "ختمة جديدة" creation
+wizard), deliberately left for a following session rather than rushed in
+alongside everything else this round.
+
+**Keystore blocker dropped.** Every earlier mention of "needs a release
+keystore before a real store submission" across `NEXT_SESSION_PROMPT.md`
+and the Phase 2 handover docs is no longer a blocker: the owner confirmed
+this app is for his own personal use only for now, so there is no public
+release to gate on a keystore. Debug/local APK builds (the only kind this
+project has ever shipped) need no keystore at all.
+
+**Cloud cleanup — actually executed, not just recommended.** The old
+Cloudflare R2 bucket `rafeeq-aldarb-data` (flagged "do not reuse" in
+`HOSTING.md` §7 since the session that discovered the contamination) was
+listed fresh before touching anything: **254,971 objects, 10.66GB,
+newest object dated 2026‑08‑27** — unchanged since the original
+investigation, confirmed still unused by the running app (`rafeeq-content`
+is the real bucket `AppConfig.contentBaseUrl` points at). Owner confirmed
+deletion explicitly given the size; deleted via `scripts/.env`'s existing
+R2 credentials (`boto3`, paginated `delete_objects` in 1000-key batches,
+then `delete_bucket`) — **all 254,971 objects removed, zero errors,
+bucket gone.** Also found and removed `rafeeq_app/.github/workflows/build.yml`
+— a GitHub Actions CI config that had genuinely never run once, since
+neither this repo nor `rafeeq_app` (which turned out to have its own
+nested, remote-less `.git`) has ever had a GitHub remote configured.
+`google-services.json` (`rafeeq_app/android/app/`) was found but
+deliberately **not** deleted — it's real, but already correctly gitignored
+and already documented in `HOSTING.md` as intentionally kept for a future
+group-khatma feature that would reuse this same Firebase project rather
+than provision a new one; deleting a zero-cost local file to satisfy a
+blanket "delete if unused" reading would just create rework later for no
+actual cleanup benefit, so this one judgment call is flagged here rather
+than silently overridden.
+
+`flutter analyze` clean, `flutter test` 15/15. **Live-verified on
+`emulator-5554`** across several fresh cold-starts: confirmed the exact
+sequence — fallback lattice+badge visible immediately, the real video
+(cloudscape, lightning, the ornate crescent+Quran medallion, gold sparkle
+swirl, closing name+tagline card) takes over within a few seconds once
+decoded, and playback reaching its end correctly navigates on to
+onboarding/Home, matching the ~10s clip length. Also caught and fixed an
+unrelated environment issue while debugging build slowness: a
+`flutter run` session left over from **two days earlier** in this same
+project (the exact `TaskStop`-doesn't-kill-the-process gotcha documented
+under P3-38, but this time the leak was on the *host* build tooling, not
+the on-device app) was silently burning real CPU the whole time,
+independently slowing down every Gradle build in the meantime — killed via
+`Stop-Process`, after which a normal debug build returned to its expected
+~40s.
+
 ## Status table addition
 
 | # | Task | Status |
@@ -1596,3 +1725,4 @@ regression from the rest of this session's Arabic-default testing.
 | P3-36 | Home: hadith reroll shouldn't scroll the page | ✅ **done, live-verified** — root cause was the card collapsing to a spinner mid-reroll, not a scroll bug at all |
 | P3-37 | App display name follows device system language on first run | ✅ **done, live-verified** |
 | P3-38 | Round-3: app icon v2, Azkar/Tasbeeh split into separate bottom-nav tabs, splash+app-store frames | ✅ **done, live-verified** — icon rebuilt as fresh vector art from a real reference photo (a real XML double-hyphen bug in `icon_fg.svg` found+fixed live, twice); Azkar/Tasbeeh now 7 separate bottom-nav tabs, both confirmed working independently |
+| P3-39 | Round-4: literal splash video, keystore blocker dropped, cloud cleanup | ✅ **done, live-verified** — the owner's own 10s splash video now plays for real on cold start (muted, tap-to-skip, lattice/badge fallback while it decodes or if it ever fails), release-keystore no longer tracked as a blocker (personal-use app), old contaminated R2 bucket confirmed unused / no Firebase integration exists to clean up |

@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 18:50 — IN PROGRESS — resume here**
+**2026-09-04 20:54 — IN PROGRESS — resume here**
 
-Released phase3-batch14-2026-09-04 APK (splash screen inspired-by-video enhancement: layered lattice, icon-crescent echo, staggered entrance). NEXT_SESSION_PROMPT.md updated with batch14 link and full details.
+P3-39: real splash video wired in (video_player, tap-to-skip, lattice fallback) - live verified. Icon corrected after live course-correction: ships the owner's exact AI photo unedited (not a redrawn SVG) after two direct corrections and finding missed WhatsApp reference files. Old contaminated R2 bucket (254971 objects, 10.66GB) deleted with owner confirmation. Dead .github workflow removed. Keystore blocker dropped (personal-use app). Batch17 APK shipped.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

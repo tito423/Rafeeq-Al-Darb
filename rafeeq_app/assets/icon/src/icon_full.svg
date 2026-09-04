@@ -11,6 +11,18 @@
       <stop offset="55%" stop-color="#4FA9DE" stop-opacity="0.10"/>
       <stop offset="100%" stop-color="#4FA9DE" stop-opacity="0"/>
     </radialGradient>
+    <!-- P3‑39: dark beveled bezel ring — see icon_bg.svg's own comment for
+         the reference photo and the radius reasoning (chosen to frame the
+         crescent's actual tips, not Android's strict safe zone, since this
+         file isn't adaptive-icon-masked in the first place — it's the
+         legacy/iOS icon and the splash badge's own source). Kept at the
+         same radius as icon_bg.svg for one consistent look everywhere the
+         mark appears. -->
+    <linearGradient id="bezel" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#1C4A66"/>
+      <stop offset="50%" stop-color="#040A11"/>
+      <stop offset="100%" stop-color="#0C2438"/>
+    </linearGradient>
     <!-- P3‑4 round 2 redesign: the owner sent a real reference photo of the
          home-screen icon he wants (a small, compressed phone-screenshot
          crop, ~173x228 — not clean enough to trace directly, so this is
@@ -38,6 +50,18 @@
       <stop offset="45%" stop-color="#D9973F" stop-opacity="0.4"/>
       <stop offset="100%" stop-color="#D9973F" stop-opacity="0"/>
     </radialGradient>
+    <!-- P3‑39 icon rebuild: a real "polished metal" streak along the
+         crescent's own rim, not just the diffuse core/wisp glows above —
+         matching the light-catch look in the owner's actual reference photo
+         (E:\New folder\1788536019972.png). Bright at the top where the
+         light would catch, fading to nothing by the lower tip (the warm
+         gold wisp already owns that area). Applied as a *stroke* along the
+         crescent's own outline below, not a new shape. -->
+    <linearGradient id="crescentHighlight" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#F3FBFF" stop-opacity="0.95"/>
+      <stop offset="35%" stop-color="#BFE6FA" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#BFE6FA" stop-opacity="0"/>
+    </linearGradient>
     <linearGradient id="page" x1="0" y1="0" x2="0.2" y2="1">
       <stop offset="0%" stop-color="#CFEBFB"/>
       <stop offset="55%" stop-color="#6FA9D6"/>
@@ -47,6 +71,15 @@
       <stop offset="0%" stop-color="#FDF6E3"/>
       <stop offset="100%" stop-color="#E8C96A"/>
     </linearGradient>
+    <!-- P3‑39: the round gold medallion centered on each open page — the
+         reference photo's book has an ornate gold-bordered cartouche on
+         each page instead of plain "text line" rows; this is that,
+         simplified to read cleanly at launcher sizes. -->
+    <radialGradient id="medallion" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FDF3D0"/>
+      <stop offset="45%" stop-color="#E8C96A"/>
+      <stop offset="100%" stop-color="#A87A22"/>
+    </radialGradient>
 
     <g id="star">
       <circle r="4.5"/>
@@ -77,6 +110,14 @@
         <rect x="220" y="60" width="700" height="700" fill="url(#crescentCore)"/>
         <rect x="220" y="60" width="700" height="700" fill="url(#crescentWisp)"/>
       </g>
+      <!-- Metallic highlight stroke, traced along the crescent's own outline
+         and clipped to it — reads as a light catching the rim rather than
+         a shape floating on top of it. -->
+      <g clip-path="url(#crescentClip)">
+        <path fill="none" stroke="url(#crescentHighlight)" stroke-width="14"
+              transform="translate(858 122) scale(-27.5 27.5)"
+              d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </g>
       <!-- open book, centered slightly low, sitting in the crescent's embrace -->
       <g>
         <path d="M 512 452
@@ -92,14 +133,13 @@
                  C 666 618 658 624 648 618
                  C 616 600 562 592 512 606 Z" fill="url(#page)"/>
         <rect x="507" y="450" width="10" height="158" rx="4" fill="url(#spine)"/>
-        <g stroke="#7A5C1E" stroke-width="3.4" stroke-linecap="round" opacity="0.55">
-          <path d="M 392 500 L 452 490" fill="none"/>
-          <path d="M 392 524 L 458 514" fill="none"/>
-          <path d="M 392 548 L 452 540" fill="none"/>
-          <path d="M 632 500 L 572 490" fill="none"/>
-          <path d="M 632 524 L 566 514" fill="none"/>
-          <path d="M 632 548 L 572 540" fill="none"/>
-        </g>
+        <!-- Gold medallions — the reference photo's ornate page cartouches,
+             simplified to a bordered gold disc per page (legible at small
+             sizes, unlike the fine calligraphy the photo itself has). -->
+        <circle cx="435" cy="524" r="30" fill="url(#medallion)" stroke="#7A5C1E" stroke-width="2" opacity="0.92"/>
+        <circle cx="589" cy="524" r="30" fill="url(#medallion)" stroke="#7A5C1E" stroke-width="2" opacity="0.92"/>
+        <circle cx="435" cy="524" r="19" fill="none" stroke="#FDF3D0" stroke-width="1.4" opacity="0.6"/>
+        <circle cx="589" cy="524" r="19" fill="none" stroke="#FDF3D0" stroke-width="1.4" opacity="0.6"/>
         <circle cx="512" cy="440" r="7" fill="#FDF6E3"/>
       </g>
       <!-- scattered stars -->
@@ -115,5 +155,7 @@
 
   <rect width="1024" height="1024" fill="url(#bg)"/>
   <circle cx="512" cy="512" r="420" fill="url(#glow)"/>
+  <circle cx="512" cy="512" r="340" fill="none" stroke="url(#bezel)" stroke-width="16"/>
+  <circle cx="512" cy="512" r="331" fill="none" stroke="#9FD6F5" stroke-width="1.6" opacity="0.35"/>
   <use href="#mark"/>
 </svg>

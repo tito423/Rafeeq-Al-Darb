@@ -26,6 +26,14 @@
       <stop offset="45%" stop-color="#D9973F" stop-opacity="0.4"/>
       <stop offset="100%" stop-color="#D9973F" stop-opacity="0"/>
     </radialGradient>
+    <!-- P3‑39 icon rebuild — see icon_full.svg's own comment for the
+         reference photo and rationale. Kept identical here so the adaptive
+         foreground matches the full/legacy icon exactly. -->
+    <linearGradient id="crescentHighlight" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#F3FBFF" stop-opacity="0.95"/>
+      <stop offset="35%" stop-color="#BFE6FA" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#BFE6FA" stop-opacity="0"/>
+    </linearGradient>
     <linearGradient id="page" x1="0" y1="0" x2="0.2" y2="1">
       <stop offset="0%" stop-color="#CFEBFB"/>
       <stop offset="55%" stop-color="#6FA9D6"/>
@@ -35,6 +43,11 @@
       <stop offset="0%" stop-color="#FDF6E3"/>
       <stop offset="100%" stop-color="#E8C96A"/>
     </linearGradient>
+    <radialGradient id="medallion" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FDF3D0"/>
+      <stop offset="45%" stop-color="#E8C96A"/>
+      <stop offset="100%" stop-color="#A87A22"/>
+    </radialGradient>
 
     <g id="star">
       <circle r="4.5"/>
@@ -61,6 +74,11 @@
     <rect x="220" y="60" width="700" height="700" fill="url(#crescentCore)"/>
     <rect x="220" y="60" width="700" height="700" fill="url(#crescentWisp)"/>
   </g>
+  <g clip-path="url(#crescentClip)">
+    <path fill="none" stroke="url(#crescentHighlight)" stroke-width="14"
+          transform="translate(858 122) scale(-27.5 27.5)"
+          d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </g>
   <g>
     <path d="M 512 452
              C 452 440 402 452 372 480
@@ -75,14 +93,10 @@
              C 666 618 658 624 648 618
              C 616 600 562 592 512 606 Z" fill="url(#page)"/>
     <rect x="507" y="450" width="10" height="158" rx="4" fill="url(#spine)"/>
-    <g stroke="#7A5C1E" stroke-width="3.4" stroke-linecap="round" opacity="0.55">
-      <path d="M 392 500 L 452 490" fill="none"/>
-      <path d="M 392 524 L 458 514" fill="none"/>
-      <path d="M 392 548 L 452 540" fill="none"/>
-      <path d="M 632 500 L 572 490" fill="none"/>
-      <path d="M 632 524 L 566 514" fill="none"/>
-      <path d="M 632 548 L 572 540" fill="none"/>
-    </g>
+    <circle cx="435" cy="524" r="30" fill="url(#medallion)" stroke="#7A5C1E" stroke-width="2" opacity="0.92"/>
+    <circle cx="589" cy="524" r="30" fill="url(#medallion)" stroke="#7A5C1E" stroke-width="2" opacity="0.92"/>
+    <circle cx="435" cy="524" r="19" fill="none" stroke="#FDF3D0" stroke-width="1.4" opacity="0.6"/>
+    <circle cx="589" cy="524" r="19" fill="none" stroke="#FDF3D0" stroke-width="1.4" opacity="0.6"/>
     <circle cx="512" cy="440" r="7" fill="#FDF6E3"/>
   </g>
   <g fill="#EAF6FF">

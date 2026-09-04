@@ -234,15 +234,21 @@ Nothing in `AppConfig` or any script in this repo references
 `rafeeq-aldarb-data` — it is not serving the app anything today, just
 sitting there accruing storage.
 
-**Not deleted without asking.** Deleting real cloud storage is exactly the
-kind of hard-to-reverse action this project's own working style (checkpoint,
-verify, don't act past what's confirmed) says to surface rather than assume.
-Left the bucket as-is; the owner should decide directly — deleting the whole
-bucket is the straightforward recommendation, since nothing in it is used —
-and can do it from the Cloudflare dashboard or ask the agent to do it via the
-same R2 API once confirmed. **Check the Cloudflare billing/usage page now,
-independent of the cleanup decision** — 10.66 GB stored is a real number
-worth confirming isn't already generating a charge.
+**✅ DELETED — 2026‑09‑04.** The owner asked directly for a cloud cleanup
+sweep ("cloud fkare... if not used now, delete it"); before acting, this
+bucket was re-listed fresh via `scripts/.env`'s R2 credentials to confirm
+nothing had changed since the inventory above — **same count, same size,
+newest object still dated 2026‑08‑27** — then the owner was asked to
+explicitly confirm given the size (a real, hard-to-reverse cloud-storage
+action), and confirmed. Deleted via `boto3`: paginated `delete_objects`
+across all 255 pages (1000 keys each) followed by `delete_bucket`, once
+every object delete returned zero errors. **All 254,971 objects and the
+bucket itself are gone.** `scripts/r2_check_old_bucket.py`-style
+inventory scripts used for this are in the session scratchpad, not
+committed (nothing left to re-run against). **Check the Cloudflare
+billing/usage page anyway** — 10.66 GB stored may have already generated
+a charge before this deletion; that's a billing-history question this
+repo can't answer.
 
 ## 8. Acceptance checklist
 

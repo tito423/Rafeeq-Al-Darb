@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -11,35 +12,33 @@ import '../../../onboarding/data/onboarding_state.dart';
 import '../../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../widgets/splash_lattice.dart';
 
-/// P3‑20 (later revisited, still P3‑20's slot in PHASE3.md): the branded
-/// splash beat shown right after the native launch screen hands off to
-/// Flutter — a dark navy field, a slow radial girih lattice, and a glowing
-/// gold badge holding **our own crescent+book mark** (not the old app's
-/// mosque icon). **Inspired by** the reference video's own splash frame
-/// (`design_refs/old_app_frames/frame_01.png`), deliberately not a
-/// reproduction of it — nothing in that frame is QuranFlash-derived (see
-/// the warning in PHASE3.md right above P3‑20, unlike the mushaf-catalog
-/// frame a few seconds later in the same video, which this project
-/// deliberately does not recreate), but the video's own frame is one flat,
-/// static image; this adds three things of its own instead of just
-/// matching it: a second lattice layer counter-rotating against the first
-/// (`SplashLattice`), a huge, soft echo of the app's own icon-crescent
-/// silhouette breathing in the backdrop, and a staggered fade/scale/rise
-/// entrance for the badge, name, and tagline instead of everything simply
-/// being present in frame one.
+/// P3‑20 (revisited by P3‑38, then again by P3‑39 — still P3‑20's slot in
+/// PHASE3.md): the branded splash beat shown right after the native launch
+/// screen hands off to Flutter.
+///
+/// P3‑39 gave this a real, literal splash **video**
+/// (`assets/branding/splash_intro.mp4`) — the owner's own request was
+/// explicit ("new video to use as splash screen"), not just a mood
+/// reference this time, and the clip already ends on a card carrying our
+/// exact app name and tagline, so it is played as-is rather than
+/// reinterpreted. It's muted (this is a silent brand beat, not a trailer),
+/// plays once, and a tap anywhere skips straight past it — a 10‑second
+/// clip with no skip would be a real annoyance on every cold start, so
+/// that affordance was added even though the owner didn't ask for it in
+/// those words. The original hand-built girih-lattice + glow-badge design
+/// (`SplashLattice`, `_GlowBadge` below) is kept as the fallback shown
+/// while the video is still decoding and if it ever fails to load — never
+/// a blank frame — plus what's still shown outright for reduced-motion
+/// users (system setting or the in-app "Motion effects" toggle), who skip
+/// both the video and the entrance animation entirely and land on the next
+/// screen immediately.
 ///
 /// This is a deliberate brand pause, not a loading gate: every async
 /// bootstrap step (`SharedPreferences`, translations, timezone data, the
 /// adhan/reminder services) already finishes in `main()` *before*
 /// `runApp()` — Android's own native launch screen is what covers that
 /// real wait. By the time this widget's first frame draws there is nothing
-/// left to wait for, so the only honest reason to hold here at all is the
-/// same couple of seconds any app spends on its own logo (long enough now
-/// to let the staggered entrance actually play out and settle), and
-/// reduced-motion (system setting or the in-app "Motion effects" toggle)
-/// skips the hold *and* the entrance entirely — everything just appears
-/// fully formed — rather than making the user endure a pointless
-/// animation.
+/// left to wait for.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -66,6 +65,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   );
   bool _navigated = false;
 
+  /// Null until the video has decoded its first frame — the lattice+badge
+  /// design underneath is what's visible until then (and stays visible for
+  /// good if this never becomes non-null, e.g. the asset failed to decode
+  /// on some device/codec combination).
+  VideoPlayerController? _video;
+
   @override
   void initState() {
     super.initState();
@@ -75,13 +80,45 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (motionOn) {
       _c.repeat();
       _intro.forward();
+      _initVideo();
     } else {
       _intro.value = 1; // reduced motion: appear fully formed, no reveal
+      Future<void>.delayed(Duration.zero, _proceed);
     }
-    Future<void>.delayed(
-      motionOn ? const Duration(milliseconds: 1900) : Duration.zero,
-      _proceed,
-    );
+  }
+
+  Future<void> _initVideo() async {
+    try {
+      final c = VideoPlayerController.asset('assets/branding/splash_intro.mp4');
+      await c.initialize();
+      await c.setVolume(0); // silent brand beat, no sound track of its own
+      await c.setLooping(false);
+      if (!mounted) {
+        await c.dispose();
+        return;
+      }
+      c.addListener(_onVideoTick);
+      setState(() => _video = c);
+      await c.play();
+      // Belt-and-braces: `_onVideoTick` should always catch the end first,
+      // but a decoder that never reports a clean completion must not strand
+      // the user on frame one forever.
+      Future<void>.delayed(c.value.duration + const Duration(seconds: 2), _proceed);
+    } catch (_) {
+      // Asset missing/undecodable on this device — fall back to the same
+      // fixed hold the hand-built badge design used before P3‑39.
+      Future<void>.delayed(const Duration(milliseconds: 1900), _proceed);
+    }
+  }
+
+  void _onVideoTick() {
+    final v = _video;
+    if (v == null || _navigated) return;
+    final value = v.value;
+    if (value.duration > Duration.zero &&
+        value.position >= value.duration - const Duration(milliseconds: 150)) {
+      _proceed();
+    }
   }
 
   void _proceed() {
@@ -108,6 +145,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void dispose() {
     _c.dispose();
     _intro.dispose();
+    _video?.removeListener(_onVideoTick);
+    _video?.dispose();
     super.dispose();
   }
 
@@ -129,54 +168,79 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       curve: const Interval(0.55, 1.0, curve: Curves.easeOut),
     );
 
+    final video = _video;
+    final videoReady = video != null && video.value.isInitialized;
+
     return Scaffold(
       backgroundColor: AppColors.night,
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          Positioned.fill(child: SplashLattice(animation: _c)),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ScaleTransition(
-                scale: Tween(begin: 0.7, end: 1.0).animate(badgeIn),
-                child: FadeTransition(
-                  opacity: badgeIn,
-                  child: _GlowBadge(animation: _c),
-                ),
-              ),
-              const SizedBox(height: 28),
-              _RiseIn(
-                animation: nameIn,
-                child: Text(
-                  'app.name'.tr(),
-                  style: const TextStyle(
-                    fontFamily: 'AmiriQuran',
-                    fontSize: 40,
-                    color: AppColors.textHigh,
-                    height: 1.3,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 6),
-              _RiseIn(
-                animation: taglineIn,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Text(
-                    'app.tagline'.tr(),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: 15,
-                      color: AppColors.gold,
+      body: GestureDetector(
+        // Tap anywhere to skip the intro video — never offered for the
+        // fallback design below, which is already short.
+        behavior: HitTestBehavior.opaque,
+        onTap: videoReady ? _proceed : null,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 260),
+          child: videoReady
+              ? SizedBox.expand(
+                  key: const ValueKey('video'),
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: video.value.size.width,
+                      height: video.value.size.height,
+                      child: VideoPlayer(video),
                     ),
                   ),
+                )
+              : Stack(
+                  key: const ValueKey('fallback'),
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned.fill(child: SplashLattice(animation: _c)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ScaleTransition(
+                          scale: Tween(begin: 0.7, end: 1.0).animate(badgeIn),
+                          child: FadeTransition(
+                            opacity: badgeIn,
+                            child: _GlowBadge(animation: _c),
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        _RiseIn(
+                          animation: nameIn,
+                          child: Text(
+                            'app.name'.tr(),
+                            style: const TextStyle(
+                              fontFamily: 'AmiriQuran',
+                              fontSize: 40,
+                              color: AppColors.textHigh,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        _RiseIn(
+                          animation: taglineIn,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(
+                              'app.tagline'.tr(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontFamily: 'AmiriQuran',
+                                fontSize: 15,
+                                color: AppColors.gold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
