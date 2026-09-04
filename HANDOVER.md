@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 18:49 — IN PROGRESS — resume here**
+**2026-09-04 18:50 — IN PROGRESS — resume here**
 
-Splash screen enhanced, inspired by (not copied from) the reference video: second counter-rotating girih rosette layer for depth, a huge soft echo of our own icon's crescent silhouette breathing in the backdrop, and a staggered scale/fade entrance for badge->name->tagline (reduced-motion still skips straight to fully-formed). Confirmed timing correctness via instrumented flutter run debugPrints (1932ms measured vs 1900ms coded) since cold-start latency variance made screenshot polling unreliable; confirmed the visual result via a temporary 9s-hold build, reverted after. Found+recorded a real gotcha: TaskStop on a backgrounded flutter run doesn't reliably kill the on-device process, causing several adb am start calls to silently resume a stale pre-splash instance. analyze clean, test 15/15.
+Released phase3-batch14-2026-09-04 APK (splash screen inspired-by-video enhancement: layered lattice, icon-crescent echo, staggered entrance). NEXT_SESSION_PROMPT.md updated with batch14 link and full details.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
