@@ -732,25 +732,109 @@ star pattern, gold circular badge, calligraphy) is generic Islamic-art
 styling with nothing QuranFlash-specific in it — safe to rebuild from
 scratch with our own mark and colours, and is tracked as P3-20 below.
 
-## P3-20 — Splash screen + early screens, rebuilt in the old style (new artwork)
+## P3-20 — Splash screen ✅ DONE, live-verified
 
-Native Android splash (`launch_background.xml`/theme, not a Flutter route —
-same mechanism this project already uses) styled like the video: a dark
-navy field, a slow radial geometric star lattice (girih-style, echoes
-`rgb_backdrop.dart`'s own lattice technique — reuse that approach, not a
-new one), a glowing gold circular badge holding **our own P3-1 crescent+
-book mark** (not the old mosque icon), "رفيق الدرب" in `AmiriQuran` below
-it, tagline "زاد المسلم اليومي ومصحف القلوب" (already `app.tagline`'s
-spirit — confirm wording matches or update the key) in gold. Not started.
+Two layers, since a native Android splash literally cannot animate (it's
+shown before the Flutter engine even attaches):
 
-## P3-21 — First-run onboarding: pick + download a mushaf edition (real 5, not 17)
+- **Native `launch_background.xml`** (all 4 density/theme variants) now
+  centres `@mipmap/ic_launcher` (our real P3-1 crescent+book mark) on the
+  existing navy field, instead of the blank navy screen it was before —
+  the one honest improvement available at this layer.
+- **A new Flutter `SplashScreen`** (`features/splash/`) takes over the
+  instant the engine attaches: a slow radial girih lattice
+  (`SplashLattice`, a bespoke `CustomPainter` — concentric rings + chords
+  joining every 5th point of a 16-point circle, echoing `rgb_backdrop.dart`'s
+  own low-alpha-stroke/slow-rotation *technique*, not its tiled-star
+  *shape*, since the reference frame is a single rosette, not a grid), a
+  breathing-glow gold badge around a bundled copy of the real app icon
+  (`assets/branding/app_mark.png` — a deliberate, documented exception to
+  the "don't bundle `assets/icon/`" rule, since this copy actually ships
+  at runtime), "رفيق الدرب" in `AmiriQuran`, and the tagline.
+- **`app.tagline` was dead** (grep confirmed zero call sites anywhere in
+  `lib/`) — repurposed it for the video's own exact wording "زاد المسلم
+  اليومي ومصحف القلوب" (+ translated for the other 4 locales) instead of
+  the generic feature-list string that was never actually shown anywhere.
+- **Honest about what the hold is for**: every async bootstrap step
+  (`SharedPreferences`, translations, timezone data, the adhan/reminder
+  services) already finishes in `main()` *before* `runApp()` — Android's
+  own native launch screen covers that real wait. By `SplashScreen`'s
+  first frame there is nothing left to wait for, so its ~1.4s hold is a
+  deliberate brand pause only, and is skipped entirely under reduced
+  motion (the in-app "Motion effects" toggle or the system accessibility
+  setting) rather than forcing a pointless animation on anyone who's
+  turned that off.
+- Then navigates (`pushReplacement`, no back-stack entry) to
+  `OnboardingScreen` on first run or straight to `AppShell` otherwise —
+  see P3-21.
 
-Ties directly into the already-tracked **P3-8 G4/G5** (mushaf edition
-picker + mandatory-feeling first download) — build it as the video shows
-*structurally* (a dedicated onboarding screen, a prominent "تحميل المصحف
-كاملاً الآن" action, a closing "ابدأ رحلتك الإيمانية 🚀" CTA) but scoped to
-this project's real 5 editions, each labelled by riwayah, no fabricated
-cover art. Not started.
+`flutter analyze`/`flutter test` clean. **Live-verified on `emulator-5554`**
+across three full install→launch cycles; a genuine Android XML bug was
+caught and fixed along the way (below).
+
+**A real build bug, not just a cosmetic one:** the native `launch_background.xml`
+files originally had a code comment containing "--" (em-dash-style), which
+Android's AAPT2 XML comment parser rejects outright (`the string "--" is
+not permitted within comments`) — this failed the Gradle build completely
+for all four density/theme variants, not a warning. Fixed by rewording the
+comments to avoid the double-hyphen; confirmed the rebuild succeeds.
+
+## P3-21 — First-run onboarding ✅ DONE, live-verified
+
+Ties into the already-tracked **P3-8 G4/G5** (pick + download a mushaf
+edition; first-install pick + download an image mushaf edition *and* a
+recitation, both "essential"). Built as a real, functional screen, not a
+mockup:
+
+- **Mushaf edition list** — the 5 real editions (Hafs/Shubah/Duri/Qalun/
+  Warsh), no fabricated cover art. Tapping a card's radio selects it as
+  the active reading edition (`selectedMushafEditionProvider`); the
+  download button/progress/pause/cancel is the *exact same*
+  `MushafPageService.prefetchEdition` job the Downloads screen already
+  used — not a second, decorative copy. `MushafDownloadTile` was pulled
+  out of `downloads_screen.dart` into a public, shared widget
+  (`features/downloads/presentation/widgets/`) for this reuse.
+- **Recitation section** (G5's "essential" second download) — a reciter
+  dropdown plus the exact same bulk-download card P3-27 already built,
+  likewise extracted to a public `FullRecitationCard` widget and reused
+  here unchanged.
+- **The forbidden 17-mushaf cover-art catalog was NOT rebuilt.** The
+  reference video's onboarding screen has a "تصفح أغلفة ومعاينات الـ 17
+  مصحفاً" button opening exactly that catalog — the same screen flagged in
+  the warning above P3-20 as strong evidence of QuranFlash-derived scanned
+  cover art. This project's onboarding has no such button and no cover
+  images at all, by design.
+- **Downloading is offered, not forced** — both are real background jobs
+  a user can equally start later from Downloads, so the closing "ابدأ
+  رحلتك الإيمانية 🚀" CTA never blocks on either finishing; it just marks
+  `onboarding.completed` (`SharedPreferences`) and replaces the route with
+  `AppShell`.
+
+**A real bug found live, not by static review:** the screen was first
+built wrapped in a hardcoded `Directionality(textDirection: TextDirection.rtl)`
+— correct for `book_text_reader_screen.dart`/`quran_screen.dart` (always-
+Arabic *content* regardless of UI language) but wrong here, since this
+screen's chrome should follow the ambient locale like the rest of the app.
+Confirmed live on the emulator (device/app locale = English): the English
+subtitle rendered with its trailing period bidi-flipped to the front, and
+"0 / 604 pages saved" rendered reversed as "pages saved 604 / 0". Fixed by
+removing the hardcoded `Directionality` entirely (letting it inherit the
+real ambient direction); both strings confirmed correct after the fix.
+
+`flutter analyze`/`flutter test` clean (translation parity included, +5
+new `onboarding.*` keys × 5 locales). **Live-verified on `emulator-5554`,
+device locale English:** fresh install → notification permission →
+onboarding renders correctly (title/subtitle/CTA in proper LTR order);
+selecting a different edition (Hafs → Shubah) moved the gold selection
+ring correctly; tapping Download on Shubah started a real prefetch job
+("Downloading 1 / 604" with working Pause/Cancel); scrolled to the
+recitation section — reciter dropdown showed مشاري العفاسي, the card
+showed real "0 / 114 Surah" status; tapped the CTA — navigated to the
+real `AppShell` Home screen. **Force-stopped and relaunched the app** (a
+true cold process start, confirmed via `ps -A` showing no running
+process beforehand) — onboarding was correctly **skipped**, landing
+directly on Home, confirming the `onboarding.completed` flag persists and
+is honoured on subsequent launches.
 
 ## P3-22 — Home: the animated interactive prayer card (frame-verified target)
 
@@ -1234,8 +1318,8 @@ regression from the rest of this session's Arabic-default testing.
 
 | # | Task | Status |
 |---|---|---|
-| P3-20 | Splash screen + early onboarding screens, restyled (new art) | queued, unblocked |
-| P3-21 | First-run mushaf pick+download onboarding (real 5 editions) | queued, unblocked (extends P3-8 G4/G5) |
+| P3-20 | Splash screen, restyled (new art) | ✅ **done, live-verified** — native splash icon + animated Flutter `SplashScreen` (girih lattice, glow badge, our own mark); a real AAPT2 build bug (`--` in an XML comment) found+fixed along the way |
+| P3-21 | First-run mushaf pick+download onboarding (real 5 editions) | ✅ **done, live-verified** — edition picker + real download reused from Downloads, essential recitation download reused from P3-27, onboarding correctly skipped on relaunch; a real hardcoded-RTL bidi bug found+fixed live |
 | P3-22 | Home: animated interactive prayer card (frame-verified target) | 🔶 built, analyze/test clean; fallback path live-verified, **populated path blocked on this emulator's location fix** (see notes) |
 | P3-23 | Icon replacement round 2 | ✅ **resolved — owner confirmed the P3-1 icon**, sent the exact same `ref_icon_installed.jpg` back as confirmation (byte-identical), not a new reference; no change needed |
 | P3-24 | Book download button → cancel state while downloading | ✅ **done, live-verified** |

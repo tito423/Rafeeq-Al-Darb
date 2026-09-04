@@ -1,7 +1,14 @@
 {
   "app": {
     "name": "Rafeeq Al-Darb",
-    "tagline": "Alcorão • Adhkar • Oração • Biblioteca"
+    "tagline": "O sustento diário do muçulmano, e um Alcorão para o coração"
+  },
+  "onboarding": {
+    "title": "Escolha seu Mushaf",
+    "subtitle": "Escolha sua riwayah preferida e baixe-a para leitura offline.",
+    "recitation_title": "Recitação em áudio",
+    "recitation_subtitle": "Escolha seu recitador favorito e baixe a recitação completa — você também pode fazer isso depois em Downloads.",
+    "cta": "Comece sua jornada de fé 🚀"
   },
   "common": {
     "coming_soon": "Em breve…",

@@ -1,7 +1,14 @@
 {
   "app": {
     "name": "Rafeeq Al-Darb",
-    "tagline": "Quran • Adhkar • Prayer • Library"
+    "tagline": "The Muslim's daily provision, and a Qur'an for the heart"
+  },
+  "onboarding": {
+    "title": "Choose your Mushaf",
+    "subtitle": "Pick your preferred riwayah, then download it for offline reading.",
+    "recitation_title": "Audio recitation",
+    "recitation_subtitle": "Pick your favourite reciter and download the full recitation — you can also do this later from Downloads.",
+    "cta": "Begin your journey of faith 🚀"
   },
   "common": {
     "coming_soon": "Coming soon…",

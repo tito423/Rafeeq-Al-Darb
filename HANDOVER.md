@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 11:52 — IN PROGRESS — resume here**
+**2026-09-04 12:28 — IN PROGRESS — resume here**
 
-Released phase3-batch9-2026-09-04 APK (P3-29 visual redesign complete). NEXT_SESSION_PROMPT.md updated: P3-29 both parts done, icon+azkar/tasbeeh confirmations noted, batch9 link, splash/onboarding video ref note + QuranFlash catalog warning kept prominent.
+P3-20+P3-21 DONE: new branded SplashScreen (girih lattice CustomPainter, glowing gold badge w/ our own icon mark, native launch_background icon) + first-run OnboardingScreen (real 5-edition mushaf picker+download reusing MushafDownloadTile, essential recitation download reusing FullRecitationCard from P3-27, both extracted to public shared widgets). No QuranFlash 17-mushaf catalog rebuilt (deliberate). Two real bugs found+fixed live: AAPT2 XML comment '--' build failure, and hardcoded-RTL Directionality causing English bidi mis-ordering. Live-verified full flow on emulator incl. cold-relaunch onboarding-skip. +6 keys x5 locales (onboarding.*), tagline repurposed (was dead key) x5 locales. analyze clean, test 15/15.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

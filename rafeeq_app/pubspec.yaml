@@ -95,9 +95,12 @@ flutter:
     - assets/data/mushaf/
     - assets/data/catalogs/
     - assets/audio/adhan/
+    - assets/branding/
     # assets/icon/ is intentionally NOT bundled — the PNGs there are consumed
     # by flutter_launcher_icons at build time only, never at runtime. Bundling
-    # them would just bloat the install.
+    # them would just bloat the install. assets/branding/app_mark.png (P3‑20)
+    # is a deliberate exception: a copy of the same source icon art, actually
+    # shown at runtime on the new splash screen's glowing badge.
 
   fonts:
     - family: AmiriQuran
