@@ -25,7 +25,8 @@ const _prayerLabelKeys = {
 
 /// Home tab — real prayer times (once location is granted) + quick access.
 class HomeScreen extends ConsumerStatefulWidget {
-  /// [onNavigate] is the shell tab index (1=quran, 2=azkar, 3=hadith, 4=settings).
+  /// [onNavigate] is the shell tab index — see `AppTab`
+  /// (`app/shell/tab_request_provider.dart`) for the named constants.
   final void Function(int tab) onNavigate;
 
   const HomeScreen({super.key, required this.onNavigate});

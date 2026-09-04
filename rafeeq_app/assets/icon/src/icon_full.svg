@@ -11,25 +11,54 @@
       <stop offset="55%" stop-color="#4FA9DE" stop-opacity="0.10"/>
       <stop offset="100%" stop-color="#4FA9DE" stop-opacity="0"/>
     </radialGradient>
+    <!-- P3‑4 round 2 redesign: the owner sent a real reference photo of the
+         home-screen icon he wants (a small, compressed phone-screenshot
+         crop, ~173x228 — not clean enough to trace directly, so this is
+         rebuilt as fresh vector art matching its composition/palette, same
+         approach the original P3‑1 build used). The crescent reads as a
+         moodier "cosmic swirl" — dark navy rim, a bright blue-white glow
+         core, and warm gold wisps trailing near the lower tip — rather than
+         the flat single-direction gradient the previous version used; the
+         book sits inside it in cool blue tones instead of gold, so it reads
+         as part of the same nebula rather than a separate gold object. -->
     <linearGradient id="crescent" x1="0.1" y1="0" x2="0.95" y2="1">
-      <stop offset="0%" stop-color="#BFEBFF"/>
-      <stop offset="35%" stop-color="#6FC6EE"/>
-      <stop offset="70%" stop-color="#3E8FC4"/>
-      <stop offset="100%" stop-color="#E8C96A"/>
+      <stop offset="0%" stop-color="#0A1B2E"/>
+      <stop offset="30%" stop-color="#2E6FA8"/>
+      <stop offset="65%" stop-color="#1B4A78"/>
+      <stop offset="100%" stop-color="#0D2740"/>
     </linearGradient>
+    <radialGradient id="crescentCore" cx="62%" cy="32%" r="55%">
+      <stop offset="0%" stop-color="#DFF4FF" stop-opacity="0.95"/>
+      <stop offset="35%" stop-color="#8FD3F5" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#4E86C9" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#4E86C9" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="crescentWisp" cx="30%" cy="78%" r="42%">
+      <stop offset="0%" stop-color="#F5D488" stop-opacity="0.85"/>
+      <stop offset="45%" stop-color="#D9973F" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#D9973F" stop-opacity="0"/>
+    </radialGradient>
     <linearGradient id="page" x1="0" y1="0" x2="0.2" y2="1">
-      <stop offset="0%" stop-color="#F7E7AC"/>
-      <stop offset="55%" stop-color="#E1BF53"/>
-      <stop offset="100%" stop-color="#B4841F"/>
+      <stop offset="0%" stop-color="#CFEBFB"/>
+      <stop offset="55%" stop-color="#6FA9D6"/>
+      <stop offset="100%" stop-color="#2C5E93"/>
     </linearGradient>
     <linearGradient id="spine" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#FDF6E3"/>
-      <stop offset="100%" stop-color="#D9B24A"/>
+      <stop offset="100%" stop-color="#E8C96A"/>
     </linearGradient>
 
     <g id="star">
       <circle r="4.5"/>
     </g>
+
+    <!-- Same path+transform as the crescent fill below, reused as a clip so
+         the glow/wisp overlays that create the "cosmic swirl" look never
+         paint outside the crescent's own silhouette. -->
+    <clipPath id="crescentClip">
+      <path transform="translate(858 122) scale(-27.5 27.5)"
+            d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </clipPath>
 
     <g id="mark">
       <!-- crescent: a single traced outline (outer arc + inner arc sharing
@@ -40,6 +69,14 @@
            horizontally so the opening faces right, toward the book. -->
       <path fill="url(#crescent)" transform="translate(858 122) scale(-27.5 27.5)"
             d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      <!-- Cosmic-swirl overlays (P3‑4 round 2): a bright blue-white glow core
+           plus a warm gold wisp near the lower tip, both clipped to the
+           crescent so they read as texture *within* the moon, not a glow
+           floating outside it. -->
+      <g clip-path="url(#crescentClip)">
+        <rect x="220" y="60" width="700" height="700" fill="url(#crescentCore)"/>
+        <rect x="220" y="60" width="700" height="700" fill="url(#crescentWisp)"/>
+      </g>
       <!-- open book, centered slightly low, sitting in the crescent's embrace -->
       <g>
         <path d="M 512 452

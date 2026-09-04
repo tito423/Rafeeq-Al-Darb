@@ -6,14 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// nothing caught until it was traced by hand; every screen that jumps to
 /// a specific tab should use these constants instead of a bare int, so the
 /// next tab insertion is a compile-time-visible one-line change here
-/// rather than a silent runtime misnavigation.
+/// rather than a silent runtime misnavigation. P3‑4 round 2 inserted
+/// `tasbeeh` the same safe way, right after `azkar`.
 abstract final class AppTab {
   static const home = 0;
   static const quran = 1;
   static const prayer = 2;
   static const azkar = 3;
-  static const library = 4;
-  static const settings = 5;
+  static const tasbeeh = 4;
+  static const library = 5;
+  static const settings = 6;
 }
 
 /// Cross-route "switch the bottom-nav tab to N" seam.

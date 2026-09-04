@@ -1406,6 +1406,94 @@ Verified with a real `flutter build apk --debug` (not just `flutter
 analyze`, which can't see manifest/resource errors) since this touches
 native Android resources. `flutter analyze` clean, `flutter test` 15/15.
 
+## P3-38 — Round-3 feedback: app icon v2, Azkar/Tasbeeh split into separate tabs, splash+app-store frames ✅ DONE, live-verified
+
+Owner sent a new set of real references (`design_refs/round2_2026-09-04/`
+— 4 images + a video, 25 frames extracted for review) plus a follow-up
+clean icon photo, with four concrete asks:
+
+1. **"Use the video as splash screen, first frame or two for the app
+   store."** Reviewed all 25 extracted frames carefully. The video's own
+   splash frames (girih lattice + gold circle + the **old mosque icon**)
+   match what P3-20 already built from the earlier video — no new
+   splash-layout change needed. What *did* change: once the new app icon
+   (below) was live, `SplashScreen`'s own badge picked it up automatically
+   (it reads the same `assets/branding/app_mark.png` the launcher icon is
+   built from), so a fresh screenshot of **our own real splash** —not the
+   old app's mosque-icon frame — was saved as the app-store candidate:
+   `design_refs/app_store_candidates/splash_frame_1.png`, captured live
+   from `emulator-5554`, not a mockup.
+2. **Tasbeeh style** — already matched (P3-12, confirmed by the owner
+   round 2). Re-verified live in this pass, no changes needed.
+3. **Hadith card style** — already done earlier this same round (see
+   P3-4's writeup above, the `_OrnateFrame` gold-corner-flourish card).
+4. **"Separate azkar from misbha, put it in the bottom nav bar."** The
+   owner's real screenshots of the old app's own bottom nav
+   (`ref_azkar_hub_v2.jpg`/`ref_tasbeeh_v2.jpg`) clearly show **7** tabs —
+   المسبحة as its own tab, not a sub-tab under الأذكار like this app had
+   it. Split `azkar_screen.dart`'s `DefaultTabController`/`TabBarView`
+   apart: `AzkarScreen` is now just the sections grid with its own
+   `AppBar`, and a new `TasbeehScreen` (`tasbeeh_screen.dart`) carries the
+   whole P3-12 counter UI unchanged. The shared reminders/haptics settings
+   sheet (used by both) was pulled into its own
+   `azkar_settings_sheet.dart` (public `AzkarSettingsButton`) so neither
+   screen needs a second copy. `AppShell` gained the 7th
+   `NavigationDestination` (∞ `Icons.all_inclusive`, between الأذكار and
+   المكتبة); `AppTab` (`tab_request_provider.dart`) got `tasbeeh` inserted
+   the same safe, named-constant way P3-16 already established — every
+   other `AppTab.*` call site (`downloads_screen.dart`, `khatma_screen.dart`)
+   kept working unchanged since they reference the names, not raw ints.
+   +1 key (`nav.tasbeeh`) × 5 locales.
+
+**App icon v2, genuinely redesigned — a fifth concrete ask that arrived
+mid-turn.** The owner first sent a blurry install-screen video frame that
+looked like a different icon; rather than guess-replacing an icon he'd
+explicitly confirmed earlier the same day, asked directly — he chose to
+send a clean reference photo instead. That photo (173×228, a phone
+home-screen crop — still not clean vector-source quality, but clear
+enough to read composition/palette) showed a moodier "cosmic swirl"
+version of the same crescent+book mark: a blue-white glow core and a warm
+gold wisp inside the crescent (rather than the old flat single-direction
+gradient), and the book itself in cool blue tones instead of solid gold.
+Rebuilt `assets/icon/src/icon_full.svg`/`icon_fg.svg` as fresh vector art
+matching that composition (same reproducible pipeline P3-1 established:
+hand-authored SVG, headless-Chrome render, `flutter_launcher_icons`) —
+not a pixel-crop of the low-res source, which wouldn't have produced a
+usable 1024² asset. Added a `crescentCore`/`crescentWisp` radial-gradient
+overlay pair, clipped to the exact same crescent path already used for
+the base fill, so the glow/wisp read as texture *inside* the moon rather
+than a halo floating outside its silhouette. Also refreshed
+`assets/branding/app_mark.png` (the splash screen's own icon copy, P3-20)
+so it doesn't go stale relative to the real launcher icon.
+
+**A real bug found live, twice, while regenerating the icon:**
+`icon_fg.svg`'s existing comment (`... this with --default-background-color=...`,
+present before this session's edit) contains a literal double-hyphen — SVG
+is XML, and XML forbids `--` anywhere inside a comment body. Chrome's
+headless screenshot renderer doesn't render the SVG at all when this
+happens — it renders an **HTML error page instead**, which got silently
+written to `icon_fg.png` as if it were a real icon until viewed by hand.
+This is the same bug class as the `launch_background.xml` fix earlier in
+this session, in a different file. Fixed by rewording the comment to
+avoid the literal sequence — caught a **second** instance of the exact
+same mistake immediately after, in the very sentence added to explain the
+first one (the fix's own doc comment quoted `"--"` as an example,
+recreating the violation it was describing). Both PNGs regenerated clean
+after; alpha sanity-checked on `icon_fg.png` per the README's own
+prescribed check (`A=0` at a transparent corner pixel, confirmed via a
+`System.Drawing.Bitmap` read).
+
+`flutter analyze` clean, `flutter test` 15/15. **Live-verified on
+`emulator-5554`** across a full fresh-install cycle: the new icon renders
+correctly at native-splash time (the centred `@mipmap/ic_launcher`, before
+Flutter even attaches), inside `SplashScreen`'s own glow badge, and in the
+regenerated `mipmap-xxxhdpi/ic_launcher.png` directly. The 7-tab bottom
+nav fits without truncation or overflow at this device's width; tapped
+into both الأذكار (sections grid, own `AppBar`, no leftover `TabBar`) and
+المسبحة (full counter UI, own `AppBar` + settings gear) and confirmed both
+work as fully independent screens, not remnants of the old tabbed
+structure.
+
 **Live-verified on `emulator-5554`:** this AVD's actual system locale is
 `en-US` (`adb shell getprop ro.product.locale`) — a fresh install (after
 `adb uninstall`) opened the whole app in **English** by default, no
@@ -1444,3 +1532,4 @@ regression from the rest of this session's Arabic-default testing.
 | P3-35 | Ayah card: single play/stop toggle button | ✅ **done, live-verified** |
 | P3-36 | Home: hadith reroll shouldn't scroll the page | ✅ **done, live-verified** — root cause was the card collapsing to a spinner mid-reroll, not a scroll bug at all |
 | P3-37 | App display name follows device system language on first run | ✅ **done, live-verified** |
+| P3-38 | Round-3: app icon v2, Azkar/Tasbeeh split into separate bottom-nav tabs, splash+app-store frames | ✅ **done, live-verified** — icon rebuilt as fresh vector art from a real reference photo (a real XML double-hyphen bug in `icon_fg.svg` found+fixed live, twice); Azkar/Tasbeeh now 7 separate bottom-nav tabs, both confirmed working independently |

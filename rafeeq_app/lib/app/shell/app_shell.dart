@@ -6,6 +6,7 @@ import '../../core/models/prayer_times.dart';
 import '../../core/services/prayer_status_notification.dart';
 import '../../features/adhan/data/prayer_status_enabled_provider.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
+import '../../features/azkar/presentation/screens/tasbeeh_screen.dart';
 import '../../features/home/data/prayer_controller.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
@@ -15,8 +16,12 @@ import '../../features/settings/presentation/screens/settings_screen.dart';
 import 'tab_request_provider.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
-/// sections (Home, Quran, Azkar, Library, Settings). "Library" holds the
-/// Hadith hub and the books catalog.
+/// sections (Home, Quran, Prayer, Azkar, Tasbeeh, Library, Settings).
+/// "Library" holds the Hadith hub and the books catalog. P3‑4 round 2:
+/// Tasbeeh used to be a sub-tab inside Azkar; the owner's real reference
+/// screenshots of the old app's own bottom nav show it as its own separate
+/// tab, so it was split out (`AppTab`/`tab_request_provider.dart` tracks
+/// the indices).
 ///
 /// Also the single place the persistent "next prayer" status card (P2‑6) is
 /// kept in sync: whenever the prayer times resolve, the opt-in toggle flips,
@@ -84,6 +89,7 @@ class _AppShellState extends ConsumerState<AppShell>
       const QuranScreen(),
       const QiblaScreen(),
       const AzkarScreen(),
+      const TasbeehScreen(),
       const LibraryScreen(),
       const SettingsScreen(),
     ];
@@ -113,6 +119,11 @@ class _AppShellState extends ConsumerState<AppShell>
             icon: const Icon(Icons.auto_awesome_outlined),
             selectedIcon: const Icon(Icons.auto_awesome),
             label: 'nav.azkar'.tr(),
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.all_inclusive_outlined),
+            selectedIcon: const Icon(Icons.all_inclusive),
+            label: 'nav.tasbeeh'.tr(),
           ),
           NavigationDestination(
             icon: const Icon(Icons.library_books_outlined),
