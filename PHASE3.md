@@ -1172,14 +1172,14 @@ regression from the rest of this session's Arabic-default testing.
 | P3-20 | Splash screen + early onboarding screens, restyled (new art) | queued, unblocked |
 | P3-21 | First-run mushaf pick+download onboarding (real 5 editions) | queued, unblocked (extends P3-8 G4/G5) |
 | P3-22 | Home: animated interactive prayer card (frame-verified target) | 🔶 built, analyze/test clean; fallback path live-verified, **populated path blocked on this emulator's location fix** (see notes) |
-| P3-23 | Icon replacement round 2 | **blocked on owner's reference image** |
+| P3-23 | Icon replacement round 2 | ✅ **resolved — owner confirmed the P3-1 icon**, sent the exact same `ref_icon_installed.jpg` back as confirmation (byte-identical), not a new reference; no change needed |
 | P3-24 | Book download button → cancel state while downloading | ✅ **done, live-verified** |
 | P3-25 | Downloads overview rows jump to their own tab | ✅ **done, live-verified** |
 | P3-26 | Persistent prayer notification still reported absent | **blocked on live device** (see P3-13/P3-19) |
 | P3-27 | "Download full recitation" card under the reciter picker | ✅ **done, live-verified** |
 | P3-28 | Mushaf edition thumbnails | queued, **needs a per-edition licence/sourcing pass first** (see the QuranFlash warning above) |
 | P3-29 | Book text reader nav/visual redesign | 🔶 nav part ✅ **done, live-verified** (swipe + fast-jump slider, a real `SelectionArea`-vs-`GestureDetector` bug found+fixed along the way); visual part still open — **ask the owner to resend the Shamela reference image** |
-| P3-30 | "Azkar/Tasbeeh still old" | likely stale — **ask the owner to re-check on the batch-2+ APK** before rebuilding |
+| P3-30 | "Azkar/Tasbeeh still old" | ✅ **confirmed resolved by the owner** — sent real-device screenshots of both, byte-identical to the earlier `ref_azkar_hub.jpg`/`ref_tasbeeh.jpg` reference images, confirming the shipped redesigns match |
 | P3-31 | ~20-source تفسير download section | queued, **needs a research/licence pass first**, same rigor as every other content source |
 | P3-32 | Ayah-end marker misaligned in text mode | ✅ **done, live-verified** — `PlaceholderAlignment.middle` → `.baseline` |
 | P3-33 | Tafsir tab → single dropdown + inline download | 🔶 dropdown ✅ **done, live-verified**; inline download intentionally deferred — no real per-source download mechanism exists yet, see **P3-31** |

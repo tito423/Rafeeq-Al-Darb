@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 03:07 — IN PROGRESS — resume here**
+**2026-09-04 11:07 — IN PROGRESS — resume here**
 
-Safety-net checkpoint: released phase3-batch8-2026-09-04 APK (P3-8 surah-jump strip, live-verified; P3-15 investigation findings). NEXT_SESSION_PROMPT.md fully rewritten with a comprehensive, accurate status summary covering everything done across this extended session (~20 items live-verified) - new APK link + reorganized done/verified-without-code/blocked/untouched sections.
+Owner confirmed via real-device screenshots: P3-23 icon approved (sent the exact same ref_icon_installed.jpg back, byte-identical - confirmation not a new reference) and P3-30 Azkar/Tasbeeh redesigns confirmed matching (same for ref_azkar_hub.jpg/ref_tasbeeh.jpg). New ref_shamela_reader.jpg saved to design_refs/ for P3-29's book reader visual redesign, now unblocked with an explicit ask: 'shamela style but follow our theme coloring'. Docs only, no code change this step.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
