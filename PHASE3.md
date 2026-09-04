@@ -36,7 +36,7 @@ Reference images: `design_refs/ref_tasbeeh.jpg`, `ref_azkar_hub.jpg`,
 | P3‑3 | RGB theme restyle toward the tasbeeh reference's palette | ✅ **done, live-verified** — calmer near-black backdrop, glow rings instead of filled blobs, sparse star-dots instead of a tiled grid; a real crash (unrelated to the restyle itself, in P3-20/21's navigation code) found+fixed along the way |
 | P3‑4 | Home screen redesign (RGB info card, per-card Islamic pattern bg, interactive prayer card, hadith/khatma/continue-reading cards) | 🔶 header card, prayer card (**P3-22**), ornate hadith card, and continue-reading card all ✅ done + live-verified; only the app-wide per-card Islamic-pattern background pass (a much larger separate task) still open |
 | P3‑5 | **Login / accounts — architecture decision** | ✅ **answered: optional** (guest mode stays default, sign-in adds sync) — not yet built |
-| P3‑6 | Khatma card bugs + redesign | 🔶 nav bug fixed, undo added, duplicate label removed; full visual redesign still open — **real reference finally received** (`design_refs/khatma_app_ref/`, a competing app's own خطمة screens), unblocking this after being stuck all session for lack of one |
+| P3‑6 | Khatma card bugs + redesign | ✅ **done, live-verified** — nav bug fixed, undo added, duplicate label removed, and (round 2, once the owner's real reference screenshots arrived) the full redesign: real surah/ayah/page ranges resolved from actual mushaf data, a khatma can start from any juz, previous/upcoming portion counts, and a real two-step "ختمة جديدة" wizard with duration↔daily-amount live linking |
 | P3‑7 | Adhan: confirmed real bugs + feature requests | 🔶 auto-play-on-select DONE; bug half **blocked on live device/logcat** (see P3‑19 for a real, concrete Android-14 lead found by code review) |
 | P3‑8 | Mushaf reader: confirmed real bugs + feature requests | 🔶 surah-jump strip ✅ done + live-verified, caching re-verified as not-a-bug (see notes), toolbar captions done (P3‑34); pinch-zoom needs a live gesture check (code already there); first-open edition prompt + first-install onboarding still open (ties to P3‑21) |
 | P3‑9 | Search & tafsir correctness bugs | 🔶 both search bugs fixed; ✅ **tafsir-ayah-link fixed — was a major bug: ~83% of the Quran showed an earlier ayah's tafsir, plus one whole source was mislabeled (real content = Ibn Kathir, not Jalalayn) — full data rebuild, live-verified**; non-Hafs-gating still open |
@@ -281,6 +281,68 @@ signed-in" migration path, and how big this task actually is.
   inside/on the button), and the full redesign to `design_refs/ref_home.jpg`'s
   compact card language (no image of the specific "ختمة" app referenced was
   attached — that reference image is the closer, actually-in-hand one).
+
+### P3‑6 round 2 — the full redesign, ✅ DONE, live-verified
+
+The duplicated-label issue above resolved itself along the way (the new
+create flow has one "ختمة جديدة"/"New khatma" affordance total — the FAB
+only, no second button competing with it). The real work: the owner's
+four real "ختمة" app reference screenshots
+(`design_refs/khatma_app_ref/`) finally arrived this round, unblocking
+the redesign this section had been waiting on all session.
+
+**Data model gained two fields, not just a UI reskin.** `Khatma` gained
+`startPage` (a khatma can now start from a chosen juz, not only page 1 —
+the reference's own "الرجاء تحديد المكان ... الذي تريد أن تبدأ منه
+الختمة" step) and `portionsRead` (an honest count of completed "أتممت
+القراءة" taps, the reference's "الأوراد السابقة" — not a derived
+estimate). Every page-count formula (`progress`, `duePages`,
+`currentPage`, the new `totalPagesInPlan`/`portionsRemaining`) is
+relative to `startPage` now, not hardcoded to page 1, so a khatma
+started mid-mushaf still reports honest numbers. Both new fields default
+safely for every khatma saved before this change (`startPage: 1`,
+`portionsRead: 0` — exactly how they already behaved).
+
+**Home's card is now the reference's own "الورد الحالي" screen**, not a
+percent-ring summary: today's portion resolved into real surah/ayah/page
+boundaries via a new `resolveKhatmaPortionRange` (`khatma_range.dart`,
+backed by the real `ayahsOfPage` lookup already used elsewhere in the
+app, never fabricated), the juz label, the opening ayah's own Arabic
+text shown as a preview (matching the reference's "من قوله تعالى" +
+ayah-text presentation), a linear progress bar, and the honest
+"Previous portions / Upcoming portions" counts. Two separate buttons
+now, matching the reference's actual interaction — "افتح المصحف" only
+navigates to the page (no longer marks it read in the same tap, unlike
+the old single-button design), "أتممت القراءة" is the one that actually
+records the portion as read; that's a real behavioural improvement, not
+just a visual one, since the old one-tap-does-both design didn't give
+the reader a chance to actually read before it counted.
+
+**"ختمة جديدة" is now a real two-step wizard**, matching the reference's
+own two dedicated screens: step 1 — "من أين تريد أن تبدأ؟" with a
+dropdown (بداية المصحف, or any of the 30 أجزاء); step 2 — the khatma's
+duration and its daily portion size are *linked live*: editing either
+one recomputes the other (`_onDurationChanged`/`_onAmountChanged` in
+`khatma_screen.dart`), exactly the reference's "حدد المدة ... أو كمية
+الورد اليومي — تغيير أي منهما يحدّث الآخر". **One deliberate, documented
+scope cut:** the reference also offers quarter-hizb precision for the
+daily amount (ربع/ربعان/... حزب); this app's mushaf DB only has juz
+boundaries, not hizb/quarter ones, so faking that precision without real
+page numbers to back it would be dishonest — the unit choice here is
+honestly limited to صفحات/جزء instead.
+
+`flutter analyze` clean, `flutter test` 15/15 (17 new translation keys ×
+5 locales, parity holds). **Live-verified on `emulator-5554`, the full
+real flow, not just individual pieces:** created a khatma from the new
+wizard (30→32 days linked correctly to 19 pages/day after two duration
+taps), landed on Home showing "Juz 1" / the real opening ayah text of
+al-Fātiḥah / "Surah al-Fātiḥah — Ayah 1, Page 1" through "Surah
+al-Baqarah — Ayah 126, Page 19" / "Previous portions: 0" / "Upcoming
+portions: 32", tapped "I've finished reading", and watched it correctly
+advance to the *next* real range (Surah al-Baqarah Ayah 127–237, pages
+20–38, a different real ayah text shown), "Previous portions: 1" /
+"Upcoming portions: 31", the button disable into "✓ Read today", and the
+undo snackbar appear — a complete, real, live cycle, not a mockup.
 
 ## P3‑7 — Adhan
 
@@ -1659,15 +1721,14 @@ actual home-screen launcher icon and the splash badge, both showing the
 full circle with even margins, the exact photo pixels, "EST. 1445" text
 and all, not a redrawn approximation.
 
-**Khatma-card redesign (P3-6) — reference received, not yet built.** The
-four real competing-app "ختمة" screenshots the owner finally sent
-(`design_refs/khatma_app_ref/`, unblocking P3-6 after being stuck all
-session for lack of exactly this reference) are saved and reviewed, but
-building the actual redesign is tracked as open work below, not silently
-dropped — it's a genuinely large feature (a richer daily-portion model
-with explicit start/end ranges, plus a whole "ختمة جديدة" creation
-wizard), deliberately left for a following session rather than rushed in
-alongside everything else this round.
+**Khatma-card redesign (P3-6) — reference received, and built later the
+same session.** The four real competing-app "ختمة" screenshots the owner
+sent (`design_refs/khatma_app_ref/`, unblocking P3-6 after being stuck
+all session for lack of exactly this reference) were saved and reviewed
+here; the actual build — the richer daily-portion model with real
+start/end ranges, plus the "ختمة جديدة" creation wizard — followed once
+the owner asked what was still unfinished. Full writeup under P3‑6's own
+section above ("P3‑6 round 2").
 
 **Keystore blocker dropped.** Every earlier mention of "needs a release
 keystore before a real store submission" across `NEXT_SESSION_PROMPT.md`

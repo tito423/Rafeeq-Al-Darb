@@ -202,7 +202,7 @@ class _KhatmaTile extends StatelessWidget {
                     children: [
                       Text(
                         'khatma.pages_read_of'
-                            .tr(args: ['${khatma.pagesRead}', '${Khatma.totalPages}']),
+                            .tr(args: ['${khatma.pagesRead}', '${khatma.totalPagesInPlan}']),
                         style: theme.textTheme.titleSmall,
                       ),
                       Text(
@@ -301,6 +301,20 @@ class _CompletedTile extends StatelessWidget {
   }
 }
 
+enum _AmountUnit { pages, juz }
+
+/// P3‑6 redesign: a real two-step wizard, matching the owner's actual
+/// reference app's own "ختمة جديدة" flow (`design_refs/khatma_app_ref/
+/// 2_new_khatma_start.jpg` + `3_new_khatma_duration.jpg`) — step 1 picks
+/// *where* the khatma starts (the reference's own "الرجاء تحديد المكان أو
+/// الجزء الذي تريد أن تبدء منه الختمة"), step 2 links the khatma's
+/// duration and its daily portion size so editing either one recomputes
+/// the other (the reference's "حدد المدة ... أو كمية الورد اليومي" — two
+/// views of the same rate). The reference also offers quarter-hizb
+/// precision for the daily amount; this app has no hizb/quarter boundary
+/// data in its mushaf DB (only juz boundaries), so the unit choice here is
+/// honestly limited to صفحات/جزء rather than faking finer precision it
+/// can't actually back with real page numbers.
 class _CreateKhatmaSheet extends ConsumerStatefulWidget {
   const _CreateKhatmaSheet();
 
@@ -309,15 +323,81 @@ class _CreateKhatmaSheet extends ConsumerStatefulWidget {
 }
 
 class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
-  KhatmaMode _mode = KhatmaMode.dailyPages;
-  int _dailyPages = 4;
-  int _dailyJuz = 1;
-  DateTime? _targetDate;
+  int _step = 0;
+
+  // Step 1 — where to start.
+  int? _startJuz; // null = بداية المصحف (page 1)
+
+  // Step 2 — linked duration/amount. _dailyAmount starts consistent with
+  // _durationDays (recomputed once real mushaf data is available in
+  // didChangeDependencies below) rather than an arbitrary pair of numbers
+  // that wouldn't actually multiply out to 604 pages.
+  _AmountUnit _unit = _AmountUnit.pages;
+  int _durationDays = 30;
+  int _dailyAmount = 21;
+  bool _amountInitialized = false;
+
   TimeOfDay? _reminder;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_amountInitialized) return;
+    final mushaf = ref.read(mushafDataProvider).valueOrNull;
+    if (mushaf == null) return;
+    _amountInitialized = true;
+    final plan = _totalPlan(mushaf, _startPage(mushaf));
+    _dailyAmount = (plan / _durationDays).ceil().clamp(1, plan);
+  }
+
+  int _startPage(MushafData? mushaf) {
+    final juz = _startJuz;
+    if (juz == null || mushaf == null) return 1;
+    return mushaf.juzStartPages[juz] ?? 1;
+  }
+
+  int _startJuzNumber(MushafData? mushaf, int startPage) {
+    if (mushaf == null) return 1;
+    var juz = 1;
+    for (final entry in mushaf.juzStartPages.entries) {
+      if (entry.value <= startPage) juz = juz < entry.key ? entry.key : juz;
+    }
+    return juz;
+  }
+
+  int _totalPlan(MushafData? mushaf, int startPage) {
+    if (_unit == _AmountUnit.pages) return Khatma.totalPages - startPage + 1;
+    final startJuz = _startJuzNumber(mushaf, startPage);
+    return 30 - startJuz + 1;
+  }
+
+  void _onDurationChanged(int v, MushafData? mushaf) {
+    setState(() {
+      _durationDays = v;
+      final plan = _totalPlan(mushaf, _startPage(mushaf));
+      _dailyAmount = (plan / v).ceil().clamp(1, plan);
+    });
+  }
+
+  void _onAmountChanged(int v, MushafData? mushaf) {
+    setState(() {
+      _dailyAmount = v;
+      final plan = _totalPlan(mushaf, _startPage(mushaf));
+      _durationDays = (plan / v).ceil().clamp(1, 3650);
+    });
+  }
+
+  void _onUnitChanged(_AmountUnit u, MushafData? mushaf) {
+    setState(() {
+      _unit = u;
+      final plan = _totalPlan(mushaf, _startPage(mushaf));
+      _dailyAmount = (plan / _durationDays).ceil().clamp(1, plan);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final gold = AppColors.gold;
+    final mushaf = ref.watch(mushafDataProvider).valueOrNull;
     return Padding(
       padding: EdgeInsets.only(
         left: 18,
@@ -329,106 +409,208 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('khatma.new'.tr(), style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 16),
-          SegmentedButton<KhatmaMode>(
-            segments: [
-              ButtonSegment(
-                value: KhatmaMode.dailyPages,
-                label: Text('khatma.mode_pages'.tr()),
-              ),
-              ButtonSegment(
-                value: KhatmaMode.dailyJuz,
-                label: Text('khatma.mode_juz'.tr()),
-              ),
-              ButtonSegment(
-                value: KhatmaMode.targetDate,
-                label: Text('khatma.mode_date'.tr()),
-              ),
-            ],
-            selected: {_mode},
-            onSelectionChanged: (s) => setState(() => _mode = s.first),
-          ),
-          const SizedBox(height: 18),
-          if (_mode == KhatmaMode.dailyPages) _Stepper(
-            label: 'khatma.pages_per_day'.tr(),
-            value: _dailyPages,
-            min: 1,
-            max: 30,
-            onChanged: (v) => setState(() => _dailyPages = v),
-          ),
-          if (_mode == KhatmaMode.dailyJuz) _Stepper(
-            label: 'khatma.juz_per_day'.tr(),
-            value: _dailyJuz,
-            min: 1,
-            max: 5,
-            onChanged: (v) => setState(() => _dailyJuz = v),
-          ),
-          if (_mode == KhatmaMode.targetDate)
-            OutlinedButton.icon(
-              onPressed: () async {
-                final picked = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now().add(const Duration(days: 30)),
-                  firstDate: DateTime.now().add(const Duration(days: 1)),
-                  lastDate: DateTime.now().add(const Duration(days: 3650)),
-                );
-                if (picked != null) setState(() => _targetDate = picked);
-              },
-              icon: const Icon(Icons.event_outlined),
-              label: Text(_targetDate == null
-                  ? 'khatma.pick_date'.tr()
-                  : DateFormat.yMMMd(context.locale.toString()).format(_targetDate!)),
-            ),
-          const SizedBox(height: 14),
           Row(
             children: [
-              Expanded(
-                child: Text(
-                  _reminder == null
-                      ? 'khatma.no_reminder'.tr()
-                      : 'khatma.reminder_at'.tr(args: [
-                          '${_reminder!.hour.toString().padLeft(2, '0')}:${_reminder!.minute.toString().padLeft(2, '0')}'
-                        ]),
-                  style: TextStyle(color: gold),
+              if (_step == 1)
+                IconButton(
+                  onPressed: () => setState(() => _step = 0),
+                  icon: const Icon(Icons.arrow_back),
+                  visualDensity: VisualDensity.compact,
                 ),
-              ),
-              TextButton(
-                onPressed: () async {
-                  final t = await showTimePicker(
-                    context: context,
-                    initialTime: const TimeOfDay(hour: 20, minute: 0),
-                  );
-                  if (t != null) setState(() => _reminder = t);
-                },
-                child: Text('khatma.set_reminder'.tr()),
-              ),
+              Text('khatma.new'.tr(), style: Theme.of(context).textTheme.titleLarge),
             ],
           ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: _mode == KhatmaMode.targetDate && _targetDate == null
-                  ? null
-                  : () async {
-                      await ref.read(khatmaStoreProvider.notifier).create(
-                            mode: _mode,
-                            targetDate: _mode == KhatmaMode.targetDate ? _targetDate : null,
-                            dailyAmount: _mode == KhatmaMode.dailyPages
-                                ? _dailyPages
-                                : _mode == KhatmaMode.dailyJuz
-                                    ? _dailyJuz
-                                    : null,
-                            reminderTime: _reminder,
-                          );
-                      if (context.mounted) Navigator.of(context).pop();
-                    },
-              child: Text('khatma.create'.tr()),
+          const SizedBox(height: 16),
+          if (_step == 0)
+            _StartStep(
+              mushaf: mushaf,
+              startJuz: _startJuz,
+              onChanged: (v) => setState(() => _startJuz = v),
+              onContinue: () => setState(() => _step = 1),
+            )
+          else
+            _DurationStep(
+              unit: _unit,
+              durationDays: _durationDays,
+              dailyAmount: _dailyAmount,
+              reminder: _reminder,
+              onUnitChanged: (u) => _onUnitChanged(u, mushaf),
+              onDurationChanged: (v) => _onDurationChanged(v, mushaf),
+              onAmountChanged: (v) => _onAmountChanged(v, mushaf),
+              onReminderChanged: (t) => setState(() => _reminder = t),
+              onCreate: () async {
+                final startPage = _startPage(mushaf);
+                await ref.read(khatmaStoreProvider.notifier).create(
+                      mode: _unit == _AmountUnit.pages
+                          ? KhatmaMode.dailyPages
+                          : KhatmaMode.dailyJuz,
+                      dailyAmount: _dailyAmount,
+                      startPage: startPage,
+                      reminderTime: _reminder,
+                    );
+                if (context.mounted) Navigator.of(context).pop();
+              },
             ),
-          ),
         ],
       ),
+    );
+  }
+}
+
+class _StartStep extends StatelessWidget {
+  final MushafData? mushaf;
+  final int? startJuz;
+  final ValueChanged<int?> onChanged;
+  final VoidCallback onContinue;
+
+  const _StartStep({
+    required this.mushaf,
+    required this.startJuz,
+    required this.onChanged,
+    required this.onContinue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('khatma.start_prompt'.tr(),
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        const SizedBox(height: 20),
+        DropdownButtonFormField<int?>(
+          initialValue: startJuz,
+          decoration: InputDecoration(
+            labelText: 'khatma.start_from'.tr(),
+            border: const OutlineInputBorder(),
+          ),
+          items: [
+            DropdownMenuItem(value: null, child: Text('khatma.start_beginning'.tr())),
+            for (var j = 1; j <= 30; j++)
+              DropdownMenuItem(value: j, child: Text('khatma.juz_label'.tr(args: ['$j']))),
+          ],
+          onChanged: onChanged,
+        ),
+        const SizedBox(height: 18),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: mushaf == null ? null : onContinue,
+            child: Text('khatma.continue_button'.tr()),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DurationStep extends StatelessWidget {
+  final _AmountUnit unit;
+  final int durationDays;
+  final int dailyAmount;
+  final TimeOfDay? reminder;
+  final ValueChanged<_AmountUnit> onUnitChanged;
+  final ValueChanged<int> onDurationChanged;
+  final ValueChanged<int> onAmountChanged;
+  final ValueChanged<TimeOfDay?> onReminderChanged;
+  final VoidCallback onCreate;
+
+  const _DurationStep({
+    required this.unit,
+    required this.durationDays,
+    required this.dailyAmount,
+    required this.reminder,
+    required this.onUnitChanged,
+    required this.onDurationChanged,
+    required this.onAmountChanged,
+    required this.onReminderChanged,
+    required this.onCreate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final gold = AppColors.gold;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('khatma.duration_prompt'.tr(),
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        const SizedBox(height: 18),
+        _Stepper(
+          label: 'khatma.duration_days'.tr(),
+          value: durationDays,
+          min: 1,
+          max: 3650,
+          onChanged: onDurationChanged,
+        ),
+        const Divider(height: 28),
+        Row(
+          children: [
+            Expanded(child: Text('khatma.daily_portion'.tr())),
+            SegmentedButton<_AmountUnit>(
+              segments: [
+                ButtonSegment(
+                    value: _AmountUnit.pages, label: Text('khatma.unit_pages'.tr())),
+                ButtonSegment(
+                    value: _AmountUnit.juz, label: Text('khatma.unit_juz'.tr())),
+              ],
+              selected: {unit},
+              onSelectionChanged: (s) => onUnitChanged(s.first),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        _Stepper(
+          label: unit == _AmountUnit.pages
+              ? 'khatma.pages_per_day'.tr()
+              : 'khatma.juz_per_day'.tr(),
+          value: dailyAmount,
+          min: 1,
+          max: unit == _AmountUnit.pages ? 60 : 30,
+          onChanged: onAmountChanged,
+        ),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                reminder == null
+                    ? 'khatma.no_reminder'.tr()
+                    : 'khatma.reminder_at'.tr(args: [
+                        '${reminder!.hour.toString().padLeft(2, '0')}:${reminder!.minute.toString().padLeft(2, '0')}'
+                      ]),
+                style: TextStyle(color: gold),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                final t = await showTimePicker(
+                  context: context,
+                  initialTime: reminder ?? const TimeOfDay(hour: 20, minute: 0),
+                );
+                if (t != null) onReminderChanged(t);
+              },
+              child: Text('khatma.set_reminder'.tr()),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: onCreate,
+            child: Text('khatma.create'.tr()),
+          ),
+        ),
+      ],
     );
   }
 }

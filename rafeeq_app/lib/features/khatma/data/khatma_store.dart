@@ -24,8 +24,25 @@ class Khatma {
   /// Pages/day ([KhatmaMode.dailyPages]) or juz/day ([KhatmaMode.dailyJuz]).
   final int? dailyAmount;
 
-  /// How many of the 604 pages have been marked read so far.
+  /// The mushaf page this khatma starts from — 1 for "بداية المصحف", or a
+  /// juz's own start page when the owner's real reference app (P3‑6,
+  /// `design_refs/khatma_app_ref/2_new_khatma_start.jpg`) showed a khatma
+  /// can begin from a chosen juz, not just page 1. All the page-count math
+  /// below (`totalPagesInPlan`, `progress`, `duePages`) is relative to this
+  /// start, not to the mushaf's own page 1, so a khatma started mid-mushaf
+  /// still reports honest progress/completion.
+  final int startPage;
+
+  /// How many of this khatma's own pages (from [startPage], not from page 1)
+  /// have been marked read so far.
   final int pagesRead;
+
+  /// How many separate "أتممت القراءة" taps have completed a portion —
+  /// the reference app's "الأوراد السابقة" count (P3‑6). Distinct from
+  /// [pagesRead]: a catch-up tap that covers more than one day's due amount
+  /// is still one portion, and this is the honest count of *that*, not a
+  /// derived estimate.
+  final int portionsRead;
 
   /// Date-only (midnight) of the last "read today" tap, for the streak and
   /// the "already read today" state.
@@ -41,7 +58,9 @@ class Khatma {
     required this.mode,
     this.targetDate,
     this.dailyAmount,
+    this.startPage = 1,
     this.pagesRead = 0,
+    this.portionsRead = 0,
     this.lastReadDate,
     this.streak = 0,
     this.completedAt,
@@ -50,11 +69,16 @@ class Khatma {
 
   static const totalPages = 604;
 
+  /// How many pages this khatma's own plan actually covers — `totalPages`
+  /// when [startPage] is 1 (the common case), less when it starts mid-mushaf.
+  int get totalPagesInPlan => totalPages - startPage + 1;
+
   bool get isCompleted => completedAt != null;
 
-  /// The page to open the mushaf on — the next unread page, clamped so a
-  /// completed khatma still points somewhere real.
-  int get currentPage => (pagesRead + 1).clamp(1, totalPages);
+  /// The page to open the mushaf on — the next unread page relative to
+  /// [startPage], clamped so a completed khatma still points somewhere real.
+  int get currentPage =>
+      (startPage + pagesRead).clamp(startPage, totalPages);
 
   bool _sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
@@ -70,7 +94,7 @@ class Khatma {
   /// instead of silently missing the target (the "catch-up" behaviour the
   /// Khatmah-app research called for).
   int duePages(Map<int, int> juzStartPages) {
-    final remaining = totalPages - pagesRead;
+    final remaining = totalPagesInPlan - pagesRead;
     if (remaining <= 0) return 0;
     switch (mode) {
       case KhatmaMode.dailyPages:
@@ -96,8 +120,8 @@ class Khatma {
     final startJuz = _juzForPage(currentPage, juzStartPages);
     final endJuz = (startJuz + juzCount).clamp(1, 31);
     final endPage = endJuz > 30 ? totalPages + 1 : (juzStartPages[endJuz] ?? totalPages + 1);
-    final startPage = juzStartPages[startJuz] ?? currentPage;
-    return math.max(1, endPage - startPage);
+    final juzStart = juzStartPages[startJuz] ?? currentPage;
+    return math.max(1, endPage - juzStart);
   }
 
   static int _juzForPage(int page, Map<int, int> juzStartPages) {
@@ -118,10 +142,29 @@ class Khatma {
     return math.max(0, d);
   }
 
-  double get progress => (pagesRead / totalPages).clamp(0, 1);
+  double get progress => (pagesRead / totalPagesInPlan).clamp(0, 1);
+
+  /// "الأوراد القادمة" (P3‑6) — how many more daily portions remain at the
+  /// current rate. [KhatmaMode.targetDate] is just the days left (that
+  /// mode's whole point is one portion per remaining day); the two
+  /// fixed-rate modes divide the remaining pages by one day's amount.
+  int portionsRemaining(Map<int, int> juzStartPages) {
+    final remaining = totalPagesInPlan - pagesRead;
+    if (remaining <= 0) return 0;
+    switch (mode) {
+      case KhatmaMode.targetDate:
+        return daysLeft ?? 0;
+      case KhatmaMode.dailyPages:
+        return (remaining / math.max(1, dailyAmount ?? 1)).ceil();
+      case KhatmaMode.dailyJuz:
+        final perDay = _pagesForJuz(dailyAmount ?? 1, juzStartPages);
+        return (remaining / math.max(1, perDay)).ceil();
+    }
+  }
 
   Khatma copyWith({
     int? pagesRead,
+    int? portionsRead,
     DateTime? lastReadDate,
     int? streak,
     DateTime? completedAt,
@@ -133,7 +176,9 @@ class Khatma {
         mode: mode,
         targetDate: targetDate,
         dailyAmount: dailyAmount,
+        startPage: startPage,
         pagesRead: pagesRead ?? this.pagesRead,
+        portionsRead: portionsRead ?? this.portionsRead,
         lastReadDate: lastReadDate ?? this.lastReadDate,
         streak: streak ?? this.streak,
         completedAt: completedAt ?? this.completedAt,
@@ -148,7 +193,9 @@ class Khatma {
         'mode': mode.name,
         'targetDate': targetDate?.toIso8601String(),
         'dailyAmount': dailyAmount,
+        'startPage': startPage,
         'pagesRead': pagesRead,
+        'portionsRead': portionsRead,
         'lastReadDate': lastReadDate?.toIso8601String(),
         'streak': streak,
         'completedAt': completedAt?.toIso8601String(),
@@ -164,7 +211,12 @@ class Khatma {
             ? DateTime.parse(j['targetDate'] as String)
             : null,
         dailyAmount: j['dailyAmount'] as int?,
+        // P3‑6: startPage/portionsRead are new fields — default to 1/0 for
+        // every khatma saved before this change, which is exactly what they
+        // already behaved as (start of mushaf, no portion count tracked).
+        startPage: j['startPage'] as int? ?? 1,
         pagesRead: j['pagesRead'] as int? ?? 0,
+        portionsRead: j['portionsRead'] as int? ?? 0,
         lastReadDate: j['lastReadDate'] != null
             ? DateTime.parse(j['lastReadDate'] as String)
             : null,
@@ -212,6 +264,7 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     required KhatmaMode mode,
     DateTime? targetDate,
     int? dailyAmount,
+    int startPage = 1,
     TimeOfDay? reminderTime,
   }) async {
     final khatma = Khatma(
@@ -220,6 +273,7 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
       mode: mode,
       targetDate: targetDate,
       dailyAmount: dailyAmount,
+      startPage: startPage,
       reminderTime: reminderTime,
     );
     state = [...state, khatma];
@@ -241,10 +295,12 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
                 .inDays ==
             1;
     final alreadyToday = khatma.readToday;
-    final newPages = (khatma.pagesRead + due).clamp(0, Khatma.totalPages);
-    final completed = newPages >= Khatma.totalPages;
+    final newPages =
+        (khatma.pagesRead + due).clamp(0, khatma.totalPagesInPlan);
+    final completed = newPages >= khatma.totalPagesInPlan;
     final updated = khatma.copyWith(
       pagesRead: newPages,
+      portionsRead: khatma.portionsRead + 1,
       lastReadDate: today,
       streak: alreadyToday
           ? khatma.streak

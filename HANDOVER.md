@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 20:59 — IN PROGRESS — resume here**
+**2026-09-04 22:09 — IN PROGRESS — resume here**
 
-P3-39 fix: icon crop was off-center, cut off bottom of the circle - found grid-overlay coords, recentered on true circle bounds (448,528). Batch18 APK shipped, live-verified full circle with even margins.
+P3-6 DONE: full Khatma redesign using the owner's real reference screenshots - Khatma model gained startPage + portionsRead, Home card now shows real surah/ayah/page ranges (resolved from actual mushaf data), previous/upcoming portion counts, separate open-reader/mark-read buttons; new-khatma flow is a real two-step wizard (start point, then duration<->daily-amount live-linked). Live-verified full cycle: create -> read today -> real next range. Batch19 APK shipped. analyze clean, test 15/15, +17 keys x5 locales.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
