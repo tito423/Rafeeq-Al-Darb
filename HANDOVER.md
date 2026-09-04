@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 11:49 — IN PROGRESS — resume here**
+**2026-09-04 11:52 — IN PROGRESS — resume here**
 
-P3-29 DONE: book reader visual redesign (Shamela-style toolbar row + paper theme, our navy/gold not Shamela blue) - live-verified all 6 toolbar actions on emulator (font size/color/tashkeel/search/index/bookmark). New core/widgets/toolbar_action.dart shared widget (extracted from quran_screen). stripTashkeelForDisplay() added to arabic_normalize.dart. Fixed real AppBar.automaticallyImplyActions gotcha found live (actions:[] alone does not suppress Flutter's auto endDrawer button). +6 keys x5 locales. analyze clean, test 15/15.
+Released phase3-batch9-2026-09-04 APK (P3-29 visual redesign complete). NEXT_SESSION_PROMPT.md updated: P3-29 both parts done, icon+azkar/tasbeeh confirmations noted, batch9 link, splash/onboarding video ref note + QuranFlash catalog warning kept prominent.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
