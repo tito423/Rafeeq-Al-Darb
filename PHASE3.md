@@ -1494,6 +1494,69 @@ into both الأذكار (sections grid, own `AppBar`, no leftover `TabBar`) and
 work as fully independent screens, not remnants of the old tabbed
 structure.
 
+**Follow-up in the same round: "make yourself a splash screen inspired by
+the video."** The owner's phrasing was a deliberate nudge away from a
+literal reproduction — re-read `SplashLattice`/`SplashScreen` with that in
+mind and added three things the reference frame itself doesn't have,
+rather than just re-confirming the existing match:
+- A second, smaller girih rosette layer counter-rotating against the
+  first (`_paintRosette`, called twice with different radius/angle/point-
+  count) — a real girih mandala is traditionally built from overlapping
+  polygons, not one flat ring, so this reads closer to the genre the
+  reference is itself drawing on rather than to the reference frame
+  literally.
+- A huge, very soft echo of **this app's own icon-crescent silhouette**
+  breathing in the backdrop — the exact two-arc construction
+  `icon_full.svg` uses, just enormous, blurred, and low-opacity, tucked
+  into a back corner (`_paintCrescentEcho`, `BlendMode.dstOut` cutout
+  rather than a combined `Path`, since this only needed a one-off soft
+  cutout). Ties the backdrop to the app's own new icon (P3-38 above)
+  instead of being generic atmosphere.
+- A staggered entrance: the video's own splash frame is static —
+  everything present in frame one. Added a second, one-shot
+  `AnimationController` (`_intro`, 900ms) driving three overlapping
+  `Interval`s so the badge scales+fades in first (`Curves.easeOutBack`),
+  the app name rises+fades in a beat behind it, and the tagline trails
+  last — each via a small reusable `_RiseIn` (fade + upward settle)
+  wrapper. Reduced motion (system setting or the in-app toggle) skips this
+  and the badge/text simply appear fully formed, same honesty rule the
+  backdrop's own looping animation already followed.
+
+**A real timing-investigation, not a bug, worth recording:** confirming
+the entrance animation visually by screenshotting mid-splash proved
+genuinely difficult — `adb shell am start`'s own cold-start latency to
+Flutter's first frame varied between roughly 0.3s and 2s+ run to run on
+this AVD, so fixed-delay screenshot polling kept landing either on the
+native pre-Flutter icon or already past the splash, never inside its
+~1.9s live window. Confirmed the *timing logic itself* was correct first
+via instrumented `debugPrint(DateTime.now())` calls through `flutter run`
+(`initState` → `_proceed` measured at 1932ms against a coded 1900ms hold,
+well within normal `Future.delayed` scheduling overhead — temporarily
+added, verified, then removed before shipping), then confirmed the
+*visual result* by temporarily extending the hold to 9 seconds for one
+screenshot (reverted to 1900ms immediately after) rather than continuing
+to gamble on timing. That screenshot also caught a real, separate mistake
+along the way: `TaskStop` on a background `flutter run` session doesn't
+reliably kill the app process on the device (`flutter run`'s own "detach"
+semantics leave it running) — several `adb shell am start` calls were
+silently resuming that stale, already-past-splash process instead of
+cold-launching the newly installed APK, printing an easy-to-miss "Activity
+not started, intent has been delivered to currently running top-most
+instance" warning each time. Confirmed via `adb shell "ps -A" | grep
+rafeeq` before relying on any subsequent launch again — an `am
+force-stop` first is now the safer habit after any `flutter run` session
+on this project, not just before a fresh install.
+
+`flutter analyze` clean, `flutter test` 15/15. **Live-verified on
+`emulator-5554`:** the fully-settled splash (screenshotted via the
+temporary extended hold, confirming the real animation's *end state* since
+the live 1.9s window couldn't be reliably screenshotted) shows both
+lattice layers, the crescent echo's soft gold glow bleeding through the
+girih lines, scattered twinkling stars, and the badge/name/tagline all in
+their final settled position — confirmed the real 1900ms build still
+correctly proceeds to onboarding/Home afterward, unaffected by the
+temporary-hold detour.
+
 **Live-verified on `emulator-5554`:** this AVD's actual system locale is
 `en-US` (`adb shell getprop ro.product.locale`) — a fresh install (after
 `adb uninstall`) opened the whole app in **English** by default, no
