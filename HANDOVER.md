@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-04 16:32 — IN PROGRESS — resume here**
+**2026-09-04 16:35 — IN PROGRESS — resume here**
 
-P3-4 DONE (ornate hadith card + continue-reading card): DailyHadithCard wrapped in gold corner-flourish frame matching owner's new ref_hadith_card.jpg reference (our navy/gold theme, not the reference's black-green). New ContinueReadingCard on Home, split out of KhatmaCard's 'read today' nudge, built on real quran_last_page data only (renders nothing if never set - no fabricated default). Real reactivity bug found+fixed live: raw SharedPreferences read didn't update across IndexedStack-preserved tabs - replaced with quranLastPageProvider StateNotifierProvider. Live-verified full round-trip on a fresh emulator (previous instance had degraded to 13.5h uptime/load 15+, killed+relaunched per established procedure). +2 keys x5 locales. analyze clean, test 15/15.
+Released phase3-batch12-2026-09-04 APK (P3-4 complete: ornate hadith card + Continue Reading card). NEXT_SESSION_PROMPT.md updated with batch12 link and full P3-4 details.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
