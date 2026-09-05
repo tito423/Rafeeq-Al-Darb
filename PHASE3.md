@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 15 items, priority-ordered; see its own section below | ⏳ **not started — full task breakdown written, nothing built yet** (session handed off at owner's explicit request before quota ran out) |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | ⏳ **not started — full task breakdown written, nothing built yet** (session handed off at owner's explicit request before quota ran out) |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2308,6 +2308,25 @@ core-feature failures before polish):
     Arabic** — "لا تظهر الترجمة إلا إذا كانت لغة التطبيق مختلفة عن
     العربية." Straightforward conditional: only show a hadith's
     translation block when `context.locale.languageCode != 'ar'`.
+16. **More Shamela books, text-only** — already listed as open under
+    P3‑41 above, but the owner re-raised it directly (2026-09-05) asking
+    it be worked alongside this round rather than left for later. His
+    original ask (`PHASE3_FEEDBACK.md`'s "A2") was genuinely open-ended —
+    "the library only has 5 books... I want you to download them all,
+    Shamela-style" — and that file already flags honestly that al-
+    Maktaba al-Shamela indexes thousands of titles, so this needs either
+    a scope answer from the owner (a target count or category list) or a
+    safe default: keep growing the same 3-author set already established
+    (Ibn Taymiyyah, al-Hakim al-Tirmidhi, Ibn Abi al-Dunya — the latter
+    two wrote many short treatises per P2‑4's own notes) with more real
+    titles, one at a time, through the exact same `build_book_text.py`
+    pipeline and provenance discipline as the 5+3 already shipped
+    (Shamela ID, editor, publisher, page count, `printReliable` flag,
+    uploaded to R2 `rafeeq-content/books/text/*.json`, verified with
+    `head_object` **and** a live `curl -I`) — never a bulk import without
+    per-title verification. If the owner's intent reads as wanting a
+    genuinely broader scope than that, ask one direct clarifying question
+    rather than guessing.
 
 `flutter analyze`/`flutter test` not yet run against any of this — none
 of it is built. See `NEXT_SESSION_PROMPT.md` for the actual next-session
