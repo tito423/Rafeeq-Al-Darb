@@ -5,8 +5,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
@@ -19,17 +21,24 @@ import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 /// live by the device's own compass heading, with an honest state for
 /// every real-world failure mode (no location permission, no magnetometer
 /// on this device) instead of ever faking a direction.
-class QiblaScreen extends StatefulWidget {
+class QiblaScreen extends ConsumerStatefulWidget {
   const QiblaScreen({super.key});
 
   @override
-  State<QiblaScreen> createState() => _QiblaScreenState();
+  ConsumerState<QiblaScreen> createState() => _QiblaScreenState();
 }
 
 enum _LocationState { loading, denied, ready }
 
-class _QiblaScreenState extends State<QiblaScreen> {
+class _QiblaScreenState extends ConsumerState<QiblaScreen>
+    with WidgetsBindingObserver {
   StreamSubscription<CompassEvent>? _compassSub;
+
+  /// P3‑47: only true while the Prayer tab is actually on screen and the app
+  /// is in the foreground. The compass alignment haptic + `setState` loop is
+  /// gated on this so the kept-alive Prayer tab never buzzes/spins in the
+  /// background — the "random haptic" the owner couldn't source.
+  bool _screenActive = true;
 
   _LocationState _locationState = _LocationState.loading;
   double? _qiblaBearing; // great-circle bearing from the user to the Kaaba
@@ -41,15 +50,28 @@ class _QiblaScreenState extends State<QiblaScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _resolveLocation();
     _listenCompass();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _compassSub?.cancel();
     super.dispose();
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Pause the compass work (and its haptic) whenever the app leaves the
+    // foreground — the sensor stream would otherwise keep firing while the
+    // app is backgrounded.
+    _screenActive =
+        state == AppLifecycleState.resumed && _isPrayerTabActive();
+  }
+
+  bool _isPrayerTabActive() => ref.read(activeTabProvider) == AppTab.prayer;
 
   Future<void> _resolveLocation() async {
     setState(() => _locationState = _LocationState.loading);
@@ -94,6 +116,10 @@ class _QiblaScreenState extends State<QiblaScreen> {
   }
 
   void _onHeading(double heading) {
+    // P3‑47: skip everything (haptic + rebuild) unless the Prayer tab is
+    // actually on screen and the app is foregrounded — the compass stream
+    // keeps emitting from the kept-alive tab otherwise.
+    if (!_screenActive) return;
     final bearing = _qiblaBearing;
     var wasAligned = _wasAligned;
     if (bearing != null) {
@@ -133,6 +159,11 @@ class _QiblaScreenState extends State<QiblaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Track whether this tab is the one on screen; combined with the app
+    // being foregrounded, this drives whether the compass does any work.
+    final tabActive = ref.watch(activeTabProvider) == AppTab.prayer;
+    _screenActive = tabActive &&
+        WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
     return Scaffold(
       appBar: AppBar(title: Text('nav.prayer'.tr())),
       body: SafeArea(

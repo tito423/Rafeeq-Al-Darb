@@ -223,7 +223,9 @@
     "category_after_prayer": "Après la prière",
     "category_mosque": "À la mosquée",
     "category_travel": "Voyage",
-    "category_narrated": "Invocations rapportées"
+    "category_narrated": "Invocations rapportées",
+    "tasbeeh_unlimited": "Sans limite",
+    "tasbeeh_milestone": "Ma sha Allah"
   },
   "prayer": {
     "fajr": "Fajr",

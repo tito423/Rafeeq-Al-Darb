@@ -3,14 +3,12 @@
 // direction — see the identical fix in ayah_sciences_sheet.dart.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/azkar_repeat.dart';
-import '../../data/azkar_settings_provider.dart';
 
 /// One section's adhkar, one at a time — a real tap-to-count counter per
 /// dhikr (counts on the very first tap, not only after a reset — WORK_QUEUE
@@ -44,13 +42,10 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
       _items == null ? 1 : parseAzkarRepeatCount(_items![_index].body);
 
   void _tap() {
-    final haptics = ref.read(azkarSettingsProvider).haptics;
+    // P3‑47: count vibration removed at the owner's request.
     setState(() => _count++);
     if (_count >= _target) {
-      if (haptics) HapticFeedback.mediumImpact();
       Future.delayed(const Duration(milliseconds: 350), _advance);
-    } else if (haptics) {
-      HapticFeedback.lightImpact();
     }
   }
 

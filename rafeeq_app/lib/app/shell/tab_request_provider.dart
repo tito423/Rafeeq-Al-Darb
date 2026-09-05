@@ -39,6 +39,17 @@ abstract final class AppTab {
 /// only fires once.
 final requestedTabProvider = StateProvider<int?>((ref) => null);
 
+/// P3‑47: the bottom-nav tab currently on screen. Unlike
+/// [requestedTabProvider] (a one-shot "please switch" request), this always
+/// reflects the tab actually showing. Exists because every tab's `State`
+/// stays alive at once inside `AppShell`'s `IndexedStack` — so a screen with
+/// a live sensor stream (the Qibla compass) keeps running, and buzzing, even
+/// while a different tab is on screen. Real-device feedback: "random haptic
+/// in the background I can't find the source of" was the Qibla alignment
+/// buzz firing from the kept-alive Prayer tab. Screens with background-
+/// unfriendly work watch this and pause when they aren't the active tab.
+final activeTabProvider = StateProvider<int>((ref) => AppTab.home);
+
 /// Same seam, one level deeper: `LibraryScreen` has its own inner
 /// `TabController` (0 = الكتب, 1 = الحديث), separate from the bottom-nav
 /// index above. P3‑25: `DownloadsScreen`'s overview rows navigate here —

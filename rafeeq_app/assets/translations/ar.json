@@ -223,7 +223,9 @@
     "category_after_prayer": "بعد الصلاة",
     "category_mosque": "أذكار المسجد",
     "category_travel": "دعاء السفر",
-    "category_narrated": "أدعية مأثورة"
+    "category_narrated": "أدعية مأثورة",
+    "tasbeeh_unlimited": "بلا حد",
+    "tasbeeh_milestone": "ما شاء الله"
   },
   "prayer": {
     "fajr": "الفجر",

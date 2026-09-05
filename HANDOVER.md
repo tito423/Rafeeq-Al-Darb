@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-05 |
+| **Last updated** | 2026-09-06 |
 | **State at** | **PHASE 2 nearly done** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. Every P2 stage is done and emulator-verified **except P2‑7's last piece, which needs a real Android phone** (see its row below) and P2‑8, which is stopped waiting on the owner's shortlist pick. |
 | **Build verified?** | `flutter analyze` clean · `flutter test` **13/13**. All of P2‑1/2/3/4/4b/5/6/9/10/11/12/13 emulator-verified live (not just built) on `emulator-5554`. |
 
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-05 22:54 — IN PROGRESS — resume here**
+**2026-09-06 00:31 — IN PROGRESS — resume here**
 
-P3-46: fix the flutter_local_notifications 'Missing type parameter' crash at its ROOT (R8 was stripping Gson generic-type metadata the plugin needs) via proper ProGuard keep rules + explicit isMinifyEnabled; add a real Android foreground service (DownloadForegroundService) so downloads survive backgrounding instead of the process being frozen/killed, reference-counted across all four download-performing services; fix the lock-screen adhan showing the settings screen instead of the full-screen alert by falling back to the OS active-notifications query on cold launch (a fullScreenIntent auto-launch never sets didNotificationLaunchApp) plus a retry on resume; fix the surah header letter rendering (Quranic U+06E1 dotless-head sukun replaced with standard U+0652 for display across all 41 affected surah names); collapse the long adhan settings screen (Default adhan + Per-prayer settings now ExpansionTiles, default-adhan header shows the current pick); pre-create the silent notification channel at init so Mute has a valid target even from a background isolate. flutter analyze/test clean (21/21), live-verified on emulator: no launch crash, settings collapsed, surah header clean, location+qibla working.
+P3-47: batch of real-device fixes. Found + fixed the mystery background haptic (the Qibla compass alignment buzz kept firing from the kept-alive Prayer tab; now gated on an activeTabProvider + app-resumed so it only works while the compass is actually on screen). Rebuilt the Tasbeeh counter: it stopped displaying at 32 (reset the instant it hit the target) - now shows N/target, added selectable targets 33/100/1000/No-limit as chips, and a full-screen celebration burst at every 1000. Removed the 'الاهتزاز عند العد' vibration toggle and all count vibration from both Azkar and Tasbeeh. Deleted the 'صحيح من الصحيحين' badge from hadith detail. Hid the English book name in hadith detail when the app is in Arabic. Fixed the RTL next/previous arrows in hadith navigation (the code hard-swapped arrow_back/forward, which double-flipped against Flutter's own RTL auto-mirroring and pointed both the wrong way - now uses the semantic icons and lets the framework mirror). Made the full-screen mushaf truly immersive (hides the system status/nav bars) so the surah header no longer collides with the clock. Removed the 'داخل المسجد' adhan video at the owner's request. flutter analyze/test clean (21/21); live-verified the Tasbeeh targets + counter on emulator.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

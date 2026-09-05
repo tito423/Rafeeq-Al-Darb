@@ -56,12 +56,7 @@ const List<AdhanVideoOption> adhanVideoCatalog = [
     nameEn: "The Prophet's Mosque, Madinah",
     approxSizeBytes: 5515868,
   ),
-  AdhanVideoOption(
-    id: 'mosque_prayer',
-    nameAr: 'داخل المسجد',
-    nameEn: 'Inside a mosque',
-    approxSizeBytes: 981129,
-  ),
+  // P3‑47: 'mosque_prayer' (داخل المسجد) removed at the owner's request.
   AdhanVideoOption(
     id: 'mosque_ottoman',
     nameAr: 'مسجد عثماني',

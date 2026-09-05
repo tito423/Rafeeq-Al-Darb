@@ -223,7 +223,9 @@
     "category_after_prayer": "After Prayer",
     "category_mosque": "At the Mosque",
     "category_travel": "Travel",
-    "category_narrated": "Narrated Supplications"
+    "category_narrated": "Narrated Supplications",
+    "tasbeeh_unlimited": "No limit",
+    "tasbeeh_milestone": "Ma sha Allah"
   },
   "prayer": {
     "fajr": "Fajr",

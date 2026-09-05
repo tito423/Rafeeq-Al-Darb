@@ -223,7 +223,9 @@
     "category_after_prayer": "После молитвы",
     "category_mosque": "В мечети",
     "category_travel": "Путешествие",
-    "category_narrated": "Переданные мольбы"
+    "category_narrated": "Переданные мольбы",
+    "tasbeeh_unlimited": "Без предела",
+    "tasbeeh_milestone": "Ма ша Аллах"
   },
   "prayer": {
     "fajr": "Фаджр",

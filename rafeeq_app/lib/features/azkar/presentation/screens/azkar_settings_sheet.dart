@@ -64,13 +64,10 @@ class _AzkarSettingsSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SwitchListTile(
-              title: Text('azkar.vibration'.tr()),
-              value: settings.haptics,
-              onChanged: notifier.setHaptics,
-            ),
+            // P3‑47: the "الاهتزاز عند العد" (vibrate-on-count) toggle was
+            // removed at the owner's request — count vibration is gone from
+            // both the Azkar and Tasbeeh counters entirely.
             if (showReminders) ...[
-              const Divider(),
               Text('azkar.reminders'.tr(),
                   style: Theme.of(context).textTheme.titleSmall),
               ListTile(

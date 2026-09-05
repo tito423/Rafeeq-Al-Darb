@@ -48,12 +48,17 @@ class _HadithDetailScreenState extends State<HadithDetailScreen> {
                     style: theme.textTheme.labelLarge
                         ?.copyWith(color: scheme.primary),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    widget.book.nameEn,
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: scheme.onSurfaceVariant),
-                  ),
+                  // P3‑47: hide the English book name when the app is in
+                  // Arabic — an Arabic reader doesn't need "Sahih al-Bukhari"
+                  // shown under "صحيح البخاري".
+                  if (context.locale.languageCode != 'ar') ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.book.nameEn,
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: scheme.onSurfaceVariant),
+                    ),
+                  ],
                   const Divider(height: 28),
                   SelectableText(
                     _item.arabic,
@@ -86,28 +91,16 @@ class _HadithDetailScreenState extends State<HadithDetailScreen> {
                           ?.copyWith(height: 1.6),
                     ),
                   ],
-                  // Bukhari (id 1) / Muslim (id 2) are sahih by definition —
-                  // that badge comes from the book itself, never from a
-                  // per-hadith `grade` (which stays null for both, see
-                  // HadithRepository's doc). The other 7 books show the
-                  // real per-hadith grade+grader where the source has one,
-                  // and an honest "not stated" chip where it doesn't — never
-                  // silence, which could read as "ungraded because weak".
-                  if (widget.book.id == 1 || widget.book.id == 2)
+                  // P3‑47: the "صحيح — من الصحيحين" badge for Bukhari/Muslim
+                  // was removed at the owner's request. The real per-hadith
+                  // grade+grader for the other 7 books (where the source
+                  // states one) still shows — that's genuine data, not the
+                  // definitional badge that was dropped.
+                  if (widget.book.id != 1 &&
+                      widget.book.id != 2 &&
+                      _item.grade != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 16),
-                      child: Chip(
-                        avatar: const Icon(Icons.verified, size: 18),
-                        label: Text('library.sahihayn_badge'.tr()),
-                      ),
-                    )
-                  else if (_item.grade != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      // P3‑41: no "Grade:" label — just the grade itself,
-                      // localized where honestly possible (see
-                      // hadith_grade_i18n.dart's own doc for why only
-                      // Arabic gets real term restoration).
                       child: Chip(
                         label: Text(_item.grader != null
                             ? '${localizedHadithGrade(_item.grade!, context.locale.languageCode)} '
@@ -130,7 +123,12 @@ class _HadithDetailScreenState extends State<HadithDetailScreen> {
                         onPressed: _index > 0
                             ? () => setState(() => _index--)
                             : null,
-                        icon: const Icon(Icons.arrow_forward, size: 18),
+                        // P3‑47: use the semantic icons and let Flutter
+                        // auto-mirror them in RTL (both are matchTextDirection
+                        // icons). The old code hard-swapped them, which
+                        // double-flipped in Arabic and pointed both the wrong
+                        // way — the arrow bug the owner flagged.
+                        icon: const Icon(Icons.arrow_back, size: 18),
                         label: Text('library.previous'.tr()),
                       ),
                     ),
@@ -140,7 +138,7 @@ class _HadithDetailScreenState extends State<HadithDetailScreen> {
                         onPressed: _index < widget.chapterHadiths.length - 1
                             ? () => setState(() => _index++)
                             : null,
-                        icon: const Icon(Icons.arrow_back, size: 18),
+                        icon: const Icon(Icons.arrow_forward, size: 18),
                         label: Text('library.next'.tr()),
                       ),
                     ),

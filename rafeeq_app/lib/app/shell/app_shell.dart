@@ -48,6 +48,9 @@ class _AppShellState extends ConsumerState<AppShell>
 
   void _goTo(int index, {int? tab}) {
     setState(() => _index = index);
+    // P3‑47: keep the active-tab signal in sync so kept-alive tabs (e.g. the
+    // Qibla compass) can pause their sensor work when they aren't showing.
+    ref.read(activeTabProvider.notifier).state = index;
   }
 
   @override
@@ -134,6 +137,7 @@ class _AppShellState extends ConsumerState<AppShell>
     ref.listen<int?>(requestedTabProvider, (_, tab) {
       if (tab == null) return;
       setState(() => _index = tab);
+      ref.read(activeTabProvider.notifier).state = tab;
       Future.microtask(
         () => ref.read(requestedTabProvider.notifier).state = null,
       );
@@ -191,7 +195,10 @@ class _AppShellState extends ConsumerState<AppShell>
     return PopScope(
       canPop: _index == AppTab.home,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) setState(() => _index = AppTab.home);
+        if (!didPop) {
+          setState(() => _index = AppTab.home);
+          ref.read(activeTabProvider.notifier).state = AppTab.home;
+        }
       },
       child: Scaffold(
         body: IndexedStack(index: _index, children: screens),

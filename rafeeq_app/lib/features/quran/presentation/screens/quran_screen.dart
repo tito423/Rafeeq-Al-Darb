@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,6 +115,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       if (pageFillScreen != null) _pageFillScreen = pageFillScreen;
     });
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
+    if (_pageFillScreen) _applyImmersive(true);
   }
 
   void _changeFontScale(double delta) {
@@ -139,8 +141,20 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   void _togglePageFillScreen() {
     setState(() => _pageFillScreen = !_pageFillScreen);
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
+    _applyImmersive(_pageFillScreen);
     SharedPreferences.getInstance().then(
       (p) => p.setBool(_kPageFillScreen, _pageFillScreen),
+    );
+  }
+
+  /// P3‑47: real-device feedback — in full-screen the surah-header badges
+  /// collided with the system status bar (clock/battery). Truly "cover
+  /// everything" by hiding the system bars while full-screen, and restore
+  /// them on exit. `immersiveSticky` lets a swipe from the edge peek them
+  /// back temporarily without leaving the mode.
+  void _applyImmersive(bool on) {
+    SystemChrome.setEnabledSystemUIMode(
+      on ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
     );
   }
 
@@ -177,6 +191,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   @override
   void dispose() {
     _pages?.dispose();
+    // Make sure the system bars are never left hidden if this screen goes
+    // away while full-screen.
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 
