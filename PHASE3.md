@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1 (pinch-zoom regression), #3 (surah-jump banner bug), #14 (tasbeeh presets), #15 (hadith translation in Arabic) done; 12 items remain |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #6, #8, #14, #15 done; #12 needs a fresh device screenshot before diagnosing (doesn't reproduce on emulator fonts); 9 items remain |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2286,28 +2286,61 @@ core-feature failures before polish):
    bar, when I move it scroll quickly." Combine with item 4: the page
    should navigate by dragging a scrollbar thumb, not tapping arrows or
    a name-strip.
-6. **Full-screen toggle needs to be genuinely full-screen** — P3‑42's
-   "page fill" only shrinks the page card's own margins; the owner wants
-   pressing "ملء الشاشة" to hide **everything** — the top toolbar *and*
-   the bottom nav bar — leaving only the Quran page sized to fill the
-   whole screen, in both mushaf modes (image and scrolling text).
-   Tapping the screen again exits back to normal. This likely means
-   hiding `Scaffold`'s `bottomNavigationBar` conditionally from
-   `AppShell` (or overlaying `QuranScreen` full-screen via
-   `Navigator`/`SystemUiMode.immersive` while this mode is on) — a
-   bigger structural change than the current per-`QuranScreen` toggle.
+6. ✅ **DONE — genuinely full-screen now, in both modes.** Exactly the
+   structural change flagged as needed: new `quranFullScreenProvider`
+   (`quran_fullscreen_provider.dart`, same seam shape as
+   `quranJumpRequestProvider`/`requestedTabProvider` — `AppShell` isn't
+   a parent of `QuranScreen`, so a shared provider is how one tells the
+   other anything). `QuranScreen`'s own `appBar` and `bottomNavigationBar`
+   both go `null` while `_pageFillScreen` is on; `AppShell` watches the
+   same flag to drop its own `NavigationBar` too — all three chrome
+   layers gone at once, leaving only the mushaf page. Also fixed two
+   real gaps the old implementation had even before this: the fullscreen
+   *toggle button itself* only ever existed in the text-mode half of the
+   toolbar (moved out to the shared part so image mode gets it too), and
+   image mode's `PreferredSize` height stayed at the old single-row
+   estimate even though it now has one more icon and wraps to two rows
+   like text mode's already does (would have clipped/overflowed — fixed
+   by using the same 116 height for both modes).
+   **Exiting**: since the button that turned this on is itself hidden
+   once it's on, a plain tap on the page is now the only way back —
+   `_onBackgroundTap()` exits full-screen first if it's on, otherwise
+   falls through to the existing (already P3‑43‑#1-verified)
+   toggle-the-toolbar-row behaviour, so normal-mode tapping is completely
+   unchanged. Image mode never had a background-tap gesture at all
+   (every tap there is an ayah hit-test); `MushafPageView` gained a
+   narrowly-scoped `onBackgroundTap` that fires only when a tap misses
+   every ayah polygon, wired **only** to the full-screen-exit case (not
+   to a new toolbar-toggle-on-tap for image mode — that was never asked
+   for and would be a real, uninvited UX change there). `flutter
+   analyze`/`flutter test` clean (15/15).
+   **A real bug found live, not by inspection**: the first version gated
+   `AppShell`'s bottom nav on the shared flag alone — but `IndexedStack`
+   keeps every tab's `State` alive simultaneously, so `QuranScreen`'s
+   restored `_pageFillScreen` (an earlier manual test in this same
+   session had left it persisted `true`) kept the app-wide nav bar
+   hidden even while sitting on the **Home** tab, nothing to do with
+   Quran being visible at all. Fixed by also gating on
+   `_index == AppTab.quran` — the flag can only ever hide the bar while
+   the Quran tab is the one actually on screen.
 7. **Persistent page-context overlay needed in both mushaf modes** —
    "always show the page number at the bottom, the surah name at the
    top-right, and the juz name at the top-left" — like a real printed
    mushaf's running headers. Needs to stay visible even in the new full-
    screen mode above (it's reading context, not "options" to hide).
-8. **Onboarding "Choose your Mushaf" screen has a real overflow** —
-   `2_onboarding_mushaf_overflow.jpg` shows Flutter's own "RIGHT
-   OVERFLOWED BY 5.3 PIXELS" banner on the Hafs card's button row, likely
-   introduced by the P3‑41-follow-up bundling work (that card now shows
-   both a disabled "Download" button *and* a "Delete" option side by
-   side once an edition is bundled/ready, which the row wasn't sized
-   for).
+8. ✅ **DONE — the real overflow fixed at its actual source,
+   `MushafDownloadTile`** (shared by both the Downloads screen and this
+   onboarding screen — not a copy specific to onboarding, confirmed by
+   reading the widget directly). Root cause matched the suspicion
+   exactly: once an edition is bundled/complete, the button row shows a
+   disabled "Download" **and** "Delete" together in a plain `Row` with a
+   `Spacer()` — on a narrow card (onboarding nests this tile behind an
+   extra leading radio circle, narrowing it further than the Downloads
+   screen's own use ever does) that combination doesn't fit. Same fix
+   shape as P3‑42's toolbar overflow: `Row` → `Wrap`, so "Delete" drops
+   to its own line on a narrow card instead of clipping past the edge,
+   no visual change at all on any card where it already fit. `flutter
+   analyze`/`flutter test` clean (15/15).
 9. **Khatma daily-portion units are missing the quarter-hizb
    granularity the owner's own reference screenshots always called
    for** — `design_refs/khatma_app_ref/3_new_khatma_duration.jpg` and

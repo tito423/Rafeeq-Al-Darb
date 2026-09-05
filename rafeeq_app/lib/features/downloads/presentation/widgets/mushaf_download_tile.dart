@@ -107,11 +107,13 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
     _bind();
     // Fire-and-forget: the job is owned by the service and _onProgress drives
     // this tile to completion, so it survives this widget being disposed.
-    unawaited(_service.prefetchEdition(
-      editionId: widget.edition.id,
-      sourcePath: widget.edition.sourcePath,
-      title: widget.edition.nameAr,
-    ));
+    unawaited(
+      _service.prefetchEdition(
+        editionId: widget.edition.id,
+        sourcePath: widget.edition.sourcePath,
+        title: widget.edition.nameAr,
+      ),
+    );
   }
 
   Future<void> _delete() async {
@@ -139,7 +141,12 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
           // P3‑28/39: the edition's own real first page as its thumbnail —
           // already-licensed content (see the widget's own doc), so every
           // edition card gets a real cover, not a placeholder icon.
-          MushafFirstPagePreview(edition: e, isDark: isDark, width: 46, height: 46 * 550 / 345),
+          MushafFirstPagePreview(
+            edition: e,
+            isDark: isDark,
+            width: 46,
+            height: 46 * 550 / 345,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -150,12 +157,17 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                     Expanded(
                       child: Text(
                         e.nameAr,
-                        style: theme.textTheme.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w700),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     if (complete)
-                      Icon(Icons.offline_pin, color: AppColors.success, size: 20),
+                      Icon(
+                        Icons.offline_pin,
+                        color: AppColors.success,
+                        size: 20,
+                      ),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -163,9 +175,10 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                   complete
                       ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
                       : '$_cached / $total ${'downloads.pages_cached'.tr()}'
-                          '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.outline),
+                            '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.outline,
+                  ),
                 ),
                 if (_busy) ...[
                   const SizedBox(height: 10),
@@ -182,7 +195,19 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                   ),
                 ],
                 const SizedBox(height: 10),
-                Row(
+                // P3‑43 #8: a plain `Row` here overflowed by ~5px once a
+                // card could show both a (disabled, once complete)
+                // "Download" button *and* "Delete" side by side — the
+                // onboarding screen nests this tile behind an extra
+                // leading radio circle too, narrowing the row further
+                // than the Downloads screen's own use of this same
+                // widget ever hit. `Wrap` (same fix shape as P3‑42's
+                // toolbar overflow) lets Delete drop to its own line on
+                // a narrow card instead of clipping past the edge.
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     if (_busy) ...[
                       TextButton.icon(
@@ -194,13 +219,16 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                           }
                         }),
                         icon: Icon(
-                            _paused
-                                ? Icons.play_arrow_rounded
-                                : Icons.pause_rounded,
-                            size: 18),
-                        label: Text(_paused
-                            ? 'downloads.resume'.tr()
-                            : 'downloads.pause'.tr()),
+                          _paused
+                              ? Icons.play_arrow_rounded
+                              : Icons.pause_rounded,
+                          size: 18,
+                        ),
+                        label: Text(
+                          _paused
+                              ? 'downloads.resume'.tr()
+                              : 'downloads.pause'.tr(),
+                        ),
                       ),
                       TextButton.icon(
                         onPressed: () => _service.cancelPrefetch(e.id),
@@ -213,7 +241,6 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                         icon: const Icon(Icons.download_rounded, size: 18),
                         label: Text('downloads.download'.tr()),
                       ),
-                    const Spacer(),
                     if (_cached > 0 && !_busy)
                       TextButton.icon(
                         onPressed: _delete,

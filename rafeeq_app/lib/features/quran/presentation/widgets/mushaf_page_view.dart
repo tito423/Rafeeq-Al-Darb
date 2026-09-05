@@ -22,6 +22,13 @@ class MushafPageView extends StatefulWidget {
   final void Function(AyahRegion region) onAyahTap;
   final VoidCallback? onLoadFailed;
 
+  /// P3‑43 #6: fires on a tap that didn't land on any real ayah polygon —
+  /// the closest honest equivalent this mode has to `MushafTextPage`'s
+  /// "background tap", since here every point on the page is a candidate
+  /// ayah hit-test rather than there being a separate non-text area.
+  /// Currently only used to exit full-screen mode.
+  final VoidCallback? onBackgroundTap;
+
   const MushafPageView({
     super.key,
     required this.edition,
@@ -29,6 +36,7 @@ class MushafPageView extends StatefulWidget {
     required this.highlight,
     required this.onAyahTap,
     this.onLoadFailed,
+    this.onBackgroundTap,
   });
 
   @override
@@ -67,8 +75,7 @@ class _MushafPageViewState extends State<MushafPageView> {
   }
 
   Future<String> _load() async {
-    await _coords.ensureLoaded(
-        widget.edition.id, widget.edition.polygonsAsset);
+    await _coords.ensureLoaded(widget.edition.id, widget.edition.polygonsAsset);
     return MushafPageService.instance.svgForPage(
       editionId: widget.edition.id,
       sourcePath: widget.edition.sourcePath,
@@ -82,8 +89,8 @@ class _MushafPageViewState extends State<MushafPageView> {
   // identical one in library_screen.dart: retrying a failed mushaf page
   // load would have thrown "setState() callback argument returned a Future."
   void _retry() => setState(() {
-        _ready = _load();
-      });
+    _ready = _load();
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -98,34 +105,38 @@ class _MushafPageViewState extends State<MushafPageView> {
       future: _ready,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return _Centered(children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: 12),
-            Text('quran.loading_page'.tr()),
-          ]);
+          return _Centered(
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 12),
+              Text('quran.loading_page'.tr()),
+            ],
+          );
         }
         if (snapshot.hasError) {
-          return _Centered(children: [
-            Icon(Icons.cloud_off, size: 56, color: theme.colorScheme.outline),
-            const SizedBox(height: 10),
-            Text('errors.offline'.tr(), textAlign: TextAlign.center),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              alignment: WrapAlignment.center,
-              children: [
-                FilledButton.tonal(
-                  onPressed: _retry,
-                  child: Text('common.retry'.tr()),
-                ),
-                if (widget.onLoadFailed != null)
-                  TextButton(
-                    onPressed: widget.onLoadFailed,
-                    child: Text('quran.text_mode'.tr()),
+          return _Centered(
+            children: [
+              Icon(Icons.cloud_off, size: 56, color: theme.colorScheme.outline),
+              const SizedBox(height: 10),
+              Text('errors.offline'.tr(), textAlign: TextAlign.center),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                alignment: WrapAlignment.center,
+                children: [
+                  FilledButton.tonal(
+                    onPressed: _retry,
+                    child: Text('common.retry'.tr()),
                   ),
-              ],
-            ),
-          ]);
+                  if (widget.onLoadFailed != null)
+                    TextButton(
+                      onPressed: widget.onLoadFailed,
+                      child: Text('quran.text_mode'.tr()),
+                    ),
+                ],
+              ),
+            ],
+          );
         }
 
         final svg = snapshot.data!;
@@ -150,8 +161,7 @@ class _MushafPageViewState extends State<MushafPageView> {
                           SvgPicture.string(
                             svg,
                             fit: BoxFit.fill,
-                            colorFilter:
-                                ColorFilter.mode(ink, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(ink, BlendMode.srcIn),
                             placeholderBuilder: (_) => const Center(
                               child: CircularProgressIndicator(),
                             ),
@@ -181,7 +191,11 @@ class _MushafPageViewState extends State<MushafPageView> {
     final ny = local.dy / height;
     if (nx < 0 || nx > 1 || ny < 0 || ny > 1) return;
     final hit = _coords.hitTest(widget.edition.id, widget.page, nx, ny);
-    if (hit != null) widget.onAyahTap(hit);
+    if (hit != null) {
+      widget.onAyahTap(hit);
+    } else {
+      widget.onBackgroundTap?.call();
+    }
   }
 }
 
@@ -227,12 +241,12 @@ class _Centered extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children,
-          ),
-        ),
-      );
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: children,
+      ),
+    ),
+  );
 }

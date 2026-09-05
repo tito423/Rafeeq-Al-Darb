@@ -11,6 +11,7 @@ import '../../features/home/data/prayer_controller.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/qibla/presentation/screens/qibla_screen.dart';
+import '../../features/quran/data/quran_fullscreen_provider.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import 'tab_request_provider.dart';
 
@@ -87,7 +88,8 @@ class _AppShellState extends ConsumerState<AppShell>
       if (tab == null) return;
       setState(() => _index = tab);
       Future.microtask(
-          () => ref.read(requestedTabProvider.notifier).state = null);
+        () => ref.read(requestedTabProvider.notifier).state = null,
+      );
     });
 
     final screens = [
@@ -99,44 +101,59 @@ class _AppShellState extends ConsumerState<AppShell>
       const LibraryScreen(),
     ];
 
+    // P3‑43 #6: a genuinely full-screen mushaf reader needs this bar gone
+    // too, not just the Quran tab's own AppBar — see
+    // `quran_fullscreen_provider.dart` for why this is a shared provider
+    // rather than a direct call, `QuranScreen` isn't a parent of this bar.
+    // Gated on `_index == AppTab.quran` too, not the flag alone: `IndexedStack`
+    // keeps every tab's `State` alive at once, so `QuranScreen`'s restored
+    // `_pageFillScreen` (persisted across app restarts) stays live even
+    // while a completely different tab is the one actually on screen — a
+    // real bug caught live, not by inspection: a fullscreen toggle left on
+    // from an earlier session made the bottom nav vanish on Home too.
+    final fullScreen =
+        ref.watch(quranFullScreenProvider) && _index == AppTab.quran;
+
     return Scaffold(
       body: IndexedStack(index: _index, children: screens),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: _goTo,
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
-            label: 'nav.home'.tr(),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.menu_book_outlined),
-            selectedIcon: const Icon(Icons.menu_book),
-            label: 'nav.quran'.tr(),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.explore_outlined),
-            selectedIcon: const Icon(Icons.explore),
-            label: 'nav.prayer'.tr(),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.auto_awesome_outlined),
-            selectedIcon: const Icon(Icons.auto_awesome),
-            label: 'nav.azkar'.tr(),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.all_inclusive_outlined),
-            selectedIcon: const Icon(Icons.all_inclusive),
-            label: 'nav.tasbeeh'.tr(),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.library_books_outlined),
-            selectedIcon: const Icon(Icons.library_books),
-            label: 'nav.library'.tr(),
-          ),
-        ],
-      ),
+      bottomNavigationBar: fullScreen
+          ? null
+          : NavigationBar(
+              selectedIndex: _index,
+              onDestinationSelected: _goTo,
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: const Icon(Icons.home),
+                  label: 'nav.home'.tr(),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.menu_book_outlined),
+                  selectedIcon: const Icon(Icons.menu_book),
+                  label: 'nav.quran'.tr(),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.explore_outlined),
+                  selectedIcon: const Icon(Icons.explore),
+                  label: 'nav.prayer'.tr(),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.auto_awesome_outlined),
+                  selectedIcon: const Icon(Icons.auto_awesome),
+                  label: 'nav.azkar'.tr(),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.all_inclusive_outlined),
+                  selectedIcon: const Icon(Icons.all_inclusive),
+                  label: 'nav.tasbeeh'.tr(),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.library_books_outlined),
+                  selectedIcon: const Icon(Icons.library_books),
+                  label: 'nav.library'.tr(),
+                ),
+              ],
+            ),
     );
   }
 }

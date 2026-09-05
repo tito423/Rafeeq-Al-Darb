@@ -11,6 +11,7 @@ import '../../../search/presentation/screens/search_screen.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
+import '../../data/quran_fullscreen_provider.dart';
 import '../../data/quran_jump_provider.dart';
 import '../../data/quran_last_read.dart';
 import '../widgets/ayah_sciences_sheet.dart';
@@ -112,6 +113,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       if (autoScrollSpeed != null) _autoScrollSpeed = autoScrollSpeed;
       if (pageFillScreen != null) _pageFillScreen = pageFillScreen;
     });
+    ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
   }
 
   void _changeFontScale(double delta) {
@@ -121,12 +123,22 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     );
   }
 
-  void _toggleToolbarVisible() {
-    setState(() => _toolbarVisible = !_toolbarVisible);
+  /// P3‑43 #6: while genuinely full-screen (AppBar and both bottom nav
+  /// bars hidden), the fullscreen toggle button itself is off-screen too
+  /// — a plain tap on the page is the only way back, so it exits
+  /// full-screen first rather than just toggling the (currently invisible
+  /// anyway) toolbar row underneath it.
+  void _onBackgroundTap() {
+    if (_pageFillScreen) {
+      _togglePageFillScreen();
+    } else {
+      setState(() => _toolbarVisible = !_toolbarVisible);
+    }
   }
 
   void _togglePageFillScreen() {
     setState(() => _pageFillScreen = !_pageFillScreen);
+    ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
     SharedPreferences.getInstance().then(
       (p) => p.setBool(_kPageFillScreen, _pageFillScreen),
     );
@@ -243,131 +255,146 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       }
     });
     return Scaffold(
-      appBar: AppBar(
-        title: Text('nav.quran'.tr()),
-        // P3‑34 built this as a single horizontal-scroll row; P3‑41's
-        // real-device feedback was that this "takes place from the
-        // screen" — a long scrolling strip hides most actions until you
-        // scroll to find them. Two changes: a `Wrap` instead of a
-        // `SingleChildScrollView(Row)` so every action is visible at
-        // once across as many rows as it naturally takes (no more
-        // hidden-until-scrolled icons), and the whole thing collapses to
-        // nothing when `_toolbarVisible` is false (tapping the page
-        // itself toggles it — see `_buildViewer`), handing that space
-        // back to the page.
-        bottom: mushaf.hasValue && _toolbarVisible
-            ? PreferredSize(
-                preferredSize: Size.fromHeight(
-                  _mode == MushafMode.text ? 116 : 58,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 4,
-                    runSpacing: 0,
-                    children: [
-                      if (_mode == MushafMode.text) ...[
-                        ToolbarAction(
-                          icon: Icons.text_decrease,
-                          label: 'quran.font_smaller'.tr(),
-                          onPressed: () => _changeFontScale(-0.1),
+      // P3‑43 #6: "ملء الشاشة" now hides the AppBar entirely (not just its
+      // own toolbar row) plus this screen's own bottom bar below, and
+      // (via `quranFullScreenProvider`) `AppShell`'s bottom nav bar too —
+      // a tap on the page (`_onBackgroundTap`) is the only way back once
+      // the button that turned this on is itself off-screen.
+      appBar: _pageFillScreen
+          ? null
+          : AppBar(
+              title: Text('nav.quran'.tr()),
+              // P3‑34 built this as a single horizontal-scroll row; P3‑41's
+              // real-device feedback was that this "takes place from the
+              // screen" — a long scrolling strip hides most actions until you
+              // scroll to find them. Two changes: a `Wrap` instead of a
+              // `SingleChildScrollView(Row)` so every action is visible at
+              // once across as many rows as it naturally takes (no more
+              // hidden-until-scrolled icons), and the whole thing collapses to
+              // nothing when `_toolbarVisible` is false (tapping the page
+              // itself toggles it — see `_buildViewer`), handing that space
+              // back to the page.
+              bottom: mushaf.hasValue && _toolbarVisible
+                  ? PreferredSize(
+                      // P3‑43 #6: image mode's toolbar gained the full-screen
+                      // action too (moved out of the text-only block below), so
+                      // it now wraps to two rows the same as text mode's own —
+                      // this height was still the old single-row estimate and
+                      // would have clipped/overflowed the extra row.
+                      preferredSize: const Size.fromHeight(116),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
                         ),
-                        ToolbarAction(
-                          icon: Icons.text_increase,
-                          label: 'quran.font_larger'.tr(),
-                          onPressed: () => _changeFontScale(0.1),
-                        ),
-                        ToolbarAction(
-                          icon: _autoScroll
-                              ? Icons.pause_circle_outline
-                              : Icons.play_circle_outline,
-                          label: _autoScroll
-                              ? 'quran.auto_scroll_stop'.tr()
-                              : 'quran.auto_scroll'.tr(),
-                          onPressed: _toggleAutoScroll,
-                        ),
-                        ToolbarAction(
-                          icon: _pageFillScreen
-                              ? Icons.fullscreen_exit
-                              : Icons.fullscreen,
-                          label: _pageFillScreen
-                              ? 'quran.page_fit_small'.tr()
-                              : 'quran.page_fit_full'.tr(),
-                          onPressed: _togglePageFillScreen,
-                        ),
-                      ],
-                      ToolbarAction(
-                        icon: Icons.travel_explore_outlined,
-                        label: 'search.title'.tr(),
-                        onPressed: () async {
-                          final page = await Navigator.of(context).push<int>(
-                            MaterialPageRoute<int>(
-                              builder: (_) =>
-                                  SearchScreen(repo: mushaf.value!.repo),
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 4,
+                          runSpacing: 0,
+                          children: [
+                            if (_mode == MushafMode.text) ...[
+                              ToolbarAction(
+                                icon: Icons.text_decrease,
+                                label: 'quran.font_smaller'.tr(),
+                                onPressed: () => _changeFontScale(-0.1),
+                              ),
+                              ToolbarAction(
+                                icon: Icons.text_increase,
+                                label: 'quran.font_larger'.tr(),
+                                onPressed: () => _changeFontScale(0.1),
+                              ),
+                              ToolbarAction(
+                                icon: _autoScroll
+                                    ? Icons.pause_circle_outline
+                                    : Icons.play_circle_outline,
+                                label: _autoScroll
+                                    ? 'quran.auto_scroll_stop'.tr()
+                                    : 'quran.auto_scroll'.tr(),
+                                onPressed: _toggleAutoScroll,
+                              ),
+                            ],
+                            // P3‑43 #6: moved out of the text-only block above —
+                            // full-screen reading is a real, useful mode for the
+                            // image mushaf too, not just the text one.
+                            ToolbarAction(
+                              icon: _pageFillScreen
+                                  ? Icons.fullscreen_exit
+                                  : Icons.fullscreen,
+                              label: _pageFillScreen
+                                  ? 'quran.page_fit_small'.tr()
+                                  : 'quran.page_fit_full'.tr(),
+                              onPressed: _togglePageFillScreen,
                             ),
-                          );
-                          if (page != null) _goToPage(page);
-                        },
-                      ),
-                      ToolbarAction(
-                        icon: Icons.format_list_numbered,
-                        label: 'quran.surah_list'.tr(),
-                        onPressed: () => showSurahSheet(
-                          context,
-                          surahs: mushaf.value!.surahs,
-                          startPages: mushaf.value!.surahStartPages,
-                          onSelect: _goToPage,
+                            ToolbarAction(
+                              icon: Icons.travel_explore_outlined,
+                              label: 'search.title'.tr(),
+                              onPressed: () async {
+                                final page = await Navigator.of(context)
+                                    .push<int>(
+                                      MaterialPageRoute<int>(
+                                        builder: (_) => SearchScreen(
+                                          repo: mushaf.value!.repo,
+                                        ),
+                                      ),
+                                    );
+                                if (page != null) _goToPage(page);
+                              },
+                            ),
+                            ToolbarAction(
+                              icon: Icons.format_list_numbered,
+                              label: 'quran.surah_list'.tr(),
+                              onPressed: () => showSurahSheet(
+                                context,
+                                surahs: mushaf.value!.surahs,
+                                startPages: mushaf.value!.surahStartPages,
+                                onSelect: _goToPage,
+                              ),
+                            ),
+                            ToolbarAction(
+                              icon: Icons.filter_9_plus,
+                              label: 'quran.juz'.tr(),
+                              onPressed: () => showJuzSheet(
+                                context,
+                                juzStartPages: mushaf.value!.juzStartPages,
+                                onSelect: _goToPage,
+                              ),
+                            ),
+                            ToolbarAction(
+                              icon: Icons.pin_drop_outlined,
+                              label: 'quran.jump_to'.tr(),
+                              onPressed: () => showGotoPageSheet(
+                                context,
+                                current: _current,
+                                onSelect: _goToPage,
+                              ),
+                            ),
+                            ToolbarAction(
+                              icon: Icons.auto_stories_outlined,
+                              label: 'quran.editions'.tr(),
+                              onPressed: () => MushafEditionSheet.show(context),
+                            ),
+                            ToolbarAction(
+                              icon: _mode == MushafMode.text
+                                  ? Icons.image_outlined
+                                  : Icons.notes,
+                              label: _mode == MushafMode.text
+                                  ? 'quran.mushaf_mode'.tr()
+                                  : 'quran.text_mode'.tr(),
+                              onPressed: () {
+                                setState(() {
+                                  _mode = _mode == MushafMode.text
+                                      ? MushafMode.image
+                                      : MushafMode.text;
+                                });
+                                _persistMode();
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                      ToolbarAction(
-                        icon: Icons.filter_9_plus,
-                        label: 'quran.juz'.tr(),
-                        onPressed: () => showJuzSheet(
-                          context,
-                          juzStartPages: mushaf.value!.juzStartPages,
-                          onSelect: _goToPage,
-                        ),
-                      ),
-                      ToolbarAction(
-                        icon: Icons.pin_drop_outlined,
-                        label: 'quran.jump_to'.tr(),
-                        onPressed: () => showGotoPageSheet(
-                          context,
-                          current: _current,
-                          onSelect: _goToPage,
-                        ),
-                      ),
-                      ToolbarAction(
-                        icon: Icons.auto_stories_outlined,
-                        label: 'quran.editions'.tr(),
-                        onPressed: () => MushafEditionSheet.show(context),
-                      ),
-                      ToolbarAction(
-                        icon: _mode == MushafMode.text
-                            ? Icons.image_outlined
-                            : Icons.notes,
-                        label: _mode == MushafMode.text
-                            ? 'quran.mushaf_mode'.tr()
-                            : 'quran.text_mode'.tr(),
-                        onPressed: () {
-                          setState(() {
-                            _mode = _mode == MushafMode.text
-                                ? MushafMode.image
-                                : MushafMode.text;
-                          });
-                          _persistMode();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            : null,
-      ),
+                    )
+                  : null,
+            ),
       body: mushaf.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, _) =>
@@ -377,59 +404,62 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
           ref.watch(currentMushafEditionProvider).valueOrNull,
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // P3‑8: a fast surah-jump strip — was completely missing,
-              // the only way to jump surahs before this was the toolbar's
-              // full-screen "السور" list sheet. Only shown once real data
-              // is loaded (needs `surahStartPages` to know where to jump).
-              if (mushaf.hasValue)
-                _SurahStrip(
-                  surahs: mushaf.value!.surahs,
-                  surahStartPages: mushaf.value!.surahStartPages,
-                  currentPage: _current,
-                  onSelect: _goToPage,
-                ),
-              // Only shown once auto-scroll is actually on — no point
-              // occupying screen space with a speed control for a feature
-              // that isn't running.
-              if (_autoScroll && _mode == MushafMode.text)
-                _AutoScrollSpeedBar(
-                  speed: _autoScrollSpeed,
-                  onChanged: _changeAutoScrollSpeed,
-                ),
-              const SizedBox(height: 6),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.chevron_left),
-                    onPressed: _current > 1
-                        ? () => _goToPage(_current - 1)
-                        : null,
-                  ),
-                  Text(
-                    '${'quran.page'.tr()}  $_current / $_totalPages',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
+      bottomNavigationBar: _pageFillScreen
+          ? null
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // P3‑8: a fast surah-jump strip — was completely missing,
+                    // the only way to jump surahs before this was the toolbar's
+                    // full-screen "السور" list sheet. Only shown once real data
+                    // is loaded (needs `surahStartPages` to know where to jump).
+                    if (mushaf.hasValue)
+                      _SurahStrip(
+                        surahs: mushaf.value!.surahs,
+                        surahStartPages: mushaf.value!.surahStartPages,
+                        currentPage: _current,
+                        onSelect: _goToPage,
+                      ),
+                    // Only shown once auto-scroll is actually on — no point
+                    // occupying screen space with a speed control for a feature
+                    // that isn't running.
+                    if (_autoScroll && _mode == MushafMode.text)
+                      _AutoScrollSpeedBar(
+                        speed: _autoScrollSpeed,
+                        onChanged: _changeAutoScrollSpeed,
+                      ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.chevron_left),
+                          onPressed: _current > 1
+                              ? () => _goToPage(_current - 1)
+                              : null,
+                        ),
+                        Text(
+                          '${'quran.page'.tr()}  $_current / $_totalPages',
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.chevron_right),
+                          onPressed: _current < _totalPages
+                              ? () => _goToPage(_current + 1)
+                              : null,
+                        ),
+                      ],
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.chevron_right),
-                    onPressed: _current < _totalPages
-                        ? () => _goToPage(_current + 1)
-                        : null,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -462,6 +492,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 onAyahTap: (region) =>
                     _onImageAyahTap(region, ayahs, data, edition),
                 onLoadFailed: () => setState(() => _mode = MushafMode.text),
+                // Image mode never had a tap-to-hide-toolbar gesture (only
+                // text mode does, since P3‑42) — deliberately not adding
+                // one here. This only exists so a full-screen image-mode
+                // reader can be exited the same way the text-mode one can.
+                onBackgroundTap: _pageFillScreen ? _togglePageFillScreen : null,
               );
             }
             return MushafTextPage(
@@ -473,7 +508,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               autoScrollSpeed: _autoScrollSpeed,
               isActive: page == _current,
               onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
-              onBackgroundTap: _toggleToolbarVisible,
+              onBackgroundTap: _onBackgroundTap,
               pageFillScreen: _pageFillScreen,
             );
           },
