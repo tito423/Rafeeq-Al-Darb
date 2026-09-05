@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,7 +45,11 @@ class KhatmaScreen extends ConsumerWidget {
                             final before = k;
                             final updated = await ref
                                 .read(khatmaStoreProvider.notifier)
-                                .readToday(k, mushaf.juzStartPages);
+                                .readToday(
+                                  k,
+                                  mushaf.juzStartPages,
+                                  mushaf.rubElHizbPages,
+                                );
                             if (!context.mounted) return;
                             ref.read(quranJumpRequestProvider.notifier).state =
                                 updated.currentPage;
@@ -67,11 +73,12 @@ class KhatmaScreen extends ConsumerWidget {
                   ),
                 if (done.isNotEmpty) ...[
                   const SizedBox(height: 12),
-                  Text('khatma.history'.tr(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall
-                          ?.copyWith(color: AppColors.gold)),
+                  Text(
+                    'khatma.history'.tr(),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: AppColors.gold),
+                  ),
                   const SizedBox(height: 8),
                   for (final k in done) _CompletedTile(khatma: k),
                 ],
@@ -81,7 +88,10 @@ class KhatmaScreen extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(
-      BuildContext context, WidgetRef ref, Khatma k) async {
+    BuildContext context,
+    WidgetRef ref,
+    Khatma k,
+  ) async {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
@@ -102,7 +112,10 @@ class KhatmaScreen extends ConsumerWidget {
   }
 
   Future<void> _pickReminder(
-      BuildContext context, WidgetRef ref, Khatma k) async {
+    BuildContext context,
+    WidgetRef ref,
+    Khatma k,
+  ) async {
     final time = await showTimePicker(
       context: context,
       initialTime: k.reminderTime ?? const TimeOfDay(hour: 20, minute: 0),
@@ -137,8 +150,11 @@ class _EmptyBody extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.auto_stories_outlined,
-                size: 56, color: Theme.of(context).colorScheme.outline),
+            Icon(
+              Icons.auto_stories_outlined,
+              size: 56,
+              color: Theme.of(context).colorScheme.outline,
+            ),
             const SizedBox(height: 14),
             Text('khatma.start_invite'.tr(), textAlign: TextAlign.center),
           ],
@@ -169,7 +185,9 @@ class _KhatmaTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gold = AppColors.gold;
-    final due = mushaf == null ? 0 : khatma.duePages(mushaf!.juzStartPages);
+    final due = mushaf == null
+        ? 0
+        : khatma.duePages(mushaf!.juzStartPages, mushaf!.rubElHizbPages);
     final daysLeft = khatma.daysLeft;
 
     return Card(
@@ -184,16 +202,21 @@ class _KhatmaTile extends StatelessWidget {
                 SizedBox(
                   width: 46,
                   height: 46,
-                  child: Stack(alignment: Alignment.center, children: [
-                    CircularProgressIndicator(
-                      value: khatma.progress,
-                      strokeWidth: 4,
-                      backgroundColor: gold.withValues(alpha: 0.15),
-                      color: gold,
-                    ),
-                    Text('${(khatma.progress * 100).round()}%',
-                        style: theme.textTheme.labelSmall),
-                  ]),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        value: khatma.progress,
+                        strokeWidth: 4,
+                        backgroundColor: gold.withValues(alpha: 0.15),
+                        color: gold,
+                      ),
+                      Text(
+                        '${(khatma.progress * 100).round()}%',
+                        style: theme.textTheme.labelSmall,
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -201,16 +224,23 @@ class _KhatmaTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'khatma.pages_read_of'
-                            .tr(args: ['${khatma.pagesRead}', '${khatma.totalPagesInPlan}']),
+                        'khatma.pages_read_of'.tr(
+                          args: [
+                            '${khatma.pagesRead}',
+                            '${khatma.totalPagesInPlan}',
+                          ],
+                        ),
                         style: theme.textTheme.titleSmall,
                       ),
                       Text(
                         daysLeft != null
                             ? 'khatma.days_left'.tr(args: ['$daysLeft'])
-                            : 'khatma.daily_amount'.tr(args: ['${khatma.dailyAmount ?? 1}']),
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                            : 'khatma.daily_amount'.tr(
+                                args: ['${khatma.dailyAmount ?? 1}'],
+                              ),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -225,19 +255,27 @@ class _KhatmaTile extends StatelessWidget {
                       value: 'reminder',
                       child: ListTile(
                         leading: const Icon(Icons.notifications_outlined),
-                        title: Text(khatma.reminderTime == null
-                            ? 'khatma.set_reminder'.tr()
-                            : 'khatma.reminder_at'
-                                .tr(args: [_fmtTime(khatma.reminderTime!)])),
+                        title: Text(
+                          khatma.reminderTime == null
+                              ? 'khatma.set_reminder'.tr()
+                              : 'khatma.reminder_at'.tr(
+                                  args: [_fmtTime(khatma.reminderTime!)],
+                                ),
+                        ),
                         contentPadding: EdgeInsets.zero,
                       ),
                     ),
                     PopupMenuItem(
                       value: 'delete',
                       child: ListTile(
-                        leading: const Icon(Icons.delete_outline, color: AppColors.error),
-                        title: Text('khatma.delete'.tr(),
-                            style: const TextStyle(color: AppColors.error)),
+                        leading: const Icon(
+                          Icons.delete_outline,
+                          color: AppColors.error,
+                        ),
+                        title: Text(
+                          'khatma.delete'.tr(),
+                          style: const TextStyle(color: AppColors.error),
+                        ),
                         contentPadding: EdgeInsets.zero,
                       ),
                     ),
@@ -290,18 +328,50 @@ class _CompletedTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: const Icon(Icons.emoji_events_outlined, color: AppColors.gold),
-        title: Text('khatma.completed_on'.tr(
-          args: [date != null ? DateFormat.yMMMd(context.locale.toString()).format(date) : ''],
-        )),
-        subtitle: Text('khatma.started_on'.tr(
-          args: [DateFormat.yMMMd(context.locale.toString()).format(khatma.startDate)],
-        )),
+        title: Text(
+          'khatma.completed_on'.tr(
+            args: [
+              date != null
+                  ? DateFormat.yMMMd(context.locale.toString()).format(date)
+                  : '',
+            ],
+          ),
+        ),
+        subtitle: Text(
+          'khatma.started_on'.tr(
+            args: [
+              DateFormat.yMMMd(
+                context.locale.toString(),
+              ).format(khatma.startDate),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-enum _AmountUnit { pages, juz }
+enum _AmountUnit { pages, juz, quarters }
+
+/// The reference's own fine-grained pre-juz steps
+/// (`design_refs/khatma_app_ref/4_new_khatma_juz_units.jpg`): quarters of
+/// a hizb, 1 through 7 (8 quarters = 1 juz, already covered by
+/// [_AmountUnit.juz]'s own 1-30 range — no need to duplicate that as
+/// "quarters" too).
+String _quarterLabel(int n) {
+  switch (n) {
+    case 1:
+      return 'khatma.quarter_1'.tr();
+    case 2:
+      return 'khatma.quarter_2'.tr();
+    case 3:
+      return 'khatma.quarter_3'.tr();
+    case 4:
+      return 'khatma.quarter_4_hizb'.tr();
+    default:
+      return 'khatma.quarter_n'.tr(args: ['$n']);
+  }
+}
 
 /// P3‑6 redesign: a real two-step wizard, matching the owner's actual
 /// reference app's own "ختمة جديدة" flow (`design_refs/khatma_app_ref/
@@ -310,11 +380,16 @@ enum _AmountUnit { pages, juz }
 /// الجزء الذي تريد أن تبدء منه الختمة"), step 2 links the khatma's
 /// duration and its daily portion size so editing either one recomputes
 /// the other (the reference's "حدد المدة ... أو كمية الورد اليومي" — two
-/// views of the same rate). The reference also offers quarter-hizb
-/// precision for the daily amount; this app has no hizb/quarter boundary
-/// data in its mushaf DB (only juz boundaries), so the unit choice here is
-/// honestly limited to صفحات/جزء rather than faking finer precision it
-/// can't actually back with real page numbers.
+/// views of the same rate).
+///
+/// P3‑43 #9: the reference's own quarter-hizb precision for the daily
+/// amount (ربع/ربعان/٣ أرباع/حزب...) was missed in the original P3‑6
+/// build — this app's mushaf DB has no hizb/quarter column, only juz, so
+/// building it honestly needed real boundary data first. Now sourced from
+/// `assets/data/mushaf/rub_el_hizb_pages.json` (real `rub_el_hizb_number`
+/// metadata fetched from api.quran.com, the same trusted source already
+/// used for tafsir/translations) — see `MushafData.rubElHizbPages`'s own
+/// doc.
 class _CreateKhatmaSheet extends ConsumerStatefulWidget {
   const _CreateKhatmaSheet();
 
@@ -365,17 +440,42 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
     return juz;
   }
 
-  int _totalPlan(MushafData? mushaf, int startPage) {
-    if (_unit == _AmountUnit.pages) return Khatma.totalPages - startPage + 1;
-    final startJuz = _startJuzNumber(mushaf, startPage);
-    return 30 - startJuz + 1;
+  int _startQuarterNumber(MushafData? mushaf, int startPage) {
+    final rubPages = mushaf?.rubElHizbPages;
+    if (rubPages == null || rubPages.isEmpty) return 1;
+    var rub = 1;
+    for (var i = 0; i < rubPages.length; i++) {
+      if (rubPages[i] <= startPage) rub = i + 1;
+    }
+    return rub;
   }
+
+  int _totalPlan(MushafData? mushaf, int startPage) {
+    switch (_unit) {
+      case _AmountUnit.pages:
+        return Khatma.totalPages - startPage + 1;
+      case _AmountUnit.juz:
+        final startJuz = _startJuzNumber(mushaf, startPage);
+        return 30 - startJuz + 1;
+      case _AmountUnit.quarters:
+        final total = mushaf?.rubElHizbPages.length ?? 240;
+        final startRub = _startQuarterNumber(mushaf, startPage);
+        return total - startRub + 1;
+    }
+  }
+
+  /// Caps how big a single day's amount can be for the *current* unit —
+  /// quarters are deliberately bounded to 1-7 (8 quarters = a full juz,
+  /// already the [_AmountUnit.juz] option's own job), unlike pages/juz
+  /// which can validly span the whole plan in one day.
+  int _maxAmount(_AmountUnit unit, int plan) =>
+      unit == _AmountUnit.quarters ? math.min(7, plan) : plan;
 
   void _onDurationChanged(int v, MushafData? mushaf) {
     setState(() {
       _durationDays = v;
       final plan = _totalPlan(mushaf, _startPage(mushaf));
-      _dailyAmount = (plan / v).ceil().clamp(1, plan);
+      _dailyAmount = (plan / v).ceil().clamp(1, _maxAmount(_unit, plan));
     });
   }
 
@@ -391,7 +491,10 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
     setState(() {
       _unit = u;
       final plan = _totalPlan(mushaf, _startPage(mushaf));
-      _dailyAmount = (plan / _durationDays).ceil().clamp(1, plan);
+      _dailyAmount = (plan / _durationDays).ceil().clamp(
+        1,
+        _maxAmount(u, plan),
+      );
     });
   }
 
@@ -417,7 +520,10 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
                   icon: const Icon(Icons.arrow_back),
                   visualDensity: VisualDensity.compact,
                 ),
-              Text('khatma.new'.tr(), style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                'khatma.new'.tr(),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -440,10 +546,15 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
               onReminderChanged: (t) => setState(() => _reminder = t),
               onCreate: () async {
                 final startPage = _startPage(mushaf);
-                await ref.read(khatmaStoreProvider.notifier).create(
-                      mode: _unit == _AmountUnit.pages
-                          ? KhatmaMode.dailyPages
-                          : KhatmaMode.dailyJuz,
+                final mode = switch (_unit) {
+                  _AmountUnit.pages => KhatmaMode.dailyPages,
+                  _AmountUnit.juz => KhatmaMode.dailyJuz,
+                  _AmountUnit.quarters => KhatmaMode.dailyQuarters,
+                };
+                await ref
+                    .read(khatmaStoreProvider.notifier)
+                    .create(
+                      mode: mode,
                       dailyAmount: _dailyAmount,
                       startPage: startPage,
                       reminderTime: _reminder,
@@ -475,12 +586,13 @@ class _StartStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('khatma.start_prompt'.tr(),
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        Text(
+          'khatma.start_prompt'.tr(),
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 20),
         DropdownButtonFormField<int?>(
           initialValue: startJuz,
@@ -489,9 +601,15 @@ class _StartStep extends StatelessWidget {
             border: const OutlineInputBorder(),
           ),
           items: [
-            DropdownMenuItem(value: null, child: Text('khatma.start_beginning'.tr())),
+            DropdownMenuItem(
+              value: null,
+              child: Text('khatma.start_beginning'.tr()),
+            ),
             for (var j = 1; j <= 30; j++)
-              DropdownMenuItem(value: j, child: Text('khatma.juz_label'.tr(args: ['$j']))),
+              DropdownMenuItem(
+                value: j,
+                child: Text('khatma.juz_label'.tr(args: ['$j'])),
+              ),
           ],
           onChanged: onChanged,
         ),
@@ -537,12 +655,13 @@ class _DurationStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('khatma.duration_prompt'.tr(),
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        Text(
+          'khatma.duration_prompt'.tr(),
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 18),
         _Stepper(
           label: 'khatma.duration_days'.tr(),
@@ -558,9 +677,17 @@ class _DurationStep extends StatelessWidget {
             SegmentedButton<_AmountUnit>(
               segments: [
                 ButtonSegment(
-                    value: _AmountUnit.pages, label: Text('khatma.unit_pages'.tr())),
+                  value: _AmountUnit.quarters,
+                  label: Text('khatma.unit_quarters'.tr()),
+                ),
                 ButtonSegment(
-                    value: _AmountUnit.juz, label: Text('khatma.unit_juz'.tr())),
+                  value: _AmountUnit.pages,
+                  label: Text('khatma.unit_pages'.tr()),
+                ),
+                ButtonSegment(
+                  value: _AmountUnit.juz,
+                  label: Text('khatma.unit_juz'.tr()),
+                ),
               ],
               selected: {unit},
               onSelectionChanged: (s) => onUnitChanged(s.first),
@@ -568,15 +695,34 @@ class _DurationStep extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        _Stepper(
-          label: unit == _AmountUnit.pages
-              ? 'khatma.pages_per_day'.tr()
-              : 'khatma.juz_per_day'.tr(),
-          value: dailyAmount,
-          min: 1,
-          max: unit == _AmountUnit.pages ? 60 : 30,
-          onChanged: onAmountChanged,
-        ),
+        // P3‑43 #9: quarters are a bounded, named 1-7 choice (ربع..٧ أرباع
+        // — 8 quarters is a full juz, already the juz option's own job),
+        // not an open-ended stepper like pages/juz.
+        if (unit == _AmountUnit.quarters)
+          DropdownButtonFormField<int>(
+            initialValue: dailyAmount.clamp(1, 7),
+            decoration: InputDecoration(
+              labelText: 'khatma.quarters_per_day'.tr(),
+              border: const OutlineInputBorder(),
+            ),
+            items: [
+              for (var n = 1; n <= 7; n++)
+                DropdownMenuItem(value: n, child: Text(_quarterLabel(n))),
+            ],
+            onChanged: (v) {
+              if (v != null) onAmountChanged(v);
+            },
+          )
+        else
+          _Stepper(
+            label: unit == _AmountUnit.pages
+                ? 'khatma.pages_per_day'.tr()
+                : 'khatma.juz_per_day'.tr(),
+            value: dailyAmount,
+            min: 1,
+            max: unit == _AmountUnit.pages ? 60 : 30,
+            onChanged: onAmountChanged,
+          ),
         const SizedBox(height: 14),
         Row(
           children: [
@@ -584,9 +730,11 @@ class _DurationStep extends StatelessWidget {
               child: Text(
                 reminder == null
                     ? 'khatma.no_reminder'.tr()
-                    : 'khatma.reminder_at'.tr(args: [
-                        '${reminder!.hour.toString().padLeft(2, '0')}:${reminder!.minute.toString().padLeft(2, '0')}'
-                      ]),
+                    : 'khatma.reminder_at'.tr(
+                        args: [
+                          '${reminder!.hour.toString().padLeft(2, '0')}:${reminder!.minute.toString().padLeft(2, '0')}',
+                        ],
+                      ),
                 style: TextStyle(color: gold),
               ),
             ),

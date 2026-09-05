@@ -435,7 +435,14 @@
     "duration_days": "Продолжительность хатмы (дней)",
     "daily_portion": "Дневная порция",
     "unit_pages": "Страниц",
-    "unit_juz": "Джуз"
+    "unit_juz": "Джуз",
+    "unit_quarters": "Четверти",
+    "quarters_per_day": "Четвертей хизба в день",
+    "quarter_1": "Четверть",
+    "quarter_2": "Две четверти",
+    "quarter_3": "3 четверти",
+    "quarter_4_hizb": "Один хизб",
+    "quarter_n": "{} четвертей"
   },
   "sunan_suwar": {
     "title": "Сунна сур (днём и ночью)",

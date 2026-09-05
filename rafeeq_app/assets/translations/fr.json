@@ -435,7 +435,14 @@
     "duration_days": "Durée de la khatma (jours)",
     "daily_portion": "Portion quotidienne",
     "unit_pages": "Pages",
-    "unit_juz": "Juz'"
+    "unit_juz": "Juz'",
+    "unit_quarters": "Quarts",
+    "quarters_per_day": "Quarts de hizb par jour",
+    "quarter_1": "Un quart",
+    "quarter_2": "Deux quarts",
+    "quarter_3": "3 quarts",
+    "quarter_4_hizb": "Un hizb",
+    "quarter_n": "{} quarts"
   },
   "sunan_suwar": {
     "title": "Sunna des sourates (jour et nuit)",

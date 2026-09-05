@@ -435,7 +435,14 @@
     "duration_days": "Duração da khatma (dias)",
     "daily_portion": "Porção diária",
     "unit_pages": "Páginas",
-    "unit_juz": "Juz"
+    "unit_juz": "Juz",
+    "unit_quarters": "Quartos",
+    "quarters_per_day": "Quartos de hizb por dia",
+    "quarter_1": "Um quarto",
+    "quarter_2": "Dois quartos",
+    "quarter_3": "3 quartos",
+    "quarter_4_hizb": "Um hizb",
+    "quarter_n": "{} quartos"
   },
   "sunan_suwar": {
     "title": "Sunan das Suras (Dia e Noite)",

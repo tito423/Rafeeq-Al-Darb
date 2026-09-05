@@ -34,14 +34,18 @@ Future<KhatmaPortionRange?> resolveKhatmaPortionRange(
   Khatma khatma,
   MushafData mushaf,
 ) async {
-  final due = khatma.duePages(mushaf.juzStartPages);
+  final due = khatma.duePages(mushaf.juzStartPages, mushaf.rubElHizbPages);
   final startPage = khatma.currentPage;
-  final endPage = (startPage + (due > 0 ? due - 1 : 0)).clamp(startPage, Khatma.totalPages);
+  final endPage = (startPage + (due > 0 ? due - 1 : 0)).clamp(
+    startPage,
+    Khatma.totalPages,
+  );
 
   final startAyahs = await mushaf.repo.ayahsOfPage(startPage);
   if (startAyahs.isEmpty) return null;
-  final endAyahs =
-      endPage == startPage ? startAyahs : await mushaf.repo.ayahsOfPage(endPage);
+  final endAyahs = endPage == startPage
+      ? startAyahs
+      : await mushaf.repo.ayahsOfPage(endPage);
   if (endAyahs.isEmpty) return null;
 
   return KhatmaPortionRange(
@@ -60,5 +64,5 @@ Future<KhatmaPortionRange?> resolveKhatmaPortionRange(
 /// hits, rather than flashing back to a loading state on unrelated rebuilds.
 final khatmaPortionRangeProvider = FutureProvider.family
     .autoDispose<KhatmaPortionRange?, (Khatma, MushafData)>((ref, args) {
-  return resolveKhatmaPortionRange(args.$1, args.$2);
-});
+      return resolveKhatmaPortionRange(args.$1, args.$2);
+    });

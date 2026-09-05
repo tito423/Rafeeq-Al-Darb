@@ -435,7 +435,14 @@
     "duration_days": "Khatma duration (days)",
     "daily_portion": "Daily portion",
     "unit_pages": "Pages",
-    "unit_juz": "Juz"
+    "unit_juz": "Juz",
+    "unit_quarters": "Quarters",
+    "quarters_per_day": "Quarter-hizbs per day",
+    "quarter_1": "Quarter",
+    "quarter_2": "Two quarters",
+    "quarter_3": "3 quarters",
+    "quarter_4_hizb": "One hizb",
+    "quarter_n": "{} quarters"
   },
   "sunan_suwar": {
     "title": "Sunnah of the Surahs (Day & Night)",

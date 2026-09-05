@@ -2439,21 +2439,36 @@ core-feature failures before polish):
    to its own line on a narrow card instead of clipping past the edge,
    no visual change at all on any card where it already fit. `flutter
    analyze`/`flutter test` clean (15/15).
-9. **Khatma daily-portion units are missing the quarter-hizb
-   granularity the owner's own reference screenshots always called
-   for** — `design_refs/khatma_app_ref/3_new_khatma_duration.jpg` and
-   `4_new_khatma_juz_units.jpg` (re-sent this round, byte-identical to
-   what's already in the repo from P3‑6) show ONE unified unit dropdown
-   that starts fine-grained (`ربع`, `ربعان`, `٣ أرباع`, `حزب`, `٥ أرباع`,
-   `٦ أرباع`, `٧ أرباع` — quarters of a hizb) and only switches to whole-
-   juz counts (`جزء`, `جزءان`, ... `٩ أجزاء`) past one juz. The P3‑6
-   implementation (`khatma_screen.dart`'s `_AmountUnit` enum) only ever
-   built the juz-level half of this — the quarter-hizb granularity was
-   missed. Needs real quarter/hizb page-boundary data (check whether
-   `assets/data/mushaf/` already has hizb-quarter boundaries the way it
-   has juz-start pages for `khatma_store.dart`'s
-   `portionsRemaining(juzStartPages)`) before building the finer unit
-   options — do not invent approximate boundaries.
+9. ✅ **DONE — real quarter-hizb data sourced, not invented, and wired
+   in.** Confirmed first (per the item's own instruction not to guess):
+   `assets/data/mushaf/` and the bundled `quran_local.db` have no hizb/
+   quarter column at all — only `juz_number`. Real `rub_el_hizb_number`
+   per-ayah metadata is available from **api.quran.com** (this project's
+   own already-trusted source for tafsir/translations —
+   `fetch_tafsirs_complete.py`), via `/verses/by_juz/{n}?fields=…
+   rub_el_hizb_number,page_number`. Fetched all 30 juz (one request
+   each), derived each of the 240 real quarter-hizb divisions' first
+   page the same "MIN(page_number), first occurrence wins" rule already
+   used for juz/surah boundaries — verified before shipping: exactly
+   6236 ayahs fetched, exactly 240 distinct rub numbers 1‑240, pages
+   non-decreasing, رُبع 1 starts page 1. Saved as `assets/data/mushaf/
+   rub_el_hizb_pages.json` (a plain 240-int list).
+   **Wired in properly, not bolted on**: new `MushafData.rubElHizbPages`
+   (loaded once alongside the existing surah/juz data);
+   `KhatmaMode` gained `dailyQuarters` as its own value — **not** a
+   reinterpretation of `dailyJuz`'s existing `dailyAmount` unit, so an
+   already-created khatma's "N juz/day" pacing can never be silently
+   misread as "N quarters/day" (4× slower) by this change; new
+   `Khatma._pagesForQuarters`/`_rubForPage` mirror `_pagesForJuz`'s
+   exact shape. The "ختمة جديدة" wizard's unit `SegmentedButton` gained
+   a third "أرباع" option; picking it swaps the amount `_Stepper` for a
+   bounded `DropdownButtonFormField` offering exactly the reference's
+   own 1‑7 labels (ربع/ربعان/٣ أرباع/حزب/٥ أرباع/٦ أرباع/٧ أرباع) — 8
+   quarters is a full juz, already the juz option's own job, so this
+   deliberately doesn't duplicate that range. +8 keys × 6 locales
+   (`unit_quarters`, `quarters_per_day`, `quarter_1..3`,
+   `quarter_4_hizb`, `quarter_n`). `flutter analyze`/`flutter test`
+   clean (15/15, parity holds).
 10. **Location permission has no direct action from where it's needed**
     — when the home screen shows "فعّل الموقع لحساب مواقيت صلاتك", it's
     just static text with no tap action; the owner wants tapping it (or

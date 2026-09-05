@@ -25,14 +25,18 @@ class KhatmaCard extends ConsumerWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const KhatmaScreen()),
-        ),
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute<void>(builder: (_) => const KhatmaScreen())),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: active.isEmpty
               ? _EmptyState(theme: theme, gold: gold)
-              : _ActiveKhatmaRow(khatma: active.first, theme: theme, gold: gold),
+              : _ActiveKhatmaRow(
+                  khatma: active.first,
+                  theme: theme,
+                  gold: gold,
+                ),
         ),
       ),
     );
@@ -56,9 +60,12 @@ class _EmptyState extends StatelessWidget {
             children: [
               Text('khatma.title'.tr(), style: theme.textTheme.titleMedium),
               const SizedBox(height: 2),
-              Text('khatma.start_invite'.tr(),
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              Text(
+                'khatma.start_invite'.tr(),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             ],
           ),
         ),
@@ -88,8 +95,9 @@ class _ActiveKhatmaRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mushaf = ref.watch(mushafDataProvider).valueOrNull;
-    final subtleStyle = theme.textTheme.bodySmall
-        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final subtleStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -97,8 +105,10 @@ class _ActiveKhatmaRow extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: Text('khatma.title'.tr(),
-                  style: theme.textTheme.titleMedium),
+              child: Text(
+                'khatma.title'.tr(),
+                style: theme.textTheme.titleMedium,
+              ),
             ),
             if (khatma.streak > 1)
               Row(
@@ -106,8 +116,10 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                 children: [
                   Icon(Icons.local_fire_department, size: 14, color: gold),
                   const SizedBox(width: 2),
-                  Text('khatma.streak'.tr(args: ['${khatma.streak}']),
-                      style: theme.textTheme.labelSmall?.copyWith(color: gold)),
+                  Text(
+                    'khatma.streak'.tr(args: ['${khatma.streak}']),
+                    style: theme.textTheme.labelSmall?.copyWith(color: gold),
+                  ),
                 ],
               ),
           ],
@@ -119,27 +131,35 @@ class _ActiveKhatmaRow extends ConsumerWidget {
             child: LinearProgressIndicator(),
           )
         else
-          Consumer(builder: (context, ref, _) {
-            final rangeAsync =
-                ref.watch(khatmaPortionRangeProvider((khatma, mushaf)));
-            return rangeAsync.when(
-              loading: () => const Padding(
-                padding: EdgeInsets.symmetric(vertical: 4),
-                child: LinearProgressIndicator(),
-              ),
-              error: (_, _) => const SizedBox.shrink(),
-              data: (range) => range == null
-                  ? const SizedBox.shrink()
-                  : _PortionRangeBlock(
-                      range: range,
-                      mushaf: mushaf,
-                      gold: gold,
-                      subtleStyle: subtleStyle,
-                    ),
-            );
-          }),
+          Consumer(
+            builder: (context, ref, _) {
+              final rangeAsync = ref.watch(
+                khatmaPortionRangeProvider((khatma, mushaf)),
+              );
+              return rangeAsync.when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  child: LinearProgressIndicator(),
+                ),
+                error: (_, _) => const SizedBox.shrink(),
+                data: (range) => range == null
+                    ? const SizedBox.shrink()
+                    : _PortionRangeBlock(
+                        range: range,
+                        mushaf: mushaf,
+                        gold: gold,
+                        subtleStyle: subtleStyle,
+                      ),
+              );
+            },
+          ),
         const SizedBox(height: 12),
-        _ProgressSection(khatma: khatma, mushaf: mushaf, gold: gold, subtleStyle: subtleStyle),
+        _ProgressSection(
+          khatma: khatma,
+          mushaf: mushaf,
+          gold: gold,
+          subtleStyle: subtleStyle,
+        ),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -170,7 +190,11 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                               final before = khatma;
                               await ref
                                   .read(khatmaStoreProvider.notifier)
-                                  .readToday(khatma, mushaf.juzStartPages);
+                                  .readToday(
+                                    khatma,
+                                    mushaf.juzStartPages,
+                                    mushaf.rubElHizbPages,
+                                  );
                               if (!context.mounted) return;
                               showKhatmaUndoSnackBar(context, ref, before);
                             },
@@ -223,8 +247,10 @@ class _PortionRangeBlock extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text('khatma.juz_label'.tr(args: ['${range.juz}']),
-                    style: theme.textTheme.labelMedium?.copyWith(color: gold)),
+                child: Text(
+                  'khatma.juz_label'.tr(args: ['${range.juz}']),
+                  style: theme.textTheme.labelMedium?.copyWith(color: gold),
+                ),
               ),
               Text('khatma.from_saying'.tr(), style: subtleStyle),
             ],
@@ -232,7 +258,11 @@ class _PortionRangeBlock extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             range.start.textUthmani,
-            style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 17, height: 1.6),
+            style: const TextStyle(
+              fontFamily: 'AmiriQuran',
+              fontSize: 17,
+              height: 1.6,
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
@@ -241,18 +271,22 @@ class _PortionRangeBlock extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: 8),
           _RangeLine(
-            label: 'khatma.range_from'.tr(args: [
-              mushaf.surahNameAr(range.start.surahId),
-              '${range.start.ayahNumber}',
-            ]),
+            label: 'khatma.range_from'.tr(
+              args: [
+                mushaf.surahNameAr(range.start.surahId),
+                '${range.start.ayahNumber}',
+              ],
+            ),
             page: range.startPage,
           ),
           const SizedBox(height: 4),
           _RangeLine(
-            label: 'khatma.range_to'.tr(args: [
-              mushaf.surahNameAr(range.end.surahId),
-              '${range.end.ayahNumber}',
-            ]),
+            label: 'khatma.range_to'.tr(
+              args: [
+                mushaf.surahNameAr(range.end.surahId),
+                '${range.end.ayahNumber}',
+              ],
+            ),
             page: range.endPage,
           ),
         ],
@@ -295,8 +329,12 @@ class _ProgressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final upcoming =
-        mushaf == null ? null : khatma.portionsRemaining(mushaf!.juzStartPages);
+    final upcoming = mushaf == null
+        ? null
+        : khatma.portionsRemaining(
+            mushaf!.juzStartPages,
+            mushaf!.rubElHizbPages,
+          );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -313,11 +351,15 @@ class _ProgressSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('khatma.portions_previous'.tr(args: ['${khatma.portionsRead}']),
-                style: subtleStyle),
+            Text(
+              'khatma.portions_previous'.tr(args: ['${khatma.portionsRead}']),
+              style: subtleStyle,
+            ),
             if (upcoming != null)
-              Text('khatma.portions_upcoming'.tr(args: ['$upcoming']),
-                  style: subtleStyle),
+              Text(
+                'khatma.portions_upcoming'.tr(args: ['$upcoming']),
+                style: subtleStyle,
+              ),
           ],
         ),
       ],
@@ -328,15 +370,18 @@ class _ProgressSection extends StatelessWidget {
 /// Shared "قرأت اليوم" undo snackbar (P3‑6) — a "تراجع" action that restores
 /// the exact pre-update [before] snapshot, for an accidental tap. Used by
 /// both this card's inline button and `KhatmaScreen`'s tile.
-void showKhatmaUndoSnackBar(BuildContext context, WidgetRef ref, Khatma before) {
+void showKhatmaUndoSnackBar(
+  BuildContext context,
+  WidgetRef ref,
+  Khatma before,
+) {
   ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text('khatma.read_today_done'.tr()),
       action: SnackBarAction(
         label: 'common.undo'.tr(),
-        onPressed: () =>
-            ref.read(khatmaStoreProvider.notifier).restore(before),
+        onPressed: () => ref.read(khatmaStoreProvider.notifier).restore(before),
       ),
     ),
   );

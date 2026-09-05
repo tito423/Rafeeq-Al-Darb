@@ -435,7 +435,14 @@
     "duration_days": "Duración de la jatma (días)",
     "daily_portion": "Porción diaria",
     "unit_pages": "Páginas",
-    "unit_juz": "Juz"
+    "unit_juz": "Juz",
+    "unit_quarters": "Cuartos",
+    "quarters_per_day": "Cuartos de hizb al día",
+    "quarter_1": "Un cuarto",
+    "quarter_2": "Dos cuartos",
+    "quarter_3": "3 cuartos",
+    "quarter_4_hizb": "Un hizb",
+    "quarter_n": "{} cuartos"
   },
   "sunan_suwar": {
     "title": "Sunan de las Suras (Día y Noche)",

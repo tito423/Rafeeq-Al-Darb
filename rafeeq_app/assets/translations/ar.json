@@ -435,7 +435,14 @@
     "duration_days": "مدة الختمة (أيام)",
     "daily_portion": "كمية الورد اليومي",
     "unit_pages": "صفحات",
-    "unit_juz": "جزء"
+    "unit_juz": "جزء",
+    "unit_quarters": "أرباع",
+    "quarters_per_day": "عدد أرباع الحزب في اليوم",
+    "quarter_1": "ربع",
+    "quarter_2": "ربعان",
+    "quarter_3": "٣ أرباع",
+    "quarter_4_hizb": "حزب",
+    "quarter_n": "{} أرباع"
   },
   "sunan_suwar": {
     "title": "سنن السور في اليوم والليلة",
