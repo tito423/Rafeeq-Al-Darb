@@ -58,22 +58,38 @@ Future<void> rescheduleAdhans(
     final option = _resolveOption(catalog, settings, key);
     final (rawResource, customUri) = await _resolveSound(mode, option);
 
-    await AdhanAlarmService.instance.scheduleDaily(
-      prayerKey: key,
-      hour: hour,
-      minute: minute,
-      mode: mode,
-      rawResource: rawResource,
-      customUri: customUri,
-      title: 'الصلاة — ${_prayerLabelsAr[key]}',
-      payload: buildAdhanPayload(
+    try {
+      await AdhanAlarmService.instance.scheduleDaily(
         prayerKey: key,
-        prayerLabel: _prayerLabelsAr[key]!,
-        notificationId: AdhanAlarmService.instance.idFor(key),
-        previewAssetPath: option.assetPath,
-        videoPath: adhanVideoPath,
-      ),
-    );
+        hour: hour,
+        minute: minute,
+        mode: mode,
+        rawResource: rawResource,
+        customUri: customUri,
+        title: 'الصلاة — ${_prayerLabelsAr[key]}',
+        payload: buildAdhanPayload(
+          prayerKey: key,
+          prayerLabel: _prayerLabelsAr[key]!,
+          notificationId: AdhanAlarmService.instance.idFor(key),
+          previewAssetPath: option.assetPath,
+          videoPath: adhanVideoPath,
+        ),
+      );
+    } catch (_) {
+      // P3‑45: real-device testing found `flutter_local_notifications`
+      // throwing ("Missing type parameter") from its own persisted
+      // scheduled-notification storage on some devices/emulators with
+      // notification history from earlier plugin versions — this call is
+      // inside `PrayerController._load()`, awaited with no guard of its
+      // own, so it was taking the *entire* Home prayer-times card down
+      // with it (real times hidden behind "something went wrong") even
+      // though the times themselves fetched fine and had nothing to do
+      // with alarm scheduling. One prayer's alarm failing to arm is a
+      // real problem worth fixing at its root (a plugin-version issue,
+      // tracked separately), but it must never hide working prayer times
+      // — same "optional, app is fine without it" rule already applied to
+      // `PrayerStatusNotification`.
+    }
   }
 }
 

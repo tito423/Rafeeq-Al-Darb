@@ -6,8 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/rgb_backdrop.dart';
 import '../core/theme/theme_controller.dart';
-import '../features/splash/presentation/screens/splash_screen.dart';
+import '../features/onboarding/data/onboarding_state.dart';
+import '../features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'navigation.dart';
+import 'shell/app_shell.dart';
 
 /// Injected from main() so sync reads are possible anywhere.
 final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
@@ -43,10 +45,15 @@ class RafeeqApp extends ConsumerWidget {
       builder: variant == ThemeVariant.rgb
           ? (context, child) => RgbScaffoldBackground(child: child!)
           : null,
-      // P3‑20/21: the very first screen is now the branded splash, which
-      // itself decides whether to hand off to onboarding (first run) or
-      // straight to `AppShell` (returning user) — see `SplashScreen`.
-      home: const SplashScreen(),
+      // P3‑45: the owner asked for the branded splash screen (video +
+      // hand-built lattice/badge fallback) removed outright — straight to
+      // onboarding (first run) or `AppShell` (returning user), no brand
+      // pause in between. `onboardingCompletedProvider` is a synchronous
+      // SharedPreferences read (see its own doc), so this decision needs
+      // no loading state of its own.
+      home: ref.watch(onboardingCompletedProvider)
+          ? AppShell(key: ValueKey(context.locale.languageCode))
+          : const OnboardingScreen(),
     );
   }
 }

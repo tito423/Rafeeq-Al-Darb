@@ -77,70 +77,89 @@ class PrayerStatusNotification {
     final now = DateTime.now();
     final next = times.isEmpty ? null : _nextPrayer(svc, times, now);
 
-    if (next == null) {
-      // Enabled but no real times yet — be honest, don't invent them.
-      await _plugin.cancel(_rolloverId);
+    // P3‑45: real-device testing found `flutter_local_notifications`
+    // throwing ("Missing type parameter") from its own persisted
+    // scheduled-notification storage on some devices/emulators carrying
+    // notification history from earlier plugin versions — this whole
+    // method was previously unguarded and this class's own header already
+    // documents the card as optional ("the app is fine without this
+    // card"); the try/catch here just actually enforces that promise
+    // instead of leaving these calls to throw as unhandled exceptions.
+    try {
+      if (next == null) {
+        // Enabled but no real times yet — be honest, don't invent them.
+        await _plugin.cancel(_rolloverId);
+        await _plugin.show(
+          _liveId,
+          _needLocationTitle(localeCode),
+          _needLocationBody(localeCode),
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              _channelId,
+              'بطاقة الصلاة القادمة',
+              importance: Importance.low,
+              priority: Priority.low,
+              ongoing: true,
+              autoCancel: false,
+              onlyAlertOnce: true,
+              category: AndroidNotificationCategory.status,
+              largeIcon:
+                  const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+            ),
+          ),
+        );
+        return;
+      }
+
+      // Prefer the AlAdhan Hijri date already in [times] (Umm al-Qura,
+      // matches the Home card and works from cache offline); fall back to
+      // the `hijri` package only if that string is missing/old-format.
+      final hijriToday = _hijriLine(times.hijriDate, now, localeCode);
+
       await _plugin.show(
         _liveId,
-        _needLocationTitle(localeCode),
-        _needLocationBody(localeCode),
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            _channelId,
-            'بطاقة الصلاة القادمة',
-            importance: Importance.low,
-            priority: Priority.low,
-            ongoing: true,
-            autoCancel: false,
-            onlyAlertOnce: true,
-            category: AndroidNotificationCategory.status,
-            largeIcon:
-                const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-          ),
-        ),
+        _titleFor(next.$1, next.$2, localeCode),
+        hijriToday,
+        NotificationDetails(android: _details(next.$2)),
       );
-      return;
-    }
 
-    // Prefer the AlAdhan Hijri date already in [times] (Umm al-Qura, matches
-    // the Home card and works from cache offline); fall back to the `hijri`
-    // package only if that string is missing/old-format.
-    final hijriToday = _hijriLine(times.hijriDate, now, localeCode);
-
-    await _plugin.show(
-      _liveId,
-      _titleFor(next.$1, next.$2, localeCode),
-      hijriToday,
-      NotificationDetails(android: _details(next.$2)),
-    );
-
-    // One rollover while the app is closed: at `next` time, re-post the card
-    // for the prayer after it. Same id as any previous schedule → replaces.
-    final after = _nextPrayer(svc, times, next.$2.add(const Duration(minutes: 1)));
-    await _plugin.cancel(_rolloverId);
-    if (after != null) {
-      // If the rollover crosses midnight the printed Hijri day advances by one.
-      final crossesMidnight = after.$2.day != next.$2.day;
-      final hijriRollover = crossesMidnight
-          ? _hijriLine('', after.$2, localeCode)
-          : hijriToday;
-      await _plugin.zonedSchedule(
-        _rolloverId,
-        _titleFor(after.$1, after.$2, localeCode),
-        hijriRollover,
-        tz.TZDateTime.from(next.$2, tz.local),
-        NotificationDetails(android: _details(after.$2)),
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-      );
+      // One rollover while the app is closed: at `next` time, re-post the
+      // card for the prayer after it. Same id as any previous schedule →
+      // replaces.
+      final after =
+          _nextPrayer(svc, times, next.$2.add(const Duration(minutes: 1)));
+      await _plugin.cancel(_rolloverId);
+      if (after != null) {
+        // If the rollover crosses midnight the printed Hijri day advances
+        // by one.
+        final crossesMidnight = after.$2.day != next.$2.day;
+        final hijriRollover = crossesMidnight
+            ? _hijriLine('', after.$2, localeCode)
+            : hijriToday;
+        await _plugin.zonedSchedule(
+          _rolloverId,
+          _titleFor(after.$1, after.$2, localeCode),
+          hijriRollover,
+          tz.TZDateTime.from(next.$2, tz.local),
+          NotificationDetails(android: _details(after.$2)),
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+        );
+      }
+    } catch (_) {
+      // Notifications are optional; the app is fine without this card.
     }
   }
 
   Future<void> hide() async {
     if (!_ready) return;
-    await _plugin.cancel(_liveId);
-    await _plugin.cancel(_rolloverId);
+    try {
+      await _plugin.cancel(_liveId);
+      await _plugin.cancel(_rolloverId);
+    } catch (_) {
+      // Notifications are optional; the app is fine without this card.
+    }
   }
 
   // ── content helpers ──────────────────────────────────────────────────────

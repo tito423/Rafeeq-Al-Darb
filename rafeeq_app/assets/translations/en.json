@@ -311,8 +311,6 @@
     "rgb": "RGB",
     "motion_effects": "Motion effects",
     "motion_effects_desc": "Animate the background in the RGB theme",
-    "splash_video": "Splash video",
-    "splash_video_desc": "Play the welcome video on launch (adds a few seconds to startup)",
     "permissions": "Permissions",
     "perm_notifications": "Notifications",
     "perm_notifications_desc": "For Adhan alerts and adhkar reminders",

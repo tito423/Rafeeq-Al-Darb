@@ -127,13 +127,32 @@ class _AppShellState extends ConsumerState<AppShell>
       );
     });
 
+    // P3‑45: real-device feedback found whole tabs (Library's "Hadith" /
+    // "Available books" chrome, seen live after switching locale mid-
+    // session) frozen in whatever language was active on the app's first
+    // frame. `IndexedStack` keeps every tab's `Element`/`State` alive at
+    // once by design (that's the whole point — Home already isn't `const`
+    // here because its `onNavigate` closure captures `this`), but a
+    // `const` screen with no constructor arguments gets canonicalized to
+    // one shared Dart object; passing that *same identical* instance back
+    // on every `AppShell.build()` makes Flutter's own element-update path
+    // skip calling `build()` on it entirely (an `identical(old, new)`
+    // widget is treated as "nothing changed"), so a screen that only
+    // depends on `.tr()` — which reads easy_localization's global current
+    // locale, not a `BuildContext` dependency — never gets a chance to
+    // re-render with the new language. Dropping `const` from the other
+    // five doesn't lose any of their state (same runtimeType + no key
+    // still reuses the same `State` object, `initState` does not re-run)
+    // — it just means `build()` actually runs again on the rare
+    // `AppShell` rebuilds (tab switch, locale, theme), which is exactly
+    // what every one of these screens needs to stay in sync.
     final screens = [
       HomeScreen(onNavigate: (t) => _goTo(t, tab: t)),
-      const QuranScreen(),
-      const QiblaScreen(),
-      const AzkarScreen(),
-      const TasbeehScreen(),
-      const LibraryScreen(),
+      QuranScreen(),
+      QiblaScreen(),
+      AzkarScreen(),
+      TasbeehScreen(),
+      LibraryScreen(),
     ];
 
     // P3‑43 #6: a genuinely full-screen mushaf reader needs this bar gone

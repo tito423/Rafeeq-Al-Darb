@@ -205,32 +205,53 @@ class _HeaderCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(
-            _hijriLine(context.locale.languageCode),
-            style: TextStyle(
-              color: hijriColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              _hijriLine(context.locale.languageCode),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: hijriColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           Expanded(
             child: Text(
               'home.welcome_guest'.tr(),
               textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
               style: TextStyle(
                 color: welcomeColor,
-                fontFamily: 'AmiriQuran',
+                // P3‑45: real-device testing found this Quran-calligraphy
+                // font renders Latin script (fr/pt/es/ru) far wider than
+                // its Arabic glyphs at the same size, squeezing this
+                // Expanded cell between the two date labels until words
+                // like "Bienvenue"/"Bem-vindo" wrapped mid-word across 2-3
+                // lines. The font is only right for its intended Arabic
+                // "مرحباً بك" — every other locale uses the app's normal
+                // (narrower, Latin-tuned) font instead.
+                fontFamily:
+                    context.locale.languageCode == 'ar' ? 'AmiriQuran' : null,
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
-          Text(
-            _gregorianLine(context),
-            style: TextStyle(
-              color: gregorianColor.withValues(alpha: 0.9),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              _gregorianLine(context),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                color: gregorianColor.withValues(alpha: 0.9),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           // P3‑41: Settings came off the bottom nav entirely (real-device

@@ -29,10 +29,14 @@ Future<void> main() async {
   // Arabic shaping standing in for Cairo while it was still downloading).
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // P3‑45: real-device feedback — "rotation and orientation not working at
+  // all". This used to hard-lock the whole app to portrait; every screen
+  // uses ordinary Flutter layout (Column/ListView/Scaffold) that reflows
+  // fine with more horizontal space, so there's no real reason to forbid
+  // landscape app-wide. Left unset (no `setPreferredOrientations` call at
+  // all) so the OS's own auto-rotate setting decides, same as almost every
+  // other app — a user with auto-rotate off keeps their phone in portrait
+  // without the app fighting them either way.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

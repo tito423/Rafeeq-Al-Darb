@@ -311,8 +311,6 @@
     "rgb": "RGB",
     "motion_effects": "التأثيرات الحركية",
     "motion_effects_desc": "تشغيل الخلفية المتحركة في ثيم RGB",
-    "splash_video": "فيديو البداية",
-    "splash_video_desc": "تشغيل فيديو الترحيب عند فتح التطبيق (يضيف بضع ثوانٍ لبدء التشغيل)",
     "permissions": "الأذونات",
     "perm_notifications": "الإشعارات",
     "perm_notifications_desc": "لتنبيهات الأذان وتذكيرات الأذكار",

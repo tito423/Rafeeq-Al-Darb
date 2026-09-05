@@ -311,8 +311,6 @@
     "rgb": "RGB",
     "motion_effects": "Efectos de movimiento",
     "motion_effects_desc": "Animar el fondo en el tema RGB",
-    "splash_video": "Video de bienvenida",
-    "splash_video_desc": "Reproducir el video de bienvenida al abrir la app (añade unos segundos al inicio)",
     "permissions": "Permisos",
     "perm_notifications": "Notificaciones",
     "perm_notifications_desc": "Para las alertas del Adhan y los recordatorios de adhkar",

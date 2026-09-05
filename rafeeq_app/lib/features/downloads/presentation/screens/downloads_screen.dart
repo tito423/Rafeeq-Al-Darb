@@ -9,6 +9,7 @@ import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
+import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/downloads_controller.dart';
@@ -115,18 +116,37 @@ class _OverviewTab extends ConsumerWidget {
         return () => DefaultTabController.of(context).animateTo(2);
       case DownloadCategory.hadith:
         return () {
-          Navigator.of(context).pop();
+          // P3‑45: real-device feedback — this used a single `pop()`,
+          // which only closes `DownloadsScreen` itself and lands back on
+          // `SettingsScreen` (this screen is pushed *from* Settings, which
+          // is itself pushed from `AppShell`). The tab-request providers
+          // below were being set correctly, but with `AppShell` still
+          // buried under Settings, nothing visible ever happened — the
+          // exact same class of bug this file's own seam doc already
+          // names ("afتح المصحف silently did nothing but pop back to
+          // Home"). `popUntil((route) => route.isFirst)` clears the whole
+          // pushed stack back to `AppShell` so the tab switch is actually
+          // seen.
+          Navigator.of(context).popUntil((route) => route.isFirst);
           ref.read(requestedTabProvider.notifier).state = AppTab.library;
           ref.read(requestedLibraryTabProvider.notifier).state = 1;
         };
       case DownloadCategory.books:
         return () {
-          Navigator.of(context).pop();
+          Navigator.of(context).popUntil((route) => route.isFirst);
           ref.read(requestedTabProvider.notifier).state = AppTab.library;
           ref.read(requestedLibraryTabProvider.notifier).state = 0;
         };
       case DownloadCategory.adhan:
-        return null;
+        // P3‑45: real-device feedback called this row out as "fake" — it
+        // rendered exactly like every other tappable category row but did
+        // nothing. Adhan videos are real, downloadable content; they're
+        // just managed on the Adhan settings screen rather than a
+        // dedicated browsing tab here, so route there instead of leaving
+        // an inert-looking row.
+        return () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const AdhanSettingsScreen()),
+            );
     }
   }
 

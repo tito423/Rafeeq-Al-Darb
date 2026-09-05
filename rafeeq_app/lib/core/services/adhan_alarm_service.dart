@@ -307,32 +307,57 @@ class AdhanAlarmService {
   /// comes from the payload the full-screen screen (or a notification
   /// action) was opened with, so it always targets the alarm actually firing
   /// (a real daily one or a [scheduleTest] one), never a guess.
+  // P3‑45: real-device testing found `flutter_local_notifications` throwing
+  // ("Missing type parameter") from its own persisted scheduled-notification
+  // storage on some devices/emulators carrying notification history from
+  // earlier plugin versions. `stopById` in particular is the full-screen
+  // alert's own Stop button — the one moment this absolutely cannot throw
+  // and leave the user stuck with a blaring alarm and an unresponsive
+  // button, so every one of these plugin calls is now best-effort.
   Future<void> stopById(int id) async {
-    await _plugin.cancel(id);
+    try {
+      await _plugin.cancel(id);
+    } catch (_) {
+      // Best-effort: the caller (the full-screen alert's Stop button)
+      // still navigates away regardless of whether the native
+      // notification/sound itself could be cancelled.
+    }
   }
 
   /// Re-posts notification [id] silenced, still ongoing — a real state
   /// change (the loud channel's sound stops because that notification id is
   /// replaced on the silent channel), not a cosmetic one.
   Future<void> muteById(int id, String? payload) async {
-    final details = await _detailsFor(mode: AdhanMode.silent);
-    await _plugin.show(
-      id,
-      'أذان — مكتوم',
-      'الله أكبر، حان وقت الصلاة',
-      NotificationDetails(android: details),
-      payload: payload,
-    );
+    try {
+      final details = await _detailsFor(mode: AdhanMode.silent);
+      await _plugin.show(
+        id,
+        'أذان — مكتوم',
+        'الله أكبر، حان وقت الصلاة',
+        NotificationDetails(android: details),
+        payload: payload,
+      );
+    } catch (_) {
+      // Best-effort — see `stopById`.
+    }
   }
 
   Future<void> cancelPrayer(String prayerKey) async {
-    await _plugin.cancel(idFor(prayerKey));
+    try {
+      await _plugin.cancel(idFor(prayerKey));
+    } catch (_) {
+      // Best-effort — see `stopById`.
+    }
   }
 
   Future<void> cancelAll() async {
     for (final k in const ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
-      await _plugin.cancel(idFor(k));
-      await _plugin.cancel(testIdFor(k));
+      try {
+        await _plugin.cancel(idFor(k));
+        await _plugin.cancel(testIdFor(k));
+      } catch (_) {
+        // Best-effort — see `stopById`.
+      }
     }
   }
 

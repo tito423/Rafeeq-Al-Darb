@@ -311,8 +311,6 @@
     "rgb": "RGB",
     "motion_effects": "Эффекты движения",
     "motion_effects_desc": "Анимировать фон в теме RGB",
-    "splash_video": "Видео заставки",
-    "splash_video_desc": "Воспроизводить приветственное видео при запуске (добавляет несколько секунд к загрузке)",
     "permissions": "Разрешения",
     "perm_notifications": "Уведомления",
     "perm_notifications_desc": "Для оповещений азана и напоминаний адхкар",

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
-import '../../../splash/data/splash_video_provider.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
 import '../widgets/permissions_section.dart';
 
@@ -92,32 +91,34 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ],
-          const SizedBox(height: 8),
-          // P3‑41: the splash video adds real time to every cold start —
-          // off by default after the genuine first run, opt back in here.
-          Card(
-            child: SwitchListTile(
-              secondary: Icon(Icons.smart_display_outlined, color: scheme.primary),
-              title: Text('settings.splash_video'.tr()),
-              subtitle: Text('settings.splash_video_desc'.tr()),
-              value: ref.watch(splashVideoEnabledProvider),
-              onChanged: (v) =>
-                  ref.read(splashVideoEnabledProvider.notifier).set(v),
-            ),
-          ),
           const SizedBox(height: 24),
 
           // P3‑41: one place for every permission the app actually needs,
           // each re-checked on resume (granted from a system settings
           // screen, not an in-app dialog).
+          //
+          // P3‑45: real-device feedback found this section's own text
+          // frozen in whatever locale was active when it last happened to
+          // rebuild (e.g. a Spanish label surviving a later switch to
+          // Arabic) — `.tr()` reads from easy_localization's own global
+          // current-locale state, not a `BuildContext` dependency, so
+          // nothing marks a `.tr()`-only widget dirty on locale change by
+          // itself; a plain `Widget.canUpdate`/`identical()` check in
+          // Flutter's own element-update path then short-circuits and
+          // never re-invokes `build()` at all when the parent keeps
+          // passing back the exact same canonicalized `const` instance.
+          // Dropping `const` here (and below) is enough on its own: the
+          // parent now constructs a genuinely new, non-identical widget
+          // every rebuild, so Flutter takes the normal update path and
+          // calls `build()` again with fresh translations.
           _SectionLabel('settings.permissions'.tr()),
-          const PermissionsSection(),
+          PermissionsSection(),
           const SizedBox(height: 24),
 
           // P3‑44: per-surah reminder toggles moved here wholesale from
           // the Home "سنن السور" card — see that card's own doc comment.
           _SectionLabel('sunan_suwar.reminders_section_title'.tr()),
-          const SunanSuwarRemindersSection(),
+          SunanSuwarRemindersSection(),
           const SizedBox(height: 24),
 
           // P3‑41: the Adhan settings entry that used to live here is
