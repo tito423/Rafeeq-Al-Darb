@@ -2939,3 +2939,68 @@ title, real hadith text with tashkeel, correct source-label footer, real
 44-page slider, swipe-hint showing only on page 1 (confirming fix #7
 above works here too) — the full pipeline works for this expanded
 batch exactly as it did for the smaller ones.
+
+### Gzip compression made a standing rule (owner's own ask)
+
+The owner asked directly for book text editions to be compressed on R2
+going forward, as a permanent rule, not a one-off. Real, worthwhile
+benefit reframed honestly: R2 itself has free egress and near-free
+storage, so this isn't a hosting-cost fix — it's genuinely smaller
+downloads for a reader on mobile data, and this JSON (repeated structure
++ heavy Arabic text) compresses very well.
+
+**Implementation, backward-compatible by construction:**
+- `BookText.fromFile` (`book_text.dart`) now reads the downloaded file's
+  raw bytes and checks for gzip's own magic bytes (`0x1f 0x8b`) before
+  deciding whether to decompress — detected by content, not the
+  (unchanged) `.json` filename/URL. A file downloaded *before* this
+  change (still plain JSON) keeps working exactly as before; no forced
+  re-download of anything already on a device.
+- `build_book_text.py`'s new shared `write_book_json()` gzip-compresses
+  at the one place every build script's output funnels through, so
+  every book built from now on is compressed by default — this is the
+  actual "standing rule," not a separate manual step per batch.
+  `fetch_authors_batch.py` updated to use it too.
+- Retroactively applied to every book already on R2 (`gzip_and_reupload_
+  all_books.py`): all 193 local book files compressed and re-uploaded,
+  verified via `head_object` (exact size match, all 193). **Real result:
+  70.8 MB → 16.5 MB, 77% smaller.**
+- `approxSizeBytes` (the size shown to a reader *before* downloading)
+  re-derived from the real compressed file size for every catalog entry
+  (`patch_catalog_sizes.py`) — found and fixed a real regex miss along
+  the way: `dart format` wraps a `fileName:` line onto its own line when
+  the slug is long enough, which the first version of the size-patch
+  script didn't account for, silently leaving exactly one book
+  (`al_furqan_bayn_awliya_al_rahman_wa_awliya_al_shaytan`) still showing
+  its old uncompressed size — caught by counting occurrences and cross-
+  checking, not assumed correct, fixed by loosening the regex.
+
+`flutter analyze`/`flutter test` clean (21/21). **Live-verified real
+round-trip on `emulator-5554`, not just inspected**: deleted a
+downloaded book's local file via its own delete button, confirmed the
+catalog correctly fell back to an honest error screen ("حدث خطأ، حاول
+مجدداً") rather than crashing on the missing file, re-downloaded it
+(now fetching the new gzip object, confirmed by its much smaller
+transfer), and opened it — identical real content rendered, proving the
+gzip round-trip (server compress → app detect+decompress) actually
+works, not just that the bytes matched on disk.
+
+### Round 3: Imam al-Nawawi (owner: "proceed with all other author's books")
+
+Same discipline, next author already seeded in the catalog (`رياض
+الصالحين`) but not yet mined: every id read directly off his real
+shamela.ws page (author 44), "?"-page-count entries excluded (this is
+where `المجموع شرح المهذب`, `تهذيب الأسماء واللغات`, `روضة الطالبين`,
+`شرح صحيح مسلم`, `خلاصة الأحكام` all live — all genuinely multi-volume),
+duplicate editions collapsed to one, the one `printMatches=False`
+edition excluded. **15 new titles.**
+
+**Deliberately not expanded this round: "Ibn Qudamah al-Maqdisi."** The
+existing `mukhtasar_minhaj_al_qasidin` catalog entry credits "الإمام
+موفق الدين ابن قدامة المقدسي" — but that book's actual shamela.ws author
+link (author 2586) is titled "المقدسي، نجم الدين", a different laqab
+(Najm al-Din, not Ibn Qudamah's own Muwaffaq al-Din) — a real identity
+mismatch found by checking the live page, not assumed. Mining that
+author's other listed works under an unverified identity risks
+attributing someone else's real writings to Ibn Qudamah — flagged here
+for the owner to weigh in on rather than guessed at either way.

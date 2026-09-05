@@ -24,6 +24,7 @@ AUTHOR_EN = {
     "ibn_taymiyyah": ("شيخ الإسلام ابن تيمية", "Shaykh al-Islam Ibn Taymiyyah", "توفي 728 هـ"),
     "ibn_al_qayyim": ("الإمام ابن قيّم الجوزية", "Imam Ibn Qayyim al-Jawziyyah", "توفي 751 هـ"),
     "ibn_al_jawzi": ("الإمام أبو الفرج ابن الجوزي", "Imam Ibn al-Jawzi", "توفي 597 هـ"),
+    "nawawi": ("الإمام محيي الدين النووي", "Imam al-Nawawi", "توفي 676 هـ"),
 }
 
 CATEGORY_LABEL_AR = {

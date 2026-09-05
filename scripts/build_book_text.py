@@ -62,6 +62,7 @@ summary (page count, section count, first/last printed page, a text sample).
 Only the Python standard library is used (matches build_hadith_db.py).
 """
 
+import gzip
 import html
 import http.client
 import json
@@ -401,6 +402,26 @@ def verify_and_print(doc):
         print("  !! WARNING: this Shamela copy is NOT marked موافق للمطبوع")
 
 
+def write_book_json(doc, out_path):
+    """P3-44: the owner asked for gzip compression to be a standing rule
+    for every book text edition on R2 — real bandwidth savings for a
+    reader on mobile data (typically 70-80% smaller; this JSON is heavy
+    on repeated structure and Arabic text, which compresses very well).
+    The app's own `BookText.fromFile` detects gzip by magic bytes, not
+    the (unchanged) `.json` filename/URL, and still reads a plain,
+    uncompressed file exactly as before — real backward compatibility,
+    not a breaking format change. Writing it gzip-compressed here, at
+    the one place every build script's output funnels through, means
+    every future book is compressed by default without a separate
+    after-the-fact pass (`gzip_and_reupload_all_books.py` exists only
+    because this rule didn't exist yet when the first ~193 were built).
+    """
+    raw = json.dumps(doc, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    with open(out_path, "wb") as f:
+        f.write(gzip.compress(raw, compresslevel=9))
+    return len(raw), os.path.getsize(out_path)
+
+
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     want = sys.argv[1:] or list(BOOKS)
@@ -412,10 +433,8 @@ def main():
         print(f"\n=== {book_id}  (shamela {cfg['shamela_id']}) ===")
         doc = build_book(book_id, cfg["shamela_id"], cfg["source_label"])
         out = os.path.join(OUT_DIR, f"{book_id}.json")
-        with open(out, "w", encoding="utf-8") as f:
-            json.dump(doc, f, ensure_ascii=False, separators=(",", ":"))
-        size = os.path.getsize(out)
-        print(f"  wrote {out}  ({size/1024:.0f} KB)")
+        before, after = write_book_json(doc, out)
+        print(f"  wrote {out}  ({after/1024:.0f} KB gzip, {before/1024:.0f} KB raw)")
         verify_and_print(doc)
 
 

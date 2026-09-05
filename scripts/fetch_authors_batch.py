@@ -48,6 +48,7 @@ from build_book_text import (  # noqa: E402
     build_book,
     fetch_meta_card,
     verify_and_print,
+    write_book_json,
 )
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "book_text_build")
@@ -265,12 +266,49 @@ IBN_AL_JAWZI = [
     (38121, "nawasikh_al_quran"),
 ]
 
+# --- round 3 (2026-09-05, same day): "proceed with all other author's
+# books download" — Imam al-Nawawi already has one book in the catalog
+# (رياض الصالحين). Same discipline: every id read directly off his real
+# shamela.ws author page (author 44), "?"-page-count entries excluded as
+# multi-volume risk (this is where المجموع شرح المهذب، تهذيب الأسماء
+# واللغات، روضة الطالبين، شرح صحيح مسلم، خلاصة الأحكام all live — all
+# genuinely multi-volume), duplicate editions of an already-covered title
+# picked once, and the one printMatches=False edition excluded.
+#
+# Deliberately NOT expanding "Ibn Qudamah al-Maqdisi" this round: the
+# existing mukhtasar_minhaj_al_qasidin entry credits "الإمام موفق الدين
+# ابن قدامة المقدسي", but that book's real shamela.ws author link
+# (author 2586) is titled "المقدسي، نجم الدين" — a different laqab
+# (Najm al-Din, not Ibn Qudamah's own Muwaffaq al-Din) — a real identity
+# mismatch found by checking, not assumed away. Mining that author's
+# other works under an unverified identity risks attributing someone
+# else's writings to Ibn Qudamah; flagged to the owner instead of guessed
+# at.
+NAWAWI = [
+    (6345, "adab_al_fatwa_wal_mufti"),
+    (1956, "al_adhkar_lil_nawawi"),
+    (12836, "al_arbaun_al_nawawiyyah"),
+    (6285, "al_usul_wal_dawabit"),
+    (5064, "al_ijaz_fi_sharh_sunan_abi_dawud"),
+    (96232, "al_idah_fi_manasik_al_hajj_wal_umrah"),
+    (1969, "al_tibyan_fi_adab_hamalat_al_quran"),
+    (5586, "al_taqrib_wal_taysir"),
+    (12719, "bustan_al_arifin"),
+    (7043, "tahrir_alfaz_al_tanbih"),
+    (512, "tahqiq_riyad_al_salihin_lil_albani"),
+    (11137, "juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat"),
+    (6134, "daqaiq_al_minhaj"),
+    (497, "fatawa_al_nawawi"),
+    (12096, "minhaj_al_talibin"),
+]
+
 ALL_BOOKS = (
     [(bid, slug, "ibn_abi_al_dunya") for bid, slug in IBN_ABI_AL_DUNYA]
     + [(bid, slug, "al_hakim_al_tirmidhi") for bid, slug in AL_HAKIM_AL_TIRMIDHI]
     + [(bid, slug, "ibn_taymiyyah") for bid, slug in IBN_TAYMIYYAH]
     + [(bid, slug, "ibn_al_qayyim") for bid, slug in IBN_AL_QAYYIM]
     + [(bid, slug, "ibn_al_jawzi") for bid, slug in IBN_AL_JAWZI]
+    + [(bid, slug, "nawawi") for bid, slug in NAWAWI]
 )
 
 
@@ -302,10 +340,8 @@ def main():
 
                 doc = build_book(slug, book_id, source_label)
                 out = os.path.join(OUT_DIR, f"{slug}.json")
-                with open(out, "w", encoding="utf-8") as f:
-                    json.dump(doc, f, ensure_ascii=False, separators=(",", ":"))
-                size = os.path.getsize(out)
-                print(f"  wrote {out}  ({size/1024:.0f} KB)")
+                before, after = write_book_json(doc, out)
+                print(f"  wrote {out}  ({after/1024:.0f} KB gzip, {before/1024:.0f} KB raw)")
                 verify_and_print(doc)
 
                 n_paras = sum(len(p["paras"]) for p in doc["pages"])
@@ -323,7 +359,8 @@ def main():
                     "emptyPages": empty_pages,
                     "printMatches": doc["meta"]["printMatches"],
                     "printReliable": doc["meta"]["printReliable"],
-                    "sizeBytes": size,
+                    "sizeBytes": after,
+                    "sizeBytesRaw": before,
                     "status": "ok",
                     "builtAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                 }

@@ -27,8 +27,22 @@ class BookText {
 
   const BookText({required this.meta, required this.toc, required this.pages});
 
+  /// P3-44: newer uploads are gzip-compressed on R2 (real bandwidth savings
+  /// for a reader on mobile data — these files run a few hundred KB to a
+  /// few MB of Arabic text, which gzips very well) — `DownloadManager`
+  /// streams whatever bytes the server sends straight to disk with no
+  /// decompression of its own (`ResponseType.stream` bypasses dio's normal
+  /// auto-decompression), so this is the one place that needs to know.
+  /// Detected by gzip's own magic bytes (`0x1f 0x8b`), not the file
+  /// extension, so an **already-downloaded, still-plain-JSON file from
+  /// before this change keeps working** without forcing every reader to
+  /// re-download it — real backward compatibility, not just new files.
   static Future<BookText> fromFile(String path) async {
-    final raw = await File(path).readAsString();
+    final bytes = await File(path).readAsBytes();
+    final isGzip = bytes.length >= 2 && bytes[0] == 0x1f && bytes[1] == 0x8b;
+    final raw = isGzip
+        ? utf8.decode(gzip.decode(bytes))
+        : utf8.decode(bytes);
     return BookText.fromJson(jsonDecode(raw) as Map<String, dynamic>);
   }
 

@@ -56,3 +56,4 @@ scripts/__pycache__/
 scripts/batch_summary.jsonl
 scripts/book_categories.jsonl
 scripts/catalog_entries_generated.dart
+scripts/compressed_sizes.jsonl
