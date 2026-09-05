@@ -331,7 +331,9 @@
     "perm_full_screen": "Alerta de Adhan em tela cheia",
     "perm_full_screen_desc": "Para que o alerta do Adhan abra sobre a tela de bloqueio",
     "perm_autostart": "Início automático / apps protegidos",
-    "perm_autostart_desc": "Alguns fabricantes (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gerenciam apps em segundo plano separadamente da bateria — permita este app lá para que o Adhan não seja interrompido"
+    "perm_autostart_desc": "Alguns fabricantes (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gerenciam apps em segundo plano separadamente da bateria — permita este app lá para que o Adhan não seja interrompido",
+    "splash_video": "Vídeo de abertura",
+    "splash_video_desc": "Reproduzir o vídeo de introdução ao abrir o app"
   },
   "downloads": {
     "title": "Transferências",

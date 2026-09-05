@@ -331,7 +331,9 @@
     "perm_full_screen": "Full-screen Adhan alert",
     "perm_full_screen_desc": "So the Adhan alert can open over the lock screen",
     "perm_autostart": "Auto-start / protected apps",
-    "perm_autostart_desc": "Some phone makers (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) run their own background-app manager beyond battery settings — allow this app there so the Adhan doesn't get killed"
+    "perm_autostart_desc": "Some phone makers (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) run their own background-app manager beyond battery settings — allow this app there so the Adhan doesn't get killed",
+    "splash_video": "Splash video",
+    "splash_video_desc": "Play the intro video when the app opens"
   },
   "downloads": {
     "title": "Downloads",

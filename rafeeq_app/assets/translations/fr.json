@@ -331,7 +331,9 @@
     "perm_full_screen": "Alerte Adhan plein écran",
     "perm_full_screen_desc": "Pour que l'alerte Adhan s'ouvre sur l'écran verrouillé",
     "perm_autostart": "Démarrage automatique / applications protégées",
-    "perm_autostart_desc": "Certains fabricants (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gèrent les applications en arrière-plan séparément des paramètres de batterie — autorisez l'application ici pour que l'Adhan ne soit pas interrompu"
+    "perm_autostart_desc": "Certains fabricants (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gèrent les applications en arrière-plan séparément des paramètres de batterie — autorisez l'application ici pour que l'Adhan ne soit pas interrompu",
+    "splash_video": "Vidéo d'accueil",
+    "splash_video_desc": "Lire la vidéo d'introduction à l'ouverture"
   },
   "downloads": {
     "title": "Téléchargements",

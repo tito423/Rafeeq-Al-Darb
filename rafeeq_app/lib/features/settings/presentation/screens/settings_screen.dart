@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
+import '../../../splash/data/splash_video_provider.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
 import '../widgets/permissions_section.dart';
 
@@ -91,6 +92,20 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ],
+          const SizedBox(height: 8),
+          // P3‑49: the AI-generated splash video is back on by default; keep
+          // a toggle for anyone who prefers a faster cold start.
+          Card(
+            child: SwitchListTile(
+              secondary:
+                  Icon(Icons.smart_display_outlined, color: scheme.primary),
+              title: Text('settings.splash_video'.tr()),
+              subtitle: Text('settings.splash_video_desc'.tr()),
+              value: ref.watch(splashVideoEnabledProvider),
+              onChanged: (v) =>
+                  ref.read(splashVideoEnabledProvider.notifier).set(v),
+            ),
+          ),
           const SizedBox(height: 24),
 
           // P3‑41: one place for every permission the app actually needs,

@@ -331,7 +331,9 @@
     "perm_full_screen": "Alerta de Adhan a pantalla completa",
     "perm_full_screen_desc": "Para que la alerta del Adhan se abra sobre la pantalla de bloqueo",
     "perm_autostart": "Inicio automático / apps protegidas",
-    "perm_autostart_desc": "Algunos fabricantes (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gestionan las apps en segundo plano aparte de la batería — permite esta app ahí para que el Adhan no se detenga"
+    "perm_autostart_desc": "Algunos fabricantes (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gestionan las apps en segundo plano aparte de la batería — permite esta app ahí para que el Adhan no se detenga",
+    "splash_video": "Vídeo de inicio",
+    "splash_video_desc": "Reproducir el vídeo de introducción al abrir la app"
   },
   "downloads": {
     "title": "Descargas",

@@ -96,6 +96,9 @@ flutter:
     - assets/data/mushaf/
     - assets/data/catalogs/
     - assets/audio/adhan/
+    # P3‑49: the owner's AI-generated splash video (Gemini watermark removed)
+    # + its badge-fallback art, put back at his request.
+    - assets/branding/
     # P3‑41: the default mushaf edition (Hafs/KFQC), all 604 pages, bundled
     # so it's usable fully offline the moment the app installs — see
     # MushafPageService's own comment for how these get served ahead of
@@ -104,9 +107,6 @@ flutter:
     # assets/icon/ is intentionally NOT bundled — the PNGs there are consumed
     # by flutter_launcher_icons at build time only, never at runtime. Bundling
     # them would just bloat the install.
-    # P3‑45: assets/branding/ (splash_intro.mp4 + app_mark.png, ~5MB) removed
-    # along with the splash screen feature itself — the owner asked for the
-    # splash removed outright, not just muted/shortened.
     # P3‑43 #12: the `google_fonts` package fetches a font over the network
     # on first use unless a matching file already sits in the asset bundle
     # (see AppTypography's own doc comment) — bundling Cairo's real static
