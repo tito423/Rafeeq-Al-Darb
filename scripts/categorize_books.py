@@ -59,6 +59,20 @@ OVERRIDES = {
     "al_qussas_wal_mudhakkirin": "adab",
     "husn_al_zann_billah": "tazkiyah",
     "tanwir_al_ghabash": "adab",
+    # Nawawi round: well-known works the keyword pass mis-tagged as the
+    # tazkiyah fallback because their titles don't contain the generic
+    # fiqh/hadith trigger words above (real titles/genres, not guessed).
+    "minhaj_al_talibin": "fiqh",  # major Shafi'i fiqh matn
+    "fatawa_al_nawawi": "fiqh",
+    "daqaiq_al_minhaj": "fiqh",  # glosses on the Minhaj fiqh matn
+    "tahrir_alfaz_al_tanbih": "fiqh",  # glossary of fiqh terms in al-Tanbih
+    "adab_al_fatwa_wal_mufti": "fiqh",  # usul al-fiqh: etiquette of issuing fatwa
+    "al_arbaun_al_nawawiyyah": "hadith",  # the famous 40-hadith collection
+    "al_ijaz_fi_sharh_sunan_abi_dawud": "hadith",
+    "tahqiq_riyad_al_salihin_lil_albani": "hadith",  # Albani's hadith-grading verification
+    # real title is "جزء فيه ذكر اعتقاد السلف في الحروف والأصوات" (belief
+    # of the Salaf re: the Qur'an's letters/sounds) - a creed treatise.
+    "juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat": "aqidah",
 }
 ADAB_WORDS = [
     "ذم ", "الأذكياء", "الحمقى", "الظراف", "اللسان", "الأخلاق",

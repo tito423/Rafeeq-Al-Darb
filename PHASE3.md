@@ -2995,6 +2995,60 @@ where `المجموع شرح المهذب`, `تهذيب الأسماء والل�
 duplicate editions collapsed to one, the one `printMatches=False`
 edition excluded. **15 new titles.**
 
+All 15 fetched with zero failures via `fetch_authors_batch.py`'s
+already-gzip-by-default `write_book_json()`. Categorized for real (not
+per-author blanket): `categorize_books.py`'s keyword pass mis-tagged 9 of
+the 15 into the tazkiyah fallback bucket because Nawawi's titles (unlike
+Ibn al-Qayyim/Ibn al-Jawzi's) are mostly fiqh/hadith terminology that
+doesn't contain the existing keyword lists' trigger words — caught by
+spot-checking against each real title before committing, not guessed:
+`minhaj_al_talibin` (his major Shafi'i fiqh matn), `fatawa_al_nawawi`,
+`daqaiq_al_minhaj`, `tahrir_alfaz_al_tanbih`, `adab_al_fatwa_wal_mufti`
+→ fiqh; `al_arbaun_al_nawawiyyah` (the famous 40-hadith collection),
+`al_ijaz_fi_sharh_sunan_abi_dawud`, `tahqiq_riyad_al_salihin_lil_albani`
+→ hadith; `juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat` → aqidah
+(real title is "جزء فيه ذكر اعتقاد السلف في الحروف والأصوات" — a creed
+treatise on the Qur'an's letters/sounds, not a devotional tazkiyah
+piece as the fallback would have implied). Added as new `OVERRIDES`
+entries in `categorize_books.py` rather than one-off edits, so a future
+re-run stays correct. Final category split for the 15:
+fiqh 5, hadith 3, aqidah 1, tazkiyah 6.
+
+Uploaded to R2 via new `r2_upload_nawawi_batch.py` (one script per
+upload batch, same convention as `r2_upload_p3_44_batch.py`) — 15/15
+uploaded, `head_object` size verified against the local gzip file for
+all 15, plus a live `curl -I` spot-check against the real public R2 URL
+(`minhaj_al_talibin.json`, 195,468 bytes, HTTP 200). Catalog regenerated
+via `generate_catalog_entries.py` (197 total entries now, up from 182 —
+11 originally-curated + 197 = 208 `LibraryBook`s in `book_catalog.dart`)
+and spliced into the existing generated block. `flutter analyze` clean,
+`flutter test` 21/21 passing. Live-verified end to end on a fresh
+`flutter run --release` install on emulator-5554: found and downloaded
+`الأصول والضوابط` (al_usul_wal_dawabit) from the "كل الكتب" library
+list, confirmed it shows the real Nawawi attribution and hadith
+category, and opened it — real Arabic text rendered correctly
+(المقدمة, page 21/27, with correct source-attribution footer) —
+confirming the gzip-compressed R2 object round-trips correctly through
+the standing pipeline for this newest batch too, not just the
+retroactively-compressed older ones.
+
+**Unrelated crash found live during this verification pass, not part of
+this round's scope but worth flagging**: on a fresh cold start
+immediately after `am force-stop`, logcat showed a real
+`FATAL EXCEPTION` — `ScheduledNotificationBootReceiver` →
+`flutter_local_notifications`' `loadScheduledNotifications` threw
+`RuntimeException: Missing type parameter.` — plus the same
+`PlatformException` surfacing (non-fatally) from
+`PrayerStatusNotification.refresh`'s `cancel()` calls during normal
+foreground use. This only reproduced once (a later cold start was
+clean), but it's a real, reproducible-enough plugin-level bug in how
+`flutter_local_notifications` persists/reads its scheduled-notification
+list, and is plausibly part of what's behind the owner's round-8
+"notification killed quickly and disappeared" report — not something to
+guess-fix blindly here; needs its own dedicated look (likely a
+`flutter_local_notifications` version bump or a SharedPreferences-schema
+issue) rather than being bundled into this already-large session.
+
 **Deliberately not expanded this round: "Ibn Qudamah al-Maqdisi."** The
 existing `mukhtasar_minhaj_al_qasidin` catalog entry credits "الإمام
 موفق الدين ابن قدامة المقدسي" — but that book's actual shamela.ws author

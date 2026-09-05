@@ -3771,4 +3771,282 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — قاعدة جليلة في التوسل والوسيلة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، مكتبة الفرقان - عجمان، تحقيق ربيع بن هادي عمير المدخلي [ت ١٤٤٧ هـ]',
     ),
   ),
+  LibraryBook(
+    id: 'adab_al_fatwa_wal_mufti',
+    titleAr: 'آداب الفتوى والمفتي والمستفتي',
+    titleEn: 'Adab Al Fatwa Wal Mufti',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 74 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/adab_al_fatwa_wal_mufti.json',
+      fileName: 'adab_al_fatwa_wal_mufti_text.json',
+      approxSizeBytes: 27240, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — آداب الفتوى والمفتي والمستفتي، أبو زكريا يحيى بن شرف النووي (٦٣١ - ٦٧٦ هـ)، دار الفكر، دمشق - سوريا، تحقيق بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_adhkar_lil_nawawi',
+    titleAr: 'الأذكار',
+    titleEn: 'Al Adhkar Lil Nawawi',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 411 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_adhkar_lil_nawawi.json',
+      fileName: 'al_adhkar_lil_nawawi_text.json',
+      approxSizeBytes: 390619, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأذكار، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦ هـ)، دار الفكر للطباعة والنشر والتوزيع، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_arbaun_al_nawawiyyah',
+    titleAr: 'الأربعون النووية',
+    titleEn: 'Al Arbaun Al Nawawiyyah',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 81 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_arbaun_al_nawawiyyah.json',
+      fileName: 'al_arbaun_al_nawawiyyah_text.json',
+      approxSizeBytes: 10048, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأربعون النووية، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار المنهاج للنشر والتوزيع، لبنان - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_usul_wal_dawabit',
+    titleAr: 'الأصول والضوابط',
+    titleEn: 'Al Usul Wal Dawabit',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 27 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_usul_wal_dawabit.json',
+      fileName: 'al_usul_wal_dawabit_text.json',
+      approxSizeBytes: 6700, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأصول والضوابط، أبو زكريا يحيى بن شرف النووي (ت ٦٧٦ هـ)، دار البشائر الإسلامية - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ijaz_fi_sharh_sunan_abi_dawud',
+    titleAr: 'الإيجاز في شرح سنن أبي داود السجستاني رحمه الله تعالى',
+    titleEn: 'Al Ijaz Fi Sharh Sunan Abi Dawud',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 398 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_ijaz_fi_sharh_sunan_abi_dawud.json',
+      fileName: 'al_ijaz_fi_sharh_sunan_abi_dawud_text.json',
+      approxSizeBytes: 247838, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الإيجاز في شرح سنن أبي داود السجستاني رحمه الله تعالى، محيي الدين يحيى بن شرف النووي (ت ٦٧٦ هـ)، الدار الأثرية، عمان - الأردن',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_idah_fi_manasik_al_hajj_wal_umrah',
+    titleAr: 'الإيضاح في مناسك الحج والعمرة',
+    titleEn: 'Al Idah Fi Manasik Al Hajj Wal Umrah',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 519 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json',
+      fileName: 'al_idah_fi_manasik_al_hajj_wal_umrah_text.json',
+      approxSizeBytes: 445183, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية، بيروت - المكتبة الأمدادية، مكة المكرمة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tibyan_fi_adab_hamalat_al_quran',
+    titleAr: 'التبيان في آداب حملة القرآن',
+    titleEn: 'Al Tibyan Fi Adab Hamalat Al Quran',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 224 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_tibyan_fi_adab_hamalat_al_quran.json',
+      fileName: 'al_tibyan_fi_adab_hamalat_al_quran_text.json',
+      approxSizeBytes: 64098, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — التبيان في آداب حملة القرآن، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار ابن حزم للطباعة والنشر والتوزيع - بيروت - لبنان - ص ب: ٦٣٦٦ / ١٤ - تلفون: ٨٣١٣٣١',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_taqrib_wal_taysir',
+    titleAr: 'التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث',
+    titleEn: 'Al Taqrib Wal Taysir',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 100 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_taqrib_wal_taysir.json',
+      fileName: 'al_taqrib_wal_taysir_text.json',
+      approxSizeBytes: 47554, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الكتاب العربي، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'bustan_al_arifin',
+    titleAr: 'بستان العارفين',
+    titleEn: 'Bustan Al Arifin',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 72 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/bustan_al_arifin.json',
+      fileName: 'bustan_al_arifin_text.json',
+      approxSizeBytes: 43469, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — بستان العارفين، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الريان للتراث',
+    ),
+  ),
+  LibraryBook(
+    id: 'tahrir_alfaz_al_tanbih',
+    titleAr: 'تحرير ألفاظ التنبيه',
+    titleEn: 'Tahrir Alfaz Al Tanbih',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 303 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/tahrir_alfaz_al_tanbih.json',
+      fileName: 'tahrir_alfaz_al_tanbih_text.json',
+      approxSizeBytes: 137261, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تحرير ألفاظ التنبيه، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار القلم - دمشق، تحقيق عبد الغني الدقر',
+    ),
+  ),
+  LibraryBook(
+    id: 'tahqiq_riyad_al_salihin_lil_albani',
+    titleAr: 'رياض الصالحين',
+    titleEn: 'Tahqiq Riyad Al Salihin Lil Albani',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 98 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tahqiq_riyad_al_salihin_lil_albani.json',
+      fileName: 'tahqiq_riyad_al_salihin_lil_albani_text.json',
+      approxSizeBytes: 17337, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — رياض الصالحين، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، المكتب الإسلامي - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat',
+    titleAr: 'جزء فيه ذكر اعتقاد السلف في الحروف والأصوات',
+    titleEn: 'Juz Fih Dhikr Iiqad Al Salaf Fil Huruf Wal Aswat',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 86 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat.json',
+      fileName: 'juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat_text.json',
+      approxSizeBytes: 47299, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — جزء فيه ذكر اعتقاد السلف في الحروف والأصوات، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، مكتبة الأنصار للنشر والتوزيع، تحقيق أحمد بن على الدمياطي',
+    ),
+  ),
+  LibraryBook(
+    id: 'daqaiq_al_minhaj',
+    titleAr: 'دقائق المنهاج',
+    titleEn: 'Daqaiq Al Minhaj',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 52 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/daqaiq_al_minhaj.json',
+      fileName: 'daqaiq_al_minhaj_text.json',
+      approxSizeBytes: 22588, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — دقائق المنهاج، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار ابن حزم - بيروت، تحقيق إياد أحمد الغوج',
+    ),
+  ),
+  LibraryBook(
+    id: 'fatawa_al_nawawi',
+    titleAr:
+        'فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: "بالمَسَائِل المنْثورَةِ"',
+    titleEn: 'Fatawa Al Nawawi',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 278 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/fatawa_al_nawawi.json',
+      fileName: 'fatawa_al_nawawi_text.json',
+      approxSizeBytes: 180153, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: "بالمَسَائِل المنْثورَةِ"، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دَارُ البشائرِ الإسلاميَّة للطبَاعَة وَالنشرَ والتوزيع، بَيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'minhaj_al_talibin',
+    titleAr: 'منهاج الطالبين وعمدة المفتين في الفقه',
+    titleEn: 'Minhaj Al Talibin',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    authorDeathAr: 'توفي 676 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام محيي الدين النووي، 406 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/minhaj_al_talibin.json',
+      fileName: 'minhaj_al_talibin_text.json',
+      approxSizeBytes: 195468, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — منهاج الطالبين وعمدة المفتين في الفقه، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الفكر، تحقيق عوض قاسم أحمد عوض',
+    ),
+  ),
 ];
