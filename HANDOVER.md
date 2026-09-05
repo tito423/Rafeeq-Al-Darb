@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-05 06:37 — IN PROGRESS — resume here**
+**2026-09-05 06:45 — IN PROGRESS — resume here**
 
-Owner directly re-asked (in chat, not a screenshot) to elevate the Shamela-books task alongside P3-43's 15 items rather than leave it in the 'not urgent' pile. Added it as item 16 in both PHASE3.md's P3-43 section and NEXT_SESSION_PROMPT.md: safe default is growing the same 3-author treatise set (Ibn Taymiyyah/al-Hakim al-Tirmidhi/Ibn Abi al-Dunya) via the exact same build_book_text.py + R2 + per-title license-verification discipline already used for the 5+3 shipped books, since the owner's original ask was genuinely open-ended (thousands of titles in Shamela) and PHASE3_FEEDBACK.md already flags this needs either a scope answer or that safe default - next session should ask one direct question if a broader scope seems intended, not guess. No code changed.
+NEXT_SESSION_PROMPT.md rewritten from scratch as ONE coherent prompt (owner correctly called out the old version reading as two stitched-together prompts - a growing historical numbered narrative plus the new P3-43 list). Dropped the redundant blow-by-blow history (already fully in PHASE3.md, no need to duplicate) in favor of a short condensed status + the single actionable P3-43 16-item task list as the real payload. No code changed.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
