@@ -456,17 +456,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // P3‑8: a fast surah-jump strip — was completely missing,
-                    // the only way to jump surahs before this was the toolbar's
-                    // full-screen "السور" list sheet. Only shown once real data
-                    // is loaded (needs `surahStartPages` to know where to jump).
-                    if (mushaf.hasValue)
-                      _SurahStrip(
-                        surahs: mushaf.value!.surahs,
-                        surahStartPages: mushaf.value!.surahStartPages,
-                        currentPage: _current,
-                        onSelect: _goToPage,
-                      ),
                     // Only shown once auto-scroll is actually on — no point
                     // occupying screen space with a speed control for a feature
                     // that isn't running.
@@ -476,29 +465,21 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                         onChanged: _changeAutoScrollSpeed,
                       ),
                     const SizedBox(height: 6),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.chevron_left),
-                          onPressed: _current > 1
-                              ? () => _goToPage(_current - 1)
-                              : null,
-                        ),
-                        Text(
-                          '${'quran.page'.tr()}  $_current / $_totalPages',
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.chevron_right),
-                          onPressed: _current < _totalPages
-                              ? () => _goToPage(_current + 1)
-                              : null,
-                        ),
-                      ],
+                    // P3‑43 #4/#5: the surah-name strip and the ‹ › arrow
+                    // buttons are both gone per the owner's explicit,
+                    // repeated ask ("my request was only fast scroll bar
+                    // not putting suras names" — P3‑41 — then again this
+                    // round) — replaced with one real drag-to-scrub
+                    // scrollbar. The page number itself isn't lost: P3‑43
+                    // #7's persistent overlay already shows it always, in
+                    // both modes, so nothing needs to repeat it here.
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: _FastPageScrollBar(
+                        currentPage: _current,
+                        totalPages: _totalPages,
+                        onChanged: (p) => _goToPage(p, animate: false),
+                      ),
                     ),
                   ],
                 ),
@@ -704,138 +685,118 @@ class _AutoScrollSpeedBar extends StatelessWidget {
   }
 }
 
-/// P3‑8: a fast surah-jump strip — before this the only way to jump
-/// between surahs was the toolbar's full-screen "السور" list sheet, a much
-/// heavier interaction for what's often a quick "skip ahead a surah or
-/// two" move. Auto-scrolls to keep the current surah's chip in view as
-/// the reader pages through the mushaf, and tapping any chip jumps
-/// straight there (reusing the exact same `surahStartPages` lookup the
-/// full sheet already uses).
-class _SurahStrip extends StatefulWidget {
-  final List<Surah> surahs;
-  final Map<int, int> surahStartPages;
+/// P3‑43 #4/#5: replaces the old surah-name strip (P3‑8) *and* the ‹ ›
+/// page-arrow buttons with one real drag-to-scrub scrollbar — the owner's
+/// actual, twice-repeated ask ("my request was only fast scroll bar not
+/// putting suras names", P3‑41; "delete the arrows, make scroll bar, when
+/// I move it scroll quickly", this round). Dragging anywhere jumps
+/// immediately (no animation — a scrub should feel instant, not
+/// throttled by a 320ms page-turn tween), and the thumb tracks the real
+/// current page live while dragging, not just on release.
+///
+/// **Direction: a plain, direct left-to-right value**, exactly like the
+/// existing auto-scroll speed slider and every other slider in the app —
+/// drag right, page number goes up; drag left, it goes down. A "page 1
+/// physically on the right" mapping (matching a printed Arabic book's
+/// spine) was considered, but dropped: this is a UI scrollbar control,
+/// not the mushaf content itself (unlike the ayah text/surah banners,
+/// which really are always Arabic regardless of the app's own locale),
+/// and there's no confirmed real-device signal for which direction a
+/// reader actually expects here — the honest choice is the ordinary,
+/// unsurprising one already used everywhere else in this screen, not a
+/// guessed-at "authenticity" twist nothing asked for.
+class _FastPageScrollBar extends StatefulWidget {
   final int currentPage;
-  final void Function(int page) onSelect;
+  final int totalPages;
+  final ValueChanged<int> onChanged;
 
-  const _SurahStrip({
-    required this.surahs,
-    required this.surahStartPages,
+  const _FastPageScrollBar({
     required this.currentPage,
-    required this.onSelect,
+    required this.totalPages,
+    required this.onChanged,
   });
 
   @override
-  State<_SurahStrip> createState() => _SurahStripState();
+  State<_FastPageScrollBar> createState() => _FastPageScrollBarState();
 }
 
-class _SurahStripState extends State<_SurahStrip> {
-  static const _itemWidth = 96.0;
-  final _scrollController = ScrollController();
+class _FastPageScrollBarState extends State<_FastPageScrollBar> {
+  /// 0 = page 1 (physical left), 1 = page [totalPages] (physical right).
+  /// Non-null only while a drag is actively in progress, so the thumb
+  /// reflects the real `currentPage` (from the parent, once it's actually
+  /// jumped) the rest of the time rather than a stale local guess.
+  double? _dragFraction;
 
-  /// The surah whose own start page is the highest one at or before the
-  /// current page — i.e. "which surah is this page actually inside".
-  int get _currentIndex {
-    var best = 0;
-    for (var i = 0; i < widget.surahs.length; i++) {
-      final start = widget.surahStartPages[widget.surahs[i].id] ?? 1;
-      if (start <= widget.currentPage) {
-        best = i;
-      } else {
-        break;
-      }
-    }
-    return best;
-  }
+  // Must be the exact inverse of `_pageOf` below.
+  double _fractionOf(int page) =>
+      widget.totalPages <= 1 ? 0.0 : (page - 1) / (widget.totalPages - 1);
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _scrollToCurrent(animate: false),
-    );
-  }
+  int _pageOf(double fraction) =>
+      1 + (fraction * (widget.totalPages - 1)).round();
 
-  @override
-  void didUpdateWidget(covariant _SurahStrip old) {
-    super.didUpdateWidget(old);
-    if (old.currentPage != widget.currentPage) _scrollToCurrent();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollToCurrent({bool animate = true}) {
-    if (!_scrollController.hasClients) return;
-    final target = (_currentIndex * _itemWidth - 140).clamp(
-      0.0,
-      _scrollController.position.maxScrollExtent,
-    );
-    if (animate) {
-      _scrollController.animateTo(
-        target,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOut,
-      );
-    } else {
-      _scrollController.jumpTo(target);
-    }
+  void _handleDragAt(double dx, double width) {
+    final fraction = width <= 0 ? 0.0 : (dx / width).clamp(0.0, 1.0);
+    setState(() => _dragFraction = fraction);
+    widget.onChanged(_pageOf(fraction));
   }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final curIdx = _currentIndex;
-    return SizedBox(
-      height: 40,
-      child: ListView.builder(
-        controller: _scrollController,
-        scrollDirection: Axis.horizontal,
-        itemCount: widget.surahs.length,
-        itemExtent: _itemWidth,
-        itemBuilder: (context, i) {
-          final s = widget.surahs[i];
-          final active = i == curIdx;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3),
-            child: Material(
-              color: active
-                  ? AppColors.gold.withValues(alpha: 0.16)
-                  : scheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(10),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(10),
-                onTap: () => widget.onSelect(widget.surahStartPages[s.id] ?? 1),
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
+    final fraction = _dragFraction ?? _fractionOf(widget.currentPage);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        const thumbSize = 26.0;
+        final thumbX = (fraction * width).clamp(
+          thumbSize / 2,
+          width - thumbSize / 2,
+        );
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTapDown: (d) => _handleDragAt(d.localPosition.dx, width),
+          onHorizontalDragUpdate: (d) =>
+              _handleDragAt(d.localPosition.dx, width),
+          onHorizontalDragEnd: (_) => setState(() => _dragFraction = null),
+          child: SizedBox(
+            height: 32,
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Container(
+                  height: 4,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: active
-                          ? AppColors.gold.withValues(alpha: 0.7)
-                          : scheme.outlineVariant,
-                      width: active ? 1.4 : 1,
-                    ),
+                    color: scheme.outlineVariant,
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  child: Text(
-                    '${s.id}. ${s.nameAr}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: active ? FontWeight.w700 : FontWeight.w400,
-                      color: active ? AppColors.gold : scheme.onSurfaceVariant,
+                ),
+                Positioned(
+                  left: thumbX - thumbSize / 2,
+                  child: Container(
+                    width: thumbSize,
+                    height: thumbSize,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.gold,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.gold.withValues(alpha: 0.5),
+                          blurRadius: 6,
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.drag_indicator,
+                      size: 16,
+                      color: Colors.black87,
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

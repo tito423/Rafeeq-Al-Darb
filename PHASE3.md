@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #6, #7, #8, #14, #15 done; #12 needs a fresh device screenshot before diagnosing (doesn't reproduce on emulator fonts); 8 items remain |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #14, #15 done; #12 needs a fresh device screenshot before diagnosing (doesn't reproduce on emulator fonts); 6 items remain |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2270,22 +2270,37 @@ core-feature failures before polish):
    further down where its own ayahs actually begin, exactly matching a
    real printed mushaf page and finally showing the surah the reader
    actually asked for.
-4. **Delete the bottom surah-name scroll strip in text-mode mushaf
-   entirely** (`3_quran_text_surah_strip_marked.jpg`) — this is the
-   *same* complaint from P3‑41 ("my request was only fast scroll bar not
-   putting suras names") coming back, meaning either that round's fix
-   didn't reach this widget or there are two separate instances (image
-   mode vs text mode) and only one got addressed. The owner's ask is
-   unambiguous now: **delete this strip outright**, replace with a real
-   fast-scroll affordance — a draggable scrollbar thumb that scrubs
-   quickly through the page/content when dragged, not a list of names.
-   Ties directly into item 5 (remove the ‹ › arrows too — one unified
-   navigation redesign, not two separate widgets).
-5. **Quran text mode: remove the ‹ › page-arrow buttons, add a real
-   drag-to-scroll fast scrollbar** — "delete the arrows, make scroll
-   bar, when I move it scroll quickly." Combine with item 4: the page
-   should navigate by dragging a scrollbar thumb, not tapping arrows or
-   a name-strip.
+4/5. ✅ **DONE together, as the owner's own note said to** — the surah-
+   name strip (`_SurahStrip`, P3‑8) and the ‹ › page-arrow `Row` are both
+   deleted outright, replaced with one new `_FastPageScrollBar`: a
+   draggable gold thumb over a thin track, `onTapDown`/
+   `onHorizontalDragUpdate` jump the mushaf immediately (no 320ms tween —
+   a scrub should feel instant) to whatever page the thumb's dragged
+   position maps to, tracking the live position while dragging rather
+   than only on release. The page number itself isn't lost by deleting
+   the arrows' label — P3‑43 #7's persistent overlay (built earlier this
+   same session) already shows it always, in both modes, so nothing
+   needed to repeat it here.
+   **Direction: kept as a plain left-to-right value** (drag right = page
+   number up), matching every other slider already in this screen
+   (auto-scroll speed, font size). A "page 1 on the physical right" flip
+   — mimicking a printed Arabic book's spine — was considered and
+   deliberately dropped: unlike the ayah text and surah banners (which
+   really are always Arabic regardless of app locale, a fact about the
+   *content*), this is a UI scrollbar, and there's no confirmed signal
+   for which direction a reader actually expects from it. A first attempt
+   did invert the mapping on an unverified assumption about the old
+   arrow buttons' direction — caught before committing anything, by
+   jumping to specific pages (100, then near the end) and watching where
+   the thumb actually landed, which showed the inversion was backwards
+   from what a real test would need to confirm either way. Reverted to
+   the plain, unsurprising mapping rather than ship an unverified guess.
+   `flutter analyze`/`flutter test` clean (15/15). **Not yet live-tested
+   with real touch drag gestures** — `adb`'s synthetic swipe didn't
+   register a page turn during this pass (a separate, pre-existing
+   question about the raw swipe gesture, not this scrollbar's own tap/
+   drag handling) — verify the actual drag-to-scrub feel on a real device
+   or with real touch input before considering this fully done.
 6. ✅ **DONE — genuinely full-screen now, in both modes.** Exactly the
    structural change flagged as needed: new `quranFullScreenProvider`
    (`quran_fullscreen_provider.dart`, same seam shape as
