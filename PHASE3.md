@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #6, #8, #14, #15 done; #12 needs a fresh device screenshot before diagnosing (doesn't reproduce on emulator fonts); 9 items remain |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #6, #7, #8, #14, #15 done; #12 needs a fresh device screenshot before diagnosing (doesn't reproduce on emulator fonts); 8 items remain |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2323,11 +2323,25 @@ core-feature failures before polish):
    Quran being visible at all. Fixed by also gating on
    `_index == AppTab.quran` — the flag can only ever hide the bar while
    the Quran tab is the one actually on screen.
-7. **Persistent page-context overlay needed in both mushaf modes** —
-   "always show the page number at the bottom, the surah name at the
-   top-right, and the juz name at the top-left" — like a real printed
-   mushaf's running headers. Needs to stay visible even in the new full-
-   screen mode above (it's reading context, not "options" to hide).
+7. ✅ **DONE — a real running-header overlay, in both modes, immune to
+   toolbar/full-screen state.** New `_PersistentPageOverlay` sits in a
+   `Stack` above `_buildViewer`'s `PageView` (so it renders for image
+   and text mode alike, and is completely unaffected by `_toolbarVisible`
+   /`_pageFillScreen` since it doesn't live inside either's conditional
+   tree) — page number bottom-centre, surah name top-right, juz name
+   top-left, `IgnorePointer`-wrapped so it never steals the background
+   tap that toggles the toolbar or exits full-screen. Surah/juz are
+   derived by the same real rule `_SurahStrip` already uses ("the
+   highest start-page at or before the current page"), not a second
+   guess at the data. Deliberately **fixed physical corners** (`left`/
+   `right`, not RTL `start`/`end`) and **always Arabic** text (surah
+   name via the existing `data.surahNameAr`, juz via "الجزء ‎+ Arabic-
+   Indic numeral, matching `mushaf_nav_sheets.dart`'s own juz-list
+   wording) — a real mushaf page's own printed running header is part of
+   the page's identity, not app UI chrome that follows the interface
+   locale (the surah banner already worked this way; this keeps it
+   consistent rather than inventing a translated variant). `flutter
+   analyze`/`flutter test` clean (15/15).
 8. ✅ **DONE — the real overflow fixed at its actual source,
    `MushafDownloadTile`** (shared by both the Downloads screen and this
    onboarding screen — not a copy specific to onboarding, confirmed by

@@ -240,6 +240,36 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return null;
   }
 
+  /// P3‑43 #7: the real surah covering `_current` — "which surah's start
+  /// page is the highest one at or before the current page", the same
+  /// real-data rule `_SurahStrip` already uses, not a second guess at it.
+  String _currentSurahName(MushafData data) {
+    var name = data.surahs.isEmpty ? '' : data.surahs.first.nameAr;
+    for (final s in data.surahs) {
+      if ((data.surahStartPages[s.id] ?? 1) <= _current) {
+        name = s.nameAr;
+      } else {
+        break;
+      }
+    }
+    return name;
+  }
+
+  /// Same rule as [_currentSurahName], against `juzStartPages` instead.
+  int _currentJuzNumber(MushafData data) {
+    var juz = 1;
+    final entries = data.juzStartPages.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    for (final e in entries) {
+      if (e.value <= _current) {
+        juz = e.key;
+      } else {
+        break;
+      }
+    }
+    return juz;
+  }
+
   @override
   Widget build(BuildContext context) {
     final mushaf = ref.watch(mushafDataProvider);
@@ -399,9 +429,23 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, _) =>
             ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
-        data: (data) => _buildViewer(
-          data,
-          ref.watch(currentMushafEditionProvider).valueOrNull,
+        data: (data) => Stack(
+          children: [
+            _buildViewer(
+              data,
+              ref.watch(currentMushafEditionProvider).valueOrNull,
+            ),
+            // P3‑43 #7: "always show the page number at the bottom, the
+            // surah name at the top-right, and the juz name at the
+            // top-left" — reading context, not an "option" toolbars can
+            // hide, so this sits above everything (toolbar visibility,
+            // full-screen mode) and never toggles off with them.
+            _PersistentPageOverlay(
+              pageNumber: _current,
+              surahName: _currentSurahName(data),
+              juzNumber: _currentJuzNumber(data),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: _pageFillScreen
@@ -533,6 +577,92 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         return;
       }
     }
+  }
+}
+
+/// P3‑43 #7: a real printed mushaf's running header — page number bottom
+/// centre, surah name top-right, juz name top-left — kept on screen
+/// regardless of toolbar visibility or full-screen mode (it's reading
+/// context, not an "option"). Fixed physical corners, not RTL `start`/
+/// `end`: a real mushaf page's own running headers don't mirror with the
+/// *app's* locale, they're a property of the page itself. `IgnorePointer`
+/// throughout so it never steals the background tap that toggles the
+/// toolbar or exits full-screen.
+class _PersistentPageOverlay extends StatelessWidget {
+  final int pageNumber;
+  final String surahName;
+  final int juzNumber;
+
+  const _PersistentPageOverlay({
+    required this.pageNumber,
+    required this.surahName,
+    required this.juzNumber,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                right: 0,
+                child: _HeaderBadge(text: surahName),
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                // Same convention as the surah name above (and as
+                // `mushaf_nav_sheets.dart`'s own juz list): a real
+                // mushaf's own running header is always Arabic — it's
+                // part of the page's own printed identity, not app UI
+                // chrome that follows the interface locale.
+                child: _HeaderBadge(text: 'الجزء ${_arabicNumber(juzNumber)}'),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: _HeaderBadge(text: _arabicNumber(pageNumber)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+String _arabicNumber(int n) {
+  const digits = '٠١٢٣٤٥٦٧٨٩';
+  return n.toString().split('').map((c) => digits[int.parse(c)]).join();
+}
+
+class _HeaderBadge extends StatelessWidget {
+  final String text;
+  const _HeaderBadge({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.55),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: AppColors.gold,
+        ),
+      ),
+    );
   }
 }
 
