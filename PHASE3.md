@@ -1992,12 +1992,20 @@ split below, not a blanket "done".
 **⏳ Deliberately not rushed — real work, still open:**
 - ~~**Mushaf toolbar redesign**~~ — done in its own focused pass, see
   **P3-42** below.
-- **Removing the Settings tab and relocating it into a Home card**, plus
-  **moving Adhan settings into the Prayer tab as a collapsed card and
-  giving Qibla its own card there too** — a real navigation-architecture
-  change touching `AppShell`, several route call-sites, and every place
-  that currently expects a 7-tab bottom nav; risks breaking navigation
-  app-wide if rushed alongside everything else this round.
+- ~~**Removing the Settings tab and relocating it into a Home card**~~ —
+  **done.** `AppTab.settings` and its `NavigationDestination` are gone;
+  `HomeScreen`'s header card now has a gear-icon button that pushes the
+  same `SettingsScreen` (no content changes, just its entry point moved).
+  Bottom nav is 6 tabs again. The duplicate Adhan-settings card that used
+  to also sit in `SettingsScreen` was removed too, since the Prayer tab
+  (`qibla_screen.dart`) already carries both the compass card and a real
+  `_AdhanSettingsLink` card on the same screen — pre-existing from an
+  earlier session, not new work. **Still worth a direct owner
+  confirmation**: the ask was Qibla "also in a card in the Prayer tab",
+  and right now the compass genuinely is its own card there (alongside
+  the Adhan-settings card), but the whole Prayer tab doesn't yet have
+  *other* prayer-times content around it — worth checking this matches
+  what was actually pictured before calling it fully closed.
 - **More Shamela books, text-only** — the owner named this directly
   ("you did not add all books... download all from shamela"); needs the
   same per-title licence rigor P3‑15's existing library books already

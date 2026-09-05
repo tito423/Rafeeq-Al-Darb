@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-05 02:55 — IN PROGRESS — resume here**
+**2026-09-05 05:26 — IN PROGRESS — resume here**
 
-P3-42 DONE + live-verified: mushaf toolbar redesign - Wrap 2-row toolbar (all actions visible, no h-scroll), tap-anywhere toggles toolbar visibility (GestureDetector wraps MushafTextPage), ayah selection now long-press only (LongPressGestureRecognizer replaces TapGestureRecognizer per-ayah, quick tap just toggles toolbar), full-screen/normal-size page-fit toggle (tighter padding+border), back-gesture cleanly dismisses sciences sheet. +2 keys x6 locales (page_fit_full/small). analyze clean, test 15/15. Live-verified end to end on emulator: toolbar hide/show, long-press opens real tafsir sheet on ayah 5, full-screen toggle round-trips. Shipped batch23. NEXT_SESSION_PROMPT.md + PHASE3.md updated.
+docs: PHASE3.md Settings-tab-removal bullet was stale (said still open, but AppTab.settings/its NavigationDestination were already removed and HomeScreen's gear button already wired up earlier this session) - corrected to done, with an honest note that Qibla-in-Prayer-tab still deserves owner confirmation of exact intent.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
