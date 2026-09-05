@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #9, #10, #13, #14, #15, #16 done; #2 root-caused + fixed, pending real-device re-verification (USB dropped mid-test); #11 investigated, no cause found (may already be fixed by an earlier session's bootstrap removal); #12 needs a fresh device screenshot — **only #2 (device re-verify) and #12 (owner screenshot) remain, both blocked on the owner, not on more work** |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #9, #10, #12, #13, #14, #15, #16 done; #2 root-caused + fixed, pending real-device re-verification (USB dropped mid-test); #11 investigated, no cause found (may already be fixed by an earlier session's bootstrap removal) — **only #2 (real-device re-verify) and #11 (needs a real repro) remain, both blocked on the owner having the device in hand, not on more work** |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2512,11 +2512,64 @@ core-feature failures before polish):
     network) before closing. If it still reproduces, the next session
     should get a screen recording of the exact repro, since nothing in
     the current code explains it.
-12. **Quran-mode AppBar title renders broken** —
-    `4_quran_text_toolbar_title_marked.jpg` shows "القرآن" not
-    rendering normally in the AppBar. Needs a fresh zoomed screenshot to
-    see the exact glyph corruption before diagnosing (font fallback?
-    directionality?).
+12. ✅ **DONE + live-verified — root-caused directly from the reference
+    screenshot already in the repo, no new screenshot needed.** Zoomed
+    into `4_quran_text_toolbar_title_marked.jpg` (already saved from the
+    original report) with Python/PIL instead of waiting on the owner: the
+    letters of "القرآن" render **disconnected, in isolated presentation
+    forms** — ق ر آ ن each standing alone rather than joined in cursive
+    script. That is a text-*shaping* failure, not a directionality or
+    translation bug.
+    **Real root cause, found by reading the actual code, not guessed:**
+    `AppTypography`'s whole UI font (`GoogleFonts.cairo(...)`, used by
+    every `uiBold`/`uiSemibold`/`uiMedium`/`uiRegular` helper *and* the
+    app's entire ambient `TextTheme` via `GoogleFonts.cairoTextTheme()`)
+    was never bundled as a local asset — only declared through the
+    `google_fonts` package, which **fetches the font over the network at
+    first use** (confirmed by reading `google_fonts` 6.3.3's own source:
+    `loadFontIfNecessary` checks bundled assets, then the device's local
+    cache, and only then falls back to `http` — `allowRuntimeFetching`
+    defaults to `true`). While that fetch is pending or fails (a slow/no
+    connection on first launch — very plausible on a fresh install, which
+    is exactly when an owner takes a first screenshot), Skia paints the
+    text in whatever fallback font the OS substitutes for the
+    not-yet-loaded "Cairo" family — and that fallback evidently doesn't
+    apply Arabic contextual shaping the way Cairo itself does, producing
+    exactly the disconnected letterforms in the screenshot. This is also
+    a real violation of hard rule 4 (offline-first) that's much bigger
+    than the original narrow complaint: the app's *entire UI chrome
+    text*, not just "downloaded content," depended on a network round
+    trip neither the owner nor rule 4 ever sanctioned.
+    **Fixed the same way `AmiriQuran` already is — bundled locally,
+    zero network dependency:** Cairo's real upstream source
+    (`google/fonts` GitHub repo, OFL-licensed) now only ships a single
+    variable font (`Cairo[slnt,wght].ttf`); used `fonttools varLib.
+    instancer` to cut real static instances at the 4 weights this app
+    actually uses (400/500/600/700 — verified by grepping every
+    `GoogleFonts.cairo(...)` call site and Material's own default
+    `TextTheme` weights, nothing else is ever requested), named to match
+    `google_fonts`' own asset-lookup convention
+    (`assets/fonts/google_fonts/Cairo-{Regular,Medium,SemiBold,Bold}
+    .ttf`, declared in `pubspec.yaml`) so the existing `GoogleFonts.
+    cairo(...)` call sites needed **zero code changes** — the package
+    finds the bundled file itself and never touches the network. Also
+    flipped `GoogleFonts.config.allowRuntimeFetching = false` in
+    `main()` so a future missing/renamed weight fails loudly (a clear
+    exception) instead of silently reintroducing this exact bug.
+    `flutter analyze`/`flutter test` clean (21/21).
+    **Live-verified end to end on `emulator-5554`, offline, not just by
+    inspection:** uninstalled the app, disabled wifi+data+airplane mode
+    (confirmed via `adb shell ping` failing with "Network is
+    unreachable"), installed the freshly-built debug APK, and walked
+    through first-launch onboarding entirely offline — the whole flow
+    worked with zero network errors. Switched the in-app language to
+    Arabic (also fully offline), force-stopped and cold-relaunched the
+    app (to reproduce the *actual* reported scenario: an already-Arabic
+    app on a fresh cold start, not a live mid-session switch), and
+    opened the Quran tab: **"القرآن" now renders as properly joined
+    cursive script**, confirmed by cropping and zooming the actual
+    screenshot pixel-for-pixel — a real, visual, offline fix, not an
+    inference from reading the code.
 13. ✅ **DONE + live-verified — 8 of the reference's 10 categories built
     as real, content-based groupings; 2 deliberately left out, not
     force-fit.** Queried the real DB directly first, not guessed at:

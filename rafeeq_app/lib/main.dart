@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,16 @@ import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // P3‑43 #12: the app's core UI font (Cairo) is now bundled locally under
+  // assets/fonts/google_fonts/ (see pubspec.yaml/AppTypography) specifically
+  // so this app never depends on a network fetch just to render its own
+  // chrome text — disallowing runtime fetching turns a missing/renamed
+  // weight into a loud, obvious exception instead of a silent fallback to
+  // the OS's default font, which is what produced the broken/disconnected
+  // Arabic letterforms the owner saw (a fallback font without proper
+  // Arabic shaping standing in for Cairo while it was still downloading).
+  GoogleFonts.config.allowRuntimeFetching = false;
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
