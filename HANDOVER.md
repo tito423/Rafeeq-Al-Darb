@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-05 05:26 — IN PROGRESS — resume here**
+**2026-09-05 06:31 — IN PROGRESS — resume here**
 
-docs: PHASE3.md Settings-tab-removal bullet was stale (said still open, but AppTab.settings/its NavigationDestination were already removed and HomeScreen's gear button already wired up earlier this session) - corrected to done, with an honest note that Qibla-in-Prayer-tab still deserves owner confirmation of exact intent.
+P3-43 handover: owner sent a second real-device feedback batch (8 screenshots) and explicitly asked to STOP implementing and hand off cleanly since quota was about to run out on an already-huge session. No code changed this checkpoint - full analysis + task breakdown only. Wrote PHASE3.md P3-43 section: 15 items priority-ordered (pinch-zoom regression suspected from this session's own P3-42 GestureDetector wrap = #1, full-screen-adhan-not-launching-even-when-locked = #2, wrong-surah-jump data bug = #3, delete bad surah-strip = #4, remove arrows/add real fast-scrollbar = #5, genuinely-full full-screen incl. bottom nav = #6, persistent page/surah/juz header overlay = #7, onboarding mushaf-list overflow = #8, khatma quarter-hizb unit granularity gap vs already-saved khatma_app_ref images = #9, location-permission direct-action + auto-pickup = #10, locale-toggle re-downloading tellawah = #11, broken القرآن title glyph = #12, azkar re-categorization per new reference image = #13, tasbeeh-screen-specific missing presets = #14, hadith translation should hide when locale is Arabic = #15). Saved 5 new screenshots to design_refs/round3_2026-09-05/ (confirmed the 3 khatma reference images are byte-identical duplicates already in design_refs/khatma_app_ref/ from P3-6, not re-saved). NEXT_SESSION_PROMPT.md rewritten with this as the loud top-priority section, pointing the next session there before anything else. Status table +1 row (P3-43, not started).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

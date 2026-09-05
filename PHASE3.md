@@ -1870,6 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 15 items, priority-ordered; see its own section below | ⏳ **not started — full task breakdown written, nothing built yet** (session handed off at owner's explicit request before quota ran out) |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2147,3 +2148,167 @@ gesture dismisses it cleanly; the full-screen toggle visibly tightens the
 page's margins and border, and reverts correctly on a second tap.
 `flutter analyze` clean, `flutter test` 15/15 (including translation
 parity for the two new keys across all 6 locales).
+
+## P3-43 — Second real-device feedback batch ⏳ NOT STARTED — planning only, see task list below
+
+The owner sent 8 screenshots + a long mixed Arabic/English message, and
+explicitly asked that this session **stop and hand off** rather than
+start implementing (quota was about to run out on an already very large
+session). This section is the full breakdown of that feedback into
+concrete, actionable tasks for the *next* session — nothing below is
+built yet. Screenshots saved to `design_refs/round3_2026-09-05/`
+(`1_home_first_launch.jpg`, `2_onboarding_mushaf_overflow.jpg`,
+`3_quran_text_surah_strip_marked.jpg`,
+`4_quran_text_toolbar_title_marked.jpg`,
+`8_azkar_categories_target.jpg`); the three Khatma reference images the
+owner re-sent are **already** in the repo from the P3-6 round, byte-
+identical, at `design_refs/khatma_app_ref/2_new_khatma_start.jpg`,
+`3_new_khatma_duration.jpg`, `4_new_khatma_juz_units.jpg` — no need to
+re-save them, but see the real gap they expose below (P3-43.9).
+
+**Suggested priority order** (highest first — regressions and
+core-feature failures before polish):
+
+1. **Pinch-to-zoom reportedly not working AT ALL, in either mushaf mode**
+   ("مفيش تكبير بالأصابع في المصحف النصي أو المصحف الورقي") — this
+   directly contradicts earlier sessions' finding that `InteractiveViewer`
+   pinch-zoom was already confirmed working (P3‑8/P3‑15). **Prime
+   suspect: this very session's P3‑42 change** — `MushafTextPage.build()`
+   now wraps the whole page (including its `InteractiveViewer`) in a new
+   `GestureDetector(behavior: opaque, onTap: ...)` for the toolbar-hide
+   feature; an opaque ancestor `GestureDetector` competing in the same
+   gesture arena as `InteractiveViewer`'s own two-finger scale recognizer
+   is exactly the kind of interaction this project has hit real bugs in
+   before (P3‑29's `SelectionArea` conflict). Needs a live pinch test on
+   the emulator FIRST (multi-touch: `adb shell input touchscreen` doesn't
+   simulate pinch — use two simultaneous `MotionEvent` pointers via a
+   real gesture-testing approach, or the AVD's own pinch emulation in
+   Android Studio's Extended Controls) to confirm whether it's this
+   session's regression or a pre-existing issue on real hardware the
+   emulator never exposed. If it is the `GestureDetector`, likely fix:
+   move the tap-to-toggle-toolbar detection to `onTapUp`/manual pointer
+   tracking that doesn't compete with scale gestures, or gate the tap
+   recognizer to reject once a second pointer joins.
+2. **Full-screen Adhan alert still not auto-launching even with the
+   screen locked** — different from the P3‑41 finding (that was about
+   the screen being *unlocked*). The owner's exact repro: download an
+   Adhan video → pick a muezzin voice → go to Prayer → tap "تجربة"
+   (test/trial) → lock the screen → the full-screen alert does **not**
+   appear; it only shows once the phone is unlocked manually. Since
+   Android's documented behaviour is the opposite (full-screen intents
+   *should* auto-launch on a locked screen), this suggests the "تجربة"
+   test-trigger path may not actually be posting a real
+   `fullScreenIntent` notification at all — needs tracing from the
+   test-button's `onPressed` through to whatever posts the notification,
+   compared against the real scheduled-Adhan code path.
+   Also reported in the same flow: the video doesn't preview anywhere in
+   the settings screen that has the test button + muezzin picker, and
+   the owner wants **a "معاينة" (preview) button next to each video** in
+   the video-selection card so each option can be checked before
+   picking it — a real, buildable feature request, not just a bug.
+3. **Text-mode mushaf surah-jump is wired to the wrong surah** — real
+   data/indexing bug: picking "سورة المسد" (111) from the surah picker
+   actually navigates to/shows "سورة الكافرون" (109) instead. This is
+   independent of item 4 below (deleting the bad UI strip) — whatever
+   surah→page lookup table or index math the jump feature uses needs a
+   direct audit against the real mushaf page-boundary data, since this
+   is a correctness bug, not a cosmetic one.
+4. **Delete the bottom surah-name scroll strip in text-mode mushaf
+   entirely** (`3_quran_text_surah_strip_marked.jpg`) — this is the
+   *same* complaint from P3‑41 ("my request was only fast scroll bar not
+   putting suras names") coming back, meaning either that round's fix
+   didn't reach this widget or there are two separate instances (image
+   mode vs text mode) and only one got addressed. The owner's ask is
+   unambiguous now: **delete this strip outright**, replace with a real
+   fast-scroll affordance — a draggable scrollbar thumb that scrubs
+   quickly through the page/content when dragged, not a list of names.
+   Ties directly into item 5 (remove the ‹ › arrows too — one unified
+   navigation redesign, not two separate widgets).
+5. **Quran text mode: remove the ‹ › page-arrow buttons, add a real
+   drag-to-scroll fast scrollbar** — "delete the arrows, make scroll
+   bar, when I move it scroll quickly." Combine with item 4: the page
+   should navigate by dragging a scrollbar thumb, not tapping arrows or
+   a name-strip.
+6. **Full-screen toggle needs to be genuinely full-screen** — P3‑42's
+   "page fill" only shrinks the page card's own margins; the owner wants
+   pressing "ملء الشاشة" to hide **everything** — the top toolbar *and*
+   the bottom nav bar — leaving only the Quran page sized to fill the
+   whole screen, in both mushaf modes (image and scrolling text).
+   Tapping the screen again exits back to normal. This likely means
+   hiding `Scaffold`'s `bottomNavigationBar` conditionally from
+   `AppShell` (or overlaying `QuranScreen` full-screen via
+   `Navigator`/`SystemUiMode.immersive` while this mode is on) — a
+   bigger structural change than the current per-`QuranScreen` toggle.
+7. **Persistent page-context overlay needed in both mushaf modes** —
+   "always show the page number at the bottom, the surah name at the
+   top-right, and the juz name at the top-left" — like a real printed
+   mushaf's running headers. Needs to stay visible even in the new full-
+   screen mode above (it's reading context, not "options" to hide).
+8. **Onboarding "Choose your Mushaf" screen has a real overflow** —
+   `2_onboarding_mushaf_overflow.jpg` shows Flutter's own "RIGHT
+   OVERFLOWED BY 5.3 PIXELS" banner on the Hafs card's button row, likely
+   introduced by the P3‑41-follow-up bundling work (that card now shows
+   both a disabled "Download" button *and* a "Delete" option side by
+   side once an edition is bundled/ready, which the row wasn't sized
+   for).
+9. **Khatma daily-portion units are missing the quarter-hizb
+   granularity the owner's own reference screenshots always called
+   for** — `design_refs/khatma_app_ref/3_new_khatma_duration.jpg` and
+   `4_new_khatma_juz_units.jpg` (re-sent this round, byte-identical to
+   what's already in the repo from P3‑6) show ONE unified unit dropdown
+   that starts fine-grained (`ربع`, `ربعان`, `٣ أرباع`, `حزب`, `٥ أرباع`,
+   `٦ أرباع`, `٧ أرباع` — quarters of a hizb) and only switches to whole-
+   juz counts (`جزء`, `جزءان`, ... `٩ أجزاء`) past one juz. The P3‑6
+   implementation (`khatma_screen.dart`'s `_AmountUnit` enum) only ever
+   built the juz-level half of this — the quarter-hizb granularity was
+   missed. Needs real quarter/hizb page-boundary data (check whether
+   `assets/data/mushaf/` already has hizb-quarter boundaries the way it
+   has juz-start pages for `khatma_store.dart`'s
+   `portionsRemaining(juzStartPages)`) before building the finer unit
+   options — do not invent approximate boundaries.
+10. **Location permission has no direct action from where it's needed**
+    — when the home screen shows "فعّل الموقع لحساب مواقيت صلاتك", it's
+    just static text with no tap action; the owner wants tapping it (or
+    a Settings entry) to directly trigger the OS permission prompt. Also
+    related: **after permission is actually granted, the app doesn't
+    pick it up automatically** — needs a re-check/re-fetch triggered by
+    the permission-result callback itself, not requiring an app restart.
+11. **Locale toggle re-triggers a tellawah (recitation) download** —
+    reported after a fresh install: switching the app language somehow
+    causes recitation to re-download. Needs a repro — check whether any
+    recitation-related provider is incorrectly keyed on locale or
+    rebuilt on `EasyLocalization` locale-change in a way that re-fires a
+    download call.
+12. **Quran-mode AppBar title renders broken** —
+    `4_quran_text_toolbar_title_marked.jpg` shows "القرآن" not
+    rendering normally in the AppBar. Needs a fresh zoomed screenshot to
+    see the exact glyph corruption before diagnosing (font fallback?
+    directionality?).
+13. **Azkar needs re-categorizing to match a specific reference layout**
+    — `8_azkar_categories_target.jpg` shows a 10-category colored-card
+    grid (أذكار الصباح، أذكار المساء، أذكار النوم، بعد الصلاة،
+    الاستيقاظ، أذكار المسجد، أدعية مأثورة، أدعية قرآنية، دعاء السفر،
+    الرقية الشرعية) — the owner wants the existing 133 real Hisn
+    al-Muslim sections regrouped under these named categories instead of
+    one flat grid. This is a real content-mapping task: every section
+    needs to be assigned to exactly one of these categories from its
+    actual content, not guessed at superficially — a mapping table is
+    the honest way to do this, and any section that doesn't cleanly fit
+    one of the 10 should be flagged rather than force-fit.
+14. **Tasbeeh is still missing two specific presets**: "اللهم صل على
+    محمد" and "لا حول ولا قوة إلا بالله" — **note the distinction from
+    P3‑41's azkar-reorder investigation**: that investigation found both
+    phrases already exist inside the *Azkar* Hisn al-Muslim dataset, but
+    the owner is now clarifying he means the **Tasbeeh screen's own
+    preset dhikr counter list** specifically — a different, smaller,
+    hand-picked list, not the full Azkar section content. Check
+    `tasbeeh_screen.dart`'s preset list directly; if these two aren't in
+    it, add them for real.
+15. **Hadith translation should be hidden when the app locale is
+    Arabic** — "لا تظهر الترجمة إلا إذا كانت لغة التطبيق مختلفة عن
+    العربية." Straightforward conditional: only show a hadith's
+    translation block when `context.locale.languageCode != 'ar'`.
+
+`flutter analyze`/`flutter test` not yet run against any of this — none
+of it is built. See `NEXT_SESSION_PROMPT.md` for the actual next-session
+kickoff prompt covering this list.
