@@ -130,6 +130,29 @@ BOOKS = {
         "الدنيا، تحقيق أبو إسحاق الحويني الأثري، دار الكتاب العربي، بيروت، "
         "الطبعة الأولى ١٤١٠هـ/١٩٩٠م",
     },
+    # --- P3-43 #16 (2026-09-05): growing the same 3-author set with one more
+    # real title each, per PHASE3.md's own safe-default guidance (owner's ask
+    # was open-ended; no scope answer given this round). Each id/edition
+    # verified directly against its shamela.ws landing page before being
+    # added here — printMatches=True and a real موافق-للمطبوع flag for all 3,
+    # not assumed.
+    "qasr_al_amal": {
+        "shamela_id": 6899,
+        "source_label": "المكتبة الشاملة — قصر الأمل لابن أبي الدنيا، تحقيق "
+        "محمد خير رمضان يوسف، دار ابن حزم، بيروت، الطبعة الثانية "
+        "١٤١٧هـ/١٩٩٧م",
+    },
+    "al_hasanah_wa_al_sayyiah": {
+        "shamela_id": 7609,
+        "source_label": "المكتبة الشاملة — الحسنة والسيئة لابن تيمية، دار "
+        "الكتب العلمية، بيروت",
+    },
+    "adab_al_nafs": {
+        "shamela_id": 37054,
+        "source_label": "المكتبة الشاملة — أدب النفس للحكيم الترمذي، تحقيق "
+        "د. أحمد عبد الرحيم السايح، الدار المصرية اللبنانية، مصر، الطبعة "
+        "الأولى ١٤١٣هـ/١٩٩٣م",
+    },
 }
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "book_text_build")

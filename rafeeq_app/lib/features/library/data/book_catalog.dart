@@ -330,4 +330,73 @@ const List<LibraryBook> libraryBookCatalog = [
           'الطبعة الأولى ١٤١٠هـ/١٩٩٠م',
     ),
   ),
+  // --- P3-43 #16 (2026-09-05): one more real title per already-established
+  // author, نص-only — same safe default recorded in PHASE3.md (the owner's
+  // "download them all, Shamela-style" ask was open-ended with no scope
+  // answer given this round). Each Shamela id/edition verified directly
+  // against its own landing page before being added (see
+  // build_book_text.py's BOOKS dict comment) — real موافق-للمطبوع editions,
+  // not guessed at.
+  LibraryBook(
+    id: 'qasr_al_amal',
+    titleAr: 'قصر الأمل',
+    titleEn: 'Qasr al-Amal',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف ابن أبي الدنيا في قصر الأمل وذم طول الأمل والتسويف، جمع فيه '
+        'أحاديث وآثاراً وأخباراً عن السلف في الاستعداد للموت والمبادرة '
+        'بالعمل الصالح.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/qasr_al_amal.json',
+      fileName: 'qasr_al_amal_text.json',
+      approxSizeBytes: 347268, // built by scripts/build_book_text.py
+      sourceLabel: 'المكتبة الشاملة — قصر الأمل لابن أبي الدنيا، تحقيق محمد '
+          'خير رمضان يوسف، دار ابن حزم، بيروت، الطبعة الثانية '
+          '١٤١٧هـ/١٩٩٧م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_hasanah_wa_al_sayyiah',
+    titleAr: 'الحسنة والسيئة',
+    titleEn: 'Al-Hasanah wa al-Sayyi\'ah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'رسالة ابن تيمية في بيان أسباب الحسنات والسيئات، وأن الجهل أصل '
+        'المعاصي وأن العلم النافع يوجب الخشية الحاملة على فعل الطاعات وترك '
+        'المنكرات.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_hasanah_wa_al_sayyiah.json',
+      fileName: 'al_hasanah_wa_al_sayyiah_text.json',
+      approxSizeBytes: 360481, // built by scripts/build_book_text.py
+      sourceLabel: 'المكتبة الشاملة — الحسنة والسيئة لابن تيمية، دار الكتب '
+          'العلمية، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'adab_al_nafs',
+    titleAr: 'أدب النفس',
+    titleEn: 'Adab al-Nafs',
+    authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
+    authorEn: 'Al-Hakim al-Tirmidhi',
+    authorDeathAr: 'توفي نحو 320 هـ',
+    descriptionAr:
+        'مصنَّف الحكيم الترمذي في رياضة النفس وتزكيتها، يتناول أنواع النفس '
+        'الواردة في القرآن (الأمّارة والمطمئنة واللوّامة) وصفة القلب واليقين '
+        'ومجاهدة السالكين.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/adab_al_nafs.json',
+      fileName: 'adab_al_nafs_text.json',
+      approxSizeBytes: 148884, // built by scripts/build_book_text.py
+      sourceLabel: 'المكتبة الشاملة — أدب النفس للحكيم الترمذي، تحقيق د. '
+          'أحمد عبد الرحيم السايح، الدار المصرية اللبنانية، مصر، الطبعة '
+          'الأولى ١٤١٣هـ/١٩٩٣م',
+    ),
+  ),
 ];
