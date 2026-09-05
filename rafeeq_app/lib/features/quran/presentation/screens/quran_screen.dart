@@ -459,8 +459,18 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
             // the viewer itself (not the overlay) keeps the badge exactly
             // where P3‑43 #7 put it while giving the real content room to
             // stop short of it.
+            // P3‑49: real-device feedback — the running-header badges
+            // (surah name top-right, juz top-left) were floating directly
+            // over the first line of the page, hiding it. A real mushaf's
+            // running header sits in a reserved top margin above the text,
+            // so reserve that strip here (both modes; the badges are at the
+            // top of the Stack regardless of AppBar/full-screen), mirroring
+            // the bottom reservation for the page-number badge.
             Padding(
-              padding: EdgeInsets.only(bottom: _pageFillScreen ? 56 : 0),
+              padding: EdgeInsets.only(
+                top: _pageFillScreen ? 44 : 40,
+                bottom: _pageFillScreen ? 56 : 0,
+              ),
               child: _buildViewer(
                 data,
                 ref.watch(currentMushafEditionProvider).valueOrNull,

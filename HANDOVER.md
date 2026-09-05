@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-06 02:08 — IN PROGRESS — resume here**
+**2026-09-06 03:23 — IN PROGRESS — resume here**
 
-P3-48b: sourced + shipped 6 more copyright-free Pixabay adhan-background videos (Pixabay Content License, free commercial use, no attribution) - downloaded, head_object-verified upload to R2 adhan/video/*.mp4, added to the catalog to reach the owner's requested 10 total (Haram+Kaaba, Grand Mosque courtyards, Kaaba up close, Prophet's Mosque grounds, mosque minaret, a mosque). Added Arabic transliteration (phonetics) for all 7 Tasbeeh phrases - Latin for en/es/pt/fr, Cyrillic for ru - shown as an italic line under the Arabic on the Tasbeeh screen whenever the UI language isn't Arabic, so non-Arabic speakers can read/pronounce it. Confirmed translation files are ~90%+ complete and the parity test enforces identical key sets + no empty values across all 6 locales. flutter analyze/test clean (21/21); live-verified on emulator: Tasbeeh shows 'SubhanAllah' under سبحان الله in English, new videos return HTTP 200 from R2.
+P3-49: two real-device bugs from the owner's screenshots. (1) The ayah 'الترجمة' (translation) tab errored on every device with 'حدث خطأ حاول مجددا' - root cause: a later sciences-DB rebuild (P3-40, expanded tafsir) shipped a bundled quran_sciences.db with the translations and translation_editions tables MISSING entirely, so the query threw 'no such table'. Recovered both tables from git history (commit 51fb678, 37,416 rows across en/es/fr/pt/ru/ur), merged them into the current DB, verified the app's exact join query now returns all 6 translations for a sample ayah, and bumped the copy stamp sciences-v3->v4 so every existing install re-copies the fixed file. (2) The mushaf running-header badges (surah name top-right, juz top-left) floated directly over the first line of the page, hiding it - reserved a top margin strip for them (mirroring the existing bottom reservation for the page-number badge), so the text now starts below the header in both normal and full-screen modes. flutter analyze/test clean (21/21); live-verified header no longer overlaps; translation fix verified at the DB query layer.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

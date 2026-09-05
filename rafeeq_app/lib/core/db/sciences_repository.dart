@@ -153,7 +153,15 @@ final sciencesRepositoryProvider =
     FutureProvider<SciencesRepository>((ref) async {
   // Bumped for P2‑8 #9 (es/ru/pt translations added) — devices holding an
   // already-copied v2 file would otherwise never see the new languages.
+  // P3‑49: bumped v3→v4. A later sciences-DB rebuild (P3‑40, expanded
+  // tafsir) had silently shipped a bundled DB with the `translations` /
+  // `translation_editions` tables MISSING entirely — so the ayah
+  // "الترجمة" tab threw "no such table" and showed an error on every
+  // device (real-device report). The tables were recovered from git
+  // history (37,416 rows, 6 languages) and merged back into the current
+  // DB; this stamp bump forces every existing install to re-copy the
+  // fixed file instead of keeping its translation-less v3 copy.
   final db = await DbHelper.instance.openBundled('data/quran_sciences.db',
-      stamp: 'sciences-v3');
+      stamp: 'sciences-v4');
   return SciencesRepository(db);
 });
