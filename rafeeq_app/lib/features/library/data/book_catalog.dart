@@ -108,8 +108,10 @@ class LibraryBook {
     this.approxSizeBytes,
     this.sourceUrl,
     this.textEdition,
-  }) : assert(downloadUrl != null || textEdition != null,
-            'a book needs at least one edition');
+  }) : assert(
+         downloadUrl != null || textEdition != null,
+         'a book needs at least one edition',
+       );
 
   /// [DownloadManager] id for this book's text edition (distinct from the
   /// image PDF, whose id is just [id]).
@@ -150,7 +152,8 @@ const List<LibraryBook> libraryBookCatalog = [
       url: '${AppConfig.contentBaseUrl}/books/text/riyad_as_salihin.json',
       fileName: 'riyad_as_salihin_text.json',
       approxSizeBytes: 1840046, // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — رياض الصالحين، تحقيق شعيب الأرنؤوط، '
+      sourceLabel:
+          'المكتبة الشاملة — رياض الصالحين، تحقيق شعيب الأرنؤوط، '
           'مؤسسة الرسالة، بيروت، الطبعة الثالثة ١٤١٩هـ/١٩٩٨م',
     ),
   ),
@@ -174,10 +177,12 @@ const List<LibraryBook> libraryBookCatalog = [
     approxSizeBytes: 29648193, // measured with curl 2026-09-02: 29.65 MB
     sourceUrl: 'https://archive.org/details/menhaj-alkasdeen-dar-alhejaz',
     textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/mukhtasar_minhaj_al_qasidin.json',
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/mukhtasar_minhaj_al_qasidin.json',
       fileName: 'mukhtasar_minhaj_al_qasidin_text.json',
-      approxSizeBytes: 1214930,  // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — مختصر منهاج القاصدين، تقديم محمد أحمد '
+      approxSizeBytes: 1214930, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مختصر منهاج القاصدين، تقديم محمد أحمد '
           'دهمان وتعليق شعيب وعبد القادر الأرناؤوط، مكتبة دار البيان، دمشق، '
           '١٣٩٨هـ/١٩٧٨م',
     ),
@@ -200,8 +205,9 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_fawaid.json',
       fileName: 'al_fawaid_text.json',
-      approxSizeBytes: 738171,  // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — الفوائد لابن القيم، دار الكتب العلمية، '
+      approxSizeBytes: 738171, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الفوائد لابن القيم، دار الكتب العلمية، '
           'بيروت، الطبعة الثانية ١٣٩٣هـ/١٩٧٣م',
     ),
   ),
@@ -226,8 +232,9 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sayd_al_khatir.json',
       fileName: 'sayd_al_khatir_text.json',
-      approxSizeBytes: 1559023,  // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — صيد الخاطر، بعناية حسن المساحي سويدان، '
+      approxSizeBytes: 1559023, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — صيد الخاطر، بعناية حسن المساحي سويدان، '
           'دار القلم، دمشق، الطبعة الأولى ١٤٢٥هـ/٢٠٠٤م',
     ),
   ),
@@ -246,7 +253,8 @@ const List<LibraryBook> libraryBookCatalog = [
     // Content-Length 3382545 (item is an image-container scan; the underlying
     // text is public domain — Ibn Taymiyyah d. 728 AH — and the item carries
     // no license restriction).
-    downloadUrl: 'https://archive.org/download/20201231_20201231_1341/'
+    downloadUrl:
+        'https://archive.org/download/20201231_20201231_1341/'
         '%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%AF%D9%8A%D8%A9%20-%20'
         '%D8%A7%D8%A8%D9%86%20%D8%AA%D9%8A%D9%85%D9%8A%D8%A9.pdf',
     fileName: 'al_ubudiyyah.pdf',
@@ -255,8 +263,9 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ubudiyyah.json',
       fileName: 'al_ubudiyyah_text.json',
-      approxSizeBytes: 238715,  // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — العبودية لابن تيمية، تحقيق محمد زهير '
+      approxSizeBytes: 238715, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — العبودية لابن تيمية، تحقيق محمد زهير '
           'الشاويش، المكتب الإسلامي، بيروت، الطبعة السابعة ١٤٢٦هـ/٢٠٠٥م',
     ),
   ),
@@ -281,10 +290,12 @@ const List<LibraryBook> libraryBookCatalog = [
         'لطلب قاضٍ من واسط، ومن أكثر متون العقيدة شرحاً وتداولاً عند أهل السنة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/al_aqidah_al_wasitiyyah.json',
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_aqidah_al_wasitiyyah.json',
       fileName: 'al_aqidah_al_wasitiyyah_text.json',
       approxSizeBytes: 119516, // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — العقيدة الواسطية لابن تيمية، تحقيق '
+      sourceLabel:
+          'المكتبة الشاملة — العقيدة الواسطية لابن تيمية، تحقيق '
           'أشرف بن عبد المقصود، أضواء السلف، الرياض، الطبعة الثانية '
           '١٤٢٠هـ/١٩٩٩م',
     ),
@@ -306,7 +317,8 @@ const List<LibraryBook> libraryBookCatalog = [
       url: '${AppConfig.contentBaseUrl}/books/text/nawadir_al_usul.json',
       fileName: 'nawadir_al_usul_text.json',
       approxSizeBytes: 2780973, // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — نوادر الأصول في أحاديث الرسول للحكيم '
+      sourceLabel:
+          'المكتبة الشاملة — نوادر الأصول في أحاديث الرسول للحكيم '
           'الترمذي، تحقيق عبد الرحمن عميرة، دار الجيل، بيروت (4 أجزاء)',
     ),
   ),
@@ -322,10 +334,12 @@ const List<LibraryBook> libraryBookCatalog = [
         'فيه أحاديث وآثاراً في آداب الكلام والصمت عند السلف.',
     category: BookCategory.adab,
     textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/al_samt_wa_adab_al_lisan.json',
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_samt_wa_adab_al_lisan.json',
       fileName: 'al_samt_wa_adab_al_lisan_text.json',
       approxSizeBytes: 563635, // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — الصمت وآداب اللسان لابن أبي الدنيا، '
+      sourceLabel:
+          'المكتبة الشاملة — الصمت وآداب اللسان لابن أبي الدنيا، '
           'تحقيق أبو إسحاق الحويني الأثري، دار الكتاب العربي، بيروت، '
           'الطبعة الأولى ١٤١٠هـ/١٩٩٠م',
     ),
@@ -353,7 +367,8 @@ const List<LibraryBook> libraryBookCatalog = [
       url: '${AppConfig.contentBaseUrl}/books/text/qasr_al_amal.json',
       fileName: 'qasr_al_amal_text.json',
       approxSizeBytes: 347268, // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — قصر الأمل لابن أبي الدنيا، تحقيق محمد '
+      sourceLabel:
+          'المكتبة الشاملة — قصر الأمل لابن أبي الدنيا، تحقيق محمد '
           'خير رمضان يوسف، دار ابن حزم، بيروت، الطبعة الثانية '
           '١٤١٧هـ/١٩٩٧م',
     ),
@@ -371,10 +386,12 @@ const List<LibraryBook> libraryBookCatalog = [
         'المنكرات.',
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/al_hasanah_wa_al_sayyiah.json',
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_hasanah_wa_al_sayyiah.json',
       fileName: 'al_hasanah_wa_al_sayyiah_text.json',
       approxSizeBytes: 360481, // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — الحسنة والسيئة لابن تيمية، دار الكتب '
+      sourceLabel:
+          'المكتبة الشاملة — الحسنة والسيئة لابن تيمية، دار الكتب '
           'العلمية، بيروت',
     ),
   ),
@@ -394,9 +411,3364 @@ const List<LibraryBook> libraryBookCatalog = [
       url: '${AppConfig.contentBaseUrl}/books/text/adab_al_nafs.json',
       fileName: 'adab_al_nafs_text.json',
       approxSizeBytes: 148884, // built by scripts/build_book_text.py
-      sourceLabel: 'المكتبة الشاملة — أدب النفس للحكيم الترمذي، تحقيق د. '
+      sourceLabel:
+          'المكتبة الشاملة — أدب النفس للحكيم الترمذي، تحقيق د. '
           'أحمد عبد الرحيم السايح، الدار المصرية اللبنانية، مصر، الطبعة '
           'الأولى ١٤١٣هـ/١٩٩٣م',
+    ),
+  ),
+  // --- P3-44 (2026-09-05): 182 more real titles from the same 5
+  // established authors (Ibn Abi al-Dunya, al-Hakim al-Tirmidhi, Ibn
+  // Taymiyyah, Ibn al-Qayyim, Ibn al-Jawzi), fetched via the exact same
+  // build_book_text.py pipeline and verified the same way (printMatches,
+  // printReliable, zero empty pages checked for every one before being
+  // added here). See scripts/fetch_authors_batch.py for exactly which
+  // ids were pulled and which known multi-volume works were
+  // deliberately excluded as too large for this per-page-walk pipeline.
+  // descriptionAr here is a short factual line (author + category +
+  // real page count), not a hand-crafted blurb per title, the way the
+  // ~11 already-curated books above have — not practical to write 182
+  // individual ones by hand; still zero invented claims about content.
+  LibraryBook(
+    id: 'al_risalah_al_madaniyyah',
+    titleAr:
+        'الرسالة المدنية في تحقيق المجاز والحقيقة في صفات الله (مطبوع ضمن الفتوى الحموية الكبرى)',
+    titleEn: 'Al Risalah Al Madaniyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 15 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_madaniyyah.json',
+      fileName: 'al_risalah_al_madaniyyah_text.json',
+      approxSizeBytes: 53298, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الرسالة المدنية في تحقيق المجاز والحقيقة في صفات الله (مطبوع ضمن الفتوى الحموية الكبرى)، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، مطبعة المدني، القاهرة، مصر، تحقيق محمد عبد الرزاق حمزة [ت ١٣٩٢ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'masalah_fima_idha_kana_fil_abd_mahabbah',
+    titleAr: 'مسألة فيما إذا كان في العبد محبة لما هو خير وحق ومحمود في نفسه',
+    titleEn: 'Masalah Fima Idha Kana Fil Abd Mahabbah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 8 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/masalah_fima_idha_kana_fil_abd_mahabbah.json',
+      fileName: 'masalah_fima_idha_kana_fil_abd_mahabbah_text.json',
+      approxSizeBytes: 19428, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مسألة فيما إذا كان في العبد محبة لما هو خير وحق ومحمود في نفسه، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، تحقيق د. محمد رشاد سالم',
+    ),
+  ),
+  LibraryBook(
+    id: 'islah_al_mal',
+    titleAr: 'إصلاح المال',
+    titleEn: 'Islah Al Mal',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 497 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/islah_al_mal.json',
+      fileName: 'islah_al_mal_text.json',
+      approxSizeBytes: 381039, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — إصلاح المال، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية - بيروت - لبنان، تحقيق محمد عبد القادر عطا',
+    ),
+  ),
+  LibraryBook(
+    id: 'istina_al_maruf',
+    titleAr: 'اصطناع المعروف',
+    titleEn: 'Istina Al Maruf',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 182 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/istina_al_maruf.json',
+      fileName: 'istina_al_maruf_text.json',
+      approxSizeBytes: 174734, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — اصطناع المعروف، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، تحقيق محمد خير رمضان يوسف',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_amr_bil_maruf_ibn_abi_al_dunya',
+    titleAr: 'الأمر بالمعروف والنهي عن المنكر',
+    titleEn: 'Al Amr Bil Maruf Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 122 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_amr_bil_maruf_ibn_abi_al_dunya.json',
+      fileName: 'al_amr_bil_maruf_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 163839, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأمر بالمعروف والنهي عن المنكر، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة الغرباء الأثرية، السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'asma_muallafat_ibn_taymiyyah',
+    titleAr: 'أسماء مؤلفات شيخ الإسلام ابن تيمية',
+    titleEn: 'Asma Muallafat Ibn Taymiyyah',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 23 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/asma_muallafat_ibn_taymiyyah.json',
+      fileName: 'asma_muallafat_ibn_taymiyyah_text.json',
+      approxSizeBytes: 51925, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — أسماء مؤلفات شيخ الإسلام ابن تيمية، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الكتاب الجديد - بيروت، تحقيق د. صلاح الدين المنجد',
+    ),
+  ),
+  LibraryBook(
+    id: 'ighathat_al_lahfan_fi_hukm_talaq_al_ghadban',
+    titleAr: 'إغاثة اللهفان في حكم طلاق الغضبان - ت الحفيان',
+    titleEn: 'Ighathat Al Lahfan Fi Hukm Talaq Al Ghadban',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 111 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ighathat_al_lahfan_fi_hukm_talaq_al_ghadban.json',
+      fileName: 'ighathat_al_lahfan_fi_hukm_talaq_al_ghadban_text.json',
+      approxSizeBytes: 218097, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — إغاثة اللهفان في حكم طلاق الغضبان - ت الحفيان، شمس الدين محمد بن أبي بكر ابن قيم الجوزية (٦٩١ - ٧٥١ هـ)، مؤسسة الرسالة، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_amthal_fil_quran_ibn_al_qayyim',
+    titleAr: 'الأمثال في القرآن [من «اعلام الموقعين»]',
+    titleEn: 'Al Amthal Fil Quran Ibn Al Qayyim',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 58 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_amthal_fil_quran_ibn_al_qayyim.json',
+      fileName: 'al_amthal_fil_quran_ibn_al_qayyim_text.json',
+      approxSizeBytes: 170317, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأمثال في القرآن [من «اعلام الموقعين»]، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، مكتبة الصحابة - مصر، طنطا، تحقيق أبو حذيفة إبراهيم بن محمد',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ahwal',
+    titleAr: 'الأهوال.',
+    titleEn: 'Al Ahwal',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 271 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_ahwal.json',
+      fileName: 'al_ahwal_text.json',
+      approxSizeBytes: 284509, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأهوال.، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، تحقيق مجدي فتحي السيد [ت ١٤٤٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_awliya_ibn_abi_al_dunya',
+    titleAr: 'الأولياء',
+    titleEn: 'Al Awliya Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 158 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_awliya_ibn_abi_al_dunya.json',
+      fileName: 'al_awliya_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 196308, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأولياء، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق محمد السعيد بن بسيوني زغلول',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ikhlas_wal_niyyah',
+    titleAr: 'الإخلاص والنية',
+    titleEn: 'Al Ikhlas Wal Niyyah',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 52 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_ikhlas_wal_niyyah.json',
+      fileName: 'al_ikhlas_wal_niyyah_text.json',
+      approxSizeBytes: 46582, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الإخلاص والنية، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار البشائر',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tibyan_fi_aqsam_al_quran',
+    titleAr: 'التبيان في أقسام القرآن',
+    titleEn: 'Al Tibyan Fi Aqsam Al Quran',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 431 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_tibyan_fi_aqsam_al_quran.json',
+      fileName: 'al_tibyan_fi_aqsam_al_quran_text.json',
+      approxSizeBytes: 817013, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — التبيان في أقسام القرآن، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، دار المعرفة، بيروت، لبنان، تحقيق محمد حامد الفقي [ت ١٣٧٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ikhwan',
+    titleAr: 'الإخوان',
+    titleEn: 'Al Ikhwan',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 242 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_ikhwan.json',
+      fileName: 'al_ikhwan_text.json',
+      approxSizeBytes: 169526, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الإخوان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الكتب العلمية - بيروت، تحقيق مصطفى عبد القادر عطا',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_jami_fi_amthal_al_quran',
+    titleAr: 'الجامع في أمثال القرآن، للعلامة ابن القيم',
+    titleEn: 'Al Jami Fi Amthal Al Quran',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 243 صفحة، ضمن باب التفسير.',
+    category: BookCategory.tafsir,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_jami_fi_amthal_al_quran.json',
+      fileName: 'al_jami_fi_amthal_al_quran_text.json',
+      approxSizeBytes: 622446, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الجامع في أمثال القرآن، للعلامة ابن القيم، جمعه ورتبه ووثق نصوصه وحققه أبو أويس الكردي، راجعه وقدم له الشيخ مصطفى العدوي، مكتبة ابن تيمية، القاهرة، الطبعة الأولى ١٤٣٠هـ/٢٠٠٩م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_daa_wal_dawa',
+    titleAr: 'الجواب الكافي لمن سأل عن الدواء الشافي أو الداء والدواء',
+    titleEn: 'Al Daa Wal Dawa',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 237 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_daa_wal_dawa.json',
+      fileName: 'al_daa_wal_dawa_text.json',
+      approxSizeBytes: 1267340, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الجواب الكافي لمن سأل عن الدواء الشافي أو الداء والدواء، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار المعرفة - المغرب',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_risalah_al_tabukiyyah',
+    titleAr: 'الرسالة التبوكية (ضمن مجموع الرسائل)',
+    titleEn: 'Al Risalah Al Tabukiyyah',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 109 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_tabukiyyah.json',
+      fileName: 'al_risalah_al_tabukiyyah_text.json',
+      approxSizeBytes: 198975, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الرسالة التبوكية (ضمن مجموع الرسائل)، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٥٩ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق محمد عزير شمس',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ishraf_fi_manazil_al_ashraf',
+    titleAr: 'الإشراف في منازل الأشراف',
+    titleEn: 'Al Ishraf Fi Manazil Al Ashraf',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 518 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_ishraf_fi_manazil_al_ashraf.json',
+      fileName: 'al_ishraf_fi_manazil_al_ashraf_text.json',
+      approxSizeBytes: 604043, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الإشراف في منازل الأشراف، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة الرشد - الرياض - السعودية، تحقيق د نجم عبد الرحمن خلف',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_itibar_wa_aqab_al_surur',
+    titleAr: 'الاعتبار وأعقاب السرور والأحزان',
+    titleEn: 'Al Itibar Wa Aqab Al Surur',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 69 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_itibar_wa_aqab_al_surur.json',
+      fileName: 'al_itibar_wa_aqab_al_surur_text.json',
+      approxSizeBytes: 152430, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الاعتبار وأعقاب السرور والأحزان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار البشير - عمان، تحقيق د. نجم عبد الرحمن خلف',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tawadu_wal_khumul',
+    titleAr: 'التواضع والخمول',
+    titleEn: 'Al Tawadu Wal Khumul',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 259 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_tawadu_wal_khumul.json',
+      fileName: 'al_tawadu_wal_khumul_text.json',
+      approxSizeBytes: 194612, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — التواضع والخمول، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الكتب العلمية - بيروت، تحقيق محمد عبد القادر أحمد عطا',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ruh_ibn_al_qayyim',
+    titleAr:
+        'الروح في الكلام على أرواح الأموات والأحياء بالدلائل من الكتاب والسنة',
+    titleEn: 'Al Ruh Ibn Al Qayyim',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 263 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_ruh_ibn_al_qayyim.json',
+      fileName: 'al_ruh_ibn_al_qayyim_text.json',
+      approxSizeBytes: 1210305, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الروح في الكلام على أرواح الأموات والأحياء بالدلائل من الكتاب والسنة، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الكتب العلمية - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tawbah_ibn_abi_al_dunya',
+    titleAr: 'كتاب التوبة.',
+    titleEn: 'Al Tawbah Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 345 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_tawbah_ibn_abi_al_dunya.json',
+      fileName: 'al_tawbah_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 198078, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — كتاب التوبة.، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tawakkul_ala_allah',
+    titleAr: 'مجموعة رسائل بان أبي الدنيا كتاب التوكل على الله',
+    titleEn: 'Al Tawakkul Ala Allah',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 62 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_tawakkul_ala_allah.json',
+      fileName: 'al_tawakkul_ala_allah_text.json',
+      approxSizeBytes: 73343, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مجموعة رسائل بان أبي الدنيا كتاب التوكل على الله، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tibb_al_nabawi',
+    titleAr: 'الطب النبوي (جزء من كتاب زاد المعاد لابن القيم)',
+    titleEn: 'Al Tibb Al Nabawi',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 318 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_tibb_al_nabawi.json',
+      fileName: 'al_tibb_al_nabawi_text.json',
+      approxSizeBytes: 1399745, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الطب النبوي (جزء من كتاب زاد المعاد لابن القيم)، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الهلال - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_turuq_al_hukmiyyah',
+    titleAr: 'الطرق الحكمية',
+    titleEn: 'Al Turuq Al Hukmiyyah',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 274 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_turuq_al_hukmiyyah.json',
+      fileName: 'al_turuq_al_hukmiyyah_text.json',
+      approxSizeBytes: 1455453, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الطرق الحكمية، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، مكتبة دار البيان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ju',
+    titleAr: 'الجوع',
+    titleEn: 'Al Ju',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 550 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_ju.json',
+      fileName: 'al_ju_text.json',
+      approxSizeBytes: 296561, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الجوع، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، بيروت لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_hilm',
+    titleAr: 'الحلم',
+    titleEn: 'Al Hilm',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 148 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_hilm.json',
+      fileName: 'al_hilm_text.json',
+      approxSizeBytes: 106133, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الحلم، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق محمد عبد القادر أحمد عطا',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_rida_an_allah_biqadaihi',
+    titleAr: 'الرضا عن الله بقضائه',
+    titleEn: 'Al Rida An Allah Biqadaihi',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 150 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_rida_an_allah_biqadaihi.json',
+      fileName: 'al_rida_an_allah_biqadaihi_text.json',
+      approxSizeBytes: 122104, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الرضا عن الله بقضائه، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، الدار السلفية - بومباي، تحقيق ضياء الحسن السلفي',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_furusiyyah_al_muhammadiyyah',
+    titleAr: 'الفروسية المحمدية',
+    titleEn: 'Al Furusiyyah Al Muhammadiyyah',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 530 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_furusiyyah_al_muhammadiyyah.json',
+      fileName: 'al_furusiyyah_al_muhammadiyyah_text.json',
+      approxSizeBytes: 1009884, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الفروسية المحمدية، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٩١ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق زائد بن أحمد النشيري',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_riqqah_wal_buka',
+    titleAr: 'الرقة والبكاء',
+    titleEn: 'Al Riqqah Wal Buka',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 446 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_riqqah_wal_buka.json',
+      fileName: 'al_riqqah_wal_buka_text.json',
+      approxSizeBytes: 398565, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الرقة والبكاء، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_kalam_ala_masalat_al_sama',
+    titleAr: 'الكلام على مسألة السماع',
+    titleEn: 'Al Kalam Ala Masalat Al Sama',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 508 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_kalam_ala_masalat_al_sama.json',
+      fileName: 'al_kalam_ala_masalat_al_sama_text.json',
+      approxSizeBytes: 1034306, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الكلام على مسألة السماع، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٩١ - ٧٥١ هـ)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق محمد عزير شمس',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_zuhd_ibn_abi_al_dunya',
+    titleAr: 'الزهد لابن أبي الدنيا',
+    titleEn: 'Al Zuhd Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 563 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_zuhd_ibn_abi_al_dunya.json',
+      fileName: 'al_zuhd_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 726464, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الزهد لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن كثير، دمشق',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_manar_al_munif',
+    titleAr: 'المنار المنيف في الصحيح والضعيف',
+    titleEn: 'Al Manar Al Munif',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 135 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_manar_al_munif.json',
+      fileName: 'al_manar_al_munif_text.json',
+      approxSizeBytes: 246070, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المنار المنيف في الصحيح والضعيف، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، مكتبة المطبوعات الإسلامية، حلب، تحقيق عبد الفتاح أبو غدة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_wabil_al_sayyib',
+    titleAr: 'الوابل الصيب من الكلم الطيب',
+    titleEn: 'Al Wabil Al Sayyib',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 148 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_wabil_al_sayyib.json',
+      fileName: 'al_wabil_al_sayyib_text.json',
+      approxSizeBytes: 467502, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الوابل الصيب من الكلم الطيب، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الحديث - القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_shukr',
+    titleAr: 'الشكر',
+    titleEn: 'Al Shukr',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 205 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_shukr.json',
+      fileName: 'al_shukr_text.json',
+      approxSizeBytes: 215597, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الشكر، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، المكتب الإسلامي - الكويت، تحقيق بدر البدر',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_sabr_wal_thawab_alayh',
+    titleAr: 'الصبر والثواب عليه',
+    titleEn: 'Al Sabr Wal Thawab Alayh',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 200 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_sabr_wal_thawab_alayh.json',
+      fileName: 'al_sabr_wal_thawab_alayh_text.json',
+      approxSizeBytes: 246632, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الصبر والثواب عليه، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'tuhfat_al_mawdud_bi_ahkam_al_mawlud',
+    titleAr: 'تحفة المودود بأحكام المولود',
+    titleEn: 'Tuhfat Al Mawdud Bi Ahkam Al Mawlud',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 309 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tuhfat_al_mawdud_bi_ahkam_al_mawlud.json',
+      fileName: 'tuhfat_al_mawdud_bi_ahkam_al_mawlud_text.json',
+      approxSizeBytes: 651359, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تحفة المودود بأحكام المولود، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، مكتبة دار البيان - دمشق، تحقيق عبد القادر الأرناؤوط [ت ١٤٢٥ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_uzlah_wal_infirad',
+    titleAr: 'العزلة والانفراد',
+    titleEn: 'Al Uzlah Wal Infirad',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 225 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_uzlah_wal_infirad.json',
+      fileName: 'al_uzlah_wal_infirad_text.json',
+      approxSizeBytes: 332456, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — العزلة والانفراد، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (المتوفى : ٢٨١هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_aql_wa_fadluh',
+    titleAr: 'العقل وفضله',
+    titleEn: 'Al Aql Wa Fadluh',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 172 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_aql_wa_fadluh.json',
+      fileName: 'al_aql_wa_fadluh_text.json',
+      approxSizeBytes: 100659, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — العقل وفضله، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة القرآن - مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'jala_al_afham',
+    titleAr: 'جلاء الأفهام في فضل الصلاة على محمد خير الأنام',
+    titleEn: 'Jala Al Afham',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 451 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/jala_al_afham.json',
+      fileName: 'jala_al_afham_text.json',
+      approxSizeBytes: 981351, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — جلاء الأفهام في فضل الصلاة على محمد خير الأنام، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، دار العروبة - الكويت، تحقيق شعيب الأرناؤوط [ت ١٤٣٨ هـ]- عبد القادر الأرناؤوط [ت ١٤٢٥ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_uqubat',
+    titleAr: 'العقوبات',
+    titleEn: 'Al Uqubat',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 426 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_uqubat.json',
+      fileName: 'al_uqubat_text.json',
+      approxSizeBytes: 463055, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — العقوبات، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_umr_wal_shayb',
+    titleAr: 'العمر والشيب',
+    titleEn: 'Al Umr Wal Shayb',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 86 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_umr_wal_shayb.json',
+      fileName: 'al_umr_wal_shayb_text.json',
+      approxSizeBytes: 77643, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — العمر والشيب، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة الرشد - الرياض، تحقيق د. نجم عبد الله خلف',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_faraj_bad_al_shiddah',
+    titleAr: 'الفرج بعد الشدة',
+    titleEn: 'Al Faraj Bad Al Shiddah',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 115 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_faraj_bad_al_shiddah.json',
+      fileName: 'al_faraj_bad_al_shiddah_text.json',
+      approxSizeBytes: 175781, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الفرج بعد الشدة، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الريان للتراث، مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'hadi_al_arwah_ila_bilad_al_afrah',
+    titleAr: 'حادي الأرواح إلى بلاد الأفراح',
+    titleEn: 'Hadi Al Arwah Ila Bilad Al Afrah',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 415 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/hadi_al_arwah_ila_bilad_al_afrah.json',
+      fileName: 'hadi_al_arwah_ila_bilad_al_afrah_text.json',
+      approxSizeBytes: 1039576, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — حادي الأرواح إلى بلاد الأفراح، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، مطبعة المدني، القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'risalat_ibn_al_qayyim_ila_ahad_ikhwanih',
+    titleAr: 'رسالة ابن القيم إلى أحد إخوانه',
+    titleEn: 'Risalat Ibn Al Qayyim Ila Ahad Ikhwanih',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 84 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/risalat_ibn_al_qayyim_ila_ahad_ikhwanih.json',
+      fileName: 'risalat_ibn_al_qayyim_ila_ahad_ikhwanih_text.json',
+      approxSizeBytes: 162892, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — رسالة ابن القيم إلى أحد إخوانه، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٥٩ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق عبد الله بن محمد المديفر',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_qubur_ibn_abi_al_dunya',
+    titleAr: 'القبور لابن أبي الدنيا',
+    titleEn: 'Al Qubur Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 275 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_qubur_ibn_abi_al_dunya.json',
+      fileName: 'al_qubur_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 177199, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — القبور لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة الغرباء الأثرية، تحقيق طارق محمد سكلوع العمود',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_qanaah_wal_taaffuf',
+    titleAr: 'القناعة والتعفف',
+    titleEn: 'Al Qanaah Wal Taaffuf',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 64 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_qanaah_wal_taaffuf.json',
+      fileName: 'al_qanaah_wal_taaffuf_text.json',
+      approxSizeBytes: 167088, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — القناعة والتعفف، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'raf_al_yadayn_fil_salah',
+    titleAr: 'رفع اليدين في الصلاة',
+    titleEn: 'Raf Al Yadayn Fil Salah',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 343 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/raf_al_yadayn_fil_salah.json',
+      fileName: 'raf_al_yadayn_fil_salah_text.json',
+      approxSizeBytes: 718422, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — رفع اليدين في الصلاة، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٩١ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق علي بن محمد العمران',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_mutamannin',
+    titleAr: 'المتمنين',
+    titleEn: 'Al Mutamannin',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 166 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_mutamannin.json',
+      fileName: 'al_mutamannin_text.json',
+      approxSizeBytes: 161561, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المتمنين، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم - بيروت - لبنان، تحقيق محمد خير رمضان يوسف',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_muhtadirin',
+    titleAr: 'المحتضرين',
+    titleEn: 'Al Muhtadirin',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 369 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_muhtadirin.json',
+      fileName: 'al_muhtadirin_text.json',
+      approxSizeBytes: 383997, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المحتضرين، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم - بيروت - لبنان، تحقيق محمد خير رمضان يوسف',
+    ),
+  ),
+  LibraryBook(
+    id: 'rawdat_al_muhibbin',
+    titleAr: 'روضة المحبين ونزهة المشتاقين',
+    titleEn: 'Rawdat Al Muhibbin',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 482 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/rawdat_al_muhibbin.json',
+      fileName: 'rawdat_al_muhibbin_text.json',
+      approxSizeBytes: 946586, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — روضة المحبين ونزهة المشتاقين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، دار الكتب العلمية، بيروت، لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_marad_wal_kaffarat',
+    titleAr: 'المرض والكفارات',
+    titleEn: 'Al Marad Wal Kaffarat',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 261 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_marad_wal_kaffarat.json',
+      fileName: 'al_marad_wal_kaffarat_text.json',
+      approxSizeBytes: 286987, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المرض والكفارات، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، الدار السلفية - بومباي، تحقيق عبد الوكيل الندوي',
+    ),
+  ),
+  LibraryBook(
+    id: 'shifa_al_alil',
+    titleAr: 'شفاء العليل في مسائل القضاء والقدر والحكمة والتعليل',
+    titleEn: 'Shifa Al Alil',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 333 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/shifa_al_alil.json',
+      fileName: 'shifa_al_alil_text.json',
+      approxSizeBytes: 1669935, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — شفاء العليل في مسائل القضاء والقدر والحكمة والتعليل، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار المعرفة، بيروت، لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'sifat_al_munafiqin',
+    titleAr: 'صفات المنافقين',
+    titleEn: 'Sifat Al Munafiqin',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 20 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/sifat_al_munafiqin.json',
+      fileName: 'sifat_al_munafiqin_text.json',
+      approxSizeBytes: 40512, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — صفات المنافقين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، الكتاب منشور على موقع وزارة الأوقاف السعودية بدون بيانات',
+    ),
+  ),
+  LibraryBook(
+    id: 'sigh_al_hamd',
+    titleAr: 'جواب في صيغ الحمد',
+    titleEn: 'Sigh Al Hamd',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 48 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/sigh_al_hamd.json',
+      fileName: 'sigh_al_hamd_text.json',
+      approxSizeBytes: 56294, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — جواب في صيغ الحمد، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار العاصمة - الرياض، تحقيق محمد بن إبراهيم السعران',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_matar_wal_rad_wal_barq',
+    titleAr: 'المطر والرعد والبرق',
+    titleEn: 'Al Matar Wal Rad Wal Barq',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 185 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_matar_wal_rad_wal_barq.json',
+      fileName: 'al_matar_wal_rad_wal_barq_text.json',
+      approxSizeBytes: 161239, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المطر والرعد والبرق، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_manamat',
+    titleAr: 'المنامات',
+    titleEn: 'Al Manamat',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 465 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_manamat.json',
+      fileName: 'al_manamat_text.json',
+      approxSizeBytes: 413721, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المنامات، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق عبد القادر أحمد عطا [ت ١٤٠٣ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'tariq_al_hijratayn',
+    titleAr: 'طريق الهجرتين وباب السعادتين',
+    titleEn: 'Tariq Al Hijratayn',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 443 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/tariq_al_hijratayn.json',
+      fileName: 'tariq_al_hijratayn_text.json',
+      approxSizeBytes: 1524302, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — طريق الهجرتين وباب السعادتين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، الدار السلفية، القاهرة، مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'uddat_al_sabirin',
+    titleAr: 'عدة الصابرين وذخيرة الشاكرين',
+    titleEn: 'Uddat Al Sabirin',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 301 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/uddat_al_sabirin.json',
+      fileName: 'uddat_al_sabirin_text.json',
+      approxSizeBytes: 753873, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — عدة الصابرين وذخيرة الشاكرين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، دار ابن كثير، دمشق، بيروت/مكتبة دار التراث، المدينة المنورة، المملكة العربية السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'faidah_jalilah_fi_qawaid_al_asma_al_husna',
+    titleAr: 'فائدة جليلة في قواعد الأسماء الحسنى',
+    titleEn: 'Faidah Jalilah Fi Qawaid Al Asma Al Husna',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 59 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/faidah_jalilah_fi_qawaid_al_asma_al_husna.json',
+      fileName: 'faidah_jalilah_fi_qawaid_al_asma_al_husna_text.json',
+      approxSizeBytes: 71747, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — فائدة جليلة في قواعد الأسماء الحسنى، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، غراس، الكويت، تحقيق عبد الرزاق بن عبد المحسن البدر',
+    ),
+  ),
+  LibraryBook(
+    id: 'fatya_fi_sighat_al_hamd',
+    titleAr: 'فتيا في صيغة الحمد «الحمد لله حمدا يوافي نعمه ويكافئ مزيده»',
+    titleEn: 'Fatya Fi Sighat Al Hamd',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 61 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/fatya_fi_sighat_al_hamd.json',
+      fileName: 'fatya_fi_sighat_al_hamd_text.json',
+      approxSizeBytes: 124061, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — فتيا في صيغة الحمد «الحمد لله حمدا يوافي نعمه ويكافئ مزيده»، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٥٩ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_nafaqah_ala_al_iyal',
+    titleAr: 'العيال ويقع في مجلدين',
+    titleEn: 'Al Nafaqah Ala Al Iyal',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 701 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_nafaqah_ala_al_iyal.json',
+      fileName: 'al_nafaqah_ala_al_iyal_text.json',
+      approxSizeBytes: 559299, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — العيال ويقع في مجلدين، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن القيم - السعودية - الدمام، تحقيق د نجم عبد الرحمن خلف',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_hamm_wal_huzn',
+    titleAr: 'الهم والحزن',
+    titleEn: 'Al Hamm Wal Huzn',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 252 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_hamm_wal_huzn.json',
+      fileName: 'al_hamm_wal_huzn_text.json',
+      approxSizeBytes: 154711, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الهم والحزن، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، دار السلام - القاهرة، تحقيق مجدي فتحي السيد [ت ١٤٤٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'nuniyyat_ibn_al_qayyim',
+    titleAr: 'متن القصيدة النونية',
+    titleEn: 'Nuniyyat Ibn Al Qayyim',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 423 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/nuniyyat_ibn_al_qayyim.json',
+      fileName: 'nuniyyat_ibn_al_qayyim_text.json',
+      approxSizeBytes: 703198, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — متن القصيدة النونية، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، مكتبة ابن تيمية، القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_hawatif',
+    titleAr: 'هواتف الجنان',
+    titleEn: 'Al Hawatif',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 178 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_hawatif.json',
+      fileName: 'al_hawatif_text.json',
+      approxSizeBytes: 310933, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — هواتف الجنان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، المكتب الإسلامي، تحقيق محمد الزغلي',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_wajal_wal_tawthuq_bil_amal',
+    titleAr: 'الوجل والتوثق بالعمل',
+    titleEn: 'Al Wajal Wal Tawthuq Bil Amal',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 52 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_wajal_wal_tawthuq_bil_amal.json',
+      fileName: 'al_wajal_wal_tawthuq_bil_amal_text.json',
+      approxSizeBytes: 88733, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الوجل والتوثق بالعمل، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الوطن - الرياض، تحقيق مشهور حسن آل سلمان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_wara',
+    titleAr: 'الورع',
+    titleEn: 'Al Wara',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 243 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_wara.json',
+      fileName: 'al_wara_text.json',
+      approxSizeBytes: 188931, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الورع، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، الدار السلفية - الكويت، تحقيق أبي عبد الله محمد بن حمد الحمود',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_yaqin_ibn_abi_al_dunya',
+    titleAr: 'اليقين لابن أبي الدنيا',
+    titleEn: 'Al Yaqin Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 42 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_yaqin_ibn_abi_al_dunya.json',
+      fileName: 'al_yaqin_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 52041, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — اليقين لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار البشائر الإسلامية',
+    ),
+  ),
+  LibraryBook(
+    id: 'hidayat_al_hayara',
+    titleAr: 'هداية الحيارى في أجوبة اليهود والنصارى',
+    titleEn: 'Hidayat Al Hayara',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي 751 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن قيّم الجوزية، 517 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/hidayat_al_hayara.json',
+      fileName: 'hidayat_al_hayara_text.json',
+      approxSizeBytes: 1151105, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — هداية الحيارى في أجوبة اليهود والنصارى، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٩١ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)',
+    ),
+  ),
+  LibraryBook(
+    id: 'husn_al_zann_billah',
+    titleAr: 'حسن الظن بالله',
+    titleEn: 'Husn Al Zann Billah',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 152 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/husn_al_zann_billah.json',
+      fileName: 'husn_al_zann_billah_text.json',
+      approxSizeBytes: 186242, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — حسن الظن بالله، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار طيبة - الرياض، تحقيق مخلص محمد',
+    ),
+  ),
+  LibraryBook(
+    id: 'hilm_muawiyah',
+    titleAr: 'حلم معاوية لابن أبي الدنيا',
+    titleEn: 'Hilm Muawiyah',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 40 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/hilm_muawiyah.json',
+      fileName: 'hilm_muawiyah_text.json',
+      approxSizeBytes: 32319, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — حلم معاوية لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، دار البشائر',
+    ),
+  ),
+  LibraryBook(
+    id: 'dhamm_al_baghy',
+    titleAr: 'ذم البغى لابن أبي الدنيا',
+    titleEn: 'Dhamm Al Baghy',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 57 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/dhamm_al_baghy.json',
+      fileName: 'dhamm_al_baghy_text.json',
+      approxSizeBytes: 62053, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — ذم البغى لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الراية للنشر والتوزيع، الرياض - السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'akhbar_al_humqa_wal_mughaffalin',
+    titleAr: 'أخبار الحمقى والمغفلين',
+    titleEn: 'Akhbar Al Humqa Wal Mughaffalin',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 192 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/akhbar_al_humqa_wal_mughaffalin.json',
+      fileName: 'akhbar_al_humqa_wal_mughaffalin_text.json',
+      approxSizeBytes: 391527, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — أخبار الحمقى والمغفلين، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الفكر اللبناني',
+    ),
+  ),
+  LibraryBook(
+    id: 'akhbar_al_zuraf_wal_mutamajinin',
+    titleAr: 'أخبار الظراف والمتماجنين',
+    titleEn: 'Akhbar Al Zuraf Wal Mutamajinin',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 116 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/akhbar_al_zuraf_wal_mutamajinin.json',
+      fileName: 'akhbar_al_zuraf_wal_mutamajinin_text.json',
+      approxSizeBytes: 194862, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — أخبار الظراف والمتماجنين، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، دار ابن حزم - بيروت، تحقيق بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'akhbar_al_nisa_ibn_al_jawzi',
+    titleAr: 'أخبار النساء',
+    titleEn: 'Akhbar Al Nisa Ibn Al Jawzi',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 242 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/akhbar_al_nisa_ibn_al_jawzi.json',
+      fileName: 'akhbar_al_nisa_ibn_al_jawzi_text.json',
+      approxSizeBytes: 455624, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — أخبار النساء، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ) (منسوب خطأ في المطبوع لابن قيم الجوزية)، دار مكتبة الحياة، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'dhamm_al_dunya',
+    titleAr: 'ذم الدنيا',
+    titleEn: 'Dhamm Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 503 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/dhamm_al_dunya.json',
+      fileName: 'dhamm_al_dunya_text.json',
+      approxSizeBytes: 303927, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — ذم الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية',
+    ),
+  ),
+  LibraryBook(
+    id: 'amar_al_ayan',
+    titleAr: 'أعمار الأعيان',
+    titleEn: 'Amar Al Ayan',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 191 صفحة، ضمن باب السيرة والتاريخ.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/amar_al_ayan.json',
+      fileName: 'amar_al_ayan_text.json',
+      approxSizeBytes: 581008, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — أعمار الأعيان، ابن الجوزي، جمال الدين أبي الفرج عبد الرحمن بن علي بن محمد (٥١٠ هـ - ٥٩٧ هـ)، مكتبة الخانجي، القاهرة، تحقيق د محمود محمد الطناحي',
+    ),
+  ),
+  LibraryBook(
+    id: 'ikhbar_ahl_al_rusukh_fil_fiqh',
+    titleAr: 'إخبار أهل الرسوخ في الفقه والتحديث بمقدار المنسوخ من الحديث',
+    titleEn: 'Ikhbar Ahl Al Rusukh Fil Fiqh',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 38 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ikhbar_ahl_al_rusukh_fil_fiqh.json',
+      fileName: 'ikhbar_ahl_al_rusukh_fil_fiqh_text.json',
+      approxSizeBytes: 38272, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — إخبار أهل الرسوخ في الفقه والتحديث بمقدار المنسوخ من الحديث، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مكتبة ابن حجر للنشر والتوزيع، مكة المكرمة',
+    ),
+  ),
+  LibraryBook(
+    id: 'dhamm_al_ghibah_wal_namimah',
+    titleAr: 'ذم الغيبة والنميمة',
+    titleEn: 'Dhamm Al Ghibah Wal Namimah',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 171 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/dhamm_al_ghibah_wal_namimah.json',
+      fileName: 'dhamm_al_ghibah_wal_namimah_text.json',
+      approxSizeBytes: 135671, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — ذم الغيبة والنميمة، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، مكتبة دار البيان، دمشق - سورية، مكتبة المؤيد، الرياض - السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'dhamm_al_muskir',
+    titleAr: 'كتاب ذم المسكر',
+    titleEn: 'Dhamm Al Muskir',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 99 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/dhamm_al_muskir.json',
+      fileName: 'dhamm_al_muskir_text.json',
+      approxSizeBytes: 84149, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — كتاب ذم المسكر، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الراية - الرياض، تحقيق د. نجم عبد الرحمن خلف',
+    ),
+  ),
+  LibraryBook(
+    id: 'dhamm_al_malahi',
+    titleAr: 'ذم الملاهي لابن أبي الدنيا',
+    titleEn: 'Dhamm Al Malahi',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 183 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/dhamm_al_malahi.json',
+      fileName: 'dhamm_al_malahi_text.json',
+      approxSizeBytes: 177430, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — ذم الملاهي لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة ابن تيمية، القاهرة- مصر، مكتبة العلم، جدة - السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'ilam_al_alim_bi_naskh_al_hadith',
+    titleAr: 'إعلام العالم بعد رسوخه بناسخ الحديث ومنسوخه',
+    titleEn: 'Ilam Al Alim Bi Naskh Al Hadith',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 386 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ilam_al_alim_bi_naskh_al_hadith.json',
+      fileName: 'ilam_al_alim_bi_naskh_al_hadith_text.json',
+      approxSizeBytes: 439489, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — إعلام العالم بعد رسوخه بناسخ الحديث ومنسوخه، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، ابن حزم، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'sifat_al_jannah_ibn_abi_al_dunya',
+    titleAr: 'صفة الجنة وما أعد الله لأهلها من النعيم',
+    titleEn: 'Sifat Al Jannah Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 366 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/sifat_al_jannah_ibn_abi_al_dunya.json',
+      fileName: 'sifat_al_jannah_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 350872, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — صفة الجنة وما أعد الله لأهلها من النعيم، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار البشير - مؤسسة الرسالة، تحقيق عبد الرحيم أحمد عبد الرحيم العساسلة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_adhkiya',
+    titleAr: 'كتاب الأذكياء',
+    titleEn: 'Al Adhkiya',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 241 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_adhkiya.json',
+      fileName: 'al_adhkiya_text.json',
+      approxSizeBytes: 797853, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — كتاب الأذكياء، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مكتبة الغزالي',
+    ),
+  ),
+  LibraryBook(
+    id: 'sifat_al_nar',
+    titleAr: 'صفة النار',
+    titleEn: 'Sifat Al Nar',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 268 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/sifat_al_nar.json',
+      fileName: 'sifat_al_nar_text.json',
+      approxSizeBytes: 249208, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — صفة النار، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم - لبنان / بيروت، تحقيق محمد خير رمضان يوسف',
+    ),
+  ),
+  LibraryBook(
+    id: 'fadail_ramadan_ibn_abi_al_dunya',
+    titleAr: 'فضائل رمضان',
+    titleEn: 'Fadail Ramadan Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 66 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/fadail_ramadan_ibn_abi_al_dunya.json',
+      fileName: 'fadail_ramadan_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 65789, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — فضائل رمضان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار السلف، الرياض - السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_birr_wal_silah_ibn_al_jawzi',
+    titleAr: 'البر والصلة لابن الجوزي',
+    titleEn: 'Al Birr Wal Silah Ibn Al Jawzi',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 225 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_birr_wal_silah_ibn_al_jawzi.json',
+      fileName: 'al_birr_wal_silah_ibn_al_jawzi_text.json',
+      approxSizeBytes: 693894, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — البر والصلة لابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مؤسسة الكتب الثقافية، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'qira_al_dayf',
+    titleAr: 'قرى الضيف',
+    titleEn: 'Qira Al Dayf',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 67 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/qira_al_dayf.json',
+      fileName: 'qira_al_dayf_text.json',
+      approxSizeBytes: 100857, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قرى الضيف، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، أضواء السلف، الرياض - السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'qada_al_hawaij',
+    titleAr: 'قضاء الحوائج',
+    titleEn: 'Qada Al Hawaij',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 118 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/qada_al_hawaij.json',
+      fileName: 'qada_al_hawaij_text.json',
+      approxSizeBytes: 139462, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قضاء الحوائج، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، مكتبة القرآن - القاهرة، تحقيق مجدي السيد إبراهيم [ت ١٤٤٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'kalam_al_layali_wal_ayyam',
+    titleAr: 'كلام الليالي والأيام',
+    titleEn: 'Kalam Al Layali Wal Ayyam',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 65 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/kalam_al_layali_wal_ayyam.json',
+      fileName: 'kalam_al_layali_wal_ayyam_text.json',
+      approxSizeBytes: 75155, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — كلام الليالي والأيام، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tadhkirah_fil_waz',
+    titleAr: 'التذكرة في الوعظ',
+    titleEn: 'Al Tadhkirah Fil Waz',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 214 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_tadhkirah_fil_waz.json',
+      fileName: 'al_tadhkirah_fil_waz_text.json',
+      approxSizeBytes: 427826, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — التذكرة في الوعظ، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار المعرفة - بيروت، تحقيق أحمد عبد الوهاب فتيح',
+    ),
+  ),
+  LibraryBook(
+    id: 'mujabu_al_dawah',
+    titleAr: 'مجابو الدعوة (مطبوع ضمن مجموعة رسائل ابن أبي الدنيا)',
+    titleEn: 'Mujabu Al Dawah',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 194 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/mujabu_al_dawah.json',
+      fileName: 'mujabu_al_dawah_text.json',
+      approxSizeBytes: 209598, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مجابو الدعوة (مطبوع ضمن مجموعة رسائل ابن أبي الدنيا)، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_thabat_ind_al_mamat',
+    titleAr: 'الثبات عند الممات',
+    titleEn: 'Al Thabat Ind Al Mamat',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 157 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_thabat_ind_al_mamat.json',
+      fileName: 'al_thabat_ind_al_mamat_text.json',
+      approxSizeBytes: 346588, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الثبات عند الممات، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق عبد الله الليثي الأنصاري',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_hathth_ala_hifz_al_ilm',
+    titleAr: 'الحث على حفظ العلم وذكر كبار الحفاظ',
+    titleEn: 'Al Hathth Ala Hifz Al Ilm',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 72 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_hathth_ala_hifz_al_ilm.json',
+      fileName: 'al_hathth_ala_hifz_al_ilm_text.json',
+      approxSizeBytes: 151574, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الحث على حفظ العلم وذكر كبار الحفاظ، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مؤسسة شباب الجامعة، الاسكندرية',
+    ),
+  ),
+  LibraryBook(
+    id: 'muhasabat_al_nafs',
+    titleAr: 'محاسبة النفس لابن أبي الدنيا',
+    titleEn: 'Muhasabat Al Nafs',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 155 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/muhasabat_al_nafs.json',
+      fileName: 'muhasabat_al_nafs_text.json',
+      approxSizeBytes: 155278, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — محاسبة النفس لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الكتب العلمية، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'mudarat_al_nas',
+    titleAr: 'مداراة الناس',
+    titleEn: 'Mudarat Al Nas',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 187 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/mudarat_al_nas.json',
+      fileName: 'mudarat_al_nas_text.json',
+      approxSizeBytes: 146415, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مداراة الناس، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم - بيروت - لبنان، تحقيق محمد خير رمضان يوسف',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_qussas_wal_mudhakkirin',
+    titleAr: 'القصاص والمذكرين',
+    titleEn: 'Al Qussas Wal Mudhakkirin',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 209 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_qussas_wal_mudhakkirin.json',
+      fileName: 'al_qussas_wal_mudhakkirin_text.json',
+      approxSizeBytes: 428994, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — القصاص والمذكرين، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، المكتب الإسلامي - بيروت، تحقيق د. محمد لطفي الصباغ',
+    ),
+  ),
+  LibraryBook(
+    id: 'maqtal_ali',
+    titleAr: 'مقتل أمير المؤمنين علي بن أبي طالب عليه السلام',
+    titleEn: 'Maqtal Ali',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 143 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/maqtal_ali.json',
+      fileName: 'maqtal_ali_text.json',
+      approxSizeBytes: 112791, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مقتل أمير المؤمنين علي بن أبي طالب عليه السلام، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، دار البشائر - دمشق، تحقيق إبراهيم صالح [ت ١٤٤٣ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_mujtaba_min_al_mujtana',
+    titleAr: 'المجتبى من المجتنى',
+    titleEn: 'Al Mujtaba Min Al Mujtana',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 97 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_mujtaba_min_al_mujtana.json',
+      fileName: 'al_mujtaba_min_al_mujtana_text.json',
+      approxSizeBytes: 267832, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المجتبى من المجتنى، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، :دار الآفاق العربية - القاهرة، تحقيق أيمن عبد الجابر البحيري',
+    ),
+  ),
+  LibraryBook(
+    id: 'makaid_al_shaytan',
+    titleAr: 'مكائد الشيطان',
+    titleEn: 'Makaid Al Shaytan',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 129 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/makaid_al_shaytan.json',
+      fileName: 'makaid_al_shaytan_text.json',
+      approxSizeBytes: 113785, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مكائد الشيطان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'makarim_al_akhlaq_ibn_abi_al_dunya',
+    titleAr: 'مكارم الأخلاق',
+    titleEn: 'Makarim Al Akhlaq Ibn Abi Al Dunya',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 490 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/makarim_al_akhlaq_ibn_abi_al_dunya.json',
+      fileName: 'makarim_al_akhlaq_ibn_abi_al_dunya_text.json',
+      approxSizeBytes: 515933, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مكارم الأخلاق، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، مكتبة القرآن - القاهرة، تحقيق مجدي السيد إبراهيم [ت ١٤٤٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'man_asha_bad_al_mawt',
+    titleAr: 'كتاب من عاش بعد الموت',
+    titleEn: 'Man Asha Bad Al Mawt',
+    authorAr: 'الإمام ابن أبي الدنيا',
+    authorEn: 'Ibn Abi al-Dunya',
+    authorDeathAr: 'توفي 281 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام ابن أبي الدنيا، 56 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/man_asha_bad_al_mawt.json',
+      fileName: 'man_asha_bad_al_mawt_text.json',
+      approxSizeBytes: 145000, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — كتاب من عاش بعد الموت، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق محمد حسام بيضون',
+    ),
+  ),
+  LibraryBook(
+    id: 'riyadat_al_nafs',
+    titleAr: 'رياضة النفس',
+    titleEn: 'Riyadat Al Nafs',
+    authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
+    authorEn: 'Al-Hakim al-Tirmidhi',
+    authorDeathAr: 'توفي نحو 320 هـ',
+    descriptionAr:
+        'مصنَّف لـ الحكيم أبو عبد الله محمد بن علي الترمذي، 48 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/riyadat_al_nafs.json',
+      fileName: 'riyadat_al_nafs_text.json',
+      approxSizeBytes: 108060, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — رياضة النفس، محمد بن علي بن الحسن بن بشر، أبو عبد الله، الحكيم الترمذي (ت نحو ٣٢٠هـ)، دار الكتب العلمية، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_mudhish',
+    titleAr: 'المدهش',
+    titleEn: 'Al Mudhish',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 530 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_mudhish.json',
+      fileName: 'al_mudhish_text.json',
+      approxSizeBytes: 1263861, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المدهش، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الكتب العلمية - بيروت - لبنان، تحقيق الدكتور مروان قباني',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_musaffa_bi_akuff_ahl_al_rusukh',
+    titleAr: 'المصفى بأكف أهل الرسوخ من علم الناسخ والمنسوخ',
+    titleEn: 'Al Musaffa Bi Akuff Ahl Al Rusukh',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 50 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_musaffa_bi_akuff_ahl_al_rusukh.json',
+      fileName: 'al_musaffa_bi_akuff_ahl_al_rusukh_text.json',
+      approxSizeBytes: 108683, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المصفى بأكف أهل الرسوخ من علم الناسخ والمنسوخ، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، مؤسسة الرسالة، تحقيق حاتم صالح الضامن [ت ١٤٣٤ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_manahi',
+    titleAr: 'المنهيات',
+    titleEn: 'Al Manahi',
+    authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
+    authorEn: 'Al-Hakim al-Tirmidhi',
+    authorDeathAr: 'توفي نحو 320 هـ',
+    descriptionAr:
+        'مصنَّف لـ الحكيم أبو عبد الله محمد بن علي الترمذي، 233 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_manahi.json',
+      fileName: 'al_manahi_text.json',
+      approxSizeBytes: 340305, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المنهيات، محمد بن علي بن الحسن بن بشر، أبو عبد الله، الحكيم الترمذي (ت نحو ٣٢٠هـ)، مكتبة القرآن للطبع والنشر والتوزيع -القاهرة، مصر، تحقيق محمد عثمان الخشت',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_muqliq_ibn_al_jawzi',
+    titleAr: 'المقلق',
+    titleEn: 'Al Muqliq Ibn Al Jawzi',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 122 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_muqliq_ibn_al_jawzi.json',
+      fileName: 'al_muqliq_ibn_al_jawzi_text.json',
+      approxSizeBytes: 103278, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المقلق، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، دار الصحابة للتراث بطنطا، تحقيق مجدي فتحي السيد [ت ١٤٤٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'bahr_al_dumu',
+    titleAr: 'بحر الدموع',
+    titleEn: 'Bahr Al Dumu',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 150 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/bahr_al_dumu.json',
+      fileName: 'bahr_al_dumu_text.json',
+      approxSizeBytes: 340844, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — بحر الدموع، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الفجر للتراث، تحقيق جمال محمود مصطفى',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_amthal_min_al_kitab_wal_sunnah',
+    titleAr: 'الأمثال من الكتاب والسنة',
+    titleEn: 'Al Amthal Min Al Kitab Wal Sunnah',
+    authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
+    authorEn: 'Al-Hakim al-Tirmidhi',
+    authorDeathAr: 'توفي نحو 320 هـ',
+    descriptionAr:
+        'مصنَّف لـ الحكيم أبو عبد الله محمد بن علي الترمذي، 318 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_amthal_min_al_kitab_wal_sunnah.json',
+      fileName: 'al_amthal_min_al_kitab_wal_sunnah_text.json',
+      approxSizeBytes: 629594, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأمثال من الكتاب والسنة، محمد بن علي بن الحسن بن بشر، أبو عبد الله، الحكيم الترمذي (ت نحو ٣٢٠هـ)، دار ابن زيدون / دار أسامة - بيروت - دمشق، تحقيق د. السيد الجميلي',
+    ),
+  ),
+  LibraryBook(
+    id: 'ahadith_al_qusas',
+    titleAr: 'أحاديث القصاص',
+    titleEn: 'Ahadith Al Qusas',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 44 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/ahadith_al_qusas.json',
+      fileName: 'ahadith_al_qusas_text.json',
+      approxSizeBytes: 48616, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — أحاديث القصاص، شيخ الإسلام تقي الدين أحمد بن عبد الحليم ابن تيمية، المكتب الإسلامي، بيروت - لبنان، تحقيق د. محمد بن لطفي الصباغ',
+    ),
+  ),
+  LibraryBook(
+    id: 'amrad_al_qulub_wa_shifauha',
+    titleAr: 'أمراض القلب وشفاؤها',
+    titleEn: 'Amrad Al Qulub Wa Shifauha',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 78 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/amrad_al_qulub_wa_shifauha.json',
+      fileName: 'amrad_al_qulub_wa_shifauha_text.json',
+      approxSizeBytes: 340526, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — أمراض القلب وشفاؤها، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المطبعة السلفية - القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_arbaun_al_taymiyyah',
+    titleAr: 'الأربعون التيمية',
+    titleEn: 'Al Arbaun Al Taymiyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 58 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_arbaun_al_taymiyyah.json',
+      fileName: 'al_arbaun_al_taymiyyah_text.json',
+      approxSizeBytes: 100669, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأربعون التيمية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مؤسسة الريان للتراث، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'bustan_al_waizin',
+    titleAr: 'بستان الواعظين ورياض السامعين',
+    titleEn: 'Bustan Al Waizin',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 301 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/bustan_al_waizin.json',
+      fileName: 'bustan_al_waizin_text.json',
+      approxSizeBytes: 1135310, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — بستان الواعظين ورياض السامعين، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مؤسسة الكتب الثقافية - بيروت - لبنان، تحقيق أيمن البحيري',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_amr_bil_maruf_ibn_taymiyyah',
+    titleAr: 'الأمر بالمعروف والنهي عن المنكر',
+    titleEn: 'Al Amr Bil Maruf Ibn Taymiyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 58 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_amr_bil_maruf_ibn_taymiyyah.json',
+      fileName: 'al_amr_bil_maruf_ibn_taymiyyah_text.json',
+      approxSizeBytes: 130973, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الأمر بالمعروف والنهي عن المنكر، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، وزارة الشئون الإسلامية والأوقاف والدعوة والإرشاد - المملكة العربية السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'tarikh_bayt_al_maqdis',
+    titleAr: 'تاريخ بيت المقدس',
+    titleEn: 'Tarikh Bayt Al Maqdis',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 40 صفحة، ضمن باب السيرة والتاريخ.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/tarikh_bayt_al_maqdis.json',
+      fileName: 'tarikh_bayt_al_maqdis_text.json',
+      approxSizeBytes: 63694, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تاريخ بيت المقدس، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مكتبة الثقافة الدينية، تحقيق محمد زينهم محمد عزب',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ikhnaiyyah',
+    titleAr: 'الرد على الأخنائي قاضي المالكية',
+    titleEn: 'Al Ikhnaiyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 247 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_ikhnaiyyah.json',
+      fileName: 'al_ikhnaiyyah_text.json',
+      approxSizeBytes: 960785, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الرد على الأخنائي قاضي المالكية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتبة العصرية - بيروت، تحقيق الداني بن منير آل زهوي',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_iklil_fi_al_mutashabih_wal_tawil',
+    titleAr: 'الإكليل في المتشابه والتأويل',
+    titleEn: 'Al Iklil Fi Al Mutashabih Wal Tawil',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 48 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_iklil_fi_al_mutashabih_wal_tawil.json',
+      fileName: 'al_iklil_fi_al_mutashabih_wal_tawil_text.json',
+      approxSizeBytes: 80283, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الإكليل في المتشابه والتأويل، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الإيمان للطبع والنشر والتوزيع، الإسكندرية - مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'tadhkirat_al_arib_fi_tafsir_al_gharib',
+    titleAr: 'تذكرة الأريب في تفسير الغريب (غريب القرآن الكريم)',
+    titleEn: 'Tadhkirat Al Arib Fi Tafsir Al Gharib',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 466 صفحة، ضمن باب التفسير.',
+    category: BookCategory.tafsir,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tadhkirat_al_arib_fi_tafsir_al_gharib.json',
+      fileName: 'tadhkirat_al_arib_fi_tafsir_al_gharib_text.json',
+      approxSizeBytes: 590064, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تذكرة الأريب في تفسير الغريب (غريب القرآن الكريم)، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الكتب العلمية، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'tazim_al_fatya',
+    titleAr: 'تعظيم الفتيا',
+    titleEn: 'Tazim Al Fatya',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 63 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/tazim_al_fatya.json',
+      fileName: 'tazim_al_fatya_text.json',
+      approxSizeBytes: 50368, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تعظيم الفتيا، جمال الدين أبو الفرج عبد الرحمن بن محمد بن علي الشهير بـ ابن الجوزي (٥١٠ - ٥٩٧ هـ)، الدار الأثرية، عمان - الأردن، تحقيق أبو عبيدة مشهور بن حسن آل سلمان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_iman_ibn_taymiyyah',
+    titleAr: 'الإيمان',
+    titleEn: 'Al Iman Ibn Taymiyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 357 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_iman_ibn_taymiyyah.json',
+      fileName: 'al_iman_ibn_taymiyyah_text.json',
+      approxSizeBytes: 1080525, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الإيمان، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي، عمان، الأردن، تحقيق محمد ناصر الدين الألباني',
+    ),
+  ),
+  LibraryBook(
+    id: 'taqwim_al_lisan',
+    titleAr: 'تقويم اللسان',
+    titleEn: 'Taqwim Al Lisan',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 140 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/taqwim_al_lisan.json',
+      fileName: 'taqwim_al_lisan_text.json',
+      approxSizeBytes: 166553, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تقويم اللسان، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، دار المعارف، تحقيق د. عبد العزيز مطر (أستاذ علم اللغة بجامعتي عين شمس وقطر)',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_intisar_li_ahl_al_athar',
+    titleAr: 'الانتصار لأهل الأثر المطبوع باسم «نقض المنطق»',
+    titleEn: 'Al Intisar Li Ahl Al Athar',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 390 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_intisar_li_ahl_al_athar.json',
+      fileName: 'al_intisar_li_ahl_al_athar_text.json',
+      approxSizeBytes: 945701, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الانتصار لأهل الأثر المطبوع باسم «نقض المنطق»، شيخ الإسلام أحمد بن عبد الحليم بن عبد السلام ابن تيمية (٦٦١ - ٧٢٨ هـ)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق عبد الرحمن بن حسن قائد',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tuhfah_al_iraqiyyah',
+    titleAr: 'التحفة العراقية في الأعمال القلبية',
+    titleEn: 'Al Tuhfah Al Iraqiyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 44 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_tuhfah_al_iraqiyyah.json',
+      fileName: 'al_tuhfah_al_iraqiyyah_text.json',
+      approxSizeBytes: 208538, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — التحفة العراقية في الأعمال القلبية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المطبعة السلفية - القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'talbis_iblis',
+    titleAr: 'تلبيس إبليس',
+    titleEn: 'Talbis Iblis',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 419 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/talbis_iblis.json',
+      fileName: 'talbis_iblis_text.json',
+      approxSizeBytes: 1240348, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تلبيس إبليس، عبد الرحمن بن علي بن محمد ابن الجوزي (ت ٥٩٧ هـ)، دار الفكر، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tadmuriyyah',
+    titleAr:
+        'التدمرية: تحقيق الإثبات للأسماء والصفات وحقيقة الجمع بين القدر والشرع',
+    titleEn: 'Al Tadmuriyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 242 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_tadmuriyyah.json',
+      fileName: 'al_tadmuriyyah_text.json',
+      approxSizeBytes: 309459, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — التدمرية: تحقيق الإثبات للأسماء والصفات وحقيقة الجمع بين القدر والشرع، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، مكتبة العبيكان - الرياض، تحقيق د. محمد بن عودة السعوي',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_hisbah_fil_islam',
+    titleAr: 'الحسبة في الإسلام، أو وظيفة الحكومة الإسلامية',
+    titleEn: 'Al Hisbah Fil Islam',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 56 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_hisbah_fil_islam.json',
+      fileName: 'al_hisbah_fil_islam_text.json',
+      approxSizeBytes: 151450, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الحسبة في الإسلام، أو وظيفة الحكومة الإسلامية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الكتب العلمية',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_radd_ala_man_qala_bi_fana_al_jannah_wal_nar',
+    titleAr: 'الرد على من قال بفناء الجنة والنار وبيان الأقوال في ذلك',
+    titleEn: 'Al Radd Ala Man Qala Bi Fana Al Jannah Wal Nar',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 80 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_radd_ala_man_qala_bi_fana_al_jannah_wal_nar.json',
+      fileName: 'al_radd_ala_man_qala_bi_fana_al_jannah_wal_nar_text.json',
+      approxSizeBytes: 189988, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الرد على من قال بفناء الجنة والنار وبيان الأقوال في ذلك، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار بلنسية - الرياض، تحقيق محمد بن عبد الله السمهري',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_risalah_al_akmaliyyah',
+    titleAr: 'الرسالة الأكملية في ما يجب لله من صفات الكمال',
+    titleEn: 'Al Risalah Al Akmaliyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 71 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_akmaliyyah.json',
+      fileName: 'al_risalah_al_akmaliyyah_text.json',
+      approxSizeBytes: 133017, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الرسالة الأكملية في ما يجب لله من صفات الكمال، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مطبعة المدني، المؤسسة السعودية، القاهرة، مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_risalah_al_arshiyyah',
+    titleAr: 'الرسالة العرشية',
+    titleEn: 'Al Risalah Al Arshiyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 38 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_arshiyyah.json',
+      fileName: 'al_risalah_al_arshiyyah_text.json',
+      approxSizeBytes: 138011, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الرسالة العرشية، تقي الدين أبو العَباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، المطبعة السلفية، القاهرة، مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_zuhd_wal_wara_wal_ibadah',
+    titleAr: 'الزهد والورع والعبادة',
+    titleEn: 'Al Zuhd Wal Wara Wal Ibadah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 186 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_zuhd_wal_wara_wal_ibadah.json',
+      fileName: 'al_zuhd_wal_wara_wal_ibadah_text.json',
+      approxSizeBytes: 443089, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الزهد والورع والعبادة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مكتبة المنار - الأردن، تحقيق حماد سلامة , محمد عويضة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_siyasah_al_shariyyah',
+    titleAr: 'السياسة الشرعية',
+    titleEn: 'Al Siyasah Al Shariyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 130 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_siyasah_al_shariyyah.json',
+      fileName: 'al_siyasah_al_shariyyah_text.json',
+      approxSizeBytes: 460490, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — السياسة الشرعية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، وزارة الشئون الإسلامية والأوقاف والدعوة والإرشاد - المملكة العربية السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_furqan_bayn_awliya_al_rahman_wa_awliya_al_shaytan',
+    titleAr: 'الفرقان بين أولياء الرحمن وأولياء الشيطان',
+    titleEn: 'Al Furqan Bayn Awliya Al Rahman Wa Awliya Al Shaytan',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 196 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_furqan_bayn_awliya_al_rahman_wa_awliya_al_shaytan.json',
+      fileName:
+          'al_furqan_bayn_awliya_al_rahman_wa_awliya_al_shaytan_text.json',
+      approxSizeBytes: 315345, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الفرقان بين أولياء الرحمن وأولياء الشيطان، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، مكتبة دار البيان، دمشق',
+    ),
+  ),
+  LibraryBook(
+    id: 'talqih_fuhum_ahl_al_athar',
+    titleAr: 'تلقيح فهوم أهل الأثر في عيون التاريخ والسير',
+    titleEn: 'Talqih Fuhum Ahl Al Athar',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 521 صفحة، ضمن باب السيرة والتاريخ.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/talqih_fuhum_ahl_al_athar.json',
+      fileName: 'talqih_fuhum_ahl_al_athar_text.json',
+      approxSizeBytes: 1991084, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تلقيح فهوم أهل الأثر في عيون التاريخ والسير، جمال الدين أبي الفرج عبد الرحمن ابن الجوزي [٥٠٨هـ - ٥٩٧هـ]، شركة دار الأرقم بن أبي الأرقم - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_qasidah_al_taiyyah_fil_qadar',
+    titleAr: 'القصيدة التائية في القدر',
+    titleEn: 'Al Qasidah Al Taiyyah Fil Qadar',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 51 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_qasidah_al_taiyyah_fil_qadar.json',
+      fileName: 'al_qasidah_al_taiyyah_fil_qadar_text.json',
+      approxSizeBytes: 28974, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — القصيدة التائية في القدر، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار ابن خزيمة - الرياض',
+    ),
+  ),
+  LibraryBook(
+    id: 'tanbih_al_naim_al_ghamr',
+    titleAr: 'تنبيه النائم الغمر على مواسم العمر',
+    titleEn: 'Tanbih Al Naim Al Ghamr',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 41 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tanbih_al_naim_al_ghamr.json',
+      fileName: 'tanbih_al_naim_al_ghamr_text.json',
+      approxSizeBytes: 30862, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تنبيه النائم الغمر على مواسم العمر، جمال الدين أبو الفرج عبد الرحمن بن علي ابن الجوزي، دار ابن حزم للطباعة والنشر والتوزيع، بيروت - لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_kalim_al_tayyib',
+    titleAr: 'الكلم الطيب',
+    titleEn: 'Al Kalim Al Tayyib',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 88 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_kalim_al_tayyib.json',
+      fileName: 'al_kalim_al_tayyib_text.json',
+      approxSizeBytes: 133636, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الكلم الطيب، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الفكر اللبناني للطباعة والنشر، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'tanwir_al_ghabash',
+    titleAr: 'تنوير الغبش في فضل السودان والحبش',
+    titleEn: 'Tanwir Al Ghabash',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 233 صفحة، ضمن باب الأدب.',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/tanwir_al_ghabash.json',
+      fileName: 'tanwir_al_ghabash_text.json',
+      approxSizeBytes: 409053, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تنوير الغبش في فضل السودان والحبش، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الشريف - الرياض / السعودية، تحقيق مرزوق علي إبراهيم',
+    ),
+  ),
+  LibraryBook(
+    id: 'hifz_al_umr',
+    titleAr: 'حفظ العمر',
+    titleEn: 'Hifz Al Umr',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 42 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/hifz_al_umr.json',
+      fileName: 'hifz_al_umr_text.json',
+      approxSizeBytes: 89427, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — حفظ العمر، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار البشائر الإسلامية، تحقيق محمد بن ناصر العجمي',
+    ),
+  ),
+  LibraryBook(
+    id: 'takhrij_al_kalim_al_tayyib',
+    titleAr: 'الكلم الطيب',
+    titleEn: 'Takhrij Al Kalim Al Tayyib',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 311 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/takhrij_al_kalim_al_tayyib.json',
+      fileName: 'takhrij_al_kalim_al_tayyib_text.json',
+      approxSizeBytes: 138760, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الكلم الطيب، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'fadail_bayt_al_maqdis',
+    titleAr: 'فضائل بيت المقدس',
+    titleEn: 'Fadail Bayt Al Maqdis',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 119 صفحة، ضمن باب السيرة والتاريخ.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/fadail_bayt_al_maqdis.json',
+      fileName: 'fadail_bayt_al_maqdis_text.json',
+      approxSizeBytes: 254945, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — فضائل بيت المقدس، أبو الفرج جمال الدين ابن الجوزي (٥٠٨ - ٥٩٧ هـ)، مكتبة الإمام البخاري للنشر والتوزيع، القاهرة - مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_masail_al_maridiniyyah',
+    titleAr:
+        'المسَائِلُ الماردينيَّةِ - وهي مسائل يكثر وقوعها ويحصل الابتلاء بها',
+    titleEn: 'Al Masail Al Maridiniyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 252 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_masail_al_maridiniyyah.json',
+      fileName: 'al_masail_al_maridiniyyah_text.json',
+      approxSizeBytes: 521772, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — المسَائِلُ الماردينيَّةِ - وهي مسائل يكثر وقوعها ويحصل الابتلاء بها، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، دار الفلاح، مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_nusayriyyah_tughat_suriya',
+    titleAr: 'النصيرية طغاة سورية أو العلويون كما سماهم الفرنسيون',
+    titleEn: 'Al Nusayriyyah Tughat Suriya',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 27 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_nusayriyyah_tughat_suriya.json',
+      fileName: 'al_nusayriyyah_tughat_suriya_text.json',
+      approxSizeBytes: 35892, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — النصيرية طغاة سورية أو العلويون كما سماهم الفرنسيون، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الافتاء، الرياض، المملكة العربية السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_wasitah_bayn_al_haqq_wal_khalq',
+    titleAr: 'الواسطة بين الحق والخلق',
+    titleEn: 'Al Wasitah Bayn Al Haqq Wal Khalq',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 34 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_wasitah_bayn_al_haqq_wal_khalq.json',
+      fileName: 'al_wasitah_bayn_al_haqq_wal_khalq_text.json',
+      approxSizeBytes: 50906, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الواسطة بين الحق والخلق، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مطابع الجامعة الإسلامية، المدينة النبوية، المملكة العربية السعودية، تحقيق محمد بن جميل زينو',
+    ),
+  ),
+  LibraryBook(
+    id: 'funun_al_afnan_fi_uyun_ulum_al_quran',
+    titleAr: 'فنون الأفنان في عيون علوم القرآن',
+    titleEn: 'Funun Al Afnan Fi Uyun Ulum Al Quran',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 341 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/funun_al_afnan_fi_uyun_ulum_al_quran.json',
+      fileName: 'funun_al_afnan_fi_uyun_ulum_al_quran_text.json',
+      approxSizeBytes: 341898, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — فنون الأفنان في عيون علوم القرآن، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'tahqiq_al_iman',
+    titleAr: 'الإيمان',
+    titleEn: 'Tahqiq Al Iman',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 167 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_iman.json',
+      fileName: 'tahqiq_al_iman_text.json',
+      approxSizeBytes: 45007, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الإيمان، تقي الدين أبو العباس أحمد بن عبد الحليم بن تيمية (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'tahqiq_al_ihtijaj_bil_qadar',
+    titleAr: 'الاحتجاج بالقدر',
+    titleEn: 'Tahqiq Al Ihtijaj Bil Qadar',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 27 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_ihtijaj_bil_qadar.json',
+      fileName: 'tahqiq_al_ihtijaj_bil_qadar_text.json',
+      approxSizeBytes: 11962, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الاحتجاج بالقدر، تقي الدين أبو العباس أحمد بن عبد الحليم بن تيمية (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'tahqiq_al_qawl_fi_isa_kalimat_allah',
+    titleAr: 'تحقيق القول في مسألة: عيسى كلمة الله والقرآن كلام الله',
+    titleEn: 'Tahqiq Al Qawl Fi Isa Kalimat Allah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 47 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_qawl_fi_isa_kalimat_allah.json',
+      fileName: 'tahqiq_al_qawl_fi_isa_kalimat_allah_text.json',
+      approxSizeBytes: 48371, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — تحقيق القول في مسألة: عيسى كلمة الله والقرآن كلام الله، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الصحابة للتراث - طنطا (مصر)، تحقيق قسم التحقيق بدار النشر',
+    ),
+  ),
+  LibraryBook(
+    id: 'jawab_al_itiradat_al_misriyyah',
+    titleAr: 'جواب الاعتراضات المصرية على الفتيا الحموية',
+    titleEn: 'Jawab Al Itiradat Al Misriyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 194 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/jawab_al_itiradat_al_misriyyah.json',
+      fileName: 'jawab_al_itiradat_al_misriyyah_text.json',
+      approxSizeBytes: 503033, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — جواب الاعتراضات المصرية على الفتيا الحموية، شيخ الإسلام أحمد بن عبد الحليم بن عبد السلام بن تيمية (٦٦١ - ٧٢٨ هـ)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق محمد عزير شمس',
+    ),
+  ),
+  LibraryBook(
+    id: 'jawab_fi_al_half_bighayr_allah',
+    titleAr:
+        'جواب في الحلف بغير الله والصلاة إلى القبور، ويليه: فصل في الاستغاثة',
+    titleEn: 'Jawab Fi Al Half Bighayr Allah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 27 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/jawab_fi_al_half_bighayr_allah.json',
+      fileName: 'jawab_fi_al_half_bighayr_allah_text.json',
+      approxSizeBytes: 37788, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — جواب في الحلف بغير الله والصلاة إلى القبور، ويليه: فصل في الاستغاثة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، (طبع في الكويت)',
+    ),
+  ),
+  LibraryBook(
+    id: 'hijab_al_marah_wa_libasuha_fil_salah',
+    titleAr: 'حجاب المرأة ولباسها في الصلاة',
+    titleEn: 'Hijab Al Marah Wa Libasuha Fil Salah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 46 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/hijab_al_marah_wa_libasuha_fil_salah.json',
+      fileName: 'hijab_al_marah_wa_libasuha_fil_salah_text.json',
+      approxSizeBytes: 87965, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — حجاب المرأة ولباسها في الصلاة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي، تحقيق محمد ناصر الدين الألباني',
+    ),
+  ),
+  LibraryBook(
+    id: 'muthir_al_gharam_al_sakin',
+    titleAr: 'مثير الغرام الساكن إلى أشرف الأماكن لابن الجوزي',
+    titleEn: 'Muthir Al Gharam Al Sakin',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 465 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/muthir_al_gharam_al_sakin.json',
+      fileName: 'muthir_al_gharam_al_sakin_text.json',
+      approxSizeBytes: 1342963, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مثير الغرام الساكن إلى أشرف الأماكن لابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الحديث، القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'huquq_al_al_al_bayt',
+    titleAr: 'حقوق آل البيت',
+    titleEn: 'Huquq Al Al Al Bayt',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 65 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/huquq_al_al_al_bayt.json',
+      fileName: 'huquq_al_al_al_bayt_text.json',
+      approxSizeBytes: 144649, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — حقوق آل البيت، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، دار الكتب العلمية بيروت ـ لبنان، تحقيق عبد القادر أحمد عطا [ت ١٤٠٣ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'ras_al_husayn',
+    titleAr: 'رأس الحسين',
+    titleEn: 'Ras Al Husayn',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 38 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/ras_al_husayn.json',
+      fileName: 'ras_al_husayn_text.json',
+      approxSizeBytes: 105668, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — رأس الحسين، تقي الدين أبو العباس أحمد بن عبد الحليم بن تيمية الحراني (ت ٧٢٨ هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'risalah_fi_usul_al_din',
+    titleAr: 'رسالة في أصول الدين',
+    titleEn: 'Risalah Fi Usul Al Din',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 34 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/risalah_fi_usul_al_din.json',
+      fileName: 'risalah_fi_usul_al_din_text.json',
+      approxSizeBytes: 78028, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — رسالة في أصول الدين، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، -',
+    ),
+  ),
+  LibraryBook(
+    id: 'mashyakhat_ibn_al_jawzi',
+    titleAr: 'مشيخة ابن الجوزي',
+    titleEn: 'Mashyakhat Ibn Al Jawzi',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 150 صفحة، ضمن باب السيرة والتاريخ.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/mashyakhat_ibn_al_jawzi.json',
+      fileName: 'mashyakhat_ibn_al_jawzi_text.json',
+      approxSizeBytes: 297366, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مشيخة ابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، دار الغرب الإسلامي، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'risalah_fi_fadl_al_khulafa_al_rashidin',
+    titleAr:
+        'رسالة في فضل الخلفاء الراشدين (طبعت مفردة، ومنها نسخة مختصرة في مجموع الفتاوى)',
+    titleEn: 'Risalah Fi Fadl Al Khulafa Al Rashidin',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 30 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/risalah_fi_fadl_al_khulafa_al_rashidin.json',
+      fileName: 'risalah_fi_fadl_al_khulafa_al_rashidin_text.json',
+      approxSizeBytes: 28276, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — رسالة في فضل الخلفاء الراشدين (طبعت مفردة، ومنها نسخة مختصرة في مجموع الفتاوى)، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الصحابة للتراث، مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'mawaiz_ibn_al_jawzi_al_yaqutah',
+    titleAr: 'الياقوتة - مواعظ ابن الجوزي',
+    titleEn: 'Mawaiz Ibn Al Jawzi Al Yaqutah',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 27 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/mawaiz_ibn_al_jawzi_al_yaqutah.json',
+      fileName: 'mawaiz_ibn_al_jawzi_al_yaqutah_text.json',
+      approxSizeBytes: 103315, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — الياقوتة - مواعظ ابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'raf_al_malam_an_al_aimmah_al_alam',
+    titleAr: 'رفع الملام عن الأئمة الأعلام',
+    titleEn: 'Raf Al Malam An Al Aimmah Al Alam',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 87 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/raf_al_malam_an_al_aimmah_al_alam.json',
+      fileName: 'raf_al_malam_an_al_aimmah_al_alam_text.json',
+      approxSizeBytes: 239670, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — رفع الملام عن الأئمة الأعلام، تقي الدين أبو العَباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'ziyarat_al_qubur_wal_istinjad_bil_maqbur',
+    titleAr: 'زيارة القبور والاستنجاد بالمقبور',
+    titleEn: 'Ziyarat Al Qubur Wal Istinjad Bil Maqbur',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 78 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ziyarat_al_qubur_wal_istinjad_bil_maqbur.json',
+      fileName: 'ziyarat_al_qubur_wal_istinjad_bil_maqbur_text.json',
+      approxSizeBytes: 93622, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — زيارة القبور والاستنجاد بالمقبور، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار طيبة، الرياض، المملكة العربية السعودية',
+    ),
+  ),
+  LibraryBook(
+    id: 'sujud_al_tilawah',
+    titleAr: 'سجود التلاوة معانيه وأحكامه',
+    titleEn: 'Sujud Al Tilawah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 82 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/sujud_al_tilawah.json',
+      fileName: 'sujud_al_tilawah_text.json',
+      approxSizeBytes: 83704, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — سجود التلاوة معانيه وأحكامه، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار ابن حزم، بيروت، لبنان، تحقيق فواز أحمد زمرلي',
+    ),
+  ),
+  LibraryBook(
+    id: 'nawasikh_al_quran',
+    titleAr: 'نواسخ القرآن = ناسخ القرآن ومنسوخه',
+    titleEn: 'Nawasikh Al Quran',
+    authorAr: 'الإمام أبو الفرج ابن الجوزي',
+    authorEn: 'Imam Ibn al-Jawzi',
+    authorDeathAr: 'توفي 597 هـ',
+    descriptionAr:
+        'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 211 صفحة، ضمن باب الحديث.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/nawasikh_al_quran.json',
+      fileName: 'nawasikh_al_quran_text.json',
+      approxSizeBytes: 718157, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — نواسخ القرآن = ناسخ القرآن ومنسوخه، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، شركه أبناء شريف الأنصارى - بيروت، تحقيق أبو عبد الله العاملي السّلفي الداني بن منير آل زهوي',
+    ),
+  ),
+  LibraryBook(
+    id: 'sunnat_al_jumuah',
+    titleAr: 'سنة الجمعة',
+    titleEn: 'Sunnat Al Jumuah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 64 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/sunnat_al_jumuah.json',
+      fileName: 'sunnat_al_jumuah_text.json',
+      approxSizeBytes: 32017, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — سنة الجمعة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار ابن حزم، بيروت، لبنان، تحقيق أبو عبد الله سعد المزعل',
+    ),
+  ),
+  LibraryBook(
+    id: 'sharh_al_aqidah_al_isfahaniyyah',
+    titleAr: 'شرح العقيدة الأصفهانية',
+    titleEn: 'Sharh Al Aqidah Al Isfahaniyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 224 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/sharh_al_aqidah_al_isfahaniyyah.json',
+      fileName: 'sharh_al_aqidah_al_isfahaniyyah_text.json',
+      approxSizeBytes: 805739, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — شرح العقيدة الأصفهانية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، المكتبة العصرية - بيروت، تحقيق محمد بن رياض الأحمد',
+    ),
+  ),
+  LibraryBook(
+    id: 'sharh_hadith_al_nuzul',
+    titleAr: 'شرح حديث النزول',
+    titleEn: 'Sharh Hadith Al Nuzul',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 188 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/sharh_hadith_al_nuzul.json',
+      fileName: 'sharh_hadith_al_nuzul_text.json',
+      approxSizeBytes: 557246, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — شرح حديث النزول، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي، بيروت، لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'sharh_umdat_al_fiqh_sifat_al_salah',
+    titleAr: 'كتاب صفة الصلاة من شرح العمدة للإمام موفق الدين ابن قدامة',
+    titleEn: 'Sharh Umdat Al Fiqh Sifat Al Salah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 190 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/sharh_umdat_al_fiqh_sifat_al_salah.json',
+      fileName: 'sharh_umdat_al_fiqh_sifat_al_salah_text.json',
+      approxSizeBytes: 237250, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — كتاب صفة الصلاة من شرح العمدة للإمام موفق الدين ابن قدامة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، دار العاصمة - الرياض، تحقيق عبد العزيز بن أحمد بن محمد بن حمود المشيقح',
+    ),
+  ),
+  LibraryBook(
+    id: 'fasl_fi_tazkiyat_al_nafs',
+    titleAr: 'فصل في تزكية النفس [الطبعة الكاملة للرسالة]',
+    titleEn: 'Fasl Fi Tazkiyat Al Nafs',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 60 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/fasl_fi_tazkiyat_al_nafs.json',
+      fileName: 'fasl_fi_tazkiyat_al_nafs_text.json',
+      approxSizeBytes: 109470, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — فصل في تزكية النفس [الطبعة الكاملة للرسالة]، شيخ الإسلام أبو العباس أحمد بن عبد الحليم ابن تيمية الحراني (٦٦١ - ٧٢٨ هـ)، مكتبة النهج الواضح - الكويت',
+    ),
+  ),
+  LibraryBook(
+    id: 'fadl_abi_bakr_al_siddiq',
+    titleAr: 'فضل أبي بكر الصديق رضي الله عنه',
+    titleEn: 'Fadl Abi Bakr Al Siddiq',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 33 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/fadl_abi_bakr_al_siddiq.json',
+      fileName: 'fadl_abi_bakr_al_siddiq_text.json',
+      approxSizeBytes: 115807, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — فضل أبي بكر الصديق رضي الله عنه، تقي الدين أبو العَباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مجلة جامعة أم القرى لعلوم الشريعة، تحقيق د. عبد العزيز بن محمد الفريح',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_dhikr_malabis_al_nabi',
+    titleAr:
+        'قاعدة تتضمن ذكر ملابس النبي صلى الله عليه وسلم وسلاحه ودوابه - القرمانية - جواب فتيا في لبس النبي صلى الله عليه وسلم',
+    titleEn: 'Qaidah Dhikr Malabis Al Nabi',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 59 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qaidah_dhikr_malabis_al_nabi.json',
+      fileName: 'qaidah_dhikr_malabis_al_nabi_text.json',
+      approxSizeBytes: 111320, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة تتضمن ذكر ملابس النبي صلى الله عليه وسلم وسلاحه ودوابه - القرمانية - جواب فتيا في لبس النبي صلى الله عليه وسلم، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، أضواء السلف، تحقيق أبو محمد أشرف بن عبد المقصود',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_jamiah_fi_tawhid_allah',
+    titleAr: 'قاعدة جامعة في توحيد الله وإخلاص الوجه والعمل له عبادة واستعانة',
+    titleEn: 'Qaidah Jamiah Fi Tawhid Allah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 69 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qaidah_jamiah_fi_tawhid_allah.json',
+      fileName: 'qaidah_jamiah_fi_tawhid_allah_text.json',
+      approxSizeBytes: 107978, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة جامعة في توحيد الله وإخلاص الوجه والعمل له عبادة واستعانة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار العاصمة، الرياض، المملكة العربية السعودية، تحقيق عبد الله بن محمد البصيري',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_hasanah_fil_baqiyat_al_salihat',
+    titleAr: 'قاعدة حسنة في الباقيات الصالحات',
+    titleEn: 'Qaidah Hasanah Fil Baqiyat Al Salihat',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 48 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qaidah_hasanah_fil_baqiyat_al_salihat.json',
+      fileName: 'qaidah_hasanah_fil_baqiyat_al_salihat_text.json',
+      approxSizeBytes: 90526, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة حسنة في الباقيات الصالحات، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مكتبة أضواء السلف، تحقيق أبو محمد أشرف بن عبد المقصود',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_azimah_fil_farq_bayn_ibadat_ahl_al_islam',
+    titleAr:
+        'قاعدة عظيمة في الفرق بين عبادات أهل الإسلام والإيمان وعبادات أهل الشرك والنفاق',
+    titleEn: 'Qaidah Azimah Fil Farq Bayn Ibadat Ahl Al Islam',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 145 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qaidah_azimah_fil_farq_bayn_ibadat_ahl_al_islam.json',
+      fileName: 'qaidah_azimah_fil_farq_bayn_ibadat_ahl_al_islam_text.json',
+      approxSizeBytes: 359044, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة عظيمة في الفرق بين عبادات أهل الإسلام والإيمان وعبادات أهل الشرك والنفاق، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار العاصمة - الرياض، تحقيق سليمان بن صالح الغصن',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_fil_inghimas_fil_aduw',
+    titleAr: 'قاعدة في الانغماس في العدو وهل يباح',
+    titleEn: 'Qaidah Fil Inghimas Fil Aduw',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 62 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qaidah_fil_inghimas_fil_aduw.json',
+      fileName: 'qaidah_fil_inghimas_fil_aduw_text.json',
+      approxSizeBytes: 137586, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة في الانغماس في العدو وهل يباح، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، أضواء السلف، تحقيق أبو محمد أشرف بن عبد المقصود',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_fil_sabr',
+    titleAr: 'قاعدة في الصبر',
+    titleEn: 'Qaidah Fil Sabr',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 51 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/qaidah_fil_sabr.json',
+      fileName: 'qaidah_fil_sabr_text.json',
+      approxSizeBytes: 70270, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة في الصبر، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، الجامعة الإسلامية بالمدينة المنورة، تحقيق محمد بن خليفة بن علي التميمي',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_fil_mahabbah',
+    titleAr: 'قاعدة في المحبة',
+    titleEn: 'Qaidah Fil Mahabbah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 208 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/qaidah_fil_mahabbah.json',
+      fileName: 'qaidah_fil_mahabbah_text.json',
+      approxSizeBytes: 401975, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة في المحبة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مكتبة التراث الإسلامي، القاهرة، مصر، تحقيق محمد رشاد سالم',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_mukhtasarah_fi_qital_al_kuffar',
+    titleAr: 'قاعدة مختصرة في قتال الكفار ومهادنتهم وتحريم قتلهم لمجرد كفرهم',
+    titleEn: 'Qaidah Mukhtasarah Fi Qital Al Kuffar',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 214 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qaidah_mukhtasarah_fi_qital_al_kuffar.json',
+      fileName: 'qaidah_mukhtasarah_fi_qital_al_kuffar_text.json',
+      approxSizeBytes: 343899, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة مختصرة في قتال الكفار ومهادنتهم وتحريم قتلهم لمجرد كفرهم، شيخ الإسلام أحمد بن عبد الحليم ابن تيمية الحراني (٦٦١ - ٧٢٨ هـ)، (المحقق)',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_mukhtasarah_fi_wujub_taat_allah',
+    titleAr: 'قاعدة مختصرة في وجوب طاعة الله ورسوله وولاة الأمور',
+    titleEn: 'Qaidah Mukhtasarah Fi Wujub Taat Allah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 50 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qaidah_mukhtasarah_fi_wujub_taat_allah.json',
+      fileName: 'qaidah_mukhtasarah_fi_wujub_taat_allah_text.json',
+      approxSizeBytes: 71544, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة مختصرة في وجوب طاعة الله ورسوله وولاة الأمور، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، جهاز الإرشاد والتوجيه بالحرس الوطني، المملكة العربية السعودية، تحقيق عبد الرزاق بن عبد المحسن البدر',
+    ),
+  ),
+  LibraryBook(
+    id: 'masalah_fil_murabatah_bil_thughur',
+    titleAr: 'مسألة فى المرابطة بالثغور أفضل أم المجاورة بمكة شرفها الله تعالى',
+    titleEn: 'Masalah Fil Murabatah Bil Thughur',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 85 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/masalah_fil_murabatah_bil_thughur.json',
+      fileName: 'masalah_fil_murabatah_bil_thughur_text.json',
+      approxSizeBytes: 151422, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مسألة فى المرابطة بالثغور أفضل أم المجاورة بمكة شرفها الله تعالى، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، أضواء السلف',
+    ),
+  ),
+  LibraryBook(
+    id: 'masalah_fil_kanais',
+    titleAr: 'مسألة في الكنائس',
+    titleEn: 'Masalah Fil Kanais',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 48 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/masalah_fil_kanais.json',
+      fileName: 'masalah_fil_kanais_text.json',
+      approxSizeBytes: 163803, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مسألة في الكنائس، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مكتبة العبيكان - الرياض، تحقيق علي بن عبدالعزيز الشبل',
+    ),
+  ),
+  LibraryBook(
+    id: 'masalah_fi_tawhid_al_falasifah',
+    titleAr: 'مسألة في توحيد الفلاسفة',
+    titleEn: 'Masalah Fi Tawhid Al Falasifah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 98 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/masalah_fi_tawhid_al_falasifah.json',
+      fileName: 'masalah_fi_tawhid_al_falasifah_text.json',
+      approxSizeBytes: 260003, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مسألة في توحيد الفلاسفة، الإمام أحمد بن عبد الحليم ابن تيمية (ت ٧٢٨ هـ)، دار الفتح للدراسات والنشر، تحقيق مبارك بن راشد الحثلان',
+    ),
+  ),
+  LibraryBook(
+    id: 'muqaddimah_fi_usul_al_tafsir',
+    titleAr: 'مقدمة في أصول التفسير',
+    titleEn: 'Muqaddimah Fi Usul Al Tafsir',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 56 صفحة، ضمن باب التفسير.',
+    category: BookCategory.tafsir,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/muqaddimah_fi_usul_al_tafsir.json',
+      fileName: 'muqaddimah_fi_usul_al_tafsir_text.json',
+      approxSizeBytes: 100974, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مقدمة في أصول التفسير، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار مكتبة الحياة، بيروت، لبنان',
+    ),
+  ),
+  LibraryBook(
+    id: 'manasik_al_hajj_ibn_taymiyyah',
+    titleAr: 'مناسك الحج',
+    titleEn: 'Manasik Al Hajj Ibn Taymiyyah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 178 صفحة، ضمن باب الفقه.',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/manasik_al_hajj_ibn_taymiyyah.json',
+      fileName: 'manasik_al_hajj_ibn_taymiyyah_text.json',
+      approxSizeBytes: 356515, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — مناسك الحج، شيخ الإسلام أحمد بن عبد الحليم ابن تيمية الحراني (ت ٧٢٨ هـ)، دار ركائز للنشر والتوزيع، الكويت، تحقيق د. أنس بن عادل اليتامى',
+    ),
+  ),
+  LibraryBook(
+    id: 'naqd_maratib_al_ijma',
+    titleAr: 'نقد مراتب الإجماع',
+    titleEn: 'Naqd Maratib Al Ijma',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 25 صفحة، ضمن باب التزكية والرقائق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/naqd_maratib_al_ijma.json',
+      fileName: 'naqd_maratib_al_ijma_text.json',
+      approxSizeBytes: 74692, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — نقد مراتب الإجماع، تقي الدين أبو العَباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (المتوفى : ٧٢٨هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'qaidah_jalilah_fil_tawassul_wal_wasilah',
+    titleAr: 'قاعدة جليلة في التوسل والوسيلة',
+    titleEn: 'Qaidah Jalilah Fil Tawassul Wal Wasilah',
+    authorAr: 'شيخ الإسلام ابن تيمية',
+    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
+    authorDeathAr: 'توفي 728 هـ',
+    descriptionAr:
+        'مصنَّف لـ شيخ الإسلام ابن تيمية، 455 صفحة، ضمن باب العقيدة.',
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qaidah_jalilah_fil_tawassul_wal_wasilah.json',
+      fileName: 'qaidah_jalilah_fil_tawassul_wal_wasilah_text.json',
+      approxSizeBytes: 1032197, // built by scripts/build_book_text.py
+      sourceLabel:
+          'المكتبة الشاملة — قاعدة جليلة في التوسل والوسيلة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، مكتبة الفرقان - عجمان، تحقيق ربيع بن هادي عمير المدخلي [ت ١٤٤٧ هـ]',
     ),
   ),
 ];

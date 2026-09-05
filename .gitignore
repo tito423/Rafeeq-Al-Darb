@@ -54,3 +54,5 @@ scripts/book_text_build/
 scripts/adhan_video_build/
 scripts/__pycache__/
 scripts/batch_summary.jsonl
+scripts/book_categories.jsonl
+scripts/catalog_entries_generated.dart

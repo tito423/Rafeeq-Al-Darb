@@ -2691,3 +2691,251 @@ core-feature failures before polish):
     guessing at a much larger scope. If the owner wants a broader
     target (a count, or specific titles/categories), that's still a
     real, easy-to-act-on follow-up once they say so.
+
+---
+
+## P3-44 — Round-8 real-device feedback + library mega-expansion (2026-09-05)
+
+Owner tested the v2.1.3 release build live, sent 5 screenshots + a screen
+recording with UI/UX feedback, then separately asked to expand the
+library "all all the authors specially ibn alqayyem and ibn aljawzy and
+all the rest." Both threads worked in parallel this session.
+
+### UI/UX fixes (all flutter analyze/test clean, 21/21, parity holds)
+
+1. ✅ **Splash video now plays with its real soundtrack.** An earlier
+   session had muted it (`setVolume(0)`) as "a silent brand beat, not a
+   trailer" — the owner confirmed the clip genuinely has sound and there
+   is no technical reason to withhold it (native apps have no browser-
+   style autoplay-with-sound restriction). `setVolume(1.0)` now.
+2. ✅ **Home header card is theme-aware.** Used to hard-code the dark
+   navy/teal/gold palette in *every* theme, including Light — a real
+   screenshot showed it reading as a rendering bug on an otherwise-light
+   screen. Same brand identity, now a light parchment gradient + dark
+   ink text specifically in Light theme.
+3. ✅ **Location "loses access continuously" — root-caused and fixed.**
+   `LocationService.getCurrentPosition()` only ever attempted one fresh
+   GPS/network fix per call with no fallback; indoors (the owner's own
+   repro was literally "at work"), a fresh fix routinely can't complete
+   in the 12–15s window even with permission genuinely granted. That
+   failure returned `null`, which `PrayerController` reads as "denied"
+   and wipes the whole prayer-times card back to the enable-location
+   prompt — even though `PrayerTimesService` already has a solid same-
+   day/stale cache for the *times* that never got a chance to run
+   because the *location* step gave up first. Now falls back through
+   `Geolocator.getLastKnownPosition()` (near-instant, no new GPS radio
+   activation) then this service's own persisted last-good fix
+   (SharedPreferences, 7-day max age) before giving up — a real,
+   previously-measured position, not invented.
+4. ✅ **Mushaf fast-page-scrollbar is now locale-aware (RTL).** P3-43
+   shipped this as a plain always-left-to-right value since there was no
+   confirmed signal either way at the time; this round gave a direct
+   one — real feedback asked specifically for RTL "in arabic locale
+   selection state." In Arabic, page 1 now sits at the physical right
+   (matching a printed mushaf's spine) and dragging left increases the
+   page number; unchanged (plain left-to-right) in every other locale.
+   Live-verified: the thumb sits at the far right for page 1 in Arabic,
+   and dragging left jumped to a real higher page.
+5. ✅ **Full-screen mushaf reading: fixed a real bottom-edge overflow.**
+   The persistent page-number badge (P3-43 #7) sits in a `Stack` above
+   the viewer; in full-screen mode there's no separate bottom toolbar
+   bar reserving clearance under it any more, so a page whose last line
+   ran close to the bottom rendered straight underneath the badge — a
+   real bug caught from a live screenshot, not guessed at. The viewer
+   itself (not the overlay) now gets bottom padding reserved for the
+   badge specifically in full-screen mode.
+6. ✅ **"Sunnah of the surahs" home card decluttered** per a new house
+   rule the owner set directly: more than 2 options on a card should
+   collapse elsewhere rather than pile up inline. The per-surah reminder
+   bell moved wholesale to a real Settings section
+   (`SunanSuwarRemindersSection`) — the home card is now purely "tap a
+   surah, read it."
+7. ✅ **Repetitive swipe-hint text fixed.** Both the Library text-reader
+   and the Azkar dhikr-counter screen repeated their "swipe to
+   navigate"/"swipe between adhkar" hint on *every single page/dhikr*
+   instead of once — reads as a stuck label, not a hint. Now shown only
+   on the first page/first dhikr of each.
+8. ✅ **System back button on a non-Home tab no longer exits the app.**
+   A real default-Android behavior (a root route with nothing beneath
+   it exits) that reads as a bug in a bottom-nav shell app. `AppShell`
+   now wraps itself in a `PopScope`: back on any non-Home tab switches
+   to Home first; only back-on-Home actually exits. Live-verified: the
+   app stayed running (confirmed via `adb shell ps`) and landed on Home
+   instead of closing.
+9. ✅ **Azkar/Tasbeeh settings sheet split.** Both tabs shared one
+   settings bottom sheet (haptics + morning/evening adhkar reminders) —
+   real feedback pointed out "morning/evening adhkar reminder" has no
+   meaning on Tasbeeh's free-form counter. `AzkarSettingsButton` now
+   takes a `showReminders` flag (Azkar: true, Tasbeeh: false); haptics
+   stays on both since it genuinely drives tap feedback for both
+   counters.
+10. ✅ **New tasbeeh preset added** ("أستغفر الله العظيم وأتوب إليه"),
+    exactly as asked.
+11. ✅ **Adhan video preview added.** There was no way to actually see a
+    video clip before selecting it — only a name and a download button.
+    A new preview button (shown once downloaded) plays it muted/looped
+    in a dialog, exactly as it will really appear behind the full-screen
+    Adhan karaoke text, so the preview is honest about what picking it
+    actually does. Live-verified: downloaded a real clip, tapped
+    preview, a real video frame (a man praying in a mosque) rendered in
+    the dialog.
+12. 🔶 **"Notification killed quickly and disappeared" — partially
+    addressed, needs the owner's device to finish.** The notification's
+    own flags were already correct (`ongoing: true`, `autoCancel:
+    false`, max importance/priority, no `timeoutAfter`) — this is
+    Android's *process* being killed by the phone's own aggressive
+    background-app manager, a layer standard battery-optimization
+    exemption doesn't cover. Every major OEM skin with this behavior
+    (Xiaomi/MIUI, Honor/Huawei, Oppo, Vivo, OnePlus) ships its own
+    "auto-start"/"protected apps" settings screen with no public API to
+    query or grant it — only well-known per-OEM component names to
+    launch directly. Added `MainActivity.kt`'s `openAutostartSettings`
+    (tries every candidate for `Build.MANUFACTURER`, falls back to the
+    plain App Info screen, never a silent no-op) + a new settings card
+    (`PermissionsSection`, shown only when a known candidate exists for
+    the device's manufacturer). **This is the concrete, buildable half**
+    — it cannot be marked verified until the owner actually grants it on
+    the real Honor phone and confirms the Adhan survives. A full
+    "refactor the notification system entirely" was not attempted: the
+    scheduling/channel/notification code itself is already sound (see
+    above), and rewriting a working system without a diagnosed defect
+    in it would be guessing, not fixing.
+13. ⏳ **Not actionable this pass**: two items from the feedback
+    ("this option is for misbaha not azkar, remove it from here" / "add
+    in mesbaha [phrase]") referenced screenshots 3–4 that did not
+    actually attach to that message — only 2 images arrived. Read the
+    azkar/tasbeeh settings code directly instead of guessing blind: the
+    only real structural mismatch found there (the shared reminder
+    section, #9 above) was fixed. If there is a second, different
+    mismatch, it needs the actual screenshot to act on safely rather
+    than another guess.
+14. ⏳ **Not attempted this pass**: "no orientation landscape/portrait
+    in all app" — the app already explicitly locks to portrait-only in
+    `main.dart` (`SystemChrome.setPreferredOrientations`); building
+    real landscape support for every screen (mushaf reader, sciences
+    sheets, video players, dialogs) is a much larger, separate UI
+    initiative, not a one-line fix, and the one screenshot offered
+    alongside this ask didn't show a specific overlap to root-cause
+    instead. Flagged honestly as open rather than silently claimed done.
+15. ⏳ **Not attempted this pass**: a full "collapsed video+azan picker
+    with Preview+Apply bundling both as one full-screen-azan config"
+    redesign, and a consolidated "tap Home's prayer card → one screen
+    with manual/auto location, manual prayer-time + Hijri overrides,
+    Apply, azan/video/custom azan, persistent-notification toggle"
+    screen, and a general "permission opt-out toggle" system. All 3 are
+    real, substantial architecture asks (not bugs) that deserve their
+    own focused design pass rather than a rushed version bolted on at
+    the end of an already very large session — flagged as the next
+    concrete follow-ups, not silently dropped.
+
+### Library mega-expansion: 182 new real titles (5 authors)
+
+The owner's follow-up ask ("all all the authors specially ibn alqayyem
+and ibn aljawzy and all the rest") extended P3-43 #16's safe default
+into a genuinely large pull, using the exact same `build_book_text.py`
+pipeline and the exact same discipline (every id read directly off each
+author's real shamela.ws page, `printMatches`/`printReliable` checked,
+per-title provenance kept) — just at real scale:
+
+| Author | New titles | Note |
+|---|---|---|
+| Ibn Abi al-Dunya | 57 | Every real remaining work — his whole corpus is short/medium treatises, so "all" is honestly achievable here |
+| al-Hakim al-Tirmidhi | 3 | Every real remaining candidate |
+| Ibn Taymiyyah | 60 | Every real single-volume work; excludes ~22 "?"-page-count entries (a real multi-volume-risk signal, not skipped by accident — this is exactly where مجموع الفتاوى / منهاج السنة النبوية / درء تعارض العقل والنقل / الفتاوى الكبرى live) and 2 true 600+-page outliers |
+| Ibn al-Qayyim | 29 | Excludes ~30 "?"-page-count entries and duplicate editions — this is where زاد المعاد / مدارج السالكين / إعلام الموقعين / مفتاح دار السعادة / الصواعق المرسلة / بدائع الفوائد live, all genuinely multi-volume on Shamela |
+| Ibn al-Jawzi | 33 | Excludes ~14 "?"-page-count entries, a few `printMatches=False` editions, and duplicate editions — this is where صفة الصفوة / المنتظم في التاريخ / زاد المسير / الموضوعات / العلل المتناهية / كشف المشكل live |
+| **Total** | **182** | |
+
+**Why the exclusions**: this pipeline (`scripts/build_book_text.py`)
+walks one linked chain of `nextId` pages per book. A real multi-volume
+work split across separate linked ids on Shamela would either only
+capture one volume, or — worse — silently walk into an unrelated second
+volume without any error. Every excluded id was a real, direct signal
+(no page count listed at all almost always means "this id is one part of
+a multi-volume set", confirmed by spot-checking several) — not a rough
+guess. This does mean some of these 3 authors' *most famous* individual
+works are still not in the app (see table) — an honest, scoped
+limitation, not an oversold "everything."
+
+**Build quality — every one of the 182 verified individually, not
+sampled**: `printMatches`, `printReliable`, and zero-empty-pages checked
+per book via `build_book_text.py`'s own `verify_and_print` (see
+`scripts/batch_summary.jsonl`, the full machine-readable record).
+Result: **182/182 built successfully, zero failures, zero empty pages
+across every single book.** 25 of the 182 have `printReliable: false`
+(non-monotonic printed-page numbers — the same honest edge case
+`riyad_as_salihin` already had; the reader simply doesn't offer "jump to
+printed page" for those, nothing else affected). One book
+(`al_nafaqah_ala_al_iyal`, real title "العيال ويقع في مجلدين" — Ibn Abi
+al-Dunya's real 2-volume work on family/children) walked a genuinely
+large 701 real pages despite having no page count listed on the
+author's own index page — checked its actual table of contents by hand
+before trusting it (a real, coherently-ordered chapter sequence:
+النفقة على العيال → العدل بين الأولاد → العقيقة → تزويج البنات → …→ أدب
+اليتامى → بول الولدان) rather than assuming a large page count meant a
+merge bug.
+
+**Categorization**: `scripts/categorize_books.py` classifies each real
+book into the app's existing 7 catalog categories by real keywords
+actually present in its own title (fiqh rulings, aqidah/creed terms,
+hadith-methodology terms, tafsir terms, history/seerah terms, literary-
+adab terms; unmatched falls back to `tazkiyah`, the same general bucket
+`al_fawaid`/`sayd_al_khatir` already use) — not one blanket category per
+author. Spot-checked the classification against real titles by hand and
+fixed 5 real false positives via explicit overrides (e.g. a devotional
+salawat treatise had matched "الصلاة" into fiqh; a tawhid/oaths ruling
+had matched into fiqh instead of aqidah; a storytellers-critique work
+had matched into hadith-methodology instead of adab) before trusting the
+rest. Final distribution: tazkiyah 114, aqidah 36, adab 12, fiqh 7,
+hadith 5, seerah 5, tafsir 3.
+
+**Cataloging**: added as `LibraryBook` entries (`book_catalog.dart`,
+`scripts/generate_catalog_entries.py`) with real `titleAr`/`authorAr`
+pulled from each book's own built JSON (never retyped/guessed) and real
+`approxSizeBytes` read off the actual uploaded file. `descriptionAr` is
+deliberately a short factual line (author + category + real page count)
+rather than a hand-crafted blurb per title the way the original ~11
+curated books have — not practical to write 182 individually by hand at
+this scale, and a generic-but-true line is safer than inventing
+per-book claims about content this pass didn't read cover to cover. Any
+specific title the owner wants a real hand-written description for is a
+quick, easy follow-up.
+
+**Upload**: all 182 uploaded to R2 via a new dated script
+(`r2_upload_p3_44_batch.py`, kept separate from earlier upload scripts
+per this project's own convention), verified with `head_object` (exact
+size match, all 182) **and** a live `curl -I` spot-check against the
+real public URL for 7 titles spanning all 5 authors (all `HTTP/1.1 200
+OK` with matching `Content-Length`).
+
+`flutter analyze`/`flutter test` clean (21/21) after the ~2,900-line
+catalog insertion.
+
+**A real data-quality bug found and fixed by actually looking at the
+live app, not just trusting the pipeline's own success report**: the
+first live check of the Library tab showed 2 of the 182 books
+displaying their internal slug (`al_uzlah_wal_infirad`) instead of a
+real title. Root cause read directly from the raw HTML, not guessed: a
+handful of Shamela editions format their meta-card as "الكتاب : x"
+(space before the colon) instead of the usual "الكتاب: x" —
+`fetch_meta_card`'s regex required an exact match and silently returned
+empty strings for those. Fixed the regex (`\s*:` instead of `:`) in
+`build_book_text.py` itself (benefits every future book built with it,
+not a one-off patch), re-fetched metadata for the affected 2 + a 3rd
+(`al_jami_fi_amthal_al_quran`, a real edge case with no "المؤلف:" line
+at all — it's a compilation of Ibn al-Qayyim's scattered writings
+credited to its compiler instead, handled with an honest hand-written
+attribution reflecting the real fields that edition actually has), re-
+uploaded those 3 corrected files to R2, and regenerated/reinstalled the
+catalog. Re-verified live: all 182 titles now render their real Arabic
+title, not a slug.
+
+**Live-verified end to end on `emulator-5554`**: Library tab lists all
+182 new books with real titles/authors/categories/sizes rendering
+correctly (including per-category icons — the `adab` heart icon showing
+correctly next to Ibn al-Jawzi's anecdote collections). Downloaded and
+opened `أحاديث القصاص` (Ibn Taymiyyah) in the real text reader: correct
+title, real hadith text with tashkeel, correct source-label footer, real
+44-page slider, swipe-hint showing only on page 1 (confirming fix #7
+above works here too) — the full pipeline works for this expanded
+batch exactly as it did for the smaller ones.

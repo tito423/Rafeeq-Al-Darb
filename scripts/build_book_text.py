@@ -208,12 +208,17 @@ def fetch_meta_card(shamela_id):
     if m:
         card = re.sub(r"<br\s*/?>", "\n", m.group(1))
         card = re.sub(r"<[^>]+>", "", card).strip()
+    # P3-44: some editions' meta card uses "الكتاب : x" (space before the
+    # colon) instead of "الكتاب: x" — a real Shamela page-template
+    # variant found by hand (3 of 182 books in one batch came back with
+    # an empty title/author because of it), not a guess. `\s*:` tolerates
+    # both.
     title = ""
-    tm = re.search(r"الكتاب:\s*(.+)", card)
+    tm = re.search(r"الكتاب\s*:\s*(.+)", card)
     if tm:
         title = tm.group(1).strip()
     author = ""
-    am = re.search(r"المؤلف:\s*(.+)", card)
+    am = re.search(r"المؤلف\s*:\s*(.+)", card)
     if am:
         author = am.group(1).strip()
     print_matches = "موافق للمطبوع" in card
