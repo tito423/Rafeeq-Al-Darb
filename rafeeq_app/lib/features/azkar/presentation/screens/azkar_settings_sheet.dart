@@ -4,13 +4,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/azkar_settings_provider.dart';
 
-/// Shared settings entry point (haptics + morning/evening reminders) —
-/// pulled out to its own file (P3‑4 round 2) so both the now-separate
-/// `AzkarScreen` and `TasbeehScreen` bottom-nav tabs can offer it. The
-/// haptics toggle affects the tasbeeh counter's tap feedback directly, so
-/// it needs to stay reachable from the Tasbeeh tab too, not just Azkar's.
+/// Shared settings entry point (haptics, + morning/evening reminders on
+/// the Azkar tab only) — pulled out to its own file (P3‑4 round 2) so
+/// both the now-separate `AzkarScreen` and `TasbeehScreen` bottom-nav
+/// tabs can offer it. The haptics toggle genuinely applies to both (it
+/// drives the tap feedback for `AzkarSectionScreen`'s own dhikr counter
+/// *and* the Tasbeeh counter), so it always shows.
+///
+/// P3‑44: the morning/evening reminders **used to** show here
+/// unconditionally too — real-device feedback pointed out that on the
+/// Tasbeeh tab specifically, "remind me to read morning/evening adhkar"
+/// is an Azkar concept with no meaning for a free-form counter, and asked
+/// for it removed from that context. [showReminders] (Azkar: true,
+/// Tasbeeh: false) is the fix — same shared sheet, the one section that
+/// doesn't apply everywhere is now conditional on which tab opened it.
 class AzkarSettingsButton extends ConsumerWidget {
-  const AzkarSettingsButton({super.key});
+  final bool showReminders;
+  const AzkarSettingsButton({super.key, this.showReminders = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,14 +29,15 @@ class AzkarSettingsButton extends ConsumerWidget {
       onPressed: () => showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
-        builder: (_) => const _AzkarSettingsSheet(),
+        builder: (_) => _AzkarSettingsSheet(showReminders: showReminders),
       ),
     );
   }
 }
 
 class _AzkarSettingsSheet extends ConsumerWidget {
-  const _AzkarSettingsSheet();
+  final bool showReminders;
+  const _AzkarSettingsSheet({required this.showReminders});
 
   Future<void> _pickTime(
     BuildContext context,
@@ -58,45 +69,47 @@ class _AzkarSettingsSheet extends ConsumerWidget {
               value: settings.haptics,
               onChanged: notifier.setHaptics,
             ),
-            const Divider(),
-            Text('azkar.reminders'.tr(),
-                style: Theme.of(context).textTheme.titleSmall),
-            ListTile(
-              title: Text('azkar.morning_reminder'.tr()),
-              subtitle: Text(settings.morningReminder == null
-                  ? 'azkar.reminder_off'.tr()
-                  : settings.morningReminder!.format(context)),
-              trailing: Wrap(children: [
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => _pickTime(context, ref, settings.morningReminder,
-                      notifier.setMorningReminder),
-                ),
-                if (settings.morningReminder != null)
+            if (showReminders) ...[
+              const Divider(),
+              Text('azkar.reminders'.tr(),
+                  style: Theme.of(context).textTheme.titleSmall),
+              ListTile(
+                title: Text('azkar.morning_reminder'.tr()),
+                subtitle: Text(settings.morningReminder == null
+                    ? 'azkar.reminder_off'.tr()
+                    : settings.morningReminder!.format(context)),
+                trailing: Wrap(children: [
                   IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => notifier.setMorningReminder(null),
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _pickTime(context, ref, settings.morningReminder,
+                        notifier.setMorningReminder),
                   ),
-              ]),
-            ),
-            ListTile(
-              title: Text('azkar.evening_reminder'.tr()),
-              subtitle: Text(settings.eveningReminder == null
-                  ? 'azkar.reminder_off'.tr()
-                  : settings.eveningReminder!.format(context)),
-              trailing: Wrap(children: [
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => _pickTime(context, ref, settings.eveningReminder,
-                      notifier.setEveningReminder),
-                ),
-                if (settings.eveningReminder != null)
+                  if (settings.morningReminder != null)
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => notifier.setMorningReminder(null),
+                    ),
+                ]),
+              ),
+              ListTile(
+                title: Text('azkar.evening_reminder'.tr()),
+                subtitle: Text(settings.eveningReminder == null
+                    ? 'azkar.reminder_off'.tr()
+                    : settings.eveningReminder!.format(context)),
+                trailing: Wrap(children: [
                   IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => notifier.setEveningReminder(null),
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _pickTime(context, ref, settings.eveningReminder,
+                        notifier.setEveningReminder),
                   ),
-              ]),
-            ),
+                  if (settings.eveningReminder != null)
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => notifier.setEveningReminder(null),
+                    ),
+                ]),
+              ),
+            ],
           ],
         ),
       ),

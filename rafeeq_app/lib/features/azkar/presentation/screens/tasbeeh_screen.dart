@@ -95,7 +95,10 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('azkar.tab_tasbeeh'.tr()),
-        actions: const [AzkarSettingsButton()],
+        // P3‑44: real-device feedback — "morning/evening adhkar reminder"
+        // is an Azkar concept with no meaning on a free-form Tasbeeh
+        // counter; hidden here, still shown on the Azkar tab's own gear.
+        actions: const [AzkarSettingsButton(showReminders: false)],
       ),
       body: SafeArea(
         child: Column(
