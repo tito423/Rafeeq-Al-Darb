@@ -214,64 +214,101 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
             const SizedBox(height: 20),
             const _PresentationCard(),
             const SizedBox(height: 20),
-            Text('prayer.default_adhan_label'.tr(),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
+            // P3‑46: real-device feedback — this screen had every section
+            // (the ~10-item adhan list AND five per-prayer cards) expanded
+            // at once, an overwhelming wall to scroll. The two long ones are
+            // now collapsed by default behind `ExpansionTile`s; the default
+            // adhan's header shows the current pick so the common case (just
+            // seeing/changing which adhan plays) needs no expand at all.
             Card(
-              child: RadioGroup<String>(
-                groupValue: settings.defaultAdhanId,
-                onChanged: (id) {
-                  if (id == null) return;
-                  _saveDefault(id);
-                  // P3‑7 (J4): picking an adhan previews it immediately —
-                  // the owner asked not to also require a separate tap on
-                  // the play icon. Reuses the exact same preview player as
-                  // that icon (_togglePreview), so a still-playing preview
-                  // of a *different* adhan is correctly stopped first.
-                  final picked = catalog.where((o) => o.id == id).firstOrNull;
-                  if (picked != null) _togglePreview(picked, forcePlay: true);
-                },
-                child: Column(
-                  children: [
-                    for (final option in catalog)
-                      _AdhanRow(
-                        option: option,
-                        playing: _playingId == option.id,
-                        onPreview: () => _togglePreview(option),
-                        onRemove: option.isCustom
-                            ? () async {
-                                await ref
-                                    .read(adhanCatalogProvider.notifier)
-                                    .removeCustom(option);
-                              }
-                            : null,
-                      ),
-                  ],
+              clipBehavior: Clip.antiAlias,
+              child: ExpansionTile(
+                leading: const Icon(Icons.library_music_outlined),
+                title: Text('prayer.default_adhan_label'.tr()),
+                subtitle: Text(
+                  catalog
+                          .where((o) => o.id == settings.defaultAdhanId)
+                          .firstOrNull
+                          ?.name ??
+                      '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
+                childrenPadding: const EdgeInsets.only(bottom: 8),
+                children: [
+                  RadioGroup<String>(
+                    groupValue: settings.defaultAdhanId,
+                    onChanged: (id) {
+                      if (id == null) return;
+                      _saveDefault(id);
+                      // P3‑7 (J4): picking an adhan previews it immediately —
+                      // the owner asked not to also require a separate tap on
+                      // the play icon. Reuses the exact same preview player as
+                      // that icon (_togglePreview), so a still-playing preview
+                      // of a *different* adhan is correctly stopped first.
+                      final picked =
+                          catalog.where((o) => o.id == id).firstOrNull;
+                      if (picked != null) {
+                        _togglePreview(picked, forcePlay: true);
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        for (final option in catalog)
+                          _AdhanRow(
+                            option: option,
+                            playing: _playingId == option.id,
+                            onPreview: () => _togglePreview(option),
+                            onRemove: option.isCustom
+                                ? () async {
+                                    await ref
+                                        .read(adhanCatalogProvider.notifier)
+                                        .removeCustom(option);
+                                  }
+                                : null,
+                          ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: OutlinedButton.icon(
+                      onPressed: _pickCustomAdhan,
+                      icon: const Icon(Icons.upload_file),
+                      label: Text('prayer.pick_file'.tr()),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              onPressed: _pickCustomAdhan,
-              icon: const Icon(Icons.upload_file),
-              label: Text('prayer.pick_file'.tr()),
-            ),
-            const SizedBox(height: 28),
-            Text('prayer.per_prayer'.tr(),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            for (final key in adhanPrayerKeys)
-              _PrayerModeCard(
-                prayerKey: key,
-                label: _prayerLabels[key]!.tr(),
-                mode: settings.modeFor(key),
-                adhanId: settings.adhanIdByPrayer[key],
-                catalog: catalog,
-                onModeChanged: (m) => _saveMode(key, m),
-                onAdhanChanged: (id) => _saveChoice(key, id),
-                onTest: () => _test(key, settings.modeFor(key)),
-                accent: scheme.primary,
+            const SizedBox(height: 20),
+            Card(
+              clipBehavior: Clip.antiAlias,
+              child: ExpansionTile(
+                leading: const Icon(Icons.tune),
+                title: Text('prayer.per_prayer'.tr()),
+                subtitle: Text(
+                  'prayer.per_prayer_desc'.tr(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                children: [
+                  for (final key in adhanPrayerKeys)
+                    _PrayerModeCard(
+                      prayerKey: key,
+                      label: _prayerLabels[key]!.tr(),
+                      mode: settings.modeFor(key),
+                      adhanId: settings.adhanIdByPrayer[key],
+                      catalog: catalog,
+                      onModeChanged: (m) => _saveMode(key, m),
+                      onAdhanChanged: (id) => _saveChoice(key, id),
+                      onTest: () => _test(key, settings.modeFor(key)),
+                      accent: scheme.primary,
+                    ),
+                ],
               ),
+            ),
           ],
         ),
       ),

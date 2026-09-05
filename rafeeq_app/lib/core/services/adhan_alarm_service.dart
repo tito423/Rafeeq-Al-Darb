@@ -82,6 +82,27 @@ class AdhanAlarmService {
         >();
     await androidPlugin?.requestNotificationsPermission();
     await _requestPermissions();
+
+    // P3‑46: pre-create the silent channel now, at first launch, so
+    // `muteById` (which re-posts the firing adhan onto this channel to
+    // silence it) always has a valid OS-level channel to target — even when
+    // Mute is tapped from the notification while the app is backgrounded/
+    // killed and runs in a background isolate that never called the
+    // per-mode channel setup. Real-device feedback: Mute (كتم) "always not
+    // working" — a missing target channel in that isolate is one real way
+    // that happens. Android channels are OS-wide once created, so creating
+    // it here makes it exist for every later isolate.
+    await _ensureChannel(
+      androidPlugin,
+      const AndroidNotificationChannel(
+        _channelSilent,
+        'أذان — صامت',
+        description: 'تنبيه صامت لوقت الصلاة، بلا صوت أو اهتزاز',
+        importance: Importance.defaultImportance,
+        playSound: false,
+        enableVibration: false,
+      ),
+    );
     _ready = true;
   }
 
@@ -111,9 +132,19 @@ class AdhanAlarmService {
   Future<String?> consumeColdLaunchPayload() async {
     final details = await _plugin.getNotificationAppLaunchDetails();
     if (details?.didNotificationLaunchApp == true) {
-      return details!.notificationResponse?.payload;
+      final tapped = details!.notificationResponse?.payload;
+      if (tapped != null && tapped.isNotEmpty) return tapped;
     }
-    return null;
+    // P3‑46: a `fullScreenIntent` AUTO-launch over the lock screen (the app
+    // was killed, the alarm woke it) does NOT set `didNotificationLaunchApp`
+    // — that flag is only set when the user *taps* the notification body.
+    // Real-device feedback: on such a cold, lock-screen wake the app opened
+    // to its last route (e.g. the Adhan settings screen) instead of the
+    // full-screen Adhan alert, because this method returned null. Asking
+    // Android directly whether a real Adhan notification is posted right now
+    // is launch-mechanism-agnostic — it's true whether the app was tapped,
+    // fullScreenIntent-launched, or resumed — so it's the reliable signal.
+    return findActiveAdhanPayload();
   }
 
   Future<void> _ensureChannel(

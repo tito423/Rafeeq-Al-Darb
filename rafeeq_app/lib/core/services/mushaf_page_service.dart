@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../config/app_config.dart';
+import 'download_foreground_service.dart';
 import 'download_manager.dart' show DownloadNotifications;
 
 /// P3‑41: the owner asked directly for the default mushaf to be "built
@@ -164,6 +165,11 @@ class MushafPageService {
     final notifTitle = title ?? editionId;
     await DownloadNotifications.instance.ensureInitialized();
     var cancelled = false;
+    // P3-46: see DownloadForegroundServiceBridge's own doc — protects this
+    // process from being frozen/killed by the OS while backgrounded during
+    // this download (604 sequential page fetches, the longest-running
+    // download in the app).
+    await DownloadForegroundServiceBridge.acquire(title: notifTitle);
     try {
       var done = 0;
       for (var page = fromPage; page <= toPage; page++) {
@@ -216,6 +222,7 @@ class MushafPageService {
         await DownloadNotifications.instance
             .showComplete(id: notifId, title: notifTitle);
       }
+      await DownloadForegroundServiceBridge.release();
     }
   }
 

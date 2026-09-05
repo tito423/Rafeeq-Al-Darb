@@ -275,7 +275,8 @@
     "video_note": "O vídeo aparece apenas com a tela ligada. Com o app fechado, só o som do adhan é reproduzido (limitação do Android).",
     "video_select": "Selecionar",
     "video_selected": "Selecionado",
-    "video_preview": "Pré-visualizar"
+    "video_preview": "Pré-visualizar",
+    "per_prayer_desc": "Um modo e muezim por oração"
   },
   "qibla": {
     "locating": "A localizar...",

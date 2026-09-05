@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import '../config/app_config.dart';
 import '../db/models.dart';
 import '../db/quran_repository.dart';
+import 'download_foreground_service.dart';
 import 'download_manager.dart' show DownloadNotifications;
 
 /// Progress of a surah recitation download.
@@ -266,6 +267,10 @@ class AyahAudioService {
     final notifTitle = title ?? 'سورة $surah';
     await DownloadNotifications.instance.ensureInitialized();
     var cancelled = false;
+    // P3-46: see DownloadForegroundServiceBridge's own doc — protects this
+    // process from being frozen/killed by the OS while backgrounded during
+    // this download.
+    await DownloadForegroundServiceBridge.acquire(title: notifTitle);
 
     try {
       final dir = await _editionDir(edition);
@@ -333,6 +338,7 @@ class AyahAudioService {
       } else {
         await DownloadNotifications.instance.clear(notifId);
       }
+      await DownloadForegroundServiceBridge.release();
     }
   }
 

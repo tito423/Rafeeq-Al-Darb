@@ -37,6 +37,17 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            // P3-46: R8 shrinking was already active on this build (see
+            // proguard-rules.pro's own doc comment for how that was
+            // confirmed) even with isMinifyEnabled unset — making it
+            // explicit here, with our Gson keep rules wired in, is what
+            // actually fixes the real flutter_local_notifications crash
+            // rather than leaving shrinking's exact on/off state implicit.
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }

@@ -97,8 +97,20 @@ class _AppShellState extends ConsumerState<AppShell>
   /// alert screen is already showing, so this is safe to call on every
   /// resume, not just a suspicious one.
   Future<void> _checkActiveAdhan() async {
-    final payload = await AdhanAlarmService.instance.findActiveAdhanPayload();
-    if (payload != null) openAdhanFromPayload(payload);
+    // P3‑46: a couple of short retries — when a fullScreenIntent wakes the
+    // app over the lock screen, this resume can fire a beat before the OS
+    // has the notification in its active list, so a single query could miss
+    // it and leave the last route (e.g. Adhan settings) showing instead of
+    // the alert. `openAdhanFromPayload` no-ops once the alert is showing, so
+    // extra checks after it lands are harmless.
+    for (var attempt = 0; attempt < 3; attempt++) {
+      final payload = await AdhanAlarmService.instance.findActiveAdhanPayload();
+      if (payload != null) {
+        openAdhanFromPayload(payload);
+        return;
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+    }
   }
 
   /// Push the current prayer times + toggle state to the status-bar card.

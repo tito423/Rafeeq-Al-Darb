@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
+import '../../../core/utils/arabic_normalize.dart';
 
 /// Everything the mushaf browser needs, resolved once from the bundled DB.
 class MushafData {
@@ -33,19 +34,21 @@ class MushafData {
     required this.repo,
   });
 
-  String surahNameAr(int id) => surahs
-      .takeWhile((s) => s.id <= id)
-      .lastWhere(
-        (s) => s.id == id,
-        orElse: () => const Surah(
-          id: 0,
-          nameAr: '',
-          nameEn: '',
-          revelationType: '',
-          ayahsCount: 0,
-        ),
-      )
-      .nameAr;
+  String surahNameAr(int id) => surahNameForDisplay(
+        surahs
+            .takeWhile((s) => s.id <= id)
+            .lastWhere(
+              (s) => s.id == id,
+              orElse: () => const Surah(
+                id: 0,
+                nameAr: '',
+                nameEn: '',
+                revelationType: '',
+                ayahsCount: 0,
+              ),
+            )
+            .nameAr,
+      );
 }
 
 Future<List<int>> _loadRubElHizbPages() async {

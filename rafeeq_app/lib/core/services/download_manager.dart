@@ -10,6 +10,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'download_foreground_service.dart';
+
 /// Status of a single download task.
 enum DownloadStatus { queued, downloading, paused, completed, failed, canceled }
 
@@ -254,6 +256,11 @@ class DownloadManager {
     task.status = DownloadStatus.downloading;
     task.error = null;
     _notify();
+    // P3-46: see DownloadForegroundServiceBridge's own doc — protects this
+    // process from being frozen/killed by the OS while backgrounded during
+    // this download. Paired release() in `finally` below, whatever the
+    // outcome (success, failure, or cancel).
+    await DownloadForegroundServiceBridge.acquire(title: task.title);
 
     try {
       final dir = await downloadDir;
@@ -344,6 +351,7 @@ class DownloadManager {
       _notify();
     } finally {
       _tokens.remove(task.id);
+      await DownloadForegroundServiceBridge.release();
     }
   }
 

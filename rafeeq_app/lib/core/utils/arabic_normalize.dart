@@ -93,6 +93,22 @@ String normalizeArabicLoose(String s) {
 /// page. Used by the book text reader's "التشكيل" toolbar toggle.
 String stripTashkeelForDisplay(String s) => s.replaceAll(_arabicDiacritics, '');
 
+/// P3‑46: a display-only cleanup for surah *names* shown as UI chrome
+/// (section-header banners, AppBar titles, nav lists) — NOT for the recited
+/// ayah body.
+///
+/// The bundled `quran_local.db` stores surah names in Madani-mushaf
+/// orthography, where the sukun is written with U+06E1 (ARABIC SMALL HIGH
+/// DOTLESS HEAD OF KHAH) rather than the ordinary U+0652 (SUKUN). Real-device
+/// feedback flagged the ج of "السَّجۡدَةِ" (surah 32) rendering oddly — that
+/// small-high-khah-head sits awkwardly over ج (and over the other 40 surah
+/// names that use it) in this app's chrome font at header sizes. U+06E1 and
+/// U+0652 mean the same thing (a silent consonant); swapping to the standard
+/// sukun keeps the diacritic honest while rendering cleanly in every font.
+/// Scope is deliberately just this one substitution — nothing else about the
+/// name is touched, so fully-vocalized names stay fully vocalized.
+String surahNameForDisplay(String s) => s.replaceAll('ۡ', 'ْ');
+
 /// True if [needle] occurs in [haystack] starting at a word boundary (index
 /// 0, or right after a space) — not merely anywhere `.contains()` would
 /// find it, which also matches inside an unrelated longer word (P3‑9: e.g.

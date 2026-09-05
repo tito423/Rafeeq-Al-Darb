@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -14,9 +15,43 @@ import java.io.File
 
 class MainActivity: AudioServiceActivity() {
     private val ADHAN_CHANNEL = "com.tito.rafeeq_aldarb/adhan"
+    private val DOWNLOAD_SERVICE_CHANNEL = "com.tito.rafeeq_aldarb/download_service"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        // P3-46: start/stop the real foreground service that keeps this
+        // process from being frozen/killed while backgrounded during an
+        // active download — see DownloadForegroundService's own doc for why
+        // this exists. `DownloadManager` (Dart) is the sole caller, exactly
+        // when its active-download count crosses 0.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DOWNLOAD_SERVICE_CHANNEL).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "start" -> {
+                    val intent = Intent(this, DownloadForegroundService::class.java)
+                    intent.action = DownloadForegroundService.ACTION_START
+                    intent.putExtra(DownloadForegroundService.EXTRA_TITLE, call.argument<String>("title"))
+                    try {
+                        ContextCompat.startForegroundService(this, intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        // Best-effort: a device refusing the foreground-service
+                        // start (rare OEM policy) must not break the download
+                        // itself, which keeps running in Dart regardless.
+                        result.success(false)
+                    }
+                }
+                "stop" -> {
+                    val intent = Intent(this, DownloadForegroundService::class.java)
+                    intent.action = DownloadForegroundService.ACTION_STOP
+                    try {
+                        startService(intent)
+                    } catch (_: Exception) {}
+                    result.success(null)
+                }
+                else -> result.notImplemented()
+            }
+        }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ADHAN_CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
