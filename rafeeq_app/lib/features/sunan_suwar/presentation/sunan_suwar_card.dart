@@ -19,17 +19,23 @@ const _weekdayKeys = {
 };
 
 /// Home, middle card (P2‑12) — the 4 sunnah surahs, each opening a reader
-/// locked to that surah only, each with its own independent weekly
-/// reminder.
+/// locked to that surah only.
+///
+/// P3‑44: real-device feedback said this card had too many inline options
+/// (title + description + a per-row reminder bell = a 3rd action fighting
+/// for space on every row) and asked for a house rule going forward: past
+/// 2 options on a card, collapse the extra ones elsewhere rather than pile
+/// them inline. The reminder bell moved wholesale to a real Settings
+/// section (`SunanSuwarRemindersSection`, `settings_screen.dart`) — this
+/// card is now purely "tap a surah, read it," nothing configured from
+/// here at all.
 class SunanSuwarCard extends ConsumerWidget {
   const SunanSuwarCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mushaf = ref.watch(mushafDataProvider).valueOrNull;
-    final reminders = ref.watch(sunanSuwarStoreProvider);
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
 
     return Card(
       child: Padding(
@@ -43,60 +49,47 @@ class SunanSuwarCard extends ConsumerWidget {
               _SurahRow(
                 surah: s,
                 name: mushaf?.surahNameAr(s.surahId) ?? '',
-                reminder: reminders[s.surahId],
                 onOpen: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (_) => SingleSurahScreen(surahId: s.surahId),
                   ),
                 ),
-                onSetReminder: () => _pickReminder(
-                  context,
-                  ref,
-                  s.surahId,
-                  mushaf?.surahNameAr(s.surahId) ?? '',
-                  reminders[s.surahId],
-                ),
-                gold: gold,
               ),
           ],
         ),
       ),
     );
   }
+}
 
-  Future<void> _pickReminder(
-    BuildContext context,
-    WidgetRef ref,
-    int surahId,
-    String label,
-    SunanReminder? existing,
-  ) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      builder: (_) => _ReminderSheet(
-        surahId: surahId,
-        label: label,
-        existing: existing,
-      ),
-    );
-  }
+/// Reusable across the home card's own tap target and the Settings
+/// reminders section — pass `existing` from whichever store read the
+/// caller already has.
+Future<void> pickSunanReminder(
+  BuildContext context,
+  int surahId,
+  String label,
+  SunanReminder? existing,
+) async {
+  await showModalBottomSheet<void>(
+    context: context,
+    builder: (_) => SunanReminderSheet(
+      surahId: surahId,
+      label: label,
+      existing: existing,
+    ),
+  );
 }
 
 class _SurahRow extends StatelessWidget {
   final SunanSurah surah;
   final String name;
-  final SunanReminder? reminder;
   final VoidCallback onOpen;
-  final VoidCallback onSetReminder;
-  final Color gold;
 
   const _SurahRow({
     required this.surah,
     required this.name,
-    required this.reminder,
     required this.onOpen,
-    required this.onSetReminder,
-    required this.gold,
   });
 
   @override
@@ -107,34 +100,19 @@ class _SurahRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(name.isEmpty ? '…' : name,
-                      style: theme.textTheme.titleSmall
-                          ?.copyWith(fontFamily: 'AmiriQuran')),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${surah.virtueNoteKey.tr()} — ${surah.sourceKey.tr()}',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              tooltip: 'sunan_suwar.reminder'.tr(),
-              icon: Icon(
-                reminder == null ? Icons.notifications_none : Icons.notifications_active,
-                color: reminder == null ? null : gold,
-              ),
-              onPressed: onSetReminder,
+            Text(name.isEmpty ? '…' : name,
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(fontFamily: 'AmiriQuran')),
+            const SizedBox(height: 2),
+            Text(
+              '${surah.virtueNoteKey.tr()} — ${surah.sourceKey.tr()}',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -143,22 +121,23 @@ class _SurahRow extends StatelessWidget {
   }
 }
 
-class _ReminderSheet extends ConsumerStatefulWidget {
+class SunanReminderSheet extends ConsumerStatefulWidget {
   final int surahId;
   final String label;
   final SunanReminder? existing;
 
-  const _ReminderSheet({
+  const SunanReminderSheet({
+    super.key,
     required this.surahId,
     required this.label,
     required this.existing,
   });
 
   @override
-  ConsumerState<_ReminderSheet> createState() => _ReminderSheetState();
+  ConsumerState<SunanReminderSheet> createState() => _SunanReminderSheetState();
 }
 
-class _ReminderSheetState extends ConsumerState<_ReminderSheet> {
+class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
   late int _weekday = widget.existing?.weekday ?? DateTime.friday;
   late TimeOfDay _time = widget.existing?.time ?? const TimeOfDay(hour: 20, minute: 0);
 

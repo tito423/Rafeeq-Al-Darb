@@ -202,6 +202,7 @@
     "tasbeeh_lailahaillallah": "لَا إِلَٰهَ إِلَّا اللهُ",
     "tasbeeh_allahumma_salli": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ",
     "tasbeeh_lahawla": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ",
+    "tasbeeh_astaghfirullah": "أَسْتَغْفِرُ اللهَ الْعَظِيمَ وَأَتُوبُ إِلَيْهِ",
     "tasbeeh_total": "Total: {}",
     "tap_to_count": "Tap to count",
     "rounds_count": "Rounds: {}",
@@ -273,7 +274,8 @@
     "adhan_video": "Adhan video",
     "video_note": "The video shows only while the screen is on. When the app is closed only the adhan sound plays (an Android limitation).",
     "video_select": "Select",
-    "video_selected": "Selected"
+    "video_selected": "Selected",
+    "video_preview": "Preview"
   },
   "qibla": {
     "locating": "Locating you...",
@@ -319,7 +321,9 @@
     "perm_battery": "Battery optimization exemption",
     "perm_battery_desc": "So the Adhan fires reliably in the background",
     "perm_full_screen": "Full-screen Adhan alert",
-    "perm_full_screen_desc": "So the Adhan alert can open over the lock screen"
+    "perm_full_screen_desc": "So the Adhan alert can open over the lock screen",
+    "perm_autostart": "Auto-start / protected apps",
+    "perm_autostart_desc": "Some phone makers (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) run their own background-app manager beyond battery settings — allow this app there so the Adhan doesn't get killed"
   },
   "downloads": {
     "title": "Downloads",
@@ -465,6 +469,9 @@
     "sun": "Sunday",
     "remove_reminder": "Remove reminder",
     "save_reminder": "Save reminder",
+    "reminder_off": "No reminder set",
+    "reminder_on_at": "Every {day} at {time}",
+    "reminders_section_title": "Sunnah Surahs Reminders",
     "note_baqarah": "“Recite it, for taking it up is a blessing and abandoning it is a loss”; it drives devils from the home where it's recited",
     "source_baqarah": "Sahih Muslim",
     "note_kahf": "Reciting it on Friday brings light between the two Fridays; memorizing its first ten verses protects from the Dajjal",

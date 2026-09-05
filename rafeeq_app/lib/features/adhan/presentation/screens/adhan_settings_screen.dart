@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 import 'package:path/path.dart' as p;
+import 'package:video_player/video_player.dart';
 
 import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
@@ -523,6 +525,55 @@ class _PresentationCardState extends ConsumerState<_PresentationCard> {
     super.dispose();
   }
 
+  // P3‑44: real-device feedback — there was no way to actually see a video
+  // clip before selecting it, only a name and a download button. Plays it
+  // exactly as it'll really appear in the full-screen Adhan (muted,
+  // looped, behind a dark scrim) so the preview is honest about what
+  // picking it actually does, not a different, sound-on experience.
+  Future<void> _showVideoPreview(String path) async {
+    final controller = VideoPlayerController.file(File(path));
+    try {
+      await controller.initialize();
+      await controller.setVolume(0);
+      await controller.setLooping(true);
+      await controller.play();
+    } catch (_) {
+      await controller.dispose();
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('errors.generic'.tr())));
+      }
+      return;
+    }
+    if (!mounted) {
+      await controller.dispose();
+      return;
+    }
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => Dialog(
+        insetPadding: const EdgeInsets.all(16),
+        backgroundColor: Colors.black,
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            AspectRatio(
+              aspectRatio: controller.value.aspectRatio == 0
+                  ? 16 / 9
+                  : controller.value.aspectRatio,
+              child: VideoPlayer(controller),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+          ],
+        ),
+      ),
+    );
+    await controller.dispose();
+  }
+
   Future<void> _loadPaths() async {
     final paths = <String, String>{};
     for (final v in adhanVideoCatalog) {
@@ -603,6 +654,9 @@ class _PresentationCardState extends ConsumerState<_PresentationCard> {
                     await _reschedule();
                   },
                   onDownload: () => _download(v),
+                  onPreview: _paths[v.id] == null
+                      ? null
+                      : () => _showVideoPreview(_paths[v.id]!),
                 ),
               const SizedBox(height: 8),
               Text(adhanVideoSourceLabel,
@@ -623,6 +677,7 @@ class _VideoRow extends StatelessWidget {
   final DownloadTask? task;
   final VoidCallback onSelect;
   final VoidCallback onDownload;
+  final VoidCallback? onPreview;
 
   const _VideoRow({
     required this.option,
@@ -631,6 +686,7 @@ class _VideoRow extends StatelessWidget {
     required this.task,
     required this.onSelect,
     required this.onDownload,
+    required this.onPreview,
   });
 
   @override
@@ -673,14 +729,19 @@ class _VideoRow extends StatelessWidget {
                 color: AppColors.gold,
               ),
             )
-          else if (downloaded)
+          else if (downloaded) ...[
+            IconButton(
+              tooltip: 'prayer.video_preview'.tr(),
+              icon: const Icon(Icons.play_circle_outline),
+              onPressed: onPreview,
+            ),
             TextButton(
               onPressed: onSelect,
               child: Text(selected
                   ? 'prayer.video_selected'.tr()
                   : 'prayer.video_select'.tr()),
-            )
-          else
+            ),
+          ] else
             OutlinedButton.icon(
               onPressed: onDownload,
               icon: const Icon(Icons.download_rounded, size: 16),

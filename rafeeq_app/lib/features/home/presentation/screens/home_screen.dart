@@ -105,11 +105,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 /// P3‑4: replaces the old "رفيق الدرب" title + time-of-day greeting with a
-/// single fixed card — same look in every app theme (a static version of
-/// the RGB theme's own teal/violet/gold palette, `rgb_backdrop.dart`), the
-/// Hijri date at the row's start, a centred welcome, the Gregorian date at
-/// the end. "Start"/"end" (not literal left/right) so this reads correctly
-/// mirrored in both RTL and LTR locales without special-casing either.
+/// single fixed card — the Hijri date at the row's start, a centred
+/// welcome, the Gregorian date at the end. "Start"/"end" (not literal
+/// left/right) so this reads correctly mirrored in both RTL and LTR
+/// locales without special-casing either.
+///
+/// P3‑44: this used to hard-code the dark navy/teal/gold palette
+/// regardless of theme ("same look in every app theme" — a deliberate
+/// choice at the time). Real-device feedback in Light theme called that
+/// out directly: a fixed dark card reads as a rendering bug sitting above
+/// an otherwise-light screen, not a brand accent. Now themed: the same
+/// teal/gold accent identity, just on a light parchment-toned gradient
+/// with dark text when `Theme.of(context).brightness` is light.
 ///
 /// The welcome text is honestly generic ("مرحبا بك") rather than a fake
 /// name — P3‑5 (login, answered: optional) hasn't been built yet, so there
@@ -166,14 +173,24 @@ class _HeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
+    // Same teal/gold brand identity in both themes, just re-pitched: a
+    // parchment-toned gradient + dark ink text for Light, the original
+    // near-black/navy/violet + light text for Dark and RGB.
+    final gradient = isLight
+        ? const [Color(0xFFFBF6E9), Color(0xFFF3ECD8), Color(0xFFEFE6D2)]
+        : const [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)];
+    final hijriColor = isLight ? const Color(0xFF0E7C6B) : const Color(0xFF7DEBDA);
+    final welcomeColor = isLight ? const Color(0xFF1D2C26) : Colors.white;
+    final gregorianColor = isLight ? const Color(0xFF9A7A15) : const Color(0xFFD4AF37);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)],
+          colors: gradient,
         ),
         border: Border.all(
           color: const Color(0xFF15C7B0).withValues(alpha: 0.35),
@@ -190,8 +207,8 @@ class _HeaderCard extends StatelessWidget {
         children: [
           Text(
             _hijriLine(context.locale.languageCode),
-            style: const TextStyle(
-              color: Color(0xFF7DEBDA),
+            style: TextStyle(
+              color: hijriColor,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -200,8 +217,8 @@ class _HeaderCard extends StatelessWidget {
             child: Text(
               'home.welcome_guest'.tr(),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: welcomeColor,
                 fontFamily: 'AmiriQuran',
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -211,7 +228,7 @@ class _HeaderCard extends StatelessWidget {
           Text(
             _gregorianLine(context),
             style: TextStyle(
-              color: const Color(0xFFD4AF37).withValues(alpha: 0.9),
+              color: gregorianColor.withValues(alpha: 0.9),
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -229,11 +246,11 @@ class _HeaderCard extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
             ),
-            child: const Padding(
-              padding: EdgeInsets.all(4),
+            child: Padding(
+              padding: const EdgeInsets.all(4),
               child: Icon(
                 Icons.settings_outlined,
-                color: Color(0xFF7DEBDA),
+                color: hijriColor,
                 size: 18,
               ),
             ),

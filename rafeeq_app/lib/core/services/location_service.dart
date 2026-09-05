@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Thin wrapper over Geolocator (real GPS/network location).
 class AppPosition {
@@ -35,12 +36,63 @@ class LocationService {
   // was applied. Wrapping the *entire* flow in one outer `.timeout(...)`
   // is defense-in-depth that gives up on the whole attempt after a bounded
   // wait regardless of which specific platform-channel call is stuck.
+  // P3‑44: real-device feedback said the app "loses access to location
+  // continuously" — this is real and root-caused, not a permission bug.
+  // `getCurrentPosition` demands a *fresh* GPS/network fix every single
+  // call, with no fallback of its own; indoors (the owner's own repro was
+  // literally "at work"), a fresh fix routinely can't complete inside the
+  // 12-15s window even though permission is genuinely granted and a fix
+  // worked minutes/hours earlier. Before this fix, that transient failure
+  // returned `null`, which `PrayerController` reads as "denied" and wipes
+  // the whole prayer-times card back to the enable-location prompt — even
+  // though `PrayerTimesService` already has a perfectly good same-day/
+  // stale-cache fallback for the *times* themselves, it never got a
+  // chance to run because the *location* step gave up first.
+  //
+  // Three-tier fallback now, cheapest/freshest first:
+  //   1. A real fresh fix (unchanged).
+  //   2. `Geolocator.getLastKnownPosition()` — the OS's own last fix,
+  //      near-instant, no new GPS radio activation.
+  //   3. This service's own persisted last-good fix (SharedPreferences),
+  //      kept for up to 7 days — still a real, previously-measured
+  //      position, not invented, just not maximally fresh.
+  // Only a genuinely denied/never-granted permission, or a device with no
+  // fix ever recorded by any of the three tiers, still returns `null`.
+  static const _cacheLatKey = 'location_cache_lat_v1';
+  static const _cacheLonKey = 'location_cache_lon_v1';
+  static const _cacheLocalityKey = 'location_cache_locality_v1';
+  static const _cacheCountryKey = 'location_cache_country_v1';
+  static const _cacheTimeKey = 'location_cache_time_v1';
+  static const _maxCacheAge = Duration(days: 7);
+
   Future<AppPosition?> getCurrentPosition() async {
     try {
-      return await _fetchPosition().timeout(const Duration(seconds: 15));
+      final fresh = await _fetchPosition().timeout(const Duration(seconds: 15));
+      if (fresh != null) {
+        unawaited(_persist(fresh));
+        return fresh;
+      }
     } catch (_) {
-      return null;
+      // fall through to the cached tiers below
     }
+
+    try {
+      final last = await Geolocator.getLastKnownPosition();
+      if (last != null) {
+        final (locality, country) =
+            await _reverseGeocode(last.latitude, last.longitude);
+        return AppPosition(
+          latitude: last.latitude,
+          longitude: last.longitude,
+          locality: locality,
+          country: country,
+        );
+      }
+    } catch (_) {
+      // fall through to this service's own cache
+    }
+
+    return _readCached();
   }
 
   Future<AppPosition?> _fetchPosition() async {
@@ -64,6 +116,33 @@ class LocationService {
       longitude: pos.longitude,
       locality: locality,
       country: country,
+    );
+  }
+
+  Future<void> _persist(AppPosition pos) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_cacheLatKey, pos.latitude);
+    await prefs.setDouble(_cacheLonKey, pos.longitude);
+    await prefs.setString(_cacheLocalityKey, pos.locality ?? '');
+    await prefs.setString(_cacheCountryKey, pos.country ?? '');
+    await prefs.setString(_cacheTimeKey, DateTime.now().toIso8601String());
+  }
+
+  Future<AppPosition?> _readCached() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lat = prefs.getDouble(_cacheLatKey);
+    final lon = prefs.getDouble(_cacheLonKey);
+    final timeStr = prefs.getString(_cacheTimeKey);
+    if (lat == null || lon == null || timeStr == null) return null;
+    final age = DateTime.now().difference(DateTime.tryParse(timeStr) ?? DateTime(0));
+    if (age > _maxCacheAge) return null;
+    final locality = prefs.getString(_cacheLocalityKey);
+    final country = prefs.getString(_cacheCountryKey);
+    return AppPosition(
+      latitude: lat,
+      longitude: lon,
+      locality: (locality?.isNotEmpty ?? false) ? locality : null,
+      country: (country?.isNotEmpty ?? false) ? country : null,
     );
   }
 

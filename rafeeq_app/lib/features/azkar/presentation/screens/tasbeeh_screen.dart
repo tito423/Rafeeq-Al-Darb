@@ -25,6 +25,8 @@ const _dhikrOptions = [
   // that's a different list from this screen's own counter presets.
   _DhikrOption('azkar.tasbeeh_allahumma_salli', Color(0xFFD4785A)), // amber
   _DhikrOption('azkar.tasbeeh_lahawla', Color(0xFF5C8A6E)), // sage
+  // P3‑44: real-device feedback asked for this one directly.
+  _DhikrOption('azkar.tasbeeh_astaghfirullah', Color(0xFF3F7A8C)), // teal
 ];
 
 /// المسبحة (Tasbeeh) tab — P3‑12 redesign, matching `design_refs/ref_tasbeeh.jpg`:

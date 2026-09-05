@@ -28,12 +28,16 @@ class _PermissionsSectionState extends State<PermissionsSection>
   bool? _locationOk;
   bool? _batteryOk;
   bool? _fullScreenOk;
+  bool _hasAutostartSettings = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _refreshAll();
+    AdhanUriBridge.hasKnownAutostartSettings().then((v) {
+      if (mounted) setState(() => _hasAutostartSettings = v);
+    });
   }
 
   @override
@@ -117,6 +121,21 @@ class _PermissionsSectionState extends State<PermissionsSection>
               _refreshAll();
             },
           ),
+          // P3‑44: no public Android API can report whether this is
+          // actually granted (unlike every tile above) — shown only when
+          // this device's manufacturer is one with a known settings
+          // screen to send the user to, always as a plain "open it"
+          // action rather than a pass/fail check it can't honestly make.
+          if (_hasAutostartSettings) ...[
+            const Divider(height: 1),
+            ListTile(
+              leading: Icon(Icons.shield_outlined, color: AppColors.gold),
+              title: Text('settings.perm_autostart'.tr()),
+              subtitle: Text('settings.perm_autostart_desc'.tr()),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: AdhanUriBridge.openAutostartSettings,
+            ),
+          ],
         ],
       ),
     );

@@ -37,4 +37,34 @@ class AdhanUriBridge {
       await _channel.invokeMethod<void>('openFullScreenIntentSettings');
     } catch (_) {}
   }
+
+  /// P3‑44: real-device feedback (a Honor phone, Magic OS) confirmed the
+  /// long-flagged-but-not-yet-built gap in PHASE3.md — the Adhan
+  /// notification got killed within seconds, a real Android-14 battery-
+  /// optimization exemption doesn't fix, because OEMs like Honor/Huawei/
+  /// Xiaomi/Oppo/Vivo/OnePlus run their own "auto-start"/"protected apps"
+  /// manager on top of stock Android's own process-killing rules. There is
+  /// no public API to query or grant this — only a well-known per-OEM
+  /// settings Activity to launch directly (see `MainActivity.kt`).
+  /// Whether this device's manufacturer is one this app knows a specific
+  /// screen for — used to decide whether the settings card even shows,
+  /// not a guarantee the underlying setting is actually granted (there's
+  /// no API to check that either, unlike the other permission cards).
+  static Future<bool> hasKnownAutostartSettings() async {
+    try {
+      return await _channel.invokeMethod<bool>('hasKnownAutostartSettings') ??
+          false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Opens this device's real OEM auto-start/protected-apps manager if a
+  /// known one exists for its manufacturer, else falls back to the plain
+  /// App Info screen — never a silent no-op.
+  static Future<void> openAutostartSettings() async {
+    try {
+      await _channel.invokeMethod<void>('openAutostartSettings');
+    } catch (_) {}
+  }
 }

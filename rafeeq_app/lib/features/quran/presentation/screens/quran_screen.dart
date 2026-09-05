@@ -431,9 +431,23 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
             ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
         data: (data) => Stack(
           children: [
-            _buildViewer(
-              data,
-              ref.watch(currentMushafEditionProvider).valueOrNull,
+            // P3‑44: in normal mode the separate bottom toolbar bar below
+            // already reserves plenty of clearance under the viewer, but
+            // in full-screen mode (`bottomNavigationBar` goes null) the
+            // viewer fills the *entire* remaining height with nothing
+            // reserved for the page-number badge overlaid on top of it —
+            // a real bug caught from a live screenshot: on a page whose
+            // last line runs close to the bottom, that line rendered
+            // straight underneath the badge instead of above it. Padding
+            // the viewer itself (not the overlay) keeps the badge exactly
+            // where P3‑43 #7 put it while giving the real content room to
+            // stop short of it.
+            Padding(
+              padding: EdgeInsets.only(bottom: _pageFillScreen ? 56 : 0),
+              child: _buildViewer(
+                data,
+                ref.watch(currentMushafEditionProvider).valueOrNull,
+              ),
             ),
             // P3‑43 #7: "always show the page number at the bottom, the
             // surah name at the top-right, and the juz name at the
@@ -694,17 +708,14 @@ class _AutoScrollSpeedBar extends StatelessWidget {
 /// throttled by a 320ms page-turn tween), and the thumb tracks the real
 /// current page live while dragging, not just on release.
 ///
-/// **Direction: a plain, direct left-to-right value**, exactly like the
-/// existing auto-scroll speed slider and every other slider in the app —
-/// drag right, page number goes up; drag left, it goes down. A "page 1
-/// physically on the right" mapping (matching a printed Arabic book's
-/// spine) was considered, but dropped: this is a UI scrollbar control,
-/// not the mushaf content itself (unlike the ayah text/surah banners,
-/// which really are always Arabic regardless of the app's own locale),
-/// and there's no confirmed real-device signal for which direction a
-/// reader actually expects here — the honest choice is the ordinary,
-/// unsurprising one already used everywhere else in this screen, not a
-/// guessed-at "authenticity" twist nothing asked for.
+/// **Direction: follows the app's own text direction.** P3‑43 originally
+/// shipped this as a plain always-left-to-right value (matching every
+/// other slider in the app) since there was no confirmed signal either
+/// way. P3‑44's real-device round gave a direct one: real feedback asked
+/// for RTL specifically "in arabic locale selection state" — so in an
+/// RTL locale, page 1 now sits at the physical right (like a printed
+/// Arabic mushaf's spine) and dragging left increases the page number;
+/// in an LTR locale it stays the original plain left-to-right mapping.
 class _FastPageScrollBar extends StatefulWidget {
   final int currentPage;
   final int totalPages;
@@ -727,23 +738,32 @@ class _FastPageScrollBarState extends State<_FastPageScrollBar> {
   /// jumped) the rest of the time rather than a stale local guess.
   double? _dragFraction;
 
-  // Must be the exact inverse of `_pageOf` below.
-  double _fractionOf(int page) =>
-      widget.totalPages <= 1 ? 0.0 : (page - 1) / (widget.totalPages - 1);
+  /// `fraction` is always plain screen-space left(0)-to-right(1) — the RTL
+  /// flip lives entirely in these two conversions, so `thumbX`/`Positioned`
+  /// below never has to think about direction itself. Each must stay the
+  /// exact inverse of the other for a given `isRtl`.
+  double _fractionOf(int page, bool isRtl) {
+    if (widget.totalPages <= 1) return isRtl ? 1.0 : 0.0;
+    final t = (page - 1) / (widget.totalPages - 1);
+    return isRtl ? 1 - t : t;
+  }
 
-  int _pageOf(double fraction) =>
-      1 + (fraction * (widget.totalPages - 1)).round();
+  int _pageOf(double fraction, bool isRtl) {
+    final t = isRtl ? 1 - fraction : fraction;
+    return 1 + (t * (widget.totalPages - 1)).round();
+  }
 
-  void _handleDragAt(double dx, double width) {
+  void _handleDragAt(double dx, double width, bool isRtl) {
     final fraction = width <= 0 ? 0.0 : (dx / width).clamp(0.0, 1.0);
     setState(() => _dragFraction = fraction);
-    widget.onChanged(_pageOf(fraction));
+    widget.onChanged(_pageOf(fraction, isRtl));
   }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final fraction = _dragFraction ?? _fractionOf(widget.currentPage);
+    final isRtl = context.locale.languageCode == 'ar';
+    final fraction = _dragFraction ?? _fractionOf(widget.currentPage, isRtl);
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
@@ -754,9 +774,9 @@ class _FastPageScrollBarState extends State<_FastPageScrollBar> {
         );
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTapDown: (d) => _handleDragAt(d.localPosition.dx, width),
+          onTapDown: (d) => _handleDragAt(d.localPosition.dx, width, isRtl),
           onHorizontalDragUpdate: (d) =>
-              _handleDragAt(d.localPosition.dx, width),
+              _handleDragAt(d.localPosition.dx, width, isRtl),
           onHorizontalDragEnd: (_) => setState(() => _dragFraction = null),
           child: SizedBox(
             height: 32,

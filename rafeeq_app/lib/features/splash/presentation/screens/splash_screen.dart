@@ -22,8 +22,10 @@ import '../widgets/splash_lattice.dart';
 /// explicit ("new video to use as splash screen"), not just a mood
 /// reference this time, and the clip already ends on a card carrying our
 /// exact app name and tagline, so it is played as-is rather than
-/// reinterpreted. It's muted (this is a silent brand beat, not a trailer),
-/// plays once, and a tap anywhere skips straight past it.
+/// reinterpreted. P3-44: plays with its own real soundtrack (an earlier
+/// session muted it as "a silent brand beat, not a trailer" — the owner
+/// confirmed the clip actually has sound and wants it heard), plays once,
+/// and a tap anywhere skips straight past it.
 ///
 /// P3‑41: real-device use showed the video adds ~8s to *every* cold
 /// start, which reads as slow rather than premium once the novelty wears
@@ -123,7 +125,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     try {
       final c = VideoPlayerController.asset('assets/branding/splash_intro.mp4');
       await c.initialize();
-      await c.setVolume(0); // silent brand beat, no sound track of its own
+      // P3-44: the owner confirmed the clip has its own real soundtrack —
+      // native apps (unlike a browser tab) have no autoplay-with-sound
+      // restriction, so there's no technical reason to mute it. Volume
+      // follows the system media stream like any other app audio.
+      await c.setVolume(1.0);
       await c.setLooping(false);
       if (!mounted) {
         await c.dispose();

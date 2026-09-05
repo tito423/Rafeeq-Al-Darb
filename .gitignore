@@ -52,3 +52,5 @@ scripts/_check_output.txt
 # hosted on tito423/rafeeq-api, not carried in this repo (same as hadith.zip).
 scripts/book_text_build/
 scripts/adhan_video_build/
+scripts/__pycache__/
+scripts/batch_summary.jsonl

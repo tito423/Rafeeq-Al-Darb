@@ -76,6 +76,79 @@ class MainActivity: AudioServiceActivity() {
                         result.success(null)
                     }
                 }
+                // P3-44: real-device feedback (Honor X9c, Magic OS) showed
+                // the Adhan notification getting killed within seconds of
+                // posting — the notification's own flags are already
+                // correct (ongoing, autoCancel=false, max importance/
+                // priority, no timeoutAfter); this is Android's *process*
+                // being killed by the OEM's own aggressive background-app
+                // manager, a layer standard battery-optimization exemption
+                // doesn't cover. Every major skin with this behavior ships
+                // its own "auto-start"/"protected apps" manager Activity —
+                // no public API exists to query or grant it, only these
+                // well-known per-OEM component names to launch directly.
+                // Tries every one that could plausibly match this device's
+                // manufacturer, falls back to the generic App Info screen
+                // (never a silent no-op) if none of them resolve.
+                "openAutostartSettings" -> {
+                    val manufacturer = Build.MANUFACTURER.lowercase()
+                    val candidates = mutableListOf<Pair<String, String>>()
+                    if (manufacturer.contains("xiaomi")) {
+                        candidates.add("com.miui.securitycenter" to "com.miui.permcenter.autostart.AutoStartManagementActivity")
+                    }
+                    if (manufacturer.contains("honor")) {
+                        candidates.add("com.hihonor.systemmanager" to "com.hihonor.systemmanager.startupmgr.ui.StartupNormalAppListActivity")
+                        candidates.add("com.hihonor.systemmanager" to "com.hihonor.systemmanager.optimize.process.ProtectActivity")
+                    }
+                    if (manufacturer.contains("huawei") || manufacturer.contains("honor")) {
+                        candidates.add("com.huawei.systemmanager" to "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")
+                        candidates.add("com.huawei.systemmanager" to "com.huawei.systemmanager.optimize.process.ProtectActivity")
+                    }
+                    if (manufacturer.contains("oppo")) {
+                        candidates.add("com.coloros.safecenter" to "com.coloros.safecenter.permission.startup.StartupAppListActivity")
+                        candidates.add("com.coloros.safecenter" to "com.coloros.safecenter.startupapp.StartupAppListActivity")
+                    }
+                    if (manufacturer.contains("vivo")) {
+                        candidates.add("com.vivo.permissionmanager" to "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")
+                    }
+                    if (manufacturer.contains("oneplus")) {
+                        candidates.add("com.oneplus.security" to "com.oneplus.security.chainlaunch.view.ChainLaunchAppListActivity")
+                    }
+
+                    var opened = false
+                    for ((pkg, cls) in candidates) {
+                        try {
+                            val intent = Intent()
+                            intent.component = android.content.ComponentName(pkg, cls)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                            opened = true
+                            break
+                        } catch (_: Exception) {
+                            // this candidate doesn't exist on this build — try the next
+                        }
+                    }
+                    if (!opened) {
+                        try {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            intent.data = Uri.parse("package:$packageName")
+                            startActivity(intent)
+                        } catch (_: Exception) {}
+                    }
+                    result.success(opened)
+                }
+                // Best-effort: is this manufacturer one we actually have a
+                // known autostart-manager candidate for? Used only to decide
+                // whether to show the settings card at all — `false` doesn't
+                // mean the device is safe, just that this app doesn't know a
+                // specific screen to send the user to for it.
+                "hasKnownAutostartSettings" -> {
+                    val m = Build.MANUFACTURER.lowercase()
+                    val known = m.contains("xiaomi") || m.contains("honor") ||
+                        m.contains("huawei") || m.contains("oppo") ||
+                        m.contains("vivo") || m.contains("oneplus")
+                    result.success(known)
+                }
                 else -> result.notImplemented()
             }
         }

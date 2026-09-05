@@ -202,6 +202,7 @@
     "tasbeeh_lailahaillallah": "لَا إِلَٰهَ إِلَّا اللهُ",
     "tasbeeh_allahumma_salli": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ",
     "tasbeeh_lahawla": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ",
+    "tasbeeh_astaghfirullah": "أَسْتَغْفِرُ اللهَ الْعَظِيمَ وَأَتُوبُ إِلَيْهِ",
     "tasbeeh_total": "Total: {}",
     "tap_to_count": "Toca para contar",
     "rounds_count": "Rondas: {}",
@@ -273,7 +274,8 @@
     "adhan_video": "Vídeo del adhán",
     "video_note": "El vídeo se muestra solo con la pantalla encendida. Con la app cerrada solo suena el adhán (limitación de Android).",
     "video_select": "Elegir",
-    "video_selected": "Elegido"
+    "video_selected": "Elegido",
+    "video_preview": "Vista previa"
   },
   "qibla": {
     "locating": "Localizándote...",
@@ -319,7 +321,9 @@
     "perm_battery": "Exención de optimización de batería",
     "perm_battery_desc": "Para que el Adhan se active de forma fiable en segundo plano",
     "perm_full_screen": "Alerta de Adhan a pantalla completa",
-    "perm_full_screen_desc": "Para que la alerta del Adhan se abra sobre la pantalla de bloqueo"
+    "perm_full_screen_desc": "Para que la alerta del Adhan se abra sobre la pantalla de bloqueo",
+    "perm_autostart": "Inicio automático / apps protegidas",
+    "perm_autostart_desc": "Algunos fabricantes (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gestionan las apps en segundo plano aparte de la batería — permite esta app ahí para que el Adhan no se detenga"
   },
   "downloads": {
     "title": "Descargas",
@@ -464,6 +468,9 @@
     "sat": "Sábado",
     "sun": "Domingo",
     "remove_reminder": "Quitar recordatorio",
+    "reminder_off": "Sin recordatorio",
+    "reminder_on_at": "Cada {day} a las {time}",
+    "reminders_section_title": "Recordatorios de las suras de la Sunnah",
     "save_reminder": "Guardar recordatorio",
     "note_baqarah": "“Recítenla, pues tomarla es una bendición y abandonarla una pérdida”; aleja a los demonios del hogar donde se recita",
     "source_baqarah": "Sahih Muslim",

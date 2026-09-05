@@ -6,6 +6,7 @@ import '../../../../core/theme/theme_controller.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../splash/data/splash_video_provider.dart';
+import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
 import '../widgets/permissions_section.dart';
 
 /// Every locale the app ships, labelled in its own script.
@@ -111,6 +112,12 @@ class SettingsScreen extends ConsumerWidget {
           // screen, not an in-app dialog).
           _SectionLabel('settings.permissions'.tr()),
           const PermissionsSection(),
+          const SizedBox(height: 24),
+
+          // P3‑44: per-surah reminder toggles moved here wholesale from
+          // the Home "سنن السور" card — see that card's own doc comment.
+          _SectionLabel('sunan_suwar.reminders_section_title'.tr()),
+          const SunanSuwarRemindersSection(),
           const SizedBox(height: 24),
 
           // P3‑41: the Adhan settings entry that used to live here is

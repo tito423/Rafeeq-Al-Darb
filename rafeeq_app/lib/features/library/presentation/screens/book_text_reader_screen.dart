@@ -617,13 +617,21 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                               textAlign: TextAlign.center,
                               style: TextStyle(color: ink.withValues(alpha: 0.6))),
                         ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'library.text_swipe_hint'.tr(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 11, color: ink.withValues(alpha: 0.5)),
-                      ),
+                      // P3‑44: real-device feedback — this repeated on
+                      // *every* page, which reads as a stuck label rather
+                      // than a one-time gesture hint. Shown only on the
+                      // book's actual first page now; a reader who needs
+                      // reminding after that already has the visible page
+                      // slider/arrows at the bottom.
+                      if (_pageIndex == 0) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          'library.text_swipe_hint'.tr(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 11, color: ink.withValues(alpha: 0.5)),
+                        ),
+                      ],
                     ],
                   ),
                 ),

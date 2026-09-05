@@ -149,8 +149,21 @@ class _AppShellState extends ConsumerState<AppShell>
     final fullScreen =
         ref.watch(quranFullScreenProvider) && _index == AppTab.quran;
 
-    return Scaffold(
-      body: IndexedStack(index: _index, children: screens),
+    // P3‑44: real-device feedback — pressing the system back button/gesture
+    // on any non-Home tab exited the app outright (Android's own default
+    // for a root route with nothing beneath it in the Navigator stack).
+    // Real apps with a bottom-nav shell almost universally treat "back" on
+    // a non-Home tab as "go to Home" first, reserving an actual exit for
+    // back-on-Home — that's what `canPop`/`onPopInvokedWithResult` do here,
+    // rather than a literal AppBar arrow that wouldn't make sense on a
+    // root bottom-nav screen.
+    return PopScope(
+      canPop: _index == AppTab.home,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) setState(() => _index = AppTab.home);
+      },
+      child: Scaffold(
+        body: IndexedStack(index: _index, children: screens),
       bottomNavigationBar: fullScreen
           ? null
           : NavigationBar(
@@ -189,6 +202,7 @@ class _AppShellState extends ConsumerState<AppShell>
                 ),
               ],
             ),
+      ),
     );
   }
 }

@@ -202,6 +202,7 @@
     "tasbeeh_lailahaillallah": "لَا إِلَٰهَ إِلَّا اللهُ",
     "tasbeeh_allahumma_salli": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ",
     "tasbeeh_lahawla": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ",
+    "tasbeeh_astaghfirullah": "أَسْتَغْفِرُ اللهَ الْعَظِيمَ وَأَتُوبُ إِلَيْهِ",
     "tasbeeh_total": "Total : {}",
     "tap_to_count": "Touchez pour compter",
     "rounds_count": "Tours : {}",
@@ -273,7 +274,8 @@
     "adhan_video": "Vidéo de l'adhan",
     "video_note": "La vidéo ne s'affiche que lorsque l'écran est allumé. Quand l'application est fermée, seul le son de l'adhan est joué (une limitation d'Android).",
     "video_select": "Sélectionner",
-    "video_selected": "Sélectionné"
+    "video_selected": "Sélectionné",
+    "video_preview": "Aperçu"
   },
   "qibla": {
     "locating": "Localisation en cours...",
@@ -319,7 +321,9 @@
     "perm_battery": "Exemption d'optimisation de la batterie",
     "perm_battery_desc": "Pour que l'Adhan se déclenche de façon fiable en arrière-plan",
     "perm_full_screen": "Alerte Adhan plein écran",
-    "perm_full_screen_desc": "Pour que l'alerte Adhan s'ouvre sur l'écran verrouillé"
+    "perm_full_screen_desc": "Pour que l'alerte Adhan s'ouvre sur l'écran verrouillé",
+    "perm_autostart": "Démarrage automatique / applications protégées",
+    "perm_autostart_desc": "Certains fabricants (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gèrent les applications en arrière-plan séparément des paramètres de batterie — autorisez l'application ici pour que l'Adhan ne soit pas interrompu"
   },
   "downloads": {
     "title": "Téléchargements",
@@ -464,6 +468,9 @@
     "sat": "Samedi",
     "sun": "Dimanche",
     "remove_reminder": "Supprimer le rappel",
+    "reminder_off": "Aucun rappel défini",
+    "reminder_on_at": "Chaque {day} à {time}",
+    "reminders_section_title": "Rappels des sourates de la Sunna",
     "save_reminder": "Enregistrer le rappel",
     "note_baqarah": "« Récitez-la, car s'en saisir est une bénédiction et l'abandonner est une perte » ; elle chasse les diables de la maison où elle est récitée",
     "source_baqarah": "Sahih Muslim",

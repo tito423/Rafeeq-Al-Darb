@@ -160,13 +160,19 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
                                         ?.copyWith(color: scheme.onSurfaceVariant),
                                   ),
                                 ],
-                                const SizedBox(height: 12),
-                                Text(
-                                  'azkar.swipe_hint'.tr(),
-                                  textAlign: TextAlign.center,
-                                  style: theme.textTheme.labelSmall
-                                      ?.copyWith(color: scheme.outline),
-                                ),
+                                // P3‑44: real-device feedback — repeated on
+                                // every single dhikr, reads as stuck rather
+                                // than a one-time gesture hint. First dhikr
+                                // in the section only.
+                                if (_index == 0) ...[
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    'azkar.swipe_hint'.tr(),
+                                    textAlign: TextAlign.center,
+                                    style: theme.textTheme.labelSmall
+                                        ?.copyWith(color: scheme.outline),
+                                  ),
+                                ],
                               ],
                             ),
                           ),

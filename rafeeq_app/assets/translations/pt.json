@@ -202,6 +202,7 @@
     "tasbeeh_lailahaillallah": "لَا إِلَٰهَ إِلَّا اللهُ",
     "tasbeeh_allahumma_salli": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ",
     "tasbeeh_lahawla": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ",
+    "tasbeeh_astaghfirullah": "أَسْتَغْفِرُ اللهَ الْعَظِيمَ وَأَتُوبُ إِلَيْهِ",
     "tasbeeh_total": "Total: {}",
     "tap_to_count": "Toque para contar",
     "rounds_count": "Voltas: {}",
@@ -273,7 +274,8 @@
     "adhan_video": "Vídeo do adhan",
     "video_note": "O vídeo aparece apenas com a tela ligada. Com o app fechado, só o som do adhan é reproduzido (limitação do Android).",
     "video_select": "Selecionar",
-    "video_selected": "Selecionado"
+    "video_selected": "Selecionado",
+    "video_preview": "Pré-visualizar"
   },
   "qibla": {
     "locating": "A localizar...",
@@ -319,7 +321,9 @@
     "perm_battery": "Isenção de otimização de bateria",
     "perm_battery_desc": "Para que o Adhan dispare de forma confiável em segundo plano",
     "perm_full_screen": "Alerta de Adhan em tela cheia",
-    "perm_full_screen_desc": "Para que o alerta do Adhan abra sobre a tela de bloqueio"
+    "perm_full_screen_desc": "Para que o alerta do Adhan abra sobre a tela de bloqueio",
+    "perm_autostart": "Início automático / apps protegidos",
+    "perm_autostart_desc": "Alguns fabricantes (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gerenciam apps em segundo plano separadamente da bateria — permita este app lá para que o Adhan não seja interrompido"
   },
   "downloads": {
     "title": "Transferências",
@@ -464,6 +468,9 @@
     "sat": "Sábado",
     "sun": "Domingo",
     "remove_reminder": "Remover lembrete",
+    "reminder_off": "Nenhum lembrete definido",
+    "reminder_on_at": "Toda {day} às {time}",
+    "reminders_section_title": "Lembretes das suratas da Sunnah",
     "save_reminder": "Guardar lembrete",
     "note_baqarah": "“Recitem-na, pois tomá-la é uma bênção e abandoná-la é uma perda”; afasta os demónios da casa onde é recitada",
     "source_baqarah": "Sahih Muslim",
