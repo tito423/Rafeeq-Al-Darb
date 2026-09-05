@@ -214,7 +214,15 @@
     "evening_reminder": "تذكير أذكار المساء",
     "reminder_off": "متوقف",
     "choose_time": "اختر الوقت",
-    "auto_advance": "الانتقال التلقائي عند اكتمال العدد"
+    "auto_advance": "الانتقال التلقائي عند اكتمال العدد",
+    "category_morning": "أذكار الصباح",
+    "category_evening": "أذكار المساء",
+    "category_sleep": "أذكار النوم",
+    "category_waking": "الاستيقاظ",
+    "category_after_prayer": "بعد الصلاة",
+    "category_mosque": "أذكار المسجد",
+    "category_travel": "دعاء السفر",
+    "category_narrated": "أدعية مأثورة"
   },
   "prayer": {
     "fajr": "الفجر",

@@ -6,6 +6,7 @@ import '../../../../core/db/models.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
+import '../../data/azkar_categories.dart';
 import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
 
@@ -32,20 +33,12 @@ class AzkarScreen extends StatelessWidget {
   }
 }
 
-/// P3‑11: real-keyword → icon mapping for the grid redesign
-/// (`design_refs/ref_azkar_hub.jpg`) — deliberately **not** a fixed 6-card
-/// taxonomy (أذكار الصباح / أذكار المساء / التسبيح والتحميد / أدعية
-/// قرآنية / … as separate cards), because Hisn al-Muslim's real 134
-/// sections don't actually split that way: there is exactly **one**
-/// combined "أذكار الصباح والمساء" section (§29), no standalone "أدعية
-/// قرآنية" section, and no "التسبيح والتحميد" dhikr-text section (§132/133
-/// are *about* the virtue of tasbih, not the dhikr texts themselves — that
-/// content lives in the المسبحة tab instead). Inventing separate cards for
-/// categories the data doesn't actually have would be exactly the kind of
-/// placeholder structure rule 1 forbids. Instead: every one of the real 133
-/// sections (⁠المقدمة filtered) gets its own card in a 2-column grid — the
-/// reference's *visual language* (icon + title card, not a bare list row),
-/// applied honestly to the real content.
+/// P3‑11's original real-keyword → icon mapping, still used for each
+/// section's own card icon within a category group. P3‑43 #13 later added
+/// the category *grouping* itself (`azkar_categories.dart`) on top of this
+/// same per-section icon lookup — see that file's doc comment for why 8 of
+/// the reference's 10 categories are real and 2 are deliberately left out
+/// rather than force-fit.
 IconData _azkarIcon(String title) {
   const map = <String, IconData>{
     'الصباح': Icons.wb_sunny_outlined,
@@ -78,6 +71,20 @@ IconData _azkarIcon(String title) {
   return Icons.auto_awesome_outlined;
 }
 
+/// Display order for the category groups — a rough daily/situational flow
+/// (wake → morning → after-prayer/mosque → evening → sleep, then travel and
+/// the general catch-all last) rather than the enum's declaration order.
+const _categoryOrder = [
+  AzkarCategory.waking,
+  AzkarCategory.morning,
+  AzkarCategory.mosque,
+  AzkarCategory.afterPrayer,
+  AzkarCategory.evening,
+  AzkarCategory.sleep,
+  AzkarCategory.travel,
+  AzkarCategory.narrated,
+];
+
 class _SectionsTab extends ConsumerWidget {
   const _SectionsTab();
 
@@ -101,7 +108,28 @@ class _SectionsTab extends ConsumerWidget {
           // as bundled — this is a display-only decision.
           final sections =
               snapshot.data!.where((s) => s.title != 'المقدمة').toList();
+          final byId = {for (final s in sections) s.id: s};
           final scheme = Theme.of(context).colorScheme;
+
+          // P3‑43 #13: group the real sections under the reference's
+          // category taxonomy (`azkarSectionCategories`). Any real section
+          // with no assignment there falls back into "narrated" rather than
+          // silently vanishing from the tab — every one of the 133 sections
+          // must still be reachable.
+          final byCategory = <AzkarCategory, List<AzkarSection>>{};
+          for (final s in sections) {
+            final cats = azkarSectionCategories[s.id] ?? const [AzkarCategory.narrated];
+            for (final c in cats) {
+              (byCategory[c] ??= []).add(s);
+            }
+          }
+          // Sanity net: azkarSectionCategories may reference an id the
+          // current bundled DB doesn't have (shouldn't happen, but a
+          // stale mapping should never crash the tab).
+          for (final list in byCategory.values) {
+            list.removeWhere((s) => !byId.containsKey(s.id));
+          }
+
           return CustomScrollView(
             slivers: [
               SliverPadding(
@@ -111,42 +139,87 @@ class _SectionsTab extends ConsumerWidget {
                       style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13)),
                 ),
               ),
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(14, 8, 14, 4),
-                sliver: SliverToBoxAdapter(
-                  child: Text('azkar.choose_type'.tr(),
-                      style: Theme.of(context).textTheme.titleSmall),
-                ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 1.3,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, i) {
-                      final s = sections[i];
-                      return _AzkarSectionCard(
-                        section: s,
-                        icon: _azkarIcon(s.title),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => AzkarSectionScreen(section: s),
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: sections.length,
-                  ),
-                ),
-              ),
+              for (final cat in _categoryOrder)
+                if ((byCategory[cat] ?? const []).isNotEmpty)
+                  ..._categorySlivers(context, cat, byCategory[cat]!),
+              const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
             ],
           );
         },
+      ),
+    );
+  }
+
+  List<Widget> _categorySlivers(
+    BuildContext context,
+    AzkarCategory cat,
+    List<AzkarSection> items,
+  ) {
+    final info = azkarCategoryInfo[cat]!;
+    return [
+      SliverPadding(
+        padding: const EdgeInsets.fromLTRB(14, 16, 14, 8),
+        sliver: SliverToBoxAdapter(child: _CategoryHeader(info: info)),
+      ),
+      SliverPadding(
+        padding: const EdgeInsets.fromLTRB(14, 0, 14, 4),
+        sliver: SliverGrid(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1.3,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (context, i) {
+              final s = items[i];
+              return _AzkarSectionCard(
+                section: s,
+                icon: _azkarIcon(s.title),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => AzkarSectionScreen(section: s),
+                  ),
+                ),
+              );
+            },
+            childCount: items.length,
+          ),
+        ),
+      ),
+    ];
+  }
+}
+
+class _CategoryHeader extends StatelessWidget {
+  final AzkarCategoryInfo info;
+  const _CategoryHeader({required this.info});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        gradient: LinearGradient(
+          colors: info.gradient,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(info.icon, color: Colors.white, size: 22),
+          const SizedBox(width: 10),
+          Text(
+            info.titleKey.tr(),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 15,
+            ),
+          ),
+        ],
       ),
     );
   }

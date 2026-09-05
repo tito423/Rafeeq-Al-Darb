@@ -214,7 +214,15 @@
     "evening_reminder": "Evening adhkar reminder",
     "reminder_off": "Off",
     "choose_time": "Choose time",
-    "auto_advance": "Auto-advance when the count is reached"
+    "auto_advance": "Auto-advance when the count is reached",
+    "category_morning": "Morning Adhkar",
+    "category_evening": "Evening Adhkar",
+    "category_sleep": "Sleep Adhkar",
+    "category_waking": "Waking Up",
+    "category_after_prayer": "After Prayer",
+    "category_mosque": "At the Mosque",
+    "category_travel": "Travel",
+    "category_narrated": "Narrated Supplications"
   },
   "prayer": {
     "fajr": "Fajr",

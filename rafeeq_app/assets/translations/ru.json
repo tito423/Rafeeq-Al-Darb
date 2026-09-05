@@ -214,7 +214,15 @@
     "evening_reminder": "Напоминание о вечерних азкарах",
     "reminder_off": "Выкл.",
     "choose_time": "Выбрать время",
-    "auto_advance": "Автопереход при достижении счёта"
+    "auto_advance": "Автопереход при достижении счёта",
+    "category_morning": "Утренние поминания",
+    "category_evening": "Вечерние поминания",
+    "category_sleep": "Поминания перед сном",
+    "category_waking": "Пробуждение",
+    "category_after_prayer": "После молитвы",
+    "category_mosque": "В мечети",
+    "category_travel": "Путешествие",
+    "category_narrated": "Переданные мольбы"
   },
   "prayer": {
     "fajr": "Фаджр",

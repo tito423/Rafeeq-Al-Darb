@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #9, #10, #14, #15 done; #2 root-caused + fixed, pending real-device re-verification (USB dropped mid-test); #11 investigated, no cause found (may already be fixed by an earlier session's bootstrap removal); #12 needs a fresh device screenshot; #13/#16 remain |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #9, #10, #13, #14, #15 done; #2 root-caused + fixed, pending real-device re-verification (USB dropped mid-test); #11 investigated, no cause found (may already be fixed by an earlier session's bootstrap removal); #12 needs a fresh device screenshot; #16 remains |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2517,17 +2517,53 @@ core-feature failures before polish):
     rendering normally in the AppBar. Needs a fresh zoomed screenshot to
     see the exact glyph corruption before diagnosing (font fallback?
     directionality?).
-13. **Azkar needs re-categorizing to match a specific reference layout**
-    — `8_azkar_categories_target.jpg` shows a 10-category colored-card
-    grid (أذكار الصباح، أذكار المساء، أذكار النوم، بعد الصلاة،
-    الاستيقاظ، أذكار المسجد، أدعية مأثورة، أدعية قرآنية، دعاء السفر،
-    الرقية الشرعية) — the owner wants the existing 133 real Hisn
-    al-Muslim sections regrouped under these named categories instead of
-    one flat grid. This is a real content-mapping task: every section
-    needs to be assigned to exactly one of these categories from its
-    actual content, not guessed at superficially — a mapping table is
-    the honest way to do this, and any section that doesn't cleanly fit
-    one of the 10 should be flagged rather than force-fit.
+13. ✅ **DONE + live-verified — 8 of the reference's 10 categories built
+    as real, content-based groupings; 2 deliberately left out, not
+    force-fit.** Queried the real DB directly first, not guessed at:
+    `sqlite3 quran_sciences.db "SELECT id, title FROM azkar_sections"`
+    dumped all 134 real section titles, `.schema azkar_items` confirmed
+    there's no source-type column to derive a Quran-vs-Sunnah split
+    programmatically. Grepped the full title list for "قرآن" and "رقية"
+    — **zero matches for both** — confirming "أدعية قرآنية" and "الرقية
+    الشرعية" have no naturally-titled real section in this specific
+    133-section Hisn al-Muslim index (the nearest real content for the
+    latter, sickness/evil-eye sections like the "عيادة المريض" group, is
+    about *visiting the afflicted*, not the ruqyah recitation practice
+    itself — folding it in would be a mischaracterisation). Per the
+    task's own instruction ("any section that doesn't cleanly fit...
+    should be flagged rather than force-fit"), these 2 are simply not
+    rendered — inventing an empty, dead-end category card would be
+    exactly the kind of placeholder UI rule 1 forbids.
+    New `azkar_categories.dart`: an `AzkarCategory` enum (8 values) +
+    a real `Map<int, List<AzkarCategory>>` assigning every one of the
+    133 real sections (§1 "المقدمة" already filtered) to a category by
+    actually reading its title/content, not bulk-guessed — §29 ("أذكار
+    الصباح والمساء") is the one deliberate exception listed under
+    **both** Morning and Evening, since Hisn al-Muslim genuinely never
+    split it into two chapters. `azkar_screen.dart`'s `_SectionsTab`
+    rewritten to group by category — a colored gradient header
+    (`_CategoryHeader`, one color per category matching the reference's
+    card-per-category look) followed by that category's own 2-column
+    section grid, in a situational daily-flow order (waking → morning →
+    mosque → after-prayer → evening → sleep → travel → narrated
+    catch-all). 8 new `azkar.category_*` keys added across all 6
+    locales (religious category names, translated like the rest of the
+    UI chrome — unlike the raw dhikr *text* which stays Arabic-only).
+    `flutter analyze` clean; `flutter test` clean (21/21, parity holds).
+    **Live-verified on `emulator-5554`:** launched a fresh debug build,
+    opened the Adhkar tab — all 8 category headers render with distinct
+    gradient colors and correct real section cards underneath (Waking
+    Up → أذكار الاستيقاظ من النوم; Morning Adhkar → both §29's combined
+    section and its own morning-only entry; At the Mosque → real
+    mosque-arrival/entry/exit/adhan sections; After Prayer → the full
+    real tashahhud/witr/istikhara block; Sleep → real sleep-dhikr
+    sections; Travel → real travel-dua sections; Narrated Supplications
+    → the large real catch-all, ending cleanly with the last two real
+    sections, no overflow); scrolled the full list top to bottom with
+    zero crashes/overflow; tapped into a real section ("ما يقول عند
+    الذبح أو النحر") and confirmed the actual dhikr text + real source
+    citation still render correctly, unchanged; `adb logcat` showed no
+    Flutter exceptions/errors through the whole pass.
 14. ✅ **DONE — the two missing Tasbeeh presets added for real, to the
     right list.** Checked `tasbeeh_screen.dart`'s own `_dhikrOptions`
     directly (not the Azkar dataset P3‑41 already confirmed has these

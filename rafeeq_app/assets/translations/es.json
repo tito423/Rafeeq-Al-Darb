@@ -214,7 +214,15 @@
     "evening_reminder": "Recordatorio de adhkar de la tarde",
     "reminder_off": "Desactivado",
     "choose_time": "Elegir hora",
-    "auto_advance": "Avanzar automáticamente al alcanzar la cuenta"
+    "auto_advance": "Avanzar automáticamente al alcanzar la cuenta",
+    "category_morning": "Adhkar de la mañana",
+    "category_evening": "Adhkar de la tarde",
+    "category_sleep": "Adhkar para dormir",
+    "category_waking": "Al despertar",
+    "category_after_prayer": "Después de la oración",
+    "category_mosque": "En la mezquita",
+    "category_travel": "Viaje",
+    "category_narrated": "Súplicas narradas"
   },
   "prayer": {
     "fajr": "Fayr",
