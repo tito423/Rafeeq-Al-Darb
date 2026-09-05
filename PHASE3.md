@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #14, #15 done; #2 root-caused live on the owner's real device + a real fix built, pending re-verification (USB dropped mid-test); #12 needs a fresh device screenshot before diagnosing; 5 items remain |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #9, #10, #14, #15 done; #2 root-caused + fixed, pending real-device re-verification (USB dropped mid-test); #11 investigated, no cause found (may already be fixed by an earlier session's bootstrap removal); #12 needs a fresh device screenshot; #13/#16 remain |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2488,12 +2488,30 @@ core-feature failures before polish):
     refetches when the *last known* state was genuinely `locationDenied`,
     so this doesn't add a spurious network call to every ordinary app
     resume. `flutter analyze`/`flutter test` clean (21/21).
-11. **Locale toggle re-triggers a tellawah (recitation) download** —
-    reported after a fresh install: switching the app language somehow
-    causes recitation to re-download. Needs a repro — check whether any
-    recitation-related provider is incorrectly keyed on locale or
-    rebuilt on `EasyLocalization` locale-change in a way that re-fires a
-    download call.
+11. 🔶 **Investigated thoroughly, no reproducible cause found in the
+    current codebase — genuinely not the same as "fixed."** Traced every
+    real recitation-download call site by hand: `FullRecitationCard.
+    _downloadAll()` (the bulk "download all" card, both on Downloads and
+    onboarding) and `_SurahAudioTile._download()` (the per-surah tile) —
+    **both only ever fire from an explicit button `onPressed`**, nothing
+    else calls either. Checked every candidate for a hidden locale
+    coupling: `reciters_provider.dart`'s `SelectedReciter` (persisted
+    plain `SharedPreferences` string, no locale key anywhere in it),
+    `AyahAudioService` (grepped for "locale" — zero hits),
+    `onboardingCompletedProvider` (reads a plain bool flag, unrelated to
+    locale). The one auto-download path that *did* once exist —
+    `essential_content_bootstrap.dart`'s first-launch auto-fetch — was
+    already deleted in the P3‑41-follow-up session (recitation reverted
+    to manual-only), which plausibly already fixed exactly this
+    complaint before it was even reported this round. `grep -r locale`
+    across `lib/features/downloads/` and `lib/core/services/
+    ayah_audio_service.dart` returns nothing.
+    **Not marked done**, because "no cause found by static search" is
+    not the same as "confirmed fixed" (rule 3) — needs a real repro on
+    the current build (fresh install → switch language → watch Downloads/
+    network) before closing. If it still reproduces, the next session
+    should get a screen recording of the exact repro, since nothing in
+    the current code explains it.
 12. **Quran-mode AppBar title renders broken** —
     `4_quran_text_toolbar_title_marked.jpg` shows "القرآن" not
     rendering normally in the AppBar. Needs a fresh zoomed screenshot to
