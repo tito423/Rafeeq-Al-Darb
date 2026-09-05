@@ -42,7 +42,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(prayerControllerProvider.notifier).refresh());
+    Future.microtask(
+      () => ref.read(prayerControllerProvider.notifier).refresh(),
+    );
     // P3‑22: ticks every second so the new prayer card's live HH:MM:SS clock
     // actually moves (was 30s, fine for the old static "متبقي" text but not
     // for a real ticking clock).
@@ -64,38 +66,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return HomeNavigate(
       onNavigate: widget.onNavigate,
       child: Scaffold(
-      // P3‑4: the old AppBar just repeated "app.name" as a plain title —
-      // dropped in favour of the header card below carrying the app's
-      // identity through its own presence, freeing a full row of vertical
-      // space for content.
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () => ref.read(prayerControllerProvider.notifier).refresh(),
-          child: ListView(
-            padding: const EdgeInsets.all(20),
-            children: [
-              const SizedBox(height: 4),
-              const _HeaderCard(),
-              const SizedBox(height: 16),
-              _PrayerCard(state: prayerState),
-              const SizedBox(height: 16),
-              // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
-              // the reference shows a "متابعة القراءة" bookmark-style card
-              // ("where you left off") as its own thing, separate from the
-              // khatma daily-goal card below it. Renders nothing when
-              // there's no real last-read page yet (see its own doc).
-              const ContinueReadingCard(),
-              const SizedBox(height: 16),
-              const KhatmaCard(),
-              const SizedBox(height: 16),
-              const SunanSuwarCard(),
-              const SizedBox(height: 16),
-              const DailyHadithCard(),
-              const SizedBox(height: 12),
-            ],
+        // P3‑4: the old AppBar just repeated "app.name" as a plain title —
+        // dropped in favour of the header card below carrying the app's
+        // identity through its own presence, freeing a full row of vertical
+        // space for content.
+        body: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: () =>
+                ref.read(prayerControllerProvider.notifier).refresh(),
+            child: ListView(
+              padding: const EdgeInsets.all(20),
+              children: [
+                const SizedBox(height: 4),
+                const _HeaderCard(),
+                const SizedBox(height: 16),
+                _PrayerCard(state: prayerState),
+                const SizedBox(height: 16),
+                // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
+                // the reference shows a "متابعة القراءة" bookmark-style card
+                // ("where you left off") as its own thing, separate from the
+                // khatma daily-goal card below it. Renders nothing when
+                // there's no real last-read page yet (see its own doc).
+                const ContinueReadingCard(),
+                const SizedBox(height: 16),
+                const KhatmaCard(),
+                const SizedBox(height: 16),
+                const SunanSuwarCard(),
+                const SizedBox(height: 16),
+                const DailyHadithCard(),
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -122,13 +125,34 @@ class _HeaderCard extends StatelessWidget {
     HijriCalendar.setLocal(lang);
     final h = HijriCalendar.now();
     const monthsAr = [
-      '', 'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى',
-      'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة',
+      '',
+      'محرم',
+      'صفر',
+      'ربيع الأول',
+      'ربيع الآخر',
+      'جمادى الأولى',
+      'جمادى الآخرة',
+      'رجب',
+      'شعبان',
+      'رمضان',
+      'شوال',
+      'ذو القعدة',
+      'ذو الحجة',
     ];
     const monthsEn = [
-      '', 'Muharram', 'Safar', 'Rabiʿ al-Awwal', 'Rabiʿ al-Akhir',
-      'Jumada al-Awwal', 'Jumada al-Akhira', 'Rajab', 'Shaʿban', 'Ramadan',
-      'Shawwal', 'Dhu al-Qaʿda', 'Dhu al-Hijja',
+      '',
+      'Muharram',
+      'Safar',
+      'Rabiʿ al-Awwal',
+      'Rabiʿ al-Akhir',
+      'Jumada al-Awwal',
+      'Jumada al-Akhira',
+      'Rajab',
+      'Shaʿban',
+      'Ramadan',
+      'Shawwal',
+      'Dhu al-Qaʿda',
+      'Dhu al-Hijja',
     ];
     final months = lang == 'ar' ? monthsAr : monthsEn;
     final suffix = lang == 'ar' ? ' هـ' : ' AH';
@@ -151,7 +175,9 @@ class _HeaderCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)],
         ),
-        border: Border.all(color: const Color(0xFF15C7B0).withValues(alpha: 0.35)),
+        border: Border.all(
+          color: const Color(0xFF15C7B0).withValues(alpha: 0.35),
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFD4AF37).withValues(alpha: 0.12),
@@ -162,9 +188,14 @@ class _HeaderCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(_hijriLine(context.locale.languageCode),
-              style: const TextStyle(
-                  color: Color(0xFF7DEBDA), fontSize: 12, fontWeight: FontWeight.w600)),
+          Text(
+            _hijriLine(context.locale.languageCode),
+            style: const TextStyle(
+              color: Color(0xFF7DEBDA),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           Expanded(
             child: Text(
               'home.welcome_guest'.tr(),
@@ -177,11 +208,14 @@ class _HeaderCard extends StatelessWidget {
               ),
             ),
           ),
-          Text(_gregorianLine(context),
-              style: TextStyle(
-                  color: const Color(0xFFD4AF37).withValues(alpha: 0.9),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600)),
+          Text(
+            _gregorianLine(context),
+            style: TextStyle(
+              color: const Color(0xFFD4AF37).withValues(alpha: 0.9),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           // P3‑41: Settings came off the bottom nav entirely (real-device
           // feedback) — this is its one remaining entry point, a small
           // gear tucked into the header card's own trailing edge rather
@@ -197,8 +231,11 @@ class _HeaderCard extends StatelessWidget {
             ),
             child: const Padding(
               padding: EdgeInsets.all(4),
-              child: Icon(Icons.settings_outlined,
-                  color: Color(0xFF7DEBDA), size: 18),
+              child: Icon(
+                Icons.settings_outlined,
+                color: Color(0xFF7DEBDA),
+                size: 18,
+              ),
             ),
           ),
         ],
@@ -207,12 +244,12 @@ class _HeaderCard extends StatelessWidget {
   }
 }
 
-class _PrayerCard extends StatelessWidget {
+class _PrayerCard extends ConsumerWidget {
   final AsyncValue<PrayerTimesResult> state;
   const _PrayerCard({required this.state});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return state.when(
       loading: () => const Card(
         child: Padding(
@@ -226,9 +263,18 @@ class _PrayerCard extends StatelessWidget {
       ),
       data: (result) {
         if (result.locationDenied) {
+          // P3‑43 #10: this used to be static text with no way to act on
+          // it — a real button that actually triggers the OS permission
+          // prompt, reusing `LocationService.getCurrentPosition()`'s own
+          // existing `Geolocator.requestPermission()` call inside
+          // `PrayerController.refresh()` rather than a second, separate
+          // permission-request path.
           return _MessageCard(
             icon: Icons.location_off_outlined,
             message: 'home.location_needed'.tr(),
+            actionLabel: 'home.enable_location'.tr(),
+            onAction: () =>
+                ref.read(prayerControllerProvider.notifier).refresh(),
           );
         }
         if (result.times.isEmpty) {
@@ -246,7 +292,14 @@ class _PrayerCard extends StatelessWidget {
 class _MessageCard extends StatelessWidget {
   final IconData icon;
   final String message;
-  const _MessageCard({required this.icon, required this.message});
+  final String? actionLabel;
+  final VoidCallback? onAction;
+  const _MessageCard({
+    required this.icon,
+    required this.message,
+    this.actionLabel,
+    this.onAction,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -259,6 +312,13 @@ class _MessageCard extends StatelessWidget {
             Icon(icon, size: 32, color: scheme.onSurfaceVariant),
             const SizedBox(height: 10),
             Text(message, textAlign: TextAlign.center),
+            if (actionLabel != null && onAction != null) ...[
+              const SizedBox(height: 12),
+              FilledButton.tonal(
+                onPressed: onAction,
+                child: Text(actionLabel!),
+              ),
+            ],
           ],
         ),
       ),
@@ -307,9 +367,10 @@ class _PrayerTimesTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final next = PrayerTimesService().nextPrayer(times, DateTime.now());
-    final location = [times.cityName, times.countryName]
-        .where((s) => s.isNotEmpty)
-        .join('، ');
+    final location = [
+      times.cityName,
+      times.countryName,
+    ].where((s) => s.isNotEmpty).join('، ');
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -323,7 +384,9 @@ class _PrayerTimesTable extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)],
         ),
-        border: Border.all(color: const Color(0xFF15C7B0).withValues(alpha: 0.35)),
+        border: Border.all(
+          color: const Color(0xFF15C7B0).withValues(alpha: 0.35),
+        ),
       ),
       child: Column(
         children: [
@@ -362,8 +425,10 @@ class _PrayerTimesTable extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text(_remaining(next),
-                      style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                  Text(
+                    _remaining(next),
+                    style: const TextStyle(color: Colors.white70, fontSize: 13),
+                  ),
                 ],
               ),
             ),
@@ -375,7 +440,10 @@ class _PrayerTimesTable extends StatelessWidget {
               children: [
                 const Icon(Icons.location_on, size: 14, color: Colors.white54),
                 const SizedBox(width: 4),
-                Text(location, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                Text(
+                  location,
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
+                ),
               ],
             ),
           ],
@@ -440,18 +508,22 @@ class _PrayerChip extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: isNext ? Colors.white : color,
-                )),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: isNext ? Colors.white : color,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(time,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: isNext ? Colors.white : Colors.white70,
-                )),
+            Text(
+              time,
+              style: TextStyle(
+                fontSize: 13,
+                color: isNext ? Colors.white : Colors.white70,
+              ),
+            ),
             if (isNext) ...[
               const SizedBox(height: 4),
               Container(
@@ -460,8 +532,10 @@ class _PrayerChip extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.25),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text('home.upcoming'.tr(),
-                    style: const TextStyle(fontSize: 9, color: Colors.white)),
+                child: Text(
+                  'home.upcoming'.tr(),
+                  style: const TextStyle(fontSize: 9, color: Colors.white),
+                ),
               ),
             ],
           ],
@@ -470,4 +544,3 @@ class _PrayerChip extends StatelessWidget {
     );
   }
 }
-

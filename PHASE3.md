@@ -2469,13 +2469,25 @@ core-feature failures before polish):
    (`unit_quarters`, `quarters_per_day`, `quarter_1..3`,
    `quarter_4_hizb`, `quarter_n`). `flutter analyze`/`flutter test`
    clean (15/15, parity holds).
-10. **Location permission has no direct action from where it's needed**
-    — when the home screen shows "فعّل الموقع لحساب مواقيت صلاتك", it's
-    just static text with no tap action; the owner wants tapping it (or
-    a Settings entry) to directly trigger the OS permission prompt. Also
-    related: **after permission is actually granted, the app doesn't
-    pick it up automatically** — needs a re-check/re-fetch triggered by
-    the permission-result callback itself, not requiring an app restart.
+10. ✅ **DONE — both halves.** The Home prayer card's location-denied
+    state (`_MessageCard`) was genuinely just an icon + text, no action
+    at all. `_MessageCard` gained an optional action button;
+    `_PrayerCard` (now a `ConsumerWidget`) wires it to
+    `PrayerController.refresh()` — already-existing code, not a new
+    permission path: `refresh()` calls `LocationService.getCurrentPosition()`,
+    which already calls `Geolocator.requestPermission()` internally, so
+    tapping the button genuinely triggers the real OS prompt and, on
+    grant, continues the *same* await chain straight into fetching real
+    prayer times — no separate "recheck" needed for that path. +1 key
+    (`home.enable_location`) × 6 locales.
+    **Second half — granting via the OS Settings app directly** (not
+    through this new button) needed its own fix, since nothing in-app
+    would ever know that happened: `AppShell` (already a
+    `WidgetsBindingObserver` for the prayer-status card and the P3‑43 #2
+    adhan fallback) now also re-checks on every resume — but only
+    refetches when the *last known* state was genuinely `locationDenied`,
+    so this doesn't add a spurious network call to every ordinary app
+    resume. `flutter analyze`/`flutter test` clean (21/21).
 11. **Locale toggle re-triggers a tellawah (recitation) download** —
     reported after a fresh install: switching the app language somehow
     causes recitation to re-download. Needs a repro — check whether any

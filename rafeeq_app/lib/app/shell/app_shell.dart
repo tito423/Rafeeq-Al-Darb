@@ -71,6 +71,21 @@ class _AppShellState extends ConsumerState<AppShell>
     if (state == AppLifecycleState.resumed) {
       _syncPrayerStatus();
       _checkActiveAdhan();
+      _recheckLocationIfDenied();
+    }
+  }
+
+  /// P3‑43 #10: "after permission is actually granted, the app doesn't
+  /// pick it up automatically" — true for the path where the user grants
+  /// location from the OS Settings app directly rather than through the
+  /// new in-app button (which already re-fetches immediately as part of
+  /// its own tap, no separate recheck needed there). Only re-fetches when
+  /// the last known state genuinely was "denied", so this doesn't refetch
+  /// location on every ordinary app resume.
+  void _recheckLocationIfDenied() {
+    final result = ref.read(prayerControllerProvider).valueOrNull;
+    if (result?.locationDenied == true) {
+      ref.read(prayerControllerProvider.notifier).refresh();
     }
   }
 
