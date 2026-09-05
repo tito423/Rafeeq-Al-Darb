@@ -208,6 +208,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                           children: [
                             Text(
                               selected.textKey.tr(),
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'AmiriQuran',
                                 fontSize: 22,
@@ -215,6 +216,25 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                                 color: selected.color,
                               ),
                             ),
+                            // P3‑48: for non-Arabic UI languages, show a
+                            // transliteration ("how to read it") beneath the
+                            // Arabic so a non-Arabic speaker can pronounce it.
+                            if (context.locale.languageCode != 'ar') ...[
+                              const SizedBox(height: 4),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  '${selected.textKey}_ph'.tr(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontStyle: FontStyle.italic,
+                                    color: scheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: 14),
                             Text(
                               _target == null ? '$_count' : '$_count / $_target',

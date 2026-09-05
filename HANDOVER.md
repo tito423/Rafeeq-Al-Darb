@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-06 01:28 — IN PROGRESS — resume here**
+**2026-09-06 02:08 — IN PROGRESS — resume here**
 
-P3-48: fixed the download stall at its root - AyahAudioService and DownloadManager used a bare Dio() with NO timeouts, so a stalled connection hung a download forever with no progress and no error (the 'starts but never finishes / hangs on first-run tellawah' bug). Added connect/receive/send timeouts to all three download Dio instances (verified the audio CDN itself returns 200, so the hang was purely the missing timeout). Brought the rich 'current wird' card design into the Khatma section screen (made KhatmaPortionRangeBlock/KhatmaProgressSection public and reused them there - real surah/ayah/page range + opening-ayah text + previous/upcoming counts, matching the Home card and the owner's reference). Made the persistent next-prayer card a real foreground service (flutter_local_notifications startForegroundService, specialUse type + manifest service/permission) so it is non-dismissible and survives the app being closed, like Salatuk. flutter analyze/test clean (21/21); live-verified on emulator: FGS starts with no crash and the card shows a correct live countdown (Fajr 05:09, 3:41:16, Hijri date); tasbeeh/khatma unaffected.
+P3-48b: sourced + shipped 6 more copyright-free Pixabay adhan-background videos (Pixabay Content License, free commercial use, no attribution) - downloaded, head_object-verified upload to R2 adhan/video/*.mp4, added to the catalog to reach the owner's requested 10 total (Haram+Kaaba, Grand Mosque courtyards, Kaaba up close, Prophet's Mosque grounds, mosque minaret, a mosque). Added Arabic transliteration (phonetics) for all 7 Tasbeeh phrases - Latin for en/es/pt/fr, Cyrillic for ru - shown as an italic line under the Arabic on the Tasbeeh screen whenever the UI language isn't Arabic, so non-Arabic speakers can read/pronounce it. Confirmed translation files are ~90%+ complete and the parity test enforces identical key sets + no empty values across all 6 locales. flutter analyze/test clean (21/21); live-verified on emulator: Tasbeeh shows 'SubhanAllah' under سبحان الله in English, new videos return HTTP 200 from R2.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

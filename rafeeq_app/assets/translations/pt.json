@@ -225,7 +225,14 @@
     "category_travel": "Viagem",
     "category_narrated": "Súplicas narradas",
     "tasbeeh_unlimited": "Sem limite",
-    "tasbeeh_milestone": "Ma sha Allah"
+    "tasbeeh_milestone": "Ma sha Allah",
+    "tasbeeh_subhanallah_ph": "SubhanAllah",
+    "tasbeeh_alhamdulillah_ph": "Alhamdulillah",
+    "tasbeeh_allahuakbar_ph": "Allahu Akbar",
+    "tasbeeh_lailahaillallah_ph": "La ilaha illa Allah",
+    "tasbeeh_allahumma_salli_ph": "Allahumma salli ala Muhammad",
+    "tasbeeh_lahawla_ph": "La hawla wa la quwwata illa billah",
+    "tasbeeh_astaghfirullah_ph": "Astaghfirullah al-'Adheem wa atubu ilayh"
   },
   "prayer": {
     "fajr": "Fajr",

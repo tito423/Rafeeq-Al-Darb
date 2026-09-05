@@ -225,7 +225,14 @@
     "category_travel": "Путешествие",
     "category_narrated": "Переданные мольбы",
     "tasbeeh_unlimited": "Без предела",
-    "tasbeeh_milestone": "Ма ша Аллах"
+    "tasbeeh_milestone": "Ма ша Аллах",
+    "tasbeeh_subhanallah_ph": "СубханАллах",
+    "tasbeeh_alhamdulillah_ph": "Альхамдулиллях",
+    "tasbeeh_allahuakbar_ph": "Аллаху Акбар",
+    "tasbeeh_lailahaillallah_ph": "Ля иляха илля Аллах",
+    "tasbeeh_allahumma_salli_ph": "Аллахумма салли аля Мухаммад",
+    "tasbeeh_lahawla_ph": "Ля хауля уа ля куввата илля билляh",
+    "tasbeeh_astaghfirullah_ph": "Астагфируллах аль-Азым уа атубу иляйх"
   },
   "prayer": {
     "fajr": "Фаджр",

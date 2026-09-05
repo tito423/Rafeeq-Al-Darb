@@ -63,6 +63,47 @@ const List<AdhanVideoOption> adhanVideoCatalog = [
     nameEn: 'An Ottoman-style mosque',
     approxSizeBytes: 1717259,
   ),
+  // P3‑48: six more curated copyright-free clips (Pixabay Content License —
+  // free for commercial use, no attribution required) sourced + uploaded to
+  // R2 (adhan/video/<id>.mp4, head_object-verified) to reach the owner's
+  // requested set of 10 beautiful Islamic-scene backgrounds. Sizes are the
+  // real uploaded byte counts.
+  AdhanVideoOption(
+    id: 'kaaba_tawaf',
+    nameAr: 'الحرم والكعبة',
+    nameEn: 'The Haram & the Kaaba',
+    approxSizeBytes: 5396917,
+  ),
+  AdhanVideoOption(
+    id: 'haram_makkah2',
+    nameAr: 'ساحات الحرم المكي',
+    nameEn: 'The Grand Mosque courtyards',
+    approxSizeBytes: 17359517,
+  ),
+  AdhanVideoOption(
+    id: 'kaaba_close',
+    nameAr: 'الكعبة المشرّفة عن قرب',
+    nameEn: 'The Kaaba, up close',
+    approxSizeBytes: 2491506,
+  ),
+  AdhanVideoOption(
+    id: 'madina_haram',
+    nameAr: 'رحاب المسجد النبوي',
+    nameEn: "The Prophet's Mosque grounds",
+    approxSizeBytes: 12626797,
+  ),
+  AdhanVideoOption(
+    id: 'mosque_minaret',
+    nameAr: 'مئذنة مسجد',
+    nameEn: 'A mosque minaret',
+    approxSizeBytes: 16592826,
+  ),
+  AdhanVideoOption(
+    id: 'mosque_view',
+    nameAr: 'رحاب مسجد',
+    nameEn: 'A mosque',
+    approxSizeBytes: 5109120,
+  ),
 ];
 
 AdhanVideoOption? adhanVideoById(String? id) {
