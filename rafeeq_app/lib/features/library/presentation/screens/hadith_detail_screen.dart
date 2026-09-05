@@ -64,7 +64,12 @@ class _HadithDetailScreenState extends State<HadithDetailScreen> {
                       height: 2.0,
                     ),
                   ),
-                  if ((_item.textEn ?? '').isNotEmpty) ...[
+                  // P3‑43 #15: "لا تظهر الترجمة إلا إذا كانت لغة التطبيق
+                  // مختلفة عن العربية" — an Arabic-reading user doesn't need
+                  // the English gloss shown back at them next to the real
+                  // Arabic hadith text above.
+                  if (context.locale.languageCode != 'ar' &&
+                      (_item.textEn ?? '').isNotEmpty) ...[
                     const Divider(height: 32),
                     if ((_item.narratorEn ?? '').isNotEmpty)
                       Padding(

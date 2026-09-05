@@ -19,6 +19,12 @@ const _dhikrOptions = [
   _DhikrOption('azkar.tasbeeh_alhamdulillah', Color(0xFF2E9D6F)), // green
   _DhikrOption('azkar.tasbeeh_allahuakbar', Color(0xFF6C5FBC)), // purple
   _DhikrOption('azkar.tasbeeh_lailahaillallah', Color(0xFFC9A227)), // gold
+  // P3‑43 #14: the owner clarified these two belong on the Tasbeeh
+  // screen's own hand-picked preset list specifically — they already
+  // exist inside the (much larger) Azkar Hisn al-Muslim dataset, but
+  // that's a different list from this screen's own counter presets.
+  _DhikrOption('azkar.tasbeeh_allahumma_salli', Color(0xFFD4785A)), // amber
+  _DhikrOption('azkar.tasbeeh_lahawla', Color(0xFF5C8A6E)), // sage
 ];
 
 /// المسبحة (Tasbeeh) tab — P3‑12 redesign, matching `design_refs/ref_tasbeeh.jpg`:

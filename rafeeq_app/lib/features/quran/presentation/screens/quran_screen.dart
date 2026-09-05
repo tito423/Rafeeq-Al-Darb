@@ -116,8 +116,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   void _changeFontScale(double delta) {
     setState(() => _fontScale = (_fontScale + delta).clamp(0.75, 1.8));
-    SharedPreferences.getInstance()
-        .then((p) => p.setDouble(_kFontScale, _fontScale));
+    SharedPreferences.getInstance().then(
+      (p) => p.setDouble(_kFontScale, _fontScale),
+    );
   }
 
   void _toggleToolbarVisible() {
@@ -126,8 +127,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   void _togglePageFillScreen() {
     setState(() => _pageFillScreen = !_pageFillScreen);
-    SharedPreferences.getInstance()
-        .then((p) => p.setBool(_kPageFillScreen, _pageFillScreen));
+    SharedPreferences.getInstance().then(
+      (p) => p.setBool(_kPageFillScreen, _pageFillScreen),
+    );
   }
 
   void _toggleAutoScroll() {
@@ -136,8 +138,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   void _changeAutoScrollSpeed(double speed) {
     setState(() => _autoScrollSpeed = speed);
-    SharedPreferences.getInstance()
-        .then((p) => p.setDouble(_kAutoScrollSpeed, speed));
+    SharedPreferences.getInstance().then(
+      (p) => p.setDouble(_kAutoScrollSpeed, speed),
+    );
   }
 
   /// Called once by the currently-active `MushafTextPage` when auto-scroll
@@ -190,8 +193,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   // of them go through `Navigator.pop` under a `showModalBottomSheet`),
   // so awaiting it and clearing the highlight there covers all three the
   // same way, not just one specific close button.
-  Future<void> _openSciences(Ayah ayah, MushafData data,
-      {bool sciencesAvailable = true}) async {
+  Future<void> _openSciences(
+    Ayah ayah,
+    MushafData data, {
+    bool sciencesAvailable = true,
+  }) async {
     setState(() {
       _highlightSurah = ayah.surahId;
       _highlightAyah = ayah.ayahNumber;
@@ -214,13 +220,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   Future<List<Ayah>> _ayahsOfPage(int page, MushafData data) =>
       _pageFutures.putIfAbsent(page, () => data.repo.ayahsOfPage(page));
 
-  String? _surahHeaderIdForPage(int page, Map<int, int> startPages) {
-    for (final e in startPages.entries) {
-      if (e.value == page) return e.key.toString();
-    }
-    return null;
-  }
-
   AyahRegion? _highlightRegion(String editionId, int page) {
     if (_highlightSurah == null || _current != page) return null;
     for (final r in _coords.regionsForPage(editionId, page)) {
@@ -228,7 +227,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     }
     return null;
   }
-@override
+
+  @override
   Widget build(BuildContext context) {
     final mushaf = ref.watch(mushafDataProvider);
     // P2‑11: a khatma's "اقرأ اليوم" (or its card) asks for a page here,
@@ -238,7 +238,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       if (page != null) {
         _goToPage(page, animate: false);
         Future.microtask(
-            () => ref.read(quranJumpRequestProvider.notifier).state = null);
+          () => ref.read(quranJumpRequestProvider.notifier).state = null,
+        );
       }
     });
     return Scaffold(
@@ -256,9 +257,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         // back to the page.
         bottom: mushaf.hasValue && _toolbarVisible
             ? PreferredSize(
-                preferredSize: Size.fromHeight(_mode == MushafMode.text ? 116 : 58),
+                preferredSize: Size.fromHeight(
+                  _mode == MushafMode.text ? 116 : 58,
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   child: Wrap(
                     alignment: WrapAlignment.center,
                     spacing: 4,
@@ -364,9 +370,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       ),
       body: mushaf.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
-        data: (data) => _buildViewer(data, ref.watch(
-            currentMushafEditionProvider).valueOrNull),
+        error: (_, _) =>
+            ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
+        data: (data) => _buildViewer(
+          data,
+          ref.watch(currentMushafEditionProvider).valueOrNull,
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -399,14 +408,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.chevron_left),
-                    onPressed:
-                        _current > 1 ? () => _goToPage(_current - 1) : null,
+                    onPressed: _current > 1
+                        ? () => _goToPage(_current - 1)
+                        : null,
                   ),
                   Text(
                     '${'quran.page'.tr()}  $_current / $_totalPages',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.chevron_right),
@@ -441,7 +451,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             final ayahs = snap.data!;
-            final headerId = _surahHeaderIdForPage(page, data.surahStartPages);
             if (_mode == MushafMode.image) {
               if (edition == null) {
                 return const Center(child: CircularProgressIndicator());
@@ -452,16 +461,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 highlight: _highlightRegion(edition.id, page),
                 onAyahTap: (region) =>
                     _onImageAyahTap(region, ayahs, data, edition),
-                onLoadFailed: () =>
-                    setState(() => _mode = MushafMode.text),
+                onLoadFailed: () => setState(() => _mode = MushafMode.text),
               );
             }
             return MushafTextPage(
               ayahs: ayahs,
-              surahHeader: headerId == null
-                  ? null
-                  : (int.parse(headerId),
-                      data.surahNameAr(int.parse(headerId))),
+              surahNameOf: data.surahNameAr,
               onAyahTap: (a) => _openSciences(a, data),
               fontScale: _fontScale,
               autoScroll: _autoScroll,
@@ -477,12 +482,19 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     );
   }
 
-  void _onImageAyahTap(AyahRegion region, List<Ayah> ayahs, MushafData data,
-      MushafEdition edition) {
+  void _onImageAyahTap(
+    AyahRegion region,
+    List<Ayah> ayahs,
+    MushafData data,
+    MushafEdition edition,
+  ) {
     for (final ayah in ayahs) {
       if (ayah.surahId == region.surah && ayah.ayahNumber == region.ayah) {
-        _openSciences(ayah, data,
-            sciencesAvailable: edition.sciencesAvailableFor(region.surah));
+        _openSciences(
+          ayah,
+          data,
+          sciencesAvailable: edition.sciencesAvailableFor(region.surah),
+        );
         return;
       }
     }
@@ -573,8 +585,9 @@ class _SurahStripState extends State<_SurahStrip> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _scrollToCurrent(animate: false));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _scrollToCurrent(animate: false),
+    );
   }
 
   @override
@@ -591,11 +604,16 @@ class _SurahStripState extends State<_SurahStrip> {
 
   void _scrollToCurrent({bool animate = true}) {
     if (!_scrollController.hasClients) return;
-    final target = (_currentIndex * _itemWidth - 140)
-        .clamp(0.0, _scrollController.position.maxScrollExtent);
+    final target = (_currentIndex * _itemWidth - 140).clamp(
+      0.0,
+      _scrollController.position.maxScrollExtent,
+    );
     if (animate) {
-      _scrollController.animateTo(target,
-          duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      _scrollController.animateTo(
+        target,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
     } else {
       _scrollController.jumpTo(target);
     }
@@ -624,8 +642,7 @@ class _SurahStripState extends State<_SurahStrip> {
               borderRadius: BorderRadius.circular(10),
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
-                onTap: () =>
-                    widget.onSelect(widget.surahStartPages[s.id] ?? 1),
+                onTap: () => widget.onSelect(widget.surahStartPages[s.id] ?? 1),
                 child: Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(horizontal: 6),

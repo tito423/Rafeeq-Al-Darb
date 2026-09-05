@@ -34,8 +34,16 @@ import '../../../../core/theme/app_colors.dart';
 class MushafTextPage extends StatefulWidget {
   final List<Ayah> ayahs;
 
-  /// (surahId, surahNameAr) shown as a header when a surah starts on this page.
-  final (int, String)? surahHeader;
+  /// Real surah-name lookup, used to render a banner before every surah
+  /// that actually starts on this page — see [_MushafTextPageState.build]'s
+  /// doc for why this replaced a single `surahHeader` (P3‑43 #3): several
+  /// short surahs near the end of the mushaf share one physical page (e.g.
+  /// page 603 holds the starts of both سورة الكافرون and سورة المسد), and
+  /// a single fixed header picked the lowest surah id every time —
+  /// jumping to المسد's own start page then showed "سورة الكافرون" at the
+  /// top, reading as "jumped to the wrong surah" even though the page
+  /// itself, and المسد's own text on it, were always correct.
+  final String Function(int surahId) surahNameOf;
 
   /// P3‑41: fires on a **long press** of an ayah, not a plain tap any
   /// more — real-device feedback: "if I press the page directly it shows
@@ -78,7 +86,7 @@ class MushafTextPage extends StatefulWidget {
   const MushafTextPage({
     super.key,
     required this.ayahs,
-    required this.surahHeader,
+    required this.surahNameOf,
     required this.onAyahTap,
     this.fontScale = 1.0,
     this.onBackgroundTap,
@@ -95,10 +103,27 @@ class MushafTextPage extends StatefulWidget {
 
 class _MushafTextPageState extends State<MushafTextPage> {
   final TransformationController _transform = TransformationController();
-  final List<LongPressGestureRecognizer> _recognizers = [];
+  final List<_SoloPointerLongPressRecognizer> _recognizers = [];
   final ScrollController _scroll = ScrollController();
   Timer? _autoTimer;
   bool _reachedEndFired = false;
+
+  /// P3‑43 #1: a real pinch-to-zoom regression traced to this same
+  /// session's own P3‑42 change. Two things compete with
+  /// `InteractiveViewer`'s two-finger scale recognizer for the same
+  /// pointers: the per-ayah tap became a `LongPressGestureRecognizer`
+  /// (holds the gesture arena open for its ~500ms deadline instead of
+  /// resolving immediately), and the background-tap `GestureDetector` was
+  /// added as an *ancestor* of `InteractiveViewer` (the image-mode page,
+  /// `MushafPageView`, keeps its own tap detector as InteractiveViewer's
+  /// *child* instead — the pattern that was never broken). Tracking real
+  /// pointer count here (via a plain `Listener`, which observes the raw
+  /// pointer stream without joining the gesture arena at all) lets every
+  /// custom recognizer below refuse to enter the arena the moment a
+  /// second finger is already down, so a two-finger pinch is never
+  /// contested by a single-pointer tap/long-press recognizer.
+  int _activePointers = 0;
+  bool get _otherPointerActive => _activePointers >= 1;
 
   static const _tickInterval = Duration(milliseconds: 50);
 
@@ -176,9 +201,9 @@ class _MushafTextPageState extends State<MushafTextPage> {
       ..clear()
       ..addAll(
         widget.ayahs.map(
-          (a) =>
-              LongPressGestureRecognizer()
-                ..onLongPress = () => widget.onAyahTap(a),
+          (a) => _SoloPointerLongPressRecognizer(
+            otherPointerActive: () => _otherPointerActive,
+          )..onLongPress = () => widget.onAyahTap(a),
         ),
       );
   }
@@ -211,92 +236,179 @@ class _MushafTextPageState extends State<MushafTextPage> {
     // screen without becoming a second, competing "zoom" control.
     final fill = widget.pageFillScreen;
 
-    return GestureDetector(
+    final textStyle = TextStyle(
+      fontFamily: 'AmiriQuran',
+      fontSize: baseFont,
+      height: 2.05,
+      color: ink,
+    );
+
+    // P3‑43 #3: several short surahs near the end of the mushaf share one
+    // physical page — this loop renders a real banner before EVERY surah
+    // that actually starts here (not just one fixed pick for the whole
+    // page), grouping consecutive same-surah ayahs into their own
+    // Text.rich so a banner can sit between groups, matching how a real
+    // printed mushaf stacks multiple surah headers on such a page.
+    final blocks = <Widget>[];
+    var groupStart = 0;
+    void flushGroup(int end) {
+      if (end <= groupStart) return;
+      blocks.add(
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                for (var i = groupStart; i < end; i++) ...[
+                  TextSpan(
+                    text: widget.ayahs[i].textUthmani,
+                    recognizer: _recognizers[i],
+                  ),
+                  // P3‑32: `PlaceholderAlignment.middle` centers the
+                  // marker within the *line's* full ascent+descent
+                  // box — for `AmiriQuran`, whose metrics reserve a
+                  // lot of extra room above the baseline for
+                  // tashkeel, that box is taller and sits higher
+                  // than the visible base letters, so the marker
+                  // read as sitting low relative to the actual
+                  // Arabic glyphs next to it. `baseline` pins it to
+                  // the alphabetic baseline instead — a stable
+                  // reference line the base letters actually sit
+                  // on, independent of how much tashkeel headroom
+                  // the font reserves.
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: _AyahMarker(
+                      number: widget.ayahs[i].ayahNumber,
+                      fontScale: widget.fontScale,
+                    ),
+                  ),
+                  const TextSpan(text: ' '),
+                ],
+              ],
+            ),
+            textAlign: TextAlign.justify,
+            style: textStyle,
+          ),
+        ),
+      );
+    }
+
+    for (var i = 0; i < widget.ayahs.length; i++) {
+      final isNewSurah = i == 0
+          ? widget.ayahs[i].ayahNumber == 1
+          : widget.ayahs[i].surahId != widget.ayahs[i - 1].surahId;
+      if (isNewSurah) {
+        flushGroup(i);
+        groupStart = i;
+        blocks.add(
+          _SurahBanner(name: widget.surahNameOf(widget.ayahs[i].surahId)),
+        );
+      }
+    }
+    flushGroup(widget.ayahs.length);
+
+    final page = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: blocks,
+    );
+
+    final card = Container(
+      padding: fill
+          ? const EdgeInsets.fromLTRB(10, 14, 10, 14)
+          : const EdgeInsets.fromLTRB(18, 22, 18, 22),
+      decoration: BoxDecoration(
+        color: paper,
+        borderRadius: BorderRadius.circular(fill ? 8 : 20),
+        border: Border.all(
+          color: AppColors.gold.withValues(alpha: fill ? 0.18 : 0.35),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: page,
+    );
+
+    // The background-tap detector is a *child* of `InteractiveViewer`
+    // here, matching `MushafPageView` (image mode)'s own, never-broken
+    // structure — not an ancestor wrapping it, which is what P3‑42
+    // originally shipped and what made the tap recognizer a competitor
+    // for the same pointers as the scale gesture (P3‑43 #1).
+    final tappableScroll = RawGestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: widget.onBackgroundTap,
+      gestures: {
+        _SoloPointerTapRecognizer:
+            GestureRecognizerFactoryWithHandlers<_SoloPointerTapRecognizer>(
+              () => _SoloPointerTapRecognizer(
+                otherPointerActive: () => _otherPointerActive,
+              ),
+              (instance) => instance.onTap = widget.onBackgroundTap,
+            ),
+      },
+      child: SingleChildScrollView(
+        controller: _scroll,
+        padding: fill
+            ? const EdgeInsets.fromLTRB(4, 8, 4, 16)
+            : const EdgeInsets.fromLTRB(14, 18, 14, 28),
+        child: card,
+      ),
+    );
+
+    return Listener(
+      // Raw pointer observation only — a `Listener` never joins the
+      // gesture arena, so counting pointers here can never itself compete
+      // with `InteractiveViewer`'s scale recognizer or the recognizers
+      // above; it only tells them whether a second finger is already down.
+      onPointerDown: (_) => _activePointers++,
+      onPointerUp: (_) => _activePointers = math.max(0, _activePointers - 1),
+      onPointerCancel: (_) =>
+          _activePointers = math.max(0, _activePointers - 1),
       child: ClipRect(
         child: InteractiveViewer(
           transformationController: _transform,
           minScale: 1,
           maxScale: 3,
-          child: SingleChildScrollView(
-            controller: _scroll,
-            padding: fill
-                ? const EdgeInsets.fromLTRB(4, 8, 4, 16)
-                : const EdgeInsets.fromLTRB(14, 18, 14, 28),
-            child: Container(
-              padding: fill
-                  ? const EdgeInsets.fromLTRB(10, 14, 10, 14)
-                  : const EdgeInsets.fromLTRB(18, 22, 18, 22),
-              decoration: BoxDecoration(
-                color: paper,
-                borderRadius: BorderRadius.circular(fill ? 8 : 20),
-                border: Border.all(
-                  color: AppColors.gold.withValues(alpha: fill ? 0.18 : 0.35),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
-                    blurRadius: 14,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (widget.surahHeader != null)
-                    _SurahBanner(name: widget.surahHeader!.$2),
-                  Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          for (var i = 0; i < widget.ayahs.length; i++) ...[
-                            TextSpan(
-                              text: widget.ayahs[i].textUthmani,
-                              recognizer: _recognizers[i],
-                            ),
-                            // P3‑32: `PlaceholderAlignment.middle` centers the
-                            // marker within the *line's* full ascent+descent
-                            // box — for `AmiriQuran`, whose metrics reserve a
-                            // lot of extra room above the baseline for
-                            // tashkeel, that box is taller and sits higher
-                            // than the visible base letters, so the marker
-                            // read as sitting low relative to the actual
-                            // Arabic glyphs next to it. `baseline` pins it to
-                            // the alphabetic baseline instead — a stable
-                            // reference line the base letters actually sit
-                            // on, independent of how much tashkeel headroom
-                            // the font reserves.
-                            WidgetSpan(
-                              alignment: PlaceholderAlignment.baseline,
-                              baseline: TextBaseline.alphabetic,
-                              child: _AyahMarker(
-                                number: widget.ayahs[i].ayahNumber,
-                                fontScale: widget.fontScale,
-                              ),
-                            ),
-                            const TextSpan(text: ' '),
-                          ],
-                        ],
-                      ),
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        fontFamily: 'AmiriQuran',
-                        fontSize: baseFont,
-                        height: 2.05,
-                        color: ink,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child: tappableScroll,
         ),
       ),
     );
+  }
+}
+
+/// A `LongPressGestureRecognizer` that refuses to ever join the gesture
+/// arena while another finger is already down. Without this, a genuine
+/// two-finger pinch that happens to land its first finger on ayah text (the
+/// text fills almost the whole page, so this is the common case) lets that
+/// ayah's own long-press recognizer hold the arena open for its full ~500ms
+/// deadline, delaying — and on a fast pinch, sometimes outright starving —
+/// `InteractiveViewer`'s own scale recognizer. See P3‑43 #1.
+class _SoloPointerLongPressRecognizer extends LongPressGestureRecognizer {
+  _SoloPointerLongPressRecognizer({required this.otherPointerActive});
+  final bool Function() otherPointerActive;
+
+  @override
+  bool isPointerAllowed(PointerDownEvent event) {
+    if (otherPointerActive()) return false;
+    return super.isPointerAllowed(event);
+  }
+}
+
+/// Same guard as [_SoloPointerLongPressRecognizer], for the plain
+/// background-tap-to-toggle-toolbar gesture.
+class _SoloPointerTapRecognizer extends TapGestureRecognizer {
+  _SoloPointerTapRecognizer({required this.otherPointerActive});
+  final bool Function() otherPointerActive;
+
+  @override
+  bool isPointerAllowed(PointerDownEvent event) {
+    if (otherPointerActive()) return false;
+    return super.isPointerAllowed(event);
   }
 }
 
@@ -310,7 +422,11 @@ class _SurahBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final gold = AppColors.gold;
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      // P3‑43 #3: this banner can now appear between two ayah groups on
+      // the same page (several short surahs sharing a page), not only at
+      // the very top of the page — a little breathing room above it
+      // keeps it from crowding the previous surah's last line.
+      margin: const EdgeInsets.only(top: 10, bottom: 16),
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),

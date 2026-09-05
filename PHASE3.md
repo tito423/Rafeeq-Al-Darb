@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | ⏳ **not started — full task breakdown written, nothing built yet** (session handed off at owner's explicit request before quota ran out) |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1 (pinch-zoom regression), #3 (surah-jump banner bug), #14 (tasbeeh presets), #15 (hadith translation in Arabic) done; 12 items remain |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2170,25 +2170,55 @@ re-save them, but see the real gap they expose below (P3-43.9).
 core-feature failures before polish):
 
 1. **Pinch-to-zoom reportedly not working AT ALL, in either mushaf mode**
-   ("مفيش تكبير بالأصابع في المصحف النصي أو المصحف الورقي") — this
-   directly contradicts earlier sessions' finding that `InteractiveViewer`
-   pinch-zoom was already confirmed working (P3‑8/P3‑15). **Prime
-   suspect: this very session's P3‑42 change** — `MushafTextPage.build()`
-   now wraps the whole page (including its `InteractiveViewer`) in a new
-   `GestureDetector(behavior: opaque, onTap: ...)` for the toolbar-hide
-   feature; an opaque ancestor `GestureDetector` competing in the same
-   gesture arena as `InteractiveViewer`'s own two-finger scale recognizer
-   is exactly the kind of interaction this project has hit real bugs in
-   before (P3‑29's `SelectionArea` conflict). Needs a live pinch test on
-   the emulator FIRST (multi-touch: `adb shell input touchscreen` doesn't
-   simulate pinch — use two simultaneous `MotionEvent` pointers via a
-   real gesture-testing approach, or the AVD's own pinch emulation in
-   Android Studio's Extended Controls) to confirm whether it's this
-   session's regression or a pre-existing issue on real hardware the
-   emulator never exposed. If it is the `GestureDetector`, likely fix:
-   move the tap-to-toggle-toolbar detection to `onTapUp`/manual pointer
-   tracking that doesn't compete with scale gestures, or gate the tap
-   recognizer to reject once a second pointer joins.
+   ✅ **fixed in `mushaf_text_page.dart` (text mode) — the one place this
+   session actually changed anything.** Root cause confirmed by
+   *comparing* the two mushaf pages, not just re-reading the suspect file:
+   `MushafPageView` (image/paper mode, untouched this session, never
+   reported broken) puts its background `GestureDetector` **inside**
+   `InteractiveViewer` as a child. P3‑42's new text-mode code did the
+   opposite — it wrapped `InteractiveViewer` itself in an **ancestor**
+   `GestureDetector(opaque, onTap: ...)`, making that tap recognizer a
+   direct competitor for the same pointers as `InteractiveViewer`'s own
+   two-finger scale recognizer. P3‑42 also switched every per-ayah tap
+   recognizer from `TapGestureRecognizer` to `LongPressGestureRecognizer`
+   (needed for the new long-press-to-select interaction) — a second
+   plausible contributor, since a long-press recognizer holds the gesture
+   arena open for its full ~500ms deadline instead of resolving
+   immediately, and ayah text covers almost the entire page so a pinch's
+   first finger will almost always land on one.
+   **The fix addresses both:** restructured `MushafTextPage.build()` so
+   the background-tap detector is now `InteractiveViewer`'s *child*
+   (matching `MushafPageView`'s own, never-broken structure) instead of
+   its ancestor; and added a small defensive layer — a raw `Listener`
+   (observes pointers without ever joining the gesture arena) tracks how
+   many fingers are actually down, and two new recognizer subclasses
+   (`_SoloPointerTapRecognizer`, `_SoloPointerLongPressRecognizer`)
+   override `isPointerAllowed` to refuse to even enter the arena once a
+   second pointer is already active — so neither the background tap nor
+   any per-ayah long-press can ever contest a genuine two-finger pinch,
+   regardless of which of the two mechanisms above was the actual
+   trigger. `flutter analyze`/`flutter test` clean (15/15).
+   **Live-verified on `emulator-5554` (batch24 debug build):** both
+   single-finger interactions confirmed working end to end after the
+   restructure — a plain tap on the page background toggles the toolbar
+   (both directions), and a genuine ~700ms hold directly on ayah 1:1's
+   glyphs opens the real sciences sheet (Tafsir/Translation/Grammar) —
+   and image mode (untouched code) re-confirmed unaffected, tap-to-select
+   still opens the same sheet correctly there too.
+   **Not independently live-verified: an actual two-finger pinch.** This
+   AVD image is a production (non-rooted) build — `adb root` refuses
+   ("adbd cannot run as root in production builds"), which blocks the
+   only reliable way to script a synthetic two-finger touch
+   (`/dev/input` raw multitouch events; `adb shell input` has no
+   multi-pointer support). Attempted, confirmed genuinely blocked at the
+   OS level, not skipped. The fix is grounded in solid, verifiable
+   evidence — a direct structural comparison against the one page that
+   was never reported broken, plus a defensive mechanism that makes the
+   two contributing mechanisms provably inert once a second pointer
+   exists — but per rule 3, this is **not** the same as a confirmed live
+   pinch. **Next session or the owner's real device should confirm the
+   actual two-finger gesture** before this line item is marked fully
+   done.
 2. **Full-screen Adhan alert still not auto-launching even with the
    screen locked** — different from the P3‑41 finding (that was about
    the screen being *unlocked*). The owner's exact repro: download an
@@ -2206,13 +2236,40 @@ core-feature failures before polish):
    the owner wants **a "معاينة" (preview) button next to each video** in
    the video-selection card so each option can be checked before
    picking it — a real, buildable feature request, not just a bug.
-3. **Text-mode mushaf surah-jump is wired to the wrong surah** — real
-   data/indexing bug: picking "سورة المسد" (111) from the surah picker
-   actually navigates to/shows "سورة الكافرون" (109) instead. This is
-   independent of item 4 below (deleting the bad UI strip) — whatever
-   surah→page lookup table or index math the jump feature uses needs a
-   direct audit against the real mushaf page-boundary data, since this
-   is a correctness bug, not a cosmetic one.
+3. ✅ **DONE — root-caused directly against the real bundled DB, not
+   guessed.** `sqlite3` against `assets/data/quran_local.db`: **the jump
+   itself was never broken.** `SELECT surah_id, MIN(page_number) FROM
+   ayahs WHERE surah_id IN (109,111)` returns page **603 for both** —
+   سورة الكافرون (109) and سورة المسد (111) genuinely start on the same
+   physical Madani mushaf page, a real and correct fact about this
+   mushaf (several very short surahs cluster onto shared pages near the
+   Quran's end). The actual bug was in
+   `quran_screen.dart`'s `_surahHeaderIdForPage()`: it picked the
+   *first* map entry whose value equalled the target page — and since
+   the map is built `ORDER BY surah_id ASC`, that always resolved to
+   the **lowest** surah id sharing the page (109), regardless of which
+   surah the reader actually asked to jump to. So the page shown was
+   always correct; only the single gold banner at the top of it lied,
+   always saying "سورة الكافرون" even when the reader picked المسد
+   specifically — reading exactly like "jumped to the wrong surah."
+   **The fix matches how a real printed mushaf actually looks**, not
+   just a patched index: `MushafTextPage` no longer takes one
+   `surahHeader` — it now takes a `surahNameOf` lookup and renders a
+   real banner before **every** surah that starts on the page, by
+   grouping the page's own already-correct per-ayah `surahId`/
+   `ayahNumber` data (a surah-id change between consecutive ayahs, or
+   the page's first ayah being ayah 1, are the only two ways a new
+   surah genuinely starts — both derived from real data, nothing
+   invented). `single_surah_screen.dart` (Sunan as-Suwar) simplified
+   the same way — its own per-page `headerId` hack is now redundant
+   since the shared widget derives banners correctly on its own.
+   `flutter analyze`/`flutter test` clean (15/15). **Live-verified on
+   `emulator-5554` (batch25):** opened the Surahs sheet, tapped سورة
+   المسد — landed on page 603 and it now shows **two** real banners in
+   the correct order, "سورة الكافرون" first then "سورة المسد" a little
+   further down where its own ayahs actually begin, exactly matching a
+   real printed mushaf page and finally showing the surah the reader
+   actually asked for.
 4. **Delete the bottom surah-name scroll strip in text-mode mushaf
    entirely** (`3_quran_text_surah_strip_marked.jpg`) — this is the
    *same* complaint from P3‑41 ("my request was only fast scroll bar not
@@ -2295,19 +2352,31 @@ core-feature failures before polish):
     actual content, not guessed at superficially — a mapping table is
     the honest way to do this, and any section that doesn't cleanly fit
     one of the 10 should be flagged rather than force-fit.
-14. **Tasbeeh is still missing two specific presets**: "اللهم صل على
-    محمد" and "لا حول ولا قوة إلا بالله" — **note the distinction from
-    P3‑41's azkar-reorder investigation**: that investigation found both
-    phrases already exist inside the *Azkar* Hisn al-Muslim dataset, but
-    the owner is now clarifying he means the **Tasbeeh screen's own
-    preset dhikr counter list** specifically — a different, smaller,
-    hand-picked list, not the full Azkar section content. Check
-    `tasbeeh_screen.dart`'s preset list directly; if these two aren't in
-    it, add them for real.
-15. **Hadith translation should be hidden when the app locale is
-    Arabic** — "لا تظهر الترجمة إلا إذا كانت لغة التطبيق مختلفة عن
-    العربية." Straightforward conditional: only show a hadith's
-    translation block when `context.locale.languageCode != 'ar'`.
+14. ✅ **DONE — the two missing Tasbeeh presets added for real, to the
+    right list.** Checked `tasbeeh_screen.dart`'s own `_dhikrOptions`
+    directly (not the Azkar dataset P3‑41 already confirmed has these
+    phrases — a different, smaller, hand-picked counter list): only the
+    classical 4 (سبحان الله / الحمد لله / الله أكبر / لا إله إلا الله)
+    were there. Added "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ" and "لَا حَوْلَ
+    وَلَا قُوَّةَ إِلَّا بِاللهِ" as two more colour-coded pills (amber,
+    sage), new `azkar.tasbeeh_allahumma_salli`/`azkar.tasbeeh_lahawla`
+    keys — kept identically Arabic across all 6 locale files, the same
+    convention P3‑12 already established for the original 4 religious
+    phrases (only UI-chrome strings get translated). `flutter analyze`/
+    `flutter test` clean (15/15, parity holds across 6 locales).
+15. ✅ **DONE — hadith translation now hidden when the app locale is
+    Arabic.** Only one place in the app actually showed the English
+    translation block: `hadith_detail_screen.dart` (grepped the other
+    hadith screens — chapter/book lists never rendered `textEn` at all).
+    Added `context.locale.languageCode != 'ar'` to the existing
+    `(_item.textEn ?? '').isNotEmpty` guard. `flutter analyze`/`flutter
+    test` clean. Live-verified on `emulator-5554` with the device locale
+    set to English (the AVD's language, not switched to Arabic this
+    pass): the translation block still renders correctly for a
+    non-Arabic locale, confirming the condition doesn't accidentally
+    hide it for everyone — re-verify the Arabic-hides case directly if a
+    session with the app already in Arabic is available, but the logic
+    itself is a one-line, low-risk conditional.
 16. **More Shamela books, text-only** — already listed as open under
     P3‑41 above, but the owner re-raised it directly (2026-09-05) asking
     it be worked alongside this round rather than left for later. His

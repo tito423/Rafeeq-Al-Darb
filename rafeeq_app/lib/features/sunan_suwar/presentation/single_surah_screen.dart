@@ -101,7 +101,6 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   final ayahs = snap.data!;
-                  final headerId = page == startPage ? '${widget.surahId}' : null;
                   if (_mode == _Mode.image) {
                     if (edition == null) {
                       return const Center(child: CircularProgressIndicator());
@@ -122,9 +121,7 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                   }
                   return MushafTextPage(
                     ayahs: ayahs,
-                    surahHeader: headerId == null
-                        ? null
-                        : (widget.surahId, data.surahNameAr(widget.surahId)),
+                    surahNameOf: data.surahNameAr,
                     onAyahTap: (a) => _openSciences(a, data, edition),
                     fontScale: _fontScale,
                   );

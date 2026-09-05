@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-05 06:45 — IN PROGRESS — resume here**
+**2026-09-05 08:11 — IN PROGRESS — resume here**
 
-NEXT_SESSION_PROMPT.md rewritten from scratch as ONE coherent prompt (owner correctly called out the old version reading as two stitched-together prompts - a growing historical numbered narrative plus the new P3-43 list). Dropped the redundant blow-by-blow history (already fully in PHASE3.md, no need to duplicate) in favor of a short condensed status + the single actionable P3-43 16-item task list as the real payload. No code changed.
+P3-43 items #1, #3, #14, #15 done + live-verified: #1 pinch-zoom regression fixed (restructured MushafTextPage to match MushafPageView's proven GestureDetector-inside-InteractiveViewer pattern + defensive multitouch-safe recognizers), single-finger tap/long-press confirmed working live, two-finger pinch itself not independently verified (production AVD blocks adb root, so raw multitouch injection is unavailable - genuinely attempted, not skipped). #3 surah-jump 'wrong surah' bug root-caused via direct sqlite3 query against quran_local.db: page 603 genuinely holds both Al-Kafirun and Al-Masad's starts (real mushaf fact) - the real bug was the single fixed page-header picking the lowest surah id every time; MushafTextPage now renders a banner for every surah that actually starts on a page, matching a real printed mushaf and single_surah_screen.dart simplified onto the same shared logic. #14 added the two missing Tasbeeh screen presets (Allahumma salli / la hawla) as new pills, 6-locale keys added (kept Arabic per the existing religious-content convention). #15 hadith translation now hidden when app locale is Arabic (only hadith_detail_screen.dart actually showed it). flutter analyze/test clean throughout (15/15). Live-verified end to end on emulator-5554 batch25: toolbar tap-toggle, long-press-opens-sciences, image-mode unaffected, Arabic-locale hides hadith translation, and jumping to Surah Al-Masad now shows all 3 real banners (Al-Kafirun/An-Nasr/Al-Masad) in order on page 603.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
