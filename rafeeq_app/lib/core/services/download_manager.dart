@@ -65,7 +65,16 @@ class DownloadManager {
 
   static const registryKey = 'download_registry_v1';
 
-  final Dio _dio = Dio();
+  // P3‑47: timeouts so a stalled/blocked connection fails fast instead of
+  // hanging a download forever with no error and no progress (see the same
+  // fix + reasoning in ayah_audio_service.dart). receiveTimeout is per-read-
+  // gap for a streamed body, not the whole-file duration, so a big book/db
+  // still downloads fine as long as bytes keep arriving.
+  final Dio _dio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 20),
+    receiveTimeout: const Duration(seconds: 60),
+    sendTimeout: const Duration(seconds: 20),
+  ));
   final Map<String, CancelToken> _tokens = {};
   final Map<String, DownloadTask> _tasks = {};
   final StreamController<List<DownloadTask>> _controller =

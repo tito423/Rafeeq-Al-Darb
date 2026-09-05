@@ -37,7 +37,17 @@ class AyahAudioService {
   static const String defaultEdition = 'ar.alafasy';
 
   final AudioPlayer _player = AudioPlayer();
-  final Dio _dio = Dio();
+  // P3‑47: real-device feedback — recitation downloads "start but never
+  // finish" / "hang directly". Root cause: a bare `Dio()` has NO timeouts,
+  // so on a stalled/blocked connection every per-ayah request waits forever
+  // with no error and no progress — the count sticks at 0 and the UI looks
+  // frozen. Sensible timeouts turn a dead connection into a fast, honest
+  // failure the loop can move past (or surface), instead of an infinite wait.
+  final Dio _dio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 20),
+    receiveTimeout: const Duration(seconds: 60),
+    sendTimeout: const Duration(seconds: 20),
+  ));
   final Map<String, CancelToken> _downloads = {};
 
   bool get isPlaying => _player.playing;

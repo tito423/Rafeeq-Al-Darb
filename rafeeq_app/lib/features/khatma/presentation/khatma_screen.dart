@@ -8,8 +8,13 @@ import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
+import '../data/khatma_range.dart';
 import '../data/khatma_store.dart';
-import 'khatma_card.dart' show showKhatmaUndoSnackBar;
+import 'khatma_card.dart'
+    show
+        showKhatmaUndoSnackBar,
+        KhatmaPortionRangeBlock,
+        KhatmaProgressSection;
 
 /// The full khatma manager (P2‑11) — every active khatma with its own
 /// progress/read-today/reminder controls, a "+" to start a new one, and a
@@ -164,7 +169,7 @@ class _EmptyBody extends StatelessWidget {
   }
 }
 
-class _KhatmaTile extends StatelessWidget {
+class _KhatmaTile extends ConsumerWidget {
   final Khatma khatma;
   final MushafData? mushaf;
   final VoidCallback? onReadToday;
@@ -182,13 +187,21 @@ class _KhatmaTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // P3‑47: the owner asked for this section to carry the same rich "current
+    // wird" card the Home screen shows (design_refs/khatma_app_ref) — the
+    // real surah/ayah/page range + opening-ayah text + previous/upcoming
+    // portion counts, not just a bare ring. Reuses the exact same public
+    // building blocks the Home card uses (KhatmaPortionRangeBlock /
+    // KhatmaProgressSection), resolved from real mushaf data.
     final theme = Theme.of(context);
     final gold = AppColors.gold;
     final due = mushaf == null
         ? 0
         : khatma.duePages(mushaf!.juzStartPages, mushaf!.rubElHizbPages);
-    final daysLeft = khatma.daysLeft;
+    final subtleStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -199,52 +212,29 @@ class _KhatmaTile extends StatelessWidget {
           children: [
             Row(
               children: [
-                SizedBox(
-                  width: 46,
-                  height: 46,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        value: khatma.progress,
-                        strokeWidth: 4,
-                        backgroundColor: gold.withValues(alpha: 0.15),
-                        color: gold,
-                      ),
-                      Text(
-                        '${(khatma.progress * 100).round()}%',
-                        style: theme.textTheme.labelSmall,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'khatma.pages_read_of'.tr(
-                          args: [
-                            '${khatma.pagesRead}',
-                            '${khatma.totalPagesInPlan}',
-                          ],
-                        ),
-                        style: theme.textTheme.titleSmall,
-                      ),
-                      Text(
-                        daysLeft != null
-                            ? 'khatma.days_left'.tr(args: ['$daysLeft'])
-                            : 'khatma.daily_amount'.tr(
-                                args: ['${khatma.dailyAmount ?? 1}'],
-                              ),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    'khatma.title'.tr(),
+                    style: theme.textTheme.titleMedium,
                   ),
                 ),
+                if (khatma.streak > 1)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.local_fire_department,
+                            size: 14, color: gold),
+                        const SizedBox(width: 2),
+                        Text(
+                          'khatma.streak'.tr(args: ['${khatma.streak}']),
+                          style:
+                              theme.textTheme.labelSmall?.copyWith(color: gold),
+                        ),
+                      ],
+                    ),
+                  ),
                 PopupMenuButton<String>(
                   onSelected: (v) {
                     if (v == 'reminder') onSetReminder();
@@ -282,6 +272,42 @@ class _KhatmaTile extends StatelessWidget {
                   ],
                 ),
               ],
+            ),
+            const SizedBox(height: 10),
+            if (mushaf == null)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 4),
+                child: LinearProgressIndicator(),
+              )
+            else
+              Consumer(
+                builder: (context, ref, _) {
+                  final rangeAsync = ref.watch(
+                    khatmaPortionRangeProvider((khatma, mushaf!)),
+                  );
+                  return rangeAsync.when(
+                    loading: () => const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      child: LinearProgressIndicator(),
+                    ),
+                    error: (_, _) => const SizedBox.shrink(),
+                    data: (range) => range == null
+                        ? const SizedBox.shrink()
+                        : KhatmaPortionRangeBlock(
+                            range: range,
+                            mushaf: mushaf!,
+                            gold: gold,
+                            subtleStyle: subtleStyle,
+                          ),
+                  );
+                },
+              ),
+            const SizedBox(height: 12),
+            KhatmaProgressSection(
+              khatma: khatma,
+              mushaf: mushaf,
+              gold: gold,
+              subtleStyle: subtleStyle,
             ),
             const SizedBox(height: 12),
             Row(

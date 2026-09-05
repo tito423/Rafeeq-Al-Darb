@@ -89,23 +89,20 @@ class PrayerStatusNotification {
       if (next == null) {
         // Enabled but no real times yet — be honest, don't invent them.
         await _plugin.cancel(_rolloverId);
-        await _plugin.show(
-          _liveId,
+        await _startLiveCard(
           _needLocationTitle(localeCode),
           _needLocationBody(localeCode),
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              _channelId,
-              'بطاقة الصلاة القادمة',
-              importance: Importance.low,
-              priority: Priority.low,
-              ongoing: true,
-              autoCancel: false,
-              onlyAlertOnce: true,
-              category: AndroidNotificationCategory.status,
-              largeIcon:
-                  const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-            ),
+          AndroidNotificationDetails(
+            _channelId,
+            'بطاقة الصلاة القادمة',
+            importance: Importance.low,
+            priority: Priority.low,
+            ongoing: true,
+            autoCancel: false,
+            onlyAlertOnce: true,
+            category: AndroidNotificationCategory.status,
+            largeIcon:
+                const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
           ),
         );
         return;
@@ -116,11 +113,10 @@ class PrayerStatusNotification {
       // the `hijri` package only if that string is missing/old-format.
       final hijriToday = _hijriLine(times.hijriDate, now, localeCode);
 
-      await _plugin.show(
-        _liveId,
+      await _startLiveCard(
         _titleFor(next.$1, next.$2, localeCode),
         hijriToday,
-        NotificationDetails(android: _details(next.$2)),
+        _details(next.$2),
       );
 
       // One rollover while the app is closed: at `next` time, re-post the
@@ -152,9 +148,42 @@ class PrayerStatusNotification {
     }
   }
 
+  /// P3‑47: post the live card as a real **foreground service** so Android
+  /// treats it as non-dismissible and keeps it (and the process) alive while
+  /// the app is closed — the owner asked for it to stay put like Salatuk's,
+  /// rather than a plain `ongoing` notification that Android 14 now lets the
+  /// user swipe away. `specialUse` is the honest FGS type for a standing
+  /// countdown card; the manifest declares the matching service + subtype.
+  /// Falls back to a plain `show` if the platform impl isn't available.
+  Future<void> _startLiveCard(
+    String title,
+    String body,
+    AndroidNotificationDetails details,
+  ) async {
+    final androidImpl = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    if (androidImpl == null) {
+      await _plugin.show(
+          _liveId, title, body, NotificationDetails(android: details));
+      return;
+    }
+    await androidImpl.startForegroundService(
+      _liveId,
+      title,
+      body,
+      notificationDetails: details,
+      foregroundServiceTypes: {
+        AndroidServiceForegroundType.foregroundServiceTypeSpecialUse,
+      },
+    );
+  }
+
   Future<void> hide() async {
     if (!_ready) return;
     try {
+      final androidImpl = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      await androidImpl?.stopForegroundService();
       await _plugin.cancel(_liveId);
       await _plugin.cancel(_rolloverId);
     } catch (_) {

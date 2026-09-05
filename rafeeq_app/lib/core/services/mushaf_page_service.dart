@@ -53,7 +53,12 @@ class MushafPageService {
   MushafPageService._();
   static final MushafPageService instance = MushafPageService._();
 
-  final Dio _dio = Dio();
+  // P3‑47: add a connectTimeout (the per-request receiveTimeout on
+  // svgForPage was already set) so a stalled connection can't hang a page
+  // fetch forever — same reasoning as ayah_audio_service.dart.
+  final Dio _dio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 20),
+  ));
   /// Keyed `'<editionId>/<page>'` so switching edition cannot serve a
   /// cached page from the previous one.
   final Map<String, String> _memory = {};

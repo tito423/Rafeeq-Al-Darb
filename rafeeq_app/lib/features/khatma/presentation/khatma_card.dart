@@ -144,7 +144,7 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                 error: (_, _) => const SizedBox.shrink(),
                 data: (range) => range == null
                     ? const SizedBox.shrink()
-                    : _PortionRangeBlock(
+                    : KhatmaPortionRangeBlock(
                         range: range,
                         mushaf: mushaf,
                         gold: gold,
@@ -154,7 +154,7 @@ class _ActiveKhatmaRow extends ConsumerWidget {
             },
           ),
         const SizedBox(height: 12),
-        _ProgressSection(
+        KhatmaProgressSection(
           khatma: khatma,
           mushaf: mushaf,
           gold: gold,
@@ -218,13 +218,14 @@ class _ActiveKhatmaRow extends ConsumerWidget {
 /// The "من سورة X - آية Y (صفحة P)" / "إلى ..." block plus the opening
 /// ayah's own text as a preview line, matching the reference's "من قوله
 /// تعالى" + ayah-text presentation.
-class _PortionRangeBlock extends StatelessWidget {
+class KhatmaPortionRangeBlock extends StatelessWidget {
   final KhatmaPortionRange range;
   final MushafData mushaf;
   final Color gold;
   final TextStyle? subtleStyle;
 
-  const _PortionRangeBlock({
+  const KhatmaPortionRangeBlock({
+    super.key,
     required this.range,
     required this.mushaf,
     required this.gold,
@@ -314,13 +315,14 @@ class _RangeLine extends StatelessWidget {
 
 /// "الختمة الحالية" — a linear progress bar plus the honest previous/
 /// upcoming portion counts (P3‑6's "الأوراد السابقة" / "الأوراد القادمة").
-class _ProgressSection extends StatelessWidget {
+class KhatmaProgressSection extends StatelessWidget {
   final Khatma khatma;
   final MushafData? mushaf;
   final Color gold;
   final TextStyle? subtleStyle;
 
-  const _ProgressSection({
+  const KhatmaProgressSection({
+    super.key,
     required this.khatma,
     required this.mushaf,
     required this.gold,

@@ -10,6 +10,12 @@
     <!-- P3-46: DownloadForegroundService — keeps the process from being
          frozen/killed by the OS while backgrounded during an active download. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+    <!-- P3-47: the persistent "next prayer" card runs as a real foreground
+         service (flutter_local_notifications) so it can't be swiped away and
+         survives the app being closed — the owner asked for it to stay put
+         like Salatuk's. specialUse is the honest FGS type for a standing
+         countdown card that isn't one of the predefined categories. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <!-- Vibration for notifications -->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- Push notifications (Android 13+) -->
@@ -76,6 +82,19 @@
             android:name=".DownloadForegroundService"
             android:exported="false"
             android:foregroundServiceType="dataSync"/>
+
+        <!-- P3-47: flutter_local_notifications' own foreground service, used
+             to keep the persistent next-prayer card non-dismissible and
+             alive while the app is closed. -->
+        <service
+            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+            android:exported="false"
+            android:stopWithTask="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Persistent next-prayer countdown card"/>
+        </service>
 
         <!-- just_audio_background components -->
         <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
