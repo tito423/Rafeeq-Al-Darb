@@ -1870,7 +1870,7 @@ independently slowing down every Gradle build in the meantime — killed via
 | P3-40 | Round-5: "do it all" — French locale, tafsir speed control, mushaf thumbnails, tafsir source expansion | ✅ **done where reachable, honestly flagged where not** — see P3-14/P3-28/P3-31/P3-34's own updated sections; the one owner-facing gap is P3-31's remaining ~13 tafsir sources, which need a new sourcing pipeline, not a shortcut |
 | P3-41 | Round-6: first real-device feedback batch (12 screenshots + a screen recording) — huge, multi-part; see its own section below | 🔶 **substantial subset done, live-verified; a large remainder honestly still open** — see the section below for the exact split; its mushaf/hadith follow-up (true APK bundling) and its deferred mushaf toolbar redesign (**P3-42**) are both now separately done |
 | P3-42 | Mushaf toolbar redesign (2-row layout, hide-on-tap, long-press-to-select ayah, deselect on back, page full-fit toggle) | ✅ **done, live-verified** — see its own section below |
-| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #14, #15 done; #12 needs a fresh device screenshot before diagnosing (doesn't reproduce on emulator fonts); 6 items remain |
+| P3-43 | Round-7: second real-device feedback batch (8 screenshots) — 16 items, priority-ordered; see its own section below | 🔶 **in progress** — #1, #3, #4, #5, #6, #7, #8, #14, #15 done; #2 root-caused live on the owner's real device + a real fix built, pending re-verification (USB dropped mid-test); #12 needs a fresh device screenshot before diagnosing; 5 items remain |
 
 ## P3-41 — First real-device feedback batch
 
@@ -2219,23 +2219,92 @@ core-feature failures before polish):
    pinch. **Next session or the owner's real device should confirm the
    actual two-finger gesture** before this line item is marked fully
    done.
-2. **Full-screen Adhan alert still not auto-launching even with the
-   screen locked** — different from the P3‑41 finding (that was about
-   the screen being *unlocked*). The owner's exact repro: download an
-   Adhan video → pick a muezzin voice → go to Prayer → tap "تجربة"
-   (test/trial) → lock the screen → the full-screen alert does **not**
-   appear; it only shows once the phone is unlocked manually. Since
-   Android's documented behaviour is the opposite (full-screen intents
-   *should* auto-launch on a locked screen), this suggests the "تجربة"
-   test-trigger path may not actually be posting a real
-   `fullScreenIntent` notification at all — needs tracing from the
-   test-button's `onPressed` through to whatever posts the notification,
-   compared against the real scheduled-Adhan code path.
-   Also reported in the same flow: the video doesn't preview anywhere in
-   the settings screen that has the test button + muezzin picker, and
-   the owner wants **a "معاينة" (preview) button next to each video** in
-   the video-selection card so each option can be checked before
-   picking it — a real, buildable feature request, not just a bug.
+2. 🔶 **Root-caused live on the owner's own real device (Honor X9c, Magic
+   OS, Android 16/API 36) this session via `adb` — a genuine two-part
+   bug, both parts now understood, one fixed, the other needs
+   re-verification once the device reconnects (USB dropped mid-session
+   — see below).**
+
+   **Part 1 — confirmed via `adb shell appops get`, not guessed:**
+   `USE_FULL_SCREEN_INTENT: default; rejectTime=+3s534ms ago` — Android
+   silently downgraded the full-screen notification to an ordinary one
+   because the separate Android 14+ **app-op** permission (beyond the
+   `USE_FULL_SCREEN_INTENT` manifest permission) was never granted. The
+   in-app detection/prompt for this already exists and is correctly
+   built (`MainActivity.kt`'s `canUseFullScreenIntent` calls the real
+   `NotificationManager.canUseFullScreenIntent()` API, correctly gated
+   on SDK 34+; `AdhanSettingsScreen`'s `_FullScreenIntentCard` surfaces
+   it — P3‑19) — the owner just hadn't granted it on this phone yet.
+   Granted directly via `adb shell appops set … USE_FULL_SCREEN_INTENT
+   allow` to confirm the theory: **the full-screen launch then
+   genuinely fired.**
+
+   **Part 2 — the real bug, found immediately after part 1 confirmed
+   the launch itself works:** the full-screen alert opened, but showed
+   whatever screen the app was already on (the owner's exact words:
+   "full screen gave app screen not video screen") instead of
+   navigating to `AdhanFullScreenScreen`. Read `flutter_local_
+   notifications` 16.3.3's own Android source directly (not assumed):
+   `fullScreenIntent: true` reuses the *same* content `PendingIntent`
+   as a normal tap (`builder.setFullScreenIntent(pendingIntent, true)`),
+   and both the cold-launch check (`getNotificationAppLaunchDetails`)
+   and the warm path (`onNewIntent` → `PluginRegistry.NewIntentListener`)
+   are structurally correct in the plugin itself — not a plugin bug.
+   The live evidence (app resumed showing its last screen, no
+   navigation at all) points at the real Android Intent never reaching
+   the app faithfully on this Honor/Magic OS device: some OEM skins are
+   known to intercept a locked-screen full-screen-intent launch and
+   implement it as a generic "bring this app's existing task forward"
+   wake rather than truly re-delivering the notification's Intent
+   through `onCreate`/`onNewIntent` — not something app-level Dart code
+   (or even standard Android code) can force a specific OEM to do
+   correctly.
+
+   **✅ Fixed with a device/OEM-agnostic safety net, not a device-
+   specific patch:** new `AdhanAlarmService.findActiveAdhanPayload()`
+   asks Android directly, via the plugin's own `getActiveNotifications()`,
+   "is there a real Adhan notification actually posted right now" — true
+   regardless of *how* the app came back to the foreground. `AppShell`
+   calls this on every `AppLifecycleState.resumed` (and once on first
+   frame) and navigates to the alert screen if one's found;
+   `openAdhanFromPayload` (`adhan_navigation.dart`) now guards against a
+   duplicate push if the Intent-based path *also* fires around the same
+   time. This works whether or not the OEM's Intent journey is faithful,
+   so it isn't a Honor-specific patch — it should improve reliability on
+   other skins with similar background/notification quirks too.
+   `flutter analyze`/`flutter test` clean (15/15).
+   **Not yet re-verified live** — the real device's USB connection
+   dropped (a separate, also-observed quirk: this Honor device seems to
+   suspend the ADB/USB-debugging link while the screen is locked) right
+   as the fix was being built; re-test on reconnect before marking this
+   fully done. Also still open, unrelated to either bug above: the
+   owner's separate ask for a "معاينة" (preview) button next to each
+   adhan video in the picker card — a real, buildable feature request,
+   not attempted this pass.
+
+   **Broader cross-device/OEM reliability — scoped honestly, not
+   oversold.** The owner asked for compatibility across "all Android
+   5+, all OEM skins (Magic OS/Honor, HyperOS/Xiaomi, One UI/Samsung,
+   HarmonyOS/Huawei, MIUI…), tablets, and Android TV." That is a real,
+   ongoing engineering commitment, not a single patch — recording what's
+   already true vs. genuinely still open rather than claiming it's
+   solved:
+   - `flutter.minSdkVersion` (this project's unmodified Flutter-tooling
+     default) is already 21 = Android 5.0 — nothing to change there.
+   - The fix above is itself a generic reliability improvement for
+     exactly this class of OEM Intent-delivery quirk, not Honor-specific.
+   - **Still genuinely open, not attempted this pass**: the well-known
+     next layer for aggressive OEMs (Xiaomi/MIUI, Huawei/Honor, OPPO/
+     Vivo, some Samsung configs) is their own non-standard "auto-start"/
+     "protected apps" manager, separate from Android's standard
+     battery-optimization exemption (`requestBatteryOptimizationExemption`
+     already exists and is unrelated) — needs per-vendor Settings-intent
+     deep links with a graceful "just open app info" fallback when no
+     match is found. A real, scoped follow-up, not attempted this
+     session due to time.
+   - Tablet layout and Android TV (leanback launcher, D-pad navigation,
+     10-foot UI) are much larger, separate initiatives with no code
+     written toward them yet — not silently claimed as covered.
 3. ✅ **DONE — root-caused directly against the real bundled DB, not
    guessed.** `sqlite3` against `assets/data/quran_local.db`: **the jump
    itself was never broken.** `SELECT surah_id, MIN(page_number) FROM

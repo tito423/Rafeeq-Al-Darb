@@ -76,8 +76,10 @@ class AdhanAlarmService {
       onDidReceiveBackgroundNotificationResponse: _onNotificationResponse,
     );
 
-    final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     await androidPlugin?.requestNotificationsPermission();
     await _requestPermissions();
     _ready = true;
@@ -133,8 +135,10 @@ class AdhanAlarmService {
     String? rawResource,
     String? customUri,
   }) async {
-    final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     const actions = <AndroidNotificationAction>[
       AndroidNotificationAction(actionStop, 'إيقاف', cancelNotification: true),
       AndroidNotificationAction(actionMute, 'كتم', cancelNotification: false),
@@ -196,11 +200,14 @@ class AdhanAlarmService {
         final sound = rawResource != null
             ? RawResourceAndroidNotificationSound(rawResource)
             : (customUri != null
-                ? UriAndroidNotificationSound(customUri)
-                : null);
+                  ? UriAndroidNotificationSound(customUri)
+                  : null);
         final prefix = mode == AdhanMode.full ? 'radh_full' : 'radh_audio';
-        final channelId =
-            _soundChannelId(prefix, raw: rawResource, uri: customUri);
+        final channelId = _soundChannelId(
+          prefix,
+          raw: rawResource,
+          uri: customUri,
+        );
         await _ensureChannel(
           androidPlugin,
           AndroidNotificationChannel(
@@ -346,10 +353,54 @@ class AdhanAlarmService {
   /// the real daily id so a test firing never overwrites the real schedule.
   int testIdFor(String prayerKey) => idFor(prayerKey) + 900;
 
+  /// Every id a real or test Adhan notification can ever be posted under —
+  /// used only to recognise "this active notification is really an Adhan
+  /// one", not to schedule anything.
+  static const _knownAdhanIds = {
+    5001, 5003, 5004, 5005, 5006, 5099, // real
+    5901, 5903, 5904, 5905, 5906, 5999, // test (+900)
+  };
+
+  /// P3‑43 #2: a redundant, device/OEM-agnostic safety net. A full-screen
+  /// Adhan alert is supposed to auto-navigate via the notification's own
+  /// Intent (`getNotificationAppLaunchDetails`/`onNewIntent`) — confirmed
+  /// structurally correct by reading the plugin's own Android source, and
+  /// the OS-level permission gate (P3‑19/P3‑43 #2) confirmed the real
+  /// blocker there. But a real Honor/Magic OS device live-tested this
+  /// session still just resumed the app's last screen instead of the
+  /// Adhan alert once that permission was granted — some device skins are
+  /// known to intercept/rewrap a locked-screen full-screen-intent launch
+  /// as a generic "bring this app forward" wake rather than faithfully
+  /// re-delivering the original Intent's action/extras through Android's
+  /// normal component lifecycle, which no app-level code can control.
+  /// Rather than trust that journey on every device, this asks Android
+  /// directly — "is there a real Adhan notification actually posted right
+  /// now" — via the OS's own active-notifications list, true regardless
+  /// of *how* the app came to the foreground. Call this on every app
+  /// resume (see `AppShell`) as a fallback when the Intent-based path
+  /// didn't already navigate.
+  Future<String?> findActiveAdhanPayload() async {
+    final active = await _plugin.getActiveNotifications();
+    for (final n in active) {
+      if (_knownAdhanIds.contains(n.id) &&
+          n.payload != null &&
+          n.payload!.isNotEmpty) {
+        return n.payload;
+      }
+    }
+    return null;
+  }
+
   tz.TZDateTime _nextInstanceOf(int hour, int minute) {
     final now = tz.TZDateTime.now(tz.local);
-    var scheduled =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+    var scheduled = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
     if (!scheduled.isAfter(now)) {
       scheduled = scheduled.add(const Duration(days: 1));
     }
@@ -367,14 +418,13 @@ String buildAdhanPayload({
   required int notificationId,
   String? previewAssetPath,
   String? videoPath,
-}) =>
-    jsonEncode({
-      'prayer': prayerKey,
-      'label': prayerLabel,
-      'id': notificationId,
-      'asset': ?previewAssetPath,
-      'video': ?videoPath,
-    });
+}) => jsonEncode({
+  'prayer': prayerKey,
+  'label': prayerLabel,
+  'id': notificationId,
+  'asset': ?previewAssetPath,
+  'video': ?videoPath,
+});
 
 /// Parses a payload built by [buildAdhanPayload].
 class AdhanPayload {

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
+import '../../core/services/adhan_alarm_service.dart';
 import '../../core/services/prayer_status_notification.dart';
 import '../../features/adhan/data/prayer_status_enabled_provider.dart';
+import '../../features/adhan/presentation/adhan_navigation.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
 import '../../features/azkar/presentation/screens/tasbeeh_screen.dart';
 import '../../features/home/data/prayer_controller.dart';
@@ -52,7 +54,10 @@ class _AppShellState extends ConsumerState<AppShell>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _syncPrayerStatus());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _syncPrayerStatus();
+      _checkActiveAdhan();
+    });
   }
 
   @override
@@ -63,7 +68,22 @@ class _AppShellState extends ConsumerState<AppShell>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _syncPrayerStatus();
+    if (state == AppLifecycleState.resumed) {
+      _syncPrayerStatus();
+      _checkActiveAdhan();
+    }
+  }
+
+  /// P3‑43 #2: fallback for a full-screen Adhan alert that should have
+  /// auto-navigated via its notification Intent but didn't — see
+  /// `AdhanAlarmService.findActiveAdhanPayload`'s own doc for why this
+  /// exists as a second, OS/OEM-agnostic path rather than trusting that
+  /// Intent journey alone. `openAdhanFromPayload` itself no-ops if the
+  /// alert screen is already showing, so this is safe to call on every
+  /// resume, not just a suspicious one.
+  Future<void> _checkActiveAdhan() async {
+    final payload = await AdhanAlarmService.instance.findActiveAdhanPayload();
+    if (payload != null) openAdhanFromPayload(payload);
   }
 
   /// Push the current prayer times + toggle state to the status-bar card.
