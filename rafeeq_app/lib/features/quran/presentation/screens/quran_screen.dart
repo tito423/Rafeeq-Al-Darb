@@ -132,14 +132,28 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// anyway) toolbar row underneath it.
   void _onBackgroundTap() {
     if (_pageFillScreen) {
-      _togglePageFillScreen();
+      // P3‑54: leaving immersive mode is now a double-tap or the translucent
+      // floating button (see `_togglePageFillScreen` / the exit FAB), so a
+      // single tap here instead toggles the hands-free auto-scroll — a
+      // tap-to-pause/resume, like a video, without dropping out of immersive
+      // reading.
+      _toggleAutoScroll();
     } else {
       setState(() => _toolbarVisible = !_toolbarVisible);
     }
   }
 
   void _togglePageFillScreen() {
-    setState(() => _pageFillScreen = !_pageFillScreen);
+    final entering = !_pageFillScreen;
+    setState(() {
+      _pageFillScreen = entering;
+      // P3‑54: exiting immersive mode also stops the auto-scroll — the owner's
+      // spec ("العودة للوضع الطبيعي وإيقاف التمرير"). Every exit path (the
+      // toolbar button, a double-tap, and the floating button) funnels through
+      // here, so none of them can leave a hands-free scroll running behind the
+      // normal reader.
+      if (!entering) _autoScroll = false;
+    });
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
     _applyImmersive(_pageFillScreen);
     SharedPreferences.getInstance().then(
@@ -496,6 +510,32 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               juzNumber: _currentJuzNumber(data),
               pageNumber: _pageFillScreen ? _current : null,
             ),
+            // P3‑54: a translucent floating "exit immersive" button — the
+            // always-visible, discoverable way back out (alongside the
+            // double-tap gesture), since in full-screen the toolbar that
+            // toggled the mode is itself off-screen. Only present while
+            // full-screen; a plain SafeArea-aligned button, not an
+            // `IgnorePointer` overlay, so it actually receives its own taps.
+            if (_pageFillScreen)
+              SafeArea(
+                child: Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Material(
+                      color: Colors.black.withValues(alpha: 0.35),
+                      shape: const CircleBorder(),
+                      clipBehavior: Clip.antiAlias,
+                      child: IconButton(
+                        tooltip: 'quran.page_fit_small'.tr(),
+                        icon: const Icon(Icons.fullscreen_exit,
+                            color: Colors.white),
+                        onPressed: _togglePageFillScreen,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -595,6 +635,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
               onBackgroundTap: _onBackgroundTap,
               pageFillScreen: _pageFillScreen,
+              // Only wired in full-screen, so a stray double-tap never exits a
+              // mode the reader isn't in.
+              onExitFullScreen: _pageFillScreen ? _togglePageFillScreen : null,
             );
           },
         );

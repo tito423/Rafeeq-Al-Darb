@@ -25,6 +25,7 @@ import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
 import '../../data/adhan_video_catalog.dart';
 import '../../data/prayer_status_enabled_provider.dart';
+import 'adhan_full_screen_screen.dart';
 
 const _prayerLabels = {
   'fajr': 'prayer.fajr',
@@ -150,6 +151,47 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
   }
 
+  /// Opens the real full-screen Azan player immediately (silent looping
+  /// video + adhan audio via just_audio + the synced karaoke text), using the
+  /// currently-chosen default adhan and video, so the owner can experience
+  /// exactly what fires at prayer time without scheduling an alarm and
+  /// waiting. Not a fake preview: it pushes the very same
+  /// [AdhanFullScreenScreen] a real full-mode alarm launches, just triggered
+  /// by a button instead of a notification.
+  Future<void> _previewAzan() async {
+    final settings = ref.read(adhanSettingsProvider);
+    final catalog = ref.read(adhanCatalogProvider).value ?? const [];
+    if (catalog.isEmpty) return;
+    final option = catalog.firstWhere(
+      (o) => o.id == settings.defaultAdhanId,
+      orElse: () => catalog.first,
+    );
+    final videoPath =
+        await resolveAdhanVideoPath(ref.read(adhanPresentationProvider));
+    if (!mounted) return;
+    // Stop any inline list preview first so two adhan streams never overlap.
+    await _preview.stop();
+    if (!mounted) return;
+    setState(() => _playingId = null);
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => AdhanFullScreenScreen(
+          // Dhuhr = a neutral (non-Fajr) adhan, so the synced text uses the
+          // standard adhan wording rather than the Fajr-only "الصلاة خير من
+          // النوم" line; notificationId 0 is a harmless no-op for the
+          // screen's Stop (there is no real notification behind a preview).
+          prayerKey: 'dhuhr',
+          prayerLabel: _prayerLabels['dhuhr']!.tr(),
+          notificationId: 0,
+          rawPayload: '',
+          audioAsset: option.assetPath,
+          audioFilePath: option.filePath,
+          videoPath: videoPath,
+        ),
+      ),
+    );
+  }
+
   Future<void> _test(String prayerKey, AdhanMode mode) async {
     final messenger = ScaffoldMessenger.of(context);
     final settings = ref.read(adhanSettingsProvider);
@@ -213,6 +255,31 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
             ),
             const SizedBox(height: 20),
             const _PresentationCard(),
+            const SizedBox(height: 20),
+            // Preview the full Azan experience on demand — opens the real
+            // full-screen player right now (video + audio + synced text) so
+            // the owner can test it without waiting for an actual prayer.
+            Card(
+              color: scheme.primaryContainer,
+              child: ListTile(
+                leading: Icon(Icons.play_circle_fill,
+                    color: scheme.onPrimaryContainer, size: 32),
+                title: Text(
+                  'prayer.preview_azan'.tr(),
+                  style: TextStyle(
+                    color: scheme.onPrimaryContainer,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                subtitle: Text(
+                  'prayer.preview_azan_desc'.tr(),
+                  style: TextStyle(color: scheme.onPrimaryContainer),
+                ),
+                trailing:
+                    Icon(Icons.chevron_right, color: scheme.onPrimaryContainer),
+                onTap: _previewAzan,
+              ),
+            ),
             const SizedBox(height: 20),
             // P3‑46: real-device feedback — this screen had every section
             // (the ~10-item adhan list AND five per-prayer cards) expanded

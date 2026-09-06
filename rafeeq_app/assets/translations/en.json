@@ -249,6 +249,8 @@
     "custom_adhan": "Custom adhan from device",
     "pick_file": "Pick MP3 file",
     "test": "Test",
+    "preview_azan": "Preview Adhan",
+    "preview_azan_desc": "Open the Adhan screen now to try the video, audio and synced text without waiting for prayer time",
     "alarm_for": "Prayer alarm",
     "mute": "Mute",
     "stop": "Stop",

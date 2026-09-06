@@ -249,6 +249,8 @@
     "custom_adhan": "Adhán personalizado desde el dispositivo",
     "pick_file": "Elegir archivo MP3",
     "test": "Probar",
+    "preview_azan": "Vista previa del Adhan",
+    "preview_azan_desc": "Abre ahora la pantalla del Adhan para probar el vídeo, el audio y el texto sincronizado sin esperar la hora de la oración",
     "alarm_for": "Alarma de oración",
     "mute": "Silenciar",
     "stop": "Detener",

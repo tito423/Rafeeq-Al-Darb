@@ -28,6 +28,12 @@
     <!-- Full Screen Intent (Adhan) -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <!-- Draw-over-other-apps: a fallback path for the Adhan alert to surface
+         over the lock screen on Android 14+/16 OEM skins that throttle a
+         background full-screen-intent launch. The primary path stays the
+         fullScreenIntent notification (category=alarm, max importance) that
+         launches MainActivity (which is showWhenLocked + turnScreenOn). -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     
     <!-- Battery optimizations exemption -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>

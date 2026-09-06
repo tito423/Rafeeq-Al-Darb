@@ -83,6 +83,13 @@ class MushafTextPage extends StatefulWidget {
   /// going rather than just stopping dead at the page boundary.
   final VoidCallback? onAutoScrollReachedEnd;
 
+  /// P3‑54: while in full-screen (immersive) reading, a **double-tap** anywhere
+  /// on the page leaves it — the owner's explicit exit gesture, alongside the
+  /// translucent floating button the parent overlays. Non-null only when
+  /// [pageFillScreen] is true, so an ordinary (windowed) read is never subject
+  /// to a stray double-tap exiting a mode it isn't in.
+  final VoidCallback? onExitFullScreen;
+
   const MushafTextPage({
     super.key,
     required this.ayahs,
@@ -95,6 +102,7 @@ class MushafTextPage extends StatefulWidget {
     this.autoScrollSpeed = 40,
     this.isActive = true,
     this.onAutoScrollReachedEnd,
+    this.onExitFullScreen,
   });
 
   @override
@@ -107,6 +115,18 @@ class _MushafTextPageState extends State<MushafTextPage> {
   final ScrollController _scroll = ScrollController();
   Timer? _autoTimer;
   bool _reachedEndFired = false;
+
+  /// Hybrid auto-scroll (the owner's explicit ask): while auto-scroll is on,
+  /// the moment the reader drags the page themselves the automatic motion
+  /// pauses, and once they lift their finger (and any fling settles) it
+  /// resumes from wherever they left it — so manual and automatic scrolling
+  /// coexist instead of fighting over the same `ScrollController`. Driven by
+  /// the `NotificationListener<ScrollNotification>` in [build]: a
+  /// user-initiated `ScrollStartNotification` (its `dragDetails` is non-null,
+  /// unlike the ones the auto-scroll's own `jumpTo` emits) sets this true;
+  /// the following `ScrollEndNotification` schedules the resume.
+  bool _pausedForUser = false;
+  Timer? _resumeTimer;
 
   /// P3‑43 #1: a real pinch-to-zoom regression traced to this same
   /// session's own P3‑42 change. Two things compete with
@@ -163,7 +183,10 @@ class _MushafTextPageState extends State<MushafTextPage> {
   /// `didUpdateWidget` (the parent toggles the feature, changes speed, or
   /// this page stops being the active one).
   void _syncAutoScroll() {
-    final shouldRun = widget.autoScroll && widget.isActive;
+    // `!_pausedForUser` folds the hybrid manual-scroll pause into the same
+    // gate: while the reader is dragging (or a resume is pending), the timer
+    // stays cancelled even though `autoScroll`/`isActive` are still true.
+    final shouldRun = widget.autoScroll && widget.isActive && !_pausedForUser;
     if (shouldRun && _autoTimer == null) {
       _reachedEndFired = false;
       _autoTimer = Timer.periodic(_tickInterval, (_) => _tickAutoScroll());
@@ -171,6 +194,47 @@ class _MushafTextPageState extends State<MushafTextPage> {
       _autoTimer?.cancel();
       _autoTimer = null;
     }
+    // If the feature was switched off entirely, drop any pending resume so it
+    // can't restart the motion after the fact.
+    if (!widget.autoScroll || !widget.isActive) {
+      _resumeTimer?.cancel();
+      _resumeTimer = null;
+      _pausedForUser = false;
+    }
+  }
+
+  /// A user drag began — stop the automatic motion immediately and cancel any
+  /// pending resume so a quick pause→drag→pause sequence can't double-resume.
+  void _pauseForUserScroll() {
+    _resumeTimer?.cancel();
+    _resumeTimer = null;
+    if (_pausedForUser) return;
+    _pausedForUser = true;
+    _syncAutoScroll();
+  }
+
+  /// The user finished dragging — resume the automatic motion shortly after,
+  /// from the new position, letting any post-drag fling settle first.
+  void _resumeAfterUserScroll() {
+    if (!_pausedForUser) return;
+    _resumeTimer?.cancel();
+    _resumeTimer = Timer(const Duration(milliseconds: 700), () {
+      _pausedForUser = false;
+      _syncAutoScroll();
+    });
+  }
+
+  bool _onScrollNotification(ScrollNotification n) {
+    if (!(widget.autoScroll && widget.isActive)) return false;
+    // `dragDetails != null` is the reliable "this was a human finger, not the
+    // auto-scroll's own jumpTo" signal — jumpTo emits start/end notifications
+    // too, but always with null drag details.
+    if (n is ScrollStartNotification && n.dragDetails != null) {
+      _pauseForUserScroll();
+    } else if (n is ScrollEndNotification && _pausedForUser) {
+      _resumeAfterUserScroll();
+    }
+    return false;
   }
 
   void _tickAutoScroll() {
@@ -214,6 +278,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
       r.dispose();
     }
     _autoTimer?.cancel();
+    _resumeTimer?.cancel();
     _scroll.dispose();
     _transform.dispose();
     super.dispose();
@@ -351,16 +416,19 @@ class _MushafTextPageState extends State<MushafTextPage> {
               (instance) => instance.onTap = widget.onBackgroundTap,
             ),
       },
-      child: SingleChildScrollView(
-        controller: _scroll,
-        padding: fill
-            ? const EdgeInsets.fromLTRB(4, 8, 4, 16)
-            : const EdgeInsets.fromLTRB(14, 18, 14, 28),
-        child: card,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _onScrollNotification,
+        child: SingleChildScrollView(
+          controller: _scroll,
+          padding: fill
+              ? const EdgeInsets.fromLTRB(4, 8, 4, 16)
+              : const EdgeInsets.fromLTRB(14, 18, 14, 28),
+          child: card,
+        ),
       ),
     );
 
-    return Listener(
+    final listener = Listener(
       // Raw pointer observation only — a `Listener` never joins the
       // gesture arena, so counting pointers here can never itself compete
       // with `InteractiveViewer`'s scale recognizer or the recognizers
@@ -377,6 +445,20 @@ class _MushafTextPageState extends State<MushafTextPage> {
           child: tappableScroll,
         ),
       ),
+    );
+
+    // In immersive full-screen, a double-tap anywhere exits (the owner's
+    // requested exit gesture). The double-tap recognizer is only installed
+    // when `onExitFullScreen` is provided (i.e. `pageFillScreen`), so an
+    // ordinary windowed read never adds a recognizer that could compete with
+    // the scroll/pinch gestures below it; and because a double-tap tracks a
+    // single pointer, a two-finger pinch rejects it outright, leaving
+    // `InteractiveViewer`'s scale gesture untouched.
+    if (widget.onExitFullScreen == null) return listener;
+    return GestureDetector(
+      behavior: HitTestBehavior.deferToChild,
+      onDoubleTap: widget.onExitFullScreen,
+      child: listener,
     );
   }
 }
