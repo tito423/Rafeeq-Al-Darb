@@ -368,12 +368,10 @@ class _RecitationsTab extends ConsumerStatefulWidget {
 }
 
 class _RecitationsTabState extends ConsumerState<_RecitationsTab> {
-  // P3‑27: bumped once a "download all" run finishes (or is cancelled) so
-  // the per-surah tiles below — each a `_SurahAudioTile` that only checks
-  // its own on-disk state once in `initState` — remount and pick up the
-  // real file state instead of sitting stale on "not downloaded" after a
-  // bulk run just changed the files out from under them.
-  int _generation = 0;
+  // P3‑54: the old `_generation` remount hack is gone. Each `_SurahAudioTile`
+  // now watches the service's own live `surahJob` notifier, so a bulk "download
+  // all" run updates every affected tile in real time — no forced remount
+  // needed to pick up file changes any more.
 
   @override
   Widget build(BuildContext context) {
@@ -430,15 +428,14 @@ class _RecitationsTabState extends ConsumerState<_RecitationsTab> {
                     key: ValueKey('full/$selected'),
                     edition: selected,
                     data: data,
-                    onFinished: () => setState(() => _generation++),
+                    onFinished: () {},
                   ),
                   Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.fromLTRB(14, 4, 14, 24),
                       itemCount: data.surahs.length,
                       itemBuilder: (_, i) => _SurahAudioTile(
-                        key: ValueKey(
-                            '$selected/${data.surahs[i].id}/$_generation'),
+                        key: ValueKey('$selected/${data.surahs[i].id}'),
                         surahId: data.surahs[i].id,
                         surahName: data.surahs[i].nameAr,
                         ayahCount: data.surahs[i].ayahsCount,
@@ -480,109 +477,113 @@ class _SurahAudioTile extends StatefulWidget {
 
 class _SurahAudioTileState extends State<_SurahAudioTile> {
   final _audio = AyahAudioService.instance;
-  RecitationProgress _progress = const RecitationProgress(0, 0);
-  bool _busy = false;
-  bool _paused = false;
 
   @override
   void initState() {
     super.initState();
-    _refresh();
-  }
-
-  Future<void> _refresh() async {
-    final p = await _audio.surahProgress(
+    // Seed this surah's live notifier from disk (won't clobber an in-flight
+    // download — see refreshSurahJob). All progress is then read straight from
+    // the service's notifier, so scrolling this tile off-screen and back, or
+    // leaving and reopening the screen, never loses the live progress.
+    _audio.refreshSurahJob(
+      widget.edition,
       widget.surahId,
       widget.ayahCount,
       widget.data.repo,
-      edition: widget.edition,
     );
-    if (mounted) setState(() => _progress = p);
-  }
-
-  Future<void> _download() async {
-    setState(() => _busy = true);
-    await _audio.downloadSurah(
-      surah: widget.surahId,
-      ayahCount: widget.ayahCount,
-      repo: widget.data.repo,
-      edition: widget.edition,
-      title: '${widget.surahId}. ${widget.surahName}',
-      onProgress: (p) {
-        if (mounted) setState(() => _progress = p);
-      },
-    );
-    if (mounted) {
-      setState(() {
-        _busy = false;
-        _paused = false;
-      });
-    }
-  }
-
-  void _togglePause() {
-    setState(() {
-      _paused = !_paused;
-      if (_paused) {
-        _audio.pauseDownload(widget.edition, widget.surahId);
-      } else {
-        _audio.resumeDownload(widget.edition, widget.surahId);
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final complete = _progress.isComplete;
+    return ValueListenableBuilder<RecitationJob>(
+      valueListenable: _audio.surahJob(widget.edition, widget.surahId),
+      builder: (context, job, _) {
+        final complete = job.isComplete;
+        final downloading = job.status == RecitationJobStatus.downloading;
+        final paused = job.status == RecitationJobStatus.paused;
+        final active = downloading || paused;
+        final showBar = active || (job.done > 0 && !complete);
 
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-      title: Text('${widget.surahId}. ${widget.surahName}'),
-      subtitle: _busy || (_progress.done > 0 && !complete)
-          ? Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: LinearProgressIndicator(
-                value: _progress.fraction,
-                color: _paused ? theme.colorScheme.outline : AppColors.gold,
-              ),
-            )
-          : Text(
-              complete
-                  ? 'downloads.offline_ready'.tr()
-                  : '${widget.ayahCount} ${'quran.ayahs'.tr()}',
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.outline),
-            ),
-      trailing: complete
-          ? Icon(Icons.offline_pin, color: AppColors.success)
-          : _busy
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      tooltip: _paused
-                          ? 'downloads.resume'.tr()
-                          : 'downloads.pause'.tr(),
-                      icon: Icon(_paused
-                          ? Icons.play_arrow_rounded
-                          : Icons.pause_rounded),
-                      onPressed: _togglePause,
-                    ),
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      tooltip: 'downloads.cancel'.tr(),
-                      icon: const Icon(Icons.stop_circle_outlined),
-                      onPressed: () => _audio.cancelDownload(
-                          widget.edition, widget.surahId),
-                    ),
-                  ],
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+          title: Text('${widget.surahId}. ${widget.surahName}'),
+          subtitle: showBar
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value: job.total == 0 ? null : job.fraction,
+                          color: paused
+                              ? theme.colorScheme.outline
+                              : AppColors.gold,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Live percentage next to the bar so a long surah (e.g.
+                      // Al-Baqarah, 286 ayahs) visibly moves ayah by ayah.
+                      Text(
+                        '${job.done} / ${job.total}',
+                        style: theme.textTheme.labelSmall
+                            ?.copyWith(color: theme.colorScheme.outline),
+                      ),
+                    ],
+                  ),
                 )
-              : IconButton(
-                  icon: const Icon(Icons.download_rounded),
-                  onPressed: _download,
+              : Text(
+                  complete
+                      ? 'downloads.offline_ready'.tr()
+                      : '${widget.ayahCount} ${'quran.ayahs'.tr()}',
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.outline),
                 ),
+          trailing: complete
+              ? Icon(Icons.offline_pin, color: AppColors.success)
+              : active
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          visualDensity: VisualDensity.compact,
+                          tooltip: paused
+                              ? 'downloads.resume'.tr()
+                              : 'downloads.pause'.tr(),
+                          icon: Icon(paused
+                              ? Icons.play_arrow_rounded
+                              : Icons.pause_rounded),
+                          onPressed: () {
+                            if (paused) {
+                              _audio.resumeDownload(
+                                  widget.edition, widget.surahId);
+                            } else {
+                              _audio.pauseDownload(
+                                  widget.edition, widget.surahId);
+                            }
+                          },
+                        ),
+                        IconButton(
+                          visualDensity: VisualDensity.compact,
+                          tooltip: 'downloads.cancel'.tr(),
+                          icon: const Icon(Icons.stop_circle_outlined),
+                          onPressed: () => _audio.cancelDownload(
+                              widget.edition, widget.surahId),
+                        ),
+                      ],
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.download_rounded),
+                      onPressed: () => _audio.startSurahDownload(
+                        edition: widget.edition,
+                        surah: widget.surahId,
+                        ayahCount: widget.ayahCount,
+                        repo: widget.data.repo,
+                        title: '${widget.surahId}. ${widget.surahName}',
+                      ),
+                    ),
+        );
+      },
     );
   }
 }

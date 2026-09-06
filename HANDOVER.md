@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-06 21:53 — IN PROGRESS — resume here**
+**2026-09-06 23:05 — IN PROGRESS — resume here**
 
-P3-54 round 2 polish: move the immersive-mode floating exit button down (EdgeInsetsDirectional start:8, top:56) so it no longer overlaps the surah/juz running-header badges that occupy the top corners. Live-verified round 2 on emulator-5554: Preview Adhan card opens the real full-screen player (mosque + live clock + synced 'الله أكبر' + Mute/Stop); text-mushaf auto-scroll runs with the speed slider and auto-turns pages; ملء الشاشة hides both system bars (immersiveSticky) edge-to-edge; the floating exit button leaves immersive AND stops auto-scroll. flutter analyze clean, tests 21/21.
+P3-55 recitation download rebuild (owner-chosen in-app approach). Moved all recitation-download orchestration + progress out of the Downloads widgets and into AyahAudioService as service-owned, observable state: per-(edition,surah) ValueNotifier<RecitationJob> and per-edition ValueNotifier<FullRecitationState>. Fixes: (1) live progress - _SurahAudioTile and FullRecitationCard are now ValueListenableBuilders over the service notifiers, so a running download shows real-time ayah-by-ayah progress (with n/total) even after the ListView recycles the tile on scroll or the screen is left and reopened; seeded from disk via refreshSurahJob/refreshFullJob which never clobber an in-flight job. (2) background continuation - the whole-reciter 114-surah loop (startFullDownload) now runs inside the service instead of inside the card widget with an if(!mounted)return, so navigating away no longer aborts it; still protected by the existing foreground service, and the notification % tracks in-app progress exactly. cancelDownloadsFor resets the notifiers so freeing storage reflects immediately. Removed the _generation remount hack. (3) encoding - confirmed non-issue: recitation/surah names come from the bundled SQLite DB and a rootBundle.loadString(UTF-8) JSON, both decode correctly; no API-fetched Arabic name in the download path. flutter analyze clean, tests 21/21.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
