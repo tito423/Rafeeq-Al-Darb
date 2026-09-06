@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-06 19:44 — IN PROGRESS — resume here**
+**2026-09-06 19:46 — IN PROGRESS — resume here**
 
-docs: rewrite NEXT_SESSION_PROMPT.md as one coherent handoff for v2.1.16 state - hard rules, workflow, env gotchas (py not python, R2 .env, emulator fullScreenIntent/audio limits, debug ANR), what shipped (P3-52 azan player + P3-53 parts 1-5 incl the Colored Tajweed raster edition on R2), and the two open items (Shamarly needs page images then upload to mushaf/shamarly on R2 + editions.json entry; owner real-device verification of lock-screen adhan + download queue). Working tree otherwise clean at v2.1.16 (d1c4db9).
+docs: add HANDOFF_PROMPT.md - the copy-ready colleague handoff prompt (condensed single-block version of NEXT_SESSION_PROMPT.md) for pasting into a new session.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
