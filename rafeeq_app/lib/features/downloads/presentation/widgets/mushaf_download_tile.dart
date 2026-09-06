@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/mushaf_edition.dart';
-import '../../../quran/presentation/widgets/mushaf_first_page_preview.dart';
+import '../../../quran/presentation/widgets/quran_book_cover_thumbnail.dart';
 
 String formatBytes(int bytes) {
   if (bytes < 1024) return '$bytes B';
@@ -124,7 +124,6 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final e = widget.edition;
     final total = e.pages;
     final complete = _cached >= total;
@@ -138,16 +137,10 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // P3‑28/39: the edition's own real first page as its thumbnail —
-          // already-licensed content (see the widget's own doc), so every
-          // edition card gets a real cover, not a placeholder icon.
-          MushafFirstPagePreview(
-            edition: e,
-            isDark: isDark,
-            width: 46,
-            height: 46 * 550 / 345,
-          ),
-          const SizedBox(width: 12),
+          // P3‑53: a luxury leather book-cover thumbnail (not the Fatiha page),
+          // matching the edition picker — a real bound-book look per edition.
+          QuranBookCoverThumbnail(edition: e, width: 52),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

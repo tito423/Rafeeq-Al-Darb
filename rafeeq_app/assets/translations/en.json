@@ -281,7 +281,6 @@
     "presentation_audio": "Audio",
     "presentation_video": "Video",
     "adhan_video": "Adhan video",
-    "video_note": "The video shows only while the screen is on. When the app is closed only the adhan sound plays (an Android limitation).",
     "video_select": "Select",
     "video_selected": "Selected",
     "video_preview": "Preview",

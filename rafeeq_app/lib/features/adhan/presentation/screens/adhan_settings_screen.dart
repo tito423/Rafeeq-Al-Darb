@@ -674,10 +674,6 @@ class _PresentationCardState extends ConsumerState<_PresentationCard> {
             ),
             if (isVideo) ...[
               const SizedBox(height: 12),
-              Text('prayer.video_note'.tr(),
-                  style: TextStyle(
-                      color: scheme.onSurfaceVariant, fontSize: 12, height: 1.5)),
-              const SizedBox(height: 8),
               for (final v in adhanVideoCatalog)
                 _VideoRow(
                   option: v,

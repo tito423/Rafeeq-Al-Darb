@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 import 'package:video_player/video_player.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../core/services/adhan_alarm_service.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -80,25 +81,17 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
   int _activeIndex = -1;
   bool _muted = false;
   bool _stopped = false;
-  String _clockText = _fmtNow();
 
-  Timer? _clock;
   Timer? _fallbackTicker;
   StreamSubscription<Duration>? _posSub;
   StreamSubscription<PlayerState>? _stateSub;
 
-  static String _fmtNow() {
-    final n = DateTime.now();
-    String two(int v) => v.toString().padLeft(2, '0');
-    return '${two(n.hour)}:${two(n.minute)}:${two(n.second)}';
-  }
-
   @override
   void initState() {
     super.initState();
-    _clock = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) setState(() => _clockText = _fmtNow());
-    });
+    // Keep the screen awake for the whole adhan (scoped to this screen only —
+    // released in dispose — so ordinary reading never holds a wakelock).
+    WakelockPlus.enable();
     _initVideo();
     _initAudio();
   }
@@ -209,7 +202,7 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
 
   @override
   void dispose() {
-    _clock?.cancel();
+    WakelockPlus.disable();
     _fallbackTicker?.cancel();
     _posSub?.cancel();
     _stateSub?.cancel();
@@ -222,12 +215,16 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
   Widget _background() {
     final v = _video;
     if (v != null && v.value.isInitialized) {
-      return FittedBox(
-        fit: BoxFit.cover,
-        child: SizedBox(
-          width: v.value.size.width,
-          height: v.value.size.height,
-          child: VideoPlayer(v),
+      // RepaintBoundary isolates the decoding video surface from the rest of
+      // the tree so nothing above it forces the frame to repaint.
+      return RepaintBoundary(
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: SizedBox(
+            width: v.value.size.width,
+            height: v.value.size.height,
+            child: VideoPlayer(v),
+          ),
         ),
       );
     }
@@ -303,14 +300,7 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      _clockText,
-                      style: const TextStyle(
-                        color: AppColors.goldSoft,
-                        fontSize: 18,
-                        fontFeatures: [FontFeature.tabularFigures()],
-                      ),
-                    ),
+                    const _LiveClock(),
                     const Spacer(),
                     // Middle: the current adhan phrase, big, with a soft
                     // fade+scale transition on change.
@@ -387,6 +377,53 @@ class _AdhanFullScreenScreenState extends State<AdhanFullScreenScreen>
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// A live HH:mm:ss clock that owns its own 1-second timer and rebuilds *only
+/// itself*, so the per-second tick never repaints the video/subtitle Stack
+/// above it (P3‑53 performance).
+class _LiveClock extends StatefulWidget {
+  const _LiveClock();
+
+  @override
+  State<_LiveClock> createState() => _LiveClockState();
+}
+
+class _LiveClockState extends State<_LiveClock> {
+  late Timer _timer;
+  String _text = _fmt();
+
+  static String _fmt() {
+    final n = DateTime.now();
+    String two(int v) => v.toString().padLeft(2, '0');
+    return '${two(n.hour)}:${two(n.minute)}:${two(n.second)}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() => _text = _fmt());
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _text,
+      style: const TextStyle(
+        color: AppColors.goldSoft,
+        fontSize: 18,
+        fontFeatures: [FontFeature.tabularFigures()],
       ),
     );
   }

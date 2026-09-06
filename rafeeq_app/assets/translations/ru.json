@@ -281,7 +281,6 @@
     "presentation_audio": "Звук",
     "presentation_video": "Видео",
     "adhan_video": "Видео азана",
-    "video_note": "Видео показывается только при включённом экране. Когда приложение закрыто, воспроизводится только звук азана (ограничение Android).",
     "video_select": "Выбрать",
     "video_selected": "Выбрано",
     "video_preview": "Просмотр",

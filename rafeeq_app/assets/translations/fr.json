@@ -281,7 +281,6 @@
     "presentation_audio": "Audio",
     "presentation_video": "Vidéo",
     "adhan_video": "Vidéo de l'adhan",
-    "video_note": "La vidéo ne s'affiche que lorsque l'écran est allumé. Quand l'application est fermée, seul le son de l'adhan est joué (une limitation d'Android).",
     "video_select": "Sélectionner",
     "video_selected": "Sélectionné",
     "video_preview": "Aperçu",

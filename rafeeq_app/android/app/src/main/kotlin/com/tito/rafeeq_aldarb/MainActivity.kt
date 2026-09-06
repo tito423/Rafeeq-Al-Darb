@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import io.flutter.embedding.engine.FlutterEngine
@@ -16,6 +18,29 @@ import java.io.File
 class MainActivity: AudioServiceActivity() {
     private val ADHAN_CHANNEL = "com.tito.rafeeq_aldarb/adhan"
     private val DOWNLOAD_SERVICE_CHANNEL = "com.tito.rafeeq_aldarb/download_service"
+
+    // P3‑53: guarantee that a full-screen-intent launch (the Adhan alert) wakes
+    // the screen and draws OVER the lock screen without a biometric unlock
+    // first — exactly like an alarm-clock or incoming-call screen. The manifest
+    // already declares `showWhenLocked`/`turnScreenOn`, but Google's own docs
+    // recommend setting them programmatically as well (some OEM skins honor only
+    // one path), so this is deliberate belt-and-braces, not a duplicate. No
+    // FLAG_KEEP_SCREEN_ON here on purpose — keeping the screen awake is scoped
+    // to the Adhan player itself (via WakelockPlus in Dart) so ordinary reading
+    // doesn't hold a wakelock and drain the battery.
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        } else {
+            @Suppress("DEPRECATION")
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            )
+        }
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

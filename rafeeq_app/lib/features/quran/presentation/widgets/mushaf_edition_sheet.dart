@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../data/mushaf_edition.dart';
-import 'mushaf_first_page_preview.dart';
+import 'quran_book_cover_thumbnail.dart';
 
 /// Picker for the printed mushaf being read.
 ///
@@ -104,7 +104,6 @@ class _EditionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gold = AppColors.gold;
-    final isDark = theme.brightness == Brightness.dark;
 
     return InkWell(
       onTap: onTap,
@@ -122,8 +121,8 @@ class _EditionTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MushafFirstPagePreview(edition: edition, isDark: isDark),
-            const SizedBox(width: 12),
+            QuranBookCoverThumbnail(edition: edition),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

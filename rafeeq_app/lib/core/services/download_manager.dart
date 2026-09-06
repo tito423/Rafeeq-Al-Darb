@@ -80,6 +80,68 @@ class DownloadManager {
   final StreamController<List<DownloadTask>> _controller =
       StreamController<List<DownloadTask>>.broadcast();
 
+  /// P3‑53 — FIFO download queue. Only [maxConcurrent] file(s) actually
+  /// transfer at once; everything else waits its turn as [DownloadStatus
+  /// .queued]. Set to 1 on purpose: real-device testing showed that starting
+  /// 7 video downloads in parallel saturated CPU + RAM and froze the whole app
+  /// (and flooded the status bar with 7 competing notifications). One-at-a-time
+  /// keeps each transfer fast and the UI responsive, and lets a single
+  /// aggregated progress notification replace the flood. `_tasks` is a
+  /// `LinkedHashMap`, so iterating it yields tasks in the order they were
+  /// enqueued — that ordering *is* the FIFO queue.
+  static const int maxConcurrent = 1;
+  int _active = 0;
+
+  /// Starts as many queued tasks as the concurrency limit allows, oldest
+  /// first, then returns. Re-invoked every time a slot frees (a task finishes)
+  /// or a new task is enqueued/resumed.
+  void _pump() {
+    while (_active < maxConcurrent) {
+      DownloadTask? next;
+      for (final t in _tasks.values) {
+        if (t.status == DownloadStatus.queued) {
+          next = t;
+          break;
+        }
+      }
+      if (next == null) break;
+      _active++;
+      next.status = DownloadStatus.downloading;
+      _notify();
+      unawaited(_run(next).whenComplete(() {
+        _active--;
+        _pump();
+        unawaited(_refreshAggregate());
+      }));
+    }
+    unawaited(_refreshAggregate());
+  }
+
+  /// One aggregated status-bar notification for the whole queue instead of one
+  /// per file: shows the file currently transferring, its %, and how many more
+  /// are still waiting. Cleared when the queue drains.
+  Future<void> _refreshAggregate() async {
+    DownloadTask? current;
+    var queued = 0;
+    for (final t in _tasks.values) {
+      if (t.status == DownloadStatus.downloading) {
+        current ??= t;
+      } else if (t.status == DownloadStatus.queued) {
+        queued++;
+      }
+    }
+    if (current == null) {
+      await DownloadNotifications.instance.clearAggregate();
+      return;
+    }
+    await DownloadNotifications.instance.aggregate(
+      title: current.title,
+      done: current.received,
+      total: current.total ?? 0,
+      remaining: queued,
+    );
+  }
+
   Stream<List<DownloadTask>> get stream => _controller.stream;
   List<DownloadTask> get tasks => _tasks.values.toList();
   DownloadTask? taskById(String id) => _tasks[id];
@@ -161,10 +223,12 @@ class DownloadManager {
       dbVersion: dbVersion,
       title: title,
     );
+    // Enters the queue as `queued`; `_pump` promotes it to `downloading` only
+    // when a concurrency slot is free (see [maxConcurrent]).
     _tasks[id] = task;
     _notify();
     await DownloadNotifications.instance.ensureInitialized();
-    unawaited(_run(task));
+    _pump();
   }
 
   void pause(String id) {
@@ -183,7 +247,11 @@ class DownloadManager {
         t.status == DownloadStatus.failed ||
         t.status == DownloadStatus.canceled ||
         t.status == DownloadStatus.queued) {
-      unawaited(_run(t));
+      // Re-queue (don't run directly) so it obeys the same one-at-a-time limit
+      // as every other task instead of racing them.
+      t.status = DownloadStatus.queued;
+      _notify();
+      _pump();
     }
   }
 
@@ -309,7 +377,7 @@ class DownloadManager {
       }
       task.received = start;
       _notify();
-      await DownloadNotifications.instance.progress(task);
+      await _refreshAggregate();
 
       final raf = await partial.open(mode: FileMode.append);
       try {
@@ -317,7 +385,7 @@ class DownloadManager {
           await raf.writeFrom(chunk);
           task.received += chunk.length;
           _notify();
-          await DownloadNotifications.instance.progress(task);
+          await _refreshAggregate();
         }
       } finally {
         await raf.close();
@@ -340,7 +408,9 @@ class DownloadManager {
 
       task.status = DownloadStatus.completed;
       await _registerCompleted(task, registeredPath);
-      await DownloadNotifications.instance.complete(task);
+      // No per-file "done" toast — the aggregate notification (refreshed by
+      // `_pump` when this slot frees) reflects the queue as a whole, and the
+      // in-app downloads list shows each item's completed state.
       _notify();
     } on DioException catch (e) {
       if (!CancelToken.isCancel(e)) {
@@ -350,13 +420,11 @@ class DownloadManager {
         // exception, e.g. a SocketException or HandshakeException). Falling
         // straight to the generic "network error" string hid that detail.
         task.error = e.message ?? e.error?.toString() ?? e.type.name;
-        await DownloadNotifications.instance.failed(task);
       }
       _notify();
     } catch (e) {
       task.status = DownloadStatus.failed;
       task.error = e.toString();
-      await DownloadNotifications.instance.failed(task);
       _notify();
     } finally {
       _tokens.remove(task.id);
@@ -539,20 +607,64 @@ class DownloadNotifications {
     } catch (_) {}
   }
 
-  // ── DownloadManager convenience wrappers ────────────────────────────────
+  // ── DownloadManager aggregated queue notification ───────────────────────
+  // P3‑53: ONE ongoing notification for the whole download queue (the file
+  // transferring now + how many are still waiting), instead of one per file.
 
-  Future<void> progress(DownloadTask task) => showProgress(
-        id: task.id,
-        title: task.title,
-        done: task.received,
-        total: task.total ?? 0,
-        detail: (task.total != null && task.total! > 0)
-            ? '${(task.progress * 100).round()}%'
-            : '${task.received} bytes',
+  static const _aggregateId = 4699;
+  DateTime? _aggregateLastPost;
+
+  /// Post/refresh the single queue notification. [remaining] is how many other
+  /// files are still queued behind the current one. Throttled to ~1/sec.
+  Future<void> aggregate({
+    required String title,
+    required int done,
+    required int total,
+    required int remaining,
+  }) async {
+    if (!_ready || !Platform.isAndroid) return;
+    final hasSize = total > 0;
+    final pct = hasSize ? ((done / total) * 100).round() : 0;
+    final complete = hasSize && done >= total;
+    final now = DateTime.now();
+    if (!complete &&
+        _aggregateLastPost != null &&
+        now.difference(_aggregateLastPost!) < const Duration(milliseconds: 900)) {
+      return;
+    }
+    _aggregateLastPost = now;
+    try {
+      final plugin = FlutterLocalNotificationsPlugin();
+      final body = StringBuffer(hasSize ? '$pct%' : 'جارٍ التنزيل…');
+      if (remaining > 0) body.write('  •  $remaining في الانتظار');
+      final android = AndroidNotificationDetails(
+        _channelId,
+        _channelName,
+        channelDescription: 'Offline content download progress',
+        importance: Importance.low,
+        priority: Priority.low,
+        onlyAlertOnce: true,
+        ongoing: true,
+        showProgress: hasSize,
+        maxProgress: 100,
+        progress: pct,
+        indeterminate: !hasSize,
       );
+      await plugin.show(
+        _aggregateId,
+        title,
+        body.toString(),
+        NotificationDetails(android: android),
+      );
+    } catch (_) {}
+  }
 
-  Future<void> complete(DownloadTask task) =>
-      showComplete(id: task.id, title: task.title);
-
-  Future<void> failed(DownloadTask task) => clear(task.id);
+  /// Remove the queue notification (the queue has fully drained).
+  Future<void> clearAggregate() async {
+    _aggregateLastPost = null;
+    if (!_ready || !Platform.isAndroid) return;
+    try {
+      await FlutterLocalNotificationsPlugin().cancel(_aggregateId);
+    } catch (_) {}
+  }
 }
