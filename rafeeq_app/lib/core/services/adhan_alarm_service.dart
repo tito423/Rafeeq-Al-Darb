@@ -80,8 +80,11 @@ class AdhanAlarmService {
         .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin
         >();
-    await androidPlugin?.requestNotificationsPermission();
-    await _requestPermissions();
+    // P3‑50: the notification/exact-alarm permission prompts used to fire
+    // right here, from `main()` — which meant they popped over the splash
+    // video on first launch. Moved out to [requestStartupPermissions],
+    // called *after* the splash finishes (see SplashScreen). `initialize`
+    // now only sets up the plugin + channel and never prompts.
 
     // P3‑46: pre-create the silent channel now, at first launch, so
     // `muteById` (which re-posts the firing adhan onto this channel to
@@ -113,6 +116,19 @@ class AdhanAlarmService {
     if (await Permission.scheduleExactAlarm.isDenied) {
       await Permission.scheduleExactAlarm.request();
     }
+  }
+
+  /// P3‑50: notification + exact-alarm prompts, called once **after** the
+  /// splash screen finishes (not from `main()`, which would pop them over
+  /// the splash video). Safe to call more than once — each request no-ops
+  /// if already granted.
+  Future<void> requestStartupPermissions() async {
+    final androidPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+    await androidPlugin?.requestNotificationsPermission();
+    await _requestPermissions();
   }
 
   /// Prompts the system's battery-optimization exemption dialog for this
