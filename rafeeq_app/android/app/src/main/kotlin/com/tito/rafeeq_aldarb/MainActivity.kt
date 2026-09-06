@@ -9,11 +9,11 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import com.ryanheise.audioservice.AudioServiceActivity
-import java.io.File
+import com.tito.rafeeq_aldarb.adhan.AdhanChannels
+import com.tito.rafeeq_aldarb.adhan.AdhanNotifications
 
 class MainActivity: AudioServiceActivity() {
     private val ADHAN_CHANNEL = "com.tito.rafeeq_aldarb/adhan"
@@ -44,6 +44,13 @@ class MainActivity: AudioServiceActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        // The rebuilt Adhan module: alarm scheduling + the native adhan
+        // player (used by both the real firing and the settings preview).
+        // Registered here as well as in AdhanActivity because the two run in
+        // separate Flutter engines over the same native singletons.
+        AdhanNotifications.ensureChannels(this)
+        AdhanChannels.register(this, flutterEngine, this)
 
         // P3-46: start/stop the real foreground service that keeps this
         // process from being frozen/killed while backgrounded during an
@@ -80,32 +87,6 @@ class MainActivity: AudioServiceActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ADHAN_CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
-                // Turns a custom-adhan file path (app-private storage, from
-                // AdhanCatalogService) into a content:// URI so it can be
-                // used as a native notification-alarm sound — the
-                // notification sound API cannot read a raw filesystem path
-                // from another app's private storage, only a content:// URI
-                // it has read permission to.
-                "contentUriForFile" -> {
-                    val path = call.argument<String>("path")
-                    if (path == null) {
-                        result.error("no_path", "path is required", null)
-                        return@setMethodCallHandler
-                    }
-                    try {
-                        val uri = FileProvider.getUriForFile(this, "$packageName.fileprovider", File(path))
-                        // Best-effort: let the system's own notification/sound
-                        // renderer read it even when this app is not running.
-                        // Some OEM skins ignore this; the bundled adhans (played
-                        // via a raw resource, not a URI) are unaffected either way.
-                        try {
-                            grantUriPermission("com.android.systemui", uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        } catch (_: Exception) {}
-                        result.success(uri.toString())
-                    } catch (e: Exception) {
-                        result.error("uri_failed", e.message, null)
-                    }
-                }
                 // P3-19: Android 14+ (API 34) added a *separate*, per-app,
                 // user-granted toggle for full-screen-intent notifications —
                 // the USE_FULL_SCREEN_INTENT manifest permission alone no

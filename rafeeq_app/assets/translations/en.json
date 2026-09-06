@@ -289,7 +289,11 @@
     "video_selected": "Selected",
     "video_preview": "Preview",
     "per_prayer_desc": "A separate mode and muezzin per prayer",
-    "azan_of": "Adhan — {} prayer"
+    "azan_of": "Adhan — {} prayer",
+    "exact_alarm": "The Adhan behaves exactly like an alarm, so it needs the \"exact alarms\" permission to fire on time and open over the lock screen",
+    "exact_alarm_action": "Grant permission",
+    "muted_now": "Adhan muted",
+    "preview_badge": "Preview"
   },
   "qibla": {
     "locating": "Locating you...",

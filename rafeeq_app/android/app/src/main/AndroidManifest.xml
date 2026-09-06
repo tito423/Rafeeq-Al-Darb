@@ -35,6 +35,14 @@
          launches MainActivity (which is showWhenLocked + turnScreenOn). -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     
+    <!-- The rebuilt Adhan fires as a real alarm: AdhanScheduler arms it with
+         AlarmManager.setAlarmClock (SCHEDULE_EXACT_ALARM / USE_EXACT_ALARM,
+         declared above), AdhanAlarmReceiver wakes on it, and AdhanService
+         plays it as a mediaPlayback foreground service while holding a
+         partial wake lock. TURN_SCREEN_ON is what lets AdhanActivity wake a
+         dark display on Android 10+, the same way a clock app does. -->
+    <uses-permission android:name="android.permission.TURN_SCREEN_ON"/>
+
     <!-- Battery optimizations exemption -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     
@@ -66,6 +74,63 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- ─── Adhan (rebuilt, native alarm pipeline) ──────────────────────
+             AdhanActivity is the "ringing phone" screen. It lives in its own
+             task (taskAffinity + excludeFromRecents) so firing it never
+             disturbs whatever the user was doing inside the app, and it is
+             showWhenLocked + turnScreenOn so it draws over the lock screen
+             and wakes the display without an unlock — exactly like an alarm
+             clock or an incoming call. It runs the `adhanMain` Dart
+             entrypoint, not the whole app.
+             `android:theme` is the plain Normal theme, not LaunchTheme: the
+             alert paints its own full-bleed background and must not flash the
+             app's splash first. -->
+        <activity
+            android:name=".adhan.AdhanActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.tito.rafeeq_aldarb.adhan"
+            android:excludeFromRecents="true"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/NormalTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"/>
+
+        <!-- Receives the exact alarm. Not exported: only AlarmManager, acting
+             on our own PendingIntent, ever delivers to it. -->
+        <receiver
+            android:name=".adhan.AdhanAlarmReceiver"
+            android:exported="false"
+            android:directBootAware="true"/>
+
+        <!-- Re-arms the persisted schedule after a reboot / app update /
+             clock change, since AlarmManager forgets everything then. -->
+        <receiver
+            android:name=".adhan.AdhanBootReceiver"
+            android:exported="false"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- Holds the firing adhan: the MediaPlayer, the alert notification
+             (with its real Stop/Mute actions) and the wake lock. Started from
+             the exact-alarm broadcast, which is Android's own exemption for
+             starting a foreground service from the background. -->
+        <service
+            android:name=".adhan.AdhanService"
+            android:exported="false"
+            android:stopWithTask="false"
+            android:foregroundServiceType="mediaPlayback"/>
 
         <!-- Notification receiver for boot-completed rescheduling -->
         <receiver
@@ -117,10 +182,12 @@
             </intent-filter>
         </service>
 
-        <!-- Exposes app-private files (a user-imported custom adhan MP3) as a
-             content:// URI so the native notification sound API — which
-             cannot read Flutter asset paths or app-private file paths — can
-             play it when an alarm fires while the app is killed. -->
+        <!-- Generic FileProvider for handing app-private files to other
+             components as content:// URIs. The Adhan no longer needs it (the
+             rebuilt native player opens an imported MP3 straight from its
+             path, in this app own process), so nothing uses it today; it is
+             kept declared because it is plain, inert plumbing that the next
+             feature to share a private file will want. -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

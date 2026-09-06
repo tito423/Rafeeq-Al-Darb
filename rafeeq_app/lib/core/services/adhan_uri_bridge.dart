@@ -1,19 +1,16 @@
 import 'package:flutter/services.dart';
 
-/// Bridges to `MainActivity.kt`'s FileProvider helper — Dart cannot mint a
-/// `content://` URI on its own, and the native notification-sound API needs
-/// one to play a custom (user-imported) adhan file.
+/// The remaining OS-settings bridges the Adhan needs: the Android 14+
+/// full-screen-intent grant, and the per-OEM auto-start managers.
+///
+/// The old `contentUriForFile` helper is gone with the rewrite. It existed
+/// because Android's *notification-sound* API played a custom adhan and
+/// could not read another app's private storage — it needed a FileProvider
+/// `content://` URI. The adhan is now played by this app's own native
+/// `MediaPlayer`, in this app's own process, so an imported file is opened
+/// straight from its path.
 class AdhanUriBridge {
   static const _channel = MethodChannel('com.tito.rafeeq_aldarb/adhan');
-
-  static Future<String?> contentUriForFile(String path) async {
-    try {
-      return await _channel
-          .invokeMethod<String>('contentUriForFile', {'path': path});
-    } catch (_) {
-      return null;
-    }
-  }
 
   /// P3‑19: Android 14+ (API 34) requires a *separate*, user-granted toggle
   /// for full-screen-intent notifications, beyond the `USE_FULL_SCREEN_INTENT`

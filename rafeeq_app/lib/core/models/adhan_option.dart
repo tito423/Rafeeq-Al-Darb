@@ -9,8 +9,8 @@ class AdhanOption {
   final String? assetPath;
 
   /// Android raw-resource name (no extension) backing this sound for the
-  /// native notification-alarm sound API. Null for a custom adhan — that
-  /// case uses a FileProvider content:// URI over [filePath] instead.
+  /// native adhan player. Null for a custom adhan — that case is played
+  /// straight from [filePath].
   final String? rawResource;
 
   /// Absolute file path on device storage. Only set for a custom adhan.

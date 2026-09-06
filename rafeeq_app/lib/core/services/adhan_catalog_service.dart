@@ -8,11 +8,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/adhan_option.dart';
 
-/// The 10 bundled, verified adhan recordings plus whatever the user has
-/// imported from their own device. Custom entries are persisted as JSON in
+/// The 10 bundled adhan recordings plus whatever the user has imported from
+/// their own device. Custom entries are persisted as JSON in
 /// SharedPreferences (their audio files live under the app's own documents
 /// directory, copied there by [addCustom] so they survive the picker's
 /// temporary file being cleaned up).
+///
+/// **On the muezzin names.** `assets/data/catalogs/adhans.json` now carries
+/// the ten muezzin names the owner asked for, in his order, mapped onto the
+/// ten bundled recordings in file order (`azan1.mp3` -> the first name, and
+/// so on). Those recordings came from islamcan.com as an unattributed set:
+/// no per-file record of *which* muezzin each one actually is has ever
+/// existed in this project. Each entry's `source` field says so explicitly.
+/// The names are therefore a labelling the owner supplied, not a verified
+/// attribution — swapping in correctly-attributed MP3s later is a pure asset
+/// change (drop the file into `assets/audio/adhan/` and
+/// `android/app/src/main/res/raw/` under the same `azanN` name), with no
+/// code or id change, because the ids stay `azan1`..`azan10` precisely so
+/// existing users keep the adhan they already chose.
 class AdhanCatalogService {
   AdhanCatalogService._();
   static final AdhanCatalogService instance = AdhanCatalogService._();

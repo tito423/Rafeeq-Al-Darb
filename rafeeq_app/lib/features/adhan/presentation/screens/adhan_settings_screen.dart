@@ -5,15 +5,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 import 'package:path/path.dart' as p;
 import 'package:video_player/video_player.dart';
 
 import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
-import '../../../../core/services/adhan_alarm_service.dart';
+import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/services/adhan_catalog_service.dart';
+import '../../../../core/services/adhan_native.dart';
 import '../../../../core/services/adhan_uri_bridge.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -25,7 +24,7 @@ import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
 import '../../data/adhan_video_catalog.dart';
 import '../../data/prayer_status_enabled_provider.dart';
-import 'adhan_full_screen_screen.dart';
+import 'azan_player_screen.dart';
 
 const _prayerLabels = {
   'fajr': 'prayer.fajr',
@@ -48,24 +47,26 @@ class AdhanSettingsScreen extends ConsumerStatefulWidget {
 
 class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     with WidgetsBindingObserver {
-  final AudioPlayer _preview = AudioPlayer();
+  /// The adhan currently sounding from the list rows, if any. There is no
+  /// Dart audio player here any more: previews go through the same native
+  /// [AdhanNative] player a real alarm uses (see its doc for why), so this
+  /// is just which row's button should read "stop".
   String? _playingId;
+  Timer? _previewWatch;
+
   bool? _batteryExempt;
   bool? _fullScreenIntentOk;
+  bool? _exactAlarmOk;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _preview.playerStateStream.listen((s) {
-      if (s.processingState == ProcessingState.completed && mounted) {
-        setState(() => _playingId = null);
-      }
-    });
-    AdhanAlarmService.instance.isBatteryOptimizationExempt().then((v) {
+    AlarmPermissionsService.instance.isBatteryOptimizationExempt().then((v) {
       if (mounted) setState(() => _batteryExempt = v);
     });
     _checkFullScreenIntent();
+    _checkExactAlarm();
   }
 
   Future<void> _checkFullScreenIntent() async {
@@ -73,46 +74,87 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     if (mounted) setState(() => _fullScreenIntentOk = v);
   }
 
+  /// The Adhan is armed with `AlarmManager.setAlarmClock`, which needs the
+  /// exact-alarm grant. Without it the alarms still arm, but only
+  /// approximately — and the lock-screen takeover loses the OS exemption it
+  /// depends on, so this is worth showing the user rather than degrading
+  /// quietly.
+  Future<void> _checkExactAlarm() async {
+    final v = await AdhanNative.canScheduleExact();
+    if (mounted) setState(() => _exactAlarmOk = v);
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // The user grants the P3‑19 full-screen-intent toggle from a system
     // settings screen, not a dialog — re-check when they come back rather
     // than assuming it worked.
-    if (state == AppLifecycleState.resumed) _checkFullScreenIntent();
+    if (state == AppLifecycleState.resumed) {
+      _checkFullScreenIntent();
+      _checkExactAlarm();
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _preview.dispose();
+    _previewWatch?.cancel();
+    // Leaving this screen must never leave an adhan sounding behind it.
+    AdhanNative.stop();
     super.dispose();
   }
 
+  /// Plays (or stops) one row's adhan through the native player.
+  ///
+  /// This used to be a second `just_audio` `AudioPlayer`. It could not work:
+  /// `main()` initialises `just_audio_background`, whose platform throws
+  /// *"supports only a single player instance"* for every player after the
+  /// first, and the Quran recitation player already holds that slot — the
+  /// failure was caught and swallowed, which is why previews were silent.
   Future<void> _togglePreview(AdhanOption option, {bool forcePlay = false}) async {
+    final messenger = ScaffoldMessenger.of(context);
     if (!forcePlay && _playingId == option.id) {
-      await _preview.stop();
-      setState(() => _playingId = null);
+      _previewWatch?.cancel();
+      await AdhanNative.stop();
+      if (mounted) setState(() => _playingId = null);
       return;
     }
-    final messenger = ScaffoldMessenger.of(context);
-    try {
-      final tag = MediaItem(id: option.id, title: option.name, album: 'أذان');
-      if (option.isCustom) {
-        await _preview.setAudioSource(AudioSource.file(option.filePath!, tag: tag));
-      } else {
-        await _preview.setAudioSource(AudioSource.asset(option.assetPath!, tag: tag));
-      }
-      // just_audio's play() future only resolves when playback pauses or
-      // completes, not when it starts (the same gotcha `ayah_audio_service`
-      // already works around) — awaiting it here would leave the icon stuck
-      // on "play" for the whole track instead of flipping immediately.
-      unawaited(_preview.play());
-      setState(() => _playingId = option.id);
-    } catch (_) {
-      if (mounted) {
-        messenger.showSnackBar(SnackBar(content: Text('errors.generic'.tr())));
-      }
+    final started = await AdhanNative.preview(
+      AdhanNative.specFor(
+        prayerKey: 'dhuhr',
+        prayerLabel: option.name,
+        // `audio` rather than `full`: a row preview is just the sound, with
+        // no screen takeover and no clip.
+        mode: AdhanMode.audio,
+        option: option,
+      ),
+    );
+    if (!mounted) return;
+    if (!started) {
+      setState(() => _playingId = null);
+      messenger.showSnackBar(SnackBar(content: Text('errors.generic'.tr())));
+      return;
     }
+    setState(() => _playingId = option.id);
+    _watchPreview();
+  }
+
+  /// The native player has no completion callback into Dart, so the row's
+  /// button is flipped back by watching the real playback state rather than
+  /// by assuming a duration.
+  void _watchPreview() {
+    _previewWatch?.cancel();
+    _previewWatch = Timer.periodic(const Duration(milliseconds: 500), (t) async {
+      final state = await AdhanNative.state();
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      if (!state.playing) {
+        t.cancel();
+        setState(() => _playingId = null);
+      }
+    });
   }
 
   Future<void> _pickCustomAdhan() async {
@@ -151,48 +193,54 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
   }
 
-  /// Opens the real full-screen Azan player immediately (silent looping
-  /// video + adhan audio via just_audio + the synced karaoke text), using the
-  /// currently-chosen default adhan and video, so the owner can experience
-  /// exactly what fires at prayer time without scheduling an alarm and
-  /// waiting. Not a fake preview: it pushes the very same
-  /// [AdhanFullScreenScreen] a real full-mode alarm launches, just triggered
-  /// by a button instead of a notification.
+  /// "معاينة الأذان" — opens the real [AzanPlayerScreen] right now with
+  /// the currently-chosen adhan and clip, using the same native player a real
+  /// firing uses. It is the actual experience, not a mock-up of it.
+  ///
+  /// The screen is pushed in [AzanPlayerMode.preview], which is what fixes
+  /// the old behaviour where its Stop button ran
+  /// `popUntil((route) => route.isFirst)` and threw the user out to the
+  /// prayer tab: a preview now pops exactly one route, straight back here.
   Future<void> _previewAzan() async {
     final settings = ref.read(adhanSettingsProvider);
     final catalog = ref.read(adhanCatalogProvider).value ?? const [];
     if (catalog.isEmpty) return;
-    final option = catalog.firstWhere(
-      (o) => o.id == settings.defaultAdhanId,
-      orElse: () => catalog.first,
-    );
     final videoPath =
         await resolveAdhanVideoPath(ref.read(adhanPresentationProvider));
     if (!mounted) return;
-    // Stop any inline list preview first so two adhan streams never overlap.
-    await _preview.stop();
+
+    // Stop any row preview first, so two adhans can never overlap.
+    _previewWatch?.cancel();
+    await AdhanNative.stop();
     if (!mounted) return;
     setState(() => _playingId = null);
+
+    final spec = previewSpec(
+      settings: settings,
+      catalog: catalog,
+      adhanVideoPath: videoPath,
+      // Dhuhr = a neutral (non-Fajr) adhan, so the synced text uses the
+      // standard wording rather than the Fajr-only sunrise line.
+      prayerLabel: _prayerLabels['dhuhr']!.tr(),
+    );
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => AdhanFullScreenScreen(
-          // Dhuhr = a neutral (non-Fajr) adhan, so the synced text uses the
-          // standard adhan wording rather than the Fajr-only "الصلاة خير من
-          // النوم" line; notificationId 0 is a harmless no-op for the
-          // screen's Stop (there is no real notification behind a preview).
-          prayerKey: 'dhuhr',
-          prayerLabel: _prayerLabels['dhuhr']!.tr(),
-          notificationId: 0,
-          rawPayload: '',
-          audioAsset: option.assetPath,
-          audioFilePath: option.filePath,
-          videoPath: videoPath,
+        builder: (_) => AzanPlayerScreen(
+          spec: spec,
+          playerMode: AzanPlayerMode.preview,
         ),
       ),
     );
+    // Backing out of the preview (system back, a gesture) must not leave the
+    // adhan sounding behind this screen.
+    await AdhanNative.stop();
   }
 
-  Future<void> _test(String prayerKey, AdhanMode mode) async {
+  /// Fires this prayer's adhan a few seconds from now through the *real*
+  /// alarm pipeline — exact alarm, broadcast receiver, foreground service,
+  /// lock-screen takeover — so the button proves the whole chain works on
+  /// this device rather than only the parts Dart can reach.
+  Future<void> _test(String prayerKey) async {
     final messenger = ScaffoldMessenger.of(context);
     final settings = ref.read(adhanSettingsProvider);
     final catalog = ref.read(adhanCatalogProvider).value ?? const [];
@@ -200,7 +248,6 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
         await resolveAdhanVideoPath(ref.read(adhanPresentationProvider));
     await fireAdhanTest(
       prayerKey: prayerKey,
-      mode: mode,
       settings: settings,
       catalog: catalog,
       adhanVideoPath: videoPath,
@@ -224,15 +271,25 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
         data: (catalog) => ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            if (_exactAlarmOk == false)
+              _PermissionCard(
+                icon: Icons.alarm_on,
+                message: 'prayer.exact_alarm'.tr(),
+                action: 'prayer.exact_alarm_action'.tr(),
+                onPressed: AdhanNative.openExactAlarmSettings,
+              ),
             if (_fullScreenIntentOk == false)
-              _FullScreenIntentCard(
-                onGrant: AdhanUriBridge.openFullScreenIntentSettings,
+              _PermissionCard(
+                icon: Icons.fullscreen,
+                message: 'prayer.full_screen_intent'.tr(),
+                action: 'prayer.full_screen_intent_action'.tr(),
+                onPressed: AdhanUriBridge.openFullScreenIntentSettings,
               ),
             if (_batteryExempt == false) _BatteryCard(
               onExempt: () async {
                 final messenger = ScaffoldMessenger.of(context);
                 final granted =
-                    await AdhanAlarmService.instance.requestBatteryOptimizationExemption();
+                    await AlarmPermissionsService.instance.requestBatteryOptimizationExemption();
                 if (mounted) {
                   setState(() => _batteryExempt = granted);
                   if (granted) {
@@ -370,7 +427,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                       catalog: catalog,
                       onModeChanged: (m) => _saveMode(key, m),
                       onAdhanChanged: (id) => _saveChoice(key, id),
-                      onTest: () => _test(key, settings.modeFor(key)),
+                      onTest: () => _test(key),
                       accent: scheme.primary,
                     ),
                 ],
@@ -383,13 +440,24 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   }
 }
 
-/// P3‑19: on Android 14+, shown when the OS reports the app doesn't yet
-/// have the separate full-screen-intent grant — mirrors [_BatteryCard]'s
-/// look exactly, same "here's a real gap, here's the one button that fixes
-/// it" pattern.
-class _FullScreenIntentCard extends StatelessWidget {
-  final VoidCallback onGrant;
-  const _FullScreenIntentCard({required this.onGrant});
+/// One "this device needs a permission the Adhan really depends on" card —
+/// a real gap, and the single button that closes it. Used for the Android
+/// 12+ exact-alarm grant (without it the alarms are approximate and lose the
+/// OS exemption the lock-screen takeover rides on) and the Android 14+
+/// full-screen-intent grant (without it the OS silently downgrades the
+/// adhan alert to an ordinary heads-up notification).
+class _PermissionCard extends StatelessWidget {
+  final IconData icon;
+  final String message;
+  final String action;
+  final VoidCallback onPressed;
+
+  const _PermissionCard({
+    required this.icon,
+    required this.message,
+    required this.action,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -404,11 +472,11 @@ class _FullScreenIntentCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.fullscreen, color: scheme.onSecondaryContainer),
+                Icon(icon, color: scheme.onSecondaryContainer),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'prayer.full_screen_intent'.tr(),
+                    message,
                     style: TextStyle(color: scheme.onSecondaryContainer),
                   ),
                 ),
@@ -417,10 +485,7 @@ class _FullScreenIntentCard extends StatelessWidget {
             const SizedBox(height: 10),
             Align(
               alignment: AlignmentDirectional.centerEnd,
-              child: FilledButton(
-                onPressed: onGrant,
-                child: Text('prayer.full_screen_intent_action'.tr()),
-              ),
+              child: FilledButton(onPressed: onPressed, child: Text(action)),
             ),
           ],
         ),

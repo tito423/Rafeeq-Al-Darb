@@ -1,8 +1,7 @@
 import '../../../core/models/adhan_mode.dart';
 import '../../../core/models/adhan_option.dart';
 import '../../../core/models/prayer_times.dart';
-import '../../../core/services/adhan_alarm_service.dart';
-import '../../../core/services/adhan_uri_bridge.dart';
+import '../../../core/services/adhan_native.dart';
 import '../../../core/services/prayer_times_service.dart';
 import 'adhan_settings_provider.dart';
 
@@ -28,102 +27,114 @@ AdhanOption _resolveOption(
   return match.isNotEmpty ? match.first : catalog.first;
 }
 
-Future<(String?, String?)> _resolveSound(AdhanMode mode, AdhanOption option) async {
-  if (mode != AdhanMode.full && mode != AdhanMode.audio) return (null, null);
-  if (option.isCustom) {
-    return (null, await AdhanUriBridge.contentUriForFile(option.filePath!));
-  }
-  return (option.rawResource, null);
+AdhanSpec _specFor({
+  required String prayerKey,
+  required AdhanSettings settings,
+  required List<AdhanOption> catalog,
+  required int hour,
+  required int minute,
+  String? adhanVideoPath,
+}) {
+  final mode = settings.modeFor(prayerKey);
+  return AdhanNative.specFor(
+    prayerKey: prayerKey,
+    prayerLabel: _prayerLabelsAr[prayerKey] ?? prayerKey,
+    mode: mode,
+    option: _resolveOption(catalog, settings, prayerKey),
+    // Only the full-screen mode ever shows a clip; carrying a video path for
+    // the other modes would be a promise the alert never keeps.
+    videoPath: mode == AdhanMode.full ? adhanVideoPath : null,
+    hour: hour,
+    minute: minute,
+  );
 }
 
-/// (Re)schedules the daily exact alarm for every one of the 5 prayers from
-/// real, freshly-fetched [times], resolving each prayer's mode + chosen
-/// adhan from the persisted [settings]/[catalog]. Called after every
-/// successful prayer times fetch, and again whenever the Adhan settings
-/// screen changes anything — both real triggers, never a timer-based guess.
-Future<void> rescheduleAdhans(
+/// (Re)schedules the daily alarm for every one of the 5 prayers from real,
+/// freshly-fetched [times], resolving each prayer's mode + chosen adhan from
+/// the persisted [settings]/[catalog]. Called after every successful prayer
+/// times fetch, and again whenever the Adhan settings screen changes
+/// anything — both real triggers, never a timer-based guess.
+///
+/// The alarms themselves are armed natively (`AlarmManager.setAlarmClock`,
+/// see `AdhanScheduler.kt`), which is what makes them survive Doze, an app
+/// swipe-away and a reboot, and what earns the process the background
+/// activity-start exemption the lock-screen alert depends on.
+///
+/// Returns false when the OS refused *exact* alarms and armed them
+/// approximately instead — the settings screen turns that into the one
+/// button that fixes it rather than silently drifting by minutes.
+Future<bool> rescheduleAdhans(
   PrayerTimes times,
   AdhanSettings settings,
   List<AdhanOption> catalog, {
   String? adhanVideoPath,
 }) async {
-  if (times.isEmpty || catalog.isEmpty) return;
+  if (times.isEmpty || catalog.isEmpty) return true;
 
+  final specs = <AdhanSpec>[];
   for (final key in adhanPrayerKeys) {
     final parsed = PrayerTimesService.parseHM(times.byName(key));
     if (parsed == null) continue;
     final (hour, minute) = parsed;
-
-    final mode = settings.modeFor(key);
-    final option = _resolveOption(catalog, settings, key);
-    final (rawResource, customUri) = await _resolveSound(mode, option);
-
-    try {
-      await AdhanAlarmService.instance.scheduleDaily(
+    specs.add(
+      _specFor(
         prayerKey: key,
+        settings: settings,
+        catalog: catalog,
         hour: hour,
         minute: minute,
-        mode: mode,
-        rawResource: rawResource,
-        customUri: customUri,
-        title: 'الصلاة — ${_prayerLabelsAr[key]}',
-        payload: buildAdhanPayload(
-          prayerKey: key,
-          prayerLabel: _prayerLabelsAr[key]!,
-          notificationId: AdhanAlarmService.instance.idFor(key),
-          previewAssetPath: option.assetPath,
-          audioFilePath: option.filePath,
-          videoPath: adhanVideoPath,
-        ),
-      );
-    } catch (_) {
-      // P3‑45: real-device testing found `flutter_local_notifications`
-      // throwing ("Missing type parameter") from its own persisted
-      // scheduled-notification storage on some devices/emulators with
-      // notification history from earlier plugin versions — this call is
-      // inside `PrayerController._load()`, awaited with no guard of its
-      // own, so it was taking the *entire* Home prayer-times card down
-      // with it (real times hidden behind "something went wrong") even
-      // though the times themselves fetched fine and had nothing to do
-      // with alarm scheduling. One prayer's alarm failing to arm is a
-      // real problem worth fixing at its root (a plugin-version issue,
-      // tracked separately), but it must never hide working prayer times
-      // — same "optional, app is fine without it" rule already applied to
-      // `PrayerStatusNotification`.
-    }
+        adhanVideoPath: adhanVideoPath,
+      ),
+    );
   }
+  if (specs.isEmpty) return true;
+  return AdhanNative.scheduleDaily(specs);
 }
 
-/// Fires one prayer's Adhan a few seconds from now, exactly as scheduled —
-/// a real QA tool so the whole pipeline (channel, sound, full-screen intent,
-/// Stop/Mute) can be verified without waiting for an actual prayer time.
+/// Fires one prayer's Adhan a few seconds from now through the *identical*
+/// alarm → receiver → foreground-service path a real prayer takes, so the
+/// "تجربة" button proves the whole pipeline (exact alarm, lock-screen
+/// takeover, Stop/Mute) rather than a lookalike of it.
 Future<void> fireAdhanTest({
   required String prayerKey,
-  required AdhanMode mode,
   required AdhanSettings settings,
   required List<AdhanOption> catalog,
   Duration from = const Duration(seconds: 8),
   String? adhanVideoPath,
 }) async {
   if (catalog.isEmpty) return;
-
-  final option = _resolveOption(catalog, settings, prayerKey);
-  final (rawResource, customUri) = await _resolveSound(mode, option);
-
-  await AdhanAlarmService.instance.scheduleTest(
-    prayerKey: prayerKey,
-    from: from,
-    mode: mode,
-    rawResource: rawResource,
-    customUri: customUri,
-    title: 'الصلاة — ${_prayerLabelsAr[prayerKey]} (تجربة)',
-    payload: buildAdhanPayload(
+  await AdhanNative.scheduleTest(
+    _specFor(
       prayerKey: prayerKey,
-      prayerLabel: _prayerLabelsAr[prayerKey]!,
-      notificationId: AdhanAlarmService.instance.testIdFor(prayerKey),
-      previewAssetPath: option.assetPath,
-      audioFilePath: option.filePath,
-      videoPath: adhanVideoPath,
+      settings: settings,
+      catalog: catalog,
+      hour: 0,
+      minute: 0,
+      adhanVideoPath: adhanVideoPath,
     ),
+    delay: from,
+  );
+}
+
+/// The spec the settings screen's "معاينة الأذان" plays — the user's current
+/// default sound and clip, always in full-screen mode, since a preview of a
+/// silent mode would have nothing to show.
+AdhanSpec previewSpec({
+  required AdhanSettings settings,
+  required List<AdhanOption> catalog,
+  String? adhanVideoPath,
+  String prayerKey = 'dhuhr',
+  required String prayerLabel,
+}) {
+  final option = catalog
+      .where((o) => o.id == settings.defaultAdhanId)
+      .firstOrNull ??
+      catalog.first;
+  return AdhanNative.specFor(
+    prayerKey: prayerKey,
+    prayerLabel: prayerLabel,
+    mode: AdhanMode.full,
+    option: option,
+    videoPath: adhanVideoPath,
   );
 }

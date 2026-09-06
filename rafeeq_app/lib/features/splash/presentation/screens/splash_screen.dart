@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../app/shell/app_shell.dart';
-import '../../../../core/services/adhan_alarm_service.dart';
+import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../onboarding/data/onboarding_state.dart';
@@ -149,7 +149,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     } catch (_) {
       // best-effort — prayer times fall back to cache without it
     }
-    await AdhanAlarmService.instance.requestStartupPermissions();
+    await AlarmPermissionsService.instance.requestStartupPermissions();
   }
 
   @override

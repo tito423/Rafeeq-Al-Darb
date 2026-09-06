@@ -289,7 +289,11 @@
     "video_selected": "Selecionado",
     "video_preview": "Pré-visualizar",
     "per_prayer_desc": "Um modo e muezim por oração",
-    "azan_of": "Adhan — oração do {}"
+    "azan_of": "Adhan — oração do {}",
+    "exact_alarm": "O adhan funciona tal como um alarme, por isso precisa da permissão de \"alarmes exatos\" para tocar à hora certa e abrir sobre o ecrã de bloqueio",
+    "exact_alarm_action": "Conceder permissão",
+    "muted_now": "Adhan silenciado",
+    "preview_badge": "Pré-visualização"
   },
   "qibla": {
     "locating": "A localizar...",

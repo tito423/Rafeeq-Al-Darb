@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Keeps the ten bundled adhan recordings out of the resource shrinker's jaws.
+
+    This fixes a real, pre-existing bug found while rebuilding the Adhan: the
+    release build has R8 resource shrinking on, and `res/raw/azan1..azan10`
+    were being stripped from every release APK (`reachable=false` for all ten
+    in build/app/outputs/mapping/release/resources.txt). Nothing in the app
+    ever writes `R.raw.azan1` — the raw resource name comes out of
+    `assets/data/catalogs/adhans.json` at runtime and is resolved with
+    `Resources.getIdentifier`, which the shrinker's "safe" mode cannot see
+    because there is no matching string literal anywhere in the dex. So the
+    debug APK had the sounds and the release APK the owner actually installs
+    did not — the adhan could not play no matter how correct the alarm was.
+
+    `tools:keep` is the documented way to pin dynamically-referenced
+    resources. The wildcard covers every `azanN`, so adding an eleventh
+    bundled muezzin needs no change here.
+-->
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@raw/azan*"
+    tools:shrinkMode="safe" />

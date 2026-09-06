@@ -289,7 +289,11 @@
     "video_selected": "Sélectionné",
     "video_preview": "Aperçu",
     "per_prayer_desc": "Un mode et un muezzin par prière",
-    "azan_of": "Adhan — prière du {}"
+    "azan_of": "Adhan — prière du {}",
+    "exact_alarm": "L'adhan se comporte exactement comme un réveil : il lui faut l'autorisation « alarmes exactes » pour sonner à l'heure et s'ouvrir sur l'écran verrouillé",
+    "exact_alarm_action": "Accorder l'autorisation",
+    "muted_now": "Adhan en sourdine",
+    "preview_badge": "Aperçu"
   },
   "qibla": {
     "locating": "Localisation en cours...",

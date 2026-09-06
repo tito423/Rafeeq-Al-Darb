@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../../core/services/adhan_alarm_service.dart';
+import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/services/adhan_uri_bridge.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -54,7 +54,7 @@ class _PermissionsSectionState extends State<PermissionsSection>
   Future<void> _refreshAll() async {
     final notif = await Permission.notification.status;
     final loc = await Geolocator.checkPermission();
-    final battery = await AdhanAlarmService.instance.isBatteryOptimizationExempt();
+    final battery = await AlarmPermissionsService.instance.isBatteryOptimizationExempt();
     final fullScreen = await AdhanUriBridge.canUseFullScreenIntent();
     if (!mounted) return;
     setState(() {
@@ -106,7 +106,7 @@ class _PermissionsSectionState extends State<PermissionsSection>
             subtitle: 'settings.perm_battery_desc'.tr(),
             granted: _batteryOk,
             onTap: () async {
-              await AdhanAlarmService.instance.requestBatteryOptimizationExemption();
+              await AlarmPermissionsService.instance.requestBatteryOptimizationExemption();
               _refreshAll();
             },
           ),

@@ -289,7 +289,11 @@
     "video_selected": "Elegido",
     "video_preview": "Vista previa",
     "per_prayer_desc": "Un modo y almuédano por oración",
-    "azan_of": "Adhan — oración del {}"
+    "azan_of": "Adhan — oración del {}",
+    "exact_alarm": "El adhán funciona igual que una alarma, por lo que necesita el permiso de \"alarmas exactas\" para sonar a su hora y abrirse sobre la pantalla de bloqueo",
+    "exact_alarm_action": "Conceder permiso",
+    "muted_now": "Adhán silenciado",
+    "preview_badge": "Vista previa"
   },
   "qibla": {
     "locating": "Localizándote...",

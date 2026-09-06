@@ -11,11 +11,25 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 
+import 'adhan_entry.dart';
 import 'app/rafeeq_app.dart';
-import 'core/services/adhan_alarm_service.dart';
+import 'core/services/alarm_permissions_service.dart';
 import 'core/services/sunan_suwar_reminder_service.dart';
-import 'features/adhan/presentation/adhan_navigation.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
+
+/// The Adhan alert screen's Dart entrypoint, run by `AdhanActivity` (Kotlin)
+/// in its own Flutter engine instead of [main].
+///
+/// It has to be declared *in this library*: Flutter compiles only what is
+/// reachable from the app's entrypoint, so an alternate entrypoint living in
+/// a file nothing imports would be dropped from the release snapshot and the
+/// Activity would come up blank. `@pragma('vm:entry-point')` then keeps it
+/// from being tree-shaken even though no Dart code calls it.
+///
+/// The body is one line on purpose - everything it needs lives in
+/// `adhan_entry.dart`, which this library imports (and thereby compiles).
+@pragma('vm:entry-point')
+Future<void> adhanMain() => runAdhanAlertApp();
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -72,10 +86,14 @@ Future<void> main() async {
     tz.setLocalLocation(tz.getLocation(name));
   } catch (_) {}
 
-  await AdhanAlarmService.instance.initialize();
-  AdhanAlarmService.onOpenAdhan = openAdhanFromPayload;
-  final coldLaunchPayload =
-      await AdhanAlarmService.instance.consumeColdLaunchPayload();
+  // The Adhan itself no longer boots anything here. Its alarms are armed
+  // natively (AlarmManager.setAlarmClock), it fires into its own Kotlin
+  // BroadcastReceiver + foreground service, and it renders in its own
+  // Activity running the `adhanMain` entrypoint (lib/adhan_entry.dart) --
+  // none of which needs the main app's engine to be alive, which is the
+  // whole point. All that is left for main() is the notifications plugin
+  // and the permission gates.
+  await AlarmPermissionsService.instance.initialize();
 
   await SunanSuwarReminderService.instance.initialize();
   SunanSuwarReminderService.onOpenSurah = openSunanSuwarFromPayload;
@@ -111,13 +129,4 @@ Future<void> main() async {
     ),
   );
 
-  // The app was launched by tapping an Adhan notification while fully
-  // killed — the live tap callback (`onOpenAdhan`, wired above) only fires
-  // for a running/backgrounded app, so a cold launch needs this one-time
-  // check instead. Deferred a frame so the navigator is actually mounted.
-  if (coldLaunchPayload != null) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      openAdhanFromPayload(coldLaunchPayload);
-    });
-  }
 }

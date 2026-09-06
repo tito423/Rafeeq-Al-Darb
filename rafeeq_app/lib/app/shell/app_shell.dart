@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
-import '../../core/services/adhan_alarm_service.dart';
 import '../../core/services/prayer_status_notification.dart';
 import '../../features/adhan/data/prayer_status_enabled_provider.dart';
-import '../../features/adhan/presentation/adhan_navigation.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
 import '../../features/azkar/presentation/screens/tasbeeh_screen.dart';
 import '../../features/home/data/prayer_controller.dart';
@@ -60,7 +58,6 @@ class _AppShellState extends ConsumerState<AppShell>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _syncPrayerStatus();
-      _checkActiveAdhan();
     });
   }
 
@@ -74,7 +71,6 @@ class _AppShellState extends ConsumerState<AppShell>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _syncPrayerStatus();
-      _checkActiveAdhan();
       _recheckLocationIfDenied();
     }
   }
@@ -90,30 +86,6 @@ class _AppShellState extends ConsumerState<AppShell>
     final result = ref.read(prayerControllerProvider).valueOrNull;
     if (result?.locationDenied == true) {
       ref.read(prayerControllerProvider.notifier).refresh();
-    }
-  }
-
-  /// P3‑43 #2: fallback for a full-screen Adhan alert that should have
-  /// auto-navigated via its notification Intent but didn't — see
-  /// `AdhanAlarmService.findActiveAdhanPayload`'s own doc for why this
-  /// exists as a second, OS/OEM-agnostic path rather than trusting that
-  /// Intent journey alone. `openAdhanFromPayload` itself no-ops if the
-  /// alert screen is already showing, so this is safe to call on every
-  /// resume, not just a suspicious one.
-  Future<void> _checkActiveAdhan() async {
-    // P3‑46: a couple of short retries — when a fullScreenIntent wakes the
-    // app over the lock screen, this resume can fire a beat before the OS
-    // has the notification in its active list, so a single query could miss
-    // it and leave the last route (e.g. Adhan settings) showing instead of
-    // the alert. `openAdhanFromPayload` no-ops once the alert is showing, so
-    // extra checks after it lands are harmless.
-    for (var attempt = 0; attempt < 3; attempt++) {
-      final payload = await AdhanAlarmService.instance.findActiveAdhanPayload();
-      if (payload != null) {
-        openAdhanFromPayload(payload);
-        return;
-      }
-      await Future<void>.delayed(const Duration(milliseconds: 400));
     }
   }
 
