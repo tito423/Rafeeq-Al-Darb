@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-06 23:27 — IN PROGRESS — resume here**
+**2026-09-06 23:52 — IN PROGRESS — resume here**
 
-P3-56 UI polish. (1) Splash glitch fixed with flutter_native_splash: added the dep + config (color #071625 matching AppColors.night, image app_mark.png, incl android_12), regenerated the native drawables/styles via flutter_native_splash:create; main() now FlutterNativeSplash.preserve()s the OS splash through the whole bootstrap, and SplashScreen lifts it (FlutterNativeSplash.remove()) only once the video's first frame is painted (post-frame) - or, with no/failed video, onto the identical Flutter app-mark - removing the old icon->flash->icon->video sequence. Dropped the now-redundant AnimatedSwitcher icon/video crossfade. (2) Hadith detail screen is now a PageView.builder over the chapter's hadiths - swipe left/right slides between them (Directionality-aware), and the Previous/Next buttons drive the same PageController so both stay in sync; content extracted to a _HadithContent page builder. (3) Imam-name formatting: new _HadithBookTile - collection name bold/titleMedium, imam (author) below in secondary tone, chapter/hadith counts smaller again, every line single-line+ellipsis so a long imam name can't overflow or collide with the counts (the old crammed one-line ListTile subtitle); also wrapped the hadith book screen header's author in Expanded+ellipsis to kill its RenderFlex overflow risk. flutter analyze clean, tests 21/21.
+docs: rewrite HANDOFF_PROMPT.md as one coherent handoff for the current state - hard rules, workflow, env gotchas, the architecture worth knowing (7-tab nav with More, the two separate download engines incl the service-owned recitation notifiers, raster/text mushaf + immersive auto-scroll, adhan full-screen player + preview card, flutter_native_splash flow), current state (v2.1.17 released; P3-55 download rebuild + P3-56 splash/hadith/imam committed unreleased -> v2.1.18), and the open items (release v2.1.18 on owner go-ahead, owner real-device verification of lock-screen adhan + background download continuation with background_downloader as the fallback, Shamarly still needs a real page-image source).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
