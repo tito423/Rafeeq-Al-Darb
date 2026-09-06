@@ -72,6 +72,7 @@ Future<void> rescheduleAdhans(
           prayerLabel: _prayerLabelsAr[key]!,
           notificationId: AdhanAlarmService.instance.idFor(key),
           previewAssetPath: option.assetPath,
+          audioFilePath: option.filePath,
           videoPath: adhanVideoPath,
         ),
       );
@@ -121,6 +122,7 @@ Future<void> fireAdhanTest({
       prayerLabel: _prayerLabelsAr[prayerKey]!,
       notificationId: AdhanAlarmService.instance.testIdFor(prayerKey),
       previewAssetPath: option.assetPath,
+      audioFilePath: option.filePath,
       videoPath: adhanVideoPath,
     ),
   );

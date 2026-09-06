@@ -285,7 +285,8 @@
     "video_select": "Sélectionner",
     "video_selected": "Sélectionné",
     "video_preview": "Aperçu",
-    "per_prayer_desc": "Un mode et un muezzin par prière"
+    "per_prayer_desc": "Un mode et un muezzin par prière",
+    "azan_of": "Adhan — prière du {}"
   },
   "qibla": {
     "locating": "Localisation en cours...",

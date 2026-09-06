@@ -285,7 +285,8 @@
     "video_select": "Elegir",
     "video_selected": "Elegido",
     "video_preview": "Vista previa",
-    "per_prayer_desc": "Un modo y almuédano por oración"
+    "per_prayer_desc": "Un modo y almuédano por oración",
+    "azan_of": "Adhan — oración del {}"
   },
   "qibla": {
     "locating": "Localizándote...",

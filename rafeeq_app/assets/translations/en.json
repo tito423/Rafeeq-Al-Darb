@@ -285,7 +285,8 @@
     "video_select": "Select",
     "video_selected": "Selected",
     "video_preview": "Preview",
-    "per_prayer_desc": "A separate mode and muezzin per prayer"
+    "per_prayer_desc": "A separate mode and muezzin per prayer",
+    "azan_of": "Adhan — {} prayer"
   },
   "qibla": {
     "locating": "Locating you...",

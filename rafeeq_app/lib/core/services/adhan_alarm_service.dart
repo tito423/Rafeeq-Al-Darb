@@ -242,16 +242,53 @@ class AdhanAlarmService {
           actions: actions,
         );
 
-      case AdhanMode.audio:
       case AdhanMode.full:
+        // P3‑52: full-screen mode is now a SILENT full-screen-intent trigger.
+        // The adhan audio is played by the full-screen player itself (via
+        // just_audio, so the karaoke subtitles can sync to its real playback
+        // position) — if the channel also played the sound we'd get a double
+        // adhan. So the channel is silent; it exists only to launch the
+        // screen over the lock screen and carry the Stop/Mute actions.
+        // (Tradeoff: on a device where the OS refuses the full-screen-intent
+        // launch, the screen — and thus the audio — won't appear; that's why
+        // the app surfaces the full-screen-intent + autostart permission
+        // cards. Users who want guaranteed sound even when the app can't be
+        // launched should pick "صوت فقط" (audio) mode, which keeps the native
+        // channel sound below.)
+        const fullChannelId = 'radh_full_silent';
+        await _ensureChannel(
+          androidPlugin,
+          const AndroidNotificationChannel(
+            fullChannelId,
+            'أذان — شاشة كاملة',
+            description: 'يفتح شاشة الأذان الكاملة عند وقت الصلاة',
+            importance: Importance.max,
+            playSound: false,
+            enableVibration: true,
+          ),
+        );
+        return const AndroidNotificationDetails(
+          fullChannelId,
+          'أذان — شاشة كاملة',
+          importance: Importance.max,
+          priority: Priority.max,
+          category: AndroidNotificationCategory.alarm,
+          fullScreenIntent: true,
+          ongoing: true,
+          autoCancel: false,
+          playSound: false,
+          enableVibration: true,
+          actions: actions,
+        );
+
+      case AdhanMode.audio:
         final sound = rawResource != null
             ? RawResourceAndroidNotificationSound(rawResource)
             : (customUri != null
                   ? UriAndroidNotificationSound(customUri)
                   : null);
-        final prefix = mode == AdhanMode.full ? 'radh_full' : 'radh_audio';
         final channelId = _soundChannelId(
-          prefix,
+          'radh_audio',
           raw: rawResource,
           uri: customUri,
         );
@@ -259,7 +296,7 @@ class AdhanAlarmService {
           androidPlugin,
           AndroidNotificationChannel(
             channelId,
-            mode == AdhanMode.full ? 'أذان — شاشة كاملة' : 'أذان — صوت',
+            'أذان — صوت',
             description: 'صوت الأذان الحقيقي لوقت الصلاة',
             importance: Importance.max,
             sound: sound,
@@ -270,12 +307,12 @@ class AdhanAlarmService {
         );
         return AndroidNotificationDetails(
           channelId,
-          mode == AdhanMode.full ? 'أذان — شاشة كاملة' : 'أذان — صوت',
+          'أذان — صوت',
           importance: Importance.max,
           priority: Priority.max,
           category: AndroidNotificationCategory.alarm,
           audioAttributesUsage: AudioAttributesUsage.alarm,
-          fullScreenIntent: mode == AdhanMode.full,
+          fullScreenIntent: false,
           ongoing: true,
           autoCancel: false,
           playSound: sound != null,
@@ -489,12 +526,14 @@ String buildAdhanPayload({
   required String prayerLabel,
   required int notificationId,
   String? previewAssetPath,
+  String? audioFilePath,
   String? videoPath,
 }) => jsonEncode({
   'prayer': prayerKey,
   'label': prayerLabel,
   'id': notificationId,
   'asset': ?previewAssetPath,
+  'audioFile': ?audioFilePath,
   'video': ?videoPath,
 });
 
@@ -503,7 +542,15 @@ class AdhanPayload {
   final String prayerKey;
   final String prayerLabel;
   final int notificationId;
+
+  /// Bundled adhan Flutter asset (one of the 10 muezzins). The full-screen
+  /// player (P3‑52) plays this via just_audio and syncs subtitles to its
+  /// position.
   final String? previewAssetPath;
+
+  /// P3‑52 — on-device file of a custom imported adhan (assetPath is null for
+  /// those); the full-screen player plays it via just_audio the same way.
+  final String? audioFilePath;
 
   /// P2‑7 — local path of a downloaded background clip for video-mode adhan.
   final String? videoPath;
@@ -513,6 +560,7 @@ class AdhanPayload {
     required this.prayerLabel,
     required this.notificationId,
     this.previewAssetPath,
+    this.audioFilePath,
     this.videoPath,
   });
 
@@ -525,6 +573,7 @@ class AdhanPayload {
         prayerLabel: m['label'] as String,
         notificationId: m['id'] as int,
         previewAssetPath: m['asset'] as String?,
+        audioFilePath: m['audioFile'] as String?,
         videoPath: m['video'] as String?,
       );
     } catch (_) {

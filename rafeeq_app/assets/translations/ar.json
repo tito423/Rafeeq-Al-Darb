@@ -285,7 +285,8 @@
     "video_select": "اختيار",
     "video_selected": "مختار",
     "video_preview": "معاينة",
-    "per_prayer_desc": "وضع ومؤذّن مستقل لكل صلاة"
+    "per_prayer_desc": "وضع ومؤذّن مستقل لكل صلاة",
+    "azan_of": "أذان صلاة {}"
   },
   "qibla": {
     "locating": "جارِ تحديد موقعك...",
