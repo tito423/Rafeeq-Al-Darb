@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-06 21:39 — IN PROGRESS — resume here**
+**2026-09-06 21:53 — IN PROGRESS — resume here**
 
-P3-54 round 2: adhan preview + alarm hardening + immersive auto-scroll. (1) New 'Preview Adhan' card in Adhan settings opens the real AdhanFullScreenScreen on demand (default adhan + chosen video + synced text), no waiting for prayer time; prayer.preview_azan/_desc added to all 6 locales. (2) Android alarm hardening: added SYSTEM_ALERT_WINDOW to the manifest as a lock-screen fallback path (fullScreenIntent+category=alarm+audioAttributesUsage=alarm and showWhenLocked/turnScreenOn were already in place; the @pragma vm:entry-point background action handler and the Android-14 USE_FULL_SCREEN_INTENT programmatic check + settings redirect already existed). NOTE: android:showOnLockScreen is not a real Android manifest attribute (would break the build); the correct pair showWhenLocked+turnScreenOn is kept. (3) Text-mushaf immersive reading: added the hybrid auto-scroll the owner asked for - NotificationListener<ScrollNotification> pauses the auto-scroll the instant the reader drags (distinguished from the auto-scroll's own jumpTo via dragDetails) and resumes 700ms after release/fling; a double-tap anywhere exits full-screen (recognizer only installed while pageFillScreen, single-pointer so pinch-zoom is untouched); a translucent floating fullscreen-exit button; and exiting immersive now also stops the auto-scroll. Immersive SystemUiMode.immersiveSticky/edgeToEdge and the 15-120px/s speed slider already existed. flutter analyze clean, tests 21/21.
+P3-54 round 2 polish: move the immersive-mode floating exit button down (EdgeInsetsDirectional start:8, top:56) so it no longer overlaps the surah/juz running-header badges that occupy the top corners. Live-verified round 2 on emulator-5554: Preview Adhan card opens the real full-screen player (mosque + live clock + synced 'الله أكبر' + Mute/Stop); text-mushaf auto-scroll runs with the speed slider and auto-turns pages; ملء الشاشة hides both system bars (immersiveSticky) edge-to-edge; the floating exit button leaves immersive AND stops auto-scroll. flutter analyze clean, tests 21/21.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -520,8 +520,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               SafeArea(
                 child: Align(
                   alignment: AlignmentDirectional.topStart,
+                  // Sits below the running-header badges (surah/juz occupy the
+                  // top corners) so it never overlaps them.
                   child: Padding(
-                    padding: const EdgeInsets.all(8),
+                    padding:
+                        const EdgeInsetsDirectional.only(start: 8, top: 56),
                     child: Material(
                       color: Colors.black.withValues(alpha: 0.35),
                       shape: const CircleBorder(),
