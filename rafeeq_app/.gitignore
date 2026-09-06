@@ -67,3 +67,14 @@ android/app/*.keystore
 # Scratch / temporary
 scratch/
 scratch_test.dart
+
+# ── Generated databases — regenerable, kept out of git ───────────────────────
+# GitHub hard-rejects any single file over 100 MB, and quran_sciences.db is
+# ~132 MB: every push was refused by the server, which is why 175 commits sat
+# unpushed while releases carried only APKs. Both files are build artifacts
+# produced by scripts/, not sources — the same rule this repo already applies
+# to scripts/book_text_build/. They are still bundled into the APK, so a build
+# machine must have them: see assets/data/README.md for how to regenerate or
+# download each one.
+assets/data/quran_sciences.db
+assets/data/hadith.db
