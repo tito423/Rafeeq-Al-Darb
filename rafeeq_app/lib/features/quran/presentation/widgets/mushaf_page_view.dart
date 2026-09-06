@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,10 +56,18 @@ class _MushafPageViewState extends State<MushafPageView> {
 
   late Future<String> _ready;
 
+  /// Raster editions only: the on-disk scan if it's already cached (offline),
+  /// else null → stream from the network with `cached_network_image`.
+  late Future<File?> _rasterReady;
+
   @override
   void initState() {
     super.initState();
-    _ready = _load();
+    if (widget.edition.isRaster) {
+      _rasterReady = _loadRaster();
+    } else {
+      _ready = _load();
+    }
   }
 
   @override
@@ -64,9 +75,16 @@ class _MushafPageViewState extends State<MushafPageView> {
     super.didUpdateWidget(old);
     if (old.page != widget.page || old.edition.id != widget.edition.id) {
       _transform.value = Matrix4.identity();
-      _ready = _load();
+      if (widget.edition.isRaster) {
+        _rasterReady = _loadRaster();
+      } else {
+        _ready = _load();
+      }
     }
   }
+
+  Future<File?> _loadRaster() =>
+      MushafPageService.instance.cachedImageFile(widget.edition.id, widget.page);
 
   @override
   void dispose() {
@@ -96,6 +114,8 @@ class _MushafPageViewState extends State<MushafPageView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    if (widget.edition.isRaster) return _buildRaster(theme);
 
     // The mushaf glyphs are monochrome, so a single srcIn recolour carries the
     // whole page into the active theme.
@@ -178,6 +198,81 @@ class _MushafPageViewState extends State<MushafPageView> {
                   },
                 ),
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Raster (scan) rendering: the finished coloured page as an image, disk-
+  /// first for offline then streamed + cached from R2. No polygon layer, so a
+  /// tap just forwards to [onBackgroundTap] (e.g. exit full-screen). A capped
+  /// `memCacheWidth` keeps a ~1 MB JPEG from being decoded at full size into
+  /// memory (P3‑53 perf).
+  Widget _buildRaster(ThemeData theme) {
+    final dpr = MediaQuery.of(context).devicePixelRatio;
+    final memCacheWidth =
+        (MediaQuery.of(context).size.width * dpr).clamp(360, 1400).round();
+
+    return FutureBuilder<File?>(
+      future: _rasterReady,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return _Centered(
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 12),
+              Text('quran.loading_page'.tr()),
+            ],
+          );
+        }
+
+        final localFile = snapshot.data;
+        final Widget image = localFile != null
+            ? Image.file(
+                localFile,
+                fit: BoxFit.contain,
+                cacheWidth: memCacheWidth,
+                gaplessPlayback: true,
+              )
+            : CachedNetworkImage(
+                imageUrl: widget.edition.imagePageUrl(widget.page),
+                fit: BoxFit.contain,
+                memCacheWidth: memCacheWidth,
+                placeholder: (_, _) => _Centered(
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 12),
+                    Text('quran.loading_page'.tr()),
+                  ],
+                ),
+                errorWidget: (_, _, _) => _Centered(
+                  children: [
+                    Icon(Icons.cloud_off,
+                        size: 56, color: theme.colorScheme.outline),
+                    const SizedBox(height: 10),
+                    Text('errors.offline'.tr(), textAlign: TextAlign.center),
+                    const SizedBox(height: 10),
+                    FilledButton.tonal(
+                      onPressed: () => setState(() {
+                        _rasterReady = _loadRaster();
+                      }),
+                      child: Text('common.retry'.tr()),
+                    ),
+                  ],
+                ),
+              );
+
+        return ClipRect(
+          child: InteractiveViewer(
+            transformationController: _transform,
+            minScale: 1,
+            maxScale: 5,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => widget.onBackgroundTap?.call(),
+              child: Center(child: image),
             ),
           ),
         );

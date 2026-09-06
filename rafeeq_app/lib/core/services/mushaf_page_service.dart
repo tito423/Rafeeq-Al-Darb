@@ -131,6 +131,40 @@ class MushafPageService {
     return _remember(key, svg);
   }
 
+  /// Raster editions: the on-disk scan for [page] if already downloaded, else
+  /// null (the reader streams it from the network instead). Stored in the same
+  /// per-edition dir the SVG cache uses, so `cachedPages`/`cacheSizeBytes`/
+  /// `clearCache` cover raster editions unchanged.
+  Future<File?> cachedImageFile(String editionId, int page) async {
+    final dir = await _pageDir(editionId);
+    final f = File(p.join(dir.path, '${page.toString().padLeft(3, '0')}.jpg'));
+    return (f.existsSync() && await f.length() > 4096) ? f : null;
+  }
+
+  /// Downloads one raster page scan to disk (skips one already present). Used by
+  /// [prefetchEdition] for image editions — the raster counterpart of
+  /// [svgForPage]'s network branch.
+  Future<void> _fetchImageToDisk(
+      String editionId, String imagePath, int page) async {
+    final dir = await _pageDir(editionId);
+    final file = File(p.join(dir.path, '${page.toString().padLeft(3, '0')}.jpg'));
+    if (file.existsSync() && await file.length() > 4096) return;
+    final res = await _dio.get<List<int>>(
+      AppConfig.mushafImageUrl(imagePath, page),
+      options: Options(
+        responseType: ResponseType.bytes,
+        receiveTimeout: const Duration(seconds: 40),
+      ),
+    );
+    final bytes = res.data ?? const <int>[];
+    if (bytes.length < 4096) {
+      throw StateError('Incomplete mushaf scan $page (${bytes.length} bytes)');
+    }
+    final tmp = File('${file.path}.part');
+    await tmp.writeAsBytes(bytes, flush: true);
+    await tmp.rename(file.path);
+  }
+
   String _remember(String key, String svg) {
     // Small ring buffer: neighbouring pages stay hot while paging, without
     // holding all 604 pages (~350 MB uncompressed) in memory.
@@ -160,6 +194,7 @@ class MushafPageService {
     int toPage = lastPage,
     void Function(int done, int total)? onProgress,
     String? title,
+    String? imagePath,
   }) async {
     if (_prefetching.contains(editionId)) return;
     _prefetching.add(editionId);
@@ -198,11 +233,15 @@ class MushafPageService {
           break;
         }
         try {
-          await svgForPage(
-            editionId: editionId,
-            sourcePath: sourcePath,
-            page: page,
-          );
+          if (imagePath != null) {
+            await _fetchImageToDisk(editionId, imagePath, page);
+          } else {
+            await svgForPage(
+              editionId: editionId,
+              sourcePath: sourcePath,
+              page: page,
+            );
+          }
         } catch (_) {
           // leave this page for a later run
         }

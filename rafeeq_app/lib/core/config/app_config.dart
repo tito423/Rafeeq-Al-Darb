@@ -30,6 +30,13 @@ abstract final class AppConfig {
   static String mushafPageUrl(String sourcePath, int page) =>
       '$mushafBase/$sourcePath/svg/${page.toString().padLeft(3, '0')}.svg';
 
+  /// P3‑53: raster (image-scan) mushaf pages, hosted first-party on the R2
+  /// content bucket under `mushaf/<imagePath>/NNN.jpg` (e.g. the coloured
+  /// Tajweed mushaf at `mushaf/tajweed/002.jpg`). Uses [contentBaseUrl] so it
+  /// is overridable at build time the same way every other content URL is.
+  static String mushafImageUrl(String imagePath, int page) =>
+      '$contentBaseUrl/mushaf/$imagePath/${page.toString().padLeft(3, '0')}.jpg';
+
   /// Ayah-level recitation (real CDN by islamic.network).
   static const String quranAudioBase =
       'https://cdn.islamic.network/quran/audio';

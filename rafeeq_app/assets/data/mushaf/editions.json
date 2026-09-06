@@ -18,6 +18,19 @@
       "is_default": true
     },
     {
+      "id": "tajweed_color",
+      "image_path": "tajweed",
+      "name_ar": "مصحف التجويد الملوّن",
+      "name_en": "Colored Tajweed Mushaf",
+      "riwayah_ar": "حفص عن عاصم — بألوان التجويد",
+      "riwayah_en": "Hafs — colour-coded tajweed",
+      "pages": 604,
+      "ayahs": 6236,
+      "sciences_aligned": true,
+      "diverging_surahs": [],
+      "is_default": false
+    },
+    {
       "id": "shubah_kfqc",
       "source_path": "shubah/kfqc",
       "name_ar": "مصحف المدينة — رواية شعبة",

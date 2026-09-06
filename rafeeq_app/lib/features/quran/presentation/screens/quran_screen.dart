@@ -290,6 +290,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   @override
   Widget build(BuildContext context) {
     final mushaf = ref.watch(mushafDataProvider);
+    // P3‑53: a raster (image-scan) edition — e.g. the coloured Tajweed mushaf —
+    // has no reflowable text form, so it's always shown as page images. This
+    // coerces the reader into image mode and hides the text/image toggle and
+    // the text-only controls for those editions.
+    final isRaster =
+        ref.watch(currentMushafEditionProvider).valueOrNull?.isRaster ?? false;
     // P2‑11: a khatma's "اقرأ اليوم" (or its card) asks for a page here,
     // then switches to this tab — consume it once and clear it so it
     // doesn't re-fire on every rebuild.
@@ -339,7 +345,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           spacing: 4,
                           runSpacing: 0,
                           children: [
-                            if (_mode == MushafMode.text) ...[
+                            if (_mode == MushafMode.text && !isRaster) ...[
                               ToolbarAction(
                                 icon: Icons.text_decrease,
                                 label: 'quran.font_smaller'.tr(),
@@ -420,22 +426,25 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               label: 'quran.editions'.tr(),
                               onPressed: () => MushafEditionSheet.show(context),
                             ),
-                            ToolbarAction(
-                              icon: _mode == MushafMode.text
-                                  ? Icons.image_outlined
-                                  : Icons.notes,
-                              label: _mode == MushafMode.text
-                                  ? 'quran.mushaf_mode'.tr()
-                                  : 'quran.text_mode'.tr(),
-                              onPressed: () {
-                                setState(() {
-                                  _mode = _mode == MushafMode.text
-                                      ? MushafMode.image
-                                      : MushafMode.text;
-                                });
-                                _persistMode();
-                              },
-                            ),
+                            // A raster edition has no text form, so its
+                            // text/image toggle is hidden (always image).
+                            if (!isRaster)
+                              ToolbarAction(
+                                icon: _mode == MushafMode.text
+                                    ? Icons.image_outlined
+                                    : Icons.notes,
+                                label: _mode == MushafMode.text
+                                    ? 'quran.mushaf_mode'.tr()
+                                    : 'quran.text_mode'.tr(),
+                                onPressed: () {
+                                  setState(() {
+                                    _mode = _mode == MushafMode.text
+                                        ? MushafMode.image
+                                        : MushafMode.text;
+                                  });
+                                  _persistMode();
+                                },
+                              ),
                           ],
                         ),
                       ),
@@ -553,7 +562,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             final ayahs = snap.data!;
-            if (_mode == MushafMode.image) {
+            // A raster edition is always shown as page images, regardless of
+            // the persisted text/image mode (it has no reflowable text form).
+            if (_mode == MushafMode.image || (edition?.isRaster ?? false)) {
               if (edition == null) {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -563,7 +574,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 highlight: _highlightRegion(edition.id, page),
                 onAyahTap: (region) =>
                     _onImageAyahTap(region, ayahs, data, edition),
-                onLoadFailed: () => setState(() => _mode = MushafMode.text),
+                onLoadFailed: edition.isRaster
+                    ? null
+                    : () => setState(() => _mode = MushafMode.text),
                 // Image mode never had a tap-to-hide-toolbar gesture (only
                 // text mode does, since P3‑42) — deliberately not adding
                 // one here. This only exists so a full-screen image-mode

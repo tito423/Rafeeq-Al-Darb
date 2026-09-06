@@ -111,6 +111,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
       _service.prefetchEdition(
         editionId: widget.edition.id,
         sourcePath: widget.edition.sourcePath,
+        imagePath: widget.edition.imagePath,
         title: widget.edition.nameAr,
       ),
     );

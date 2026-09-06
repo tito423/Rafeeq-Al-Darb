@@ -33,6 +33,9 @@ class QuranBookCoverThumbnail extends StatelessWidget {
   static const Map<String, _Leather> _palette = {
     // Madinah Hafs — royal emerald green.
     'hafs_kfqc': _Leather(Color(0xFF063D27), Color(0xFF0B5D3B), Color(0xFF14814F)),
+    // Coloured Tajweed — deep maroon (نبيتي).
+    'tajweed_color':
+        _Leather(Color(0xFF460B18), Color(0xFF6E1327), Color(0xFF922038)),
     // Shu'bah — deep plum.
     'shubah_kfqc': _Leather(Color(0xFF241238), Color(0xFF3A2350), Color(0xFF553472)),
     // Duri — dark bronze/olive.
@@ -41,6 +44,15 @@ class QuranBookCoverThumbnail extends StatelessWidget {
     'qalon_kfqc': _Leather(Color(0xFF3E1019), Color(0xFF5A1E2B), Color(0xFF833141)),
     // Warsh — royal navy (كحلي).
     'warsh_kfqc': _Leather(Color(0xFF0B1D3A), Color(0xFF12294F), Color(0xFF1E427E)),
+    // Shamarly — black & gold (reserved; wired when its scans are hosted).
+    'shamarly': _Leather(Color(0xFF0A0A0A), Color(0xFF1A1A1A), Color(0xFF333333)),
+  };
+
+  /// Medallion text override where the first riwayah word would be ambiguous
+  /// (e.g. the Tajweed mushaf is also Hafs — show "تجويد", not a second "حفص").
+  static const Map<String, String> _medallionOverride = {
+    'tajweed_color': 'تجويد',
+    'shamarly': 'الشمرلي',
   };
 
   static const _Leather _fallback =
@@ -53,10 +65,11 @@ class QuranBookCoverThumbnail extends StatelessWidget {
   /// A short label for the medallion — the first word of the riwayah
   /// ("حفص عن عاصم" → "حفص"), which is what a reader scans covers by.
   String get _medallion {
+    final override = _medallionOverride[edition.id];
+    if (override != null) return override;
     final r = edition.riwayahAr.trim();
     if (r.isEmpty) return edition.nameAr.characters.take(4).toString();
-    final first = r.split(RegExp(r'\s+')).first;
-    return first;
+    return r.split(RegExp(r'\s+')).first;
   }
 
   @override

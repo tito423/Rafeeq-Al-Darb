@@ -17,14 +17,26 @@ import '../../../core/config/app_config.dart';
 class MushafEdition {
   final String id;
 
-  /// Upstream folder, e.g. 'hafs/kfqc'.
+  /// Upstream folder for the vector (SVG) editions, e.g. 'hafs/kfqc'.
+  /// Unused (empty) for raster editions — see [imagePath].
   final String sourcePath;
 
   final String nameAr;
   final String nameEn;
   final String riwayahAr;
   final String riwayahEn;
+
+  /// Ayah-polygon asset for the vector editions. Empty for raster editions,
+  /// which have no polygon hit layer (so tap-to-highlight / sciences don't
+  /// apply — the page is a finished coloured scan, e.g. the Tajweed mushaf).
   final String polygonsAsset;
+
+  /// P3‑53: raster (image-scan) editions — the folder under `mushaf/` on the
+  /// R2 content bucket that holds `NNN.jpg` page scans (e.g. 'tajweed'). Null
+  /// for the vector SVG editions. [isRaster] keys the whole render/download
+  /// path off this one field.
+  final String? imagePath;
+
   final int pages;
   final int ayahs;
 
@@ -50,16 +62,18 @@ class MushafEdition {
     required this.sciencesAligned,
     required this.divergingSurahs,
     required this.isDefault,
+    this.imagePath,
   });
 
   factory MushafEdition.fromJson(Map<String, dynamic> j) => MushafEdition(
         id: j['id'] as String,
-        sourcePath: j['source_path'] as String,
+        sourcePath: j['source_path'] as String? ?? '',
         nameAr: j['name_ar'] as String,
         nameEn: j['name_en'] as String,
         riwayahAr: j['riwayah_ar'] as String? ?? '',
         riwayahEn: j['riwayah_en'] as String? ?? '',
-        polygonsAsset: j['polygons_asset'] as String,
+        polygonsAsset: j['polygons_asset'] as String? ?? '',
+        imagePath: j['image_path'] as String?,
         pages: j['pages'] as int,
         ayahs: j['ayahs'] as int,
         sciencesAligned: j['sciences_aligned'] as bool? ?? false,
@@ -70,11 +84,19 @@ class MushafEdition {
         isDefault: j['is_default'] as bool? ?? false,
       );
 
+  /// A raster (image-scan) edition — rendered from `NNN.jpg` page images with
+  /// no ayah polygon layer, rather than the vector SVG + polygons path.
+  bool get isRaster => imagePath != null && imagePath!.isNotEmpty;
+
   /// Whether tafsir / translation / i'rab can be trusted for this surah.
+  /// Raster editions have no tappable ayah layer, so this is moot there.
   bool sciencesAvailableFor(int surah) =>
       sciencesAligned || !divergingSurahs.contains(surah);
 
   String pageUrl(int page) => AppConfig.mushafPageUrl(sourcePath, page);
+
+  /// The R2 URL for [page]'s scan (raster editions only).
+  String imagePageUrl(int page) => AppConfig.mushafImageUrl(imagePath!, page);
 }
 
 /// The editions bundled with the app, newest catalog wins.
