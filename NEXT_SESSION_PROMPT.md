@@ -1,157 +1,157 @@
-# برومبت الجلسة الجاية — رفيق الدرب (Rafiq Al-Darb)
+# Rafeeq Al-Darb (رفيق الدرب) — New-Session Prompt
 
-انسخ ده كله وابعته للـ agent اللي هيكمّل.
+You are continuing work on an existing, mature Flutter app for a single owner
+(personal-use, sideloaded APK — no Play Store). Read this whole file before
+touching anything. The project is at `E:\My Projects\Rafiq-Al-Darb`; the Flutter
+app is in the `rafeeq_app/` subfolder. Current app version `3.0.0+1`, latest
+GitHub release **v2.1.13** on `tito423/Rafeeq-Al-Darb`.
+
+The app: an Arabic-first Islamic companion — Quran (text + image mushaf,
+tafsir/translation/i'rab/word-meanings), prayer times + adhan, adhkar, tasbeeh,
+hadith library + a large book library, khatma tracker, qibla compass. 6 UI
+locales: ar (default/RTL), en, es, ru, pt, fr.
 
 ---
 
-مشروع **Rafiq Al-Darb** — تطبيق إسلامي Flutter في `E:\My Projects\Rafiq-Al-Darb`.
-متفترضش أي حاجة عن الحالة من الرسالة دي — استنتج كل حاجة من الريبو.
+## HARD RULES — never violate these (the owner cares about them deeply)
 
-## 1) ORIENT الأول (من PowerShell/cmd، مش Git Bash)
+1. **Zero mock / placeholder / invented data.** Every ayah, hadith, tafsir,
+   book, prayer time, translation must be real and sourced. Never fabricate a
+   translation, a hadith grade, a book attribution, or "verified" status. If you
+   can't source something honestly, say so — don't invent it.
+2. **Never scrape or use QuranFlash** (or its derivative 17-mushaf catalog /
+   thumbnails). This has been purged before; do not reintroduce it. The app ships
+   only its own legitimately-sourced 5 mushaf editions.
+3. **Never claim something is "verified" / "works" unless you actually tested
+   it.** Distinguish clearly between "code compiles / analyze passes" and
+   "behaviour confirmed live." Be explicit about what you did NOT verify.
+4. **Offline-first.** Content is bundled or downloaded on demand, then works
+   with no network. Don't add features that silently require connectivity.
+5. **No secrets in the repo.** R2 credentials live only in `scripts/.env`
+   (gitignored). Never echo, commit, or paste them. If the owner pastes a secret
+   in chat, store it to `.env` only and flag it.
+6. **Translation-key parity across all 6 locales.** Any new `.tr()` key must
+   exist in all of `assets/translations/{ar,en,es,ru,pt,fr}.json`. The test
+   `test/translation_parity_test.dart` enforces identical key sets + no empty
+   values — it MUST stay green.
+7. **Religious content stays Arabic** (Quran text, adhkar, hadith, tasbeeh
+   phrases) regardless of UI locale. For non-Arabic locales, ADD transliteration
+   ("phonetics") alongside — do not translate/replace the Arabic itself.
 
-```
-git -C "E:\My Projects\Rafiq-Al-Darb" log --oneline -25
-git -C "E:\My Projects\Rafiq-Al-Darb" status --short
-.\cp.bat /s
-```
+## WORKFLOW DISCIPLINE (do this every time)
 
-بعدين اقرأ بالترتيب:
+- Run `flutter analyze` after every change; keep it at **"No issues found."**
+- Run `flutter test` — must stay **21/21 passing**.
+- **Live-verify on the emulator** (`emulator-5554`) for any UI/behaviour change:
+  build `--release`, install, drive it with adb + screenshots. The real device
+  is the owner's (not available to you) — say so when a fix needs it.
+- Checkpoint after meaningful work with `cp.bat "message"` (run from PowerShell,
+  NOT git bash). **Commit messages must be ASCII-only** — embedding Arabic/RTL
+  text breaks cmd.exe arg parsing. `cp.bat` appends the Co-Authored-By line.
+- Ship a build the way it's always done: `flutter build apk --release`, then
+  `gh release create vX.Y.Z <apk> --repo tito423/Rafeeq-Al-Darb --title ... --notes ...`.
+  The APK is ~230 MB (too big for direct transfer — GitHub Releases is the
+  delivery channel). Give the owner the release URL.
+- Content hosting is Cloudflare R2 (`rafeeq-content` bucket, public r2.dev
+  domain `https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev`). Upload scripts
+  live in `scripts/` (boto3, one script per batch, verify with head_object +
+  live curl). Book text editions are **gzip-compressed on R2** (standing rule);
+  the app detects gzip by magic bytes and decompresses.
 
-1. **PHASE3.md** — **المرجع الوحيد الصحيح لحالة كل بند.** فيه جدول حالة
-   كامل (P3‑1 لحد P3‑43 دلوقتي) + تفاصيل كل بند في قسمه. آخر قسمين
-   (**P3‑42**، **P3‑43**) هما أحدث حاجة.
-2. `design_refs/` — صور مرجعية لكل راوند فيدباك (مجلدات مؤرخة). **مهم:**
-   فيه تحذير موثّق جوه PHASE3.md عن كتالوج الـ١٧ مصحف اللي ظهر في فيديو
-   قديم — أدلة قوية إنه من QuranFlash الممنوع، **ممنوع تعيد استخدامه**.
-3. **HANDOVER.md** — بلوك "Current work in progress" (بيتحدّث لوحده من
-   `cp.bat`). §3 قواعد ملزمة، §5 قرارات ممنوع تلغيها.
-4. **HOSTING.md** — استضافة R2. §7 فيها bucket قديم لسه محتاج قرار
-   الأونر (`rafeeq-aldarb-data`) + توكن لازم rotate.
-5. **PHASE2.md** — Phase 2 خلصت بالكامل، اقراه للسياق التاريخي بس لو
-   احتجت.
-6. **ARCHITECTURE.md** — خريطة الكود.
+## ENVIRONMENT NOTES / GOTCHAS
 
-## 2) الحالة دلوقتي (باختصار — التفاصيل كلها في PHASE3.md)
+- Windows. Two shells: PowerShell (use for `cp.bat`) and Git Bash (use for adb,
+  curl, python). In Git Bash, adb remote paths need `//sdcard/...` (double slash)
+  to avoid MSYS path mangling; Python needs Windows-style paths (`C:/...` not
+  `/c/...`).
+- Native Python has no `ffmpeg` — install `imageio-ffmpeg` (pip) and use its
+  bundled binary via `imageio_ffmpeg.get_ffmpeg_exe()`.
+- The emulator's **video decoder is unreliable** — `video_player` shows the
+  fallback instead of playing MP4s. Video playback must be confirmed on the real
+  device, not the emulator.
+- Console can't print Arabic (cp1256) — write Arabic output to a file and read
+  it, don't `print()` it.
+- adb taps: the display is 900x2000 but the real framebuffer is 1080x2400
+  (×1.2). Prefer `uiautomator dump` + exact `bounds` over guessing tap coords.
 
-- **Phase 1 + Phase 2** ✅ خلصت كلها إلا **P2‑7** (محتاج موبايل حقيقي —
-  مفيش وصول USB/adb حي لموبايل الأونر من هنا أبدًا؛ لو محتاج دليل من
-  الجهاز الحقيقي اطلب من الأونر "Bug report" أو تسجيل شاشة، مش adb).
-  **keystore (P2‑9) مش مطلوب** — التطبيق شخصي دلوقتي، الـdebug APK كفاية.
-- **Phase 3** شغالة، ~43 بند في PHASE3.md. آخر حاجة خلصت (batch23):
-  - **P3‑41-follow-up**: مصحف حفص المدينة (604 صفحة) + مكتبة الحديث
-    كاملة بقوا **Built-in فعليًا جوه الـAPK** (مش تحميل تلقائي) عن طريق
-    `DbHelper.openBundled`. التلاوة رجعت تحميل اختياري بس. الـAPK بقى
-    ~393 ميجا.
-  - **P3‑42**: إعادة تصميم توولبار المصحف — `Wrap` صفين بدل شريط بيتمرّر،
-    دوسة عادية في أي مكان بتخفي/تظهر التوولبار، اختيار الآية بقى
-    long-press بس، توجل "ملء الشاشة" بيقلل الهوامش.
-  - **آخر APK**: `https://github.com/tito423/rafeeq-api/releases/download/phase3-batch23-2026-09-05/app-debug.apk`
+## WHAT'S DONE RECENTLY (v2.1.5 → v2.1.13, "P3-44"…"P3-50")
 
-## 3) ⚠️⚠️ ابدأ هنا فعليًا — P3‑43: فيدباك جديد، صفر كود اتكتب له لسه
+- Library expanded to ~208 books across 6 classical authors (Ibn Abi al-Dunya,
+  al-Hakim al-Tirmidhi, Ibn Taymiyyah, Ibn al-Qayyim, Ibn al-Jawzi, al-Nawawi),
+  gzip on R2, categorized, catalog-wired.
+- Round-8+ UI fixes: back-button→Home, light-theme header, location 3-tier
+  fallback, RTL mushaf scrollbar, azkar/tasbeeh settings split, autostart-
+  settings deep link, surah-header sukun (U+06E1→standard) display fix.
+- **Notification crash fixed at root**: R8 was stripping Gson generics the
+  flutter_local_notifications v18 needs — added ProGuard keep rules
+  (`android/app/proguard-rules.pro`) + explicit `isMinifyEnabled`.
+- **Download stall fixed**: `Dio()` had no timeouts → stalled connections hung
+  forever. Added connect/receive/send timeouts in AyahAudioService,
+  DownloadManager, MushafPageService.
+- **Download foreground service** (`DownloadForegroundService.kt`, dataSync type)
+  so downloads survive backgrounding; reference-counted via
+  `DownloadForegroundServiceBridge`.
+- **Persistent prayer card is now a real foreground service** (specialUse type,
+  flutter_local_notifications `startForegroundService`) — non-dismissible,
+  survives app close. Manifest declares the service + FOREGROUND_SERVICE_SPECIAL_USE.
+- **Adhan full-screen routing fix**: a fullScreenIntent auto-launch doesn't set
+  `didNotificationLaunchApp`, so `consumeColdLaunchPayload()` now falls back to
+  the OS active-notifications query; AppShell retries on resume.
+- **Ayah translation tab fixed**: the bundled `quran_sciences.db` had lost its
+  `translations`/`translation_editions` tables in an earlier rebuild — recovered
+  37,416 rows (6 langs) from git commit `51fb678`, merged in, bumped copy stamp
+  to `sciences-v4`.
+- **Mushaf running-header overlap fixed** (top margin reserved).
+- **Tasbeeh reworked**: shows N/target, targets 33/100/1000/no-limit chips,
+  1000-milestone celebration; vibrate-on-count removed; **Qibla background
+  haptic bug fixed** (compass buzz was firing from the kept-alive Prayer tab —
+  now gated on `activeTabProvider` + app-resumed).
+- Hadith detail: removed "صحيح من الصحيحين" badge, hide English name in Arabic,
+  fixed RTL next/prev arrows (was fighting Flutter's icon auto-mirroring).
+- **10 adhan background videos** (copyright-free Pixabay, Content License) on R2.
+- **Tasbeeh phonetics** (transliteration) for non-Arabic locales.
+- Full-screen mushaf now truly immersive (hides system bars).
+- **Splash**: owner's AI-generated intro video restored with the **Gemini
+  watermark removed** (ffmpeg delogo); "first splash" lattice screen deleted
+  (now just icon→video); **permission prompts moved to AFTER the splash**,
+  location asked first.
 
-الجلسة اللي فاتت خلصت كوتتها والأونر طلب توقف عن التنفيذ وعمل handover
-كامل بدل ما تبدأ تنفّذ — يعني **كل اللي تحت ده تخطيط بس، لسه ماتبناش.**
-التفاصيل الكاملة والمصادر في PHASE3.md قسم "P3-43 — Second real-device
-feedback batch". الصور محفوظة:
-- `design_refs/round3_2026-09-05/` (1_home_first_launch,
-  2_onboarding_mushaf_overflow, 3_quran_text_surah_strip_marked,
-  4_quran_text_toolbar_title_marked, 8_azkar_categories_target)
-- صور الختمة (5،6،7 في رسالة الأونر) **موجودة بالفعل** من P3‑6 في
-  `design_refs/khatma_app_ref/` — مفيش داعي تنزلهم تاني.
+## OPEN / NEEDS THE OWNER'S REAL DEVICE (can't verify on emulator)
 
-**نفّذ بالترتيب ده (الأهم أولاً — ريجريشن وباجات جوهرية قبل التلميع):**
+- Confirm the AI **splash video actually plays** on device (emulator can't
+  decode). Same for the 10 adhan background videos downloading/playing.
+- Adhan **Stop/Mute** buttons, notification **persistence after swipe/kill**,
+  and background reliability on aggressive OEM skins (owner's Honor) — need the
+  battery-optimization exemption + autostart grants; verify on device.
+- The native `ScheduledNotificationBootReceiver` crash class is guarded on the
+  Dart side + ProGuard-fixed; confirm no boot crash on device.
 
-1. **تكبير بالأصابع (pinch-zoom) مش شغال خالص في المصحف النصي والورقي**
-   — بيعارض تأكيد جلسات قبل كده إنه شغال. **المشتبه فيه الأول: تعديل
-   الجلسة اللي فاتت نفسها (P3‑42)** — لفّينا `MushafTextPage` كله جوه
-   `GestureDetector(opaque, onTap: ...)` عشان نخفي/نظهر التوولبار، وده
-   ممكن يتعارك مع `ScaleGestureRecognizer` بتاع `InteractiveViewer` في
-   نفس الـgesture arena. اختبر لايف بإصبعين حقيقيين (Extended Controls
-   بتاع الـAVD) قبل ما تحدد الحل.
-2. **شاشة الأذان الكاملة لسه مش بتفتح أوتوماتيك حتى والشاشة مقفولة** —
-   الأونر جرّب: نزّل فيديو أذان → اختار صوت مؤذن → صلاة → "تجربة" → قفل
-   الشاشة → مفيش حاجة فتحت لوحدها. زرار "تجربة" غالبًا مش بيعمل نفس
-   مسار الإشعار الحقيقي (`fullScreenIntent`) — تتبّعه وقارنه بمسار
-   الأذان المجدول الحقيقي. كمان: زرار **معاينة** جنب كل فيديو في كارت
-   اختيار الفيديو — فيتشر حقيقي مطلوب.
-3. **باج بيانات: اختيار سورة المسد بيوديك لسورة الكافرون** في المصحف
-   النصي — راجع جدول/منطق ربط السورة بالصفحة مباشرة.
-4. **احذف شريط أسماء السور تحت المصحف النصي خالص** — نفس شكوى P3‑41
-   راجعة تاني ("عايز فاست سكرول مش أسماء سور"). امسحه، حط بدله فاست-
-   سكرول بار حقيقي (thumb بتتسحب وتقفز بسرعة).
-5. **احذف زراير ‹ › في وضع النص وحط سكرول بار بيتسحب** — حل واحد موحّد
-   مع البند اللي فات.
-6. **"ملء الشاشة" لازم يخفي كل حاجة فعليًا** — مش بس هوامش الصفحة (P3‑42
-   الحالي) — التوولبار **والـbottom nav bar كمان**، في الوضعين (صور
-   ونص)؛ دوسة تانية ترجّع الوضع العادي. غالبًا محتاج تتعامل مع إخفاء
-   `bottomNavigationBar` من `AppShell` نفسه، مش بس جوه `QuranScreen`.
-7. **اعرض دايمًا: رقم الصفحة تحت، اسم السورة فوق يمين، اسم الجزء فوق
-   شمال** — في الوضعين، وحتى في وضع ملء الشاشة.
-8. **overflow حقيقي في شاشة "اختار مصحفك" بالـonboarding** —
-   `2_onboarding_mushaf_overflow.jpg` فيها "RIGHT OVERFLOWED BY 5.3
-   PIXELS" على صف زراير كارت حفص (Download+Delete جنب بعض بعد ما بقى
-   built-in).
-9. **وحدات "كمية الورد" في الختمة ناقصة تدريج الأرباع** — صور
-   `khatma_app_ref` بتوري قايمة وحدة واحدة موحّدة: ربع/ربعان/٣ أرباع/
-   حزب/٥-٧ أرباع، وبعدها جزء/جزءان...٩ أجزاء. P3‑6 بنى بس نص القايمة
-   (الأجزاء). محتاج بيانات حدود ربع/حزب حقيقية قبل ما تبني — لو مش
-   موجودة جوه `assets/data/mushaf/`، متخترعش تقريب.
-10. **إذن الموقع بدون فعل مباشر** — كارت "فعّل الموقع" في الرئيسية نص
-    بس من غير زرار فعلي؛ وبعد ما الإذن يتديله، التطبيق مش بياخده
-    أوتوماتيك (محتاج re-check تلقائي بعد نتيجة الإذن).
-11. **تبديل اللغة بيعمل reset لتحميل التلاوة** — بعد تثبيت جديد، تغيير
-    اللغة بيبدأ يعيد تحميل التلاوة. محتاج إعادة إنتاج وتتبّع provider
-    مربوط غلط بالـlocale.
-12. **عنوان "القرآن" في التوب بار مش ظاهر طبيعي** —
-    `4_quran_text_toolbar_title_marked.jpg`. خد screenshot جديد مقرّب
-    الأول قبل التشخيص.
-13. **إعادة تصنيف الأذكار حسب `8_azkar_categories_target.jpg`** — ١٠
-    تصنيفات (صباح/مساء/نوم، بعد الصلاة، الاستيقاظ، أذكار المسجد، أدعية
-    مأثورة، أدعية قرآنية، دعاء السفر، الرقية الشرعية). أعد تجميع الـ133
-    قسم الحقيقي تحتها — mapping حقيقي قسم بقسم، مش تخمين.
-14. **المسبحة لسه ناقصة "اللهم صل على محمد" و"لا حول ولا قوة إلا بالله"**
-    — دول جوه بيانات الأذكار العامة بالفعل، لكن الأونر يقصد قايمة
-    الأذكار الجاهزة **جوه شاشة المسبحة نفسها** (`tasbeeh_screen.dart`)
-    تحديدًا. اتأكد منها وضيفهم لو ناقصين فعلاً.
-15. **الترجمة في قسم الحديث تختفي لو اللغة عربي** — اعرضها بس لو
-    `context.locale.languageCode != 'ar'`.
-16. **كمّل تحميل كتب الشاملة** — الأونر أعاد الطلب مباشرة. طلبه الأصلي
-    عام جدًا ("نزّلهم كلهم بشكل الشاملة") وموثّق في `PHASE3_FEEDBACK.md`
-    ("A2") إنه محتاج قرار نطاق من الأونر (الشاملة فيها آلاف الكتب، كل
-    كتاب محتاج ترخيص/PD check فردي). **المسار الآمن دلوقتي**: كمّل تكبّر
-    نفس مجموعة الـ٣ مؤلفين المحددين فعلاً (ابن تيمية، الحكيم الترمذي،
-    ابن أبي الدنيا — عندهم رسايل قصيرة كتير زي ما موثّق في PHASE2.md
-    P2‑4) بنفس الـpipeline (`build_book_text.py`، Shamela ID + محقق +
-    ناشر + عدد صفحات + `printReliable`، رفع فعلي على R2
-    `rafeeq-content/books/text/*.json`، تحقق بـ`head_object` **و**
-    `curl -I` حقيقي). لو حسّيت إن الأونر عايز نطاق أوسع من كده، اسأله
-    سؤال واحد واضح بدل ما تفترض.
+## KNOWN-DEFERRED / LARGER WORK NOT YET DONE
 
-`flutter analyze`/`flutter test` **متعملوش على أي حاجة من دي لسه.**
+- **Full translation/phonetics sweep**: transliteration is currently only on the
+  Tasbeeh phrases. Extending "how to read the Arabic" to the whole Adhkar (Hisn
+  al-Muslim) and Quran datasets is a large content-generation task — do it as a
+  dedicated, careful pass (correct Latin + Cyrillic), not a rushed guess.
+- **Dynamic runtime adhan video** (muezzin + chosen video + synced adhan text,
+  full-screen on lock screen) — the full-screen adhan already plays a video with
+  karaoke-style synced text; making it fully per-choice dynamic is the larger
+  remaining part.
+- **Ibn Qudamah / Najm al-Din identity mismatch** flagged in PHASE3.md — needs
+  the owner's decision before mining that author's works.
 
-## 4) قواعد ملزمة اتعلمناها من جلسات فاتت
+## SOURCE-OF-TRUTH FILES
 
-- **لو لقيت credentials في رسالة من الأونر** — خزّنها فورًا في
-  `scripts/.env` (متجاهَل من git) ومتطبعهاش تاني. موثّق في `HOSTING.md` §7.
-- **ممنوع تستخدم أي محتوى (تصاميم/صور أغلفة/كاتالوجات) من فيديو أو مرجع
-  قديم من غير ما تتأكد مصدره** — راجع كل مرجع بصري بحذر قبل الاستخدام.
-- **لما الأونر يقول "استخدم الصورة/الفيديو ده بالظبط"** — استخدمه هو
-  نفسه، متعاملهوش كمرجع فني تعيد رسمه أو تلوّنه (درس اتعلمناه غلط في
-  P3‑39 مع أيقونة الأونر).
-- المحاكي عنده مشاكل معروفة: (1) مساحة تخزين ضيقة أحيانًا — `adb
-  uninstall` بدل `install -r` لو حصل خطأ مساحة، (2) `adb emu geo fix`
-  مش بيوصل فعليًا للـ Fused Location Provider — لو محتاج GPS حقيقي جرّب
-  Extended Controls من الـGUI أو سيبها للجهاز الحقيقي، (3) بعد شغل طويل
-  المحاكي ممكن يعمل ANR حقيقي — جرّب تعيد تشغيله أول حاجة قبل ما تفترض
-  فيه باج.
+- `PHASE3.md` — the running detailed log of every round (read the tail for the
+  latest state and rationale).
+- `HANDOVER.md` — hosting, data pipeline, and historical findings.
+- `scripts/` — all data/build/upload pipelines (fetch_authors_batch,
+  build_book_text, build_sciences_db, ingest_translations, r2_upload_*, etc.).
+- `test/translation_parity_test.dart` — the guard that must stay green.
 
-## 5) Checkpoint
+## HOW TO START
 
-بعد كل تعديل مهم: `.\cp.bat "اللي عملته"`. لو الكوتة قربت تخلص: حدّث
-`PHASE3.md` (الجدول + التفاصيل) و`NEXT_SESSION_PROMPT.md` ده يدويًا
-(**مش بيتحدّث أوتوماتيك**)، وابني وارفع APK جديد لو فيه تغييرات حقيقية.
-
-## 6) التحقق
-
-`emulator-5554` غالبًا شغّال. package = `com.tito.rafeeq_aldarb`.
-`gh` مسجَّل دخول كـ`tito423`. R2 credentials في `scripts/.env`.
+Ask the owner what to work on, or pick from the OPEN list. Do NOT assume prior
+approval for anything destructive, for pushing, or for spending on a new build —
+follow the owner's lead. When they send device screenshots, treat those as the
+real bug reports and root-cause them (read the actual code/DB, don't guess), fix,
+build, release, and be honest about what you verified vs. what needs their device.
