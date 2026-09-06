@@ -26,6 +26,7 @@
     "tasbeeh": "المسبحة",
     "hadith": "الحديث",
     "settings": "الإعدادات",
+    "more": "المزيد",
     "downloads": "التحميلات",
     "prayer": "الصلاة"
   },
@@ -132,6 +133,7 @@
     "previous": "السابق",
     "next": "التالي",
     "tab_books": "الكتب المتوفرة",
+    "book_count": "كتاب",
     "sub_all": "كل الكتب",
     "sub_categories": "التصنيفات",
     "sub_mine": "مكتبتي",

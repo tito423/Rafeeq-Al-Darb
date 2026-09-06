@@ -178,7 +178,13 @@ class _SectionsTab extends ConsumerWidget {
                 icon: _azkarIcon(s.title),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    builder: (_) => AzkarSectionScreen(section: s),
+                    // P3‑54: carry this category's accent into the full-screen
+                    // reader so its countdown ring + active page dot match the
+                    // group the section was opened from.
+                    builder: (_) => AzkarSectionScreen(
+                      section: s,
+                      accent: info.gradient.last,
+                    ),
                   ),
                 ),
               );

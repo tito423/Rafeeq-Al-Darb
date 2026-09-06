@@ -61,7 +61,15 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
                             style: const TextStyle(fontSize: 11)),
                       ),
                       title: Text(c.nameAr),
-                      subtitle: c.nameEn.isNotEmpty ? Text(c.nameEn) : null,
+                      // P3‑54: an Arabic-reading user doesn't need the English
+                      // chapter name ("The Book of Revelation") shown under the
+                      // real Arabic باب title — hide it entirely in Arabic, same
+                      // rule the hadith detail screen already applies to the
+                      // book name and English gloss.
+                      subtitle: (context.locale.languageCode != 'ar' &&
+                              c.nameEn.isNotEmpty)
+                          ? Text(c.nameEn)
+                          : null,
                       trailing: const Icon(Icons.chevron_left),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute<void>(

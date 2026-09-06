@@ -322,39 +322,88 @@ class _CategoriesView extends StatelessWidget {
     }
     final cats = byCat.keys.toList()
       ..sort((a, b) => a.index.compareTo(b.index));
+    // P3‑54: each category is now a collapsible `ExpansionTile` — tap the
+    // header to expand its books, tap again to collapse — instead of one long
+    // always-open list. The first category opens by default so the tab never
+    // looks empty on entry. `PageStorageKey` keeps each tile's open/closed
+    // state across rebuilds (locale/theme changes, scrolling far away and
+    // back) so the user's expand/collapse choices don't reset under them.
     return ListView(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       children: [
-        for (final cat in cats) ...[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(2, 8, 2, 8),
-            child: Row(
-              children: [
-                Icon(cat.icon, size: 18, color: AppColors.gold),
-                const SizedBox(width: 8),
-                Text(
-                  cat.labelKey.tr(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: AppColors.gold),
-                ),
-              ],
-            ),
+        for (var i = 0; i < cats.length; i++)
+          _CategoryExpansionTile(
+            key: PageStorageKey<int>(cats[i].index),
+            category: cats[i],
+            books: byCat[cats[i]]!
+              ..sort((x, y) => x.sortKey.compareTo(y.sortKey)),
+            initiallyExpanded: i == 0,
+            paths: paths,
+            editionOf: editionOf,
+            onSetEdition: onSetEdition,
+            onDownload: onDownload,
+            onOpen: onOpen,
           ),
-          for (final b in byCat[cat]!..sort(
-              (x, y) => x.sortKey.compareTo(y.sortKey))) ...[
-            _BookCard(
-              book: b,
-              paths: paths,
-              edition: editionOf(b),
-              onSetEdition: (e) => onSetEdition(b, e),
-              onDownload: (e) => onDownload(b, e),
-              onOpen: (e) => onOpen(b, e),
-            ),
-            const SizedBox(height: 10),
-          ],
-          const SizedBox(height: 6),
+      ],
+    );
+  }
+}
+
+class _CategoryExpansionTile extends StatelessWidget {
+  final BookCategory category;
+  final List<LibraryBook> books;
+  final bool initiallyExpanded;
+  final Map<String, String> paths;
+  final BookEdition Function(LibraryBook) editionOf;
+  final void Function(LibraryBook, BookEdition) onSetEdition;
+  final void Function(LibraryBook, BookEdition) onDownload;
+  final void Function(LibraryBook, BookEdition) onOpen;
+
+  const _CategoryExpansionTile({
+    super.key,
+    required this.category,
+    required this.books,
+    required this.initiallyExpanded,
+    required this.paths,
+    required this.editionOf,
+    required this.onSetEdition,
+    required this.onDownload,
+    required this.onOpen,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      initiallyExpanded: initiallyExpanded,
+      leading: Icon(category.icon, color: AppColors.gold),
+      title: Text(
+        category.labelKey.tr(),
+        style: Theme.of(context)
+            .textTheme
+            .titleSmall
+            ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
+      ),
+      subtitle: Text(
+        '${books.length} ${'library.book_count'.tr()}',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          fontSize: 12,
+        ),
+      ),
+      shape: const Border(),
+      collapsedShape: const Border(),
+      childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
+      children: [
+        for (final b in books) ...[
+          _BookCard(
+            book: b,
+            paths: paths,
+            edition: editionOf(b),
+            onSetEdition: (e) => onSetEdition(b, e),
+            onDownload: (e) => onDownload(b, e),
+            onOpen: (e) => onOpen(b, e),
+          ),
+          const SizedBox(height: 10),
         ],
       ],
     );

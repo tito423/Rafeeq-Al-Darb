@@ -12,6 +12,7 @@ import '../../features/azkar/presentation/screens/tasbeeh_screen.dart';
 import '../../features/home/data/prayer_controller.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
+import '../../features/more/presentation/screens/more_screen.dart';
 import '../../features/qibla/presentation/screens/qibla_screen.dart';
 import '../../features/quran/data/quran_fullscreen_provider.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
@@ -169,6 +170,7 @@ class _AppShellState extends ConsumerState<AppShell>
       AzkarScreen(),
       TasbeehScreen(),
       LibraryScreen(),
+      MoreScreen(),
     ];
 
     // P3‑43 #6: a genuinely full-screen mushaf reader needs this bar gone
@@ -237,6 +239,11 @@ class _AppShellState extends ConsumerState<AppShell>
                   icon: const Icon(Icons.library_books_outlined),
                   selectedIcon: const Icon(Icons.library_books),
                   label: 'nav.library'.tr(),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.menu),
+                  selectedIcon: const Icon(Icons.menu_open),
+                  label: 'nav.more'.tr(),
                 ),
               ],
             ),

@@ -20,17 +20,36 @@ const _languageNames = <String, String>{
 };
 
 /// Settings tab — language, theme, and app info.
-class SettingsScreen extends ConsumerWidget {
+///
+/// P3‑54: the settings entry point moved off the Home header card into a
+/// dedicated "المزيد" (More) bottom-nav tab (`MoreScreen`). Both that tab and
+/// this stand-alone screen render the exact same [SettingsBody], so there is
+/// one source of truth for the options regardless of how they're reached.
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('nav.settings'.tr())),
+      body: const SettingsBody(),
+    );
+  }
+}
+
+/// The scrollable list of every settings/"more" option, with no `Scaffold`
+/// of its own so it can be hosted either by [SettingsScreen] (a pushed route)
+/// or by the More tab (`MoreScreen`, which supplies its own AppBar titled
+/// "المزيد").
+class SettingsBody extends ConsumerWidget {
+  const SettingsBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeVariant = ref.watch(themeControllerProvider);
     final scheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(title: Text('nav.settings'.tr())),
-      body: ListView(
+    return ListView(
         padding: const EdgeInsets.all(16),
         children: [
           // Language — each shown in its own script, independent of the
@@ -201,8 +220,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 }
 

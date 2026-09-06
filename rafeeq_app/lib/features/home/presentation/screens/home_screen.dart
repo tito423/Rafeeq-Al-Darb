@@ -10,7 +10,6 @@ import '../../../../core/services/prayer_times_service.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
-import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
 
@@ -203,76 +202,75 @@ class _HeaderCard extends StatelessWidget {
           ),
         ],
       ),
+      // P3‑54: the settings gear was removed from this card entirely — every
+      // option it reached now lives on the dedicated "المزيد" (More) bottom-
+      // nav tab, so this card is purely a date/greeting header again.
+      //
+      // Three balanced cells: the full Hijri date (start), the welcome in the
+      // exact centre, the full Gregorian date (end). Each cell is an
+      // `Expanded` wrapping a `BoxFit.scaleDown` `FittedBox`, so a long
+      // translated greeting (fr "Bienvenue", ru "Добро пожаловать") or a wide
+      // month name only ever shrinks to fit — it can never wrap mid-word or
+      // trip a `RenderFlex overflowed` and break the card's shape. The side
+      // cells share the same flex so the welcome stays optically centred.
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Flexible(
-            child: Text(
-              _hijriLine(context.locale.languageCode),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: hijriColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+          Expanded(
+            flex: 3,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                _hijriLine(context.locale.languageCode),
+                maxLines: 1,
+                style: TextStyle(
+                  color: hijriColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
           Expanded(
-            child: Text(
-              'home.welcome_guest'.tr(),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-              style: TextStyle(
-                color: welcomeColor,
-                // P3‑45: real-device testing found this Quran-calligraphy
-                // font renders Latin script (fr/pt/es/ru) far wider than
-                // its Arabic glyphs at the same size, squeezing this
-                // Expanded cell between the two date labels until words
-                // like "Bienvenue"/"Bem-vindo" wrapped mid-word across 2-3
-                // lines. The font is only right for its intended Arabic
-                // "مرحباً بك" — every other locale uses the app's normal
-                // (narrower, Latin-tuned) font instead.
-                fontFamily:
-                    context.locale.languageCode == 'ar' ? 'AmiriQuran' : null,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+            flex: 4,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.center,
+              child: Text(
+                'home.welcome_guest'.tr(),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                style: TextStyle(
+                  color: welcomeColor,
+                  // The AmiriQuran calligraphy face is only right for the
+                  // Arabic "مرحبًا بك"; Latin locales use the app's normal
+                  // (narrower, Latin-tuned) font. FittedBox now guarantees no
+                  // overflow either way, but keeping the right face per script
+                  // still reads better than scaling a mismatched one down.
+                  fontFamily: context.locale.languageCode == 'ar'
+                      ? 'AmiriQuran'
+                      : null,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
-          Flexible(
-            child: Text(
-              _gregorianLine(context),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                color: gregorianColor.withValues(alpha: 0.9),
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          // P3‑41: Settings came off the bottom nav entirely (real-device
-          // feedback) — this is its one remaining entry point, a small
-          // gear tucked into the header card's own trailing edge rather
-          // than a whole extra row that would crowd this already-tight
-          // card. `Navigator.push`, not a tab switch — Settings was never
-          // part of `IndexedStack`'s kept-alive screens even when it was
-          // a tab, so nothing about its own state management changes.
-          const SizedBox(width: 6),
-          InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(4),
-              child: Icon(
-                Icons.settings_outlined,
-                color: hijriColor,
-                size: 18,
+          Expanded(
+            flex: 3,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(
+                _gregorianLine(context),
+                maxLines: 1,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  color: gregorianColor.withValues(alpha: 0.9),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

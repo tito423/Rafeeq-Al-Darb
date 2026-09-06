@@ -15,9 +15,11 @@ abstract final class AppTab {
   static const azkar = 3;
   static const tasbeeh = 4;
   static const library = 5;
-  // P3‑41: Settings is no longer a bottom-nav tab at all (see AppShell's
-  // own doc) — reached via a button on Home instead, a real
-  // `Navigator.push`, so there's no tab index for it any more.
+  // P3‑54: "المزيد" (More) is a real bottom-nav tab again — it hosts every
+  // settings/options screen (`MoreScreen` → `SettingsBody`). It sits last so
+  // it renders visually left-most under RTL, matching where a "More" entry
+  // conventionally lives.
+  static const more = 6;
 }
 
 /// Cross-route "switch the bottom-nav tab to N" seam.

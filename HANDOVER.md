@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-06 19:46 — IN PROGRESS — resume here**
+**2026-09-06 21:04 — IN PROGRESS — resume here**
 
-docs: add HANDOFF_PROMPT.md - the copy-ready colleague handoff prompt (condensed single-block version of NEXT_SESSION_PROMPT.md) for pasting into a new session.
+P3-54 UI restructure: (1) Home header card - removed the settings gear entirely, rebuilt as three balanced FittedBox(scaleDown) cells (full Hijri date / centred welcome / full Gregorian date) so long translations shrink to fit instead of overflowing. (2) New More bottom-nav tab (AppTab.more=6, MoreScreen) hosting every settings/options screen via a shared SettingsBody extracted from SettingsScreen; nav.more added to all 6 locales. (4) Adhkar reader rewritten as full-screen swipeable PageView cards - Islamic gradient ground + app_mark watermark + dark overlay, white AmiriQuran text, tappable countdown ring (repeats remaining, auto-advance on completion, per-card counts kept), page indicator (dots, numeric pill past 21 items), trailing done card; category accent carried in from the hub. (5) Library category view is now collapsible ExpansionTiles (first open by default, PageStorageKey-persisted); library.book_count added to all 6 locales. (6) Bukhari chapter list hides the English chapter name in Arabic locale. flutter analyze clean, tests 21/21.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

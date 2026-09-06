@@ -26,6 +26,7 @@
     "tasbeeh": "Tasbeeh",
     "hadith": "Hadith",
     "settings": "Settings",
+    "more": "More",
     "downloads": "Downloads",
     "prayer": "Prayer"
   },
@@ -132,6 +133,7 @@
     "previous": "Previous",
     "next": "Next",
     "tab_books": "Available books",
+    "book_count": "books",
     "sub_all": "All books",
     "sub_categories": "Categories",
     "sub_mine": "My library",
