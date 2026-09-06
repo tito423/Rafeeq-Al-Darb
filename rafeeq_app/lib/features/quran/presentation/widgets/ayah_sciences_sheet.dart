@@ -11,9 +11,11 @@ import '../../../../core/db/models.dart';
 import '../../../../core/db/quran_repository.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
+import '../../../../core/services/quran_api_service.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/buckwalter.dart';
+import '../../../settings/data/transliteration_settings_provider.dart';
 import '../../data/ayah_notes_store.dart';
+import '../../data/quran_grammar_parser.dart';
 import '../../data/tafseer_source_provider.dart';
 import '../../data/translation_lang_provider.dart';
 import 'ayah_share_card.dart';
@@ -124,7 +126,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                 quranRepo: widget.quranRepo,
                 translationsFuture: _translations,
               ),
-              _AyahPanel(text: widget.ayah.textUthmani),
+              _AyahPanel(ayah: widget.ayah),
               if (!widget.sciencesAvailable)
                 Expanded(
                   child: _Notice(
@@ -152,7 +154,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                     children: [
                       _TafseerTab(future: _tafseer),
                       _TranslationTab(future: _translations),
-                      _IrabTab(future: _grammar),
+                      _IrabTab(ayah: widget.ayah, future: _grammar),
                     ],
                   ),
                 ),
@@ -536,35 +538,86 @@ class _NoteDialogState extends ConsumerState<_NoteDialog> {
   }
 }
 
-/// The ayah itself, framed the way a printed mushaf frames its text.
-class _AyahPanel extends StatelessWidget {
-  final String text;
-  const _AyahPanel({required this.text});
+/// The ayah itself, framed the way a printed mushaf frames its text,
+/// with optional Latin transliteration for non-Arabic readers.
+class _AyahPanel extends ConsumerWidget {
+  final Ayah ayah;
+  const _AyahPanel({required this.ayah});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final gold = AppColors.gold;
+    final showTransliteration = ref.watch(transliterationEnabledProvider);
 
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(14, 4, 14, 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      constraints: const BoxConstraints(maxHeight: 190),
+      constraints: const BoxConstraints(maxHeight: 220),
       decoration: BoxDecoration(
         color: gold.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: gold.withValues(alpha: 0.3)),
       ),
       child: SingleChildScrollView(
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          textDirection: TextDirection.rtl,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontFamily: 'AmiriQuran',
-            height: 2.0,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              ayah.textUthmani,
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontFamily: 'AmiriQuran',
+                height: 2.0,
+              ),
+            ),
+            if (showTransliteration) ...[
+              const SizedBox(height: 8),
+              Container(
+                width: 48,
+                height: 1.5,
+                color: gold.withValues(alpha: 0.3),
+              ),
+              const SizedBox(height: 8),
+              FutureBuilder<String?>(
+                future: ref
+                    .read(quranApiServiceProvider)
+                    .getAyahTransliteration(ayah.surahId, ayah.ayahNumber),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: SizedBox(
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: gold.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    );
+                  }
+                  final text = snapshot.data;
+                  if (text == null || text.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: gold,
+                      height: 1.5,
+                      letterSpacing: 0.25,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ],
         ),
       ),
     );
@@ -852,77 +905,53 @@ class _TranslationTab extends ConsumerWidget {
   }
 }
 
-/// Corpus morphology, one card per word: part of speech, case, root, lemma.
-class _IrabTab extends StatelessWidget {
+/// Corpus morphology & syntax, one structured card per word:
+/// Part of speech, grammatical case, root, morphemes tree, and wbw translation.
+class _IrabTab extends ConsumerStatefulWidget {
+  final Ayah ayah;
   final Future<List<WordGrammar>> future;
-  const _IrabTab({required this.future});
+  const _IrabTab({required this.ayah, required this.future});
+
+  @override
+  ConsumerState<_IrabTab> createState() => _IrabTabState();
+}
+
+class _IrabTabState extends ConsumerState<_IrabTab> {
+  late final Future<List<QuranWordWbw>> _wbwFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _wbwFuture = ref.read(quranApiServiceProvider).getAyahWordsWbw(
+          widget.ayah.surahId,
+          widget.ayah.ayahNumber,
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
     return _AsyncTab<List<WordGrammar>>(
-      future: future,
+      future: widget.future,
       isEmpty: (d) => d.isEmpty,
-      builder: (context, data) {
-        final theme = Theme.of(context);
-        final gold = AppColors.gold;
-        return ListView.separated(
-          padding: const EdgeInsets.fromLTRB(14, 10, 14, 24),
-          itemCount: data.length,
-          separatorBuilder: (_, _) => const SizedBox(height: 8),
-          itemBuilder: (context, i) {
-            final w = data[i];
-            final facts = <String>[
-              if (w.posAr.isNotEmpty) w.posAr,
-              if (w.caseAr.isNotEmpty) w.caseAr,
-            ].join(' · ');
-            return Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: gold.withValues(alpha: 0.2)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    w.token,
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.right,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontFamily: 'AmiriQuran',
-                      color: gold,
-                    ),
-                  ),
-                  if (facts.isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Text(
-                      facts,
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.right,
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  ],
-                  if (w.root.isNotEmpty || w.lemma.isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Wrap(
-                      alignment: WrapAlignment.end,
-                      spacing: 8,
-                      children: [
-                        if (w.root.isNotEmpty)
-                          _Chip(
-                            label: 'quran.root'.tr(),
-                            value: buckwalterForDisplay(w.root),
-                          ),
-                        if (w.lemma.isNotEmpty)
-                          _Chip(
-                            label: 'quran.word'.tr(),
-                            value: buckwalterForDisplay(w.lemma),
-                          ),
-                      ],
-                    ),
-                  ],
-                ],
-              ),
+      builder: (context, localList) {
+        return FutureBuilder<List<QuranWordWbw>>(
+          future: _wbwFuture,
+          builder: (context, wbwSnap) {
+            final wbwList = wbwSnap.data ?? const <QuranWordWbw>[];
+            final wbwMap = {for (final w in wbwList) w.position: w};
+
+            final parsedItems = localList.map((g) {
+              final wbw = wbwMap[g.pos];
+              return QuranGrammarParser.parse(local: g, wbw: wbw);
+            }).toList();
+
+            return ListView.separated(
+              padding: const EdgeInsets.fromLTRB(14, 10, 14, 24),
+              itemCount: parsedItems.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              itemBuilder: (context, i) {
+                return _GrammarCard(item: parsedItems[i]);
+              },
             );
           },
         );
@@ -931,24 +960,255 @@ class _IrabTab extends StatelessWidget {
   }
 }
 
-class _Chip extends StatelessWidget {
-  final String label;
-  final String value;
-  const _Chip({required this.label, required this.value});
+/// A structured, elegant grammar card for a single Quranic word.
+class _GrammarCard extends StatelessWidget {
+  final WordSyntaxData item;
+  const _GrammarCard({required this.item});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final gold = AppColors.gold;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: gold.withValues(alpha: 0.25)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header: Word + Position + POS Badge
+          Row(
+            children: [
+              // Position pill
+              Container(
+                width: 28,
+                height: 28,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: gold.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: gold.withValues(alpha: 0.4)),
+                ),
+                child: Text(
+                  '${item.position}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: gold,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+
+              // POS badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: gold.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  item.posLabel,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: gold,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Spacer(),
+
+              // Word Token (Uthmani)
+              Text(
+                item.token,
+                textDirection: TextDirection.rtl,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontFamily: 'AmiriQuran',
+                  color: gold,
+                  fontSize: 22,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          // Grammatical Case & Role Detail
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: scheme.surface,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: scheme.outlineVariant.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.account_tree_outlined,
+                  size: 16,
+                  color: gold.withValues(alpha: 0.8),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    item.caseDetail,
+                    textDirection: TextDirection.rtl,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Morphemes Tree / Decomposition (if available)
+          if (item.segments.length > 1) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              alignment: WrapAlignment.end,
+              children: item.segments.map((seg) {
+                final isStem = seg.type == MorphemeType.stem;
+                return Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: isStem
+                        ? gold.withValues(alpha: 0.12)
+                        : scheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: isStem
+                          ? gold.withValues(alpha: 0.35)
+                          : scheme.outlineVariant.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  child: Text(
+                    '${seg.text} (${seg.label})',
+                    textDirection: TextDirection.rtl,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: isStem ? gold : scheme.onSurfaceVariant,
+                      fontSize: 11,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+
+          // Root & Lemma Chips
+          if (item.rootFormatted != null || item.lemmaFormatted != null) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 8,
+              runSpacing: 6,
+              children: [
+                if (item.rootFormatted != null)
+                  _Chip(
+                    icon: Icons.grass_outlined,
+                    label: 'quran.root'.tr(),
+                    value: item.rootFormatted!,
+                  ),
+                if (item.lemmaFormatted != null)
+                  _Chip(
+                    icon: Icons.menu_book_outlined,
+                    label: 'quran.word'.tr(),
+                    value: item.lemmaFormatted!,
+                  ),
+              ],
+            ),
+          ],
+
+          // Word-by-Word Translation & Transliteration (from Quran.com API v4)
+          if (item.englishMeaning != null || item.transliteration != null) ...[
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: scheme.surfaceContainerHighest.withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                textDirection: TextDirection.ltr,
+                children: [
+                  if (item.transliteration != null)
+                    Text(
+                      item.transliteration!,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontStyle: FontStyle.italic,
+                        color: gold,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  if (item.transliteration != null &&
+                      item.englishMeaning != null)
+                    Text(
+                      ' • ',
+                      style: TextStyle(color: scheme.outline),
+                    ),
+                  if (item.englishMeaning != null)
+                    Expanded(
+                      child: Text(
+                        item.englishMeaning!,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData? icon;
+  const _Chip({required this.label, required this.value, this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gold = AppColors.gold;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.gold.withValues(alpha: 0.1),
+        color: gold.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: gold.withValues(alpha: 0.25)),
       ),
-      child: Text(
-        '$label: $value',
-        style: theme.textTheme.labelSmall,
-        textDirection: TextDirection.rtl,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 13, color: gold),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            '$label: $value',
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: gold,
+              fontWeight: FontWeight.w600,
+            ),
+            textDirection: TextDirection.rtl,
+          ),
+        ],
       ),
     );
   }

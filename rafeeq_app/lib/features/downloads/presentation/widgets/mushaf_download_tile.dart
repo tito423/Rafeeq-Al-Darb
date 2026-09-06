@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/mushaf_edition.dart';
-import '../../../quran/presentation/widgets/quran_book_cover_thumbnail.dart';
+import '../../../quran/presentation/widgets/mushaf_page_thumbnail.dart';
+import 'mushaf_preview_sheet.dart';
 
 String formatBytes(int bytes) {
   if (bytes < 1024) return '$bytes B';
@@ -129,124 +130,120 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
     final total = e.pages;
     final complete = _cached >= total;
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // P3‑53: a luxury leather book-cover thumbnail (not the Fatiha page),
-          // matching the edition picker — a real bound-book look per edition.
-          QuranBookCoverThumbnail(edition: e, width: 52),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        e.nameAr,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
+    return InkWell(
+      onTap: () => MushafPreviewSheet.show(context, e),
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Real page thumbnail from the mushaf's own source instead of a
+            // static leather cover — so the user sees the actual typeface /
+            // colour-coding before downloading.
+            MushafPageThumbnail(edition: e, width: 52),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          e.nameAr,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                    ),
-                    if (complete)
-                      Icon(
-                        Icons.offline_pin,
-                        color: AppColors.success,
-                        size: 20,
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  complete
-                      ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
-                      : '$_cached / $total ${'downloads.pages_cached'.tr()}'
-                            '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.outline,
+                      if (complete)
+                        Icon(
+                          Icons.offline_pin,
+                          color: AppColors.success,
+                          size: 20,
+                        ),
+                    ],
                   ),
-                ),
-                if (_busy) ...[
-                  const SizedBox(height: 10),
-                  LinearProgressIndicator(
-                    value: total == 0 ? null : _done / total,
-                    color: _paused ? theme.colorScheme.outline : AppColors.gold,
-                  ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
-                    _paused
-                        ? '${'downloads.paused'.tr()}  $_done / $total'
-                        : '${'downloads.downloading'.tr()}  $_done / $total',
-                    style: theme.textTheme.labelSmall,
+                    complete
+                        ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
+                        : '$_cached / $total ${'downloads.pages_cached'.tr()}'
+                              '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
+                  ),
+                  if (_busy) ...[
+                    const SizedBox(height: 10),
+                    LinearProgressIndicator(
+                      value: total == 0 ? null : _done / total,
+                      color: _paused ? theme.colorScheme.outline : AppColors.gold,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _paused
+                          ? '${'downloads.paused'.tr()}  $_done / $total'
+                          : '${'downloads.downloading'.tr()}  $_done / $total',
+                      style: theme.textTheme.labelSmall,
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      if (_busy) ...[
+                        TextButton.icon(
+                          onPressed: () => setState(() {
+                            if (_paused) {
+                              _service.resumePrefetch(e.id);
+                            } else {
+                              _service.pausePrefetch(e.id);
+                            }
+                          }),
+                          icon: Icon(
+                            _paused
+                                ? Icons.play_arrow_rounded
+                                : Icons.pause_rounded,
+                            size: 18,
+                          ),
+                          label: Text(
+                            _paused
+                                ? 'downloads.resume'.tr()
+                                : 'downloads.pause'.tr(),
+                          ),
+                        ),
+                        TextButton.icon(
+                          onPressed: () => _service.cancelPrefetch(e.id),
+                          icon: const Icon(Icons.stop_circle_outlined, size: 18),
+                          label: Text('downloads.cancel'.tr()),
+                        ),
+                      ] else
+                        FilledButton.tonalIcon(
+                          onPressed: complete ? null : _download,
+                          icon: const Icon(Icons.download_rounded, size: 18),
+                          label: Text('downloads.download'.tr()),
+                        ),
+                      if (_cached > 0 && !_busy)
+                        TextButton.icon(
+                          onPressed: _delete,
+                          icon: const Icon(Icons.delete_outline, size: 18),
+                          label: Text('downloads.delete'.tr()),
+                        ),
+                    ],
                   ),
                 ],
-                const SizedBox(height: 10),
-                // P3‑43 #8: a plain `Row` here overflowed by ~5px once a
-                // card could show both a (disabled, once complete)
-                // "Download" button *and* "Delete" side by side — the
-                // onboarding screen nests this tile behind an extra
-                // leading radio circle too, narrowing the row further
-                // than the Downloads screen's own use of this same
-                // widget ever hit. `Wrap` (same fix shape as P3‑42's
-                // toolbar overflow) lets Delete drop to its own line on
-                // a narrow card instead of clipping past the edge.
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 4,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    if (_busy) ...[
-                      TextButton.icon(
-                        onPressed: () => setState(() {
-                          if (_paused) {
-                            _service.resumePrefetch(e.id);
-                          } else {
-                            _service.pausePrefetch(e.id);
-                          }
-                        }),
-                        icon: Icon(
-                          _paused
-                              ? Icons.play_arrow_rounded
-                              : Icons.pause_rounded,
-                          size: 18,
-                        ),
-                        label: Text(
-                          _paused
-                              ? 'downloads.resume'.tr()
-                              : 'downloads.pause'.tr(),
-                        ),
-                      ),
-                      TextButton.icon(
-                        onPressed: () => _service.cancelPrefetch(e.id),
-                        icon: const Icon(Icons.stop_circle_outlined, size: 18),
-                        label: Text('downloads.cancel'.tr()),
-                      ),
-                    ] else
-                      FilledButton.tonalIcon(
-                        onPressed: complete ? null : _download,
-                        icon: const Icon(Icons.download_rounded, size: 18),
-                        label: Text('downloads.download'.tr()),
-                      ),
-                    if (_cached > 0 && !_busy)
-                      TextButton.icon(
-                        onPressed: _delete,
-                        icon: const Icon(Icons.delete_outline, size: 18),
-                        label: Text('downloads.delete'.tr()),
-                      ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

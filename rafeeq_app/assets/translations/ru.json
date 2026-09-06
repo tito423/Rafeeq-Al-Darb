@@ -337,7 +337,13 @@
     "perm_autostart": "Автозапуск / защищённые приложения",
     "perm_autostart_desc": "Некоторые производители (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) отдельно управляют фоновыми приложениями помимо настроек батареи — разрешите это приложение там, чтобы азан не отключался",
     "splash_video": "Заставка-видео",
-    "splash_video_desc": "Показывать вступительное видео при запуске"
+    "splash_video_desc": "Показывать вступительное видео при запуске",
+    "non_arabic_reading_title": "Параметры чтения для неарабоязычных",
+    "non_arabic_reading_desc": "Инструменты для облегчения правильного чтения и произношения",
+    "show_transliteration": "Показывать транслитерацию (Show Transliteration)",
+    "show_transliteration_desc": "Отображать транслитерацию латиницей под арабскими аятами",
+    "live_preview": "Предпросмотр в реальном времени",
+    "transliteration_off_hint": "Транслитерация латиницей отключена"
   },
   "downloads": {
     "title": "Загрузки",
@@ -372,7 +378,12 @@
     "nothing_downloaded": "Ничего не загружено",
     "downloaded_items": "Загруженные элементы",
     "paused": "Приостановлено",
-    "download_all_recitation": "Скачать чтение полностью"
+    "download_all_recitation": "Скачать чтение полностью",
+    "preview_title": "Предпросмотр мусхафа",
+    "sample_pages": "Примеры страниц",
+    "download_full": "Скачать полный мусхаф",
+    "already_downloaded": "Уже загружено",
+    "page_preview_note": "Это пример страниц 1 и 2"
   },
   "new_muslim": {
     "title": "Руководство для нового мусульманина",

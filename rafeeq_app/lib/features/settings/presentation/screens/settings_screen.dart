@@ -7,6 +7,7 @@ import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
+import '../widgets/non_arabic_reading_card.dart';
 import '../widgets/permissions_section.dart';
 
 /// Every locale the app ships, labelled in its own script.
@@ -125,6 +126,11 @@ class SettingsBody extends ConsumerWidget {
                   ref.read(splashVideoEnabledProvider.notifier).set(v),
             ),
           ),
+          const SizedBox(height: 24),
+
+          // Reading Options for Non-Arabs (Transliteration)
+          _SectionLabel('settings.non_arabic_reading_title'.tr()),
+          const NonArabicReadingCard(),
           const SizedBox(height: 24),
 
           // P3‑41: one place for every permission the app actually needs,

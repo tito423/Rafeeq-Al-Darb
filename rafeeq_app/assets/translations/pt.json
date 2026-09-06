@@ -337,7 +337,13 @@
     "perm_autostart": "Início automático / apps protegidos",
     "perm_autostart_desc": "Alguns fabricantes (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gerenciam apps em segundo plano separadamente da bateria — permita este app lá para que o Adhan não seja interrompido",
     "splash_video": "Vídeo de abertura",
-    "splash_video_desc": "Reproduzir o vídeo de introdução ao abrir o app"
+    "splash_video_desc": "Reproduzir o vídeo de introdução ao abrir o app",
+    "non_arabic_reading_title": "Opções de leitura para não-arabófonos",
+    "non_arabic_reading_desc": "Ferramentas de assistência para facilitar a pronúncia e leitura correta",
+    "show_transliteration": "Mostrar transliteração (Show Transliteration)",
+    "show_transliteration_desc": "Exibir guia de pronúncia latina sob os versículos em árabe",
+    "live_preview": "Pré-visualização ao vivo",
+    "transliteration_off_hint": "A transliteração latina está desativada"
   },
   "downloads": {
     "title": "Transferências",
@@ -372,7 +378,12 @@
     "nothing_downloaded": "Nada baixado",
     "downloaded_items": "Itens baixados",
     "paused": "Em pausa",
-    "download_all_recitation": "Baixar a recitação completa"
+    "download_all_recitation": "Baixar a recitação completa",
+    "preview_title": "Pré-visualização do Mushaf",
+    "sample_pages": "Páginas de exemplo",
+    "download_full": "Baixar mushaf completo",
+    "already_downloaded": "Já transferido",
+    "page_preview_note": "Amostra das páginas 1 e 2"
   },
   "new_muslim": {
     "title": "Guia do novo muçulmano",

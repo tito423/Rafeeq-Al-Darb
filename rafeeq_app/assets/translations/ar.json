@@ -337,7 +337,13 @@
     "perm_autostart": "بدء التشغيل التلقائي / التطبيقات المحمية",
     "perm_autostart_desc": "بعض الأجهزة (شاومي، هونر، هواوي، أوبو، فيفو، ون بلس) لديها إدارة خاصة للتطبيقات في الخلفية غير إعدادات البطارية العادية — فعّل التطبيق هناك ليستمر عمل الأذان دون إيقافه",
     "splash_video": "فيديو الشاشة الافتتاحية",
-    "splash_video_desc": "تشغيل الفيديو التعريفي عند فتح التطبيق"
+    "splash_video_desc": "تشغيل الفيديو التعريفي عند فتح التطبيق",
+    "non_arabic_reading_title": "خيارات القراءة لغير العرب",
+    "non_arabic_reading_desc": "أدوات مساعدة لتيسير القراءة والنطق الصحيح لغير الناطقين بالعربية",
+    "show_transliteration": "إظهار النطق (Show Transliteration)",
+    "show_transliteration_desc": "عرض نطق الآيات بالحروف اللاتينية أسفل النص القرآني مباشرة",
+    "live_preview": "معاينة حية للمظهر",
+    "transliteration_off_hint": "النطق اللاتيني متوقف (مخصص لتسهيل القراءة لغير العرب)"
   },
   "downloads": {
     "title": "التنزيلات",
@@ -372,7 +378,12 @@
     "nothing_downloaded": "لا يوجد محتوى منزَّل",
     "downloaded_items": "العناصر المنزَّلة",
     "paused": "متوقف مؤقتاً",
-    "download_all_recitation": "تحميل التلاوة كاملة"
+    "download_all_recitation": "تحميل التلاوة كاملة",
+    "preview_title": "استعراض المصحف",
+    "sample_pages": "نموذج من الصفحات",
+    "download_full": "تحميل المصحف كاملاً",
+    "already_downloaded": "تم التحميل",
+    "page_preview_note": "هذه عينة من الصفحة الأولى والثانية"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",

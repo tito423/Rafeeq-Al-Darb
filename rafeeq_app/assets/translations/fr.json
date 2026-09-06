@@ -337,7 +337,13 @@
     "perm_autostart": "Démarrage automatique / applications protégées",
     "perm_autostart_desc": "Certains fabricants (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gèrent les applications en arrière-plan séparément des paramètres de batterie — autorisez l'application ici pour que l'Adhan ne soit pas interrompu",
     "splash_video": "Vidéo d'accueil",
-    "splash_video_desc": "Lire la vidéo d'introduction à l'ouverture"
+    "splash_video_desc": "Lire la vidéo d'introduction à l'ouverture",
+    "non_arabic_reading_title": "Options de lecture pour non-arabophones",
+    "non_arabic_reading_desc": "Outils d'assistance pour faciliter la prononciation et la lecture correcte",
+    "show_transliteration": "Afficher la translittération (Show Transliteration)",
+    "show_transliteration_desc": "Afficher la prononciation en caractères latins sous les versets arabes",
+    "live_preview": "Aperçu en direct",
+    "transliteration_off_hint": "La translittération latine est désactivée"
   },
   "downloads": {
     "title": "Téléchargements",
@@ -372,7 +378,12 @@
     "nothing_downloaded": "Rien de téléchargé",
     "downloaded_items": "Éléments téléchargés",
     "paused": "En pause",
-    "download_all_recitation": "Télécharger la récitation complète"
+    "download_all_recitation": "Télécharger la récitation complète",
+    "preview_title": "Aperçu du Mushaf",
+    "sample_pages": "Pages d'exemple",
+    "download_full": "Télécharger le Mushaf complet",
+    "already_downloaded": "Déjà téléchargé",
+    "page_preview_note": "Ceci est un aperçu des pages 1 et 2"
   },
   "new_muslim": {
     "title": "Guide du nouveau musulman",

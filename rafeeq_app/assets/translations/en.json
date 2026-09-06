@@ -337,7 +337,13 @@
     "perm_autostart": "Auto-start / protected apps",
     "perm_autostart_desc": "Some phone makers (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) run their own background-app manager beyond battery settings — allow this app there so the Adhan doesn't get killed",
     "splash_video": "Splash video",
-    "splash_video_desc": "Play the intro video when the app opens"
+    "splash_video_desc": "Play the intro video when the app opens",
+    "non_arabic_reading_title": "Reading Options for Non-Arabs",
+    "non_arabic_reading_desc": "Assistance tools to facilitate correct pronunciation and reading",
+    "show_transliteration": "Show Transliteration",
+    "show_transliteration_desc": "Display Latin pronunciation guide directly beneath Arabic verses",
+    "live_preview": "Live Appearance Preview",
+    "transliteration_off_hint": "Latin transliteration is off (designed for non-Arabic readers)"
   },
   "downloads": {
     "title": "Downloads",
@@ -372,7 +378,12 @@
     "nothing_downloaded": "Nothing downloaded",
     "downloaded_items": "Downloaded items",
     "paused": "Paused",
-    "download_all_recitation": "Download the full recitation"
+    "download_all_recitation": "Download the full recitation",
+    "preview_title": "Mushaf Preview",
+    "sample_pages": "Sample pages",
+    "download_full": "Download full mushaf",
+    "already_downloaded": "Already downloaded",
+    "page_preview_note": "This is a sample of pages 1 & 2"
   },
   "new_muslim": {
     "title": "New Muslim Guide",

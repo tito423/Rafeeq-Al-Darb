@@ -337,7 +337,13 @@
     "perm_autostart": "Inicio automático / apps protegidas",
     "perm_autostart_desc": "Algunos fabricantes (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) gestionan las apps en segundo plano aparte de la batería — permite esta app ahí para que el Adhan no se detenga",
     "splash_video": "Vídeo de inicio",
-    "splash_video_desc": "Reproducir el vídeo de introducción al abrir la app"
+    "splash_video_desc": "Reproducir el vídeo de introducción al abrir la app",
+    "non_arabic_reading_title": "Opciones de lectura para no arabófonos",
+    "non_arabic_reading_desc": "Herramientas de ayuda para facilitar la pronunciación y lectura correcta",
+    "show_transliteration": "Mostrar transliteración (Show Transliteration)",
+    "show_transliteration_desc": "Muestra la guía de pronunciación latina debajo de los versos árabes",
+    "live_preview": "Vista previa en vivo",
+    "transliteration_off_hint": "La transliteración latina está desactivada"
   },
   "downloads": {
     "title": "Descargas",
@@ -372,7 +378,12 @@
     "nothing_downloaded": "Nada descargado",
     "downloaded_items": "Elementos descargados",
     "paused": "En pausa",
-    "download_all_recitation": "Descargar la recitación completa"
+    "download_all_recitation": "Descargar la recitación completa",
+    "preview_title": "Vista previa del Mus-haf",
+    "sample_pages": "Páginas de muestra",
+    "download_full": "Descargar Mus-haf completo",
+    "already_downloaded": "Ya descargado",
+    "page_preview_note": "Esta es una muestra de las páginas 1 y 2"
   },
   "new_muslim": {
     "title": "Guía del nuevo musulmán",
