@@ -855,27 +855,87 @@ class _BookList extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           itemCount: books.length,
           separatorBuilder: (_, _) => const SizedBox(height: 8),
-          itemBuilder: (context, i) {
-            final b = books[i];
-            return Card(
-              child: ListTile(
-                title: Text(b.nameAr,
-                    style: const TextStyle(fontWeight: FontWeight.w700)),
-                subtitle: Text(
-                  '${b.authorAr} · ${b.chapterCount} ${'library.chapters'.tr()} '
-                  '· ${b.hadithCount} ${'library.hadiths_count'.tr()}',
-                ),
-                trailing: const Icon(Icons.chevron_left),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => HadithBookScreen(book: b, repo: repo),
-                  ),
-                ),
+          itemBuilder: (context, i) => _HadithBookTile(
+            book: books[i],
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => HadithBookScreen(book: books[i], repo: repo),
               ),
-            );
-          },
+            ),
+          ),
         );
       },
+    );
+  }
+}
+
+/// P3‑56: a proper card for a hadith collection's imam — the collection name
+/// bold and larger, the imam's name below it in a smaller secondary tone, and
+/// the chapter/hadith counts smaller again. Every line is single-line with
+/// ellipsis so a long imam name (e.g. "الإمام أبو عبد الرحمن أحمد بن شعيب
+/// النسائي") can never overflow or collide with the counts, which the old
+/// one-line `ListTile` subtitle (imam + counts crammed together) did.
+class _HadithBookTile extends StatelessWidget {
+  final HadithBook book;
+  final VoidCallback onTap;
+  const _HadithBookTile({required this.book, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: AppColors.gold.withValues(alpha: 0.14),
+                child: Icon(Icons.menu_book_rounded,
+                    color: AppColors.gold, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      book.nameAr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      book.authorAr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: scheme.onSurfaceVariant),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${book.chapterCount} ${'library.chapters'.tr()}  ·  '
+                      '${book.hadithCount} ${'library.hadiths_count'.tr()}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: scheme.outline),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_left, color: scheme.onSurfaceVariant),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

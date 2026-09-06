@@ -79,6 +79,13 @@ dependencies:
   # Share an ayah card as an image (P2‑8)
   share_plus: ^12.0.2
 
+  # P3‑56: native splash held until init completes. The OS-drawn splash stays
+  # on screen through the Flutter engine warmup and main()'s bootstrap
+  # (FlutterNativeSplash.preserve) and is lifted only when the app is actually
+  # ready (FlutterNativeSplash.remove) — killing the icon→flash→icon→video
+  # glitch the old hand-built splash produced.
+  flutter_native_splash: ^2.4.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -129,3 +136,19 @@ flutter_launcher_icons:
   background_color_ios: '#0C2C29'
   remove_alpha_ios: true
   min_sdk_android: 21
+
+# P3‑56: native splash config. The colour matches `AppColors.night`
+# (#071625 — the same scaffold ground the Flutter `SplashScreen` uses), and
+# the image is the app mark, so the OS splash and the Flutter frame that
+# replaces it are visually identical — the hand-off is seamless with no
+# flash. Regenerate the native drawables after any change here with:
+#   dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#071625"
+  image: assets/branding/app_mark.png
+  android_12:
+    color: "#071625"
+    image: assets/branding/app_mark.png
+  android: true
+  ios: true
+  web: false

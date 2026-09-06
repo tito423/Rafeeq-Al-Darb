@@ -28,11 +28,20 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            // P3‑56: the imam name is now `Expanded` + ellipsis so a long one
+            // (e.g. "الإمام أبو عبد الرحمن أحمد بن شعيب النسائي") can't push the
+            // counts off the edge and trip a RenderFlex overflow.
             child: Row(
               children: [
-                Text(widget.book.authorAr,
-                    style: TextStyle(color: scheme.onSurfaceVariant)),
-                const Spacer(),
+                Expanded(
+                  child: Text(
+                    widget.book.authorAr,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: scheme.onSurfaceVariant),
+                  ),
+                ),
+                const SizedBox(width: 8),
                 Text(
                   '${widget.book.chapterCount} ${'library.chapters'.tr()} · '
                   '${widget.book.hadithCount} ${'library.hadiths_count'.tr()}',

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:video_player/video_player.dart';
@@ -49,13 +50,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     if (motionOn && shouldPlayVideo) {
       _initVideo();
     } else {
-      // No video: a brief icon beat, then straight on. Reduced-motion users
-      // get an effectively instant hand-off.
+      // No video: the native splash already showed the icon; lift it now (the
+      // Flutter icon below is identical, so there's no visible swap) and,
+      // after a brief beat, hand off. Reduced-motion users get an instant
+      // hand-off.
+      _removeNativeSplash();
       Future<void>.delayed(
         Duration(milliseconds: motionOn ? 600 : 0),
         _proceed,
       );
     }
+  }
+
+  bool _nativeSplashRemoved = false;
+
+  /// Lift the OS-drawn native splash exactly once. Idempotent — called from
+  /// every path (video ready, no video, video failed, and as a safety net in
+  /// [_proceed]) so the splash can never end up stranded on screen.
+  void _removeNativeSplash() {
+    if (_nativeSplashRemoved) return;
+    _nativeSplashRemoved = true;
+    FlutterNativeSplash.remove();
   }
 
   Future<void> _initVideo() async {
@@ -71,13 +86,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       c.addListener(_onVideoTick);
       setState(() => _video = c);
       await c.play();
+      // Lift the native splash only once the video's FIRST frame has actually
+      // been painted (post-frame), so the OS icon hands straight over to the
+      // playing video with no blank frame in between — the seamless transition
+      // the owner asked for.
+      WidgetsBinding.instance.addPostFrameCallback((_) => _removeNativeSplash());
       // Belt-and-braces: `_onVideoTick` should catch the end first, but a
       // decoder that never reports a clean completion must not strand the
       // user on frame one forever.
       Future<void>.delayed(
           c.value.duration + const Duration(seconds: 2), _proceed);
     } catch (_) {
-      // Asset missing/undecodable on this device — brief icon hold, proceed.
+      // Asset missing/undecodable on this device — lift the native splash onto
+      // the (identical) Flutter icon, brief hold, then proceed.
+      _removeNativeSplash();
       Future<void>.delayed(const Duration(milliseconds: 1500), _proceed);
     }
   }
@@ -94,6 +116,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   void _proceed() {
     if (_navigated || !mounted) return;
+    // Safety net: if we somehow reach the hand-off with the native splash
+    // still up (e.g. a decoder that never painted a frame), lift it now so it
+    // can't cover the app.
+    _removeNativeSplash();
     _navigated = true;
     ref.read(splashFirstRunProvider.notifier).markDone();
     final done = ref.read(onboardingCompletedProvider);
@@ -140,37 +166,36 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.night,
+      // No AnimatedSwitcher any more: the icon beat is owned by the native
+      // splash (held until the video's first frame is painted), so this either
+      // shows the video directly or, as a fallback, the same app mark the
+      // native splash showed — a clean cut, not a second animated hand-off.
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: videoReady ? _proceed : null,
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 260),
-          child: videoReady
-              ? SizedBox.expand(
-                  key: const ValueKey('video'),
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: SizedBox(
-                      width: video.value.size.width,
-                      height: video.value.size.height,
-                      child: VideoPlayer(video),
-                    ),
-                  ),
-                )
-              : Center(
-                  key: const ValueKey('icon'),
+        child: videoReady
+            ? SizedBox.expand(
+                child: FittedBox(
+                  fit: BoxFit.cover,
                   child: SizedBox(
-                    width: 148,
-                    height: 148,
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/branding/app_mark.png',
-                        fit: BoxFit.cover,
-                      ),
+                    width: video.value.size.width,
+                    height: video.value.size.height,
+                    child: VideoPlayer(video),
+                  ),
+                ),
+              )
+            : Center(
+                child: SizedBox(
+                  width: 148,
+                  height: 148,
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/branding/app_mark.png',
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-        ),
+              ),
       ),
     );
   }

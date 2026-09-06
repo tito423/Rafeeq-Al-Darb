@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- P3-20: the native splash (shown before the Flutter engine attaches,
-     while main()'s async bootstrap still runs) now centres our own app
-     mark on the navy field instead of a blank screen. The Flutter-side
-     SplashScreen picks up right after with the full animated lattice plus
-     glow treatment; this native layer only needs to look right for the
-     instant before that. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <bitmap android:gravity="fill" android:src="@drawable/background"/>
     </item>
-    <item android:gravity="center">
-        <bitmap android:gravity="center" android:src="@mipmap/ic_launcher"/>
+    <item>
+        <bitmap android:gravity="center" android:src="@drawable/splash"/>
     </item>
 </layer-list>

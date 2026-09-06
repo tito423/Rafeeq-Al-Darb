@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -17,7 +18,15 @@ import 'features/adhan/presentation/adhan_navigation.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // P3‑56: hold the OS-drawn native splash on screen through the whole
+  // bootstrap below (fonts, prefs, localization, timezone, alarm init) instead
+  // of letting Flutter tear it down at its first frame — that early teardown,
+  // before the Dart `SplashScreen`/video was ready, was the "icon → flash →
+  // icon → video" glitch. `SplashScreen` lifts it (`FlutterNativeSplash
+  // .remove()`) only once the video's first frame is painted (or, with no
+  // video, once it's about to hand off), so the transition is seamless.
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // P3‑43 #12: the app's core UI font (Cairo) is now bundled locally under
   // assets/fonts/google_fonts/ (see pubspec.yaml/AppTypography) specifically
