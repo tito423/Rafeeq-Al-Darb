@@ -476,24 +476,32 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 ref.watch(currentMushafEditionProvider).valueOrNull,
               ),
             ),
-            // P3‑43 #7: "always show the page number at the bottom, the
-            // surah name at the top-right, and the juz name at the
-            // top-left" — reading context, not an "option" toolbars can
-            // hide, so this sits above everything (toolbar visibility,
-            // full-screen mode) and never toggles off with them.
+            // P3‑43 #7 / P3‑51: the surah name (top-right) and juz (top-left)
+            // running header stays on screen regardless of toolbar/full-screen
+            // — reading context, not an "option". The page number is only
+            // floated here in full-screen mode (where there's no bottom bar);
+            // in normal mode it lives in its own bar under the text so it can
+            // never overlap the last line.
             _PersistentPageOverlay(
-              pageNumber: _current,
               surahName: _currentSurahName(data),
               juzNumber: _currentJuzNumber(data),
+              pageNumber: _pageFillScreen ? _current : null,
             ),
           ],
         ),
       ),
+      // P3‑51: the owner asked for a clean vertical stack with nothing
+      // floating over the ayah text — (a) the text area (the Scaffold body,
+      // Expanded by nature), (b) a dedicated info bar with the page number
+      // centred, (c) the scrollbar, (d) the app's own bottom nav. This
+      // bottomNavigationBar holds (b) + (c); (d) is AppShell's NavigationBar
+      // below it. Built with min-size flex so it never overflows or overlaps
+      // regardless of screen size/density.
       bottomNavigationBar: _pageFillScreen
           ? null
           : SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
+                padding: const EdgeInsets.only(top: 4, bottom: 6),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -505,15 +513,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                         speed: _autoScrollSpeed,
                         onChanged: _changeAutoScrollSpeed,
                       ),
+                    // (b) The page-number info bar — its own row, centred, so
+                    // it sits cleanly below the text instead of over it.
+                    Center(child: _PageNumberBadge(page: _current)),
                     const SizedBox(height: 6),
-                    // P3‑43 #4/#5: the surah-name strip and the ‹ › arrow
-                    // buttons are both gone per the owner's explicit,
-                    // repeated ask ("my request was only fast scroll bar
-                    // not putting suras names" — P3‑41 — then again this
-                    // round) — replaced with one real drag-to-scrub
-                    // scrollbar. The page number itself isn't lost: P3‑43
-                    // #7's persistent overlay already shows it always, in
-                    // both modes, so nothing needs to repeat it here.
+                    // (c) One real drag-to-scrub scrollbar (P3‑43 #4/#5: the
+                    // old surah strip + ‹ › arrows were removed per the
+                    // owner's repeated ask).
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: _FastPageScrollBar(
@@ -611,14 +617,21 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 /// throughout so it never steals the background tap that toggles the
 /// toolbar or exits full-screen.
 class _PersistentPageOverlay extends StatelessWidget {
-  final int pageNumber;
   final String surahName;
   final int juzNumber;
 
+  /// P3‑51: the page number itself no longer lives here. In normal mode it's
+  /// a real bar under the text (see the Scaffold's bottomNavigationBar), so
+  /// this overlay only paints the top running header (surah + juz). In
+  /// full-screen mode there's no bottom bar, so the page badge is shown here
+  /// at the bottom instead — the viewer already reserves 56px there, so it
+  /// never overlaps the last line.
+  final int? pageNumber;
+
   const _PersistentPageOverlay({
-    required this.pageNumber,
     required this.surahName,
     required this.juzNumber,
+    this.pageNumber,
   });
 
   @override
@@ -644,10 +657,11 @@ class _PersistentPageOverlay extends StatelessWidget {
                 // chrome that follows the interface locale.
                 child: _HeaderBadge(text: 'الجزء ${_arabicNumber(juzNumber)}'),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: _HeaderBadge(text: _arabicNumber(pageNumber)),
-              ),
+              if (pageNumber != null)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _PageNumberBadge(page: pageNumber!),
+                ),
             ],
           ),
         ),
@@ -661,6 +675,15 @@ String _arabicNumber(int n) {
   return n.toString().split('').map((c) => digits[int.parse(c)]).join();
 }
 
+/// P3‑51: a uniform, perfectly-centred badge for the running header.
+///
+/// Arabic (esp. the AmiriQuran calligraphy face, with its large internal
+/// metrics and tashkeel marks that sit above/below the glyph body) does not
+/// vertically centre inside a box by default — the baseline drifts. The fix,
+/// applied here and in [_PageNumberBadge], is: `alignment: center` on the box,
+/// plus `StrutStyle(forceStrutHeight, height:1.0, leading:0)` and a
+/// `TextHeightBehavior` that trims the first-ascent/last-descent, so the line
+/// box collapses to the font size and the glyph lands in the geometric centre.
 class _HeaderBadge extends StatelessWidget {
   final String text;
   const _HeaderBadge({required this.text});
@@ -668,8 +691,10 @@ class _HeaderBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    const fontSize = 13.0;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.55),
         borderRadius: BorderRadius.circular(20),
@@ -677,10 +702,69 @@ class _HeaderBadge extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
+        textAlign: TextAlign.center,
+        strutStyle: const StrutStyle(
           fontFamily: 'AmiriQuran',
-          fontSize: 13,
+          fontSize: fontSize,
+          height: 1.0,
+          leading: 0,
+          forceStrutHeight: true,
+        ),
+        textHeightBehavior: const TextHeightBehavior(
+          applyHeightToFirstAscent: false,
+          applyHeightToLastDescent: false,
+        ),
+        style: const TextStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: fontSize,
+          height: 1.0,
           fontWeight: FontWeight.w600,
+          color: AppColors.gold,
+        ),
+      ),
+    );
+  }
+}
+
+/// P3‑51: the page-number badge — a real circle with the Arabic-Indic page
+/// number geometrically centred (same centring recipe as [_HeaderBadge]).
+/// Used both in the normal-mode bottom info bar and, in full-screen, floated
+/// at the bottom of the reserved strip.
+class _PageNumberBadge extends StatelessWidget {
+  final int page;
+  const _PageNumberBadge({required this.page});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      width: 40,
+      height: 40,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.55),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
+      ),
+      child: Text(
+        _arabicNumber(page),
+        textAlign: TextAlign.center,
+        strutStyle: const StrutStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: 14,
+          height: 1.0,
+          leading: 0,
+          forceStrutHeight: true,
+        ),
+        textHeightBehavior: const TextHeightBehavior(
+          applyHeightToFirstAscent: false,
+          applyHeightToLastDescent: false,
+        ),
+        style: const TextStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: 14,
+          height: 1.0,
+          fontWeight: FontWeight.w700,
           color: AppColors.gold,
         ),
       ),

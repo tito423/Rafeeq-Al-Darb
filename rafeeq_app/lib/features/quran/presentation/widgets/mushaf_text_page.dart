@@ -445,9 +445,24 @@ class _SurahBanner extends StatelessWidget {
         // another "سورة" produced the doubled header (P2‑1.1).
         name,
         textDirection: TextDirection.rtl,
+        textAlign: TextAlign.center,
+        // P3‑51: same geometric-centring recipe as the header badges so the
+        // Arabic (with its tashkeel headroom) sits centred in the cartouche.
+        strutStyle: const StrutStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: 22,
+          height: 1.0,
+          leading: 0,
+          forceStrutHeight: true,
+        ),
+        textHeightBehavior: const TextHeightBehavior(
+          applyHeightToFirstAscent: false,
+          applyHeightToLastDescent: false,
+        ),
         style: TextStyle(
           fontFamily: 'AmiriQuran',
           fontSize: 22,
+          height: 1.0,
           color: gold,
           fontWeight: FontWeight.w600,
         ),
