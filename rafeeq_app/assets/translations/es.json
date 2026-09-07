@@ -105,7 +105,14 @@
     "auto_scroll": "Desplazamiento automático",
     "auto_scroll_stop": "Detener desplazamiento",
     "page_fit_full": "Pantalla completa",
-    "page_fit_small": "Tamaño normal"
+    "page_fit_small": "Tamaño normal",
+    "recite_continuous": "Recitación continua",
+    "recite_stop": "Detener la recitación",
+    "recite_loading": "Cargando la recitación…",
+    "recite_now": "Recitando {}:{}",
+    "recite_previous": "Versículo anterior",
+    "recite_pause": "Pausar / reanudar",
+    "recite_next": "Versículo siguiente"
   },
   "library": {
     "title": "Biblioteca",
@@ -387,7 +394,15 @@
     "sample_pages": "Páginas de muestra",
     "download_full": "Descargar Mus-haf completo",
     "already_downloaded": "Ya descargado",
-    "page_preview_note": "Esta es una muestra de las páginas 1 y 2"
+    "page_preview_note": "Esta es una muestra de las páginas 1 y 2",
+    "by_category": "Por categoría",
+    "items": "elementos",
+    "find_surah": "Buscar una sura…",
+    "source_verified": "Fuente rápida verificada: se reanuda tras una interrupción",
+    "source_cdn": "Servido desde la CDN: la descarga puede ser más lenta",
+    "incomplete_tap_retry": "Incompleto: toca para reintentar",
+    "preparing": "Preparando…",
+    "now_downloading": "Descargando {}"
   },
   "new_muslim": {
     "title": "Guía del nuevo musulmán",

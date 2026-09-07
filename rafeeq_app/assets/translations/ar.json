@@ -105,7 +105,14 @@
     "auto_scroll": "تمرير تلقائي",
     "auto_scroll_stop": "إيقاف التمرير",
     "page_fit_full": "ملء الشاشة",
-    "page_fit_small": "حجم عادي"
+    "page_fit_small": "حجم عادي",
+    "recite_continuous": "التلاوة المستمرة",
+    "recite_stop": "إيقاف التلاوة",
+    "recite_loading": "جارٍ تحميل التلاوة…",
+    "recite_now": "يُتلى الآن: {}:{}",
+    "recite_previous": "الآية السابقة",
+    "recite_pause": "إيقاف مؤقت / متابعة",
+    "recite_next": "الآية التالية"
   },
   "library": {
     "title": "المكتبة",
@@ -387,7 +394,15 @@
     "sample_pages": "نموذج من الصفحات",
     "download_full": "تحميل المصحف كاملاً",
     "already_downloaded": "تم التحميل",
-    "page_preview_note": "هذه عينة من الصفحة الأولى والثانية"
+    "page_preview_note": "هذه عينة من الصفحة الأولى والثانية",
+    "by_category": "حسب النوع",
+    "items": "عنصر",
+    "find_surah": "ابحث عن سورة…",
+    "source_verified": "مصدر موثّق وسريع — يدعم الاستئناف بعد الانقطاع",
+    "source_cdn": "يُشغَّل من شبكة التوزيع — قد يكون التنزيل أبطأ",
+    "incomplete_tap_retry": "لم يكتمل — اضغط لإعادة المحاولة",
+    "preparing": "جارٍ التحضير…",
+    "now_downloading": "جارٍ تنزيل {}"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",

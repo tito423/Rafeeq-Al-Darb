@@ -105,7 +105,14 @@
     "auto_scroll": "Rolagem automática",
     "auto_scroll_stop": "Parar rolagem",
     "page_fit_full": "Tela cheia",
-    "page_fit_small": "Tamanho normal"
+    "page_fit_small": "Tamanho normal",
+    "recite_continuous": "Recitação contínua",
+    "recite_stop": "Parar a recitação",
+    "recite_loading": "A carregar a recitação…",
+    "recite_now": "A recitar {}:{}",
+    "recite_previous": "Versículo anterior",
+    "recite_pause": "Pausar / retomar",
+    "recite_next": "Versículo seguinte"
   },
   "library": {
     "title": "Biblioteca",
@@ -387,7 +394,15 @@
     "sample_pages": "Páginas de exemplo",
     "download_full": "Baixar mushaf completo",
     "already_downloaded": "Já transferido",
-    "page_preview_note": "Amostra das páginas 1 e 2"
+    "page_preview_note": "Amostra das páginas 1 e 2",
+    "by_category": "Por categoria",
+    "items": "itens",
+    "find_surah": "Procurar uma sura…",
+    "source_verified": "Fonte rápida verificada — retoma após uma interrupção",
+    "source_cdn": "Servido pela CDN — a transferência pode ser mais lenta",
+    "incomplete_tap_retry": "Incompleto — toque para tentar de novo",
+    "preparing": "A preparar…",
+    "now_downloading": "A transferir {}"
   },
   "new_muslim": {
     "title": "Guia do novo muçulmano",

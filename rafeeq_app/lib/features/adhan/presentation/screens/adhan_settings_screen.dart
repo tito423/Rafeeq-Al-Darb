@@ -360,40 +360,24 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                 ),
                 childrenPadding: const EdgeInsets.only(bottom: 8),
                 children: [
-                  RadioGroup<String>(
-                    groupValue: settings.defaultAdhanId,
-                    onChanged: (id) {
-                      if (id == null) return;
-                      _saveDefault(id);
-                      // P3‑7 (J4): picking an adhan previews it immediately —
-                      // the owner asked not to also require a separate tap on
-                      // the play icon. Reuses the exact same preview player as
-                      // that icon (_togglePreview), so a still-playing preview
-                      // of a *different* adhan is correctly stopped first.
-                      final picked =
-                          catalog.where((o) => o.id == id).firstOrNull;
-                      if (picked != null) {
-                        _togglePreview(picked, forcePlay: true);
-                      }
-                    },
-                    child: Column(
-                      children: [
-                        for (final option in catalog)
-                          _AdhanRow(
-                            option: option,
-                            playing: _playingId == option.id,
-                            onPreview: () => _togglePreview(option),
-                            onRemove: option.isCustom
-                                ? () async {
-                                    await ref
-                                        .read(adhanCatalogProvider.notifier)
-                                        .removeCustom(option);
-                                  }
-                                : null,
-                          ),
-                      ],
+                  for (final option in catalog)
+                    _AdhanCard(
+                      option: option,
+                      isSelected: settings.defaultAdhanId == option.id,
+                      isPlaying: _playingId == option.id,
+                      onTap: () {
+                        _saveDefault(option.id);
+                        _togglePreview(option, forcePlay: true);
+                      },
+                      onStop: () => _togglePreview(option),
+                      onRemove: option.isCustom
+                          ? () async {
+                              await ref
+                                  .read(adhanCatalogProvider.notifier)
+                                  .removeCustom(option);
+                            }
+                          : null,
                     ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: OutlinedButton.icon(
@@ -536,42 +520,121 @@ class _BatteryCard extends StatelessWidget {
   }
 }
 
-class _AdhanRow extends StatelessWidget {
+/// Adhan selection card — tapping the entire card selects that adhan,
+/// saves it immediately, and previews it. No separate "select" button.
+class _AdhanCard extends StatelessWidget {
   final AdhanOption option;
-  final bool playing;
-  final VoidCallback onPreview;
+  final bool isSelected;
+  final bool isPlaying;
+  final VoidCallback onTap;
+  final VoidCallback onStop;
   final VoidCallback? onRemove;
 
-  const _AdhanRow({
+  const _AdhanCard({
     required this.option,
-    required this.playing,
-    required this.onPreview,
+    required this.isSelected,
+    required this.isPlaying,
+    required this.onTap,
+    required this.onStop,
     this.onRemove,
   });
 
   @override
   Widget build(BuildContext context) {
-    // groupValue/onChanged are supplied by the RadioGroup<String> ancestor
-    // in AdhanSettingsScreen — this only declares its own value.
-    return RadioListTile<String>(
-      value: option.id,
-      title: Text(option.name),
-      subtitle: option.isCustom ? Text('prayer.imported'.tr()) : null,
-      secondary: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(playing ? Icons.stop_circle : Icons.play_circle_outline),
-            tooltip: 'prayer.test'.tr(),
-            onPressed: onPreview,
-          ),
-          if (onRemove != null)
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              tooltip: 'prayer.remove_custom'.tr(),
-              onPressed: onRemove,
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: Material(
+        color: isSelected
+            ? AppColors.gold.withValues(alpha: 0.12)
+            : scheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isSelected
+                    ? AppColors.gold.withValues(alpha: 0.6)
+                    : Colors.transparent,
+                width: 1.5,
+              ),
             ),
-        ],
+            child: Row(
+              children: [
+                // Selection indicator
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected ? AppColors.gold : Colors.transparent,
+                    border: Border.all(
+                      color: isSelected
+                          ? AppColors.gold
+                          : scheme.onSurfaceVariant.withValues(alpha: 0.4),
+                      width: 2,
+                    ),
+                  ),
+                  child: isSelected
+                      ? const Icon(Icons.check, color: Colors.white, size: 16)
+                      : null,
+                ),
+                const SizedBox(width: 14),
+                // Name and label
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        option.name,
+                        style: TextStyle(
+                          fontWeight:
+                              isSelected ? FontWeight.w700 : FontWeight.w500,
+                          color: isSelected
+                              ? AppColors.gold
+                              : scheme.onSurface,
+                          fontSize: 15,
+                        ),
+                      ),
+                      if (option.isCustom)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            'prayer.imported'.tr(),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                // Stop button (only visible when this adhan is playing)
+                if (isPlaying)
+                  IconButton(
+                    icon: Icon(Icons.stop_circle,
+                        color: AppColors.gold, size: 28),
+                    tooltip: 'prayer.test'.tr(),
+                    onPressed: onStop,
+                  ),
+                // Delete button for custom adhans
+                if (onRemove != null)
+                  IconButton(
+                    icon: Icon(Icons.delete_outline,
+                        color: scheme.error, size: 22),
+                    tooltip: 'prayer.remove_custom'.tr(),
+                    onPressed: onRemove,
+                  ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

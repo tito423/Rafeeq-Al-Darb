@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../config/app_config.dart';
 import 'download_foreground_service.dart';
-import 'download_manager.dart' show DownloadNotifications;
+import 'download_notifications.dart';
 
 /// P3‑41: the owner asked directly for the default mushaf to be "built
 /// in" — bundled inside the APK, not fetched over the network at all, the

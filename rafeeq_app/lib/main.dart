@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'adhan_entry.dart';
 import 'app/rafeeq_app.dart';
 import 'core/services/alarm_permissions_service.dart';
+import 'core/services/download_engine.dart';
 import 'core/services/sunan_suwar_reminder_service.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 
@@ -94,6 +97,13 @@ Future<void> main() async {
   // whole point. All that is left for main() is the notifications plugin
   // and the permission gates.
   await AlarmPermissionsService.instance.initialize();
+
+  // Re-attach to any download the OS kept running while the app was gone.
+  // `background_downloader` hands transfers to Android's own WorkManager, so a
+  // surah (or a 100 MB pack) can finish while the app is closed — without this
+  // the app would never learn that it did. Deliberately not awaited: it is a
+  // reconciliation, not a prerequisite for the first frame.
+  unawaited(DownloadEngine.resumeFromBackground());
 
   await SunanSuwarReminderService.instance.initialize();
   SunanSuwarReminderService.onOpenSurah = openSunanSuwarFromPayload;

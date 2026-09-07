@@ -85,6 +85,7 @@ dependencies:
   # ready (FlutterNativeSplash.remove) — killing the icon→flash→icon→video
   # glitch the old hand-built splash produced.
   flutter_native_splash: ^2.4.4
+  background_downloader: ^9.5.9
 
 dev_dependencies:
   flutter_test:

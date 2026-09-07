@@ -105,7 +105,14 @@
     "auto_scroll": "Автопрокрутка",
     "auto_scroll_stop": "Остановить прокрутку",
     "page_fit_full": "Во весь экран",
-    "page_fit_small": "Обычный размер"
+    "page_fit_small": "Обычный размер",
+    "recite_continuous": "Непрерывное чтение",
+    "recite_stop": "Остановить чтение",
+    "recite_loading": "Загрузка чтения…",
+    "recite_now": "Читается {}:{}",
+    "recite_previous": "Предыдущий аят",
+    "recite_pause": "Пауза / продолжить",
+    "recite_next": "Следующий аят"
   },
   "library": {
     "title": "Библиотека",
@@ -387,7 +394,15 @@
     "sample_pages": "Примеры страниц",
     "download_full": "Скачать полный мусхаф",
     "already_downloaded": "Уже загружено",
-    "page_preview_note": "Это пример страниц 1 и 2"
+    "page_preview_note": "Это пример страниц 1 и 2",
+    "by_category": "По категориям",
+    "items": "элементов",
+    "find_surah": "Найти суру…",
+    "source_verified": "Проверенный быстрый источник — продолжает после обрыва",
+    "source_cdn": "Раздаётся через CDN — загрузка может быть медленнее",
+    "incomplete_tap_retry": "Не завершено — нажмите, чтобы повторить",
+    "preparing": "Подготовка…",
+    "now_downloading": "Загрузка {}"
   },
   "new_muslim": {
     "title": "Руководство для нового мусульманина",

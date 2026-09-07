@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +12,8 @@ import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/toolbar_action.dart';
 import '../../../search/presentation/screens/search_screen.dart';
 import '../../data/ayah_coords_repository.dart';
+import '../../../../core/services/ayah_audio_service.dart';
+import '../../../downloads/data/reciters_provider.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
 import '../../data/quran_fullscreen_provider.dart';
@@ -78,6 +82,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// fills).
   bool _pageFillScreen = false;
   static const _kPageFillScreen = 'quran_text_page_fill_v1';
+
+  /// Live state of continuous (ayah-by-ayah, auto-advancing) recitation.
+  /// Mirrored into local state from `AyahAudioService.continuous` so the page
+  /// can highlight the verse being recited and follow it across page breaks.
+  ContinuousRecitation _recite = ContinuousRecitation.stopped;
+
+  /// Guards the page-following below: without it, every position update for a
+  /// verse already on screen would re-issue the same page jump.
+  int? _followedPage;
 
   Future<void> _persistPage() async {
     // Goes through the reactive provider (P3‑4), not a raw prefs write —
@@ -200,10 +213,61 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   void initState() {
     super.initState();
     _restoreState();
+    AyahAudioService.instance.continuous.addListener(_onReciteChanged);
+  }
+
+  /// The recitation moved to another verse. Two things follow: the highlight
+  /// (a plain rebuild), and turning the page when the reciter crosses onto
+  /// the next one — the reader should never have to swipe to keep up.
+  void _onReciteChanged() {
+    if (!mounted) return;
+    final state = AyahAudioService.instance.continuous.value;
+    setState(() => _recite = state);
+    if (!state.active) {
+      _followedPage = null;
+      return;
+    }
+    final surah = state.surahId;
+    final ayah = state.ayahNumber;
+    if (surah == null || ayah == null) return;
+    unawaited(_followRecitationTo(surah, ayah));
+  }
+
+  Future<void> _followRecitationTo(int surah, int ayah) async {
+    final repo = ref.read(mushafDataProvider).valueOrNull?.repo;
+    if (repo == null) return;
+    final row = await repo.ayah(surah, ayah);
+    if (!mounted || row == null) return;
+    final page = row.pageNumber;
+    if (page == _current || page == _followedPage) return;
+    _followedPage = page;
+    _goToPage(page);
+  }
+
+  /// Starts continuous recitation from the current page (or from the verse
+  /// the reader has selected, if any), and reads on through the mushaf.
+  Future<void> _toggleContinuousRecitation(MushafData data) async {
+    final audio = AyahAudioService.instance;
+    if (_recite.active) {
+      await audio.stopContinuous();
+      return;
+    }
+    final ayahs = await _ayahsOfPage(_current, data);
+    if (ayahs.isEmpty || !mounted) return;
+    final start = ayahs.firstWhere(
+      (a) => a.surahId == _highlightSurah && a.ayahNumber == _highlightAyah,
+      orElse: () => ayahs.first,
+    );
+    await audio.startContinuous(
+      from: start,
+      repo: data.repo,
+      edition: ref.read(selectedReciterProvider),
+    );
   }
 
   @override
   void dispose() {
+    AyahAudioService.instance.continuous.removeListener(_onReciteChanged);
     _pages?.dispose();
     // Make sure the system bars are never left hidden if this screen goes
     // away while full-screen.
@@ -264,9 +328,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       _pageFutures.putIfAbsent(page, () => data.repo.ayahsOfPage(page));
 
   AyahRegion? _highlightRegion(String editionId, int page) {
-    if (_highlightSurah == null || _current != page) return null;
+    if (_current != page) return null;
+    // While reciting, the verse being read wins over a tap selection — it is
+    // the one the reader is actually following.
+    final surah = _recite.active ? _recite.surahId : _highlightSurah;
+    final ayah = _recite.active ? _recite.ayahNumber : _highlightAyah;
+    if (surah == null || ayah == null) return null;
     for (final r in _coords.regionsForPage(editionId, page)) {
-      if (r.surah == _highlightSurah && r.ayah == _highlightAyah) return r;
+      if (r.surah == surah && r.ayah == ayah) return r;
     }
     return null;
   }
@@ -380,6 +449,20 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                 onPressed: _toggleAutoScroll,
                               ),
                             ],
+                            // Continuous recitation works in both modes: the
+                            // text page tints the verse, the image page
+                            // highlights its polygon, and either way the reader
+                            // turns its own pages to follow the reciter.
+                            ToolbarAction(
+                              icon: _recite.active
+                                  ? Icons.stop_circle_outlined
+                                  : Icons.headphones_rounded,
+                              label: _recite.active
+                                  ? 'quran.recite_stop'.tr()
+                                  : 'quran.recite_continuous'.tr(),
+                              onPressed: () =>
+                                  _toggleContinuousRecitation(mushaf.value!),
+                            ),
                             // P3‑43 #6: moved out of the text-only block above —
                             // full-screen reading is a real, useful mode for the
                             // image mushaf too, not just the text one.
@@ -465,82 +548,77 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     )
                   : null,
             ),
-      body: mushaf.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) =>
-            ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
-        data: (data) => Stack(
-          children: [
-            // P3‑44: in normal mode the separate bottom toolbar bar below
-            // already reserves plenty of clearance under the viewer, but
-            // in full-screen mode (`bottomNavigationBar` goes null) the
-            // viewer fills the *entire* remaining height with nothing
-            // reserved for the page-number badge overlaid on top of it —
-            // a real bug caught from a live screenshot: on a page whose
-            // last line runs close to the bottom, that line rendered
-            // straight underneath the badge instead of above it. Padding
-            // the viewer itself (not the overlay) keeps the badge exactly
-            // where P3‑43 #7 put it while giving the real content room to
-            // stop short of it.
-            // P3‑49: real-device feedback — the running-header badges
-            // (surah name top-right, juz top-left) were floating directly
-            // over the first line of the page, hiding it. A real mushaf's
-            // running header sits in a reserved top margin above the text,
-            // so reserve that strip here (both modes; the badges are at the
-            // top of the Stack regardless of AppBar/full-screen), mirroring
-            // the bottom reservation for the page-number badge.
-            Padding(
-              padding: EdgeInsets.only(
-                top: _pageFillScreen ? 44 : 40,
-                bottom: _pageFillScreen ? 56 : 0,
-              ),
-              child: _buildViewer(
-                data,
-                ref.watch(currentMushafEditionProvider).valueOrNull,
-              ),
-            ),
-            // P3‑43 #7 / P3‑51: the surah name (top-right) and juz (top-left)
-            // running header stays on screen regardless of toolbar/full-screen
-            // — reading context, not an "option". The page number is only
-            // floated here in full-screen mode (where there's no bottom bar);
-            // in normal mode it lives in its own bar under the text so it can
-            // never overlap the last line.
-            _PersistentPageOverlay(
-              surahName: _currentSurahName(data),
-              juzNumber: _currentJuzNumber(data),
-              pageNumber: _pageFillScreen ? _current : null,
-            ),
-            // P3‑54: a translucent floating "exit immersive" button — the
-            // always-visible, discoverable way back out (alongside the
-            // double-tap gesture), since in full-screen the toolbar that
-            // toggled the mode is itself off-screen. Only present while
-            // full-screen; a plain SafeArea-aligned button, not an
-            // `IgnorePointer` overlay, so it actually receives its own taps.
-            if (_pageFillScreen)
-              SafeArea(
-                child: Align(
-                  alignment: AlignmentDirectional.topStart,
-                  // Sits below the running-header badges (surah/juz occupy the
-                  // top corners) so it never overlaps them.
-                  child: Padding(
-                    padding:
-                        const EdgeInsetsDirectional.only(start: 8, top: 56),
-                    child: Material(
-                      color: Colors.black.withValues(alpha: 0.35),
-                      shape: const CircleBorder(),
-                      clipBehavior: Clip.antiAlias,
-                      child: IconButton(
-                        tooltip: 'quran.page_fit_small'.tr(),
-                        icon: const Icon(Icons.fullscreen_exit,
-                            color: Colors.white),
-                        onPressed: _togglePageFillScreen,
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          final isLandscape = orientation == Orientation.landscape;
+          return mushaf.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, _) =>
+                ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
+            data: (data) => Stack(
+              children: [
+                // P3‑44 / P3-Landscape: adjust viewer padding dynamically based on
+                // screen orientation and full-screen state.
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: _pageFillScreen
+                        ? (isLandscape ? 32 : 44)
+                        : (isLandscape ? 28 : 40),
+                    bottom: _pageFillScreen
+                        ? (isLandscape ? 36 : 56)
+                        : 0,
+                  ),
+                  child: _buildViewer(
+                    data,
+                    ref.watch(currentMushafEditionProvider).valueOrNull,
+                  ),
+                ),
+                // P3‑43 #7 / P3‑51: the surah name (top-right) and juz (top-left)
+                // running header stays on screen regardless of toolbar/full-screen
+                // — reading context, not an "option". The page number is only
+                // floated here in full-screen mode (where there's no bottom bar);
+                // in normal mode it lives in its own bar under the text so it can
+                // never overlap the last line.
+                _PersistentPageOverlay(
+                  surahName: _currentSurahName(data),
+                  juzNumber: _currentJuzNumber(data),
+                  pageNumber: _pageFillScreen ? _current : null,
+                ),
+                // P3‑54: a translucent floating "exit immersive" button — the
+                // always-visible, discoverable way back out (alongside the
+                // double-tap gesture), since in full-screen the toolbar that
+                // toggled the mode is itself off-screen. Only present while
+                // full-screen; a plain SafeArea-aligned button, not an
+                // `IgnorePointer` overlay, so it actually receives its own taps.
+                if (_pageFillScreen)
+                  SafeArea(
+                    child: Align(
+                      alignment: AlignmentDirectional.topStart,
+                      // Sits below the running-header badges (surah/juz occupy the
+                      // top corners) so it never overlaps them.
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.only(
+                          start: 8,
+                          top: isLandscape ? 40 : 56,
+                        ),
+                        child: Material(
+                          color: Colors.black.withValues(alpha: 0.35),
+                          shape: const CircleBorder(),
+                          clipBehavior: Clip.antiAlias,
+                          child: IconButton(
+                            tooltip: 'quran.page_fit_small'.tr(),
+                            icon: const Icon(Icons.fullscreen_exit,
+                                color: Colors.white),
+                            onPressed: _togglePageFillScreen,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-          ],
-        ),
+              ],
+            ),
+          );
+        },
       ),
       // P3‑51: the owner asked for a clean vertical stack with nothing
       // floating over the ayah text — (a) the text area (the Scaffold body,
@@ -557,6 +635,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // The reciter's transport, only while it is actually
+                    // running — skip back/forward a verse, pause, or stop
+                    // without digging back into the toolbar.
+                    if (_recite.active) _ReciteBar(state: _recite),
                     // Only shown once auto-scroll is actually on — no point
                     // occupying screen space with a speed control for a feature
                     // that isn't running.
@@ -630,6 +712,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
             return MushafTextPage(
               ayahs: ayahs,
               surahNameOf: data.surahNameAr,
+              playingSurah: _recite.active ? _recite.surahId : null,
+              playingAyah: _recite.active ? _recite.ayahNumber : null,
               onAyahTap: (a) => _openSciences(a, data),
               fontScale: _fontScale,
               autoScroll: _autoScroll,
@@ -664,6 +748,79 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         return;
       }
     }
+  }
+}
+
+/// The compact transport shown under the page while continuous recitation is
+/// running: which verse is sounding, and the three controls a listener
+/// actually reaches for.
+class _ReciteBar extends StatelessWidget {
+  final ContinuousRecitation state;
+  const _ReciteBar({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    final audio = AyahAudioService.instance;
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 0, 14, 6),
+      child: Material(
+        color: AppColors.gold.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsetsDirectional.only(start: 12, end: 4),
+          child: Row(
+            children: [
+              Icon(
+                state.buffering ? Icons.hourglass_top_rounded : Icons.graphic_eq_rounded,
+                size: 18,
+                color: AppColors.gold,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  state.buffering
+                      ? 'quran.recite_loading'.tr()
+                      : 'quran.recite_now'.tr(
+                          args: [
+                            '${state.surahId ?? ''}',
+                            '${state.ayahNumber ?? ''}',
+                          ],
+                        ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12, color: scheme.onSurface),
+                ),
+              ),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: 'quran.recite_previous'.tr(),
+                icon: const Icon(Icons.skip_previous_rounded),
+                onPressed: audio.continuousPrevious,
+              ),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: 'quran.recite_pause'.tr(),
+                icon: const Icon(Icons.pause_circle_outline_rounded),
+                onPressed: audio.continuousPauseResume,
+              ),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: 'quran.recite_next'.tr(),
+                icon: const Icon(Icons.skip_next_rounded),
+                onPressed: audio.continuousNext,
+              ),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: 'quran.recite_stop'.tr(),
+                icon: Icon(Icons.stop_circle_outlined, color: scheme.error),
+                onPressed: audio.stopContinuous,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

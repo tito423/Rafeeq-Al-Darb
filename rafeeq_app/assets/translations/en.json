@@ -105,7 +105,14 @@
     "auto_scroll": "Auto-scroll",
     "auto_scroll_stop": "Stop scrolling",
     "page_fit_full": "Full screen",
-    "page_fit_small": "Normal size"
+    "page_fit_small": "Normal size",
+    "recite_continuous": "Continuous recitation",
+    "recite_stop": "Stop recitation",
+    "recite_loading": "Loading recitation…",
+    "recite_now": "Now reciting {}:{}",
+    "recite_previous": "Previous verse",
+    "recite_pause": "Pause / resume",
+    "recite_next": "Next verse"
   },
   "library": {
     "title": "Library",
@@ -387,7 +394,15 @@
     "sample_pages": "Sample pages",
     "download_full": "Download full mushaf",
     "already_downloaded": "Already downloaded",
-    "page_preview_note": "This is a sample of pages 1 & 2"
+    "page_preview_note": "This is a sample of pages 1 & 2",
+    "by_category": "By category",
+    "items": "items",
+    "find_surah": "Find a surah…",
+    "source_verified": "Verified fast source — resumes after an interruption",
+    "source_cdn": "Served from the CDN — downloads may be slower",
+    "incomplete_tap_retry": "Incomplete — tap to retry",
+    "preparing": "Preparing…",
+    "now_downloading": "Downloading {}"
   },
   "new_muslim": {
     "title": "New Muslim Guide",

@@ -96,6 +96,7 @@ class _KeywordTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Padding(
@@ -105,11 +106,49 @@ class _KeywordTab extends StatelessWidget {
             decoration: InputDecoration(
               hintText: 'search.search_hint'.tr(),
               prefixIcon: const Icon(Icons.search),
+              suffixIcon: ValueListenableBuilder<TextEditingValue>(
+                valueListenable: controller,
+                builder: (_, value, _) {
+                  if (value.text.isEmpty) return const SizedBox.shrink();
+                  return IconButton(
+                    icon: const Icon(Icons.clear, size: 20),
+                    onPressed: () {
+                      controller.clear();
+                      onChanged('');
+                    },
+                  );
+                },
+              ),
               isDense: true,
             ),
             onChanged: onChanged,
           ),
         ),
+        // Results count badge
+        if (results != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            child: Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.gold.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${results!.length} ${'search.results_count'.tr()}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.gold,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         Expanded(
           child: results == null
               ? Center(child: Text('search.theme_hint'.tr()))
@@ -121,14 +160,17 @@ class _KeywordTab extends StatelessWidget {
                       itemBuilder: (context, i) {
                         final a = results![i];
                         return ListTile(
-                          title: Text(
-                            a.textUthmani,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontFamily: 'AmiriQuran', fontSize: 16),
+                          title: _HighlightedAyahText(
+                            text: a.textUthmani,
+                            query: controller.text.trim(),
                           ),
-                          subtitle: Text('${a.surahId}:${a.ayahNumber}'),
+                          subtitle: Text(
+                            '${a.surahId}:${a.ayahNumber}',
+                            style: TextStyle(
+                              color: scheme.onSurfaceVariant,
+                              fontSize: 12,
+                            ),
+                          ),
                           onTap: () => onOpen(a),
                         );
                       },
@@ -136,6 +178,99 @@ class _KeywordTab extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+/// Highlights the matching portion of the ayah text using RichText.
+/// Uses the same normalization logic as the search itself so the highlight
+/// aligns with what actually matched.
+class _HighlightedAyahText extends StatelessWidget {
+  final String text;
+  final String query;
+  const _HighlightedAyahText({required this.text, required this.query});
+
+  @override
+  Widget build(BuildContext context) {
+    if (query.isEmpty) {
+      return Text(
+        text,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 16),
+      );
+    }
+
+    // Simple case-insensitive highlight (works well for Arabic since the
+    // visual rendering matches even if diacritics differ slightly).
+    // We search for the query characters in the original text, ignoring
+    // diacritics for the match position but highlighting the original text.
+    final spans = <TextSpan>[];
+    final lowerText = _stripDiacritics(text);
+    final lowerQuery = _stripDiacritics(query);
+
+    int start = 0;
+    int idx = lowerText.indexOf(lowerQuery);
+    while (idx != -1 && start < text.length) {
+      // Map positions from stripped text back to original text
+      final origStart = _mapToOriginal(text, lowerText, idx);
+      final origEnd = _mapToOriginal(text, lowerText, idx + lowerQuery.length);
+
+      if (origStart > start) {
+        spans.add(TextSpan(text: text.substring(start, origStart)));
+      }
+      spans.add(TextSpan(
+        text: text.substring(origStart, origEnd),
+        style: TextStyle(
+          backgroundColor: AppColors.gold.withValues(alpha: 0.3),
+          color: AppColors.gold,
+          fontWeight: FontWeight.w700,
+        ),
+      ));
+      start = origEnd;
+      idx = lowerText.indexOf(lowerQuery, idx + lowerQuery.length);
+    }
+    if (start < text.length) {
+      spans.add(TextSpan(text: text.substring(start)));
+    }
+
+    return RichText(
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(
+        style: TextStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: 16,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        children: spans,
+      ),
+    );
+  }
+
+  /// Strip Arabic diacritics for matching purposes.
+  static final _diacritics = RegExp('[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED\u0640]');
+  static final _alefs = RegExp('[\u0622\u0623\u0625\u0671\u0670]');
+
+  static String _stripDiacritics(String s) {
+    return s
+        .replaceAll(_diacritics, '')
+        .replaceAll(_alefs, '\u0627')
+        .replaceAll('\u0649', '\u064A');
+  }
+
+  /// Maps an index in the stripped string back to the original string.
+  static int _mapToOriginal(String original, String stripped, int strippedIdx) {
+    if (strippedIdx >= stripped.length) return original.length;
+    int si = 0;
+    for (int oi = 0; oi < original.length; oi++) {
+      if (si == strippedIdx) return oi;
+      // If this character in original maps to something in stripped, advance si
+      final strippedChar = _stripDiacritics(original[oi]);
+      if (strippedChar.isNotEmpty) {
+        si += strippedChar.length;
+      }
+    }
+    return original.length;
   }
 }
 

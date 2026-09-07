@@ -3,24 +3,26 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 
-/// P3‑27: a small card right under the reciter dropdown offering to download
-/// the reciter's **whole** recitation in one action.
+/// The headline card of the recitations tab: download this reciter's **whole**
+/// recitation in one action.
 ///
-/// P3‑54 rewrite: the 114-surah loop used to run *inside this widget*, with an
-/// `if (!mounted) return;` in it — so leaving the Downloads screen aborted the
-/// whole download. It now runs in `AyahAudioService` (survives navigation,
-/// protected by the foreground service), and this card is a thin
-/// `ValueListenableBuilder` over the service's live `fullJob` state: real-time
-/// progress that keeps ticking whether or not this widget is on screen.
+/// The 114-surah loop runs in `AyahAudioService`, not in this widget — an
+/// earlier version drove it from here with an `if (!mounted) return;` inside,
+/// so leaving the Downloads screen aborted the download halfway. This card is
+/// a thin `ValueListenableBuilder` over the service's live `fullJob` state:
+/// real-time progress that keeps ticking whether or not the widget is on
+/// screen, and reattaches to the same run when it comes back.
 ///
-/// Still a public widget (P3‑21) so first-run onboarding can reuse the exact
-/// same real "essential recitation download" (G5).
+/// Public (rather than private to the screen) so first-run onboarding can
+/// offer the exact same real download.
 class FullRecitationCard extends StatefulWidget {
   final String edition;
   final MushafData data;
   final VoidCallback onFinished;
+
   const FullRecitationCard({
     super.key,
     required this.edition,
@@ -47,86 +49,146 @@ class _FullRecitationCardState extends State<FullRecitationCard> {
     if (old.edition != widget.edition) _seed();
   }
 
-  /// Seed the live state from disk for this reciter (no-op while a run for this
-  /// edition is already in progress). Does NOT cancel another reciter's run —
-  /// switching reciters now just shows the other one's live state; the previous
-  /// download, if any, keeps going in the background in the service.
+  /// Seed the live state from disk for this reciter (no-op while a run for
+  /// this edition is already in progress). Does NOT cancel another reciter's
+  /// run — switching reciters just shows the other one's live state; the
+  /// previous download keeps going in the service.
   void _seed() {
     _audio.refreshFullJob(widget.edition, widget.data.surahs, widget.data.repo);
   }
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
     return ValueListenableBuilder<FullRecitationState>(
       valueListenable: _audio.fullJob(widget.edition),
       builder: (context, state, _) {
         final complete = state.isComplete;
         final running = state.running;
-        return Card(
-          margin: const EdgeInsets.fromLTRB(14, 0, 14, 10),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
+        final currentSurah = state.currentSurahId == null
+            ? null
+            : widget.data.surahs
+                  .where((s) => s.id == state.currentSurahId)
+                  .firstOrNull;
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(14, 4, 14, 10),
+          child: IslamicPatternPanel(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+            radius: 20,
+            colors: complete
+                ? const [AppColors.goldContainer, AppColors.nightSurface]
+                : null,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  complete
-                      ? Icons.offline_pin
-                      : Icons.download_for_offline_outlined,
-                  color: complete ? AppColors.success : AppColors.gold,
+                Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: (complete ? AppColors.success : AppColors.gold)
+                            .withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: Icon(
+                        complete
+                            ? Icons.offline_pin_rounded
+                            : Icons.download_for_offline_rounded,
+                        color: complete ? AppColors.success : AppColors.gold,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'downloads.download_all_recitation'.tr(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.textHigh,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            complete
+                                ? 'downloads.offline_ready'.tr()
+                                : '${state.doneSurahs} / ${state.totalSurahs} '
+                                      '${'quran.surah'.tr()}',
+                            style: const TextStyle(
+                              color: AppColors.textMedium,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (!complete)
+                      running
+                          ? IconButton(
+                              tooltip: 'downloads.cancel'.tr(),
+                              icon: const Icon(
+                                Icons.stop_circle_rounded,
+                                color: AppColors.error,
+                              ),
+                              onPressed: () =>
+                                  _audio.cancelFullDownload(widget.edition),
+                            )
+                          : FilledButton.icon(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: AppColors.gold,
+                                foregroundColor: AppColors.night,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              onPressed: () async {
+                                await _audio.startFullDownload(
+                                  edition: widget.edition,
+                                  surahs: widget.data.surahs,
+                                  repo: widget.data.repo,
+                                );
+                                widget.onFinished();
+                              },
+                              icon: const Icon(Icons.download_rounded, size: 18),
+                              label: Text('downloads.download'.tr()),
+                            ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                if (running) ...[
+                  const SizedBox(height: 12),
+                  GoldProgressBar(value: state.fraction),
+                  const SizedBox(height: 8),
+                  Row(
                     children: [
-                      Text('downloads.download_all_recitation'.tr(),
-                          style: const TextStyle(fontWeight: FontWeight.w700)),
-                      const SizedBox(height: 4),
-                      if (running) ...[
-                        LinearProgressIndicator(
-                          value: state.fraction,
+                      const SizedBox(
+                        width: 12,
+                        height: 12,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
                           color: AppColors.gold,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${state.doneSurahs} / ${state.totalSurahs} '
-                          '${'quran.surah'.tr()}',
-                          style: TextStyle(
-                              color: scheme.onSurfaceVariant, fontSize: 12),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          currentSurah == null
+                              ? 'downloads.preparing'.tr()
+                              : 'downloads.now_downloading'.tr(
+                                  args: [currentSurah.nameAr],
+                                ),
+                          style: const TextStyle(
+                            color: AppColors.textMedium,
+                            fontSize: 12,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ] else
-                        Text(
-                          complete
-                              ? 'downloads.offline_ready'.tr()
-                              : '${state.doneSurahs} / ${state.totalSurahs} '
-                                  '${'quran.surah'.tr()}',
-                          style: TextStyle(
-                              color: scheme.onSurfaceVariant, fontSize: 12),
-                        ),
+                      ),
                     ],
                   ),
-                ),
-                if (!complete)
-                  running
-                      ? IconButton(
-                          tooltip: 'downloads.cancel'.tr(),
-                          icon: const Icon(Icons.stop_circle_outlined),
-                          onPressed: () =>
-                              _audio.cancelFullDownload(widget.edition),
-                        )
-                      : FilledButton.tonal(
-                          onPressed: () async {
-                            await _audio.startFullDownload(
-                              edition: widget.edition,
-                              surahs: widget.data.surahs,
-                              repo: widget.data.repo,
-                            );
-                            widget.onFinished();
-                          },
-                          child: Text('downloads.download'.tr()),
-                        ),
+                ],
               ],
             ),
           ),

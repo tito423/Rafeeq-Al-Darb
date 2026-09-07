@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,11 +35,7 @@ class AzkarScreen extends StatelessWidget {
 }
 
 /// P3‑11's original real-keyword → icon mapping, still used for each
-/// section's own card icon within a category group. P3‑43 #13 later added
-/// the category *grouping* itself (`azkar_categories.dart`) on top of this
-/// same per-section icon lookup — see that file's doc comment for why 8 of
-/// the reference's 10 categories are real and 2 are deliberately left out
-/// rather than force-fit.
+/// section's own card icon within a category group.
 IconData _azkarIcon(String title) {
   const map = <String, IconData>{
     'الصباح': Icons.wb_sunny_outlined,
@@ -71,9 +68,7 @@ IconData _azkarIcon(String title) {
   return Icons.auto_awesome_outlined;
 }
 
-/// Display order for the category groups — a rough daily/situational flow
-/// (wake → morning → after-prayer/mosque → evening → sleep, then travel and
-/// the general catch-all last) rather than the enum's declaration order.
+/// Display order for the category groups.
 const _categoryOrder = [
   AzkarCategory.waking,
   AzkarCategory.morning,
@@ -85,6 +80,28 @@ const _categoryOrder = [
   AzkarCategory.narrated,
 ];
 
+/// Beautiful Islamic background image URLs per category (royalty-free from
+/// Unsplash, small 640px crops to minimize bandwidth). Cached locally by
+/// CachedNetworkImage so they load once and work offline after that.
+const _categoryBackgroundUrls = <AzkarCategory, String>{
+  AzkarCategory.waking:
+      'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=640&q=70&fit=crop',
+  AzkarCategory.morning:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=640&q=70&fit=crop',
+  AzkarCategory.mosque:
+      'https://images.unsplash.com/photo-1591604129939-f1efa4d99f7e?w=640&q=70&fit=crop',
+  AzkarCategory.afterPrayer:
+      'https://images.unsplash.com/photo-1564769625905-50e93615e769?w=640&q=70&fit=crop',
+  AzkarCategory.evening:
+      'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=640&q=70&fit=crop',
+  AzkarCategory.sleep:
+      'https://images.unsplash.com/photo-1532978379173-523e16f371f2?w=640&q=70&fit=crop',
+  AzkarCategory.travel:
+      'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=640&q=70&fit=crop',
+  AzkarCategory.narrated:
+      'https://images.unsplash.com/photo-1585036156171-384164a8c956?w=640&q=70&fit=crop',
+};
+
 class _SectionsTab extends ConsumerWidget {
   const _SectionsTab();
 
@@ -93,94 +110,112 @@ class _SectionsTab extends ConsumerWidget {
     final repoAsync = ref.watch(sciencesRepositoryProvider);
     return repoAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => ErrorRetry(onRetry: () => ref.invalidate(sciencesRepositoryProvider)),
+      error: (_, _) =>
+          ErrorRetry(onRetry: () => ref.invalidate(sciencesRepositoryProvider)),
       data: (repo) => FutureBuilder<List<AzkarSection>>(
         future: repo.azkarSections(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
-          // P3‑11: "المقدمة" (section 1) is al-Qahtani's own author's preface
-          // to Hisn al-Muslim — real front-matter, but not a dhikr a user
-          // would ever tap into from a list of dhikr categories. Filtered
-          // out here, not at the DB/repository layer, so the underlying
-          // "134 real sections" count and azkar_items(1) both stay exactly
-          // as bundled — this is a display-only decision.
+          // P3‑11: filter out the author preface (section 1 "المقدمة").
           final sections =
               snapshot.data!.where((s) => s.title != 'المقدمة').toList();
           final byId = {for (final s in sections) s.id: s};
-          final scheme = Theme.of(context).colorScheme;
 
-          // P3‑43 #13: group the real sections under the reference's
-          // category taxonomy (`azkarSectionCategories`). Any real section
-          // with no assignment there falls back into "narrated" rather than
-          // silently vanishing from the tab — every one of the 133 sections
-          // must still be reachable.
           final byCategory = <AzkarCategory, List<AzkarSection>>{};
           for (final s in sections) {
-            final cats = azkarSectionCategories[s.id] ?? const [AzkarCategory.narrated];
+            final cats = azkarSectionCategories[s.id] ??
+                const [AzkarCategory.narrated];
             for (final c in cats) {
               (byCategory[c] ??= []).add(s);
             }
           }
-          // Sanity net: azkarSectionCategories may reference an id the
-          // current bundled DB doesn't have (shouldn't happen, but a
-          // stale mapping should never crash the tab).
           for (final list in byCategory.values) {
             list.removeWhere((s) => !byId.containsKey(s.id));
           }
 
-          return CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 4),
-                sliver: SliverToBoxAdapter(
-                  child: Text('azkar.hub_subtitle'.tr(),
-                      style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13)),
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(14, 14, 14, 24),
+            children: [
+              Text(
+                'azkar.hub_subtitle'.tr(),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 13,
                 ),
               ),
-              for (final cat in _categoryOrder)
-                if ((byCategory[cat] ?? const []).isNotEmpty)
-                  ..._categorySlivers(context, cat, byCategory[cat]!),
-              const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
+              const SizedBox(height: 12),
+              for (var i = 0; i < _categoryOrder.length; i++)
+                if ((byCategory[_categoryOrder[i]] ?? const []).isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _CategoryExpansionCard(
+                      key: PageStorageKey<int>(i),
+                      category: _categoryOrder[i],
+                      items: byCategory[_categoryOrder[i]]!,
+                      initiallyExpanded: i == 0,
+                    ),
+                  ),
             ],
           );
         },
       ),
     );
   }
+}
 
-  List<Widget> _categorySlivers(
-    BuildContext context,
-    AzkarCategory cat,
-    List<AzkarSection> items,
-  ) {
-    final info = azkarCategoryInfo[cat]!;
-    return [
-      SliverPadding(
-        padding: const EdgeInsets.fromLTRB(14, 16, 14, 8),
-        sliver: SliverToBoxAdapter(child: _CategoryHeader(info: info)),
-      ),
-      SliverPadding(
-        padding: const EdgeInsets.fromLTRB(14, 0, 14, 4),
-        sliver: SliverGrid(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1.3,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, i) {
+/// A collapsible category card with an Islamic background image.
+class _CategoryExpansionCard extends StatelessWidget {
+  final AzkarCategory category;
+  final List<AzkarSection> items;
+  final bool initiallyExpanded;
+
+  const _CategoryExpansionCard({
+    super.key,
+    required this.category,
+    required this.items,
+    required this.initiallyExpanded,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final info = azkarCategoryInfo[category]!;
+    final bgUrl = _categoryBackgroundUrls[category];
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ExpansionTile(
+        initiallyExpanded: initiallyExpanded,
+        shape: const Border(),
+        collapsedShape: const Border(),
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.fromLTRB(10, 0, 10, 12),
+        title: _CategoryHeaderWithBg(
+          info: info,
+          bgUrl: bgUrl,
+          count: items.length,
+        ),
+        children: [
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 1.3,
+            ),
+            itemCount: items.length,
+            itemBuilder: (context, i) {
               final s = items[i];
               return _AzkarSectionCard(
                 section: s,
                 icon: _azkarIcon(s.title),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    // P3‑54: carry this category's accent into the full-screen
-                    // reader so its countdown ring + active page dot match the
-                    // group the section was opened from.
                     builder: (_) => AzkarSectionScreen(
                       section: s,
                       accent: info.gradient.last,
@@ -189,45 +224,140 @@ class _SectionsTab extends ConsumerWidget {
                 ),
               );
             },
-            childCount: items.length,
           ),
-        ),
+        ],
       ),
-    ];
+    );
   }
 }
 
-class _CategoryHeader extends StatelessWidget {
+/// Category header with a beautiful Islamic background image overlaid with a
+/// gradient in the category's own colors.
+class _CategoryHeaderWithBg extends StatelessWidget {
   final AzkarCategoryInfo info;
-  const _CategoryHeader({required this.info});
+  final String? bgUrl;
+  final int count;
+
+  const _CategoryHeaderWithBg({
+    required this.info,
+    required this.bgUrl,
+    required this.count,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        gradient: LinearGradient(
-          colors: info.gradient,
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-      ),
-      child: Row(
+      height: 80,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Icon(info.icon, color: Colors.white, size: 22),
-          const SizedBox(width: 10),
-          Text(
-            info.titleKey.tr(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
+          // Background image with color filter
+          if (bgUrl != null)
+            CachedNetworkImage(
+              imageUrl: bgUrl!,
+              fit: BoxFit.cover,
+              colorBlendMode: BlendMode.multiply,
+              color: info.gradient.first.withValues(alpha: 0.6),
+              placeholder: (_, _) => Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: info.gradient,
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+              ),
+              errorWidget: (_, _, _) => Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: info.gradient,
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+              ),
+            )
+          else
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: info.gradient,
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+              ),
+            ),
+          // Gradient overlay for readability
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  info.gradient.first.withValues(alpha: 0.85),
+                  info.gradient.last.withValues(alpha: 0.55),
+                ],
+                begin: AlignmentDirectional.centerStart,
+                end: AlignmentDirectional.centerEnd,
+              ),
+            ),
+          ),
+          // Content
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.18),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(info.icon, color: Colors.white, size: 22),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        info.titleKey.tr(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '$count ${_sectionCountLabel(count)}',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.expand_more,
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  /// Arabic plural helper for "قسم".
+  static String _sectionCountLabel(int n) {
+    if (n <= 2) return 'قسم';
+    if (n <= 10) return 'أقسام';
+    return 'قسمًا';
   }
 }
 
@@ -267,4 +397,3 @@ class _AzkarSectionCard extends StatelessWidget {
     );
   }
 }
-

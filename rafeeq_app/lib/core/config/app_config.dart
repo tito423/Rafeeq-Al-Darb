@@ -41,7 +41,11 @@ abstract final class AppConfig {
   static const String quranAudioBase =
       'https://cdn.islamic.network/quran/audio';
 
-  /// Backup ayah audio (per-reciter folders).
+  /// everyayah.com — the **primary** per-ayah recitation host (see
+  /// `RecitationSource` for which reciters are mirrored there and why it is
+  /// preferred over the CDN below). Files are addressed by surah+ayah, and
+  /// every folder answers HTTP Range requests, which is what makes an
+  /// interrupted download resume rather than restart.
   static const String quranAudioBackupBase = 'https://everyayah.com/data';
 
   /// Prayer times (AlAdhan API).
@@ -94,6 +98,14 @@ abstract final class AppConfig {
   /// v1 -> v2 (2026‑09‑03, P2‑13): added real `grade`/`grader` columns.
   static const String hadithDbVersion = 'v2';
 
+
+  /// One ayah on everyayah.com: `<folder>/SSSAAA.mp3`, both parts zero-padded
+  /// to three digits (so 2:286 is `002286.mp3`). [folder] comes from
+  /// `RecitationSource`, whose folder names were each verified live.
+  static String everyAyahUrl(String folder, int surah, int ayah) =>
+      '$quranAudioBackupBase/$folder/'
+      '${surah.toString().padLeft(3, '0')}'
+      '${ayah.toString().padLeft(3, '0')}.mp3';
 
   /// [editionIdentifier] e.g. "ar.alafasy". Tries 128kbps then 64kbps.
   static List<String> ayahAudioUrls(String editionIdentifier, int globalAyah) =>

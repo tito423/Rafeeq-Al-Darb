@@ -228,7 +228,7 @@ class _BooksTabState extends State<_BooksTab> {
               labelColor: AppColors.gold,
               indicatorColor: AppColors.gold,
               tabs: [
-                Tab(text: 'library.sub_all'.tr()),
+                Tab(text: 'library.sub_authors'.tr()),
                 Tab(text: 'library.sub_categories'.tr()),
                 Tab(text: 'library.sub_mine'.tr()),
               ],
@@ -237,7 +237,7 @@ class _BooksTabState extends State<_BooksTab> {
           Expanded(
             child: TabBarView(
               children: [
-                _AllBooksView(
+                _AuthorsView(
                   paths: _paths,
                   editionOf: _editionOf,
                   onSetEdition: _setEdition,
@@ -266,13 +266,15 @@ class _BooksTabState extends State<_BooksTab> {
   }
 }
 
-class _AllBooksView extends StatelessWidget {
+/// Authors view — groups books by author using ExpansionTile. Each author
+/// expands to show their books with download/open buttons.
+class _AuthorsView extends StatelessWidget {
   final Map<String, String> paths;
   final BookEdition Function(LibraryBook) editionOf;
   final void Function(LibraryBook, BookEdition) onSetEdition;
   final void Function(LibraryBook, BookEdition) onDownload;
   final void Function(LibraryBook, BookEdition) onOpen;
-  const _AllBooksView({
+  const _AuthorsView({
     required this.paths,
     required this.editionOf,
     required this.onSetEdition,
@@ -282,20 +284,101 @@ class _AllBooksView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final books = [...libraryBookCatalog]
-      ..sort((a, b) => a.sortKey.compareTo(b.sortKey));
-    return ListView.separated(
-      padding: const EdgeInsets.all(14),
-      itemCount: books.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 10),
-      itemBuilder: (_, i) => _BookCard(
-        book: books[i],
-        paths: paths,
-        edition: editionOf(books[i]),
-        onSetEdition: (e) => onSetEdition(books[i], e),
-        onDownload: (e) => onDownload(books[i], e),
-        onOpen: (e) => onOpen(books[i], e),
+    // Group books by authorAr
+    final byAuthor = <String, List<LibraryBook>>{};
+    for (final b in libraryBookCatalog) {
+      byAuthor.putIfAbsent(b.authorAr, () => []).add(b);
+    }
+    // Sort authors alphabetically, sort each author's books
+    final authors = byAuthor.keys.toList()..sort();
+    for (final list in byAuthor.values) {
+      list.sort((a, b) => a.sortKey.compareTo(b.sortKey));
+    }
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      children: [
+        for (var i = 0; i < authors.length; i++)
+          _AuthorExpansionTile(
+            key: PageStorageKey<String>(authors[i]),
+            authorName: authors[i],
+            deathDate: byAuthor[authors[i]]!.first.authorDeathAr,
+            books: byAuthor[authors[i]]!,
+            initiallyExpanded: i == 0,
+            paths: paths,
+            editionOf: editionOf,
+            onSetEdition: onSetEdition,
+            onDownload: onDownload,
+            onOpen: onOpen,
+          ),
+      ],
+    );
+  }
+}
+
+class _AuthorExpansionTile extends StatelessWidget {
+  final String authorName;
+  final String deathDate;
+  final List<LibraryBook> books;
+  final bool initiallyExpanded;
+  final Map<String, String> paths;
+  final BookEdition Function(LibraryBook) editionOf;
+  final void Function(LibraryBook, BookEdition) onSetEdition;
+  final void Function(LibraryBook, BookEdition) onDownload;
+  final void Function(LibraryBook, BookEdition) onOpen;
+
+  const _AuthorExpansionTile({
+    super.key,
+    required this.authorName,
+    required this.deathDate,
+    required this.books,
+    required this.initiallyExpanded,
+    required this.paths,
+    required this.editionOf,
+    required this.onSetEdition,
+    required this.onDownload,
+    required this.onOpen,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return ExpansionTile(
+      initiallyExpanded: initiallyExpanded,
+      leading: CircleAvatar(
+        backgroundColor: AppColors.gold.withValues(alpha: 0.15),
+        child: Icon(Icons.person_outline, color: AppColors.gold, size: 22),
       ),
+      title: Text(
+        authorName,
+        style: Theme.of(context)
+            .textTheme
+            .titleSmall
+            ?.copyWith(fontWeight: FontWeight.w700),
+      ),
+      subtitle: Text(
+        '$deathDate • ${books.length} ${'library.book_count'.tr()}',
+        style: TextStyle(
+          color: scheme.onSurfaceVariant,
+          fontSize: 12,
+        ),
+      ),
+      shape: const Border(),
+      collapsedShape: const Border(),
+      childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
+      children: [
+        for (final b in books) ...[
+          _BookCard(
+            book: b,
+            paths: paths,
+            edition: editionOf(b),
+            onSetEdition: (e) => onSetEdition(b, e),
+            onDownload: (e) => onDownload(b, e),
+            onOpen: (e) => onOpen(b, e),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ],
     );
   }
 }

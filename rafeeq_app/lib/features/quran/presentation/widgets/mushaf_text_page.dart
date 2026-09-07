@@ -90,6 +90,16 @@ class MushafTextPage extends StatefulWidget {
   /// to a stray double-tap exiting a mode it isn't in.
   final VoidCallback? onExitFullScreen;
 
+  /// The verse continuous recitation is sounding right now, if any. It gets a
+  /// tinted background and the page scrolls itself to keep it in view, so the
+  /// reader can follow along without touching the screen.
+  ///
+  /// This is driven by the audio player's own `currentIndexStream` (see
+  /// `AyahAudioService.continuous`), not by a timer guessing verse lengths —
+  /// which is why the highlight stays in step with any reciter's pacing.
+  final int? playingSurah;
+  final int? playingAyah;
+
   const MushafTextPage({
     super.key,
     required this.ayahs,
@@ -103,6 +113,8 @@ class MushafTextPage extends StatefulWidget {
     this.isActive = true,
     this.onAutoScrollReachedEnd,
     this.onExitFullScreen,
+    this.playingSurah,
+    this.playingAyah,
   });
 
   @override
@@ -113,6 +125,13 @@ class _MushafTextPageState extends State<MushafTextPage> {
   final TransformationController _transform = TransformationController();
   final List<_SoloPointerLongPressRecognizer> _recognizers = [];
   final ScrollController _scroll = ScrollController();
+
+  /// One key per ayah, attached to that ayah's number marker. The page's text
+  /// is a single justified paragraph — there is no per-ayah widget to scroll
+  /// to — but the markers *are* real widgets inside it, so they double as
+  /// scroll anchors. Anchoring on the existing marker rather than injecting a
+  /// zero-width span keeps the paragraph's line breaking exactly as it was.
+  List<GlobalKey> _ayahKeys = const [];
   Timer? _autoTimer;
   bool _reachedEndFired = false;
 
@@ -175,6 +194,45 @@ class _MushafTextPageState extends State<MushafTextPage> {
     super.didUpdateWidget(old);
     if (old.ayahs != widget.ayahs) _buildRecognizers();
     _syncAutoScroll();
+    if (old.playingSurah != widget.playingSurah ||
+        old.playingAyah != widget.playingAyah) {
+      _scrollToPlayingAyah();
+    }
+  }
+
+  /// Brings the verse being recited into view. Deferred to after the frame
+  /// because the marker's `BuildContext` only has a render object once this
+  /// rebuild has actually laid out.
+  void _scrollToPlayingAyah() {
+    if (!widget.isActive) return;
+    final index = _playingIndex;
+    if (index < 0 || index >= _ayahKeys.length) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _ayahKeys[index].currentContext;
+      if (ctx == null || !mounted || !_scroll.hasClients) return;
+      Scrollable.ensureVisible(
+        ctx,
+        // 0.72 rather than centred: the marker sits at the *end* of its
+        // verse, so placing it low in the viewport keeps the verse's own
+        // text — the part being recited — comfortably above it.
+        alignment: 0.72,
+        duration: const Duration(milliseconds: 450),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  /// Index into [MushafTextPage.ayahs] of the verse being recited, or -1 when
+  /// it is not on this page at all.
+  int get _playingIndex {
+    final surah = widget.playingSurah;
+    final ayah = widget.playingAyah;
+    if (surah == null || ayah == null) return -1;
+    for (var i = 0; i < widget.ayahs.length; i++) {
+      final a = widget.ayahs[i];
+      if (a.surahId == surah && a.ayahNumber == ayah) return i;
+    }
+    return -1;
   }
 
   /// Starts/stops the auto-scroll timer to match the widget's current
@@ -261,6 +319,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
     for (final r in _recognizers) {
       r.dispose();
     }
+    _ayahKeys = List.generate(widget.ayahs.length, (_) => GlobalKey());
     _recognizers
       ..clear()
       ..addAll(
@@ -292,9 +351,12 @@ class _MushafTextPageState extends State<MushafTextPage> {
       return const Center(child: Text('—'));
     }
 
+    final isLandscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
     final paper = isDark ? AppColors.nightSurface : AppColors.paper;
     final ink = isDark ? AppColors.paperDark : AppColors.ink;
-    final baseFont = 23.0 * widget.fontScale;
+    // P3-Landscape: adapt base font down ~15% in landscape so lines flow gracefully
+    final baseFont = (isLandscape ? 19.5 : 23.0) * widget.fontScale;
     // P3‑41: "full fit" shrinks the card's own margins/border toward the
     // edges instead of changing the text's own font scale (that's what
     // the A+/A- actions already own) — the real content gets more of the
@@ -314,6 +376,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
     // page), grouping consecutive same-surah ayahs into their own
     // Text.rich so a banner can sit between groups, matching how a real
     // printed mushaf stacks multiple surah headers on such a page.
+    final playingIndex = _playingIndex;
     final blocks = <Widget>[];
     var groupStart = 0;
     void flushGroup(int end) {
@@ -328,6 +391,11 @@ class _MushafTextPageState extends State<MushafTextPage> {
                   TextSpan(
                     text: widget.ayahs[i].textUthmani,
                     recognizer: _recognizers[i],
+                    style: i == playingIndex
+                        ? const TextStyle(
+                            backgroundColor: AppColors.ayahHighlightPlaying,
+                          )
+                        : null,
                   ),
                   // P3‑32: `PlaceholderAlignment.middle` centers the
                   // marker within the *line's* full ascent+descent
@@ -345,8 +413,10 @@ class _MushafTextPageState extends State<MushafTextPage> {
                     alignment: PlaceholderAlignment.baseline,
                     baseline: TextBaseline.alphabetic,
                     child: _AyahMarker(
+                      key: i < _ayahKeys.length ? _ayahKeys[i] : null,
                       number: widget.ayahs[i].ayahNumber,
                       fontScale: widget.fontScale,
+                      playing: i == playingIndex,
                     ),
                   ),
                   const TextSpan(text: ' '),
@@ -379,10 +449,14 @@ class _MushafTextPageState extends State<MushafTextPage> {
       children: blocks,
     );
 
+    final hCardPad = isLandscape ? 32.0 : (fill ? 10.0 : 18.0);
     final card = Container(
-      padding: fill
-          ? const EdgeInsets.fromLTRB(10, 14, 10, 14)
-          : const EdgeInsets.fromLTRB(18, 22, 18, 22),
+      padding: EdgeInsets.fromLTRB(
+        hCardPad,
+        fill ? 12 : 20,
+        hCardPad,
+        fill ? 12 : 20,
+      ),
       decoration: BoxDecoration(
         color: paper,
         borderRadius: BorderRadius.circular(fill ? 8 : 20),
@@ -405,6 +479,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
     // structure — not an ancestor wrapping it, which is what P3‑42
     // originally shipped and what made the tap recognizer a competitor
     // for the same pointers as the scale gesture (P3‑43 #1).
+    final hScrollPad = isLandscape ? 24.0 : (fill ? 4.0 : 14.0);
     final tappableScroll = RawGestureDetector(
       behavior: HitTestBehavior.opaque,
       gestures: {
@@ -420,9 +495,12 @@ class _MushafTextPageState extends State<MushafTextPage> {
         onNotification: _onScrollNotification,
         child: SingleChildScrollView(
           controller: _scroll,
-          padding: fill
-              ? const EdgeInsets.fromLTRB(4, 8, 4, 16)
-              : const EdgeInsets.fromLTRB(14, 18, 14, 28),
+          padding: EdgeInsets.fromLTRB(
+            hScrollPad,
+            fill ? 8 : 16,
+            hScrollPad,
+            fill ? 16 : 24,
+          ),
           child: card,
         ),
       ),
@@ -558,11 +636,21 @@ class _SurahBanner extends StatelessWidget {
 class _AyahMarker extends StatelessWidget {
   final int number;
   final double fontScale;
-  const _AyahMarker({required this.number, required this.fontScale});
+
+  /// True for the verse continuous recitation is sounding — the rosette goes
+  /// solid gold so the eye finds it instantly in a full page of text.
+  final bool playing;
+
+  const _AyahMarker({
+    super.key,
+    required this.number,
+    required this.fontScale,
+    this.playing = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final gold = AppColors.gold;
+    final gold = playing ? AppColors.goldSoft : AppColors.gold;
     final size = 25.0 * fontScale;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -574,7 +662,9 @@ class _AyahMarker extends StatelessWidget {
           children: [
             CustomPaint(
               size: Size(size, size),
-              painter: _RosettePainter(color: gold.withValues(alpha: 0.85)),
+              painter: _RosettePainter(
+                color: gold.withValues(alpha: playing ? 1.0 : 0.85),
+              ),
             ),
             // P3‑41: a real-device screenshot showed the digit still
             // reading off-center inside the rosette even after P3‑32's

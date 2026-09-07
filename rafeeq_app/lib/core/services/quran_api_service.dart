@@ -159,7 +159,7 @@ class QuranApiService {
     // Fetch from API
     try {
       final uri = Uri.parse(
-          '$_baseUrl/verses/by_key/$surah:$ayah?words=true&word_fields=text_uthmani,location,translation,transliteration');
+          '$_baseUrl/verses/by_key/$surah:$ayah?words=true&word_fields=text_uthmani,location,translation,transliteration&language=ar');
       final res = await http.get(uri, headers: _headers).timeout(const Duration(seconds: 10));
 
       if (res.statusCode == 200) {
