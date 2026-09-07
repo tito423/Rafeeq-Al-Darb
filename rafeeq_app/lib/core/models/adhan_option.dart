@@ -18,6 +18,7 @@ class AdhanOption {
 
   final bool isCustom;
   final String source;
+  final String? url;
 
   const AdhanOption({
     required this.id,
@@ -27,6 +28,7 @@ class AdhanOption {
     this.rawResource,
     this.filePath,
     this.source = '',
+    this.url,
   });
 
   factory AdhanOption.bundled(Map<String, dynamic> json) => AdhanOption(
@@ -36,6 +38,7 @@ class AdhanOption {
         rawResource: json['raw'] as String?,
         isCustom: false,
         source: json['source'] as String? ?? '',
+        url: json['url'] as String?,
       );
 
   factory AdhanOption.custom({

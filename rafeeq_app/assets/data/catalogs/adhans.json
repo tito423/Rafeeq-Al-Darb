@@ -1,12 +1,12 @@
 [
-  {"id": "azan1", "name": "مصطفى البنا", "asset": "assets/audio/adhan/azan1.mp3", "raw": "azan1", "source": "ملف الأذان المجمَّع رقم 1 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan2", "name": "عبدالباسط عبدالصمد", "asset": "assets/audio/adhan/azan2.mp3", "raw": "azan2", "source": "ملف الأذان المجمَّع رقم 2 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan3", "name": "محمد صديق المنشاوي", "asset": "assets/audio/adhan/azan3.mp3", "raw": "azan3", "source": "ملف الأذان المجمَّع رقم 3 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan4", "name": "نصر الدين طوبار", "asset": "assets/audio/adhan/azan4.mp3", "raw": "azan4", "source": "ملف الأذان المجمَّع رقم 4 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan5", "name": "مشاري راشد العفاسي", "asset": "assets/audio/adhan/azan5.mp3", "raw": "azan5", "source": "ملف الأذان المجمَّع رقم 5 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan6", "name": "علي أحمد ملا (الحرم المكي)", "asset": "assets/audio/adhan/azan6.mp3", "raw": "azan6", "source": "ملف الأذان المجمَّع رقم 6 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan7", "name": "عصام بخاري (الحرم النبوي)", "asset": "assets/audio/adhan/azan7.mp3", "raw": "azan7", "source": "ملف الأذان المجمَّع رقم 7 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan8", "name": "عبدالمجيد السريحي", "asset": "assets/audio/adhan/azan8.mp3", "raw": "azan8", "source": "ملف الأذان المجمَّع رقم 8 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan9", "name": "منصور الزهراني", "asset": "assets/audio/adhan/azan9.mp3", "raw": "azan9", "source": "ملف الأذان المجمَّع رقم 9 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
-  {"id": "azan10", "name": "محمد خليل رمل", "asset": "assets/audio/adhan/azan10.mp3", "raw": "azan10", "source": "ملف الأذان المجمَّع رقم 10 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"}
+  {"id": "azan1", "name": "مصطفى البنا", "asset": "assets/audio/adhan/azan1.mp3", "raw": "azan1", "url": "https://www.islamcan.com/audio/adhan/azan1.mp3", "source": "ملف الأذان المجمَّع رقم 1 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan2", "name": "عبدالباسط عبدالصمد", "asset": "assets/audio/adhan/azan2.mp3", "raw": "azan2", "url": "https://www.islamcan.com/audio/adhan/azan2.mp3", "source": "ملف الأذان المجمَّع رقم 2 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan3", "name": "محمد صديق المنشاوي", "asset": "assets/audio/adhan/azan3.mp3", "raw": "azan3", "url": "https://www.islamcan.com/audio/adhan/azan3.mp3", "source": "ملف الأذان المجمَّع رقم 3 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan4", "name": "نصر الدين طوبار", "asset": "assets/audio/adhan/azan4.mp3", "raw": "azan4", "url": "https://www.islamcan.com/audio/adhan/azan4.mp3", "source": "ملف الأذان المجمَّع رقم 4 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan5", "name": "مشاري راشد العفاسي", "asset": "assets/audio/adhan/azan5.mp3", "raw": "azan5", "url": "https://www.islamcan.com/audio/adhan/azan5.mp3", "source": "ملف الأذان المجمَّع رقم 5 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan6", "name": "علي أحمد ملا (الحرم المكي)", "asset": "assets/audio/adhan/azan6.mp3", "raw": "azan6", "url": "https://www.islamcan.com/audio/adhan/azan6.mp3", "source": "ملف الأذان المجمَّع رقم 6 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan7", "name": "عصام بخاري (الحرم النبوي)", "asset": "assets/audio/adhan/azan7.mp3", "raw": "azan7", "url": "https://www.islamcan.com/audio/adhan/azan7.mp3", "source": "ملف الأذان المجمَّع رقم 7 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan8", "name": "عبدالمجيد السريحي", "asset": "assets/audio/adhan/azan8.mp3", "raw": "azan8", "url": "https://www.islamcan.com/audio/adhan/azan8.mp3", "source": "ملف الأذان المجمَّع رقم 8 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan9", "name": "منصور الزهراني", "asset": "assets/audio/adhan/azan9.mp3", "raw": "azan9", "url": "https://www.islamcan.com/audio/adhan/azan9.mp3", "source": "ملف الأذان المجمَّع رقم 9 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"},
+  {"id": "azan10", "name": "محمد خليل رمل", "asset": "assets/audio/adhan/azan10.mp3", "raw": "azan10", "url": "https://www.islamcan.com/audio/adhan/azan10.mp3", "source": "ملف الأذان المجمَّع رقم 10 (islamcan.com) — اسم المؤذّن بحاجة إلى تأكيد المطابقة"}
 ]
