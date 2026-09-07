@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vibration/vibration.dart';
 
 /// One of the standard tasbeeh phrases + the pill/accent colour the owner's
 /// reference image (`design_refs/ref_tasbeeh.jpg`) used for it.
@@ -84,6 +86,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       _celebrate
         ..reset()
         ..forward();
+      Vibration.vibrate(duration: 300, amplitude: 255);
+    } else {
+      Vibration.vibrate(duration: 30, amplitude: 100);
     }
   }
 
@@ -141,7 +146,12 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                         onPressed: _total == 0 && _rounds == 0 && _count == 0
                             ? null
                             : _clearAll,
-                        icon: Icon(Icons.delete_outline, color: scheme.error),
+                        icon: SvgPicture.asset(
+                          'assets/icons/reset.svg',
+                          colorFilter: ColorFilter.mode(scheme.error, BlendMode.srcIn),
+                          width: 24,
+                          height: 24,
+                        ),
                       ),
                     ],
                   ),

@@ -86,6 +86,7 @@ dependencies:
   # glitch the old hand-built splash produced.
   flutter_native_splash: ^2.4.4
   background_downloader: ^9.5.9
+  vibration: ^3.1.8
 
 dev_dependencies:
   flutter_test:
@@ -109,9 +110,9 @@ flutter:
     - assets/branding/
     # P3‑41: the default mushaf edition (Hafs/KFQC), all 604 pages, bundled
     # so it's usable fully offline the moment the app installs — see
-    # MushafPageService's own comment for how these get served ahead of
     # the cache/network fallback.
     - assets/mushaf/hafs_kfqc/
+    - assets/icons/
     # assets/icon/ is intentionally NOT bundled — the PNGs there are consumed
     # by flutter_launcher_icons at build time only, never at runtime. Bundling
     # them would just bloat the install.

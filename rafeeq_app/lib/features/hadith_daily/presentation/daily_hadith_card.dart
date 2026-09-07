@@ -383,23 +383,7 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
               // literally reads "Sahih Muslim") — a separate badge
               // repeating that was pure redundancy, so it's gone rather
               // than shown twice.
-              if (!isSahihayn && item.grade != null) ...[
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 4,
-                  children: [
-                    Chip(
-                      visualDensity: VisualDensity.compact,
-                      label: Text(item.grader != null
-                          ? '${localizedHadithGrade(item.grade!, context.locale.languageCode)} '
-                              '(${localizedHadithGrader(item.grader!, context.locale.languageCode)})'
-                          : localizedHadithGrade(
-                              item.grade!, context.locale.languageCode)),
-                    ),
-                  ],
-                ),
-              ],
+              // Note: Grade UI removed completely as per user request.
             ],
           ),
         );

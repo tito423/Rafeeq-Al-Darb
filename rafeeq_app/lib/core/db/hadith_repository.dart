@@ -115,11 +115,10 @@ class HadithItem {
       );
 }
 
-/// The 7 books the Home random-hadith card (P2‑13) draws from — the Six
-/// Books plus Muwatta Malik, per the owner's own framing of the feature.
-/// `hadiths_daily.dart` (not this file) owns *when* to reroll; this is just
+/// The 9 books the Home random-hadith card (P2‑13) draws from — the Nine
+/// Books. `hadiths_daily.dart` (not this file) owns *when* to reroll; this is just
 /// the pool of `book_id`s a fair random pick is drawn across.
-const dailyHadithBookIds = [1, 2, 3, 4, 5, 6, 8]; // 7=Ahmad, 9=Darimi excluded
+const dailyHadithBookIds = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 /// `DownloadManager` task id for `hadith.db` — one shared constant so
 /// `LibraryScreen`'s hadith tab and the Home daily-hadith card (P2‑13) are

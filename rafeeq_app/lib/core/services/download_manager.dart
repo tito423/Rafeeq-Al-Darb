@@ -337,6 +337,36 @@ class DownloadManager {
     _notify();
   }
 
+  /// Attempts to resume all paused or failed downloads, clearing any error state.
+  /// Also picks up tasks from `background_downloader`'s own database.
+  Future<void> resumeAll() async {
+    await _ensureWired();
+    // 1. Ask the plugin to resume everything it knows about.
+    await bd.FileDownloader().resumeFromBackground();
+    // 2. Retry our local tasks that failed or paused.
+    for (final task in _tasks.values) {
+      if (task.status == DownloadStatus.paused || task.status == DownloadStatus.failed) {
+        if (task.platformTask != null) {
+          task.error = null;
+          task.status = DownloadStatus.queued;
+          bd.FileDownloader().resume(task.platformTask!);
+        } else {
+          // If no platform task exists, restart it entirely
+          enqueue(
+            id: task.id,
+            url: task.url,
+            category: task.category,
+            fileName: task.fileName,
+            unzipToDatabases: task.unzipToDatabases,
+            dbVersion: task.dbVersion,
+            title: task.title,
+          );
+        }
+      }
+    }
+    _notify();
+  }
+
   Future<void> remove(String id) async {
     cancel(id);
     final t = _tasks.remove(id);

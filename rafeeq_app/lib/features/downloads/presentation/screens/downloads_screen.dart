@@ -72,6 +72,17 @@ class DownloadsScreen extends ConsumerWidget {
         body: const TabBarView(
           children: [_OverviewTab(), _MushafsTab(), _RecitationsTab()],
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            DownloadManager.instance.resumeAll();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('downloads.repairing'.tr())),
+            );
+          },
+          icon: const Icon(Icons.build_rounded),
+          label: Text('downloads.repair'.tr()),
+          backgroundColor: AppColors.gold,
+        ),
       ),
     );
   }

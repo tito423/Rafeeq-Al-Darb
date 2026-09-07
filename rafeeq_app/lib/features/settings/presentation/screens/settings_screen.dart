@@ -219,7 +219,7 @@ class SettingsBody extends ConsumerWidget {
               leading: Icon(Icons.verified_user_outlined, color: scheme.primary),
               title: Text('settings.credits'.tr()),
               subtitle: Text(
-                'api.quran.com • api.alquran.cloud • api.aladhan.com • '
+                'Quran.com • Sunnah.com • api.quran.com • api.alquran.cloud • api.aladhan.com • '
                 'cdn.islamic.network • mp3quran.net • islamcan.com • '
                 'quranpedia/quran-svg (CC0)',
               ),

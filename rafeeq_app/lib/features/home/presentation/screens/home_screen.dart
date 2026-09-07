@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hijri/hijri_calendar.dart';
 
-import '../../../../core/models/prayer_times.dart';
+import '../../../../core/utils/time_formatter.dart';
+import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/services/prayer_times_service.dart';
+import '../../../../core/models/prayer_times.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
@@ -381,9 +383,47 @@ const _prayerChipColors = {
 /// `ref_home.jpg` mock: a live ticking `HH:MM:SS` clock, a "next prayer +
 /// countdown" pill, a real location line, and coloured per-prayer chips
 /// with a badge on the next one.
-class _PrayerTimesTable extends StatelessWidget {
+class _PrayerTimesTable extends StatefulWidget {
   final PrayerTimes times;
   const _PrayerTimesTable({required this.times});
+
+  @override
+  State<_PrayerTimesTable> createState() => _PrayerTimesTableState();
+}
+
+class _PrayerTimesTableState extends State<_PrayerTimesTable> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToNextPrayer();
+    });
+  }
+
+  void _scrollToNextPrayer() {
+    if (!mounted || !_scrollController.hasClients) return;
+    final next = PrayerTimesService().nextPrayer(widget.times, DateTime.now());
+    if (next == null) return;
+    
+    final index = _prayerOrder.indexOf(next.$1);
+    if (index > 1) {
+      // Each chip is ~90 width (84 + 6 margin).
+      final offset = (index - 1) * 90.0;
+      _scrollController.animateTo(
+        offset,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   String _clockDigits(String localeCode) {
     final now = DateTime.now();
@@ -402,11 +442,11 @@ class _PrayerTimesTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final next = PrayerTimesService().nextPrayer(times, DateTime.now());
+    final next = PrayerTimesService().nextPrayer(widget.times, DateTime.now());
     final location = [
-      times.cityName,
-      times.countryName,
-    ].where((s) => s.isNotEmpty).join('، ');
+      widget.times.cityName,
+      widget.times.countryName,
+    ].where((s) => s != null && s.isNotEmpty).join('، ');
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -485,6 +525,7 @@ class _PrayerTimesTable extends StatelessWidget {
           ],
           const SizedBox(height: 16),
           SingleChildScrollView(
+            controller: _scrollController,
             scrollDirection: Axis.horizontal,
             reverse: Directionality.of(context) == TextDirection.rtl,
             child: Row(
@@ -492,7 +533,7 @@ class _PrayerTimesTable extends StatelessWidget {
                 for (final key in _prayerOrder)
                   _PrayerChip(
                     label: _prayerLabelKeys[key]!.tr(),
-                    time: times.byName(key),
+                    time: formatTime12h(widget.times.byName(key)),
                     color: _prayerChipColors[key]!,
                     isNext: next?.$1 == key,
                   ),
