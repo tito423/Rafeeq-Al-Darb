@@ -212,6 +212,7 @@ class MushafPageService {
     await DownloadForegroundServiceBridge.acquire(title: notifTitle);
     try {
       var done = 0;
+      var consecutiveErrors = 0;
       for (var page = fromPage; page <= toPage; page++) {
         if (!_prefetching.contains(editionId)) {
           cancelled = true;
@@ -242,19 +243,28 @@ class MushafPageService {
               page: page,
             );
           }
+          consecutiveErrors = 0;
         } catch (_) {
-          // leave this page for a later run
+          consecutiveErrors++;
+          if (consecutiveErrors >= 3) {
+            // Abort the download if we hit 3 consecutive errors (e.g. 404 or no internet)
+            // This prevents "fake" progress reaching 100% when no files are saved.
+            cancelled = true;
+            break;
+          }
         }
         done++;
         progress._set(done: done);
         onProgress?.call(done, total);
-        await DownloadNotifications.instance.showProgress(
-          id: notifId,
-          title: notifTitle,
-          done: done,
-          total: total,
-          detail: '$done / $total',
-        );
+        if (done % 5 == 0) {
+          await DownloadNotifications.instance.showProgress(
+            id: notifId,
+            title: notifTitle,
+            done: done,
+            total: total,
+            detail: '$done / $total',
+          );
+        }
       }
     } finally {
       _prefetching.remove(editionId);

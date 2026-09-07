@@ -1,8 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:vibration/vibration.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// One of the standard tasbeeh phrases + the pill/accent colour the owner's
 /// reference image (`design_refs/ref_tasbeeh.jpg`) used for it.
@@ -56,6 +57,29 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       }
     });
 
+  /// Whether haptic feedback is enabled — persisted in SharedPreferences.
+  bool _hapticEnabled = true;
+  static const _kHapticPref = 'tasbeeh_haptic_enabled';
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((prefs) {
+      if (mounted) {
+        setState(() {
+          _hapticEnabled = prefs.getBool(_kHapticPref) ?? true;
+        });
+      }
+    });
+  }
+
+  void _toggleHaptic() {
+    setState(() => _hapticEnabled = !_hapticEnabled);
+    SharedPreferences.getInstance().then(
+      (p) => p.setBool(_kHapticPref, _hapticEnabled),
+    );
+  }
+
   @override
   void dispose() {
     _celebrate.dispose();
@@ -64,10 +88,6 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
 
   void _tap() {
     setState(() {
-      // Show the target number itself: when the previous tap had just
-      // landed exactly on the target (a completed round for a finite
-      // target), the next tap starts a fresh round at 1 rather than the
-      // count being reset the instant it reaches the target.
       final t = _target;
       if (t != null && _count >= t) {
         _count = 1;
@@ -82,13 +102,19 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     final hitMilestone = _target == null
         ? _count > 0 && _count % _celebrateEvery == 0
         : (_target! % _celebrateEvery == 0 && _count == _target);
-    if (hitMilestone) {
+    if (_hapticEnabled) {
+      if (hitMilestone) {
+        _celebrate
+          ..reset()
+          ..forward();
+        HapticFeedback.heavyImpact();
+      } else {
+        HapticFeedback.mediumImpact();
+      }
+    } else if (hitMilestone) {
       _celebrate
         ..reset()
         ..forward();
-      Vibration.vibrate(duration: 300, amplitude: 255);
-    } else {
-      Vibration.vibrate(duration: 30, amplitude: 100);
     }
   }
 
@@ -141,6 +167,20 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                         backgroundColor: scheme.surfaceContainerHighest,
                       ),
                       const Spacer(),
+                      IconButton(
+                        tooltip: _hapticEnabled
+                            ? 'azkar.haptic_on'.tr()
+                            : 'azkar.haptic_off'.tr(),
+                        onPressed: _toggleHaptic,
+                        icon: Icon(
+                          _hapticEnabled
+                              ? Icons.vibration
+                              : Icons.phonelink_erase,
+                          color: _hapticEnabled
+                              ? scheme.primary
+                              : scheme.onSurfaceVariant,
+                        ),
+                      ),
                       IconButton(
                         tooltip: 'common.reset_all'.tr(),
                         onPressed: _total == 0 && _rounds == 0 && _count == 0

@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hijri/hijri_calendar.dart';
 
 import '../../../../core/utils/time_formatter.dart';
-import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/services/prayer_times_service.dart';
 import '../../../../core/models/prayer_times.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
@@ -14,6 +13,7 @@ import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
+import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 
 const _prayerOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
 const _prayerLabelKeys = {
@@ -448,7 +448,9 @@ class _PrayerTimesTableState extends State<_PrayerTimesTable> {
       widget.times.countryName,
     ].where((s) => s != null && s.isNotEmpty).join('، ');
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOut,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -477,7 +479,8 @@ class _PrayerTimesTableState extends State<_PrayerTimesTable> {
           ),
           if (next != null) ...[
             const SizedBox(height: 12),
-            Container(
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.06),
@@ -531,11 +534,21 @@ class _PrayerTimesTableState extends State<_PrayerTimesTable> {
             child: Row(
               children: [
                 for (final key in _prayerOrder)
-                  _PrayerChip(
-                    label: _prayerLabelKeys[key]!.tr(),
-                    time: formatTime12h(widget.times.byName(key)),
-                    color: _prayerChipColors[key]!,
-                    isNext: next?.$1 == key,
+                  InkWell(
+                    borderRadius: BorderRadius.circular(14),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const AdhanSettingsScreen(),
+                        ),
+                      );
+                    },
+                    child: _PrayerChip(
+                      label: _prayerLabelKeys[key]!.tr(),
+                      time: formatTime12h(widget.times.byName(key)),
+                      color: _prayerChipColors[key]!,
+                      isNext: next?.$1 == key,
+                    ),
                   ),
               ],
             ),
@@ -570,53 +583,53 @@ class _PrayerChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
       width: 84,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 3),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: isNext ? color : color.withValues(alpha: 0.16),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: isNext
-              ? [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 10)]
-              : null,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: isNext ? Colors.white : color,
-              ),
+      margin: const EdgeInsets.symmetric(horizontal: 3),
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: isNext ? color : color.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: isNext
+            ? [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 10)]
+            : null,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: isNext ? Colors.white : color,
             ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            time,
+            style: TextStyle(
+              fontSize: 13,
+              color: isNext ? Colors.white : Colors.white70,
+            ),
+          ),
+          if (isNext) ...[
             const SizedBox(height: 4),
-            Text(
-              time,
-              style: TextStyle(
-                fontSize: 13,
-                color: isNext ? Colors.white : Colors.white70,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'home.upcoming'.tr(),
+                style: const TextStyle(fontSize: 9, color: Colors.white),
               ),
             ),
-            if (isNext) ...[
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'home.upcoming'.tr(),
-                  style: const TextStyle(fontSize: 9, color: Colors.white),
-                ),
-              ),
-            ],
           ],
-        ),
+        ],
       ),
     );
   }

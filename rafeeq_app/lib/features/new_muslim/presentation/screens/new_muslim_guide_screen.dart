@@ -27,23 +27,67 @@ class NewMuslimGuideScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text('new_muslim.title'.tr())),
-      body: ListView.separated(
+      body: GridView.builder(
         padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 0.85,
+        ),
         itemCount: newMuslimGuideSections.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 10),
         itemBuilder: (context, i) {
           final section = newMuslimGuideSections[i];
           return Card(
-            child: ListTile(
-              leading: Icon(_icons[section.icon] ?? Icons.book_outlined,
-                  color: scheme.primary),
-              title: Text(isAr ? section.titleAr : section.titleEn),
-              subtitle: Text('${section.items.length} '
-                  '${isAr ? "بنود" : "points"}'),
-              trailing: const Icon(Icons.chevron_left),
+            clipBehavior: Clip.antiAlias,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(
+                color: scheme.outlineVariant.withValues(alpha: 0.5),
+              ),
+            ),
+            child: InkWell(
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => NewMuslimSectionScreen(section: section),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: scheme.primaryContainer.withValues(alpha: 0.6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _icons[section.icon] ?? Icons.book_outlined,
+                        size: 36,
+                        color: scheme.onPrimaryContainer,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      isAr ? section.titleAr : section.titleEn,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${section.items.length} ${isAr ? "بنود" : "points"}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

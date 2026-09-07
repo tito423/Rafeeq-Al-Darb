@@ -1,14 +1,16 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
+import 'package:adhan/adhan.dart' as adhan;
+import 'package:hijri/hijri_calendar.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/prayer_times.dart';
 
-/// Real prayer times from the AlAdhan API with offline stale-cache support.
+/// Real prayer times calculated offline using the 'adhan' package.
 class PrayerTimesService {
-  static const _cacheKey = 'prayer_times_cache_v1';
-  static const _cacheDateKey = 'prayer_times_cache_date_v1';
+  static const _cacheKey = 'prayer_times_cache_v2';
+  static const _cacheDateKey = 'prayer_times_cache_date_v2';
 
   /// [method]: 4 = Umm Al-Qura, 2 = ISNA, 3 = MWL, 5 = Egypt.
   Future<PrayerTimes> fetchPrayerTimes({
@@ -31,53 +33,44 @@ class PrayerTimesService {
     }
 
     try {
-      final uri = Uri.parse(
-        'https://api.aladhan.com/v1/timings'
-        '?latitude=$lat&longitude=$lon&method=$method',
+      final coordinates = adhan.Coordinates(lat, lon);
+      final params = _getParams(method);
+      final date = adhan.DateComponents.from(DateTime.now());
+      
+      final ptAdhan = adhan.PrayerTimes(coordinates, date, params);
+      
+      final hDate = HijriCalendar.now();
+      final hijriStr = '${hDate.hDay} ${hDate.longMonthName} ${hDate.hYear}';
+      final gregorianStr = DateFormat('dd MMM yyyy', 'ar').format(DateTime.now());
+      
+      final pt = PrayerTimes(
+        fajr: _formatTime(ptAdhan.fajr),
+        sunrise: _formatTime(ptAdhan.sunrise),
+        dhuhr: _formatTime(ptAdhan.dhuhr),
+        asr: _formatTime(ptAdhan.asr),
+        maghrib: _formatTime(ptAdhan.maghrib),
+        isha: _formatTime(ptAdhan.isha),
+        cityName: cityName,
+        countryName: countryName,
+        hijriDate: hijriStr,
+        gregorianDate: gregorianStr,
       );
-      final resp = await http
-          .get(uri)
-          .timeout(const Duration(seconds: 15));
-      if (resp.statusCode == 200) {
-        final body = jsonDecode(resp.body) as Map<String, dynamic>;
-        if (body['code'] == 200) {
-          final data = body['data'] as Map<String, dynamic>;
-          final timings = data['timings'] as Map<String, dynamic>;
-          final date = data['date'] as Map<String, dynamic>;
-          final hijri =
-              (date['hijri'] as Map<String, dynamic>)['date'] as String? ?? '';
-          final gregorian =
-              (date['gregorian'] as Map<String, dynamic>)['date'] as String? ??
-                  '';
-          final pt = PrayerTimes(
-            fajr: _clean(timings['Fajr']),
-            sunrise: _clean(timings['Sunrise']),
-            dhuhr: _clean(timings['Dhuhr']),
-            asr: _clean(timings['Asr']),
-            maghrib: _clean(timings['Maghrib']),
-            isha: _clean(timings['Isha']),
-            cityName: cityName,
-            countryName: countryName,
-            hijriDate: hijri,
-            gregorianDate: gregorian,
-          );
-          await prefs.setString(
-            _cacheKey,
-            jsonEncode({
-              'fajr': pt.fajr,
-              'sunrise': pt.sunrise,
-              'dhuhr': pt.dhuhr,
-              'asr': pt.asr,
-              'maghrib': pt.maghrib,
-              'isha': pt.isha,
-              'hijri': hijri,
-              'gregorian': gregorian,
-            }),
-          );
-          await prefs.setString(_cacheDateKey, today);
-          return pt;
-        }
-      }
+
+      await prefs.setString(
+        _cacheKey,
+        jsonEncode({
+          'fajr': pt.fajr,
+          'sunrise': pt.sunrise,
+          'dhuhr': pt.dhuhr,
+          'asr': pt.asr,
+          'maghrib': pt.maghrib,
+          'isha': pt.isha,
+          'hijri': pt.hijriDate,
+          'gregorian': pt.gregorianDate,
+        }),
+      );
+      await prefs.setString(_cacheDateKey, today);
+      return pt;
     } catch (_) {
       // fall through to stale cache
     }
@@ -89,6 +82,24 @@ class PrayerTimesService {
       if (pt != null) return pt;
     }
     return PrayerTimes.empty();
+  }
+
+  adhan.CalculationParameters _getParams(int method) {
+    switch (method) {
+      case 2:
+        return adhan.CalculationMethod.north_america.getParameters();
+      case 3:
+        return adhan.CalculationMethod.muslim_world_league.getParameters();
+      case 5:
+        return adhan.CalculationMethod.egyptian.getParameters();
+      case 4:
+      default:
+        return adhan.CalculationMethod.umm_al_qura.getParameters();
+    }
+  }
+
+  String _formatTime(DateTime time) {
+    return DateFormat('HH:mm').format(time);
   }
 
   PrayerTimes? _decode(String raw, String cityName, String countryName) {
@@ -109,13 +120,6 @@ class PrayerTimesService {
     } catch (_) {
       return null;
     }
-  }
-
-  String _clean(Object? t) {
-    final s = t?.toString() ?? '--:--';
-    // "05:12 (EET)" -> "05:12"
-    final m = RegExp(r'^(\d{1,2}:\d{2})').firstMatch(s);
-    return m?.group(1) ?? s;
   }
 
   /// (name, time) of the next prayer after [now].
@@ -151,3 +155,4 @@ class PrayerTimesService {
     return (int.parse(m.group(1)!), int.parse(m.group(2)!));
   }
 }
+

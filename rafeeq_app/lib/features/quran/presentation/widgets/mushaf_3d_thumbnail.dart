@@ -32,12 +32,12 @@ class Mushaf3DThumbnail extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: 0.4),
                   blurRadius: 4,
                   offset: const Offset(2, 2),
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 1,
                   offset: const Offset(-1, -1),
                 ),
@@ -46,9 +46,9 @@ class Mushaf3DThumbnail extends StatelessWidget {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  coverColor.withOpacity(0.8),
+                  coverColor.withValues(alpha: 0.8),
                   coverColor,
-                  coverColor.withOpacity(0.6),
+                  coverColor.withValues(alpha: 0.6),
                 ],
                 stops: const [0.0, 0.5, 1.0],
               ),
@@ -64,9 +64,9 @@ class Mushaf3DThumbnail extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.black.withOpacity(0.0),
-                    Colors.black.withOpacity(0.3),
-                    Colors.black.withOpacity(0.0),
+                    Colors.black.withValues(alpha: 0.0),
+                    Colors.black.withValues(alpha: 0.3),
+                    Colors.black.withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -93,7 +93,7 @@ class Mushaf3DThumbnail extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 2,
                       offset: const Offset(1, 0),
                     ),
@@ -124,7 +124,7 @@ class Mushaf3DThumbnail extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 2,
                       offset: const Offset(-1, 0),
                     ),
@@ -148,7 +148,7 @@ class Mushaf3DThumbnail extends StatelessWidget {
           12,
           (index) => Container(
             height: 1,
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             margin: EdgeInsets.symmetric(
               horizontal: index % 3 == 0 ? 4 : 0,
             ),

@@ -53,11 +53,13 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
     if (pos == null) {
       return PrayerTimesResult(times: PrayerTimes.empty(), locationDenied: true);
     }
+    final settings = ref.read(adhanSettingsProvider);
     final times = await PrayerTimesService().fetchPrayerTimes(
       lat: pos.latitude,
       lon: pos.longitude,
       cityName: pos.locality ?? '',
       countryName: pos.country ?? '',
+      method: settings.calculationMethod,
     );
     if (!times.isEmpty) {
       await _reschedule(times);

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/config/app_config.dart';
@@ -37,7 +38,7 @@ class LibraryScreen extends ConsumerStatefulWidget {
 class _LibraryScreenState extends ConsumerState<LibraryScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController =
-      TabController(length: 2, vsync: this);
+      TabController(length: 4, vsync: this);
 
   @override
   void dispose() {
@@ -58,17 +59,26 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
         title: Text('nav.library'.tr()),
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
           indicatorColor: AppColors.gold,
           labelColor: AppColors.gold,
+          tabAlignment: TabAlignment.start,
           tabs: [
             Tab(text: 'library.tab_books'.tr()),
             Tab(text: 'library.tab_hadith'.tr()),
+            Tab(text: 'library.tab_channels'.tr()),
+            Tab(text: 'library.tab_websites'.tr()),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [_BooksTab(), _HadithTab()],
+        children: const [
+          _BooksTab(),
+          _HadithTab(),
+          _IslamicChannelsTab(),
+          _IslamicWebsitesTab(),
+        ],
       ),
     );
   }
@@ -976,6 +986,324 @@ class _SearchResultsState extends State<_SearchResults> {
               ),
             );
           },
+        );
+      },
+    );
+  }
+}
+
+// ── Islamic Channels ──────────────────────────────────────────────────────
+
+class _ChannelInfo {
+  final String name;
+  final String description;
+  final String url;
+  final IconData icon;
+  final Color color;
+  const _ChannelInfo({
+    required this.name,
+    required this.description,
+    required this.url,
+    required this.icon,
+    required this.color,
+  });
+}
+
+const _islamicChannels = [
+  _ChannelInfo(
+    name: 'د. راغب السرجاني',
+    description: 'تاريخ إسلامي وسيرة نبوية وحضارة',
+    url: 'https://www.youtube.com/@RaghebElsergany',
+    icon: Icons.history_edu,
+    color: Color(0xFF1565C0),
+  ),
+  _ChannelInfo(
+    name: 'د. حسن الحسيني',
+    description: 'مقارنة أديان وعقيدة ودعوة',
+    url: 'https://www.youtube.com/@HassanElhusseiny',
+    icon: Icons.menu_book,
+    color: Color(0xFF2E7D32),
+  ),
+  _ChannelInfo(
+    name: 'الشيخ أمجد سمير',
+    description: 'فقه وعلوم شرعية وتزكية',
+    url: 'https://www.youtube.com/@AmgadSamir',
+    icon: Icons.school,
+    color: Color(0xFF6A1B9A),
+  ),
+  _ChannelInfo(
+    name: 'د. أحمد العربي',
+    description: 'تدبر القرآن الكريم وعلومه',
+    url: 'https://www.youtube.com/@Dr.AhmedAlarabi',
+    icon: Icons.auto_stories,
+    color: Color(0xFFC62828),
+  ),
+  _ChannelInfo(
+    name: 'د. هيثم طلعت',
+    description: 'ردود علمية وفكرية على الإلحاد والشبهات',
+    url: 'https://www.youtube.com/@HaythamTalaat',
+    icon: Icons.lightbulb,
+    color: Color(0xFFEF6C00),
+  ),
+  _ChannelInfo(
+    name: 'قناة فاهم',
+    description: 'محتوى فكري إسلامي بأسلوب بصري عصري',
+    url: 'https://www.youtube.com/@fahem',
+    icon: Icons.smart_display,
+    color: Color(0xFF00838F),
+  ),
+  _ChannelInfo(
+    name: 'د. إياد قنيبي',
+    description: 'فكر إسلامي وردود على الشبهات المعاصرة',
+    url: 'https://www.youtube.com/@EyadQunaibi',
+    icon: Icons.psychology,
+    color: Color(0xFF4527A0),
+  ),
+  _ChannelInfo(
+    name: 'قناة مكاني',
+    description: 'محتوى دعوي وتعليمي هادف',
+    url: 'https://www.youtube.com/@MakanyChannel',
+    icon: Icons.mosque,
+    color: Color(0xFF00695C),
+  ),
+  _ChannelInfo(
+    name: 'م. أيمن عبدالرحيم',
+    description: 'محتوى إيماني ودعوي متنوع',
+    url: 'https://www.youtube.com/@AymanAbdelRaheem',
+    icon: Icons.volunteer_activism,
+    color: Color(0xFF283593),
+  ),
+  _ChannelInfo(
+    name: 'قناة وعي',
+    description: 'وعي فكري إسلامي معاصر',
+    url: 'https://www.youtube.com/@waikishow',
+    icon: Icons.visibility,
+    color: Color(0xFF37474F),
+  ),
+];
+
+class _IslamicChannelsTab extends StatelessWidget {
+  const _IslamicChannelsTab();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _islamicChannels.length,
+      itemBuilder: (context, i) {
+        final ch = _islamicChannels[i];
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          clipBehavior: Clip.antiAlias,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: InkWell(
+            onTap: () => launchUrl(
+              Uri.parse(ch.url),
+              mode: LaunchMode.externalApplication,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    ch.color.withValues(alpha: 0.12),
+                    Colors.transparent,
+                  ],
+                  begin: AlignmentDirectional.centerStart,
+                  end: AlignmentDirectional.centerEnd,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: ch.color.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(ch.icon, color: ch.color, size: 28),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            ch.name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: scheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            ch.description,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.play_circle_fill_rounded,
+                      color: Colors.red.shade600,
+                      size: 32,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ── Islamic Websites ──────────────────────────────────────────────────────
+
+class _WebsiteInfo {
+  final String name;
+  final String description;
+  final String url;
+  final IconData icon;
+  final Color color;
+  const _WebsiteInfo({
+    required this.name,
+    required this.description,
+    required this.url,
+    required this.icon,
+    required this.color,
+  });
+}
+
+const _islamicWebsites = [
+  _WebsiteInfo(
+    name: 'الإسلام سؤال وجواب',
+    description: 'أكبر موقع إسلامي للفتاوى والأسئلة الشرعية بإشراف الشيخ محمد صالح المنجد',
+    url: 'https://islamqa.info',
+    icon: Icons.question_answer,
+    color: Color(0xFF1B5E20),
+  ),
+  _WebsiteInfo(
+    name: 'الدرر السنية',
+    description: 'موسوعة شاملة للحديث النبوي والعقيدة والفقه وتخريج الأحاديث',
+    url: 'https://dorar.net',
+    icon: Icons.diamond,
+    color: Color(0xFFC9A227),
+  ),
+  _WebsiteInfo(
+    name: 'طريق الإسلام',
+    description: 'دروس ومحاضرات ومقالات إسلامية من كبار العلماء والدعاة',
+    url: 'https://ar.islamway.net',
+    icon: Icons.route,
+    color: Color(0xFF0D47A1),
+  ),
+  _WebsiteInfo(
+    name: 'صيد الفوائد',
+    description: 'مكتبة إسلامية شاملة تضم مقالات وكتب ومحاضرات متنوعة',
+    url: 'https://saaid.org',
+    icon: Icons.catching_pokemon,
+    color: Color(0xFF4E342E),
+  ),
+  _WebsiteInfo(
+    name: 'شبكة الألوكة',
+    description: 'شبكة علمية ثقافية تضم بحوثاً ومقالات أكاديمية إسلامية',
+    url: 'https://www.alukah.net',
+    icon: Icons.language,
+    color: Color(0xFF311B92),
+  ),
+];
+
+class _IslamicWebsitesTab extends StatelessWidget {
+  const _IslamicWebsitesTab();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _islamicWebsites.length,
+      itemBuilder: (context, i) {
+        final site = _islamicWebsites[i];
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          clipBehavior: Clip.antiAlias,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: InkWell(
+            onTap: () => launchUrl(
+              Uri.parse(site.url),
+              mode: LaunchMode.externalApplication,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    site.color.withValues(alpha: 0.12),
+                    Colors.transparent,
+                  ],
+                  begin: AlignmentDirectional.centerStart,
+                  end: AlignmentDirectional.centerEnd,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: site.color.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Icon(site.icon, color: site.color, size: 28),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            site.name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: scheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            site.description,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.open_in_new_rounded,
+                      color: site.color,
+                      size: 24,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         );
       },
     );

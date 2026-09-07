@@ -203,8 +203,8 @@ class _AppShellState extends ConsumerState<AppShell>
                   label: 'nav.azkar'.tr(),
                 ),
                 NavigationDestination(
-                  icon: const Icon(Icons.all_inclusive_outlined),
-                  selectedIcon: const Icon(Icons.all_inclusive),
+                  icon: const Icon(Icons.radio_button_checked_outlined),
+                  selectedIcon: const Icon(Icons.radio_button_checked),
                   label: 'nav.tasbeeh'.tr(),
                 ),
                 NavigationDestination(

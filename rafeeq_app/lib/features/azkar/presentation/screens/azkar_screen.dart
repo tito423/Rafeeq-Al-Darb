@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/db/sciences_repository.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/error_retry.dart';
 import '../../data/azkar_categories.dart';
 import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
@@ -36,6 +34,7 @@ class AzkarScreen extends StatelessWidget {
 
 /// P3‑11's original real-keyword → icon mapping, still used for each
 /// section's own card icon within a category group.
+// ignore: unused_element
 IconData _azkarIcon(String title) {
   const map = <String, IconData>{
     'الصباح': Icons.wb_sunny_outlined,
@@ -107,292 +106,179 @@ class _SectionsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repoAsync = ref.watch(sciencesRepositoryProvider);
-    return repoAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) =>
-          ErrorRetry(onRetry: () => ref.invalidate(sciencesRepositoryProvider)),
-      data: (repo) => FutureBuilder<List<AzkarSection>>(
-        future: repo.azkarSections(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          // P3‑11: filter out the author preface (section 1 "المقدمة").
-          final sections =
-              snapshot.data!.where((s) => s.title != 'المقدمة').toList();
-          final byId = {for (final s in sections) s.id: s};
-
-          final byCategory = <AzkarCategory, List<AzkarSection>>{};
-          for (final s in sections) {
-            final cats = azkarSectionCategories[s.id] ??
-                const [AzkarCategory.narrated];
-            for (final c in cats) {
-              (byCategory[c] ??= []).add(s);
-            }
-          }
-          for (final list in byCategory.values) {
-            list.removeWhere((s) => !byId.containsKey(s.id));
-          }
-
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(14, 14, 14, 24),
-            children: [
-              Text(
-                'azkar.hub_subtitle'.tr(),
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 13,
-                ),
-              ),
-              const SizedBox(height: 12),
-              for (var i = 0; i < _categoryOrder.length; i++)
-                if ((byCategory[_categoryOrder[i]] ?? const []).isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: _CategoryExpansionCard(
-                      key: PageStorageKey<int>(i),
-                      category: _categoryOrder[i],
-                      items: byCategory[_categoryOrder[i]]!,
-                      initiallyExpanded: i == 0,
-                    ),
-                  ),
-            ],
-          );
-        },
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        childAspectRatio: 0.9,
       ),
-    );
-  }
-}
-
-/// A collapsible category card with an Islamic background image.
-class _CategoryExpansionCard extends StatelessWidget {
-  final AzkarCategory category;
-  final List<AzkarSection> items;
-  final bool initiallyExpanded;
-
-  const _CategoryExpansionCard({
-    super.key,
-    required this.category,
-    required this.items,
-    required this.initiallyExpanded,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final info = azkarCategoryInfo[category]!;
-    final bgUrl = _categoryBackgroundUrls[category];
-
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: ExpansionTile(
-        initiallyExpanded: initiallyExpanded,
-        shape: const Border(),
-        collapsedShape: const Border(),
-        tilePadding: EdgeInsets.zero,
-        childrenPadding: const EdgeInsets.fromLTRB(10, 0, 10, 12),
-        title: _CategoryHeaderWithBg(
+      itemCount: _categoryOrder.length,
+      itemBuilder: (context, i) {
+        final category = _categoryOrder[i];
+        final info = azkarCategoryInfo[category]!;
+        final bgUrl = _categoryBackgroundUrls[category];
+        
+        return _CategoryCard(
+          category: category,
           info: info,
           bgUrl: bgUrl,
-          count: items.length,
-        ),
-        children: [
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              childAspectRatio: 1.3,
-            ),
-            itemCount: items.length,
-            itemBuilder: (context, i) {
-              final s = items[i];
-              return _AzkarSectionCard(
-                section: s,
-                icon: _azkarIcon(s.title),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => AzkarSectionScreen(
-                      section: s,
-                      accent: info.gradient.last,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
-/// Category header with a beautiful Islamic background image overlaid with a
-/// gradient in the category's own colors.
-class _CategoryHeaderWithBg extends StatelessWidget {
+class _CategoryCard extends ConsumerWidget {
+  final AzkarCategory category;
   final AzkarCategoryInfo info;
   final String? bgUrl;
-  final int count;
 
-  const _CategoryHeaderWithBg({
+  const _CategoryCard({
+    required this.category,
     required this.info,
     required this.bgUrl,
-    required this.count,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 80,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Card(
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Background image with color filter
-          if (bgUrl != null)
-            CachedNetworkImage(
-              imageUrl: bgUrl!,
-              fit: BoxFit.cover,
-              colorBlendMode: BlendMode.multiply,
-              color: info.gradient.first.withValues(alpha: 0.6),
-              placeholder: (_, _) => Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: info.gradient,
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: InkWell(
+        onTap: () async {
+          final repo = await ref.read(sciencesRepositoryProvider.future);
+          final allSections = await repo.azkarSections();
+          final sections = allSections.where((s) {
+            final cats = azkarSectionCategories[s.id] ?? const [AzkarCategory.narrated];
+            return cats.contains(category) && s.title != 'المقدمة';
+          }).toList();
+          
+          if (!context.mounted) return;
+          
+          if (sections.length == 1 || category == AzkarCategory.morning || category == AzkarCategory.evening) {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => AzkarSectionScreen(
+                  section: sections.first,
+                  accent: info.gradient.last,
                 ),
               ),
-              errorWidget: (_, _, _) => Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: info.gradient,
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
+            );
+          } else {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => _CategorySectionsListScreen(
+                  categoryInfo: info,
+                  sections: sections,
+                  bgUrl: bgUrl,
                 ),
               ),
-            )
-          else
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: info.gradient,
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-              ),
-            ),
-          // Gradient overlay for readability
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  info.gradient.first.withValues(alpha: 0.85),
-                  info.gradient.last.withValues(alpha: 0.55),
-                ],
-                begin: AlignmentDirectional.centerStart,
-                end: AlignmentDirectional.centerEnd,
-              ),
+            );
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: info.gradient,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
-          // Content
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.18),
-                    borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            children: [
+              if (bgUrl != null)
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.2,
+                    child: CachedNetworkImage(
+                      imageUrl: bgUrl!,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => const SizedBox.shrink(),
+                    ),
                   ),
-                  child: Icon(info.icon, color: Colors.white, size: 22),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Icon(
+                        info.icon,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(height: 8),
                       Text(
                         info.titleKey.tr(),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '$count ${_sectionCountLabel(count)}',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontSize: 12,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.expand_more,
-                  color: Colors.white.withValues(alpha: 0.7),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Arabic plural helper for "قسم".
-  static String _sectionCountLabel(int n) {
-    if (n <= 2) return 'قسم';
-    if (n <= 10) return 'أقسام';
-    return 'قسمًا';
-  }
-}
-
-class _AzkarSectionCard extends StatelessWidget {
-  final AzkarSection section;
-  final IconData icon;
-  final VoidCallback onTap;
-  const _AzkarSectionCard(
-      {required this.section, required this.icon, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(icon, color: AppColors.gold, size: 26),
-              Text(
-                section.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall
-                    ?.copyWith(fontWeight: FontWeight.w700),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CategorySectionsListScreen extends StatelessWidget {
+  final AzkarCategoryInfo categoryInfo;
+  final List<AzkarSection> sections;
+  final String? bgUrl;
+
+  const _CategorySectionsListScreen({
+    required this.categoryInfo,
+    required this.sections,
+    this.bgUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(categoryInfo.titleKey.tr()),
+        backgroundColor: categoryInfo.gradient.first,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: sections.length,
+        itemBuilder: (context, i) {
+          final s = sections[i];
+          return Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: ListTile(
+              leading: Icon(categoryInfo.icon, color: categoryInfo.gradient.first),
+              title: Text(s.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => AzkarSectionScreen(
+                      section: s,
+                      accent: categoryInfo.gradient.last,
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

@@ -715,6 +715,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               playingSurah: _recite.active ? _recite.surahId : null,
               playingAyah: _recite.active ? _recite.ayahNumber : null,
               onAyahTap: (a) => _openSciences(a, data),
+              onPlayTap: (a) {
+                AyahAudioService.instance.startContinuous(
+                  from: a,
+                  repo: data.repo,
+                  edition: edition?.id ?? 'hafs_kfqc',
+                  wholeMushaf: true,
+                );
+              },
               fontScale: _fontScale,
               autoScroll: _autoScroll,
               autoScrollSpeed: _autoScrollSpeed,
