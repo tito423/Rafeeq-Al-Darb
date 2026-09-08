@@ -87,6 +87,13 @@ const _groups = <(String, List<_Source>)>[
     [
       _Source('sunnah.com', 'https://sunnah.com', 'about.src_sunnah'),
       _Source('المكتبة الشاملة', 'https://shamela.ws', 'about.src_shamela'),
+      // Named separately from Shamela itself: these are the two edited
+      // editions the app's hadith gradings actually come from, and a grading
+      // is only worth anything if the reader can see whose it is.
+      _Source('مسند أحمد — ط الرسالة', 'https://shamela.ws/book/25794',
+          'about.src_musnad_arnaut'),
+      _Source('سنن الدارمي — ت حسين أسد', 'https://shamela.ws/book/21795',
+          'about.src_darimi_asad'),
     ]
   ),
   (

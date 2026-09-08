@@ -45,6 +45,9 @@ def strip_html(h):
     h = re.sub(r"</p\s*>", "\n", h)
     h = re.sub(r"<[^>]+>", "", h)
     h = h.replace("&nbsp;", " ").replace("&amp;", "&").replace("&quot;", '"')
+    # Shamela marks where the printed page turns, mid-sentence, as
+    # ⦗٤١⦘ — that is a page number, not part of the hadith.
+    h = re.sub(r"⦗[^⦘]*⦘", " ", h)
     return re.sub(r"\n{3,}", "\n\n", h).strip()
 
 

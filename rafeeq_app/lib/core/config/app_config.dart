@@ -111,7 +111,12 @@ abstract final class AppConfig {
   /// constant existed but nothing ever read it, so bumping it did nothing.
   ///
   /// v1 -> v2 (2026‑09‑03, P2‑13): added real `grade`/`grader` columns.
-  static const String hadithDbVersion = 'v2';
+  /// v2 -> v3 (2026‑09‑09): Musnad Ahmad rebuilt from `مسند أحمد - ط الرسالة`
+  /// (تحقيق شعيب الأرناؤوط) — 1,374 hadiths in 8 chapters became 27,584 in
+  /// 1,061 musnads, 24,530 of them carrying his own ruling — and Sunan
+  /// al-Darimi gained 2,642 rulings from حسين سليم أسد الداراني's edition.
+  /// 40,943 hadiths -> 67,153; graded 44% -> 67%.
+  static const String hadithDbVersion = 'v3';
 
 
   /// One ayah on everyayah.com: `<folder>/SSSAAA.mp3`, both parts zero-padded

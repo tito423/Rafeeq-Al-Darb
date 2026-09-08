@@ -36,7 +36,13 @@ PAGES = os.path.join(HERE, "musnad_ahmad_arnaut_pages.jsonl")
 OUT = os.path.join(HERE, "musnad_ahmad_arnaut.json")
 
 _AR_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")
-NUM_LINE = re.compile(r"^([٠-٩]+)\s*-\s*(.*)$")
+# Some hadiths are printed with an editorial mark before the number --
+# "* ٥١٨ - حَدَّثَنَا ..." and "° ٥١٩ - قَالَ أَبُو عَبْدِ الرَّحْمَنِ ..." (the
+# degree sign marks Abdullah's additions, and a bullet appears too).
+# Requiring the number at the very start of the line dropped about a
+# thousand hadiths, so any short run of non-letter marks is allowed before
+# it — but never an open paren, which would swallow footnote lines.
+NUM_LINE = re.compile(r"^[^\u0621-\u064a٠-٩(]{0,4}([٠-٩]+)\s*-\s*(.*)$")
 FOOT_LINE = re.compile(r"^\(([٠-٩]+)\)\s*(.*)$")
 TRAIL_MARK = re.compile(r"\(([٠-٩]+)\)\s*$")
 
@@ -65,6 +71,9 @@ def strip_html(h):
     h = re.sub(r"</p\s*>", "\n", h)
     h = re.sub(r"<[^>]+>", "", h)
     h = h.replace("&nbsp;", " ").replace("&amp;", "&").replace("&quot;", '"')
+    # Shamela marks where the printed page turns, mid-sentence, as
+    # ⦗٤١⦘ — that is a page number, not part of the hadith.
+    h = re.sub(r"⦗[^⦘]*⦘", " ", h)
     return re.sub(r"\n{3,}", "\n\n", h).strip()
 
 
@@ -269,6 +278,11 @@ def main():
         t = re.sub(r"\([٠-٩]+\)", " ", h["arabic"])
         h["arabic"] = re.sub(r"\s+", " ", t).strip()
         h.pop("end_page", None)
+
+    # A handful of pages are rendered as a row of dots, with the hadith's text
+    # living entirely on another page; keeping those would show a blank hadith.
+    has_arabic = re.compile(r"[ء-ي]")
+    hadiths = [h for h in hadiths if has_arabic.search(h["arabic"])]
 
     graded = sum(1 for h in hadiths if h["grade"])
     print(f"hadiths: {len(hadiths)}  graded: {graded} "

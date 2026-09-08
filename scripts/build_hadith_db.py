@@ -142,6 +142,7 @@ def load_arnaut_musnad():
     return chapters, hadiths
 
 
+DARIMI_KEY_LEN = 60
 DARIMI_GRADES_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "sunan_darimi_asad_grades.json")
 
@@ -163,12 +164,18 @@ def load_darimi_grades():
     with open(DARIMI_GRADES_PATH, encoding="utf-8") as f:
         d = json.load(f)
     grader = d.get("grader") or ""
-    index = {}
+    # Keyed by the first DARIMI_KEY_LEN characters of the normalized text, not
+    # the whole of it. The app's Darimi and Asad's edition are two different
+    # printings of the same book: they agree on the isnad and the opening of
+    # the matn but drift in the tail, so whole-string matching found only 39%
+    # of them where a prefix finds 73%. A prefix shared by two different
+    # hadiths is dropped rather than guessed at.
+    buckets = {}
     for h in d.get("hadiths", []):
-        key = _norm_arabic(h.get("arabic") or "")
+        key = _norm_arabic(h.get("arabic") or "")[:DARIMI_KEY_LEN]
         if key and h.get("grade"):
-            index[key] = (h["grade"], grader)
-    return index
+            buckets.setdefault(key, set()).add(h["grade"])
+    return {k: (next(iter(v)), grader) for k, v in buckets.items() if len(v) == 1}
 
 
 report = io.StringIO()
@@ -293,7 +300,8 @@ for order, key in enumerate(BOOK_ORDER, start=1):
             grade_text, grader = h["_grade"], h["_grader"]
             book_graded += 1
         else:
-            hit = grades.get(_norm_arabic(h["arabic"] or ""))
+            norm = _norm_arabic(h["arabic"] or "")
+            hit = grades.get(norm[:DARIMI_KEY_LEN] if key == "darimi" else norm)
             if hit:
                 grade_text, grader = hit
                 book_graded += 1

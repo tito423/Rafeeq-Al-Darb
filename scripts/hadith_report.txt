@@ -4,11 +4,11 @@ abudawud: Sunan Abi Dawud — 43 chapters, 5276 hadiths, 4896 graded
 tirmidhi: Jami' al-Tirmidhi — 49 chapters, 4053 hadiths, 3898 graded
 nasai: Sunan al-Nasa'i — 52 chapters, 5768 hadiths, 5321 graded
 ibnmajah: Sunan Ibn Majah — 38 chapters, 4345 hadiths, 3932 graded
-ahmed: Musnad Ahmad ibn Hanbal — 8 chapters, 1374 hadiths, 0 graded (no graded source)
+ahmed: Musnad Ahmad ibn Hanbal — 1061 chapters, 27584 hadiths, 24530 graded [ط الرسالة، تحقيق شعيب الأرناؤوط]
 malik: Muwatta Malik — 61 chapters, 1985 hadiths, 0 graded (no graded source)
-darimi: Sunan al-Darimi — 24 chapters, 3406 hadiths, 0 graded (no graded source)
+darimi: Sunan al-Darimi — 24 chapters, 3406 hadiths, 2642 graded [أحكام حسين سليم أسد الداراني]
 
-TOTAL: 9 books, 429 chapters, 40943 hadiths, 18047 graded (44.1%)
+TOTAL: 9 books, 1482 chapters, 67153 hadiths, 45219 graded (67.3%)
 chapters with out-of-order integer numbering after ORDER BY: 0 (must be 0)
-hadith.db size: 74.2 MB
-hadith.zip size: 16.1 MB (this is what gets uploaded/downloaded — DownloadManager.unzipToDatabases expects a .zip)
+hadith.db size: 104.6 MB
+hadith.zip size: 21.2 MB (this is what gets uploaded/downloaded — DownloadManager.unzipToDatabases expects a .zip)
