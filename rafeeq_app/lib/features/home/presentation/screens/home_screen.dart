@@ -464,9 +464,12 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
           // Tapping the clock opens the face gallery. `AnimatedSwitcher`
           // means swapping between the digital and analogue families is a
           // cross-fade in place rather than a hard cut.
-          InkWell(
+          Builder(
+            builder: (clockContext) => InkWell(
             borderRadius: BorderRadius.circular(20),
-            onTap: () => ClockGallerySheet.show(context),
+            // `clockContext` is the tap target, so the gallery grows out of
+            // the clock itself rather than out of nowhere.
+            onTap: () => ClockGallerySheet.show(context, origin: clockContext),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: AnimatedSwitcher(
@@ -499,6 +502,7 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
                         ),
                 ),
               ),
+            ),
             ),
           ),
           if (next != null) ...[

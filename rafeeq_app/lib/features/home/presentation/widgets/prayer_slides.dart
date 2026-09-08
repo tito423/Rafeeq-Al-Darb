@@ -10,6 +10,7 @@ import '../../../../core/models/adhan_option.dart';
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/utils/time_formatter.dart';
+import '../../../../core/widgets/card_route.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
 import '../../../adhan/data/adhan_presentation_provider.dart';
 import '../../../adhan/data/adhan_settings_provider.dart';
@@ -87,7 +88,6 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
   late final PageController _controller;
   double _page = 0;
   int _focused = 0;
-  bool _expanded = false;
 
   /// True once the reader has moved the carousel themselves. Until then the
   /// card keeps following the next prayer; after it, it stays where they put
@@ -145,26 +145,60 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
     super.dispose();
   }
 
-  void _onSlideTapped(int index) {
+  /// Tapping a slide centres it and opens its editor **as a card screen**.
+  ///
+  /// It used to expand inline under the carousel, which is exactly the thing
+  /// the owner objected to: the Home page is a scroll view, so the editor
+  /// shoved everything below it down and the controls it revealed landed
+  /// off-screen. As a route it floats over Home instead — Home keeps its
+  /// scroll position, blurred behind — and it is sized to its own content.
+  Future<void> _onSlideTapped(int index, BuildContext slideContext) async {
     _userDriven = true;
+    final key = prayerSlideOrder[index];
     if (index != _focused) {
-      _controller.animateToPage(
+      // Centre first, so the card grows out of the slide it belongs to.
+      await _controller.animateToPage(
         index,
-        duration: const Duration(milliseconds: 420),
+        duration: const Duration(milliseconds: 320),
         curve: Curves.easeOutCubic,
       );
-      setState(() => _expanded = true);
-      return;
+      if (!mounted || !slideContext.mounted) return;
     }
-    setState(() => _expanded = !_expanded);
+    await showCardScreen<void>(
+      context: slideContext,
+      originContext: slideContext,
+      // A `Consumer` around the whole card, not just its body: the header
+      // shows this prayer's time, and the ± stepper inside the card changes
+      // exactly that. Capturing the time at push time left the header reading
+      // the old value while the row under it already said "+3".
+      child: Consumer(
+        builder: (context, ref, _) {
+          // The controller listens to `prayerAdjustmentsProvider` itself and
+          // re-derives the day's times through `withOffsets`, so watching it
+          // is enough: the ± stepper in this card's own body moves the time
+          // in this card's own header.
+          final times =
+              ref.watch(prayerControllerProvider).valueOrNull?.times ??
+                  widget.times;
+          return CardScreen(
+            title: prayerSlideLabelKeys[key]!.tr(),
+            subtitle: formatTime12h(times.byName(key)),
+            icon: _prayerSlideIcons[key],
+            accent: prayerSlideColors[key]!,
+            child: PrayerSlideDetails(prayerKey: key),
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 116,
+    // 126, not 116: with a manual correction applied the slide grows an extra
+    // "+3" line, and at 116 that overflowed by 0.8px on the device. Sized for
+    // the tallest state the slide can actually be in, not the common one.
+    return SizedBox(
+          height: 126,
           child: PageView.builder(
             controller: _controller,
             // No `reverse`: a horizontal PageView already resolves its scroll
@@ -178,61 +212,31 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
               final distance = (_page - index).abs().clamp(0.0, 1.0);
               final scale = 1 - 0.22 * distance;
               final opacity = 1 - 0.45 * distance;
-              return Center(
-                child: Transform.scale(
-                  scale: scale,
-                  child: Opacity(
-                    opacity: opacity,
-                    child: _PrayerSlide(
-                      label: prayerSlideLabelKeys[key]!.tr(),
-                      time: formatTime12h(widget.times.byName(key)),
-                      color: prayerSlideColors[key]!,
-                      icon: _prayerSlideIcons[key]!,
-                      isNext: widget.nextKey == key,
-                      isFocused: index == _focused,
-                      expanded: _expanded && index == _focused,
-                      offsetMinutes:
-                          ref.watch(prayerAdjustmentsProvider).offsetFor(key),
-                      onTap: () => _onSlideTapped(index),
+              // `Builder` so the slide has a context of its own — that is what
+              // the card route uses as the point it grows out of.
+              return Builder(
+                builder: (slideContext) => Center(
+                  child: Transform.scale(
+                    scale: scale,
+                    child: Opacity(
+                      opacity: opacity,
+                      child: _PrayerSlide(
+                        label: prayerSlideLabelKeys[key]!.tr(),
+                        time: formatTime12h(widget.times.byName(key)),
+                        color: prayerSlideColors[key]!,
+                        icon: _prayerSlideIcons[key]!,
+                        isNext: widget.nextKey == key,
+                        isFocused: index == _focused,
+                        offsetMinutes:
+                            ref.watch(prayerAdjustmentsProvider).offsetFor(key),
+                        onTap: () => _onSlideTapped(index, slideContext),
+                      ),
                     ),
                   ),
                 ),
               );
             },
           ),
-        ),
-        // The editor for whichever slide is focused. `AnimatedSize` gives the
-        // whole card a real grow/shrink instead of a jump, and the switcher
-        // cross-fades when the focus moves to another prayer while open.
-        AnimatedSize(
-          duration: const Duration(milliseconds: 380),
-          curve: Curves.easeOutCubic,
-          alignment: Alignment.topCenter,
-          child: !_expanded
-              ? const SizedBox(width: double.infinity, height: 0)
-              : Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (child, anim) => FadeTransition(
-                      opacity: anim,
-                      child: SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(0, 0.06),
-                          end: Offset.zero,
-                        ).animate(anim),
-                        child: child,
-                      ),
-                    ),
-                    child: PrayerSlideDetails(
-                      key: ValueKey(prayerSlideOrder[_focused]),
-                      prayerKey: prayerSlideOrder[_focused],
-                      onClose: () => setState(() => _expanded = false),
-                    ),
-                  ),
-                ),
-        ),
-      ],
     );
   }
 }
@@ -244,7 +248,6 @@ class _PrayerSlide extends StatelessWidget {
   final IconData icon;
   final bool isNext;
   final bool isFocused;
-  final bool expanded;
   final int offsetMinutes;
   final VoidCallback onTap;
 
@@ -255,7 +258,6 @@ class _PrayerSlide extends StatelessWidget {
     required this.icon,
     required this.isNext,
     required this.isFocused,
-    required this.expanded,
     required this.offsetMinutes,
     required this.onTap,
   });
@@ -337,14 +339,13 @@ class _PrayerSlide extends StatelessWidget {
                 ),
               ),
             ],
-            AnimatedRotation(
-              turns: expanded ? 0.5 : 0,
-              duration: const Duration(milliseconds: 300),
-              child: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                size: 16,
-                color: (filled ? Colors.white : color).withValues(alpha: 0.8),
-              ),
+            // The affordance that this slide opens into something. It is an
+            // "expand" glyph rather than a chevron because the card no longer
+            // unfolds downward — it opens as its own screen.
+            Icon(
+              Icons.open_in_full_rounded,
+              size: 13,
+              color: (filled ? Colors.white : color).withValues(alpha: 0.75),
             ),
           ],
         ),
@@ -353,16 +354,17 @@ class _PrayerSlide extends StatelessWidget {
   }
 }
 
-/// The expanded editor for one prayer, living inside the Home card.
+/// The editor for one prayer — the body of the card screen the carousel opens.
+///
+/// It carries no header or frame of its own: [CardScreen] supplies the title,
+/// the icon, the close button and the illuminated ground, so this is only the
+/// controls. Every one of them writes through the same providers the Adhan
+/// settings screen uses and re-schedules the alarms, so a change made here is
+/// the same change made there.
 class PrayerSlideDetails extends ConsumerStatefulWidget {
   final String prayerKey;
-  final VoidCallback onClose;
 
-  const PrayerSlideDetails({
-    super.key,
-    required this.prayerKey,
-    required this.onClose,
-  });
+  const PrayerSlideDetails({super.key, required this.prayerKey});
 
   @override
   ConsumerState<PrayerSlideDetails> createState() => _PrayerSlideDetailsState();
@@ -461,40 +463,10 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
         settings.adhanIdByPrayer[widget.prayerKey] == null;
     final video = adhanVideoById(presentation.videoId);
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white.withValues(alpha: 0.06),
-        border: Border.all(color: color.withValues(alpha: 0.45)),
-      ),
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              Icon(_prayerSlideIcons[widget.prayerKey], size: 18, color: color),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  prayerSlideLabelKeys[widget.prayerKey]!.tr(),
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-              IconButton(
-                visualDensity: VisualDensity.compact,
-                onPressed: widget.onClose,
-                icon: const Icon(Icons.close_rounded,
-                    size: 18, color: Colors.white54),
-              ),
-            ],
-          ),
-
           // ── Manual correction — always available, sunrise included ──
           _DetailRow(
             icon: Icons.tune_rounded,
@@ -603,7 +575,6 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
             ),
           ],
         ],
-      ),
     );
   }
 

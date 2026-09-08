@@ -79,7 +79,8 @@
     "face_skeleton": "أقواس",
     "face_sunMoon": "شمس وقمر",
     "face_halo": "هالة",
-    "face_mosaic": "فسيفساء"
+    "face_mosaic": "فسيفساء",
+    "clock_gallery_subtitle": "كل شكل يعرض الوقت الحقيقي الآن"
   },
   "quran": {
     "surah_list": "السور",
@@ -302,7 +303,7 @@
     "isha": "العشاء",
     "adhan": "الأذان",
     "adhan_settings": "إعدادات الأذان",
-    "choose_adhan": "اختر صوت الأذان",
+    "choose_adhan": "صوت الأذان",
     "custom_adhan": "أذان من جهازك",
     "pick_file": "اختيار ملف MP3",
     "test": "تجربة",
@@ -347,8 +348,6 @@
     "presentation_audio": "صوت",
     "presentation_video": "فيديو",
     "adhan_video": "فيديو الأذان",
-    "video_select": "اختيار",
-    "video_selected": "مختار",
     "video_preview": "معاينة",
     "per_prayer_desc": "وضع ومؤذّن مستقل لكل صلاة",
     "azan_of": "أذان صلاة {}",

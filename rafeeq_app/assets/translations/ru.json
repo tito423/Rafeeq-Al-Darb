@@ -79,7 +79,8 @@
     "face_skeleton": "Дуги",
     "face_sunMoon": "Солнце и луна",
     "face_halo": "Ореол",
-    "face_mosaic": "Мозаика"
+    "face_mosaic": "Мозаика",
+    "clock_gallery_subtitle": "Каждый циферблат показывает реальное время"
   },
   "quran": {
     "surah_list": "Суры",
@@ -302,7 +303,7 @@
     "isha": "Иша",
     "adhan": "Азан",
     "adhan_settings": "Настройки азана",
-    "choose_adhan": "Выберите звук азана",
+    "choose_adhan": "Голос азана",
     "custom_adhan": "Свой азан с устройства",
     "pick_file": "Выбрать файл MP3",
     "test": "Проверить",
@@ -342,8 +343,6 @@
     "presentation_audio": "Звук",
     "presentation_video": "Видео",
     "adhan_video": "Видео азана",
-    "video_select": "Выбрать",
-    "video_selected": "Выбрано",
     "video_preview": "Просмотр",
     "per_prayer_desc": "Отдельный режим и муэдзин для каждой молитвы",
     "azan_of": "Азан — молитва {}",

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/widgets/card_route.dart';
 import '../../data/clock_settings_provider.dart';
 import 'analog_clock_faces.dart';
 import 'digital_clock_faces.dart';
@@ -10,16 +11,19 @@ import 'digital_clock_faces.dart';
 ///
 /// Every tile is the *real* face running on the real current time, not a
 /// static thumbnail: what the reader taps is exactly what lands on the Home
-/// card, and the card updates the moment they tap it (the sheet writes
+/// card, and the card updates the moment they tap it (the gallery writes
 /// straight through `clockSettingsProvider`, which Home watches).
+///
+/// It opens as a [CardScreen] rather than a bottom sheet, so it grows out of
+/// the clock that was tapped and leaves Home visible (blurred) behind it.
 class ClockGallerySheet extends ConsumerStatefulWidget {
   const ClockGallerySheet({super.key});
 
-  static Future<void> show(BuildContext context) => showModalBottomSheet<void>(
+  static Future<void> show(BuildContext context, {BuildContext? origin}) =>
+      showCardScreen<void>(
         context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => const ClockGallerySheet(),
+        originContext: origin,
+        child: const ClockGallerySheet(),
       );
 
   @override
@@ -56,42 +60,19 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
         ? (DateTime.now().hour < 12 ? 'home.am'.tr() : 'home.pm'.tr())
         : null;
 
-    return DraggableScrollableSheet(
-      initialChildSize: 0.86,
-      minChildSize: 0.5,
-      maxChildSize: 0.96,
-      expand: false,
-      builder: (context, scrollController) => Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF101A2B), Color(0xFF080C15)],
-          ),
-        ),
-        child: Column(
+    return CardScreen(
+      title: 'home.clock_gallery_title'.tr(),
+      subtitle: 'home.clock_gallery_subtitle'.tr(),
+      icon: Icons.schedule_rounded,
+      accent: const Color(0xFF15C7B0),
+      maxWidth: 520,
+      maxHeightFraction: 0.9,
+      // The grids scroll themselves inside a TabBarView, so the card must not
+      // wrap them in a scroll view of its own.
+      scrollable: false,
+      footer: _bothFamiliesOptions(cs, notifier),
+      child: Column(
           children: [
-            const SizedBox(height: 10),
-            Container(
-              width: 44,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'home.clock_gallery_title'.tr(),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 12),
-
             // ── The live hero: whatever is selected right now ──
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 420),
@@ -143,7 +124,6 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
                 controller: _tabs,
                 children: [
                   _FaceGrid(
-                    scrollController: scrollController,
                     itemCount: DigitalClockFace.values.length,
                     aspectRatio: 1.45,
                     isSelected: (i) =>
@@ -164,7 +144,6 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
                     ),
                   ),
                   _FaceGrid(
-                    scrollController: scrollController,
                     itemCount: AnalogClockFace.values.length,
                     aspectRatio: 0.92,
                     isSelected: (i) =>
@@ -183,47 +162,44 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
               ),
             ),
 
-            // ── The two options that apply to both families ──
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                16,
-                6,
-                16,
-                12 + MediaQuery.of(context).padding.bottom,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _MiniSwitch(
-                      label: 'home.clock_12h'.tr(),
-                      value: cs.use12Hour,
-                      onChanged: notifier.set12Hour,
-                    ),
-                  ),
-                  Expanded(
-                    child: _MiniSwitch(
-                      label: 'home.clock_seconds'.tr(),
-                      value: cs.showSeconds,
-                      onChanged: notifier.setShowSeconds,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
+    );
+  }
+
+  /// The two switches that apply to both families, pinned under the grid so
+  /// they stay reachable however far the reader has scrolled.
+  Widget _bothFamiliesOptions(ClockSettings cs, ClockSettingsNotifier n) {
+    return Container(
+      padding: const EdgeInsets.only(top: 8),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _MiniSwitch(
+              label: 'home.clock_12h'.tr(),
+              value: cs.use12Hour,
+              onChanged: n.set12Hour,
+            ),
+          ),
+          Expanded(
+            child: _MiniSwitch(
+              label: 'home.clock_seconds'.tr(),
+              value: cs.showSeconds,
+              onChanged: n.setShowSeconds,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class _FaceGrid extends StatelessWidget {
-  final ScrollController scrollController;
   final int itemCount;
   final double aspectRatio;
   final bool Function(int) isSelected;
@@ -232,7 +208,6 @@ class _FaceGrid extends StatelessWidget {
   final Widget Function(int) preview;
 
   const _FaceGrid({
-    required this.scrollController,
     required this.itemCount,
     required this.aspectRatio,
     required this.isSelected,
@@ -244,7 +219,6 @@ class _FaceGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      controller: scrollController,
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

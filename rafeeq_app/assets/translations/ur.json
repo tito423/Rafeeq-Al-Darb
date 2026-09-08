@@ -79,7 +79,8 @@
     "face_skeleton": "قوسیں",
     "face_sunMoon": "سورج اور چاند",
     "face_halo": "ہالہ",
-    "face_mosaic": "موزیک"
+    "face_mosaic": "موزیک",
+    "clock_gallery_subtitle": "ہر ڈائل اصل وقت زندہ دکھاتا ہے"
   },
   "quran": {
     "surah_list": "سورتیں",
@@ -302,7 +303,7 @@
     "isha": "عشاء",
     "adhan": "اذان",
     "adhan_settings": "اذان کی ترتیبات",
-    "choose_adhan": "اذان کی آواز منتخب کریں",
+    "choose_adhan": "اذان کی آواز",
     "custom_adhan": "آلے سے اپنی اذان",
     "pick_file": "MP3 فائل منتخب کریں",
     "test": "آزمائیں",
@@ -347,8 +348,6 @@
     "presentation_audio": "آواز",
     "presentation_video": "ویڈیو",
     "adhan_video": "اذان کی ویڈیو",
-    "video_select": "منتخب کریں",
-    "video_selected": "منتخب شدہ",
     "video_preview": "معائنہ",
     "per_prayer_desc": "ہر نماز کے لیے الگ طریقہ اور مؤذن",
     "azan_of": "اذان — نمازِ {}",

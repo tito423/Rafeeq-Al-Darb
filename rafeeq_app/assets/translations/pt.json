@@ -79,7 +79,8 @@
     "face_skeleton": "Arcos",
     "face_sunMoon": "Sol e lua",
     "face_halo": "Halo",
-    "face_mosaic": "Mosaico"
+    "face_mosaic": "Mosaico",
+    "clock_gallery_subtitle": "Cada mostrador exibe a hora real, ao vivo"
   },
   "quran": {
     "surah_list": "Suratas",
@@ -302,7 +303,7 @@
     "isha": "Isha",
     "adhan": "Adhan",
     "adhan_settings": "Definições do adhan",
-    "choose_adhan": "Escolha o som do adhan",
+    "choose_adhan": "Voz do adhan",
     "custom_adhan": "Adhan personalizado do dispositivo",
     "pick_file": "Escolher ficheiro MP3",
     "test": "Testar",
@@ -342,8 +343,6 @@
     "presentation_audio": "Áudio",
     "presentation_video": "Vídeo",
     "adhan_video": "Vídeo do adhan",
-    "video_select": "Selecionar",
-    "video_selected": "Selecionado",
     "video_preview": "Pré-visualizar",
     "per_prayer_desc": "Um modo e muezim por oração",
     "azan_of": "Adhan — oração do {}",

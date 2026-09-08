@@ -72,17 +72,35 @@ class _AnalogClockFaceViewState extends State<AnalogClockFaceView>
           _now,
           arabicDigits: widget.arabicDigits,
         ),
+        // The AM/PM marker sits on the dial's vertical axis, which is exactly
+        // where the minute and second hands spend a good part of every hour.
+        // Bare text there is unreadable half the time — on the device it read
+        // as a broken half-glyph with the minute hand through it. A capsule
+        // in the dial's own dark gives it a ground of its own, so it stays
+        // legible whatever the hands are doing. No letterSpacing: on a
+        // one- or two-letter Arabic marker («ص» / «م») it only adds a
+        // trailing gap that throws the centring off.
         child: widget.meridiem == null || !_hasMeridiemRoom(widget.face)
             ? null
             : Align(
-                alignment: const Alignment(0, 0.44),
-                child: Text(
-                  widget.meridiem!,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.72),
-                    fontSize: widget.size * 0.075,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.5,
+                alignment: const Alignment(0, 0.52),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: widget.size * 0.045,
+                    vertical: widget.size * 0.012,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.55),
+                    borderRadius: BorderRadius.circular(widget.size),
+                  ),
+                  child: Text(
+                    widget.meridiem!,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.85),
+                      fontSize: widget.size * 0.075,
+                      fontWeight: FontWeight.w700,
+                      height: 1.1,
+                    ),
                   ),
                 ),
               ),

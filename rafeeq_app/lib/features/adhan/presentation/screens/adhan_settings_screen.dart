@@ -1012,56 +1012,56 @@ class _VideoRow extends StatelessWidget {
     final downloaded = downloadedPath != null;
     final sizeMb = (option.approxSizeBytes / 1000000).toStringAsFixed(1);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Icon(
-            downloaded
-                ? (selected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked)
-                : Icons.movie_outlined,
-            size: 20,
-            color: selected ? AppColors.gold : scheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: GestureDetector(
-              onTap: downloaded ? onSelect : null,
+    // Selecting a clip is a tap on the row, not a button labelled
+    // «اختر»/«مختار» beside it. The owner asked for that word gone: the
+    // radio glyph already says which one is chosen, and a word that changes
+    // between "select" and "selected" made the row read like a form field
+    // rather than a list you pick from.
+    return InkWell(
+      onTap: downloaded ? onSelect : null,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        child: Row(
+          children: [
+            Icon(
+              downloaded
+                  ? (selected
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked)
+                  : Icons.movie_outlined,
+              size: 20,
+              color: selected ? AppColors.gold : scheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
               child: Text(option.nameAr,
                   style: TextStyle(
                       fontWeight:
                           selected ? FontWeight.w700 : FontWeight.w400)),
             ),
-          ),
-          if (busy)
-            SizedBox(
-              width: 90,
-              child: LinearProgressIndicator(
-                value: task!.total == null ? null : task!.progress,
-                color: AppColors.gold,
+            if (busy)
+              SizedBox(
+                width: 90,
+                child: LinearProgressIndicator(
+                  value: task!.total == null ? null : task!.progress,
+                  color: AppColors.gold,
+                ),
+              )
+            else if (downloaded)
+              IconButton(
+                tooltip: 'prayer.video_preview'.tr(),
+                icon: const Icon(Icons.play_circle_outline),
+                onPressed: onPreview,
+              )
+            else
+              OutlinedButton.icon(
+                onPressed: onDownload,
+                icon: const Icon(Icons.download_rounded, size: 16),
+                label: Text('$sizeMb MB'),
               ),
-            )
-          else if (downloaded) ...[
-            IconButton(
-              tooltip: 'prayer.video_preview'.tr(),
-              icon: const Icon(Icons.play_circle_outline),
-              onPressed: onPreview,
-            ),
-            TextButton(
-              onPressed: onSelect,
-              child: Text(selected
-                  ? 'prayer.video_selected'.tr()
-                  : 'prayer.video_select'.tr()),
-            ),
-          ] else
-            OutlinedButton.icon(
-              onPressed: onDownload,
-              icon: const Icon(Icons.download_rounded, size: 16),
-              label: Text('$sizeMb MB'),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
