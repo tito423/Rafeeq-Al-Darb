@@ -32,9 +32,13 @@ never a guess. Bukhari and Muslim stay NULL too: they're sahih by definition
 (that's what "sahih" in their titles means, and is exactly what the grading
 source itself encodes by leaving every one of their rows blank) — the app
 shows a "من الصحيحين" badge for those two books directly, not from this
-column. No graded, redistributable source was found for Muwatta Malik (or
-for Ahmad/al-Darimi, the two extra books beyond the Home card's needed 7) —
-their `grade`/`grader` are honestly NULL, not invented.
+column. No graded, redistributable source was found for Muwatta Malik or
+al-Darimi — their `grade`/`grader` are honestly NULL, not invented.
+
+Musnad Ahmad no longer comes from that dataset at all: see
+`load_arnaut_musnad` below. Its 1,374-hadith, 8-chapter stub is replaced by
+the complete Arna'ut edition, which brings the real musnad structure and his
+ruling on each hadith with it.
 """
 import glob
 import io
@@ -101,6 +105,42 @@ def load_grades(book_key):
             continue
         index[key] = _split_grade(raw_grade)
     return index
+
+ARNAUT_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "musnad_ahmad_arnaut.json")
+ARNAUT_GRADER = "شعيب الأرناؤوط"
+
+
+def load_arnaut_musnad():
+    """Musnad Ahmad from the Arna'ut edition, replacing the upstream stub.
+
+    hadith-json's Musnad Ahmad is 1,374 hadiths in 8 chapters -- its own
+    metadata says `length: 1374`, and chapters 8 to 30 are simply absent
+    upstream, so it is a fragment of a ~27,000-hadith book rather than a
+    truncated download. It also carries no grading at all.
+
+    `مسند أحمد - ط الرسالة` (تحقيق شعيب الأرناؤوط ومن معه) supplies all three
+    missing pieces from one named edition: the complete text, the real
+    musnad-by-companion structure, and Arna'ut's ruling under each hadith.
+    See fetch_musnad_ahmad_arnaut.py and parse_musnad_ahmad_arnaut.py; a
+    hadith the edition does not rule on keeps `grade` NULL, never a guess.
+
+    Returns None when the file has not been built, so a plain checkout still
+    produces a database (with the old stub) instead of failing.
+    """
+    if not os.path.exists(ARNAUT_PATH):
+        return None
+    with open(ARNAUT_PATH, encoding="utf-8") as f:
+        d = json.load(f)
+    chapters = [{"id": c["no"], "arabic": c["name_ar"], "english": ""}
+                for c in d["chapters"]]
+    hadiths = [{"chapterId": h["chapter_no"], "idInBook": h["number"],
+                "arabic": h["arabic"], "english": None,
+                "_grade": h["grade"],
+                "_grader": ARNAUT_GRADER if h["grade"] else None}
+               for h in d["hadiths"]]
+    return chapters, hadiths
+
 
 report = io.StringIO()
 
@@ -179,6 +219,13 @@ for order, key in enumerate(BOOK_ORDER, start=1):
     hadiths = data["hadiths"]
     grades = load_grades(key)
     book_graded = 0
+    source_note = ""
+
+    if key == "ahmed":
+        arnaut = load_arnaut_musnad()
+        if arnaut:
+            chapters, hadiths = arnaut
+            source_note = " [ط الرسالة، تحقيق شعيب الأرناؤوط]"
 
     cur.execute(
         "INSERT INTO books(id, book_key, sort_order, name_ar, name_en, "
@@ -207,10 +254,15 @@ for order, key in enumerate(BOOK_ORDER, start=1):
             eng if isinstance(eng, str) else None
         )
         grade_text = grader = None
-        hit = grades.get(_norm_arabic(h["arabic"] or ""))
-        if hit:
-            grade_text, grader = hit
+        if h.get("_grade"):
+            # Already carries the editor's own ruling (Musnad Ahmad).
+            grade_text, grader = h["_grade"], h["_grader"]
             book_graded += 1
+        else:
+            hit = grades.get(_norm_arabic(h["arabic"] or ""))
+            if hit:
+                grade_text, grader = hit
+                book_graded += 1
         cur.execute(
             "INSERT INTO hadiths(book_id, chapter_no, number_in_book, "
             "arabic, narrator_en, text_en, grade, grader) VALUES(?,?,?,?,?,?,?,?)",
@@ -221,7 +273,8 @@ for order, key in enumerate(BOOK_ORDER, start=1):
     total_graded += book_graded
     out(f"{key}: {meta['english']['title']} — "
         f"{len(chapters)} chapters, {len(hadiths)} hadiths, "
-        f"{book_graded} graded" + (" (no graded source)" if not grades else ""))
+        f"{book_graded} graded" + source_note
+        + (" (no graded source)" if not grades and not book_graded else ""))
 
 cur.execute("INSERT INTO hadiths_fts(rowid, arabic, text_en) "
             "SELECT id, arabic, text_en FROM hadiths")

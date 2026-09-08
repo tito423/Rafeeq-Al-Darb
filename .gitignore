@@ -61,3 +61,8 @@ scripts/compressed_sizes.jsonl
 # Release APKs staged for upload — the artifact lives on the GitHub release,
 # never in the repo (a 240 MB binary per version would bloat it permanently).
 RafeeqAlDarb-*.apk
+
+# The Musnad Ahmad page cache: ~23k raw Shamela pages, several hundred MB,
+# regenerable with scripts/fetch_musnad_ahmad_arnaut.py. The parsed result
+# (musnad_ahmad_arnaut.json) is what the build actually reads.
+scripts/musnad_ahmad_arnaut_pages.jsonl

@@ -6,21 +6,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/mushaf_edition.dart';
-import '../../../quran/presentation/widgets/mushaf_3d_thumbnail.dart';
+import '../../../quran/presentation/widgets/mushaf_page_thumbnail.dart';
 import 'mushaf_preview_sheet.dart';
-
-Color _coverColor(String id) {
-  switch (id) {
-    case 'hafs_kfqc': return const Color(0xFF1E3A5F); // Blue
-    case 'tajweed_color': return const Color(0xFF8B0000); // Dark Red
-    case 'warsh': return const Color(0xFF12294F); // Royal navy
-    case 'qaloon': return const Color(0xFF5A1E2B); // Wine maroon
-    case 'shamarly': return const Color(0xFF1C1C1C); // Black & gold board
-    case 'madinah_gold': return const Color(0xFF5C4310); // Antique gold
-    case 'indopak_tajweed': return const Color(0xFF0B4A47); // Teal
-    default: return const Color(0xFF1E3A5F);
-  }
-}
 
 String formatBytes(int bytes) {
   if (bytes < 1024) return '$bytes B';
@@ -158,11 +145,11 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 3D Leather Cover rendering for the edition.
-            Mushaf3DThumbnail(
-              coverColor: _coverColor(e.id),
-              width: 52,
-              height: 70,
+            // The edition's own first page, falling back to its leather
+            // cover while that loads.
+            MushafPageThumbnail(
+              edition: e,
+              width: 60,
             ),
             const SizedBox(width: 14),
             Expanded(
