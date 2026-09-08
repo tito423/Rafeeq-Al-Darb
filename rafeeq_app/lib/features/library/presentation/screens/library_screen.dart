@@ -128,7 +128,7 @@ class _BooksTabState extends State<_BooksTab> {
     final paths = <String, String>{};
     for (final book in libraryBookCatalog) {
       if (await LibraryApiService.instance.isBookDownloaded(book.id)) {
-        paths[book.id] = 'sqlite'; // just a marker
+        paths[book.id] = await LibraryApiService.instance.bookFilePath(book.id);
       }
     }
     if (mounted) {
@@ -150,13 +150,17 @@ class _BooksTabState extends State<_BooksTab> {
       await _loadRegistry();
     } catch (e) {
       debugPrint(e.toString());
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${'errors.offline'.tr()}\n$e')),
+      );
     }
   }
 
   void _open(LibraryBook book) {
     if (!_paths.containsKey(book.id)) return;
     Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (_) => BookTextReaderScreen(book: book, path: 'sqlite'),
+      builder: (_) => BookTextReaderScreen(book: book, path: _paths[book.id]!),
     ));
   }
 
@@ -882,7 +886,8 @@ class _BookListState extends State<_BookList> {
     final paths = <String, String>{};
     for (final book in _hadithTexts) {
       if (await LibraryApiService.instance.isBookDownloaded(book.id)) {
-        paths[book.id] = 'sqlite'; // marker, same as the Books tab uses
+        paths[book.id] =
+            await LibraryApiService.instance.bookFilePath(book.id);
       }
     }
     if (!mounted) return;
@@ -897,10 +902,10 @@ class _BookListState extends State<_BookList> {
     try {
       await LibraryApiService.instance.downloadBook(book.id, edition.url);
       await _loadRegistry();
-    } catch (_) {
+    } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('errors.offline'.tr())),
+        SnackBar(content: Text('${'errors.offline'.tr()}\n$e')),
       );
     }
   }
@@ -908,7 +913,7 @@ class _BookListState extends State<_BookList> {
   void _open(LibraryBook book) {
     if (!_paths.containsKey(book.id)) return;
     Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (_) => BookTextReaderScreen(book: book, path: 'sqlite'),
+      builder: (_) => BookTextReaderScreen(book: book, path: _paths[book.id]!),
     ));
   }
 

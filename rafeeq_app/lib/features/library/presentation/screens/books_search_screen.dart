@@ -70,13 +70,15 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
     }
   }
 
-  void _open(BookSearchHit hit) {
+  Future<void> _open(BookSearchHit hit) async {
     final book = libraryBookCatalog.where((b) => b.id == hit.bookId).firstOrNull;
     if (book == null) return;
+    final path = await LibraryApiService.instance.bookFilePath(hit.bookId);
+    if (!mounted) return;
     Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (_) => BookTextReaderScreen(
         book: book,
-        path: 'sqlite',
+        path: path,
         initialPageIndex: hit.pageIndex,
       ),
     ));
