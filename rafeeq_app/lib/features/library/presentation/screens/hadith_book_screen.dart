@@ -21,35 +21,15 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: Text(widget.book.nameAr)),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-            // P3‑56: the imam name is now `Expanded` + ellipsis so a long one
-            // (e.g. "الإمام أبو عبد الرحمن أحمد بن شعيب النسائي") can't push the
-            // counts off the edge and trip a RenderFlex overflow.
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.book.authorAr,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: scheme.onSurfaceVariant),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '${widget.book.chapterCount} ${'library.chapters'.tr()} · '
-                  '${widget.book.hadithCount} ${'library.hadiths_count'.tr()}',
-                  style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
+          // The imam's name and the chapter/hadith counts used to repeat
+          // here under the book title. They already appear in full on the
+          // collection's own card in the library list, which is where a
+          // reader chooses the book — repeating them above every chapter
+          // list was just a second header competing with the AppBar title.
           Expanded(
             child: FutureBuilder<List<HadithChapter>>(
               future: _future,
@@ -79,7 +59,7 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
                               c.nameEn.isNotEmpty)
                           ? Text(c.nameEn)
                           : null,
-                      trailing: const Icon(Icons.chevron_left),
+                      trailing: const Icon(Icons.chevron_right),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute<void>(
                           builder: (_) => HadithChapterScreen(

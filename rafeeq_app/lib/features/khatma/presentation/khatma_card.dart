@@ -69,7 +69,7 @@ class _EmptyState extends StatelessWidget {
             ],
           ),
         ),
-        Icon(Icons.chevron_left, color: theme.colorScheme.outline),
+        Icon(Icons.chevron_right, color: theme.colorScheme.outline),
       ],
     );
   }

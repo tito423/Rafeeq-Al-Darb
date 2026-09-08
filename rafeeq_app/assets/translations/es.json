@@ -118,7 +118,9 @@
     "gharib_description": "Significados palabra por palabra extraídos de la base de datos del Complejo Rey Fahd para la Impresión del Noble Corán.",
     "gharib_unavailable": "Lo sentimos, el significado de las palabras no está disponible para esta sura.",
     "downloading_translation": "Descargando la traducción al {}…",
-    "translation_not_downloaded": "La traducción al {} aún no está descargada"
+    "translation_not_downloaded": "La traducción al {} aún no está descargada",
+    "layout_page": "Vista de página",
+    "layout_cards": "Vista de tarjetas"
   },
   "library": {
     "title": "Biblioteca",

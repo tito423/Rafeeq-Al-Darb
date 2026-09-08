@@ -19,6 +19,7 @@ import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
 import '../../data/quran_fullscreen_provider.dart';
 import '../../data/quran_jump_provider.dart';
+import '../../data/text_layout_provider.dart';
 import '../../data/quran_last_read.dart';
 import '../widgets/ayah_sciences_sheet.dart';
 import '../widgets/mushaf_edition_sheet.dart';
@@ -383,6 +384,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // coerces the reader into image mode and hides the text/image toggle and
     // the text-only controls for those editions.
     final edition = ref.watch(currentMushafEditionProvider).valueOrNull;
+    final textLayout = ref.watch(quranTextLayoutProvider);
     final isRaster = edition?.isRaster ?? false;
     // Adopt the open edition's real page count. Plain assignment rather than
     // setState: we are already inside build and the new value is used by this
@@ -449,6 +451,20 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           runSpacing: 0,
                           children: [
                             if (_mode == MushafMode.text && !isRaster) ...[
+                              // Both verse layouts are real reading
+                              // preferences, so this switches between them
+                              // rather than one replacing the other.
+                              ToolbarAction(
+                                icon: textLayout == QuranTextLayout.page
+                                    ? Icons.view_agenda_outlined
+                                    : Icons.article_outlined,
+                                label: textLayout == QuranTextLayout.page
+                                    ? 'quran.layout_cards'.tr()
+                                    : 'quran.layout_page'.tr(),
+                                onPressed: () => ref
+                                    .read(quranTextLayoutProvider.notifier)
+                                    .toggle(),
+                              ),
                               ToolbarAction(
                                 icon: Icons.text_decrease,
                                 label: 'quran.font_smaller'.tr(),
@@ -600,10 +616,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                         ? (isLandscape ? 36 : 56)
                         : 0,
                   ),
-                  child: _buildViewer(
-                    data,
-                    ref.watch(currentMushafEditionProvider).valueOrNull,
-                  ),
+                  child: _buildViewer(data, edition, textLayout),
                 ),
                 // P3‑43 #7 / P3‑51: the surah name (top-right) and juz (top-left)
                 // running header stays on screen regardless of toolbar/full-screen
@@ -708,7 +721,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     );
   }
 
-  Widget _buildViewer(MushafData data, MushafEdition? edition) {
+  Widget _buildViewer(
+    MushafData data,
+    MushafEdition? edition,
+    QuranTextLayout textLayout,
+  ) {
     _pages ??= PageController(initialPage: _initialPage - 1);
     return PageView.builder(
       controller: _pages,
@@ -749,6 +766,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               );
             }
             return MushafTextPage(
+              layout: textLayout,
               ayahs: ayahs,
               surahNameOf: data.surahNameAr,
               playingSurah: _recite.active ? _recite.surahId : null,

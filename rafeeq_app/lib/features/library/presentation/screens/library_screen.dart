@@ -907,7 +907,7 @@ class _HadithBookTile extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Icon(Icons.chevron_left, color: scheme.onSurfaceVariant),
+                  Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
                 ],
               ),
               if (bio != null) ...[

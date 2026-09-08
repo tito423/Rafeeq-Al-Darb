@@ -118,7 +118,9 @@
     "recite_pause": "Pause / resume",
     "recite_next": "Next verse",
     "downloading_translation": "Downloading {} translation…",
-    "translation_not_downloaded": "The {} translation is not downloaded yet"
+    "translation_not_downloaded": "The {} translation is not downloaded yet",
+    "layout_page": "Page layout",
+    "layout_cards": "Card layout"
   },
   "library": {
     "title": "Library",

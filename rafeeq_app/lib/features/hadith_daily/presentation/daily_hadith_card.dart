@@ -273,6 +273,46 @@ class _PickedHadith extends ConsumerStatefulWidget {
 }
 
 class _PickedHadithState extends ConsumerState<_PickedHadith> {
+  /// Opens the day's hadith inside its own chapter rather than on its own.
+  ///
+  /// It used to be pushed as a one-item list, which meant the detail screen's
+  /// Prev/Next buttons had nowhere to go and its swipe `PageView` had a single
+  /// page — the navigation looked broken because there was genuinely nothing
+  /// to navigate to. Loading the chapter gives those controls real neighbours,
+  /// with the day's hadith as the starting page. If the chapter can't be read
+  /// for any reason we fall back to the single hadith, which is no worse than
+  /// the old behaviour.
+  Future<void> _openDetail(DailyHadith daily) async {
+    var chapter = <HadithItem>[daily.item];
+    var index = 0;
+    try {
+      final repo = await ref.read(hadithRepositoryProvider.future);
+      if (repo != null) {
+        final all = await repo.hadithsOfChapter(
+          daily.item.bookId,
+          daily.item.chapterNo,
+        );
+        final at = all.indexWhere((h) => h.id == daily.item.id);
+        if (at >= 0) {
+          chapter = all;
+          index = at;
+        }
+      }
+    } catch (_) {
+      // keep the single-hadith fallback
+    }
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => HadithDetailScreen(
+          book: daily.book,
+          chapterHadiths: chapter,
+          initialIndex: index,
+        ),
+      ),
+    );
+  }
+
   // P3‑36: local, layout-invisible "in flight" flag for the reroll button's
   // own spinner — deliberately NOT derived from the provider's AsyncValue
   // (see the doc on `DailyHadithNotifier.reroll`), so a reroll can never
@@ -304,15 +344,7 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
         final book = daily.book;
 
         return InkWell(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (_) => HadithDetailScreen(
-                book: book,
-                chapterHadiths: [item],
-                initialIndex: 0,
-              ),
-            ),
-          ),
+          onTap: () => _openDetail(daily),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

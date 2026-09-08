@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none"
+     stroke-linecap="round">
+  <!-- "Steps of prayer": the three postures of a rak'ah — qiyam (standing with
+       the forearms folded), ruku' (bowing, hands to the knees) and sujud
+       (prostration) — sharing one ground line inside a medallion.
+
+       Modelled on the reference the owner supplied, but drawn as a monochrome
+       SVG rather than shipping his raster PNG: it then inherits the card's
+       gold tint, stays sharp at any size and needs no network fetch. Material
+       has no praying glyph, and the meditation icon that was here read as
+       yoga rather than salah. -->
+
+  <!-- Medallion -->
+  <circle cx="48" cy="48" r="45" stroke="currentColor" stroke-width="3"
+          opacity="0.5"/>
+  <circle cx="48" cy="48" r="39.5" stroke="currentColor" stroke-width="1.4"
+          opacity="0.28"/>
+
+  <!-- ── Qiyam ── -->
+  <circle cx="21" cy="31" r="4" fill="currentColor"/>
+  <path d="M21 36v18" stroke="currentColor" stroke-width="7"/>
+  <path d="M16 45.5h10" stroke="currentColor" stroke-width="3"/>
+  <path d="M18.6 55v14" stroke="currentColor" stroke-width="3.4"/>
+  <path d="M23.4 55v14" stroke="currentColor" stroke-width="3.4"/>
+
+  <!-- ── Ruku' ── -->
+  <circle cx="38" cy="45" r="4" fill="currentColor"/>
+  <path d="M42.5 45h11" stroke="currentColor" stroke-width="7"/>
+  <path d="M45 49.5v9.5" stroke="currentColor" stroke-width="2.8"/>
+  <path d="M52 49v20" stroke="currentColor" stroke-width="3.4"/>
+  <path d="M56 49v20" stroke="currentColor" stroke-width="3.4"/>
+
+  <!-- ── Sujud ── -->
+  <circle cx="68" cy="65" r="3.8" fill="currentColor"/>
+  <path d="M72 65.5c1.5-7.5 5-11.5 10-11.5" stroke="currentColor"
+        stroke-width="6.5"/>
+  <path d="M82 54.5v14.5" stroke="currentColor" stroke-width="3.4"/>
+  <path d="M77.5 56.5c-2.5 3-3.5 6.5-3.5 12.5" stroke="currentColor"
+        stroke-width="3"/>
+
+  <!-- Shared ground -->
+  <path d="M14 71h68" stroke="currentColor" stroke-width="2.6" opacity="0.6"/>
+</svg>

@@ -432,7 +432,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                trailing: const Icon(Icons.chevron_left),
+                trailing: const Icon(Icons.chevron_right),
                 onTap: () => _openFullScreen(
                   title: 'prayer.default_adhan_label'.tr(),
                   builder: (context) => ListView(
@@ -480,7 +480,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                   'prayer.per_prayer_desc'.tr(),
                   maxLines: 2,
                 ),
-                trailing: const Icon(Icons.chevron_left),
+                trailing: const Icon(Icons.chevron_right),
                 onTap: () => _openFullScreen(
                   title: 'prayer.per_prayer'.tr(),
                   builder: (context) => ListView(

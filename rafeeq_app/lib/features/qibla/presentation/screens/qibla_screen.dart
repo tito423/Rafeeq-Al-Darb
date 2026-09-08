@@ -525,7 +525,7 @@ class _PrayerAdjustmentsLink extends StatelessWidget {
         title: Text('prayer.adjustments'.tr()),
         subtitle: Text('prayer.adjustments_hint'.tr(),
             style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
-        trailing: const Icon(Icons.chevron_left),
+        trailing: const Icon(Icons.chevron_right),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => const PrayerAdjustmentsScreen(),
@@ -548,7 +548,7 @@ class _AdhanSettingsLink extends StatelessWidget {
         title: Text('prayer.adhan_settings'.tr()),
         subtitle: Text('qibla.adhan_settings_hint'.tr(),
             style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
-        trailing: const Icon(Icons.chevron_left),
+        trailing: const Icon(Icons.chevron_right),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => const AdhanSettingsScreen(),

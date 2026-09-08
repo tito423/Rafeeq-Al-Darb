@@ -118,7 +118,9 @@
     "recite_pause": "وقفہ / جاری",
     "recite_next": "اگلی آیت",
     "downloading_translation": "{} ترجمہ ڈاؤن لوڈ ہو رہا ہے…",
-    "translation_not_downloaded": "{} ترجمہ ابھی ڈاؤن لوڈ نہیں ہوا"
+    "translation_not_downloaded": "{} ترجمہ ابھی ڈاؤن لوڈ نہیں ہوا",
+    "layout_page": "صفحہ نما",
+    "layout_cards": "کارڈ نما"
   },
   "library": {
     "title": "کتب خانہ",

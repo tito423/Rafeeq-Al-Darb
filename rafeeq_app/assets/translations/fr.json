@@ -118,7 +118,9 @@
     "gharib_description": "Sens mot à mot extraits de la base de données du Complexe du Roi Fahd pour l’impression du Noble Coran.",
     "gharib_unavailable": "Désolé, le sens des mots n’est pas disponible pour cette sourate.",
     "downloading_translation": "Téléchargement de la traduction en {}…",
-    "translation_not_downloaded": "La traduction en {} n'est pas encore téléchargée"
+    "translation_not_downloaded": "La traduction en {} n'est pas encore téléchargée",
+    "layout_page": "Vue page",
+    "layout_cards": "Vue cartes"
   },
   "library": {
     "title": "Bibliothèque",

@@ -118,7 +118,9 @@
     "gharib_description": "Пословные значения из базы данных Комплекса имени короля Фахда по изданию Священного Корана.",
     "gharib_unavailable": "К сожалению, значения слов для этой суры недоступны.",
     "downloading_translation": "Загрузка перевода на {}…",
-    "translation_not_downloaded": "Перевод на {} ещё не загружен"
+    "translation_not_downloaded": "Перевод на {} ещё не загружен",
+    "layout_page": "Вид страницы",
+    "layout_cards": "Вид карточек"
   },
   "library": {
     "title": "Библиотека",

@@ -1,5 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../core/theme/app_colors.dart';
 
 import '../../data/guide_content.dart';
 import 'new_muslim_section_screen.dart';
@@ -8,8 +12,26 @@ const _icons = {
   'pillars': Icons.mosque_outlined,
   'faith': Icons.favorite_outline,
   'wudu': Icons.water_drop_outlined,
-  'prayer': Icons.self_improvement_outlined,
+  // 'prayer' is drawn from assets/icons/praying_person.svg instead — see
+  // _sectionBackgrounds' neighbour below. Material has no praying glyph and
+  // the meditation one that was here read as yoga, not salah.
   'quran': Icons.menu_book_outlined,
+};
+
+/// A real Islamic photograph behind each card, each one checked by eye before
+/// being used — several plausible-looking Unsplash ids turned out to be
+/// autumn leaves, a fashion illustration and a climbing gym.
+const _sectionBackgrounds = <String, String>{
+  'pillars':
+      'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=640&q=70&fit=crop',
+  'faith':
+      'https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=640&q=70&fit=crop',
+  'wudu':
+      'https://images.unsplash.com/photo-1548013146-72479768bada?w=640&q=70&fit=crop',
+  'prayer':
+      'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=640&q=70&fit=crop',
+  'quran':
+      'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=640&q=70&fit=crop',
 };
 
 /// New Muslim Guide (WORK_QUEUE Stage 5) — pillars of Islam, articles of
@@ -23,7 +45,6 @@ class NewMuslimGuideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAr = context.locale.languageCode == 'ar';
-    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text('new_muslim.title'.tr())),
@@ -38,58 +59,104 @@ class NewMuslimGuideScreen extends StatelessWidget {
         itemCount: newMuslimGuideSections.length,
         itemBuilder: (context, i) {
           final section = newMuslimGuideSections[i];
+          final bg = _sectionBackgrounds[section.icon];
           return Card(
             clipBehavior: Clip.antiAlias,
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
               side: BorderSide(
-                color: scheme.outlineVariant.withValues(alpha: 0.5),
+                color: AppColors.gold.withValues(alpha: 0.35),
               ),
             ),
-            child: InkWell(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => NewMuslimSectionScreen(section: section),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                if (bg != null)
+                  CachedNetworkImage(
+                    imageUrl: bg,
+                    fit: BoxFit.cover,
+                    memCacheWidth: 640,
+                    // No placeholder art: an empty card simply shows the
+                    // scrim and stays perfectly readable, which is better
+                    // than a grey block flashing on every scroll.
+                    errorWidget: (_, _, _) => const SizedBox.shrink(),
+                  ),
+                // A scrim dark enough that the title and count keep their
+                // contrast over any photo underneath.
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.45),
+                        Colors.black.withValues(alpha: 0.72),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: scheme.primaryContainer.withValues(alpha: 0.6),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        _icons[section.icon] ?? Icons.book_outlined,
-                        size: 36,
-                        color: scheme.onPrimaryContainer,
-                      ),
+                InkWell(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => NewMuslimSectionScreen(section: section),
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      isAr ? section.titleAr : section.titleEn,
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.35),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.gold.withValues(alpha: 0.6),
+                            ),
+                          ),
+                          child: section.icon == 'prayer'
+                              ? SvgPicture.asset(
+                                  'assets/icons/praying_person.svg',
+                                  width: 34,
+                                  height: 34,
+                                  colorFilter: const ColorFilter.mode(
+                                      AppColors.gold, BlendMode.srcIn),
+                                )
+                              : Icon(
+                                  _icons[section.icon] ?? Icons.book_outlined,
+                                  size: 34,
+                                  color: AppColors.gold,
+                                ),
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          isAr ? section.titleAr : section.titleEn,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${section.items.length} ${isAr ? "بنود" : "points"}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: Colors.white70),
+                        ),
+                      ],
                     ),
-                    const Spacer(),
-                    Text(
-                      '${section.items.length} ${isAr ? "بنود" : "points"}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: scheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           );
         },

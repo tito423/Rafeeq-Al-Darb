@@ -437,7 +437,7 @@ class _TopicsTabState extends State<_TopicsTab> {
               margin: const EdgeInsets.only(bottom: 6),
               child: ListTile(
                 title: Text(topic.labelKey.tr()),
-                trailing: const Icon(Icons.chevron_left),
+                trailing: const Icon(Icons.chevron_right),
                 onTap: () => _selectTopic(topic),
               ),
             ),

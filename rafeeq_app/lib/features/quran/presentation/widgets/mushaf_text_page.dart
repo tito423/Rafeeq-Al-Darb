@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderParagraph;
 
 import '../../../../core/db/models.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../data/text_layout_provider.dart';
 
 /// Renders one mushaf page (or a surah's ayahs) as a **vertical list** of
 /// individually-tappable ayah items, with the surah name pinned at the top
@@ -62,6 +64,9 @@ class MushafTextPage extends StatefulWidget {
   final int? playingSurah;
   final int? playingAyah;
 
+  /// Whether verses are set as boxed cards or as one flowing justified page.
+  final QuranTextLayout layout;
+
   const MushafTextPage({
     super.key,
     required this.ayahs,
@@ -78,6 +83,7 @@ class MushafTextPage extends StatefulWidget {
     this.onExitFullScreen,
     this.playingSurah,
     this.playingAyah,
+    this.layout = QuranTextLayout.page,
   });
 
   @override
@@ -89,7 +95,6 @@ class _MushafTextPageState extends State<MushafTextPage> {
 
   /// One key per ayah — used as scroll anchors for playing-verse tracking
   /// and auto-scroll end detection.
-  List<GlobalKey> _ayahKeys = const [];
 
   Timer? _autoTimer;
   bool _reachedEndFired = false;
@@ -104,14 +109,12 @@ class _MushafTextPageState extends State<MushafTextPage> {
   @override
   void initState() {
     super.initState();
-    _buildKeys();
     _syncAutoScroll();
   }
 
   @override
   void didUpdateWidget(covariant MushafTextPage old) {
     super.didUpdateWidget(old);
-    if (old.ayahs != widget.ayahs) _buildKeys();
     _syncAutoScroll();
     if (old.playingSurah != widget.playingSurah ||
         old.playingAyah != widget.playingAyah) {
@@ -119,21 +122,63 @@ class _MushafTextPageState extends State<MushafTextPage> {
     }
   }
 
-  void _buildKeys() {
-    _ayahKeys = List.generate(widget.ayahs.length, (_) => GlobalKey());
-  }
+  /// One key per flowing run, so the playing verse can be located inside
+  /// the paragraph that actually contains it.
+  List<GlobalKey> _runKeys = [];
+
+  /// One key per verse — only the card layout has a widget per verse to
+  /// attach them to; the flowing layout scrolls by glyph box instead.
+  List<GlobalKey> _ayahKeys = [];
+
+  /// (firstAyahIndex, lastAyahIndex) for each run, rebuilt every layout.
+  List<(int, int)> _runs = [];
 
   /// Brings the verse being recited into view.
+  ///
+  /// A verse no longer has a widget of its own — it is a span inside a
+  /// paragraph — so this asks the run's `_FlowingAyahs` where that span sits
+  /// and scrolls the viewport to it directly.
   void _scrollToPlayingAyah() {
     if (!widget.isActive) return;
     final index = _playingIndex;
-    if (index < 0 || index >= _ayahKeys.length) return;
+    if (index < 0) return;
+    if (widget.layout == QuranTextLayout.cards) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || index >= _ayahKeys.length) return;
+        final ctx = _ayahKeys[index].currentContext;
+        if (ctx == null || !_scroll.hasClients) return;
+        Scrollable.ensureVisible(
+          ctx,
+          alignment: 0.5,
+          duration: const Duration(milliseconds: 450),
+          curve: Curves.easeInOut,
+        );
+      });
+      return;
+    }
+    final runIndex = _runs.indexWhere((r) => index >= r.$1 && index <= r.$2);
+    if (runIndex < 0 || runIndex >= _runKeys.length) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctx = _ayahKeys[index].currentContext;
-      if (ctx == null || !mounted || !_scroll.hasClients) return;
-      Scrollable.ensureVisible(
-        ctx,
-        alignment: 0.5,
+      if (!mounted || !_scroll.hasClients) return;
+      final ctx = _runKeys[runIndex].currentContext;
+      if (ctx == null) return;
+      final state = ctx.findAncestorStateOfType<_FlowingAyahsState>() ??
+          (ctx is StatefulElement && ctx.state is _FlowingAyahsState
+              ? ctx.state as _FlowingAyahsState
+              : null);
+      final dy = state?.offsetOfAyah(index);
+      final box = ctx.findRenderObject();
+      if (dy == null || box is! RenderBox) return;
+      // The paragraph's own top in scroll coordinates, plus the verse's
+      // offset inside it, centred in the viewport.
+      final top = box.localToGlobal(Offset.zero).dy;
+      final viewport = _scroll.position.viewportDimension;
+      final target = _scroll.offset + top + dy - viewport / 2;
+      _scroll.animateTo(
+        target.clamp(
+          _scroll.position.minScrollExtent,
+          _scroll.position.maxScrollExtent,
+        ),
         duration: const Duration(milliseconds: 450),
         curve: Curves.easeInOut,
       );
@@ -246,19 +291,30 @@ class _MushafTextPageState extends State<MushafTextPage> {
       color: ink,
     );
 
-    // ── Build a flat list of item descriptors (surah banners + ayahs) ──
-    // Several short surahs may share one physical page, so every surah
-    // break gets its own banner row in the list.
+    // ── Build the page's rows: a banner wherever a surah starts, and one
+    // flowing run per contiguous stretch of the same surah's verses. ──
     final items = <_ListItem>[];
+    final runs = <(int, int)>[];
+    var runStart = 0;
     for (var i = 0; i < widget.ayahs.length; i++) {
       final ayah = widget.ayahs[i];
-      final isNewSurah = i == 0
-          ? ayah.ayahNumber == 1
-          : ayah.surahId != widget.ayahs[i - 1].surahId;
-      if (isNewSurah) {
-        items.add(_ListItem.banner(ayah.surahId));
+      final isNewSurah =
+          i == 0 ? ayah.ayahNumber == 1 : ayah.surahId != widget.ayahs[i - 1].surahId;
+      if (isNewSurah && i > 0) {
+        items.add(_ListItem.run(runs.length, runStart, i - 1));
+        runs.add((runStart, i - 1));
+        runStart = i;
       }
-      items.add(_ListItem.ayah(i));
+      if (isNewSurah) items.add(_ListItem.banner(ayah.surahId));
+    }
+    items.add(_ListItem.run(runs.length, runStart, widget.ayahs.length - 1));
+    runs.add((runStart, widget.ayahs.length - 1));
+    _runs = runs;
+    if (_runKeys.length != runs.length) {
+      _runKeys = List.generate(runs.length, (_) => GlobalKey());
+    }
+    if (_ayahKeys.length != widget.ayahs.length) {
+      _ayahKeys = List.generate(widget.ayahs.length, (_) => GlobalKey());
     }
 
     final body = NotificationListener<ScrollNotification>(
@@ -307,39 +363,57 @@ class _MushafTextPageState extends State<MushafTextPage> {
             ),
           ),
 
-          // ── Ayah list ──
+          // ── The page itself ──
+          //
+          // A real mushaf sets its verses as one continuous justified block,
+          // not as a stack of separate cards — that was the owner's ask, and
+          // it is also what makes the page look like the printed page it is
+          // meant to mirror. Each contiguous run of one surah's verses is a
+          // single justified paragraph; a surah change breaks the run so its
+          // banner can sit between them.
           SliverPadding(
             padding: EdgeInsets.symmetric(
-              horizontal: fill ? 8.0 : (isLandscape ? 32.0 : 16.0),
+              horizontal: fill ? 10.0 : (isLandscape ? 40.0 : 18.0),
               vertical: 12.0,
             ),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   final item = items[index];
-
-                  // ── Surah banner ──
                   if (item.isBanner) {
                     return _SurahBanner(
                       name: widget.surahNameOf(item.surahId!),
                     );
                   }
-
-                  // ── Ayah row ──
-                  final ayahIndex = item.ayahIndex!;
-                  final ayah = widget.ayahs[ayahIndex];
-                  final isPlaying = ayahIndex == playingIndex;
-
-                  return _AyahRow(
-                    key: _ayahKeys[ayahIndex],
-                    ayah: ayah,
-                    isPlaying: isPlaying,
+                  if (widget.layout == QuranTextLayout.cards) {
+                    return Column(
+                      children: [
+                        for (var i = item.runFrom!; i <= item.runTo!; i++)
+                          _AyahRow(
+                            key: _ayahKeys.length > i ? _ayahKeys[i] : null,
+                            ayah: widget.ayahs[i],
+                            isPlaying: i == playingIndex,
+                            textStyle: textStyle,
+                            onLongPress: () =>
+                                widget.onAyahTap(widget.ayahs[i]),
+                            onTap: widget.onBackgroundTap,
+                            onPlayTap: widget.onPlayTap != null
+                                ? () => widget.onPlayTap!(widget.ayahs[i])
+                                : null,
+                          ),
+                      ],
+                    );
+                  }
+                  return _FlowingAyahs(
+                    key: _runKeys[item.runIndex!],
+                    ayahs: widget.ayahs,
+                    from: item.runFrom!,
+                    to: item.runTo!,
+                    playingIndex: playingIndex,
                     textStyle: textStyle,
-                    onLongPress: () => widget.onAyahTap(ayah),
-                    onTap: widget.onBackgroundTap,
-                    onPlayTap: widget.onPlayTap != null
-                        ? () => widget.onPlayTap!(ayah)
-                        : null,
+                    onAyahTap: widget.onPlayTap,
+                    onAyahLongPress: widget.onAyahTap,
+                    onBackgroundTap: widget.onBackgroundTap,
                   );
                 },
                 childCount: items.length,
@@ -368,18 +442,32 @@ class _MushafTextPageState extends State<MushafTextPage> {
 
 // ─── Helper models ─────────────────────────────────────────────────────────
 
-/// Describes one row in the flat list: either a surah banner or an ayah.
+/// One row of the page: either a surah banner, or a run of verses belonging to
+/// the same surah that are set as a single flowing paragraph.
 class _ListItem {
   final bool isBanner;
-  final int? surahId; // only for banners
-  final int? ayahIndex; // only for ayahs (index into widget.ayahs)
+  final int? surahId; // banners only
+  final int? runIndex; // runs only — index into the page's run list
+  final int? runFrom; // runs only — first index into widget.ayahs
+  final int? runTo; // runs only — last index, inclusive
 
-  const _ListItem._({required this.isBanner, this.surahId, this.ayahIndex});
+  const _ListItem._({
+    required this.isBanner,
+    this.surahId,
+    this.runIndex,
+    this.runFrom,
+    this.runTo,
+  });
 
   factory _ListItem.banner(int surahId) =>
       _ListItem._(isBanner: true, surahId: surahId);
-  factory _ListItem.ayah(int ayahIndex) =>
-      _ListItem._(isBanner: false, ayahIndex: ayahIndex);
+
+  factory _ListItem.run(int runIndex, int from, int to) => _ListItem._(
+        isBanner: false,
+        runIndex: runIndex,
+        runFrom: from,
+        runTo: to,
+      );
 }
 
 // ─── Ayah row widget ───────────────────────────────────────────────────────
@@ -612,4 +700,154 @@ class _RosettePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _RosettePainter old) => old.color != color;
+}
+
+// ─── Flowing verses ────────────────────────────────────────────────────────
+
+/// One contiguous run of a surah's verses, set as a single justified paragraph
+/// the way a printed mushaf sets them.
+///
+/// Verses are spans, not widgets, so hit-testing is done against the laid-out
+/// paragraph: a tap is mapped to a text offset and then to the verse whose
+/// span covers it. That gives per-verse tap and long-press without breaking
+/// the text flow — which putting each verse in its own `InkWell` necessarily
+/// would.
+class _FlowingAyahs extends StatefulWidget {
+  final List<Ayah> ayahs;
+
+  /// Inclusive range into [ayahs] that this paragraph covers.
+  final int from;
+  final int to;
+
+  /// Index into [ayahs] of the verse being recited, or -1.
+  final int playingIndex;
+
+  final TextStyle textStyle;
+
+  /// Tap a verse: start (or jump) the recitation there.
+  final void Function(Ayah ayah)? onAyahTap;
+
+  /// Long-press a verse: open its sciences sheet.
+  final void Function(Ayah ayah) onAyahLongPress;
+
+  /// Tap outside any verse: toggle the reader's chrome.
+  final VoidCallback? onBackgroundTap;
+
+  const _FlowingAyahs({
+    super.key,
+    required this.ayahs,
+    required this.from,
+    required this.to,
+    required this.playingIndex,
+    required this.textStyle,
+    required this.onAyahLongPress,
+    this.onAyahTap,
+    this.onBackgroundTap,
+  });
+
+  @override
+  State<_FlowingAyahs> createState() => _FlowingAyahsState();
+}
+
+class _FlowingAyahsState extends State<_FlowingAyahs> {
+  final GlobalKey _textKey = GlobalKey();
+
+  /// (startOffset, endOffset, ayahIndex) for every verse in this paragraph,
+  /// in the same character space the laid-out paragraph uses.
+  List<(int, int, int)> _ranges = const [];
+
+  RenderParagraph? get _paragraph {
+    final ro = _textKey.currentContext?.findRenderObject();
+    return ro is RenderParagraph ? ro : null;
+  }
+
+  /// Vertical offset of a verse's first glyph inside this paragraph, or null.
+  double? offsetOfAyah(int ayahIndex) {
+    final p = _paragraph;
+    if (p == null) return null;
+    for (final r in _ranges) {
+      if (r.$3 != ayahIndex) continue;
+      final boxes = p.getBoxesForSelection(
+        TextSelection(baseOffset: r.$1, extentOffset: r.$2),
+      );
+      if (boxes.isEmpty) return null;
+      return boxes.first.top;
+    }
+    return null;
+  }
+
+  /// The verse under [local], or null when the tap landed on empty space.
+  Ayah? _ayahAt(Offset local) {
+    final p = _paragraph;
+    if (p == null) return null;
+    final pos = p.getPositionForOffset(local);
+    for (final r in _ranges) {
+      if (pos.offset >= r.$1 && pos.offset < r.$2) return widget.ayahs[r.$3];
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final spans = <InlineSpan>[];
+    final ranges = <(int, int, int)>[];
+    var offset = 0;
+
+    for (var i = widget.from; i <= widget.to; i++) {
+      final ayah = widget.ayahs[i];
+      final isPlaying = i == widget.playingIndex;
+      final text = '${ayah.textUthmani} ';
+
+      spans.add(
+        TextSpan(
+          text: text,
+          style: isPlaying
+              ? widget.textStyle.copyWith(
+                  // A wash behind the glyphs rather than a bordered box, so
+                  // the highlight rides the text as it wraps across lines.
+                  backgroundColor:
+                      AppColors.ayahHighlightPlaying.withValues(alpha: 0.28),
+                  color: AppColors.goldSoft,
+                )
+              : widget.textStyle,
+        ),
+      );
+      ranges.add((offset, offset + text.length, i));
+      offset += text.length;
+
+      spans.add(
+        WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: _AyahMarker(number: ayah.ayahNumber, playing: isPlaying),
+          ),
+        ),
+      );
+      offset += 1; // a WidgetSpan occupies one placeholder character
+    }
+    _ranges = ranges;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapUp: (d) {
+        final ayah = _ayahAt(d.localPosition);
+        if (ayah != null && widget.onAyahTap != null) {
+          widget.onAyahTap!(ayah);
+        } else {
+          widget.onBackgroundTap?.call();
+        }
+      },
+      onLongPressStart: (d) {
+        final ayah = _ayahAt(d.localPosition);
+        if (ayah != null) widget.onAyahLongPress(ayah);
+      },
+      child: Text.rich(
+        TextSpan(children: spans),
+        key: _textKey,
+        textAlign: TextAlign.justify,
+        textDirection: TextDirection.rtl,
+      ),
+    );
+  }
 }

@@ -214,7 +214,7 @@ class SettingsBody extends ConsumerWidget {
               leading: Icon(Icons.info_outline, color: scheme.primary),
               title: Text('app.name'.tr()),
               subtitle: Text('settings.about_desc'.tr()),
-              trailing: const Icon(Icons.chevron_left),
+              trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
               ),
@@ -227,7 +227,7 @@ class SettingsBody extends ConsumerWidget {
                   Icon(Icons.verified_user_outlined, color: scheme.primary),
               title: Text('settings.credits'.tr()),
               subtitle: Text('about.sources_hint'.tr()),
-              trailing: const Icon(Icons.chevron_left),
+              trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(builder: (_) => const SourcesScreen()),
               ),

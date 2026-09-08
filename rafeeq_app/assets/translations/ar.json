@@ -118,7 +118,9 @@
     "recite_pause": "إيقاف مؤقت / متابعة",
     "recite_next": "الآية التالية",
     "downloading_translation": "جارٍ تنزيل ترجمة {}…",
-    "translation_not_downloaded": "ترجمة {} غير منزَّلة بعد"
+    "translation_not_downloaded": "ترجمة {} غير منزَّلة بعد",
+    "layout_page": "شكل الصفحة",
+    "layout_cards": "شكل البطاقات"
   },
   "library": {
     "title": "المكتبة",
