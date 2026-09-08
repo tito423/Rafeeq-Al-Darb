@@ -192,10 +192,14 @@
     "text_empty": "No text",
     "text_blank_page": "Blank page",
     "text_ocr_badge": "Auto-extracted text",
-    "sahihayn_badge": "Sahih — from the Two Sahihs",
-    "grade_unstated": "Grade: not stated",
     "tab_channels": "Dawah Channels",
-    "tab_websites": "Islamic Websites"
+    "tab_websites": "Islamic Websites",
+    "takhrij_sahihayn": "Sahih — reported in {}",
+    "takhrij_none": "This source states no grading",
+    "section_nine": "The Nine Collections",
+    "section_nine_desc": "Complete collections, chaptered and searchable",
+    "section_texts": "Hadith texts & primers",
+    "section_texts_desc": "Text books with a chapter index — read page by page"
   },
   "azkar": {
     "title": "Adhkar",

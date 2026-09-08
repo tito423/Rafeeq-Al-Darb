@@ -816,33 +816,171 @@ class _DownloadGate extends StatelessWidget {
   }
 }
 
-class _BookList extends StatelessWidget {
+class _BookList extends StatefulWidget {
   final HadithRepository repo;
   const _BookList({required this.repo});
 
   @override
+  State<_BookList> createState() => _BookListState();
+}
+
+class _BookListState extends State<_BookList> {
+  StreamSubscription<List<DownloadTask>>? _sub;
+
+  /// download id -> local path, for the hadith text books in the second
+  /// section. Same registry the Books tab uses.
+  final Map<String, String> _paths = {};
+
+  /// The catalog's own hadith-category books — رياض الصالحين, الأربعون
+  /// النووية and the rest. They were only reachable through
+  /// Books -> Categories -> Hadith, which is not where anyone looks for them.
+  static final List<LibraryBook> _hadithTexts = libraryBookCatalog
+      .where((b) => b.category == BookCategory.hadith)
+      .toList()
+    ..sort((a, b) => a.titleAr.compareTo(b.titleAr));
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRegistry();
+    _sub = DownloadManager.instance.stream.listen((_) => _loadRegistry());
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadRegistry() async {
+    // Only this section's own books, not the whole 208-title catalog.
+    final paths = <String, String>{};
+    for (final book in _hadithTexts) {
+      if (await LibraryApiService.instance.isBookDownloaded(book.id)) {
+        paths[book.id] = 'sqlite'; // marker, same as the Books tab uses
+      }
+    }
+    if (!mounted) return;
+    setState(() => _paths
+      ..clear()
+      ..addAll(paths));
+  }
+
+  Future<void> _download(LibraryBook book) async {
+    final edition = book.textEdition;
+    if (edition == null) return;
+    try {
+      await LibraryApiService.instance.downloadBook(book.id, edition.url);
+      await _loadRegistry();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('errors.offline'.tr())),
+      );
+    }
+  }
+
+  void _open(LibraryBook book) {
+    if (!_paths.containsKey(book.id)) return;
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (_) => BookTextReaderScreen(book: book, path: 'sqlite'),
+    ));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<HadithBook>>(
-      future: repo.books(),
+      future: widget.repo.books(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
         final books = snapshot.data!;
-        return ListView.separated(
+        return ListView(
           padding: const EdgeInsets.all(14),
-          itemCount: books.length,
-          separatorBuilder: (_, _) => const SizedBox(height: 8),
-          itemBuilder: (context, i) => _HadithBookTile(
-            book: books[i],
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => HadithBookScreen(book: books[i], repo: repo),
-              ),
+          children: [
+            _HadithSectionHeader(
+              title: 'library.section_nine'.tr(),
+              subtitle: 'library.section_nine_desc'.tr(),
+              icon: Icons.auto_stories_rounded,
             ),
-          ),
+            for (final b in books) ...[
+              _HadithBookTile(
+                book: b,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => HadithBookScreen(book: b, repo: widget.repo),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+            if (_hadithTexts.isNotEmpty) ...[
+              const SizedBox(height: 18),
+              _HadithSectionHeader(
+                title: 'library.section_texts'.tr(),
+                subtitle: 'library.section_texts_desc'.tr(),
+                icon: Icons.menu_book_rounded,
+              ),
+              for (final b in _hadithTexts) ...[
+                _BookCard(
+                  book: b,
+                  paths: _paths,
+                  onDownload: () => _download(b),
+                  onOpen: () => _open(b),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ],
+          ],
         );
       },
+    );
+  }
+}
+
+/// A labelled divider between the two kinds of hadith content.
+class _HadithSectionHeader extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  const _HadithSectionHeader({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12, top: 2),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: AppColors.gold),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: AppColors.gold,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

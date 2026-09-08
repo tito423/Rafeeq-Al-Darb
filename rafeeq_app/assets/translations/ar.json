@@ -192,10 +192,14 @@
     "text_empty": "لا يوجد نص",
     "text_blank_page": "صفحة بلا نص",
     "text_ocr_badge": "نص مستخرَج آلياً",
-    "sahihayn_badge": "صحيح — من الصحيحين",
-    "grade_unstated": "الدرجة: غير مذكورة",
     "tab_channels": "قنوات دعوية",
-    "tab_websites": "مواقع إسلامية"
+    "tab_websites": "مواقع إسلامية",
+    "takhrij_sahihayn": "صحيح — أخرجه {}",
+    "takhrij_none": "لم يرد تخريج في هذا المصدر",
+    "section_nine": "الكتب التسعة",
+    "section_nine_desc": "مسانيد وسنن كاملة، مبوّبة وقابلة للبحث",
+    "section_texts": "كتب ومتون الحديث",
+    "section_texts_desc": "كتب نصّية مفهرسة بالأبواب — تُقرأ صفحة صفحة"
   },
   "azkar": {
     "title": "الأذكار",

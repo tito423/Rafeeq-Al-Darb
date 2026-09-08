@@ -191,11 +191,15 @@
     "text_empty": "Нет текста",
     "text_blank_page": "Пустая страница",
     "text_ocr_badge": "Автоизвлечённый текст",
-    "sahihayn_badge": "Сахих — из «Двух Сахихов»",
-    "grade_unstated": "Степень: не указана",
     "sub_authors": "Авторы",
     "tab_channels": "Да‘ва-каналы",
-    "tab_websites": "Исламские сайты"
+    "tab_websites": "Исламские сайты",
+    "takhrij_sahihayn": "Сахих — приведён в {}",
+    "takhrij_none": "Источник не указывает степень",
+    "section_nine": "Девять сборников",
+    "section_nine_desc": "Полные сборники, по главам и с поиском",
+    "section_texts": "Тексты по хадису",
+    "section_texts_desc": "Книги с оглавлением по главам"
   },
   "azkar": {
     "title": "Азкары",

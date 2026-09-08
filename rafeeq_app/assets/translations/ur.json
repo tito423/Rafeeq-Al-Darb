@@ -192,10 +192,14 @@
     "text_empty": "متن موجود نہیں",
     "text_blank_page": "خالی صفحہ",
     "text_ocr_badge": "خودکار مستخرج متن",
-    "sahihayn_badge": "صحیح — صحیحین سے",
-    "grade_unstated": "درجہ: مذکور نہیں",
     "tab_channels": "دعوتی چینلز",
-    "tab_websites": "اسلامی ویب سائٹس"
+    "tab_websites": "اسلامی ویب سائٹس",
+    "takhrij_sahihayn": "صحیح — {} میں مروی",
+    "takhrij_none": "اس مأخذ میں کوئی تخریج مذکور نہیں",
+    "section_nine": "کتبِ تسعہ",
+    "section_nine_desc": "مکمل مجموعے، ابواب کے ساتھ اور قابلِ تلاش",
+    "section_texts": "حدیث کے متون و کتب",
+    "section_texts_desc": "ابواب کی فہرست کے ساتھ متنی کتابیں"
   },
   "azkar": {
     "title": "اذکار",

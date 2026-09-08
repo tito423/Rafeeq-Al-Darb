@@ -191,11 +191,15 @@
     "text_empty": "Aucun texte",
     "text_blank_page": "Page vierge",
     "text_ocr_badge": "Texte extrait automatiquement",
-    "sahihayn_badge": "Sahih — des Deux Sahihs",
-    "grade_unstated": "Degré : non précisé",
     "sub_authors": "Auteurs",
     "tab_channels": "Chaînes de daawa",
-    "tab_websites": "Sites islamiques"
+    "tab_websites": "Sites islamiques",
+    "takhrij_sahihayn": "Sahih — rapporté dans {}",
+    "takhrij_none": "Cette source n'indique aucun degré",
+    "section_nine": "Les neuf recueils",
+    "section_nine_desc": "Recueils complets, par chapitres et consultables",
+    "section_texts": "Textes de hadith",
+    "section_texts_desc": "Livres avec index des chapitres"
   },
   "azkar": {
     "title": "Adhkar",

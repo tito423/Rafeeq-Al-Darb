@@ -191,11 +191,15 @@
     "text_empty": "Sin texto",
     "text_blank_page": "Página en blanco",
     "text_ocr_badge": "Texto extraído automáticamente",
-    "sahihayn_badge": "Sahih — de los Dos Sahihs",
-    "grade_unstated": "Grado: no indicado",
     "sub_authors": "Autores",
     "tab_channels": "Canales de dawah",
-    "tab_websites": "Sitios islámicos"
+    "tab_websites": "Sitios islámicos",
+    "takhrij_sahihayn": "Sahih — recogido en {}",
+    "takhrij_none": "Esta fuente no indica grado",
+    "section_nine": "Las nueve colecciones",
+    "section_nine_desc": "Colecciones completas, por capítulos y con búsqueda",
+    "section_texts": "Textos de hadiz",
+    "section_texts_desc": "Libros de texto con índice de capítulos"
   },
   "azkar": {
     "title": "Adhkar",

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/hadith_repository.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/i18n/hadith_grade_i18n.dart';
 
 /// One hadith, full text, with Previous/Next inside its chapter so reading
@@ -167,21 +168,92 @@ class _HadithContent extends StatelessWidget {
             style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
           ),
         ],
-        // Bukhari/Muslim carry no per-hadith grade column (they're sahih by
-        // definition); the real grade+grader for the other books shows where
-        // the source states one.
-        if (book.id != 1 && book.id != 2 && item.grade != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: Chip(
-              label: Text(item.grader != null
-                  ? '${localizedHadithGrade(item.grade!, context.locale.languageCode)} '
-                      '(${localizedHadithGrader(item.grader!, context.locale.languageCode)})'
-                  : localizedHadithGrade(
-                      item.grade!, context.locale.languageCode)),
-            ),
-          ),
+        // Every hadith now says something about its takhrij, because saying
+        // nothing is itself ambiguous — a reader can't tell an ungraded
+        // hadith from one whose grading the app simply forgot to show.
+        //
+        // Bukhari and Muslim have no per-hadith grade column and should not:
+        // what the two of them included in their Sahihs is authentic by the
+        // collections' own criteria and by scholarly consensus, so the
+        // collection *is* the grading. That is stated plainly rather than
+        // left blank. For everything else the source's own grade and grader
+        // are shown, and where the source states none, so is that — nothing
+        // here is ever inferred.
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: _TakhrijChip(book: book, item: item),
+        ),
       ],
+    );
+  }
+}
+
+
+/// The takhrij line under a hadith: its authenticity grading, or an honest
+/// statement of where that grading comes from.
+class _TakhrijChip extends StatelessWidget {
+  final HadithBook book;
+  final HadithItem item;
+
+  const _TakhrijChip({required this.book, required this.item});
+
+  /// Sahih al-Bukhari and Sahih Muslim, by their `books.id`.
+  static const _bukhari = 1;
+  static const _muslim = 2;
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = context.locale.languageCode;
+    final scheme = Theme.of(context).colorScheme;
+
+    final String text;
+    final Color tone;
+    final IconData icon;
+
+    if (book.id == _bukhari || book.id == _muslim) {
+      // Not a grade the app invented — a statement of which Sahih it is in.
+      text = 'library.takhrij_sahihayn'.tr(args: [book.nameAr]);
+      tone = AppColors.success;
+      icon = Icons.verified_outlined;
+    } else if (item.grade != null && item.grade!.isNotEmpty) {
+      final grade = localizedHadithGrade(item.grade!, lang);
+      text = item.grader != null
+          ? '$grade — ${localizedHadithGrader(item.grader!, lang)}'
+          : grade;
+      tone = AppColors.gold;
+      icon = Icons.fact_check_outlined;
+    } else {
+      text = 'library.takhrij_none'.tr();
+      tone = scheme.outline;
+      icon = Icons.help_outline;
+    }
+
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: tone.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: tone.withValues(alpha: 0.4)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 15, color: tone),
+            const SizedBox(width: 7),
+            Flexible(
+              child: Text(
+                text,
+                style: Theme.of(context)
+                    .textTheme
+                    .labelMedium
+                    ?.copyWith(color: tone, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
