@@ -49,7 +49,16 @@
     "enable_location": "Enable Location",
     "tap_to_open": "Tap to open",
     "continue_reading_title": "Continue Reading",
-    "continue_reading_button": "Resume reading"
+    "continue_reading_button": "Resume reading",
+    "clock_section": "Home clock",
+    "clock_style": "Clock style",
+    "clock_digital": "Digital",
+    "clock_analog_rgb": "RGB analogue",
+    "clock_12h": "12-hour time",
+    "clock_12h_desc": "Show AM/PM instead of a 24-hour clock",
+    "clock_seconds": "Show seconds",
+    "am": "AM",
+    "pm": "PM"
   },
   "quran": {
     "surah_list": "Surahs",
@@ -365,7 +374,7 @@
     "downloads": "Downloads",
     "offline_content": "Offline content",
     "about": "About",
-    "about_desc": "Rafeeq Al-Darb — a comprehensive Islamic app with real content from trusted sources",
+    "about_desc": "Rafeeq Al-Darb — a comprehensive Islamic app built on trusted, freely available sources",
     "guest_mode": "Guest mode",
     "guest_active": "Current mode: Guest (fully offline)",
     "credits": "Sources & credits",
@@ -573,7 +582,7 @@
     "another": "Another hadith"
   },
   "about": {
-    "blurb": "Rafeeq Al-Darb is a comprehensive Islamic app built only on real content from verified sources — no placeholder text, no dead links. Every mushaf, translation and adhan recording in it was checked against its source before it shipped.",
+    "blurb": "Rafeeq Al-Darb is a comprehensive Islamic app built on trusted sources that are freely available to developers. Every mushaf, translation and adhan recording was checked against its source before it shipped, and every source is named so you can verify it yourself.",
     "developed_by": "Developed by",
     "capabilities": "What the app offers",
     "f_quran": "Seven mushafs",

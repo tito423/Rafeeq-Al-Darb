@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/theme_controller.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
+import '../../../home/data/clock_settings_provider.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
@@ -127,6 +128,75 @@ class SettingsBody extends ConsumerWidget {
               value: ref.watch(splashVideoEnabledProvider),
               onChanged: (v) =>
                   ref.read(splashVideoEnabledProvider.notifier).set(v),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // ── Home clock ──
+          _SectionLabel('home.clock_section'.tr()),
+          Card(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+                  child: Row(
+                    children: [
+                      Icon(Icons.schedule_outlined, color: scheme.primary),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text('home.clock_style'.tr(),
+                            style: Theme.of(context).textTheme.titleSmall),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                  child: Wrap(
+                    spacing: 8,
+                    children: [
+                      for (final st in ClockStyle.values)
+                        ChoiceChip(
+                          avatar: Icon(
+                            st == ClockStyle.digital
+                                ? Icons.pin_outlined
+                                : Icons.watch_later_outlined,
+                            size: 18,
+                          ),
+                          label: Text(st == ClockStyle.digital
+                              ? 'home.clock_digital'.tr()
+                              : 'home.clock_analog_rgb'.tr()),
+                          selected:
+                              ref.watch(clockSettingsProvider).style == st,
+                          onSelected: (_) => ref
+                              .read(clockSettingsProvider.notifier)
+                              .setStyle(st),
+                        ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                SwitchListTile(
+                  secondary: const Icon(Icons.access_time),
+                  title: Text('home.clock_12h'.tr()),
+                  subtitle: Text('home.clock_12h_desc'.tr()),
+                  value: ref.watch(clockSettingsProvider).use12Hour,
+                  onChanged: (v) =>
+                      ref.read(clockSettingsProvider.notifier).set12Hour(v),
+                ),
+                // Seconds only exist on the digital face; the analogue one
+                // always sweeps them.
+                if (ref.watch(clockSettingsProvider).style ==
+                    ClockStyle.digital)
+                  SwitchListTile(
+                    secondary: const Icon(Icons.timer_outlined),
+                    title: Text('home.clock_seconds'.tr()),
+                    value: ref.watch(clockSettingsProvider).showSeconds,
+                    onChanged: (v) => ref
+                        .read(clockSettingsProvider.notifier)
+                        .setShowSeconds(v),
+                  ),
+              ],
             ),
           ),
           const SizedBox(height: 24),

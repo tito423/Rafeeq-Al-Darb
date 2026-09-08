@@ -49,7 +49,16 @@
     "enable_location": "Activar ubicación",
     "tap_to_open": "Toca para abrir",
     "continue_reading_title": "Continuar leyendo",
-    "continue_reading_button": "Reanudar lectura"
+    "continue_reading_button": "Reanudar lectura",
+    "clock_section": "Reloj de inicio",
+    "clock_style": "Estilo de reloj",
+    "clock_digital": "Digital",
+    "clock_analog_rgb": "Analógico RGB",
+    "clock_12h": "Formato de 12 horas",
+    "clock_12h_desc": "Mostrar AM/PM en vez de 24 horas",
+    "clock_seconds": "Mostrar segundos",
+    "am": "a. m.",
+    "pm": "p. m."
   },
   "quran": {
     "surah_list": "Suras",
@@ -365,7 +374,7 @@
     "downloads": "Descargas",
     "offline_content": "Contenido sin conexión",
     "about": "Acerca de",
-    "about_desc": "Rafeeq Al-Darb — una app islámica completa con contenido real de fuentes fiables",
+    "about_desc": "Rafeeq Al-Darb — app islámica integral con fuentes fiables y de libre acceso",
     "guest_mode": "Modo invitado",
     "guest_active": "Modo actual: invitado (totalmente sin conexión)",
     "credits": "Fuentes y créditos",
@@ -573,7 +582,7 @@
     "another": "Otro hadiz"
   },
   "about": {
-    "blurb": "Rafeeq Al-Darb es una app islámica integral construida solo con contenido real de fuentes verificadas: sin textos de relleno ni enlaces rotos. Cada mushaf, traducción y grabación de adhan fue comprobado en su fuente antes de publicarse.",
+    "blurb": "Rafeeq Al-Darb es una app islámica integral basada en fuentes fiables y de libre acceso para desarrolladores. Cada mushaf, traducción y grabación de adhan fue comprobado en su fuente antes de publicarse, y todas las fuentes están citadas para que puedas verificarlas.",
     "developed_by": "Desarrollado por",
     "capabilities": "Qué ofrece la app",
     "f_quran": "Siete mushafs",

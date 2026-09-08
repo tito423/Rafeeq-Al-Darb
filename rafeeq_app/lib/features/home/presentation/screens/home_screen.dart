@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:hijri/hijri_calendar.dart';
 
 import '../../../adhan/data/prayer_adjustments_provider.dart';
+import '../../data/clock_settings_provider.dart';
+import '../widgets/rgb_analog_clock.dart';
 
 import '../../../../core/utils/time_formatter.dart';
 import '../../../../core/services/prayer_times_service.dart';
@@ -391,15 +394,16 @@ const _prayerChipColors = {
 /// `ref_home.jpg` mock: a live ticking `HH:MM:SS` clock, a "next prayer +
 /// countdown" pill, a real location line, and coloured per-prayer chips
 /// with a badge on the next one.
-class _PrayerTimesTable extends StatefulWidget {
+class _PrayerTimesTable extends ConsumerStatefulWidget {
   final PrayerTimes times;
   const _PrayerTimesTable({required this.times});
 
   @override
-  State<_PrayerTimesTable> createState() => _PrayerTimesTableState();
+  ConsumerState<_PrayerTimesTable> createState() =>
+      _PrayerTimesTableState();
 }
 
-class _PrayerTimesTableState extends State<_PrayerTimesTable> {
+class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -433,10 +437,15 @@ class _PrayerTimesTableState extends State<_PrayerTimesTable> {
     super.dispose();
   }
 
-  String _clockDigits(String localeCode) {
+  /// The digital face, honouring the reader's 12/24-hour and seconds choice.
+  /// Arabic gets Arabic-Indic digits, as the rest of the card does.
+  String _clockDigits(String localeCode, ClockSettings cs) {
     final now = DateTime.now();
     String two(int n) => n.toString().padLeft(2, '0');
-    final s = '${two(now.hour)}:${two(now.minute)}:${two(now.second)}';
+    final h = cs.use12Hour ? (now.hour % 12 == 0 ? 12 : now.hour % 12) : now.hour;
+    final s = cs.showSeconds
+        ? '${two(h)}:${two(now.minute)}:${two(now.second)}'
+        : '${two(h)}:${two(now.minute)}';
     if (localeCode != 'ar') return s;
     const west = '0123456789';
     const east = '٠١٢٣٤٥٦٧٨٩';
@@ -448,9 +457,16 @@ class _PrayerTimesTableState extends State<_PrayerTimesTable> {
     return b.toString();
   }
 
+  /// AM/PM in the app's own language — never shown in 24-hour mode.
+  String? _meridiem(ClockSettings cs) {
+    if (!cs.use12Hour) return null;
+    return DateTime.now().hour < 12 ? 'home.am'.tr() : 'home.pm'.tr();
+  }
+
   @override
   Widget build(BuildContext context) {
     final next = PrayerTimesService().nextPrayer(widget.times, DateTime.now());
+    final clock = ref.watch(clockSettingsProvider);
     final location = [
       widget.times.cityName,
       widget.times.countryName,
@@ -459,9 +475,10 @@ class _PrayerTimesTableState extends State<_PrayerTimesTable> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeInOut,
-      padding: const EdgeInsets.all(16),
+      clipBehavior: Clip.antiAlias,
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         // P3‑4: "RGB في جميع الثيمات" — same fixed dark/teal/violet gradient
         // as the Home header card, so this reads as one visual family
         // regardless of the app's selected theme.
@@ -473,18 +490,58 @@ class _PrayerTimesTableState extends State<_PrayerTimesTable> {
         border: Border.all(
           color: const Color(0xFF15C7B0).withValues(alpha: 0.35),
         ),
+        // A teal cast under the card so it lifts off the page instead of
+        // sitting flat on it — the clock is the first thing on the screen
+        // and should read as the hero it is.
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF15C7B0).withValues(alpha: 0.16),
+            blurRadius: 26,
+            spreadRadius: -6,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          Text(
-            _clockDigits(context.locale.languageCode),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
+          if (clock.style == ClockStyle.analogRgb)
+            RgbAnalogClock(
+              time: DateTime.now(),
+              size: 176,
+              meridiem: _meridiem(clock),
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  _clockDigits(context.locale.languageCode, clock),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    // Tabular figures so the width doesn't jitter every
+                    // second as the digits change.
+                    fontFeatures: [FontFeature.tabularFigures()],
+                  ),
+                ),
+                if (_meridiem(clock) != null) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    _meridiem(clock)!,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ],
+              ],
             ),
-          ),
           if (next != null) ...[
             const SizedBox(height: 12),
             AnimatedContainer(

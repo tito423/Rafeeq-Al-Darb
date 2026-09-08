@@ -49,7 +49,16 @@
     "enable_location": "Activer la localisation",
     "tap_to_open": "Touchez pour ouvrir",
     "continue_reading_title": "Poursuivre la lecture",
-    "continue_reading_button": "Reprendre la lecture"
+    "continue_reading_button": "Reprendre la lecture",
+    "clock_section": "Horloge d'accueil",
+    "clock_style": "Style d'horloge",
+    "clock_digital": "Numérique",
+    "clock_analog_rgb": "Analogique RVB",
+    "clock_12h": "Format 12 heures",
+    "clock_12h_desc": "Afficher AM/PM au lieu de 24 heures",
+    "clock_seconds": "Afficher les secondes",
+    "am": "AM",
+    "pm": "PM"
   },
   "quran": {
     "surah_list": "Sourates",
@@ -365,7 +374,7 @@
     "downloads": "Téléchargements",
     "offline_content": "Contenu hors ligne",
     "about": "À propos",
-    "about_desc": "Rafeeq Al-Darb — une application islamique complète avec un contenu authentique provenant de sources fiables",
+    "about_desc": "Rafeeq Al-Darb — application islamique complète, sources fiables et librement accessibles",
     "guest_mode": "Mode invité",
     "guest_active": "Mode actuel : Invité (entièrement hors ligne)",
     "credits": "Sources et crédits",
@@ -573,7 +582,7 @@
     "another": "Autre hadith"
   },
   "about": {
-    "blurb": "Rafeeq Al-Darb est une application islamique complète bâtie uniquement sur du contenu réel issu de sources vérifiées : aucun texte de remplissage, aucun lien mort. Chaque moushaf, traduction et enregistrement d'adhan a été vérifié à la source avant publication.",
+    "blurb": "Rafeeq Al-Darb est une application islamique complète bâtie sur des sources fiables et librement accessibles aux développeurs. Chaque moushaf, traduction et enregistrement d'adhan a été vérifié à la source avant publication, et chaque source est citée pour que vous puissiez la vérifier.",
     "developed_by": "Développé par",
     "capabilities": "Ce que propose l'application",
     "f_quran": "Sept moushafs",
