@@ -112,7 +112,10 @@
     "recite_now": "Recitando {}:{}",
     "recite_previous": "Versículo anterior",
     "recite_pause": "Pausar / reanudar",
-    "recite_next": "Versículo siguiente"
+    "recite_next": "Versículo siguiente",
+    "gharib": "Significado de las palabras (Garib)",
+    "gharib_description": "Significados palabra por palabra extraídos de la base de datos del Complejo Rey Fahd para la Impresión del Noble Corán.",
+    "gharib_unavailable": "Lo sentimos, el significado de las palabras no está disponible para esta sura."
   },
   "library": {
     "title": "Biblioteca",
@@ -184,7 +187,8 @@
     "text_blank_page": "Página en blanco",
     "text_ocr_badge": "Texto extraído automáticamente",
     "sahihayn_badge": "Sahih — de los Dos Sahihs",
-    "grade_unstated": "Grado: no indicado"
+    "grade_unstated": "Grado: no indicado",
+    "sub_authors": "Autores"
   },
   "azkar": {
     "title": "Adhkar",
@@ -300,7 +304,17 @@
     "exact_alarm": "El adhán funciona igual que una alarma, por lo que necesita el permiso de \"alarmas exactas\" para sonar a su hora y abrirse sobre la pantalla de bloqueo",
     "exact_alarm_action": "Conceder permiso",
     "muted_now": "Adhán silenciado",
-    "preview_badge": "Vista previa"
+    "preview_badge": "Vista previa",
+    "auto_location": "Actualizar ubicación automáticamente",
+    "auto_location_desc": "Volver a obtener tu posición periódicamente con la app abierta",
+    "location_interval": "Intervalo de actualización",
+    "every_minutes": "Cada {} minutos",
+    "every_hours": "Cada {} horas",
+    "calc_method": "Método de cálculo",
+    "calc_umm_alqura": "Umm Al-Qura",
+    "calc_egyptian": "Autoridad General Egipcia de Topografía",
+    "calc_mwl": "Liga Islámica Mundial",
+    "calc_isna": "ISNA (Norteamérica)"
   },
   "qibla": {
     "locating": "Localizándote...",
@@ -402,7 +416,9 @@
     "source_cdn": "Servido desde la CDN: la descarga puede ser más lenta",
     "incomplete_tap_retry": "Incompleto: toca para reintentar",
     "preparing": "Preparando…",
-    "now_downloading": "Descargando {}"
+    "now_downloading": "Descargando {}",
+    "repair": "Reparar descargas",
+    "repairing": "Reanudando descargas detenidas..."
   },
   "new_muslim": {
     "title": "Guía del nuevo musulmán",
@@ -443,7 +459,8 @@
     "prophet_musa": "Musa (Moisés), la paz sea con él",
     "prophet_yusuf": "Yusuf (José), la paz sea con él",
     "play_topic": "Reproducir todo",
-    "stop_playing": "Detener"
+    "stop_playing": "Detener",
+    "results_count": "resultados"
   },
   "errors": {
     "offline": "Sin conexión a internet",

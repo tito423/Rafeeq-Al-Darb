@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-06 |
+| **Last updated** | 2026-09-08 |
 | **State at** | **PHASE 2 nearly done** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. Every P2 stage is done and emulator-verified **except P2‑7's last piece, which needs a real Android phone** (see its row below) and P2‑8, which is stopped waiting on the owner's shortlist pick. |
 | **Build verified?** | `flutter analyze` clean · `flutter test` **13/13**. All of P2‑1/2/3/4/4b/5/6/9/10/11/12/13 emulator-verified live (not just built) on `emulator-5554`. |
 
@@ -52,9 +52,9 @@
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-06 23:52 — IN PROGRESS — resume here**
+**2026-09-08 05:02 — IN PROGRESS — resume here**
 
-docs: rewrite HANDOFF_PROMPT.md as one coherent handoff for the current state - hard rules, workflow, env gotchas, the architecture worth knowing (7-tab nav with More, the two separate download engines incl the service-owned recitation notifiers, raster/text mushaf + immersive auto-scroll, adhan full-screen player + preview card, flutter_native_splash flow), current state (v2.1.17 released; P3-55 download rebuild + P3-56 splash/hadith/imam committed unreleased -> v2.1.18), and the open items (release v2.1.18 on owner go-ahead, owner real-device verification of lock-screen adhan + background download continuation with background_downloader as the fallback, Shamarly still needs a real page-image source).
+Fix broken mushaf catalog, add auto-location refresh, restore clean analyze and tests. Eight raster mushaf editions (shamarly, qatar, amiriya, indo_pak, kazan, muallim, kfqc_new, sahaba) had been added to editions.json without any page images ever being uploaded - every page 404d on R2, so choosing any of them opened an empty reader. Verified against R2 and the public endpoint, then removed all eight rather than ship placeholders. Sourced and verified two real replacements: Warsh an Nafi and Qalun an Nafi, 604 real page scans each, from the Quran-for-Android content host, rehosted first-party to R2 by the new scripts/r2_upload_mushaf_editions.py (probes content-type and byte size to reject soft-404 HTML, resumable, head_object-verified). Those scans are palette PNGs, so added an optional image_ext field to MushafEdition and editions.json threaded through AppConfig.mushafImageUrl, MushafPageService.cachedImageFile/_fetchImageToDisk/prefetchEdition and the reader/download/preview callers - it defaults to jpg so the existing Tajweed JPEGs are untouched. Re-encoding those PNGs to JPEG made every page about 4x larger with ringing on the letterforms, hence the pass-through. Cover palette and download-tile colours rekeyed to the ids actually shipped, dead shamarly slot dropped. New feature: automatic location refresh for prayer times - AdhanSettings gained autoLocationUpdate plus locationUpdateMinutes (30 min, 1, 2, 5, 12, 24 h), PrayerController drives it with a Timer that refreshes silently so the card never flips back to a spinner and a failed fix leaves the previous times up, and the Adhan settings screen got a switch plus interval dropdown. Documented honestly that this is a foreground convenience, not a background location service - Adhan alarms remain exact alarms. Also dropped the syncfusion_flutter_pdfviewer dependency, which had zero remaining references after the library went fully text-based, and cleared five pre-existing analyzer warnings. Restored translation parity: es/fr/pt/ru were each missing the same twelve keys added earlier in ar/en only (gharib tab, calc methods, repair downloads, authors subtab, results count) plus the five new auto-location keys. flutter analyze clean, flutter test 25/25. Warsh/Qalun R2 upload still running at checkpoint time.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

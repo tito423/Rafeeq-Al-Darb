@@ -7,12 +7,26 @@ import '../../../core/models/adhan_mode.dart';
 /// The 5 prayers that actually get an Adhan (sunrise never does).
 const adhanPrayerKeys = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
+/// Selectable auto-location-refresh intervals, in minutes: 30 minutes, then
+/// 1, 2, 5, 12 and 24 hours. Prayer times shift with position, so a traveller
+/// wants a short interval while someone praying at home wants the longest one
+/// (each refresh costs a GPS fix and a times re-fetch).
+const locationUpdateIntervals = <int>[30, 60, 120, 300, 720, 1440];
+
 /// Persisted Adhan preferences: one default sound, and an optional
 /// per-prayer override of both the notification mode and the sound.
 class AdhanSettings {
   final String defaultAdhanId;
   final Map<String, AdhanMode> modeByPrayer;
   final int calculationMethod;
+
+  /// Whether the app re-acquires the device position on a timer while it is
+  /// open, instead of only on launch.
+  final bool autoLocationUpdate;
+
+  /// How often that refresh runs, in minutes — one of
+  /// [locationUpdateIntervals].
+  final int locationUpdateMinutes;
 
   /// Null value = "use the default adhan" for that prayer.
   final Map<String, String?> adhanIdByPrayer;
@@ -22,6 +36,8 @@ class AdhanSettings {
     required this.modeByPrayer,
     required this.adhanIdByPrayer,
     required this.calculationMethod,
+    required this.autoLocationUpdate,
+    required this.locationUpdateMinutes,
   });
 
   String adhanIdFor(String prayerKey) =>
@@ -35,12 +51,17 @@ class AdhanSettings {
     Map<String, AdhanMode>? modeByPrayer,
     Map<String, String?>? adhanIdByPrayer,
     int? calculationMethod,
+    bool? autoLocationUpdate,
+    int? locationUpdateMinutes,
   }) =>
       AdhanSettings(
         defaultAdhanId: defaultAdhanId ?? this.defaultAdhanId,
         modeByPrayer: modeByPrayer ?? this.modeByPrayer,
         adhanIdByPrayer: adhanIdByPrayer ?? this.adhanIdByPrayer,
         calculationMethod: calculationMethod ?? this.calculationMethod,
+        autoLocationUpdate: autoLocationUpdate ?? this.autoLocationUpdate,
+        locationUpdateMinutes:
+            locationUpdateMinutes ?? this.locationUpdateMinutes,
       );
 }
 
@@ -49,6 +70,9 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
       : super(AdhanSettings(
           defaultAdhanId: _prefs.getString(_defaultKey) ?? 'azan1',
           calculationMethod: _prefs.getInt(_calcMethodKey) ?? 4,
+          autoLocationUpdate: _prefs.getBool(_autoLocationKey) ?? false,
+          locationUpdateMinutes:
+              _prefs.getInt(_locationIntervalKey) ?? 60,
           modeByPrayer: {
             for (final k in adhanPrayerKeys)
               k: AdhanMode.fromName(_prefs.getString('$_modePrefix$k')),
@@ -62,6 +86,8 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
 
   static const _defaultKey = 'adhan_default_id_v1';
   static const _calcMethodKey = 'adhan_calc_method_v1';
+  static const _autoLocationKey = 'prayer_auto_location_v1';
+  static const _locationIntervalKey = 'prayer_location_interval_min_v1';
   static const _modePrefix = 'adhan_mode_v1_';
   static const _choicePrefix = 'adhan_choice_v1_';
 
@@ -75,6 +101,17 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
     await _prefs.setInt(_calcMethodKey, method);
     // Force prayer times to re-fetch instead of using the cached times for the old method
     await _prefs.remove('prayer_times_cache_date_v2');
+  }
+
+  Future<void> setAutoLocationUpdate(bool enabled) async {
+    state = state.copyWith(autoLocationUpdate: enabled);
+    await _prefs.setBool(_autoLocationKey, enabled);
+  }
+
+  /// [minutes] must be one of [locationUpdateIntervals].
+  Future<void> setLocationUpdateMinutes(int minutes) async {
+    state = state.copyWith(locationUpdateMinutes: minutes);
+    await _prefs.setInt(_locationIntervalKey, minutes);
   }
 
   Future<void> setModeFor(String prayerKey, AdhanMode mode) async {

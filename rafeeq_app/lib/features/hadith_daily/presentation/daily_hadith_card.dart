@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/db/hadith_repository.dart';
-import '../../../core/i18n/hadith_grade_i18n.dart';
 import '../../../core/services/download_manager.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../library/presentation/screens/hadith_detail_screen.dart';
@@ -303,7 +302,6 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
         }
         final item = daily.item;
         final book = daily.book;
-        final isSahihayn = book.id == 1 || book.id == 2;
 
         return InkWell(
           onTap: () => Navigator.of(context).push(

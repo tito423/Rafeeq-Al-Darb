@@ -319,7 +319,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                     icon: const Icon(Icons.calculate_outlined),
                     border: InputBorder.none,
                   ),
-                  value: settings.calculationMethod,
+                  initialValue: settings.calculationMethod,
                   items: [
                     DropdownMenuItem(value: 4, child: Text('prayer.calc_umm_alqura'.tr())),
                     DropdownMenuItem(value: 5, child: Text('prayer.calc_egyptian'.tr())),
@@ -333,6 +333,57 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                     }
                   },
                 ),
+              ),
+            ),
+            // Prayer times move with the device's position, so a traveller
+            // can have the app re-acquire it on a timer instead of only at
+            // launch. Off by default — a fix costs battery, and most users
+            // pray in one place.
+            Card(
+              child: Column(
+                children: [
+                  SwitchListTile(
+                    secondary: const Icon(Icons.my_location_outlined),
+                    title: Text('prayer.auto_location'.tr()),
+                    subtitle: Text('prayer.auto_location_desc'.tr()),
+                    value: settings.autoLocationUpdate,
+                    onChanged: (v) => ref
+                        .read(adhanSettingsProvider.notifier)
+                        .setAutoLocationUpdate(v),
+                  ),
+                  if (settings.autoLocationUpdate)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                      child: DropdownButtonFormField<int>(
+                        decoration: InputDecoration(
+                          labelText: 'prayer.location_interval'.tr(),
+                          icon: const Icon(Icons.schedule_outlined),
+                          border: InputBorder.none,
+                        ),
+                        initialValue: settings.locationUpdateMinutes,
+                        items: [
+                          for (final m in locationUpdateIntervals)
+                            DropdownMenuItem(
+                              value: m,
+                              child: Text(
+                                m < 60
+                                    ? 'prayer.every_minutes'
+                                        .tr(args: ['$m'])
+                                    : 'prayer.every_hours'
+                                        .tr(args: ['${m ~/ 60}']),
+                              ),
+                            ),
+                        ],
+                        onChanged: (v) {
+                          if (v != null) {
+                            ref
+                                .read(adhanSettingsProvider.notifier)
+                                .setLocationUpdateMinutes(v);
+                          }
+                        },
+                      ),
+                    ),
+                ],
               ),
             ),
             const SizedBox(height: 20),

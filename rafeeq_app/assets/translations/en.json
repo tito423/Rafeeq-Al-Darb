@@ -309,7 +309,12 @@
     "exact_alarm": "The Adhan behaves exactly like an alarm, so it needs the \"exact alarms\" permission to fire on time and open over the lock screen",
     "exact_alarm_action": "Grant permission",
     "muted_now": "Adhan muted",
-    "preview_badge": "Preview"
+    "preview_badge": "Preview",
+    "auto_location": "Update location automatically",
+    "auto_location_desc": "Re-acquire your position periodically while the app is open",
+    "location_interval": "Update interval",
+    "every_minutes": "Every {} minutes",
+    "every_hours": "Every {} hours"
   },
   "qibla": {
     "locating": "Locating you...",

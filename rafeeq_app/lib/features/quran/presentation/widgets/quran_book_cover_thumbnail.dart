@@ -27,9 +27,8 @@ class QuranBookCoverThumbnail extends StatelessWidget {
   });
 
   /// Per-edition leather palette (deep → base → sheen). Distinct luxury colours
-  /// so the shelf reads at a glance; the map leaves obvious slots for a
-  /// maroon Tajweed board and a black-and-gold Shamarly board once those
-  /// editions have a real page source. Unknown ids fall back to royal emerald.
+  /// so the shelf reads at a glance. Keyed by the ids actually shipped in
+  /// `editions.json`; unknown ids fall back to royal emerald.
   static const Map<String, _Leather> _palette = {
     // Madinah Hafs — royal emerald green.
     'hafs_kfqc': _Leather(Color(0xFF063D27), Color(0xFF0B5D3B), Color(0xFF14814F)),
@@ -41,18 +40,15 @@ class QuranBookCoverThumbnail extends StatelessWidget {
     // Duri — dark bronze/olive.
     'douri_kfqc': _Leather(Color(0xFF2A2408), Color(0xFF44380F), Color(0xFF6A571A)),
     // Qalun — wine maroon.
-    'qalon_kfqc': _Leather(Color(0xFF3E1019), Color(0xFF5A1E2B), Color(0xFF833141)),
+    'qaloon': _Leather(Color(0xFF3E1019), Color(0xFF5A1E2B), Color(0xFF833141)),
     // Warsh — royal navy (كحلي).
-    'warsh_kfqc': _Leather(Color(0xFF0B1D3A), Color(0xFF12294F), Color(0xFF1E427E)),
-    // Shamarly — black & gold (reserved; wired when its scans are hosted).
-    'shamarly': _Leather(Color(0xFF0A0A0A), Color(0xFF1A1A1A), Color(0xFF333333)),
+    'warsh': _Leather(Color(0xFF0B1D3A), Color(0xFF12294F), Color(0xFF1E427E)),
   };
 
   /// Medallion text override where the first riwayah word would be ambiguous
   /// (e.g. the Tajweed mushaf is also Hafs — show "تجويد", not a second "حفص").
   static const Map<String, String> _medallionOverride = {
     'tajweed_color': 'تجويد',
-    'shamarly': 'الشمرلي',
   };
 
   static const _Leather _fallback =

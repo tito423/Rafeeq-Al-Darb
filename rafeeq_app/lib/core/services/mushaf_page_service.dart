@@ -135,9 +135,10 @@ class MushafPageService {
   /// null (the reader streams it from the network instead). Stored in the same
   /// per-edition dir the SVG cache uses, so `cachedPages`/`cacheSizeBytes`/
   /// `clearCache` cover raster editions unchanged.
-  Future<File?> cachedImageFile(String editionId, int page) async {
+  Future<File?> cachedImageFile(String editionId, int page,
+      {String ext = 'jpg'}) async {
     final dir = await _pageDir(editionId);
-    final f = File(p.join(dir.path, '${page.toString().padLeft(3, '0')}.jpg'));
+    final f = File(p.join(dir.path, '${page.toString().padLeft(3, '0')}.$ext'));
     return (f.existsSync() && await f.length() > 4096) ? f : null;
   }
 
@@ -145,12 +146,13 @@ class MushafPageService {
   /// [prefetchEdition] for image editions — the raster counterpart of
   /// [svgForPage]'s network branch.
   Future<void> _fetchImageToDisk(
-      String editionId, String imagePath, int page) async {
+      String editionId, String imagePath, int page, String imageExt) async {
     final dir = await _pageDir(editionId);
-    final file = File(p.join(dir.path, '${page.toString().padLeft(3, '0')}.jpg'));
+    final file =
+        File(p.join(dir.path, '${page.toString().padLeft(3, '0')}.$imageExt'));
     if (file.existsSync() && await file.length() > 4096) return;
     final res = await _dio.get<List<int>>(
-      AppConfig.mushafImageUrl(imagePath, page),
+      AppConfig.mushafImageUrl(imagePath, page, ext: imageExt),
       options: Options(
         responseType: ResponseType.bytes,
         receiveTimeout: const Duration(seconds: 40),
@@ -195,6 +197,7 @@ class MushafPageService {
     void Function(int done, int total)? onProgress,
     String? title,
     String? imagePath,
+    String imageExt = 'jpg',
   }) async {
     if (_prefetching.contains(editionId)) return;
     _prefetching.add(editionId);
@@ -235,7 +238,7 @@ class MushafPageService {
         }
         try {
           if (imagePath != null) {
-            await _fetchImageToDisk(editionId, imagePath, page);
+            await _fetchImageToDisk(editionId, imagePath, page, imageExt);
           } else {
             await svgForPage(
               editionId: editionId,

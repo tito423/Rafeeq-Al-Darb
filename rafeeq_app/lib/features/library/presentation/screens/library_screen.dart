@@ -561,7 +561,6 @@ class _BookCard extends StatelessWidget {
   final VoidCallback onOpen;
 
   const _BookCard({
-    super.key,
     required this.book,
     required this.paths,
     required this.onDownload,

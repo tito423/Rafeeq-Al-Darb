@@ -31,11 +31,18 @@ abstract final class AppConfig {
       '$mushafBase/$sourcePath/svg/${page.toString().padLeft(3, '0')}.svg';
 
   /// P3‑53: raster (image-scan) mushaf pages, hosted first-party on the R2
-  /// content bucket under `mushaf/<imagePath>/NNN.jpg` (e.g. the coloured
+  /// content bucket under `mushaf/<imagePath>/NNN.<ext>` (e.g. the coloured
   /// Tajweed mushaf at `mushaf/tajweed/002.jpg`). Uses [contentBaseUrl] so it
   /// is overridable at build time the same way every other content URL is.
-  static String mushafImageUrl(String imagePath, int page) =>
-      '$contentBaseUrl/mushaf/$imagePath/${page.toString().padLeft(3, '0')}.jpg';
+  ///
+  /// [ext] defaults to `jpg` (what Tajweed's real scans are). The Warsh and
+  /// Qalun editions are palette PNGs — the right encoding for black-on-white
+  /// script, and re-encoding them as JPEG made every page ~4x larger with
+  /// ringing artifacts on the letterforms — so they declare
+  /// `"image_ext": "png"` in `editions.json` and land here as `png`.
+  static String mushafImageUrl(String imagePath, int page,
+          {String ext = 'jpg'}) =>
+      '$contentBaseUrl/mushaf/$imagePath/${page.toString().padLeft(3, '0')}.$ext';
 
   /// Ayah-level recitation (real CDN by islamic.network).
   static const String quranAudioBase =

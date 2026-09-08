@@ -84,7 +84,8 @@ class _MushafPageViewState extends State<MushafPageView> {
   }
 
   Future<File?> _loadRaster() =>
-      MushafPageService.instance.cachedImageFile(widget.edition.id, widget.page);
+      MushafPageService.instance.cachedImageFile(widget.edition.id, widget.page,
+          ext: widget.edition.imageExt);
 
   @override
   void dispose() {

@@ -446,7 +446,7 @@ class _PrayerTimesTableState extends State<_PrayerTimesTable> {
     final location = [
       widget.times.cityName,
       widget.times.countryName,
-    ].where((s) => s != null && s.isNotEmpty).join('، ');
+    ].where((s) => s.isNotEmpty).join('، ');
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 600),

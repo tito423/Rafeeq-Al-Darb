@@ -13,14 +13,8 @@ Color _coverColor(String id) {
   switch (id) {
     case 'hafs_kfqc': return const Color(0xFF1E3A5F); // Blue
     case 'tajweed_color': return const Color(0xFF8B0000); // Dark Red
-    case 'shamarly': return const Color(0xFF2E8B57); // Sea Green
-    case 'qatar': return const Color(0xFF4B0082); // Indigo
-    case 'amiriya': return const Color(0xFF8B4513); // Saddle Brown
-    case 'indo_pak': return const Color(0xFF006400); // Dark Green
-    case 'kazan': return const Color(0xFF556B2F); // Dark Olive Green
-    case 'muallim': return const Color(0xFF4682B4); // Steel Blue
-    case 'kfqc_new': return const Color(0xFF2F4F4F); // Dark Slate Gray
-    case 'sahaba': return const Color(0xFFA0522D); // Sienna
+    case 'warsh': return const Color(0xFF12294F); // Royal navy
+    case 'qaloon': return const Color(0xFF5A1E2B); // Wine maroon
     default: return const Color(0xFF1E3A5F);
   }
 }
@@ -129,6 +123,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
         editionId: widget.edition.id,
         sourcePath: widget.edition.sourcePath,
         imagePath: widget.edition.imagePath,
+        imageExt: widget.edition.imageExt,
         title: widget.edition.nameAr,
       ),
     );

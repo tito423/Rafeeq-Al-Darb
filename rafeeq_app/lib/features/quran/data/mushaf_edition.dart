@@ -32,10 +32,15 @@ class MushafEdition {
   final String polygonsAsset;
 
   /// P3‑53: raster (image-scan) editions — the folder under `mushaf/` on the
-  /// R2 content bucket that holds `NNN.jpg` page scans (e.g. 'tajweed'). Null
-  /// for the vector SVG editions. [isRaster] keys the whole render/download
-  /// path off this one field.
+  /// R2 content bucket that holds `NNN.<ext>` page scans (e.g. 'tajweed').
+  /// Null for the vector SVG editions. [isRaster] keys the whole
+  /// render/download path off this one field.
   final String? imagePath;
+
+  /// File extension of this edition's page scans, without the dot. Defaults
+  /// to `jpg`; the Warsh/Qalun scans are palette PNGs (see
+  /// [AppConfig.mushafImageUrl]) and set `"image_ext": "png"`.
+  final String imageExt;
 
   final int pages;
   final int ayahs;
@@ -63,6 +68,7 @@ class MushafEdition {
     required this.divergingSurahs,
     required this.isDefault,
     this.imagePath,
+    this.imageExt = 'jpg',
   });
 
   factory MushafEdition.fromJson(Map<String, dynamic> j) => MushafEdition(
@@ -74,6 +80,7 @@ class MushafEdition {
         riwayahEn: j['riwayah_en'] as String? ?? '',
         polygonsAsset: j['polygons_asset'] as String? ?? '',
         imagePath: j['image_path'] as String?,
+        imageExt: j['image_ext'] as String? ?? 'jpg',
         pages: j['pages'] as int,
         ayahs: j['ayahs'] as int,
         sciencesAligned: j['sciences_aligned'] as bool? ?? false,
@@ -96,7 +103,8 @@ class MushafEdition {
   String pageUrl(int page) => AppConfig.mushafPageUrl(sourcePath, page);
 
   /// The R2 URL for [page]'s scan (raster editions only).
-  String imagePageUrl(int page) => AppConfig.mushafImageUrl(imagePath!, page);
+  String imagePageUrl(int page) =>
+      AppConfig.mushafImageUrl(imagePath!, page, ext: imageExt);
 }
 
 /// The editions bundled with the app, newest catalog wins.

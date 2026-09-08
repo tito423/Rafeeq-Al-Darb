@@ -137,6 +137,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
         editionId: widget.edition.id,
         sourcePath: widget.edition.sourcePath,
         imagePath: widget.edition.imagePath,
+        imageExt: widget.edition.imageExt,
         title: widget.edition.nameAr,
       ),
     );

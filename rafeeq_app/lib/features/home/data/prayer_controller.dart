@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/models/prayer_times.dart';
@@ -22,8 +24,56 @@ class PrayerTimesResult {
 /// Home screen and the Adhan settings screen trigger this — Home on open,
 /// settings whenever the user changes a mode/sound choice.
 class PrayerController extends AsyncNotifier<PrayerTimesResult> {
+  /// Drives the optional "update my location automatically" refresh. Null
+  /// whenever the setting is off.
+  Timer? _autoTimer;
+
   @override
-  Future<PrayerTimesResult> build() => _load();
+  Future<PrayerTimesResult> build() {
+    // Only the two auto-location fields are selected, so changing an unrelated
+    // Adhan preference (a per-prayer sound, say) doesn't tear this controller
+    // down and re-fetch the day's times for nothing.
+    ref.listen<(bool, int)>(
+      adhanSettingsProvider.select(
+        (s) => (s.autoLocationUpdate, s.locationUpdateMinutes),
+      ),
+      (_, next) => _restartAutoRefresh(
+        enabled: next.$1,
+        minutes: next.$2,
+      ),
+      fireImmediately: true,
+    );
+    ref.onDispose(() => _autoTimer?.cancel());
+    return _load();
+  }
+
+  void _restartAutoRefresh({required bool enabled, required int minutes}) {
+    _autoTimer?.cancel();
+    _autoTimer = null;
+    if (!enabled) return;
+    _autoTimer = Timer.periodic(
+      Duration(minutes: minutes),
+      (_) => _silentRefresh(),
+    );
+  }
+
+  /// A refresh that never flips the card back to a spinner: the times on
+  /// screen stay put until real new ones arrive, and a failed GPS fix or a
+  /// dropped connection simply leaves the previous (still valid) times up.
+  ///
+  /// Note this timer only runs while the app is alive — it is a
+  /// foreground convenience, not a background location service. The Adhan
+  /// alarms themselves are already scheduled through exact alarms, so a
+  /// missed refresh delays a position correction, never an Adhan.
+  Future<void> _silentRefresh() async {
+    try {
+      final result = await _load();
+      if (result.locationDenied || result.times.isEmpty) return;
+      state = AsyncData(result);
+    } catch (_) {
+      // Keep whatever is already on screen.
+    }
+  }
 
   Future<void> refresh() async {
     state = const AsyncLoading<PrayerTimesResult>().copyWithPrevious(state);
