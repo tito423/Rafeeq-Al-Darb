@@ -879,6 +879,19 @@ class _TranslationTabState extends ConsumerState<_TranslationTab> {
           (e) => e.lang == selected,
           orElse: () => catalog.first,
         );
+        // Rebuild the whole tab — dropdown included — when a language finishes
+        // downloading, so its "needs downloading" size label disappears
+        // instead of lingering on an item that is now installed.
+        return ValueListenableBuilder<Set<String>>(
+          valueListenable: QuranTranslationStore.instance.installed,
+          builder: (context, _, _) => _tab(context, catalog, info),
+        );
+      },
+    );
+  }
+
+  Widget _tab(BuildContext context, List<QuranTranslationInfo> catalog,
+      QuranTranslationInfo info) {
         return Column(
           children: [
             Padding(
@@ -934,8 +947,6 @@ class _TranslationTabState extends ConsumerState<_TranslationTab> {
             Expanded(child: _body(info)),
           ],
         );
-      },
-    );
   }
 
   Widget _body(QuranTranslationInfo info) {
@@ -960,10 +971,7 @@ class _TranslationTabState extends ConsumerState<_TranslationTab> {
         if (_error != null) {
           return _Notice(icon: Icons.cloud_off, message: _error!);
         }
-        return ValueListenableBuilder<Set<String>>(
-          valueListenable: QuranTranslationStore.instance.installed,
-          builder: (context, _, _) => _text(info),
-        );
+        return _text(info);
       },
     );
   }
