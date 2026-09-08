@@ -191,7 +191,9 @@
     "text_blank_page": "Blank page",
     "text_ocr_badge": "Auto-extracted text",
     "sahihayn_badge": "Sahih — from the Two Sahihs",
-    "grade_unstated": "Grade: not stated"
+    "grade_unstated": "Grade: not stated",
+    "tab_channels": "Dawah Channels",
+    "tab_websites": "Islamic Websites"
   },
   "azkar": {
     "title": "Adhkar",
@@ -248,7 +250,9 @@
     "tasbeeh_lailahaillallah_ph": "La ilaha illa Allah",
     "tasbeeh_allahumma_salli_ph": "Allahumma salli ala Muhammad",
     "tasbeeh_lahawla_ph": "La hawla wa la quwwata illa billah",
-    "tasbeeh_astaghfirullah_ph": "Astaghfirullah al-'Adheem wa atubu ilayh"
+    "tasbeeh_astaghfirullah_ph": "Astaghfirullah al-'Adheem wa atubu ilayh",
+    "haptic_on": "Vibration on",
+    "haptic_off": "Vibration off"
   },
   "prayer": {
     "fajr": "Fajr",
@@ -317,7 +321,16 @@
     "auto_location_desc": "Re-acquire your position periodically while the app is open",
     "location_interval": "Update interval",
     "every_minutes": "Every {} minutes",
-    "every_hours": "Every {} hours"
+    "every_hours": "Every {} hours",
+    "adjustments": "Times & date adjustment",
+    "adjustments_hint": "Calculation method, and manual Hijri date and prayer time corrections",
+    "hijri_adjust": "Hijri date",
+    "hijri_adjust_desc": "The Hijri date is set by moon sighting and can differ by a day from any calculation. Adjust it to match what your locality announced.",
+    "times_adjust": "Prayer time adjustment",
+    "times_adjust_desc": "Add or subtract minutes from each time to match your mosque. Applies to the Adhan too.",
+    "reset_adjustments": "Reset",
+    "days_unit": "days",
+    "minutes_unit": "min"
   },
   "qibla": {
     "locating": "Locating you...",
@@ -550,5 +563,40 @@
     "download_prompt": "Download the hadith library to see a random hadith here",
     "downloading": "Downloading…",
     "another": "Another hadith"
+  },
+  "about": {
+    "blurb": "Rafeeq Al-Darb is a comprehensive Islamic app built only on real content from verified sources — no placeholder text, no dead links. Every mushaf, translation and adhan recording in it was checked against its source before it shipped.",
+    "developed_by": "Developed by",
+    "capabilities": "What the app offers",
+    "f_quran": "Seven mushafs",
+    "f_quran_desc": "A full text mushaf plus six printed editions: coloured Tajweed, Shamarly, illuminated Madinah, Indo-Pak colour-coded, Warsh and Qalun.",
+    "f_translations": "Quran in 45 languages",
+    "f_translations_desc": "An established translation per language, all 6,236 verses complete, alongside tafsir, i’rab and word meanings.",
+    "f_audio": "Recitation & adhan",
+    "f_audio_desc": "Continuous recitation with verse highlighting and auto-scroll, and ten muezzins with attributed names.",
+    "f_prayer": "Prayer times & qibla",
+    "f_prayer_desc": "Four calculation methods, manual correction of times and the Hijri date, and a qibla compass.",
+    "f_hadith": "The nine collections",
+    "f_hadith_desc": "Over forty thousand hadiths by chapter, plus a searchable text book library.",
+    "f_azkar": "Adhkar & tasbeeh",
+    "f_azkar_desc": "Day and night adhkar as cards, a digital tasbeeh, and khatma tracking.",
+    "f_offline": "Works offline",
+    "f_offline_desc": "Quran, adhkar and prayer times work with no connection, and anything downloaded stays on your device.",
+    "sources_intro": "Every piece of content in the app comes from the sources below. Tap any one to open its site and check for yourself.",
+    "sources_hint": "Where the app’s content comes from",
+    "src_quran": "Quran",
+    "src_audio": "Audio",
+    "src_hadith": "Hadith & books",
+    "src_prayer": "Prayer times",
+    "src_qurancom": "Quran text, tafsir and word meanings",
+    "src_alquran": "Quran translations in every language",
+    "src_svg": "Vector mushaf pages and verse coordinates",
+    "src_archive": "Scanned mushaf printings and adhan recordings",
+    "src_everyayah": "Per-verse recitation by reciter",
+    "src_islamicnetwork": "Recitation delivery network",
+    "src_mp3quran": "Full-surah recitations",
+    "src_sunnah": "Texts of the nine collections",
+    "src_shamela": "Text books and biographies",
+    "src_aladhan": "Prayer time calculation"
   }
 }

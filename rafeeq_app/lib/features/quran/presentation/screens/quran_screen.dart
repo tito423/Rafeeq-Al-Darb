@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
@@ -542,25 +543,37 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               label: 'quran.editions'.tr(),
                               onPressed: () => MushafEditionSheet.show(context),
                             ),
-                            // A raster edition has no text form, so its
-                            // text/image toggle is hidden (always image).
-                            if (!isRaster)
-                              ToolbarAction(
-                                icon: _mode == MushafMode.text
-                                    ? Icons.image_outlined
-                                    : Icons.notes,
-                                label: _mode == MushafMode.text
-                                    ? 'quran.mushaf_mode'.tr()
-                                    : 'quran.text_mode'.tr(),
-                                onPressed: () {
+                            // A raster printing is a finished scan with no
+                            // reflowable text of its own — but the button is
+                            // still shown, because hiding it left a reader who
+                            // had picked one of those printings with no way
+                            // back to the text reader at all. On a raster
+                            // edition it switches back to the default text
+                            // edition as well as the mode.
+                            ToolbarAction(
+                              icon: (_mode == MushafMode.text && !isRaster)
+                                  ? Icons.image_outlined
+                                  : Icons.notes,
+                              label: (_mode == MushafMode.text && !isRaster)
+                                  ? 'quran.mushaf_mode'.tr()
+                                  : 'quran.text_mode'.tr(),
+                              onPressed: () {
+                                if (isRaster) {
+                                  ref
+                                      .read(selectedMushafEditionProvider
+                                          .notifier)
+                                      .select(AppConfig.defaultMushafEdition);
+                                  setState(() => _mode = MushafMode.text);
+                                } else {
                                   setState(() {
                                     _mode = _mode == MushafMode.text
                                         ? MushafMode.image
                                         : MushafMode.text;
                                   });
-                                  _persistMode();
-                                },
-                              ),
+                                }
+                                _persistMode();
+                              },
+                            ),
                           ],
                         ),
                       ),

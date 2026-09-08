@@ -18,15 +18,11 @@ wire. Gzipped they are ~250-350 KB each, so fetching just the language a reader
 actually picks is effectively instant, and it follows the pattern the books and
 hadith DB already use.
 
-Each edition is verified to be essentially complete before it is uploaded. Two
-of them (ko.korean, ku.asan) have exactly one ayah left blank upstream
-(40:81 and 108:3 respectively) — a real gap in the source data, not a fetch
-failure, and re-fetching reproduces it exactly. Rather than drop two whole
-languages over one verse each, those are shipped with the 6235 verses that do
-exist; the reader sees the reader's normal "not available" notice on that
-single ayah and nothing is ever invented to fill it. The real count is recorded
-as `ayahs` in the catalog so the gap is visible rather than hidden. Anything
-missing more than a handful of verses is still rejected outright.
+Every edition must contain all 6236 ayahs. Korean (`ko.korean`) and Kurdish
+(`ku.asan`) were briefly shipped with 6235 — each has exactly one verse left
+blank upstream (40:81 and 108:3), reproducibly — but the owner asked for any
+language with a gap to be dropped rather than shipped incomplete, so both were
+removed. A translation is all of the Qur'an or it is not offered.
 
 Writes:
   * R2   `quran/translations/<lang>.json.gz`
@@ -76,8 +72,6 @@ PICKS = {
     "id": ("id.indonesian", "Bahasa Indonesia", "Kementerian Agama RI"),
     "it": ("it.piccardo", "Italiano", "Hamza Roberto Piccardo"),
     "ja": ("ja.japanese", "日本語", "Ryoichi Mita"),
-    "ko": ("ko.korean", "한국어", "Hamid Choi"),
-    "ku": ("ku.asan", "کوردی", "Burhan Muhammad-Amin"),
     "ml": ("ml.abdulhameed", "മലയാളം", "Abdul Hameed & Parappoor"),
     "ms": ("ms.basmeih", "Bahasa Melayu", "Abdullah Muhammad Basmeih"),
     "my": ("my.ghazi", "မြန်မာ", "Ghazi Hashim"),
@@ -112,9 +106,6 @@ BUNDLED = {"en", "es", "fr", "pt", "ru", "ur"}
 SRC = "https://api.alquran.cloud/v1/quran/{}"
 DST_KEY = "quran/translations/{}.json.gz"
 TOTAL_AYAHS = 6236
-# Allow the couple of upstream editions with a single blank verse (see the
-# module docstring); reject anything genuinely partial.
-MIN_AYAHS = 6230
 WORKERS = 8
 FORCE = "--force" in sys.argv
 
@@ -167,7 +158,7 @@ def fetch_edition(edition):
             text = (ayah.get("text") or "").strip()
             if text:
                 out[f"{surah['number']}:{ayah['numberInSurah']}"] = text
-    if len(out) < MIN_AYAHS:
+    if len(out) != TOTAL_AYAHS:
         raise ValueError(f"incomplete: {len(out)}/{TOTAL_AYAHS} ayahs")
     return out
 

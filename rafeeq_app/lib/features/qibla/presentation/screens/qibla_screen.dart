@@ -12,6 +12,7 @@ import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
+import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 
 /// P3‑16 — a real Qibla compass, the star feature of the new "الصلاة" tab.
 /// "روعه بصريا... باحترافية شديدة جدا" (owner: should look genuinely
@@ -173,6 +174,8 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
             _buildCompassCard(context),
             const SizedBox(height: 16),
             _AdhanSettingsLink(),
+            const SizedBox(height: 12),
+            const _PrayerAdjustmentsLink(),
           ],
         ),
       ),
@@ -506,6 +509,31 @@ class _DialPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _DialPainter oldDelegate) => false;
+}
+
+/// Sits directly under the Adhan-settings card: everything that decides *when*
+/// a prayer is, as opposed to how it is announced.
+class _PrayerAdjustmentsLink extends StatelessWidget {
+  const _PrayerAdjustmentsLink();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.tune_rounded, color: AppColors.gold),
+        title: Text('prayer.adjustments'.tr()),
+        subtitle: Text('prayer.adjustments_hint'.tr(),
+            style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
+        trailing: const Icon(Icons.chevron_left),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => const PrayerAdjustmentsScreen(),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _AdhanSettingsLink extends StatelessWidget {

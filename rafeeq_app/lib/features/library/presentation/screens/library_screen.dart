@@ -13,6 +13,7 @@ import '../../data/library_api_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../data/book_catalog.dart';
+import '../../data/hadith_imam_bios.dart';
 import '../../data/book_category.dart';
 import 'book_text_reader_screen.dart';
 import 'hadith_book_screen.dart';
@@ -861,54 +862,80 @@ class _HadithBookTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final bio = hadithImamBios[book.key];
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
-          child: Row(
+          padding: const EdgeInsets.fromLTRB(14, 14, 10, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: AppColors.gold.withValues(alpha: 0.14),
-                child: Icon(Icons.menu_book_rounded,
-                    color: AppColors.gold, size: 22),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 22,
+                    backgroundColor: AppColors.gold.withValues(alpha: 0.14),
+                    child: Icon(Icons.menu_book_rounded,
+                        color: AppColors.gold, size: 22),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          book.nameAr,
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(height: 3),
+                        // The compiler's full name, wrapped rather than
+                        // ellipsised: it used to be clipped to one line, so
+                        // "الإمام أبو محمد عبد الرحمن بن عبد الله بن الدارمي"
+                        // showed as a fragment with no way to read the rest.
+                        Text(
+                          book.authorAr,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_left, color: scheme.onSurfaceVariant),
+                ],
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      book.nameAr,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      book.authorAr,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: scheme.onSurfaceVariant),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '${book.chapterCount} ${'library.chapters'.tr()}  ·  '
-                      '${book.hadithCount} ${'library.hadiths_count'.tr()}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: scheme.outline),
-                    ),
-                  ],
+              if (bio != null) ...[
+                const SizedBox(height: 10),
+                Text(
+                  bio,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant.withValues(alpha: 0.85),
+                    height: 1.6,
+                  ),
                 ),
+              ],
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  _CountChip(
+                    icon: Icons.format_list_numbered_rounded,
+                    label: 'library.hadiths_count'.tr(),
+                    value: book.hadithCount,
+                  ),
+                  const SizedBox(width: 8),
+                  _CountChip(
+                    icon: Icons.bookmarks_outlined,
+                    label: 'library.chapters'.tr(),
+                    value: book.chapterCount,
+                  ),
+                ],
               ),
-              Icon(Icons.chevron_left, color: scheme.onSurfaceVariant),
             ],
           ),
         ),
@@ -916,6 +943,44 @@ class _HadithBookTile extends StatelessWidget {
     );
   }
 }
+
+/// One count pill (hadiths / chapters) on a collection's card.
+class _CountChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final int value;
+  const _CountChip({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.gold.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.28)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: AppColors.gold),
+          const SizedBox(width: 6),
+          Text(
+            '$value $label',
+            style: theme.textTheme.labelSmall
+                ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 class _SearchResults extends StatefulWidget {
   final HadithRepository repo;

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "api.alquran.cloud — one established translation per language, rehosted first-party on R2",
-  "total": 47,
+  "total": 45,
   "translations": [
     {
       "lang": "am",
@@ -181,24 +181,6 @@
       "translator": "Ryoichi Mita",
       "gz_bytes": 349144,
       "ayahs": 6236,
-      "bundled": false
-    },
-    {
-      "lang": "ko",
-      "native_name": "한국어",
-      "edition": "ko.korean",
-      "translator": "Hamid Choi",
-      "gz_bytes": 317005,
-      "ayahs": 6235,
-      "bundled": false
-    },
-    {
-      "lang": "ku",
-      "native_name": "کوردی",
-      "edition": "ku.asan",
-      "translator": "Burhan Muhammad-Amin",
-      "gz_bytes": 551103,
-      "ayahs": 6235,
       "bundled": false
     },
     {

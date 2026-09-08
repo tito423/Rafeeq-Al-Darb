@@ -9,6 +9,7 @@ import '../../adhan/data/adhan_catalog_provider.dart';
 import '../../adhan/data/adhan_presentation_provider.dart';
 import '../../adhan/data/adhan_scheduler.dart';
 import '../../adhan/data/adhan_settings_provider.dart';
+import '../../adhan/data/prayer_adjustments_provider.dart';
 
 /// Real prayer times for today, plus whether we could even ask — no location
 /// permission means no real times to show, so the UI must say that honestly
@@ -43,6 +44,11 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       ),
       fireImmediately: true,
     );
+    // Re-fetch when the manual corrections change so the card, the alarms and
+    // the status notification all move together.
+    ref.listen<PrayerAdjustments>(prayerAdjustmentsProvider, (_, _) {
+      refresh();
+    });
     ref.onDispose(() => _autoTimer?.cancel());
     return _load();
   }
@@ -104,13 +110,19 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       return PrayerTimesResult(times: PrayerTimes.empty(), locationDenied: true);
     }
     final settings = ref.read(adhanSettingsProvider);
-    final times = await PrayerTimesService().fetchPrayerTimes(
+    final rawTimes = await PrayerTimesService().fetchPrayerTimes(
       lat: pos.latitude,
       lon: pos.longitude,
       cityName: pos.locality ?? '',
       countryName: pos.country ?? '',
       method: settings.calculationMethod,
     );
+    // The user's own corrections are applied here, before scheduling, so the
+    // Adhan fires at the time they actually see on the card rather than the
+    // uncorrected calculation.
+    final adjustments = ref.read(prayerAdjustmentsProvider);
+    final times =
+        rawTimes.withOffsets(adjustments.minuteOffsets, applyMinuteOffset);
     if (!times.isEmpty) {
       await _reschedule(times);
     }

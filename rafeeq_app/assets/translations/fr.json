@@ -191,7 +191,9 @@
     "text_ocr_badge": "Texte extrait automatiquement",
     "sahihayn_badge": "Sahih — des Deux Sahihs",
     "grade_unstated": "Degré : non précisé",
-    "sub_authors": "Auteurs"
+    "sub_authors": "Auteurs",
+    "tab_channels": "Chaînes de daawa",
+    "tab_websites": "Sites islamiques"
   },
   "azkar": {
     "title": "Adhkar",
@@ -248,7 +250,9 @@
     "tasbeeh_lailahaillallah_ph": "La ilaha illa Allah",
     "tasbeeh_allahumma_salli_ph": "Allahumma salli ala Muhammad",
     "tasbeeh_lahawla_ph": "La hawla wa la quwwata illa billah",
-    "tasbeeh_astaghfirullah_ph": "Astaghfirullah al-'Adheem wa atubu ilayh"
+    "tasbeeh_astaghfirullah_ph": "Astaghfirullah al-'Adheem wa atubu ilayh",
+    "haptic_on": "Vibration activée",
+    "haptic_off": "Vibration désactivée"
   },
   "prayer": {
     "fajr": "Fajr",
@@ -317,7 +321,16 @@
     "calc_umm_alqura": "Umm Al-Qura",
     "calc_egyptian": "Autorité générale égyptienne de topographie",
     "calc_mwl": "Ligue islamique mondiale",
-    "calc_isna": "ISNA (Amérique du Nord)"
+    "calc_isna": "ISNA (Amérique du Nord)",
+    "adjustments": "Réglage des horaires et de la date",
+    "adjustments_hint": "Méthode de calcul, correction manuelle de la date hégirienne et des horaires",
+    "hijri_adjust": "Date hégirienne",
+    "hijri_adjust_desc": "La date hégirienne dépend de l'observation de la lune et peut différer d'un jour du calcul. Ajustez-la à ce qui est annoncé chez vous.",
+    "times_adjust": "Réglage des horaires de prière",
+    "times_adjust_desc": "Ajoutez ou retirez des minutes à chaque horaire pour correspondre à votre mosquée. S'applique aussi à l'adhan.",
+    "reset_adjustments": "Réinitialiser",
+    "days_unit": "jours",
+    "minutes_unit": "min"
   },
   "qibla": {
     "locating": "Localisation en cours...",
@@ -550,5 +563,40 @@
     "download_prompt": "Téléchargez la bibliothèque de hadiths pour voir un hadith aléatoire ici",
     "downloading": "Téléchargement…",
     "another": "Autre hadith"
+  },
+  "about": {
+    "blurb": "Rafeeq Al-Darb est une application islamique complète bâtie uniquement sur du contenu réel issu de sources vérifiées : aucun texte de remplissage, aucun lien mort. Chaque moushaf, traduction et enregistrement d'adhan a été vérifié à la source avant publication.",
+    "developed_by": "Développé par",
+    "capabilities": "Ce que propose l'application",
+    "f_quran": "Sept moushafs",
+    "f_quran_desc": "Un moushaf texte intégral et six éditions imprimées : tajwid en couleurs, Shamarly, Médine enluminé, indo-pakistanais en couleurs, Warsh et Qalun.",
+    "f_translations": "Le Coran en 45 langues",
+    "f_translations_desc": "Une traduction reconnue par langue, les 6 236 versets au complet, avec le tafsir, l'i’rab et le sens des mots.",
+    "f_audio": "Récitation et adhan",
+    "f_audio_desc": "Récitation continue avec surlignage du verset et défilement automatique, et dix muezzins aux noms vérifiés.",
+    "f_prayer": "Horaires et qibla",
+    "f_prayer_desc": "Quatre méthodes de calcul, correction manuelle des horaires et de la date hégirienne, et boussole qibla.",
+    "f_hadith": "Les neuf recueils",
+    "f_hadith_desc": "Plus de quarante mille hadiths par chapitres, ainsi qu'une bibliothèque de livres avec recherche.",
+    "f_azkar": "Adhkar et tasbih",
+    "f_azkar_desc": "Adhkar du jour et de la nuit en cartes, tasbih numérique et suivi de la khatma.",
+    "f_offline": "Fonctionne hors ligne",
+    "f_offline_desc": "Le Coran, les adhkar et les horaires fonctionnent sans connexion, et ce qui est téléchargé reste sur votre appareil.",
+    "sources_intro": "Tout le contenu de l'application provient des sources ci-dessous. Touchez-en une pour ouvrir son site et vérifier par vous-même.",
+    "sources_hint": "D'où vient le contenu",
+    "src_quran": "Coran",
+    "src_audio": "Audio",
+    "src_hadith": "Hadith et livres",
+    "src_prayer": "Horaires",
+    "src_qurancom": "Texte du Coran, tafsir et sens des mots",
+    "src_alquran": "Traductions du Coran dans toutes les langues",
+    "src_svg": "Pages vectorielles et coordonnées des versets",
+    "src_archive": "Moushafs numérisés et enregistrements d'adhan",
+    "src_everyayah": "Récitation verset par verset",
+    "src_islamicnetwork": "Réseau de diffusion des récitations",
+    "src_mp3quran": "Récitations de sourates entières",
+    "src_sunnah": "Textes des neuf recueils",
+    "src_shamela": "Livres et biographies",
+    "src_aladhan": "Calcul des horaires de prière"
   }
 }

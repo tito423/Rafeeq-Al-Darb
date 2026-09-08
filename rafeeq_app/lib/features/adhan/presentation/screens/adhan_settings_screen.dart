@@ -310,31 +310,6 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                     ref.read(prayerStatusEnabledProvider.notifier).set(v),
               ),
             ),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: DropdownButtonFormField<int>(
-                  decoration: InputDecoration(
-                    labelText: 'prayer.calc_method'.tr(),
-                    icon: const Icon(Icons.calculate_outlined),
-                    border: InputBorder.none,
-                  ),
-                  initialValue: settings.calculationMethod,
-                  items: [
-                    DropdownMenuItem(value: 4, child: Text('prayer.calc_umm_alqura'.tr())),
-                    DropdownMenuItem(value: 5, child: Text('prayer.calc_egyptian'.tr())),
-                    DropdownMenuItem(value: 3, child: Text('prayer.calc_mwl'.tr())),
-                    DropdownMenuItem(value: 2, child: Text('prayer.calc_isna'.tr())),
-                  ],
-                  onChanged: (v) {
-                    if (v != null) {
-                      ref.read(adhanSettingsProvider.notifier).setCalculationMethod(v);
-                      ref.read(prayerControllerProvider.notifier).refresh();
-                    }
-                  },
-                ),
-              ),
-            ),
             // Prayer times move with the device's position, so a traveller
             // can have the app re-acquire it on a timer instead of only at
             // launch. Off by default — a fix costs battery, and most users

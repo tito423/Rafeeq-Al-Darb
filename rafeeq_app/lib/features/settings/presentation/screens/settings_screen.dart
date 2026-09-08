@@ -8,6 +8,8 @@ import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
 import '../widgets/non_arabic_reading_card.dart';
+import 'about_screen.dart';
+import 'sources_screen.dart';
 import '../widgets/permissions_section.dart';
 
 /// Every locale the app ships, labelled in its own script.
@@ -211,17 +213,22 @@ class SettingsBody extends ConsumerWidget {
               leading: Icon(Icons.info_outline, color: scheme.primary),
               title: Text('app.name'.tr()),
               subtitle: Text('settings.about_desc'.tr()),
+              trailing: const Icon(Icons.chevron_left),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
+              ),
             ),
           ),
           const SizedBox(height: 8),
           Card(
             child: ListTile(
-              leading: Icon(Icons.verified_user_outlined, color: scheme.primary),
+              leading:
+                  Icon(Icons.verified_user_outlined, color: scheme.primary),
               title: Text('settings.credits'.tr()),
-              subtitle: Text(
-                'Quran.com • Sunnah.com • api.quran.com • api.alquran.cloud • api.aladhan.com • '
-                'cdn.islamic.network • mp3quran.net • islamcan.com • '
-                'quranpedia/quran-svg (CC0)',
+              subtitle: Text('about.sources_hint'.tr()),
+              trailing: const Icon(Icons.chevron_left),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const SourcesScreen()),
               ),
             ),
           ),

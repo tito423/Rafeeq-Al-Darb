@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hijri/hijri_calendar.dart';
 
+import '../../../adhan/data/prayer_adjustments_provider.dart';
+
 import '../../../../core/utils/time_formatter.dart';
 import '../../../../core/services/prayer_times_service.dart';
 import '../../../../core/models/prayer_times.dart';
@@ -125,13 +127,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 /// swap this for the signed-in user's real name; do **not** invent one in
 /// the meantime — that would be exactly the kind of placeholder data rule
 /// 1 forbids.
-class _HeaderCard extends StatelessWidget {
+class _HeaderCard extends ConsumerWidget {
   const _HeaderCard();
 
-  String _hijriLine(String localeCode) {
+  /// [offsetDays] is the reader's own correction (see `PrayerAdjustments`) —
+  /// the Hijri date is set by moon sighting, so an arithmetic calendar can sit
+  /// a day either side of what a locality actually announced.
+  String _hijriLine(String localeCode, int offsetDays) {
     final lang = localeCode == 'ar' ? 'ar' : 'en';
     HijriCalendar.setLocal(lang);
-    final h = HijriCalendar.now();
+    final h = HijriCalendar.fromDate(
+      DateTime.now().add(Duration(days: offsetDays)),
+    );
     const monthsAr = [
       '',
       'محرم',
@@ -173,7 +180,7 @@ class _HeaderCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isLight = Theme.of(context).brightness == Brightness.light;
     // Same teal/gold brand identity in both themes, just re-pitched: a
     // parchment-toned gradient + dark ink text for Light, the original
@@ -224,7 +231,8 @@ class _HeaderCard extends StatelessWidget {
               fit: BoxFit.scaleDown,
               alignment: AlignmentDirectional.centerStart,
               child: Text(
-                _hijriLine(context.locale.languageCode),
+                _hijriLine(context.locale.languageCode,
+                    ref.watch(prayerAdjustmentsProvider).hijriOffsetDays),
                 maxLines: 1,
                 style: TextStyle(
                   color: hijriColor,

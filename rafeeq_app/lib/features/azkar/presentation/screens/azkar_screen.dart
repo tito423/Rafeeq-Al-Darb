@@ -85,8 +85,10 @@ const _categoryOrder = [
 const _categoryBackgroundUrls = <AzkarCategory, String>{
   AzkarCategory.waking:
       'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=640&q=70&fit=crop',
+  // A mosque under dawn light — the morning adhkar are read at first light,
+  // so the card now actually looks like when they belong.
   AzkarCategory.morning:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=640&q=70&fit=crop',
+      'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=640&q=70&fit=crop',
   AzkarCategory.mosque:
       'https://images.unsplash.com/photo-1591604129939-f1efa4d99f7e?w=640&q=70&fit=crop',
   AzkarCategory.afterPrayer:
