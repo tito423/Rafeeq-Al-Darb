@@ -436,7 +436,9 @@
     "source_cdn": "يُشغَّل من شبكة التوزيع — قد يكون التنزيل أبطأ",
     "incomplete_tap_retry": "لم يكتمل — اضغط لإعادة المحاولة",
     "preparing": "جارٍ التحضير…",
-    "now_downloading": "جارٍ تنزيل {}"
+    "now_downloading": "جارٍ تنزيل {}",
+    "repair_resumed": "تم استئناف {} تحميل غير مكتمل",
+    "repair_nothing": "لا توجد تحميلات غير مكتملة"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",

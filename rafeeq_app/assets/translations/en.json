@@ -436,7 +436,9 @@
     "source_cdn": "Served from the CDN — downloads may be slower",
     "incomplete_tap_retry": "Incomplete — tap to retry",
     "preparing": "Preparing…",
-    "now_downloading": "Downloading {}"
+    "now_downloading": "Downloading {}",
+    "repair_resumed": "Resumed {} unfinished download(s)",
+    "repair_nothing": "Nothing was left unfinished"
   },
   "new_muslim": {
     "title": "New Muslim Guide",

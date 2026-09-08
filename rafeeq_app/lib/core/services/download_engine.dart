@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:background_downloader/background_downloader.dart';
 
 /// The one place `background_downloader` is configured for the whole app.
@@ -56,6 +58,34 @@ class DownloadEngine {
 
   static bool _ready = false;
 
+  /// A broadcast fan-out of the plugin's own update stream.
+  ///
+  /// `FileDownloader().updates` is backed by a plain `StreamController`, i.e.
+  /// **single-subscription**: the second listener to attach gets
+  /// "Bad state: Stream has already been listened to" and then never receives
+  /// anything. Two services here need those updates — `DownloadManager` for
+  /// the hadith DB, books and adhan clips, and `AyahAudioService` for every
+  /// ayah of a recitation — so whichever happened to attach second was
+  /// silently deaf for the whole session.
+  ///
+  /// That is not a cosmetic bug. A service that never sees a status update
+  /// never marks its tasks finished: recitation progress freezes mid-surah,
+  /// the multi-host fallback that retries an ayah on the next CDN never
+  /// fires, "download whole reciter" never advances past its first surah,
+  /// and on the other side the hadith zip is never unpacked and registered
+  /// even though the bytes arrived. It also depended on load order, which is
+  /// why it looked intermittent.
+  ///
+  /// Everything now listens here instead, and this subscribes exactly once.
+  static final StreamController<TaskUpdate> _updates =
+      StreamController<TaskUpdate>.broadcast();
+
+  /// Task updates for every consumer in the app. Safe to listen to any number
+  /// of times, and from anywhere.
+  static Stream<TaskUpdate> get updates => _updates.stream;
+
+  static StreamSubscription<TaskUpdate>? _sourceSub;
+
   /// Idempotent — safe to call from every entry point that might be first.
   static Future<void> ensureInitialized() async {
     if (_ready) return;
@@ -102,6 +132,13 @@ class DownloadEngine {
     // showing as lost.
     await downloader.trackTasksInGroup(groupFiles);
     await downloader.trackTasksInGroup(groupRecitations);
+
+    // The one and only subscription to the plugin's single-subscription
+    // stream; everyone else reads [updates].
+    _sourceSub ??= downloader.updates.listen(
+      _updates.add,
+      onError: _updates.addError,
+    );
   }
 
   /// Re-attaches to transfers the OS kept running while the app was gone.

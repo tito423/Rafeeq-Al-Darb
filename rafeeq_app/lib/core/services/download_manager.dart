@@ -96,7 +96,9 @@ class DownloadManager {
     if (_wired) return;
     _wired = true;
     await DownloadEngine.ensureInitialized();
-    _updates = bd.FileDownloader().updates.listen(_onUpdate);
+    // Via DownloadEngine's broadcast fan-out — the plugin's own stream is
+    // single-subscription and AyahAudioService needs it too.
+    _updates = DownloadEngine.updates.listen(_onUpdate);
     await DownloadEngine.resumeFromBackground();
   }
 

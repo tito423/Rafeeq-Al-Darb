@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../features/quran/data/mushaf_edition.dart';
 import '../config/app_config.dart';
 import 'download_foreground_service.dart';
 import 'download_notifications.dart';
@@ -195,6 +197,37 @@ class MushafPageService {
   /// (tab switch, list recycle — the P2‑1.4 bug) can therefore re-attach to a
   /// running download instead of losing it. P2‑5 folds this into a unified
   /// download manager.
+  /// Resumes any edition whose page cache is partial — the mushaf half of the
+  /// Downloads screen's "repair" action.
+  ///
+  /// Like the recitation half, this was previously invisible to repair:
+  /// `DownloadManager.resumeAll()` only knows about its own tasks, while a
+  /// 604-page edition download runs here. An edition that was interrupted
+  /// stayed at, say, 431/604 until the user happened to reopen its tile.
+  ///
+  /// Only genuinely partial editions are resumed; untouched ones are left
+  /// alone so repair never starts a download nobody asked for.
+  Future<int> repairPartialEditions(List<MushafEdition> editions) async {
+    var repaired = 0;
+    for (final e in editions) {
+      if (isPrefetching(e.id)) continue;
+      final cached = await cachedPages(e.id, totalPages: e.pages);
+      if (cached.isEmpty || cached.length >= e.pages) continue;
+      unawaited(
+        prefetchEdition(
+          editionId: e.id,
+          sourcePath: e.sourcePath,
+          imagePath: e.imagePath,
+          imageExt: e.imageExt,
+          toPage: e.pages,
+          title: e.nameAr,
+        ),
+      );
+      repaired++;
+    }
+    return repaired;
+  }
+
   Future<void> prefetchEdition({
     required String editionId,
     required String sourcePath,

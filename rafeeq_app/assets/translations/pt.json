@@ -436,7 +436,9 @@
     "preparing": "A preparar…",
     "now_downloading": "A transferir {}",
     "repair": "Reparar transferências",
-    "repairing": "A retomar transferências interrompidas..."
+    "repairing": "A retomar transferências interrompidas...",
+    "repair_resumed": "Retomada(s) {} transferência(s) incompleta(s)",
+    "repair_nothing": "Não há transferências incompletas"
   },
   "new_muslim": {
     "title": "Guia do novo muçulmano",

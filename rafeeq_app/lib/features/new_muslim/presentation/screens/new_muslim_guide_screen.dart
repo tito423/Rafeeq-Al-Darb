@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
@@ -108,7 +107,8 @@ class NewMuslimGuideScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(14),
+                          padding: EdgeInsets.all(
+                              section.icon == 'prayer' ? 5 : 14),
                           decoration: BoxDecoration(
                             color: Colors.black.withValues(alpha: 0.35),
                             shape: BoxShape.circle,
@@ -116,13 +116,19 @@ class NewMuslimGuideScreen extends StatelessWidget {
                               color: AppColors.gold.withValues(alpha: 0.6),
                             ),
                           ),
+                          // The owner's own artwork for the prayer steps —
+                          // used exactly as supplied, so it keeps its colours
+                          // rather than being tinted to match the other
+                          // glyphs. It is already a round medallion, so it
+                          // fills the circle instead of sitting inside it.
                           child: section.icon == 'prayer'
-                              ? SvgPicture.asset(
-                                  'assets/icons/praying_person.svg',
-                                  width: 34,
-                                  height: 34,
-                                  colorFilter: const ColorFilter.mode(
-                                      AppColors.gold, BlendMode.srcIn),
+                              ? ClipOval(
+                                  child: Image.asset(
+                                    'assets/icons/prayer_steps.jpeg',
+                                    width: 46,
+                                    height: 46,
+                                    fit: BoxFit.cover,
+                                  ),
                                 )
                               : Icon(
                                   _icons[section.icon] ?? Icons.book_outlined,

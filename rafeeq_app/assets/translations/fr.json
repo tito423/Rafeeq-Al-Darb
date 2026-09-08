@@ -436,7 +436,9 @@
     "preparing": "Préparation…",
     "now_downloading": "Téléchargement de {}",
     "repair": "Réparer les téléchargements",
-    "repairing": "Reprise des téléchargements interrompus..."
+    "repairing": "Reprise des téléchargements interrompus...",
+    "repair_resumed": "{} téléchargement(s) inachevé(s) repris",
+    "repair_nothing": "Aucun téléchargement inachevé"
   },
   "new_muslim": {
     "title": "Guide du nouveau musulman",

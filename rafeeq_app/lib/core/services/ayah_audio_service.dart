@@ -576,7 +576,8 @@ class AyahAudioService {
     if (_wired) return;
     _wired = true;
     await DownloadEngine.ensureInitialized();
-    _downloadUpdates = bd.FileDownloader().updates.listen(_onDownloadUpdate);
+    // Via DownloadEngine's broadcast fan-out — see its `updates` doc.
+    _downloadUpdates = DownloadEngine.updates.listen(_onDownloadUpdate);
   }
 
   void _onDownloadUpdate(bd.TaskUpdate update) {
@@ -693,6 +694,50 @@ class AyahAudioService {
       totalSurahs: surahs.length,
       running: false,
     );
+  }
+
+  /// Finds every surah of [edition] that is partly downloaded and resumes it.
+  ///
+  /// This is what the Downloads screen's "repair" action needs for recitations.
+  /// `DownloadManager.resumeAll()` only ever knew about its own tasks (hadith,
+  /// books, adhan clips) — recitations run through this service instead, so a
+  /// surah left half-finished by a kill, a dropped connection or an OEM freeze
+  /// was invisible to repair and stayed stuck until the user found and tapped
+  /// that exact surah again. Large surahs are the ones this bites: al-Baqarah
+  /// alone is 286 separate files, so it is the most likely to be interrupted
+  /// and the most tedious to notice.
+  ///
+  /// Returns the number of surahs it restarted. Fully-downloaded and
+  /// not-started surahs are both left alone — repair resumes real partial
+  /// work, it does not start new downloads the user never asked for.
+  Future<int> repairPartialDownloads({
+    required String edition,
+    required List<Surah> surahs,
+    required QuranRepository repo,
+  }) async {
+    var repaired = 0;
+    for (final s in surahs) {
+      if (isDownloading(edition, s.id)) continue;
+      final progress = await surahProgress(
+        s.id,
+        s.ayahsCount,
+        repo,
+        edition: edition,
+      );
+      // Untouched or already complete — nothing to repair.
+      if (progress.done == 0 || progress.isComplete) continue;
+      _paused.remove(_jobKey(edition, s.id));
+      unawaited(
+        _downloadSurahInternal(
+          edition: edition,
+          surah: s.id,
+          ayahCount: s.ayahsCount,
+          repo: repo,
+        ),
+      );
+      repaired++;
+    }
+    return repaired;
   }
 
   /// Start (or no-op if already running) a single surah's download.

@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/services/ayah_audio_service.dart';
+import '../../../../core/db/quran_repository.dart';
 import '../../../../core/services/download_manager.dart';
+import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/services/recitation_source.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
@@ -72,17 +74,7 @@ class DownloadsScreen extends ConsumerWidget {
         body: const TabBarView(
           children: [_OverviewTab(), _MushafsTab(), _RecitationsTab()],
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            DownloadManager.instance.resumeAll();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('downloads.repairing'.tr())),
-            );
-          },
-          icon: const Icon(Icons.build_rounded),
-          label: Text('downloads.repair'.tr()),
-          backgroundColor: AppColors.gold,
-        ),
+        floatingActionButton: const _RepairButton(),
       ),
     );
   }
@@ -959,6 +951,96 @@ class _SurahAudioTileState extends State<_SurahAudioTile> {
           ),
         );
       },
+    );
+  }
+}
+
+
+// ── Repair ─────────────────────────────────────────────────────────────────
+
+/// Resumes everything that was left half-finished, across all three download
+/// engines.
+///
+/// The button used to call `DownloadManager.resumeAll()` alone, which only
+/// knows about hadith, books and adhan clips. Recitations run through
+/// [AyahAudioService] and mushaf pages through [MushafPageService], so the two
+/// downloads most likely to be interrupted — a 286-file surah, a 604-page
+/// edition — were exactly the two repair could never touch. It now asks all
+/// three and reports what it actually restarted, rather than always claiming
+/// success.
+class _RepairButton extends ConsumerStatefulWidget {
+  const _RepairButton();
+
+  @override
+  ConsumerState<_RepairButton> createState() => _RepairButtonState();
+}
+
+class _RepairButtonState extends ConsumerState<_RepairButton> {
+  bool _busy = false;
+
+  Future<void> _repair() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(
+      SnackBar(content: Text('downloads.repairing'.tr())),
+    );
+
+    var resumed = 0;
+    try {
+      // 1. Hadith / books / adhan — the platform downloader's own queue.
+      await DownloadManager.instance.resumeAll();
+
+      // 2. Recitations — partial surahs for the reciter in use.
+      try {
+        final repo = await ref.read(quranRepositoryProvider.future);
+        final data = await ref.read(mushafDataProvider.future);
+        final edition = ref.read(selectedReciterProvider);
+        resumed += await AyahAudioService.instance.repairPartialDownloads(
+          edition: edition,
+          surahs: data.surahs,
+          repo: repo,
+        );
+      } catch (_) {
+        // A missing Quran DB just means there is nothing to repair here.
+      }
+
+      // 3. Mushaf editions with a partial page cache.
+      try {
+        final editions = await ref.read(mushafEditionsProvider.future);
+        resumed +=
+            await MushafPageService.instance.repairPartialEditions(editions);
+      } catch (_) {}
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+
+    if (!mounted) return;
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          resumed > 0
+              ? 'downloads.repair_resumed'.tr(args: ['$resumed'])
+              : 'downloads.repair_nothing'.tr(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: _busy ? null : _repair,
+      icon: _busy
+          ? const SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.build_rounded),
+      label: Text('downloads.repair'.tr()),
+      backgroundColor: AppColors.gold,
     );
   }
 }

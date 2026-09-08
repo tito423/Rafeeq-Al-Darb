@@ -436,7 +436,9 @@
     "source_cdn": "CDN سے فراہم — ڈاؤن لوڈ سست ہو سکتا ہے",
     "incomplete_tap_retry": "نامکمل — دوبارہ کوشش کے لیے دبائیں",
     "preparing": "تیاری جاری…",
-    "now_downloading": "{} ڈاؤن لوڈ ہو رہا ہے"
+    "now_downloading": "{} ڈاؤن لوڈ ہو رہا ہے",
+    "repair_resumed": "{} نامکمل ڈاؤن لوڈ دوبارہ شروع کیے گئے",
+    "repair_nothing": "کوئی نامکمل ڈاؤن لوڈ نہیں"
   },
   "new_muslim": {
     "title": "نئے مسلمان کی رہنمائی",
