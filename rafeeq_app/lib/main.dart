@@ -125,6 +125,9 @@ Future<void> main() async {
         Locale('ru'),
         Locale('pt'),
         Locale('fr'),
+        // Urdu: RTL like Arabic, so the whole shell mirrors the same way the
+        // Arabic locale already does — nothing special-cased for it.
+        Locale('ur'),
       ],
       path: 'assets/translations',
       fallbackLocale: const Locale('ar'),

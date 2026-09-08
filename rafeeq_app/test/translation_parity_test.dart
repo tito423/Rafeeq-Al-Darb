@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// one locale and forgetting the others is the classic i18n bug — this fails
 /// the build instead of letting a raw `some.key` ship on screen.
 void main() {
-  const locales = ['ar', 'en', 'es', 'ru', 'pt', 'fr'];
+  const locales = ['ar', 'en', 'es', 'ru', 'pt', 'fr', 'ur'];
 
   Set<String> keysOf(String locale) {
     final raw = File('assets/translations/$locale.json').readAsStringSync();

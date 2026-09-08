@@ -24,6 +24,7 @@ const _onboardingLanguageNames = <String, String>{
   'ru': 'Русский',
   'pt': 'Português',
   'fr': 'Français',
+  'ur': 'اردو',
 };
 
 /// P3‑21: first-run onboarding — structured like the reference video's own

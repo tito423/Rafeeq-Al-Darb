@@ -257,6 +257,26 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     }
   }
 
+  /// Opens one settings section as its own full-screen page.
+  ///
+  /// A `MaterialPageRoute` rather than a modal sheet: these are ordinary
+  /// settings sub-pages with their own back affordance, and the adhan list in
+  /// particular is long enough that a sheet would just reintroduce the nested
+  /// scrolling this replaced.
+  Future<void> _openFullScreen({
+    required String title,
+    required WidgetBuilder builder,
+  }) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => Scaffold(
+          appBar: AppBar(title: Text(title)),
+          body: SafeArea(child: builder(context)),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -389,15 +409,18 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
               ),
             ),
             const SizedBox(height: 20),
-            // P3‑46: real-device feedback — this screen had every section
-            // (the ~10-item adhan list AND five per-prayer cards) expanded
-            // at once, an overwhelming wall to scroll. The two long ones are
-            // now collapsed by default behind `ExpansionTile`s; the default
-            // adhan's header shows the current pick so the common case (just
-            // seeing/changing which adhan plays) needs no expand at all.
+            // P3‑46: this screen used to have every section (the ~10-item
+            // adhan list AND five per-prayer cards) expanded at once, an
+            // overwhelming wall to scroll. They were collapsed behind
+            // `ExpansionTile`s, but expanding a ten-item list inside an
+            // already-scrolling page just moved the problem — the list opened
+            // squeezed between other cards with its own scroll fighting the
+            // page's. Each now opens as its own full screen instead, so the
+            // list gets the whole viewport; the row still shows the current
+            // pick so the common case needs no navigation at all.
             Card(
               clipBehavior: Clip.antiAlias,
-              child: ExpansionTile(
+              child: ListTile(
                 leading: const Icon(Icons.library_music_outlined),
                 title: Text('prayer.default_adhan_label'.tr()),
                 subtitle: Text(
@@ -409,63 +432,75 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                childrenPadding: const EdgeInsets.only(bottom: 8),
-                children: [
-                  for (final option in catalog)
-                    _AdhanCard(
-                      option: option,
-                      isSelected: settings.defaultAdhanId == option.id,
-                      isPlaying: _playingId == option.id,
-                      onTap: () {
-                        _saveDefault(option.id);
-                        _togglePreview(option, forcePlay: true);
-                      },
-                      onStop: () => _togglePreview(option),
-                      onRemove: option.isCustom
-                          ? () async {
-                              await ref
-                                  .read(adhanCatalogProvider.notifier)
-                                  .removeCustom(option);
-                            }
-                          : null,
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: OutlinedButton.icon(
-                      onPressed: _pickCustomAdhan,
-                      icon: const Icon(Icons.upload_file),
-                      label: Text('prayer.pick_file'.tr()),
-                    ),
+                trailing: const Icon(Icons.chevron_left),
+                onTap: () => _openFullScreen(
+                  title: 'prayer.default_adhan_label'.tr(),
+                  builder: (context) => ListView(
+                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
+                    children: [
+                      for (final option in catalog)
+                        _AdhanCard(
+                          option: option,
+                          isSelected: settings.defaultAdhanId == option.id,
+                          isPlaying: _playingId == option.id,
+                          onTap: () {
+                            _saveDefault(option.id);
+                            _togglePreview(option, forcePlay: true);
+                          },
+                          onStop: () => _togglePreview(option),
+                          onRemove: option.isCustom
+                              ? () async {
+                                  await ref
+                                      .read(adhanCatalogProvider.notifier)
+                                      .removeCustom(option);
+                                }
+                              : null,
+                        ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: OutlinedButton.icon(
+                          onPressed: _pickCustomAdhan,
+                          icon: const Icon(Icons.upload_file),
+                          label: Text('prayer.pick_file'.tr()),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
             Card(
               clipBehavior: Clip.antiAlias,
-              child: ExpansionTile(
+              child: ListTile(
                 leading: const Icon(Icons.tune),
                 title: Text('prayer.per_prayer'.tr()),
                 subtitle: Text(
                   'prayer.per_prayer_desc'.tr(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                 ),
-                childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                children: [
-                  for (final key in adhanPrayerKeys)
-                    _PrayerModeCard(
-                      prayerKey: key,
-                      label: _prayerLabels[key]!.tr(),
-                      mode: settings.modeFor(key),
-                      adhanId: settings.adhanIdByPrayer[key],
-                      catalog: catalog,
-                      onModeChanged: (m) => _saveMode(key, m),
-                      onAdhanChanged: (id) => _saveChoice(key, id),
-                      onTest: () => _test(key),
-                      accent: scheme.primary,
-                    ),
-                ],
+                trailing: const Icon(Icons.chevron_left),
+                onTap: () => _openFullScreen(
+                  title: 'prayer.per_prayer'.tr(),
+                  builder: (context) => ListView(
+                    padding: const EdgeInsets.fromLTRB(8, 12, 8, 24),
+                    children: [
+                      for (final key in adhanPrayerKeys)
+                        _PrayerModeCard(
+                          prayerKey: key,
+                          label: _prayerLabels[key]!.tr(),
+                          mode: settings.modeFor(key),
+                          adhanId: settings.adhanIdByPrayer[key],
+                          catalog: catalog,
+                          onModeChanged: (m) => _saveMode(key, m),
+                          onAdhanChanged: (id) => _saveChoice(key, id),
+                          onTest: () => _test(key),
+                          accent: scheme.primary,
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],

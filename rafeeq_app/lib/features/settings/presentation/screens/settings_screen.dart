@@ -20,6 +20,7 @@ const _languageNames = <String, String>{
   'ru': 'Русский',
   'pt': 'Português',
   'fr': 'Français',
+  'ur': 'اردو',
 };
 
 /// Settings tab — language, theme, and app info.
