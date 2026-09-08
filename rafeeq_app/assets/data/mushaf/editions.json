@@ -35,38 +35,6 @@
       "cover_asset": "assets/mushaf_covers/tajweed_color.jpg"
     },
     {
-      "id": "warsh",
-      "image_path": "warsh",
-      "image_ext": "png",
-      "name_ar": "مصحف ورش عن نافع",
-      "name_en": "Warsh Mushaf",
-      "riwayah_ar": "ورش عن نافع",
-      "riwayah_en": "Warsh an Nafi",
-      "pages": 604,
-      "ayahs": 6236,
-      "sciences_aligned": false,
-      "diverging_surahs": [],
-      "is_default": false,
-      "hafs_pagination": false,
-      "cover_asset": "assets/mushaf_covers/warsh.jpg"
-    },
-    {
-      "id": "qaloon",
-      "image_path": "qaloon",
-      "image_ext": "png",
-      "name_ar": "مصحف قالون عن نافع",
-      "name_en": "Qalun Mushaf",
-      "riwayah_ar": "قالون عن نافع",
-      "riwayah_en": "Qalun an Nafi",
-      "pages": 604,
-      "ayahs": 6236,
-      "sciences_aligned": false,
-      "diverging_surahs": [],
-      "is_default": false,
-      "hafs_pagination": false,
-      "cover_asset": "assets/mushaf_covers/qaloon.jpg"
-    },
-    {
       "id": "shamarly",
       "image_path": "shamarly",
       "image_ext": "png",

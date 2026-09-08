@@ -35,14 +35,6 @@ class QuranBookCoverThumbnail extends StatelessWidget {
     // Coloured Tajweed — deep maroon (نبيتي).
     'tajweed_color':
         _Leather(Color(0xFF460B18), Color(0xFF6E1327), Color(0xFF922038)),
-    // Shu'bah — deep plum.
-    'shubah_kfqc': _Leather(Color(0xFF241238), Color(0xFF3A2350), Color(0xFF553472)),
-    // Duri — dark bronze/olive.
-    'douri_kfqc': _Leather(Color(0xFF2A2408), Color(0xFF44380F), Color(0xFF6A571A)),
-    // Qalun — wine maroon.
-    'qaloon': _Leather(Color(0xFF3E1019), Color(0xFF5A1E2B), Color(0xFF833141)),
-    // Warsh — royal navy (كحلي).
-    'warsh': _Leather(Color(0xFF0B1D3A), Color(0xFF12294F), Color(0xFF1E427E)),
     // Shamarly — black & gold, the board that printing is known by.
     'shamarly': _Leather(Color(0xFF0A0A0A), Color(0xFF1C1C1C), Color(0xFF343434)),
     // Madinah illuminated — antique gold over deep brown.

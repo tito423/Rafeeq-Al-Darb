@@ -227,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 03:47 — IN PROGRESS — resume here**
+**2026-09-09 03:52 — IN PROGRESS — resume here**
 
-cards open as animated card screens, not inline: new CardRoute/CardScreen; prayer editor + clock gallery converted; adhan-video row is tap-to-select (the word 'mukhtar' is gone); analog AM/PM marker given a capsule so hands stop cutting it; slide height fixed (0.8px overflow seen on device)
+drop the riwayah mushafs (warsh, qaloon) and 4 orphan polygon files (~3MB); measured that hafs polygons do NOT transfer to the raster printings - overlaid on real page 2 of tajweed and madinah_gold and looked at it
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
