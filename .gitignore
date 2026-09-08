@@ -66,3 +66,4 @@ RafeeqAlDarb-*.apk
 # regenerable with scripts/fetch_musnad_ahmad_arnaut.py. The parsed result
 # (musnad_ahmad_arnaut.json) is what the build actually reads.
 scripts/musnad_ahmad_arnaut_pages.jsonl
+scripts/sunan_darimi_asad_pages.jsonl

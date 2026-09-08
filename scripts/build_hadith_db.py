@@ -142,6 +142,35 @@ def load_arnaut_musnad():
     return chapters, hadiths
 
 
+DARIMI_GRADES_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "sunan_darimi_asad_grades.json")
+
+
+def load_darimi_grades():
+    """{normalized_arabic: (ruling, grader)} from Husayn Salim Asad's edition.
+
+    Sunan al-Darimi had no grading at all. His edition (Shamela 21795) rules on
+    the hadiths one by one and labels each ruling "[تعليق المحقق]", so the
+    rulings are his own words, extracted by extract_darimi_grades.py.
+
+    Matched by normalized Arabic, not by number: the app's Darimi text comes
+    from a different source whose numbering need not agree with this edition's
+    — the same approach already used for the four Sunan. Anything that does
+    not match keeps `grade` NULL.
+    """
+    if not os.path.exists(DARIMI_GRADES_PATH):
+        return {}
+    with open(DARIMI_GRADES_PATH, encoding="utf-8") as f:
+        d = json.load(f)
+    grader = d.get("grader") or ""
+    index = {}
+    for h in d.get("hadiths", []):
+        key = _norm_arabic(h.get("arabic") or "")
+        if key and h.get("grade"):
+            index[key] = (h["grade"], grader)
+    return index
+
+
 report = io.StringIO()
 
 
@@ -226,6 +255,11 @@ for order, key in enumerate(BOOK_ORDER, start=1):
         if arnaut:
             chapters, hadiths = arnaut
             source_note = " [ط الرسالة، تحقيق شعيب الأرناؤوط]"
+    elif key == "darimi":
+        darimi = load_darimi_grades()
+        if darimi:
+            grades = darimi
+            source_note = " [أحكام حسين سليم أسد الداراني]"
 
     cur.execute(
         "INSERT INTO books(id, book_key, sort_order, name_ar, name_en, "
