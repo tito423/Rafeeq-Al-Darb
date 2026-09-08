@@ -2,7 +2,7 @@ name: rafeeq_app
 description: "Rafeeq Al-Darb — Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
 publish_to: 'none'
 
-version: 3.4.0+1
+version: 3.5.0+1
 
 environment:
   sdk: ^3.10.7
@@ -101,6 +101,7 @@ flutter:
     - assets/data/quran_sciences.db
     - assets/data/hadith.db
     - assets/data/mushaf/
+    - assets/mushaf_covers/
     - assets/data/catalogs/
     - assets/audio/adhan/
     # P3‑49: the owner's AI-generated splash video (Gemini watermark removed)

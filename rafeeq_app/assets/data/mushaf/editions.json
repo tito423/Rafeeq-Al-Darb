@@ -16,7 +16,8 @@
       "sciences_aligned": true,
       "diverging_surahs": [],
       "is_default": true,
-      "hafs_pagination": true
+      "hafs_pagination": true,
+      "cover_asset": "assets/mushaf_covers/hafs_kfqc.jpg"
     },
     {
       "id": "tajweed_color",
@@ -30,7 +31,8 @@
       "sciences_aligned": true,
       "diverging_surahs": [],
       "is_default": false,
-      "hafs_pagination": true
+      "hafs_pagination": true,
+      "cover_asset": "assets/mushaf_covers/tajweed_color.jpg"
     },
     {
       "id": "warsh",
@@ -45,7 +47,8 @@
       "sciences_aligned": false,
       "diverging_surahs": [],
       "is_default": false,
-      "hafs_pagination": false
+      "hafs_pagination": false,
+      "cover_asset": "assets/mushaf_covers/warsh.jpg"
     },
     {
       "id": "qaloon",
@@ -60,7 +63,8 @@
       "sciences_aligned": false,
       "diverging_surahs": [],
       "is_default": false,
-      "hafs_pagination": false
+      "hafs_pagination": false,
+      "cover_asset": "assets/mushaf_covers/qaloon.jpg"
     },
     {
       "id": "shamarly",
@@ -75,14 +79,15 @@
       "sciences_aligned": true,
       "diverging_surahs": [],
       "is_default": false,
-      "hafs_pagination": false
+      "hafs_pagination": false,
+      "cover_asset": "assets/mushaf_covers/shamarly.jpg"
     },
     {
       "id": "madinah_gold",
       "image_path": "madinah_gold",
       "image_ext": "jpg",
-      "name_ar": "مصحف المدينة المذهّب",
-      "name_en": "Madinah Mushaf (Illuminated)",
+      "name_ar": "المصحف المذهّب (Smart Mushaf)",
+      "name_en": "Illuminated Mushaf (Smart Mushaf)",
       "riwayah_ar": "حفص عن عاصم",
       "riwayah_en": "Hafs an Asim",
       "pages": 604,
@@ -90,7 +95,8 @@
       "sciences_aligned": true,
       "diverging_surahs": [],
       "is_default": false,
-      "hafs_pagination": true
+      "hafs_pagination": true,
+      "cover_asset": "assets/mushaf_covers/madinah_gold.jpg"
     },
     {
       "id": "indopak_tajweed",
@@ -105,7 +111,8 @@
       "sciences_aligned": true,
       "diverging_surahs": [],
       "is_default": false,
-      "hafs_pagination": false
+      "hafs_pagination": false,
+      "cover_asset": "assets/mushaf_covers/indopak_tajweed.jpg"
     }
   ]
 }

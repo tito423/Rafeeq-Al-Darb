@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/mushaf_edition.dart';
-import '../../../quran/presentation/widgets/mushaf_page_thumbnail.dart';
+import '../../../quran/presentation/widgets/quran_book_cover_thumbnail.dart';
 import 'mushaf_preview_sheet.dart';
 
 String formatBytes(int bytes) {
@@ -145,11 +145,11 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // The edition's own first page, falling back to its leather
-            // cover while that loads.
-            MushafPageThumbnail(
+            // The printing's real cover. Tapping the tile opens the preview
+            // sheet, which shows the cover beside the edition's actual pages.
+            QuranBookCoverThumbnail(
               edition: e,
-              width: 60,
+              width: 62,
             ),
             const SizedBox(width: 14),
             Expanded(

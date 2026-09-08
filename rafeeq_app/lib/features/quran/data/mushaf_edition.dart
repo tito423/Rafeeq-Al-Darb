@@ -42,6 +42,11 @@ class MushafEdition {
   /// [AppConfig.mushafImageUrl]) and set `"image_ext": "png"`.
   final String imageExt;
 
+  /// Bundled JPEG of this edition's real cover (or title page), e.g.
+  /// `assets/mushaf_covers/shamarly.jpg`. Empty when the edition has none, and
+  /// [QuranBookCoverThumbnail] then falls back to its drawn leather board.
+  final String coverAsset;
+
   final int pages;
   final int ayahs;
 
@@ -81,6 +86,7 @@ class MushafEdition {
     this.hafsPagination = true,
     this.imagePath,
     this.imageExt = 'jpg',
+    this.coverAsset = '',
   });
 
   factory MushafEdition.fromJson(Map<String, dynamic> j) => MushafEdition(
@@ -93,6 +99,7 @@ class MushafEdition {
         polygonsAsset: j['polygons_asset'] as String? ?? '',
         imagePath: j['image_path'] as String?,
         imageExt: j['image_ext'] as String? ?? 'jpg',
+        coverAsset: j['cover_asset'] as String? ?? '',
         pages: j['pages'] as int,
         ayahs: j['ayahs'] as int,
         sciencesAligned: j['sciences_aligned'] as bool? ?? false,

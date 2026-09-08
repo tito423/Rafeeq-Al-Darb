@@ -83,6 +83,15 @@ class QuranBookCoverThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The real thing when we have it. The drawn board below was always a
+    // stand-in — the owner asked for these printings' actual covers, so the
+    // Madinah title pages, the Shamarly title page and the printed boards of
+    // the Dar al-Ma'rifa and Zia-ul-Quran mushafs ship with the app and are
+    // shown here; the drawing stays only for an edition that has none.
+    if (edition.coverAsset.isNotEmpty) {
+      return _RealCover(asset: edition.coverAsset, width: width);
+    }
+
     final leather = _palette[edition.id] ?? _fallback;
     final height = width * 4 / 3;
     final ribbonOverhang = width * 0.16;
@@ -216,6 +225,79 @@ class _Leather {
 }
 
 /// The hanging cloth reading-ribbon, with a notched (swallow-tail) foot.
+/// One edition's real cover, drawn as a bound board: the scan itself, a thin
+/// gold edge, a darker spine strip down the binding side, and the same lift
+/// the drawn cover had, so a shelf of real covers still reads as books.
+class _RealCover extends StatelessWidget {
+  final String asset;
+  final double width;
+
+  const _RealCover({required this.asset, required this.width});
+
+  @override
+  Widget build(BuildContext context) {
+    final height = width * 4 / 3;
+    final radius = BorderRadius.circular(width * 0.05);
+    return SizedBox(
+      width: width,
+      height: height,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: radius,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.45),
+              blurRadius: width * 0.14,
+              offset: Offset(width * 0.03, width * 0.06),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: radius,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(asset, fit: BoxFit.cover, filterQuality:
+                  FilterQuality.medium),
+              // Spine: on the binding edge, which in an RTL book is the right.
+              PositionedDirectional(
+                start: 0,
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  width: width * 0.055,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: AlignmentDirectional.centerStart,
+                      end: AlignmentDirectional.centerEnd,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.42),
+                        Colors.black.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // A hairline gold edge, so the board reads as bound, not printed.
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: radius,
+                  border: Border.all(
+                    color: _kGold.withValues(alpha: 0.55),
+                    width: 1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+const Color _kGold = Color(0xFFD4AF37);
+
 class _Ribbon extends StatelessWidget {
   final double width;
   final double height;
