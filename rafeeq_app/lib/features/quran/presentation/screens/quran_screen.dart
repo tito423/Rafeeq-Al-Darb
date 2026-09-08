@@ -40,7 +40,11 @@ class QuranScreen extends ConsumerStatefulWidget {
 }
 
 class _QuranScreenState extends ConsumerState<QuranScreen> {
-  static const _totalPages = 604;
+  /// Pages in the edition currently open. Hafs and most printings are 604,
+  /// but the raster printings genuinely differ (Shamarly 521, Indo-Pak 564),
+  /// and paging past a printing's real end would just render 404s — so this
+  /// tracks the selected edition instead of assuming the Hafs count.
+  int _totalPages = 604;
 
   PageController? _pages;
   final Map<int, Future<List<Ayah>>> _pageFutures = {};
@@ -377,8 +381,23 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // has no reflowable text form, so it's always shown as page images. This
     // coerces the reader into image mode and hides the text/image toggle and
     // the text-only controls for those editions.
-    final isRaster =
-        ref.watch(currentMushafEditionProvider).valueOrNull?.isRaster ?? false;
+    final edition = ref.watch(currentMushafEditionProvider).valueOrNull;
+    final isRaster = edition?.isRaster ?? false;
+    // Adopt the open edition's real page count. Plain assignment rather than
+    // setState: we are already inside build and the new value is used by this
+    // very frame. If the reader was deeper into a longer printing than the
+    // newly-picked one has pages, pull them back to its last page after the
+    // frame — paging past the end would only ever render 404s.
+    if (edition != null && edition.pages != _totalPages) {
+      _totalPages = edition.pages;
+      if (_current > _totalPages) {
+        final clamped = _totalPages;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          _goToPage(clamped, animate: false);
+        });
+      }
+    }
     // P2‑11: a khatma's "اقرأ اليوم" (or its card) asks for a page here,
     // then switches to this tab — consume it once and clear it so it
     // doesn't re-fire on every rebuild.
@@ -579,9 +598,16 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // floated here in full-screen mode (where there's no bottom bar);
                 // in normal mode it lives in its own bar under the text so it can
                 // never overlap the last line.
+                // Only label the page with a surah/juz when this printing
+                // actually shares the Hafs pagination those labels come from
+                // — otherwise they would name a surah this page doesn't hold.
                 _PersistentPageOverlay(
-                  surahName: _currentSurahName(data),
-                  juzNumber: _currentJuzNumber(data),
+                  surahName: (edition?.hafsPagination ?? true)
+                      ? _currentSurahName(data)
+                      : null,
+                  juzNumber: (edition?.hafsPagination ?? true)
+                      ? _currentJuzNumber(data)
+                      : null,
                   pageNumber: _pageFillScreen ? _current : null,
                 ),
                 // P3‑54: a translucent floating "exit immersive" button — the
@@ -841,8 +867,11 @@ class _ReciteBar extends StatelessWidget {
 /// throughout so it never steals the background tap that toggles the
 /// toolbar or exits full-screen.
 class _PersistentPageOverlay extends StatelessWidget {
-  final String surahName;
-  final int juzNumber;
+  /// Null when the open printing doesn't share the Hafs pagination these
+  /// labels are derived from — the header is simply omitted rather than
+  /// asserting a surah/juz that isn't on the page.
+  final String? surahName;
+  final int? juzNumber;
 
   /// P3‑51: the page number itself no longer lives here. In normal mode it's
   /// a real bar under the text (see the Scaffold's bottomNavigationBar), so
@@ -853,8 +882,8 @@ class _PersistentPageOverlay extends StatelessWidget {
   final int? pageNumber;
 
   const _PersistentPageOverlay({
-    required this.surahName,
-    required this.juzNumber,
+    this.surahName,
+    this.juzNumber,
     this.pageNumber,
   });
 
@@ -866,21 +895,24 @@ class _PersistentPageOverlay extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: Stack(
             children: [
-              Positioned(
-                top: 0,
-                right: 0,
-                child: _HeaderBadge(text: surahName),
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
+              if (surahName != null)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: _HeaderBadge(text: surahName!),
+                ),
+              if (juzNumber != null)
+                Positioned(
+                  top: 0,
+                  left: 0,
                 // Same convention as the surah name above (and as
                 // `mushaf_nav_sheets.dart`'s own juz list): a real
                 // mushaf's own running header is always Arabic — it's
                 // part of the page's own printed identity, not app UI
                 // chrome that follows the interface locale.
-                child: _HeaderBadge(text: 'الجزء ${_arabicNumber(juzNumber)}'),
-              ),
+                  child:
+                      _HeaderBadge(text: 'الجزء ${_arabicNumber(juzNumber!)}'),
+                ),
               if (pageNumber != null)
                 Align(
                   alignment: Alignment.bottomCenter,

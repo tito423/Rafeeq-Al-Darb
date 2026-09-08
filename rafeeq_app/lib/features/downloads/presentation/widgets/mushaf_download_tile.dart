@@ -103,7 +103,8 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
   }
 
   Future<void> _refresh() async {
-    final pages = await _service.cachedPages(widget.edition.id);
+    final pages = await _service.cachedPages(widget.edition.id,
+        totalPages: widget.edition.pages);
     final size = await _service.cacheSizeBytes(widget.edition.id);
     if (mounted) {
       setState(() {
@@ -127,6 +128,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
         sourcePath: widget.edition.sourcePath,
         imagePath: widget.edition.imagePath,
         imageExt: widget.edition.imageExt,
+        toPage: widget.edition.pages,
         title: widget.edition.nameAr,
       ),
     );

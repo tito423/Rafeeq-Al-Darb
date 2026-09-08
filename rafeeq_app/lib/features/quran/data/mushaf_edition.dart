@@ -54,6 +54,17 @@ class MushafEdition {
 
   final bool isDefault;
 
+  /// Whether this printing uses the Madinah/Hafs 604-page layout that the
+  /// bundled sciences DB's page->surah and page->juz mapping was built from.
+  ///
+  /// False for every printing that paginates its own way (Shamarly's 521
+  /// pages, the Indo-Pak 564, and the Warsh/Qalun printings, whose 604 pages
+  /// do not line up verse-for-verse with Hafs either). On those, that mapping
+  /// would confidently name the wrong surah — page 521 of Shamarly is
+  /// al-Ikhlas/al-Falaq/an-Nas, while Hafs page 521 is adh-Dhariyat — so the
+  /// running header is hidden rather than shown wrong.
+  final bool hafsPagination;
+
   const MushafEdition({
     required this.id,
     required this.sourcePath,
@@ -67,6 +78,7 @@ class MushafEdition {
     required this.sciencesAligned,
     required this.divergingSurahs,
     required this.isDefault,
+    this.hafsPagination = true,
     this.imagePath,
     this.imageExt = 'jpg',
   });
@@ -89,6 +101,7 @@ class MushafEdition {
             s as int
         },
         isDefault: j['is_default'] as bool? ?? false,
+        hafsPagination: j['hafs_pagination'] as bool? ?? true,
       );
 
   /// A raster (image-scan) edition — rendered from `NNN.jpg` page images with

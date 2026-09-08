@@ -116,7 +116,8 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
   }
 
   Future<void> _refresh() async {
-    final pages = await _service.cachedPages(widget.edition.id);
+    final pages = await _service.cachedPages(widget.edition.id,
+        totalPages: widget.edition.pages);
     final size = await _service.cacheSizeBytes(widget.edition.id);
     if (mounted) {
       setState(() {
@@ -138,6 +139,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
         sourcePath: widget.edition.sourcePath,
         imagePath: widget.edition.imagePath,
         imageExt: widget.edition.imageExt,
+        toPage: widget.edition.pages,
         title: widget.edition.nameAr,
       ),
     );

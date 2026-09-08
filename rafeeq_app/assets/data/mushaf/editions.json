@@ -15,7 +15,8 @@
       "polygons_asset": "assets/data/mushaf/hafs_kfqc_polygons.json",
       "sciences_aligned": true,
       "diverging_surahs": [],
-      "is_default": true
+      "is_default": true,
+      "hafs_pagination": true
     },
     {
       "id": "tajweed_color",
@@ -28,7 +29,8 @@
       "ayahs": 6236,
       "sciences_aligned": true,
       "diverging_surahs": [],
-      "is_default": false
+      "is_default": false,
+      "hafs_pagination": true
     },
     {
       "id": "warsh",
@@ -42,7 +44,8 @@
       "ayahs": 6236,
       "sciences_aligned": false,
       "diverging_surahs": [],
-      "is_default": false
+      "is_default": false,
+      "hafs_pagination": false
     },
     {
       "id": "qaloon",
@@ -56,7 +59,8 @@
       "ayahs": 6236,
       "sciences_aligned": false,
       "diverging_surahs": [],
-      "is_default": false
+      "is_default": false,
+      "hafs_pagination": false
     },
     {
       "id": "shamarly",
@@ -70,7 +74,8 @@
       "ayahs": 6236,
       "sciences_aligned": true,
       "diverging_surahs": [],
-      "is_default": false
+      "is_default": false,
+      "hafs_pagination": false
     },
     {
       "id": "madinah_gold",
@@ -84,7 +89,8 @@
       "ayahs": 6236,
       "sciences_aligned": true,
       "diverging_surahs": [],
-      "is_default": false
+      "is_default": false,
+      "hafs_pagination": true
     },
     {
       "id": "indopak_tajweed",
@@ -98,7 +104,8 @@
       "ayahs": 6236,
       "sciences_aligned": true,
       "diverging_surahs": [],
-      "is_default": false
+      "is_default": false,
+      "hafs_pagination": false
     }
   ]
 }

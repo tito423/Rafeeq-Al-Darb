@@ -64,6 +64,12 @@ class MushafPageService {
   final Map<String, String> _memory = {};
 
   static const int firstPage = 1;
+
+  /// The Hafs/Madinah page count, and the default for anything that hasn't
+  /// been told otherwise. It is NOT true of every edition: the raster
+  /// printings paginate differently (Shamarly is 521 pages, the Indo-Pak
+  /// colour-coded one 564), so anything that walks or bounds a page range
+  /// must take the edition's own `pages` rather than assume this.
   static const int lastPage = 604;
 
   /// A page is only trusted when it is a complete XML document. A truncated
@@ -314,9 +320,10 @@ class MushafPageService {
   /// the disk cache this scans; without this, a bundled edition's own
   /// "Download" tile would misleadingly show 0/604 despite every page
   /// already being instantly readable.
-  Future<Set<int>> cachedPages(String editionId) async {
+  Future<Set<int>> cachedPages(String editionId, {int? totalPages}) async {
+    final last = totalPages ?? lastPage;
     if (_kBundledMushafEditions.contains(editionId)) {
-      return {for (var p = firstPage; p <= lastPage; p++) p};
+      return {for (var p = firstPage; p <= last; p++) p};
     }
     final dir = await _pageDir(editionId);
     if (!dir.existsSync()) return <int>{};
@@ -324,7 +331,7 @@ class MushafPageService {
     for (final entity in dir.listSync()) {
       if (entity is! File) continue;
       final n = int.tryParse(p.basenameWithoutExtension(entity.path));
-      if (n != null && n >= firstPage && n <= lastPage) pages.add(n);
+      if (n != null && n >= firstPage && n <= last) pages.add(n);
     }
     return pages;
   }
