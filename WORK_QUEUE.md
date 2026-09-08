@@ -1,3 +1,7 @@
+> **HISTORICAL (2026-09-09).** This queue tracked Phases 1-3, which are
+> complete. For what is open now see **`NEXT_SESSION_PROMPT.md`**, and read
+> **`CLAUDE.md`** before working.
+
 # WORK QUEUE — Rafiq Al-Darb
 
 **Companion to `HANDOVER.md`. Read that first — especially §3 (hard rules) and

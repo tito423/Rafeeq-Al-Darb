@@ -1,3 +1,8 @@
+> **SUPERSEDED (2026-09-09).** This was an earlier session brief. The
+> current entry points are **`CLAUDE.md`** (the mandatory working method)
+> and **`NEXT_SESSION_PROMPT.md`** (what is next). Kept for history; its
+> hard rules still hold and are restated in `CLAUDE.md`.
+
 You are picking up work on **Rafiq Al-Darb** (رفيق الدرب / "Rafeeq Al-Darb"), a personal, sideloaded Android app built in Flutter — the owner's own app on his own GitHub repo (**tito423/Rafeeq-Al-Darb**, owner **Tito**), not a store app. It's a comprehensive Islamic app: Quran (text + image mushaf editions), Adhkar, prayer times + Qibla + Adhan, a hadith library (the 9 collections) and a books library, per-reciter recitation downloads, khatma tracking, and more. Read this whole prompt before touching anything.
 
 ## Hard rules (never violate)

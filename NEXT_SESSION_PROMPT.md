@@ -1,146 +1,113 @@
-# Rafiq Al-Darb — new session handoff
+# Rafiq Al-Darb — next session brief
 
-You are picking up work on **Rafiq Al-Darb** (رفيق الدرب / "Rafeeq Al-Darb"), a
-personal, **sideloaded** Android Islamic app built in **Flutter**. It's the
-owner's own app on his own GitHub repo — not a store app. Read this whole prompt
-before touching anything.
+**Last written:** 2026-09-09, at the end of the session that shipped v3.5.0.
 
----
+You are picking up **رفيق الدرب / Rafeeq Al-Darb**, a personal **sideloaded**
+Android Islamic app in Flutter. The owner's own app on his own repo
+(`tito423/Rafeeq-Al-Darb`) — not a store app, not commercial. He writes in
+Egyptian Arabic; **reply in Arabic**, keep code and commits in English.
 
-## Hard rules (never violate)
+## Read these, in this order, before touching anything
 
-1. **Zero mock/placeholder data.** Every feature uses real content or is not
-   shipped. Never fabricate URLs, API responses, DB rows, or sample text. If a
-   real source can't be found/verified, say so and stop — don't invent one.
-2. **Never use or reference QuranFlash** (licensing). Mushaf content comes from
-   the sources already wired (see below).
-3. **No secrets in the repo.** R2 keys etc. live in `scripts/.env` (gitignored).
-   Never commit or print credentials.
-4. **Arabic is the default locale and RTL.** 6 locales: ar (default), en, es, ru,
-   pt, fr. A test (`test/translation_parity_test.dart`) enforces identical key
-   sets and no empty values across all 6 — add/remove a key in ALL six or the
-   suite fails. Religious content (adhkar, adhan phrases, tasbeeh presets) stays
-   in Arabic across locales by existing convention.
-5. **Be honest in reports.** If something is unverified (e.g. needs the owner's
-   real device), say exactly that. Don't claim done what you couldn't test.
+1. **`CLAUDE.md`** — the mandatory working method. It is not optional and it is
+   not a summary of this file; it is the rules. The owner made following it a
+   hard requirement so that any agent works the way the last one did.
+2. **`HANDOVER.md`** — the state block at the top is current as of 2026-09-09.
+3. This file — what is next.
 
----
+## Where things stand
 
-## Workflow (follow every time)
+Everything the owner has asked for so far is **done, verified on the emulator,
+committed, pushed, and released as v3.5.0** — the only release in the repo.
 
-1. Implement the change.
-2. `flutter analyze` → must be **"No issues found"**.
-3. `flutter test` → must be **21/21 passing**.
-4. **Checkpoint** with the repo's script, from the repo root, ASCII-only message:
-   ```
-   cd "E:\My Projects\Rafiq-Al-Darb"; .\cp.bat "what you did (ASCII only)"
-   ```
-   (`cp.bat /s` shows status. Messages are long-form and descriptive by
-   convention — explain the why, not just the what.)
-5. **Live-verify on the emulator** (`emulator-5554` is usually running) before
-   claiming a UI change works. Drive it with `adb` (`adb exec-out screencap -p`,
-   `adb shell input tap X Y`). Screenshots are 1080x2400.
-6. **Release** (the owner treats each version as a GitHub release — but confirm
-   with him before publishing, it's a public/irreversible action):
-   ```
-   cd "E:\My Projects\Rafiq-Al-Darb"
-   # (from rafeeq_app) flutter build apk --release   -> build/app/outputs/flutter-apk/app-release.apk (~235MB)
-   cp app-release.apk RafeeqAlDarb-vX.Y.Z.apk
-   gh release create vX.Y.Z <apk> --repo tito423/Rafeeq-Al-Darb --target master --title "..." --notes-file <notes>
-   ```
-   Latest release: **v2.1.16**. Release tags are `v2.1.x`; the pubspec `version:`
-   (3.0.0+1) is independent — don't sync them, follow the `v2.1.x` tag series.
+| | |
+|---|---|
+| Version | `3.5.0+1`, tag `v3.5.0` = `d2391a2` on `master` |
+| Checks | `flutter analyze lib test` clean · `flutter test` 25/25 · every R2 content path answered a range request on 2026-09-09 |
+| Locales | 7 (ar default/RTL, en, es, fr, pt, ru, ur), 584 keys, parity test enforces it |
+| Mushaf | 7 printings, each with its real printed cover bundled |
+| Library | 215 books, gzip on R2, indexed + chaptered + cross-book search |
+| Hadith | 67,153 in 9 books, 45,219 graded (67%) |
+
+**There is no outstanding bug the owner has reported.** The queue below is work
+he has discussed but not yet green-lit, plus honest gaps.
 
 ---
 
-## Environment gotchas
+## Next up — nothing here is started
 
-- **Two shells**: PowerShell is primary (Windows 11), Bash tool also available
-  (Git Bash / POSIX). The working dir toggles between `E:\My Projects\Rafiq-Al-Darb`
-  (repo root — where `cp.bat`, `scripts/`, `gh` run) and its `rafeeq_app/`
-  subfolder (where `flutter` runs). Watch which one you're in.
-- **Python**: use **`py`** (Python 3.12 has boto3), NOT `python`/`python3`.
-- **R2 hosting**: bucket `rafeeq-content`, creds in `scripts/.env`
-  (`R2_ENDPOINT`/`R2_ACCESS_KEY_ID`/`R2_SECRET_ACCESS_KEY`), public base
-  `https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev`. `AppConfig.contentBaseUrl`
-  points here. Upload scripts are in `scripts/r2_upload_*.py` (all use `.env` +
-  boto3 + head_object verify).
-- **Emulator limits**: it now decodes the splash video fine (API 36), BUT it does
-  NOT honor `fullScreenIntent` over a foregrounded app and has no audible audio,
-  so the lock-screen adhan launch + adhan audio/subtitle sync CANNOT be verified
-  there — those need the owner's real device. Debug builds also throw a startup
-  ANR on this emulator (tap "Wait"); release builds are fine. A concurrent heavy
-  task (e.g. an R2 upload) on the same machine makes the ANR more likely.
+### 1. The deferred big question: fetching any book from the internet
 
----
+The owner asked (and it is still open):
 
-## What was just shipped (this session → v2.1.16)
+> «هل من الممكن يكون فيه اليه ان التطبيق يقدر يدور على اي كتاب في الانترنت
+> وينزله ويعمله فهرسة وابواب بشرط يبقى نص ولو لقاه pdf يحوله نص؟»
 
-- **P3-52 Full-Screen Azan Player** (`adhan_full_screen_screen.dart`): live-overlay
-  — silent looping video bg (or gradient fallback) + `just_audio` playing the
-  adhan + karaoke subtitles synced off `positionStream` (`azan_subtitle.dart`
-  distributes phrases across the recording's real duration). The `full`-mode
-  notification is a SILENT `fullScreenIntent` trigger (channel `radh_full_silent`)
-  so the screen owns the audio (no double-play); `audio` mode keeps native sound.
-- **P3-53 Part 1** lock-screen: removed the "video only while screen on" note
-  (+ `video_note` key from all 6 locales); programmatic `setShowWhenLocked`/
-  `setTurnScreenOn` in `MainActivity.onCreate`; `WakelockPlus` scoped to the
-  adhan player only.
-- **P3-53 Part 2** downloads: `DownloadManager` is now a FIFO queue
-  (`maxConcurrent = 1`, `_pump`), and ONE aggregated progress notification
-  replaces the per-file flood.
-- **P3-53 Part 3** perf: `_LiveClock` self-timing widget (adhan clock no longer
-  repaints the whole stack), `RepaintBoundary` on the video, `cached_network_image`
-  + capped `memCacheWidth` on the new mushaf image path.
-- **P3-53 Part 5** luxury covers: `quran_book_cover_thumbnail.dart` — leather
-  board + gold frame + medallion + ribbon + 3D shadow, per-edition colours;
-  replaced the Fatiha-page thumbnail in the edition picker and downloads tile
-  (deleted `mushaf_first_page_preview.dart`).
-- **P3-53 Part 4** editions: the app already had 5 SVG riwāyāt (hafs/shubah/douri/
-  qalon/warsh from `quranpedia/quran-svg`, pinned). Added a **raster (image-scan)
-  edition path** and shipped the **Colored Tajweed mushaf** — all 604 Dar
-  Al-Maarifa pages hosted on R2 at `mushaf/tajweed/NNN.jpg`, sourced from
-  `github.com/Imomzoda8/tajweed-quran-images`, uploaded via
-  `scripts/r2_upload_tajweed_pages.py`. See the raster-edition memory for the
-  architecture (`MushafEdition.imagePath`/`isRaster`/`imagePageUrl`,
-  `AppConfig.mushafImageUrl`, the `MushafPageView` raster branch,
-  `prefetchEdition`'s `imagePath` branch, and `quran_screen` forcing image mode).
+The recommendation already given to him, which he has not yet accepted or
+rejected:
 
----
+- **Not inside the app.** A command-line tool on a PC, one source at a time,
+  with the output reviewed before it is uploaded to R2. The app keeps consuming
+  only verified content.
+- **PDF → text is the risky half.** Where the PDF has a text layer it is fine;
+  most of the Islamic heritage is scanned images, and Arabic OCR mangles
+  tashkeel and names — which is exactly the failure mode «علم الحديث مفيش فيه
+  هزار» forbids. A book that is 2% wrong is worse than a book that is absent.
+- **The realistic first step**, which he was offered: generalise what already
+  exists — `scripts/fetch_shamela_pages.py` already crawls any Shamela book
+  resumably — into a tool that pulls any Shamela title with its chapters and
+  text. That widens the library to thousands of books from a source already
+  trusted, with no OCR risk.
 
-## Open items (do these next)
+**Do not start this without his word on which shape he wants.**
 
-1. **Shamarly mushaf edition** — the owner wants it; NOT done because no free
-   per-page image source was found (the `Mr-DDDAlKilanny/Shamarly` GitHub repo's
-   `shamerly.zip` is a 2 MB stub, not 604 pages; Archive.org only has PDF/JP2
-   book scans). The pipeline is ready: a black-gold cover slot + `الشمرلي`
-   medallion override are already reserved in `quran_book_cover_thumbnail.dart`.
-   **To finish once the owner provides page images (or a working per-page URL):**
-   upload them to R2 at `mushaf/shamarly/NNN.jpg` (copy
-   `scripts/r2_upload_tajweed_pages.py`), then add a `shamarly` entry to
-   `rafeeq_app/assets/data/mushaf/editions.json` with `"image_path": "shamarly"`.
-   That's it — the reader/download/cover all key off `image_path`.
-2. **Owner real-device verification** (can't be done on the emulator):
-   - Lock-screen adhan: fire a prayer Test in "Adhan + full screen" mode →
-     screen should wake and show the player over the lock screen with audio +
-     line-by-line synced subtitles; Mute/Dismiss work.
-   - Download queue: start several downloads (e.g. the Tajweed edition's 604
-     pages) → they run one-at-a-time with a single progress notification, no
-     freeze.
+### 2. Honest content gaps (no action without a real source)
+
+| Gap | Status |
+|---|---|
+| Muwatta Malik ungraded (1,985) | **Correct as-is.** al-A'zami's edition gives takhrij, no per-hadith verdict. Do not fill it. |
+| ~3,054 Musnad Ahmad hadiths ungraded | Arna'ut does not rule on them. Correct as-is. |
+| 764 Darimi hadiths unmatched | Text drift between two printings; a prefix shared by two hadiths is dropped rather than guessed. Could be improved with a better matcher, not with a guess. |
+| 63 of 27,647 Musnad Ahmad numbers missing | 99.8% recovered. The rest need individual page inspection. Low value. |
+
+### 3. Offered but never confirmed
+
+- **`scripts/health_check.py`** — the owner asked whether a script could exist
+  that knows the app's structure well enough to diagnose faults. Never built.
+  Given how the last three sessions went (four independent faults that only a
+  device run exposed), a script that range-requests every catalogue entry,
+  opens the bundled DBs, and asserts the locale key sets would have caught real
+  bugs. Worth proposing again.
+- **archive.org mirror of R2 content** with a `mirror_url` fallback in the
+  client. He asked how much space archive.org gives; the answer was given, the
+  mirror was never built.
+
+### 4. Never verified on real hardware
+
+The full-screen adhan video render (notification tap / lock-screen
+full-screen-intent) has never fired under ADB on this emulator. It needs the
+owner's actual phone. Do not mark it verified.
 
 ---
 
-## Key files (recent work)
+## What to do first, in this session
 
-- `rafeeq_app/lib/features/adhan/presentation/screens/adhan_full_screen_screen.dart`
-- `rafeeq_app/lib/features/adhan/data/azan_subtitle.dart`
-- `rafeeq_app/lib/core/services/adhan_alarm_service.dart` (silent `full` channel)
-- `rafeeq_app/lib/core/services/download_manager.dart` (FIFO queue + aggregate notif)
-- `rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/MainActivity.kt`
-- `rafeeq_app/lib/features/quran/data/mushaf_edition.dart` (imagePath/isRaster)
-- `rafeeq_app/lib/features/quran/presentation/widgets/mushaf_page_view.dart` (raster branch)
-- `rafeeq_app/lib/features/quran/presentation/widgets/quran_book_cover_thumbnail.dart`
-- `rafeeq_app/lib/core/services/mushaf_page_service.dart` (raster cache/prefetch)
-- `rafeeq_app/lib/features/quran/presentation/screens/quran_screen.dart` (raster forces image mode)
-- `rafeeq_app/assets/data/mushaf/editions.json`
-- `scripts/r2_upload_tajweed_pages.py` (R2 upload template)
+1. Read `CLAUDE.md`.
+2. Run the verification set — `flutter analyze lib test`, `flutter test`, and a
+   range request against `hadith/hadith.zip`, one book, and one page of each
+   mushaf edition. Confirm the state above still holds before believing it.
+3. Ask the owner what he wants next. Do not pick something off this list and
+   start; §1 in particular is his decision.
+
+## Reminders that repeatedly matter
+
+- **Verify on the emulator and look at the screenshot.** Everything serious
+  found here was found by running it.
+- **`adb shell input text` cannot type Arabic.** Copy text from inside the app
+  and paste it.
+- **Never FTS5.** Android's SQLite has no such module and it takes the whole
+  database down with it.
+- **One release at a time**, previous release *and tag* deleted, tagged from
+  `master`, `pubspec.yaml` version bumped to match.
+- **Checkpoint with `.\cp.bat "…"` constantly.** Sessions die from quota
+  exhaustion mid-task.

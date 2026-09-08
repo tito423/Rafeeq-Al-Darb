@@ -1,13 +1,91 @@
 # HANDOVER — Rafiq Al-Darb (رفيق الدرب)
 
-**For:** the next AI agent picking up this project (Antigravity IDE, Cline, or any other).
-**Read this file completely before touching anything.**
+**For:** the next AI agent picking up this project (Claude Code, Antigravity,
+Cline, or any other).
+**Read `CLAUDE.md` first — it is the mandatory working method — then this file.**
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-08 |
-| **State at** | **PHASE 2 nearly done** — see `PHASE2.md` (the current build prompt). Phase 1 (T1–T20) complete. Every P2 stage is done and emulator-verified **except P2‑7's last piece, which needs a real Android phone** (see its row below) and P2‑8, which is stopped waiting on the owner's shortlist pick. |
-| **Build verified?** | `flutter analyze` clean · `flutter test` **13/13**. All of P2‑1/2/3/4/4b/5/6/9/10/11/12/13 emulator-verified live (not just built) on `emulator-5554`. |
+| **Last updated** | 2026-09-09 |
+| **Released** | **v3.5.0** — the only release; every earlier release *and tag* was deleted at the owner's request so the repo reads clean. Tag `v3.5.0` = `d2391a2` on `master`. |
+| **App version** | `pubspec.yaml` `3.5.0+1` (this is what the About card shows — keep it equal to the release tag) |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **25/25** · every hosted content path answered a range request (206) on 2026-09-09 · all features below were run on `emulator-5554` and seen, not just compiled |
+
+## STATE AS OF 2026-09-09
+
+Phases 1–3 are complete. The work since then has been driven directly by the
+owner rather than by a phase document, and the last three sessions were mostly
+**repairs to things that were shipped broken** — read §"What was found broken"
+below before assuming any area is sound.
+
+### Measured facts (2026-09-09, not from memory)
+
+| | |
+|---|---|
+| Locales | **7** — ar (default, RTL), en, es, fr, pt, ru, **ur** · 584 leaf keys, parity enforced by `test/translation_parity_test.dart` |
+| Mushaf editions | **7** raster/vector printings, all 7 with a real bundled cover image |
+| Text library | **215** books, hosted gzipped on R2, indexed + chaptered + searchable across all of them |
+| Hadith | **67,153** hadiths in 9 books, **45,219 graded (67%)** — `hadith.db` 104.6 MB bundled, mirrored at `hadith/hadith.zip`, `hadithDbVersion = 'v3'` |
+| APK | 248.4 MB |
+
+### The nine hadith books
+
+| Book | Hadiths | Chapters | Grading |
+|---|---|---|---|
+| صحيح البخاري | 7,277 | 97 | none by design — app shows «من الصحيحين» |
+| صحيح مسلم | 7,459 | 57 | none by design |
+| سنن أبي داود | 5,276 | 43 | 4,896 (al-Albani, via sunnah.com-derived set) |
+| جامع الترمذي | 4,053 | 49 | 3,898 |
+| سنن النسائي | 5,768 | 52 | 5,321 |
+| سنن ابن ماجه | 4,345 | 38 | 3,932 |
+| **مسند الإمام أحمد** | **27,584** | **1,061** | **24,530 — شعيب الأرناؤوط، ط الرسالة** |
+| موطأ مالك | 1,985 | 61 | **none, and that is the correct answer** — see below |
+| سنن الدارمي | 3,406 | 24 | 2,642 — حسين سليم أسد الداراني |
+
+**Musnad Ahmad** was 1,374 hadiths in 8 chapters until 2026-09-09 — a fragment,
+because hadith-json's own metadata says `length: 1374` and chapters 8–30 are
+absent upstream. It is now taken whole from `مسند أحمد - ط الرسالة` (Shamela
+25794): 23,340 pages crawled by `scripts/fetch_shamela_pages.py`, parsed by
+`scripts/parse_musnad_ahmad_arnaut.py`. The edition numbers to 27,647 and 27,584
+were recovered. Rulings are paired to hadiths **by order within a page**, because
+the footnote marker is a superscript that usually does not survive as text —
+verified against eight hadiths whose printed footnotes were read by hand, all
+eight exact.
+
+**Muwatta Malik has no grading on purpose.** al-A'zami's critical edition
+(Shamela 28107) was checked directly: it gives takhrij («أخرجه أبو مصعب
+الزهري، ٢٥١ …») but no per-hadith verdict, because the Muwatta is not graded
+hadith-by-hadith the way the Sunan are. Do not "complete" this column.
+
+### What was found broken (and fixed) in the last three sessions
+
+Treat this as evidence about how much of the app is verified rather than
+assumed.
+
+1. **The whole text library was dead on a device.** Four independent faults,
+   each sufficient on its own: `no such module: fts5` killed `openDatabase` and
+   therefore downloads, opening, deleting and search together; 207 of 215 books
+   are gzip and were never decoded; the reader was handed the literal string
+   `'sqlite'` as a file path; and a failed download reported nothing at all
+   because the error went to a `debugPrint` that release builds strip.
+2. **Page indexing produced empty text for every page** — `_indexableBody` cast
+   the page's paragraphs to `List<String>` when a paragraph is `{"t":…, "k":…}`.
+3. **Every book card claimed `1.0 MB`** — hardcoded. Real: 3 KB – 883 KB.
+4. **Mushaf covers were drawings**, one board recoloured per edition. Now each
+   edition ships its real printed cover or title page (556 KB total for all 7).
+5. **Release tags pointed at the initial commit** (`--target main` while work is
+   on `master`), and the About card said 3.0.0 while releases were tagged 3.2.0.
+
+### One honesty note carried forward
+
+`madinah_gold` is **not a printing**. Its archive.org source (`smartmushaf`)
+states in its own description that it took vector Qur'an pages already on the
+internet and added colours and borders — the Madinah typesetting, illuminated
+digitally. It was named «مصحف المدينة المذهّب», which implied a printed book that
+does not exist; it is now «المصحف المذهّب (Smart Mushaf)» and shows its own page.
+Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
+
+---
 
 ### PHASE 2 progress (2026-09-02) — details in `PHASE2.md`
 

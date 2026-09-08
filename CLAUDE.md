@@ -1,0 +1,285 @@
+# CLAUDE.md — how work is done on Rafiq Al-Darb
+
+**This file is mandatory.** Claude Code loads it automatically every session.
+Any agent working on this project — Claude Code, Antigravity, Cline, Gemini,
+anything — follows it. The owner made this a hard requirement so that a new
+session, or a different agent entirely, works the same way the last one did.
+
+If you are about to do something this file forbids, stop and tell the owner
+why you think it should be an exception. Do not just do it.
+
+---
+
+## 0. What this project is
+
+**رفيق الدرب / Rafeeq Al-Darb** — a personal, **sideloaded** Android Islamic
+app in Flutter. The owner's own app, on his own repo (`tito423/Rafeeq-Al-Darb`),
+distributed as an APK on GitHub Releases. Not a Play Store app, not commercial.
+
+Arabic is the primary language and the owner writes in Egyptian Arabic. **Reply
+in Arabic.** Code, comments and commit messages stay in English.
+
+---
+
+## 1. The rules that matter most
+
+### 1.1 Nothing fake. Ever.
+
+> «ممنوع استخدام أكواد وهمية (Placeholders)» — the owner, in the original spec.
+
+No mock data, no placeholder URLs, no sample text, no invented API responses,
+no "TODO: real source later". If a real source cannot be found and verified,
+**say so and stop**. Shipping a feature backed by nothing is worse than not
+shipping it.
+
+This has been violated before and cost real time:
+
+- Eight mushaf editions were added whose page images were never uploaded.
+  Every page 404'd and selecting one opened a blank reader. All eight were
+  deleted later.
+- Every library book card claimed `الحجم: 1.0 MB`, because the widget had
+  `final sizeMb = '1.0';` written into it. Real sizes ranged 3 KB – 883 KB.
+- Ten adhan clips were attributed to named muezzins nobody had verified.
+
+**Never add an entry to a catalogue before its content resolves on the public
+endpoint.** A `HEAD` (or a 1 KB range request) on the first real file, every
+time.
+
+### 1.2 Religious content is held to a higher standard
+
+> «لازم كل الاحاديث يبقى لها تخريج حقيقي. ده علم الحديث مفيش فيه هزار.»
+
+- A hadith grading must come from a **named scholar in a named edition**, and
+  the app must show whose it is. `grade` without `grader` is not acceptable.
+- **Ungraded is a valid, honest answer.** Muwatta Malik ships with no grading
+  because al-A'zami's critical edition gives takhrij but no per-hadith verdict —
+  the Muwatta simply is not graded hadith-by-hadith the way the Sunan are.
+  Bukhari and Muslim ship ungraded by design; the app shows «من الصحيحين».
+  Do not "fill the gap" with a guess to make a column look complete.
+- Never rewrite, normalise or "fix" the text of a Qur'an ayah or a hadith. If a
+  source has an obvious typo (`إسناده صحح`), it stays — it is the source's text,
+  and silently correcting scripture-adjacent text is not yours to do.
+- Every content source gets credited on the Sources screen with a link.
+
+### 1.3 Verify on a real device, not in your head
+
+**Nothing is "done" until it has been run on `emulator-5554` (or a real phone)
+and seen.** `flutter analyze` passing means the code compiles, not that the
+feature works.
+
+Every serious bug on this project was found by running it, and would have been
+missed by reading:
+
+| Bug | What reading it suggested | What running it showed |
+|---|---|---|
+| `no such module: fts5` | clean code, clean analyze | Android's SQLite has no FTS5 → the entire library DB failed to open → downloads, opening, deleting and search all dead |
+| Gzipped books | `jsonDecode(res.data!)` looks fine | 207 of 215 books are gzip bytes → `FormatException` on byte 1 |
+| Reader path `'sqlite'` | "just a marker" | `File('sqlite')` resolves to nothing → no book ever opened |
+| Transparent glyph masks | PNGs downloaded fine | black letterforms on a transparent ground → invisible on the dark reader |
+
+Take screenshots. Read them. `adb exec-out screencap -p > x.png` then look at it.
+
+**`adb shell input text` cannot type Arabic** (`NullPointerException` in
+`InputShellCommand.sendText`). To get an Arabic query into a field: long-press
+text inside the app, copy it, then long-press the field and paste. There is no
+`cmd clipboard` on this emulator.
+
+### 1.4 Read the real thing before writing the code that parses it
+
+Before writing a parser, fetch a few real pages and **look at them**. The
+Musnad Ahmad crawl needed four separate discoveries that no amount of reasoning
+would have produced: an editorial mark before the hadith number (`* ٥١٨ -`,
+`° ٥١٩ -`, `• ٢٦٧ -`), a line starting `=` opening the footnote area, footnotes
+that are manuscript variants rather than rulings, and numbered lists in the
+editor's introduction that look exactly like hadith lines.
+
+Then **verify the parser against pages you read by hand.** Eight hadiths were
+checked against their printed footnotes; all eight matched before the result
+was trusted.
+
+### 1.5 Report honestly
+
+- If something is unverified, say exactly what is unverified and why.
+- If you claimed something that turned out to be wrong, correct it plainly —
+  in the reply and in the commit message. This has happened (a claim that the
+  app showed «الدرجة: غير مذكورة» when those keys were dead) and correcting it
+  was the right call.
+- Never describe work as verified in `HANDOVER.md` unless you ran it.
+- Numbers in reports are measured, not estimated. Say where the number came
+  from.
+
+### 1.6 Secrets
+
+R2 credentials live in `scripts/.env`, which is gitignored. Never commit them,
+never print them, never paste them into a message.
+
+---
+
+## 2. Workflow
+
+### 2.1 Checkpoint constantly
+
+Sessions here die from quota exhaustion, usually mid-task. Do not save the
+write-up for the end.
+
+```bash
+.\cp.bat "what you just did"
+```
+
+updates the WIP note in `HANDOVER.md`, stamps the date, and commits — one step.
+A session that dies right after a checkpoint loses nothing.
+
+### 2.2 The definition of done
+
+A change is done when **all** of these hold:
+
+1. `flutter analyze lib test` → **No issues found**
+2. `flutter test` → **all pass** (25 as of 2026-09-09; the translation-parity
+   test enforces identical key sets and no empty values across all 7 locales)
+3. It has been **run on the emulator and seen working**
+4. `HANDOVER.md` reflects it
+5. It is committed and pushed
+
+### 2.3 Releases
+
+- One release at a time. The owner wants the repo clean: «كل حاجة تبقى على
+  نضافة». Delete the previous release **and its tag** before publishing the new
+  one, unless told otherwise.
+- `pubspec.yaml`'s `version:` is what the About card shows. **Bump it** — a
+  release tagged `v3.2.0` while the About card said `3.0.0` shipped once.
+- Tag from `master`. `gh release create ... --target master`. A previous session
+  used `--target main` while all work was on `master`, and every tag pointed at
+  the initial commit.
+- Release notes in Arabic, structured, honest about what was broken.
+- Verify after publishing: `gh release view <tag> --json tagName,targetCommitish,assets`
+  and confirm the tag's SHA equals `git rev-parse HEAD`.
+
+### 2.4 Commit messages
+
+English, explaining **why** and what was actually observed — not a changelog of
+file names. Include the evidence: what was measured, what was verified live,
+what stayed unverified. End with:
+
+```
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+```
+
+---
+
+## 3. Traps this project has already paid for
+
+Do not rediscover these.
+
+1. **Android's SQLite has no FTS5.** `CREATE VIRTUAL TABLE ... USING fts5`
+   throws `no such module: fts5`, and because it runs inside `onCreate`, the
+   throw kills `openDatabase` and every call that touches that database. This
+   has bitten three times (`HadithRepository`, `QuranRepository`,
+   `LibraryApiService`). **Never reach for FTS5.** Use the established pattern:
+   store a column normalised with `normalizeArabic`, match in Dart with
+   `normalizeArabic` + `normalizeArabicLoose` + a word-boundary test, read rows
+   in small pages.
+
+2. **Plain SQL `LIKE` does not work for Arabic here.** Stored text is fully
+   diacritised, so an undiacritised query never matches. Confirmed against the
+   real `hadith.db`: `LIKE '%عمر%'` returned 0 rows on a hadith containing
+   `عُمَرَ بْنَ الْخَطَّابِ`.
+
+3. **A word boundary is any non-letter, not just a space.** Book text quotes
+   hadith inside guillemets, so «انما الاعمال بالنيات» matched nothing under a
+   space-only test.
+
+4. **Never load a whole corpus in one query.** `_db.query('hadiths')` over ~41k
+   rows tried a single ~83 MB allocation and threw `OutOfMemoryError` on a real
+   device. Page it.
+
+5. **Soft-404s.** `android.quran.com` returns its 6318-byte HTML homepage with
+   HTTP **200** for missing folders. Always check `Content-Type` and the byte
+   size, never just the status code.
+
+6. **Hosted books are gzip without a `Content-Encoding` header.** That is the
+   standing policy (`scripts/gzip_and_reupload_all_books.py`) — 207 of 215 are
+   stored compressed, and the client sniffs the two magic bytes `1f 8b`. Any new
+   code that fetches a book must sniff, exactly as `BookText.fromFile` and
+   `LibraryApiService.downloadBook` do.
+
+7. **`Icons.chevron_left` auto-mirrors in RTL.** For a disclosure chevron that
+   should point the same way in Arabic, use `chevron_right`. Ten of them pointed
+   the wrong way.
+
+8. **A missing translation key renders as the raw key** on screen. Add or remove
+   a key in **all 7** locale files or `translation_parity_test` fails — which is
+   the point of that test.
+
+9. **`archive.org` is worth searching before giving up.** Two sessions recorded
+   the Shamarly mushaf as unsourceable after checking one GitHub repo. archive.org
+   had a complete 521-page set the whole time. Its `advancedsearch.php` needs
+   **ASCII** queries; Arabic queries error out. `https://archive.org/metadata/<id>`
+   lists every file, and `https://archive.org/download/<id>/page/n0_w800.jpg`
+   returns page 0 of a scanned book — which for a mushaf is its printed cover.
+
+10. **Windows console is cp1256 and cannot print Arabic.** Write reports to a
+    UTF-8 file and `cat` it, or the run dies on `UnicodeEncodeError`.
+
+11. **Heredocs mangle `\n` and quotes.** For any script that writes Dart or
+    JSON, use the `Write` tool or build the string with `chr(39)`/`chr(92)`.
+    This has broken generated files repeatedly.
+
+12. **`py -3` has `boto3` and `PIL`; the msys `python` does not**, and msys
+    Python has no CA bundle (TLS verification fails). Use `py -3` for anything
+    touching R2 or images, and `curl` for HTTPS downloads.
+
+---
+
+## 4. Where things live
+
+| | |
+|---|---|
+| Flutter app | `rafeeq_app/` |
+| Pipeline scripts | `scripts/` (Python, run with `py -3`) |
+| R2 credentials | `scripts/.env` — **gitignored** |
+| Hosted content | `https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev` (bucket `rafeeq-content`) |
+| Bundled databases | `rafeeq_app/assets/data/*.db` — gitignored, regenerable |
+| Mushaf covers | `rafeeq_app/assets/mushaf_covers/*.jpg` — built by `scripts/build_mushaf_covers.py` |
+| Long-form history | `HANDOVER.md` (state), `PHASE2.md` / `PHASE3.md` (build logs) |
+| Next-session brief | `NEXT_SESSION_PROMPT.md` |
+
+**Content is hosted, not bundled — except where the owner asked otherwise.**
+`hadith.db` is bundled (he asked for the hadith library built in) *and* mirrored
+on R2 as `hadith/hadith.zip`; keep the two in sync and bump
+`AppConfig.hadithDbVersion` whenever the DB changes, or devices holding the old
+download will open a stale file.
+
+---
+
+## 5. Working style the owner has asked for
+
+- **«دايما تضغط الحاجه عشان التوكنز»** — be compact. Don't narrate options you
+  are not going to take; decide and move.
+- **«خلص الاول اللي انت بتعمله انا مش عوازك تهلوس في حاجة»** — finish the task
+  in hand before opening a new front.
+- **«امشي برايك»** — he delegates judgement. Use it, and report what you decided
+  and why.
+- When he supplies an asset (an icon, an image), **use it exactly as given**:
+  «ياصاحبي استخدمها هيا بالظبط من غير تعديل».
+- Ask only when two readings would lead to materially different work.
+
+---
+
+## 6. When the owner says «جهّز الدنيا» / asks for a handover
+
+This is a standing, mandatory routine. Do all of it:
+
+1. **Verify.** `flutter analyze lib test`, `flutter test`, and a range request
+   against every hosted content path (`hadith/hadith.zip`, a book, one page of
+   each mushaf edition, a translation). Record the actual results.
+2. **Measure.** Locale count and key count, mushaf editions, library book count,
+   `hadith.db` size / rows / graded, APK size, app version. Facts, not memory.
+3. **Update `HANDOVER.md`** — the state block at the top must describe today,
+   not a previous phase.
+4. **Rewrite `NEXT_SESSION_PROMPT.md`** — what is done, what is next, what is
+   blocked and on whom.
+5. **Back up** — commit everything, push `master`, confirm the release and tag
+   point at `HEAD`.
+6. **Report** what you verified and anything that did not check out.
+
+Never hand over a state you have not just verified.

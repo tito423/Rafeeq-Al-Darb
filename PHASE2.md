@@ -1,3 +1,6 @@
+> **HISTORICAL.** Phase 2 build log, complete. Current state is in
+> `HANDOVER.md`; the working method is `CLAUDE.md`.
+
 # PHASE 2 — Owner expansion request (prompt for the executing agent)
 
 **Written 2026-09-02, from the owner's own words. This file is a build prompt.

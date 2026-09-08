@@ -1,3 +1,6 @@
+> **HISTORICAL.** Phase 3 build log, complete. Current state is in
+> `HANDOVER.md`; the working method is `CLAUDE.md`.
+
 # PHASE 3 — Real-device feedback pass (owner, 2026-09-03)
 
 > **Recovery note (2026-09-03):** the original P3-1..19 section below was briefly, accidentally truncated by a buggy append-script mid-session (it opened the file in write mode, which empties it immediately, then hit an encoding error before finishing — a retry then built on top of the already-emptied file). Recovered in full from git history (commit 5048241, the last fully-intact version) and merged back with the ROUND 2 section, which was never affected. Flagging this here in case anything looks slightly re-flowed compared to what was on screen before.
