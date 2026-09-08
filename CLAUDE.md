@@ -117,6 +117,35 @@ never print them, never paste them into a message.
 
 ## 2. Workflow
 
+### 2.0 Know how much quota is left — before you plan, and while you work
+
+**This is mandatory.** Sessions on this project have died mid-task from quota
+exhaustion more than once, and each time the loss was not the tokens — it was
+the uncommitted tree and the unwritten note. The owner's instruction:
+
+> «دايما يتحقق في الوقت الفعلي من الكوته عشان مش نلبس في حيطة ونضيع وقت كل مرة»
+
+So:
+
+1. **Check the remaining budget at the start of the session**, before promising
+   anything. In Claude Code that is `/usage` (or `/status`) in an interactive
+   terminal; the running total is also printed in the context/usage indicator.
+   If the interface you are in cannot show it, **say so to the owner in your
+   first reply and ask him to read it off his screen** — do not silently guess.
+2. **Re-check before starting any long stage** (a crawl, a bulk upload, a
+   device-verification run, a full rebuild of a DB). If what is left will not
+   cover the stage, say so *first* and pick a smaller stage instead.
+3. **Size the plan to the budget you actually have.** Split a big brief into
+   stages that each end at a committed, working state. Never begin a stage
+   whose only useful output arrives at the end.
+4. **Checkpoint before you get close to the edge**, not when you notice it —
+   see §2.1. A dying session must die on a clean tree.
+5. **Tell the owner where the budget went** when a session ends or is handed
+   over: what was spent on what, and what is left. He is paying for it.
+
+Never answer "how much quota is left" from memory or from an earlier reading in
+the same session. It is a live number; read it live.
+
 ### 2.1 Checkpoint constantly
 
 Sessions here die from quota exhaustion, usually mid-task. Do not save the

@@ -9,7 +9,7 @@ Cline, or any other).
 | **Last updated** | 2026-09-09 |
 | **Released** | **v3.5.0** — the only release; every earlier release *and tag* was deleted at the owner's request so the repo reads clean. Tag `v3.5.0` = `d2391a2` on `master`. |
 | **App version** | `pubspec.yaml` `3.5.0+1` (this is what the About card shows — keep it equal to the release tag) |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **25/25** · every hosted content path answered a range request (206) on 2026-09-09 · all features below were run on `emulator-5554` and seen, not just compiled |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **25/25** · every hosted content path answered a range request (206) on 2026-09-09 · **but the Home-screen work committed today is only PARTLY device-verified — read §"Home screen rebuild" below before trusting it** |
 
 ## STATE AS OF 2026-09-09
 
@@ -76,6 +76,103 @@ assumed.
 5. **Release tags pointed at the initial commit** (`--target main` while work is
    on `master`), and the About card said 3.0.0 while releases were tagged 3.2.0.
 
+### Home screen rebuild (2026-09-09, second session) — READ THIS
+
+This is the newest work in the repo and it is **not fully verified on a
+device**. Do not describe it as done until the checks at the end of this
+section have actually been run and seen.
+
+**What the owner asked for** (his message, condensed): make the prayer-time
+slides on Home animated and professional; tapping one should grow it into a
+card showing the adhan mode, the muezzin, the chosen video, an adhan preview
+and a manual time correction, all reflected immediately; make moving between
+slides animated; put the weekday name next to the Gregorian date; make the
+clock tappable so it opens a bigger animated card offering **10 digital** and
+**10 analogue** faces, all previewing the real live time; and make the default
+recitation محمد صديق المنشاوي (المجود).
+
+**What was built**
+
+| File | What it is |
+|---|---|
+| `lib/features/home/data/clock_settings_provider.dart` | Extended: `DigitalClockFace` (10) + `AnalogClockFace` (10) enums beside the existing `ClockStyle`. The old enum value names are kept **exactly** (`analogRgb`), because those names are the SharedPreferences payload — renaming would have silently reset every existing user to the digital clock. |
+| `lib/features/home/presentation/widgets/analog_clock_faces.dart` | The 10 analogue faces, each a `CustomPainter`: rgb, classicGold, minimalDark, neonRing, arabicNumerals, islamicStar, skeleton, sunMoon, halo, mosaic. The widget owns a `Ticker` (throttled to ~30 fps) so the seconds hand really sweeps instead of stepping, and the ticker dies with the widget. |
+| `lib/features/home/presentation/widgets/digital_clock_faces.dart` | The 10 digital faces: minimal, neon, segment (a real 7-segment painter), flip (per-digit flip cards), gradient, arabic, ring, bars, glass, dots (a 5x7 dot-matrix painter). |
+| `lib/features/home/presentation/widgets/clock_gallery_sheet.dart` | The picker. Every tile is the **real** face running on the real current time, not a thumbnail. Tapping one writes straight through `clockSettingsProvider`, which Home watches, so the card changes under the sheet. |
+| `lib/features/home/presentation/widgets/prayer_slides.dart` | The carousel + the expanded per-prayer editor. |
+| `lib/features/home/presentation/screens/home_screen.dart` | Weekday name added above the Gregorian date (`DateFormat.EEEE(locale)` — the locale's own calendar data, not a hand-written list). Clock is now a tap target opening the gallery. Chips row replaced by `PrayerSlides`. |
+| `lib/features/settings/presentation/screens/settings_screen.dart` | The two old style chips replaced by one button into the same gallery, labelled with the currently-selected face. One picker, not two lists that can drift. |
+| `lib/core/services/ayah_audio_service.dart` | `defaultEdition` is now `ar.minshawimujawwad`. |
+| `assets/translations/*.json` (all 7) | +23 keys each (20 face names, `clock_gallery_title`, `clock_analog`, `prayer.sunrise_no_adhan`); `clock_analog_rgb` removed. 606 leaf keys per locale, parity test green. |
+| **deleted** `rgb_analog_clock.dart` | Superseded by `analog_clock_faces.dart`'s `rgb` face, which is the same drawing. |
+
+**The expanded prayer card** writes through the *same* providers the Adhan
+settings screen uses (`adhanSettingsProvider`, `adhanPresentationProvider`,
+`prayerAdjustmentsProvider`) and calls `rescheduleFromCache()` after each
+change, so a change made on Home is the same change made there — it moves the
+time on the card and re-schedules the alarm without leaving the tab. The adhan
+preview goes through `AdhanNative.preview`, **not** a second `just_audio`
+player, for the reason already recorded in `adhan_settings_screen.dart`:
+`just_audio_background` throws for any player after the first, and the Quran
+recitation player holds that slot.
+
+Sunrise is handled honestly: it is a timing, not a prayer, so its card offers
+only the manual correction and says so (`prayer.sunrise_no_adhan`) instead of
+showing dead adhan controls.
+
+**Verified**
+
+- `flutter analyze lib test` → No issues found.
+- `flutter test` → 25/25 (includes the 7-locale parity test over the new keys).
+- Range request (206) on `hadith/hadith.zip`, one page of every one of the 7
+  mushaf editions, one adhan video, and
+  `everyayah.com/data/Minshawy_Mujawwad_192kbps/001001.mp3` — the new default
+  reciter, so it is a resumable per-ayah source on day one and not only a CDN
+  stream.
+- **Seen on `emulator-5554`**: the weekday name renders («الأربعاء» above
+  «٩ سبتمبر ٢٠٢٦»); the digital `minimal` face renders with Arabic-Indic
+  digits in the correct order (cropped and read: `٠٢:٢٦:٣٧`, with «ص» on the
+  RTL side); the carousel renders with the centred slide at full size/colour
+  and its neighbours scaled down and dimmed.
+
+**NOT verified, and one open bug**
+
+1. **Open bug — the carousel opened on the wrong prayer.** On the device run
+   the card's own pill correctly said «الصلاة القادمة: الفجر», but the
+   carousel was centred on العصر. A `PageController` isolation test proved the
+   controller honours `initialPage`, so the fault is on the caller side. Two
+   changes were made in response and **neither has been seen running**:
+   - `reverse:` was removed from the `PageView`. A horizontal `PageView`
+     already resolves its scroll direction from the ambient `Directionality`,
+     so passing `reverse: rtl` double-flipped it and laid the day out
+     left-to-right. On the device run Fajr was at the left-hand end, which is
+     wrong for Arabic.
+   - A `didUpdateWidget` was added that animates to the next prayer when
+     `nextKey` changes, guarded by a `_userDriven` flag so it never yanks the
+     carousel out from under the reader's finger. The likeliest root cause is
+     that the widget was born while the times were still resolving and never
+     re-centred afterwards.
+   **This must be checked on a device first thing next session.**
+2. **The expanded prayer editor has never been opened on a device.** Not the
+   mode pills, not the muezzin picker, not the video picker, not the adhan
+   preview button, not the ± minute stepper.
+3. **The clock gallery has never been opened on a device.** None of the 20
+   faces has been seen rendering at Home size or at tile size. The `segment`
+   and `dots` faces draw Latin digits by construction (a seven-segment display
+   has no Arabic-Indic glyphs) — that is deliberate, but it should be looked
+   at before it is called finished.
+
+**Why it could not be verified.** The card only renders once real prayer times
+exist, and the emulator would not produce a location fix on a fresh boot:
+`dumpsys location` reported `last location=null` and `gps provider:
+ProviderRequest[OFF]`, `adb emu geo fix` returned OK without ever populating a
+provider, and `cmd location providers add-test-provider` was refused with
+`SecurityException: android from uid 2000 not allowed to perform
+MOCK_LOCATION`. The one successful device run earlier in the session worked
+because that emulator instance still held a cached position (it resolved to
+Dubai). **Next session: get a location fix first, or run on the owner's real
+phone, before touching anything else here.**
+
 ### One honesty note carried forward
 
 `madinah_gold` is **not a printing**. Its archive.org source (`smartmushaf`)
@@ -130,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-08 20:53 — IN PROGRESS — resume here**
+**2026-09-09 03:26 — IN PROGRESS — resume here**
 
-Ship seven hadith books, add cross-book full-text search, and replace a fake book size with the real one. Books: all seven fetched from Shamela, verified and uploaded to R2 gzipped at 2.8 MB total - Bulugh al-Maram 1522 pages/1101 chapters, al-Adab al-Mufrad 2010/644, Sahih al-Adab al-Mufrad 469/387, al-Shamail 247/60, Mishkat al-Masabih 7436/1154, al-Targhib wal-Tarhib 1411/65, Umdat al-Ahkam 448/120. Every one reports printMatches true, meaning its page numbering was verified against the printed edition it cites, and all seven answer 200 on the public endpoint. Catalog entries carry the edition line copied from each book's own Shamela card. Hadith books in the library went from 12 to 19. Cross-book search: this was the one thing genuinely missing - each book already had a chapter tree and in-book search, and the nine collections already had a shared FTS index, but the text library had none, so finding a phrase meant knowing which book it was in first. Added a book_search FTS5 table (schema v2, with an onUpgrade that backfills from books already on disk so nothing needs re-downloading), populated as each book is stored and torn down with it. The indexed body and the query both pass through normalizeArabic, so a search matches regardless of diacritics on either side. New BooksSearchScreen searches every downloaded book at once, debounced, showing book, author, real printed page number and a snippet with the matched words highlighted; tapping a hit opens the reader at that exact page via a new initialPageIndex rather than wherever the book was last left. Fake data found and removed: every library card claimed 'الحجم: 1.0 MB' because the widget had inal sizeMb = '1.0'; hardcoded. Real files run 3 KB to 883 KB with a median of 47 KB, so that figure was wrong for essentially all 215 books and actively misleading to someone deciding whether to download on mobile data. TextEdition now carries a sizeBytes measured from the actual R2 object, all 215 entries were stamped from a bucket listing, and the card renders KB or MB as suits the file - or omits the line entirely when the size is unknown, rather than guessing. flutter analyze clean, flutter test 25/25.
+carry forward last session's uncommitted Home rebuild; add the mandatory quota-check rule to CLAUDE.md
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

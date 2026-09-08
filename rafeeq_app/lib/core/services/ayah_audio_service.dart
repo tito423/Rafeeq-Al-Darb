@@ -115,7 +115,12 @@ class AyahAudioService {
   AyahAudioService._();
   static final AyahAudioService instance = AyahAudioService._();
 
-  static const String defaultEdition = 'ar.alafasy';
+  /// The reciter every fresh install starts on — the owner's choice:
+  /// محمد صديق المنشاوي (المجود). It has a verified everyayah mirror
+  /// (`Minshawy_Mujawwad_192kbps`, a range request on 002001.mp3 answered 206
+  /// on 2026-09-09), so it is a resumable, per-ayah source on day one and not
+  /// only a CDN stream.
+  static const String defaultEdition = 'ar.minshawimujawwad';
 
   /// **One** player for the whole app, on purpose. `main()` initialises
   /// `just_audio_background`, whose platform implementation throws

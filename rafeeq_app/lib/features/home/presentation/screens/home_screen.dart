@@ -8,9 +8,11 @@ import 'package:hijri/hijri_calendar.dart';
 
 import '../../../adhan/data/prayer_adjustments_provider.dart';
 import '../../data/clock_settings_provider.dart';
-import '../widgets/rgb_analog_clock.dart';
+import '../widgets/analog_clock_faces.dart';
+import '../widgets/clock_gallery_sheet.dart';
+import '../widgets/digital_clock_faces.dart';
+import '../widgets/prayer_slides.dart';
 
-import '../../../../core/utils/time_formatter.dart';
 import '../../../../core/services/prayer_times_service.dart';
 import '../../../../core/models/prayer_times.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
@@ -18,17 +20,6 @@ import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
-import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
-
-const _prayerOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
-const _prayerLabelKeys = {
-  'fajr': 'prayer.fajr',
-  'sunrise': 'prayer.sunrise',
-  'dhuhr': 'prayer.dhuhr',
-  'asr': 'prayer.asr',
-  'maghrib': 'prayer.maghrib',
-  'isha': 'prayer.isha',
-};
 
 /// Home tab — real prayer times (once location is granted) + quick access.
 class HomeScreen extends ConsumerStatefulWidget {
@@ -182,6 +173,12 @@ class _HeaderCard extends ConsumerWidget {
     return DateFormat.yMMMd(context.locale.toString()).format(now);
   }
 
+  /// The weekday's own name ("السبت", "Saturday") — asked for explicitly, and
+  /// taken from the locale's own calendar data rather than a hand-written
+  /// list, so it is right in all seven locales.
+  String _weekdayLine(BuildContext context) =>
+      DateFormat.EEEE(context.locale.toString()).format(DateTime.now());
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLight = Theme.of(context).brightness == Brightness.light;
@@ -272,19 +269,39 @@ class _HeaderCard extends ConsumerWidget {
           ),
           Expanded(
             flex: 3,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: AlignmentDirectional.centerEnd,
-              child: Text(
-                _gregorianLine(context),
-                maxLines: 1,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  color: gregorianColor.withValues(alpha: 0.9),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Text(
+                    _weekdayLine(context),
+                    maxLines: 1,
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                      color: gregorianColor,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
-              ),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Text(
+                    _gregorianLine(context),
+                    maxLines: 1,
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                      color: gregorianColor.withValues(alpha: 0.9),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -375,88 +392,27 @@ class _MessageCard extends StatelessWidget {
   }
 }
 
-/// One colour per prayer, matching `design_refs/old_app_frames`' chip
-/// palette (green/blue/brown/purple…) — cosmetic only, doesn't encode
-/// anything.
-const _prayerChipColors = {
-  'fajr': Color(0xFF7C4DFF), // violet
-  'sunrise': Color(0xFF8D6E63), // brown
-  'dhuhr': Color(0xFF2F80A9), // blue
-  'asr': Color(0xFF2E9D6F), // green
-  'maghrib': Color(0xFFD4AF37), // gold
-  'isha': Color(0xFF15C7B0), // teal
-};
-
 /// P3‑4/P3‑22: the animated, interactive prayer card — rebuilt to match a
 /// video the owner sent of an earlier working build of this same app
 /// (`design_refs/old_app_video.mp4`, frames in `old_app_frames/`), which
 /// turned out to be a much more precise target than the static
-/// `ref_home.jpg` mock: a live ticking `HH:MM:SS` clock, a "next prayer +
-/// countdown" pill, a real location line, and coloured per-prayer chips
-/// with a badge on the next one.
+/// `ref_home.jpg` mock: a live ticking clock, a "next prayer + countdown"
+/// pill, a real location line, and coloured per-prayer slides with a badge
+/// on the next one.
+///
+/// The clock itself is a tap target: it opens the twenty-face gallery
+/// (`ClockGallerySheet`) and re-renders with the chosen face the moment one
+/// is picked. The six timings below it are `PrayerSlides` — a focus-scaled
+/// carousel whose centred slide expands into a full editor for that prayer.
 class _PrayerTimesTable extends ConsumerStatefulWidget {
   final PrayerTimes times;
   const _PrayerTimesTable({required this.times});
 
   @override
-  ConsumerState<_PrayerTimesTable> createState() =>
-      _PrayerTimesTableState();
+  ConsumerState<_PrayerTimesTable> createState() => _PrayerTimesTableState();
 }
 
 class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToNextPrayer();
-    });
-  }
-
-  void _scrollToNextPrayer() {
-    if (!mounted || !_scrollController.hasClients) return;
-    final next = PrayerTimesService().nextPrayer(widget.times, DateTime.now());
-    if (next == null) return;
-    
-    final index = _prayerOrder.indexOf(next.$1);
-    if (index > 1) {
-      // Each chip is ~90 width (84 + 6 margin).
-      final offset = (index - 1) * 90.0;
-      _scrollController.animateTo(
-        offset,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeOutCubic,
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  /// The digital face, honouring the reader's 12/24-hour and seconds choice.
-  /// Arabic gets Arabic-Indic digits, as the rest of the card does.
-  String _clockDigits(String localeCode, ClockSettings cs) {
-    final now = DateTime.now();
-    String two(int n) => n.toString().padLeft(2, '0');
-    final h = cs.use12Hour ? (now.hour % 12 == 0 ? 12 : now.hour % 12) : now.hour;
-    final s = cs.showSeconds
-        ? '${two(h)}:${two(now.minute)}:${two(now.second)}'
-        : '${two(h)}:${two(now.minute)}';
-    if (localeCode != 'ar') return s;
-    const west = '0123456789';
-    const east = '٠١٢٣٤٥٦٧٨٩';
-    final b = StringBuffer();
-    for (final ch in s.split('')) {
-      final i = west.indexOf(ch);
-      b.write(i >= 0 ? east[i] : ch);
-    }
-    return b.toString();
-  }
-
   /// AM/PM in the app's own language — never shown in 24-hour mode.
   String? _meridiem(ClockSettings cs) {
     if (!cs.use12Hour) return null;
@@ -467,6 +423,7 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
   Widget build(BuildContext context) {
     final next = PrayerTimesService().nextPrayer(widget.times, DateTime.now());
     final clock = ref.watch(clockSettingsProvider);
+    final arabic = context.locale.languageCode == 'ar';
     final location = [
       widget.times.cityName,
       widget.times.countryName,
@@ -504,44 +461,46 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
       ),
       child: Column(
         children: [
-          if (clock.style == ClockStyle.analogRgb)
-            RgbAnalogClock(
-              time: DateTime.now(),
-              size: 176,
-              meridiem: _meridiem(clock),
-            )
-          else
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text(
-                  _clockDigits(context.locale.languageCode, clock),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                    // Tabular figures so the width doesn't jitter every
-                    // second as the digits change.
-                    fontFeatures: [FontFeature.tabularFigures()],
-                  ),
+          // Tapping the clock opens the face gallery. `AnimatedSwitcher`
+          // means swapping between the digital and analogue families is a
+          // cross-fade in place rather than a hard cut.
+          InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () => ClockGallerySheet.show(context),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 420),
+                switchInCurve: Curves.easeOutBack,
+                switchOutCurve: Curves.easeIn,
+                transitionBuilder: (child, anim) => FadeTransition(
+                  opacity: anim,
+                  child: ScaleTransition(scale: anim, child: child),
                 ),
-                if (_meridiem(clock) != null) ...[
-                  const SizedBox(width: 8),
-                  Text(
-                    _meridiem(clock)!,
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.7),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.2,
-                    ),
+                child: KeyedSubtree(
+                  key: ValueKey(
+                    '${clock.style}-${clock.digitalFace}-${clock.analogFace}-'
+                    '${clock.use12Hour}-${clock.showSeconds}',
                   ),
-                ],
-              ],
+                  child: clock.style == ClockStyle.digital
+                      ? DigitalClockFaceView(
+                          face: clock.digitalFace,
+                          use12Hour: clock.use12Hour,
+                          showSeconds: clock.showSeconds,
+                          arabicDigits: arabic,
+                          meridiem: _meridiem(clock),
+                          height: 78,
+                        )
+                      : AnalogClockFaceView(
+                          face: clock.analogFace,
+                          size: 176,
+                          meridiem: _meridiem(clock),
+                          arabicDigits: arabic,
+                        ),
+                ),
+              ),
             ),
+          ),
           if (next != null) ...[
             const SizedBox(height: 12),
             AnimatedContainer(
@@ -559,9 +518,9 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
                       style: const TextStyle(color: Colors.white70),
                       children: [
                         TextSpan(
-                          text: _prayerLabelKeys[next.$1]!.tr(),
+                          text: prayerSlideLabelKeys[next.$1]!.tr(),
                           style: TextStyle(
-                            color: _prayerChipColors[next.$1],
+                            color: prayerSlideColors[next.$1],
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -591,33 +550,8 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
               ],
             ),
           ],
-          const SizedBox(height: 16),
-          SingleChildScrollView(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            reverse: Directionality.of(context) == TextDirection.rtl,
-            child: Row(
-              children: [
-                for (final key in _prayerOrder)
-                  InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const AdhanSettingsScreen(),
-                        ),
-                      );
-                    },
-                    child: _PrayerChip(
-                      label: _prayerLabelKeys[key]!.tr(),
-                      time: formatTime12h(widget.times.byName(key)),
-                      color: _prayerChipColors[key]!,
-                      isNext: next?.$1 == key,
-                    ),
-                  ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 12),
+          PrayerSlides(times: widget.times, nextKey: next?.$1),
         ],
       ),
     );
@@ -631,71 +565,5 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
     final label = 'home.remaining'.tr();
     if (h > 0) return '$label: $hس $mد';
     return '$label: $mد';
-  }
-}
-
-class _PrayerChip extends StatelessWidget {
-  final String label;
-  final String time;
-  final Color color;
-  final bool isNext;
-  const _PrayerChip({
-    required this.label,
-    required this.time,
-    required this.color,
-    required this.isNext,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      width: 84,
-      margin: const EdgeInsets.symmetric(horizontal: 3),
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        color: isNext ? color : color.withValues(alpha: 0.16),
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: isNext
-            ? [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 10)]
-            : null,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: isNext ? Colors.white : color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            time,
-            style: TextStyle(
-              fontSize: 13,
-              color: isNext ? Colors.white : Colors.white70,
-            ),
-          ),
-          if (isNext) ...[
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                'home.upcoming'.tr(),
-                style: const TextStyle(fontSize: 9, color: Colors.white),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
   }
 }

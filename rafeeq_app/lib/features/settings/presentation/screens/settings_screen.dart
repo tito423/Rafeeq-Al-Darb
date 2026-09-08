@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../home/data/clock_settings_provider.dart';
+import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
@@ -150,29 +151,21 @@ class SettingsBody extends ConsumerWidget {
                     ],
                   ),
                 ),
+                // The twenty faces live in one gallery, opened from here and
+                // from the Home clock itself — one picker, not two lists that
+                // can drift apart.
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-                  child: Wrap(
-                    spacing: 8,
-                    children: [
-                      for (final st in ClockStyle.values)
-                        ChoiceChip(
-                          avatar: Icon(
-                            st == ClockStyle.digital
-                                ? Icons.pin_outlined
-                                : Icons.watch_later_outlined,
-                            size: 18,
-                          ),
-                          label: Text(st == ClockStyle.digital
-                              ? 'home.clock_digital'.tr()
-                              : 'home.clock_analog_rgb'.tr()),
-                          selected:
-                              ref.watch(clockSettingsProvider).style == st,
-                          onSelected: (_) => ref
-                              .read(clockSettingsProvider.notifier)
-                              .setStyle(st),
-                        ),
-                    ],
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: FilledButton.tonalIcon(
+                      onPressed: () => ClockGallerySheet.show(context),
+                      icon: const Icon(Icons.palette_outlined, size: 18),
+                      label: Text(
+                        '${'home.clock_gallery_title'.tr()} — '
+                        '${_currentFaceLabel(ref)}',
+                      ),
+                    ),
                   ),
                 ),
                 const Divider(height: 1),
@@ -306,6 +299,15 @@ class SettingsBody extends ConsumerWidget {
         ],
       );
   }
+}
+
+/// The name of whichever face is selected right now, so the button on the
+/// settings screen says what it will open rather than a bare label.
+String _currentFaceLabel(WidgetRef ref) {
+  final cs = ref.watch(clockSettingsProvider);
+  return cs.style == ClockStyle.digital
+      ? cs.digitalFace.labelKey.tr()
+      : cs.analogFace.labelKey.tr();
 }
 
 class _SectionLabel extends StatelessWidget {
