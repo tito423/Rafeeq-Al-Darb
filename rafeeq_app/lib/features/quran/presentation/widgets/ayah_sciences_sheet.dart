@@ -17,6 +17,8 @@ import '../../../settings/data/transliteration_settings_provider.dart';
 import '../../data/ayah_notes_store.dart';
 import '../../data/quran_grammar_parser.dart';
 import '../../data/tafseer_source_provider.dart';
+import '../../../../core/services/quran_translation_store.dart';
+import '../../data/quran_translation_catalog.dart';
 import '../../data/translation_lang_provider.dart';
 import 'ayah_share_card.dart';
 
@@ -148,7 +150,8 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                     controller: _tabs,
                     children: [
                       _TafseerTab(future: _tafseer),
-                      _TranslationTab(future: _translations),
+                      _TranslationTab(
+                          ayah: widget.ayah, future: _translations),
                       _IrabTab(ayah: widget.ayah, future: _grammar),
                       _GharibTab(future: _words),
                     ],
@@ -825,31 +828,57 @@ class _TafseerTab extends ConsumerWidget {
 
 /// WORK_QUEUE Stage 4: a persisted language selector, one translation shown
 /// at a time, instead of stacking en/fr/ur every time the card opens.
-class _TranslationTab extends ConsumerWidget {
+///
+/// The list is no longer just the six bundled languages. The owner asked for
+/// 30+ languages **for the Quran translation** specifically (the app's own UI
+/// chrome stays on its six locales), so the picker is driven by
+/// `quran_translations.json` — 47 languages, one established translation each.
+/// The six bundled ones read straight out of `quran_sciences.db` and work with
+/// no connection; picking any other downloads it once (~250-450 KB) into
+/// [QuranTranslationStore], after which it is offline too.
+class _TranslationTab extends ConsumerStatefulWidget {
+  final Ayah ayah;
   final Future<Map<String, AyahTranslation>> future;
-  const _TranslationTab({required this.future});
-
-  static const _labels = {
-    'en': 'English',
-    'fr': 'Français',
-    'ur': 'اردو',
-    'es': 'Español',
-    'ru': 'Русский',
-    'pt': 'Português',
-  };
+  const _TranslationTab({required this.ayah, required this.future});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_TranslationTab> createState() => _TranslationTabState();
+}
+
+class _TranslationTabState extends ConsumerState<_TranslationTab> {
+  /// Set when a download fails, so the pane says so rather than looking empty.
+  String? _error;
+
+  Future<void> _ensureDownloaded(QuranTranslationInfo info) async {
+    if (info.bundled || QuranTranslationStore.instance.isInstalled(info.lang)) {
+      return;
+    }
+    setState(() => _error = null);
+    try {
+      await QuranTranslationStore.instance.download(info.lang);
+    } catch (_) {
+      if (mounted) setState(() => _error = 'errors.offline'.tr());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final selected = ref.watch(selectedTranslationLangProvider);
-    return _AsyncTab<Map<String, AyahTranslation>>(
-      future: future,
-      isEmpty: (d) => d.isEmpty,
-      builder: (context, data) {
-        final langs = SciencesRepository.supportedTranslationLangs
-            .where(data.containsKey)
-            .toList();
-        final active = langs.contains(selected) ? selected : langs.first;
-        final t = data[active]!;
+    final catalogAsync = ref.watch(quranTranslationCatalogProvider);
+
+    return catalogAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, _) =>
+          _Notice(icon: Icons.cloud_off, message: 'errors.offline'.tr()),
+      data: (catalog) {
+        if (catalog.isEmpty) {
+          return _Notice(
+              icon: Icons.info_outline, message: 'errors.generic'.tr());
+        }
+        final info = catalog.firstWhere(
+          (e) => e.lang == selected,
+          orElse: () => catalog.first,
+        );
         return Column(
           children: [
             Padding(
@@ -863,42 +892,157 @@ class _TranslationTab extends ConsumerWidget {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     isExpanded: true,
-                    value: active,
+                    value: info.lang,
                     items: [
-                      for (final lang in langs)
+                      for (final e in catalog)
                         DropdownMenuItem(
-                          value: lang,
-                          child: Text(_labels[lang] ?? lang.toUpperCase()),
+                          value: e.lang,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(e.nativeName,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                              // A reader on mobile data should see what an
+                              // un-downloaded language costs before tapping it.
+                              if (!e.bundled &&
+                                  !QuranTranslationStore.instance
+                                      .isInstalled(e.lang))
+                                Text(
+                                  '  ${e.sizeLabel}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(color: AppColors.gold),
+                                ),
+                            ],
+                          ),
                         ),
                     ],
-                    onChanged: (v) {
-                      if (v != null) {
-                        ref.read(selectedTranslationLangProvider.notifier).select(v);
-                      }
+                    onChanged: (v) async {
+                      if (v == null) return;
+                      await ref
+                          .read(selectedTranslationLangProvider.notifier)
+                          .select(v);
+                      await _ensureDownloaded(
+                          catalog.firstWhere((e) => e.lang == v));
                     },
                   ),
                 ),
               ),
             ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: 24),
-                children: [
-                  _SourceBlock(
-                    title: _labels[t.lang] ?? t.lang.toUpperCase(),
-                    subtitle: t.translator,
-                    body: t.text,
-                    direction:
-                        t.lang == 'ur' ? TextDirection.rtl : TextDirection.ltr,
-                  ),
-                ],
-              ),
-            ),
+            Expanded(child: _body(info)),
           ],
         );
       },
     );
   }
+
+  Widget _body(QuranTranslationInfo info) {
+    return ValueListenableBuilder<Map<String, double>>(
+      valueListenable: QuranTranslationStore.instance.downloading,
+      builder: (context, jobs, _) {
+        final progress = jobs[info.lang];
+        if (progress != null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                    value: progress > 0 ? progress : null),
+                const SizedBox(height: 12),
+                Text('quran.downloading_translation'
+                    .tr(args: [info.nativeName])),
+              ],
+            ),
+          );
+        }
+        if (_error != null) {
+          return _Notice(icon: Icons.cloud_off, message: _error!);
+        }
+        return ValueListenableBuilder<Set<String>>(
+          valueListenable: QuranTranslationStore.instance.installed,
+          builder: (context, _, _) => _text(info),
+        );
+      },
+    );
+  }
+
+  Widget _text(QuranTranslationInfo info) {
+    if (info.bundled) {
+      // Straight from the bundled sciences DB — no network, ever.
+      return FutureBuilder<Map<String, AyahTranslation>>(
+        future: widget.future,
+        builder: (context, snap) {
+          if (snap.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final t = snap.data?[info.lang];
+          if (t == null) {
+            return _Notice(
+                icon: Icons.info_outline, message: 'errors.generic'.tr());
+          }
+          return _block(info, t.text, t.translator);
+        },
+      );
+    }
+
+    if (!QuranTranslationStore.instance.isInstalled(info.lang)) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.translate,
+                  size: 48, color: Theme.of(context).colorScheme.outline),
+              const SizedBox(height: 12),
+              Text(
+                'quran.translation_not_downloaded'
+                    .tr(args: [info.nativeName]),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              FilledButton.tonalIcon(
+                onPressed: () => _ensureDownloaded(info),
+                icon: const Icon(Icons.download),
+                label: Text('${'common.download'.tr()} - ${info.sizeLabel}'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return FutureBuilder<String?>(
+      future: QuranTranslationStore.instance
+          .verse(info.lang, widget.ayah.surahId, widget.ayah.ayahNumber),
+      builder: (context, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final text = snap.data;
+        if (text == null || text.isEmpty) {
+          return _Notice(
+              icon: Icons.info_outline, message: 'errors.generic'.tr());
+        }
+        return _block(info, text, info.translator);
+      },
+    );
+  }
+
+  Widget _block(QuranTranslationInfo info, String body, String translator) =>
+      ListView(
+        padding: const EdgeInsets.only(bottom: 24),
+        children: [
+          _SourceBlock(
+            title: info.nativeName,
+            subtitle: translator,
+            body: body,
+            direction: info.isRtl ? TextDirection.rtl : TextDirection.ltr,
+          ),
+        ],
+      );
 }
 
 /// Corpus morphology & syntax, one structured card per word:

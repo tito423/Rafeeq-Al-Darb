@@ -15,6 +15,9 @@ Color _coverColor(String id) {
     case 'tajweed_color': return const Color(0xFF8B0000); // Dark Red
     case 'warsh': return const Color(0xFF12294F); // Royal navy
     case 'qaloon': return const Color(0xFF5A1E2B); // Wine maroon
+    case 'shamarly': return const Color(0xFF1C1C1C); // Black & gold board
+    case 'madinah_gold': return const Color(0xFF5C4310); // Antique gold
+    case 'indopak_tajweed': return const Color(0xFF0B4A47); // Teal
     default: return const Color(0xFF1E3A5F);
   }
 }

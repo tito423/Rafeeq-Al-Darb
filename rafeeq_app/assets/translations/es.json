@@ -16,7 +16,8 @@
     "save": "Guardar",
     "retry": "Reintentar",
     "undo": "Deshacer",
-    "reset_all": "Restablecer todo"
+    "reset_all": "Restablecer todo",
+    "download": "Descargar"
   },
   "nav": {
     "home": "Inicio",
@@ -115,7 +116,9 @@
     "recite_next": "Versículo siguiente",
     "gharib": "Significado de las palabras (Garib)",
     "gharib_description": "Significados palabra por palabra extraídos de la base de datos del Complejo Rey Fahd para la Impresión del Noble Corán.",
-    "gharib_unavailable": "Lo sentimos, el significado de las palabras no está disponible para esta sura."
+    "gharib_unavailable": "Lo sentimos, el significado de las palabras no está disponible para esta sura.",
+    "downloading_translation": "Descargando la traducción al {}…",
+    "translation_not_downloaded": "La traducción al {} aún no está descargada"
   },
   "library": {
     "title": "Biblioteca",

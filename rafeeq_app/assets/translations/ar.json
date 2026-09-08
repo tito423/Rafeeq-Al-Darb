@@ -16,7 +16,8 @@
     "save": "حفظ",
     "retry": "إعادة المحاولة",
     "undo": "تراجع",
-    "reset_all": "تصفير الكل"
+    "reset_all": "تصفير الكل",
+    "download": "تنزيل"
   },
   "nav": {
     "home": "الرئيسية",
@@ -115,7 +116,9 @@
     "recite_now": "يُتلى الآن: {}:{}",
     "recite_previous": "الآية السابقة",
     "recite_pause": "إيقاف مؤقت / متابعة",
-    "recite_next": "الآية التالية"
+    "recite_next": "الآية التالية",
+    "downloading_translation": "جارٍ تنزيل ترجمة {}…",
+    "translation_not_downloaded": "ترجمة {} غير منزَّلة بعد"
   },
   "library": {
     "title": "المكتبة",

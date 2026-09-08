@@ -43,12 +43,25 @@ class QuranBookCoverThumbnail extends StatelessWidget {
     'qaloon': _Leather(Color(0xFF3E1019), Color(0xFF5A1E2B), Color(0xFF833141)),
     // Warsh — royal navy (كحلي).
     'warsh': _Leather(Color(0xFF0B1D3A), Color(0xFF12294F), Color(0xFF1E427E)),
+    // Shamarly — black & gold, the board that printing is known by.
+    'shamarly': _Leather(Color(0xFF0A0A0A), Color(0xFF1C1C1C), Color(0xFF343434)),
+    // Madinah illuminated — antique gold over deep brown.
+    'madinah_gold':
+        _Leather(Color(0xFF3A2A08), Color(0xFF5C4310), Color(0xFF8A6A1C)),
+    // Indo-Pak colour-coded — teal, matching its cover stock.
+    'indopak_tajweed':
+        _Leather(Color(0xFF06302E), Color(0xFF0B4A47), Color(0xFF116E69)),
   };
 
   /// Medallion text override where the first riwayah word would be ambiguous
   /// (e.g. the Tajweed mushaf is also Hafs — show "تجويد", not a second "حفص").
   static const Map<String, String> _medallionOverride = {
+    // These are all Hafs, so the riwayah's first word would read "حفص" on
+    // every one of them — the medallion names the printing instead.
     'tajweed_color': 'تجويد',
+    'shamarly': 'الشمرلي',
+    'madinah_gold': 'المدينة',
+    'indopak_tajweed': 'هندي',
   };
 
   static const _Leather _fallback =

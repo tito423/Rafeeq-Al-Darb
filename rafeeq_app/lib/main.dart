@@ -16,6 +16,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'adhan_entry.dart';
 import 'app/rafeeq_app.dart';
 import 'core/services/alarm_permissions_service.dart';
+import 'core/services/quran_translation_store.dart';
 import 'core/services/download_engine.dart';
 import 'core/services/sunan_suwar_reminder_service.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
@@ -97,6 +98,13 @@ Future<void> main() async {
   // whole point. All that is left for main() is the notifications plugin
   // and the permission gates.
   await AlarmPermissionsService.instance.initialize();
+
+  // Which downloaded Quran translations are already on disk. Cheap (one
+  // SELECT over a tiny table) and needed before the reader's translation
+  // picker can tell a downloaded language from one that still needs fetching.
+  try {
+    await QuranTranslationStore.instance.refreshInstalled();
+  } catch (_) {}
 
   // Re-attach to any download the OS kept running while the app was gone.
   // `background_downloader` hands transfers to Android's own WorkManager, so a

@@ -44,6 +44,14 @@ abstract final class AppConfig {
           {String ext = 'jpg'}) =>
       '$contentBaseUrl/mushaf/$imagePath/${page.toString().padLeft(3, '0')}.$ext';
 
+  /// One downloadable Quran translation, gzipped JSON keyed "surah:ayah".
+  /// Rehosted first-party from api.alquran.cloud — see
+  /// `scripts/r2_upload_quran_translations.py`. The six translations bundled
+  /// in `quran_sciences.db` never come from here; this is only for the other
+  /// languages, fetched on demand when a reader picks one.
+  static String quranTranslationUrl(String lang) =>
+      '$contentBaseUrl/quran/translations/$lang.json.gz';
+
   /// Ayah-level recitation (real CDN by islamic.network).
   static const String quranAudioBase =
       'https://cdn.islamic.network/quran/audio';

@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "source": "api.alquran.cloud — one established translation per language, rehosted first-party on R2",
+  "total": 47,
+  "translations": [
+    {
+      "lang": "am",
+      "native_name": "አማርኛ",
+      "edition": "am.sadiq",
+      "translator": "Sadiq & Sani",
+      "gz_bytes": 336066,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "az",
+      "native_name": "Azərbaycan",
+      "edition": "az.mammadaliyev",
+      "translator": "Mammadaliyev & Bunyadov",
+      "gz_bytes": 433990,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ba",
+      "native_name": "Bosanski (Mehanović)",
+      "edition": "ba.mehanovic",
+      "translator": "Mehanović",
+      "gz_bytes": 289685,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ber",
+      "native_name": "Tamaziɣt",
+      "edition": "ber.mensur",
+      "translator": "Mensur",
+      "gz_bytes": 235888,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "bg",
+      "native_name": "Български",
+      "edition": "bg.theophanov",
+      "translator": "Tzvetan Theophanov",
+      "gz_bytes": 302497,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "bn",
+      "native_name": "বাংলা",
+      "edition": "bn.bengali",
+      "translator": "Muhiuddin Khan",
+      "gz_bytes": 375230,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "bs",
+      "native_name": "Bosanski",
+      "edition": "bs.korkut",
+      "translator": "Besim Korkut",
+      "gz_bytes": 286866,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ce",
+      "native_name": "Нохчийн",
+      "edition": "ce.magomedov",
+      "translator": "Magomedov",
+      "gz_bytes": 340255,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "cs",
+      "native_name": "Čeština",
+      "edition": "cs.hrbek",
+      "translator": "Ivan Hrbek",
+      "gz_bytes": 311999,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "de",
+      "native_name": "Deutsch",
+      "edition": "de.bubenheim",
+      "translator": "Bubenheim & Elyas",
+      "gz_bytes": 315913,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "dv",
+      "native_name": "ދިވެހި",
+      "edition": "dv.divehi",
+      "translator": "Office of the President, Maldives",
+      "gz_bytes": 433734,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "en",
+      "native_name": "English",
+      "edition": "en.sahih",
+      "translator": "Saheeh International",
+      "gz_bytes": 283379,
+      "ayahs": 6236,
+      "bundled": true
+    },
+    {
+      "lang": "es",
+      "native_name": "Español",
+      "edition": "es.cortes",
+      "translator": "Julio Cortés",
+      "gz_bytes": 272483,
+      "ayahs": 6236,
+      "bundled": true
+    },
+    {
+      "lang": "fa",
+      "native_name": "فارسی",
+      "edition": "fa.makarem",
+      "translator": "Naser Makarem Shirazi",
+      "gz_bytes": 382328,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "fr",
+      "native_name": "Français",
+      "edition": "fr.hamidullah",
+      "translator": "Muhammad Hamidullah",
+      "gz_bytes": 319016,
+      "ayahs": 6236,
+      "bundled": true
+    },
+    {
+      "lang": "ha",
+      "native_name": "Hausa",
+      "edition": "ha.gumi",
+      "translator": "Abubakar Mahmoud Gumi",
+      "gz_bytes": 284038,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "hi",
+      "native_name": "हिन्दी",
+      "edition": "hi.hindi",
+      "translator": "Suhel Farooq Khan & Saifur Rahman Nadwi",
+      "gz_bytes": 464043,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "id",
+      "native_name": "Bahasa Indonesia",
+      "edition": "id.indonesian",
+      "translator": "Kementerian Agama RI",
+      "gz_bytes": 318352,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "it",
+      "native_name": "Italiano",
+      "edition": "it.piccardo",
+      "translator": "Hamza Roberto Piccardo",
+      "gz_bytes": 289142,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ja",
+      "native_name": "日本語",
+      "edition": "ja.japanese",
+      "translator": "Ryoichi Mita",
+      "gz_bytes": 349144,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ko",
+      "native_name": "한국어",
+      "edition": "ko.korean",
+      "translator": "Hamid Choi",
+      "gz_bytes": 317005,
+      "ayahs": 6235,
+      "bundled": false
+    },
+    {
+      "lang": "ku",
+      "native_name": "کوردی",
+      "edition": "ku.asan",
+      "translator": "Burhan Muhammad-Amin",
+      "gz_bytes": 551103,
+      "ayahs": 6235,
+      "bundled": false
+    },
+    {
+      "lang": "ml",
+      "native_name": "മലയാളം",
+      "edition": "ml.abdulhameed",
+      "translator": "Abdul Hameed & Parappoor",
+      "gz_bytes": 451162,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ms",
+      "native_name": "Bahasa Melayu",
+      "edition": "ms.basmeih",
+      "translator": "Abdullah Muhammad Basmeih",
+      "gz_bytes": 411023,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "my",
+      "native_name": "မြန်မာ",
+      "edition": "my.ghazi",
+      "translator": "Ghazi Hashim",
+      "gz_bytes": 712115,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "nl",
+      "native_name": "Nederlands",
+      "edition": "nl.siregar",
+      "translator": "Sofian S. Siregar",
+      "gz_bytes": 306043,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "no",
+      "native_name": "Norsk",
+      "edition": "no.berg",
+      "translator": "Einar Berg",
+      "gz_bytes": 263330,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "pl",
+      "native_name": "Polski",
+      "edition": "pl.bielawskiego",
+      "translator": "Józef Bielawski",
+      "gz_bytes": 304931,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ps",
+      "native_name": "پښتو",
+      "edition": "ps.abdulwali",
+      "translator": "Abdulwali Khan",
+      "gz_bytes": 368183,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "pt",
+      "native_name": "Português",
+      "edition": "pt.elhayek",
+      "translator": "Samir El-Hayek",
+      "gz_bytes": 297081,
+      "ayahs": 6236,
+      "bundled": true
+    },
+    {
+      "lang": "ro",
+      "native_name": "Română",
+      "edition": "ro.grigore",
+      "translator": "George Grigore",
+      "gz_bytes": 276112,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ru",
+      "native_name": "Русский",
+      "edition": "ru.kuliev",
+      "translator": "Эльмир Кулиев",
+      "gz_bytes": 343532,
+      "ayahs": 6236,
+      "bundled": true
+    },
+    {
+      "lang": "sd",
+      "native_name": "سنڌي",
+      "edition": "sd.amroti",
+      "translator": "Taj Mehmood Amroti",
+      "gz_bytes": 337966,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "si",
+      "native_name": "සිංහල",
+      "edition": "si.naseemismail",
+      "translator": "Naseem Ismail & Masood Vafy",
+      "gz_bytes": 522332,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "so",
+      "native_name": "Soomaali",
+      "edition": "so.abduh",
+      "translator": "Mahmud Muhammad Abduh",
+      "gz_bytes": 277979,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "sq",
+      "native_name": "Shqip",
+      "edition": "sq.nahi",
+      "translator": "Hasan Efendi Nahi",
+      "gz_bytes": 329056,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "sv",
+      "native_name": "Svenska",
+      "edition": "sv.bernstrom",
+      "translator": "Knut Bernström",
+      "gz_bytes": 358541,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "sw",
+      "native_name": "Kiswahili",
+      "edition": "sw.barwani",
+      "translator": "Ali Muhsin Al-Barwani",
+      "gz_bytes": 259020,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ta",
+      "native_name": "தமிழ்",
+      "edition": "ta.tamil",
+      "translator": "Jan Turst Foundation",
+      "gz_bytes": 505737,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "tg",
+      "native_name": "Тоҷикӣ",
+      "edition": "tg.ayati",
+      "translator": "AbdolMohammad Ayati",
+      "gz_bytes": 322847,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "th",
+      "native_name": "ไทย",
+      "edition": "th.thai",
+      "translator": "King Fahad Quran Complex",
+      "gz_bytes": 406677,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "tr",
+      "native_name": "Türkçe",
+      "edition": "tr.diyanet",
+      "translator": "Diyanet İşleri",
+      "gz_bytes": 283922,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "tt",
+      "native_name": "Татарча",
+      "edition": "tt.nugman",
+      "translator": "Yakub Ibn Nugman",
+      "gz_bytes": 499258,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ug",
+      "native_name": "ئۇيغۇرچە",
+      "edition": "ug.saleh",
+      "translator": "Muhammad Saleh",
+      "gz_bytes": 433411,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "ur",
+      "native_name": "اردو",
+      "edition": "ur.jalandhry",
+      "translator": "Fateh Muhammad Jalandhry",
+      "gz_bytes": 353189,
+      "ayahs": 6236,
+      "bundled": true
+    },
+    {
+      "lang": "uz",
+      "native_name": "Oʻzbekcha",
+      "edition": "uz.sodik",
+      "translator": "Muhammad Sodik Muhammad Yusuf",
+      "gz_bytes": 572906,
+      "ayahs": 6236,
+      "bundled": false
+    },
+    {
+      "lang": "zh",
+      "native_name": "中文",
+      "edition": "zh.jian",
+      "translator": "Ma Jian",
+      "gz_bytes": 271185,
+      "ayahs": 6236,
+      "bundled": false
+    }
+  ]
+}

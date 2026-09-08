@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "license": "quranpedia/quran-svg — polygon metadata CC0-1.0; KFQC glyphs free for digital use. Raster editions rehosted first-party on R2: Tajweed (Dar Al-Maarifa colour-coded typesetting), Warsh + Qalun (Quran-for-Android page scans). Every edition listed here has its pages verified present before shipping.",
+  "license": "quranpedia/quran-svg — polygon metadata CC0-1.0; KFQC glyphs free for digital use. Raster editions rehosted first-party on R2: Tajweed (Dar Al-Maarifa), Warsh + Qalun (Quran-for-Android page scans), Shamarly / Madinah illuminated / Indo-Pak colour-coded (archive.org public scans). Every edition listed here has its full page count verified present on R2 before shipping.",
   "pin": "b91d39e1065b57bdda3e94aca8ecf3575e50e1e6",
   "editions": [
     {
@@ -55,6 +55,48 @@
       "pages": 604,
       "ayahs": 6236,
       "sciences_aligned": false,
+      "diverging_surahs": [],
+      "is_default": false
+    },
+    {
+      "id": "shamarly",
+      "image_path": "shamarly",
+      "image_ext": "png",
+      "name_ar": "مصحف الشمرلي",
+      "name_en": "Shamarly Mushaf",
+      "riwayah_ar": "حفص عن عاصم",
+      "riwayah_en": "Hafs an Asim",
+      "pages": 521,
+      "ayahs": 6236,
+      "sciences_aligned": true,
+      "diverging_surahs": [],
+      "is_default": false
+    },
+    {
+      "id": "madinah_gold",
+      "image_path": "madinah_gold",
+      "image_ext": "jpg",
+      "name_ar": "مصحف المدينة المذهّب",
+      "name_en": "Madinah Mushaf (Illuminated)",
+      "riwayah_ar": "حفص عن عاصم",
+      "riwayah_en": "Hafs an Asim",
+      "pages": 604,
+      "ayahs": 6236,
+      "sciences_aligned": true,
+      "diverging_surahs": [],
+      "is_default": false
+    },
+    {
+      "id": "indopak_tajweed",
+      "image_path": "indopak_tajweed",
+      "image_ext": "jpg",
+      "name_ar": "المصحف الهندي الملوّن (تجويدي)",
+      "name_en": "Indo-Pak Colour-Coded Tajweed",
+      "riwayah_ar": "حفص عن عاصم — رسم هندي",
+      "riwayah_en": "Hafs — Indo-Pak Nastaliq",
+      "pages": 564,
+      "ayahs": 6236,
+      "sciences_aligned": true,
       "diverging_surahs": [],
       "is_default": false
     }

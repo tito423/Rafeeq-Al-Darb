@@ -16,7 +16,8 @@
     "save": "Save",
     "retry": "Retry",
     "undo": "Undo",
-    "reset_all": "Reset all"
+    "reset_all": "Reset all",
+    "download": "Download"
   },
   "nav": {
     "home": "Home",
@@ -115,7 +116,9 @@
     "recite_now": "Now reciting {}:{}",
     "recite_previous": "Previous verse",
     "recite_pause": "Pause / resume",
-    "recite_next": "Next verse"
+    "recite_next": "Next verse",
+    "downloading_translation": "Downloading {} translation…",
+    "translation_not_downloaded": "The {} translation is not downloaded yet"
   },
   "library": {
     "title": "Library",

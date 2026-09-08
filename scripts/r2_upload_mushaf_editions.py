@@ -9,6 +9,12 @@ images were actually found and verified:
   * warsh  — Riwayat Warsh an Nafi, 604 pages, from the Quran-for-Android
              content host (android.quran.com/data/warsh/width_1024/pageNNN.png)
   * qaloon — Riwayat Qalun an Nafi, 604 pages, same host
+  * shamarly — the Shamarly (الشمرلي) printing, 521 pages, from the
+             archive.org item `quran_pages_shamarly` (numbered 1..521, none
+             missing). This is a PRINTING, not another riwayah, which is what
+             the owner actually asked for; earlier sessions had recorded it as
+             unsourceable after only checking a GitHub repo whose zip was a
+             2 MB stub.
 
 Both were probed first (content-type image/png, real byte sizes, first
 AND last page present) before being wired into the catalog — no source is
@@ -51,6 +57,12 @@ EDITIONS = {
         "https://android.quran.com/data/qaloon/width_1024/page{:03d}.png",
         "qaloon",
         (1, 604),
+    ),
+    # archive.org numbers these without zero padding: 1.png .. 521.png.
+    "shamarly": (
+        "https://archive.org/download/quran_pages_shamarly/{}.png",
+        "shamarly",
+        (1, 521),
     ),
 }
 
