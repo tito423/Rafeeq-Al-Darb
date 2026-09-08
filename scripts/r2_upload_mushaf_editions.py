@@ -25,14 +25,16 @@ Tajweed edition's real JPEGs are untouched).
 Streams upstream -> memory -> R2 with no local hoard, skips pages already
 present (so it is resumable), and head_object-verifies a sample at the end.
 
-Usage:  py scripts/r2_upload_mushaf_editions.py [edition ...]
-        (no args = both)
+Usage:  py scripts/r2_upload_mushaf_editions.py [edition ...] [--force]
+        (no args = both; --force re-uploads pages already present)
 """
 
 import io
 import sys
+import threading
 import time
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 import boto3
 from botocore.exceptions import ClientError
@@ -54,6 +56,15 @@ EDITIONS = {
 
 DST_KEY = "mushaf/{}/{:03d}.png"
 MIN_BYTES = 5000  # anything smaller upstream is a soft-404 HTML page, not a scan
+
+# Each page is an independent fetch->put, so the run is almost entirely network
+# wait. Sequentially it managed ~7 pages/min (about 3 hours for both editions);
+# a modest pool cuts that to minutes without hammering either host.
+WORKERS = 16
+
+# --force re-uploads pages already on R2 (used when the transform below
+# changes, not for a normal resumable run).
+FORCE = "--force" in sys.argv
 
 env = {}
 with open(r"E:\My Projects\Rafiq-Al-Darb\scripts\.env") as f:
@@ -81,21 +92,61 @@ def already_there(key):
         return False
 
 
-def verify_png(data):
-    """Confirm the bytes really are a decodable image before they go to R2."""
-    Image.open(io.BytesIO(data)).verify()
+def flatten_to_white(data):
+    """Transparent glyph mask -> opaque white page, still a palette PNG.
+
+    Also doubles as the "is this really an image" check: anything that isn't
+    decodable raises here, before it can reach R2.
+    """
+    img = Image.open(io.BytesIO(data))
+    if img.mode != "RGBA":
+        img = img.convert("RGBA")
+    flat = Image.new("RGB", img.size, (255, 255, 255))
+    flat.paste(img, mask=img.split()[-1])
+    # Back to a palette: these are a handful of ink colours on white, so 256
+    # entries are lossless in practice and keep the file the size it was.
+    out = io.BytesIO()
+    flat.convert("P", palette=Image.ADAPTIVE, colors=256).save(
+        out, "PNG", optimize=True
+    )
+    return out.getvalue()
 
 
 def upload_edition(name):
     src_tpl, folder, (first, last) = EDITIONS[name]
     print(f"\n=== {name} -> mushaf/{folder}/ ({first}..{last}) ===", flush=True)
-    uploaded = skipped = 0
+
+    counts = {"uploaded": 0, "skipped": 0}
     failed = []
-    for page in range(first, last + 1):
+    lock = threading.Lock()
+    # boto3 clients are not documented as thread-safe, so give each worker
+    # thread its own; they share the (immutable) credentials above.
+    local = threading.local()
+
+    def client():
+        if not hasattr(local, "s3"):
+            local.s3 = boto3.client(
+                "s3",
+                endpoint_url=env["R2_ENDPOINT"],
+                aws_access_key_id=env["R2_ACCESS_KEY_ID"],
+                aws_secret_access_key=env["R2_SECRET_ACCESS_KEY"],
+                region_name="auto",
+            )
+        return local.s3
+
+    def one_page(page):
         key = DST_KEY.format(folder, page)
-        if already_there(key):
-            skipped += 1
-            continue
+        c = client()
+        if not FORCE:
+            try:
+                h = c.head_object(Bucket=BUCKET, Key=key)
+                if h["ContentLength"] > MIN_BYTES:
+                    with lock:
+                        counts["skipped"] += 1
+                    return
+            except ClientError:
+                pass
+
         url = src_tpl.format(page)
         for attempt in range(3):
             try:
@@ -108,32 +159,44 @@ def upload_edition(name):
                 # A soft-404 comes back as the host's HTML homepage with a 200.
                 if "image" not in ctype or len(raw) < MIN_BYTES:
                     raise ValueError(f"not an image ({ctype}, {len(raw)} bytes)")
-                verify_png(raw)
-                data = raw
-                s3.put_object(
-                    Bucket=BUCKET, Key=key, Body=data, ContentType="image/png"
+                body = flatten_to_white(raw)
+                c.put_object(
+                    Bucket=BUCKET, Key=key, Body=body, ContentType="image/png"
                 )
-                uploaded += 1
-                if page % 50 == 0 or page == last:
-                    print(f"  page {page}/{last} ok ({len(data)} bytes)", flush=True)
-                break
+                with lock:
+                    counts["uploaded"] += 1
+                    done = counts["uploaded"] + counts["skipped"]
+                    if done % 50 == 0 or done == (last - first + 1):
+                        print(
+                            f"  {done}/{last - first + 1} pages "
+                            f"({len(body)} bytes last)",
+                            flush=True,
+                        )
+                return
             except Exception as e:  # noqa: BLE001
                 if attempt == 2:
-                    failed.append(page)
+                    with lock:
+                        failed.append(page)
                     print(f"  FAILED page {page}: {e}", flush=True)
                 else:
                     time.sleep(1.5)
+
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        list(pool.map(one_page, range(first, last + 1)))
+
     print(
-        f"{name}: uploaded={uploaded} skipped={skipped} failed={len(failed)}",
+        f"{name}: uploaded={counts['uploaded']} skipped={counts['skipped']} "
+        f"failed={len(failed)}",
         flush=True,
     )
     if failed:
-        print(f"{name} failed pages:", failed, flush=True)
-    return failed
+        print(f"{name} failed pages:", sorted(failed), flush=True)
+    return sorted(failed)
 
 
 def main():
-    wanted = sys.argv[1:] or list(EDITIONS)
+    args = [a for a in sys.argv[1:] if a != "--force"]
+    wanted = args or list(EDITIONS)
     bad = [w for w in wanted if w not in EDITIONS]
     if bad:
         sys.exit(f"unknown edition(s): {bad}; known: {list(EDITIONS)}")
