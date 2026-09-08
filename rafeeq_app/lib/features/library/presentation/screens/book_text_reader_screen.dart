@@ -48,10 +48,16 @@ class BookTextReaderScreen extends StatefulWidget {
   /// Local path of the downloaded `books/text/<id>.json` file.
   final String path;
 
+  /// Page to open at, overriding the reader's own saved position. Set when
+  /// arriving from a cross-book search hit, so the reader lands on the page
+  /// that actually matched instead of wherever the book was last left.
+  final int? initialPageIndex;
+
   const BookTextReaderScreen({
     super.key,
     required this.book,
     required this.path,
+    this.initialPageIndex,
   });
 
   @override
@@ -108,7 +114,8 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
       if (!mounted) return;
       setState(() {
         _doc = doc;
-        _pageIndex = savedPage.clamp(0, doc.pages.length - 1);
+        _pageIndex = (widget.initialPageIndex ?? savedPage)
+            .clamp(0, doc.pages.length - 1);
         _fontScale = prefs.getDouble(_kFont) ?? 1.0;
         _showTashkeel = prefs.getBool(_kTashkeel) ?? true;
         _inkIndex = (prefs.getInt(_kInk) ?? 0).clamp(0, _inkChoices.length - 1);

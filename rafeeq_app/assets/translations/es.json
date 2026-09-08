@@ -208,7 +208,10 @@
     "section_nine": "Las nueve colecciones",
     "section_nine_desc": "Colecciones completas, por capítulos y con búsqueda",
     "section_texts": "Textos de hadiz",
-    "section_texts_desc": "Libros de texto con índice de capítulos"
+    "section_texts_desc": "Libros de texto con índice de capítulos",
+    "search_all_books": "Buscar en todos los libros",
+    "search_all_hint": "Escribe una palabra o frase…",
+    "search_all_empty": "Busca en todos los libros descargados a la vez"
   },
   "azkar": {
     "title": "Adhkar",

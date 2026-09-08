@@ -208,7 +208,10 @@
     "section_nine": "Les neuf recueils",
     "section_nine_desc": "Recueils complets, par chapitres et consultables",
     "section_texts": "Textes de hadith",
-    "section_texts_desc": "Livres avec index des chapitres"
+    "section_texts_desc": "Livres avec index des chapitres",
+    "search_all_books": "Rechercher dans tous les livres",
+    "search_all_hint": "Tapez un mot ou une phrase…",
+    "search_all_empty": "Cherchez dans tous les livres téléchargés à la fois"
   },
   "azkar": {
     "title": "Adhkar",

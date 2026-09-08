@@ -208,7 +208,10 @@
     "section_nine": "As nove coletâneas",
     "section_nine_desc": "Coletâneas completas, por capítulos e pesquisáveis",
     "section_texts": "Textos de hadice",
-    "section_texts_desc": "Livros com índice de capítulos"
+    "section_texts_desc": "Livros com índice de capítulos",
+    "search_all_books": "Pesquisar em todos os livros",
+    "search_all_hint": "Escreva uma palavra ou frase…",
+    "search_all_empty": "Pesquise em todos os livros transferidos de uma vez"
   },
   "azkar": {
     "title": "Adhkar",

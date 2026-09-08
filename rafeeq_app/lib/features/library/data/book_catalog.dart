@@ -27,10 +27,17 @@ class TextEdition {
   /// an honest "نص مستخرَج آلياً" badge if a future OCR source is ever added.
   final bool isOcr;
 
+  /// Real gzipped size of the hosted file, in bytes, measured from the object
+  /// the app actually downloads. 0 means unknown — the card then shows no
+  /// size at all rather than a guess. Every card used to claim a hardcoded
+  /// "1.0 MB" regardless of the book.
+  final int sizeBytes;
+
   const TextEdition({
     required this.url,
     required this.sourceLabel,
     this.isOcr = false,
+    this.sizeBytes = 0,
   });
 }
 
@@ -129,6 +136,158 @@ class LibraryBook {
 }
 
 const List<LibraryBook> libraryBookCatalog = [
+  // ── Hadith expansion (2026-09-08) ──────────────────────────────────────
+  // The well-known hadith books, requested alongside the nine collections.
+  // Each Shamela id was checked against its own book card and its
+  // pageContent API before the text was fetched, and every edition line
+  // below is copied from that card — see scripts/build_book_text.py.
+  LibraryBook(
+    id: 'bulugh_al_maram',
+    titleAr: 'بلوغ المرام من أدلة الأحكام',
+    titleEn: 'Bulugh al-Maram',
+    authorAr: 'الحافظ أحمد بن علي بن حجر العسقلاني',
+    authorEn: 'Al-Hafiz Ibn Hajar al-Asqalani',
+    authorDeathAr: 'توفي 852 هـ',
+    descriptionAr:
+        'جمع فيه ابن حجر أحاديث الأحكام التي اعتمد عليها الفقهاء، مرتبة على '
+        'أبواب الفقه، ويذكر عقب كل حديث من أخرجه ودرجته. من أشهر متون '
+        'الأحكام وأكثرها تداولًا في طلب العلم.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/bulugh_al_maram.json',
+      sizeBytes: 328803,
+      sourceLabel:
+          'المكتبة الشاملة — بلوغ المرام من أدلة الأحكام، أبو الفضل أحمد بن '
+          'علي بن حجر العسقلاني (ت ٨٥٢هـ)، دار الفلق - الرياض، الطبعة '
+          'السابعة ١٤٢٤هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_adab_al_mufrad',
+    titleAr: 'الأدب المفرد',
+    titleEn: 'Al-Adab al-Mufrad',
+    authorAr: 'الإمام محمد بن إسماعيل البخاري',
+    authorEn: 'Imam Muhammad ibn Ismail al-Bukhari',
+    authorDeathAr: 'توفي 256 هـ',
+    descriptionAr:
+        'كتاب البخاري في الأخلاق والآداب وبرّ الوالدين وصلة الرحم وحسن '
+        'المعاشرة. أفرده عن صحيحه، وشرطه فيه أوسع من شرط الصحيح، فليس كل ما '
+        'فيه على درجة أحاديث الجامع الصحيح.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_adab_al_mufrad.json',
+      sizeBytes: 229674,
+      sourceLabel:
+          'المكتبة الشاملة — الأدب المفرد، محمد بن إسماعيل البخاري '
+          '(ت ٢٥٦هـ)، تحقيق محمد فؤاد عبد الباقي، المطبعة السلفية ومكتبتها - '
+          'القاهرة، الطبعة الثانية ١٣٧٩هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'sahih_al_adab_al_mufrad',
+    titleAr: 'صحيح الأدب المفرد',
+    titleEn: 'Sahih al-Adab al-Mufrad',
+    authorAr: 'الإمام البخاري — بأحكام الألباني',
+    authorEn: 'Al-Bukhari, graded by al-Albani',
+    authorDeathAr: 'توفي 256 هـ',
+    descriptionAr:
+        'ما صحّ من أحاديث الأدب المفرد بأحكام الشيخ محمد ناصر الدين '
+        'الألباني، مفردًا عن ضعيفه.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/sahih_al_adab_al_mufrad.json',
+      sizeBytes: 224236,
+      sourceLabel:
+          'المكتبة الشاملة — صحيح الأدب المفرد للإمام البخاري، بأحكام محمد '
+          'ناصر الدين الألباني، دار الصديق للنشر والتوزيع، الطبعة الرابعة '
+          '١٤١٨هـ/١٩٩٧م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_shamail_al_muhammadiyyah',
+    titleAr: 'الشمائل المحمدية',
+    titleEn: 'Al-Shamail al-Muhammadiyyah',
+    authorAr: 'الإمام أبو عيسى محمد بن عيسى الترمذي',
+    authorEn: 'Imam Abu Isa Muhammad ibn Isa al-Tirmidhi',
+    authorDeathAr: 'توفي 279 هـ',
+    descriptionAr:
+        'جمع فيه الترمذي ما ورد في صفة النبي ﷺ الخَلقية والخُلقية: خلقه '
+        'ولباسه وطعامه وعبادته وأخلاقه، مرتبًا على أبواب.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_shamail_al_muhammadiyyah.json',
+      sizeBytes: 145861,
+      sourceLabel:
+          'المكتبة الشاملة — الشمائل المحمدية، أبو عيسى محمد بن سورة '
+          'الترمذي (ت ٢٧٩هـ)، إخراج وتعليق محمد أحمد حلاق، دار إحياء التراث '
+          'العربي، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'mishkat_al_masabih',
+    titleAr: 'مشكاة المصابيح',
+    titleEn: 'Mishkat al-Masabih',
+    authorAr: 'الخطيب وليّ الدين محمد بن عبد الله التبريزي',
+    authorEn: 'Wali al-Din al-Khatib al-Tibrizi',
+    authorDeathAr: 'من علماء القرن الثامن الهجري',
+    descriptionAr:
+        'زيادة وتهذيب لكتاب "مصابيح السنة" للبغوي، رتّبه التبريزي على الأبواب '
+        'وزاد عليه فصلًا ثالثًا، وعزا كل حديث إلى مُخرِّجه. من أجمع كتب '
+        'السنة المرتبة.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/mishkat_al_masabih.json',
+      sizeBytes: 866720,
+      sourceLabel:
+          'المكتبة الشاملة — مشكاة المصابيح، محمد بن عبد الله الخطيب '
+          'التبريزي، تحقيق محمد ناصر الدين الألباني، المكتب الإسلامي - '
+          'بيروت، الطبعة الثالثة ١٩٨٥م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_targhib_wal_tarhib',
+    titleAr: 'الترغيب والترهيب',
+    titleEn: 'Al-Targhib wal-Tarhib',
+    authorAr: 'الحافظ زكي الدين عبد العظيم المنذري',
+    authorEn: 'Al-Hafiz Zaki al-Din al-Mundhiri',
+    authorDeathAr: 'توفي 656 هـ',
+    descriptionAr:
+        'جمع فيه المنذري أحاديث الترغيب في الطاعات والترهيب من المعاصي، '
+        'مرتبة على الأبواب. يشير المنذري نفسه إلى درجة كثير من أحاديثه، وفيه '
+        'الصحيح والحسن والضعيف.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_targhib_wal_tarhib.json',
+      sizeBytes: 904549,
+      sourceLabel:
+          'المكتبة الشاملة — الترغيب والترهيب من الحديث الشريف، زكي الدين '
+          'عبد العظيم المنذري (ت ٦٥٦هـ)، تحقيق إبراهيم شمس الدين، دار الكتب '
+          'العلمية - بيروت، الطبعة الأولى ١٤١٧هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'umdat_al_ahkam',
+    titleAr: 'عمدة الأحكام',
+    titleEn: 'Umdat al-Ahkam',
+    authorAr: 'الحافظ عبد الغني بن عبد الواحد المقدسي',
+    authorEn: 'Al-Hafiz Abd al-Ghani al-Maqdisi',
+    authorDeathAr: 'توفي 600 هـ',
+    descriptionAr:
+        'متن مختصر في أحاديث الأحكام، اقتصر فيه المقدسي على ما اتفق عليه '
+        'البخاري ومسلم، فهو من أعلى كتب الأحكام ثبوتًا. من المتون التي '
+        'يُبتدأ بها في طلب العلم.',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/umdat_al_ahkam.json',
+      sizeBytes: 234353,
+      sourceLabel:
+          'المكتبة الشاملة — العمدة في الأحكام، عبد الغني بن عبد الواحد '
+          'المقدسي (ت ٦٠٠هـ)، تحقيق عبد المحسن بن محمد القاسم، الطبعة '
+          'الثانية ١٤٤٢هـ/٢٠٢١م',
+    ),
+  ),
   LibraryBook(
     id: 'riyad_as_salihin',
     titleAr: 'رياض الصالحين',
@@ -142,6 +301,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.hadith,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/riyad_as_salihin.json',
+      sizeBytes: 414968,
       sourceLabel:
           'المكتبة الشاملة — رياض الصالحين، تحقيق شعيب الأرنؤوط، '
           'مؤسسة الرسالة، بيروت، الطبعة الثالثة ١٤١٩هـ/١٩٩٨م',
@@ -161,6 +321,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/mukhtasar_minhaj_al_qasidin.json',
+      sizeBytes: 323397,
       sourceLabel:
           'المكتبة الشاملة — مختصر منهاج القاصدين، تقديم محمد أحمد '
           'دهمان وتعليق شعيب وعبد القادر الأرناؤوط، مكتبة دار البيان، دمشق، '
@@ -180,6 +341,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_fawaid.json',
+      sizeBytes: 189505,
       sourceLabel:
           'المكتبة الشاملة — الفوائد لابن القيم، دار الكتب العلمية، '
           'بيروت، الطبعة الثانية ١٣٩٣هـ/١٩٧٣م',
@@ -198,6 +360,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sayd_al_khatir.json',
+      sizeBytes: 441609,
       sourceLabel:
           'المكتبة الشاملة — صيد الخاطر، بعناية حسن المساحي سويدان، '
           'دار القلم، دمشق، الطبعة الأولى ١٤٢٥هـ/٢٠٠٤م',
@@ -220,6 +383,7 @@ const List<LibraryBook> libraryBookCatalog = [
     // no license restriction).
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ubudiyyah.json',
+      sizeBytes: 57117,
       sourceLabel:
           'المكتبة الشاملة — العبودية لابن تيمية، تحقيق محمد زهير '
           'الشاويش، المكتب الإسلامي، بيروت، الطبعة السابعة ١٤٢٦هـ/٢٠٠٥م',
@@ -248,6 +412,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_aqidah_al_wasitiyyah.json',
+      sizeBytes: 25695,
       sourceLabel:
           'المكتبة الشاملة — العقيدة الواسطية لابن تيمية، تحقيق '
           'أشرف بن عبد المقصود، أضواء السلف، الرياض، الطبعة الثانية '
@@ -269,6 +434,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.hadith,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/nawadir_al_usul.json',
+      sizeBytes: 638530,
       sourceLabel:
           'المكتبة الشاملة — نوادر الأصول في أحاديث الرسول للحكيم '
           'الترمذي، تحقيق عبد الرحمن عميرة، دار الجيل، بيروت (4 أجزاء)',
@@ -288,6 +454,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_samt_wa_adab_al_lisan.json',
+      sizeBytes: 95133,
       sourceLabel:
           'المكتبة الشاملة — الصمت وآداب اللسان لابن أبي الدنيا، '
           'تحقيق أبو إسحاق الحويني الأثري، دار الكتاب العربي، بيروت، '
@@ -315,6 +482,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/qasr_al_amal.json',
+      sizeBytes: 66237,
       sourceLabel:
           'المكتبة الشاملة — قصر الأمل لابن أبي الدنيا، تحقيق محمد '
           'خير رمضان يوسف، دار ابن حزم، بيروت، الطبعة الثانية '
@@ -336,6 +504,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_hasanah_wa_al_sayyiah.json',
+      sizeBytes: 90060,
       sourceLabel:
           'المكتبة الشاملة — الحسنة والسيئة لابن تيمية، دار الكتب '
           'العلمية، بيروت',
@@ -355,6 +524,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/adab_al_nafs.json',
+      sizeBytes: 41163,
       sourceLabel:
           'المكتبة الشاملة — أدب النفس للحكيم الترمذي، تحقيق د. '
           'أحمد عبد الرحيم السايح، الدار المصرية اللبنانية، مصر، الطبعة '
@@ -387,6 +557,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_madaniyyah.json',
+      sizeBytes: 14994,
       sourceLabel:
           'المكتبة الشاملة — الرسالة المدنية في تحقيق المجاز والحقيقة في صفات الله (مطبوع ضمن الفتوى الحموية الكبرى)، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، مطبعة المدني، القاهرة، مصر، تحقيق محمد عبد الرزاق حمزة [ت ١٣٩٢ هـ]',
     ),
@@ -403,6 +574,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/masalah_fima_idha_kana_fil_abd_mahabbah.json',
+      sizeBytes: 5923,
       sourceLabel:
           'المكتبة الشاملة — مسألة فيما إذا كان في العبد محبة لما هو خير وحق ومحمود في نفسه، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، تحقيق د. محمد رشاد سالم',
     ),
@@ -419,6 +591,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/islah_al_mal.json',
+      sizeBytes: 71787,
       sourceLabel:
           'المكتبة الشاملة — إصلاح المال، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية - بيروت - لبنان، تحقيق محمد عبد القادر عطا',
     ),
@@ -435,6 +608,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/istina_al_maruf.json',
+      sizeBytes: 33566,
       sourceLabel:
           'المكتبة الشاملة — اصطناع المعروف، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، تحقيق محمد خير رمضان يوسف',
     ),
@@ -452,6 +626,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_amr_bil_maruf_ibn_abi_al_dunya.json',
+      sizeBytes: 32702,
       sourceLabel:
           'المكتبة الشاملة — الأمر بالمعروف والنهي عن المنكر، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة الغرباء الأثرية، السعودية',
     ),
@@ -469,6 +644,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/asma_muallafat_ibn_taymiyyah.json',
+      sizeBytes: 10838,
       sourceLabel:
           'المكتبة الشاملة — أسماء مؤلفات شيخ الإسلام ابن تيمية، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الكتاب الجديد - بيروت، تحقيق د. صلاح الدين المنجد',
     ),
@@ -486,6 +662,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/ighathat_al_lahfan_fi_hukm_talaq_al_ghadban.json',
+      sizeBytes: 60320,
       sourceLabel:
           'المكتبة الشاملة — إغاثة اللهفان في حكم طلاق الغضبان - ت الحفيان، شمس الدين محمد بن أبي بكر ابن قيم الجوزية (٦٩١ - ٧٥١ هـ)، مؤسسة الرسالة، بيروت - لبنان',
     ),
@@ -503,6 +680,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_amthal_fil_quran_ibn_al_qayyim.json',
+      sizeBytes: 47368,
       sourceLabel:
           'المكتبة الشاملة — الأمثال في القرآن [من «اعلام الموقعين»]، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، مكتبة الصحابة - مصر، طنطا، تحقيق أبو حذيفة إبراهيم بن محمد',
     ),
@@ -519,6 +697,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ahwal.json',
+      sizeBytes: 53649,
       sourceLabel:
           'المكتبة الشاملة — الأهوال.، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، تحقيق مجدي فتحي السيد [ت ١٤٤٨ هـ]',
     ),
@@ -536,6 +715,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_awliya_ibn_abi_al_dunya.json',
+      sizeBytes: 40022,
       sourceLabel:
           'المكتبة الشاملة — الأولياء، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق محمد السعيد بن بسيوني زغلول',
     ),
@@ -552,6 +732,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ikhlas_wal_niyyah.json',
+      sizeBytes: 11000,
       sourceLabel:
           'المكتبة الشاملة — الإخلاص والنية، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار البشائر',
     ),
@@ -569,6 +750,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_tibyan_fi_aqsam_al_quran.json',
+      sizeBytes: 215494,
       sourceLabel:
           'المكتبة الشاملة — التبيان في أقسام القرآن، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، دار المعرفة، بيروت، لبنان، تحقيق محمد حامد الفقي [ت ١٣٧٨ هـ]',
     ),
@@ -585,6 +767,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ikhwan.json',
+      sizeBytes: 31448,
       sourceLabel:
           'المكتبة الشاملة — الإخوان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الكتب العلمية - بيروت، تحقيق مصطفى عبد القادر عطا',
     ),
@@ -602,6 +785,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_jami_fi_amthal_al_quran.json',
+      sizeBytes: 160115,
       sourceLabel:
           'المكتبة الشاملة — الجامع في أمثال القرآن، للعلامة ابن القيم، جمعه ورتبه ووثق نصوصه وحققه أبو أويس الكردي، راجعه وقدم له الشيخ مصطفى العدوي، مكتبة ابن تيمية، القاهرة، الطبعة الأولى ١٤٣٠هـ/٢٠٠٩م',
     ),
@@ -618,6 +802,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_daa_wal_dawa.json',
+      sizeBytes: 259321,
       sourceLabel:
           'المكتبة الشاملة — الجواب الكافي لمن سأل عن الدواء الشافي أو الداء والدواء، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار المعرفة - المغرب',
     ),
@@ -635,6 +820,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_tabukiyyah.json',
+      sizeBytes: 55557,
       sourceLabel:
           'المكتبة الشاملة — الرسالة التبوكية (ضمن مجموع الرسائل)، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٥٩ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق محمد عزير شمس',
     ),
@@ -652,6 +838,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_ishraf_fi_manazil_al_ashraf.json',
+      sizeBytes: 129158,
       sourceLabel:
           'المكتبة الشاملة — الإشراف في منازل الأشراف، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة الرشد - الرياض - السعودية، تحقيق د نجم عبد الرحمن خلف',
     ),
@@ -669,6 +856,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_itibar_wa_aqab_al_surur.json',
+      sizeBytes: 35112,
       sourceLabel:
           'المكتبة الشاملة — الاعتبار وأعقاب السرور والأحزان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار البشير - عمان، تحقيق د. نجم عبد الرحمن خلف',
     ),
@@ -685,6 +873,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_tawadu_wal_khumul.json',
+      sizeBytes: 37223,
       sourceLabel:
           'المكتبة الشاملة — التواضع والخمول، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الكتب العلمية - بيروت، تحقيق محمد عبد القادر أحمد عطا',
     ),
@@ -702,6 +891,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ruh_ibn_al_qayyim.json',
+      sizeBytes: 279665,
       sourceLabel:
           'المكتبة الشاملة — الروح في الكلام على أرواح الأموات والأحياء بالدلائل من الكتاب والسنة، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الكتب العلمية - بيروت',
     ),
@@ -719,6 +909,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_tawbah_ibn_abi_al_dunya.json',
+      sizeBytes: 40663,
       sourceLabel:
           'المكتبة الشاملة — كتاب التوبة.، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)',
     ),
@@ -735,6 +926,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_tawakkul_ala_allah.json',
+      sizeBytes: 16162,
       sourceLabel:
           'المكتبة الشاملة — مجموعة رسائل بان أبي الدنيا كتاب التوكل على الله، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية، بيروت - لبنان',
     ),
@@ -751,6 +943,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_tibb_al_nabawi.json',
+      sizeBytes: 306328,
       sourceLabel:
           'المكتبة الشاملة — الطب النبوي (جزء من كتاب زاد المعاد لابن القيم)، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الهلال - بيروت',
     ),
@@ -767,6 +960,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_turuq_al_hukmiyyah.json',
+      sizeBytes: 283198,
       sourceLabel:
           'المكتبة الشاملة — الطرق الحكمية، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، مكتبة دار البيان',
     ),
@@ -783,6 +977,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ju.json',
+      sizeBytes: 55006,
       sourceLabel:
           'المكتبة الشاملة — الجوع، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، بيروت لبنان',
     ),
@@ -799,6 +994,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_hilm.json',
+      sizeBytes: 23086,
       sourceLabel:
           'المكتبة الشاملة — الحلم، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق محمد عبد القادر أحمد عطا',
     ),
@@ -816,6 +1012,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_rida_an_allah_biqadaihi.json',
+      sizeBytes: 23482,
       sourceLabel:
           'المكتبة الشاملة — الرضا عن الله بقضائه، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، الدار السلفية - بومباي، تحقيق ضياء الحسن السلفي',
     ),
@@ -833,6 +1030,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_furusiyyah_al_muhammadiyyah.json',
+      sizeBytes: 257949,
       sourceLabel:
           'المكتبة الشاملة — الفروسية المحمدية، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٩١ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق زائد بن أحمد النشيري',
     ),
@@ -849,6 +1047,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_riqqah_wal_buka.json',
+      sizeBytes: 74705,
       sourceLabel:
           'المكتبة الشاملة — الرقة والبكاء، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)',
     ),
@@ -866,6 +1065,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_kalam_ala_masalat_al_sama.json',
+      sizeBytes: 283113,
       sourceLabel:
           'المكتبة الشاملة — الكلام على مسألة السماع، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٩١ - ٧٥١ هـ)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق محمد عزير شمس',
     ),
@@ -883,6 +1083,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_zuhd_ibn_abi_al_dunya.json',
+      sizeBytes: 151171,
       sourceLabel:
           'المكتبة الشاملة — الزهد لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن كثير، دمشق',
     ),
@@ -899,6 +1100,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_manar_al_munif.json',
+      sizeBytes: 53006,
       sourceLabel:
           'المكتبة الشاملة — المنار المنيف في الصحيح والضعيف، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، مكتبة المطبوعات الإسلامية، حلب، تحقيق عبد الفتاح أبو غدة',
     ),
@@ -915,6 +1117,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_wabil_al_sayyib.json',
+      sizeBytes: 108669,
       sourceLabel:
           'المكتبة الشاملة — الوابل الصيب من الكلم الطيب، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الحديث - القاهرة',
     ),
@@ -931,6 +1134,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_shukr.json',
+      sizeBytes: 44284,
       sourceLabel:
           'المكتبة الشاملة — الشكر، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، المكتب الإسلامي - الكويت، تحقيق بدر البدر',
     ),
@@ -948,6 +1152,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_sabr_wal_thawab_alayh.json',
+      sizeBytes: 52452,
       sourceLabel:
           'المكتبة الشاملة — الصبر والثواب عليه، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، بيروت - لبنان',
     ),
@@ -965,6 +1170,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/tuhfat_al_mawdud_bi_ahkam_al_mawlud.json',
+      sizeBytes: 142798,
       sourceLabel:
           'المكتبة الشاملة — تحفة المودود بأحكام المولود، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، مكتبة دار البيان - دمشق، تحقيق عبد القادر الأرناؤوط [ت ١٤٢٥ هـ]',
     ),
@@ -981,6 +1187,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_uzlah_wal_infirad.json',
+      sizeBytes: 71914,
       sourceLabel:
           'المكتبة الشاملة — العزلة والانفراد، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (المتوفى : ٢٨١هـ)',
     ),
@@ -997,6 +1204,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_aql_wa_fadluh.json',
+      sizeBytes: 19551,
       sourceLabel:
           'المكتبة الشاملة — العقل وفضله، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة القرآن - مصر',
     ),
@@ -1013,6 +1221,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/jala_al_afham.json',
+      sizeBytes: 197432,
       sourceLabel:
           'المكتبة الشاملة — جلاء الأفهام في فضل الصلاة على محمد خير الأنام، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، دار العروبة - الكويت، تحقيق شعيب الأرناؤوط [ت ١٤٣٨ هـ]- عبد القادر الأرناؤوط [ت ١٤٢٥ هـ]',
     ),
@@ -1029,6 +1238,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_uqubat.json',
+      sizeBytes: 86364,
       sourceLabel:
           'المكتبة الشاملة — العقوبات، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، بيروت - لبنان',
     ),
@@ -1045,6 +1255,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_umr_wal_shayb.json',
+      sizeBytes: 16757,
       sourceLabel:
           'المكتبة الشاملة — العمر والشيب، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة الرشد - الرياض، تحقيق د. نجم عبد الله خلف',
     ),
@@ -1062,6 +1273,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_faraj_bad_al_shiddah.json',
+      sizeBytes: 38017,
       sourceLabel:
           'المكتبة الشاملة — الفرج بعد الشدة، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الريان للتراث، مصر',
     ),
@@ -1079,6 +1291,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/hadi_al_arwah_ila_bilad_al_afrah.json',
+      sizeBytes: 253896,
       sourceLabel:
           'المكتبة الشاملة — حادي الأرواح إلى بلاد الأفراح، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، مطبعة المدني، القاهرة',
     ),
@@ -1096,6 +1309,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/risalat_ibn_al_qayyim_ila_ahad_ikhwanih.json',
+      sizeBytes: 42711,
       sourceLabel:
           'المكتبة الشاملة — رسالة ابن القيم إلى أحد إخوانه، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٥٩ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق عبد الله بن محمد المديفر',
     ),
@@ -1113,6 +1327,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_qubur_ibn_abi_al_dunya.json',
+      sizeBytes: 46269,
       sourceLabel:
           'المكتبة الشاملة — القبور لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة الغرباء الأثرية، تحقيق طارق محمد سكلوع العمود',
     ),
@@ -1129,6 +1344,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_qanaah_wal_taaffuf.json',
+      sizeBytes: 36462,
       sourceLabel:
           'المكتبة الشاملة — القناعة والتعفف، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية، بيروت - لبنان',
     ),
@@ -1146,6 +1362,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/raf_al_yadayn_fil_salah.json',
+      sizeBytes: 174034,
       sourceLabel:
           'المكتبة الشاملة — رفع اليدين في الصلاة، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٩١ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق علي بن محمد العمران',
     ),
@@ -1162,6 +1379,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_mutamannin.json',
+      sizeBytes: 32897,
       sourceLabel:
           'المكتبة الشاملة — المتمنين، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم - بيروت - لبنان، تحقيق محمد خير رمضان يوسف',
     ),
@@ -1178,6 +1396,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_muhtadirin.json',
+      sizeBytes: 70631,
       sourceLabel:
           'المكتبة الشاملة — المحتضرين، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم - بيروت - لبنان، تحقيق محمد خير رمضان يوسف',
     ),
@@ -1194,6 +1413,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/rawdat_al_muhibbin.json',
+      sizeBytes: 253708,
       sourceLabel:
           'المكتبة الشاملة — روضة المحبين ونزهة المشتاقين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، دار الكتب العلمية، بيروت، لبنان',
     ),
@@ -1210,6 +1430,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_marad_wal_kaffarat.json',
+      sizeBytes: 53979,
       sourceLabel:
           'المكتبة الشاملة — المرض والكفارات، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، الدار السلفية - بومباي، تحقيق عبد الوكيل الندوي',
     ),
@@ -1226,6 +1447,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/shifa_al_alil.json',
+      sizeBytes: 430536,
       sourceLabel:
           'المكتبة الشاملة — شفاء العليل في مسائل القضاء والقدر والحكمة والتعليل، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار المعرفة، بيروت، لبنان',
     ),
@@ -1242,6 +1464,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sifat_al_munafiqin.json',
+      sizeBytes: 12998,
       sourceLabel:
           'المكتبة الشاملة — صفات المنافقين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، الكتاب منشور على موقع وزارة الأوقاف السعودية بدون بيانات',
     ),
@@ -1258,6 +1481,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sigh_al_hamd.json',
+      sizeBytes: 12575,
       sourceLabel:
           'المكتبة الشاملة — جواب في صيغ الحمد، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار العاصمة - الرياض، تحقيق محمد بن إبراهيم السعران',
     ),
@@ -1275,6 +1499,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_matar_wal_rad_wal_barq.json',
+      sizeBytes: 31259,
       sourceLabel:
           'المكتبة الشاملة — المطر والرعد والبرق، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)',
     ),
@@ -1291,6 +1516,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_manamat.json',
+      sizeBytes: 80401,
       sourceLabel:
           'المكتبة الشاملة — المنامات، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق عبد القادر أحمد عطا [ت ١٤٠٣ هـ]',
     ),
@@ -1307,6 +1533,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/tariq_al_hijratayn.json',
+      sizeBytes: 410533,
       sourceLabel:
           'المكتبة الشاملة — طريق الهجرتين وباب السعادتين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، الدار السلفية، القاهرة، مصر',
     ),
@@ -1323,6 +1550,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/uddat_al_sabirin.json',
+      sizeBytes: 197679,
       sourceLabel:
           'المكتبة الشاملة — عدة الصابرين وذخيرة الشاكرين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١ هـ)، دار ابن كثير، دمشق، بيروت/مكتبة دار التراث، المدينة المنورة، المملكة العربية السعودية',
     ),
@@ -1340,6 +1568,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/faidah_jalilah_fi_qawaid_al_asma_al_husna.json',
+      sizeBytes: 19691,
       sourceLabel:
           'المكتبة الشاملة — فائدة جليلة في قواعد الأسماء الحسنى، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، غراس، الكويت، تحقيق عبد الرزاق بن عبد المحسن البدر',
     ),
@@ -1357,6 +1586,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/fatya_fi_sighat_al_hamd.json',
+      sizeBytes: 31592,
       sourceLabel:
           'المكتبة الشاملة — فتيا في صيغة الحمد «الحمد لله حمدا يوافي نعمه ويكافئ مزيده»، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٥٩ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)',
     ),
@@ -1373,6 +1603,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_nafaqah_ala_al_iyal.json',
+      sizeBytes: 99663,
       sourceLabel:
           'المكتبة الشاملة — العيال ويقع في مجلدين، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن القيم - السعودية - الدمام، تحقيق د نجم عبد الرحمن خلف',
     ),
@@ -1389,6 +1620,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_hamm_wal_huzn.json',
+      sizeBytes: 31181,
       sourceLabel:
           'المكتبة الشاملة — الهم والحزن، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، دار السلام - القاهرة، تحقيق مجدي فتحي السيد [ت ١٤٤٨ هـ]',
     ),
@@ -1405,6 +1637,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/nuniyyat_ibn_al_qayyim.json',
+      sizeBytes: 167771,
       sourceLabel:
           'المكتبة الشاملة — متن القصيدة النونية، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، مكتبة ابن تيمية، القاهرة',
     ),
@@ -1421,6 +1654,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_hawatif.json',
+      sizeBytes: 65143,
       sourceLabel:
           'المكتبة الشاملة — هواتف الجنان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، المكتب الإسلامي، تحقيق محمد الزغلي',
     ),
@@ -1438,6 +1672,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_wajal_wal_tawthuq_bil_amal.json',
+      sizeBytes: 21217,
       sourceLabel:
           'المكتبة الشاملة — الوجل والتوثق بالعمل، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الوطن - الرياض، تحقيق مشهور حسن آل سلمان',
     ),
@@ -1454,6 +1689,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_wara.json',
+      sizeBytes: 36963,
       sourceLabel:
           'المكتبة الشاملة — الورع، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، الدار السلفية - الكويت، تحقيق أبي عبد الله محمد بن حمد الحمود',
     ),
@@ -1471,6 +1707,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_yaqin_ibn_abi_al_dunya.json',
+      sizeBytes: 12180,
       sourceLabel:
           'المكتبة الشاملة — اليقين لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار البشائر الإسلامية',
     ),
@@ -1487,6 +1724,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/hidayat_al_hayara.json',
+      sizeBytes: 317587,
       sourceLabel:
           'المكتبة الشاملة — هداية الحيارى في أجوبة اليهود والنصارى، أبو عبد الله محمد بن أبي بكر بن أيوب ابن قيم الجوزية (٦٩١ - ٧٥١)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)',
     ),
@@ -1503,6 +1741,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/husn_al_zann_billah.json',
+      sizeBytes: 38472,
       sourceLabel:
           'المكتبة الشاملة — حسن الظن بالله، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار طيبة - الرياض، تحقيق مخلص محمد',
     ),
@@ -1519,6 +1758,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/hilm_muawiyah.json',
+      sizeBytes: 9591,
       sourceLabel:
           'المكتبة الشاملة — حلم معاوية لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، دار البشائر',
     ),
@@ -1534,6 +1774,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.adab,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/dhamm_al_baghy.json',
+      sizeBytes: 14160,
       sourceLabel:
           'المكتبة الشاملة — ذم البغى لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الراية للنشر والتوزيع، الرياض - السعودية',
     ),
@@ -1551,6 +1792,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/akhbar_al_humqa_wal_mughaffalin.json',
+      sizeBytes: 104638,
       sourceLabel:
           'المكتبة الشاملة — أخبار الحمقى والمغفلين، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الفكر اللبناني',
     ),
@@ -1568,6 +1810,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/akhbar_al_zuraf_wal_mutamajinin.json',
+      sizeBytes: 55745,
       sourceLabel:
           'المكتبة الشاملة — أخبار الظراف والمتماجنين، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، دار ابن حزم - بيروت، تحقيق بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]',
     ),
@@ -1585,6 +1828,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/akhbar_al_nisa_ibn_al_jawzi.json',
+      sizeBytes: 130801,
       sourceLabel:
           'المكتبة الشاملة — أخبار النساء، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ) (منسوب خطأ في المطبوع لابن قيم الجوزية)، دار مكتبة الحياة، بيروت - لبنان',
     ),
@@ -1600,6 +1844,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.adab,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/dhamm_al_dunya.json',
+      sizeBytes: 75485,
       sourceLabel:
           'المكتبة الشاملة — ذم الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية',
     ),
@@ -1616,6 +1861,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/amar_al_ayan.json',
+      sizeBytes: 142955,
       sourceLabel:
           'المكتبة الشاملة — أعمار الأعيان، ابن الجوزي، جمال الدين أبي الفرج عبد الرحمن بن علي بن محمد (٥١٠ هـ - ٥٩٧ هـ)، مكتبة الخانجي، القاهرة، تحقيق د محمود محمد الطناحي',
     ),
@@ -1633,6 +1879,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/ikhbar_ahl_al_rusukh_fil_fiqh.json',
+      sizeBytes: 7716,
       sourceLabel:
           'المكتبة الشاملة — إخبار أهل الرسوخ في الفقه والتحديث بمقدار المنسوخ من الحديث، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مكتبة ابن حجر للنشر والتوزيع، مكة المكرمة',
     ),
@@ -1649,6 +1896,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/dhamm_al_ghibah_wal_namimah.json',
+      sizeBytes: 23125,
       sourceLabel:
           'المكتبة الشاملة — ذم الغيبة والنميمة، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، مكتبة دار البيان، دمشق - سورية، مكتبة المؤيد، الرياض - السعودية',
     ),
@@ -1664,6 +1912,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.adab,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/dhamm_al_muskir.json',
+      sizeBytes: 16211,
       sourceLabel:
           'المكتبة الشاملة — كتاب ذم المسكر، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الراية - الرياض، تحقيق د. نجم عبد الرحمن خلف',
     ),
@@ -1679,6 +1928,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.adab,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/dhamm_al_malahi.json',
+      sizeBytes: 27880,
       sourceLabel:
           'المكتبة الشاملة — ذم الملاهي لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مكتبة ابن تيمية، القاهرة- مصر، مكتبة العلم، جدة - السعودية',
     ),
@@ -1696,6 +1946,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/ilam_al_alim_bi_naskh_al_hadith.json',
+      sizeBytes: 70892,
       sourceLabel:
           'المكتبة الشاملة — إعلام العالم بعد رسوخه بناسخ الحديث ومنسوخه، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، ابن حزم، بيروت - لبنان',
     ),
@@ -1713,6 +1964,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/sifat_al_jannah_ibn_abi_al_dunya.json',
+      sizeBytes: 72807,
       sourceLabel:
           'المكتبة الشاملة — صفة الجنة وما أعد الله لأهلها من النعيم، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار البشير - مؤسسة الرسالة، تحقيق عبد الرحيم أحمد عبد الرحيم العساسلة',
     ),
@@ -1729,6 +1981,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.adab,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_adhkiya.json',
+      sizeBytes: 199882,
       sourceLabel:
           'المكتبة الشاملة — كتاب الأذكياء، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مكتبة الغزالي',
     ),
@@ -1745,6 +1998,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sifat_al_nar.json',
+      sizeBytes: 47617,
       sourceLabel:
           'المكتبة الشاملة — صفة النار، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم - لبنان / بيروت، تحقيق محمد خير رمضان يوسف',
     ),
@@ -1762,6 +2016,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/fadail_ramadan_ibn_abi_al_dunya.json',
+      sizeBytes: 13063,
       sourceLabel:
           'المكتبة الشاملة — فضائل رمضان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار السلف، الرياض - السعودية',
     ),
@@ -1779,6 +2034,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_birr_wal_silah_ibn_al_jawzi.json',
+      sizeBytes: 121041,
       sourceLabel:
           'المكتبة الشاملة — البر والصلة لابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مؤسسة الكتب الثقافية، بيروت - لبنان',
     ),
@@ -1795,6 +2051,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/qira_al_dayf.json',
+      sizeBytes: 22640,
       sourceLabel:
           'المكتبة الشاملة — قرى الضيف، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، أضواء السلف، الرياض - السعودية',
     ),
@@ -1811,6 +2068,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/qada_al_hawaij.json',
+      sizeBytes: 23359,
       sourceLabel:
           'المكتبة الشاملة — قضاء الحوائج، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، مكتبة القرآن - القاهرة، تحقيق مجدي السيد إبراهيم [ت ١٤٤٨ هـ]',
     ),
@@ -1828,6 +2086,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/kalam_al_layali_wal_ayyam.json',
+      sizeBytes: 17461,
       sourceLabel:
           'المكتبة الشاملة — كلام الليالي والأيام، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم، بيروت - لبنان',
     ),
@@ -1844,6 +2103,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.adab,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_tadhkirah_fil_waz.json',
+      sizeBytes: 117016,
       sourceLabel:
           'المكتبة الشاملة — التذكرة في الوعظ، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار المعرفة - بيروت، تحقيق أحمد عبد الوهاب فتيح',
     ),
@@ -1860,6 +2120,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/mujabu_al_dawah.json',
+      sizeBytes: 44041,
       sourceLabel:
           'المكتبة الشاملة — مجابو الدعوة (مطبوع ضمن مجموعة رسائل ابن أبي الدنيا)، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية، بيروت - لبنان',
     ),
@@ -1876,6 +2137,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_thabat_ind_al_mamat.json',
+      sizeBytes: 65536,
       sourceLabel:
           'المكتبة الشاملة — الثبات عند الممات، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق عبد الله الليثي الأنصاري',
     ),
@@ -1893,6 +2155,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_hathth_ala_hifz_al_ilm.json',
+      sizeBytes: 30455,
       sourceLabel:
           'المكتبة الشاملة — الحث على حفظ العلم وذكر كبار الحفاظ، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مؤسسة شباب الجامعة، الاسكندرية',
     ),
@@ -1909,6 +2172,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/muhasabat_al_nafs.json',
+      sizeBytes: 32473,
       sourceLabel:
           'المكتبة الشاملة — محاسبة النفس لابن أبي الدنيا، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار الكتب العلمية، بيروت',
     ),
@@ -1925,6 +2189,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/mudarat_al_nas.json',
+      sizeBytes: 27689,
       sourceLabel:
           'المكتبة الشاملة — مداراة الناس، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، دار ابن حزم - بيروت - لبنان، تحقيق محمد خير رمضان يوسف',
     ),
@@ -1942,6 +2207,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_qussas_wal_mudhakkirin.json',
+      sizeBytes: 85876,
       sourceLabel:
           'المكتبة الشاملة — القصاص والمذكرين، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، المكتب الإسلامي - بيروت، تحقيق د. محمد لطفي الصباغ',
     ),
@@ -1958,6 +2224,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/maqtal_ali.json',
+      sizeBytes: 26728,
       sourceLabel:
           'المكتبة الشاملة — مقتل أمير المؤمنين علي بن أبي طالب عليه السلام، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، دار البشائر - دمشق، تحقيق إبراهيم صالح [ت ١٤٤٣ هـ]',
     ),
@@ -1975,6 +2242,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_mujtaba_min_al_mujtana.json',
+      sizeBytes: 60233,
       sourceLabel:
           'المكتبة الشاملة — المجتبى من المجتنى، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، :دار الآفاق العربية - القاهرة، تحقيق أيمن عبد الجابر البحيري',
     ),
@@ -1991,6 +2259,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/makaid_al_shaytan.json',
+      sizeBytes: 23743,
       sourceLabel:
           'المكتبة الشاملة — مكائد الشيطان، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)',
     ),
@@ -2007,6 +2276,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/makarim_al_akhlaq_ibn_abi_al_dunya.json',
+      sizeBytes: 97004,
       sourceLabel:
           'المكتبة الشاملة — مكارم الأخلاق، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١ هـ)، مكتبة القرآن - القاهرة، تحقيق مجدي السيد إبراهيم [ت ١٤٤٨ هـ]',
     ),
@@ -2023,6 +2293,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/man_asha_bad_al_mawt.json',
+      sizeBytes: 31772,
       sourceLabel:
           'المكتبة الشاملة — كتاب من عاش بعد الموت، أبو بكر عبد الله بن محمد بن عبيد بن سفيان بن قيس البغدادي الأموي القرشي المعروف بابن أبي الدنيا (ت ٢٨١هـ)، مؤسسة الكتب الثقافية - بيروت، تحقيق محمد حسام بيضون',
     ),
@@ -2039,6 +2310,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/riyadat_al_nafs.json',
+      sizeBytes: 28891,
       sourceLabel:
           'المكتبة الشاملة — رياضة النفس، محمد بن علي بن الحسن بن بشر، أبو عبد الله، الحكيم الترمذي (ت نحو ٣٢٠هـ)، دار الكتب العلمية، بيروت - لبنان',
     ),
@@ -2055,6 +2327,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_mudhish.json',
+      sizeBytes: 350507,
       sourceLabel:
           'المكتبة الشاملة — المدهش، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الكتب العلمية - بيروت - لبنان، تحقيق الدكتور مروان قباني',
     ),
@@ -2072,6 +2345,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_musaffa_bi_akuff_ahl_al_rusukh.json',
+      sizeBytes: 27559,
       sourceLabel:
           'المكتبة الشاملة — المصفى بأكف أهل الرسوخ من علم الناسخ والمنسوخ، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، مؤسسة الرسالة، تحقيق حاتم صالح الضامن [ت ١٤٣٤ هـ]',
     ),
@@ -2088,6 +2362,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_manahi.json',
+      sizeBytes: 87037,
       sourceLabel:
           'المكتبة الشاملة — المنهيات، محمد بن علي بن الحسن بن بشر، أبو عبد الله، الحكيم الترمذي (ت نحو ٣٢٠هـ)، مكتبة القرآن للطبع والنشر والتوزيع -القاهرة، مصر، تحقيق محمد عثمان الخشت',
     ),
@@ -2104,6 +2379,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_muqliq_ibn_al_jawzi.json',
+      sizeBytes: 25680,
       sourceLabel:
           'المكتبة الشاملة — المقلق، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، دار الصحابة للتراث بطنطا، تحقيق مجدي فتحي السيد [ت ١٤٤٨ هـ]',
     ),
@@ -2120,6 +2396,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/bahr_al_dumu.json',
+      sizeBytes: 93452,
       sourceLabel:
           'المكتبة الشاملة — بحر الدموع، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الفجر للتراث، تحقيق جمال محمود مصطفى',
     ),
@@ -2137,6 +2414,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_amthal_min_al_kitab_wal_sunnah.json',
+      sizeBytes: 152312,
       sourceLabel:
           'المكتبة الشاملة — الأمثال من الكتاب والسنة، محمد بن علي بن الحسن بن بشر، أبو عبد الله، الحكيم الترمذي (ت نحو ٣٢٠هـ)، دار ابن زيدون / دار أسامة - بيروت - دمشق، تحقيق د. السيد الجميلي',
     ),
@@ -2152,6 +2430,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.hadith,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/ahadith_al_qusas.json',
+      sizeBytes: 12703,
       sourceLabel:
           'المكتبة الشاملة — أحاديث القصاص، شيخ الإسلام تقي الدين أحمد بن عبد الحليم ابن تيمية، المكتب الإسلامي، بيروت - لبنان، تحقيق د. محمد بن لطفي الصباغ',
     ),
@@ -2169,6 +2448,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/amrad_al_qulub_wa_shifauha.json',
+      sizeBytes: 80052,
       sourceLabel:
           'المكتبة الشاملة — أمراض القلب وشفاؤها، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المطبعة السلفية - القاهرة',
     ),
@@ -2185,6 +2465,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_arbaun_al_taymiyyah.json',
+      sizeBytes: 16212,
       sourceLabel:
           'المكتبة الشاملة — الأربعون التيمية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مؤسسة الريان للتراث، بيروت - لبنان',
     ),
@@ -2201,6 +2482,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/bustan_al_waizin.json',
+      sizeBytes: 259973,
       sourceLabel:
           'المكتبة الشاملة — بستان الواعظين ورياض السامعين، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مؤسسة الكتب الثقافية - بيروت - لبنان، تحقيق أيمن البحيري',
     ),
@@ -2218,6 +2500,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_amr_bil_maruf_ibn_taymiyyah.json',
+      sizeBytes: 34739,
       sourceLabel:
           'المكتبة الشاملة — الأمر بالمعروف والنهي عن المنكر، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، وزارة الشئون الإسلامية والأوقاف والدعوة والإرشاد - المملكة العربية السعودية',
     ),
@@ -2234,6 +2517,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/tarikh_bayt_al_maqdis.json',
+      sizeBytes: 15476,
       sourceLabel:
           'المكتبة الشاملة — تاريخ بيت المقدس، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، مكتبة الثقافة الدينية، تحقيق محمد زينهم محمد عزب',
     ),
@@ -2250,6 +2534,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_ikhnaiyyah.json',
+      sizeBytes: 237090,
       sourceLabel:
           'المكتبة الشاملة — الرد على الأخنائي قاضي المالكية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتبة العصرية - بيروت، تحقيق الداني بن منير آل زهوي',
     ),
@@ -2267,6 +2552,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_iklil_fi_al_mutashabih_wal_tawil.json',
+      sizeBytes: 21022,
       sourceLabel:
           'المكتبة الشاملة — الإكليل في المتشابه والتأويل، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الإيمان للطبع والنشر والتوزيع، الإسكندرية - مصر',
     ),
@@ -2284,6 +2570,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/tadhkirat_al_arib_fi_tafsir_al_gharib.json',
+      sizeBytes: 153045,
       sourceLabel:
           'المكتبة الشاملة — تذكرة الأريب في تفسير الغريب (غريب القرآن الكريم)، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الكتب العلمية، بيروت - لبنان',
     ),
@@ -2300,6 +2587,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/tazim_al_fatya.json',
+      sizeBytes: 12467,
       sourceLabel:
           'المكتبة الشاملة — تعظيم الفتيا، جمال الدين أبو الفرج عبد الرحمن بن محمد بن علي الشهير بـ ابن الجوزي (٥١٠ - ٥٩٧ هـ)، الدار الأثرية، عمان - الأردن، تحقيق أبو عبيدة مشهور بن حسن آل سلمان',
     ),
@@ -2316,6 +2604,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_iman_ibn_taymiyyah.json',
+      sizeBytes: 269015,
       sourceLabel:
           'المكتبة الشاملة — الإيمان، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي، عمان، الأردن، تحقيق محمد ناصر الدين الألباني',
     ),
@@ -2332,6 +2621,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.adab,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/taqwim_al_lisan.json',
+      sizeBytes: 40196,
       sourceLabel:
           'المكتبة الشاملة — تقويم اللسان، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، دار المعارف، تحقيق د. عبد العزيز مطر (أستاذ علم اللغة بجامعتي عين شمس وقطر)',
     ),
@@ -2349,6 +2639,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_intisar_li_ahl_al_athar.json',
+      sizeBytes: 256986,
       sourceLabel:
           'المكتبة الشاملة — الانتصار لأهل الأثر المطبوع باسم «نقض المنطق»، شيخ الإسلام أحمد بن عبد الحليم بن عبد السلام ابن تيمية (٦٦١ - ٧٢٨ هـ)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق عبد الرحمن بن حسن قائد',
     ),
@@ -2365,6 +2656,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_tuhfah_al_iraqiyyah.json',
+      sizeBytes: 49042,
       sourceLabel:
           'المكتبة الشاملة — التحفة العراقية في الأعمال القلبية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المطبعة السلفية - القاهرة',
     ),
@@ -2381,6 +2673,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/talbis_iblis.json',
+      sizeBytes: 329697,
       sourceLabel:
           'المكتبة الشاملة — تلبيس إبليس، عبد الرحمن بن علي بن محمد ابن الجوزي (ت ٥٩٧ هـ)، دار الفكر، بيروت - لبنان',
     ),
@@ -2398,6 +2691,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_tadmuriyyah.json',
+      sizeBytes: 75727,
       sourceLabel:
           'المكتبة الشاملة — التدمرية: تحقيق الإثبات للأسماء والصفات وحقيقة الجمع بين القدر والشرع، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، مكتبة العبيكان - الرياض، تحقيق د. محمد بن عودة السعوي',
     ),
@@ -2414,6 +2708,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_hisbah_fil_islam.json',
+      sizeBytes: 39558,
       sourceLabel:
           'المكتبة الشاملة — الحسبة في الإسلام، أو وظيفة الحكومة الإسلامية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الكتب العلمية',
     ),
@@ -2430,6 +2725,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_radd_ala_man_qala_bi_fana_al_jannah_wal_nar.json',
+      sizeBytes: 46073,
       sourceLabel:
           'المكتبة الشاملة — الرد على من قال بفناء الجنة والنار وبيان الأقوال في ذلك، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار بلنسية - الرياض، تحقيق محمد بن عبد الله السمهري',
     ),
@@ -2447,6 +2743,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_akmaliyyah.json',
+      sizeBytes: 33846,
       sourceLabel:
           'المكتبة الشاملة — الرسالة الأكملية في ما يجب لله من صفات الكمال، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مطبعة المدني، المؤسسة السعودية، القاهرة، مصر',
     ),
@@ -2464,6 +2761,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_arshiyyah.json',
+      sizeBytes: 28109,
       sourceLabel:
           'المكتبة الشاملة — الرسالة العرشية، تقي الدين أبو العَباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، المطبعة السلفية، القاهرة، مصر',
     ),
@@ -2481,6 +2779,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_zuhd_wal_wara_wal_ibadah.json',
+      sizeBytes: 102997,
       sourceLabel:
           'المكتبة الشاملة — الزهد والورع والعبادة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مكتبة المنار - الأردن، تحقيق حماد سلامة , محمد عويضة',
     ),
@@ -2498,6 +2797,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_siyasah_al_shariyyah.json',
+      sizeBytes: 104720,
       sourceLabel:
           'المكتبة الشاملة — السياسة الشرعية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، وزارة الشئون الإسلامية والأوقاف والدعوة والإرشاد - المملكة العربية السعودية',
     ),
@@ -2515,6 +2815,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_furqan_bayn_awliya_al_rahman_wa_awliya_al_shaytan.json',
+      sizeBytes: 78625,
       sourceLabel: 'المكتبة الشاملة',
     ),
   ),
@@ -2531,6 +2832,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/talqih_fuhum_ahl_al_athar.json',
+      sizeBytes: 359234,
       sourceLabel:
           'المكتبة الشاملة — تلقيح فهوم أهل الأثر في عيون التاريخ والسير، جمال الدين أبي الفرج عبد الرحمن ابن الجوزي [٥٠٨هـ - ٥٩٧هـ]، شركة دار الأرقم بن أبي الأرقم - بيروت',
     ),
@@ -2547,6 +2849,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_qasidah_al_taiyyah_fil_qadar.json',
+      sizeBytes: 8827,
       sourceLabel:
           'المكتبة الشاملة — القصيدة التائية في القدر، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار ابن خزيمة - الرياض',
     ),
@@ -2564,6 +2867,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/tanbih_al_naim_al_ghamr.json',
+      sizeBytes: 9734,
       sourceLabel:
           'المكتبة الشاملة — تنبيه النائم الغمر على مواسم العمر، جمال الدين أبو الفرج عبد الرحمن بن علي ابن الجوزي، دار ابن حزم للطباعة والنشر والتوزيع، بيروت - لبنان',
     ),
@@ -2580,6 +2884,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_kalim_al_tayyib.json',
+      sizeBytes: 29129,
       sourceLabel:
           'المكتبة الشاملة — الكلم الطيب، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الفكر اللبناني للطباعة والنشر، بيروت',
     ),
@@ -2596,6 +2901,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.adab,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/tanwir_al_ghabash.json',
+      sizeBytes: 94872,
       sourceLabel:
           'المكتبة الشاملة — تنوير الغبش في فضل السودان والحبش، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الشريف - الرياض / السعودية، تحقيق مرزوق علي إبراهيم',
     ),
@@ -2612,6 +2918,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/hifz_al_umr.json',
+      sizeBytes: 19319,
       sourceLabel:
           'المكتبة الشاملة — حفظ العمر، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار البشائر الإسلامية، تحقيق محمد بن ناصر العجمي',
     ),
@@ -2629,6 +2936,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/takhrij_al_kalim_al_tayyib.json',
+      sizeBytes: 28670,
       sourceLabel:
           'المكتبة الشاملة — الكلم الطيب، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
     ),
@@ -2645,6 +2953,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/fadail_bayt_al_maqdis.json',
+      sizeBytes: 62170,
       sourceLabel:
           'المكتبة الشاملة — فضائل بيت المقدس، أبو الفرج جمال الدين ابن الجوزي (٥٠٨ - ٥٩٧ هـ)، مكتبة الإمام البخاري للنشر والتوزيع، القاهرة - مصر',
     ),
@@ -2663,6 +2972,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_masail_al_maridiniyyah.json',
+      sizeBytes: 134184,
       sourceLabel:
           'المكتبة الشاملة — المسَائِلُ الماردينيَّةِ - وهي مسائل يكثر وقوعها ويحصل الابتلاء بها، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، دار الفلاح، مصر',
     ),
@@ -2679,6 +2989,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_nusayriyyah_tughat_suriya.json',
+      sizeBytes: 10436,
       sourceLabel:
           'المكتبة الشاملة — النصيرية طغاة سورية أو العلويون كما سماهم الفرنسيون، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الافتاء، الرياض، المملكة العربية السعودية',
     ),
@@ -2696,6 +3007,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_wasitah_bayn_al_haqq_wal_khalq.json',
+      sizeBytes: 13930,
       sourceLabel:
           'المكتبة الشاملة — الواسطة بين الحق والخلق، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مطابع الجامعة الإسلامية، المدينة النبوية، المملكة العربية السعودية، تحقيق محمد بن جميل زينو',
     ),
@@ -2713,6 +3025,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/funun_al_afnan_fi_uyun_ulum_al_quran.json',
+      sizeBytes: 64893,
       sourceLabel:
           'المكتبة الشاملة — فنون الأفنان في عيون علوم القرآن، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)',
     ),
@@ -2729,6 +3042,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_iman.json',
+      sizeBytes: 10488,
       sourceLabel:
           'المكتبة الشاملة — الإيمان، تقي الدين أبو العباس أحمد بن عبد الحليم بن تيمية (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
     ),
@@ -2745,6 +3059,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_ihtijaj_bil_qadar.json',
+      sizeBytes: 3577,
       sourceLabel:
           'المكتبة الشاملة — الاحتجاج بالقدر، تقي الدين أبو العباس أحمد بن عبد الحليم بن تيمية (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
     ),
@@ -2761,6 +3076,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_qawl_fi_isa_kalimat_allah.json',
+      sizeBytes: 12988,
       sourceLabel:
           'المكتبة الشاملة — تحقيق القول في مسألة: عيسى كلمة الله والقرآن كلام الله، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الصحابة للتراث - طنطا (مصر)، تحقيق قسم التحقيق بدار النشر',
     ),
@@ -2778,6 +3094,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/jawab_al_itiradat_al_misriyyah.json',
+      sizeBytes: 135382,
       sourceLabel:
           'المكتبة الشاملة — جواب الاعتراضات المصرية على الفتيا الحموية، شيخ الإسلام أحمد بن عبد الحليم بن عبد السلام بن تيمية (٦٦١ - ٧٢٨ هـ)، دار عطاءات العلم (الرياض) - دار ابن حزم (بيروت)، تحقيق محمد عزير شمس',
     ),
@@ -2795,6 +3112,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/jawab_fi_al_half_bighayr_allah.json',
+      sizeBytes: 10137,
       sourceLabel:
           'المكتبة الشاملة — جواب في الحلف بغير الله والصلاة إلى القبور، ويليه: فصل في الاستغاثة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، (طبع في الكويت)',
     ),
@@ -2811,6 +3129,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/hijab_al_marah_wa_libasuha_fil_salah.json',
+      sizeBytes: 23557,
       sourceLabel:
           'المكتبة الشاملة — حجاب المرأة ولباسها في الصلاة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي، تحقيق محمد ناصر الدين الألباني',
     ),
@@ -2828,6 +3147,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/muthir_al_gharam_al_sakin.json',
+      sizeBytes: 267942,
       sourceLabel:
           'المكتبة الشاملة — مثير الغرام الساكن إلى أشرف الأماكن لابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار الحديث، القاهرة',
     ),
@@ -2843,6 +3163,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/huquq_al_al_al_bayt.json',
+      sizeBytes: 37826,
       sourceLabel:
           'المكتبة الشاملة — حقوق آل البيت، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، دار الكتب العلمية بيروت ـ لبنان، تحقيق عبد القادر أحمد عطا [ت ١٤٠٣ هـ]',
     ),
@@ -2858,6 +3179,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/ras_al_husayn.json',
+      sizeBytes: 28581,
       sourceLabel:
           'المكتبة الشاملة — رأس الحسين، تقي الدين أبو العباس أحمد بن عبد الحليم بن تيمية الحراني (ت ٧٢٨ هـ)',
     ),
@@ -2874,6 +3196,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/risalah_fi_usul_al_din.json',
+      sizeBytes: 21433,
       sourceLabel:
           'المكتبة الشاملة — رسالة في أصول الدين، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، -',
     ),
@@ -2891,6 +3214,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/mashyakhat_ibn_al_jawzi.json',
+      sizeBytes: 46300,
       sourceLabel:
           'المكتبة الشاملة — مشيخة ابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧ هـ)، دار الغرب الإسلامي، بيروت',
     ),
@@ -2908,6 +3232,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/risalah_fi_fadl_al_khulafa_al_rashidin.json',
+      sizeBytes: 7568,
       sourceLabel:
           'المكتبة الشاملة — رسالة في فضل الخلفاء الراشدين (طبعت مفردة، ومنها نسخة مختصرة في مجموع الفتاوى)، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار الصحابة للتراث، مصر',
     ),
@@ -2925,6 +3250,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/mawaiz_ibn_al_jawzi_al_yaqutah.json',
+      sizeBytes: 30404,
       sourceLabel:
           'المكتبة الشاملة — الياقوتة - مواعظ ابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)',
     ),
@@ -2942,6 +3268,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/raf_al_malam_an_al_aimmah_al_alam.json',
+      sizeBytes: 54019,
       sourceLabel:
           'المكتبة الشاملة — رفع الملام عن الأئمة الأعلام، تقي الدين أبو العَباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)',
     ),
@@ -2958,6 +3285,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/ziyarat_al_qubur_wal_istinjad_bil_maqbur.json',
+      sizeBytes: 24672,
       sourceLabel:
           'المكتبة الشاملة — زيارة القبور والاستنجاد بالمقبور، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار طيبة، الرياض، المملكة العربية السعودية',
     ),
@@ -2973,6 +3301,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.fiqh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sujud_al_tilawah.json',
+      sizeBytes: 20841,
       sourceLabel:
           'المكتبة الشاملة — سجود التلاوة معانيه وأحكامه، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار ابن حزم، بيروت، لبنان، تحقيق فواز أحمد زمرلي',
     ),
@@ -2989,6 +3318,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.hadith,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/nawasikh_al_quran.json',
+      sizeBytes: 148074,
       sourceLabel:
           'المكتبة الشاملة — نواسخ القرآن = ناسخ القرآن ومنسوخه، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، شركه أبناء شريف الأنصارى - بيروت، تحقيق أبو عبد الله العاملي السّلفي الداني بن منير آل زهوي',
     ),
@@ -3004,6 +3334,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.fiqh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sunnat_al_jumuah.json',
+      sizeBytes: 8392,
       sourceLabel:
           'المكتبة الشاملة — سنة الجمعة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار ابن حزم، بيروت، لبنان، تحقيق أبو عبد الله سعد المزعل',
     ),
@@ -3021,6 +3352,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/sharh_al_aqidah_al_isfahaniyyah.json',
+      sizeBytes: 205581,
       sourceLabel:
           'المكتبة الشاملة — شرح العقيدة الأصفهانية، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، المكتبة العصرية - بيروت، تحقيق محمد بن رياض الأحمد',
     ),
@@ -3037,6 +3369,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sharh_hadith_al_nuzul.json',
+      sizeBytes: 137735,
       sourceLabel:
           'المكتبة الشاملة — شرح حديث النزول، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي، بيروت، لبنان',
     ),
@@ -3053,6 +3386,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/sharh_umdat_al_fiqh_sifat_al_salah.json',
+      sizeBytes: 55672,
       sourceLabel:
           'المكتبة الشاملة — كتاب صفة الصلاة من شرح العمدة للإمام موفق الدين ابن قدامة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، دار العاصمة - الرياض، تحقيق عبد العزيز بن أحمد بن محمد بن حمود المشيقح',
     ),
@@ -3070,6 +3404,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/fasl_fi_tazkiyat_al_nafs.json',
+      sizeBytes: 28538,
       sourceLabel:
           'المكتبة الشاملة — فصل في تزكية النفس [الطبعة الكاملة للرسالة]، شيخ الإسلام أبو العباس أحمد بن عبد الحليم ابن تيمية الحراني (٦٦١ - ٧٢٨ هـ)، مكتبة النهج الواضح - الكويت',
     ),
@@ -3086,6 +3421,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/fadl_abi_bakr_al_siddiq.json',
+      sizeBytes: 29841,
       sourceLabel:
           'المكتبة الشاملة — فضل أبي بكر الصديق رضي الله عنه، تقي الدين أبو العَباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مجلة جامعة أم القرى لعلوم الشريعة، تحقيق د. عبد العزيز بن محمد الفريح',
     ),
@@ -3103,6 +3439,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/qaidah_dhikr_malabis_al_nabi.json',
+      sizeBytes: 28711,
       sourceLabel:
           'المكتبة الشاملة — قاعدة تتضمن ذكر ملابس النبي صلى الله عليه وسلم وسلاحه ودوابه - القرمانية - جواب فتيا في لبس النبي صلى الله عليه وسلم، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، أضواء السلف، تحقيق أبو محمد أشرف بن عبد المقصود',
     ),
@@ -3119,6 +3456,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/qaidah_jamiah_fi_tawhid_allah.json',
+      sizeBytes: 28947,
       sourceLabel:
           'المكتبة الشاملة — قاعدة جامعة في توحيد الله وإخلاص الوجه والعمل له عبادة واستعانة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار العاصمة، الرياض، المملكة العربية السعودية، تحقيق عبد الله بن محمد البصيري',
     ),
@@ -3135,6 +3473,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/qaidah_hasanah_fil_baqiyat_al_salihat.json',
+      sizeBytes: 23063,
       sourceLabel:
           'المكتبة الشاملة — قاعدة حسنة في الباقيات الصالحات، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مكتبة أضواء السلف، تحقيق أبو محمد أشرف بن عبد المقصود',
     ),
@@ -3153,6 +3492,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/qaidah_azimah_fil_farq_bayn_ibadat_ahl_al_islam.json',
+      sizeBytes: 87998,
       sourceLabel:
           'المكتبة الشاملة — قاعدة عظيمة في الفرق بين عبادات أهل الإسلام والإيمان وعبادات أهل الشرك والنفاق، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار العاصمة - الرياض، تحقيق سليمان بن صالح الغصن',
     ),
@@ -3169,6 +3509,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/qaidah_fil_inghimas_fil_aduw.json',
+      sizeBytes: 36578,
       sourceLabel:
           'المكتبة الشاملة — قاعدة في الانغماس في العدو وهل يباح، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، أضواء السلف، تحقيق أبو محمد أشرف بن عبد المقصود',
     ),
@@ -3184,6 +3525,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/qaidah_fil_sabr.json',
+      sizeBytes: 18146,
       sourceLabel:
           'المكتبة الشاملة — قاعدة في الصبر، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، الجامعة الإسلامية بالمدينة المنورة، تحقيق محمد بن خليفة بن علي التميمي',
     ),
@@ -3200,6 +3542,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/qaidah_fil_mahabbah.json',
+      sizeBytes: 99107,
       sourceLabel:
           'المكتبة الشاملة — قاعدة في المحبة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مكتبة التراث الإسلامي، القاهرة، مصر، تحقيق محمد رشاد سالم',
     ),
@@ -3217,6 +3560,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/qaidah_mukhtasarah_fi_qital_al_kuffar.json',
+      sizeBytes: 81883,
       sourceLabel:
           'المكتبة الشاملة — قاعدة مختصرة في قتال الكفار ومهادنتهم وتحريم قتلهم لمجرد كفرهم، شيخ الإسلام أحمد بن عبد الحليم ابن تيمية الحراني (٦٦١ - ٧٢٨ هـ)، (المحقق)',
     ),
@@ -3233,6 +3577,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/qaidah_mukhtasarah_fi_wujub_taat_allah.json',
+      sizeBytes: 18917,
       sourceLabel:
           'المكتبة الشاملة — قاعدة مختصرة في وجوب طاعة الله ورسوله وولاة الأمور، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، جهاز الإرشاد والتوجيه بالحرس الوطني، المملكة العربية السعودية، تحقيق عبد الرزاق بن عبد المحسن البدر',
     ),
@@ -3249,6 +3594,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/masalah_fil_murabatah_bil_thughur.json',
+      sizeBytes: 39538,
       sourceLabel:
           'المكتبة الشاملة — مسألة فى المرابطة بالثغور أفضل أم المجاورة بمكة شرفها الله تعالى، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، أضواء السلف',
     ),
@@ -3264,6 +3610,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/masalah_fil_kanais.json',
+      sizeBytes: 45487,
       sourceLabel:
           'المكتبة الشاملة — مسألة في الكنائس، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، مكتبة العبيكان - الرياض، تحقيق علي بن عبدالعزيز الشبل',
     ),
@@ -3280,6 +3627,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/masalah_fi_tawhid_al_falasifah.json',
+      sizeBytes: 59608,
       sourceLabel:
           'المكتبة الشاملة — مسألة في توحيد الفلاسفة، الإمام أحمد بن عبد الحليم ابن تيمية (ت ٧٢٨ هـ)، دار الفتح للدراسات والنشر، تحقيق مبارك بن راشد الحثلان',
     ),
@@ -3296,6 +3644,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/muqaddimah_fi_usul_al_tafsir.json',
+      sizeBytes: 27228,
       sourceLabel:
           'المكتبة الشاملة — مقدمة في أصول التفسير، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، دار مكتبة الحياة، بيروت، لبنان',
     ),
@@ -3312,6 +3661,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/manasik_al_hajj_ibn_taymiyyah.json',
+      sizeBytes: 90830,
       sourceLabel:
           'المكتبة الشاملة — مناسك الحج، شيخ الإسلام أحمد بن عبد الحليم ابن تيمية الحراني (ت ٧٢٨ هـ)، دار ركائز للنشر والتوزيع، الكويت، تحقيق د. أنس بن عادل اليتامى',
     ),
@@ -3328,6 +3678,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/naqd_maratib_al_ijma.json',
+      sizeBytes: 19478,
       sourceLabel:
           'المكتبة الشاملة — نقد مراتب الإجماع، تقي الدين أبو العَباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (المتوفى : ٧٢٨هـ)',
     ),
@@ -3345,6 +3696,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/qaidah_jalilah_fil_tawassul_wal_wasilah.json',
+      sizeBytes: 255704,
       sourceLabel:
           'المكتبة الشاملة — قاعدة جليلة في التوسل والوسيلة، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨ هـ)، مكتبة الفرقان - عجمان، تحقيق ربيع بن هادي عمير المدخلي [ت ١٤٤٧ هـ]',
     ),
@@ -3362,6 +3714,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/adab_al_fatwa_wal_mufti.json',
+      sizeBytes: 27240,
       sourceLabel:
           'المكتبة الشاملة — آداب الفتوى والمفتي والمستفتي، أبو زكريا يحيى بن شرف النووي (٦٣١ - ٦٧٦ هـ)، دار الفكر، دمشق - سوريا، تحقيق بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]',
     ),
@@ -3378,6 +3731,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_adhkar_lil_nawawi.json',
+      sizeBytes: 390619,
       sourceLabel:
           'المكتبة الشاملة — الأذكار، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦ هـ)، دار الفكر للطباعة والنشر والتوزيع، بيروت - لبنان',
     ),
@@ -3395,6 +3749,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_arbaun_al_nawawiyyah.json',
+      sizeBytes: 10048,
       sourceLabel:
           'المكتبة الشاملة — الأربعون النووية، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار المنهاج للنشر والتوزيع، لبنان - بيروت',
     ),
@@ -3411,6 +3766,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.hadith,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_usul_wal_dawabit.json',
+      sizeBytes: 6700,
       sourceLabel:
           'المكتبة الشاملة — الأصول والضوابط، أبو زكريا يحيى بن شرف النووي (ت ٦٧٦ هـ)، دار البشائر الإسلامية - بيروت',
     ),
@@ -3428,6 +3784,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_ijaz_fi_sharh_sunan_abi_dawud.json',
+      sizeBytes: 247838,
       sourceLabel:
           'المكتبة الشاملة — الإيجاز في شرح سنن أبي داود السجستاني رحمه الله تعالى، محيي الدين يحيى بن شرف النووي (ت ٦٧٦ هـ)، الدار الأثرية، عمان - الأردن',
     ),
@@ -3445,6 +3802,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json',
+      sizeBytes: 445183,
       sourceLabel:
           'المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية، بيروت - المكتبة الأمدادية، مكة المكرمة',
     ),
@@ -3462,6 +3820,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_tibyan_fi_adab_hamalat_al_quran.json',
+      sizeBytes: 64098,
       sourceLabel:
           'المكتبة الشاملة — التبيان في آداب حملة القرآن، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار ابن حزم للطباعة والنشر والتوزيع - بيروت - لبنان - ص ب: ٦٣٦٦ / ١٤ - تلفون: ٨٣١٣٣١',
     ),
@@ -3478,6 +3837,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.hadith,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/al_taqrib_wal_taysir.json',
+      sizeBytes: 47554,
       sourceLabel:
           'المكتبة الشاملة — التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الكتاب العربي، بيروت',
     ),
@@ -3494,6 +3854,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/bustan_al_arifin.json',
+      sizeBytes: 43469,
       sourceLabel:
           'المكتبة الشاملة — بستان العارفين، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الريان للتراث',
     ),
@@ -3510,6 +3871,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.fiqh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/tahrir_alfaz_al_tanbih.json',
+      sizeBytes: 137261,
       sourceLabel:
           'المكتبة الشاملة — تحرير ألفاظ التنبيه، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار القلم - دمشق، تحقيق عبد الغني الدقر',
     ),
@@ -3527,6 +3889,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/tahqiq_riyad_al_salihin_lil_albani.json',
+      sizeBytes: 17337,
       sourceLabel:
           'المكتبة الشاملة — رياض الصالحين، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، المكتب الإسلامي - بيروت',
     ),
@@ -3544,6 +3907,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat.json',
+      sizeBytes: 47299,
       sourceLabel:
           'المكتبة الشاملة — جزء فيه ذكر اعتقاد السلف في الحروف والأصوات، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، مكتبة الأنصار للنشر والتوزيع، تحقيق أحمد بن على الدمياطي',
     ),
@@ -3560,6 +3924,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.fiqh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/daqaiq_al_minhaj.json',
+      sizeBytes: 22588,
       sourceLabel:
           'المكتبة الشاملة — دقائق المنهاج، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار ابن حزم - بيروت، تحقيق إياد أحمد الغوج',
     ),
@@ -3577,6 +3942,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.fiqh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/fatawa_al_nawawi.json',
+      sizeBytes: 180153,
       sourceLabel:
           'المكتبة الشاملة — فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: "بالمَسَائِل المنْثورَةِ"، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دَارُ البشائرِ الإسلاميَّة للطبَاعَة وَالنشرَ والتوزيع، بَيروت - لبنان',
     ),
@@ -3593,6 +3959,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.fiqh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/minhaj_al_talibin.json',
+      sizeBytes: 195468,
       sourceLabel:
           'المكتبة الشاملة — منهاج الطالبين وعمدة المفتين في الفقه، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الفكر، تحقيق عوض قاسم أحمد عوض',
     ),

@@ -16,6 +16,7 @@ import '../../data/book_catalog.dart';
 import '../../data/hadith_imam_bios.dart';
 import '../../data/book_category.dart';
 import 'book_text_reader_screen.dart';
+import 'books_search_screen.dart';
 import 'hadith_book_screen.dart';
 import 'hadith_detail_screen.dart';
 
@@ -71,6 +72,17 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
             Tab(text: 'library.tab_websites'.tr()),
           ],
         ),
+        actions: [
+          IconButton(
+            tooltip: 'library.search_all_books'.tr(),
+            icon: const Icon(Icons.manage_search),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const BooksSearchScreen(),
+              ),
+            ),
+          ),
+        ],
       ),
       body: TabBarView(
         controller: _tabController,
@@ -555,6 +567,16 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
+/// A book's download size in the unit that actually suits it — most of the
+/// library is tens of kilobytes, so rendering everything in MB (as the old
+/// fixed "1.0 MB" did) told the reader nothing useful. Empty when unknown,
+/// so the card can omit the line rather than guess.
+String formatBookSize(int bytes) {
+  if (bytes <= 0) return '';
+  if (bytes < 1024 * 1024) return '${(bytes / 1024).round()} KB';
+  return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+}
+
 class _BookCard extends StatelessWidget {
   final LibraryBook book;
   final Map<String, String> paths;
@@ -579,7 +601,9 @@ class _BookCard extends StatelessWidget {
             task.status == DownloadStatus.queued);
     final failed = task?.status == DownloadStatus.failed;
     final downloaded = paths.containsKey(dlId);
-    final sizeMb = '1.0';
+    // Real measured size of the hosted file; empty when unknown, so the
+    // card says nothing rather than repeating the old fixed '1.0 MB'.
+    final sizeLabel = formatBookSize(book.textEdition?.sizeBytes ?? 0);
 
     return Card(
       child: Padding(
@@ -638,7 +662,8 @@ class _BookCard extends StatelessWidget {
               Row(
                 children: [
                   
-                    Text('${'library.size'.tr()}: $sizeMb MB',
+                    if (sizeLabel.isNotEmpty)
+                      Text('${'library.size'.tr()}: $sizeLabel',
                         style: TextStyle(
                             color: scheme.onSurfaceVariant, fontSize: 12)),
                   const Spacer(),
