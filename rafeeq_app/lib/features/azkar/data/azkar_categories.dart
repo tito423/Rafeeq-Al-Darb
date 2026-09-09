@@ -18,12 +18,18 @@ import 'package:flutter/material.dart';
 ///    there is no per-item source tag in `azkar_items` to derive one
 ///    honestly without reading and re-classifying all ~700 individual
 ///    dhikr texts by hand — a real, much larger task than this pass.
-///  - **الرقية الشرعية** (legal ruqyah) — no section is titled or scoped as
-///    ruqyah specifically either; the nearest real content (sickness/
-///    evil-eye sections like §51 or §127) is about *visiting/comforting*
-///    the afflicted, not the specific recitation-for-healing practice
-///    ruqyah technically means, so folding them in would be a
-///    mischaracterisation, not a fit.
+///  - **الرقية الشرعية** (legal ruqyah) — still true that **no Hisn
+///    al-Muslim section is a ruqyah section**: the nearest real content
+///    (sickness / evil-eye sections like §51 or §127) is about
+///    *visiting and comforting* the afflicted, not the recitation-for-healing
+///    practice ruqyah means, and folding them in would be a
+///    mischaracterisation. The owner asked for ruqyah in the Adhkar tab
+///    anyway, so it is there now — but as `AzkarCategory.ruqyah`, a tile that
+///    opens `RuqyahScreen` instead of an azkar section. That screen assembles
+///    the ruqyah from sources the app already has and can stand behind: the
+///    verses from `quran_local.db`, and six supplications addressed by row id
+///    in `azkar_items`, each carrying its own takhrij. It is **not** a
+///    re-labelling of sections that are about something else.
 ///
 /// The other eight are real, content-based groupings of the real section
 /// titles (`assets/data/quran_sciences.db`'s `azkar_sections` table),
@@ -42,6 +48,11 @@ enum AzkarCategory {
   mosque,
   travel,
   narrated,
+
+  /// Not a grouping of Hisn al-Muslim sections — see the note above. This one
+  /// tile opens `RuqyahScreen`, which is composed from the Qur'an database and
+  /// specific azkar rows rather than from a section of the book.
+  ruqyah,
 }
 
 class AzkarCategoryInfo {
@@ -57,6 +68,11 @@ class AzkarCategoryInfo {
 }
 
 const azkarCategoryInfo = <AzkarCategory, AzkarCategoryInfo>{
+  AzkarCategory.ruqyah: AzkarCategoryInfo(
+    titleKey: 'ruqyah.title',
+    icon: Icons.healing_outlined,
+    gradient: [Color(0xFF0C3B32), Color(0xFF14705C)],
+  ),
   AzkarCategory.morning: AzkarCategoryInfo(
     titleKey: 'azkar.category_morning',
     icon: Icons.wb_sunny_outlined,

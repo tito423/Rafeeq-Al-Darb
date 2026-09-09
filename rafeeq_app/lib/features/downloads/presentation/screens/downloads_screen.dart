@@ -18,14 +18,11 @@ import '../../data/downloads_controller.dart';
 import '../../data/reciters_provider.dart';
 import '../widgets/full_recitation_card.dart';
 import '../widgets/mushaf_download_tile.dart';
+import '../../../../core/utils/byte_formatter.dart';
 
 String _fmtSize(int bytes) {
-  if (bytes < 1024) return '$bytes B';
-  if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(0)} KB';
-  if (bytes < 1024 * 1024 * 1024) {
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-  }
-  return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+  // Binary units, matching what Android's own storage screen reports.
+  return formatBytesBinary(bytes);
 }
 
 IconData _iconFor(DownloadCategory c) => switch (c) {

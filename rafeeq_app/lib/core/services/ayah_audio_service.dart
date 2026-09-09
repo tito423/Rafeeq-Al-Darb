@@ -369,7 +369,7 @@ class AyahAudioService {
   /// Whether the player is currently on [id]'s track. Used by a list of
   /// recordings to show the stop button on the right row and only that row.
   bool isTrack(String id) =>
-      (_player.sequenceState.currentSource?.tag as MediaItem?)?.id ==
+      (_player.sequenceState?.currentSource?.tag as MediaItem?)?.id ==
       'track:$id';
 
   Stream<Duration> get positionStream => _player.positionStream;

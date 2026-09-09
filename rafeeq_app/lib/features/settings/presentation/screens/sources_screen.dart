@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../ruqyah/data/ruqyah_catalog.dart';
 
 /// Where every piece of content in the app actually comes from.
 ///
@@ -61,7 +62,9 @@ class _Source {
 }
 
 /// (section title key, sources) — grouped by what part of the app they feed.
-const _groups = <(String, List<_Source>)>[
+// Not `const`: the ruqyah group is built from `ruqyahRecordings`, so the
+// credits list can never fall out of step with what the app actually ships.
+final _groups = <(String, List<_Source>)>[
   (
     'about.src_quran',
     [
@@ -100,6 +103,15 @@ const _groups = <(String, List<_Source>)>[
     'about.src_prayer',
     [
       _Source('api.aladhan.com', 'https://aladhan.com', 'about.src_aladhan'),
+    ]
+  ),
+  (
+    'ruqyah.title',
+    [
+      // Each recording is credited to the archive.org item it came from, by
+      // name, so provenance is visible in the app and not only in a script.
+      for (final r in ruqyahRecordings)
+        _Source(r.reciterAr, r.sourceUrl, 'about.src_ruqyah'),
     ]
   ),
 ];

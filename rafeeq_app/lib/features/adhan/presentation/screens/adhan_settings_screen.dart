@@ -25,6 +25,7 @@ import '../../data/adhan_settings_provider.dart';
 import '../../data/adhan_video_catalog.dart';
 import '../../data/prayer_status_enabled_provider.dart';
 import 'azan_player_screen.dart';
+import '../../../../core/utils/byte_formatter.dart';
 
 const _prayerLabels = {
   'fajr': 'prayer.fajr',
@@ -1010,7 +1011,6 @@ class _VideoRow extends StatelessWidget {
         (task!.status == DownloadStatus.downloading ||
             task!.status == DownloadStatus.queued);
     final downloaded = downloadedPath != null;
-    final sizeMb = (option.approxSizeBytes / 1000000).toStringAsFixed(1);
 
     // Selecting a clip is a tap on the row, not a button labelled
     // «اختر»/«مختار» beside it. The owner asked for that word gone: the
@@ -1058,7 +1058,7 @@ class _VideoRow extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: onDownload,
                 icon: const Icon(Icons.download_rounded, size: 16),
-                label: Text('$sizeMb MB'),
+                label: Text(formatBytes(option.approxSizeBytes)),
               ),
           ],
         ),

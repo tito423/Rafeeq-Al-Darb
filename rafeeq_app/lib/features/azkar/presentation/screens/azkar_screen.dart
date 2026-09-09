@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/db/sciences_repository.dart';
+import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../ruqyah/presentation/screens/ruqyah_screen.dart';
 import '../../data/azkar_categories.dart';
 import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
@@ -69,6 +71,9 @@ IconData _azkarIcon(String title) {
 
 /// Display order for the category groups.
 const _categoryOrder = [
+  // First, because the owner asked for it to be in the Adhkar tab and it is
+  // the one people come looking for.
+  AzkarCategory.ruqyah,
   AzkarCategory.waking,
   AzkarCategory.morning,
   AzkarCategory.mosque,
@@ -151,6 +156,14 @@ class _CategoryCard extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: InkWell(
         onTap: () async {
+          // Ruqyah is not a Hisn al-Muslim section (see `azkar_categories.dart`),
+          // so it opens its own composed screen rather than a section list.
+          if (category == AzkarCategory.ruqyah) {
+            await Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const RuqyahScreen()),
+            );
+            return;
+          }
           final repo = await ref.read(sciencesRepositoryProvider.future);
           final allSections = await repo.azkarSections();
           final sections = allSections.where((s) {
@@ -191,6 +204,9 @@ class _CategoryCard extends ConsumerWidget {
           ),
           child: Stack(
             children: [
+              // A photo where there is one; otherwise the painted khātim
+              // lattice, which costs no bytes and renders identically offline.
+              // Before this, a card with no photo was a bare gradient.
               if (bgUrl != null)
                 Positioned.fill(
                   child: Opacity(
@@ -198,7 +214,23 @@ class _CategoryCard extends ConsumerWidget {
                     child: CachedNetworkImage(
                       imageUrl: bgUrl!,
                       fit: BoxFit.cover,
-                      errorWidget: (context, url, error) => const SizedBox.shrink(),
+                      errorWidget: (context, url, error) => Positioned.fill(
+                        child: CustomPaint(
+                          painter: IslamicPatternPainter(
+                            tile: 46,
+                            color: Colors.white.withValues(alpha: 0.12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              else
+                Positioned.fill(
+                  child: CustomPaint(
+                    painter: IslamicPatternPainter(
+                      tile: 46,
+                      color: Colors.white.withValues(alpha: 0.12),
                     ),
                   ),
                 ),

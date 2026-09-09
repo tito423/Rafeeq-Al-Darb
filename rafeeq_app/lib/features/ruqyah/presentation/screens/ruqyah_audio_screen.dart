@@ -9,6 +9,7 @@ import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../data/ruqyah_catalog.dart';
+import '../../../../core/utils/byte_formatter.dart';
 
 /// Five recorded ruqyahs, listenable and downloadable.
 ///
@@ -178,7 +179,7 @@ class _RecordingCard extends StatelessWidget {
     return 'ruqyah.minutes'.tr(namedArgs: {'n': '$m'});
   }
 
-  String get _size => '${(recording.bytes / 1000000).toStringAsFixed(1)} MB';
+  String get _size => formatBytes(recording.bytes);
 
   @override
   Widget build(BuildContext context) {

@@ -8,12 +8,9 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../../quran/presentation/widgets/quran_book_cover_thumbnail.dart';
 import 'mushaf_preview_sheet.dart';
+import '../../../../core/utils/byte_formatter.dart';
 
-String formatBytes(int bytes) {
-  if (bytes < 1024) return '$bytes B';
-  if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(0)} KB';
-  return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-}
+String formatBytes(int bytes) => formatBytesBinary(bytes);
 
 /// One mushaf edition's real offline-download card: shows actual cached-page
 /// count read from disk (never a guess), a تحميل/إيقاف مؤقت/إلغاء row wired

@@ -10,6 +10,7 @@ import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../../quran/presentation/widgets/quran_book_cover_thumbnail.dart';
+import '../../../../core/utils/byte_formatter.dart';
 
 /// A luxury preview BottomSheet for a mushaf edition, inspired by Quran Flash.
 ///
@@ -150,11 +151,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
     await _refresh();
   }
 
-  String _formatBytes(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(0)} KB';
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-  }
+  String _formatBytes(int bytes) => formatBytesBinary(bytes);
 
   @override
   Widget build(BuildContext context) {

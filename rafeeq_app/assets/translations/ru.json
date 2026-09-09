@@ -640,6 +640,28 @@
     "src_shamela": "Книги и биографии",
     "src_aladhan": "Расчёт времени намаза",
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
-    "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths"
+    "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
+    "src_ruqyah": "Полная запись рукьи из «Архива Интернета»"
+  },
+  "ruqyah": {
+    "title": "Рукья",
+    "intro": "Чтение Корана и переданных мольб в поисках исцеления. Аяты берутся из мусхафа самого приложения, а мольбы — из «Хисн аль-Муслим» с их источниками.",
+    "group_sunnah": "Установлено в Сунне",
+    "group_sunnah_note": "То, что, согласно преданиям, Пророк ﷺ читал как рукью: аль-Фатиха, аят аль-Курси, последние аяты аль-Бакары и защитные суры.",
+    "group_sihr": "Аяты об уничтожении колдовства",
+    "group_sihr_note": "Аяты, в которых колдовство обращается в ничто; учёные издавна читают их. Пророческий текст особо их для этого не выделяет.",
+    "group_general": "Широко используемые аяты",
+    "group_general_note": "Рукья любой частью Корана дозволена; это наиболее часто выбираемые отрывки.",
+    "group_duas": "Пророческие мольбы рукьи",
+    "group_duas_note": "Из «Хисн аль-Муслим», каждая мольба с источником в точности как он дан.",
+    "play_group": "Воспроизвести эту группу",
+    "audio_title": "Слушать рукью",
+    "audio_intro": "Пять полных записей рукьи. Нажмите, чтобы слушать, или скачайте для работы без сети.",
+    "listen_recordings": "Слушать записи рукьи",
+    "minutes": "{n} мин"
+  },
+  "more": {
+    "section_more": "Ещё",
+    "section_settings": "Настройки"
   }
 }

@@ -19,6 +19,7 @@ import 'book_text_reader_screen.dart';
 import 'books_search_screen.dart';
 import 'hadith_book_screen.dart';
 import 'hadith_detail_screen.dart';
+import '../../../../core/utils/byte_formatter.dart';
 
 
 /// Library — two top tabs:
@@ -577,8 +578,7 @@ class _SectionHeader extends StatelessWidget {
 /// so the card can omit the line rather than guess.
 String formatBookSize(int bytes) {
   if (bytes <= 0) return '';
-  if (bytes < 1024 * 1024) return '${(bytes / 1024).round()} KB';
-  return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  return formatBytesBinary(bytes);
 }
 
 class _BookCard extends StatelessWidget {
