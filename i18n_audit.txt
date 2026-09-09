@@ -1,5 +1,6 @@
 UNTRANSLATED USER-VISIBLE STRINGS: 1408 in 8 files
    chrome  (UI text that must go through .tr()): 0
+   native  (Arabic that ANDROID renders, not Dart): 0
    content (Arabic the app authors, needs translating): 1408
    allowlisted (deliberate, with a reason in this script): 33
 

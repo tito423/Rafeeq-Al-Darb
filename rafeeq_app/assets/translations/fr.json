@@ -758,7 +758,15 @@
     "dl_recit_paused_title": "Téléchargement de la récitation en pause",
     "dl_done": "Téléchargé — prêt à être utilisé hors connexion",
     "dl_not_found": "Le fichier est introuvable sur le serveur (404)",
-    "dl_failed": "Échec du téléchargement"
+    "dl_failed": "Échec du téléchargement",
+    "adhan_channel_desc": "L’alerte de l’adhan à l’entrée du temps de la prière",
+    "adhan_channel_vibrate_desc": "Vibration seule à l’entrée du temps de la prière",
+    "adhan_channel_silent_desc": "Une alerte silencieuse à l’entrée du temps de la prière, sans son ni vibration",
+    "adhan_body": "Allahou Akbar — c’est l’heure de la prière",
+    "adhan_body_muted": "En sourdine — Allahou Akbar, c’est l’heure de la prière",
+    "dl_service_channel": "Téléchargement en arrière-plan",
+    "dl_service_channel_desc": "Garde l’application active pendant le téléchargement en arrière-plan",
+    "dl_service_body": "L’application poursuit le téléchargement en arrière-plan"
   },
   "hijri": {
     "m1": "Mouharram",

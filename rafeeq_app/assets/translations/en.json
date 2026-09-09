@@ -758,7 +758,15 @@
     "dl_recit_paused_title": "Recitation download paused",
     "dl_done": "Downloaded — ready to use offline",
     "dl_not_found": "The file is not on the server (404)",
-    "dl_failed": "Download failed"
+    "dl_failed": "Download failed",
+    "adhan_channel_desc": "The adhan alert when a prayer time begins",
+    "adhan_channel_vibrate_desc": "Vibration only, when a prayer time begins",
+    "adhan_channel_silent_desc": "A silent alert when a prayer time begins — no sound, no vibration",
+    "adhan_body": "Allahu Akbar — it is time for prayer",
+    "adhan_body_muted": "Muted — Allahu Akbar, it is time for prayer",
+    "dl_service_channel": "Background downloading",
+    "dl_service_channel_desc": "Keeps the app alive while content downloads in the background",
+    "dl_service_body": "The app is continuing the download in the background"
   },
   "hijri": {
     "m1": "Muharram",

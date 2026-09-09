@@ -758,7 +758,15 @@
     "dl_recit_paused_title": "Descarga de la recitación en pausa",
     "dl_done": "Descargado: listo para usar sin conexión",
     "dl_not_found": "El archivo no está en el servidor (404)",
-    "dl_failed": "No se pudo descargar"
+    "dl_failed": "No se pudo descargar",
+    "adhan_channel_desc": "El aviso del adhan al entrar el tiempo de la oración",
+    "adhan_channel_vibrate_desc": "Solo vibración al entrar el tiempo de la oración",
+    "adhan_channel_silent_desc": "Un aviso silencioso al entrar el tiempo de la oración, sin sonido ni vibración",
+    "adhan_body": "Allahu Akbar — es hora de la oración",
+    "adhan_body_muted": "Silenciado — Allahu Akbar, es hora de la oración",
+    "dl_service_channel": "Descarga en segundo plano",
+    "dl_service_channel_desc": "Mantiene la aplicación activa mientras el contenido se descarga en segundo plano",
+    "dl_service_body": "La aplicación continúa la descarga en segundo plano"
   },
   "hijri": {
     "m1": "Muharram",

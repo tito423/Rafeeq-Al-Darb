@@ -47,13 +47,16 @@ class DownloadForegroundService : Service() {
 
     private fun ensureChannel() {
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (nm.getNotificationChannel(CHANNEL_ID) != null) return
+        // Deliberately NOT short-circuiting on an existing channel: creating it
+        // again under the same id updates its name and description (importance
+        // and sound are the immutable parts), which is how a language change
+        // reaches a channel that was created in the previous language.
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "تنزيل المحتوى في الخلفية",
+            NativeStrings.get(this, NativeStrings.DL_CHANNEL),
             NotificationManager.IMPORTANCE_LOW,
         )
-        channel.description = "يبقي التطبيق نشطًا أثناء تنزيل المحتوى في الخلفية"
+        channel.description = NativeStrings.get(this, NativeStrings.DL_CHANNEL_DESC)
         channel.setShowBadge(false)
         nm.createNotificationChannel(channel)
     }
@@ -67,8 +70,8 @@ class DownloadForegroundService : Service() {
             )
         }
         return Notification.Builder(this, CHANNEL_ID)
-            .setContentTitle(title ?: "جارٍ التنزيل")
-            .setContentText("يتابع التطبيق التنزيل في الخلفية")
+            .setContentTitle(title ?: NativeStrings.get(this, NativeStrings.DL_TITLE))
+            .setContentText(NativeStrings.get(this, NativeStrings.DL_BODY))
             .setSmallIcon(applicationInfo.icon)
             .setOngoing(true)
             .setOnlyAlertOnce(true)

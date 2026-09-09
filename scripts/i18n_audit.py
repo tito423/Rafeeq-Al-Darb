@@ -259,6 +259,64 @@ def audit_file(path, short):
     return found, skipped
 
 
+ANDROID = os.path.join(ROOT, "rafeeq_app", "android", "app", "src", "main")
+
+# Kotlin comments and doc-comments are full of Arabic (they quote the very
+# button labels they implement), so this reads string LITERALS only, after the
+# comments are stripped by the same pass Dart gets.
+KT_LITERAL = re.compile(r'"(?:\\.|[^"\\\n])*"')
+
+# Kotlin that legitimately holds Arabic: the app's own name, as an Android
+# resource, is picked by the DEVICE locale and that is correct - the launcher
+# icon's label is not the app's in-app language.
+NATIVE_ALLOWLIST = {
+    "res/values-ar/strings.xml":
+        "an Android resource, selected by the device locale - the launcher "
+        "label is the one string that SHOULD follow the phone, not the app",
+    "kotlin/com/tito/rafeeq_aldarb/NativeStrings.kt":
+        "this file IS the fix: its Arabic is the fallback map, used only in "
+        "the window before Dart has ever pushed the translated strings (a "
+        "first launch whose alarm fires before the app is opened). Everything "
+        "it serves is translated - see add_i18n_keys_native.py",
+}
+
+
+def audit_native():
+    """Arabic that ANDROID renders - invisible to a Dart-only audit.
+
+    This bucket existed unmeasured until the fifth session's chrome count hit
+    zero and the notification shade was still Arabic on a French UI: three
+    channel names, three descriptions, the adhan alert's title, body and its
+    two action buttons, and the download service's notification. Fifteen
+    strings, none of which had ever appeared in a report.
+    """
+    found = {}
+    for dirpath, _dirs, files in os.walk(ANDROID):
+        for f in sorted(files):
+            if not f.endswith((".kt", ".java", ".xml")):
+                continue
+            p = os.path.join(dirpath, f)
+            rel = os.path.relpath(p, ANDROID).replace("\\", "/")
+            if rel in NATIVE_ALLOWLIST:
+                continue
+            src = io.open(p, encoding="utf-8").read()
+            if f.endswith(".xml"):
+                hits = [(i + 1, l.strip()[:90])
+                        for i, l in enumerate(src.split("\n"))
+                        if ARABIC.search(l)]
+            else:
+                src = strip_comments(src)
+                hits = []
+                for m in KT_LITERAL.finditer(src):
+                    if not ARABIC.search(m.group(0)):
+                        continue
+                    hits.append((src[:m.start()].count("\n") + 1,
+                                 m.group(0).strip('"')[:90]))
+            if hits:
+                found[rel] = hits
+    return found
+
+
 def main():
     per_file, total, allowlisted = {}, 0, 0
     for dirpath, _dirs, files in os.walk(LIB):
@@ -276,15 +334,23 @@ def main():
                 per_file[rel] = found
                 total += len(found)
 
+    native = audit_native()
+    native_count = sum(len(v) for v in native.values())
+
     chrome = sum(1 for v in per_file.values() for b, _, _ in v if b == "chrome")
     out = io.StringIO()
     out.write("UNTRANSLATED USER-VISIBLE STRINGS: %d in %d files\n" %
-              (total, len(per_file)))
+              (total + native_count, len(per_file) + len(native)))
     out.write("   chrome  (UI text that must go through .tr()): %d\n" % chrome)
+    out.write("   native  (Arabic that ANDROID renders, not Dart): %d\n"
+              % native_count)
     out.write("   content (Arabic the app authors, needs translating): %d\n"
               % (total - chrome))
     out.write("   allowlisted (deliberate, with a reason in this script): %d\n\n"
               % allowlisted)
+    for rel in sorted(native, key=lambda k: -len(native[k])):
+        out.write("%-70s %4d  (native)\n" % ("android/.../" + rel,
+                                             len(native[rel])))
     for rel in sorted(per_file, key=lambda k: -len(per_file[k])):
         v = per_file[rel]
         c = sum(1 for b, _, _ in v if b == "chrome")
@@ -296,11 +362,16 @@ def main():
         for bucket, line, text in per_file[rel]:
             out.write("   %-8s :%-5d %s\n" % (bucket, line, text))
         out.write("\n")
+    for rel in sorted(native):
+        out.write("== android/.../%s\n" % rel)
+        for line, text in native[rel]:
+            out.write("   %-8s :%-5d %s\n" % ("native", line, text))
+        out.write("\n")
     io.open(os.path.join(ROOT, "i18n_audit.txt"), "w",
             encoding="utf-8").write(out.getvalue())
-    print("wrote i18n_audit.txt  -  %d total, %d chrome, %d content"
-          % (total, chrome, total - chrome))
-    return chrome
+    print("wrote i18n_audit.txt  -  %d total, %d chrome, %d native, %d content"
+          % (total + native_count, chrome, native_count, total - chrome))
+    return chrome + native_count
 
 
 if __name__ == "__main__":

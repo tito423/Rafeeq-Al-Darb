@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/services/native_strings.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/rgb_backdrop.dart';
 import '../core/theme/theme_controller.dart';
@@ -30,6 +31,14 @@ class RafeeqApp extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(selectedTranslationLangProvider.notifier)
           .followAppLocale(localeCode);
+      // The strings Android renders itself — the three adhan notification
+      // channels, the adhan alert's title/body/buttons, and the download
+      // service's notification — were hardcoded Arabic in Kotlin, invisible
+      // to `i18n_audit.py` because it only reads Dart. They are pushed from
+      // here for the same reason the line above lives here: this is the one
+      // widget that rebuilds on every locale change, so startup and a
+      // language switch are the same code path.
+      NativeStrings.sync();
     });
 
     // Resolve the active variant into MaterialApp's theme slots. Only `rgb`

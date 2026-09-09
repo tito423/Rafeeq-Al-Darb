@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.tito.rafeeq_aldarb.MainActivity
+import com.tito.rafeeq_aldarb.NativeStrings
 import com.tito.rafeeq_aldarb.R
 
 /**
@@ -34,10 +35,10 @@ object AdhanNotifications {
 
         val alert = NotificationChannel(
             CHANNEL_ALERT,
-            "الأذان",
+            NativeStrings.get(context, NativeStrings.ADHAN_CHANNEL),
             NotificationManager.IMPORTANCE_HIGH,
         ).apply {
-            description = "تنبيه الأذان عند دخول وقت الصلاة"
+            description = NativeStrings.get(context, NativeStrings.ADHAN_CHANNEL_DESC)
             setSound(null, null)
             enableVibration(true)
             vibrationPattern = longArrayOf(0, 500, 400, 500)
@@ -46,10 +47,11 @@ object AdhanNotifications {
         }
         val vibrate = NotificationChannel(
             CHANNEL_VIBRATE,
-            "الأذان — اهتزاز فقط",
+            NativeStrings.get(context, NativeStrings.ADHAN_CHANNEL_VIBRATE),
             NotificationManager.IMPORTANCE_HIGH,
         ).apply {
-            description = "تنبيه بالاهتزاز فقط عند دخول وقت الصلاة"
+            description =
+                NativeStrings.get(context, NativeStrings.ADHAN_CHANNEL_VIBRATE_DESC)
             setSound(null, null)
             enableVibration(true)
             vibrationPattern = longArrayOf(0, 600, 300, 600)
@@ -57,10 +59,11 @@ object AdhanNotifications {
         }
         val silent = NotificationChannel(
             CHANNEL_SILENT,
-            "الأذان — صامت",
+            NativeStrings.get(context, NativeStrings.ADHAN_CHANNEL_SILENT),
             NotificationManager.IMPORTANCE_DEFAULT,
         ).apply {
-            description = "تنبيه صامت عند دخول وقت الصلاة، بلا صوت أو اهتزاز"
+            description =
+                NativeStrings.get(context, NativeStrings.ADHAN_CHANNEL_SILENT_DESC)
             setSound(null, null)
             enableVibration(false)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
@@ -103,8 +106,19 @@ object AdhanNotifications {
 
         val builder = NotificationCompat.Builder(context, channelFor(spec))
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("أذان ${spec.prayerLabel}")
-            .setContentText(if (muted) "مكتوم — الله أكبر، حان وقت الصلاة" else "الله أكبر، حان وقت الصلاة")
+            // The title carries a single %s for the prayer's own name, so a
+            // language whose word order differs from Arabic's can place it
+            // where that language actually puts it.
+            .setContentTitle(
+                NativeStrings.get(context, NativeStrings.ADHAN_TITLE)
+                    .replace("%s", spec.prayerLabel)
+            )
+            .setContentText(
+                NativeStrings.get(
+                    context,
+                    if (muted) NativeStrings.ADHAN_BODY_MUTED else NativeStrings.ADHAN_BODY,
+                )
+            )
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -120,8 +134,10 @@ object AdhanNotifications {
             // A sounding adhan is an ongoing alert the user must dismiss on
             // purpose; the quiet modes are ordinary, swipeable reminders.
             builder.setOngoing(true).setAutoCancel(false)
-            builder.addAction(0, "إيقاف", stop)
-            if (!muted) builder.addAction(0, "كتم", mute)
+            builder.addAction(0, NativeStrings.get(context, NativeStrings.ADHAN_STOP), stop)
+            if (!muted) {
+                builder.addAction(0, NativeStrings.get(context, NativeStrings.ADHAN_MUTE), mute)
+            }
         } else {
             builder.setOngoing(false).setAutoCancel(true)
         }

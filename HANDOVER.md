@@ -356,9 +356,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 18:06 — IN PROGRESS — resume here**
+**2026-09-09 18:19 — IN PROGRESS — resume here**
 
-i18n: the audit's chrome bucket is 0. Most of the 89 were false positives from a regex literal scanner (now a state machine judging the residue after interpolations); the real ones are fixed, including three the audit never saw - the Adhan alert's own supportedLocales list was missing Urdu, the prayer names were a hardcoded Arabic table, and the alert's label went stale on a language change. Next: the ~15 hardcoded Arabic strings in Kotlin notifications, then the 1408 content strings.
+i18n (native): the 15 hardcoded Arabic strings in Kotlin - 3 adhan notification channels + descriptions, the alert's title/body/buttons, and the download service's notification - now come from Dart through NativeStrings, and the audit grew a 'native' bucket that measures them. VERIFIED on emulator-5554 in French: the fired test adhan read 'Adhan - priere du Dhuhr / Allahou Akbar - c'est l'heure de la priere' with Arreter/Muet, and dumpsys shows the three channels renamed in place. Next: the 1408 content strings, smallest files first.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

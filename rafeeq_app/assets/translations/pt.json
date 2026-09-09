@@ -758,7 +758,15 @@
     "dl_recit_paused_title": "Transferência da recitação em pausa",
     "dl_done": "Transferido — pronto para usar sem ligação",
     "dl_not_found": "O ficheiro não está no servidor (404)",
-    "dl_failed": "Falha na transferência"
+    "dl_failed": "Falha na transferência",
+    "adhan_channel_desc": "O alerta do adhan quando entra o tempo da oração",
+    "adhan_channel_vibrate_desc": "Apenas vibração quando entra o tempo da oração",
+    "adhan_channel_silent_desc": "Um alerta silencioso quando entra o tempo da oração, sem som nem vibração",
+    "adhan_body": "Allahu Akbar — é hora da oração",
+    "adhan_body_muted": "Silenciado — Allahu Akbar, é hora da oração",
+    "dl_service_channel": "Transferência em segundo plano",
+    "dl_service_channel_desc": "Mantém a aplicação ativa enquanto o conteúdo é transferido em segundo plano",
+    "dl_service_body": "A aplicação continua a transferência em segundo plano"
   },
   "hijri": {
     "m1": "Muharram",

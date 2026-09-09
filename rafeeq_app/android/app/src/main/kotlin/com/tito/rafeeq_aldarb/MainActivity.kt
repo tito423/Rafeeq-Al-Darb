@@ -18,6 +18,7 @@ import com.tito.rafeeq_aldarb.adhan.AdhanNotifications
 class MainActivity: AudioServiceActivity() {
     private val ADHAN_CHANNEL = "com.tito.rafeeq_aldarb/adhan"
     private val DOWNLOAD_SERVICE_CHANNEL = "com.tito.rafeeq_aldarb/download_service"
+    private val NATIVE_STRINGS_CHANNEL = "com.tito.rafeeq_aldarb/native_strings"
 
     // P3‑53: guarantee that a full-screen-intent launch (the Adhan alert) wakes
     // the screen and draws OVER the lock screen without a biometric unlock
@@ -51,6 +52,27 @@ class MainActivity: AudioServiceActivity() {
         // separate Flutter engines over the same native singletons.
         AdhanNotifications.ensureChannels(this)
         AdhanChannels.register(this, flutterEngine, this)
+
+        // The strings Android renders itself — notification channels, the
+        // adhan alert, the download service — in the language chosen INSIDE
+        // the app. Dart pushes them here on startup and on every language
+        // change; see NativeStrings for why Android's own resource qualifiers
+        // cannot do this job. The channels are refreshed straight away so a
+        // language change shows up in the notification shade without waiting
+        // for the next adhan.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NATIVE_STRINGS_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "sync" -> {
+                        @Suppress("UNCHECKED_CAST")
+                        val values = (call.arguments as? Map<String, String>).orEmpty()
+                        NativeStrings.sync(this, values)
+                        AdhanNotifications.ensureChannels(this)
+                        result.success(true)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
 
         // P3-46: start/stop the real foreground service that keeps this
         // process from being frozen/killed while backgrounded during an
