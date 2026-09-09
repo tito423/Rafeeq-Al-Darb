@@ -83,7 +83,8 @@
     "face_mosaic": "Mosaïque",
     "clock_gallery_subtitle": "Chaque cadran affiche l'heure réelle, en direct",
     "hours_short": "h",
-    "minutes_short": "min"
+    "minutes_short": "min",
+    "seconds_short": "s"
   },
   "quran": {
     "surah_list": "Sourates",

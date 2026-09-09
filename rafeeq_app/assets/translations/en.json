@@ -83,7 +83,8 @@
     "face_mosaic": "Mosaic",
     "clock_gallery_subtitle": "Every face shows the real time, live",
     "hours_short": "h",
-    "minutes_short": "m"
+    "minutes_short": "m",
+    "seconds_short": "s"
   },
   "quran": {
     "surah_list": "Surahs",

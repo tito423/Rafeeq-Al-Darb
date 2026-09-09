@@ -83,7 +83,8 @@
     "face_mosaic": "Мозаика",
     "clock_gallery_subtitle": "Каждый циферблат показывает реальное время",
     "hours_short": "ч",
-    "minutes_short": "м"
+    "minutes_short": "м",
+    "seconds_short": "с"
   },
   "quran": {
     "surah_list": "Суры",

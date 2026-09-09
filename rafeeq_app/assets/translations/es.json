@@ -83,7 +83,8 @@
     "face_mosaic": "Mosaico",
     "clock_gallery_subtitle": "Cada esfera muestra la hora real, en vivo",
     "hours_short": "h",
-    "minutes_short": "min"
+    "minutes_short": "min",
+    "seconds_short": "s"
   },
   "quran": {
     "surah_list": "Suras",

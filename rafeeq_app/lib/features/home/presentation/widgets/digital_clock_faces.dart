@@ -42,6 +42,10 @@ class DigitalClockFaceView extends StatefulWidget {
   /// the Home card and the small gallery previews share exactly one drawing.
   final double height;
 
+  /// The colour the numerals are drawn in. Defaults to white, which is what
+  /// every face assumed before the Home card learned to follow the theme.
+  final Color ink;
+
   const DigitalClockFaceView({
     super.key,
     required this.face,
@@ -50,6 +54,7 @@ class DigitalClockFaceView extends StatefulWidget {
     required this.arabicDigits,
     this.meridiem,
     this.height = 74,
+    this.ink = Colors.white,
   });
 
   @override
@@ -89,20 +94,25 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
         : '${two(h)}:${two(_now.minute)}';
   }
 
+  /// Shorthand, since every face reaches for it.
+  Color get ink => widget.ink;
+
   @override
   Widget build(BuildContext context) {
     final h = widget.height;
     final body = switch (widget.face) {
       DigitalClockFace.minimal => _minimal(h),
       DigitalClockFace.neon => _neon(h),
-      DigitalClockFace.segment => _painted(h, _SegmentPainter(_text)),
+      DigitalClockFace.segment =>
+        _painted(h, _SegmentPainter(_text, ink)),
       DigitalClockFace.flip => _flip(h),
       DigitalClockFace.gradient => _gradient(h),
       DigitalClockFace.arabic => _arabic(h),
       DigitalClockFace.ring => _ring(h),
       DigitalClockFace.bars => _bars(h),
       DigitalClockFace.glass => _glass(h),
-      DigitalClockFace.dots => _painted(h, _DotMatrixPainter(_text)),
+      DigitalClockFace.dots =>
+        _painted(h, _DotMatrixPainter(_text, ink)),
     };
     return SizedBox(height: h, child: Center(child: body));
   }
@@ -116,7 +126,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
       child: Text(
         m,
         style: TextStyle(
-          color: color ?? Colors.white.withValues(alpha: 0.7),
+          color: color ?? ink.withValues(alpha: 0.7),
           fontSize: h * 0.20,
           fontWeight: FontWeight.w700,
           letterSpacing: 1.2,
@@ -149,7 +159,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
           Text(
             _shown,
             style: TextStyle(
-              color: Colors.white,
+              color: ink,
               fontSize: h * 0.58,
               fontWeight: FontWeight.w300,
               letterSpacing: h * 0.05,
@@ -163,7 +173,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
   // ── 2. Neon ───────────────────────────────────────────────────────────
   Widget _neon(double h) {
     final style = TextStyle(
-      color: Colors.white,
+      color: ink,
       fontSize: h * 0.58,
       fontWeight: FontWeight.w700,
       letterSpacing: h * 0.03,
@@ -226,7 +236,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
             child: Text(
               _shown,
               style: TextStyle(
-                color: Colors.white,
+                color: ink,
                 fontSize: h * 0.60,
                 fontWeight: FontWeight.w800,
                 letterSpacing: h * 0.02,
@@ -269,7 +279,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
       width: h * 1.9,
       height: h,
       child: CustomPaint(
-        painter: _RingPainter(progress),
+        painter: _RingPainter(progress, ink),
         child: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: h * 0.18),
@@ -286,7 +296,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
                       widget.arabicDigits,
                     ),
                     style: TextStyle(
-                      color: Colors.white,
+                      color: ink,
                       fontSize: h * 0.46,
                       fontWeight: FontWeight.w700,
                       fontFeatures: const [FontFeature.tabularFigures()],
@@ -327,7 +337,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
                     borderRadius: BorderRadius.circular(h),
                     child: LinearProgressIndicator(
                       value: r.$2,
-                      backgroundColor: Colors.white.withValues(alpha: 0.10),
+                      backgroundColor: ink.withValues(alpha: 0.10),
                       valueColor: AlwaysStoppedAnimation<Color>(r.$3),
                     ),
                   ),
@@ -344,7 +354,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
             Text(
               _shown,
               style: TextStyle(
-                color: Colors.white,
+                color: ink,
                 fontSize: h * 0.40,
                 fontWeight: FontWeight.w700,
                 fontFeatures: const [FontFeature.tabularFigures()],
@@ -366,11 +376,11 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withValues(alpha: 0.16),
-              Colors.white.withValues(alpha: 0.04),
+              ink.withValues(alpha: 0.16),
+              ink.withValues(alpha: 0.04),
             ],
           ),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+          border: Border.all(color: ink.withValues(alpha: 0.22)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -380,7 +390,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
             Text(
               _shown,
               style: TextStyle(
-                color: Colors.white,
+                color: ink,
                 fontSize: h * 0.46,
                 fontWeight: FontWeight.w600,
                 letterSpacing: h * 0.03,
@@ -397,6 +407,11 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
 class _FlipDigit extends StatelessWidget {
   final String char;
   final double height;
+
+  /// The flip card keeps its own dark plate in every theme — that IS the
+  /// flip-clock look, and a white numeral on it is right on any ground — so
+  /// this one face does not take the card's ink.
+  static const ink = Colors.white;
   const _FlipDigit({required this.char, required this.height});
 
   @override
@@ -412,7 +427,7 @@ class _FlipDigit extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [Color(0xFF1D2A3E), Color(0xFF0C1220)],
         ),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.10)),
+        border: Border.all(color: ink.withValues(alpha: 0.10)),
       ),
       alignment: Alignment.center,
       child: Stack(
@@ -434,7 +449,7 @@ class _FlipDigit extends StatelessWidget {
               char,
               key: ValueKey(char),
               style: TextStyle(
-                color: Colors.white,
+                color: ink,
                 fontSize: height * 0.56,
                 fontWeight: FontWeight.w700,
               ),
@@ -458,7 +473,8 @@ class _FlipDigit extends StatelessWidget {
 /// The ring behind the "ring" face — a full turn per minute.
 class _RingPainter extends CustomPainter {
   final double progress;
-  const _RingPainter(this.progress);
+  final Color ink;
+  const _RingPainter(this.progress, this.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -472,7 +488,7 @@ class _RingPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3
-        ..color = Colors.white.withValues(alpha: 0.12),
+        ..color = ink.withValues(alpha: 0.12),
     );
     // A stadium outline can't be swept by an arc, so the travelled portion is
     // drawn as a gradient stroke whose stop follows the seconds instead.
@@ -497,7 +513,8 @@ class _RingPainter extends CustomPainter {
 /// A seven-segment LCD. Segment order is the usual a-b-c-d-e-f-g.
 class _SegmentPainter extends CustomPainter {
   final String text;
-  const _SegmentPainter(this.text);
+  final Color ink;
+  const _SegmentPainter(this.text, this.ink);
 
   static const _map = <String, List<bool>>{
     '0': [true, true, true, true, true, true, false],
@@ -550,7 +567,7 @@ class _SegmentPainter extends CustomPainter {
     final onPaint = Paint()
       ..color = _kTeal
       ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 2);
-    final offPaint = Paint()..color = Colors.white.withValues(alpha: 0.07);
+    final offPaint = Paint()..color = ink.withValues(alpha: 0.07);
 
     void seg(Rect rect, bool lit) => canvas.drawRRect(
           RRect.fromRectAndRadius(rect, Radius.circular(t / 2)),
@@ -580,7 +597,8 @@ class _SegmentPainter extends CustomPainter {
 /// A 5x7 dot-matrix font — every lit cell is a glowing dot.
 class _DotMatrixPainter extends CustomPainter {
   final String text;
-  const _DotMatrixPainter(this.text);
+  final Color ink;
+  const _DotMatrixPainter(this.text, this.ink);
 
   /// Seven rows of five bits per glyph, most significant bit on the left.
   static const _glyphs = <String, List<int>>{
@@ -627,12 +645,12 @@ class _DotMatrixPainter extends CustomPainter {
                 ..color = _kTeal.withValues(alpha: 0.35)
                 ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
             );
-            canvas.drawCircle(centre, r, Paint()..color = Colors.white);
+            canvas.drawCircle(centre, r, Paint()..color = ink);
           } else {
             canvas.drawCircle(
               centre,
               r * 0.55,
-              Paint()..color = Colors.white.withValues(alpha: 0.07),
+              Paint()..color = ink.withValues(alpha: 0.07),
             );
           }
         }

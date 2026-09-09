@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
 import '../../../../core/models/prayer_times.dart';
+import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/utils/time_formatter.dart';
 import '../../../../core/widgets/card_route.dart';
@@ -265,6 +266,11 @@ class _PrayerSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filled = isNext || isFocused;
+    // The carousel sits on the Home card's ground, so it takes that ground's
+    // palette rather than assuming white-on-dark. `accent` is the measured,
+    // legible form of `color`; `color` itself stays the chip fill.
+    final hero = HeroSurface.of(context);
+    final accent = hero.accent(color);
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -285,7 +291,7 @@ class _PrayerSlide extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: isFocused
-                ? Colors.white.withValues(alpha: 0.55)
+                ? hero.onSurface.withValues(alpha: 0.55)
                 : Colors.transparent,
             width: 1.4,
           ),
@@ -305,7 +311,7 @@ class _PrayerSlide extends StatelessWidget {
             Icon(
               icon,
               size: 18,
-              color: filled ? Colors.white : color,
+              color: filled ? hero.onChip : accent,
             ),
             const SizedBox(height: 4),
             Text(
@@ -314,7 +320,7 @@ class _PrayerSlide extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: filled ? Colors.white : color,
+                color: filled ? hero.onChip : accent,
               ),
             ),
             const SizedBox(height: 3),
@@ -324,7 +330,7 @@ class _PrayerSlide extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: filled ? Colors.white : Colors.white70,
+                color: filled ? hero.onChip : hero.onSurfaceMuted,
               ),
             ),
             // An honest marker that this timing is not the calculated one.
@@ -335,7 +341,9 @@ class _PrayerSlide extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
-                  color: filled ? Colors.white70 : Colors.white54,
+                  color: filled
+                      ? hero.onChip.withValues(alpha: 0.78)
+                      : hero.onSurfaceFaint,
                 ),
               ),
             ],
@@ -345,7 +353,8 @@ class _PrayerSlide extends StatelessWidget {
             Icon(
               Icons.open_in_full_rounded,
               size: 13,
-              color: (filled ? Colors.white : color).withValues(alpha: 0.75),
+              color:
+                  (filled ? hero.onChip : accent).withValues(alpha: 0.75),
             ),
           ],
         ),
@@ -458,6 +467,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
         );
 
     final adhanId = settings.adhanIdFor(widget.prayerKey);
+    final hero = HeroSurface.of(context);
     final option = catalog.where((o) => o.id == adhanId).firstOrNull;
     final usesDefault =
         settings.adhanIdByPrayer[widget.prayerKey] == null;
@@ -486,7 +496,9 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
                         : (offset > 0 ? '+$offset' : '$offset'),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: offset == 0 ? Colors.white54 : color,
+                      color: offset == 0
+                          ? hero.onSurfaceFaint
+                          : hero.accent(color),
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
                     ),
@@ -508,7 +520,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 'prayer.sunrise_no_adhan'.tr(),
-                style: const TextStyle(color: Colors.white54, fontSize: 12),
+                style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
               ),
             )
           else ...[
@@ -517,7 +529,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
             // ── Alert mode ──
             Text(
               'prayer.notification_mode'.tr(),
-              style: const TextStyle(color: Colors.white54, fontSize: 12),
+              style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
             ),
             const SizedBox(height: 6),
             Wrap(
@@ -583,7 +595,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
   ) async {
     final chosen = await showModalBottomSheet<Object?>(
       context: context,
-      backgroundColor: const Color(0xFF0E1626),
+      backgroundColor: HeroSurface.of(context).sheetBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -594,7 +606,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
             ListTile(
               title: Text(
                 'prayer.use_default'.tr(),
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: HeroSurface.of(context).onSurface),
               ),
               leading: Icon(
                 usesDefault
@@ -604,12 +616,13 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
               ),
               onTap: () => Navigator.of(ctx).pop('__default__'),
             ),
-            const Divider(height: 1, color: Colors.white12),
+            Divider(height: 1, color: HeroSurface.of(context).hairline),
             for (final o in catalog)
               ListTile(
                 title: Text(
                   o.name,
-                  style: const TextStyle(color: Colors.white),
+                  style:
+                      TextStyle(color: HeroSurface.of(context).onSurface),
                 ),
                 leading: Icon(
                   !usesDefault && o.id == currentId
@@ -630,7 +643,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
   Future<void> _pickVideo(AdhanPresentationState presentation) async {
     final chosen = await showModalBottomSheet<String>(
       context: context,
-      backgroundColor: const Color(0xFF0E1626),
+      backgroundColor: HeroSurface.of(context).sheetBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -647,11 +660,11 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
               ),
               title: Text(
                 'prayer.presentation_audio'.tr(),
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: HeroSurface.of(context).onSurface),
               ),
               onTap: () => Navigator.of(ctx).pop('__audio__'),
             ),
-            const Divider(height: 1, color: Colors.white12),
+            Divider(height: 1, color: HeroSurface.of(context).hairline),
             for (final v in adhanVideoCatalog)
               ListTile(
                 leading: Icon(
@@ -663,7 +676,8 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
                 ),
                 title: Text(
                   v.labelKey.tr(),
-                  style: const TextStyle(color: Colors.white),
+                  style:
+                      TextStyle(color: HeroSurface.of(context).onSurface),
                 ),
                 onTap: () => Navigator.of(ctx).pop(v.id),
               ),
@@ -671,7 +685,9 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
               child: Text(
                 adhanVideoSourceLabelKey.tr(),
-                style: const TextStyle(color: Colors.white38, fontSize: 11),
+                style: TextStyle(
+                    color: HeroSurface.of(context).onSurfaceFaint,
+                    fontSize: 11),
               ),
             ),
           ],
@@ -709,6 +725,7 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hero = HeroSurface.of(context);
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
@@ -716,7 +733,7 @@ class _DetailRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
-            Icon(icon, size: 17, color: Colors.white54),
+            Icon(icon, size: 17, color: hero.onSurfaceFaint),
             const SizedBox(width: 8),
             Expanded(
               child: Column(
@@ -724,15 +741,16 @@ class _DetailRow extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(color: Colors.white54, fontSize: 11),
+                    style:
+                        TextStyle(color: hero.onSurfaceFaint, fontSize: 11),
                   ),
                   if (value != null)
                     Text(
                       value!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: hero.onSurface,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
@@ -740,8 +758,8 @@ class _DetailRow extends StatelessWidget {
                   if (subValue != null)
                     Text(
                       subValue!,
-                      style: const TextStyle(
-                          color: Colors.white38, fontSize: 10),
+                      style: TextStyle(
+                          color: hero.onSurfaceFaint, fontSize: 10),
                     ),
                 ],
               ),
@@ -761,16 +779,17 @@ class _StepperButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hero = HeroSurface.of(context);
     return InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
+          color: hero.onSurface.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(icon, size: 16, color: Colors.white),
+        child: Icon(icon, size: 16, color: hero.onSurface),
       ),
     );
   }
@@ -790,16 +809,21 @@ class _Pill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hero = HeroSurface.of(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
-          color: selected ? color : Colors.white.withValues(alpha: 0.07),
+          color: selected
+              ? hero.chipFill(color)
+              : hero.onSurface.withValues(alpha: 0.07),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: selected ? color : Colors.white.withValues(alpha: 0.14),
+            color: selected
+                ? hero.chipFill(color)
+                : hero.onSurface.withValues(alpha: 0.14),
           ),
         ),
         child: Text(
@@ -807,7 +831,7 @@ class _Pill extends StatelessWidget {
           style: TextStyle(
             fontSize: 11.5,
             fontWeight: FontWeight.w700,
-            color: selected ? Colors.white : Colors.white70,
+            color: selected ? hero.onChip : hero.onSurfaceMuted,
           ),
         ),
       ),
@@ -821,6 +845,9 @@ class _ThinDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Container(height: 1, color: Colors.white.withValues(alpha: 0.08)),
+        child: Container(
+          height: 1,
+          color: HeroSurface.of(context).hairline,
+        ),
       );
 }

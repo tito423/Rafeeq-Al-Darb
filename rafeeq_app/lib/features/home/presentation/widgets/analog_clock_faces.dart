@@ -25,12 +25,19 @@ class AnalogClockFaceView extends StatefulWidget {
   /// Arabic-Indic digits on the faces that draw numerals.
   final bool arabicDigits;
 
+  /// The colour the dial's markings and numerals are drawn in. Defaults to
+  /// white, which is what every face assumed before the Home card learned to
+  /// follow the theme; the coloured parts of each face (the gold, the neon
+  /// ring, the RGB sweep) are unaffected.
+  final Color ink;
+
   const AnalogClockFaceView({
     super.key,
     required this.face,
     this.size = 176,
     this.meridiem,
     this.arabicDigits = false,
+    this.ink = Colors.white,
   });
 
   @override
@@ -71,6 +78,7 @@ class _AnalogClockFaceViewState extends State<AnalogClockFaceView>
           widget.face,
           _now,
           arabicDigits: widget.arabicDigits,
+          ink: widget.ink,
         ),
         // The AM/PM marker sits on the dial's vertical axis, which is exactly
         // where the minute and second hands spend a good part of every hour.
@@ -96,6 +104,8 @@ class _AnalogClockFaceViewState extends State<AnalogClockFaceView>
                   child: Text(
                     widget.meridiem!,
                     style: TextStyle(
+                      // On its own black capsule, so white whatever the card
+                      // is: the capsule composites dark on either ground.
                       color: Colors.white.withValues(alpha: 0.85),
                       fontSize: widget.size * 0.075,
                       fontWeight: FontWeight.w700,
@@ -117,28 +127,29 @@ CustomPainter _facePainter(
   AnalogClockFace face,
   DateTime now, {
   required bool arabicDigits,
+  required Color ink,
 }) {
   switch (face) {
     case AnalogClockFace.rgb:
-      return _RgbPainter(now);
+      return _RgbPainter(now, ink);
     case AnalogClockFace.classicGold:
-      return _ClassicGoldPainter(now, arabicDigits: arabicDigits);
+      return _ClassicGoldPainter(now, ink, arabicDigits: arabicDigits);
     case AnalogClockFace.minimalDark:
-      return _MinimalDarkPainter(now);
+      return _MinimalDarkPainter(now, ink);
     case AnalogClockFace.neonRing:
-      return _NeonRingPainter(now);
+      return _NeonRingPainter(now, ink);
     case AnalogClockFace.arabicNumerals:
-      return _ArabicNumeralsPainter(now, arabicDigits: arabicDigits);
+      return _ArabicNumeralsPainter(now, ink, arabicDigits: arabicDigits);
     case AnalogClockFace.islamicStar:
-      return _IslamicStarPainter(now);
+      return _IslamicStarPainter(now, ink);
     case AnalogClockFace.skeleton:
-      return _SkeletonPainter(now);
+      return _SkeletonPainter(now, ink);
     case AnalogClockFace.sunMoon:
-      return _SunMoonPainter(now);
+      return _SunMoonPainter(now, ink);
     case AnalogClockFace.halo:
-      return _HaloPainter(now);
+      return _HaloPainter(now, ink);
     case AnalogClockFace.mosaic:
-      return _MosaicPainter(now);
+      return _MosaicPainter(now, ink);
   }
 }
 
@@ -230,10 +241,14 @@ Color _spectrum(double t, {double alpha = 1}) =>
 /// Base class so every painter repaints exactly when the clock moves.
 abstract class _FacePainter extends CustomPainter {
   final DateTime now;
-  const _FacePainter(this.now);
+
+  /// The dial's own ink, from the card underneath.
+  final Color ink;
+  const _FacePainter(this.now, this.ink);
 
   @override
-  bool shouldRepaint(covariant _FacePainter old) => old.now != now;
+  bool shouldRepaint(covariant _FacePainter old) =>
+      old.now != now || old.ink != ink;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -241,7 +256,7 @@ abstract class _FacePainter extends CustomPainter {
 // ─────────────────────────────────────────────────────────────────────────
 
 class _RgbPainter extends _FacePainter {
-  const _RgbPainter(super.now);
+  const _RgbPainter(super.now, super.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -273,7 +288,7 @@ class _RgbPainter extends _FacePainter {
         Paint()
           ..strokeCap = StrokeCap.round
           ..strokeWidth = long ? 3 : 1.6
-          ..color = Colors.white.withValues(alpha: long ? 0.85 : 0.35),
+          ..color = ink.withValues(alpha: long ? 0.85 : 0.35),
       );
     }
 
@@ -284,7 +299,7 @@ class _RgbPainter extends _FacePainter {
     _drawHand(canvas, c, t.second, r * 0.80, 2.2, _spectrum(t.second + 0.66),
         glow: true);
 
-    canvas.drawCircle(c, 6.5, Paint()..color = Colors.white);
+    canvas.drawCircle(c, 6.5, Paint()..color = ink);
     canvas.drawCircle(c, 3.2, Paint()..color = _spectrum(t.second));
   }
 }
@@ -295,7 +310,7 @@ class _RgbPainter extends _FacePainter {
 
 class _ClassicGoldPainter extends _FacePainter {
   final bool arabicDigits;
-  const _ClassicGoldPainter(super.now, {required this.arabicDigits});
+  const _ClassicGoldPainter(super.now, super.ink, {required this.arabicDigits});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -361,7 +376,7 @@ class _ClassicGoldPainter extends _FacePainter {
 // ─────────────────────────────────────────────────────────────────────────
 
 class _MinimalDarkPainter extends _FacePainter {
-  const _MinimalDarkPainter(super.now);
+  const _MinimalDarkPainter(super.now, super.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -375,7 +390,7 @@ class _MinimalDarkPainter extends _FacePainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.2
-        ..color = Colors.white.withValues(alpha: 0.20),
+        ..color = ink.withValues(alpha: 0.20),
     );
     for (var i = 0; i < 4; i++) {
       canvas.drawLine(
@@ -384,16 +399,16 @@ class _MinimalDarkPainter extends _FacePainter {
         Paint()
           ..strokeCap = StrokeCap.round
           ..strokeWidth = 2
-          ..color = Colors.white.withValues(alpha: 0.7),
+          ..color = ink.withValues(alpha: 0.7),
       );
     }
 
-    _drawHand(canvas, c, t.hour, r * 0.44, 3.4, Colors.white, tailFactor: 0.12);
+    _drawHand(canvas, c, t.hour, r * 0.44, 3.4, ink, tailFactor: 0.12);
     _drawHand(canvas, c, t.minute, r * 0.66, 2.4,
-        Colors.white.withValues(alpha: 0.9),
+        ink.withValues(alpha: 0.9),
         tailFactor: 0.12);
     _drawHand(canvas, c, t.second, r * 0.74, 1.2, _kTeal, tailFactor: 0.22);
-    canvas.drawCircle(c, 3.4, Paint()..color = Colors.white);
+    canvas.drawCircle(c, 3.4, Paint()..color = ink);
   }
 }
 
@@ -402,7 +417,7 @@ class _MinimalDarkPainter extends _FacePainter {
 // ─────────────────────────────────────────────────────────────────────────
 
 class _NeonRingPainter extends _FacePainter {
-  const _NeonRingPainter(super.now);
+  const _NeonRingPainter(super.now, super.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -449,8 +464,8 @@ class _NeonRingPainter extends _FacePainter {
     _drawHand(canvas, c, t.hour, r * 0.44, 5, neon, glow: true);
     _drawHand(canvas, c, t.minute, r * 0.64, 3.4, const Color(0xFFFF4FD8),
         glow: true);
-    _drawHand(canvas, c, t.second, r * 0.74, 1.6, Colors.white, glow: true);
-    canvas.drawCircle(c, 5, Paint()..color = Colors.white);
+    _drawHand(canvas, c, t.second, r * 0.74, 1.6, ink, glow: true);
+    canvas.drawCircle(c, 5, Paint()..color = ink);
   }
 }
 
@@ -460,7 +475,7 @@ class _NeonRingPainter extends _FacePainter {
 
 class _ArabicNumeralsPainter extends _FacePainter {
   final bool arabicDigits;
-  const _ArabicNumeralsPainter(super.now, {required this.arabicDigits});
+  const _ArabicNumeralsPainter(super.now, super.ink, {required this.arabicDigits});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -513,7 +528,7 @@ class _ArabicNumeralsPainter extends _FacePainter {
 // ─────────────────────────────────────────────────────────────────────────
 
 class _IslamicStarPainter extends _FacePainter {
-  const _IslamicStarPainter(super.now);
+  const _IslamicStarPainter(super.now, super.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -580,7 +595,7 @@ class _IslamicStarPainter extends _FacePainter {
 // ─────────────────────────────────────────────────────────────────────────
 
 class _SkeletonPainter extends _FacePainter {
-  const _SkeletonPainter(super.now);
+  const _SkeletonPainter(super.now, super.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -628,7 +643,7 @@ class _SkeletonPainter extends _FacePainter {
       c,
       '$hh:${now.minute.toString().padLeft(2, '0')}',
       r * 0.32,
-      Colors.white,
+      ink,
     );
   }
 }
@@ -638,7 +653,7 @@ class _SkeletonPainter extends _FacePainter {
 // ─────────────────────────────────────────────────────────────────────────
 
 class _SunMoonPainter extends _FacePainter {
-  const _SunMoonPainter(super.now);
+  const _SunMoonPainter(super.now, super.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -680,7 +695,7 @@ class _SunMoonPainter extends _FacePainter {
       marker,
       9,
       Paint()
-        ..color = (isDay ? const Color(0xFFFFD37A) : Colors.white)
+        ..color = (isDay ? const Color(0xFFFFD37A) : ink)
             .withValues(alpha: 0.35)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
     );
@@ -691,7 +706,7 @@ class _SunMoonPainter extends _FacePainter {
       // its own layer, or it would punch a hole straight through the card
       // behind the clock instead of just through the marker.
       canvas.saveLayer(Rect.fromCircle(center: marker, radius: 12), Paint());
-      canvas.drawCircle(marker, 5.5, Paint()..color = Colors.white);
+      canvas.drawCircle(marker, 5.5, Paint()..color = ink);
       canvas.drawCircle(
         marker + const Offset(3, -2),
         4.6,
@@ -700,10 +715,10 @@ class _SunMoonPainter extends _FacePainter {
       canvas.restore();
     }
 
-    _drawHand(canvas, c, t.hour, r * 0.42, 4.5, Colors.white);
+    _drawHand(canvas, c, t.hour, r * 0.42, 4.5, ink);
     _drawHand(canvas, c, t.minute, r * 0.60, 3, Colors.white70);
     _drawHand(canvas, c, t.second, r * 0.68, 1.4, const Color(0xFFFFD37A));
-    canvas.drawCircle(c, 4, Paint()..color = Colors.white);
+    canvas.drawCircle(c, 4, Paint()..color = ink);
   }
 }
 
@@ -712,7 +727,7 @@ class _SunMoonPainter extends _FacePainter {
 // ─────────────────────────────────────────────────────────────────────────
 
 class _HaloPainter extends _FacePainter {
-  const _HaloPainter(super.now);
+  const _HaloPainter(super.now, super.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -753,13 +768,13 @@ class _HaloPainter extends _FacePainter {
         _at(c, i / 60, r - 22),
         on ? 1.6 : 1.0,
         Paint()
-          ..color = (on ? _kGold : Colors.white).withValues(
+          ..color = (on ? _kGold : ink).withValues(
             alpha: on ? 0.9 : 0.16,
           ),
       );
     }
 
-    _drawHand(canvas, c, t.hour, r * 0.40, 4.5, Colors.white, glow: true);
+    _drawHand(canvas, c, t.hour, r * 0.40, 4.5, ink, glow: true);
     _drawHand(canvas, c, t.minute, r * 0.58, 3, _kTeal, glow: true);
     canvas.drawCircle(c, 4, Paint()..color = _kGold);
   }
@@ -770,7 +785,7 @@ class _HaloPainter extends _FacePainter {
 // ─────────────────────────────────────────────────────────────────────────
 
 class _MosaicPainter extends _FacePainter {
-  const _MosaicPainter(super.now);
+  const _MosaicPainter(super.now, super.ink);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -798,16 +813,16 @@ class _MosaicPainter extends _FacePainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
-        ..color = Colors.white.withValues(alpha: 0.12),
+        ..color = ink.withValues(alpha: 0.12),
     );
 
-    _drawHand(canvas, c, t.hour, r * 0.38, 6, Colors.white,
+    _drawHand(canvas, c, t.hour, r * 0.38, 6, ink,
         cap: StrokeCap.square);
     _drawHand(canvas, c, t.minute, r * 0.54, 4,
-        Colors.white.withValues(alpha: 0.85),
+        ink.withValues(alpha: 0.85),
         cap: StrokeCap.square);
     _drawHand(canvas, c, t.second, r * 0.62, 1.6, _kGold);
-    canvas.drawCircle(c, 5.5, Paint()..color = Colors.white);
+    canvas.drawCircle(c, 5.5, Paint()..color = ink);
     canvas.drawCircle(c, 2.6, Paint()..color = _kTeal);
   }
 }

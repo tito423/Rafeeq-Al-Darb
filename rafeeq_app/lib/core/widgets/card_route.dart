@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/hero_surface.dart';
 import 'islamic_pattern.dart';
 
 /// A card that opens as its own screen.
@@ -239,8 +240,11 @@ class CardScreen extends StatelessWidget {
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
-                      Color.lerp(AppColors.nightSurface, accent, 0.22)!,
-                      AppColors.night,
+                      // Follows the theme, like the cards that open it.
+                      Color.lerp(
+                          HeroSurface.of(context).gradient.first, accent,
+                          0.22)!,
+                      HeroSurface.of(context).gradient.last,
                     ],
                   ),
                   border: Border.all(color: accent.withValues(alpha: 0.42)),
@@ -342,7 +346,8 @@ class _CardHeader extends StatelessWidget {
                 color: accent.withValues(alpha: 0.18),
                 border: Border.all(color: accent.withValues(alpha: 0.45)),
               ),
-              child: Icon(icon, size: 20, color: accent),
+              child: Icon(icon,
+                  size: 20, color: HeroSurface.of(context).accent(accent)),
             ),
             const SizedBox(width: 10),
           ],
@@ -353,8 +358,8 @@ class _CardHeader extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    color: AppColors.textHigh,
+                  style: TextStyle(
+                    color: HeroSurface.of(context).onSurface,
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
                   ),
@@ -364,8 +369,8 @@ class _CardHeader extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
                       subtitle!,
-                      style: const TextStyle(
-                        color: AppColors.textLow,
+                      style: TextStyle(
+                        color: HeroSurface.of(context).onSurfaceFaint,
                         fontSize: 12,
                       ),
                     ),
@@ -376,8 +381,8 @@ class _CardHeader extends StatelessWidget {
           IconButton(
             tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
             onPressed: () => Navigator.of(context).maybePop(),
-            icon: const Icon(Icons.close_rounded,
-                color: AppColors.textMedium, size: 22),
+            icon: Icon(Icons.close_rounded,
+                color: HeroSurface.of(context).onSurfaceMuted, size: 22),
           ),
         ],
       ),

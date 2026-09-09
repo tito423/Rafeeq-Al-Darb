@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/hero_surface.dart';
 import 'islamic_pattern.dart';
 
 /// A tappable card with an illuminated Islamic ground.
@@ -41,6 +42,12 @@ class IslamicActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The ground was `AppColors.nightSurface`/`nightElevated` and the text
+    // `AppColors.textHigh`/`textMedium` — all four fixed dark, so these four
+    // cards stayed a night panel on the day theme. The owner asked for them
+    // to follow the theme; [HeroSurface] keeps the dark and RGB looks and
+    // supplies the light one.
+    final hero = HeroSurface.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: ClipRRect(
@@ -54,8 +61,8 @@ class IslamicActionCard extends StatelessWidget {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
                 colors: [
-                  Color.lerp(AppColors.nightSurface, accent, 0.20)!,
-                  AppColors.nightElevated,
+                  Color.lerp(hero.gradient.first, accent, 0.20)!,
+                  hero.gradient.last,
                 ],
               ),
               border: Border.all(color: accent.withValues(alpha: 0.34)),
@@ -97,7 +104,8 @@ class IslamicActionCard extends StatelessWidget {
                               color: accent.withValues(alpha: 0.45),
                             ),
                           ),
-                          child: Icon(icon, color: accent, size: 24),
+                          child: Icon(icon,
+                              color: hero.accent(accent), size: 24),
                         ),
                         const SizedBox(width: 13),
                         Expanded(
@@ -107,8 +115,8 @@ class IslamicActionCard extends StatelessWidget {
                             children: [
                               Text(
                                 title,
-                                style: const TextStyle(
-                                  color: AppColors.textHigh,
+                                style: TextStyle(
+                                  color: hero.onSurface,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w800,
                                 ),
@@ -116,8 +124,8 @@ class IslamicActionCard extends StatelessWidget {
                               const SizedBox(height: 3),
                               Text(
                                 subtitle,
-                                style: const TextStyle(
-                                  color: AppColors.textMedium,
+                                style: TextStyle(
+                                  color: hero.onSurfaceMuted,
                                   fontSize: 12,
                                   height: 1.45,
                                 ),

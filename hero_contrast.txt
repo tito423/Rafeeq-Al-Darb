@@ -1,0 +1,22 @@
+=== dark ===
+  OK  onSurface        11.71 : 1  (worst on stop1+scrim)
+  OK  onSurfaceFaint    4.54 : 1  (worst on stop1+scrim)
+  OK  onSurfaceMuted    6.65 : 1  (worst on stop1+scrim)
+  OK  accent:asr        4.63 : 1  (#5CB38F, worst on stop1+scrim)
+  OK  accent:dhuhr      4.63 : 1  (#74AAC5, worst on stop1+scrim)
+  OK  accent:fajr       4.63 : 1  (#AE91FF, worst on stop1+scrim)
+  OK  accent:isha       5.48 : 1  (#15C7B0, worst on stop1+scrim)
+  OK  accent:maghrib    5.57 : 1  (#D4AF37, worst on stop1+scrim)
+  OK  accent:sunrise    4.66 : 1  (#B49F98, worst on stop1+scrim)
+
+=== light ===
+  OK  onSurface        12.07 : 1  (worst on stop2+scrim)
+  OK  onSurfaceFaint    4.91 : 1  (worst on stop2+scrim)
+  OK  onSurfaceMuted    6.80 : 1  (worst on stop2+scrim)
+  OK  accent:asr        4.66 : 1  (#206C4D, worst on stop2+scrim)
+  OK  accent:dhuhr      4.66 : 1  (#256684, worst on stop2+scrim)
+  OK  accent:fajr       4.67 : 1  (#6742D4, worst on stop2+scrim)
+  OK  accent:isha       4.64 : 1  (#0D6C5F, worst on stop2+scrim)
+  OK  accent:maghrib    4.62 : 1  (#6D6023, worst on stop2+scrim)
+  OK  accent:sunrise    4.66 : 1  (#715B51, worst on stop2+scrim)
+

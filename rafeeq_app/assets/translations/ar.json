@@ -83,7 +83,8 @@
     "face_mosaic": "فسيفساء",
     "clock_gallery_subtitle": "كل شكل يعرض الوقت الحقيقي الآن",
     "hours_short": "س",
-    "minutes_short": "د"
+    "minutes_short": "د",
+    "seconds_short": "ث"
   },
   "quran": {
     "surah_list": "السور",

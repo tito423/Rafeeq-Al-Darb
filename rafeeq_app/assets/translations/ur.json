@@ -83,7 +83,8 @@
     "face_mosaic": "موزیک",
     "clock_gallery_subtitle": "ہر ڈائل اصل وقت زندہ دکھاتا ہے",
     "hours_short": "گھ",
-    "minutes_short": "م"
+    "minutes_short": "م",
+    "seconds_short": "س"
   },
   "quran": {
     "surah_list": "سورتیں",

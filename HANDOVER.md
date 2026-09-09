@@ -486,9 +486,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 21:59 — IN PROGRESS — resume here**
+**2026-09-09 22:38 — IN PROGRESS — resume here**
 
-measured the HadeethEnc translation gap the brief asked about: en/es/fr/pt/ru are 0 percent untranslated, and Urdu's 26 percent is Arabic-script hadith terminology an Urdu reader reads anyway
+the hero surfaces follow the theme, and the next prayer is a live counter: one measured palette for the clock card, the carousel, the card screens and the four More cards, plus four prayer accents that were never legible even on the dark theme
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

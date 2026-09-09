@@ -13,10 +13,12 @@ import '../../data/clock_settings_provider.dart';
 import '../widgets/analog_clock_faces.dart';
 import '../widgets/clock_gallery_sheet.dart';
 import '../widgets/digital_clock_faces.dart';
+import '../widgets/prayer_countdown.dart';
 import '../widgets/prayer_slides.dart';
 
 import '../../../../core/services/prayer_times_service.dart';
 import '../../../../core/models/prayer_times.dart';
+import '../../../../core/theme/hero_surface.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
@@ -411,6 +413,13 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
       widget.times.countryName,
     ].where((s) => s.isNotEmpty).join('، ');
 
+    // P3‑4 pinned this card to one fixed dark gradient in every theme. The
+    // owner has since asked for it to follow the theme instead, so the
+    // gradient, the border, the glow and every text tone now come from
+    // [HeroSurface] — which keeps the dark and RGB themes exactly as they
+    // were and adds a light member of the same family.
+    final hero = HeroSurface.of(context);
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeInOut,
@@ -418,23 +427,18 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        // P3‑4: "RGB في جميع الثيمات" — same fixed dark/teal/violet gradient
-        // as the Home header card, so this reads as one visual family
-        // regardless of the app's selected theme.
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)],
+          colors: hero.gradient,
         ),
-        border: Border.all(
-          color: const Color(0xFF15C7B0).withValues(alpha: 0.35),
-        ),
-        // A teal cast under the card so it lifts off the page instead of
-        // sitting flat on it — the clock is the first thing on the screen
-        // and should read as the hero it is.
+        border: Border.all(color: hero.border),
+        // A cast under the card so it lifts off the page instead of sitting
+        // flat on it — the clock is the first thing on the screen and should
+        // read as the hero it is.
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF15C7B0).withValues(alpha: 0.16),
+            color: hero.glow,
             blurRadius: 26,
             spreadRadius: -6,
             offset: const Offset(0, 10),
@@ -475,12 +479,17 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
                           arabicDigits: arabic,
                           meridiem: _meridiem(clock),
                           height: 78,
+                          // The face is drawn ON this card, so it takes the
+                          // card own ink — white numerals were invisible on
+                          // the light theme.
+                          ink: hero.onSurface,
                         )
                       : AnalogClockFaceView(
                           face: clock.analogFace,
                           size: 176,
                           meridiem: _meridiem(clock),
                           arabicDigits: arabic,
+                          ink: hero.onSurface,
                         ),
                 ),
               ),
@@ -491,32 +500,36 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
             const SizedBox(height: 12),
             AnimatedContainer(
               duration: const Duration(milliseconds: 400),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 7),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(14),
+                color: hero.scrim,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: hero.hairline),
               ),
               child: Column(
                 children: [
                   Text.rich(
                     TextSpan(
                       text: '${'home.next_prayer'.tr()}: ',
-                      style: const TextStyle(color: Colors.white70),
+                      style: TextStyle(color: hero.onSurfaceMuted),
                       children: [
                         TextSpan(
                           text: prayerSlideLabelKeys[next.$1]!.tr(),
                           style: TextStyle(
-                            color: prayerSlideColors[next.$1],
+                            // Toned for this ground: the raw violet measured
+                            // 2.43 : 1 on the dark card (CLAUDE.md #15).
+                            color: hero.accent(prayerSlideColors[next.$1]!),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _remaining(next),
-                    style: const TextStyle(color: Colors.white70, fontSize: 13),
+                  const SizedBox(height: 4),
+                  PrayerCountdown(
+                    target: next.$2,
+                    accent: prayerSlideColors[next.$1]!,
+                    arabicDigits: arabic,
                   ),
                 ],
               ),
@@ -527,11 +540,12 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.location_on, size: 14, color: Colors.white54),
+                Icon(Icons.location_on,
+                    size: 14, color: hero.onSurfaceFaint),
                 const SizedBox(width: 4),
                 Text(
                   location,
-                  style: const TextStyle(color: Colors.white54, fontSize: 12),
+                  style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
                 ),
               ],
             ),
@@ -543,15 +557,4 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
     );
   }
 
-  String _remaining((String, DateTime) next) {
-    final diff = next.$2.difference(DateTime.now());
-    if (diff.isNegative) return '';
-    final h = diff.inHours;
-    final m = diff.inMinutes % 60;
-    final label = 'home.remaining'.tr();
-    final hu = 'home.hours_short'.tr();
-    final mu = 'home.minutes_short'.tr();
-    if (h > 0) return '$label: $h$hu $m$mu';
-    return '$label: $m$mu';
-  }
 }
