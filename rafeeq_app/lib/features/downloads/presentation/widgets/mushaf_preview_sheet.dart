@@ -215,8 +215,8 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${e.pages} ${'quran.pages_count'.tr()} · '
-                      '${e.ayahs} ${'quran.ayahs_count'.tr()}',
+                      '${'quran.pages_count'.plural(e.pages)} · '
+                      '${'quran.ayahs_count'.plural(e.ayahs)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.outline,
                       ),

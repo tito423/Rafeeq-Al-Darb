@@ -262,7 +262,7 @@ class _StorageHero extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${summary.totalItems} ${'downloads.items'.tr()}',
+            'downloads.items'.plural(summary.totalItems),
             style: const TextStyle(color: AppColors.textLow, fontSize: 12),
           ),
           if (total > 0) ...[
@@ -872,7 +872,7 @@ class _SurahAudioTileState extends State<_SurahAudioTile> {
                                   ? 'downloads.offline_ready'.tr()
                                   : failed
                                   ? 'downloads.incomplete_tap_retry'.tr()
-                                  : '${widget.ayahCount} ${'quran.ayahs'.tr()}',
+                                  : 'quran.ayahs'.plural(widget.ayahCount),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: complete
                                     ? AppColors.success

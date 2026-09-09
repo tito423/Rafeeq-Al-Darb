@@ -138,7 +138,7 @@ class _KeywordTab extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${results!.length} ${'search.results_count'.tr()}',
+                    'search.results_count'.plural(results!.length),
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColors.gold,

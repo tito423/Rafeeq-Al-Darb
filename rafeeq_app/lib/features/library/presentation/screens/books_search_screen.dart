@@ -124,7 +124,7 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
               child: Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
-                  '${_hits.length} ${'library.text_search_results'.tr()}',
+                  'library.text_search_results'.plural(_hits.length),
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),

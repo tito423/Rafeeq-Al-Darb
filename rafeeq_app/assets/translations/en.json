@@ -91,7 +91,14 @@
     "page": "Page",
     "surah": "Surah",
     "ayah": "Ayah",
-    "ayahs": "ayahs",
+    "ayahs": {
+      "zero": "{} ayahs",
+      "one": "{} ayah",
+      "two": "{} ayahs",
+      "few": "{} ayahs",
+      "many": "{} ayahs",
+      "other": "{} ayahs"
+    },
     "makkah": "Makkah",
     "madinah": "Madinah",
     "search_hint": "Search the Quran…",
@@ -124,8 +131,22 @@
     "riwayah": "Riwayah",
     "sciences_hafs_only": "Verse numbering in this riwayah differs from Hafs, so tafsir and translation are unavailable in some surahs",
     "sciences_unavailable_here": "Tafsir and translation are unavailable for this surah in this riwayah",
-    "pages_count": "pages",
-    "ayahs_count": "ayahs",
+    "pages_count": {
+      "zero": "{} pages",
+      "one": "{} page",
+      "two": "{} pages",
+      "few": "{} pages",
+      "many": "{} pages",
+      "other": "{} pages"
+    },
+    "ayahs_count": {
+      "zero": "{} ayahs",
+      "one": "{} ayah",
+      "two": "{} ayahs",
+      "few": "{} ayahs",
+      "many": "{} ayahs",
+      "other": "{} ayahs"
+    },
     "repeat": "Repeat",
     "repeat_dialog_title": "Repeat for memorization",
     "repeat_count": "Number of repetitions",
@@ -188,7 +209,14 @@
     "previous": "Previous",
     "next": "Next",
     "tab_books": "Available books",
-    "book_count": "books",
+    "book_count": {
+      "zero": "{} books",
+      "one": "{} book",
+      "two": "{} books",
+      "few": "{} books",
+      "many": "{} books",
+      "other": "{} books"
+    },
     "sub_all": "All books",
     "sub_authors": "Authors",
     "sub_categories": "Categories",
@@ -211,7 +239,14 @@
     "text_index_filter": "Filter the index",
     "text_search": "Search the book",
     "text_search_hint": "Type a word or phrase",
-    "text_search_results": "results",
+    "text_search_results": {
+      "zero": "{} results",
+      "one": "{} result",
+      "two": "{} results",
+      "few": "{} results",
+      "many": "{} results",
+      "other": "{} results"
+    },
     "text_page": "Page",
     "text_goto": "Go",
     "text_goto_page": "Go to printed page",
@@ -242,7 +277,10 @@
     "section_texts_desc": "Text books with a chapter index — read page by page",
     "search_all_books": "Search all books",
     "search_all_hint": "Type a word or phrase…",
-    "search_all_empty": "Search every downloaded book at once"
+    "search_all_empty": "Search every downloaded book at once",
+    "died_ah": "Died {} AH",
+    "died_circa_ah": "Died c. {} AH",
+    "death_8th_century": "A scholar of the eighth Hijri century"
   },
   "azkar": {
     "title": "Adhkar",
@@ -478,7 +516,14 @@
     "already_downloaded": "Already downloaded",
     "page_preview_note": "This is a sample of pages 1 & 2",
     "by_category": "By category",
-    "items": "items",
+    "items": {
+      "zero": "{} items",
+      "one": "{} item",
+      "two": "{} items",
+      "few": "{} items",
+      "many": "{} items",
+      "other": "{} items"
+    },
     "find_surah": "Find a surah…",
     "source_verified": "Verified fast source — resumes after an interruption",
     "source_cdn": "Served from the CDN — downloads may be slower",
@@ -515,7 +560,14 @@
     "tab_topics": "Topics",
     "tab_keyword": "Keyword search",
     "search_hint": "Search for an ayah or word...",
-    "results_count": "results",
+    "results_count": {
+      "zero": "{} results",
+      "one": "{} result",
+      "two": "{} results",
+      "few": "{} results",
+      "many": "{} results",
+      "other": "{} results"
+    },
     "no_results": "No results",
     "cat_aqeedah": "Creed (Aqeedah)",
     "cat_akhlaq": "Character (Akhlaq)",

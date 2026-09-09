@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../../core/config/app_config.dart';
 import 'book_category.dart';
 
@@ -69,10 +71,21 @@ class LibraryBook {
   final String authorAr;
   final String authorEn;
 
-  /// e.g. "676 هـ" — shown so a reader can see at a glance this is a
-  /// centuries-old, public-domain classical text, not a modern copyrighted
-  /// work.
-  final String authorDeathAr;
+  /// The compiler's death year in the Hijri calendar — shown so a reader can
+  /// see at a glance that this is a centuries-old, public-domain classical
+  /// text and not a modern copyrighted work.
+  ///
+  /// This used to be a whole Arabic sentence per book («توفي 852 هـ»), which
+  /// on a French UI put Arabic prose after a Latin author name. It is a number
+  /// now, and [deathLabel] writes the sentence in the reader's language.
+  final int? deathYearAh;
+
+  /// True where the sources place the death only approximately.
+  final bool deathApprox;
+
+  /// For the one author whose dates are not known to a year: an i18n key
+  /// instead of a year.
+  final String deathNoteKey;
   final String descriptionAr;
   final BookCategory category;
 
@@ -103,7 +116,9 @@ class LibraryBook {
     required this.titleEn,
     required this.authorAr,
     required this.authorEn,
-    required this.authorDeathAr,
+    this.deathYearAh,
+    this.deathApprox = false,
+    this.deathNoteKey = '',
     required this.descriptionAr,
     required this.category,
     this.downloadUrl,
@@ -115,6 +130,15 @@ class LibraryBook {
          downloadUrl != null || textEdition != null,
          'a book needs at least one edition',
        );
+
+  /// «توفي 852 هـ» / "Died 852 AH" / «Умер в 852 г. х.» — empty when the
+  /// catalogue records neither a year nor a note.
+  String deathLabel() {
+    if (deathNoteKey.isNotEmpty) return deathNoteKey.tr();
+    if (deathYearAh == null) return '';
+    return (deathApprox ? 'library.died_circa_ah' : 'library.died_ah')
+        .tr(args: ['$deathYearAh']);
+  }
 
   /// [DownloadManager] id for this book's text edition (distinct from the
   /// image PDF, whose id is just [id]).
@@ -147,7 +171,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Bulugh al-Maram',
     authorAr: 'الحافظ أحمد بن علي بن حجر العسقلاني',
     authorEn: 'Al-Hafiz Ibn Hajar al-Asqalani',
-    authorDeathAr: 'توفي 852 هـ',
+    deathYearAh: 852,
     descriptionAr:
         'جمع فيه ابن حجر أحاديث الأحكام التي اعتمد عليها الفقهاء، مرتبة على '
         'أبواب الفقه، ويذكر عقب كل حديث من أخرجه ودرجته. من أشهر متون '
@@ -168,7 +192,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al-Adab al-Mufrad',
     authorAr: 'الإمام محمد بن إسماعيل البخاري',
     authorEn: 'Imam Muhammad ibn Ismail al-Bukhari',
-    authorDeathAr: 'توفي 256 هـ',
+    deathYearAh: 256,
     descriptionAr:
         'كتاب البخاري في الأخلاق والآداب وبرّ الوالدين وصلة الرحم وحسن '
         'المعاشرة. أفرده عن صحيحه، وشرطه فيه أوسع من شرط الصحيح، فليس كل ما '
@@ -189,7 +213,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sahih al-Adab al-Mufrad',
     authorAr: 'الإمام البخاري — بأحكام الألباني',
     authorEn: 'Al-Bukhari, graded by al-Albani',
-    authorDeathAr: 'توفي 256 هـ',
+    deathYearAh: 256,
     descriptionAr:
         'ما صحّ من أحاديث الأدب المفرد بأحكام الشيخ محمد ناصر الدين '
         'الألباني، مفردًا عن ضعيفه.',
@@ -210,7 +234,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al-Shamail al-Muhammadiyyah',
     authorAr: 'الإمام أبو عيسى محمد بن عيسى الترمذي',
     authorEn: 'Imam Abu Isa Muhammad ibn Isa al-Tirmidhi',
-    authorDeathAr: 'توفي 279 هـ',
+    deathYearAh: 279,
     descriptionAr:
         'جمع فيه الترمذي ما ورد في صفة النبي ﷺ الخَلقية والخُلقية: خلقه '
         'ولباسه وطعامه وعبادته وأخلاقه، مرتبًا على أبواب.',
@@ -231,7 +255,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Mishkat al-Masabih',
     authorAr: 'الخطيب وليّ الدين محمد بن عبد الله التبريزي',
     authorEn: 'Wali al-Din al-Khatib al-Tibrizi',
-    authorDeathAr: 'من علماء القرن الثامن الهجري',
+    deathNoteKey: 'library.death_8th_century',
     descriptionAr:
         'زيادة وتهذيب لكتاب "مصابيح السنة" للبغوي، رتّبه التبريزي على الأبواب '
         'وزاد عليه فصلًا ثالثًا، وعزا كل حديث إلى مُخرِّجه. من أجمع كتب '
@@ -252,7 +276,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al-Targhib wal-Tarhib',
     authorAr: 'الحافظ زكي الدين عبد العظيم المنذري',
     authorEn: 'Al-Hafiz Zaki al-Din al-Mundhiri',
-    authorDeathAr: 'توفي 656 هـ',
+    deathYearAh: 656,
     descriptionAr:
         'جمع فيه المنذري أحاديث الترغيب في الطاعات والترهيب من المعاصي، '
         'مرتبة على الأبواب. يشير المنذري نفسه إلى درجة كثير من أحاديثه، وفيه '
@@ -273,7 +297,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Umdat al-Ahkam',
     authorAr: 'الحافظ عبد الغني بن عبد الواحد المقدسي',
     authorEn: 'Al-Hafiz Abd al-Ghani al-Maqdisi',
-    authorDeathAr: 'توفي 600 هـ',
+    deathYearAh: 600,
     descriptionAr:
         'متن مختصر في أحاديث الأحكام، اقتصر فيه المقدسي على ما اتفق عليه '
         'البخاري ومسلم، فهو من أعلى كتب الأحكام ثبوتًا. من المتون التي '
@@ -294,7 +318,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Riyad as-Salihin',
     authorAr: 'الإمام أبو زكريا يحيى بن شرف النووي',
     authorEn: 'Imam Yahya ibn Sharaf an-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'أشهر مختصرات الحديث في الأخلاق والآداب والرقائق، جمعه الإمام النووي '
         'من أحاديث الصحيحين وغيرهما من كتب السنة.',
@@ -313,7 +337,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Mukhtasar Minhaj al-Qasidin',
     authorAr: 'الإمام موفق الدين ابن قدامة المقدسي',
     authorEn: 'Imam Ibn Qudamah al-Maqdisi',
-    authorDeathAr: 'توفي 689 هـ',
+    deathYearAh: 689,
     descriptionAr:
         'اختصار ابن قدامة المقدسي لكتاب "منهاج القاصدين" لابن الجوزي في '
         'التزكية والأخلاق والزهد، من أهم كتب السلوك عند أهل السنة.',
@@ -334,7 +358,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al-Fawaid',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'من أنفس كتب ابن القيم، فوائد ومواعظ وحكم متفرقة في العقيدة والسلوك '
         'والتربية، غير مرتبة على أبواب بل على خواطر الإيمان.',
@@ -353,7 +377,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sayd al-Khatir',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'خواطر ابن الجوزي وتأملاته في النفس والدين والدنيا، من أرقّ ما كُتب '
         'في الوعظ والتربية الروحية عند علماء أهل السنة.',
@@ -372,7 +396,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: "Al-'Ubudiyyah",
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'رسالة ابن تيمية في تحقيق معنى العبودية لله وحده، وأن كمال العبد في '
         'كمال عبوديته لربه؛ من أهم ما كُتب في هذا الباب.',
@@ -404,7 +428,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: "Al-'Aqidah al-Wasitiyyah",
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'رسالة ابن تيمية الشهيرة في اعتقاد أهل السنة والجماعة، كتبها إجابة '
         'لطلب قاضٍ من واسط، ومن أكثر متون العقيدة شرحاً وتداولاً عند أهل السنة.',
@@ -425,7 +449,8 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Nawadir al-Usul',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
     authorEn: 'Al-Hakim al-Tirmidhi',
-    authorDeathAr: 'توفي نحو 320 هـ',
+    deathYearAh: 320,
+    deathApprox: true,
     descriptionAr:
         'من أشهر مصنفات الحكيم الترمذي في شرح أصول من الحديث النبوي '
         'بأسلوبٍ صوفيٍّ تربويٍّ متميز. تنبيه أمانةً: يضم الكتاب — كحال '
@@ -446,7 +471,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al-Samt wa Adab al-Lisan',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف ابن أبي الدنيا في فضل الصمت وحفظ اللسان وآفات الكلام، جمع '
         'فيه أحاديث وآثاراً في آداب الكلام والصمت عند السلف.',
@@ -474,7 +499,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qasr al-Amal',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف ابن أبي الدنيا في قصر الأمل وذم طول الأمل والتسويف، جمع فيه '
         'أحاديث وآثاراً وأخباراً عن السلف في الاستعداد للموت والمبادرة '
@@ -495,7 +520,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al-Hasanah wa al-Sayyi\'ah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'رسالة ابن تيمية في بيان أسباب الحسنات والسيئات، وأن الجهل أصل '
         'المعاصي وأن العلم النافع يوجب الخشية الحاملة على فعل الطاعات وترك '
@@ -516,7 +541,8 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Adab al-Nafs',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
     authorEn: 'Al-Hakim al-Tirmidhi',
-    authorDeathAr: 'توفي نحو 320 هـ',
+    deathYearAh: 320,
+    deathApprox: true,
     descriptionAr:
         'مصنَّف الحكيم الترمذي في رياضة النفس وتزكيتها، يتناول أنواع النفس '
         'الواردة في القرآن (الأمّارة والمطمئنة واللوّامة) وصفة القلب واليقين '
@@ -550,7 +576,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Risalah Al Madaniyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 15 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -568,7 +594,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Masalah Fima Idha Kana Fil Abd Mahabbah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 8 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -585,7 +611,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Islah Al Mal',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 497 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -602,7 +628,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Istina Al Maruf',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 182 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -619,7 +645,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Amr Bil Maruf Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 122 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -637,7 +663,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Asma Muallafat Ibn Taymiyyah',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 23 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -655,7 +681,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Ighathat Al Lahfan Fi Hukm Talaq Al Ghadban',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 111 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -673,7 +699,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Amthal Fil Quran Ibn Al Qayyim',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 58 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -691,7 +717,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Ahwal',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 271 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -708,7 +734,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Awliya Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 158 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -726,7 +752,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Ikhlas Wal Niyyah',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 52 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -743,7 +769,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tibyan Fi Aqsam Al Quran',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 431 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -761,7 +787,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Ikhwan',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 242 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -778,7 +804,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Jami Fi Amthal Al Quran',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 243 صفحة، ضمن باب التفسير.',
     category: BookCategory.tafsir,
@@ -796,7 +822,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Daa Wal Dawa',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 237 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -813,7 +839,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Risalah Al Tabukiyyah',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 109 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -831,7 +857,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Ishraf Fi Manazil Al Ashraf',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 518 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -849,7 +875,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Itibar Wa Aqab Al Surur',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 69 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -867,7 +893,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tawadu Wal Khumul',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 259 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -885,7 +911,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Ruh Ibn Al Qayyim',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 263 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -902,7 +928,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tawbah Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 345 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -920,7 +946,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tawakkul Ala Allah',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 62 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -937,7 +963,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tibb Al Nabawi',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 318 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -954,7 +980,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Turuq Al Hukmiyyah',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 274 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -971,7 +997,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Ju',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 550 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -988,7 +1014,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Hilm',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 148 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1005,7 +1031,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Rida An Allah Biqadaihi',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 150 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1023,7 +1049,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Furusiyyah Al Muhammadiyyah',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 530 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1041,7 +1067,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Riqqah Wal Buka',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 446 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1058,7 +1084,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Kalam Ala Masalat Al Sama',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 508 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -1076,7 +1102,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Zuhd Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 563 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1094,7 +1120,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Manar Al Munif',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 135 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1111,7 +1137,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Wabil Al Sayyib',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 148 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1128,7 +1154,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Shukr',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 205 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1145,7 +1171,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Sabr Wal Thawab Alayh',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 200 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1163,7 +1189,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tuhfat Al Mawdud Bi Ahkam Al Mawlud',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 309 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
@@ -1181,7 +1207,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Uzlah Wal Infirad',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 225 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1198,7 +1224,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Aql Wa Fadluh',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 172 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -1215,7 +1241,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Jala Al Afham',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 451 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1232,7 +1258,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Uqubat',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 426 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1249,7 +1275,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Umr Wal Shayb',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 86 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1266,7 +1292,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Faraj Bad Al Shiddah',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 115 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1284,7 +1310,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Hadi Al Arwah Ila Bilad Al Afrah',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 415 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1302,7 +1328,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Risalat Ibn Al Qayyim Ila Ahad Ikhwanih',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 84 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1320,7 +1346,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Qubur Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 275 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1338,7 +1364,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Qanaah Wal Taaffuf',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 64 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1355,7 +1381,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Raf Al Yadayn Fil Salah',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 343 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
@@ -1373,7 +1399,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Mutamannin',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 166 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1390,7 +1416,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Muhtadirin',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 369 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1407,7 +1433,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Rawdat Al Muhibbin',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 482 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1424,7 +1450,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Marad Wal Kaffarat',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 261 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1441,7 +1467,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Shifa Al Alil',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 333 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -1458,7 +1484,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sifat Al Munafiqin',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 20 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1475,7 +1501,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sigh Al Hamd',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 48 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1492,7 +1518,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Matar Wal Rad Wal Barq',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 185 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1510,7 +1536,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Manamat',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 465 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1527,7 +1553,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tariq Al Hijratayn',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 443 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1544,7 +1570,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Uddat Al Sabirin',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 301 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1561,7 +1587,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Faidah Jalilah Fi Qawaid Al Asma Al Husna',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 59 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -1579,7 +1605,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Fatya Fi Sighat Al Hamd',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 61 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1597,7 +1623,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Nafaqah Ala Al Iyal',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 701 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1614,7 +1640,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Hamm Wal Huzn',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 252 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1631,7 +1657,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Nuniyyat Ibn Al Qayyim',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 423 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1648,7 +1674,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Hawatif',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 178 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1665,7 +1691,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Wajal Wal Tawthuq Bil Amal',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 52 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1683,7 +1709,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Wara',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 243 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1700,7 +1726,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Yaqin Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 42 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1718,7 +1744,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Hidayat Al Hayara',
     authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي 751 هـ',
+    deathYearAh: 751,
     descriptionAr:
         'مصنَّف لـ الإمام ابن قيّم الجوزية، 517 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1735,7 +1761,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Husn Al Zann Billah',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 152 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1752,7 +1778,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Hilm Muawiyah',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 40 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1769,7 +1795,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Dhamm Al Baghy',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 57 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
     textEdition: TextEdition(
@@ -1785,7 +1811,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Akhbar Al Humqa Wal Mughaffalin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 192 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
@@ -1803,7 +1829,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Akhbar Al Zuraf Wal Mutamajinin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 116 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
@@ -1821,7 +1847,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Akhbar Al Nisa Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 242 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1839,7 +1865,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Dhamm Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 503 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
     textEdition: TextEdition(
@@ -1855,7 +1881,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Amar Al Ayan',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 191 صفحة، ضمن باب السيرة والتاريخ.',
     category: BookCategory.seerah,
@@ -1872,7 +1898,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Ikhbar Ahl Al Rusukh Fil Fiqh',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 38 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -1890,7 +1916,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Dhamm Al Ghibah Wal Namimah',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 171 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
     textEdition: TextEdition(
@@ -1907,7 +1933,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Dhamm Al Muskir',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 99 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
     textEdition: TextEdition(
@@ -1923,7 +1949,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Dhamm Al Malahi',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 183 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
     textEdition: TextEdition(
@@ -1939,7 +1965,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Ilam Al Alim Bi Naskh Al Hadith',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 386 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -1957,7 +1983,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sifat Al Jannah Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 366 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -1975,7 +2001,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Adhkiya',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 241 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
@@ -1992,7 +2018,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sifat Al Nar',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 268 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2009,7 +2035,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Fadail Ramadan Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 66 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2027,7 +2053,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Birr Wal Silah Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 225 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2045,7 +2071,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qira Al Dayf',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 67 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2062,7 +2088,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qada Al Hawaij',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 118 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2079,7 +2105,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Kalam Al Layali Wal Ayyam',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 65 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2097,7 +2123,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tadhkirah Fil Waz',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 214 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
@@ -2114,7 +2140,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Mujabu Al Dawah',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 194 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2131,7 +2157,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Thabat Ind Al Mamat',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 157 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2148,7 +2174,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Hathth Ala Hifz Al Ilm',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 72 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2166,7 +2192,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Muhasabat Al Nafs',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 155 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2183,7 +2209,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Mudarat Al Nas',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 187 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2200,7 +2226,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Qussas Wal Mudhakkirin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 209 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
@@ -2218,7 +2244,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Maqtal Ali',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 143 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2235,7 +2261,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Mujtaba Min Al Mujtana',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 97 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2253,7 +2279,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Makaid Al Shaytan',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 129 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2270,7 +2296,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Makarim Al Akhlaq Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr: 'مصنَّف لـ الإمام ابن أبي الدنيا، 490 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
     textEdition: TextEdition(
@@ -2287,7 +2313,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Man Asha Bad Al Mawt',
     authorAr: 'الإمام ابن أبي الدنيا',
     authorEn: 'Ibn Abi al-Dunya',
-    authorDeathAr: 'توفي 281 هـ',
+    deathYearAh: 281,
     descriptionAr:
         'مصنَّف لـ الإمام ابن أبي الدنيا، 56 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2304,7 +2330,8 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Riyadat Al Nafs',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
     authorEn: 'Al-Hakim al-Tirmidhi',
-    authorDeathAr: 'توفي نحو 320 هـ',
+    deathYearAh: 320,
+    deathApprox: true,
     descriptionAr:
         'مصنَّف لـ الحكيم أبو عبد الله محمد بن علي الترمذي، 48 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2321,7 +2348,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Mudhish',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 530 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2338,7 +2365,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Musaffa Bi Akuff Ahl Al Rusukh',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 50 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -2356,7 +2383,8 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Manahi',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
     authorEn: 'Al-Hakim al-Tirmidhi',
-    authorDeathAr: 'توفي نحو 320 هـ',
+    deathYearAh: 320,
+    deathApprox: true,
     descriptionAr:
         'مصنَّف لـ الحكيم أبو عبد الله محمد بن علي الترمذي، 233 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2373,7 +2401,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Muqliq Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 122 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2390,7 +2418,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Bahr Al Dumu',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 150 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2407,7 +2435,8 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Amthal Min Al Kitab Wal Sunnah',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
     authorEn: 'Al-Hakim al-Tirmidhi',
-    authorDeathAr: 'توفي نحو 320 هـ',
+    deathYearAh: 320,
+    deathApprox: true,
     descriptionAr:
         'مصنَّف لـ الحكيم أبو عبد الله محمد بن علي الترمذي، 318 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2425,7 +2454,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Ahadith Al Qusas',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 44 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
     textEdition: TextEdition(
@@ -2441,7 +2470,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Amrad Al Qulub Wa Shifauha',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 78 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2459,7 +2488,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Arbaun Al Taymiyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 58 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2476,7 +2505,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Bustan Al Waizin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 301 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2493,7 +2522,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Amr Bil Maruf Ibn Taymiyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 58 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2511,7 +2540,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tarikh Bayt Al Maqdis',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 40 صفحة، ضمن باب السيرة والتاريخ.',
     category: BookCategory.seerah,
@@ -2528,7 +2557,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Ikhnaiyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 247 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -2545,7 +2574,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Iklil Fi Al Mutashabih Wal Tawil',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 48 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2563,7 +2592,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tadhkirat Al Arib Fi Tafsir Al Gharib',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 466 صفحة، ضمن باب التفسير.',
     category: BookCategory.tafsir,
@@ -2581,7 +2610,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tazim Al Fatya',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 63 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2598,7 +2627,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Iman Ibn Taymiyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 357 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -2615,7 +2644,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Taqwim Al Lisan',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 140 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
@@ -2632,7 +2661,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Intisar Li Ahl Al Athar',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 390 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2650,7 +2679,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tuhfah Al Iraqiyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 44 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2667,7 +2696,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Talbis Iblis',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 419 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -2685,7 +2714,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tadmuriyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 242 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -2702,7 +2731,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Hisbah Fil Islam',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 56 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2719,7 +2748,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Radd Ala Man Qala Bi Fana Al Jannah Wal Nar',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 80 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -2736,7 +2765,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Risalah Al Akmaliyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 71 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2754,7 +2783,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Risalah Al Arshiyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 38 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2772,7 +2801,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Zuhd Wal Wara Wal Ibadah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 186 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2790,7 +2819,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Siyasah Al Shariyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 130 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2808,7 +2837,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Furqan Bayn Awliya Al Rahman Wa Awliya Al Shaytan',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 196 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2825,7 +2854,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Talqih Fuhum Ahl Al Athar',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 521 صفحة، ضمن باب السيرة والتاريخ.',
     category: BookCategory.seerah,
@@ -2843,7 +2872,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Qasidah Al Taiyyah Fil Qadar',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 51 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -2860,7 +2889,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tanbih Al Naim Al Ghamr',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 41 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2878,7 +2907,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Kalim Al Tayyib',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 88 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2895,7 +2924,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tanwir Al Ghabash',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 233 صفحة، ضمن باب الأدب.',
     category: BookCategory.adab,
@@ -2912,7 +2941,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Hifz Al Umr',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 42 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2929,7 +2958,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Takhrij Al Kalim Al Tayyib',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 311 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2947,7 +2976,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Fadail Bayt Al Maqdis',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 119 صفحة، ضمن باب السيرة والتاريخ.',
     category: BookCategory.seerah,
@@ -2965,7 +2994,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Masail Al Maridiniyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 252 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -2983,7 +3012,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Nusayriyyah Tughat Suriya',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 27 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3000,7 +3029,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Wasitah Bayn Al Haqq Wal Khalq',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 34 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3018,7 +3047,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Funun Al Afnan Fi Uyun Ulum Al Quran',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 341 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3036,7 +3065,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tahqiq Al Iman',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 167 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -3053,7 +3082,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tahqiq Al Ihtijaj Bil Qadar',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 27 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3070,7 +3099,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tahqiq Al Qawl Fi Isa Kalimat Allah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 47 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3087,7 +3116,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Jawab Al Itiradat Al Misriyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 194 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3106,7 +3135,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Jawab Fi Al Half Bighayr Allah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 27 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3123,7 +3152,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Hijab Al Marah Wa Libasuha Fil Salah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 46 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
     textEdition: TextEdition(
@@ -3140,7 +3169,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Muthir Al Gharam Al Sakin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 465 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3158,7 +3187,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Huquq Al Al Al Bayt',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 65 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3174,7 +3203,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Ras Al Husayn',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 38 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3190,7 +3219,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Risalah Fi Usul Al Din',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 34 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3207,7 +3236,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Mashyakhat Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 150 صفحة، ضمن باب السيرة والتاريخ.',
     category: BookCategory.seerah,
@@ -3226,7 +3255,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Risalah Fi Fadl Al Khulafa Al Rashidin',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 30 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3243,7 +3272,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Mawaiz Ibn Al Jawzi Al Yaqutah',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 27 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3261,7 +3290,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Raf Al Malam An Al Aimmah Al Alam',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 87 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3279,7 +3308,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Ziyarat Al Qubur Wal Istinjad Bil Maqbur',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 78 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3296,7 +3325,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sujud Al Tilawah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 82 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
     textEdition: TextEdition(
@@ -3312,7 +3341,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Nawasikh Al Quran',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
     authorEn: 'Imam Ibn al-Jawzi',
-    authorDeathAr: 'توفي 597 هـ',
+    deathYearAh: 597,
     descriptionAr:
         'مصنَّف لـ الإمام أبو الفرج ابن الجوزي، 211 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -3329,7 +3358,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sunnat Al Jumuah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 64 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
     textEdition: TextEdition(
@@ -3345,7 +3374,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sharh Al Aqidah Al Isfahaniyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 224 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -3363,7 +3392,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sharh Hadith Al Nuzul',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 188 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3380,7 +3409,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Sharh Umdat Al Fiqh Sifat Al Salah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 190 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
     textEdition: TextEdition(
@@ -3397,7 +3426,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Fasl Fi Tazkiyat Al Nafs',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 60 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3415,7 +3444,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Fadl Abi Bakr Al Siddiq',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 33 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3433,7 +3462,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Dhikr Malabis Al Nabi',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 59 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3450,7 +3479,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Jamiah Fi Tawhid Allah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 69 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3467,7 +3496,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Hasanah Fil Baqiyat Al Salihat',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 48 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3485,7 +3514,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Azimah Fil Farq Bayn Ibadat Ahl Al Islam',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 145 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -3503,7 +3532,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Fil Inghimas Fil Aduw',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 62 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3520,7 +3549,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Fil Sabr',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 51 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3536,7 +3565,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Fil Mahabbah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 208 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -3553,7 +3582,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Mukhtasarah Fi Qital Al Kuffar',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 214 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -3571,7 +3600,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Mukhtasarah Fi Wujub Taat Allah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 50 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3588,7 +3617,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Masalah Fil Murabatah Bil Thughur',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 85 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3605,7 +3634,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Masalah Fil Kanais',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 48 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3621,7 +3650,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Masalah Fi Tawhid Al Falasifah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 98 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
     textEdition: TextEdition(
@@ -3638,7 +3667,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Muqaddimah Fi Usul Al Tafsir',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 56 صفحة، ضمن باب التفسير.',
     category: BookCategory.tafsir,
     textEdition: TextEdition(
@@ -3655,7 +3684,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Manasik Al Hajj Ibn Taymiyyah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr: 'مصنَّف لـ شيخ الإسلام ابن تيمية، 178 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
     textEdition: TextEdition(
@@ -3672,7 +3701,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Naqd Maratib Al Ijma',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 25 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3689,7 +3718,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Qaidah Jalilah Fil Tawassul Wal Wasilah',
     authorAr: 'شيخ الإسلام ابن تيمية',
     authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    authorDeathAr: 'توفي 728 هـ',
+    deathYearAh: 728,
     descriptionAr:
         'مصنَّف لـ شيخ الإسلام ابن تيمية، 455 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -3707,7 +3736,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Adab Al Fatwa Wal Mufti',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 74 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
@@ -3725,7 +3754,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Adhkar Lil Nawawi',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 411 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3742,7 +3771,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Arbaun Al Nawawiyyah',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 81 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -3760,7 +3789,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Usul Wal Dawabit',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 27 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -3777,7 +3806,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Ijaz Fi Sharh Sunan Abi Dawud',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 398 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -3795,7 +3824,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Idah Fi Manasik Al Hajj Wal Umrah',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 519 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
@@ -3813,7 +3842,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Tibyan Fi Adab Hamalat Al Quran',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 224 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3831,7 +3860,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Al Taqrib Wal Taysir',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 100 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -3848,7 +3877,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Bustan Al Arifin',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 72 صفحة، ضمن باب التزكية والرقائق.',
     category: BookCategory.tazkiyah,
@@ -3865,7 +3894,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tahrir Alfaz Al Tanbih',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 303 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
@@ -3882,7 +3911,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Tahqiq Riyad Al Salihin Lil Albani',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 98 صفحة، ضمن باب الحديث.',
     category: BookCategory.hadith,
@@ -3900,7 +3929,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Juz Fih Dhikr Iiqad Al Salaf Fil Huruf Wal Aswat',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 86 صفحة، ضمن باب العقيدة.',
     category: BookCategory.aqidah,
@@ -3918,7 +3947,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Daqaiq Al Minhaj',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 52 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
@@ -3936,7 +3965,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Fatawa Al Nawawi',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 278 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
@@ -3953,7 +3982,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Minhaj Al Talibin',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
-    authorDeathAr: 'توفي 676 هـ',
+    deathYearAh: 676,
     descriptionAr:
         'مصنَّف لـ الإمام محيي الدين النووي، 406 صفحة، ضمن باب الفقه.',
     category: BookCategory.fiqh,
@@ -3970,7 +3999,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Ar-Raheeq Al-Makhtum (The Sealed Nectar)',
     authorAr: 'صفي الرحمن المباركفوري',
     authorEn: 'Safi-ur-Rahman al-Mubarakpuri',
-    authorDeathAr: 'توفي ١٤٢٧ هـ',
+    deathYearAh: 1427,
     descriptionAr:
         'سيرة نبوية معاصرة نالت الجائزة الأولى في مسابقة رابطة العالم '
         'الإسلامي للسيرة، تجمع الأحداث مرتَّبة على السنين مع تحرير الروايات.',
@@ -3990,7 +4019,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'The Prophetic Biography of Ibn Hisham',
     authorAr: 'ابن هشام',
     authorEn: 'Ibn Hisham',
-    authorDeathAr: 'توفي ٢١٣ هـ',
+    deathYearAh: 213,
     descriptionAr:
         'أقدم سيرة وصلت إلينا كاملة، وهي تهذيب ابن هشام لسيرة ابن إسحاق. '
         'النسخة الإلكترونية تقتصر على الجزأين الأولين من الطبعة المذكورة.',
@@ -4011,7 +4040,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Zad al-Ma\'ad',
     authorAr: 'شمس الدين، أبو عبد الله، محمد بن أبي بكر الزرعي الدمشقي، ابن قيم الجوزية (٦٩١ - ٧٥١ هـ)',
     authorEn: 'Ibn Qayyim al-Jawziyyah',
-    authorDeathAr: 'توفي ٧٥١ هـ',
+    deathYearAh: 751,
     descriptionAr:
         'هدي النبي ﷺ في عبادته ومعاملاته وغزواته وطبّه، بتحقيق الأرناؤوطين. '
         'من أجمع ما كُتب في الهدي النبوي.',
@@ -4037,7 +4066,7 @@ const List<LibraryBook> libraryBookCatalog = [
     // Taken from that line, not invented.
     authorAr: 'محمد ناصر الدين الألباني',
     authorEn: 'Abridged by Muhammad Nasir ad-Din al-Albani',
-    authorDeathAr: 'توفي ١٤٢٠ هـ',
+    deathYearAh: 1420,
     descriptionAr:
         'ما صحّ من سيرة ابن كثير، لخّصه الألباني وعلّق عليه. توفي الشيخ قبل '
         'إتمامه، فينتهي عند ٢/٩٤ من طبعة عبد الواحد.',
@@ -4058,7 +4087,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Uyun al-Athar',
     authorAr: 'محمد بن محمد بن محمد بن أحمد، ابن سيد الناس، اليعمري الربعي، أبو الفتح، فتح الدين (ت ٧٣٤هـ)',
     authorEn: 'Ibn Sayyid an-Nas',
-    authorDeathAr: 'توفي ٧٣٤ هـ',
+    deathYearAh: 734,
     descriptionAr:
         'سيرة محرَّرة على طريقة المحدّثين في المغازي والشمائل والسير، من عمد '
         'كتب السيرة عند المتأخرين.',
@@ -4079,7 +4108,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Nur al-Yaqin',
     authorAr: 'محمد بن عفيفي الباجوري، المعروف بالشيخ الخضري (ت ١٣٤٥هـ)',
     authorEn: 'Muhammad al-Khudari',
-    authorDeathAr: 'توفي ١٣٤٥ هـ',
+    deathYearAh: 1345,
     descriptionAr:
         'سيرة مختصرة سهلة العبارة، وُضعت للتدريس فاشتهرت وصارت من أكثر '
         'المختصرات تداولًا.',
@@ -4100,7 +4129,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'The Prophetic Biography',
     authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
     authorEn: 'Abul Hasan Ali an-Nadwi',
-    authorDeathAr: 'توفي ١٤٢٠ هـ',
+    deathYearAh: 1420,
     descriptionAr:
         'سيرة تعنى بالسياق التاريخي لحال العالم قبل البعثة وبأثر الرسالة فيه، '
         'بأسلوب أدبي رفيع.',
@@ -4121,7 +4150,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Fiqh as-Seerah',
     authorAr: 'محمد الغزالي السقا (ت ١٤١٦هـ)',
     authorEn: 'Muhammad al-Ghazali',
-    authorDeathAr: 'توفي ١٤١٦ هـ',
+    deathYearAh: 1416,
     descriptionAr:
         'قراءة في السيرة تستخرج منها الدروس والعبر، مع تخريج الشيخ الألباني '
         'لأحاديثها.',
@@ -4142,7 +4171,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'The Prophetic Biography of Ibn Kathir',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
     authorEn: 'Ibn Kathir',
-    authorDeathAr: 'توفي ٧٧٤ هـ',
+    deathYearAh: 774,
     descriptionAr:
         'السيرة النبوية مستلّة من «البداية والنهاية»، جمع فيها ابن كثير '
         'الروايات وتكلّم على أسانيدها.',
@@ -4163,7 +4192,7 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Men Around the Messenger',
     authorAr: 'خالد محمد خالد ثابت (ت ١٤١٦هـ)',
     authorEn: 'Khalid Muhammad Khalid',
-    authorDeathAr: 'توفي ١٤١٦ هـ',
+    deathYearAh: 1416,
     descriptionAr:
         'ستون ترجمة لصحابة رسول الله ﷺ بأسلوب أدبي، من أوسع الكتب انتشارًا في '
         'التعريف بجيل الصحابة.',
@@ -4183,7 +4212,6 @@ const List<LibraryBook> libraryBookCatalog = [
     titleEn: 'Don\'t Be Sad',
     authorAr: 'عائض بن عبد الله القرني',
     authorEn: 'Aid al-Qarni',
-    authorDeathAr: '',
     descriptionAr:
         'كتاب في الرقائق والتخفيف عن النفس، يجمع الآيات والآثار والحكم في '
         'مواجهة الهمّ والقلق.',

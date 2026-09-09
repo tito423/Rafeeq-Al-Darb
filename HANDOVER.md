@@ -356,9 +356,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 18:33 — IN PROGRESS — resume here**
+**2026-09-09 18:48 — IN PROGRESS — resume here**
 
-i18n content batch 1: channel descriptions, adhan clip labels, the nine imam biographies and the ruqyah source line are now keys in all 7 locales; names go through properName() which reads common.script, so Urdu finally gets the Arabic form instead of the English. VERIFIED on emulator-5554: the channels grid in French shows Latin names with French descriptions. Audit is down to 1347 in TWO files - book_catalog (1217) and guide_content (130).
+i18n content batch 2 + plurals: the 226 books' titles and authors go through properName(), the death line is 3 templates instead of 226 strings (deathYearAh/deathApprox/deathNoteKey), the edition citation stays Arabic but reads RTL, and 7 count labels became real CLDR plurals so '1 livres' is '1 livre'. The audit learned to allowlist a whole FIELD with a reason. Down to 396 in two files: 266 book blurbs and 130 New Muslim Guide. Device re-verification of the plural fix is the next step - APK still building at the time of this note.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

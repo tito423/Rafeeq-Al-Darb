@@ -12,6 +12,7 @@ import '../../../../core/config/app_config.dart';
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../data/library_api_service.dart';
+import '../../../../core/i18n/proper_name.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../data/book_catalog.dart';
@@ -254,7 +255,8 @@ class _AuthorsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Group books by authorAr
+    // Grouped by the Arabic name, which is the stable identity — the Latin
+    // form is what gets DISPLAYED, and is taken from the group's first book.
     final byAuthor = <String, List<LibraryBook>>{};
     for (final b in libraryBookCatalog) {
       byAuthor.putIfAbsent(b.authorAr, () => []).add(b);
@@ -271,8 +273,9 @@ class _AuthorsView extends StatelessWidget {
         for (var i = 0; i < authors.length; i++)
           _AuthorExpansionTile(
             key: PageStorageKey<String>(authors[i]),
-            authorName: authors[i],
-            deathDate: byAuthor[authors[i]]!.first.authorDeathAr,
+            authorName: properName(
+                authors[i], byAuthor[authors[i]]!.first.authorEn),
+            deathDate: byAuthor[authors[i]]!.first.deathLabel(),
             books: byAuthor[authors[i]]!,
             initiallyExpanded: i == 0,
             paths: paths,
@@ -313,7 +316,7 @@ class _AuthorExpansionTile extends StatelessWidget {
         backgroundColor: AppColors.gold.withValues(alpha: 0.15),
         child: Icon(Icons.person_outline, color: AppColors.gold, size: 22),
       ),
-      title: ArabicText(
+      title: Text(
         authorName,
         style: Theme.of(context)
             .textTheme
@@ -321,14 +324,13 @@ class _AuthorExpansionTile extends StatelessWidget {
             ?.copyWith(fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        // A living author has no death date; do not render a dangling bullet.
-        // Each half is its own directional isolate. The death date is Arabic
-        // and the count is digits + a translated word, so in a left-to-right
-        // UI the unisolated string rendered with the halves swapped.
+        // A living author has no death date; do not render a dangling
+        // bullet. The isolates that used to wrap each half are gone with the
+        // reason for them: the death line is written in the reader's own
+        // language now, not Arabic inside a left-to-right paragraph.
         deathDate.isEmpty
-            ? ltr('${books.length} ${'library.book_count'.tr()}')
-            : '${rtl(deathDate)} • '
-                '${ltr('${books.length} ${'library.book_count'.tr()}')}',
+            ? 'library.book_count'.plural(books.length)
+            : '$deathDate • ${'library.book_count'.plural(books.length)}',
         style: TextStyle(
           color: scheme.onSurfaceVariant,
           fontSize: 12,
@@ -426,7 +428,7 @@ class _CategoryExpansionTile extends StatelessWidget {
             ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        '${books.length} ${'library.book_count'.tr()}',
+        'library.book_count'.plural(books.length),
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurfaceVariant,
           fontSize: 12,
@@ -533,7 +535,7 @@ class _MyLibraryView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(b.titleAr,
+                  Text(properName(b.titleAr, b.titleEn),
                       style: const TextStyle(
                           fontWeight: FontWeight.w700, fontSize: 15)),
                   const SizedBox(height: 3),
@@ -632,19 +634,21 @@ class _BookCard extends StatelessWidget {
                 Icon(book.category.icon, size: 16, color: AppColors.gold),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: ArabicText(book.titleAr,
+                  child: Text(properName(book.titleAr, book.titleEn),
                       style: const TextStyle(
                           fontWeight: FontWeight.w700, fontSize: 16)),
                 ),
               ],
             ),
             const SizedBox(height: 4),
-            ArabicText(
-              book.authorDeathAr.isEmpty
-                  ? book.authorAr
-                  : '${book.authorAr} · ${book.authorDeathAr}',
-              style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
-            ),
+            Builder(builder: (_) {
+              final author = properName(book.authorAr, book.authorEn);
+              final death = book.deathLabel();
+              return Text(
+                death.isEmpty ? author : '$author · $death',
+                style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
+              );
+            }),
             const SizedBox(height: 8),
             ArabicText(book.descriptionAr,
                 style: const TextStyle(fontSize: 13)),
@@ -1081,7 +1085,7 @@ class _HadithBookTile extends StatelessWidget {
                         // "الإمام أبو محمد عبد الرحمن بن عبد الله بن الدارمي"
                         // showed as a fragment with no way to read the rest.
                         Text(
-                          book.authorAr,
+                          properName(book.authorAr, book.authorEn),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: scheme.onSurfaceVariant,
                             height: 1.35,

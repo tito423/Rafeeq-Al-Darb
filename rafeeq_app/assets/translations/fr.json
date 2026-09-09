@@ -91,7 +91,14 @@
     "page": "Page",
     "surah": "Sourate",
     "ayah": "Verset",
-    "ayahs": "versets",
+    "ayahs": {
+      "zero": "{} versets",
+      "one": "{} verset",
+      "two": "{} versets",
+      "few": "{} versets",
+      "many": "{} versets",
+      "other": "{} versets"
+    },
     "makkah": "La Mecque",
     "madinah": "Médine",
     "search_hint": "Rechercher dans le Coran…",
@@ -121,8 +128,22 @@
     "riwayah": "Riwayah",
     "sciences_hafs_only": "La numérotation des versets dans cette riwayah diffère de celle de Hafs, le tafsir et la traduction sont donc indisponibles dans certaines sourates",
     "sciences_unavailable_here": "Le tafsir et la traduction sont indisponibles pour cette sourate dans cette riwayah",
-    "pages_count": "pages",
-    "ayahs_count": "versets",
+    "pages_count": {
+      "zero": "{} pages",
+      "one": "{} page",
+      "two": "{} pages",
+      "few": "{} pages",
+      "many": "{} pages",
+      "other": "{} pages"
+    },
+    "ayahs_count": {
+      "zero": "{} versets",
+      "one": "{} verset",
+      "two": "{} versets",
+      "few": "{} versets",
+      "many": "{} versets",
+      "other": "{} versets"
+    },
     "repeat": "Répéter",
     "repeat_dialog_title": "Répéter pour la mémorisation",
     "repeat_count": "Nombre de répétitions",
@@ -188,7 +209,14 @@
     "previous": "Précédent",
     "next": "Suivant",
     "tab_books": "Livres disponibles",
-    "book_count": "livres",
+    "book_count": {
+      "zero": "{} livres",
+      "one": "{} livre",
+      "two": "{} livres",
+      "few": "{} livres",
+      "many": "{} livres",
+      "other": "{} livres"
+    },
     "sub_all": "Tous les livres",
     "sub_categories": "Catégories",
     "sub_mine": "Ma bibliothèque",
@@ -210,7 +238,14 @@
     "text_index_filter": "Filtrer l'index",
     "text_search": "Rechercher dans le livre",
     "text_search_hint": "Tapez un mot ou une expression",
-    "text_search_results": "résultats",
+    "text_search_results": {
+      "zero": "{} résultats",
+      "one": "{} résultat",
+      "two": "{} résultats",
+      "few": "{} résultats",
+      "many": "{} résultats",
+      "other": "{} résultats"
+    },
     "text_page": "Page",
     "text_goto": "Aller",
     "text_goto_page": "Aller à la page imprimée",
@@ -242,7 +277,10 @@
     "section_texts_desc": "Livres avec index des chapitres",
     "search_all_books": "Rechercher dans tous les livres",
     "search_all_hint": "Tapez un mot ou une phrase…",
-    "search_all_empty": "Cherchez dans tous les livres téléchargés à la fois"
+    "search_all_empty": "Cherchez dans tous les livres téléchargés à la fois",
+    "died_ah": "Mort en {} AH",
+    "died_circa_ah": "Mort vers {} AH",
+    "death_8th_century": "Un savant du VIIIe siècle de l’Hégire"
   },
   "azkar": {
     "title": "Adhkar",
@@ -476,7 +514,14 @@
     "already_downloaded": "Déjà téléchargé",
     "page_preview_note": "Ceci est un aperçu des pages 1 et 2",
     "by_category": "Par catégorie",
-    "items": "éléments",
+    "items": {
+      "zero": "{} éléments",
+      "one": "{} élément",
+      "two": "{} éléments",
+      "few": "{} éléments",
+      "many": "{} éléments",
+      "other": "{} éléments"
+    },
     "find_surah": "Rechercher une sourate…",
     "source_verified": "Source rapide vérifiée — reprend après une interruption",
     "source_cdn": "Servi par le CDN — le téléchargement peut être plus lent",
@@ -528,7 +573,14 @@
     "prophet_yusuf": "Yusuf (Joseph), paix sur lui",
     "play_topic": "Tout écouter",
     "stop_playing": "Arrêter",
-    "results_count": "résultats"
+    "results_count": {
+      "zero": "{} résultats",
+      "one": "{} résultat",
+      "two": "{} résultats",
+      "few": "{} résultats",
+      "many": "{} résultats",
+      "other": "{} résultats"
+    }
   },
   "errors": {
     "offline": "Aucune connexion internet",

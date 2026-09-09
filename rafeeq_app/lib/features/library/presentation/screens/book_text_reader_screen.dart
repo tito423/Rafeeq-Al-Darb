@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/i18n/proper_name.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/widgets/toolbar_action.dart';
@@ -392,7 +394,8 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
             Text('library.text_source'.tr(),
                 style: Theme.of(ctx).textTheme.titleMedium),
             const SizedBox(height: 10),
-            Text(te.sourceLabel, style: const TextStyle(height: 1.7)),
+            ArabicText(te.sourceLabel,
+                style: const TextStyle(height: 1.7)),
             const SizedBox(height: 8),
             if (_doc?.meta.printReliable ?? false)
               Text('library.text_print_matches'.tr(),
@@ -428,7 +431,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.book.titleAr),
+          title: Text(properName(widget.book.titleAr, widget.book.titleEn)),
           // No actions, and `automaticallyImplyActions: false` — by
           // default, when `actions` is null OR empty and this Scaffold
           // has an `endDrawer` (it does, below, for the فهرس), Flutter's
@@ -576,7 +579,9 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
             children: [
               Expanded(
                 child: Text(
-                  section.isEmpty ? widget.book.titleAr : section,
+                  section.isEmpty
+                      ? properName(widget.book.titleAr, widget.book.titleEn)
+                      : section,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -662,7 +667,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                 Icon(Icons.info_outline, size: 14, color: ink.withValues(alpha: 0.6)),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Text(
+                  child: ArabicText(
                     widget.book.textEdition?.sourceLabel ?? '',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1104,7 +1109,7 @@ class _SearchSheetState extends State<_SearchSheet> {
                 child: Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(
-                    '${_hits.length} ${'library.text_search_results'.tr()}',
+                    'library.text_search_results'.plural(_hits.length),
                     style: TextStyle(
                         color: scheme.onSurfaceVariant, fontSize: 12),
                   ),

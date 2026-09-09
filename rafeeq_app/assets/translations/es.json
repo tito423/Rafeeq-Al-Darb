@@ -91,7 +91,14 @@
     "page": "Página",
     "surah": "Sura",
     "ayah": "Aleya",
-    "ayahs": "aleyas",
+    "ayahs": {
+      "zero": "{} aleyas",
+      "one": "{} aleya",
+      "two": "{} aleyas",
+      "few": "{} aleyas",
+      "many": "{} aleyas",
+      "other": "{} aleyas"
+    },
     "makkah": "La Meca",
     "madinah": "Medina",
     "search_hint": "Buscar en el Corán…",
@@ -121,8 +128,22 @@
     "riwayah": "Riwaya",
     "sciences_hafs_only": "La numeración de las aleyas en esta riwaya difiere de la de Hafs, por lo que el tafsir y la traducción no están disponibles en algunas suras",
     "sciences_unavailable_here": "El tafsir y la traducción no están disponibles para esta sura en esta riwaya",
-    "pages_count": "páginas",
-    "ayahs_count": "aleyas",
+    "pages_count": {
+      "zero": "{} páginas",
+      "one": "{} página",
+      "two": "{} páginas",
+      "few": "{} páginas",
+      "many": "{} páginas",
+      "other": "{} páginas"
+    },
+    "ayahs_count": {
+      "zero": "{} aleyas",
+      "one": "{} aleya",
+      "two": "{} aleyas",
+      "few": "{} aleyas",
+      "many": "{} aleyas",
+      "other": "{} aleyas"
+    },
     "repeat": "Repetir",
     "repeat_dialog_title": "Repetir para memorizar",
     "repeat_count": "Número de repeticiones",
@@ -188,7 +209,14 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "tab_books": "Libros disponibles",
-    "book_count": "libros",
+    "book_count": {
+      "zero": "{} libros",
+      "one": "{} libro",
+      "two": "{} libros",
+      "few": "{} libros",
+      "many": "{} libros",
+      "other": "{} libros"
+    },
     "sub_all": "Todos los libros",
     "sub_categories": "Categorías",
     "sub_mine": "Mi biblioteca",
@@ -210,7 +238,14 @@
     "text_index_filter": "Filtrar el índice",
     "text_search": "Buscar en el libro",
     "text_search_hint": "Escribe una palabra o frase",
-    "text_search_results": "resultados",
+    "text_search_results": {
+      "zero": "{} resultados",
+      "one": "{} resultado",
+      "two": "{} resultados",
+      "few": "{} resultados",
+      "many": "{} resultados",
+      "other": "{} resultados"
+    },
     "text_page": "Página",
     "text_goto": "Ir",
     "text_goto_page": "Ir a la página impresa",
@@ -242,7 +277,10 @@
     "section_texts_desc": "Libros de texto con índice de capítulos",
     "search_all_books": "Buscar en todos los libros",
     "search_all_hint": "Escribe una palabra o frase…",
-    "search_all_empty": "Busca en todos los libros descargados a la vez"
+    "search_all_empty": "Busca en todos los libros descargados a la vez",
+    "died_ah": "Falleció en {} AH",
+    "died_circa_ah": "Falleció hacia {} AH",
+    "death_8th_century": "Un sabio del siglo VIII de la Hégira"
   },
   "azkar": {
     "title": "Adhkar",
@@ -476,7 +514,14 @@
     "already_downloaded": "Ya descargado",
     "page_preview_note": "Esta es una muestra de las páginas 1 y 2",
     "by_category": "Por categoría",
-    "items": "elementos",
+    "items": {
+      "zero": "{} elementos",
+      "one": "{} elemento",
+      "two": "{} elementos",
+      "few": "{} elementos",
+      "many": "{} elementos",
+      "other": "{} elementos"
+    },
     "find_surah": "Buscar una sura…",
     "source_verified": "Fuente rápida verificada: se reanuda tras una interrupción",
     "source_cdn": "Servido desde la CDN: la descarga puede ser más lenta",
@@ -528,7 +573,14 @@
     "prophet_yusuf": "Yusuf (José), la paz sea con él",
     "play_topic": "Reproducir todo",
     "stop_playing": "Detener",
-    "results_count": "resultados"
+    "results_count": {
+      "zero": "{} resultados",
+      "one": "{} resultado",
+      "two": "{} resultados",
+      "few": "{} resultados",
+      "many": "{} resultados",
+      "other": "{} resultados"
+    }
   },
   "errors": {
     "offline": "Sin conexión a internet",

@@ -220,11 +220,44 @@ ALLOWLIST_NAMES = {
 }
 
 
-def allowed(short, body):
+# Whole FIELDS whose Arabic is deliberate, listed per file with the reason.
+# Listing 226 book titles one by one would be noise; what matters is that the
+# field has an answer, and the answer is the same for every row in it.
+ALLOWLIST_FIELDS = {
+    "features/library/data/book_catalog.dart": {
+        "titleAr":
+            "a book's title is its name, paired with `titleEn` and picked by "
+            "`properName()` — Arabic script for ar/ur, the Latin form for the "
+            "other five",
+        "authorAr":
+            "an author's name, paired with `authorEn` and picked the same way",
+        "sourceLabel":
+            "the printed edition's own citation — publisher, edition number, "
+            "Hijri year, as Shamela's book card states it. Translating a "
+            "citation stops it being one (CLAUDE.md §1.2); it is rendered "
+            "through ArabicText so it reads right-to-left in a Latin UI",
+    },
+}
+
+FIELD_LINE = re.compile(r"^\s*([A-Za-z_]+):")
+
+
+def allowed(short, body, src=None, line_no=None):
     if (short, body) in ALLOWLIST:
         return True
     entry = ALLOWLIST_NAMES.get(short)
-    return bool(entry) and body in entry[1]
+    if entry and body in entry[1]:
+        return True
+    fields = ALLOWLIST_FIELDS.get(short)
+    if fields and src is not None:
+        # A literal can start a line or two below its `field:`, so walk back
+        # to the field this value belongs to.
+        lines = src.split("\n")
+        for j in range(line_no - 1, max(-1, line_no - 12), -1):
+            m = FIELD_LINE.match(lines[j])
+            if m:
+                return m.group(1) in fields
+    return False
 
 
 def strip_comments(src):
@@ -269,11 +302,11 @@ def audit_file(path, short):
             continue
         if len(rest.strip()) < 2:
             continue
-        if allowed(short, body):
+        line_no = src[:start].count("\n") + 1
+        if allowed(short, body, src, line_no):
             skipped += 1
             continue
 
-        line_no = src[:start].count("\n") + 1
         line = lines[line_no - 1] if line_no - 1 < len(lines) else ""
         if MAP_KEY.match(line) or LOOKUP.search(line) or COMPARE.search(line):
             continue

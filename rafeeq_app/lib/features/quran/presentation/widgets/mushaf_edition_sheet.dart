@@ -150,8 +150,8 @@ class _EditionTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    '${edition.pages} ${'quran.pages_count'.tr()} · '
-                    '${edition.ayahs} ${'quran.ayahs_count'.tr()}',
+                    '${'quran.pages_count'.plural(edition.pages)} · '
+                    '${'quran.ayahs_count'.plural(edition.ayahs)}',
                     style: theme.textTheme.labelSmall
                         ?.copyWith(color: theme.colorScheme.outline),
                   ),
