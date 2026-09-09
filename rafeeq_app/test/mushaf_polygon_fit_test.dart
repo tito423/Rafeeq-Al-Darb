@@ -45,18 +45,18 @@ void main() {
   test('only printings whose layout was verified carry an ayah layer', () {
     expect(byId('hafs_kfqc').hasAyahLayer, isTrue);
     expect(byId('tajweed_color').hasAyahLayer, isTrue);
-    // These ship without a highlight rather than with a wrong one.
-    // shamarly (521 pages), indopak_tajweed (564) and madinah_gold paginate
-    // or typeset their own way — madinah_gold sets 6 lines on its page 2
-    // where the Madinah mushaf sets 15 — so no affine can map the Hafs
-    // polygons onto them at all. qatar DOES follow the Madinah page and line
-    // division (verified on 11 pages), but its scans are cropped differently
-    // page to page, so it needs a per-page fit that has not been built yet.
+    for (final id in ['qatar', 'kuwait', 'madinah_night']) {
+      expect(byId(id).hasAyahLayer, isTrue, reason: id);
+    }
+    // These ship without a highlight rather than with a wrong one. shamarly
+    // (521 pages), indopak_tajweed (564) and madinah_nastaleeq (611) paginate
+    // their own way; madinah_gold sets 6 lines on its page 2 where the
+    // Madinah mushaf sets 15. No affine can map the Hafs polygons onto them.
     for (final id in [
       'shamarly',
       'madinah_gold',
       'indopak_tajweed',
-      'qatar',
+      'madinah_nastaleeq',
     ]) {
       expect(byId(id).hasAyahLayer, isFalse, reason: id);
       expect(byId(id).fitForPage(1), isNull, reason: id);
@@ -130,6 +130,66 @@ void main() {
     // Al Imran 1-3 — spans y 0.1746-0.2202.
     expectBandOnLine(byId('tajweed_color').fitForPage(50)!, hafsFirstBand(50),
         (0.1746, 0.2202), page: 'page 50');
+  });
+
+  test('the per-page printings carry an affine for the pages they claim', () {
+    // Leaves cropped one by one, so there is no edition-wide affine that
+    // would do and every page carries its own.
+    for (final row in [
+      ('qatar', 604, 604),
+      ('madinah_night', 604, 604),
+      // Kuwait's two illuminated openings are deliberately unfitted: the
+      // warm cream ground and brown ink defeated every panel measurement,
+      // and one line out on al-Fatiha is worse than no highlight.
+      ('kuwait', 604, 602),
+    ]) {
+      final (id, pages, fitted) = row;
+      final e = byId(id);
+      expect(e.polygonsAsset, byId('hafs_kfqc').polygonsAsset, reason: id);
+      expect(e.polygonFit, isNull,
+          reason: '$id: a per-page printing must not carry an edition-wide '
+              'default — a page with no fit should get no highlight');
+      expect(e.polygonFitPages.length, fitted, reason: id);
+      expect(e.pages, pages, reason: id);
+
+      // Neighbouring pages must differ. If every entry were identical the
+      // per-page fit would be a fiction and one affine would have done.
+      final shifts = <double>[];
+      for (var p = 3; p < pages; p++) {
+        final a = e.fitForPage(p), b = e.fitForPage(p + 1);
+        if (a != null && b != null) shifts.add((a.dx - b.dx).abs());
+      }
+      shifts.sort();
+      expect(shifts.last, greaterThan(0.004),
+          reason: '$id: no page-to-page variation');
+    }
+
+    // Kuwait pages 1-2 really do come back with nothing.
+    expect(byId('kuwait').fitForPage(1), isNull);
+    expect(byId('kuwait').fitForPage(2), isNull);
+    expect(byId('kuwait').fitForPage(3), isNotNull);
+  });
+
+  test('only a printing on the Madinah page claims the running header', () {
+    for (final id in ['hafs_kfqc', 'tajweed_color', 'qatar', 'kuwait',
+                      'madinah_night']) {
+      expect(byId(id).hafsPagination, isTrue, reason: id);
+      expect(byId(id).pages, 604, reason: id);
+    }
+    for (final row in [('shamarly', 521), ('indopak_tajweed', 564),
+                       ('madinah_nastaleeq', 611)]) {
+      final (id, pages) = row;
+      expect(byId(id).hafsPagination, isFalse, reason: id);
+      expect(byId(id).pages, pages, reason: id);
+    }
+  });
+
+  test('every edition ships a real cover asset', () {
+    for (final e in editions) {
+      expect(e.coverAsset, isNotEmpty, reason: e.id);
+      expect(File(e.coverAsset).existsSync(), isTrue,
+          reason: '${e.id}: ${e.coverAsset} is not on disk');
+    }
   });
 
   test('page 1 uses its own fit, not the body one', () {

@@ -72,6 +72,37 @@ EDITIONS = {
         special={1: dict(panel=(0.333, 0.675, 0.203, 0.578), drop_leading=0),
                  2: dict(panel=(0.326, 0.668, 0.468, 0.838), drop_leading=1)},
     ),
+    # مصحف دولة الكويت. Every page renders to exactly 880x1226, so a single
+    # affine might have done — but the fit is done per page anyway and the
+    # run prints the spread, which is the honest way to find out rather than
+    # assuming uniform pixels mean uniform content placement.
+    "kuwait": dict(
+        dir=os.path.join(ROOT, "scripts", "mushaf_pdf_build", "kuwait"),
+        pages=604, sat_min=28, ink_max=150, inset=(0.095, 0.045),
+        # Its two illuminated openings resisted every panel measurement — the
+        # warm cream ground and the brown ink sit too close together for a
+        # threshold that also separates the lines, and the best attempt found
+        # six of seven lines. Rather than ship a highlight that is one line out
+        # on al-Fatiha, they get NO fit: `fitForPage` returns null for them and
+        # `MushafPageView` simply paints no highlight on those two pages. The
+        # other 602 are fitted.
+        skip=(1, 2),
+    ),
+    # مصحف المدينة، الطبعة الليلية — white ink on black, and no printed frame
+    # at all, so there is no coloured fiducial to find. `no_frame` makes the
+    # whole sheet the box and `invert` flips the ink test.
+    "madinah_night": dict(
+        dir=os.path.join(ROOT, "scripts", "mushaf_pdf_build", "madinah_night"),
+        pages=604, no_frame=True, invert=True, ink_max=90,
+        # Measured: at (0.06, 0.07) every one of eight sample pages spread
+        # across the mushaf yields exactly 15 runs. A shallower y inset let the
+        # running header in as a sixteenth.
+        inset=(0.06, 0.07),
+        # No illumination here, so the openings need no panel — only the surah
+        # header band dropped on page 1, and the header plus al-Baqarah's
+        # basmalah on page 2.
+        special={1: dict(drop_leading=1), 2: dict(drop_leading=2)},
+    ),
 }
 
 
@@ -81,7 +112,9 @@ def load(spec, page):
     return np.asarray(Image.open(path).convert("RGB"), dtype=np.int16)
 
 
-def frame_box(rgb, sat_min):
+def frame_box(rgb, sat_min, no_frame=False):
+    if no_frame:
+        return (0.0, 1.0, 0.0, 1.0)
     """(top, bottom, left, right) of the printed frame, normalised 0..1."""
     H, W, _ = rgb.shape
     col = (rgb.max(axis=2) - rgb.min(axis=2)) > sat_min
@@ -97,7 +130,7 @@ def frame_box(rgb, sat_min):
             float(np.median(lefts)) / W, float(np.median(rights)) / W)
 
 
-def printed_lines(rgb, box, ink_max, inset=(0.10, 0.025)):
+def printed_lines(rgb, box, ink_max, inset=(0.10, 0.025), invert=False):
     """Ink row-runs strictly inside the frame, normalised to the whole page."""
     xi, yi = inset
     H, W, _ = rgb.shape
@@ -105,7 +138,8 @@ def printed_lines(rgb, box, ink_max, inset=(0.10, 0.025)):
     fh, fw = b - t, r - l
     y0, y1 = int((t + fh * yi) * H), int((b - fh * yi) * H)
     x0, x1 = int((l + fw * xi) * W), int((r - fw * xi) * W)
-    core = rgb[y0:y1, x0:x1].mean(axis=2) < ink_max
+    lum = rgb[y0:y1, x0:x1].mean(axis=2)
+    core = (lum > ink_max) if invert else (lum < ink_max)
     h, w = core.shape
     prof = core.sum(axis=1) / w
     runs, s = [], None
@@ -121,7 +155,7 @@ def printed_lines(rgb, box, ink_max, inset=(0.10, 0.025)):
     return runs
 
 
-def panel_lines(rgb, ink_max, panel, pad=0.004):
+def panel_lines(rgb, ink_max, panel, pad=0.004, invert=False):
     """Text runs inside a hand-measured panel box.
 
     The two illuminated openings defeated every automatic attempt: the text
@@ -136,7 +170,8 @@ def panel_lines(rgb, ink_max, panel, pad=0.004):
     t, b, l, r = panel
     y0, y1 = int((t + pad) * H), int((b - pad) * H)
     x0, x1 = int((l + pad) * W), int((r - pad) * W)
-    core = rgb[y0:y1, x0:x1].mean(axis=2) < ink_max
+    lum = rgb[y0:y1, x0:x1].mean(axis=2)
+    core = (lum > ink_max) if invert else (lum < ink_max)
     h, w = core.shape
     prof = core.sum(axis=1) / w
     runs, st = [], None
@@ -249,20 +284,26 @@ def fit(edition, verbose=True):
 
     out, skipped, resid = {}, [], []
     boxes, shapes = {}, {}
+    skip = set(spec.get("skip", ()))
     for page in range(1, spec["pages"] + 1):
+        if page in skip:
+            continue
         rgb = load(spec, page)
         H, W, _ = rgb.shape
-        box = frame_box(rgb, spec["sat_min"])
+        box = frame_box(rgb, spec.get("sat_min", 45),
+                        no_frame=spec.get("no_frame", False))
         if box is None:
             raise RuntimeError("page %d: no frame found" % page)
         boxes[page], shapes[page] = box, (H, W)
 
         sp = spec.get("special", {}).get(page)
         if sp and sp.get("panel"):
-            runs = panel_lines(rgb, spec["ink_max"], sp["panel"])
+            runs = panel_lines(rgb, spec["ink_max"], sp["panel"],
+                               invert=spec.get("invert", False))
         else:
             runs = printed_lines(rgb, box, spec["ink_max"],
-                                 inset=sp["inset"] if sp else spec["inset"])
+                                 inset=(sp or {}).get("inset", spec["inset"]),
+                                 invert=spec.get("invert", False))
         if sp:
             runs = runs[sp["drop_leading"]:]
             targets = [(t + b) / 2 for t, b in hafs_lines(page)]
@@ -329,6 +370,9 @@ def fit(edition, verbose=True):
     # whole page as the "frame" and the fill produced polygons four times too
     # large. Such a page takes the affine of the nearest page that WAS fitted
     # directly — consecutive leaves are cropped alike — and is reported.
+    if verbose and skip:
+        print("   deliberately unfitted (they will show no highlight): %s"
+              % sorted(skip))
     ws = np.array([boxes[p][3] - boxes[p][2] for p in boxes
                    if p not in spec.get("special", {})])
     hs = np.array([boxes[p][1] - boxes[p][0] for p in boxes
@@ -339,6 +383,8 @@ def fit(edition, verbose=True):
     direct = sorted(int(k) for k in out)
     filled, borrowed = [], []
     for page, *_ in skipped:
+        if page in skip:
+            continue
         t, b, l, r = boxes[page]
         fw, fh = r - l, b - t
         H, W = shapes[page]

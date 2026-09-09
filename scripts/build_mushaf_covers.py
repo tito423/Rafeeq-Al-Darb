@@ -40,12 +40,8 @@ SOURCES = {
     "tajweed_color": (
         "https://archive.org/download/quraan-colored/page/n0_w800.jpg",
         "مصحف التجويد الملوّن، دار المعرفة — الغلاف المطبوع", 0.0),
-    "warsh": (
-        "https://archive.org/download/Warsh-HD/page/n0_w800.jpg",
-        "مصحف المدينة، رواية ورش — صفحة عنوان مجمع الملك فهد", 0.0),
-    "qaloon": (
-        "https://archive.org/download/mushaf-qalun/page/n0_w800.jpg",
-        "مصحف المدينة، رواية قالون — صفحة عنوان مجمع الملك فهد", 0.0),
+    # warsh and qaloon are gone: the owner asked for the riwayah mushafs to
+    # be removed, and their page sets were deleted from R2 too.
     "shamarly": (
         "https://archive.org/download/QURANShamarly/page/n0_w800.jpg",
         "مصحف الشمرلي — صفحة العنوان بخط محمد سعد إبراهيم", 0.055),
@@ -59,12 +55,32 @@ SOURCES = {
     "qatar": (
         "pdf:qatar.pdf#3",
         "مصحف قطر — صفحة العنوان المطبوعة، برواية حفص عن عاصم", 0.0),
+    "kuwait": (
+        "pdf:kuwait.pdf#1",
+        "مصحف دولة الكويت — الغلاف المطبوع، وزارة الأوقاف والشؤون الإسلامية",
+        0.0),
+    "madinah_night": (
+        # This edition has no cover page at all — the PDF is exactly its 604
+        # pages — so its own first page stands for it, which is honestly what
+        # the edition looks like.
+        # From the rendered page, not the PDF: that PDF's page box is only
+        # 96x136 points, so rendering it at 150 dpi yields a 200 px thumbnail.
+        "file:madinah_night/001.jpg",
+        "مصحف المدينة، الطبعة الليلية — صفحته الأولى؛ لا غلاف مطبوع في المصدر",
+        0.0),
+    "madinah_nastaleeq": (
+        "pdf:madinah_nastaleeq.pdf#0",
+        "مصحف المدينة بالخط النستعليقي — الغلاف المطبوع، مجمع الملك فهد", 0.0),
 }
 
 TARGET_W = 420          # 3:4 board; the tile draws it at ~60-90 logical px
 
 
 def fetch(url, tries=4):
+    if url.startswith("file:"):
+        with open(os.path.join(ROOT, "scripts", "mushaf_pdf_build",
+                               url[5:]), "rb") as f:
+            return f.read()
     if url.startswith("pdf:"):
         import fitz
         name, _, idx = url[4:].partition("#")
@@ -97,12 +113,16 @@ def trim_border(im, tol=14):
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     for eid, (url, note, cut_bottom) in SOURCES.items():
+        # The night edition's page IS black to the edge; `trim_border` treats
+        # the whole sheet as margin and crops it to a thumbnail.
+        no_trim = eid == "madinah_night"
         raw = fetch(url)
         im = Image.open(io.BytesIO(raw)).convert("RGB")
         before = im.size
         if cut_bottom:
             im = im.crop((0, 0, im.width, int(im.height * (1 - cut_bottom))))
-        im = trim_border(im)
+        if not no_trim:
+            im = trim_border(im)
         # Fit to a 3:4 board without distorting the artwork.
         h = int(TARGET_W * 4 / 3)
         im = im.resize((TARGET_W, h), Image.LANCZOS)

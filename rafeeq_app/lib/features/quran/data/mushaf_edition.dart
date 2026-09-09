@@ -18,13 +18,24 @@ import '../../../core/config/app_config.dart';
 /// coordinate layer of its own.
 ///
 /// This is only legitimate where the layouts really do match, and that has to
-/// be measured, not assumed. `scripts/fit_mushaf_polygon_transform.py` fits it
-/// and then renders the mapped polygons over the real scans to be looked at.
-/// For the Tajweed printing the fit lands every ring within a median 3.9 px of
-/// its printed line on a page whose lines are 84 px apart. The other three
-/// raster printings paginate their own way — `madinah_gold` sets 6 lines on
-/// its page 2 where the Madinah mushaf sets 15 — and no transform can fix a
-/// different typesetting, so they honestly ship with no polygon layer at all.
+/// be measured, not assumed. Two scripts fit it and then render the mapped
+/// polygons over the real scans to be looked at:
+///
+/// * `scripts/fit_mushaf_polygon_transform.py` — one affine per page GROUP,
+///   for a printing whose pages are all the same crop. The Tajweed printing
+///   uses it, and lands every ring within a median 3.9 px of its printed line
+///   on a page whose lines are 84 px apart.
+/// * `scripts/fit_mushaf_polygon_per_page.py` — one affine PER PAGE, for a
+///   printing whose leaves were cropped individually. Qatar, Kuwait and the
+///   Madinah night edition use it: on Qatar the printed frame keeps a constant
+///   size but slides up to 3% of the page width, about two letters, which no
+///   single affine could absorb.
+///
+/// Where the layouts do NOT match, no transform can fix it and the printing
+/// honestly ships with no polygon layer: `madinah_gold` sets 6 lines on its
+/// page 2 where the Madinah mushaf sets 15, and `shamarly` (521 pages),
+/// `indopak_tajweed` (564) and `madinah_nastaleeq` (611) paginate their own
+/// way outright.
 class AyahPolygonFit {
   /// x' = [sx] · x + [dx], y' = [sy] · y + [dy], both in normalized page space.
   final double sx;
@@ -97,10 +108,15 @@ class MushafEdition {
   /// (the vector edition) or which has none at all.
   final AyahPolygonFit? polygonFit;
 
-  /// Pages that need their own fit because they are set differently from the
-  /// rest of the printing — the Tajweed mushaf's two illuminated opening
-  /// pages carry a different frame, a different text block and a different
-  /// pixel size from the 602 body pages.
+  /// Per-page fits. Two quite different cases use this:
+  ///
+  /// * a handful of pages set differently from the rest — the Tajweed mushaf's
+  ///   two illuminated openings carry their own frame, text block and pixel
+  ///   size, and override an edition-wide [polygonFit];
+  /// * a printing with NO edition-wide fit at all, where every page carries
+  ///   its own because its leaves were cropped one by one. There [polygonFit]
+  ///   is null, and a page missing from this map gets no highlight rather than
+  ///   a borrowed one.
   final Map<int, AyahPolygonFit> polygonFitPages;
 
   /// P3‑53: raster (image-scan) editions — the folder under `mushaf/` on the
@@ -109,9 +125,9 @@ class MushafEdition {
   /// render/download path off this one field.
   final String? imagePath;
 
-  /// File extension of this edition's page scans, without the dot. Defaults
-  /// to `jpg`; the Warsh/Qalun scans are palette PNGs (see
-  /// [AppConfig.mushafImageUrl]) and set `"image_ext": "png"`.
+  /// File extension of this edition's page scans, without the dot. Every
+  /// shipping edition is `jpg`; the field stays because a future scan set
+  /// need not be.
   final String imageExt;
 
   /// Bundled JPEG of this edition's real cover (or title page), e.g.
@@ -134,9 +150,8 @@ class MushafEdition {
   /// Whether this printing uses the Madinah/Hafs 604-page layout that the
   /// bundled sciences DB's page->surah and page->juz mapping was built from.
   ///
-  /// False for every printing that paginates its own way (Shamarly's 521
-  /// pages, the Indo-Pak 564, and the Warsh/Qalun printings, whose 604 pages
-  /// do not line up verse-for-verse with Hafs either). On those, that mapping
+  /// False for every printing that paginates its own way — Shamarly's 521
+  /// pages, the Indo-Pak 564, the Nastaliq 611. On those, that mapping
   /// would confidently name the wrong surah — page 521 of Shamarly is
   /// al-Ikhlas/al-Falaq/an-Nas, while Hafs page 521 is adh-Dhariyat — so the
   /// running header is hidden rather than shown wrong.
@@ -173,7 +188,13 @@ class MushafEdition {
         riwayahAr: j['riwayah_ar'] as String? ?? '',
         riwayahEn: j['riwayah_en'] as String? ?? '',
         polygonsAsset: j['polygons_asset'] as String? ?? '',
-        polygonFit: fit == null
+        // `default` is optional. A printing whose leaves were cropped one by
+        // one carries a fit per page and no edition-wide one, and a page with
+        // no entry then has NO fit at all — which is the honest outcome: the
+        // reader gets no highlight on that page rather than one measured on a
+        // differently-set page. The Kuwait printing's two illuminated
+        // openings are exactly that case.
+        polygonFit: fit == null || fit['default'] == null
             ? null
             : AyahPolygonFit.fromJson(fit['default'] as Map<String, dynamic>),
         polygonFitPages: {

@@ -45,6 +45,14 @@ class QuranBookCoverThumbnail extends StatelessWidget {
         _Leather(Color(0xFF06302E), Color(0xFF0B4A47), Color(0xFF116E69)),
     // Qatar — the deep crimson and gold of its printed board.
     'qatar': _Leather(Color(0xFF4A0A12), Color(0xFF7A1420), Color(0xFFA82232)),
+    // Kuwait — the burgundy of its printed board.
+    'kuwait': _Leather(Color(0xFF3B0A12), Color(0xFF61151F), Color(0xFF8A2231)),
+    // The night edition — ink black, which is what it is.
+    'madinah_night':
+        _Leather(Color(0xFF050505), Color(0xFF121212), Color(0xFF262626)),
+    // Nastaliq — the navy and gold of the Complex's Urdu binding.
+    'madinah_nastaleeq':
+        _Leather(Color(0xFF06162E), Color(0xFF0C2549), Color(0xFF163A70)),
   };
 
   /// Medallion text override where the first riwayah word would be ambiguous
@@ -57,6 +65,9 @@ class QuranBookCoverThumbnail extends StatelessWidget {
     'madinah_gold': 'المدينة',
     'indopak_tajweed': 'هندي',
     'qatar': 'قطر',
+    'kuwait': 'الكويت',
+    'madinah_night': 'ليلي',
+    'madinah_nastaleeq': 'نستعليق',
   };
 
   static const _Leather _fallback =

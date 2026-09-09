@@ -78,6 +78,69 @@ EDITIONS = {
         patch_pdf="qatar_alt.pdf",
         patch_pages=(5, 167, 210, 323),
     ),
+    "kuwait": dict(
+        pdf="kuwait.pdf",
+        source="https://archive.org/details/"
+               "HQ23AlQuranAlKareemMushafDolatUlKuwaitWww.Quranpdf.blogspot.in",
+        # No licence is stated on the item, but the printing's own back matter
+        # names its publisher: «دولة الكويت — وزارة الأوقاف والشؤون الإسلامية،
+        # قطاع المساجد», with the ministry's stamp. A state ministry's mushaf,
+        # and — checked, because trap #18 exists — carrying no rights notice
+        # anywhere in its front or back matter, unlike the Taj scan.
+        licence="Kuwait Ministry of Awqaf and Islamic Affairs; no rights "
+                "notice printed in the volume",
+        pages=604,
+        # MEASURED: index 606 prints ٦٠٣ and 607 prints ٦٠٤ (al-Ikhlas,
+        # al-Falaq, an-Nas), 608 opens «دعاء ختم القرآن». Same page division
+        # as the Madinah mushaf.
+        first_index=4,
+        width=880,
+        quality=86,
+        # Every page of this scan is stamped "www.Quranpdf.blogspot.in" as
+        # page TEXT over the image. Redacted the same way the Qatar patch
+        # pages are — see `render`.
+        strip_text=True,
+    ),
+    "madinah_night": dict(
+        pdf="madinah_night.pdf",
+        source="https://archive.org/details/QuranMadina35685363568hNight",
+        # The volume itself says what it is, printed across the top of its
+        # first page: «نسخة من مجمع الملك فهد لطباعة المصحف الشريف بالمدينة
+        # المنورة» — the King Fahd Complex's own Madinah mushaf, set white on
+        # black. No rights notice anywhere in it; checked every page.
+        licence="King Fahd Complex Madinah mushaf, night setting; no rights "
+                "notice printed in the volume",
+        pages=604,
+        # MEASURED: this PDF is exactly 604 pages with no front or back
+        # matter, so index 0 IS page 1. Index 49 prints ٥٠ (Al Imran) and
+        # index 603 prints ٦٠٤ (al-Ikhlas, al-Falaq, an-Nas).
+        first_index=0,
+        width=880,
+        quality=86,
+        # Page 1 alone carries a "QURAN.TV" logo bar burned into the scan
+        # above the mushaf's own frame — checked on all 604, it is on that one
+        # page. Cropped away; it sits entirely above the printed page, so
+        # nothing of the mushaf is lost. The Complex attribution it sits
+        # beside is kept on the app's Sources screen instead.
+        crop_top={1: 0.052},
+    ),
+    "madinah_nastaleeq": dict(
+        pdf="madinah_nastaleeq.pdf",
+        source="https://archive.org/details/mushaf-al-madinah_nastaleeq",
+        # Its own colophon: «مجمع الملك فهد لطباعة المصحف الشريف، ص.ب ٦٢٦٢ —
+        # المدينة المنورة». The Complex's Nastaliq setting for readers of the
+        # subcontinent. Front and back matter checked; no rights notice.
+        licence="King Fahd Complex, Nastaliq setting; no rights notice "
+                "printed in the volume",
+        # MEASURED, by reading the printed folio: index 7 prints ٢ and index
+        # 616 prints ٦١١ (an-Nas). So index = page + 5, page 1 is index 6 —
+        # which in this printing is an illuminated title page, not al-Fatiha;
+        # al-Fatiha is its page 2, as the volume itself numbers it.
+        pages=611,
+        first_index=6,
+        width=880,
+        quality=86,
+    ),
 }
 
 
@@ -93,12 +156,11 @@ def render(spec, out_dir, only=None):
         idx = spec["first_index"] + page - 1
         patched = page in spec.get("patch_pages", ())
         src = (patch if patched else doc)[idx]
-        if patched:
-            # The second copy carries a "www.Quranpdf.blogspot.com" watermark
-            # drawn as TEXT over the top of every page — it is not in the
-            # embedded scan, only in the PDF. Redact the text and leave the
-            # image alone, or the four repaired pages would ship defaced while
-            # their 600 neighbours are clean.
+        if patched or spec.get("strip_text"):
+            # These scans carry a "www.Quranpdf.blogspot.*" watermark drawn as
+            # TEXT over the page — it is not in the embedded scan, only in the
+            # PDF. Redact the text and leave the image alone, or the pages
+            # would ship defaced.
             for b in src.get_text("dict")["blocks"]:
                 if b["type"] != 0:
                     continue
@@ -112,6 +174,9 @@ def render(spec, out_dir, only=None):
         zoom = spec["width"] / src.rect.width
         pix = src.get_pixmap(matrix=fitz.Matrix(zoom, zoom))
         img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+        cut = spec.get("crop_top", {}).get(page)
+        if cut:
+            img = img.crop((0, int(img.height * cut), img.width, img.height))
         path = os.path.join(out_dir, "%03d.jpg" % page)
         img.save(path, "JPEG", quality=spec["quality"], optimize=True,
                  progressive=False)
