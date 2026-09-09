@@ -222,6 +222,22 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     super.initState();
     _restoreState();
     AyahAudioService.instance.continuous.addListener(_onReciteChanged);
+    AyahAudioService.instance.continuousError.addListener(_onReciteError);
+  }
+
+  /// A recitation that could not be loaded now SAYS so. It used to end in
+  /// silence with the play button still there, which is indistinguishable
+  /// from the app ignoring the press.
+  void _onReciteError() {
+    final err = AyahAudioService.instance.continuousError.value;
+    if (err == null || !mounted) return;
+    AyahAudioService.instance.continuousError.value = null;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('quran.recite_failed'.tr()),
+        duration: const Duration(seconds: 4),
+      ),
+    );
   }
 
   /// The recitation moved to another verse. Two things follow: the highlight
@@ -257,6 +273,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   Future<void> _toggleContinuousRecitation(MushafData data) async {
     final audio = AyahAudioService.instance;
     if (_recite.active) {
+      // A run Android has already torn down (see `ContinuousRecitation
+      // .stalled`) must RESUME on this press, not stop. Treating it as
+      // "running" meant the owner's press silently cleared a recitation that
+      // was not playing anyway, which read as the button doing nothing.
+      if (_recite.stalled) {
+        await audio.continuousPauseResume();
+        return;
+      }
       await audio.stopContinuous();
       return;
     }
@@ -276,6 +300,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   @override
   void dispose() {
     AyahAudioService.instance.continuous.removeListener(_onReciteChanged);
+    AyahAudioService.instance.continuousError.removeListener(_onReciteError);
     _pages?.dispose();
     // Make sure the system bars are never left hidden if this screen goes
     // away while full-screen.
@@ -857,14 +882,20 @@ class _ReciteBar extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                state.buffering ? Icons.hourglass_top_rounded : Icons.graphic_eq_rounded,
+                state.stalled
+                    ? Icons.play_circle_outline_rounded
+                    : state.buffering
+                        ? Icons.hourglass_top_rounded
+                        : Icons.graphic_eq_rounded,
                 size: 18,
                 color: AppColors.gold,
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  state.buffering
+                  state.stalled
+                      ? 'quran.recite_stalled'.tr()
+                      : state.buffering
                       ? 'quran.recite_loading'.tr()
                       : 'quran.recite_now'.tr(
                           args: [
@@ -885,8 +916,13 @@ class _ReciteBar extends StatelessWidget {
               ),
               IconButton(
                 visualDensity: VisualDensity.compact,
-                tooltip: 'quran.recite_pause'.tr(),
-                icon: const Icon(Icons.pause_circle_outline_rounded),
+                tooltip: (state.stalled
+                        ? 'quran.recite_resume'
+                        : 'quran.recite_pause')
+                    .tr(),
+                icon: Icon(state.stalled
+                    ? Icons.play_circle_outline_rounded
+                    : Icons.pause_circle_outline_rounded),
                 onPressed: audio.continuousPauseResume,
               ),
               IconButton(

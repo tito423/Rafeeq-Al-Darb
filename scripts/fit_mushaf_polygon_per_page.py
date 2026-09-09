@@ -91,6 +91,34 @@ EDITIONS = {
     # مصحف المدينة، الطبعة الليلية — white ink on black, and no printed frame
     # at all, so there is no coloured fiducial to find. `no_frame` makes the
     # whole sheet the box and `invert` flips the ink test.
+    # المصحف المذهّب (Smart Mushaf). A previous session recorded this one as
+    # unfittable because it "sets 6 lines on its page 2 where the Madinah
+    # mushaf sets 15". That measurement was of the wrong thing: page 2 of ANY
+    # Madinah printing is al-Baqarah's illuminated opening and sets six body
+    # lines — `hafs_lines(2)` returns 6 slots, not 15. Re-measured with the
+    # tooling that did not exist then: every body page sampled (3, 50, 100,
+    # 200, 300, 400, 500, 550, 600, 604) yields exactly 15 ink runs, stable
+    # across nine threshold combinations, and page 50 prints the folio ٥٠ over
+    # آل عمران exactly as `hafs_kfqc` page 50 does. It sets the Madinah grid.
+    #
+    # The leaves are cropped individually in HEIGHT (1200 x 1756..2056), which
+    # is why this is here and not in `fit_mushaf_polygon_transform.py`.
+    "madinah_gold": dict(
+        dir=os.path.join(ROOT, "scripts", "mushaf_pdf_build", "madinah_gold"),
+        pages=604, sat_min=45, ink_max=150, inset=(0.08, 0.04),
+        # The two illuminated openings, panel read off the rendered page. Both
+        # need the saturation mask: the leaf is cream and the illumination
+        # gold, so darkness alone does not isolate the text.
+        special={
+            1: dict(panel=(0.25, 0.72, 0.22, 0.82), ink_max=130, sat_max=30,
+                    # al-Fatiha's basmalah IS ayah 1 and has a polygon, but it
+                    # is set in gold and no ink threshold finds it — so the
+                    # HAFS slot is dropped, not a run, and the affine fitted
+                    # on the six visible lines places it.
+                    drop_target=1),
+            2: dict(panel=(0.25, 0.72, 0.22, 0.82), ink_max=130, sat_max=30),
+        },
+    ),
     "madinah_night": dict(
         dir=os.path.join(ROOT, "scripts", "mushaf_pdf_build", "madinah_night"),
         pages=604, no_frame=True, invert=True, ink_max=90,
@@ -155,7 +183,37 @@ def printed_lines(rgb, box, ink_max, inset=(0.10, 0.025), invert=False):
     return runs
 
 
-def panel_lines(rgb, ink_max, panel, pad=0.004, invert=False):
+def merge_close(runs, frac=0.35):
+    """Merge row-runs separated by less than [frac] of the median line pitch.
+
+    An Arabic line is not one solid band of ink: on the illuminated openings
+    the row profile of a single line breaks in two where the body sits low and
+    only the diacritics reach the rows above. That split was worth catching
+    rather than tuning around, because it moved the run COUNT — and every fit
+    here matches run k to slot k, so a count that is right for the wrong
+    reason maps the whole page one line out.
+
+    The pitch is measured from the runs themselves, so this needs no constant
+    per printing. On `madinah_gold` pages 1 and 2 the merged count is 6 under
+    every ink/saturation threshold tried (110-150 x 30-45), while the raw
+    count moved between 6, 7 and 8.
+    """
+    if len(runs) < 2:
+        return runs
+    centres = [(r["y0"] + r["y1"]) / 2 for r in runs]
+    pitch = float(np.median(np.diff(centres)))
+    out = [dict(runs[0])]
+    for r in runs[1:]:
+        if r["y0"] - out[-1]["y1"] < pitch * frac:
+            out[-1]["y1"] = r["y1"]
+            out[-1]["x0"] = min(out[-1]["x0"], r["x0"])
+            out[-1]["x1"] = max(out[-1]["x1"], r["x1"])
+        else:
+            out.append(dict(r))
+    return out
+
+
+def panel_lines(rgb, ink_max, panel, pad=0.004, invert=False, sat_max=None):
     """Text runs inside a hand-measured panel box.
 
     The two illuminated openings defeated every automatic attempt: the text
@@ -170,8 +228,16 @@ def panel_lines(rgb, ink_max, panel, pad=0.004, invert=False):
     t, b, l, r = panel
     y0, y1 = int((t + pad) * H), int((b - pad) * H)
     x0, x1 = int((l + pad) * W), int((r - pad) * W)
-    lum = rgb[y0:y1, x0:x1].mean(axis=2)
+    sub = rgb[y0:y1, x0:x1]
+    lum = sub.mean(axis=2)
     core = (lum > ink_max) if invert else (lum < ink_max)
+    if sat_max is not None:
+        # Luminance alone cannot separate the text from the illumination on a
+        # cream leaf: measured on `madinah_gold` page 1 the paper itself sits
+        # at saturation ~72, so a plain darkness test inside the panel also
+        # catches the gold. The body text is the only near-neutral thing in
+        # there.
+        core &= (sub.max(axis=2) - sub.min(axis=2)) < sat_max
     h, w = core.shape
     prof = core.sum(axis=1) / w
     runs, st = [], None
@@ -298,15 +364,28 @@ def fit(edition, verbose=True):
 
         sp = spec.get("special", {}).get(page)
         if sp and sp.get("panel"):
-            runs = panel_lines(rgb, spec["ink_max"], sp["panel"],
-                               invert=spec.get("invert", False))
+            runs = panel_lines(rgb, sp.get("ink_max", spec["ink_max"]),
+                               sp["panel"],
+                               invert=spec.get("invert", False),
+                               sat_max=sp.get("sat_max"))
+            if sp.get("merge", True):
+                runs = merge_close(runs)
         else:
             runs = printed_lines(rgb, box, spec["ink_max"],
                                  inset=(sp or {}).get("inset", spec["inset"]),
                                  invert=spec.get("invert", False))
         if sp:
-            runs = runs[sp["drop_leading"]:]
+            runs = runs[sp.get("drop_leading", 0):]
             targets = [(t + b) / 2 for t, b in hafs_lines(page)]
+            # `drop_target` drops leading HAFS slots instead of leading runs —
+            # for a line the page really sets but the scan cannot see. On
+            # `madinah_gold` page 1 the basmalah is drawn in gold, not ink, so
+            # no threshold that still separates the six body lines will find
+            # it; it is nonetheless al-Fatiha's ayah 1 and carries a polygon.
+            # Fitting the six visible lines to slots 2..7 places slot 1 by the
+            # same affine, which is sound because the grid is uniform — and
+            # the proof overlay is what checks it, not this comment.
+            targets = targets[sp.get("drop_target", 0):]
             hx0, hx1 = hafs_x(page)
         else:
             targets = grid

@@ -151,6 +151,12 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
   Future<void> _toggleRecitation(MushafData data) async {
     final audio = AyahAudioService.instance;
     if (_recite.active) {
+      // Same recovery as the mushaf reader: a run Android tore down while the
+      // app was backgrounded resumes on this press instead of being stopped.
+      if (_recite.stalled) {
+        await audio.continuousPauseResume();
+        return;
+      }
       await audio.stopContinuous();
       return;
     }

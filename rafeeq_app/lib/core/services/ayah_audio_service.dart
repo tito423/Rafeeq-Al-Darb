@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart' as bd;
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 import 'package:path/path.dart' as p;
@@ -88,6 +88,13 @@ class ContinuousRecitation {
   /// say "جارٍ التحميل" instead of looking frozen between surahs.
   final bool buffering;
 
+  /// The run is nominally still active but the platform player has gone —
+  /// Android released it while the app sat in the background. The verse and
+  /// position are still meaningful (they are where to resume from); what is
+  /// not true any more is that anything is sounding. Set on app resume by
+  /// [AyahAudioService.onAppResumed].
+  final bool stalled;
+
   const ContinuousRecitation({
     this.active = false,
     this.surahId,
@@ -95,12 +102,31 @@ class ContinuousRecitation {
     this.indexInSurah = 0,
     this.totalInSurah = 0,
     this.buffering = false,
+    this.stalled = false,
   });
 
   static const stopped = ContinuousRecitation();
 
+  ContinuousRecitation copyWith({bool? stalled, bool? buffering}) =>
+      ContinuousRecitation(
+        active: active,
+        surahId: surahId,
+        ayahNumber: ayahNumber,
+        indexInSurah: indexInSurah,
+        totalInSurah: totalInSurah,
+        buffering: buffering ?? this.buffering,
+        stalled: stalled ?? this.stalled,
+      );
+
   bool isAyah(int surah, int ayah) =>
       active && surahId == surah && ayahNumber == ayah;
+}
+
+/// Why a continuous recitation could not start or carry on.
+enum ContinuousError {
+  /// The verses' audio could not be opened, even after the player itself was
+  /// rebuilt. Network, or a source that genuinely is not there.
+  loadFailed,
 }
 
 /// Ayah-level recitation: streaming, on-disk caching, whole-surah downloads,
@@ -112,8 +138,21 @@ class ContinuousRecitation {
 /// download is finished — including with no network — and they are also what
 /// makes verse-accurate highlighting possible during playback.
 class AyahAudioService {
-  AyahAudioService._();
+  AyahAudioService._() {
+    // Registered here rather than in each reader screen so the recovery
+    // applies wherever a recitation can be running — the mushaf reader and
+    // the Sunan Suwar reader both drive the same service.
+    try {
+      _lifecycle = AppLifecycleListener(onResume: onAppResumed);
+    } catch (_) {
+      // No widget binding (a unit test constructing the service): nothing to
+      // observe, and playback is not what such a test is exercising.
+    }
+  }
   static final AyahAudioService instance = AyahAudioService._();
+
+  // ignore: unused_field
+  AppLifecycleListener? _lifecycle;
 
   /// The reciter every fresh install starts on — the owner's choice:
   /// محمد صديق المنشاوي (المجود). It has a verified everyayah mirror
@@ -122,23 +161,86 @@ class AyahAudioService {
   /// only a CDN stream.
   static const String defaultEdition = 'ar.minshawimujawwad';
 
-  /// **One** player for the whole app, on purpose. `main()` initialises
-  /// `just_audio_background`, whose platform implementation throws
-  /// *"just_audio_background supports only a single player instance"* on the
-  /// second `AudioPlayer` created in the process. Every playback path here —
-  /// single ayah, repeat loop, topic playlist, continuous recitation — shares
-  /// this instance rather than making its own.
-  final AudioPlayer _player = AudioPlayer();
+  /// **One** player for the whole app at a time, on purpose. `main()`
+  /// initialises `just_audio_background`, whose platform implementation throws
+  /// *"just_audio_background supports only a single player instance"* on a
+  /// second concurrently-live `AudioPlayer`. Every playback path here — single
+  /// ayah, repeat loop, topic playlist, continuous recitation — shares this
+  /// one rather than making its own.
+  ///
+  /// Not `final`, because it can be **replaced**: see [_recreatePlayer]. The
+  /// package's own `disposePlayer` clears its `_playerId` (read in
+  /// just_audio_background 0.0.1-beta.17, `just_audio_background.dart:143`),
+  /// so a new player after a disposed one is allowed — it is only a second
+  /// *simultaneous* one that is refused.
+  AudioPlayer _player = AudioPlayer();
+
+  /// The player's state, re-broadcast by the service rather than handed out
+  /// directly, so a widget that subscribed before a [_recreatePlayer] keeps
+  /// receiving events from whichever player is current. Handing out
+  /// `_player.playerStateStream` would leave every existing `StreamBuilder`
+  /// listening to a dead player.
+  final StreamController<PlayerState> _stateOut =
+      StreamController<PlayerState>.broadcast();
+  StreamSubscription<PlayerState>? _stateBridge;
+  bool _bridged = false;
+
+  void _bridgePlayerState() {
+    _stateBridge?.cancel();
+    _stateBridge = _player.playerStateStream.listen(
+      _stateOut.add,
+      onError: (Object _) {},
+    );
+    _bridged = true;
+  }
 
   bool get isPlaying => _player.playing;
-  Stream<PlayerState> get playerState => _player.playerStateStream;
+
+  Stream<PlayerState> get playerState {
+    if (!_bridged) _bridgePlayerState();
+    return _stateOut.stream;
+  }
 
   /// A plain `Stream<bool>` for UI code that only cares whether *something*
   /// is playing right now (e.g. the ayah card's single play/stop toggle) —
   /// keeps `package:just_audio`'s `PlayerState` type out of widget files that
   /// don't otherwise need it.
   Stream<bool> get isPlayingStream =>
-      _player.playerStateStream.map((s) => s.playing);
+      playerState.map((s) => s.playing).distinct();
+
+  /// True when the platform side has gone away under us: the player reports
+  /// nothing loaded and nothing playing.
+  ///
+  /// This is the state the owner hit — «التلاوة بتهنج لو التطبيق راح في
+  /// الخلفية فترة طويلة ولما بحاول أضغط أشغّلها مفيش حاجة بتحصل». Android
+  /// tears down the `audio_service` foreground service (and with it the
+  /// platform player) after a long stretch in the background, while this
+  /// isolate lives on believing a recitation is still running: `play()` on a
+  /// released player is a silent no-op, and the reader's play button did
+  /// nothing at all.
+  bool get _playerIsIdle =>
+      !_player.playing &&
+      (_player.processingState == ProcessingState.idle ||
+          _player.processingState == ProcessingState.completed);
+
+  /// Throws away the platform player and builds a fresh one.
+  ///
+  /// Disposal first is what makes this legal (see [_player]'s note), and it
+  /// is awaited so the plugin has really released its id before the new
+  /// player asks for one.
+  Future<void> _recreatePlayer() async {
+    final old = _player;
+    await _stateBridge?.cancel();
+    _stateBridge = null;
+    try {
+      await old.dispose();
+    } catch (_) {
+      // A player that is already gone is exactly the case being recovered
+      // from; its disposal failing changes nothing.
+    }
+    _player = AudioPlayer();
+    if (_bridged) _bridgePlayerState();
+  }
 
   // ── Queue playback (memorization repeat-loop + topic playlists) ─────────
 
@@ -416,6 +518,12 @@ class AyahAudioService {
   final ValueNotifier<ContinuousRecitation> continuous =
       ValueNotifier(ContinuousRecitation.stopped);
 
+  /// Set when a recitation could not be started or resumed, so the reader can
+  /// **say so** instead of leaving a play button that does nothing. The screen
+  /// clears it once it has shown the message.
+  final ValueNotifier<ContinuousError?> continuousError =
+      ValueNotifier<ContinuousError?>(null);
+
   /// Bumped on every start/stop so a late async build from a superseded run
   /// cannot hijack the player.
   int _continuousToken = 0;
@@ -426,6 +534,11 @@ class AyahAudioService {
   List<Ayah> _continuousAyahs = const [];
   String _continuousEdition = defaultEdition;
   bool _continuousWholeMushaf = true;
+
+  /// The repository the running recitation was started with, kept so the
+  /// transport can restart a wedged run without the widget having to hand it
+  /// back in. See [continuousPauseResume].
+  QuranRepository? _continuousRepo;
 
   bool get isContinuousActive => continuous.value.active;
 
@@ -441,6 +554,7 @@ class AyahAudioService {
     final token = ++_continuousToken;
     _continuousEdition = edition;
     _continuousWholeMushaf = wholeMushaf;
+    _continuousRepo = repo;
 
     continuous.value = ContinuousRecitation(
       active: true,
@@ -479,44 +593,66 @@ class AyahAudioService {
     final firstGlobal = await repo.globalAyahNumber(surahId, 1);
     if (token != _continuousToken) return;
 
-    final children = <AudioSource>[];
-    for (final a in ayahs) {
-      final global = firstGlobal + (a.ayahNumber - 1);
-      final tag = _tag(_continuousEdition, global, a, null);
-      final file = _fileFor(dir, global);
-      if (_looksComplete(file)) {
-        children.add(AudioSource.file(file.path, tag: tag));
-      } else {
-        children.add(
-          AudioSource.uri(
-            Uri.parse(
-              RecitationSource.primaryUrl(
-                edition: _continuousEdition,
-                surah: a.surahId,
-                ayah: a.ayahNumber,
-                globalAyah: global,
-              ),
-            ),
-            tag: tag,
-          ),
-        );
-      }
-    }
+    // Built fresh on each attempt below: an `AudioSource` is bound to the
+    // player it was given to, so the retry after [_recreatePlayer] must not
+    // reuse the objects the disposed player already saw.
+    List<AudioSource> buildChildren() => [
+          for (final a in ayahs)
+            () {
+              final global = firstGlobal + (a.ayahNumber - 1);
+              final tag = _tag(_continuousEdition, global, a, null);
+              final file = _fileFor(dir, global);
+              return _looksComplete(file)
+                  ? AudioSource.file(file.path, tag: tag)
+                  : AudioSource.uri(
+                      Uri.parse(
+                        RecitationSource.primaryUrl(
+                          edition: _continuousEdition,
+                          surah: a.surahId,
+                          ayah: a.ayahNumber,
+                          globalAyah: global,
+                        ),
+                      ),
+                      tag: tag,
+                    );
+            }(),
+        ];
 
     await _cancelContinuousSubs();
     if (token != _continuousToken) return;
 
-    try {
-      await _player.stop();
-      await _player.setAudioSource(
-        ConcatenatingAudioSource(children: children),
-        initialIndex: 0,
-      );
-    } catch (_) {
-      await stopContinuous();
-      return;
+    // Two attempts, and the second one is on a **new** player.
+    //
+    // A `setAudioSource` that throws used to end the recitation outright —
+    // `stopContinuous()` and silence, with no way back except killing the
+    // app. The common cause is not a bad source but a platform player Android
+    // released while the app sat in the background, which throws on every
+    // call afterwards. Rebuilding it and loading the same sources again
+    // recovers, and a failure that survives a fresh player is a real failure,
+    // reported rather than swallowed.
+    var loaded = false;
+    for (var attempt = 0; attempt < 2 && !loaded; attempt++) {
+      if (attempt == 1) {
+        await _recreatePlayer();
+        if (token != _continuousToken) return;
+      }
+      try {
+        await _player.stop();
+        await _player.setAudioSource(
+          ConcatenatingAudioSource(children: buildChildren()),
+          initialIndex: 0,
+        );
+        loaded = true;
+      } catch (_) {
+        // fall through to the retry, then to the report below
+      }
     }
     if (token != _continuousToken) return;
+    if (!loaded) {
+      await stopContinuous();
+      continuousError.value = ContinuousError.loadFailed;
+      return;
+    }
 
     // The highlight source of truth: whichever child just_audio says is
     // playing *is* the verse being recited.
@@ -610,14 +746,58 @@ class AyahAudioService {
     if (!isContinuousActive) return;
     if (_player.playing) {
       await _player.pause();
-    } else {
-      unawaited(_player.play());
+      return;
+    }
+    // `play()` on a released platform player returns without doing anything
+    // and without throwing — the "I press play and nothing happens" the owner
+    // reported after a long spell in the background. When the player says it
+    // holds nothing, resume by loading the current verse again rather than
+    // asking a dead player to play.
+    if (_playerIsIdle) {
+      final resumed = await _restartFromCurrentVerse();
+      if (resumed) return;
+    }
+    unawaited(_player.play());
+  }
+
+  /// Reloads the recitation at the verse it had reached. Returns false when
+  /// there is nothing to restart from (no run, or no repository recorded).
+  Future<bool> _restartFromCurrentVerse() async {
+    final state = continuous.value;
+    final repo = _continuousRepo;
+    final surah = state.surahId;
+    final ayah = state.ayahNumber;
+    if (!state.active || repo == null || surah == null || ayah == null) {
+      return false;
+    }
+    final row = await repo.ayah(surah, ayah);
+    if (row == null) return false;
+    await startContinuous(
+      from: row,
+      repo: repo,
+      edition: _continuousEdition,
+      wholeMushaf: _continuousWholeMushaf,
+    );
+    return true;
+  }
+
+  /// Called when the app comes back to the foreground.
+  ///
+  /// If the state still claims a recitation is running but the platform player
+  /// holds nothing, the run is over as far as Android is concerned. Clearing
+  /// it here is what makes the reader's recitation button *start* on the next
+  /// press instead of toggling off a run that is not running — which is how
+  /// the hang presented: one press appeared to do nothing at all.
+  void onAppResumed() {
+    if (continuous.value.active && _playerIsIdle) {
+      continuous.value = continuous.value.copyWith(stalled: true);
     }
   }
 
   Future<void> stopContinuous() async {
     if (_continuousToken == 0 && !continuous.value.active) return;
     _continuousToken++;
+    _continuousRepo = null;
     await _cancelContinuousSubs();
     _continuousAyahs = const [];
     continuous.value = ContinuousRecitation.stopped;

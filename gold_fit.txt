@@ -1,0 +1,21 @@
+Hafs grid: 15 slots, samples per slot [67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67]
+Hafs block x: 0.0000 - 0.9840
+  fitted 100/604
+  fitted 200/604
+  fitted 300/604
+  fitted 400/604
+  fitted 500/604
+  fitted 600/604
+
+hafs -> FRAME-RELATIVE, from 601 fitted pages:
+   sx  mean 0.834991  sd 0.011859  spread 0.061218
+   dx  mean 0.089382  sd 0.006052  spread 0.030981
+   sy  mean 0.908868  sd 0.011169  spread 0.094451
+   dy  mean 0.050509  sd 0.010146  spread 0.088741
+   frame box implausible, affine borrowed from the nearest directly-fitted page: [(1, 2, 0.9992, 0.9994)]
+
+fitted directly: 603 pages   filled from the frame: 1
+   direct residual: median 0.00328  95th 0.00952  max 0.02101
+   filled pages: [50]
+
+wrote E:\My Projects\Rafiq-Al-Darb\scripts\madinah_gold_polygon_fit_pages.json (604 pages)
