@@ -6,12 +6,141 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-09 |
-| **Released** | **v3.8.0** — the only release; v3.7.0 and its tag deleted so the repo reads clean. |
-| **App version** | `pubspec.yaml` `3.8.0+4` (this is what the About card shows — keep it equal to the release tag) |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **44/44** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
+| **Last updated** | 2026-09-09, end of the **seventh** session |
+| **Released** | **v3.8.0** — still the only release. Seven sessions of work sit on `master` and are in no APK the owner has. |
+| **App version** | `pubspec.yaml` `3.8.0+4` — **not bumped**, because nothing was released |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **62/62** · `py -3 scripts/i18n_audit.py` **0** · `py -3 scripts/check_hero_contrast.py` every tone ≥ 4.5:1 · hosted content **23 paths, 0 failed** · everything below was opened on `emulator-5554` and looked at, except where this file says otherwise |
 
-## STATE AS OF 2026-09-09 — SIXTH SESSION (still unreleased, on top of v3.8.0)
+## STATE AS OF 2026-09-09 — SEVENTH SESSION (still unreleased, on top of v3.8.0)
+
+### 1. The «""» and the stray dot — the sixth session's fix was HALF the bug
+
+`stripBidiControls()` was correct and is not the whole story. Opened Sunan Abi
+Dawud 1417 on the device: the **detail screen** was right. Then opened the Home
+daily card — Bukhari 4543 — and the full stop was still adrift, sitting after
+«كِبْرَهُ}» instead of ending the sentence after «سَلُولَ».
+
+The cause the sixth session could not see: **six of the seven locales lay the
+app out left-to-right, and an Arabic paragraph in an LTR box throws its edge
+punctuation to the wrong end.** Removing the source's RLMs does nothing about
+that. It is invisible in Arabic and Urdu, which is why a sweep in Arabic would
+never have found it.
+
+Of the four patched render sites, exactly **one** forced RTL
+(`hadith_detail_screen`). The other three did not, and the same defect was in
+the adhkar screen, the khatma card, the New Muslim guide and Quran search — all
+now `ArabicText`. `test/arabic_direction_test.dart` **measures** the defect
+(the stop's x-position in an LTR paragraph) before it measures the fix.
+
+The mirror of it bit Urdu: the prayer tiles read «AM 7:36». Same trap (#16) as
+«MB 60.5»; `formatTime12h` isolates it now.
+
+### 2. Prayer calculation — 20 methods, the Asr madhab, high latitudes
+
+Was four methods, no Asr madhab (always Shafi'i), no high-latitude rule.
+
+Angles come from **AlAdhan's published table**, refetched by
+`scripts/build_prayer_method_fixtures.py`; `test/calculation_methods_test.dart`
+asserts every angle against it and then asserts the app's own computed times
+against **320 real answers** (20 methods × 4 cities × 2 dates × both Asr
+schools) — **1,920 time comparisons, worst disagreement 2 minutes.**
+
+That comparison found four real bugs that would have shipped:
+
+* **Umm al-Qura's Isha is +30 minutes in Ramadan.** Without it every Umm
+  al-Qura reader's Isha was half an hour early *for the whole of Ramadan*.
+* **Turkey** needed sunrise −7, dhuhr +5, asr +4, maghrib +7.
+* **Dubai, Morocco, Lisbon** needed measured per-prayer offsets.
+* **High latitudes**: Fajr in London in June was **78–89 minutes** out for the
+  four interval-Isha methods, because `twilight_angle` silently fell back.
+
+**Three methods are deliberately absent, with reasons in the catalogue's doc
+comment:** Moonsighting (the package's implementation differs from the
+committee's by up to 9 minutes with no constant offset), Jafari and Tehran
+(Maghrib from a 4°/4.5° sun angle is a Shia fiqh position). Everything else in
+the owner's reference screenshots — the German, Canadian, Czech, Swiss,
+Belgian, Austrian, Luxembourgish, Maldivian, Iraqi, Syrian, Omani and Libyan
+entries — is in **no published source with angles**, so it is not shipped.
+
+Verified on the device: switching Umm al-Qura → Egypt moved Isha 9:38 → 9:27 PM,
+and the 11-minute gap matches AlAdhan for the same day and place exactly.
+
+### 3. easy_localization's plural rules were OFF — in every locale, always
+
+`ignorePluralRules` defaults to **true**, so `.plural()` only ever resolved
+zero/one/two/other and **every `few` and `many` in all seven locale files was
+dead text**. Russian showed «7277 хадиса» and «97 главы» (both need the
+genitive plural); Arabic's «{} آيات» for 3–10 had never once been reached.
+Both entry points pass `ignorePluralRules: false` now, pinned by
+`test/supported_locales_test.dart`.
+
+### 4. The Russian and Urdu sweeps, and Arabic
+
+* Russian «Библиотека» (10 chars) **wrapped and clipped** in the bottom bar
+  while `nav_label_width_test` passed it — the budget was one number and
+  Cyrillic is wider than Latin. The budget is per script now (Latin 10,
+  Cyrillic 8, Arabic 8) and was **proven to fail on the old label**.
+* The Home header's three cells had no gap; in Russian the Hijri line and the
+  greeting touched.
+* Urdu and Arabic are otherwise clean.
+
+### 5. The hero surfaces follow the theme, and the countdown is live
+
+The owner reversed P3‑4's «RGB في جميع الثيمات»: the clock card, the prayer
+carousel, the card screens and the four «المزيد» cards were a fixed dark
+gradient in every theme. One `HeroSurface` decides all of them now — dark and
+RGB unchanged, a new light member — and the twenty clock faces take their ink
+from the card instead of painting white.
+
+`scripts/check_hero_contrast.py` computes every tone against the composited
+ground and found that **four prayer accents were never legible even on the
+dark theme**: Fajr's violet measured **2.43 : 1**. Each is now the smallest
+solved nudge that clears 4.6 : 1.
+
+The «المتبقي» line is a real per-second countdown — hours : minutes : seconds,
+each digit rolling through an `AnimatedSwitcher`, Arabic-Indic in Arabic,
+coloured by the next prayer's measured accent.
+
+### 6. Three reminders around each prayer
+
+Before the adhan, after it, and the iqama — each 0–60 minutes, **zero means
+off**, all off by default. They ride the same trigger as the adhan alarms (a
+real times fetch) but go through `flutter_local_notifications`, not the native
+alarm path: a reminder does not need to take over a locked screen.
+
+Proved with `dumpsys alarm` on the device, not by reading the code: with the
+pre-reminder at 10 and the iqama at 5, ten `ScheduledNotification` alarms stood
+at **exactly −10 and +5 around all five prayers** (06:03/06:18 around a 06:13
+Fajr, 13:42/13:57 around 13:52, and so on), with the adhan's own alarm
+untouched at 06:13.
+
+### 7. HadeethEnc is fully crawled
+
+**3,574 hadiths, 15,498 (id, language) rows, 100 % fetched, 60.5 MB.** Every
+single row carries both a takhrij and a grading. The earlier "of 25,018" was a
+wrong denominator: not every hadith has all seven languages, and the crawler
+only ever asks for the ones a hadith declares.
+
+`scripts/hadeethenc_gap_report.py` settles the question the last brief asked:
+**en/es/fr/pt/ru are 0 % untranslated**, and Urdu's 29 % is «متفق عليه» /
+«صحيح» — Arabic-script hadith terminology an Urdu reader reads as Urdu. **The
+card needs no "not translated" state.** Nothing is wired into the app yet.
+
+### Measured today, not remembered
+
+| | |
+|---|---|
+| locales · keys each | 7 · 941 |
+| i18n audit | 0 untranslated · 809 allowlisted, each with a written reason |
+| mushaf editions | 9 |
+| library books | 217 |
+| `hadith.db` | 104.6 MB · 67,153 hadiths · 45,219 graded |
+| `hadeethenc.db` | 60.5 MB · 3,574 hadiths · 15,498 rows (gitignored) |
+| calculation methods | 20 |
+| tests | 62 |
+| debug APK | 441 MB |
+
+## STATE AS OF 2026-09-09 — SIXTH SESSION (superseded by the block above) (still unreleased, on top of v3.8.0)
 
 **The tree is clean, `flutter analyze lib test` is clean, `flutter test` is
 48/48, and `py -3 scripts/i18n_audit.py` reports 0.** The session ended at
