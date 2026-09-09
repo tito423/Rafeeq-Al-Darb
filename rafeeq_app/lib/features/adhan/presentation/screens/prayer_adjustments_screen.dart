@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hijri/hijri_calendar.dart';
 
 import '../../../../core/i18n/hijri_months.dart';
+import '../../../../core/services/prayer_reminder_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_settings_provider.dart';
@@ -390,6 +391,7 @@ class _ReminderRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localeCode = context.locale.languageCode;
     final off = minutes <= 0;
     return Row(
       children: [
@@ -402,9 +404,13 @@ class _ReminderRow extends StatelessWidget {
             children: [
               Text(label, style: theme.textTheme.bodyMedium),
               Text(
+                // `minutesLabel`, not '$minutes ${unit}': this line and the
+                // notification the reminder produces are the same sentence
+                // fragment, and only one of them being «١٠ دقائق» while the
+                // other says «10 دقيقة» is how they drifted apart before.
                 off
                     ? 'prayer.reminder_off'.tr()
-                    : '$minutes ${'prayer.minutes_unit'.tr()}',
+                    : minutesLabel(minutes, localeCode),
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: off
                       ? theme.colorScheme.onSurfaceVariant

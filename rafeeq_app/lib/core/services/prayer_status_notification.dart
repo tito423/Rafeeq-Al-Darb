@@ -6,6 +6,7 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../models/prayer_times.dart';
+import '../utils/digits.dart';
 import 'prayer_times_service.dart';
 
 /// P2‑6 — an ongoing, low-priority status-bar card showing the **next prayer**
@@ -231,7 +232,7 @@ class PrayerStatusNotification {
     final name = _prayerName(key, localeCode);
     final hh = at.hour.toString().padLeft(2, '0');
     final mm = at.minute.toString().padLeft(2, '0');
-    final clock = localeCode == 'ar' ? _toArabicDigits('$hh:$mm') : '$hh:$mm';
+    final clock = localizeDigits('$hh:$mm', localeCode);
     return '$name · $clock';
   }
 
@@ -261,27 +262,16 @@ class PrayerStatusNotification {
       final y = int.parse(m.group(3)!);
       if (mo >= 1 && mo <= 12) {
         final line = '$d ${hijriMonthName(mo)} $y$suffix';
-        return localeCode == 'ar' ? _toArabicDigits(line) : line;
+        return localizeDigits(line, localeCode);
       }
     }
     try {
       HijriCalendar.setLocal(lang);
       final h = HijriCalendar.fromDate(day);
       final line = '${h.hDay} ${hijriMonthName(h.hMonth)} ${h.hYear}$suffix';
-      return localeCode == 'ar' ? _toArabicDigits(line) : line;
+      return localizeDigits(line, localeCode);
     } catch (_) {
       return '';
     }
-  }
-
-  String _toArabicDigits(String s) {
-    const west = '0123456789';
-    const east = '٠١٢٣٤٥٦٧٨٩';
-    final b = StringBuffer();
-    for (final ch in s.split('')) {
-      final i = west.indexOf(ch);
-      b.write(i >= 0 ? east[i] : ch);
-    }
-    return b.toString();
   }
 }

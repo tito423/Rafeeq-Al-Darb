@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../models/prayer_times.dart';
+import '../utils/digits.dart';
 import 'prayer_times_service.dart';
 
 /// The three reminders around a prayer, asked for as one card:
@@ -28,6 +29,22 @@ import 'prayer_times_service.dart';
 /// on a phone left closed for a week the last one drifts by a few minutes.
 /// The alternative — an exact alarm per reminder per day — is the machinery
 /// the adhan uses and is not worth spending on a nudge.
+/// «١٠ دقائق» / "10 min" — a count of minutes and its unit, in the app's
+/// language and its digits.
+///
+/// It is a plural key, not `'$n ${'prayer.minutes_unit'.tr()}'`, because that
+/// is what fired on emulator-5554 on 2026-09-10 as «باقٍ 10 دقيقة على الفجر».
+/// Arabic counts 3-10 with a plural (ثلاث دقائق) and 11-99 with a singular
+/// accusative (خمس عشرة دقيقة), and one hardcoded unit cannot be both. The
+/// other six locales abbreviate the unit and so do not inflect; the key still
+/// exists in all seven because `translation_parity_test` requires it and
+/// because a translator may need it later.
+///
+/// Shared with the settings screen so the counter the owner sets a reminder
+/// with and the notification it produces cannot disagree.
+String minutesLabel(int n, String localeCode) =>
+    localizeDigits('prayer.minutes_count'.plural(n), localeCode);
+
 class PrayerReminderService {
   PrayerReminderService._();
   static final PrayerReminderService instance = PrayerReminderService._();
@@ -67,11 +84,23 @@ class PrayerReminderService {
   /// Re-arms all fifteen slots from [times]. A kind whose minutes are 0 is
   /// cancelled rather than scheduled, so turning one off in settings takes
   /// effect on the next fetch without a separate path.
+  ///
+  /// [localeCode] is passed rather than looked up because there is no
+  /// `BuildContext` here and `easy_localization` keeps its active locale
+  /// private — the same reason `PrayerStatusNotification.refresh` takes one.
+  /// It shapes the digits; the wording itself comes from `.tr()`, which reads
+  /// the same global locale.
+  ///
+  /// The title and body are **baked in at arming time**, so the fifteen
+  /// notifications sitting in AlarmManager are in whatever language was
+  /// active when they were armed. `RafeeqApp` re-arms them on every language
+  /// change for exactly that reason.
   Future<void> reschedule(
     PrayerTimes times, {
     required int beforeMinutes,
     required int afterMinutes,
     required int iqamaMinutes,
+    required String localeCode,
   }) async {
     if (times.isEmpty) {
       await cancelAll();
@@ -95,7 +124,7 @@ class PrayerReminderService {
         title: 'notif.pre_title'.tr(namedArgs: {'prayer': label}),
         body: 'notif.pre_body'.tr(namedArgs: {
           'prayer': label,
-          'minutes': _minutes(beforeMinutes),
+          'minutes': minutesLabel(beforeMinutes, localeCode),
         }),
       );
 
@@ -106,7 +135,7 @@ class PrayerReminderService {
         title: 'notif.post_title'.tr(namedArgs: {'prayer': label}),
         body: 'notif.post_body'.tr(namedArgs: {
           'prayer': label,
-          'minutes': _minutes(afterMinutes),
+          'minutes': minutesLabel(afterMinutes, localeCode),
         }),
       );
 
@@ -127,10 +156,6 @@ class PrayerReminderService {
       await _plugin.cancel(_iqamaBase + i);
     }
   }
-
-  /// «١٠ دقيقة» / "10 minutes" — the count and its unit, in the app's
-  /// language, so the body reads as a sentence and not as a bare number.
-  String _minutes(int n) => '$n ${'prayer.minutes_unit'.tr()}';
 
   Future<void> _arm({
     required int id,

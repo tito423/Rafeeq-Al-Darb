@@ -442,7 +442,15 @@
     "pre_reminder": "قبل الأذان",
     "post_reminder": "بعد الأذان",
     "iqama_reminder": "الإقامة",
-    "reminder_off": "موقوف"
+    "reminder_off": "موقوف",
+    "minutes_count": {
+      "zero": "لا دقائق",
+      "one": "دقيقة واحدة",
+      "two": "دقيقتان",
+      "few": "{} دقائق",
+      "many": "{} دقيقة",
+      "other": "{} دقيقة"
+    }
   },
   "qibla": {
     "locating": "جارِ تحديد موقعك...",
@@ -857,10 +865,10 @@
     "dl_service_body": "يتابع التطبيق التنزيل في الخلفية",
     "prayer_reminder_channel": "تنبيهات الصلاة",
     "prayer_reminder_channel_desc": "تنبيه قبل الأذان وبعده، وتنبيه الإقامة",
-    "pre_title": "اقتربت {prayer}",
-    "pre_body": "باقٍ {minutes} على {prayer}",
+    "pre_title": "اقترب موعد صلاة {prayer}",
+    "pre_body": "بقيت {minutes} على صلاة {prayer}",
     "post_title": "مضى وقت من أذان {prayer}",
-    "post_body": "مضى {minutes} على أذان {prayer}",
+    "post_body": "مضت {minutes} على أذان {prayer}",
     "iqama_title": "إقامة {prayer}",
     "iqama_body": "حان وقت إقامة صلاة {prayer}"
   },

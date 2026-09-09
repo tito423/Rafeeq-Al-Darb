@@ -166,6 +166,10 @@ ALLOWLIST = {
      "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the Arabic-numeral clock face",
     ("core/services/prayer_status_notification.dart",
      "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the Arabic locale's date line",
+    # The one digit table now, shared by the status card, the reminders and
+    # anything else that needs it - a lookup table, not a sentence.
+    ("core/utils/digits.dart",
+     "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits, the app's single conversion table",
     ("features/home/presentation/widgets/prayer_countdown.dart",
      "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the countdown, so it matches "
                     "the clock face directly above it",

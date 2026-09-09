@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-09, end of the **seventh** session |
+| **Last updated** | 2026-09-10 |
 | **Released** | **v3.8.0** — still the only release. Seven sessions of work sit on `master` and are in no APK the owner has. |
 | **App version** | `pubspec.yaml` `3.8.0+4` — **not bumped**, because nothing was released |
 | **Build verified?** | `flutter analyze lib test` clean · `flutter test` **62/62** · `py -3 scripts/i18n_audit.py` **0** · `py -3 scripts/check_hero_contrast.py` every tone ≥ 4.5:1 · hosted content **23 paths, 0 failed** · everything below was opened on `emulator-5554` and looked at, except where this file says otherwise |
@@ -615,9 +615,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 23:02 — IN PROGRESS — resume here**
+**2026-09-10 00:14 — IN PROGRESS — resume here**
 
-three reminders around each prayer - before, after, iqama - each 0-60 minutes with zero meaning off. Proved on emulator-5554 by dumpsys alarm: ten notification alarms at exactly -10 and +5 around all five prayers
+the before-Fajr reminder fired on emulator-5554 at 06:03 and was read on screen: 'اقتربت الفجر' / 'باقٍ 10 دقيقة على الفجر' - a feminine verb on a masculine noun, a singular counted noun after 10, and Latin digits beside the app's own Arabic-Indic clock. Fixed with a plural key in all seven locales, one shared localizeDigits, and the owner's wording. The tests were proved to fail on the old strings first
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

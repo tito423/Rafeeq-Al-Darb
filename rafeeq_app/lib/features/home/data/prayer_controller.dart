@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/app_locale_provider.dart';
 import '../../../core/models/prayer_times.dart';
 import '../../../core/services/location_service.dart';
 import '../../../core/services/prayer_reminder_service.dart';
@@ -106,6 +107,9 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       beforeMinutes: settings.reminderBeforeMinutes,
       afterMinutes: settings.reminderAfterMinutes,
       iqamaMinutes: settings.reminderIqamaMinutes,
+      // Shapes the digits in the body. See `appLocaleProvider` for why the
+      // code has to be handed down rather than looked up.
+      localeCode: ref.read(appLocaleProvider),
     );
     final catalog = await ref.read(adhanCatalogProvider.future);
     final videoPath =

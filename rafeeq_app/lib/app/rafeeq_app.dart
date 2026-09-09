@@ -7,8 +7,10 @@ import '../core/services/native_strings.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/rgb_backdrop.dart';
 import '../core/theme/theme_controller.dart';
+import '../features/home/data/prayer_controller.dart';
 import '../features/quran/data/translation_lang_provider.dart';
 import '../features/splash/presentation/screens/splash_screen.dart';
+import 'app_locale_provider.dart';
 import 'navigation.dart';
 
 /// Injected from main() so sync reads are possible anywhere.
@@ -45,12 +47,25 @@ class RafeeqApp extends ConsumerWidget {
       // widget that rebuilds on every locale change, so startup and a
       // language switch are the same code path.
       NativeStrings.sync();
+      ref.read(appLocaleProvider.notifier).state = localeCode;
       // Anything already on screen was built in the previous language and
       // will never be rebuilt — a snackbar least of all. An undo offer for
       // something done before the switch is stale anyway.
       if (localeCode != _lastLocale) {
+        final first = _lastLocale == null;
         _lastLocale = localeCode;
         rootScaffoldMessengerKey.currentState?.clearSnackBars();
+        // The fifteen prayer reminders carry their title and body as literal
+        // text inside AlarmManager — `.tr()` runs when they are *armed*, not
+        // when they fire. Nothing re-armed them on a language change, so
+        // switching to English left tomorrow's Fajr reminder saying
+        // «اقترب موعد صلاة الفجر» until the next times fetch. Re-arm from the
+        // cached times, which costs no network call. Not on the first frame:
+        // there are no cached times yet and `PrayerController` is about to
+        // arm them itself.
+        if (!first) {
+          ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
+        }
       }
     });
 

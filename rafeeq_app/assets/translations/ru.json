@@ -442,7 +442,15 @@
     "pre_reminder": "До азана",
     "post_reminder": "После азана",
     "iqama_reminder": "Икама",
-    "reminder_off": "Выключено"
+    "reminder_off": "Выключено",
+    "minutes_count": {
+      "zero": "{} мин.",
+      "one": "{} мин.",
+      "two": "{} мин.",
+      "few": "{} мин.",
+      "many": "{} мин.",
+      "other": "{} мин."
+    }
   },
   "qibla": {
     "locating": "Определяем ваше местоположение...",

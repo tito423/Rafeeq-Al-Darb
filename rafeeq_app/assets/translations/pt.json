@@ -442,7 +442,15 @@
     "pre_reminder": "Antes do adhan",
     "post_reminder": "Depois do adhan",
     "iqama_reminder": "Iqama",
-    "reminder_off": "Desligado"
+    "reminder_off": "Desligado",
+    "minutes_count": {
+      "zero": "{} min",
+      "one": "{} min",
+      "two": "{} min",
+      "few": "{} min",
+      "many": "{} min",
+      "other": "{} min"
+    }
   },
   "qibla": {
     "locating": "A localizar...",

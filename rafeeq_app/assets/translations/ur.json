@@ -442,7 +442,15 @@
     "pre_reminder": "اذان سے پہلے",
     "post_reminder": "اذان کے بعد",
     "iqama_reminder": "اقامت",
-    "reminder_off": "بند"
+    "reminder_off": "بند",
+    "minutes_count": {
+      "zero": "{} منٹ",
+      "one": "{} منٹ",
+      "two": "{} منٹ",
+      "few": "{} منٹ",
+      "many": "{} منٹ",
+      "other": "{} منٹ"
+    }
   },
   "qibla": {
     "locating": "آپ کا مقام معلوم کیا جا رہا ہے...",
