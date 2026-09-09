@@ -227,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 04:28 — IN PROGRESS — resume here**
+**2026-09-09 04:49 — IN PROGRESS — resume here**
 
-Ruqyah shipped: composed screen (verses from quran_local.db, 6 duas by row id from azkar_items with their takhrij) + 5 recordings; More tab reordered to al-Mazeed then al-Ie'dadat with illuminated cards; verified on device - audio really streams from R2 (media session PLAYING). Also fixed a bidi bug that made every size read 'MB 60.5' in Arabic, in one shared formatter replacing five duplicates
+Islamic channels section: 7 channels, every id/handle/avatar read off YouTube itself by a new verify script (a guessed handle 404'd, which is the check working); avatars mirrored to R2 so the grid works offline; grid/list toggle remembered. Shamela catalogue indexed locally (8598 books) because their search searches inside books, not titles
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

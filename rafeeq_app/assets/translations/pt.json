@@ -663,5 +663,11 @@
   "more": {
     "section_more": "Mais",
     "section_settings": "Configurações"
+  },
+  "channels": {
+    "title": "Canais islâmicos",
+    "intro": "Uma seleção de canais do YouTube. Tocar abre o canal no YouTube — o aplicativo não hospeda vídeos.",
+    "view_grid": "Visualização em grade",
+    "view_list": "Visualização em lista"
   }
 }

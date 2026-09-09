@@ -1,0 +1,8 @@
+===== https://www.youtube.com/@ftawamostafaaladwy =====
+          title: الشيخ مصطفى العدوي
+     channel_id: UCYW44APHfIo0GyAO9iosHjQ
+         vanity: http://www.youtube.com/@ftawamostafaaladwy
+    subscribers: None
+    is_verified: False
+         avatar: https://yt3.googleusercontent.com/-eLizqc_bQxxWlqbLSCmXOS65zhK40eHZ0VR09QJgiVXdm8HtKGFOJoA7-RUYkSu8fHxlwh4=s68-c-k-c0x00ffffff-no-rj
+    description: None

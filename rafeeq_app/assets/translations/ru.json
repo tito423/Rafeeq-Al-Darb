@@ -663,5 +663,11 @@
   "more": {
     "section_more": "Ещё",
     "section_settings": "Настройки"
+  },
+  "channels": {
+    "title": "Исламские каналы",
+    "intro": "Подборка каналов YouTube. Нажатие открывает канал в YouTube — приложение не хранит видео.",
+    "view_grid": "Сеткой",
+    "view_list": "Списком"
   }
 }

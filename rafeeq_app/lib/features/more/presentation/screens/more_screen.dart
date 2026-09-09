@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
+import '../../../channels/presentation/screens/islamic_channels_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
@@ -40,6 +41,18 @@ class MoreScreen extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const RuqyahAudioScreen(),
+              ),
+            ),
+          ),
+
+          IslamicActionCard(
+            icon: Icons.ondemand_video_rounded,
+            accent: AppColors.error,
+            title: 'channels.title'.tr(),
+            subtitle: 'channels.intro'.tr(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const IslamicChannelsScreen(),
               ),
             ),
           ),

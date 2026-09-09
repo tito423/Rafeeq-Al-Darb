@@ -663,5 +663,11 @@
   "more": {
     "section_more": "Plus",
     "section_settings": "Paramètres"
+  },
+  "channels": {
+    "title": "Chaînes islamiques",
+    "intro": "Une sélection de chaînes YouTube. Toucher ouvre la chaîne dans YouTube ; l'application n'héberge aucune vidéo.",
+    "view_grid": "Vue en grille",
+    "view_list": "Vue en liste"
   }
 }

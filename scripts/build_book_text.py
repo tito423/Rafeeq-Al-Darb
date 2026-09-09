@@ -200,6 +200,90 @@ BOOKS = {
         "عبد الواحد المقدسي (ت ٦٠٠هـ)، تحقيق عبد المحسن بن محمد القاسم، "
         "الطبعة الثانية ١٤٤٢هـ/٢٠٢١م",
     },
+    # --- Seerah section + the titles the owner named (2026-09-09) ----------
+    # Every `source_label` below is the edition line from that book's own
+    # بطاقة الكتاب on shamela.ws, read before the crawl was started — not a
+    # publisher guessed from the title. All twelve say «ترقيم الكتاب موافق
+    # للمطبوع» except where noted, so the page numbers are the printed ones.
+    "ar_raheeq_al_makhtum": {
+        "shamela_id": 9820,
+        "source_label": "المكتبة الشاملة — الرحيق المختوم، صفي الرحمن "
+        "المباركفوري (ت ١٤٢٧هـ)، دار الفكر (طبعة خاصة بدار ومكتبة الهلال) - "
+        "بيروت، ٢٠٠٢م",
+    },
+    "seerat_ibn_hisham": {
+        "shamela_id": 7450,
+        # Shamela's own note: this electronic copy carries only the first two
+        # of the printed four volumes. Recorded here because the reader will
+        # reach the end of volume 2 and should not think the book is corrupt.
+        "source_label": "المكتبة الشاملة — السيرة النبوية لابن هشام "
+        "(ت ٢١٣هـ)، قدّم لها وعلّق عليها وضبطها طه عبد الرؤوف سعد، شركة "
+        "الطباعة الفنية المتحدة — النسخة الإلكترونية تقتصر على الجزأين "
+        "الأولين",
+    },
+    "zad_al_maad": {
+        "shamela_id": 21713,
+        "source_label": "المكتبة الشاملة — زاد المعاد في هدي خير العباد، ابن "
+        "قيم الجوزية (ت ٧٥١هـ)، تحقيق شعيب الأرنؤوط وعبد القادر الأرنؤوط، "
+        "مؤسسة الرسالة - بيروت، الإصدار الثاني المنقّح المزيد، الطبعة الأولى "
+        "١٤١٧هـ/١٩٩٦م",
+    },
+    "ash_shamail_al_muhammadiyyah": {
+        "shamela_id": 13037,
+        "source_label": "المكتبة الشاملة — الشمائل المحمدية والخصائل "
+        "المصطفوية، أبو عيسى الترمذي (ت ٢٧٩هـ)، تحقيق سيد بن عباس الجليمي، "
+        "المكتبة التجارية مصطفى أحمد الباز - مكة المكرمة، الطبعة الأولى "
+        "١٤١٣هـ/١٩٩٣م",
+    },
+    "sahih_as_seerah_albani": {
+        "shamela_id": 592,
+        # Shamela's own note: al-Albani died before finishing the abridgement,
+        # reaching 2/94 of Abd al-Wahid's edition. An honest, real limit.
+        "source_label": "المكتبة الشاملة — صحيح السيرة النبوية (من البداية "
+        "والنهاية لابن كثير)، لخّصه وعلّق عليه محمد ناصر الدين الألباني "
+        "(ت ١٤٢٠هـ)، المكتبة الإسلامية - عمّان، الطبعة الأولى ١٤٢١هـ — "
+        "توفي الشيخ قبل إتمامه",
+    },
+    "uyun_al_athar": {
+        "shamela_id": 23653,
+        "source_label": "المكتبة الشاملة — عيون الأثر في فنون المغازي "
+        "والشمائل والسير، ابن سيد الناس (ت ٧٣٤هـ)، تعليق إبراهيم محمد رمضان، "
+        "دار القلم - بيروت، الطبعة الأولى ١٤١٤هـ/١٩٩٣م",
+    },
+    "nur_al_yaqin": {
+        "shamela_id": 23692,
+        "source_label": "المكتبة الشاملة — نور اليقين في سيرة سيد المرسلين، "
+        "محمد بن عفيفي الباجوري المعروف بالشيخ الخضري (ت ١٣٤٥هـ)، دار الفيحاء "
+        "- دمشق، الطبعة الثانية ١٤٢٥هـ",
+    },
+    "as_seerah_nadwi": {
+        "shamela_id": 9914,
+        "source_label": "المكتبة الشاملة — السيرة النبوية، أبو الحسن علي "
+        "الحسني الندوي (ت ١٤٢٠هـ)، تحقيق وتعليق سيد عبد الماجد الغوري، دار "
+        "ابن كثير - دمشق وبيروت، الطبعة الثانية عشرة ١٤٢٥هـ/٢٠٠٤م",
+    },
+    "fiqh_as_seerah_ghazali": {
+        "shamela_id": 23659,
+        "source_label": "المكتبة الشاملة — فقه السيرة، محمد الغزالي السقا "
+        "(ت ١٤١٦هـ)، تخريج الأحاديث محمد ناصر الدين الألباني، دار القلم - "
+        "دمشق، الطبعة الأولى ١٤٢٧هـ",
+    },
+    "as_seerah_ibn_kathir": {
+        "shamela_id": 930,
+        "source_label": "المكتبة الشاملة — السيرة النبوية، ابن كثير "
+        "(ت ٧٧٤هـ)، مستلًّا من البداية والنهاية، تحقيق د. مصطفى عبد الواحد، "
+        "عيسى البابي الحلبي - القاهرة، ١٣٩٥هـ/١٩٧٦م",
+    },
+    "rijal_hawl_ar_rasul": {
+        "shamela_id": 9835,
+        "source_label": "المكتبة الشاملة — رجال حول الرسول، خالد محمد خالد "
+        "ثابت (ت ١٤١٦هـ)، دار الفكر - بيروت، الطبعة الأولى ١٤٢١هـ/٢٠٠٠م",
+    },
+    "la_tahzan": {
+        "shamela_id": 12729,
+        "source_label": "المكتبة الشاملة — لا تحزن، عائض بن عبد الله القرني، "
+        "مكتبة العبيكان",
+    },
 }
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "book_text_build")

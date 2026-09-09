@@ -663,5 +663,11 @@
   "more": {
     "section_more": "Más",
     "section_settings": "Ajustes"
+  },
+  "channels": {
+    "title": "Canales islámicos",
+    "intro": "Una selección de canales de YouTube. Al tocar se abre el canal en YouTube; la aplicación no aloja vídeos.",
+    "view_grid": "Vista de cuadrícula",
+    "view_list": "Vista de lista"
   }
 }
