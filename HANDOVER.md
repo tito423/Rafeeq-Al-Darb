@@ -294,9 +294,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 12:46 — IN PROGRESS — resume here**
+**2026-09-09 12:49 — COMPLETE**
 
-Verified all four new printings on emulator-5554, not just in Python. The editions sheet lists nine, each with its real printed cover. Mushaf Qatar page 604 with the right running header. Kuwait page 604 with recitation: the highlight sits on 112:3 across its two-line wrap, 'lam yalid' ending line 1 and 'wa lam yulad (3)' opening line 2. The night edition, white on black, same ayah, same precision - that one is the newest code path (inverted ink detection, no frame fiducial). The Nastaliq printing renders its own folio 604 with NO running header and NO highlight, which is exactly what a 611-page printing should do. Content re-verified end to end: 23 of 23 hosted paths answer 206 with a real type, byte total and magic bytes - the first AND last page of all seven raster editions, hadith.zip, a translation and four books. The one failure last time was my own guessed filename; scripts/verify_hosted_content.py is now a project script with the right key and the real last page per edition. Docs: HANDOVER gains 5.-1 (fetchable is not legible, and how the Qatar repair was proven) and an expanded 5.0 (two fitters, when each applies, and why a page may honestly have no fit); CLAUDE.md gains traps 25 and 26; NEXT_SESSION_PROMPT rewritten with the nine-printing table and a row per rejected tenth candidate
+v3.8.0 RELEASED and verified: tag SHA 0eb3339 equals HEAD, target master, APK 281,309,971 bytes uploaded, v3.7.0 and its tag deleted so one release and one tag remain. Nine mushaf printings, four of them highlighting ayahs, all four new ones opened on the device and looked at. Handover routine complete: analyze clean, 37/37 tests, 23 of 23 hosted paths range-requested (first AND last page of every raster edition), HANDOVER and NEXT_SESSION_PROMPT rewritten to the measured state, CLAUDE.md carrying traps 23-26 this session paid for, memory corrected on two counts (45 translation languages not 47; nine printings not six). Bucket 1.42 GB after adding four editions and removing two
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
