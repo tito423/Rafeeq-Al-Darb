@@ -16,10 +16,11 @@ class IslamicChannel {
   final String nameAr;
   final String nameEn;
 
-  /// One line on who this is. Factual and short; no praise, no claims about
-  /// their standing.
-  final String descriptionAr;
-  final String descriptionEn;
+  /// One line on who this is — factual and short, no praise and no claims
+  /// about anyone's standing. It lives in the locale files under
+  /// `channels.desc_<id>`, in all seven languages; it used to be an Arabic and
+  /// an English field, and everything that was neither got the English.
+  String get descriptionKey => 'channels.desc_$id';
 
   /// YouTube's own `UC…` id. This, not the handle, is what identifies a
   /// channel permanently — a handle can be changed by its owner.
@@ -32,8 +33,6 @@ class IslamicChannel {
     required this.id,
     required this.nameAr,
     required this.nameEn,
-    required this.descriptionAr,
-    required this.descriptionEn,
     required this.channelId,
     this.handle = '',
   });
@@ -61,8 +60,6 @@ const islamicChannels = <IslamicChannel>[
     id: 'mostafa_mahmoud',
     nameAr: 'القناة الرسمية للدكتور مصطفى محمود',
     nameEn: 'Dr. Mostafa Mahmoud — Official',
-    descriptionAr: 'برنامج العلم والإيمان وحلقات الدكتور مصطفى محمود',
-    descriptionEn: 'Science and Faith, and Dr. Mostafa Mahmoud\'s episodes',
     channelId: 'UCG6tWYl5Zb490PkSAjE2iRg',
     handle: 'DRMoustafaMahmoud',
   ),
@@ -70,8 +67,6 @@ const islamicChannels = <IslamicChannel>[
     id: 'ayman_abdelgelil',
     nameAr: 'الشيخ أيمن عبد الجليل',
     nameEn: 'Sheikh Ayman Abdel Gelil',
-    descriptionAr: 'دروس ومواعظ ولقاءات',
-    descriptionEn: 'Lessons, sermons and interviews',
     channelId: 'UC-hKhCAfM5HXbqqfKvcviEA',
     handle: 'ayman_abdelgelil',
   ),
@@ -79,8 +74,6 @@ const islamicChannels = <IslamicChannel>[
     id: 'abdullah_rushdy',
     nameAr: 'الشيخ عبد الله رشدي',
     nameEn: 'Sheikh Abdullah Rushdy',
-    descriptionAr: 'دروس وردود وبيان مسائل',
-    descriptionEn: 'Lessons, responses and clarifications',
     channelId: 'UCUZOB_l7pZZd0ZjuAbl-tGg',
     handle: 'abdullah.rushdy',
   ),
@@ -88,8 +81,6 @@ const islamicChannels = <IslamicChannel>[
     id: 'yasser_alhazimi',
     nameAr: 'الدكتور ياسر الحزيمي',
     nameEn: 'Dr. Yasser Al-Hazimi',
-    descriptionAr: 'محاضرات في التزكية وبناء الذات',
-    descriptionEn: 'Talks on self-development and spiritual growth',
     channelId: 'UC5Tdzct1NlgjX1CsmnGuWGg',
     handle: 'ybh_1000',
   ),
@@ -97,16 +88,12 @@ const islamicChannels = <IslamicChannel>[
     id: 'mohamed_hassan',
     nameAr: 'الشيخ الدكتور محمد حسان',
     nameEn: 'Sheikh Dr. Mohamed Hassan',
-    descriptionAr: 'دروس ومحاضرات وسلاسل علمية',
-    descriptionEn: 'Lessons, lectures and series',
     channelId: 'UCr4Kz8-cozLWzGYa1WICePw',
   ),
   IslamicChannel(
     id: 'abu_ishaq_alheweny',
     nameAr: 'الشيخ أبو إسحاق الحويني',
     nameEn: 'Sheikh Abu Ishaq al-Huwayni',
-    descriptionAr: 'دروس في الحديث وعلومه',
-    descriptionEn: 'Lessons in hadith and its sciences',
     channelId: 'UCbUeVRqAdyTSFGh2WzmVUoA',
     handle: 'aboishaqalheweny',
   ),
@@ -114,8 +101,6 @@ const islamicChannels = <IslamicChannel>[
     id: 'mostafa_aladwy',
     nameAr: 'الشيخ مصطفى العدوي',
     nameEn: 'Sheikh Mostafa Al-Adawy',
-    descriptionAr: 'فتاوى ودروس في التفسير والحديث',
-    descriptionEn: 'Fatwas and lessons in tafsir and hadith',
     channelId: 'UCYW44APHfIo0GyAO9iosHjQ',
     handle: 'ftawamostafaaladwy',
   ),

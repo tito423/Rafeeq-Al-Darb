@@ -17,7 +17,8 @@
     "retry": "Tentar novamente",
     "undo": "Desfazer",
     "reset_all": "Repor tudo",
-    "download": "Transferir"
+    "download": "Transferir",
+    "script": "latin"
   },
   "nav": {
     "home": "Início",
@@ -669,7 +670,9 @@
     "audio_intro": "Cinco ruqyahs completas gravadas. Toque para ouvir, ou baixe uma para usar offline.",
     "listen_recordings": "Ouvir ruqyahs gravadas",
     "minutes": "{n} min",
-    "reciter_unnamed": "O recitador não é nomeado na fonte"
+    "reciter_unnamed": "O recitador não é nomeado na fonte",
+    "rec_tarteel_hadi": "Ruqyah — para auscultadores",
+    "audio_source": "As gravações vêm do Internet Archive (archive.org), replicadas no servidor da aplicação"
   },
   "more": {
     "section_more": "Mais",
@@ -679,7 +682,14 @@
     "title": "Canais islâmicos",
     "intro": "Uma seleção de canais do YouTube. Tocar abre o canal no YouTube — o aplicativo não hospeda vídeos.",
     "view_grid": "Visualização em grade",
-    "view_list": "Visualização em lista"
+    "view_list": "Visualização em lista",
+    "desc_mostafa_mahmoud": "Ciência e Fé, e os episódios do Dr. Mostafa Mahmoud",
+    "desc_ayman_abdelgelil": "Lições, sermões e entrevistas",
+    "desc_abdullah_rushdy": "Lições, respostas e esclarecimentos",
+    "desc_yasser_alhazimi": "Palestras sobre desenvolvimento pessoal e purificação espiritual",
+    "desc_mohamed_hassan": "Lições, conferências e séries de ensino",
+    "desc_abu_ishaq_alheweny": "Lições de hadith e das suas ciências",
+    "desc_mostafa_aladwy": "Fatwas e lições de tafsir e hadith"
   },
   "mushaf_theme": {
     "title": "Temas do mushaf de texto",
@@ -799,5 +809,29 @@
     "site_islamway": "Lições, conferências e artigos islâmicos de grandes sábios e pregadores",
     "site_saaid": "Uma ampla biblioteca islâmica de artigos, livros e conferências",
     "site_alukah": "Uma rede académica e cultural de investigação e artigos islâmicos"
+  },
+  "adhan_video": {
+    "source": "Fonte: Pixabay — licença Pixabay (uso livre, sem atribuição)",
+    "haram_makkah": "A Grande Mesquita de Meca",
+    "kaaba": "A Caaba",
+    "madina_nabawi": "A Mesquita do Profeta, Medina",
+    "mosque_ottoman": "Uma mesquita de estilo otomano",
+    "kaaba_tawaf": "O Haram e a Caaba",
+    "haram_makkah2": "Os pátios da Grande Mesquita",
+    "kaaba_close": "A Caaba, de perto",
+    "madina_haram": "Os recintos da Mesquita do Profeta",
+    "mosque_minaret": "O minarete de uma mesquita",
+    "mosque_view": "O recinto de uma mesquita"
+  },
+  "imam_bio": {
+    "bukhari": "Nasceu em Bucara em 194 AH e morreu em 256 AH. Viajou em busca do hadith para o Hijaz, a Síria, o Iraque e o Egito, e compilou al-Jami' as-Sahih, no qual exigiu o mais alto grau de continuidade na cadeia de transmissão.",
+    "muslim": "Nasceu em Nishapur em 204 AH e morreu em 261 AH. Estudou com al-Bukhari e outros, organizou o seu Sahih por capítulos e reuniu num único lugar todas as vias de um mesmo hadith.",
+    "abudawud": "Nasceu em Sijistão em 202 AH e morreu em Baçorá em 275 AH. O seu Sunan concentra-se nos hadiths das normas jurídicas e é um dos Seis Livros.",
+    "tirmidhi": "Nasceu em Tirmid em 209 AH e morreu em 279 AH. O seu Jami' distingue-se por indicar após cada hadith as divergências dos juristas e as suas escolas, e por comentar as cadeias.",
+    "nasai": "Nasceu em Nasa, no Khorasan, em 215 AH e morreu em 303 AH. Era conhecido pela precisão com que detetava os defeitos ocultos das cadeias e dos transmissores; o seu Sunan é um dos Seis Livros.",
+    "ibnmajah": "Nasceu em Qazvin em 209 AH e morreu em 273 AH. Organizou o seu Sunan por capítulos jurídicos; é o sexto dos Seis Livros.",
+    "ahmed": "Nasceu em Bagdade em 164 AH e morreu em 241 AH; a escola hanbali tem o seu nome. Organizou o seu Musnad pelos nomes dos Companheiros e não por capítulos.",
+    "malik": "Nasceu em Medina em 93 AH e morreu ali em 179 AH; a escola maliki tem o seu nome. O Al-Muwatta está entre as obras mais antigas compiladas e junta o hadith à prática do povo de Medina.",
+    "darimi": "Nasceu em Samarcanda em 181 AH e morreu em 255 AH. Organizou o seu Sunan por capítulos e abriu-o com uma introdução sobre o conhecimento, a sua etiqueta e os méritos do Profeta ﷺ."
   }
 }

@@ -17,7 +17,8 @@
     "retry": "Réessayer",
     "undo": "Annuler",
     "reset_all": "Tout réinitialiser",
-    "download": "Télécharger"
+    "download": "Télécharger",
+    "script": "latin"
   },
   "nav": {
     "home": "Accueil",
@@ -669,7 +670,9 @@
     "audio_intro": "Cinq roqyas complètes enregistrées. Touchez pour écouter, ou téléchargez-en une pour l'utiliser hors ligne.",
     "listen_recordings": "Écouter les roqyas enregistrées",
     "minutes": "{n} min",
-    "reciter_unnamed": "Le récitant n'est pas nommé dans la source"
+    "reciter_unnamed": "Le récitant n'est pas nommé dans la source",
+    "rec_tarteel_hadi": "Roqya — pour écouteurs",
+    "audio_source": "Les enregistrements proviennent d’Internet Archive (archive.org), copiés sur le serveur de l’application"
   },
   "more": {
     "section_more": "Plus",
@@ -679,7 +682,14 @@
     "title": "Chaînes islamiques",
     "intro": "Une sélection de chaînes YouTube. Toucher ouvre la chaîne dans YouTube ; l'application n'héberge aucune vidéo.",
     "view_grid": "Vue en grille",
-    "view_list": "Vue en liste"
+    "view_list": "Vue en liste",
+    "desc_mostafa_mahmoud": "Science et Foi, et les émissions du Dr Mostafa Mahmoud",
+    "desc_ayman_abdelgelil": "Cours, sermons et entretiens",
+    "desc_abdullah_rushdy": "Cours, réponses et clarifications",
+    "desc_yasser_alhazimi": "Conférences sur le développement de soi et la purification spirituelle",
+    "desc_mohamed_hassan": "Cours, conférences et séries d’enseignement",
+    "desc_abu_ishaq_alheweny": "Cours de hadith et de ses sciences",
+    "desc_mostafa_aladwy": "Fatwas et cours de tafsir et de hadith"
   },
   "mushaf_theme": {
     "title": "Thèmes du mushaf texte",
@@ -799,5 +809,29 @@
     "site_islamway": "Cours, conférences et articles islamiques de grands savants et prédicateurs",
     "site_saaid": "Une vaste bibliothèque islamique d’articles, de livres et de conférences",
     "site_alukah": "Un réseau scientifique et culturel de recherches et d’articles académiques islamiques"
+  },
+  "adhan_video": {
+    "source": "Source : Pixabay — licence Pixabay (usage libre, sans attribution)",
+    "haram_makkah": "La Grande Mosquée de La Mecque",
+    "kaaba": "La Kaaba",
+    "madina_nabawi": "La Mosquée du Prophète, Médine",
+    "mosque_ottoman": "Une mosquée de style ottoman",
+    "kaaba_tawaf": "Le Haram et la Kaaba",
+    "haram_makkah2": "Les cours de la Grande Mosquée",
+    "kaaba_close": "La Kaaba, de près",
+    "madina_haram": "Les esplanades de la Mosquée du Prophète",
+    "mosque_minaret": "Le minaret d’une mosquée",
+    "mosque_view": "L’enceinte d’une mosquée"
+  },
+  "imam_bio": {
+    "bukhari": "Né à Boukhara en 194 AH, mort en 256 AH. Il voyagea à la recherche du hadith au Hedjaz, en Syrie, en Irak et en Égypte, et compila al-Jami' as-Sahih, pour lequel il exigea le plus haut degré de continuité dans la chaîne de transmission.",
+    "muslim": "Né à Nichapour en 204 AH, mort en 261 AH. Il étudia auprès d’al-Bukhari et d’autres, organisa son Sahih par chapitres et rassembla en un même endroit toutes les voies d’un même hadith.",
+    "abudawud": "Né au Sijistan en 202 AH, mort à Bassora en 275 AH. Son Sunan se concentre sur les hadiths des règles juridiques et compte parmi les Six Livres.",
+    "tirmidhi": "Né à Tirmidh en 209 AH, mort en 279 AH. Son Jami' se distingue en indiquant après chaque hadith les divergences des juristes et leurs écoles, et en commentant les chaînes.",
+    "nasai": "Né à Nasa, au Khorassan, en 215 AH, mort en 303 AH. Il était réputé pour la finesse de son examen des défauts cachés des chaînes et des transmetteurs ; son Sunan compte parmi les Six Livres.",
+    "ibnmajah": "Né à Qazwin en 209 AH, mort en 273 AH. Il organisa son Sunan par chapitres juridiques ; c’est le sixième des Six Livres.",
+    "ahmed": "Né à Bagdad en 164 AH, mort en 241 AH ; l’école hanbalite porte son nom. Il organisa son Musnad par les noms des Compagnons plutôt que par chapitres.",
+    "malik": "Né à Médine en 93 AH et mort dans cette ville en 179 AH ; l’école malikite porte son nom. Al-Muwatta compte parmi les plus anciens ouvrages compilés et joint le hadith à la pratique des gens de Médine.",
+    "darimi": "Né à Samarcande en 181 AH, mort en 255 AH. Il organisa son Sunan par chapitres et l’ouvrit par une introduction sur la science, ses convenances et les mérites du Prophète ﷺ."
   }
 }

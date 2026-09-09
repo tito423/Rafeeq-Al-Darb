@@ -123,6 +123,16 @@ NOT_USER_VISIBLE = {
     "features/quran/data/quran_grammar_parser.dart":
         "Quranic-corpus grammar tags mapped to their Arabic names; rendered "
         "in the i'rab tab and tracked as its own task, not as loose strings",
+    "features/azkar/data/azkar_repeat.dart":
+        "a PARSER for the bundled Arabic: a regex for a digit before "
+        "«مرة»/«مرات», a table of Arabic number-words, and an Arabic-Indic "
+        "digit table. It reads the azkar text, it never renders anything",
+    "features/adhan/data/adhan_text.dart":
+        "the words of the adhan itself, highlighted line by line in time with "
+        "the recitation the user is HEARING. Same class as a Qur'an ayah on a "
+        "mushaf page: the Arabic is the thing on screen, not a label for it. "
+        "A meaning line beneath it would be a feature, and would need a "
+        "sourced translation (CLAUDE.md §1.2), not one written here",
 }
 
 MAP_KEY = re.compile(r"^\s*r?['\"].*['\"]\s*:")
@@ -181,6 +191,24 @@ ALLOWLIST_NAMES = {
          "قناة مكاني", "م. أيمن عبدالرحيم", "قناة وعي",
          "الإسلام سؤال وجواب", "الدرر السنية", "طريق الإسلام",
          "صيد الفوائد", "شبكة الألوكة"),
+    ),
+    "features/channels/data/islamic_channels.dart": (
+        "the channels' own names, as YouTube reports them. Kept beside the "
+        "Latin transliteration in `nameEn` and picked between by "
+        "`properName()`, so an Arabic or Urdu reader gets this form and the "
+        "other five get the Latin one; the DESCRIPTIONS are translated "
+        "(channels.desc_*)",
+        ("القناة الرسمية للدكتور مصطفى محمود", "الشيخ أيمن عبد الجليل",
+         "الشيخ عبد الله رشدي", "الدكتور ياسر الحزيمي",
+         "الشيخ الدكتور محمد حسان", "الشيخ أبو إسحاق الحويني",
+         "الشيخ مصطفى العدوي"),
+    ),
+    "features/ruqyah/data/ruqyah_catalog.dart": (
+        "the reciters' own names, paired with `reciterEn` and picked by "
+        "`properName()`. The recording without a named reciter carries a "
+        "translated title key instead, and the source line is translated",
+        ("مشاري راشد العفاسي", "أحمد بن علي العجمي", "إدريس أبكر",
+         "ماهر المعيقلي", "عبد الرحمن السديس"),
     ),
     "features/settings/presentation/screens/sources_screen.dart": (
         "a credit names its source; renaming «مسند أحمد — ط الرسالة» in "

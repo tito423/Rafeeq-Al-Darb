@@ -17,7 +17,8 @@
     "retry": "Retry",
     "undo": "Undo",
     "reset_all": "Reset all",
-    "download": "Download"
+    "download": "Download",
+    "script": "latin"
   },
   "nav": {
     "home": "Home",
@@ -669,7 +670,9 @@
     "audio_intro": "Five complete recorded ruqyahs. Tap to listen now, or download one to work offline.",
     "listen_recordings": "Listen to recorded ruqyahs",
     "minutes": "{n} min",
-    "reciter_unnamed": "Reciter not named in the source"
+    "reciter_unnamed": "Reciter not named in the source",
+    "rec_tarteel_hadi": "Ruqyah — for headphones",
+    "audio_source": "The recordings come from the Internet Archive (archive.org), mirrored on the app's own server"
   },
   "more": {
     "section_more": "More",
@@ -679,7 +682,14 @@
     "title": "Islamic channels",
     "intro": "A selection of YouTube channels. Tapping opens the channel in YouTube — the app hosts no video.",
     "view_grid": "Grid view",
-    "view_list": "List view"
+    "view_list": "List view",
+    "desc_mostafa_mahmoud": "Science and Faith, and Dr. Mostafa Mahmoud's episodes",
+    "desc_ayman_abdelgelil": "Lessons, sermons and interviews",
+    "desc_abdullah_rushdy": "Lessons, responses and clarifications",
+    "desc_yasser_alhazimi": "Talks on self-development and spiritual growth",
+    "desc_mohamed_hassan": "Lessons, lectures and teaching series",
+    "desc_abu_ishaq_alheweny": "Lessons in hadith and its sciences",
+    "desc_mostafa_aladwy": "Fatwas and lessons in tafsir and hadith"
   },
   "mushaf_theme": {
     "title": "Text mushaf themes",
@@ -799,5 +809,29 @@
     "site_islamway": "Islamic lessons, lectures and articles from leading scholars and preachers",
     "site_saaid": "A broad Islamic library of articles, books and lectures",
     "site_alukah": "A scholarly and cultural network of Islamic academic research and articles"
+  },
+  "adhan_video": {
+    "source": "Source: Pixabay — Pixabay licence (free use, no attribution required)",
+    "haram_makkah": "The Grand Mosque, Makkah",
+    "kaaba": "The Kaaba",
+    "madina_nabawi": "The Prophet's Mosque, Madinah",
+    "mosque_ottoman": "An Ottoman-style mosque",
+    "kaaba_tawaf": "The Haram and the Kaaba",
+    "haram_makkah2": "The Grand Mosque courtyards",
+    "kaaba_close": "The Kaaba, up close",
+    "madina_haram": "The Prophet's Mosque grounds",
+    "mosque_minaret": "A mosque minaret",
+    "mosque_view": "A mosque's grounds"
+  },
+  "imam_bio": {
+    "bukhari": "Born in Bukhara in 194 AH, died in 256 AH. He travelled in search of hadith to the Hijaz, Syria, Iraq and Egypt, and compiled al-Jami' as-Sahih, for which he required the highest degree of continuity in the chain of transmission.",
+    "muslim": "Born in Nishapur in 204 AH, died in 261 AH. He studied under al-Bukhari and others, arranged his Sahih by chapter, and gathered all the chains of a single hadith in one place.",
+    "abudawud": "Born in Sijistan in 202 AH, died in Basra in 275 AH. His Sunan concentrates on the hadiths of legal rulings, and is one of the Six Books.",
+    "tirmidhi": "Born in Tirmidh in 209 AH, died in 279 AH. His Jami' is distinguished by noting the jurists' differences and their schools after each hadith, and by commenting on its chain.",
+    "nasai": "Born in Nasa in Khurasan in 215 AH, died in 303 AH. He was known for the precision of his eye for hidden defects in chains and narrators; his Sunan is one of the Six Books.",
+    "ibnmajah": "Born in Qazwin in 209 AH, died in 273 AH. He arranged his Sunan by chapters of law; it is the sixth of the Six Books.",
+    "ahmed": "Born in Baghdad in 164 AH, died in 241 AH; the Hanbali school is named after him. He arranged his Musnad by the names of the Companions rather than by chapter.",
+    "malik": "Born in Madinah in 93 AH and died there in 179 AH; the Maliki school is named after him. Al-Muwatta is among the earliest works compiled, and joins hadith to the practice of the people of Madinah.",
+    "darimi": "Born in Samarqand in 181 AH, died in 255 AH. He arranged his Sunan by chapters and opened it with an introduction on knowledge, its etiquette, and the merits of the Prophet ﷺ."
   }
 }

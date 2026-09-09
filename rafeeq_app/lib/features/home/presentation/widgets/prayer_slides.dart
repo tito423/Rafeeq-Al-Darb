@@ -567,9 +567,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
                   : Icons.graphic_eq_rounded,
               label: 'prayer.adhan_video'.tr(),
               value: presentation.mode == AdhanPresentation.video
-                  ? (context.locale.languageCode == 'ar'
-                      ? (video?.nameAr ?? '—')
-                      : (video?.nameEn ?? '—'))
+                  ? (video == null ? '—' : video.labelKey.tr())
                   : 'prayer.presentation_audio'.tr(),
               onTap: () => _pickVideo(presentation),
             ),
@@ -630,7 +628,6 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
   }
 
   Future<void> _pickVideo(AdhanPresentationState presentation) async {
-    final arabic = context.locale.languageCode == 'ar';
     final chosen = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: const Color(0xFF0E1626),
@@ -665,16 +662,16 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
                   color: const Color(0xFF15C7B0),
                 ),
                 title: Text(
-                  arabic ? v.nameAr : v.nameEn,
+                  v.labelKey.tr(),
                   style: const TextStyle(color: Colors.white),
                 ),
                 onTap: () => Navigator.of(ctx).pop(v.id),
               ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 10, 16, 6),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
               child: Text(
-                adhanVideoSourceLabel,
-                style: TextStyle(color: Colors.white38, fontSize: 11),
+                adhanVideoSourceLabelKey.tr(),
+                style: const TextStyle(color: Colors.white38, fontSize: 11),
               ),
             ),
           ],

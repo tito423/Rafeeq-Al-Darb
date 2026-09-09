@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/i18n/proper_name.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../data/islamic_channels.dart';
@@ -56,8 +57,6 @@ class _IslamicChannelsScreenState extends State<IslamicChannelsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final arabic = context.locale.languageCode == 'ar';
-
     return Scaffold(
       appBar: AppBar(
         title: Text('channels.title'.tr()),
@@ -103,16 +102,8 @@ class _IslamicChannelsScreenState extends State<IslamicChannelsScreen> {
               duration: const Duration(milliseconds: 320),
               switchInCurve: Curves.easeOutCubic,
               child: _grid
-                  ? _ChannelGrid(
-                      key: const ValueKey('grid'),
-                      arabic: arabic,
-                      onOpen: _open,
-                    )
-                  : _ChannelList(
-                      key: const ValueKey('list'),
-                      arabic: arabic,
-                      onOpen: _open,
-                    ),
+                  ? _ChannelGrid(key: const ValueKey('grid'), onOpen: _open)
+                  : _ChannelList(key: const ValueKey('list'), onOpen: _open),
             ),
           ),
         ],
@@ -122,10 +113,9 @@ class _IslamicChannelsScreenState extends State<IslamicChannelsScreen> {
 }
 
 class _ChannelGrid extends StatelessWidget {
-  final bool arabic;
   final void Function(IslamicChannel) onOpen;
 
-  const _ChannelGrid({super.key, required this.arabic, required this.onOpen});
+  const _ChannelGrid({super.key, required this.onOpen});
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +134,6 @@ class _ChannelGrid extends StatelessWidget {
         final c = islamicChannels[i];
         return _ChannelCard(
           channel: c,
-          arabic: arabic,
           onTap: () => onOpen(c),
         );
       },
@@ -153,10 +142,9 @@ class _ChannelGrid extends StatelessWidget {
 }
 
 class _ChannelList extends StatelessWidget {
-  final bool arabic;
   final void Function(IslamicChannel) onOpen;
 
-  const _ChannelList({super.key, required this.arabic, required this.onOpen});
+  const _ChannelList({super.key, required this.onOpen});
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +175,7 @@ class _ChannelList extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        arabic ? c.nameAr : c.nameEn,
+                        properName(c.nameAr, c.nameEn),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -198,7 +186,7 @@ class _ChannelList extends StatelessWidget {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        arabic ? c.descriptionAr : c.descriptionEn,
+                        c.descriptionKey.tr(),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -222,12 +210,10 @@ class _ChannelList extends StatelessWidget {
 
 class _ChannelCard extends StatelessWidget {
   final IslamicChannel channel;
-  final bool arabic;
   final VoidCallback onTap;
 
   const _ChannelCard({
     required this.channel,
-    required this.arabic,
     required this.onTap,
   });
 
@@ -271,7 +257,7 @@ class _ChannelCard extends StatelessWidget {
                       _Avatar(channel: channel, size: 78),
                       const SizedBox(height: 10),
                       Text(
-                        arabic ? channel.nameAr : channel.nameEn,
+                        properName(channel.nameAr, channel.nameEn),
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -284,9 +270,7 @@ class _ChannelCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        arabic
-                            ? channel.descriptionAr
-                            : channel.descriptionEn,
+                        channel.descriptionKey.tr(),
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

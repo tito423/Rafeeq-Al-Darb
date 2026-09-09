@@ -974,7 +974,7 @@ class _PresentationCardState extends ConsumerState<_PresentationCard> {
                       : () => _showVideoPreview(_paths[v.id]!),
                 ),
               const SizedBox(height: 8),
-              Text(adhanVideoSourceLabel,
+              Text(adhanVideoSourceLabelKey.tr(),
                   style: TextStyle(
                       color: scheme.onSurfaceVariant, fontSize: 11)),
             ],
@@ -1035,7 +1035,7 @@ class _VideoRow extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(option.nameAr,
+              child: Text(option.labelKey.tr(),
                   style: TextStyle(
                       fontWeight:
                           selected ? FontWeight.w700 : FontWeight.w400)),

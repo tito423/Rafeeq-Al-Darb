@@ -1,4 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../../core/config/app_config.dart';
+import '../../../core/i18n/proper_name.dart';
 
 /// One run of verses recited as ruqyah, addressed by surah and ayah range.
 ///
@@ -125,9 +128,10 @@ class RuqyahRecording {
   final String reciterEn;
 
   /// Shown as the card's heading when there is no named reciter. Normally
-  /// empty, and the reciter's name is the heading instead.
-  final String titleAr;
-  final String titleEn;
+  /// empty, and the reciter's name is the heading instead. A key, because a
+  /// recording's title is the app's own description of it — unlike a reciter's
+  /// name, which is written in the reader's script and never translated.
+  final String titleKey;
 
   /// File extension of the mirrored object. The archive.org set are `mp3`;
   /// the owner's own file is `m4a` and is mirrored as-is rather than
@@ -156,16 +160,21 @@ class RuqyahRecording {
     required this.bytes,
     this.reciterAr = '',
     this.reciterEn = '',
-    this.titleAr = '',
-    this.titleEn = '',
+    this.titleKey = '',
     this.ext = 'mp3',
     this.archiveId = '',
   });
 
   /// What the card leads with: the reciter when the source names one, the
   /// recording's own title when it does not.
-  String headingAr() => reciterAr.isNotEmpty ? reciterAr : titleAr;
-  String headingEn() => reciterEn.isNotEmpty ? reciterEn : titleEn;
+  ///
+  /// This used to be an `headingAr()` / `headingEn()` pair chosen by
+  /// `languageCode == 'ar'`, so Spanish, French, Portuguese, Russian **and
+  /// Urdu** all got the English — including Urdu, which is written in Arabic
+  /// script and should have had the Arabic form of the name.
+  String heading() => reciterAr.isNotEmpty
+      ? properName(reciterAr, reciterEn)
+      : titleKey.tr();
 
   /// True when the source does not name a reciter, so the card can say so
   /// rather than leaving a blank line where a name would be.
@@ -239,14 +248,13 @@ const ruqyahRecordings = <RuqyahRecording>[
   // Length and size measured from the file itself with ffprobe.
   RuqyahRecording(
     id: 'tarteel_hadi',
-    titleAr: 'رقية شرعية — بسماعة الرأس',
-    titleEn: 'Ruqyah — for headphones',
+    titleKey: 'ruqyah.rec_tarteel_hadi',
     seconds: 2394,
     bytes: 38858921,
     ext: 'm4a',
   ),
 ];
 
-/// Credited on the Sources screen, and shown at the foot of the audio list.
-const ruqyahAudioSourceLabel =
-    'التسجيلات من أرشيف الإنترنت (archive.org)، مرآة على خادم التطبيق';
+/// Credited on the Sources screen, and shown at the foot of the audio list —
+/// in the reader's own language.
+const ruqyahAudioSourceLabelKey = 'ruqyah.audio_source';

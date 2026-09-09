@@ -80,9 +80,7 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
       id: r.id,
       url: r.url,
       title: 'ruqyah.audio_title'.tr(),
-      artist: context.locale.languageCode == 'ar'
-          ? r.headingAr()
-          : r.headingEn(),
+      artist: r.heading(),
       localFile: local == null ? null : File(local),
     );
     if (!mounted) return;
@@ -102,9 +100,7 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
         url: r.url,
         category: 'ruqyah',
         fileName: r.fileName,
-        title: context.locale.languageCode == 'ar'
-            ? r.headingAr()
-            : r.headingEn(),
+        title: r.heading(),
       );
 
   @override
@@ -147,7 +143,7 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
           ],
           const SizedBox(height: 8),
           Text(
-            ruqyahAudioSourceLabel,
+            ruqyahAudioSourceLabelKey.tr(),
             textAlign: TextAlign.center,
             style: const TextStyle(color: AppColors.textLow, fontSize: 11),
           ),
@@ -246,9 +242,7 @@ class _RecordingCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          arabic
-                              ? recording.headingAr()
-                              : recording.headingEn(),
+                          recording.heading(),
                           style: const TextStyle(
                             color: AppColors.textHigh,
                             fontSize: 15,

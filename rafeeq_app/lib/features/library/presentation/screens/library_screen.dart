@@ -1045,7 +1045,7 @@ class _HadithBookTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final bio = hadithImamBios[book.key];
+    final bio = hadithImamBioKeys[book.key]?.tr();
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(

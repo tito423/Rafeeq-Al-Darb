@@ -1,63 +1,14 @@
-UNTRANSLATED USER-VISIBLE STRINGS: 1408 in 8 files
+UNTRANSLATED USER-VISIBLE STRINGS: 1347 in 2 files
    chrome  (UI text that must go through .tr()): 0
    native  (Arabic that ANDROID renders, not Dart): 0
-   content (Arabic the app authors, needs translating): 1408
-   allowlisted (deliberate, with a reason in this script): 33
+   content (Arabic the app authors, needs translating): 1347
+   allowlisted (deliberate, with a reason in this script): 45
 
 rafeeq_app/lib/features/library/data/book_catalog.dart                 1217  (chrome 0, content 1217)
 rafeeq_app/lib/features/new_muslim/data/guide_content.dart              130  (chrome 0, content 130)
-rafeeq_app/lib/features/library/data/hadith_imam_bios.dart               19  (chrome 0, content 19)
-rafeeq_app/lib/features/channels/data/islamic_channels.dart              14  (chrome 0, content 14)
-rafeeq_app/lib/features/adhan/data/adhan_video_catalog.dart              11  (chrome 0, content 11)
-rafeeq_app/lib/features/adhan/data/adhan_text.dart                        8  (chrome 0, content 8)
-rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart                   7  (chrome 0, content 7)
-rafeeq_app/lib/features/azkar/data/azkar_repeat.dart                      2  (chrome 0, content 2)
 
 
 ---- detail ----
-
-== rafeeq_app/lib/features/adhan/data/adhan_text.dart
-   content  :15    الله أكبر
-   content  :16    أشهد أن لا إله إلا الله
-   content  :17    أشهد أن محمداً رسول الله
-   content  :18    حيّ على الصلاة
-   content  :19    حيّ على الفلاح
-   content  :20    الصلاة خير من النوم
-   content  :21    الله أكبر
-   content  :22    لا إله إلا الله
-
-== rafeeq_app/lib/features/adhan/data/adhan_video_catalog.dart
-   content  :36    المصدر: Pixabay — رخصة Pixabay (استخدام حر، بلا نسب)
-   content  :43    الحرم المكي
-   content  :49    الكعبة المشرفة
-   content  :55    المسجد النبوي
-   content  :62    مسجد عثماني
-   content  :73    الحرم والكعبة
-   content  :79    ساحات الحرم المكي
-   content  :85    الكعبة المشرّفة عن قرب
-   content  :91    رحاب المسجد النبوي
-   content  :97    مئذنة مسجد
-   content  :103   رحاب مسجد
-
-== rafeeq_app/lib/features/azkar/data/azkar_repeat.dart
-   content  :10    ([0-9٠-٩]+)\s*مر[ةات]
-   content  :47    ٠١٢٣٤٥٦٧٨٩
-
-== rafeeq_app/lib/features/channels/data/islamic_channels.dart
-   content  :62    القناة الرسمية للدكتور مصطفى محمود
-   content  :64    برنامج العلم والإيمان وحلقات الدكتور مصطفى محمود
-   content  :71    الشيخ أيمن عبد الجليل
-   content  :73    دروس ومواعظ ولقاءات
-   content  :80    الشيخ عبد الله رشدي
-   content  :82    دروس وردود وبيان مسائل
-   content  :89    الدكتور ياسر الحزيمي
-   content  :91    محاضرات في التزكية وبناء الذات
-   content  :98    الشيخ الدكتور محمد حسان
-   content  :100   دروس ومحاضرات وسلاسل علمية
-   content  :106   الشيخ أبو إسحاق الحويني
-   content  :108   دروس في الحديث وعلومه
-   content  :115   الشيخ مصطفى العدوي
-   content  :117   فتاوى ودروس في التفسير والحديث
 
 == rafeeq_app/lib/features/library/data/book_catalog.dart
    content  :132   [إأآٱ]
@@ -1278,27 +1229,6 @@ rafeeq_app/lib/features/azkar/data/azkar_repeat.dart                      2  (ch
    content  :4189  مواجهة الهمّ والقلق.
    content  :4196  المكتبة الشاملة — لا تحزن، عائض بن عبد الله القرني، مكتبة العبيكان
 
-== rafeeq_app/lib/features/library/data/hadith_imam_bios.dart
-   content  :15    وُلد ببخارى سنة ١٩٤هـ وتوفي سنة ٢٥٦هـ. رحل في طلب الحديث إلى الحجاز 
-   content  :16    والشام والعراق ومصر، وجمع «الجامع الصحيح» واشترط فيه أعلى درجات 
-   content  :17    الاتصال في السند.
-   content  :19    وُلد بنيسابور سنة ٢٠٤هـ وتوفي سنة ٢٦١هـ. تتلمذ على البخاري وغيره، 
-   content  :20    ورتّب صحيحه على الأبواب وجمع طرق الحديث الواحد في موضع واحد.
-   content  :22    وُلد بسجستان سنة ٢٠٢هـ وتوفي بالبصرة سنة ٢٧٥هـ. عُني في سننه بأحاديث 
-   content  :23    الأحكام الفقهية، وهو أحد الكتب الستة.
-   content  :25    وُلد بترمذ سنة ٢٠٩هـ وتوفي سنة ٢٧٩هـ. تميّز جامعه بذكر اختلاف الفقهاء 
-   content  :26    ومذاهبهم عقب الأحاديث، وبالتعليق على أسانيدها.
-   content  :28    وُلد بنسا من خراسان سنة ٢١٥هـ وتوفي سنة ٣٠٣هـ. اشتُهر بدقّة نظره في 
-   content  :29    علل الأسانيد والرجال، وسننه أحد الكتب الستة.
-   content  :31    وُلد بقزوين سنة ٢٠٩هـ وتوفي سنة ٢٧٣هـ. رتّب سننه على الأبواب الفقهية، 
-   content  :32    وهو سادس الكتب الستة.
-   content  :34    وُلد ببغداد سنة ١٦٤هـ وتوفي سنة ٢٤١هـ، وإليه يُنسب المذهب الحنبلي. 
-   content  :35    رتّب مسنده على أسماء الصحابة لا على الأبواب.
-   content  :37    وُلد بالمدينة سنة ٩٣هـ وتوفي بها سنة ١٧٩هـ، وإليه يُنسب المذهب المالكي. 
-   content  :38    الموطأ من أقدم ما دُوّن، ويجمع الحديث مع عمل أهل المدينة.
-   content  :40    وُلد بسمرقند سنة ١٨١هـ وتوفي سنة ٢٥٥هـ. رتّب سننه على الأبواب، وصدّرها 
-   content  :41    بمقدمة في العلم وآدابه وفضل النبي ﷺ.
-
 == rafeeq_app/lib/features/new_muslim/data/guide_content.dart
    content  :55    أركان الإسلام
    content  :60    ١. الشهادتان
@@ -1430,13 +1360,4 @@ rafeeq_app/lib/features/azkar/data/azkar_repeat.dart                      2  (ch
    content  :403   في كل ركعة) وقصار السور في آخر جزء من القرآن (جزء عمّ)، 
    content  :404   ثم يتدرج في القراءة والفهم. تجد كل ذلك في تبويب "القرآن" 
    content  :405   من هذا التطبيق، بالنص والتلاوة وترجمة المعنى.
-
-== rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart
-   content  :198   مشاري راشد العفاسي
-   content  :206   أحمد بن علي العجمي
-   content  :214   إدريس أبكر
-   content  :222   ماهر المعيقلي
-   content  :230   عبد الرحمن السديس
-   content  :242   رقية شرعية — بسماعة الرأس
-   content  :252   التسجيلات من أرشيف الإنترنت (archive.org)، مرآة على خادم التطبيق
 

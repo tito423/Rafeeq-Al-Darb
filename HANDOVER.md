@@ -356,9 +356,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 18:19 — IN PROGRESS — resume here**
+**2026-09-09 18:33 — IN PROGRESS — resume here**
 
-i18n (native): the 15 hardcoded Arabic strings in Kotlin - 3 adhan notification channels + descriptions, the alert's title/body/buttons, and the download service's notification - now come from Dart through NativeStrings, and the audit grew a 'native' bucket that measures them. VERIFIED on emulator-5554 in French: the fired test adhan read 'Adhan - priere du Dhuhr / Allahou Akbar - c'est l'heure de la priere' with Arreter/Muet, and dumpsys shows the three channels renamed in place. Next: the 1408 content strings, smallest files first.
+i18n content batch 1: channel descriptions, adhan clip labels, the nine imam biographies and the ruqyah source line are now keys in all 7 locales; names go through properName() which reads common.script, so Urdu finally gets the Arabic form instead of the English. VERIFIED on emulator-5554: the channels grid in French shows Latin names with French descriptions. Audit is down to 1347 in TWO files - book_catalog (1217) and guide_content (130).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
