@@ -1,0 +1,65 @@
+{
+  "1": {
+    "ar": "القرآن الكريم وعلومه",
+    "en": "The Noble Qur'an and Qur'anic Sciences",
+    "es": "El Sagrado Corán y sus ciencias.",
+    "fr": "Le Noble Coran et ses sciences",
+    "pt": "O Nobre Qur'an e sua ciência",
+    "ru": "Священный Коран и корановедение",
+    "ur": "قرآن کریم اور اس کے علوم"
+  },
+  "2": {
+    "ar": "الحديث وعلومه",
+    "en": "The Hadith and Hadith Sciences",
+    "es": "El hadiz (los dichos proféticos) y sus ciencias.",
+    "fr": "Le hadith et ses sciences",
+    "pt": "O Hadith e sua ciência",
+    "ru": "Хадис и хадисоведение",
+    "ur": "حدیث و علومِ حدیث"
+  },
+  "3": {
+    "ar": "العقيدة",
+    "en": "The Creed",
+    "es": "La doctrina Islámica",
+    "fr": "Le dogme",
+    "pt": "A crença",
+    "ru": "Вероубеждение",
+    "ur": "عقیدہ"
+  },
+  "4": {
+    "ar": "الفقه وأصوله",
+    "en": "Jurisprudence and Juristic Principles",
+    "es": "La jurisprudencia islámica y sus fundamentos",
+    "fr": "La jurisprudence et son fondement",
+    "pt": "A Jurisprudência e seus princípios",
+    "ru": "Фикх и его методология",
+    "ur": "فقہ و اصولِ فقہ"
+  },
+  "5": {
+    "ar": "الفضائل والآداب",
+    "en": "Virtues and Manners",
+    "es": "Las virtudes y los modales",
+    "fr": "Les vertus et les convenances",
+    "pt": "As virtudes e etiquetas",
+    "ru": "Достоинства различных дел и этикет",
+    "ur": "فضائل و آداب"
+  },
+  "6": {
+    "ar": "الدعوة والحسبة",
+    "en": "Da‘wah and Hisbah",
+    "es": "La prédica islámica (da’wa) y al-hisba (prescribir el bien y prohibir el mal).",
+    "fr": "La prédication et la police religieuse",
+    "pt": "O chamamento e ordem do bem",
+    "ru": "Призыв к Аллаху и контроль за соблюдением шариатских норм",
+    "ur": "دعوت و احتساب"
+  },
+  "7": {
+    "ar": "السيرة والتاريخ",
+    "en": "Seerah and History",
+    "es": "La Biografía profética y la historia.",
+    "fr": "La biographie et l'histoire",
+    "pt": "A Biografia Profética e a história",
+    "ru": "Жизнеописание Пророка ﷺ и история",
+    "ur": "سیرت و تاریخ"
+  }
+}

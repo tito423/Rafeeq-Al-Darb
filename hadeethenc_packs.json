@@ -1,0 +1,65 @@
+[
+  {
+    "lang": "ar",
+    "hadeeths": 3574,
+    "db_bytes": 20045824,
+    "zip_bytes": 3523818,
+    "ungraded": 0,
+    "no_takhrij": 0,
+    "categories": 7
+  },
+  {
+    "lang": "en",
+    "hadeeths": 2328,
+    "db_bytes": 10010624,
+    "zip_bytes": 2134443,
+    "ungraded": 0,
+    "no_takhrij": 0,
+    "categories": 7
+  },
+  {
+    "lang": "es",
+    "hadeeths": 1955,
+    "db_bytes": 8372224,
+    "zip_bytes": 1755528,
+    "ungraded": 0,
+    "no_takhrij": 0,
+    "categories": 7
+  },
+  {
+    "lang": "fr",
+    "hadeeths": 1790,
+    "db_bytes": 8163328,
+    "zip_bytes": 1771671,
+    "ungraded": 0,
+    "no_takhrij": 0,
+    "categories": 7
+  },
+  {
+    "lang": "pt",
+    "hadeeths": 1382,
+    "db_bytes": 5951488,
+    "zip_bytes": 1307599,
+    "ungraded": 0,
+    "no_takhrij": 0,
+    "categories": 7
+  },
+  {
+    "lang": "ru",
+    "hadeeths": 2249,
+    "db_bytes": 14610432,
+    "zip_bytes": 2536011,
+    "ungraded": 0,
+    "no_takhrij": 0,
+    "categories": 7
+  },
+  {
+    "lang": "ur",
+    "hadeeths": 2220,
+    "db_bytes": 12447744,
+    "zip_bytes": 2170641,
+    "ungraded": 0,
+    "no_takhrij": 0,
+    "categories": 7
+  }
+]

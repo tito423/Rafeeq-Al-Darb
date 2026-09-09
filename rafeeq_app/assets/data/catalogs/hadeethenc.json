@@ -1,0 +1,65 @@
+{
+  "source": {
+    "title_ar": "موسوعة الأحاديث النبوية",
+    "title_en": "Hadeeth Encyclopedia",
+    "url": "https://hadeethenc.com"
+  },
+  "languages": [
+    {
+      "lang": "ar",
+      "name": "العربية",
+      "hadeeths": 3574,
+      "categories": 7,
+      "bytes": 3523818,
+      "db_bytes": 20045824
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "hadeeths": 2328,
+      "categories": 7,
+      "bytes": 2134443,
+      "db_bytes": 10010624
+    },
+    {
+      "lang": "es",
+      "name": "Español",
+      "hadeeths": 1955,
+      "categories": 7,
+      "bytes": 1755528,
+      "db_bytes": 8372224
+    },
+    {
+      "lang": "fr",
+      "name": "Français",
+      "hadeeths": 1790,
+      "categories": 7,
+      "bytes": 1771671,
+      "db_bytes": 8163328
+    },
+    {
+      "lang": "pt",
+      "name": "Português",
+      "hadeeths": 1382,
+      "categories": 7,
+      "bytes": 1307599,
+      "db_bytes": 5951488
+    },
+    {
+      "lang": "ru",
+      "name": "Русский",
+      "hadeeths": 2249,
+      "categories": 7,
+      "bytes": 2536011,
+      "db_bytes": 14610432
+    },
+    {
+      "lang": "ur",
+      "name": "اردو",
+      "hadeeths": 2220,
+      "categories": 7,
+      "bytes": 2170641,
+      "db_bytes": 12447744
+    }
+  ]
+}

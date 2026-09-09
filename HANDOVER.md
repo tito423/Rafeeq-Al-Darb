@@ -615,9 +615,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 00:14 — IN PROGRESS — resume here**
+**2026-09-10 00:33 — IN PROGRESS — resume here**
 
-the before-Fajr reminder fired on emulator-5554 at 06:03 and was read on screen: 'اقتربت الفجر' / 'باقٍ 10 دقيقة على الفجر' - a feminine verb on a masculine noun, a singular counted noun after 10, and Latin digits beside the app's own Arabic-Indic clock. Fixed with a plural key in all seven locales, one shared localizeDigits, and the owner's wording. The tests were proved to fail on the old strings first
+HadeethEnc packs built and on R2: seven per-language SQLite packs, 1.3-3.5 MB zipped, every one of the 15,498 rows carrying both a takhrij and a grading in its own language - measured, 0 ungraded and 0 without takhrij. Category titles refetched in all seven languages so no pack ships Arabic headings over a Spanish hadith. Each upload was read back over the public endpoint and had to answer PK with a matching Content-Length before the catalogue was written
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
