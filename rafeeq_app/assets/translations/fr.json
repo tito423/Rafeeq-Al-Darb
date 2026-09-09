@@ -658,7 +658,8 @@
     "audio_title": "Écouter la roqya",
     "audio_intro": "Cinq roqyas complètes enregistrées. Touchez pour écouter, ou téléchargez-en une pour l'utiliser hors ligne.",
     "listen_recordings": "Écouter les roqyas enregistrées",
-    "minutes": "{n} min"
+    "minutes": "{n} min",
+    "reciter_unnamed": "Le récitant n'est pas nommé dans la source"
   },
   "more": {
     "section_more": "Plus",

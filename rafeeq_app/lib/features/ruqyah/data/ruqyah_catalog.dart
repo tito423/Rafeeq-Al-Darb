@@ -116,8 +116,24 @@ const ruqyahDuaItemIds = <int>[
 /// One full recorded ruqyah.
 class RuqyahRecording {
   final String id;
+
+  /// The reciter, where the source names one. Empty when it does not —
+  /// see [titleAr]. An unnamed reciter is written down as unnamed; ten adhan
+  /// clips were once attributed to muezzins nobody had verified, and that is
+  /// the mistake this field's emptiness is protecting against.
   final String reciterAr;
   final String reciterEn;
+
+  /// Shown as the card's heading when there is no named reciter. Normally
+  /// empty, and the reciter's name is the heading instead.
+  final String titleAr;
+  final String titleEn;
+
+  /// File extension of the mirrored object. The archive.org set are `mp3`;
+  /// the owner's own file is `m4a` and is mirrored as-is rather than
+  /// re-encoded, because transcoding one lossy format to another only loses
+  /// quality for no gain.
+  final String ext;
 
   /// Runtime in seconds, taken from the source item's own metadata — not
   /// estimated, and shown to the reader so a 75-minute recitation is not a
@@ -136,23 +152,38 @@ class RuqyahRecording {
 
   const RuqyahRecording({
     required this.id,
-    required this.reciterAr,
-    required this.reciterEn,
     required this.seconds,
     required this.bytes,
-    required this.archiveId,
+    this.reciterAr = '',
+    this.reciterEn = '',
+    this.titleAr = '',
+    this.titleEn = '',
+    this.ext = 'mp3',
+    this.archiveId = '',
   });
+
+  /// What the card leads with: the reciter when the source names one, the
+  /// recording's own title when it does not.
+  String headingAr() => reciterAr.isNotEmpty ? reciterAr : titleAr;
+  String headingEn() => reciterEn.isNotEmpty ? reciterEn : titleEn;
+
+  /// True when the source does not name a reciter, so the card can say so
+  /// rather than leaving a blank line where a name would be.
+  bool get reciterUnknown => reciterAr.isEmpty;
 
   /// Mirrored onto the project's own bucket rather than linked straight at
   /// archive.org: an archive.org item can be replaced or removed by whoever
   /// uploaded it, and a core feature should not go dark when that happens.
-  String get url => '${AppConfig.contentBaseUrl}/ruqyah/$id.mp3';
+  String get url => '${AppConfig.contentBaseUrl}/ruqyah/$id.$ext';
 
-  String get sourceUrl => 'https://archive.org/details/$archiveId';
+  /// Empty for a recording the owner supplied himself — there is no public
+  /// page to link to, and inventing one would be worse than showing none.
+  String get sourceUrl =>
+      archiveId.isEmpty ? '' : 'https://archive.org/details/$archiveId';
 
   String get downloadId => 'ruqyah_$id';
 
-  String get fileName => 'ruqyah_$id.mp3';
+  String get fileName => 'ruqyah_$id.$ext';
 }
 
 /// Five recorded ruqyahs by five well-known reciters.
@@ -201,6 +232,18 @@ const ruqyahRecordings = <RuqyahRecording>[
     seconds: 2598,
     bytes: 41576448,
     archiveId: '1.-ar-ruqyah-abdul-rahman-sudais',
+  ),
+  // Supplied by the owner from his own library. Its embedded title tag reads
+  // «ضع سماعة الرأس وأسترخي ( رقية شرعية )»; the file names no reciter, so
+  // none is claimed — the card says the reciter is not named in the source.
+  // Length and size measured from the file itself with ffprobe.
+  RuqyahRecording(
+    id: 'tarteel_hadi',
+    titleAr: 'رقية شرعية — بسماعة الرأس',
+    titleEn: 'Ruqyah — for headphones',
+    seconds: 2394,
+    bytes: 38858921,
+    ext: 'm4a',
   ),
 ];
 

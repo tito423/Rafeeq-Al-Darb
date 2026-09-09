@@ -80,7 +80,9 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
       id: r.id,
       url: r.url,
       title: 'ruqyah.audio_title'.tr(),
-      artist: context.locale.languageCode == 'ar' ? r.reciterAr : r.reciterEn,
+      artist: context.locale.languageCode == 'ar'
+          ? r.headingAr()
+          : r.headingEn(),
       localFile: local == null ? null : File(local),
     );
     if (!mounted) return;
@@ -100,7 +102,9 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
         url: r.url,
         category: 'ruqyah',
         fileName: r.fileName,
-        title: context.locale.languageCode == 'ar' ? r.reciterAr : r.reciterEn,
+        title: context.locale.languageCode == 'ar'
+            ? r.headingAr()
+            : r.headingEn(),
       );
 
   @override
@@ -243,8 +247,8 @@ class _RecordingCard extends StatelessWidget {
                       children: [
                         Text(
                           arabic
-                              ? recording.reciterAr
-                              : recording.reciterEn,
+                              ? recording.headingAr()
+                              : recording.headingEn(),
                           style: const TextStyle(
                             color: AppColors.textHigh,
                             fontSize: 15,
@@ -256,9 +260,18 @@ class _RecordingCard extends StatelessWidget {
                           // Real duration and real byte size, both read from
                           // the source item's metadata and confirmed against
                           // the mirrored file — not "about an hour".
-                          offline
-                              ? '$_duration · ${'downloads.offline_ready'.tr()}'
-                              : '$_duration · $_size',
+                          [
+                            _duration,
+                            if (offline)
+                              'downloads.offline_ready'.tr()
+                            else
+                              _size,
+                            // Said plainly rather than left blank: this
+                            // recording's source names no reciter.
+                            if (recording.reciterUnknown)
+                              'ruqyah.reciter_unnamed'.tr(),
+                          ].join(' · '),
+                          maxLines: 2,
                           style: const TextStyle(
                               color: AppColors.textLow, fontSize: 12),
                         ),

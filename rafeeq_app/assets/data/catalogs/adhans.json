@@ -1,5 +1,26 @@
 [
   {
+    "id": "azan11",
+    "name": "تامر شعبان (١)",
+    "asset": "assets/audio/adhan/azan11.mp3",
+    "raw": "azan11",
+    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه"
+  },
+  {
+    "id": "azan12",
+    "name": "تامر شعبان (٢)",
+    "asset": "assets/audio/adhan/azan12.mp3",
+    "raw": "azan12",
+    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه"
+  },
+  {
+    "id": "azan13",
+    "name": "الشيخ ربيع القاضي",
+    "asset": "assets/audio/adhan/azan13.mp3",
+    "raw": "azan13",
+    "source": "ملف قدّمه صاحب التطبيق (اسم المؤذّن كما ورد في اسم الملف)"
+  },
+  {
     "id": "azan1",
     "name": "محمود علي البنا",
     "asset": "assets/audio/adhan/azan1.mp3",

@@ -227,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 04:49 — IN PROGRESS — resume here**
+**2026-09-09 04:57 — IN PROGRESS — resume here**
 
-Islamic channels section: 7 channels, every id/handle/avatar read off YouTube itself by a new verify script (a guessed handle 404'd, which is the check working); avatars mirrored to R2 so the grid works offline; grid/list toggle remembered. Shamela catalogue indexed locally (8598 books) because their search searches inside books, not titles
+owner-supplied audio: 3 adhans added and moved to the top of the muezzin list (the 40MB 24-bit WAV transcoded to 2.8MB mono 160k with the ffmpeg already on this machine, duration preserved exactly); his ruqyah recording mirrored to R2 as m4a, kept as-is rather than re-encoded lossy-to-lossy, and shown with 'reciter not named in the source' because the file names none
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

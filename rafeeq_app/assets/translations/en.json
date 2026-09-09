@@ -658,7 +658,8 @@
     "audio_title": "Listen to the Ruqyah",
     "audio_intro": "Five complete recorded ruqyahs. Tap to listen now, or download one to work offline.",
     "listen_recordings": "Listen to recorded ruqyahs",
-    "minutes": "{n} min"
+    "minutes": "{n} min",
+    "reciter_unnamed": "Reciter not named in the source"
   },
   "more": {
     "section_more": "More",

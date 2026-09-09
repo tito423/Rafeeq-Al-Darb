@@ -135,7 +135,9 @@ class _ChannelGrid extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 14,
         crossAxisSpacing: 14,
-        childAspectRatio: 0.82,
+        // 0.82 left a third of every card empty under the text on the
+        // device. Sized to what the card actually holds.
+        childAspectRatio: 1.0,
       ),
       itemCount: islamicChannels.length,
       itemBuilder: (context, i) {
@@ -261,11 +263,12 @@ class _ChannelCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
+                  padding: const EdgeInsets.fromLTRB(10, 12, 10, 10),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _Avatar(channel: channel, size: 84),
+                      _Avatar(channel: channel, size: 78),
                       const SizedBox(height: 10),
                       Text(
                         arabic ? channel.nameAr : channel.nameEn,

@@ -110,8 +110,11 @@ final _groups = <(String, List<_Source>)>[
     [
       // Each recording is credited to the archive.org item it came from, by
       // name, so provenance is visible in the app and not only in a script.
+      // Only the ones that have a public page. The owner's own file has no
+      // URL to credit, so it is not listed with a fabricated one.
       for (final r in ruqyahRecordings)
-        _Source(r.reciterAr, r.sourceUrl, 'about.src_ruqyah'),
+        if (r.sourceUrl.isNotEmpty)
+          _Source(r.reciterAr, r.sourceUrl, 'about.src_ruqyah'),
     ]
   ),
 ];
