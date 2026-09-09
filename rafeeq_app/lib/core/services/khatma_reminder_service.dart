@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Daily "read your khatma portion" reminders — one per khatma, at whatever
@@ -10,7 +11,7 @@ class KhatmaReminderService {
   static final KhatmaReminderService instance = KhatmaReminderService._();
 
   static const _channelId = 'rafeeq_khatma_reminder';
-  static const _channelName = 'تذكير الختمة';
+  static String get _channelName => 'notif.khatma_channel'.tr();
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -21,10 +22,10 @@ class KhatmaReminderService {
     final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
     await androidPlugin?.createNotificationChannel(
-      const AndroidNotificationChannel(
+      AndroidNotificationChannel(
         _channelId,
         _channelName,
-        description: 'تذكير يومي بقراءة وردك من الختمة في الوقت الذي تحدده',
+        description: 'notif.khatma_channel_desc'.tr(),
         importance: Importance.defaultImportance,
       ),
     );
@@ -35,10 +36,10 @@ class KhatmaReminderService {
     await _ensureChannel();
     await _plugin.zonedSchedule(
       id,
-      'ورد الختمة',
-      'حان وقت وردك من القرآن اليوم',
+      'notif.khatma_title'.tr(),
+      'notif.khatma_body'.tr(),
       _nextInstanceOf(hour, minute),
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,

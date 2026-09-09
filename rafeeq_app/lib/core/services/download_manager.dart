@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -127,10 +128,10 @@ class DownloadManager {
             unawaited(_finish(task));
           case bd.TaskStatus.notFound:
             task.status = DownloadStatus.failed;
-            task.error = 'الملف غير موجود على الخادم (404)';
+            task.error = 'notif.dl_not_found'.tr();
           case bd.TaskStatus.failed:
             task.status = DownloadStatus.failed;
-            task.error = update.exception?.description ?? 'تعذّر التنزيل';
+            task.error = update.exception?.description ?? 'notif.dl_failed'.tr();
         }
       case bd.TaskProgressUpdate():
         // A negative progress value is the plugin's way of signalling a

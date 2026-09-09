@@ -1,4 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../i18n/hijri_months.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -43,10 +46,10 @@ class PrayerStatusNotification {
           AndroidFlutterLocalNotificationsPlugin>();
       await androidImpl?.requestNotificationsPermission();
       await androidImpl?.createNotificationChannel(
-        const AndroidNotificationChannel(
+        AndroidNotificationChannel(
           _channelId,
-          'بطاقة الصلاة القادمة',
-          description: 'إشعار ثابت يعرض الصلاة القادمة والتاريخ الهجري وعدّاداً تنازلياً',
+          'notif.prayer_channel'.tr(),
+          description: 'notif.prayer_channel_desc'.tr(),
           importance: Importance.low,
           playSound: false,
           enableVibration: false,
@@ -94,7 +97,7 @@ class PrayerStatusNotification {
           _needLocationBody(localeCode),
           AndroidNotificationDetails(
             _channelId,
-            'بطاقة الصلاة القادمة',
+            'notif.prayer_channel'.tr(),
             importance: Importance.low,
             priority: Priority.low,
             ongoing: true,
@@ -207,9 +210,9 @@ class PrayerStatusNotification {
   AndroidNotificationDetails _details(DateTime target) {
     return AndroidNotificationDetails(
       _channelId,
-      'بطاقة الصلاة القادمة',
+      'notif.prayer_channel'.tr(),
       channelDescription:
-          'إشعار ثابت يعرض الصلاة القادمة والتاريخ الهجري وعدّاداً تنازلياً',
+          'notif.prayer_channel_desc'.tr(),
       importance: Importance.low,
       priority: Priority.low,
       ongoing: true,
@@ -232,64 +235,24 @@ class PrayerStatusNotification {
     return '$name · $clock';
   }
 
-  static const _names = {
-    'fajr': {
-      'ar': 'الفجر', 'en': 'Fajr', 'es': 'Fayr', 'ru': 'Фаджр', 'pt': 'Fajr',
-    },
-    'dhuhr': {
-      'ar': 'الظهر', 'en': 'Dhuhr', 'es': 'Duhr', 'ru': 'Зухр', 'pt': 'Duhr',
-    },
-    'asr': {
-      'ar': 'العصر', 'en': 'Asr', 'es': 'Asr', 'ru': 'Аср', 'pt': 'Asr',
-    },
-    'maghrib': {
-      'ar': 'المغرب', 'en': 'Maghrib', 'es': 'Magrib', 'ru': 'Магриб',
-      'pt': 'Magrib',
-    },
-    'isha': {
-      'ar': 'العشاء', 'en': 'Isha', 'es': 'Isha', 'ru': 'Иша', 'pt': 'Isha',
-    },
-  };
+  /// Prayer names come from the same keys the rest of the app uses, rather
+  /// than a table kept here. The table this replaced covered ar/en/es/ru/pt
+  /// and silently fell back to English for French and Urdu.
 
-  String _prayerName(String key, String localeCode) =>
-      _names[key]?[localeCode] ?? _names[key]?['en'] ?? key;
 
-  String _needLocationTitle(String l) => switch (l) {
-        'ar' => 'رفيق الدرب',
-        'es' => 'Rafiq Al-Darb',
-        'ru' => 'Рафик ад-Дарб',
-        'pt' => 'Rafiq Al-Darb',
-        _ => 'Rafiq Al-Darb',
-      };
+  String _prayerName(String key, String localeCode) => 'prayer.$key'.tr();
 
-  String _needLocationBody(String l) => switch (l) {
-        'ar' => 'فعّل الموقع لعرض مواقيت الصلاة',
-        'es' => 'Activa la ubicación para ver los horarios de oración',
-        'ru' => 'Включите геолокацию, чтобы видеть время молитв',
-        'pt' => 'Ative a localização para ver os horários de oração',
-        _ => 'Enable location to see prayer times',
-      };
+  String _needLocationTitle(String l) => 'app.name'.tr();
 
-  /// The 12 Hijri months (indices 1..12).
-  static const _hijriMonths = {
-    'ar': [
-      '', 'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى',
-      'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة',
-    ],
-    'en': [
-      '', 'Muharram', 'Safar', 'Rabiʿ al-Awwal', 'Rabiʿ al-Akhir',
-      'Jumada al-Awwal', 'Jumada al-Akhira', 'Rajab', 'Shaʿban', 'Ramadan',
-      'Shawwal', 'Dhu al-Qaʿda', 'Dhu al-Hijja',
-    ],
-  };
+  String _needLocationBody(String l) => 'notif.prayer_enable_location'.tr();
+
 
   /// Formats the Hijri line. [aladhanHijri] is AlAdhan's "DD-MM-YYYY" string
   /// (Umm al-Qura — authoritative, offline via cache); when it's empty/bad we
   /// fall back to the `hijri` package computed from [day].
   String _hijriLine(String aladhanHijri, DateTime day, String localeCode) {
     final lang = localeCode == 'ar' ? 'ar' : 'en';
-    final months = _hijriMonths[lang]!;
-    final suffix = localeCode == 'ar' ? ' هـ' : ' AH';
+    final suffix = 'hijri.suffix'.tr();
 
     final m = RegExp(r'^(\d{1,2})-(\d{1,2})-(\d{3,4})').firstMatch(aladhanHijri);
     if (m != null) {
@@ -297,14 +260,14 @@ class PrayerStatusNotification {
       final mo = int.parse(m.group(2)!);
       final y = int.parse(m.group(3)!);
       if (mo >= 1 && mo <= 12) {
-        final line = '$d ${months[mo]} $y$suffix';
+        final line = '$d ${hijriMonthName(mo)} $y$suffix';
         return localeCode == 'ar' ? _toArabicDigits(line) : line;
       }
     }
     try {
       HijriCalendar.setLocal(lang);
       final h = HijriCalendar.fromDate(day);
-      final line = '${h.hDay} ${months[h.hMonth]} ${h.hYear}$suffix';
+      final line = '${h.hDay} ${hijriMonthName(h.hMonth)} ${h.hYear}$suffix';
       return localeCode == 'ar' ? _toArabicDigits(line) : line;
     } catch (_) {
       return '';

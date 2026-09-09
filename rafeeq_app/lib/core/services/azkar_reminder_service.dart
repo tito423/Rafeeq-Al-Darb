@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Daily "time for your adhkar" reminders, at whatever time the user picked
@@ -14,7 +15,7 @@ class AzkarReminderService {
   static final AzkarReminderService instance = AzkarReminderService._();
 
   static const _channelId = 'rafeeq_azkar_reminder';
-  static const _channelName = 'تذكير الأذكار';
+  static String get _channelName => 'notif.azkar_channel'.tr();
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -28,10 +29,10 @@ class AzkarReminderService {
     final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
     await androidPlugin?.createNotificationChannel(
-      const AndroidNotificationChannel(
+      AndroidNotificationChannel(
         _channelId,
         _channelName,
-        description: 'تذكير يومي بأذكار الصباح والمساء في الوقت الذي تحدده',
+        description: 'notif.azkar_channel_desc'.tr(),
         importance: Importance.defaultImportance,
       ),
     );
@@ -39,10 +40,12 @@ class AzkarReminderService {
   }
 
   Future<void> scheduleMorning(int hour, int minute) =>
-      _schedule(_morningId, hour, minute, 'أذكار الصباح', 'حان وقت أذكار الصباح');
+      _schedule(_morningId, hour, minute, 'notif.azkar_morning_title'.tr(),
+          'notif.azkar_morning_body'.tr());
 
   Future<void> scheduleEvening(int hour, int minute) =>
-      _schedule(_eveningId, hour, minute, 'أذكار المساء', 'حان وقت أذكار المساء');
+      _schedule(_eveningId, hour, minute, 'notif.azkar_evening_title'.tr(),
+          'notif.azkar_evening_body'.tr());
 
   Future<void> cancelMorning() => _plugin.cancel(_morningId);
   Future<void> cancelEvening() => _plugin.cancel(_eveningId);
@@ -60,7 +63,7 @@ class AzkarReminderService {
       title,
       body,
       _nextInstanceOf(hour, minute),
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,

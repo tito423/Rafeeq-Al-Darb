@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -127,8 +128,8 @@ class DownloadNotifications {
       await plugin.show(
         _notificationId(id) + 1000,
         title,
-        'تم التنزيل — جاهز للاستخدام بدون إنترنت',
-        const NotificationDetails(android: android),
+        'notif.dl_done'.tr(),
+        NotificationDetails(android: android),
       );
     } catch (_) {}
   }

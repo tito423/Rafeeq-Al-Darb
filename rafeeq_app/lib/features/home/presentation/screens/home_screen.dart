@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../../../core/i18n/hijri_months.dart';
+
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -133,39 +135,12 @@ class _HeaderCard extends ConsumerWidget {
     final h = HijriCalendar.fromDate(
       DateTime.now().add(Duration(days: offsetDays)),
     );
-    const monthsAr = [
-      '',
-      'محرم',
-      'صفر',
-      'ربيع الأول',
-      'ربيع الآخر',
-      'جمادى الأولى',
-      'جمادى الآخرة',
-      'رجب',
-      'شعبان',
-      'رمضان',
-      'شوال',
-      'ذو القعدة',
-      'ذو الحجة',
-    ];
-    const monthsEn = [
-      '',
-      'Muharram',
-      'Safar',
-      'Rabiʿ al-Awwal',
-      'Rabiʿ al-Akhir',
-      'Jumada al-Awwal',
-      'Jumada al-Akhira',
-      'Rajab',
-      'Shaʿban',
-      'Ramadan',
-      'Shawwal',
-      'Dhu al-Qaʿda',
-      'Dhu al-Hijja',
-    ];
-    final months = lang == 'ar' ? monthsAr : monthsEn;
-    final suffix = lang == 'ar' ? ' هـ' : ' AH';
-    return '${h.hDay} ${months[h.hMonth]} ${h.hYear}$suffix';
+    // The month names and the era suffix come from the locale files, via
+    // `hijriMonthName`. The two tables that used to sit here (and a second
+    // copy in the prayer notification) covered Arabic and English only, so a
+    // French or Urdu reader was shown the English transliteration.
+    return '${h.hDay} ${hijriMonthName(h.hMonth)} ${h.hYear}'
+        '${'hijri.suffix'.tr()}';
   }
 
   String _gregorianLine(BuildContext context) {

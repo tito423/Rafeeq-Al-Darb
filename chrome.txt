@@ -1,0 +1,167 @@
+adhan_entry.dart                                           82    الصلاة
+core/services/ayah_audio_service.dart                      346   رفيق الدرب
+core/services/ayah_audio_service.dart                      468   رفيق الدرب
+core/services/ayah_audio_service.dart                      1107  سورة $surah
+core/services/ayah_audio_service.dart                      1226  ${s.id}. ${s.nameAr}
+core/services/azkar_reminder_service.dart                  17    تذكير الأذكار
+core/services/azkar_reminder_service.dart                  34    تذكير يومي بأذكار الصباح والمساء في الوقت الذي تحدده
+core/services/azkar_reminder_service.dart                  42    أذكار الصباح
+core/services/azkar_reminder_service.dart                  42    حان وقت أذكار الصباح
+core/services/azkar_reminder_service.dart                  45    أذكار المساء
+core/services/azkar_reminder_service.dart                  45    حان وقت أذكار المساء
+core/services/download_engine.dart                         136   جارٍ التنزيل
+core/services/download_engine.dart                         136   الملفات المكتملة: {numFinished} من {numTotal}
+core/services/download_engine.dart                         137   اكتمل التنزيل
+core/services/download_engine.dart                         137   المحتوى جاهز للاستخدام بدون إنترنت
+core/services/download_engine.dart                         138   تعذّر التنزيل
+core/services/download_engine.dart                         138   تعذّر إكمال بعض الملفات
+core/services/download_engine.dart                         139   التنزيل متوقف مؤقتًا
+core/services/download_engine.dart                         139   اضغط للمتابعة
+core/services/download_engine.dart                         146   تنزيل التلاوة
+core/services/download_engine.dart                         146   الآيات المكتملة: {numFinished} من {numTotal}
+core/services/download_engine.dart                         147   اكتملت التلاوة
+core/services/download_engine.dart                         147   التلاوة جاهزة للاستماع بدون إنترنت
+core/services/download_engine.dart                         148   تعذّر تنزيل التلاوة
+core/services/download_engine.dart                         148   تعذّر إكمال بعض الآيات
+core/services/download_engine.dart                         149   تنزيل التلاوة متوقف
+core/services/download_engine.dart                         149   اضغط للمتابعة
+core/services/download_manager.dart                        130   الملف غير موجود على الخادم (404)
+core/services/download_manager.dart                        133   تعذّر التنزيل
+core/services/download_notifications.dart                  130   تم التنزيل — جاهز للاستخدام بدون إنترنت
+core/services/khatma_reminder_service.dart                 13    تذكير الختمة
+core/services/khatma_reminder_service.dart                 27    تذكير يومي بقراءة وردك من الختمة في الوقت الذي تحدده
+core/services/khatma_reminder_service.dart                 38    ورد الختمة
+core/services/khatma_reminder_service.dart                 39    حان وقت وردك من القرآن اليوم
+core/services/prayer_status_notification.dart              48    بطاقة الصلاة القادمة
+core/services/prayer_status_notification.dart              49    إشعار ثابت يعرض الصلاة القادمة والتاريخ الهجري وعدّاداً تنازلياً
+core/services/prayer_status_notification.dart              97    بطاقة الصلاة القادمة
+core/services/prayer_status_notification.dart              210   بطاقة الصلاة القادمة
+core/services/prayer_status_notification.dart              212   إشعار ثابت يعرض الصلاة القادمة والتاريخ الهجري وعدّاداً تنازلياً
+core/services/prayer_status_notification.dart              258   رفيق الدرب
+core/services/prayer_status_notification.dart              266   فعّل الموقع لعرض مواقيت الصلاة
+core/services/prayer_status_notification.dart              276   محرم
+core/services/prayer_status_notification.dart              276   صفر
+core/services/prayer_status_notification.dart              276   ربيع الأول
+core/services/prayer_status_notification.dart              276   ربيع الآخر
+core/services/prayer_status_notification.dart              276   جمادى الأولى
+core/services/prayer_status_notification.dart              277   جمادى الآخرة
+core/services/prayer_status_notification.dart              277   رجب
+core/services/prayer_status_notification.dart              277   شعبان
+core/services/prayer_status_notification.dart              277   رمضان
+core/services/prayer_status_notification.dart              277   شوال
+core/services/prayer_status_notification.dart              277   ذو القعدة
+core/services/prayer_status_notification.dart              277   ذو الحجة
+core/services/prayer_status_notification.dart              316   ٠١٢٣٤٥٦٧٨٩
+core/services/sunan_suwar_reminder_service.dart            14    تذكير سنن السور
+core/services/sunan_suwar_reminder_service.dart            46    تذكير أسبوعي بقراءة سنن السور في وقتها
+core/services/sunan_suwar_reminder_service.dart            66    حان وقت وردك من سنن السور
+features/adhan/presentation/screens/prayer_adjustments_screen.dart 179   ${date.hDay} ${date.longMonthName} ${date.hYear} هـ
+features/azkar/presentation/screens/azkar_section_screen.dart 325   $remaining
+features/azkar/presentation/screens/azkar_section_screen.dart 371   ${index + 1} / $total
+features/azkar/presentation/screens/tasbeeh_screen.dart    397   $milestone
+features/downloads/presentation/screens/downloads_screen.dart 265   ${summary.totalItems} ${
+features/downloads/presentation/screens/downloads_screen.dart 789   ${widget.surahId}. ${widget.surahName}
+features/downloads/presentation/screens/downloads_screen.dart 835   ${widget.surahId}
+features/downloads/presentation/screens/downloads_screen.dart 863   ${job.done} / ${job.total}
+features/downloads/presentation/widgets/mushaf_preview_sheet.dart 218   ${e.pages} ${
+features/downloads/presentation/widgets/mushaf_preview_sheet.dart 324   $_cached / $total ${
+features/hadith_daily/presentation/daily_hadith_card.dart  409   ${book.nameAr} · ${
+features/home/presentation/screens/home_screen.dart        138   محرم
+features/home/presentation/screens/home_screen.dart        139   صفر
+features/home/presentation/screens/home_screen.dart        140   ربيع الأول
+features/home/presentation/screens/home_screen.dart        141   ربيع الآخر
+features/home/presentation/screens/home_screen.dart        142   جمادى الأولى
+features/home/presentation/screens/home_screen.dart        143   جمادى الآخرة
+features/home/presentation/screens/home_screen.dart        144   رجب
+features/home/presentation/screens/home_screen.dart        145   شعبان
+features/home/presentation/screens/home_screen.dart        146   رمضان
+features/home/presentation/screens/home_screen.dart        147   شوال
+features/home/presentation/screens/home_screen.dart        148   ذو القعدة
+features/home/presentation/screens/home_screen.dart        149   ذو الحجة
+features/home/presentation/screens/home_screen.dart        570   $label: $hس $mد
+features/home/presentation/screens/home_screen.dart        571   $label: $mد
+features/home/presentation/widgets/analog_clock_faces.dart 332   ١٢
+features/home/presentation/widgets/analog_clock_faces.dart 332   ١٠
+features/home/presentation/widgets/analog_clock_faces.dart 332   ١١
+features/home/presentation/widgets/analog_clock_faces.dart 491   ١٢
+features/home/presentation/widgets/analog_clock_faces.dart 491   ١٠
+features/home/presentation/widgets/analog_clock_faces.dart 491   ١١
+features/home/presentation/widgets/digital_clock_faces.dart 13    ٠١٢٣٤٥٦٧٨٩
+features/khatma/presentation/khatma_screen.dart            816   $value
+features/library/presentation/screens/book_text_reader_screen.dart 242   ${(_fontScale * 100).round()}%
+features/library/presentation/screens/book_text_reader_screen.dart 713   ${_pageIndex + 1}
+features/library/presentation/screens/book_text_reader_screen.dart 749   ${doc.pages.length}
+features/library/presentation/screens/book_text_reader_screen.dart 916   ${widget.doc.toc.length}
+features/library/presentation/screens/book_text_reader_screen.dart 1107  ${_hits.length} ${
+features/library/presentation/screens/book_text_reader_screen.dart 1125  ${h.printedPage}
+features/library/presentation/screens/books_search_screen.dart 127   ${_hits.length} ${
+features/library/presentation/screens/hadith_book_screen.dart 51    ${c.chapterNo}
+features/library/presentation/screens/hadith_chapter_screen.dart 55    ${h.numberInBook}
+features/library/presentation/screens/library_screen.dart  429   ${books.length} ${
+features/library/presentation/screens/library_screen.dart  1157  $value $label
+features/library/presentation/screens/library_screen.dart  1223  ${book?.nameAr ??
+features/library/presentation/screens/library_screen.dart  1261  د. راغب السرجاني
+features/library/presentation/screens/library_screen.dart  1262  تاريخ إسلامي وسيرة نبوية وحضارة
+features/library/presentation/screens/library_screen.dart  1268  د. حسن الحسيني
+features/library/presentation/screens/library_screen.dart  1269  مقارنة أديان وعقيدة ودعوة
+features/library/presentation/screens/library_screen.dart  1275  الشيخ أمجد سمير
+features/library/presentation/screens/library_screen.dart  1276  فقه وعلوم شرعية وتزكية
+features/library/presentation/screens/library_screen.dart  1282  د. أحمد العربي
+features/library/presentation/screens/library_screen.dart  1283  تدبر القرآن الكريم وعلومه
+features/library/presentation/screens/library_screen.dart  1289  د. هيثم طلعت
+features/library/presentation/screens/library_screen.dart  1290  ردود علمية وفكرية على الإلحاد والشبهات
+features/library/presentation/screens/library_screen.dart  1296  قناة فاهم
+features/library/presentation/screens/library_screen.dart  1297  محتوى فكري إسلامي بأسلوب بصري عصري
+features/library/presentation/screens/library_screen.dart  1303  د. إياد قنيبي
+features/library/presentation/screens/library_screen.dart  1304  فكر إسلامي وردود على الشبهات المعاصرة
+features/library/presentation/screens/library_screen.dart  1310  قناة مكاني
+features/library/presentation/screens/library_screen.dart  1311  محتوى دعوي وتعليمي هادف
+features/library/presentation/screens/library_screen.dart  1317  م. أيمن عبدالرحيم
+features/library/presentation/screens/library_screen.dart  1318  محتوى إيماني ودعوي متنوع
+features/library/presentation/screens/library_screen.dart  1324  قناة وعي
+features/library/presentation/screens/library_screen.dart  1325  وعي فكري إسلامي معاصر
+features/library/presentation/screens/library_screen.dart  1436  الإسلام سؤال وجواب
+features/library/presentation/screens/library_screen.dart  1437  أكبر موقع إسلامي للفتاوى والأسئلة الشرعية بإشراف الشيخ محمد صالح المنجد
+features/library/presentation/screens/library_screen.dart  1443  الدرر السنية
+features/library/presentation/screens/library_screen.dart  1444  موسوعة شاملة للحديث النبوي والعقيدة والفقه وتخريج الأحاديث
+features/library/presentation/screens/library_screen.dart  1450  طريق الإسلام
+features/library/presentation/screens/library_screen.dart  1451  دروس ومحاضرات ومقالات إسلامية من كبار العلماء والدعاة
+features/library/presentation/screens/library_screen.dart  1457  صيد الفوائد
+features/library/presentation/screens/library_screen.dart  1458  مكتبة إسلامية شاملة تضم مقالات وكتب ومحاضرات متنوعة
+features/library/presentation/screens/library_screen.dart  1464  شبكة الألوكة
+features/library/presentation/screens/library_screen.dart  1465  شبكة علمية ثقافية تضم بحوثاً ومقالات أكاديمية إسلامية
+features/quran/presentation/screens/quran_screen.dart      1001  الجزء ${_arabicNumber(juzNumber!)}
+features/quran/presentation/screens/quran_screen.dart      1017  ٠١٢٣٤٥٦٧٨٩
+features/quran/presentation/screens/quran_screen.dart      1145  ${speed.round()}
+features/quran/presentation/widgets/ayah_sciences_sheet.dart 294   ${ayah.surahId}:${ayah.ayahNumber}
+features/quran/presentation/widgets/ayah_sciences_sheet.dart 958     ${e.sizeLabel}
+features/quran/presentation/widgets/ayah_sciences_sheet.dart 1179  ${item.position}
+features/quran/presentation/widgets/ayah_sciences_sheet.dart 1276  ${seg.text} (${seg.label})
+features/quran/presentation/widgets/ayah_sciences_sheet.dart 1385  $label: $value
+features/quran/presentation/widgets/ayah_sciences_sheet.dart 1537  ${word.position}
+features/quran/presentation/widgets/ayah_share_card.dart   77    رفيق الدرب — $reference
+features/quran/presentation/widgets/ayah_share_card.dart   148   رفيق الدرب
+features/quran/presentation/widgets/mushaf_edition_sheet.dart 153   ${edition.pages} ${
+features/quran/presentation/widgets/mushaf_nav_sheets.dart 44    ${s.id}
+features/quran/presentation/widgets/mushaf_nav_sheets.dart 54    ${s.ayahsCount} ${
+features/quran/presentation/widgets/mushaf_nav_sheets.dart 107   الجزء ${_arabicNumber(juz)}
+features/quran/presentation/widgets/mushaf_nav_sheets.dart 110   p.${juzStartPages[juz] ?? 1}
+features/quran/presentation/widgets/mushaf_nav_sheets.dart 166   ٠١٢٣٤٥٦٧٨٩
+features/quran/presentation/widgets/mushaf_theme_picker.dart 352   بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+features/quran/presentation/widgets/mushaf_theme_picker.dart 353   ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ
+features/ruqyah/presentation/screens/ruqyah_screen.dart    322   ${ayah.surahId}:${ayah.ayahNumber}
+features/search/presentation/screens/search_screen.dart    141   ${results!.length} ${
+features/search/presentation/screens/search_screen.dart    168   ${a.surahId}:${a.ayahNumber}
+features/search/presentation/screens/search_screen.dart    401   $label • ${a.surahId}:${a.ayahNumber}
+features/search/presentation/screens/search_screen.dart    409   ${a.surahId}:${a.ayahNumber}
+features/settings/presentation/screens/about_screen.dart   162   v${AboutScreen.appVersion}
+features/settings/presentation/screens/about_screen.dart   192   Tito Abo Malak
+features/settings/presentation/screens/sources_screen.dart 92    المكتبة الشاملة
+features/settings/presentation/screens/sources_screen.dart 96    مسند أحمد — ط الرسالة
+features/settings/presentation/screens/sources_screen.dart 98    سنن الدارمي — ت حسين أسد
+features/settings/presentation/widgets/non_arabic_reading_card.dart 138   Quran.com v4 API
+features/settings/presentation/widgets/non_arabic_reading_card.dart 150   بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+features/settings/presentation/widgets/non_arabic_reading_card.dart 167   Bismi Allāhi r-Raḥmāni r-Raḥīm
+features/sunan_suwar/presentation/single_surah_screen.dart 515   ${current - startPage + 1} / $pageCount
+features/sunan_suwar/presentation/sunan_suwar_card.dart    111   ${surah.virtueNoteKey.tr()} — ${surah.sourceKey.tr()}
+features/sunan_suwar/presentation/sunan_suwar_card.dart    181   ${_time.hour.toString().padLeft(2,

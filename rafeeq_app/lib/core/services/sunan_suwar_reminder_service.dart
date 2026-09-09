@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Weekly "read your sunnah surah" reminders (P2‑12) — one per surah, fired
@@ -11,7 +12,7 @@ class SunanSuwarReminderService {
   static final SunanSuwarReminderService instance = SunanSuwarReminderService._();
 
   static const _channelId = 'rafeeq_sunan_suwar_reminder';
-  static const _channelName = 'تذكير سنن السور';
+  static String get _channelName => 'notif.sunan_channel'.tr();
 
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
   bool _channelReady = false;
@@ -40,10 +41,10 @@ class SunanSuwarReminderService {
     final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
     await androidPlugin?.createNotificationChannel(
-      const AndroidNotificationChannel(
+      AndroidNotificationChannel(
         _channelId,
         _channelName,
-        description: 'تذكير أسبوعي بقراءة سنن السور في وقتها',
+        description: 'notif.sunan_channel_desc'.tr(),
         importance: Importance.defaultImportance,
       ),
     );
@@ -63,9 +64,9 @@ class SunanSuwarReminderService {
     await _plugin.zonedSchedule(
       id,
       title,
-      'حان وقت وردك من سنن السور',
+      'notif.sunan_body'.tr(),
       _nextInstanceOfWeekday(weekday, hour, minute),
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,

@@ -11,6 +11,66 @@ Cline, or any other).
 | **App version** | `pubspec.yaml` `3.8.0+4` (this is what the About card shows — keep it equal to the release tag) |
 | **Build verified?** | `flutter analyze lib test` clean · `flutter test` **37/37** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
 
+## STATE AS OF 2026-09-09 — FIFTH SESSION (unreleased work on top of v3.8.0)
+
+**The tree is clean, `flutter analyze lib test` is clean and `flutter test` is
+43/43 — but nothing below has been built into an APK or released.** The
+session ended at 98% quota, mid-way through the i18n job. Read
+`NEXT_SESSION_PROMPT.md` §0 first: it holds the measurement that says how much
+of that job is left.
+
+### What the fifth session did
+
+1. **Continuous recitation** — three separate faults, all reported by the
+   owner and all fixed and seen working on `emulator-5554`:
+   * picking a verse **stopped** the recitation, because `quran_screen.dart`
+     handed `startContinuous` a *mushaf* id where a *reciter* id belongs. Both
+     are `String`, so `flutter analyze` saw nothing; every verse resolved to a
+     404 and the catch arm called `stopContinuous()`.
+     `test/recitation_edition_test.dart` was proven to fail on the old code
+     before being trusted.
+   * the sciences sheet's play/stop toggle read the **shared** player, so
+     mid-recitation it rendered as STOP and killed the run. It is now
+     «اقرأ من هنا» and moves the recitation to the tapped verse.
+   * the hang after a long spell in the background: the player is rebuilt and
+     the sources reloaded on failure, the run can be resumed rather than
+     silently toggled off, and a real failure is now *reported*.
+2. **Splash, theme, permissions** — day theme by default on a fresh install; a
+   splash-video sound switch in Settings; and the POST_NOTIFICATIONS dialog no
+   longer lands on top of the splash video.
+3. **Two more mushaf printings highlight ayahs** — `madinah_gold` (all 604
+   pages, fitted directly) and Kuwait's two illuminated openings. **Five of
+   nine** printings now carry the ayah layer.
+4. **Localisation** — the Quran translation follows the app language; mushaf
+   and reciter names read in the app's language; the hadith translation is
+   shown under the hadith on the card as well as in the book, always labelled
+   with its language and source.
+5. **The language-switch bug the owner photographed** — changing the language
+   left already-built tabs in the old one. `AppShell` now depends on the
+   locale and rebuilds every tab. Bottom-nav label clipping fixed and guarded
+   by a test; Arabic content inside a Latin UI now laid out RTL.
+6. **`scripts/i18n_audit.py`** — the measurement for "every screen fully
+   translated": **1,497 untranslated user-visible strings, 89 chrome and
+   1,408 content** at session end (chrome was 167 at the start).
+
+### Honest gaps from the fifth session
+
+* **The recitation background hang could not be reproduced on the emulator.**
+  `am stopservice` on the AudioService did not release the player
+  (audio_service restarted itself and playback kept advancing), and cutting
+  the network did not stall it either because played ayahs are cached to disk.
+  What *was* verified is the recovery half: with no network and an uncached
+  surah the reader now says «تعذّر تشغيل التلاوة …» instead of falling silent,
+  and playback then works again on the rebuilt player — which proves
+  `just_audio_background` accepts a new player after a disposed one, the
+  riskiest assumption in the fix. **The trigger still needs the owner's phone.**
+* **Hosted content was NOT re-verified this session** — no range requests were
+  run. The R2 figures in the table below are the previous session's.
+* **A correction the owner is owed:** he was told that no Spanish or
+  Portuguese hadith translation exists in any redistributable source. That was
+  wrong. **HadeethEnc** serves ar/en/ur/es/ru/fr/pt with grading and takhrij —
+  see `NEXT_SESSION_PROMPT.md` §1.
+
 ## STATE AS OF 2026-09-09 (v3.8.0)
 
 Phases 1–3 are complete. Everything since is owner-driven. **Read

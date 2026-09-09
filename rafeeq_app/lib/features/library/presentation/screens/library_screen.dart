@@ -1243,13 +1243,18 @@ class _SearchResultsState extends State<_SearchResults> {
 
 class _ChannelInfo {
   final String name;
-  final String description;
+  /// A translation KEY, not the text: the description is what a non-Arabic
+  /// reader needs in order to know what the channel or site is. The `name`
+  /// beside it stays Arabic because it is the real, proper name of an
+  /// Arabic-language channel, and a proper noun is not translated - it is
+  /// rendered with `ArabicText` so it reads in its own direction.
+  final String descriptionKey;
   final String url;
   final IconData icon;
   final Color color;
   const _ChannelInfo({
     required this.name,
-    required this.description,
+    required this.descriptionKey,
     required this.url,
     required this.icon,
     required this.color,
@@ -1259,70 +1264,70 @@ class _ChannelInfo {
 const _islamicChannels = [
   _ChannelInfo(
     name: 'د. راغب السرجاني',
-    description: 'تاريخ إسلامي وسيرة نبوية وحضارة',
+    descriptionKey: 'dawah.ch_sergany',
     url: 'https://www.youtube.com/@RaghebElsergany',
     icon: Icons.history_edu,
     color: Color(0xFF1565C0),
   ),
   _ChannelInfo(
     name: 'د. حسن الحسيني',
-    description: 'مقارنة أديان وعقيدة ودعوة',
+    descriptionKey: 'dawah.ch_husseiny',
     url: 'https://www.youtube.com/@HassanElhusseiny',
     icon: Icons.menu_book,
     color: Color(0xFF2E7D32),
   ),
   _ChannelInfo(
     name: 'الشيخ أمجد سمير',
-    description: 'فقه وعلوم شرعية وتزكية',
+    descriptionKey: 'dawah.ch_amgad',
     url: 'https://www.youtube.com/@AmgadSamir',
     icon: Icons.school,
     color: Color(0xFF6A1B9A),
   ),
   _ChannelInfo(
     name: 'د. أحمد العربي',
-    description: 'تدبر القرآن الكريم وعلومه',
+    descriptionKey: 'dawah.ch_arabi',
     url: 'https://www.youtube.com/@Dr.AhmedAlarabi',
     icon: Icons.auto_stories,
     color: Color(0xFFC62828),
   ),
   _ChannelInfo(
     name: 'د. هيثم طلعت',
-    description: 'ردود علمية وفكرية على الإلحاد والشبهات',
+    descriptionKey: 'dawah.ch_haytham',
     url: 'https://www.youtube.com/@HaythamTalaat',
     icon: Icons.lightbulb,
     color: Color(0xFFEF6C00),
   ),
   _ChannelInfo(
     name: 'قناة فاهم',
-    description: 'محتوى فكري إسلامي بأسلوب بصري عصري',
+    descriptionKey: 'dawah.ch_fahem',
     url: 'https://www.youtube.com/@fahem',
     icon: Icons.smart_display,
     color: Color(0xFF00838F),
   ),
   _ChannelInfo(
     name: 'د. إياد قنيبي',
-    description: 'فكر إسلامي وردود على الشبهات المعاصرة',
+    descriptionKey: 'dawah.ch_qunaibi',
     url: 'https://www.youtube.com/@EyadQunaibi',
     icon: Icons.psychology,
     color: Color(0xFF4527A0),
   ),
   _ChannelInfo(
     name: 'قناة مكاني',
-    description: 'محتوى دعوي وتعليمي هادف',
+    descriptionKey: 'dawah.ch_makany',
     url: 'https://www.youtube.com/@MakanyChannel',
     icon: Icons.mosque,
     color: Color(0xFF00695C),
   ),
   _ChannelInfo(
     name: 'م. أيمن عبدالرحيم',
-    description: 'محتوى إيماني ودعوي متنوع',
+    descriptionKey: 'dawah.ch_ayman',
     url: 'https://www.youtube.com/@AymanAbdelRaheem',
     icon: Icons.volunteer_activism,
     color: Color(0xFF283593),
   ),
   _ChannelInfo(
     name: 'قناة وعي',
-    description: 'وعي فكري إسلامي معاصر',
+    descriptionKey: 'dawah.ch_waei',
     url: 'https://www.youtube.com/@waikishow',
     icon: Icons.visibility,
     color: Color(0xFF37474F),
@@ -1379,7 +1384,7 @@ class _IslamicChannelsTab extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          ArabicText(
                             ch.name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -1389,7 +1394,7 @@ class _IslamicChannelsTab extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            ch.description,
+                            ch.descriptionKey.tr(),
                             style: TextStyle(
                               fontSize: 13,
                               color: scheme.onSurfaceVariant,
@@ -1418,13 +1423,18 @@ class _IslamicChannelsTab extends StatelessWidget {
 
 class _WebsiteInfo {
   final String name;
-  final String description;
+  /// A translation KEY, not the text: the description is what a non-Arabic
+  /// reader needs in order to know what the channel or site is. The `name`
+  /// beside it stays Arabic because it is the real, proper name of an
+  /// Arabic-language channel, and a proper noun is not translated - it is
+  /// rendered with `ArabicText` so it reads in its own direction.
+  final String descriptionKey;
   final String url;
   final IconData icon;
   final Color color;
   const _WebsiteInfo({
     required this.name,
-    required this.description,
+    required this.descriptionKey,
     required this.url,
     required this.icon,
     required this.color,
@@ -1434,35 +1444,35 @@ class _WebsiteInfo {
 const _islamicWebsites = [
   _WebsiteInfo(
     name: 'الإسلام سؤال وجواب',
-    description: 'أكبر موقع إسلامي للفتاوى والأسئلة الشرعية بإشراف الشيخ محمد صالح المنجد',
+    descriptionKey: 'dawah.site_islamqa',
     url: 'https://islamqa.info',
     icon: Icons.question_answer,
     color: Color(0xFF1B5E20),
   ),
   _WebsiteInfo(
     name: 'الدرر السنية',
-    description: 'موسوعة شاملة للحديث النبوي والعقيدة والفقه وتخريج الأحاديث',
+    descriptionKey: 'dawah.site_dorar',
     url: 'https://dorar.net',
     icon: Icons.diamond,
     color: Color(0xFFC9A227),
   ),
   _WebsiteInfo(
     name: 'طريق الإسلام',
-    description: 'دروس ومحاضرات ومقالات إسلامية من كبار العلماء والدعاة',
+    descriptionKey: 'dawah.site_islamway',
     url: 'https://ar.islamway.net',
     icon: Icons.route,
     color: Color(0xFF0D47A1),
   ),
   _WebsiteInfo(
     name: 'صيد الفوائد',
-    description: 'مكتبة إسلامية شاملة تضم مقالات وكتب ومحاضرات متنوعة',
+    descriptionKey: 'dawah.site_saaid',
     url: 'https://saaid.org',
     icon: Icons.catching_pokemon,
     color: Color(0xFF4E342E),
   ),
   _WebsiteInfo(
     name: 'شبكة الألوكة',
-    description: 'شبكة علمية ثقافية تضم بحوثاً ومقالات أكاديمية إسلامية',
+    descriptionKey: 'dawah.site_alukah',
     url: 'https://www.alukah.net',
     icon: Icons.language,
     color: Color(0xFF311B92),
@@ -1519,7 +1529,7 @@ class _IslamicWebsitesTab extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          ArabicText(
                             site.name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -1529,7 +1539,7 @@ class _IslamicWebsitesTab extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            site.description,
+                            site.descriptionKey.tr(),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:background_downloader/background_downloader.dart';
 
@@ -133,20 +134,28 @@ class DownloadEngine {
     // download from filling the shade with hundreds of rows.
     downloader.configureNotificationForGroup(
       groupFiles,
-      running: const TaskNotification('جارٍ التنزيل', 'الملفات المكتملة: {numFinished} من {numTotal}'),
-      complete: const TaskNotification('اكتمل التنزيل', 'المحتوى جاهز للاستخدام بدون إنترنت'),
-      error: const TaskNotification('تعذّر التنزيل', 'تعذّر إكمال بعض الملفات'),
-      paused: const TaskNotification('التنزيل متوقف مؤقتًا', 'اضغط للمتابعة'),
+      running: TaskNotification('notif.dl_files_running_title'.tr(),
+          'notif.dl_files_running_body'.tr()),
+      complete: TaskNotification('notif.dl_files_complete_title'.tr(),
+          'notif.dl_files_complete_body'.tr()),
+      error: TaskNotification('notif.dl_files_error_title'.tr(),
+          'notif.dl_files_error_body'.tr()),
+      paused: TaskNotification('notif.dl_paused_title'.tr(),
+          'notif.dl_paused_body'.tr()),
       progressBar: true,
       groupNotificationId: _notifGroupFiles,
     );
 
     downloader.configureNotificationForGroup(
       groupRecitations,
-      running: const TaskNotification('تنزيل التلاوة', 'الآيات المكتملة: {numFinished} من {numTotal}'),
-      complete: const TaskNotification('اكتملت التلاوة', 'التلاوة جاهزة للاستماع بدون إنترنت'),
-      error: const TaskNotification('تعذّر تنزيل التلاوة', 'تعذّر إكمال بعض الآيات'),
-      paused: const TaskNotification('تنزيل التلاوة متوقف', 'اضغط للمتابعة'),
+      running: TaskNotification('notif.dl_recit_running_title'.tr(),
+          'notif.dl_recit_running_body'.tr()),
+      complete: TaskNotification('notif.dl_recit_complete_title'.tr(),
+          'notif.dl_recit_complete_body'.tr()),
+      error: TaskNotification('notif.dl_recit_error_title'.tr(),
+          'notif.dl_recit_error_body'.tr()),
+      paused: TaskNotification('notif.dl_recit_paused_title'.tr(),
+          'notif.dl_paused_body'.tr()),
       progressBar: true,
       groupNotificationId: _notifGroupRecitations,
     );
