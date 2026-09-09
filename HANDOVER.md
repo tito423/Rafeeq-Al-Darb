@@ -727,9 +727,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 01:47 — IN PROGRESS — resume here**
+**2026-09-10 01:54 — IN PROGRESS — resume here**
 
-quotes, sourced and hand-read: 352 from the three books that can honestly give them. Rawdat al-Uqala and Hilyat al-Awliya were crawled from Shamela, built, uploaded and added to the catalogue with their measured sizes. Hilyat is EXCLUDED as a quote source and said so in the script: a hand-read sample of its 1,032 candidates carried ungraded hadith, half-isnads and editorial notes on chains, which is what CLAUDE.md 1.2 forbids. Four filters were only found by reading real pages - ayahs in plain braces, hadith in doubled parens, the editor's footnotes inside the body stream, and isnads that a plain substring missed because the text is fully diacritised
+the quote notification and its card: a rolling window of individual notifications each carrying a different saying and its own payload, so the card opens on the saying the notification showed. Six backgrounds drawn with the adhkar cards own IslamicPatternPainter - no licence question at all - and every ink/ground pairing measured against 4.5:1 on the COMPOSITE, per trap 15, rather than judged by eye. Not yet opened on a device
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

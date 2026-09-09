@@ -872,7 +872,10 @@
     "post_title": "Ya pasó el adhan del {prayer}",
     "post_body": "{minutes} desde el adhan del {prayer}",
     "iqama_title": "Iqama del {prayer}",
-    "iqama_body": "Es hora del iqama del {prayer}"
+    "iqama_body": "Es hora del iqama del {prayer}",
+    "quote_channel": "Citas",
+    "quote_channel_desc": "Un dicho de los libros de la biblioteca, en el intervalo que elijas",
+    "quote_title": "Una cita"
   },
   "hijri": {
     "m1": "Muharram",
@@ -1051,5 +1054,47 @@
     "hints": "Beneficios del hadiz",
     "reference": "Referencias",
     "credit": "Fuente: {source}"
+  },
+  "quotes": {
+    "section_title": "Citas",
+    "reminder_title": "Notificación de citas",
+    "reminder_desc": "{count} de {books}, una en el intervalo que elijas.",
+    "reminder_desc_plain": "Dichos de los libros de la biblioteca, con su fuente.",
+    "off": "Desactivado",
+    "preview": "Ver una ahora",
+    "dismiss": "Cerrar",
+    "window_note": "Se programan {n} cada vez que abres la aplicación.",
+    "count": {
+      "zero": "{} citas",
+      "one": "{} cita",
+      "two": "{} citas",
+      "few": "{} citas",
+      "many": "{} citas",
+      "other": "{} citas"
+    },
+    "books": {
+      "zero": "{} libros",
+      "one": "{} libro",
+      "two": "{} libros",
+      "few": "{} libros",
+      "many": "{} libros",
+      "other": "{} libros"
+    },
+    "minutes": {
+      "zero": "{} minutos",
+      "one": "{} minuto",
+      "two": "{} minutos",
+      "few": "{} minutos",
+      "many": "{} minutos",
+      "other": "{} minutos"
+    },
+    "hours": {
+      "zero": "{} horas",
+      "one": "{} hora",
+      "two": "{} horas",
+      "few": "{} horas",
+      "many": "{} horas",
+      "other": "{} horas"
+    }
   }
 }

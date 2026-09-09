@@ -872,7 +872,10 @@
     "post_title": "مضى وقت من أذان {prayer}",
     "post_body": "مضت {minutes} على أذان {prayer}",
     "iqama_title": "إقامة {prayer}",
-    "iqama_body": "حان وقت إقامة صلاة {prayer}"
+    "iqama_body": "حان وقت إقامة صلاة {prayer}",
+    "quote_channel": "مقولات",
+    "quote_channel_desc": "مقولة من كتب المكتبة، كل مدة تختارها",
+    "quote_title": "مقولة"
   },
   "hijri": {
     "m1": "محرم",
@@ -1051,5 +1054,47 @@
     "hints": "من فوائد الحديث",
     "reference": "المراجع",
     "credit": "المصدر: {source}"
+  },
+  "quotes": {
+    "section_title": "المقولات",
+    "reminder_title": "إشعار مقولة",
+    "reminder_desc": "{count} من {books}، تظهر واحدة كل مدة تختارها.",
+    "reminder_desc_plain": "مقولات من كتب المكتبة، بمصادرها.",
+    "off": "موقوف",
+    "preview": "اعرض مقولة الآن",
+    "dismiss": "إغلاق",
+    "window_note": "يُجهَّز {n} إشعارًا في كل مرة تفتح فيها التطبيق.",
+    "count": {
+      "zero": "لا مقولات",
+      "one": "مقولة واحدة",
+      "two": "مقولتان",
+      "few": "{} مقولات",
+      "many": "{} مقولة",
+      "other": "{} مقولة"
+    },
+    "books": {
+      "zero": "لا كتب",
+      "one": "كتاب واحد",
+      "two": "كتابان",
+      "few": "{} كتب",
+      "many": "{} كتابًا",
+      "other": "{} كتابًا"
+    },
+    "minutes": {
+      "zero": "{} دقيقة",
+      "one": "دقيقة",
+      "two": "دقيقتان",
+      "few": "{} دقائق",
+      "many": "{} دقيقة",
+      "other": "{} دقيقة"
+    },
+    "hours": {
+      "zero": "{} ساعة",
+      "one": "ساعة",
+      "two": "ساعتان",
+      "few": "{} ساعات",
+      "many": "{} ساعة",
+      "other": "{} ساعة"
+    }
   }
 }

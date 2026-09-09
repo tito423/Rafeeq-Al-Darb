@@ -872,7 +872,10 @@
     "post_title": "L'adhan du {prayer} est passé",
     "post_body": "{minutes} depuis l'adhan du {prayer}",
     "iqama_title": "Iqama du {prayer}",
-    "iqama_body": "C'est l'heure de l'iqama du {prayer}"
+    "iqama_body": "C'est l'heure de l'iqama du {prayer}",
+    "quote_channel": "Citations",
+    "quote_channel_desc": "Une parole tirée des livres de la bibliothèque, à l’intervalle choisi",
+    "quote_title": "Une parole"
   },
   "hijri": {
     "m1": "Mouharram",
@@ -1051,5 +1054,47 @@
     "hints": "Enseignements du hadith",
     "reference": "Références",
     "credit": "Source : {source}"
+  },
+  "quotes": {
+    "section_title": "Citations",
+    "reminder_title": "Notification de citation",
+    "reminder_desc": "{count} de {books}, une à l’intervalle choisi.",
+    "reminder_desc_plain": "Paroles tirées des livres de la bibliothèque, sourcées.",
+    "off": "Désactivé",
+    "preview": "En voir une maintenant",
+    "dismiss": "Fermer",
+    "window_note": "{n} sont programmées à chaque ouverture de l’application.",
+    "count": {
+      "zero": "{} citations",
+      "one": "{} citation",
+      "two": "{} citations",
+      "few": "{} citations",
+      "many": "{} citations",
+      "other": "{} citations"
+    },
+    "books": {
+      "zero": "{} livres",
+      "one": "{} livre",
+      "two": "{} livres",
+      "few": "{} livres",
+      "many": "{} livres",
+      "other": "{} livres"
+    },
+    "minutes": {
+      "zero": "{} minutes",
+      "one": "{} minute",
+      "two": "{} minutes",
+      "few": "{} minutes",
+      "many": "{} minutes",
+      "other": "{} minutes"
+    },
+    "hours": {
+      "zero": "{} heures",
+      "one": "{} heure",
+      "two": "{} heures",
+      "few": "{} heures",
+      "many": "{} heures",
+      "other": "{} heures"
+    }
   }
 }

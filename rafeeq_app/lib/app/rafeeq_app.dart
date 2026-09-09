@@ -8,6 +8,9 @@ import '../core/theme/app_theme.dart';
 import '../core/theme/rgb_backdrop.dart';
 import '../core/theme/theme_controller.dart';
 import '../features/home/data/prayer_controller.dart';
+import '../core/services/quote_reminder_service.dart';
+import '../features/quotes/data/quote_reminder_provider.dart';
+import '../features/quotes/data/quote_repository.dart';
 import '../features/quran/data/translation_lang_provider.dart';
 import '../features/splash/presentation/screens/splash_screen.dart';
 import 'app_locale_provider.dart';
@@ -66,6 +69,18 @@ class RafeeqApp extends ConsumerWidget {
         if (!first) {
           ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
         }
+      }
+      // The quote window carries its title as literal text too, for the same
+      // reason, and it is armed from here rather than from `main()` so it is
+      // armed in the language the reader is actually using — and re-armed on
+      // every launch, which is what keeps the rolling window topped up (see
+      // `QuoteReminderService`'s doc on how long it lasts without the app).
+      final every = ref.read(quoteReminderProvider);
+      if (every > 0) {
+        ref.read(quoteLibraryProvider.future).then((library) {
+          QuoteReminderService.instance
+              .reschedule(library: library, everyMinutes: every);
+        });
       }
     });
 

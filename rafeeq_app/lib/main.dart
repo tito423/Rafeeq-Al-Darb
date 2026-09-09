@@ -20,6 +20,8 @@ import 'core/services/alarm_permissions_service.dart';
 import 'core/services/quran_translation_store.dart';
 import 'core/services/download_engine.dart';
 import 'core/services/sunan_suwar_reminder_service.dart';
+import 'core/services/quote_reminder_service.dart';
+import 'features/quotes/presentation/quote_navigation.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 
 /// The Adhan alert screen's Dart entrypoint, run by `AdhanActivity` (Kotlin)
@@ -116,6 +118,14 @@ Future<void> main() async {
 
   await SunanSuwarReminderService.instance.initialize();
   SunanSuwarReminderService.onOpenSurah = openSunanSuwarFromPayload;
+
+  // The Islamic-quote notification. The window is NOT re-armed here: the
+  // interval lives in SharedPreferences and the corpus is an asset, and
+  // `QuoteReminderStartup` re-arms once the widget tree is up and the app's
+  // language is known, so the notification's title is in the language the
+  // reader is actually using.
+  await QuoteReminderService.instance.initialize();
+  QuoteReminderService.onOpenQuote = openQuoteFromPayload;
 
   runApp(
     EasyLocalization(

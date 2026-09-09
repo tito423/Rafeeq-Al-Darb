@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/theme_controller.dart';
 import '../../../home/data/clock_settings_provider.dart';
+import '../../../quotes/presentation/quote_reminder_section.dart';
 import '../../../quran/data/mushaf_theme.dart';
 import '../../../quran/presentation/widgets/mushaf_theme_picker.dart';
 import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
@@ -257,6 +258,13 @@ class SettingsBody extends ConsumerWidget {
           // the Home "سنن السور" card — see that card's own doc comment.
           SectionLabel('sunan_suwar.reminders_section_title'.tr()),
           SunanSuwarRemindersSection(),
+          const SizedBox(height: 24),
+
+          // The Islamic-quote notification, beside the other reminders
+          // rather than on a screen of its own: it is one interval and a
+          // preview.
+          SectionLabel('quotes.section_title'.tr()),
+          QuoteReminderSection(),
           const SizedBox(height: 24),
 
           // P3‑41: the Adhan settings entry that used to live here is

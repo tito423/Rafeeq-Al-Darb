@@ -872,7 +872,10 @@
     "post_title": "{prayer} adhan has passed",
     "post_body": "{minutes} since the {prayer} adhan",
     "iqama_title": "{prayer} iqama",
-    "iqama_body": "It is time for the {prayer} iqama"
+    "iqama_body": "It is time for the {prayer} iqama",
+    "quote_channel": "Quotes",
+    "quote_channel_desc": "A saying from the library's books, at your chosen interval",
+    "quote_title": "A saying"
   },
   "hijri": {
     "m1": "Muharram",
@@ -1051,5 +1054,47 @@
     "hints": "Benefits of the hadith",
     "reference": "References",
     "credit": "Source: {source}"
+  },
+  "quotes": {
+    "section_title": "Quotes",
+    "reminder_title": "Quote notification",
+    "reminder_desc": "{count} from {books}, one at the interval you pick.",
+    "reminder_desc_plain": "Sayings from the library's own books, sourced.",
+    "off": "Off",
+    "preview": "Show one now",
+    "dismiss": "Close",
+    "window_note": "{n} are armed each time you open the app.",
+    "count": {
+      "zero": "{} quotes",
+      "one": "{} quote",
+      "two": "{} quotes",
+      "few": "{} quotes",
+      "many": "{} quotes",
+      "other": "{} quotes"
+    },
+    "books": {
+      "zero": "{} books",
+      "one": "{} book",
+      "two": "{} books",
+      "few": "{} books",
+      "many": "{} books",
+      "other": "{} books"
+    },
+    "minutes": {
+      "zero": "{} minutes",
+      "one": "{} minute",
+      "two": "{} minutes",
+      "few": "{} minutes",
+      "many": "{} minutes",
+      "other": "{} minutes"
+    },
+    "hours": {
+      "zero": "{} hours",
+      "one": "{} hour",
+      "two": "{} hours",
+      "few": "{} hours",
+      "many": "{} hours",
+      "other": "{} hours"
+    }
   }
 }
