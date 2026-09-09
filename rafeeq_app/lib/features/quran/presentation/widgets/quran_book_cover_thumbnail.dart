@@ -43,6 +43,8 @@ class QuranBookCoverThumbnail extends StatelessWidget {
     // Indo-Pak colour-coded — teal, matching its cover stock.
     'indopak_tajweed':
         _Leather(Color(0xFF06302E), Color(0xFF0B4A47), Color(0xFF116E69)),
+    // Qatar — the deep crimson and gold of its printed board.
+    'qatar': _Leather(Color(0xFF4A0A12), Color(0xFF7A1420), Color(0xFFA82232)),
   };
 
   /// Medallion text override where the first riwayah word would be ambiguous
@@ -54,6 +56,7 @@ class QuranBookCoverThumbnail extends StatelessWidget {
     'shamarly': 'الشمرلي',
     'madinah_gold': 'المدينة',
     'indopak_tajweed': 'هندي',
+    'qatar': 'قطر',
   };
 
   static const _Leather _fallback =

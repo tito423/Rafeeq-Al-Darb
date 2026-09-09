@@ -45,11 +45,19 @@ void main() {
   test('only printings whose layout was verified carry an ayah layer', () {
     expect(byId('hafs_kfqc').hasAyahLayer, isTrue);
     expect(byId('tajweed_color').hasAyahLayer, isTrue);
-    // These three paginate their own way — madinah_gold sets 6 lines on its
-    // page 2 where the Madinah mushaf sets 15 — so no affine can map the Hafs
-    // polygons onto them and they ship without a highlight rather than with a
-    // wrong one.
-    for (final id in ['shamarly', 'madinah_gold', 'indopak_tajweed']) {
+    // These ship without a highlight rather than with a wrong one.
+    // shamarly (521 pages), indopak_tajweed (564) and madinah_gold paginate
+    // or typeset their own way — madinah_gold sets 6 lines on its page 2
+    // where the Madinah mushaf sets 15 — so no affine can map the Hafs
+    // polygons onto them at all. qatar DOES follow the Madinah page and line
+    // division (verified on 11 pages), but its scans are cropped differently
+    // page to page, so it needs a per-page fit that has not been built yet.
+    for (final id in [
+      'shamarly',
+      'madinah_gold',
+      'indopak_tajweed',
+      'qatar',
+    ]) {
       expect(byId(id).hasAyahLayer, isFalse, reason: id);
       expect(byId(id).fitForPage(1), isNull, reason: id);
     }

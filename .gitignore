@@ -67,3 +67,5 @@ RafeeqAlDarb-*.apk
 # (musnad_ahmad_arnaut.json) is what the build actually reads.
 scripts/musnad_ahmad_arnaut_pages.jsonl
 scripts/sunan_darimi_asad_pages.jsonl
+scripts/mushaf_pdf_build/
+scripts/mushaf_fit_build/

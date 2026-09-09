@@ -27,8 +27,12 @@ from PIL import Image, ImageChops
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(ROOT, "rafeeq_app", "assets", "mushaf_covers")
 
-# edition id -> (source url, human note, bottom crop fraction)
+# edition id -> (source, human note, bottom crop fraction)
 # The bottom crop removes a banner that is not part of the cover.
+# A source may be an http(s) URL, or `pdf:<file>#<0-based index>` to lift the
+# page out of a scan already downloaded under `scripts/mushaf_pdf_build/` --
+# used where the printing came to us as one PDF rather than as an archive.org
+# page endpoint.
 SOURCES = {
     "hafs_kfqc": (
         "https://archive.org/download/Quran-hafs-1442/page/n0_w800.jpg",
@@ -52,12 +56,24 @@ SOURCES = {
     "madinah_gold": (
         "https://archive.org/download/smartmushaf/1.jpg",
         "المصحف المذهّب (Smart Mushaf) — صفحته الأولى؛ لا غلاف مطبوع له", 0.0),
+    "qatar": (
+        "pdf:qatar.pdf#3",
+        "مصحف قطر — صفحة العنوان المطبوعة، برواية حفص عن عاصم", 0.0),
 }
 
 TARGET_W = 420          # 3:4 board; the tile draws it at ~60-90 logical px
 
 
 def fetch(url, tries=4):
+    if url.startswith("pdf:"):
+        import fitz
+        name, _, idx = url[4:].partition("#")
+        doc = fitz.open(os.path.join(ROOT, "scripts", "mushaf_pdf_build", name))
+        pix = doc[int(idx)].get_pixmap(dpi=150)
+        buf = io.BytesIO()
+        Image.frombytes("RGB", (pix.width, pix.height), pix.samples).save(
+            buf, "PNG")
+        return buf.getvalue()
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     last = None
     for _ in range(tries):

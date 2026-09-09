@@ -108,6 +108,22 @@
    "is_default": false,
    "hafs_pagination": false,
    "cover_asset": "assets/mushaf_covers/indopak_tajweed.jpg"
+  },
+  {
+   "id": "qatar",
+   "image_path": "qatar",
+   "image_ext": "jpg",
+   "name_ar": "مصحف قطر",
+   "name_en": "Qatar Mushaf",
+   "riwayah_ar": "حفص عن عاصم",
+   "riwayah_en": "Hafs an Asim",
+   "pages": 604,
+   "ayahs": 6236,
+   "sciences_aligned": true,
+   "diverging_surahs": [],
+   "is_default": false,
+   "hafs_pagination": true,
+   "cover_asset": "assets/mushaf_covers/qatar.jpg"
   }
  ]
 }

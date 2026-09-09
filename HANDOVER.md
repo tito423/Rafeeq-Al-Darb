@@ -7,24 +7,39 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-09 |
-| **Released** | **v3.6.0** — the only release; every earlier release *and tag* is deleted at the owner's request so the repo reads clean. |
-| **App version** | `pubspec.yaml` `3.6.0+2` (this is what the About card shows — keep it equal to the release tag) |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **25/25** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
+| **Released** | **v3.7.0** — the only release; every earlier release *and tag* is deleted at the owner's request so the repo reads clean. |
+| **App version** | `pubspec.yaml` `3.7.0+3` (this is what the About card shows — keep it equal to the release tag) |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **30/30** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
 
-## STATE AS OF 2026-09-09 (v3.6.0)
+## STATE AS OF 2026-09-09 (v3.7.0)
 
 Phases 1–3 are complete. Everything since is owner-driven. **Read
-`NEXT_SESSION_PROMPT.md` for what is unfinished** — in particular three books
-were still being crawled when the session ended.
+`NEXT_SESSION_PROMPT.md` for what is unfinished.**
+
+### What v3.7.0 added (2026-09-09, third session)
+
+1. **The three books that were still crawling at v3.6.0 are in.**
+   `as_seerah_ibn_kathir` (1,880,427 B), `rijal_hawl_ar_rasul` (293,158 B) and
+   `la_tahzan` (344,210 B) — each uploaded, then range-requested on the public
+   endpoint *before* being catalogued: 206, `application/json`, `1f 8b` magic,
+   byte totals matching `head_object`. **226 books.**
+2. **Ayah highlighting and tap-to-sciences on the Tajweed mushaf** — the first
+   raster printing to have them. It has no polygon layer of its own; it borrows
+   the Hafs one through a fitted affine. See §5 and
+   `scripts/fit_mushaf_polygon_transform.py`.
+3. A dangling separator the new books exposed: al-Qarni is alive, so
+   `la_tahzan`'s `authorDeathAr` is empty, and both render sites in
+   `library_screen.dart` concatenated it unconditionally.
 
 ### Measured facts (2026-09-09, measured this session, not from memory)
 
 | | |
 |---|---|
 | Locales | **7** — ar (default, RTL), en, es, fr, pt, ru, ur · **665** leaf keys, parity enforced by `test/translation_parity_test.dart` |
+| Ayah layer | **2 of 5** printings — `hafs_kfqc` (its own polygons) and `tajweed_color` (the Hafs polygons under a measured affine). The other three paginate their own way and honestly ship without one. |
 | Mushaf editions | **5** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`. Warsh and Qalun were **deleted** on the owner's instruction («احذف مصاحف الروايات»): they are riwayat, not printings. He wants 10 verified printings; five still need sourcing. |
 | Text-mushaf appearance | **10 themes × 10 frames × 11 frame colours**, one picker card, all painted |
-| Text library | **223** books (8 Seerah titles added; 3 more mid-crawl) |
+| Text library | **226** books |
 | Adhans | **14** — the owner's own three plus أذان قناة الناس are the first four |
 | Ruqyah | 6 recordings mirrored on R2 + a composed reading screen |
 | Islamic channels | 7, each id/handle/avatar read off YouTube itself |
@@ -236,9 +251,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 07:04 — IN PROGRESS — resume here**
+**2026-09-09 07:22 — IN PROGRESS — resume here**
 
-Verified the Tajweed ayah layer on emulator-5554, not just in Python. Tapping the left half of line 2 on page 2 opened the sciences sheet on exactly 2:3 with tafsir/translation/i'rab/gharib. Recitation highlight on the OPENING page: 2:2 painted across its two-line wrap - the left part of line 1 after the (1) marker and 'lilmuttaqin (2)' on line 2 - the two fits that page group needs. On a BODY page (50) with the other fit: 3:2 painted from the left edge of the (1) marker to the right edge of the (2), to the pixel. Shamarly re-checked and unchanged - no highlight, no running header, exactly as before, because fitForPage returns null for it. The highlight is deliberately cleared when the sciences sheet closes, which is why a tap alone leaves nothing on screen; recitation is what shows it
+Sixth mushaf printing: MUSHAF QATAR, 604 pages, Hafs. Sourced on archive.org (QuranMushafQatar), the only candidate found carrying an explicit open licence (CC BY-NC-SA 3.0). The Taj Company 16-line scan was REJECTED although it is clean and complete: its own back page prints an all-rights-reserved notice and a copyright warning, so it is not ours to rehost. Measured, not assumed: the PDF's index 4 is mushaf page 1 and index 607 is page 604, established by rendering 606-608 and reading the printed folios; 604 pages exactly, front matter and an afterword excluded. Page division verified against the bundled Hafs polygon layer on 11 pages spanning the mushaf - 1, 2, 50, 100, 200, 300, 400, 500, 550, 603, 604 - each carrying the same surah AND the same juz as the Madinah page of that number, which is what licenses hafs_pagination. Rendered 604 JPEGs at 880px from each page's own rect (not a common box, so a differently-cropped scan keeps its proportions), 153.8 MB, uploaded, then all 604 range-requested on the public endpoint: 206, image/jpeg, ffd8 magic, 195072-321688 bytes each. Nothing entered editions.json until that passed. Real printed title page as the cover. New reusable scripts/build_mushaf_from_pdf.py since four more printings are still wanted. No ayah layer yet: it DOES follow the Madinah line division, but its scans are cropped differently page to page so it needs a per-page fit - documented as the next stage, not claimed. analyze clean, 30/30
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
