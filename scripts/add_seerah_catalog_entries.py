@@ -159,6 +159,19 @@ def main():
         author_ar = re.sub(r"\s*\[.*?\]\s*$", "", meta["authorAr"]).strip()
         source_label = meta["sourceLabel"]
 
+        # Shamela's بطاقة الكتاب does not always carry a «المؤلف:» line. Book
+        # 592 (صحيح السيرة النبوية) names al-Albani on a «لَخّصه ... وعَلّق
+        # عليه:» line instead, because he abridged the book rather than wrote
+        # it — so the crawl returned an empty author and this script wrote it
+        # straight into the catalogue, where it shipped as a blank name in the
+        # "المؤلفون" list. Refuse instead: an empty author is a sourcing
+        # question for a person, not something to paper over.
+        if not author_ar:
+            print(f"  !! {book_id}: the crawl has no authorAr. Read the "
+                  f"edition card in the built file and set it by hand:")
+            print(f"     {meta.get('editionCard', '')[:200]}")
+            raise SystemExit(1)
+
         entries.append(
             "  LibraryBook(\n"
             f"    id: '{book_id}',\n"

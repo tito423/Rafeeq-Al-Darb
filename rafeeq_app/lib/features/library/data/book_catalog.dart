@@ -4030,7 +4030,12 @@ const List<LibraryBook> libraryBookCatalog = [
     id: 'sahih_as_seerah_albani',
     titleAr: 'صحيح السيرة النبوية [من «البداية والنهاية» لابن كثير]',
     titleEn: 'Sahih as-Seerah an-Nabawiyyah',
-    authorAr: '',
+    // Shamela's بطاقة الكتاب for book 592 carries no «المؤلف:» line — it names
+    // him on a «لَخّصه ... وعَلّق عليه:» line instead, because he abridged the
+    // book rather than wrote it — so the crawl's `meta.authorAr` came back
+    // empty and this shipped as a blank author name in the "المؤلفون" list.
+    // Taken from that line, not invented.
+    authorAr: 'محمد ناصر الدين الألباني',
     authorEn: 'Abridged by Muhammad Nasir ad-Din al-Albani',
     authorDeathAr: 'توفي ١٤٢٠ هـ',
     descriptionAr:
