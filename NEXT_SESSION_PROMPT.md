@@ -18,13 +18,14 @@ Egyptian Arabic; **reply in Arabic**, keep code and commits in English.
 
 | | |
 |---|---|
-| Version | `3.7.0+3` |
+| Version | `3.7.0+3` — **released**, tag SHA = HEAD, APK 268 MB |
 | Checks | `flutter analyze lib test` clean · `flutter test` **34/34** |
 | Locales | 7 · **665** leaf keys, parity enforced |
 | Mushaf editions | **6** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`, **`qatar`** (new) |
 | Ayah layer | **2 of 6** — `hafs_kfqc` (own polygons) and `tajweed_color` (Hafs polygons under a fitted affine) |
 | Text-mushaf themes | 10 + 10 frames + 11 frame colours |
 | Library | **226** books (the 3 that were mid-crawl at v3.6.0 are in) |
+| Quran translations | 45 languages (6 bundled); catalogue and bucket match exactly |
 | Adhans | 14 · Ruqyah 6 · Channels 7 |
 | Hadith | 67,153 in 9 books · `hadith.db` 109.7 MB |
 | R2 bucket | 1.54 GB before this session, **+154 MB** for the Qatar pages |

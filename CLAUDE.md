@@ -351,6 +351,14 @@ Do not rediscover these.
     reintroducing the escape into `la_tahzan` and watching the test reproduce
     the device's exact complaint.
 
+24. **A `flutter build apk --release` kills a running emulator on this
+    machine.** It happened twice in one session — the emulator disappears from
+    `adb devices` mid-build and the app has to be reinstalled after a fresh
+    boot. Build first, *then* start the emulator; don't leave a device-
+    verification run half-finished across a build. A fresh boot also throws
+    a «System UI isn't responding» dialog for the first ~30 seconds — tap Wait
+    and give it time rather than reading the screenshot as a crash.
+
 ---
 
 ## 4. Where things live

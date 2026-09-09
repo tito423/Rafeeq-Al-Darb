@@ -7,7 +7,7 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-09 |
-| **Released** | **v3.7.0** — the only release; every earlier release *and tag* is deleted at the owner's request so the repo reads clean. |
+| **Released** | **v3.7.0** — published and verified 2026-09-09: tag SHA `1282bdd` equals `HEAD`, target `master`, APK 281,112,836 B uploaded. v3.6.0 and its tag deleted, so this is the only release. |
 | **App version** | `pubspec.yaml` `3.7.0+3` (this is what the About card shows — keep it equal to the release tag) |
 | **Build verified?** | `flutter analyze lib test` clean · `flutter test` **34/34** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
 
@@ -67,6 +67,7 @@ ours to rehost. Check a scan's back matter before building it.
 | Mushaf editions | **6** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`, `qatar`. Warsh and Qalun were **deleted** on the owner's instruction («احذف مصاحف الروايات»): they are riwayat, not printings — but note their 1,208 page images are still on R2, unreferenced, 270 MB; see `NEXT_SESSION_PROMPT.md` §3. He wants 10 verified printings; four still need sourcing. |
 | Text-mushaf appearance | **10 themes × 10 frames × 11 frame colours**, one picker card, all painted |
 | Text library | **226** books |
+| Quran translations | **45** languages — 6 bundled, and all 45 mirrored on R2; the catalogue and the bucket match exactly, no entry without an object and no object without an entry (measured 2026-09-09; an earlier note said 47) |
 | Adhans | **14** — the owner's own three plus أذان قناة الناس are the first four |
 | Ruqyah | 6 recordings mirrored on R2 + a composed reading screen |
 | Islamic channels | 7, each id/handle/avatar read off YouTube itself |
@@ -278,9 +279,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 10:51 — IN PROGRESS — resume here**
+**2026-09-09 11:06 — COMPLETE**
 
-Docs finished for v3.7.0: CLAUDE.md trap 23 (a backslash before a dollar in generated Dart is an escape, not interpolation - and the three reasons it survived: analyze sees a valid literal, the other 215 books used the plain form, and the session that added them verified the upload instead of the app), HANDOVER items 5-6 for the eleven dead downloads and the blank author, and NEXT_SESSION_PROMPT updated to 34 tests with the same warning
+v3.7.0 RELEASED and verified: tag SHA 1282bdd equals HEAD, target master, APK 281,112,836 bytes uploaded; v3.6.0 and its tag deleted so this is the only release, and the remote carries exactly one tag. The download that failed before the fix now works end to end on the device: 'rijal_hawl_ar_rasul' downloaded, the button turned to 'open', the book opened at 412 pages and page 144 renders real text with its source line. Content re-verified with a range request on every hosted path: hadith.zip, both ends of all five raster mushafs including qatar 1 and 604, and four books - 16 of 16 answer 206 with a real type, a real byte total and the right magic bytes. The one failure in that sweep was my own guessed filename (en.sahih) - the real key is 'en', and all 45 catalogued translations match the 45 objects on R2 exactly, no entry without an object and none the other way. That also corrects a stale note that said 47 languages. CLAUDE.md gains trap 24: a release build kills the running emulator on this machine (twice this session), so build first and start the emulator after
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
