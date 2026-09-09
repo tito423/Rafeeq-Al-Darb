@@ -196,8 +196,22 @@
     "hadith_download_hint": "Download the Hadith database to browse it fully offline",
     "hadith_db": "Hadith database",
     "books_count": "books",
-    "hadiths_count": "hadiths",
-    "chapters": "Chapters",
+    "hadiths_count": {
+      "zero": "{} hadiths",
+      "one": "{} hadith",
+      "two": "{} hadiths",
+      "few": "{} hadiths",
+      "many": "{} hadiths",
+      "other": "{} hadiths"
+    },
+    "chapters": {
+      "zero": "{} chapters",
+      "one": "{} chapter",
+      "two": "{} chapters",
+      "few": "{} chapters",
+      "many": "{} chapters",
+      "other": "{} chapters"
+    },
     "hadith_number": "Hadith no.",
     "translation_en_label": "English translation — sunnah.com",
     "translation_none": "No published translation of this collection is available",

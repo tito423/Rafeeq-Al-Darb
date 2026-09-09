@@ -196,8 +196,22 @@
     "hadith_download_hint": "Descarga la base de datos de hadices para consultarla sin conexión",
     "hadith_db": "Base de datos de hadices",
     "books_count": "libros",
-    "hadiths_count": "hadices",
-    "chapters": "Capítulos",
+    "hadiths_count": {
+      "zero": "{} hadices",
+      "one": "{} hadiz",
+      "two": "{} hadices",
+      "few": "{} hadices",
+      "many": "{} hadices",
+      "other": "{} hadices"
+    },
+    "chapters": {
+      "zero": "{} capítulos",
+      "one": "{} capítulo",
+      "two": "{} capítulos",
+      "few": "{} capítulos",
+      "many": "{} capítulos",
+      "other": "{} capítulos"
+    },
     "hadith_number": "Hadiz n.º",
     "translation_en_label": "Traducción al inglés — sunnah.com",
     "translation_none": "No hay traducción publicada de esta colección",

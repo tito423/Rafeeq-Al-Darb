@@ -23,7 +23,7 @@
   "nav": {
     "home": "Главная",
     "quran": "Коран",
-    "library": "Библиотека",
+    "library": "Книги",
     "azkar": "Азкары",
     "tasbeeh": "Тасбих",
     "hadith": "Хадисы",
@@ -196,8 +196,22 @@
     "hadith_download_hint": "Скачайте базу хадисов для полного офлайн-доступа",
     "hadith_db": "База хадисов",
     "books_count": "книг",
-    "hadiths_count": "хадисов",
-    "chapters": "Главы",
+    "hadiths_count": {
+      "zero": "{} хадисов",
+      "one": "{} хадис",
+      "two": "{} хадиса",
+      "few": "{} хадиса",
+      "many": "{} хадисов",
+      "other": "{} хадиса"
+    },
+    "chapters": {
+      "zero": "{} глав",
+      "one": "{} глава",
+      "two": "{} главы",
+      "few": "{} главы",
+      "many": "{} глав",
+      "other": "{} главы"
+    },
     "hadith_number": "Хадис №",
     "translation_en_label": "Английский перевод — sunnah.com",
     "translation_none": "Опубликованного перевода этого сборника нет",

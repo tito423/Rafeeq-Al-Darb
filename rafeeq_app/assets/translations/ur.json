@@ -196,8 +196,22 @@
     "hadith_download_hint": "مکمل آف لائن مطالعے کے لیے حدیث کا ڈیٹابیس ڈاؤن لوڈ کریں",
     "hadith_db": "حدیث ڈیٹابیس",
     "books_count": "کتب",
-    "hadiths_count": "احادیث",
-    "chapters": "ابواب",
+    "hadiths_count": {
+      "zero": "{} احادیث",
+      "one": "{} حدیث",
+      "two": "{} احادیث",
+      "few": "{} احادیث",
+      "many": "{} احادیث",
+      "other": "{} احادیث"
+    },
+    "chapters": {
+      "zero": "{} ابواب",
+      "one": "{} باب",
+      "two": "{} ابواب",
+      "few": "{} ابواب",
+      "many": "{} ابواب",
+      "other": "{} ابواب"
+    },
     "hadith_number": "حدیث نمبر",
     "translation_en_label": "انگریزی ترجمہ — sunnah.com",
     "translation_none": "اس مجموعے کا کوئی شائع شدہ ترجمہ دستیاب نہیں",

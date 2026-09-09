@@ -196,8 +196,22 @@
     "hadith_download_hint": "حمّل قاعدة بيانات الحديث الشريف لتصفحها بدون إنترنت",
     "hadith_db": "قاعدة بيانات الحديث",
     "books_count": "كتاب",
-    "hadiths_count": "حديث",
-    "chapters": "الأبواب",
+    "hadiths_count": {
+      "zero": "لا أحاديث",
+      "one": "حديث واحد",
+      "two": "حديثان",
+      "few": "{} أحاديث",
+      "many": "{} حديثًا",
+      "other": "{} حديث"
+    },
+    "chapters": {
+      "zero": "لا أبواب",
+      "one": "باب واحد",
+      "two": "بابان",
+      "few": "{} أبواب",
+      "many": "{} بابًا",
+      "other": "{} باب"
+    },
     "hadith_number": "حديث رقم",
     "translation_en_label": "الترجمة الإنجليزية — sunnah.com",
     "translation_none": "لا تتوفّر ترجمة منشورة لهذه المجموعة",

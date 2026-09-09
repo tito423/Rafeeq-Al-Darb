@@ -1111,16 +1111,16 @@ class _HadithBookTile extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
+                  // .plural(), not '$n $noun': Russian showed «97 Главы»
+                  // where 97 takes the genitive plural, «97 глав».
                   _CountChip(
                     icon: Icons.format_list_numbered_rounded,
-                    label: 'library.hadiths_count'.tr(),
-                    value: book.hadithCount,
+                    text: 'library.hadiths_count'.plural(book.hadithCount),
                   ),
                   const SizedBox(width: 8),
                   _CountChip(
                     icon: Icons.bookmarks_outlined,
-                    label: 'library.chapters'.tr(),
-                    value: book.chapterCount,
+                    text: 'library.chapters'.plural(book.chapterCount),
                   ),
                 ],
               ),
@@ -1135,12 +1135,13 @@ class _HadithBookTile extends StatelessWidget {
 /// One count pill (hadiths / chapters) on a collection's card.
 class _CountChip extends StatelessWidget {
   final IconData icon;
-  final String label;
-  final int value;
+
+  /// Already pluralised — the count is inside the string, because the noun
+  /// after it changes with the number in Arabic, Russian and Urdu.
+  final String text;
   const _CountChip({
     required this.icon,
-    required this.label,
-    required this.value,
+    required this.text,
   });
 
   @override
@@ -1159,7 +1160,7 @@ class _CountChip extends StatelessWidget {
           Icon(icon, size: 14, color: AppColors.gold),
           const SizedBox(width: 6),
           Text(
-            '$value $label',
+            text,
             style: theme.textTheme.labelSmall
                 ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w600),
           ),

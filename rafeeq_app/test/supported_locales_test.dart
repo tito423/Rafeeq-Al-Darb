@@ -27,4 +27,25 @@ void main() {
     expect(kSupportedLocales.length, onDisk.length,
         reason: 'a duplicate Locale would make the two sets match anyway');
   });
+
+  /// The other setting these two roots have to agree on, and the other one
+  /// that fails silently.
+  ///
+  /// `easy_localization` defaults `ignorePluralRules` to **true**, and then
+  /// `.plural()` resolves only zero / one / two / other — every `few` and
+  /// `many` a locale file carries is dead text. Russian showed «7277 хадиса»
+  /// and «97 главы» on `emulator-5554`; both take the genitive plural, which
+  /// is the `many` form. Arabic's «{} آيات» (few, 3–10) had never been
+  /// reached either. Nothing warns: the key resolves, a string appears, and
+  /// it is the wrong one.
+  test('both app entry points turn the real plural rules on', () {
+    for (final path in ['lib/main.dart', 'lib/adhan_entry.dart']) {
+      final source = File(path).readAsStringSync();
+      expect(source, contains('EasyLocalization('),
+          reason: '$path no longer starts EasyLocalization — update this test');
+      expect(source, contains('ignorePluralRules: false'),
+          reason: '$path must pass ignorePluralRules: false, or `few` and '
+              '`many` are silently ignored in every locale');
+    }
+  });
 }

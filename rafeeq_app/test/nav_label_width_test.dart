@@ -13,14 +13,24 @@ import 'package:flutter_test/flutter_test.dart';
 ///
 /// A character budget rather than a text measurement on purpose: a widget test
 /// lays out with the test font (every glyph one square em), so measuring there
-/// would answer a question about a font the app never uses. The budget is
-/// calibrated against what was actually seen on emulator-5554 — Spanish and
-/// Portuguese «Biblioteca» (10) fits, French «Bibliothèque» (12) does not.
+/// would answer a question about a font the app never uses.
 ///
-/// The full word still appears wherever there is room for it: `library.title`
-/// is the Library screen's own heading and is deliberately not abbreviated.
+/// THE BUDGET IS PER SCRIPT, BECAUSE ONE NUMBER WAS NOT ENOUGH.
+/// A flat budget of 10 passed Russian «Библиотека» — exactly ten characters —
+/// and it wrapped on `emulator-5554` anyway, because Cyrillic letterforms are
+/// wider than Latin ones at the same size. It was seen wrapped during the
+/// Russian sweep, after the test had said it was fine. Each number below is
+/// calibrated against something actually looked at on the device:
+///
+///   * Latin 10 — Spanish and Portuguese «Biblioteca» (10) fit; French
+///     «Bibliothèque» (12) did not, and is «Biblio.» now.
+///   * Cyrillic 8 — «Библиотека» (10) wrapped, «Молитва» (7) and «Главная»
+///     (7) fit. The library tab is «Книги» (5) now.
+///   * Arabic 8 — «الرئيسية» (8) and «کتب خانہ» (8) fit.
 void main() {
-  const budget = 10;
+  const latinBudget = 10;
+  const cyrillicBudget = 8;
+  const arabicBudget = 8;
 
   // Exactly the keys `AppShell` puts in the bar, in order.
   const barKeys = [
@@ -39,8 +49,14 @@ void main() {
       for (final key in barKeys) {
         final label = nav[key] as String?;
         expect(label, isNotNull, reason: '$code: nav.$key is missing');
-        if (label!.characters > budget) {
-          tooLong.add('$code/nav.$key = "$label" (${label.characters})');
+        final budget = switch (_scriptOf(label!)) {
+          _Script.cyrillic => cyrillicBudget,
+          _Script.arabic => arabicBudget,
+          _Script.latin => latinBudget,
+        };
+        if (label.characters > budget) {
+          tooLong.add('$code/nav.$key = "$label" '
+              '(${label.characters} > $budget)');
         }
       }
     }
@@ -48,6 +64,18 @@ void main() {
         reason: 'these labels wrap and get clipped in the bottom bar:\n'
             '${tooLong.join('\n')}');
   });
+}
+
+enum _Script { latin, cyrillic, arabic }
+
+/// The script of the first letter that has one — enough for a nav label,
+/// which is a single word in a single script.
+_Script _scriptOf(String label) {
+  for (final rune in label.runes) {
+    if (rune >= 0x0400 && rune <= 0x04FF) return _Script.cyrillic;
+    if (rune >= 0x0600 && rune <= 0x06FF) return _Script.arabic;
+  }
+  return _Script.latin;
 }
 
 extension on String {

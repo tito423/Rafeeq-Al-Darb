@@ -217,6 +217,12 @@ class _HeaderCard extends ConsumerWidget {
               ),
             ),
           ),
+          // A gap on each side of the greeting. Without it the three cells
+          // are only separated by whatever slack the text leaves, and in
+          // Russian there is none: «27 Раби аль-авваль 1448 г.х.» filled its
+          // cell edge to edge and «Добро пожаловать» started against it with
+          // no space at all, seen on emulator-5554 during the Russian sweep.
+          const SizedBox(width: 8),
           Expanded(
             flex: 4,
             child: FittedBox(
@@ -242,6 +248,7 @@ class _HeaderCard extends ConsumerWidget {
               ),
             ),
           ),
+          const SizedBox(width: 8),
           Expanded(
             flex: 3,
             child: Column(

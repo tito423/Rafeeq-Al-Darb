@@ -132,6 +132,15 @@ Future<void> main() async {
       // used once), `saveLocale: true` persists it — this only affects the
       // *very first* launch before anything is saved.
       saveLocale: true,
+      // easy_localization defaults `ignorePluralRules` to TRUE, which means
+      // `.plural()` only ever picks zero/one/two/other and the `few` and
+      // `many` forms in every locale file are dead. Russian showed «7277
+      // хадиса» and «97 главы» on emulator-5554 — both should take the
+      // genitive plural («хадисов», «глав»), which is the `many` form, and
+      // Arabic's own «{} آيات» / «{} آية» split had never been reached
+      // either. With the real CLDR rules on, each locale gets the form its
+      // language actually calls for.
+      ignorePluralRules: false,
       child: ProviderScope(
         overrides: [
           sharedPrefsProvider.overrideWithValue(sharedPreferences),
