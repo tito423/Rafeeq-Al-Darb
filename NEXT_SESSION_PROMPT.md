@@ -27,7 +27,7 @@ Egyptian Arabic; **reply in Arabic**, keep code and commits in English.
 | Quran translations | 45 languages (6 bundled); catalogue and bucket match exactly |
 | Adhans | 14 · Ruqyah 6 · Channels 7 |
 | Hadith | 67,153 in 9 books · `hadith.db` 109.7 MB |
-| R2 bucket | **1.42 GB**, 3,193 objects |
+| R2 bucket | **1.81 GB**, 5,012 objects — measured at handover, after the riwayah deletion (−270 MB, 1,208 objects) and the four new page sets (+542 MB) |
 
 ### The nine printings
 

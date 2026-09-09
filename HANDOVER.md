@@ -27,8 +27,9 @@ Phases 1–3 are complete. Everything since is owner-driven. **Read
    second copy proven to be the same scan set. A page being fetchable is
    not the same as a page being legible — see §5.0.
 3. **The Warsh and Qalun page sets are gone from R2** — 1,208 objects,
-   270 MB, completing «احذف مصاحف الروايات». The bucket is 1.42 GB now
-   even after four new editions were added.
+   270 MB, completing «احذف مصاحف الروايات». The bucket is **1.81 GB /
+   5,012 objects** at handover — the deletion gave 270 MB back and the four
+   new page sets took 542 MB.
 
 ### What v3.7.0 added (2026-09-09, third session)
 
@@ -81,12 +82,13 @@ ours to rehost. Check a scan's back matter before building it.
 | Mushaf editions | **9** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`, `qatar`, `kuwait`, `madinah_night`, `madinah_nastaleeq`. Warsh and Qalun were deleted from the app *and now from R2* on the owner's instruction («احذف مصاحف الروايات»). He wants 10; the candidates examined for a tenth were each rejected for a stated reason — see `NEXT_SESSION_PROMPT.md`. |
 | Text-mushaf appearance | **10 themes × 10 frames × 11 frame colours**, one picker card, all painted |
 | Text library | **226** books |
-| R2 bucket | **1.42 GB**, 3,193 objects — measured after the riwayah deletion and the four new page sets |
+| Mushaf covers | 9 files, 662 KB — every edition ships its real printed cover |
+| R2 bucket | **1.81 GB**, 5,012 objects — measured at handover, after the riwayah deletion (−270 MB, 1,208 objects) and the four new page sets (+542 MB) |
 | Quran translations | **45** languages — 6 bundled, and all 45 mirrored on R2; the catalogue and the bucket match exactly, no entry without an object and no object without an entry (measured 2026-09-09; an earlier note said 47) |
 | Adhans | **14** — the owner's own three plus أذان قناة الناس are the first four |
 | Ruqyah | 6 recordings mirrored on R2 + a composed reading screen |
 | Islamic channels | 7, each id/handle/avatar read off YouTube itself |
-| Hadith | **67,153** in 9 books · `hadith.db` **109.7 MB** bundled |
+| Hadith | **67,153** in 9 books · **45,219 graded** · `hadith.db` **109.7 MB** bundled |
 
 ### What v3.6.0 added
 
@@ -294,9 +296,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 12:49 — COMPLETE**
+**2026-09-09 13:41 — COMPLETE**
 
-v3.8.0 RELEASED and verified: tag SHA 0eb3339 equals HEAD, target master, APK 281,309,971 bytes uploaded, v3.7.0 and its tag deleted so one release and one tag remain. Nine mushaf printings, four of them highlighting ayahs, all four new ones opened on the device and looked at. Handover routine complete: analyze clean, 37/37 tests, 23 of 23 hosted paths range-requested (first AND last page of every raster edition), HANDOVER and NEXT_SESSION_PROMPT rewritten to the measured state, CLAUDE.md carrying traps 23-26 this session paid for, memory corrected on two counts (45 translation languages not 47; nine printings not six). Bucket 1.42 GB after adding four editions and removing two
+Handover measurements corrected against the live state. The R2 figure I reported was wrong: I wrote 1.42 GB / 3,193 objects, which was the bucket right after the riwayah deletion but BEFORE the Kuwait, night and Nastaliq page sets finished uploading. Measured now: 1.81 GB / 5,012 objects - the deletion returned 270 MB and the four new page sets took 542 MB. Also added two facts that were missing: 45,219 of the 67,153 hadiths carry a grading, and all 9 editions ship a real printed cover (662 KB total). Everything else re-verified at handover, not recalled: analyze clean, 37/37 tests, 23/23 hosted paths, 7 locales at 665 keys with parity, 9 editions with 1,210 per-page ayah fits between them, 226 books, APK 281,309,971 bytes, pubspec 3.8.0+4
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
