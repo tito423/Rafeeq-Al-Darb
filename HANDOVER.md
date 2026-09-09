@@ -227,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 05:01 — IN PROGRESS — resume here**
+**2026-09-09 05:08 — IN PROGRESS — resume here**
 
-verified on device: his 3 adhans are the first 3 in the muezzin list and his own recording plays through the native alarm player (mono 44.1k, USAGE_ALARM); his ruqyah shows with an honest 'reciter not named in the source'
+add the Al-Nas adhan as the 4th, right after the owner's three; stream copied unchanged rather than re-encoded (it is already 48k mono, so transcoding could only lose quality). Verified on device: list order is his three then Al-Nas then the original ten, and it plays through the native alarm player at its real 32kHz
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
