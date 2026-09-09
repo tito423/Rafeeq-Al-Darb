@@ -436,7 +436,13 @@
     "high_latitude_desc": "Loin de l'équateur, le crépuscule peut ne jamais finir : le Fajr et l'Icha n'ont alors pas d'heure calculée. Choisissez la règle que vous suivez.",
     "high_lat_angle": "Basée sur l'angle",
     "high_lat_midnight": "Milieu de la nuit",
-    "high_lat_seventh": "Un septième de la nuit"
+    "high_lat_seventh": "Un septième de la nuit",
+    "reminders": "Avant et après la prière",
+    "reminders_desc": "Un rappel avant l'adhan, un autre après, et un pour l'iqama. Réglez les minutes de chacun, ou mettez-le à zéro pour le désactiver.",
+    "pre_reminder": "Avant l'adhan",
+    "post_reminder": "Après l'adhan",
+    "iqama_reminder": "Iqama",
+    "reminder_off": "Désactivé"
   },
   "qibla": {
     "locating": "Localisation en cours...",
@@ -848,7 +854,15 @@
     "adhan_body_muted": "En sourdine — Allahou Akbar, c’est l’heure de la prière",
     "dl_service_channel": "Téléchargement en arrière-plan",
     "dl_service_channel_desc": "Garde l’application active pendant le téléchargement en arrière-plan",
-    "dl_service_body": "L’application poursuit le téléchargement en arrière-plan"
+    "dl_service_body": "L’application poursuit le téléchargement en arrière-plan",
+    "prayer_reminder_channel": "Rappels de prière",
+    "prayer_reminder_channel_desc": "Avant et après l'adhan, et l'iqama",
+    "pre_title": "{prayer} approche",
+    "pre_body": "{minutes} avant {prayer}",
+    "post_title": "L'adhan du {prayer} est passé",
+    "post_body": "{minutes} depuis l'adhan du {prayer}",
+    "iqama_title": "Iqama du {prayer}",
+    "iqama_body": "C'est l'heure de l'iqama du {prayer}"
   },
   "hijri": {
     "m1": "Mouharram",

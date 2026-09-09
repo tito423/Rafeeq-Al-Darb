@@ -436,7 +436,13 @@
     "high_latitude_desc": "في المناطق البعيدة عن خط الاستواء قد لا يغيب الشفق ليلًا، فلا يكون للفجر والعشاء وقت محسوب. اختر القاعدة التي تعتمدها.",
     "high_lat_angle": "الطريقة القائمة على الزاوية",
     "high_lat_midnight": "منتصف الليل",
-    "high_lat_seventh": "سُبع الليل"
+    "high_lat_seventh": "سُبع الليل",
+    "reminders": "تنبيهات قبل الصلاة وبعدها",
+    "reminders_desc": "تنبيه قبل دخول الوقت، وآخر بعد الأذان، وثالث للإقامة. اضبط دقائق كل واحد، أو أنزله إلى صفر لإيقافه.",
+    "pre_reminder": "قبل الأذان",
+    "post_reminder": "بعد الأذان",
+    "iqama_reminder": "الإقامة",
+    "reminder_off": "موقوف"
   },
   "qibla": {
     "locating": "جارِ تحديد موقعك...",
@@ -848,7 +854,15 @@
     "adhan_body_muted": "مكتوم — الله أكبر، حان وقت الصلاة",
     "dl_service_channel": "تنزيل المحتوى في الخلفية",
     "dl_service_channel_desc": "يبقي التطبيق نشطًا أثناء تنزيل المحتوى في الخلفية",
-    "dl_service_body": "يتابع التطبيق التنزيل في الخلفية"
+    "dl_service_body": "يتابع التطبيق التنزيل في الخلفية",
+    "prayer_reminder_channel": "تنبيهات الصلاة",
+    "prayer_reminder_channel_desc": "تنبيه قبل الأذان وبعده، وتنبيه الإقامة",
+    "pre_title": "اقتربت {prayer}",
+    "pre_body": "باقٍ {minutes} على {prayer}",
+    "post_title": "مضى وقت من أذان {prayer}",
+    "post_body": "مضى {minutes} على أذان {prayer}",
+    "iqama_title": "إقامة {prayer}",
+    "iqama_body": "حان وقت إقامة صلاة {prayer}"
   },
   "hijri": {
     "m1": "محرم",

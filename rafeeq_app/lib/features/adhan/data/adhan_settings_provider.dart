@@ -43,11 +43,23 @@ class AdhanSettings {
   /// Null value = "use the default adhan" for that prayer.
   final Map<String, String?> adhanIdByPrayer;
 
+  /// Minutes before the adhan for the "it is nearly time" reminder, minutes
+  /// after it for the "the time has come in" one, and minutes after it for
+  /// the iqama. **0 means off** for each, independently — there is no
+  /// separate enabled flag, because a reminder set to zero minutes is not a
+  /// reminder.
+  final int reminderBeforeMinutes;
+  final int reminderAfterMinutes;
+  final int reminderIqamaMinutes;
+
   const AdhanSettings({
     required this.defaultAdhanId,
     required this.modeByPrayer,
     required this.adhanIdByPrayer,
     required this.calculationMethod,
+    required this.reminderBeforeMinutes,
+    required this.reminderAfterMinutes,
+    required this.reminderIqamaMinutes,
     required this.asrMadhab,
     required this.highLatitudeRule,
     required this.autoLocationUpdate,
@@ -65,6 +77,9 @@ class AdhanSettings {
     Map<String, AdhanMode>? modeByPrayer,
     Map<String, String?>? adhanIdByPrayer,
     int? calculationMethod,
+    int? reminderBeforeMinutes,
+    int? reminderAfterMinutes,
+    int? reminderIqamaMinutes,
     adhan.Madhab? asrMadhab,
     adhan.HighLatitudeRule? highLatitudeRule,
     bool? autoLocationUpdate,
@@ -75,6 +90,12 @@ class AdhanSettings {
         modeByPrayer: modeByPrayer ?? this.modeByPrayer,
         adhanIdByPrayer: adhanIdByPrayer ?? this.adhanIdByPrayer,
         calculationMethod: calculationMethod ?? this.calculationMethod,
+        reminderBeforeMinutes:
+            reminderBeforeMinutes ?? this.reminderBeforeMinutes,
+        reminderAfterMinutes:
+            reminderAfterMinutes ?? this.reminderAfterMinutes,
+        reminderIqamaMinutes:
+            reminderIqamaMinutes ?? this.reminderIqamaMinutes,
         asrMadhab: asrMadhab ?? this.asrMadhab,
         highLatitudeRule: highLatitudeRule ?? this.highLatitudeRule,
         autoLocationUpdate: autoLocationUpdate ?? this.autoLocationUpdate,
@@ -88,6 +109,11 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
       : super(AdhanSettings(
           defaultAdhanId: _prefs.getString(_defaultKey) ?? 'azan1',
           calculationMethod: _prefs.getInt(_calcMethodKey) ?? 4,
+          // Off until asked for: an app that starts buzzing three extra
+          // times per prayer on first launch is one nobody keeps.
+          reminderBeforeMinutes: _prefs.getInt(_reminderBeforeKey) ?? 0,
+          reminderAfterMinutes: _prefs.getInt(_reminderAfterKey) ?? 0,
+          reminderIqamaMinutes: _prefs.getInt(_reminderIqamaKey) ?? 0,
           asrMadhab: _madhabFromName(_prefs.getString(_asrMadhabKey)),
           highLatitudeRule:
               _highLatitudeFromName(_prefs.getString(_highLatitudeKey)),
@@ -107,6 +133,9 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
 
   static const _defaultKey = 'adhan_default_id_v1';
   static const _calcMethodKey = 'adhan_calc_method_v1';
+  static const _reminderBeforeKey = 'prayer_reminder_before_v1';
+  static const _reminderAfterKey = 'prayer_reminder_after_v1';
+  static const _reminderIqamaKey = 'prayer_reminder_iqama_v1';
   static const _asrMadhabKey = 'prayer_asr_madhab_v1';
   static const _highLatitudeKey = 'prayer_high_latitude_rule_v1';
   static const _autoLocationKey = 'prayer_auto_location_v1';
@@ -124,6 +153,26 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
     await _prefs.setInt(_calcMethodKey, method);
     // Force prayer times to re-fetch instead of using the cached times for the old method
     await _prefs.remove('prayer_times_cache_date_v2');
+  }
+
+  /// [minutes] is clamped to 0–60: zero turns the reminder off, and an hour
+  /// is already further from the adhan than a reminder about it is useful.
+  Future<void> setReminderBefore(int minutes) async {
+    final m = minutes.clamp(0, 60);
+    state = state.copyWith(reminderBeforeMinutes: m);
+    await _prefs.setInt(_reminderBeforeKey, m);
+  }
+
+  Future<void> setReminderAfter(int minutes) async {
+    final m = minutes.clamp(0, 60);
+    state = state.copyWith(reminderAfterMinutes: m);
+    await _prefs.setInt(_reminderAfterKey, m);
+  }
+
+  Future<void> setReminderIqama(int minutes) async {
+    final m = minutes.clamp(0, 60);
+    state = state.copyWith(reminderIqamaMinutes: m);
+    await _prefs.setInt(_reminderIqamaKey, m);
   }
 
   Future<void> setAsrMadhab(adhan.Madhab madhab) async {

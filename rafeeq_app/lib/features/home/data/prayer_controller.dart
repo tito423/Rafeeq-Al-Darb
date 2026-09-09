@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/models/prayer_times.dart';
 import '../../../core/services/location_service.dart';
+import '../../../core/services/prayer_reminder_service.dart';
 import '../../../core/services/prayer_times_service.dart';
 import '../../adhan/data/adhan_catalog_provider.dart';
 import '../../adhan/data/adhan_presentation_provider.dart';
@@ -97,6 +98,15 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
 
   Future<void> _reschedule(PrayerTimes times) async {
     final settings = ref.read(adhanSettingsProvider);
+    // The three "before / after / iqama" nudges ride on the same trigger as
+    // the adhan alarms — a real times fetch — so they can never be armed
+    // against yesterday's times.
+    await PrayerReminderService.instance.reschedule(
+      times,
+      beforeMinutes: settings.reminderBeforeMinutes,
+      afterMinutes: settings.reminderAfterMinutes,
+      iqamaMinutes: settings.reminderIqamaMinutes,
+    );
     final catalog = await ref.read(adhanCatalogProvider.future);
     final videoPath =
         await resolveAdhanVideoPath(ref.read(adhanPresentationProvider));

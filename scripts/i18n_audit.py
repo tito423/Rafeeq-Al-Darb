@@ -166,6 +166,9 @@ ALLOWLIST = {
      "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the Arabic-numeral clock face",
     ("core/services/prayer_status_notification.dart",
      "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the Arabic locale's date line",
+    ("features/home/presentation/widgets/prayer_countdown.dart",
+     "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the countdown, so it matches "
+                    "the clock face directly above it",
     ("features/home/presentation/widgets/analog_clock_faces.dart",
      "١٢"): "Arabic-numeral clock face",
     ("features/home/presentation/widgets/analog_clock_faces.dart",

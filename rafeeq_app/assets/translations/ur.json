@@ -436,7 +436,13 @@
     "high_latitude_desc": "خطِ استوا سے دور شفق کبھی ختم نہیں ہوتی، اس لیے فجر اور عشاء کا کوئی محسوب وقت نہیں ہوتا۔ وہ اصول منتخب کریں جس پر آپ عمل کرتے ہیں۔",
     "high_lat_angle": "زاویے پر مبنی طریقہ",
     "high_lat_midnight": "نصف شب",
-    "high_lat_seventh": "رات کا ساتواں حصہ"
+    "high_lat_seventh": "رات کا ساتواں حصہ",
+    "reminders": "نماز سے پہلے اور بعد کے تنبیہات",
+    "reminders_desc": "اذان سے پہلے ایک تنبیہ، اس کے بعد دوسری، اور اقامت کے لیے تیسری۔ ہر ایک کے منٹ مقرر کریں، یا صفر کر کے بند کر دیں۔",
+    "pre_reminder": "اذان سے پہلے",
+    "post_reminder": "اذان کے بعد",
+    "iqama_reminder": "اقامت",
+    "reminder_off": "بند"
   },
   "qibla": {
     "locating": "آپ کا مقام معلوم کیا جا رہا ہے...",
@@ -848,7 +854,15 @@
     "adhan_body_muted": "خاموش — اللہ اکبر، نماز کا وقت ہو گیا",
     "dl_service_channel": "پس منظر میں ڈاؤن لوڈ",
     "dl_service_channel_desc": "پس منظر میں مواد ڈاؤن لوڈ ہوتے وقت ایپ کو فعال رکھتا ہے",
-    "dl_service_body": "ایپ پس منظر میں ڈاؤن لوڈ جاری رکھے ہوئے ہے"
+    "dl_service_body": "ایپ پس منظر میں ڈاؤن لوڈ جاری رکھے ہوئے ہے",
+    "prayer_reminder_channel": "نماز کے تنبیہات",
+    "prayer_reminder_channel_desc": "اذان سے پہلے اور بعد، اور اقامت",
+    "pre_title": "{prayer} قریب ہے",
+    "pre_body": "{prayer} میں {minutes} باقی",
+    "post_title": "{prayer} کی اذان ہو چکی",
+    "post_body": "{prayer} کی اذان کو {minutes} ہو گئے",
+    "iqama_title": "{prayer} کی اقامت",
+    "iqama_body": "{prayer} کی اقامت کا وقت ہو گیا"
   },
   "hijri": {
     "m1": "محرم",

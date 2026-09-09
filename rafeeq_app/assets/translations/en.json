@@ -436,7 +436,13 @@
     "high_latitude_desc": "Far from the equator the twilight may never end, so Fajr and Isha have no calculated time. Choose the rule you follow.",
     "high_lat_angle": "Angle-based",
     "high_lat_midnight": "Middle of the night",
-    "high_lat_seventh": "One-seventh of the night"
+    "high_lat_seventh": "One-seventh of the night",
+    "reminders": "Before and after the prayer",
+    "reminders_desc": "A reminder before the adhan, one after it, and one for the iqama. Set the minutes for each, or take it down to zero to turn it off.",
+    "pre_reminder": "Before the adhan",
+    "post_reminder": "After the adhan",
+    "iqama_reminder": "Iqama",
+    "reminder_off": "Off"
   },
   "qibla": {
     "locating": "Locating you...",
@@ -848,7 +854,15 @@
     "adhan_body_muted": "Muted — Allahu Akbar, it is time for prayer",
     "dl_service_channel": "Background downloading",
     "dl_service_channel_desc": "Keeps the app alive while content downloads in the background",
-    "dl_service_body": "The app is continuing the download in the background"
+    "dl_service_body": "The app is continuing the download in the background",
+    "prayer_reminder_channel": "Prayer reminders",
+    "prayer_reminder_channel_desc": "Before and after the adhan, and the iqama",
+    "pre_title": "{prayer} is near",
+    "pre_body": "{minutes} until {prayer}",
+    "post_title": "{prayer} adhan has passed",
+    "post_body": "{minutes} since the {prayer} adhan",
+    "iqama_title": "{prayer} iqama",
+    "iqama_body": "It is time for the {prayer} iqama"
   },
   "hijri": {
     "m1": "Muharram",

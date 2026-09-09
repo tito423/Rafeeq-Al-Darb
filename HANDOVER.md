@@ -486,9 +486,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 22:38 — IN PROGRESS — resume here**
+**2026-09-09 23:02 — IN PROGRESS — resume here**
 
-the hero surfaces follow the theme, and the next prayer is a live counter: one measured palette for the clock card, the carousel, the card screens and the four More cards, plus four prayer accents that were never legible even on the dark theme
+three reminders around each prayer - before, after, iqama - each 0-60 minutes with zero meaning off. Proved on emulator-5554 by dumpsys alarm: ten notification alarms at exactly -10 and +5 around all five prayers
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

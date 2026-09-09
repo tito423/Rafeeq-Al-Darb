@@ -82,6 +82,67 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
 
+          // ── Reminders around each prayer ──
+          //
+          // «زوّد كارت في إعدادات الأذان بتنبيهات قبل الصلاة وبعد الصلاة …
+          // وكذلك للإقامة بعد الأذان حطّ لها تنبيهات وحط عداد اختار منه
+          // المدة المناسبة». Three counters, each 0–60 minutes, and zero is
+          // how a reminder is turned off — see `PrayerReminderService`.
+          _SectionLabel('prayer.reminders'.tr()),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'prayer.reminders_desc'.tr(),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                  const SizedBox(height: 14),
+                  _ReminderRow(
+                    icon: Icons.notifications_active_outlined,
+                    label: 'prayer.pre_reminder'.tr(),
+                    minutes: settings.reminderBeforeMinutes,
+                    onChanged: (v) => ref
+                        .read(adhanSettingsProvider.notifier)
+                        .setReminderBefore(v)
+                        .then((_) => ref
+                            .read(prayerControllerProvider.notifier)
+                            .refresh()),
+                  ),
+                  const Divider(height: 22),
+                  _ReminderRow(
+                    icon: Icons.notifications_none_rounded,
+                    label: 'prayer.post_reminder'.tr(),
+                    minutes: settings.reminderAfterMinutes,
+                    onChanged: (v) => ref
+                        .read(adhanSettingsProvider.notifier)
+                        .setReminderAfter(v)
+                        .then((_) => ref
+                            .read(prayerControllerProvider.notifier)
+                            .refresh()),
+                  ),
+                  const Divider(height: 22),
+                  _ReminderRow(
+                    icon: Icons.groups_2_outlined,
+                    label: 'prayer.iqama_reminder'.tr(),
+                    minutes: settings.reminderIqamaMinutes,
+                    onChanged: (v) => ref
+                        .read(adhanSettingsProvider.notifier)
+                        .setReminderIqama(v)
+                        .then((_) => ref
+                            .read(prayerControllerProvider.notifier)
+                            .refresh()),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
           // ── Hijri date ──
           _SectionLabel('prayer.hijri_adjust'.tr()),
           Card(
@@ -309,6 +370,64 @@ Future<void> _pickHighLatitudeRule(
   );
 }
 
+/// One reminder's label and its 0–60 minute counter.
+///
+/// Zero reads «موقوف» rather than «0 دقيقة», because that is what it means:
+/// the reminder is not scheduled at all.
+class _ReminderRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final int minutes;
+  final ValueChanged<int> onChanged;
+
+  const _ReminderRow({
+    required this.icon,
+    required this.label,
+    required this.minutes,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final off = minutes <= 0;
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: theme.colorScheme.onSurfaceVariant),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label, style: theme.textTheme.bodyMedium),
+              Text(
+                off
+                    ? 'prayer.reminder_off'.tr()
+                    : '$minutes ${'prayer.minutes_unit'.tr()}',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: off
+                      ? theme.colorScheme.onSurfaceVariant
+                      : AppColors.gold,
+                  fontWeight: off ? null : FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        _Stepper(
+          value: minutes,
+          min: 0,
+          max: 60,
+          unit: 'prayer.minutes_unit'.tr(),
+          onChanged: onChanged,
+          signed: false,
+        ),
+      ],
+    );
+  }
+}
+
 class _SectionLabel extends StatelessWidget {
   final String text;
   const _SectionLabel(this.text);
@@ -336,17 +455,25 @@ class _Stepper extends StatelessWidget {
   final String unit;
   final ValueChanged<int> onChanged;
 
+  /// A correction is signed — «+3 دقيقة» means three minutes later than the
+  /// calculation. A duration is not: a reminder ten minutes before the adhan
+  /// is «10 دقيقة», never «+10».
+  final bool signed;
+
   const _Stepper({
     required this.value,
     required this.min,
     required this.max,
     required this.unit,
     required this.onChanged,
+    this.signed = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final label = value == 0 ? '0 $unit' : '${value > 0 ? '+' : ''}$value $unit';
+    final label = value == 0 || !signed
+        ? '$value $unit'
+        : '${value > 0 ? '+' : ''}$value $unit';
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
