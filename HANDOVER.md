@@ -9,7 +9,103 @@ Cline, or any other).
 | **Last updated** | 2026-09-09 |
 | **Released** | **v3.8.0** — the only release; v3.7.0 and its tag deleted so the repo reads clean. |
 | **App version** | `pubspec.yaml` `3.8.0+4` (this is what the About card shows — keep it equal to the release tag) |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **37/37** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **44/44** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
+
+## STATE AS OF 2026-09-09 — SIXTH SESSION (still unreleased, on top of v3.8.0)
+
+**The tree is clean, `flutter analyze lib test` is clean, `flutter test` is
+44/44, and `py -3 scripts/i18n_audit.py` reports 0.** The session ended at
+**75 % quota**, deliberately, with everything committed. Nothing here is in any
+APK the owner has.
+
+### The localisation job the owner asked for is finished, and measured
+
+> «مش عايز حاجة اسمها اللغة تبقى فرنساوي والاقي شاشة أو كارت مش مترجم.»
+
+```
+UNTRANSLATED USER-VISIBLE STRINGS: 0 in 0 files      (was 1,497 in 39 files)
+   chrome 0 · native 0 · content 0
+   allowlisted (deliberate, with a reason in the script): 789
+```
+
+The 789 are decisions, not gaps, and each carries its reason in
+`scripts/i18n_audit.py`: recitation and scripture (the adhan's words, the
+guide's ten phrases, the mushaf font samples), proper names (226 book titles
+and authors, channels, reciters — written in the reader's own script by
+`properName()`, never translated), printed-edition citations, the Arabic-Indic
+digit tables, the owner's name.
+
+### What that took, and the three bugs that were on nobody's list
+
+1. **Most of the 89 `chrome` findings were false positives.** The audit's
+   literal scanner was a regex reading quotes pairwise and split
+   `'${_hits.length} ${'key'.tr()}'` — translated all along — into fragments
+   that looked like hardcoded text. It is a state machine now, judging the
+   residue left after interpolations are removed, and it was proven still to
+   catch: four probes injected into a real screen, four reported.
+2. **`adhan_entry.dart` listed six locales — Urdu was missing.** The
+   full-screen Adhan alert boots as its own miniature Flutter app with its own
+   `supportedLocales`, so an Urdu user's alert fell back to Arabic while every
+   other screen was Urdu. One `kSupportedLocales` now, pinned by
+   `test/supported_locales_test.dart`, which was proven to fail on the bug.
+3. **Fifteen Arabic strings lived in Kotlin** and a Dart-only audit could never
+   see them: three notification channels and their descriptions, the adhan
+   alert's title, body and two buttons, the download service's notification.
+   They come from Dart now through `NativeStrings`, and the audit grew a
+   `native` bucket that measures them.
+4. **«Lu aujourd'hui»** — the string the owner photographed sitting over English
+   and Arabic screens — is the khatma undo `SnackBar` on the root
+   `ScaffoldMessenger`. It is cleared when the locale changes now.
+
+Counting the shapes is what made the rest affordable: 226 death lines were
+**three** templates; 226 book blurbs were **one** generated sentence covering
+197 of them plus 29 written paragraphs; 443 book titles and authors needed **no
+translation at all**, because both forms were already in the catalogue and no
+screen ever looked at the Latin one.
+
+### Verified on emulator-5554 — four languages, not one
+
+* **French** — fired a test adhan through the real alarm path: «Adhan — prière
+  du Dhuhr / Allahou Akbar — c'est l'heure de la prière» with «Arrêter» and
+  «Muet»; `dumpsys notification` showed the three channels renamed in place on
+  an upgrade install.
+* **English** — the Library's Hadith tab end to end, imam biographies included.
+* **Spanish** — the New Muslim Guide: headings and bodies translated, the
+  shahada still Arabic in its own box in the Quran font.
+* **Portuguese** — the Library card: «Faleceu em 1420 AH ▪ 1 livro», the blurb
+  in Portuguese, «Tamanho: 419.4 KB», «Transferir».
+
+**Not swept: Russian, Urdu, Arabic.** The owner asked for every language, one by
+one; three remain.
+
+### HadeethEnc — measured, crawling, not yet in the app
+
+The correction the owner was owed. An earlier session told him no Spanish or
+Portuguese hadith translation existed in any redistributable source; measured
+against the live API, all seven of the app's languages are served, and every
+record carries `attribution` (تخريج) **and** `grade` (درجة) in the target
+language — which is what CLAUDE.md §1.2 requires.
+
+```
+72 languages · 493 categories, 7 top-level
+4,273 category entries -> 3,574 DISTINCT hadiths (the old 4,273 double-counted)
+```
+
+`scripts/hadeethenc_crawl.py` is resumable and was left running: **750 of
+roughly 25,000 (id, language) rows** at handover. `hadeethenc.db` is gitignored.
+Nothing is wired into the app and nothing is on R2 yet — see
+`NEXT_SESSION_PROMPT.md` §1 for the shape that fits.
+
+### Honest gaps from the sixth session
+
+* **Three languages were never opened on the device** (ru, ur, ar).
+* **The HadeethEnc crawl is ~3 % done.** Every number quoted about it is from
+  the survey and the first 750 rows, not from a finished corpus.
+* In the sampled record, **Urdu returned `attribution` and `grade` still in
+  Arabic**. Where a field is not translated it is stored as it came; how often
+  that happens has not been measured.
+* **Still nothing released.** `pubspec.yaml` is `3.8.0+4` and every fix from the
+  fifth and sixth sessions is only on `master`.
 
 ## STATE AS OF 2026-09-09 — FIFTH SESSION (unreleased work on top of v3.8.0)
 

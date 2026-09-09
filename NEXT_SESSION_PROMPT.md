@@ -1,251 +1,232 @@
 # Rafiq Al-Darb — next session brief
 
-**Last written:** 2026-09-09, at the end of the fifth session. The session
-ended on a **clean tree with `analyze` clean and 43/43 tests passing**, but
-with **nothing released** — everything below is committed on `master` and not
-yet in an APK.
+**Last written:** 2026-09-09, at the end of the sixth session, at **75 % quota**
+on a clean tree with `flutter analyze lib test` clean and `flutter test` 44/44.
+**Nothing is released.** Everything below and everything from the fifth session
+is committed on `master` and not in any APK the owner has.
 
 You are picking up **رفيق الدرب / Rafeeq Al-Darb**, a personal **sideloaded**
-Android Islamic app in Flutter. The owner's own app on his own repo
-(`tito423/Rafeeq-Al-Darb`) — not a store app, not commercial. He writes in
-Egyptian Arabic; **reply in Arabic**, keep code and commits in English.
+Android Islamic app in Flutter, on the owner's own repo (`tito423/Rafeeq-Al-Darb`)
+— not a store app, not commercial. He writes in Egyptian Arabic; **reply in
+Arabic**, keep code and commits in English.
 
 ## Read these, in this order, before touching anything
 
-1. **`CLAUDE.md`** — the mandatory working method. **Start with §2.0: check the
-   quota before you plan.** The last session ran out at 98% mid-task.
+1. **`CLAUDE.md`** — the mandatory working method. **§2.0 first: check the
+   quota before you plan, and say the number.** In a non-interactive session
+   (the desktop app's Code tab) `/usage` does not run — say so in your first
+   reply and ask the owner to read it off his screen. He answers.
 2. **`HANDOVER.md`** — the state block at the top.
 3. This file.
 
 ---
 
-## 0. THE ONE THING THE OWNER CARES ABOUT RIGHT NOW
-
-> «مش عايز حاجة اسمها اللغة تبقى مثلا فرنساوي والاقي شاشة وحدة مش مترجمة، كل
-> شاشة وكل كارت منفصلا ومنفردا يجب انه يكون مترجما ترجمة صحيحة كاملة للغة
-> المختارة بكل سطر كود في التطبيق.»
-
-Every screen, every card, fully translated. This is measured, not guessed:
+## 0. THE LOCALISATION JOB IS DONE. THE MEASUREMENT SAYS 0.
 
 ```bash
-py -3 scripts/i18n_audit.py     # writes i18n_audit.txt
+py -3 scripts/i18n_audit.py
 ```
 
-**It printed `1497 total, 89 chrome, 1408 content` at the end of the session**
-(it was 167 chrome when the session started). Drive `chrome` to zero, then
-start on `content`.
+```
+UNTRANSLATED USER-VISIBLE STRINGS: 0 in 0 files
+   chrome  (UI text that must go through .tr()): 0
+   native  (Arabic that ANDROID renders, not Dart): 0
+   content (Arabic the app authors, needs translating): 0
+   allowlisted (deliberate, with a reason in this script): 789
+```
 
-* **chrome** — UI text hardcoded in a widget or a service. Mechanical: give it
-  a key, translate the key into all seven locales, done. The pattern is
-  established — see `scripts/add_i18n_keys_notifications.py` and
-  `scripts/add_i18n_keys_dawah.py`; write one of those per batch rather than
-  hand-editing seven JSON files.
-* **content** — Arabic the app itself authors. 1,217 of the 1,408 are the
-  library book catalogue (226 books × title/author/blurb), 130 are the
-  New Muslim Guide, then imam bios (19), channels (14), adhan text (8),
-  ruqyah (7). Plus, NOT counted by the audit because it only scans Dart:
-  **134 azkar section titles and 298 azkar item bodies** in
-  `quran_sciences.db`, and 114 surah names in `quran_local.db`.
+It was **1,497 across 39 files** when the sixth session started. Do not treat
+that as a finished feature and move on — **treat the 789 as the thing to argue
+with.** Every one of them is a decision with a written reason in
+`scripts/i18n_audit.py`; if you disagree with one, say so to the owner rather
+than changing it quietly. The classes are:
 
-**A hard line to keep:** the azkar item bodies are duas and Qur'an/hadith text.
-Those need a *sourced* translation (see §2), never one you write yourself.
-Book blurbs, imam bios and channel descriptions are the app's own prose and
-are yours to translate.
+* **recitation and scripture** — the words of the adhan, the guide's ten
+  `phraseAr` phrases (the shahada, «سُبْحَانَ رَبِّيَ الْعَظِيمِ», the
+  tashahhud), the mushaf font samples. Arabic because that is the thing on
+  screen, not a label for it (CLAUDE.md §1.2).
+* **proper names** — 226 book titles and authors, 7 channel names, 5 reciters,
+  the dawah channels and sites. Never translated; written in the reader's own
+  script by `properName()` (`lib/core/i18n/proper_name.dart`), which asks
+  `common.script` — `arabic` in ar/ur, `latin` in the other five.
+* **citations** — the printed-edition lines on the Sources screen and each
+  book's `sourceLabel`. Translating a citation stops it being one.
+* **Arabic-Indic digit tables** — the mushaf page number, the Arabic-numeral
+  clock face. The owner's decision.
+* the owner's own name; `NativeStrings.kt`'s Arabic fallback map.
 
-### What was already done to the chrome, and the exact pattern to copy
+### What the sixth session actually changed, and the three bugs nobody had listed
 
-| done | how |
-|---|---|
-| every notification (azkar, khatma, sunan, downloads, prayer card) | keys under `notif.*`; the `const` on `AndroidNotificationChannel` / `NotificationDetails` has to be dropped when a `.tr()` goes inside it |
-| the twelve Hijri months | were hardcoded **twice**, ar+en only. Now `core/i18n/hijri_months.dart` → `hijri.m1..m12` + `hijri.suffix` |
-| prayer names in the persistent notification | had a hand-rolled ar/en/es/ru/pt table with **no French and no Urdu**; now `prayer.<key>`.tr() |
-| 10 dawah channels + 5 Islamic sites | `dawah.*` description keys; the **names stay Arabic** — they are the real names of Arabic-language channels — and render through `ArabicText` |
+1. **Most of the original 89 `chrome` findings were false positives.** The
+   audit's literal scanner was a regex reading quotes pairwise, so
+   `'${_hits.length} ${'library.text_search_results'.tr()}'` — translated all
+   along — was split into fragments that looked like hardcoded text. It is a
+   state machine now that judges the RESIDUE left after interpolations are
+   removed, and it was proven not to have gone blind: four probes injected into
+   a real screen were all four reported.
+2. **`adhan_entry.dart` listed SIX locales.** The full-screen Adhan alert boots
+   as its own miniature Flutter app with its own `supportedLocales`, and Urdu
+   was missing, so an Urdu user's alert fell back to Arabic. Both lists now read
+   `kSupportedLocales`; `test/supported_locales_test.dart` pins it to the files
+   on disk and was proven to fail on the bug.
+3. **Fifteen Arabic strings lived in Kotlin** — three notification channels and
+   their descriptions, the adhan alert's title/body/two buttons, the download
+   service's notification — and a Dart-only audit could never see them. They
+   come from Dart now via `NativeStrings` (SharedPreferences, readable from a
+   receiver with no engine alive; Android's own `values-<lang>/` cannot do this
+   because the app's language is its own setting, not the device's). The audit
+   grew a `native` bucket that measures them.
+4. **The «Lu aujourd'hui» the owner photographed** is the khatma undo
+   `SnackBar`, shown through the root `ScaffoldMessenger` — which is what makes
+   it survive a push to another screen, and what made it survive a language
+   change. `MaterialApp` has a `scaffoldMessengerKey` now and the locale-change
+   callback clears it. **His screenshots are from v3.8.0** — the clipped
+   «Bibliothèq/ue» in them is the label bug the fifth session already fixed and
+   never released; the mixed-language tabs were checked on the current build and
+   are gone.
 
-**`core/widgets/arabic_text.dart`** is the other half of this: Arabic content
-inside a Latin UI inherits a left-to-right paragraph and comes out with its
-separators and sentence-final punctuation at the wrong end. Use `ArabicText`
-for whole-Arabic content, and `rtl()` / `ltr()` from
-`core/utils/byte_formatter.dart` for a fragment inside a mixed line.
+### Counting the shapes is what made this affordable
 
-### The immediate next step (this is where the session stopped)
+Three times, what looked like hundreds of strings was a handful:
+* 226 author death lines → **three** templates (`توفي N هـ`, `توفي نحو N هـ`,
+  one note) plus an int field.
+* 226 book blurbs → **one** generated sentence covering 197 of them, whose
+  three slots (author, page count, category) were already solved, plus 29
+  written paragraphs.
+* 443 book titles and authors → **no translation at all**: both forms were
+  already in the catalogue and no screen looked at the Latin one.
 
-The dawah/site work is **complete and compiling** — a background shell showing
-"Stopped" for it was superseded by the same edit applied by hand; `analyze` is
-clean and 43/43 pass. Nothing is half-applied.
+Count before translating.
 
-Next: work down `i18n_audit.txt`'s remaining 89 chrome findings. The real ones
-left are, roughly:
+### Verified on emulator-5554, not in anyone's head
 
-* `features/library/presentation/screens/library_screen.dart` — a few labels
-* `features/settings/presentation/screens/sources_screen.dart` — 3 source names
-* `ayah_share_card.dart`, `ayah_audio_service.dart` — «رفيق الدرب» should be
-  `app.name`.tr()
-* `quran_screen.dart` / `mushaf_nav_sheets.dart` — «الجزء» hardcoded
-* `adhan_entry.dart` — the fallback prayer label «الصلاة»
+French: the fired test adhan read «Adhan — prière du Dhuhr / Allahou Akbar —
+c'est l'heure de la prière» with «Arrêter» and «Muet», and `dumpsys` showed the
+three channels renamed in place on an upgrade install. English: the Library's
+Hadith tab end to end, with the imam biographies in English. Spanish: the New
+Muslim Guide, headings and bodies translated with the shahada still Arabic in
+its own box.
 
-**Deliberate, not findings** (add them to an allowlist in the audit script
-with the reason, rather than "fixing" them):
-
-* the basmalah previews in `mushaf_theme_picker.dart` and
-  `non_arabic_reading_card.dart` — they are font samples, and the sample is
-  the point;
-* the Arabic-Indic digit tables in `quran_screen.dart`,
-  `mushaf_nav_sheets.dart`, `analog_clock_faces.dart`,
-  `digital_clock_faces.dart` — a mushaf's page number is set in Arabic-Indic
-  digits on purpose, and one clock face is an Arabic-numeral face;
-* `"Tito Abo Malak"` in `about_screen.dart` — the owner's name.
+**NOT swept on the device: Portuguese, Russian, Urdu and Arabic.** The owner
+asked for exactly that — «كل اللي انت عملته مع الفرنساوي اعمله بالتفصيل مع باقي
+اللغات لغه لغه». Do it, and screenshot each.
 
 ---
 
-## 1. HADITH TRANSLATION — the correction that matters
+## 1. HADITH TRANSLATIONS — the owner's stated top priority, half done
 
-An earlier reply in that session told the owner that **no Spanish or
-Portuguese translation of the hadith collections exists in any redistributable
-source**. **That was wrong, and he was right to push back.** Measured:
+> «اهم حاجة ترجمات المواد العلمية خاصة الحديث من مصادرها الموثوقة»
 
-```
-https://hadeethenc.com/api/v1/languages
-  → ar, en, ur, es, ru, fr, pt  (+53 more)
-```
-
-**HadeethEnc** (موسوعة الأحاديث النبوية) returns, for every hadith:
-`hadeeth_ar`, `attribution_ar` («متفق عليه»), `grade_ar` («صحيح»),
-`explanation_ar`, `hints_ar` — **and the same fields translated**, with their
-own attribution and grade, in the requested language. Measured size:
-**≈ 4,273 hadiths** across the 7 top-level categories (493 categories in all;
-summing every category double-counts to 15,222).
+**HadeethEnc is measured and the crawler is written and was running at
+handover.** Read `hadeethenc_survey.txt` — it prints one whole record in all
+seven languages, so the field names were read, not guessed.
 
 ```
-/api/v1/categories/list/?language=ar
-/api/v1/hadeeths/list/?language=es&category_id=5&page=1&per_page=100   → ids + titles only
-/api/v1/hadeeths/one/?language=es&id=3086                              → the full record
+languages served: 72 — ar, en, es, fr, pt, ru, ur ALL present
+categories: 493, of which 7 top-level
+4,273 category entries -> 3,574 DISTINCT hadiths
+  (a hadith sits in more than one category; the old 4,273 double-counted)
 ```
 
-One `one` call per hadith per language; the Arabic comes free with every call.
-≈ 4,300 × 6 non-Arabic languages ≈ **26,000 requests** — budget for it.
+Every record carries `hadeeth`, `attribution` (تخريج) **and** `grade` (درجة) in
+the target language, plus the Arabic originals as `*_ar`, plus an explanation
+and word meanings. That is what makes it usable at all — CLAUDE.md §1.2 forbids
+a grading without a named source.
 
-**Architecture that fits this app:** do NOT try to translate the nine books'
-67,153 hadiths — nothing translates that corpus. Add HadeethEnc as its own
-fully-documented, multilingual collection beside them, hosted on R2 as
-per-language packs and downloaded on demand exactly like the 45 Quran
-translations. Credit it on the Sources screen.
+```bash
+py -3 scripts/hadeethenc_crawl.py            # resume; skips what it has
+py -3 scripts/hadeethenc_crawl.py --status   # writes hadeethenc_status.txt
+```
 
-What ships today, and why: `hadith.db` carries an English rendering for
-**36,148 of 67,153** hadiths from sunnah.com's published translations (named
-translators). Musnad Ahmad's 27,584 and al-Darimi's 3,406 have none in any
-language. The `fawazahmed0/hadith-api` fr/ur/ru sets are public domain but
-**name no translator**, and the French Bukhari sampled reads as a translation
-of the English rather than of the Arabic — so they were not shipped, and the
-owner was told rather than it being decided for him. `HadithTranslation`
-(`features/library/presentation/widgets/hadith_translation.dart`) always
-labels what language the text is and where it came from, and says so plainly
-when a collection has no translation at all.
+**At handover: 750 of roughly 25,000 (id, language) rows.** The crawl is slow
+and polite (0.25 s between requests) and fully resumable — every row is
+committed as it arrives. `hadeethenc.db` is gitignored.
+
+**Honest gap already visible:** in the sampled record Urdu returned
+`attribution` and `grade` still in Arabic. Where a field is not translated it is
+stored as it came — never filled in from another language. Measure how often
+that happens before deciding how the card should read.
+
+### What is NOT done
+
+* Nothing is wired into the app. The plan that fits: a **separate, fully
+  documented collection beside the nine books**, hosted on R2 as per-language
+  packs and downloaded on demand exactly like the 45 Quran translations, and
+  credited on the Sources screen. Do **not** try to translate the nine books'
+  67,153 hadiths — nothing translates that corpus.
+* No R2 upload, no `AppConfig` version bump, no UI.
 
 ---
 
-## 2. Where things stand
+## 2. Two things still waiting on the OWNER's decision
 
-| | |
-|---|---|
-| Version | `pubspec.yaml` still `3.8.0+4` — **bump it before releasing** |
-| Released | v3.8.0 (before this session). **Everything since is unreleased.** |
-| Checks | `flutter analyze lib test` clean · `flutter test` **43/43** |
-| Locales | 7 · parity enforced by `test/translation_parity_test.dart` |
-| Mushaf editions | **9**, and **5 of them highlight ayahs** (was 4) |
-| Library | 226 books · Hadith 67,153 in 9 books |
-| R2 bucket | 1.81 GB / 5,012 objects — **measured last session, NOT re-verified this one** |
+He has been told about both and has not answered:
 
-### What this session shipped (all committed, none released)
-
-1. **The continuous-recitation bug the owner reported.** `quran_screen.dart`
-   passed `startContinuous` a **mushaf** id where a **reciter** id belongs
-   (both `String`, so analyze saw nothing) → every verse resolved to
-   `cdn.islamic.network/quran/audio/128/hafs_kfqc/<n>.mp3` → 404 → the catch
-   arm called `stopContinuous()`. Picking a verse **stopped** the recitation.
-   `test/recitation_edition_test.dart` was proven to fail on the old code.
-2. **The sciences sheet's play button** read the shared player, so
-   mid-recitation it rendered as STOP and killed the run. It is now
-   «اقرأ من هنا» and jumps the recitation to that verse.
-3. **The background hang** («التلاوة بتهنج ... مفيش حاجة بتحصل»): the player
-   is rebuilt on failure (`just_audio_background` accepts a new player after a
-   disposed one — read in the pub cache, then proven on the device), the state
-   gains `stalled`, and a genuine failure is now *reported* instead of ending
-   in silence. **The trigger itself could not be reproduced on the emulator** —
-   see HANDOVER §"honest gaps".
-4. **Splash / theme / permissions**: day theme by default on a fresh install;
-   a splash-video sound switch; and the POST_NOTIFICATIONS dialog no longer
-   lands on top of the splash video — the culprit was
-   `DownloadEngine.ensureInitialized()`, called from `main()` via
-   `resumeFromBackground()`, firing at 4.8s into an ~8s video (found in
-   logcat, not by reading).
-5. **The gilded mushaf highlights ayahs** — all 604 pages fitted directly. The
-   claim that kept it out for three sessions («6 lines on page 2») was a
-   measurement of the wrong thing: page 2 of *any* Madinah printing is
-   al-Baqarah's illuminated opening and sets six lines.
-6. **Kuwait's two illuminated openings are fitted.** Darkness was the wrong
-   test — the illumination is coloured and the ink is neutral, so a
-   **saturation** mask separates them.
-7. **Language switching now re-renders every tab** (it did not, which is why
-   the owner saw French chrome under an English UI), the bottom-nav label
-   clipping is fixed and guarded by a test, and Arabic content inside a Latin
-   UI is laid out RTL.
+* **The `""` and stray `.` in the hadith text** (Sunan Abi Dawud 1417 — he
+  photographed it again this session). Not corrupt data: the source wraps
+  speech in ASCII quotes surrounded by invisible RLM marks, and 51,460 hadiths
+  contain them. Stripping the invisible *control characters* at render time
+  changes no letter and no punctuation — but CLAUDE.md §1.2 forbids editing
+  hadith text, so it is his call.
+* **Whether to ship the unattributed fr/ur/ru hadith sets** if HadeethEnc turns
+  out not to cover something he wants.
 
 ---
 
 ## 3. Still open, in the order worth doing
 
-1. **Finish the i18n job** — §0. This is what he asked for last.
-2. **HadeethEnc integration** — §1.
-3. **The tenth mushaf.** Best remaining lead is the Turkish Diyanet scan;
-   `scripts/mushaf_pdf_build/turkish.pdf` (12.7 MB) is **already on disk**. Its
-   PDF holds pages 1 and 2 as a single spread and index 0 is a library
-   bookplate, so the spread must be split and the folio offset pinned by
-   reading printed page numbers. Every other candidate was examined and
-   rejected with a stated reason — do not re-examine them.
-4. **The full-screen adhan video** — still never fired on real hardware. Needs
-   the owner's phone; it cannot be closed from here.
-5. **Release.** Nothing since v3.8.0 has been built into an APK. Bump
-   `pubspec.yaml`, one release at a time, delete the old release *and its tag*,
-   tag from `master`.
-
-### Two things the owner has flagged that need HIS decision
-
-* **The `""` and stray `.` in the hadith text** (Sunan Abi Dawud 1417 in his
-  screenshot). It is **not corrupt data**: the source itself wraps speech in
-  ASCII quotes surrounded by `‏` RLM marks, and 51,460 hadiths contain
-  them. Stripping the invisible *control characters* at render time changes no
-  letter and no punctuation — but CLAUDE.md §1.2 forbids editing hadith text,
-  so it is his call, and he has not answered yet.
-* **Whether to ship the unattributed fr/ur/ru hadith sets** if HadeethEnc
-  turns out not to cover something he wants. He was told the trade-off.
+1. **Finish the HadeethEnc crawl**, then design the collection and ship it. §1.
+2. **Sweep the remaining four languages on the device.** §0.
+3. **Release.** Nothing since v3.8.0 has been built into an APK. Bump
+   `pubspec.yaml` (still `3.8.0+4`), one release at a time, delete the old
+   release *and* its tag, tag from `master`, verify the tag's SHA equals
+   `git rev-parse HEAD`.
+4. **The tenth mushaf** — the Turkish Diyanet scan;
+   `scripts/mushaf_pdf_build/turkish.pdf` (12.7 MB) is already on disk. Pages 1
+   and 2 are a single spread and index 0 is a library bookplate, so the spread
+   must be split and the folio offset pinned by reading printed page numbers.
+   Every other candidate was examined and rejected with a stated reason — do
+   not re-examine them.
+5. **The full-screen adhan video** — still never fired on real hardware. Needs
+   the owner's phone.
 
 ---
 
 ## 4. Things that will bite you
 
-- **Check the quota first (§2.0).** The last session died at 98% mid-edit.
-- A `.tr()` inside a `const` constructor is a compile error — drop the `const`.
+- **This shell eats backslashes in a heredoc.** `\b` became 0x08 and `\n`
+  became a real newline inside a `<<'PY'` block, twice. Write a script with the
+  Write tool and run it; do not pipe Python or Dart through a heredoc
+  (CLAUDE.md trap #11, confirmed again).
+- **Python's `\d` matches Arabic-Indic digits.** `re.sub(r"توفي (\d+) هـ", …)`
+  cheerfully produced `deathYearAh: ٧٥١,` — valid-looking, invalid Dart.
+  `flutter analyze` caught it as "Illegal character '1637'".
+- **A `.tr()` inside a `const` constructor is a compile error** — drop the
+  `const`.
+- **`.tr()` does not register a `BuildContext` dependency.** Anything already
+  built keeps the old language until something above it rebuilds. That is the
+  whole reason the snackbar went stale.
 - `easy_localization` re-exports `package:intl`, whose `TextDirection` collides
-  with `dart:ui`'s. `import ... hide TextDirection;` in any file that needs
-  `TextDirection.rtl`.
-- **`.tr()` does not register a `BuildContext` dependency** — it reads a
-  global. A widget that only calls `.tr()` will not rebuild on a locale change
-  unless something above it does. That is the whole reason tabs froze.
-- **Fetchable is not legible** (CLAUDE.md #25), **a release build kills the
-  emulator** (#24), **a backslash before `$` in generated Dart is an escape**
-  (#23), **never FTS5**.
+  with `dart:ui`'s. `import … hide TextDirection;` where you need `dart:ui`'s.
+- **`ArabicText` forces RTL, and that is now sometimes wrong.** It exists for
+  Arabic content in a Latin UI. Where a string became Latin (`properName`, the
+  translated blurb, the death line) it must be a plain `Text`, or the bug just
+  points the other way.
 - Windows console is cp1256: write reports to a UTF-8 file and `cat` it.
-- `.\cp.bat "…"` chokes on very long notes with quotes; call
-  `scripts/checkpoint.ps1 -Note $note` directly, reading the note from a file.
+- **A `flutter build apk --release` kills a running emulator** (#24). A
+  `--debug` build did not, three times this session.
+- **Never FTS5** (#1). **Soft-404s** (#5). **Books are gzip without a header**
+  (#6). **A backslash before `$` in generated Dart is an escape** (#23).
 
 ## 5. The scripts you will want
 
 | | |
 |---|---|
-| `i18n_audit.py` | **the measurement for §0** — untranslated strings, split into chrome / content |
-| `add_i18n_keys_notifications.py`, `add_i18n_keys_dawah.py` | the pattern for adding a batch of keys to all 7 locales at once |
+| `i18n_audit.py` | the measurement; `chrome` / `native` / `content` / allowlisted |
+| `hadeethenc_survey.py`, `hadeethenc_crawl.py` | §1 |
+| `add_i18n_keys_*.py`, `patch_book_desc.py` | the pattern for a batch of keys |
 | `build_mushaf_from_pdf.py` | scan PDF → `mushaf/<id>/NNN.jpg` on R2 |
-| `check_mushaf_pages.py` | defect scan + printed-header check before uploading |
-| `fit_mushaf_polygon_per_page.py` | one ayah affine per page; `--fit` then `--proof` and **look at the pictures** |
-| `verify_hosted_content.py` | range-request every hosted path the app uses |
+| `check_mushaf_pages.py` | defect scan before uploading |
+| `fit_mushaf_polygon_per_page.py` | one ayah affine per page; **look at the proofs** |
+| `verify_hosted_content.py` | range-request every hosted path |
 | `shamela_index.py find "<title>"` | search 8,598 book titles locally |
