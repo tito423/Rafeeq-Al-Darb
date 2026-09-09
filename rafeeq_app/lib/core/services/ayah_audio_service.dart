@@ -261,6 +261,19 @@ class AyahAudioService {
       final file = _fileFor(dir, global);
       final tag = _tag(edition, global, ayah, title);
 
+      // A single ayah supersedes continuous recitation *properly*. Stopping
+      // only the player used to leave `continuous.value.active == true` with
+      // its `currentIndexStream`/completion subscriptions still bound to a
+      // live token: the transport bar went on claiming a recitation was
+      // running while nothing played, and when this one ayah finished the
+      // stale completion listener fired `_advanceToNextSurah` and jumped to a
+      // surah nobody asked for. Guarded on `active` because `playQueue`
+      // already stopped continuous before its loop, and an unguarded call
+      // here would stop the player between every verse of the queue.
+      if (continuous.value.active) {
+        await stopContinuous();
+      }
+
       await _player.stop();
 
       if (_looksComplete(file)) {
@@ -553,6 +566,33 @@ class AyahAudioService {
       repo: repo,
       token: token,
     );
+  }
+
+  /// Moves a **running** recitation to [ayah] and carries on reading from
+  /// there, keeping the reciter and the whole-mushaf setting the current run
+  /// was started with.
+  ///
+  /// This is what "pick a verse while the recitation is playing" has to do.
+  /// Before it existed the only per-ayah control reachable mid-recitation was
+  /// the sciences sheet's single-ayah play/stop toggle, which stopped the
+  /// shared player and left the recitation stranded — the owner's report that
+  /// choosing a verse before or after the one sounding "stops the recitation
+  /// and it doesn't play".
+  ///
+  /// Returns false (and changes nothing) when no recitation is running, so a
+  /// caller can fall back to single-ayah playback.
+  Future<bool> jumpContinuousTo({
+    required Ayah ayah,
+    required QuranRepository repo,
+  }) async {
+    if (!continuous.value.active) return false;
+    await startContinuous(
+      from: ayah,
+      repo: repo,
+      edition: _continuousEdition,
+      wholeMushaf: _continuousWholeMushaf,
+    );
+    return true;
   }
 
   /// Skips to the next / previous verse without waiting for the current one.

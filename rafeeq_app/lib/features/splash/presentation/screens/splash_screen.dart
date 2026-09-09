@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -23,7 +25,8 @@ import '../../data/splash_video_provider.dart';
 /// seamless continuation of the native launch icon rather than a second,
 /// different branded screen. The video itself (`assets/branding/
 /// splash_intro.mp4`, the owner's AI-generated intro with the Gemini
-/// watermark removed) plays with sound, once, and a tap skips it.
+/// watermark removed) plays once, and a tap skips it. Whether it plays with
+/// sound is a Settings switch (`splashVideoSoundProvider`, default on).
 ///
 /// P3‑50: the notification/location permission prompts are requested **after**
 /// this splash finishes (see [_proceed]), not from `main()` — so they no
@@ -39,6 +42,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   bool _navigated = false;
   VideoPlayerController? _video;
 
+  /// Read once in [initState] rather than watched: the splash lasts one
+  /// playthrough, and re-reading it mid-play would let a Settings change from
+  /// another isolate mute a video that is already running.
+  bool _videoSound = true;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +55,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     final reduceMotion = WidgetsBinding
         .instance.platformDispatcher.accessibilityFeatures.disableAnimations;
     final motionOn = ref.read(motionEffectsProvider) && !reduceMotion;
+    _videoSound = ref.read(splashVideoSoundProvider);
     if (motionOn && shouldPlayVideo) {
       _initVideo();
     } else {
@@ -77,7 +86,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     try {
       final c = VideoPlayerController.asset('assets/branding/splash_intro.mp4');
       await c.initialize();
-      await c.setVolume(1.0);
+      // P3-57: the owner's setting — the intro can play silently without
+      // losing the visual. Volume, not a skipped video.
+      await c.setVolume(_videoSound ? 1.0 : 0.0);
       await c.setLooping(false);
       if (!mounted) {
         await c.dispose();
@@ -135,12 +146,26 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // location first (the owner asked for it to be the first prompt), then
     // notifications + exact alarm. Scheduled on the binding (not this
     // widget's context) so it still fires after this screen is disposed.
+    //
+    // P3‑57: and only after the hand-off has finished *drawing*. A
+    // post-frame callback fires on the very next frame, i.e. one frame into
+    // the 300ms `MaterialPageRoute` transition, so the OS permission dialog
+    // came up over a splash that was still fading out — which is what the
+    // owner saw as the splash "not showing completely". The delay is longer
+    // than the transition on purpose; nothing depends on these grants
+    // arriving in the first second.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _requestStartupPermissions();
+      unawaited(_requestStartupPermissions());
     });
   }
 
+  /// Long enough to outlast the `MaterialPageRoute` transition (300ms) plus
+  /// the first real frame of the screen behind it, so no permission dialog
+  /// can ever overlap the splash video or its hand-off.
+  static const _permissionDelay = Duration(milliseconds: 900);
+
   Future<void> _requestStartupPermissions() async {
+    await Future<void>.delayed(_permissionDelay);
     try {
       final loc = await Geolocator.checkPermission();
       if (loc == LocationPermission.denied) {

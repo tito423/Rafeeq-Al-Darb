@@ -324,23 +324,56 @@ class _Header extends ConsumerWidget {
           // Driven by the audio service's own playback stream rather than
           // local widget state, so it also reflects playback started
           // elsewhere (e.g. the "repeat" menu action below).
-          StreamBuilder<bool>(
-            stream: AyahAudioService.instance.isPlayingStream,
-            initialData: AyahAudioService.instance.isPlaying,
-            builder: (context, snapshot) {
-              final playing = snapshot.data ?? false;
-              return IconButton(
-                tooltip: (playing ? 'quran.stop' : 'quran.play').tr(),
-                icon: Icon(playing
-                    ? Icons.stop_circle_outlined
-                    : Icons.play_circle_outline),
-                onPressed: playing
-                    ? AyahAudioService.instance.stopQueue
-                    : () => AyahAudioService.instance.play(
-                          ayah,
-                          quranRepo,
-                          title: _reference,
-                        ),
+          //
+          // P3‑57: while a continuous recitation is running, the shared
+          // player is playing, so this button used to render as STOP and
+          // stopped the recitation the reader was following — the owner's
+          // "I pick a verse before or after the one playing and the
+          // recitation stops and won't play". Mid-recitation it now means
+          // «اقرأ من هنا»: the recitation jumps to this verse and reads on,
+          // and the sheet closes so the reader can see the page it moved to.
+          ValueListenableBuilder<ContinuousRecitation>(
+            valueListenable: AyahAudioService.instance.continuous,
+            builder: (context, recite, _) {
+              if (recite.active) {
+                final here = recite.isAyah(ayah.surahId, ayah.ayahNumber);
+                return IconButton(
+                  tooltip: 'quran.recite_from_here'.tr(),
+                  icon: Icon(
+                    here
+                        ? Icons.graphic_eq_rounded
+                        : Icons.play_circle_outline,
+                    color: here ? gold : null,
+                  ),
+                  onPressed: () async {
+                    final navigator = Navigator.of(context);
+                    await AyahAudioService.instance.jumpContinuousTo(
+                      ayah: ayah,
+                      repo: quranRepo,
+                    );
+                    if (navigator.canPop()) navigator.pop();
+                  },
+                );
+              }
+              return StreamBuilder<bool>(
+                stream: AyahAudioService.instance.isPlayingStream,
+                initialData: AyahAudioService.instance.isPlaying,
+                builder: (context, snapshot) {
+                  final playing = snapshot.data ?? false;
+                  return IconButton(
+                    tooltip: (playing ? 'quran.stop' : 'quran.play').tr(),
+                    icon: Icon(playing
+                        ? Icons.stop_circle_outlined
+                        : Icons.play_circle_outline),
+                    onPressed: playing
+                        ? AyahAudioService.instance.stopQueue
+                        : () => AyahAudioService.instance.play(
+                              ayah,
+                              quranRepo,
+                              title: _reference,
+                            ),
+                  );
+                },
               );
             },
           ),

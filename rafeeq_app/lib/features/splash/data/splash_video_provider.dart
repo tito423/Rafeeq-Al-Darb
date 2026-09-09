@@ -52,3 +52,28 @@ final splashVideoEnabledProvider =
     StateNotifierProvider<SplashVideoEnabledNotifier, bool>((ref) {
   return SplashVideoEnabledNotifier(ref.watch(sharedPrefsProvider));
 });
+
+/// Whether the splash video plays **with its sound**.
+///
+/// The owner asked for the choice to be his rather than baked in
+/// («حط خيار في الاسبلاش اسكرين في اعداداتها لو المستخدم يحبها بصوت او بدون
+/// صوت»). Default ON, because that is exactly how the video has behaved since
+/// P3-49 — turning the setting on for the first time must not silently change
+/// what an existing install already does. Muting sets the player's volume to
+/// zero rather than skipping the video, so the visual intro is unaffected.
+class SplashVideoSoundNotifier extends StateNotifier<bool> {
+  SplashVideoSoundNotifier(this._prefs) : super(_prefs.getBool(_key) ?? true);
+
+  final SharedPreferences _prefs;
+  static const _key = 'splash_video_sound_v1';
+
+  Future<void> set(bool value) async {
+    state = value;
+    await _prefs.setBool(_key, value);
+  }
+}
+
+final splashVideoSoundProvider =
+    StateNotifierProvider<SplashVideoSoundNotifier, bool>((ref) {
+  return SplashVideoSoundNotifier(ref.watch(sharedPrefsProvider));
+});

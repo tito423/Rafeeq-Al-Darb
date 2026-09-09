@@ -784,11 +784,19 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               playingSurah: _recite.active ? _recite.surahId : null,
               playingAyah: _recite.active ? _recite.ayahNumber : null,
               onAyahTap: (a) => _openSciences(a, data),
+              // `edition:` here is the RECITER, not the mushaf. It used to
+              // be handed `edition?.id ?? 'hafs_kfqc'` — a *mushaf* printing
+              // id — so every verse resolved to
+              // `cdn.islamic.network/quran/audio/128/hafs_kfqc/<n>.mp3`,
+              // which 404s; `setAudioSource` threw, the catch called
+              // `stopContinuous()`, and picking a verse stopped the
+              // recitation instead of moving it. That is the owner's
+              // «واجي اختار آية … بتقف التلاوة مش بتشتغل».
               onPlayTap: (a) {
                 AyahAudioService.instance.startContinuous(
                   from: a,
                   repo: data.repo,
-                  edition: edition?.id ?? 'hafs_kfqc',
+                  edition: ref.read(selectedReciterProvider),
                   wholeMushaf: true,
                 );
               },
