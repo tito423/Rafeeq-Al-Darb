@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
 
 import '../../../../core/db/models.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../data/mushaf_theme.dart';
 import '../../data/text_layout_provider.dart';
 
 /// Renders one mushaf page (or a surah's ayahs) as a **vertical list** of
@@ -67,6 +67,13 @@ class MushafTextPage extends StatefulWidget {
   /// Whether verses are set as boxed cards or as one flowing justified page.
   final QuranTextLayout layout;
 
+  /// The page's colour scheme. Null follows the app's light/dark theme, which
+  /// is what a reader who has never opened the theme picker gets.
+  ///
+  /// Passed in rather than watched here: this widget is deliberately
+  /// presentational, and both callers are already Riverpod consumers.
+  final MushafTheme? mushafTheme;
+
   const MushafTextPage({
     super.key,
     required this.ayahs,
@@ -84,6 +91,7 @@ class MushafTextPage extends StatefulWidget {
     this.playingSurah,
     this.playingAyah,
     this.layout = QuranTextLayout.page,
+    this.mushafTheme,
   });
 
   @override
@@ -271,13 +279,14 @@ class _MushafTextPageState extends State<MushafTextPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     if (widget.ayahs.isEmpty) {
       return const Center(child: Text('—'));
     }
 
-    final paper = isDark ? AppColors.nightSurface : AppColors.paper;
-    final ink = isDark ? AppColors.paperDark : AppColors.ink;
+    final mt = widget.mushafTheme ??
+        resolveMushafTheme(null, theme.brightness);
+    final paper = mt.paper;
+    final ink = mt.ink;
     final isLandscape =
         MediaQuery.orientationOf(context) == Orientation.landscape;
     final baseFont = (isLandscape ? 20.0 : 24.0) * widget.fontScale;
@@ -345,11 +354,11 @@ class _MushafTextPageState extends State<MushafTextPage> {
                 applyHeightToFirstAscent: false,
                 applyHeightToLastDescent: false,
               ),
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'AmiriQuran',
                 fontSize: 22,
                 height: 1.0,
-                color: AppColors.gold,
+                color: mt.gold,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -358,7 +367,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
               preferredSize: const Size.fromHeight(1),
               child: Container(
                 height: 1,
-                color: AppColors.gold.withValues(alpha: 0.3),
+                color: mt.gold.withValues(alpha: 0.3),
               ),
             ),
           ),
@@ -383,6 +392,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
                   if (item.isBanner) {
                     return _SurahBanner(
                       name: widget.surahNameOf(item.surahId!),
+                      mt: mt,
                     );
                   }
                   if (widget.layout == QuranTextLayout.cards) {
@@ -394,6 +404,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
                             ayah: widget.ayahs[i],
                             isPlaying: i == playingIndex,
                             textStyle: textStyle,
+                            mt: mt,
                             onLongPress: () =>
                                 widget.onAyahTap(widget.ayahs[i]),
                             onTap: widget.onBackgroundTap,
@@ -406,6 +417,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
                   }
                   return _FlowingAyahs(
                     key: _runKeys[item.runIndex!],
+                    mt: mt,
                     ayahs: widget.ayahs,
                     from: item.runFrom!,
                     to: item.runTo!,
@@ -479,6 +491,7 @@ class _AyahRow extends StatelessWidget {
   final Ayah ayah;
   final bool isPlaying;
   final TextStyle textStyle;
+  final MushafTheme mt;
   final VoidCallback onLongPress;
   final VoidCallback? onTap;
   final VoidCallback? onPlayTap;
@@ -488,6 +501,7 @@ class _AyahRow extends StatelessWidget {
     required this.ayah,
     required this.isPlaying,
     required this.textStyle,
+    required this.mt,
     required this.onLongPress,
     this.onTap,
     this.onPlayTap,
@@ -495,22 +509,20 @@ class _AyahRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
+    // The row's resting tint comes from the *theme's* own lightness, not the
+    // app's: a light mushaf theme can be selected while the app is in dark
+    // mode, and a white wash on cream paper is invisible.
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: isPlaying
-            ? AppColors.ayahHighlightPlaying.withValues(alpha: 0.18)
-            : (isDark
-                ? Colors.white.withValues(alpha: 0.03)
-                : Colors.black.withValues(alpha: 0.015)),
+            ? mt.highlightPlaying
+            : (mt.isLight
+                ? Colors.black.withValues(alpha: 0.015)
+                : Colors.white.withValues(alpha: 0.03)),
         borderRadius: BorderRadius.circular(14),
         border: isPlaying
-            ? Border.all(
-                color: AppColors.gold.withValues(alpha: 0.5),
-                width: 1.2,
-              )
+            ? Border.all(color: mt.gold.withValues(alpha: 0.5), width: 1.2)
             : null,
       ),
       child: Material(
@@ -551,6 +563,7 @@ class _AyahRow extends StatelessWidget {
                     child: _AyahMarker(
                       number: ayah.ayahNumber,
                       playing: isPlaying,
+                      mt: mt,
                     ),
                   ),
                 ),
@@ -569,11 +582,12 @@ class _AyahRow extends StatelessWidget {
 /// headers — a bordered cartouche.
 class _SurahBanner extends StatelessWidget {
   final String name;
-  const _SurahBanner({required this.name});
+  final MushafTheme mt;
+  const _SurahBanner({required this.name, required this.mt});
 
   @override
   Widget build(BuildContext context) {
-    final gold = AppColors.gold;
+    final gold = mt.gold;
     return Container(
       margin: const EdgeInsets.only(top: 10, bottom: 16),
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -623,15 +637,17 @@ class _SurahBanner extends StatelessWidget {
 class _AyahMarker extends StatelessWidget {
   final int number;
   final bool playing;
+  final MushafTheme mt;
 
   const _AyahMarker({
     required this.number,
+    required this.mt,
     this.playing = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final gold = playing ? AppColors.goldSoft : AppColors.gold;
+    final gold = mt.gold;
     const size = 32.0;
     return SizedBox(
       width: size,
@@ -724,6 +740,9 @@ class _FlowingAyahs extends StatefulWidget {
 
   final TextStyle textStyle;
 
+  /// The page's colour scheme, for the recited-verse wash and the markers.
+  final MushafTheme mt;
+
   /// Tap a verse: start (or jump) the recitation there.
   final void Function(Ayah ayah)? onAyahTap;
 
@@ -740,6 +759,7 @@ class _FlowingAyahs extends StatefulWidget {
     required this.to,
     required this.playingIndex,
     required this.textStyle,
+    required this.mt,
     required this.onAyahLongPress,
     this.onAyahTap,
     this.onBackgroundTap,
@@ -805,9 +825,11 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
               ? widget.textStyle.copyWith(
                   // A wash behind the glyphs rather than a bordered box, so
                   // the highlight rides the text as it wraps across lines.
-                  backgroundColor:
-                      AppColors.ayahHighlightPlaying.withValues(alpha: 0.28),
-                  color: AppColors.goldSoft,
+                  // Both colours come from the theme: on the black
+                  // high-contrast page a gold wash under gold text would be
+                  // unreadable, so that theme flips the ink instead.
+                  backgroundColor: widget.mt.highlightPlaying,
+                  color: widget.mt.inkOnHighlight,
                 )
               : widget.textStyle,
         ),
@@ -820,7 +842,11 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
           alignment: PlaceholderAlignment.middle,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: _AyahMarker(number: ayah.ayahNumber, playing: isPlaying),
+            child: _AyahMarker(
+              number: ayah.ayahNumber,
+              playing: isPlaying,
+              mt: widget.mt,
+            ),
           ),
         ),
       );

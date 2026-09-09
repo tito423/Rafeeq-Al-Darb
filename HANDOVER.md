@@ -227,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 05:08 — IN PROGRESS — resume here**
+**2026-09-09 05:25 — IN PROGRESS — resume here**
 
-add the Al-Nas adhan as the 4th, right after the owner's three; stream copied unchanged rather than re-encoded (it is already 48k mono, so transcoding could only lose quality). Verified on device: list order is his three then Al-Nas then the original ten, and it plays through the native alarm player at its real 32kHz
+10 text-mushaf themes with a Settings card and a live picker (every tile is real Quran text with the real recitation highlight, not a swatch). Found by measuring, not eyeballing: charcoal/azure/emerald shipped dark ink on a translucent wash over a dark ground and measured 2.6/2.3/2.6:1 - all ten now sit between 6.0 and 12.3:1
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

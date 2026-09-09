@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/theme_controller.dart';
 import '../../../home/data/clock_settings_provider.dart';
+import '../../../quran/data/mushaf_theme.dart';
+import '../../../quran/presentation/widgets/mushaf_theme_picker.dart';
 import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
@@ -181,6 +183,26 @@ class SettingsBody extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
+          // The text mushaf's own colour scheme — its own section, because it
+          // is not the app theme: a light mushaf can be read inside a dark
+          // app, and the two settings genuinely mean different things.
+          SectionLabel('mushaf_theme.title'.tr()),
+          Builder(
+            builder: (tileContext) => Card(
+              child: ListTile(
+                leading: Icon(Icons.palette_outlined, color: scheme.primary),
+                title: Text('mushaf_theme.title'.tr()),
+                subtitle: Text(_currentMushafThemeLabel(ref)),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => MushafThemePicker.show(
+                  context,
+                  origin: tileContext,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
           // Reading Options for Non-Arabs (Transliteration)
           SectionLabel('settings.non_arabic_reading_title'.tr()),
           const NonArabicReadingCard(),
@@ -248,6 +270,15 @@ class SettingsBody extends ConsumerWidget {
         ],
       );
   }
+}
+
+/// The name of whichever mushaf theme is active, so the row says what it is
+/// rather than a bare label. "Follow the app theme" is a real answer, not a
+/// missing one.
+String _currentMushafThemeLabel(WidgetRef ref) {
+  final id = ref.watch(mushafThemeProvider);
+  if (id == null) return 'mushaf_theme.follow_app'.tr();
+  return mushafThemeById(id).labelKey.tr();
 }
 
 /// The name of whichever face is selected right now, so the button on the

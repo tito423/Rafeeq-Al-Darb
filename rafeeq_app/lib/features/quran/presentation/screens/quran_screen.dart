@@ -19,6 +19,7 @@ import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
 import '../../data/quran_fullscreen_provider.dart';
 import '../../data/quran_jump_provider.dart';
+import '../../data/mushaf_theme.dart';
 import '../../data/text_layout_provider.dart';
 import '../../data/quran_last_read.dart';
 import '../widgets/ayah_sciences_sheet.dart';
@@ -767,6 +768,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
             }
             return MushafTextPage(
               layout: textLayout,
+              mushafTheme: resolveMushafTheme(
+                ref.watch(mushafThemeProvider),
+                Theme.of(context).brightness,
+              ),
               ayahs: ayahs,
               surahNameOf: data.surahNameAr,
               playingSurah: _recite.active ? _recite.surahId : null,

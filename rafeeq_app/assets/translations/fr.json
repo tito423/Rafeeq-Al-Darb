@@ -670,5 +670,20 @@
     "intro": "Une sélection de chaînes YouTube. Toucher ouvre la chaîne dans YouTube ; l'application n'héberge aucune vidéo.",
     "view_grid": "Vue en grille",
     "view_list": "Vue en liste"
+  },
+  "mushaf_theme": {
+    "title": "Thèmes du mushaf texte",
+    "subtitle": "Chacun sur de vrais versets, avec la surbrillance de récitation",
+    "follow_app": "Suivre le thème de l'application",
+    "classic": "Papier classique",
+    "night": "Nuit",
+    "sepia": "Sépia",
+    "madinah": "Vert de Médine",
+    "charcoal": "Charbon",
+    "azure": "Bleu nuit",
+    "emerald": "Émeraude doré",
+    "parchment": "Vieux parchemin",
+    "rose": "Rose doux",
+    "contrast": "Contraste élevé"
   }
 }

@@ -6,6 +6,7 @@ import '../../../core/db/models.dart';
 import '../../../core/widgets/error_retry.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/mushaf_edition.dart';
+import '../../quran/data/mushaf_theme.dart';
 import '../../quran/presentation/widgets/ayah_sciences_sheet.dart';
 import '../../quran/presentation/widgets/mushaf_page_view.dart';
 import '../../quran/presentation/widgets/mushaf_text_page.dart';
@@ -120,6 +121,10 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                     );
                   }
                   return MushafTextPage(
+                    mushafTheme: resolveMushafTheme(
+                      ref.watch(mushafThemeProvider),
+                      Theme.of(context).brightness,
+                    ),
                     ayahs: ayahs,
                     surahNameOf: data.surahNameAr,
                     onAyahTap: (a) => _openSciences(a, data, edition),

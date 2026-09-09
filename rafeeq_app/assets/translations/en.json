@@ -670,5 +670,20 @@
     "intro": "A selection of YouTube channels. Tapping opens the channel in YouTube — the app hosts no video.",
     "view_grid": "Grid view",
     "view_list": "List view"
+  },
+  "mushaf_theme": {
+    "title": "Text mushaf themes",
+    "subtitle": "Each shown on real verses, with the recitation highlight",
+    "follow_app": "Follow the app theme",
+    "classic": "Classic paper",
+    "night": "Night",
+    "sepia": "Sepia",
+    "madinah": "Madinah green",
+    "charcoal": "Charcoal",
+    "azure": "Midnight blue",
+    "emerald": "Gilded emerald",
+    "parchment": "Old parchment",
+    "rose": "Soft rose",
+    "contrast": "High contrast"
   }
 }

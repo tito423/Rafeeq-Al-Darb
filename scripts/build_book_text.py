@@ -228,13 +228,10 @@ BOOKS = {
         "مؤسسة الرسالة - بيروت، الإصدار الثاني المنقّح المزيد، الطبعة الأولى "
         "١٤١٧هـ/١٩٩٦م",
     },
-    "ash_shamail_al_muhammadiyyah": {
-        "shamela_id": 13037,
-        "source_label": "المكتبة الشاملة — الشمائل المحمدية والخصائل "
-        "المصطفوية، أبو عيسى الترمذي (ت ٢٧٩هـ)، تحقيق سيد بن عباس الجليمي، "
-        "المكتبة التجارية مصطفى أحمد الباز - مكة المكرمة، الطبعة الأولى "
-        "١٤١٣هـ/١٩٩٣م",
-    },
+    # NOT re-crawled: al-Shamail is already in the catalogue as
+    # `al_shamail_al_muhammadiyyah` (Shamela 23647, ط إحياء التراث).
+    # Adding Shamela 13037 (ت الجليمي) would have put the same book in the
+    # library twice under two ids.
     "sahih_as_seerah_albani": {
         "shamela_id": 592,
         # Shamela's own note: al-Albani died before finishing the abridgement,

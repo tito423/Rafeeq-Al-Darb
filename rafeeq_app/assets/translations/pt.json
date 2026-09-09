@@ -670,5 +670,20 @@
     "intro": "Uma seleção de canais do YouTube. Tocar abre o canal no YouTube — o aplicativo não hospeda vídeos.",
     "view_grid": "Visualização em grade",
     "view_list": "Visualização em lista"
+  },
+  "mushaf_theme": {
+    "title": "Temas do mushaf de texto",
+    "subtitle": "Cada um em versículos reais, com o destaque da recitação",
+    "follow_app": "Seguir o tema do aplicativo",
+    "classic": "Papel clássico",
+    "night": "Noite",
+    "sepia": "Sépia",
+    "madinah": "Verde de Medina",
+    "charcoal": "Carvão",
+    "azure": "Azul meia-noite",
+    "emerald": "Esmeralda dourada",
+    "parchment": "Pergaminho antigo",
+    "rose": "Rosa suave",
+    "contrast": "Alto contraste"
   }
 }

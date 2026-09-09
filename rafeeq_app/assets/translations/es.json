@@ -670,5 +670,20 @@
     "intro": "Una selección de canales de YouTube. Al tocar se abre el canal en YouTube; la aplicación no aloja vídeos.",
     "view_grid": "Vista de cuadrícula",
     "view_list": "Vista de lista"
+  },
+  "mushaf_theme": {
+    "title": "Temas del mushaf de texto",
+    "subtitle": "Cada uno sobre versículos reales, con el resaltado de recitación",
+    "follow_app": "Seguir el tema de la aplicación",
+    "classic": "Papel clásico",
+    "night": "Noche",
+    "sepia": "Sepia",
+    "madinah": "Verde Medina",
+    "charcoal": "Carbón",
+    "azure": "Azul medianoche",
+    "emerald": "Esmeralda dorada",
+    "parchment": "Pergamino antiguo",
+    "rose": "Rosa suave",
+    "contrast": "Alto contraste"
   }
 }
