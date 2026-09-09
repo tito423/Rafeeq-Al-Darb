@@ -19,7 +19,7 @@ Egyptian Arabic; **reply in Arabic**, keep code and commits in English.
 | | |
 |---|---|
 | Version | `3.7.0+3` |
-| Checks | `flutter analyze lib test` clean · `flutter test` **30/30** |
+| Checks | `flutter analyze lib test` clean · `flutter test` **34/34** |
 | Locales | 7 · **665** leaf keys, parity enforced |
 | Mushaf editions | **6** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`, **`qatar`** (new) |
 | Ayah layer | **2 of 6** — `hafs_kfqc` (own polygons) and `tajweed_color` (Hafs polygons under a fitted affine) |
@@ -37,6 +37,14 @@ Egyptian Arabic; **reply in Arabic**, keep code and commits in English.
 2. **Ayah highlighting + tap-to-sciences on the Tajweed mushaf** — the first
    raster printing to have them. Details below and in `HANDOVER.md` §5.
 3. **مصحف قطر** as the sixth printing — 604 pages, verified page by page.
+4. **Eleven dead book downloads, eight of them shipped in v3.6.0.** Every book
+   `add_seerah_catalog_entries.py` ever generated had a URL that was never
+   interpolated — a backslash before the `$` made it an escaped dollar, so the
+   app was handed the literal text and failed with «No host specified in URI».
+   Found by tapping Download on the device, not by reading. See CLAUDE.md
+   trap #23. **This is the reason to open the app and touch a feature after
+   changing content, every time** — the previous session verified the upload
+   and stopped there.
 
 ---
 

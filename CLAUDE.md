@@ -329,6 +329,28 @@ Do not rediscover these.
     on the surrounding box, so put the page in an `AspectRatio` of its own
     measured shape.
 
+23. **In generated Dart, a backslash before a `$` is an ESCAPE, not an
+    interpolation.** `scripts/add_seerah_catalog_entries.py` wrote
+    `'\${AppConfig.contentBaseUrl}/books/text/x.json'` into `book_catalog.dart`
+    — a perfectly valid Dart string literal that evaluates to that text
+    *verbatim*. Every book it generated failed on the device with «Invalid
+    argument(s): No host specified in URI». Eleven books; **eight of them
+    shipped in v3.6.0.**
+
+    Three things made it survive:
+    * `flutter analyze` sees a valid string and says nothing.
+    * The other 215 books use the plain form and always worked, so the
+      catalogue looked fine.
+    * The session that added them verified the *upload* — a range request
+      against R2 — and never opened the library in the app. **The bytes being
+      on the bucket is not the feature working** (§1.3).
+
+    `test/book_catalog_urls_test.dart` now parses all 226 URLs and asserts each
+    has a real host. When you write a test for a bug like this, **prove it
+    fails on the broken code** before trusting it — that one was proven by
+    reintroducing the escape into `la_tahzan` and watching the test reproduce
+    the device's exact complaint.
+
 ---
 
 ## 4. Where things live

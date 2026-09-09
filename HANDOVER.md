@@ -9,7 +9,7 @@ Cline, or any other).
 | **Last updated** | 2026-09-09 |
 | **Released** | **v3.7.0** — the only release; every earlier release *and tag* is deleted at the owner's request so the repo reads clean. |
 | **App version** | `pubspec.yaml` `3.7.0+3` (this is what the About card shows — keep it equal to the release tag) |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **30/30** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **34/34** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
 
 ## STATE AS OF 2026-09-09 (v3.7.0)
 
@@ -37,6 +37,21 @@ Phases 1–3 are complete. Everything since is owner-driven. **Read
    `la_tahzan`'s `authorDeathAr` is empty, and both render sites in
    `library_screen.dart` concatenated it unconditionally.
 
+5. **Eleven dead book downloads fixed — eight of which shipped in v3.6.0.**
+   `add_seerah_catalog_entries.py` generated
+   `'\${AppConfig.contentBaseUrl}/books/text/x.json'`, and in Dart a
+   backslash-dollar inside a string is an *escaped* dollar, so the URL was
+   never interpolated and every one of those books failed on the device with
+   «Invalid argument(s): No host specified in URI». `flutter analyze` cannot
+   see it — the escaped form is a valid string literal. Found by tapping
+   Download on the emulator. See CLAUDE.md trap #23; guarded now by
+   `test/book_catalog_urls_test.dart`, which was proven to fail on the broken
+   form before being trusted.
+6. **A blank author name.** `sahih_as_seerah_albani` shipped with an empty
+   `authorAr`, because Shamela's card for book 592 names al-Albani on a
+   «لَخّصه … وعَلّق عليه:» line rather than a «المؤلف:» one. Taken from that
+   line; the generator now refuses an empty author instead of writing it.
+
 **Rejected on purpose:** the Taj Company 16-line Indo-Pak scan
 (`AlQuran16LinesTaj`) is clean and complete, but its own back page prints
 «جملہ حقوق محفوظ» and a copyright warning naming Taj Company Ltd. It is not
@@ -47,6 +62,7 @@ ours to rehost. Check a scan's back matter before building it.
 | | |
 |---|---|
 | Locales | **7** — ar (default, RTL), en, es, fr, pt, ru, ur · **665** leaf keys, parity enforced by `test/translation_parity_test.dart` |
+| Tests | **34** — the four new `book_catalog_urls_test.dart` cases and the five `mushaf_polygon_fit_test.dart` ones both pin *measured* facts, not code shape |
 | Ayah layer | **2 of 6** printings — `hafs_kfqc` (its own polygons) and `tajweed_color` (the Hafs polygons under a measured affine). The other four ship without one rather than with a wrong one; see §5.0. |
 | Mushaf editions | **6** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`, `qatar`. Warsh and Qalun were **deleted** on the owner's instruction («احذف مصاحف الروايات»): they are riwayat, not printings — but note their 1,208 page images are still on R2, unreferenced, 270 MB; see `NEXT_SESSION_PROMPT.md` §3. He wants 10 verified printings; four still need sourcing. |
 | Text-mushaf appearance | **10 themes × 10 frames × 11 frame colours**, one picker card, all painted |
@@ -262,9 +278,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 07:42 — IN PROGRESS — resume here**
+**2026-09-09 10:51 — IN PROGRESS — resume here**
 
-CRITICAL, found by tapping Download on the device: ALL ELEVEN books written by add_seerah_catalog_entries.py were dead, and EIGHT OF THEM SHIPPED IN v3.6.0. The device said 'Invalid argument(s): No host specified in URI \/books/text/rijal_hawl_ar_rasul.json' - the URL was the LITERAL TEXT. The generator emitted a backslash before the dollar, and in Dart a backslash-dollar inside a string is an ESCAPED dollar, so it never interpolated. flutter analyze cannot see this: the escaped form is a perfectly valid string literal, and the other 215 books use the plain form and always worked. I have to correct my own report from earlier today - I said the three new books were verified because I range-requested them on R2. The upload was fine; the app could never reach them. Verifying the bytes are on the bucket is not verifying the feature, and CLAUDE.md says so in 1.3. Fixed: 11 URLs repaired, the generator fixed with a comment naming the trap, and a new test/book_catalog_urls_test.dart that parses every one of the 226 URLs and asserts it has a real host - plus that no book has an empty author, title, description or size, and that ids are unique. The test was PROVEN to catch it: the bug was deliberately reintroduced into la_tahzan and the test failed with exactly the device's complaint, then reverted. analyze clean, 34/34
+Docs finished for v3.7.0: CLAUDE.md trap 23 (a backslash before a dollar in generated Dart is an escape, not interpolation - and the three reasons it survived: analyze sees a valid literal, the other 215 books used the plain form, and the session that added them verified the upload instead of the app), HANDOVER items 5-6 for the eleven dead downloads and the blank author, and NEXT_SESSION_PROMPT updated to 34 tests with the same warning
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
