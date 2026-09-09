@@ -6,12 +6,124 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-10 |
-| **Released** | **v3.8.0** — still the only release. Seven sessions of work sit on `master` and are in no APK the owner has. |
-| **App version** | `pubspec.yaml` `3.8.0+4` — **not bumped**, because nothing was released |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **62/62** · `py -3 scripts/i18n_audit.py` **0** · `py -3 scripts/check_hero_contrast.py` every tone ≥ 4.5:1 · hosted content **23 paths, 0 failed** · everything below was opened on `emulator-5554` and looked at, except where this file says otherwise |
+| **Last updated** | 2026-09-10, end of the **eighth** session |
+| **Released** | **v3.9.0** — the eight sessions of work since v3.8.0 are in it |
+| **App version** | `pubspec.yaml` `3.9.0+5` |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **71/71** · `py -3 scripts/i18n_audit.py` **0** · hosted content **30 paths, 0 failed** · APK **281,598,575 bytes** · everything below was opened on `emulator-5554` and looked at |
 
-## STATE AS OF 2026-09-09 — SEVENTH SESSION (still unreleased, on top of v3.8.0)
+## STATE AS OF 2026-09-10 — EIGHTH SESSION (released as v3.9.0)
+
+### 1. A prayer reminder was watched firing, and the wording it fired with was wrong
+
+The seventh session proved the fifteen reminders **armed** with `dumpsys alarm`
+and stopped there. This session moved the emulator's clock to 06:01 with the
+before-Fajr alarm at 06:03, waited, and read the shade. It said:
+
+```
+اقتربت الفجر
+باقٍ 10 دقيقة على الفجر
+```
+
+Three defects in two lines, none of which `flutter analyze`, the 62 tests or a
+key-parity check could see, because every string involved was present,
+non-empty and grammatical *as a template*:
+
+* **«اقتربت» is feminine and four of the five prayer names are masculine.**
+  No single verb agrees with `{prayer}`. The sentence is built on «موعد صلاة»
+  now — the owner's own wording, «اقترب موعد صلاة {prayer}» — which agrees for
+  all five.
+* **«10 دقيقة» is the wrong number agreement.** Arabic counts 3–10 with a
+  plural and 11–99 with a singular accusative. `_minutes()` hardcoded one
+  unit. It is `prayer.minutes_count`, a plural key, in all seven locales now;
+  the other six abbreviate the unit and do not inflect.
+* **Latin digits beside the app's own Arabic-Indic ones.** The ongoing prayer
+  card one row below in the same shade read «الفجر · ٠٦:١٣». `localizeDigits`
+  in `lib/core/utils/digits.dart` is the one conversion table now — it was
+  about to be written a third time.
+
+Re-verified live: «اقترب موعد صلاة الفجر» / «بقيت ١٠ دقائق على صلاة الفجر».
+
+**And a fourth defect the fix exposed:** a reminder's title and body are baked
+into AlarmManager when it is **armed**, so switching the app's language left
+tomorrow's reminders in the old one until the next times fetch. `RafeeqApp`
+re-arms from the cached times on every language change. Verified: switched to
+English, jumped to 06:18, and the iqama fired as «Fajr iqama — It is time for
+the Fajr iqama».
+
+### 2. موسوعة الأحاديث النبوية — the owner's stated top priority, now in the app
+
+> «اهم حاجة ترجمات المواد العلمية خاصة الحديث من مصادرها الموثوقة»
+
+A fifth Library tab, **beside** the nine books and not inside them. 3,574
+records, and **every single one carries both a takhrij and a grading in the
+reader's own language** — measured across all 15,498 (hadith, language) rows
+by `scripts/build_hadeethenc_packs.py`: **0 ungraded, 0 without takhrij**.
+
+* **One pack per language**, `hadeethenc/<lang>.zip` on R2, 1.3–3.5 MB, built
+  by `build_hadeethenc_packs.py` and uploaded by `r2_upload_hadeethenc.py` —
+  which refuses to write the bundled catalogue unless every object answers
+  `PK` with a matching `Content-Length` from the public endpoint.
+* **Category titles were refetched in all seven languages**
+  (`hadeethenc_categories.py`). The crawl walked the tree in Arabic only, so
+  building from it alone would have put Arabic section headings over Spanish
+  hadiths.
+* **The grading is never shown bare.** §1.2: it is always «الدرجة: … —
+  تصنيف موسوعة الأحاديث النبوية», with the encyclopedia's own reference list
+  under it. HadeethEnc names no individual scholar per hadith; the verdict is
+  the encyclopedia's, and the reader is told so.
+* **The publisher permits this, conditionally, and the conditions were read
+  before a byte was uploaded** (trap #18). Its «الشروط والسياسات» modal
+  (hadeethenc.com/ar/home, read 2026‑09‑10) allows redistribution given: no
+  modification, addition or deletion; clear credit to publisher and source;
+  the version number; no unbefitting ads. The app modifies nothing, credits
+  the source on the collection screen, on every hadith and on the Sources
+  screen, and carries no advertising. **The version number does not exist to
+  quote**: the API returns no version field, `hadeeths/list/`'s `meta` is only
+  paging, and the PDFs answer `Last-Modified: Thu, 26 Mar 2000`. Each pack
+  therefore records the retrieval dates instead, and says so.
+* **No FTS5** (trap #1). Search is a pre-normalised `search` column matched in
+  Dart, paged 400 rows at a time (trap #4).
+* **A new boundary test.** `wordBoundaryContains` treats any non-letter as a
+  boundary. The two existing tests could not serve a corpus in three scripts:
+  `arabicWordBoundaryContains` counts only a space (trap #3), and
+  `LibraryApiService._boundaryIndexOf` counts anything outside U+0621..U+064A,
+  which would match «the» inside «other».
+
+**The bug that only a device could find.** The download succeeded, the unzip
+succeeded, `flutter analyze` was clean, 66 tests passed, and every pack had
+been range-checked on the bucket — and the tab sat on its download button for
+ever. `DownloadManager._unzipToDatabases` names the extracted database after
+the **zip's** basename, not the entry's, so `ar.zip` became `ar.db` while the
+repository opened `hadeethenc_ar.db`. `hadith.zip` has always worked only
+because those two names are the same word. `HadeethEncPack.zipFileName` now
+derives from `fileName`, and `test/hadeethenc_pack_test.dart` was proved to
+reproduce the device's exact complaint before it was trusted.
+
+Verified live in Arabic and in English: the download, the seven sections with
+their measured counts (197 · 16 · 681 · 1690 · 727 · 79 · 184 in Arabic),
+a hadith with its takhrij and whose grading it is, and search.
+
+### 3. Measured for this release
+
+7 locales × **965** keys · **9** mushaf editions · **227** library books ·
+`hadith.db` **109,731,840 bytes**, 67,153 hadiths, **45,219 graded** ·
+7 HadeethEnc packs, **15,202,244 bytes** on the bucket · APK
+**281,598,575 bytes** · **71** tests · **30** hosted paths, 0 failed.
+
+### 4. Not done, and named as not done
+
+* **`words_meanings_ar` (معاني الكلمات) is not in the packs.** The API returns
+  it and `hadeethenc_crawl.py` never stored it, along with `explanation_ar`
+  and `hints_ar`. Adding them needs a re-crawl of ~3,574 Arabic records.
+* **Urdu keeps Latin digits.** `localizeDigits` shapes Arabic only, because
+  the rest of the Urdu build renders every number in Latin and shaping one
+  screen would make Urdu inconsistent with itself. Urdu's own digits are
+  U+06F0-U+06F9, *not* the Arabic ones.
+* **`QuranTranslationInfo.sizeLabel` builds its own `'… MB'`** instead of
+  using `formatBytes`, so it is a sixth copy of the formatter trap #16 exists
+  for, without the isolate. Not touched this session.
+
+## STATE AS OF 2026-09-09 — SEVENTH SESSION (superseded by the block above)
 
 ### 1. The «""» and the stray dot — the sixth session's fix was HALF the bug
 
