@@ -122,6 +122,17 @@ class QuoteReminderService {
               _preview(quote.text),
               summaryText: quote.bookTitle,
             ),
+            // A quote disappears when the next one is due.
+            //
+            // Found on emulator-5554, and it is not cosmetic: Android caps a
+            // package at 25 posted notifications and drops the rest. With 24
+            // quote slots and nothing dismissing them, the app can spend its
+            // whole budget on its own nudges and then be unable to post the
+            // things that matter — the سنن السور reminder was blocked
+            // exactly that way during this test, its alarm firing and its
+            // notification never appearing.
+            timeoutAfter: Duration(minutes: everyMinutes).inMilliseconds,
+            groupKey: _channelId,
           ),
         ),
         // EXACT, and this was measured before it was chosen: with

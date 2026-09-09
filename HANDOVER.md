@@ -727,9 +727,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 02:36 — IN PROGRESS — resume here**
+**2026-09-10 03:00 — IN PROGRESS — resume here**
 
-the quote notification works end to end on emulator-5554: fired at its exact minute, tapped, and the card opened on THAT saying with its book and author. Two real defects fixed on the way. First, five services each called initialize on the singleton notifications plugin and two installed an empty tap handler, so whichever ran last owned every tap - PrayerStatusNotification's (_) {} won from AppShell's first frame and had been swallowing the surah reminder's taps too, silently, for as long as that code existed; NotificationRouter is the single owner now and a test pins it. Second, inexactAllowWhileIdle had a slot armed for 02:35 still unfired at 02:43, which makes a 15-minute setting a lie
+each quote notification now clears itself before the next is due. Not cosmetic: Android caps a package at 25 posted notifications, and 24 undismissed quotes can spend the whole budget so the app cannot post what matters. Re-verified on emulator-5554 after the change - a slot armed for 20:22:58 posted at 20:22:59. Also found and NOT fixed: the surah reminder rescheduled itself for the following Friday twice, so its alarm fired, and no notification was ever posted on its channel - mLastNotificationUpdateTimeMs is still 0. That is independent of the router change, since posting is native and does not go through initialize
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
