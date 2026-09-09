@@ -322,6 +322,70 @@ class AyahAudioService {
     } catch (_) {}
   }
 
+  // ── Long-form tracks (the recorded ruqyahs) ─────────────────────────────
+
+  /// Plays one long recording — a file if it has been downloaded, otherwise
+  /// streamed from [url].
+  ///
+  /// This goes through the app's single player for the same reason every
+  /// other playback path does: `just_audio_background` throws on the second
+  /// `AudioPlayer` in the process. A 75-minute ruqyah is exactly the kind of
+  /// thing a reader starts and then locks the phone on, so it has to be the
+  /// player that owns the notification, not a silent second one.
+  ///
+  /// Returns false if the source could not be opened, so the caller can say so
+  /// instead of leaving a dead play button.
+  Future<bool> playTrack({
+    required String id,
+    required String url,
+    required String title,
+    String? artist,
+    File? localFile,
+  }) async {
+    try {
+      await stopQueue();
+      await stopContinuous();
+      final tag = MediaItem(
+        id: 'track:$id',
+        album: 'رفيق الدرب',
+        title: title,
+        artist: artist,
+      );
+      if (localFile != null && localFile.existsSync()) {
+        await _player.setAudioSource(
+          AudioSource.file(localFile.path, tag: tag),
+        );
+      } else {
+        await _player.setAudioSource(AudioSource.uri(Uri.parse(url), tag: tag));
+      }
+      unawaited(_player.play());
+      return true;
+    } catch (e) {
+      debugPrint('playTrack failed for $id: $e');
+      return false;
+    }
+  }
+
+  /// Whether the player is currently on [id]'s track. Used by a list of
+  /// recordings to show the stop button on the right row and only that row.
+  bool isTrack(String id) =>
+      (_player.sequenceState.currentSource?.tag as MediaItem?)?.id ==
+      'track:$id';
+
+  Stream<Duration> get positionStream => _player.positionStream;
+
+  Duration? get trackDuration => _player.duration;
+
+  Future<void> pauseResumeTrack() async {
+    if (_player.playing) {
+      await _player.pause();
+    } else {
+      await _player.play();
+    }
+  }
+
+  Future<void> seekTrack(Duration to) => _player.seek(to);
+
   // ── Continuous recitation ───────────────────────────────────────────────
   //
   // "Read the whole mushaf, verse after verse, and follow along." The player

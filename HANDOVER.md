@@ -227,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 03:52 — IN PROGRESS — resume here**
+**2026-09-09 04:11 — IN PROGRESS — resume here**
 
-drop the riwayah mushafs (warsh, qaloon) and 4 orphan polygon files (~3MB); measured that hafs polygons do NOT transfer to the raster printings - overlaid on real page 2 of tajweed and madinah_gold and looked at it
+ruqyah audio: 5 verified recordings mirrored to R2 (355MB, byte-exact, 206 on the public URL); found Avast intercepting TLS which broke every boto3 upload - new scripts/r2_common.py verifies against the Windows root store instead of disabling verification
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

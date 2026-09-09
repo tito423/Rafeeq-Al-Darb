@@ -147,6 +147,33 @@ class SciencesRepository {
     );
     return rows.map(AzkarItem.fromRow).toList();
   }
+
+  /// Specific azkar rows by id, returned in the order [ids] asks for.
+  ///
+  /// The ruqyah screen needs six duas that live in five different Ḥiṣn
+  /// al-Muslim sections, so neither `azkarItems(section)` nor the section
+  /// order is any use to it. Addressing them by id keeps the text and its
+  /// takhrij coming from the database at runtime — the alternative was
+  /// copying six duas into Dart, which is exactly how a second, drifting copy
+  /// of religious text gets into an app.
+  ///
+  /// Ids that are not in the table are simply absent from the result rather
+  /// than faked, so a mis-typed id shows up as a missing dua, not a wrong one.
+  Future<List<AzkarItem>> azkarItemsByIds(List<int> ids) async {
+    if (ids.isEmpty) return const [];
+    final rows = await _db.query(
+      'azkar_items',
+      where: 'id IN (${List.filled(ids.length, '?').join(',')})',
+      whereArgs: ids,
+    );
+    final byId = {
+      for (final r in rows.map(AzkarItem.fromRow)) r.id: r,
+    };
+    return [
+      for (final id in ids)
+        if (byId[id] != null) byId[id]!,
+    ];
+  }
 }
 
 final sciencesRepositoryProvider =
