@@ -359,6 +359,31 @@ Do not rediscover these.
     a «System UI isn't responding» dialog for the first ~30 seconds — tap Wait
     and give it time rather than reading the screenshot as a crash.
 
+25. **Fetchable is not legible.** All 604 pages of مصحف قطر answered a range
+    request, and four of them were still unreadable — a flat green block, a
+    pink wash, a grey wash, a torn orange band, all in the source scan's own
+    embedded JPEGs. **Run `scripts/check_mushaf_pages.py <edition>` on every
+    rendered page set before uploading**; it scans for a large flat coloured
+    area and reports each sample page's printed header beside the surah the
+    Hafs layer expects.
+
+    When a page is damaged, look for a second copy of the *same* scan set
+    rather than a different printing, and prove it is the same set before
+    lifting anything: 598 of the 604 embedded images were byte-identical
+    between the two archive.org copies, and every page that differed had the
+    same byte length in both — the signature of corruption, not of a different
+    scan. Watch for a watermark drawn as page TEXT in the second copy; redact
+    it before rendering (`fitz` `add_redact_annot` + `apply_redactions(
+    images=PDF_REDACT_IMAGE_NONE)`) or the repaired pages ship defaced while
+    their neighbours are clean.
+
+26. **A page may honestly have NO ayah fit.** Kuwait's two illuminated
+    openings defeated every panel measurement, so they carry no entry at all
+    and the reader gets no highlight on them — one line out on al-Fatiha is
+    worse than nothing. This is why a per-page printing carries no `default`
+    in `editions.json`: a page with no entry must fall through to nothing, not
+    to an affine measured on a differently-set page.
+
 ---
 
 ## 4. Where things live

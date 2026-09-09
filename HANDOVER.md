@@ -7,14 +7,28 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-09 |
-| **Released** | **v3.7.0** — published and verified 2026-09-09: tag SHA `1282bdd` equals `HEAD`, target `master`, APK 281,112,836 B uploaded. v3.6.0 and its tag deleted, so this is the only release. |
-| **App version** | `pubspec.yaml` `3.7.0+3` (this is what the About card shows — keep it equal to the release tag) |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **34/34** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
+| **Released** | **v3.8.0** — the only release; v3.7.0 and its tag deleted so the repo reads clean. |
+| **App version** | `pubspec.yaml` `3.8.0+4` (this is what the About card shows — keep it equal to the release tag) |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **37/37** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
 
-## STATE AS OF 2026-09-09 (v3.7.0)
+## STATE AS OF 2026-09-09 (v3.8.0)
 
 Phases 1–3 are complete. Everything since is owner-driven. **Read
 `NEXT_SESSION_PROMPT.md` for what is unfinished.**
+
+### What v3.8.0 added (2026-09-09, fourth session)
+
+1. **Nine mushaf printings, up from six**, and **four of them now
+   highlight ayahs**. New: مصحف قطر, مصحف دولة الكويت, مصحف المدينة
+   الطبعة الليلية, مصحف المدينة بالخط النستعليقي. See §5.0 for what had
+   to be measured on each before it could ship, and
+   `NEXT_SESSION_PROMPT.md` for why the tenth was **not** added.
+2. **Six corrupt pages found in the Qatar source; four repaired** from a
+   second copy proven to be the same scan set. A page being fetchable is
+   not the same as a page being legible — see §5.0.
+3. **The Warsh and Qalun page sets are gone from R2** — 1,208 objects,
+   270 MB, completing «احذف مصاحف الروايات». The bucket is 1.42 GB now
+   even after four new editions were added.
 
 ### What v3.7.0 added (2026-09-09, third session)
 
@@ -63,10 +77,11 @@ ours to rehost. Check a scan's back matter before building it.
 |---|---|
 | Locales | **7** — ar (default, RTL), en, es, fr, pt, ru, ur · **665** leaf keys, parity enforced by `test/translation_parity_test.dart` |
 | Tests | **34** — the four new `book_catalog_urls_test.dart` cases and the five `mushaf_polygon_fit_test.dart` ones both pin *measured* facts, not code shape |
-| Ayah layer | **2 of 6** printings — `hafs_kfqc` (its own polygons) and `tajweed_color` (the Hafs polygons under a measured affine). The other four ship without one rather than with a wrong one; see §5.0. |
-| Mushaf editions | **6** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`, `qatar`. Warsh and Qalun were **deleted** on the owner's instruction («احذف مصاحف الروايات»): they are riwayat, not printings — but note their 1,208 page images are still on R2, unreferenced, 270 MB; see `NEXT_SESSION_PROMPT.md` §3. He wants 10 verified printings; four still need sourcing. |
+| Ayah layer | **4 of 9** printings — `hafs_kfqc` (its own polygons), `tajweed_color` (one affine per page group) and `qatar` / `kuwait` / `madinah_night` (one affine per page). That is 5 of 9 counting Kuwait, whose two illuminated openings are deliberately unfitted. The rest paginate their own way and ship without one rather than with a wrong one; see §5.0. |
+| Mushaf editions | **9** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`, `qatar`, `kuwait`, `madinah_night`, `madinah_nastaleeq`. Warsh and Qalun were deleted from the app *and now from R2* on the owner's instruction («احذف مصاحف الروايات»). He wants 10; the candidates examined for a tenth were each rejected for a stated reason — see `NEXT_SESSION_PROMPT.md`. |
 | Text-mushaf appearance | **10 themes × 10 frames × 11 frame colours**, one picker card, all painted |
 | Text library | **226** books |
+| R2 bucket | **1.42 GB**, 3,193 objects — measured after the riwayah deletion and the four new page sets |
 | Quran translations | **45** languages — 6 bundled, and all 45 mirrored on R2; the catalogue and the bucket match exactly, no entry without an object and no object without an entry (measured 2026-09-09; an earlier note said 47) |
 | Adhans | **14** — the owner's own three plus أذان قناة الناس are the first four |
 | Ruqyah | 6 recordings mirrored on R2 + a composed reading screen |
@@ -279,9 +294,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 12:34 — IN PROGRESS — resume here**
+**2026-09-09 12:46 — IN PROGRESS — resume here**
 
-Nine mushaf printings, up from six, and three of them now carry the ayah layer. NEW: Mushaf Qatar (already in), Mushaf Dawlat al-Kuwait (Ministry of Awqaf, 604 pages), Madinah night edition (604, white on black), Madinah Nastaliq (King Fahd Complex, 611 pages). Each one's page offset was MEASURED by reading its own printed folio, not assumed: Kuwait index 606 prints 603 and 607 prints 604; the night PDF is exactly 604 pages so index 0 IS page 1; the Nastaliq index 7 prints 2 and 616 prints 611, so its page 1 is an illuminated title page and al-Fatiha is its page 2, as the volume itself numbers it. Each one's back matter was read for a rights notice before building (trap 18) - Kuwait carries the Ministry of Awqaf imprint and the Complex's colophon closes the Nastaliq; neither prints one. Each was scanned page by page for source damage before upload; none had any. Kuwait and the night edition follow the Madinah page division (seven headers each checked against the bundled Hafs layer) so both got a per-page ayah fit - the night edition needed inverted ink detection and no frame, and Kuwait's two illuminated openings are DELIBERATELY unfitted because the cream ground and brown ink defeated every panel measurement and one line out on al-Fatiha is worse than no highlight. Nastaliq paginates its own way at 611 pages so it honestly ships with no highlight and no running header. Proof overlays rendered and looked at for all of them. REJECTED for the tenth: the Taj 16-line scan prints a copyright notice; 06MushafAlMadinahOld549 turned out to be the 604-page Madinah mushaf we already ship as vector, so adding it would be padding; the Turkish Diyanet scan holds page 1 and 2 as a single spread image and I will not ship a page offset I cannot pin. Nine verified is the honest answer, not ten. Also fixed: the cover builder was still generating warsh and qaloon covers for editions that no longer exist, and the night edition's cover came out a 200px blur because a black page defeats the border trim and its PDF box is only 96pt wide. analyze clean, 37/37 (three new cases: per-page printings really vary page to page, only a 604-page printing claims the running header, every edition's cover file is on disk)
+Verified all four new printings on emulator-5554, not just in Python. The editions sheet lists nine, each with its real printed cover. Mushaf Qatar page 604 with the right running header. Kuwait page 604 with recitation: the highlight sits on 112:3 across its two-line wrap, 'lam yalid' ending line 1 and 'wa lam yulad (3)' opening line 2. The night edition, white on black, same ayah, same precision - that one is the newest code path (inverted ink detection, no frame fiducial). The Nastaliq printing renders its own folio 604 with NO running header and NO highlight, which is exactly what a 611-page printing should do. Content re-verified end to end: 23 of 23 hosted paths answer 206 with a real type, byte total and magic bytes - the first AND last page of all seven raster editions, hadith.zip, a translation and four books. The one failure last time was my own guessed filename; scripts/verify_hosted_content.py is now a project script with the right key and the real last page per edition. Docs: HANDOVER gains 5.-1 (fetchable is not legible, and how the Qatar repair was proven) and an expanded 5.0 (two fitters, when each applies, and why a page may honestly have no fit); CLAUDE.md gains traps 25 and 26; NEXT_SESSION_PROMPT rewritten with the nine-printing table and a row per rejected tenth candidate
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -376,6 +391,30 @@ See §5.4.
 
 ## 5. DESIGN DECISIONS — understand these before changing them
 
+### 5.-1 A page being FETCHABLE is not a page being LEGIBLE
+
+مصحف قطر was catalogued after all 604 of its pages answered a range request on
+the public endpoint. Four of them were still unreadable: page 210 was a flat
+green block over most of the sheet, page 5 a pink wash, page 167 a grey wash,
+page 323 a torn orange band. The damage was in the archive.org copy's own
+embedded JPEGs, not in the rendering.
+
+It was found only because a polygon overlay on page 210 came out four times too
+big. **`scripts/check_mushaf_pages.py` now scans every rendered page** for a
+large flat coloured area and for an abnormally dark sheet, and reports the
+page's printed header beside the surah the Hafs layer expects. Run it on every
+new page set before uploading.
+
+The repair is worth recording as a method: a second archive.org item held the
+same scan set, and that they were one set was **proven, not assumed** — 598 of
+the 604 embedded images are byte-identical between the two copies, and each of
+the six that differ has the *same byte length* in both, which is the signature
+of a corrupted copy rather than a different scan. Two of the six were clean in
+both (the difference confined to glyph edges, i.e. re-encoding) and kept the
+primary. The second copy draws a `www.Quranpdf.blogspot.com` watermark as page
+TEXT over every page, which the first render baked into the repaired pages; it
+is redacted before rendering, images untouched.
+
 ### 5.0 A raster printing may borrow the Hafs ayah polygons — but only if
 ### its layout was *measured* to match
 
@@ -405,14 +444,39 @@ printing:
   and the recitation highlight painted 2:2 across its two-line wrap on the
   opening page and 3:2 marker-to-marker on body page 50.
 
+**Two fitters, for two different problems.** `fit_mushaf_polygon_transform.py`
+fits one affine per page GROUP and suits a printing whose pages are all the
+same crop — the Tajweed one. `fit_mushaf_polygon_per_page.py` fits one affine
+PER PAGE, for a printing whose leaves were cropped individually. Qatar, Kuwait
+and the night edition need the second: on Qatar the printed frame keeps a
+constant size (sd under 0.5%) while its position slides up to 3% of the page
+width — 26 px, about two letters — which no single affine could absorb.
+
+Its method, worth understanding before changing it: the printed frame is the
+fiducial, found by saturation rather than darkness (the frame is red and gold,
+the text near-black, the paper not saturated) and taken as the MEDIAN of each
+row's extremes, so a hizb ornament out in the margin is one row's outlier. Then
+every body page yields exactly 15 ink runs and the Hafs slots cluster to
+exactly 15, so slot k matches run k with nothing to guess. Pages that fail that
+count are filled from the frame — their frame-relative parameters agree across
+567 pages to sd 0.002, which is the evidence the frame is a valid fiducial —
+and a page whose frame box is itself implausible borrows its neighbour's.
+
 **Do not extend this to a printing whose layout has not been measured.**
 `madinah_gold` sets 6 lines on its page 2 where the Madinah mushaf sets 15;
 `shamarly` (521 pages) and `indopak_tajweed` (564) paginate differently
 outright. No affine can fix a different typesetting, and those three ship with
 no highlight rather than a wrong one — which is the honest answer, and what
-`test/mushaf_polygon_fit_test.dart` asserts. `qatar` **does** follow the
-Madinah division but its scans are cropped differently page to page, so it
-needs a per-page fit that has not been built; it is in that same list for now.
+`test/mushaf_polygon_fit_test.dart` asserts. `madinah_nastaleeq` (611 pages) is in that
+same list.
+
+**A page may honestly have no fit at all.** Kuwait's two illuminated openings
+resisted every panel measurement — warm cream ground, brown ink, and the best
+attempt found six of seven lines — so they carry no entry, `fitForPage`
+returns null for them, and the reader simply gets no highlight on those two
+pages. One line out on al-Fatiha is worse than nothing. That is also why a
+per-page printing carries **no `default`** in `editions.json`: a missing page
+must fall through to nothing, not to an affine measured elsewhere.
 
 Two implementation points worth keeping:
 
