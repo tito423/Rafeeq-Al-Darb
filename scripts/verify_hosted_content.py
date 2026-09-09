@@ -31,6 +31,15 @@ for e in editions:
 for b in ("as_seerah_ibn_kathir", "rijal_hawl_ar_rasul", "la_tahzan",
           "riyad_as_salihin"):
     checks.append(("book " + b, "/books/text/%s.json" % b))
+# Every HadeethEnc language pack, from the catalogue the app bundles —
+# so a pack the app offers and the bucket does not have fails here
+# rather than on a reader's phone (CLAUDE.md §1.1).
+henc = json.load(io.open(os.path.join(
+    APP, "assets", "data", "catalogs", "hadeethenc.json"),
+    encoding="utf-8"))["languages"]
+for lang in henc:
+    checks.append(("hadeethenc " + lang["lang"],
+                   "/hadeethenc/%s.zip" % lang["lang"]))
 checks.append(("adhan video", "/adhan/video/"))
 
 
