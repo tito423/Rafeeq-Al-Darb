@@ -116,6 +116,25 @@ class _AppShellState extends ConsumerState<AppShell>
       );
     });
 
+    // P3‑57: the OTHER half of the P3‑45 fix below, and the half that was
+    // missing — dropping `const` let a tab re-`build()` when `AppShell`
+    // rebuilds, but nothing made `AppShell` rebuild on a language change in
+    // the first place. Its `build()` read no locale, so switching language
+    // left every already-built tab exactly as it was: the owner's real-device
+    // screenshots show the Library tab's chrome in FRENCH under an English
+    // UI, and the Adhkar grid's tiles in ENGLISH under a French one, with the
+    // strings sitting correctly in their own locale files all along.
+    //
+    // Reading `context.locale` here registers the dependency that makes the
+    // rebuild happen. `KeyedSubtree` then forces it all the way down rather
+    // than relying on no `const` widget existing anywhere below: a changed key
+    // rebuilds the subtree outright, where an identical `const` child deeper
+    // in a tab would otherwise still be skipped by the same
+    // `identical(old, new)` shortcut described below. The cost is that a tab's
+    // scroll position resets when the language changes, which is the right
+    // trade for a screen that is being re-rendered in another language anyway.
+    final localeCode = context.locale.languageCode;
+
     // P3‑45: real-device feedback found whole tabs (Library's "Hadith" /
     // "Available books" chrome, seen live after switching locale mid-
     // session) frozen in whatever language was active on the app's first
@@ -175,7 +194,10 @@ class _AppShellState extends ConsumerState<AppShell>
         }
       },
       child: Scaffold(
-        body: IndexedStack(index: _index, children: screens),
+        body: KeyedSubtree(
+          key: ValueKey<String>(localeCode),
+          child: IndexedStack(index: _index, children: screens),
+        ),
       bottomNavigationBar: fullScreen
           ? null
           : NavigationBar(
