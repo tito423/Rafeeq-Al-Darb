@@ -198,9 +198,17 @@ class _AppShellState extends ConsumerState<AppShell>
           key: ValueKey<String>(localeCode),
           child: IndexedStack(index: _index, children: screens),
         ),
+      // P3‑57: seven destinations is more than Material's bar is designed
+      // for (the spec says three to five), so the longest translated label
+      // wins or loses by a few pixels. On the owner's phone «Bibliothèque»
+      // wrapped to two lines and had its last letter clipped by the bar's
+      // fixed 68px height. Pinning the text scale stops a device font-size
+      // setting from making that worse, and is the only part of this that a
+      // user setting could otherwise break.
       bottomNavigationBar: fullScreen
           ? null
-          : NavigationBar(
+          : MediaQuery.withNoTextScaling(
+              child: NavigationBar(
               selectedIndex: _index,
               onDestinationSelected: _goTo,
               destinations: [
@@ -241,6 +249,7 @@ class _AppShellState extends ConsumerState<AppShell>
                 ),
               ],
             ),
+          ),
       ),
     );
   }

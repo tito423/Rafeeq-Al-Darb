@@ -28,6 +28,18 @@ library;
 String ltr(String text) =>
     '${String.fromCharCode(0x2066)}$text${String.fromCharCode(0x2069)}';
 
+/// The mirror of [ltr]: wraps [text] so it always reads right-to-left,
+/// whatever the surrounding paragraph direction is. U+2067 RIGHT-TO-LEFT
+/// ISOLATE opens it, U+2069 POP DIRECTIONAL ISOLATE closes it.
+///
+/// Needed for the reverse of the bug [ltr] fixes. The Library's author line
+/// is «توفي ١٤٢٠ هـ • 1 livres»: an Arabic fragment first, a Latin one second.
+/// Inside a French (left-to-right) paragraph the Arabic run is reordered and
+/// the line came out «1 livres توفي ١٤٢٠ هـ» — the two halves swapped, which
+/// is what the owner photographed. Isolating each half pins both.
+String rtl(String text) =>
+    '${String.fromCharCode(0x2067)}$text${String.fromCharCode(0x2069)}';
+
 /// A human-readable size, correct in RTL.
 ///
 /// Uses decimal MB (10⁶), which is what the catalogues in this project

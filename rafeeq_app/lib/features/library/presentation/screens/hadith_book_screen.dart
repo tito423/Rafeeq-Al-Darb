@@ -1,4 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
+
+import '../../../../core/widgets/arabic_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/hadith_repository.dart';
@@ -22,7 +24,7 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.book.nameAr)),
+      appBar: AppBar(title: ArabicText(widget.book.nameAr)),
       body: Column(
         children: [
           // The imam's name and the chapter/hadith counts used to repeat
@@ -49,7 +51,7 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
                         child: Text('${c.chapterNo}',
                             style: const TextStyle(fontSize: 11)),
                       ),
-                      title: Text(c.nameAr),
+                      title: ArabicText(c.nameAr),
                       // P3‑54: an Arabic-reading user doesn't need the English
                       // chapter name ("The Book of Revelation") shown under the
                       // real Arabic باب title — hide it entirely in Arabic, same

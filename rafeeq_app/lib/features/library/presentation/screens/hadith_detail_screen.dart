@@ -1,7 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
-
-import '../widgets/hadith_translation.dart';
+// easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
+// collides with the `dart:ui` enum (ltr/rtl) this file needs for the hadith's
+// own right-to-left layout.
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
+
+import '../../../../core/widgets/arabic_text.dart';
+import '../widgets/hadith_translation.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -129,7 +133,7 @@ class _HadithContent extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        Text(
+        ArabicText(
           book.nameAr,
           style: theme.textTheme.labelLarge?.copyWith(color: scheme.primary),
         ),
@@ -146,6 +150,7 @@ class _HadithContent extends StatelessWidget {
         const Divider(height: 28),
         SelectableText(
           item.arabic,
+          textDirection: TextDirection.rtl,
           textAlign: TextAlign.justify,
           style: const TextStyle(
             fontFamily: 'AmiriQuran',

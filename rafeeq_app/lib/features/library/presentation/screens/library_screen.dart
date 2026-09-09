@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../../../core/widgets/arabic_text.dart';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,7 +61,10 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('nav.library'.tr()),
+        //  rather than : the bottom bar's label is
+        // abbreviated to fit seven tiles (see test/nav_label_width_test.dart),
+        // and an AppBar has room for the whole word.
+        title: Text('library.title'.tr()),
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
@@ -308,7 +313,7 @@ class _AuthorExpansionTile extends StatelessWidget {
         backgroundColor: AppColors.gold.withValues(alpha: 0.15),
         child: Icon(Icons.person_outline, color: AppColors.gold, size: 22),
       ),
-      title: Text(
+      title: ArabicText(
         authorName,
         style: Theme.of(context)
             .textTheme
@@ -317,9 +322,13 @@ class _AuthorExpansionTile extends StatelessWidget {
       ),
       subtitle: Text(
         // A living author has no death date; do not render a dangling bullet.
+        // Each half is its own directional isolate. The death date is Arabic
+        // and the count is digits + a translated word, so in a left-to-right
+        // UI the unisolated string rendered with the halves swapped.
         deathDate.isEmpty
-            ? '${books.length} ${'library.book_count'.tr()}'
-            : '$deathDate • ${books.length} ${'library.book_count'.tr()}',
+            ? ltr('${books.length} ${'library.book_count'.tr()}')
+            : '${rtl(deathDate)} • '
+                '${ltr('${books.length} ${'library.book_count'.tr()}')}',
         style: TextStyle(
           color: scheme.onSurfaceVariant,
           fontSize: 12,
@@ -623,21 +632,22 @@ class _BookCard extends StatelessWidget {
                 Icon(book.category.icon, size: 16, color: AppColors.gold),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Text(book.titleAr,
+                  child: ArabicText(book.titleAr,
                       style: const TextStyle(
                           fontWeight: FontWeight.w700, fontSize: 16)),
                 ),
               ],
             ),
             const SizedBox(height: 4),
-            Text(
+            ArabicText(
               book.authorDeathAr.isEmpty
                   ? book.authorAr
                   : '${book.authorAr} · ${book.authorDeathAr}',
               style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
             ),
             const SizedBox(height: 8),
-            Text(book.descriptionAr, style: const TextStyle(fontSize: 13)),
+            ArabicText(book.descriptionAr,
+                style: const TextStyle(fontSize: 13)),
             const SizedBox(height: 10),
 
             if (busy) ...[

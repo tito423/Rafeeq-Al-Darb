@@ -124,8 +124,14 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         height: 68,
         elevation: 0,
+        // P3‑57: the bar carries SEVEN destinations, which on a 393dp phone
+        // leaves about 56dp per tile. `uiMedium`'s 1.4 line height is what
+        // turned a label that wrapped into a label whose second line was
+        // clipped by the bar's fixed 68px height, so the nav gets its own
+        // tighter style rather than the shared one. The width budget itself
+        // is enforced by `test/nav_label_width_test.dart`.
         labelTextStyle: WidgetStatePropertyAll(
-          AppTypography.uiMedium(11, color: onSurface),
+          AppTypography.uiMedium(11, color: onSurface).copyWith(height: 1.15),
         ),
         iconTheme: WidgetStateProperty.resolveWith((states) => IconThemeData(
               color: states.contains(WidgetState.selected)
