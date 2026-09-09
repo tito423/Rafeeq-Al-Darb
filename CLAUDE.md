@@ -439,3 +439,33 @@ This is a standing, mandatory routine. Do all of it:
 6. **Report** what you verified and anything that did not check out.
 
 Never hand over a state you have not just verified.
+
+---
+
+## 7. The next-session prompt — a standing instruction
+
+> «لما تكتب برومبت للسيشن الجاية يكمل من عند ما انت وقفت، ولو وقفت في حاجة
+> خليه يرجع يعملها تاني، ودايما تصدّر البرومبت في ملف .md جاهز للنسخ.»
+
+Every time you write a prompt for the next session — asked for it or not, at a
+handover or when the quota is closing — all three of these hold:
+
+1. **It resumes exactly where you stopped.** Not a summary of the project: the
+   next instruction, in order, starting from the thing your hands were on. Name
+   the file, the command, the screen.
+
+2. **Anything you left half-done is named as half-done, and the next session is
+   told to redo it — not to trust it.** This is the whole point of the rule.
+   "Applied but never run", "committed but never opened on a device", "the crawl
+   was at 2,900 of 25,000", "the emulator was on the wrong screen" — each of
+   those is a *first* item for the next session, not a footnote. If you cannot
+   say whether something works, say that, and say to do it again.
+
+3. **It is written to `NEXT_PROMPT.md` in the repo root, ready to copy whole.**
+   A prompt buried in a chat reply is lost when the session is. `NEXT_PROMPT.md`
+   is the thing the owner pastes; it is rewritten every time, and it is
+   committed with everything else.
+
+`NEXT_PROMPT.md` is the paste-ready message. `NEXT_SESSION_PROMPT.md` remains
+the long brief it points at — the two are not the same file and neither
+replaces the other.
