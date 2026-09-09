@@ -15,6 +15,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 
 import 'adhan_entry.dart';
 import 'app/rafeeq_app.dart';
+import 'core/i18n/supported_locales.dart';
 import 'core/services/alarm_permissions_service.dart';
 import 'core/services/quran_translation_store.dart';
 import 'core/services/download_engine.dart';
@@ -118,17 +119,7 @@ Future<void> main() async {
 
   runApp(
     EasyLocalization(
-      supportedLocales: const [
-        Locale('ar'),
-        Locale('en'),
-        Locale('es'),
-        Locale('ru'),
-        Locale('pt'),
-        Locale('fr'),
-        // Urdu: RTL like Arabic, so the whole shell mirrors the same way the
-        // Arabic locale already does — nothing special-cased for it.
-        Locale('ur'),
-      ],
+      supportedLocales: kSupportedLocales,
       path: 'assets/translations',
       fallbackLocale: const Locale('ar'),
       // P3‑37: `startLocale` used to be hardcoded to Arabic, so a fresh

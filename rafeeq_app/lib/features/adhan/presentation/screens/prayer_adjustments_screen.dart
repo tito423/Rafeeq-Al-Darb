@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hijri/hijri_calendar.dart';
 
+import '../../../../core/i18n/hijri_months.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_settings_provider.dart';
@@ -176,7 +177,8 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
     final date = HijriCalendar.fromDate(
       DateTime.now().add(Duration(days: offsetDays)),
     );
-    return '${date.hDay} ${date.longMonthName} ${date.hYear} هـ';
+    return '${date.hDay} ${hijriMonthName(date.hMonth)} ${date.hYear}'
+        '${'hijri.suffix'.tr()}';
   }
 }
 

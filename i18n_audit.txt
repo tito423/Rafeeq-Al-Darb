@@ -1,61 +1,19 @@
-UNTRANSLATED USER-VISIBLE STRINGS: 1497 in 39 files
-   chrome  (UI text that must go through .tr()): 89
+UNTRANSLATED USER-VISIBLE STRINGS: 1408 in 8 files
+   chrome  (UI text that must go through .tr()): 0
    content (Arabic the app authors, needs translating): 1408
+   allowlisted (deliberate, with a reason in this script): 33
 
 rafeeq_app/lib/features/library/data/book_catalog.dart                 1217  (chrome 0, content 1217)
 rafeeq_app/lib/features/new_muslim/data/guide_content.dart              130  (chrome 0, content 130)
 rafeeq_app/lib/features/library/data/hadith_imam_bios.dart               19  (chrome 0, content 19)
-rafeeq_app/lib/features/library/presentation/screens/library_screen.dart   18  (chrome 18, content 0)
 rafeeq_app/lib/features/channels/data/islamic_channels.dart              14  (chrome 0, content 14)
 rafeeq_app/lib/features/adhan/data/adhan_video_catalog.dart              11  (chrome 0, content 11)
 rafeeq_app/lib/features/adhan/data/adhan_text.dart                        8  (chrome 0, content 8)
 rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart                   7  (chrome 0, content 7)
-rafeeq_app/lib/features/home/presentation/widgets/analog_clock_faces.dart    6  (chrome 6, content 0)
-rafeeq_app/lib/features/library/presentation/screens/book_text_reader_screen.dart    6  (chrome 6, content 0)
-rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences_sheet.dart    6  (chrome 6, content 0)
-rafeeq_app/lib/features/quran/presentation/widgets/mushaf_nav_sheets.dart    5  (chrome 5, content 0)
-rafeeq_app/lib/core/services/ayah_audio_service.dart                      4  (chrome 4, content 0)
-rafeeq_app/lib/features/downloads/presentation/screens/downloads_screen.dart    4  (chrome 4, content 0)
-rafeeq_app/lib/features/search/presentation/screens/search_screen.dart    4  (chrome 4, content 0)
-rafeeq_app/lib/features/quran/presentation/screens/quran_screen.dart      3  (chrome 3, content 0)
-rafeeq_app/lib/features/settings/presentation/screens/sources_screen.dart    3  (chrome 3, content 0)
-rafeeq_app/lib/features/settings/presentation/widgets/non_arabic_reading_card.dart    3  (chrome 3, content 0)
 rafeeq_app/lib/features/azkar/data/azkar_repeat.dart                      2  (chrome 0, content 2)
-rafeeq_app/lib/features/azkar/presentation/screens/azkar_section_screen.dart    2  (chrome 2, content 0)
-rafeeq_app/lib/features/downloads/presentation/widgets/mushaf_preview_sheet.dart    2  (chrome 2, content 0)
-rafeeq_app/lib/features/home/presentation/screens/home_screen.dart        2  (chrome 2, content 0)
-rafeeq_app/lib/features/quran/presentation/widgets/ayah_share_card.dart    2  (chrome 2, content 0)
-rafeeq_app/lib/features/quran/presentation/widgets/mushaf_theme_picker.dart    2  (chrome 2, content 0)
-rafeeq_app/lib/features/settings/presentation/screens/about_screen.dart    2  (chrome 2, content 0)
-rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_card.dart    2  (chrome 2, content 0)
-rafeeq_app/lib/adhan_entry.dart                                           1  (chrome 1, content 0)
-rafeeq_app/lib/core/services/prayer_status_notification.dart              1  (chrome 1, content 0)
-rafeeq_app/lib/features/adhan/presentation/screens/prayer_adjustments_screen.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/azkar/presentation/screens/tasbeeh_screen.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/hadith_daily/presentation/daily_hadith_card.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/home/presentation/widgets/digital_clock_faces.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/khatma/presentation/khatma_screen.dart            1  (chrome 1, content 0)
-rafeeq_app/lib/features/library/presentation/screens/books_search_screen.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/library/presentation/screens/hadith_book_screen.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/library/presentation/screens/hadith_chapter_screen.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/quran/presentation/widgets/mushaf_edition_sheet.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/ruqyah/presentation/screens/ruqyah_screen.dart    1  (chrome 1, content 0)
-rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart    1  (chrome 1, content 0)
 
 
 ---- detail ----
-
-== rafeeq_app/lib/adhan_entry.dart
-   chrome   :82    الصلاة
-
-== rafeeq_app/lib/core/services/ayah_audio_service.dart
-   chrome   :346   رفيق الدرب
-   chrome   :468   رفيق الدرب
-   chrome   :1107  سورة $surah
-   chrome   :1226  ${s.id}. ${s.nameAr}
-
-== rafeeq_app/lib/core/services/prayer_status_notification.dart
-   chrome   :279   ٠١٢٣٤٥٦٧٨٩
 
 == rafeeq_app/lib/features/adhan/data/adhan_text.dart
    content  :15    الله أكبر
@@ -80,19 +38,9 @@ rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart    1  
    content  :97    مئذنة مسجد
    content  :103   رحاب مسجد
 
-== rafeeq_app/lib/features/adhan/presentation/screens/prayer_adjustments_screen.dart
-   chrome   :179   ${date.hDay} ${date.longMonthName} ${date.hYear} هـ
-
 == rafeeq_app/lib/features/azkar/data/azkar_repeat.dart
    content  :10    ([0-9٠-٩]+)\s*مر[ةات]
    content  :47    ٠١٢٣٤٥٦٧٨٩
-
-== rafeeq_app/lib/features/azkar/presentation/screens/azkar_section_screen.dart
-   chrome   :325   $remaining
-   chrome   :371   ${index + 1} / $total
-
-== rafeeq_app/lib/features/azkar/presentation/screens/tasbeeh_screen.dart
-   chrome   :397   $milestone
 
 == rafeeq_app/lib/features/channels/data/islamic_channels.dart
    content  :62    القناة الرسمية للدكتور مصطفى محمود
@@ -109,37 +57,6 @@ rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart    1  
    content  :108   دروس في الحديث وعلومه
    content  :115   الشيخ مصطفى العدوي
    content  :117   فتاوى ودروس في التفسير والحديث
-
-== rafeeq_app/lib/features/downloads/presentation/screens/downloads_screen.dart
-   chrome   :265   ${summary.totalItems} ${
-   chrome   :789   ${widget.surahId}. ${widget.surahName}
-   chrome   :835   ${widget.surahId}
-   chrome   :863   ${job.done} / ${job.total}
-
-== rafeeq_app/lib/features/downloads/presentation/widgets/mushaf_preview_sheet.dart
-   chrome   :218   ${e.pages} ${
-   chrome   :324   $_cached / $total ${
-
-== rafeeq_app/lib/features/hadith_daily/presentation/daily_hadith_card.dart
-   chrome   :409   ${book.nameAr} · ${
-
-== rafeeq_app/lib/features/home/presentation/screens/home_screen.dart
-   chrome   :545   $label: $hس $mد
-   chrome   :546   $label: $mد
-
-== rafeeq_app/lib/features/home/presentation/widgets/analog_clock_faces.dart
-   chrome   :332   ١٢
-   chrome   :332   ١٠
-   chrome   :332   ١١
-   chrome   :491   ١٢
-   chrome   :491   ١٠
-   chrome   :491   ١١
-
-== rafeeq_app/lib/features/home/presentation/widgets/digital_clock_faces.dart
-   chrome   :13    ٠١٢٣٤٥٦٧٨٩
-
-== rafeeq_app/lib/features/khatma/presentation/khatma_screen.dart
-   chrome   :816   $value
 
 == rafeeq_app/lib/features/library/data/book_catalog.dart
    content  :132   [إأآٱ]
@@ -1266,7 +1183,7 @@ rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart    1  
    content  :3921  توفي 676 هـ
    content  :3923  مصنَّف لـ الإمام محيي الدين النووي، 52 صفحة، ضمن باب الفقه.
    content  :3929  المكتبة الشاملة — دقائق المنهاج، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار اب
-   content  :3935  فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: "بالمَسَائِل المنْثورَةِ
+   content  :3935  فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: "بالمَسَائِل المنْثورَةِ"
    content  :3937  الإمام محيي الدين النووي
    content  :3939  توفي 676 هـ
    content  :3941  مصنَّف لـ الإمام محيي الدين النووي، 278 صفحة، ضمن باب الفقه.
@@ -1380,43 +1297,6 @@ rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart    1  
    content  :38    الموطأ من أقدم ما دُوّن، ويجمع الحديث مع عمل أهل المدينة.
    content  :40    وُلد بسمرقند سنة ١٨١هـ وتوفي سنة ٢٥٥هـ. رتّب سننه على الأبواب، وصدّرها 
    content  :41    بمقدمة في العلم وآدابه وفضل النبي ﷺ.
-
-== rafeeq_app/lib/features/library/presentation/screens/book_text_reader_screen.dart
-   chrome   :242   ${(_fontScale * 100).round()}%
-   chrome   :713   ${_pageIndex + 1}
-   chrome   :749   ${doc.pages.length}
-   chrome   :916   ${widget.doc.toc.length}
-   chrome   :1107  ${_hits.length} ${
-   chrome   :1125  ${h.printedPage}
-
-== rafeeq_app/lib/features/library/presentation/screens/books_search_screen.dart
-   chrome   :127   ${_hits.length} ${
-
-== rafeeq_app/lib/features/library/presentation/screens/hadith_book_screen.dart
-   chrome   :51    ${c.chapterNo}
-
-== rafeeq_app/lib/features/library/presentation/screens/hadith_chapter_screen.dart
-   chrome   :55    ${h.numberInBook}
-
-== rafeeq_app/lib/features/library/presentation/screens/library_screen.dart
-   chrome   :429   ${books.length} ${
-   chrome   :1157  $value $label
-   chrome   :1223  ${book?.nameAr ?? 
-   chrome   :1266  د. راغب السرجاني
-   chrome   :1273  د. حسن الحسيني
-   chrome   :1280  الشيخ أمجد سمير
-   chrome   :1287  د. أحمد العربي
-   chrome   :1294  د. هيثم طلعت
-   chrome   :1301  قناة فاهم
-   chrome   :1308  د. إياد قنيبي
-   chrome   :1315  قناة مكاني
-   chrome   :1322  م. أيمن عبدالرحيم
-   chrome   :1329  قناة وعي
-   chrome   :1446  الإسلام سؤال وجواب
-   chrome   :1453  الدرر السنية
-   chrome   :1460  طريق الإسلام
-   chrome   :1467  صيد الفوائد
-   chrome   :1474  شبكة الألوكة
 
 == rafeeq_app/lib/features/new_muslim/data/guide_content.dart
    content  :55    أركان الإسلام
@@ -1550,37 +1430,6 @@ rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart    1  
    content  :404   ثم يتدرج في القراءة والفهم. تجد كل ذلك في تبويب "القرآن" 
    content  :405   من هذا التطبيق، بالنص والتلاوة وترجمة المعنى.
 
-== rafeeq_app/lib/features/quran/presentation/screens/quran_screen.dart
-   chrome   :1001  الجزء ${_arabicNumber(juzNumber!)}
-   chrome   :1017  ٠١٢٣٤٥٦٧٨٩
-   chrome   :1145  ${speed.round()}
-
-== rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences_sheet.dart
-   chrome   :294   ${ayah.surahId}:${ayah.ayahNumber}
-   chrome   :958     ${e.sizeLabel}
-   chrome   :1179  ${item.position}
-   chrome   :1276  ${seg.text} (${seg.label})
-   chrome   :1385  $label: $value
-   chrome   :1537  ${word.position}
-
-== rafeeq_app/lib/features/quran/presentation/widgets/ayah_share_card.dart
-   chrome   :77    رفيق الدرب — $reference
-   chrome   :148   رفيق الدرب
-
-== rafeeq_app/lib/features/quran/presentation/widgets/mushaf_edition_sheet.dart
-   chrome   :153   ${edition.pages} ${
-
-== rafeeq_app/lib/features/quran/presentation/widgets/mushaf_nav_sheets.dart
-   chrome   :44    ${s.id}
-   chrome   :54    ${s.ayahsCount} ${
-   chrome   :107   الجزء ${_arabicNumber(juz)}
-   chrome   :110   p.${juzStartPages[juz] ?? 1}
-   chrome   :166   ٠١٢٣٤٥٦٧٨٩
-
-== rafeeq_app/lib/features/quran/presentation/widgets/mushaf_theme_picker.dart
-   chrome   :352   بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-   chrome   :353   ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ
-
 == rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart
    content  :198   مشاري راشد العفاسي
    content  :206   أحمد بن علي العجمي
@@ -1589,34 +1438,4 @@ rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart    1  
    content  :230   عبد الرحمن السديس
    content  :242   رقية شرعية — بسماعة الرأس
    content  :252   التسجيلات من أرشيف الإنترنت (archive.org)، مرآة على خادم التطبيق
-
-== rafeeq_app/lib/features/ruqyah/presentation/screens/ruqyah_screen.dart
-   chrome   :322   ${ayah.surahId}:${ayah.ayahNumber}
-
-== rafeeq_app/lib/features/search/presentation/screens/search_screen.dart
-   chrome   :141   ${results!.length} ${
-   chrome   :168   ${a.surahId}:${a.ayahNumber}
-   chrome   :401   $label • ${a.surahId}:${a.ayahNumber}
-   chrome   :409   ${a.surahId}:${a.ayahNumber}
-
-== rafeeq_app/lib/features/settings/presentation/screens/about_screen.dart
-   chrome   :162   v${AboutScreen.appVersion}
-   chrome   :192   Tito Abo Malak
-
-== rafeeq_app/lib/features/settings/presentation/screens/sources_screen.dart
-   chrome   :92    المكتبة الشاملة
-   chrome   :96    مسند أحمد — ط الرسالة
-   chrome   :98    سنن الدارمي — ت حسين أسد
-
-== rafeeq_app/lib/features/settings/presentation/widgets/non_arabic_reading_card.dart
-   chrome   :138   Quran.com v4 API
-   chrome   :150   بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-   chrome   :167   Bismi Allāhi r-Raḥmāni r-Raḥīm
-
-== rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart
-   chrome   :515   ${current - startPage + 1} / $pageCount
-
-== rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_card.dart
-   chrome   :111   ${surah.virtueNoteKey.tr()} — ${surah.sourceKey.tr()}
-   chrome   :181   ${_time.hour.toString().padLeft(2, 
 

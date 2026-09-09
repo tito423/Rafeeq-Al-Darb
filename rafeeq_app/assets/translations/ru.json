@@ -80,7 +80,9 @@
     "face_sunMoon": "Солнце и луна",
     "face_halo": "Ореол",
     "face_mosaic": "Мозаика",
-    "clock_gallery_subtitle": "Каждый циферблат показывает реальное время"
+    "clock_gallery_subtitle": "Каждый циферблат показывает реальное время",
+    "hours_short": "ч",
+    "minutes_short": "м"
   },
   "quran": {
     "surah_list": "Суры",

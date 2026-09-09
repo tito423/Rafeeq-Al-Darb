@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../../ruqyah/data/ruqyah_catalog.dart';
 
 /// Where every piece of content in the app actually comes from.
@@ -60,6 +61,8 @@ class _Source {
 
   const _Source(this.host, this.url, this.roleKey);
 }
+
+final _hasArabic = RegExp(r'[\u0600-\u06FF]');
 
 /// (section title key, sources) — grouped by what part of the app they feed.
 // Not `const`: the ruqyah group is built from `ruqyahRecordings`, so the
@@ -159,12 +162,28 @@ class _SourceRow extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        source.host,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
+                      // A source's identity is its own name: `sunnah.com`
+                      // is Latin, and «مسند أحمد — ط الرسالة» is Arabic and
+                      // carries an em dash and an editor's name. On a French
+                      // UI that line inherits an LTR paragraph and its parts
+                      // migrate to the wrong end. The name itself is never
+                      // translated - a credit that renames its source stops
+                      // being a credit (CLAUDE.md §1.2) - so what is fixed
+                      // here is direction, not words.
+                      if (_hasArabic.hasMatch(source.host))
+                        ArabicText(
+                          source.host,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      else
+                        Text(
+                          source.host,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
                       const SizedBox(height: 2),
                       Text(
                         source.roleKey.tr(),

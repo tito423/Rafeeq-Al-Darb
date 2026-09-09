@@ -80,7 +80,9 @@
     "face_sunMoon": "Soleil et lune",
     "face_halo": "Halo",
     "face_mosaic": "Mosaïque",
-    "clock_gallery_subtitle": "Chaque cadran affiche l'heure réelle, en direct"
+    "clock_gallery_subtitle": "Chaque cadran affiche l'heure réelle, en direct",
+    "hours_short": "h",
+    "minutes_short": "min"
   },
   "quran": {
     "surah_list": "Sourates",

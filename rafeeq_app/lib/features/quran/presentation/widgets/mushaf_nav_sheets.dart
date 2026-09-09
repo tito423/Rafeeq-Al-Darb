@@ -53,7 +53,7 @@ void showSurahSheet(
                     subtitle: Text(
                       '${s.ayahsCount} ${'quran.ayahs'.tr()} — '
                       '${s.revelationType == 'Meccan' ? 'quran.makkah'.tr() : 'quran.madinah'.tr()}'
-                      '  •  p.${startPages[s.id] ?? 1}',
+                      '  •  ${'quran.page'.tr()} ${startPages[s.id] ?? 1}',
                       textAlign: TextAlign.right,
                     ),
                     onTap: () {
@@ -104,10 +104,11 @@ void showJuzSheet(
                   return ListTile(
                     leading: const Icon(Icons.radio_button_unchecked),
                     title: Text(
-                      'الجزء ${_arabicNumber(juz)}',
+                      '${'quran.juz'.tr()} $juz',
                       textAlign: TextAlign.right,
                     ),
-                    trailing: Text('p.${juzStartPages[juz] ?? 1}'),
+                    trailing:
+                        Text('${'quran.page'.tr()} ${juzStartPages[juz] ?? 1}'),
                     onTap: () {
                       Navigator.pop(ctx);
                       onSelect(juzStartPages[juz] ?? 1);
@@ -160,9 +161,4 @@ void showGotoPageSheet(
       );
     },
   );
-}
-
-String _arabicNumber(int n) {
-  const digits = '٠١٢٣٤٥٦٧٨٩';
-  return n.toString().split('').map((c) => digits[int.parse(c)]).join();
 }

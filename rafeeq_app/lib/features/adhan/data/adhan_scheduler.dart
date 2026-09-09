@@ -1,17 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../../core/models/adhan_mode.dart';
 import '../../../core/models/adhan_option.dart';
 import '../../../core/models/prayer_times.dart';
 import '../../../core/services/adhan_native.dart';
 import '../../../core/services/prayer_times_service.dart';
 import 'adhan_settings_provider.dart';
-
-const _prayerLabelsAr = {
-  'fajr': 'الفجر',
-  'dhuhr': 'الظهر',
-  'asr': 'العصر',
-  'maghrib': 'المغرب',
-  'isha': 'العشاء',
-};
 
 /// Deliberately takes plain [AdhanSettings]/catalog values rather than a
 /// Riverpod `Ref` — `WidgetRef` (consumer widgets) and `Ref` (notifiers)
@@ -38,7 +32,11 @@ AdhanSpec _specFor({
   final mode = settings.modeFor(prayerKey);
   return AdhanNative.specFor(
     prayerKey: prayerKey,
-    prayerLabel: _prayerLabelsAr[prayerKey] ?? prayerKey,
+    // Localised here because this label is what the *native* notification
+    // prints; the Flutter alert screen resolves the name from `prayerKey`
+    // at display time instead, so a language change before the alarm
+    // fires cannot leave it stale.
+    prayerLabel: 'prayer.$prayerKey'.tr(),
     mode: mode,
     option: _resolveOption(catalog, settings, prayerKey),
     // Only the full-screen mode ever shows a clip; carrying a video path for

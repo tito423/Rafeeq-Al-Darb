@@ -3,6 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+// `hide TextDirection`: easy_localization re-exports package:intl, whose
+// TextDirection collides with dart:ui's - and this file uses dart:ui's.
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path/path.dart' as p;
@@ -74,7 +77,7 @@ Future<bool> shareAyahAsImage(
     await file.writeAsBytes(bytes, flush: true);
     if (!context.mounted) return true;
     await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], text: 'رفيق الدرب — $reference'),
+      ShareParams(files: [XFile(file.path)], text: '${'app.name'.tr()} — $reference'),
     );
     return true;
   } catch (_) {
@@ -145,7 +148,7 @@ class _AyahShareCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'رفيق الدرب',
+            'app.name'.tr(),
             style: TextStyle(color: AppColors.textLow, fontSize: 12),
           ),
         ],

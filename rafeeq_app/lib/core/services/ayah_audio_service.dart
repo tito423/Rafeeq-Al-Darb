@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart' as bd;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
@@ -343,7 +344,7 @@ class AyahAudioService {
   MediaItem _tag(String edition, int global, Ayah ayah, String? title) =>
       MediaItem(
         id: '$edition:$global',
-        album: 'رفيق الدرب',
+        album: 'app.name'.tr(),
         title: title ?? '${ayah.surahId}:${ayah.ayahNumber}',
       );
 
@@ -465,7 +466,7 @@ class AyahAudioService {
       await stopContinuous();
       final tag = MediaItem(
         id: 'track:$id',
-        album: 'رفيق الدرب',
+        album: 'app.name'.tr(),
         title: title,
         artist: artist,
       );
@@ -1104,7 +1105,7 @@ class AyahAudioService {
       RecitationJob(alreadyDone, ayahCount, RecitationJobStatus.downloading),
     );
 
-    final displayName = title ?? 'سورة $surah';
+    final displayName = title ?? '${'quran.surah'.tr()} $surah';
     for (final ayahNumber in missing) {
       final global = first + (ayahNumber - 1);
       _enqueueAttempt(

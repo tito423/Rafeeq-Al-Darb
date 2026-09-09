@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'core/i18n/supported_locales.dart';
 import 'core/models/adhan_mode.dart';
 import 'core/services/adhan_native.dart';
 import 'core/theme/app_colors.dart';
@@ -48,14 +49,7 @@ Future<void> runAdhanAlertApp() async {
 
   runApp(
     EasyLocalization(
-      supportedLocales: const [
-        Locale('ar'),
-        Locale('en'),
-        Locale('es'),
-        Locale('ru'),
-        Locale('pt'),
-        Locale('fr'),
-      ],
+      supportedLocales: kSupportedLocales,
       path: 'assets/translations',
       fallbackLocale: const Locale('ar'),
       saveLocale: true,
@@ -77,9 +71,9 @@ AdhanSpec _specFromRoute(String route) {
   } catch (_) {
     // fall through to the safe default below
   }
-  return const AdhanSpec(
+  return AdhanSpec(
     prayerKey: 'dhuhr',
-    prayerLabel: 'الصلاة',
+    prayerLabel: 'prayer.adhan'.tr(),
     mode: AdhanMode.full,
     soundType: AdhanSoundType.none,
     soundValue: null,

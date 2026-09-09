@@ -80,7 +80,9 @@
     "face_sunMoon": "شمس وقمر",
     "face_halo": "هالة",
     "face_mosaic": "فسيفساء",
-    "clock_gallery_subtitle": "كل شكل يعرض الوقت الحقيقي الآن"
+    "clock_gallery_subtitle": "كل شكل يعرض الوقت الحقيقي الآن",
+    "hours_short": "س",
+    "minutes_short": "د"
   },
   "quran": {
     "surah_list": "السور",

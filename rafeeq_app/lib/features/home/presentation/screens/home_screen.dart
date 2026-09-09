@@ -542,7 +542,9 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
     final h = diff.inHours;
     final m = diff.inMinutes % 60;
     final label = 'home.remaining'.tr();
-    if (h > 0) return '$label: $hس $mد';
-    return '$label: $mد';
+    final hu = 'home.hours_short'.tr();
+    final mu = 'home.minutes_short'.tr();
+    if (h > 0) return '$label: $h$hu $m$mu';
+    return '$label: $m$mu';
   }
 }

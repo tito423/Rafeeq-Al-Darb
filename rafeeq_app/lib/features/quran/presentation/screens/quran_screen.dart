@@ -998,7 +998,8 @@ class _PersistentPageOverlay extends StatelessWidget {
                 // part of the page's own printed identity, not app UI
                 // chrome that follows the interface locale.
                   child:
-                      _HeaderBadge(text: 'الجزء ${_arabicNumber(juzNumber!)}'),
+                      _HeaderBadge(
+                          text: '${'quran.juz'.tr()} ${_arabicNumber(juzNumber!)}'),
                 ),
               if (pageNumber != null)
                 Align(

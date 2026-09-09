@@ -80,7 +80,9 @@
     "face_sunMoon": "سورج اور چاند",
     "face_halo": "ہالہ",
     "face_mosaic": "موزیک",
-    "clock_gallery_subtitle": "ہر ڈائل اصل وقت زندہ دکھاتا ہے"
+    "clock_gallery_subtitle": "ہر ڈائل اصل وقت زندہ دکھاتا ہے",
+    "hours_short": "گھ",
+    "minutes_short": "م"
   },
   "quran": {
     "surah_list": "سورتیں",

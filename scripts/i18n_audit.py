@@ -30,12 +30,78 @@ LIB = os.path.join(ROOT, "rafeeq_app", "lib")
 
 ARABIC = re.compile(r"[؀-ۿ]")
 
-LITERAL = re.compile(
-    r"r?'''(?:[^']|'(?!''))*'''"
-    r'|r?"""(?:[^"]|"(?!""))*"""'
-    r"|r?'(?:\\.|[^'\\\n])*'"
-    r'|r?"(?:\\.|[^"\\\n])*"'
-)
+def _scan(src, i, raw):
+    """Consume the Dart string literal whose opening quote is at `src[i]`.
+
+    Returns `(end, verbatim, residue)`: the index just past the closing quote,
+    the literal's body as written, and the body with every interpolation
+    replaced by a space.
+
+    A regex cannot do this. `'${book?.nameAr ?? ''} · ${'k'.tr()} ${n}'` is one
+    Dart literal containing four quote characters, and a regex reading quotes
+    pairwise splits it into fragments that look like hardcoded text - which is
+    exactly how three "untranslated strings" that were nothing of the kind
+    stayed on the list.
+    """
+    n = len(src)
+    q = src[i] * 3 if src.startswith(src[i] * 3, i) else src[i]
+    i += len(q)
+    verbatim, residue = [], []
+    while i < n:
+        if src.startswith(q, i):
+            return i + len(q), "".join(verbatim), "".join(residue)
+        c = src[i]
+        if c == "\\" and not raw:
+            verbatim.append(src[i:i + 2])
+            residue.append(" ")
+            i += 2
+            continue
+        if c == "$" and not raw:
+            if i + 1 < n and src[i + 1] == "{":
+                depth, j = 1, i + 2
+                while j < n and depth:
+                    if src[j] in "'\"":
+                        j = _scan(src, j, False)[0]
+                        continue
+                    if src[j] == "{":
+                        depth += 1
+                    elif src[j] == "}":
+                        depth -= 1
+                    j += 1
+            else:
+                j = i + 1
+                while j < n and (src[j].isalnum() or src[j] == "_"):
+                    j += 1
+            verbatim.append(src[i:j])
+            residue.append(" ")
+            i = j
+            continue
+        if c == "\n" and len(q) == 1:
+            # An unterminated single-quoted literal means the scan is out of
+            # step; stop here rather than swallowing the rest of the file.
+            return i, "".join(verbatim), "".join(residue)
+        verbatim.append(c)
+        residue.append(c)
+        i += 1
+    return n, "".join(verbatim), "".join(residue)
+
+
+IDENT_CHAR = re.compile(r"[A-Za-z0-9_]")
+
+
+def literals(src):
+    """Yield `(start, end, verbatim, residue)` for every string literal."""
+    i, n = 0, len(src)
+    while i < n:
+        c = src[i]
+        if c in "'\"":
+            raw = (i > 0 and src[i - 1] in "rR"
+                   and (i < 2 or not IDENT_CHAR.match(src[i - 2])))
+            end, verbatim, residue = _scan(src, i, raw)
+            yield (i - 1 if raw else i), end, verbatim, residue
+            i = max(end, i + 1)
+        else:
+            i += 1
 
 # A literal that lands in one of these slots is rendered.
 SLOT = re.compile(
@@ -63,6 +129,75 @@ MAP_KEY = re.compile(r"^\s*r?['\"].*['\"]\s*:")
 LOOKUP = re.compile(r"\.(?:contains|startsWith|endsWith|indexOf|split)\s*\(")
 COMPARE = re.compile(r"[=!]=\s*r?['\"]")
 
+# Left in Arabic ON PURPOSE, each with the reason. These are NOT "things the
+# audit can't see" - they are decisions, and a decision belongs in writing.
+ALLOWLIST = {
+    # A font sample is judged on how it looks, so the sample is the point.
+    ("features/quran/presentation/widgets/mushaf_theme_picker.dart",
+     "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ"): "mushaf font sample",
+    ("features/quran/presentation/widgets/mushaf_theme_picker.dart",
+     "ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ"): "mushaf font sample (highlighted)",
+    ("features/settings/presentation/widgets/non_arabic_reading_card.dart",
+     "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"):
+        "the card's whole point is showing what Arabic looks like beside its "
+        "transliteration - translating the sample would erase the feature",
+    ("features/settings/presentation/widgets/non_arabic_reading_card.dart",
+     "Bismi Allāhi r-Raḥmāni r-Raḥīm"):
+        "the transliteration half of that same sample",
+    ("features/settings/presentation/widgets/non_arabic_reading_card.dart",
+     "Quran.com v4 API"): "the API's own name",
+
+    # Arabic-Indic digits: the owner's decision, twice over - a mushaf's page
+    # number is set in Arabic-Indic digits in every printing, and one clock
+    # face is an Arabic-numeral face.
+    ("features/quran/presentation/screens/quran_screen.dart",
+     "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the mushaf's page number",
+    ("features/home/presentation/widgets/digital_clock_faces.dart",
+     "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the Arabic-numeral clock face",
+    ("core/services/prayer_status_notification.dart",
+     "٠١٢٣٤٥٦٧٨٩"): "Arabic-Indic digits for the Arabic locale's date line",
+    ("features/home/presentation/widgets/analog_clock_faces.dart",
+     "١٢"): "Arabic-numeral clock face",
+    ("features/home/presentation/widgets/analog_clock_faces.dart",
+     "١٠"): "Arabic-numeral clock face",
+    ("features/home/presentation/widgets/analog_clock_faces.dart",
+     "١١"): "Arabic-numeral clock face",
+
+    # The owner's own name.
+    ("features/settings/presentation/screens/about_screen.dart",
+     "Tito Abo Malak"): "the owner's name",
+}
+
+# Whole categories of proper name, listed per file so a NEW hardcoded string in
+# the same file is still reported. A name is not translated - it is rendered in
+# its own direction instead (`ArabicText`), which is what these all do.
+ALLOWLIST_NAMES = {
+    "features/library/presentation/screens/library_screen.dart": (
+        "the real names of Arabic-language dawah channels and Islamic sites; "
+        "their DESCRIPTIONS are translated (dawah.*) and the names render "
+        "through ArabicText",
+        ("د. راغب السرجاني", "د. حسن الحسيني", "الشيخ أمجد سمير",
+         "د. أحمد العربي", "د. هيثم طلعت", "قناة فاهم", "د. إياد قنيبي",
+         "قناة مكاني", "م. أيمن عبدالرحيم", "قناة وعي",
+         "الإسلام سؤال وجواب", "الدرر السنية", "طريق الإسلام",
+         "صيد الفوائد", "شبكة الألوكة"),
+    ),
+    "features/settings/presentation/screens/sources_screen.dart": (
+        "a credit names its source; renaming «مسند أحمد — ط الرسالة» in "
+        "French would stop it being a credit (CLAUDE.md §1.2). Rendered "
+        "through ArabicText so it reads right-to-left in a Latin UI",
+        ("المكتبة الشاملة", "مسند أحمد — ط الرسالة",
+         "سنن الدارمي — ت حسين أسد"),
+    ),
+}
+
+
+def allowed(short, body):
+    if (short, body) in ALLOWLIST:
+        return True
+    entry = ALLOWLIST_NAMES.get(short)
+    return bool(entry) and body in entry[1]
+
 
 def strip_comments(src):
     out, i, n = [], 0, len(src)
@@ -79,37 +214,38 @@ def strip_comments(src):
     return "".join(out)
 
 
-def keyed_spans(src):
-    """Ranges covered by a `'key'.tr(...)` call - those are already handled."""
-    return [(m.start(), m.end())
-            for m in re.finditer(r"(['\"])((?:\\.|(?!\1).)*)\1\s*\.tr\b", src)]
+KEYED = re.compile(r"\s*\.tr\b")
 
 
 def audit_file(path, short):
     src = strip_comments(io.open(path, encoding="utf-8").read())
-    ok = keyed_spans(src)
     lines = src.split("\n")
     found = []
+    skipped = 0
 
-    for m in LITERAL.finditer(src):
-        text = m.group(0)
-        body = text.strip("rR").strip("'\"")
-        if any(s in text for s in SKIP_IF_CONTAINS):
+    for start, end, body, rest in literals(src):
+        if any(s in body for s in SKIP_IF_CONTAINS):
             continue
-        if any(a <= m.start() < b for a, b in ok):
+        # `'some.key'.tr()` - already going through the locale files.
+        # The window is generous because dartfmt wraps a long call: the key
+        # can sit on its own line with `.tr()` indented underneath it.
+        if KEYED.match(src[end:end + 120]):
             continue
 
-        arabic = bool(ARABIC.search(text))
-        before = src[max(0, m.start() - 40):m.start()]
+        arabic = bool(ARABIC.search(rest))
+        before = src[max(0, start - 40):start]
         rendered = bool(SLOT.search(before))
         if not arabic and not rendered:
             continue
-        if not arabic and not re.search(r"[A-Za-z]{2,}", body):
+        if not arabic and not re.search(r"[A-Za-z]{2,}", rest):
             continue
-        if len(body.strip()) < 2:
+        if len(rest.strip()) < 2:
+            continue
+        if allowed(short, body):
+            skipped += 1
             continue
 
-        line_no = src[: m.start()].count("\n") + 1
+        line_no = src[:start].count("\n") + 1
         line = lines[line_no - 1] if line_no - 1 < len(lines) else ""
         if MAP_KEY.match(line) or LOOKUP.search(line) or COMPARE.search(line):
             continue
@@ -120,11 +256,11 @@ def audit_file(path, short):
                       or short.endswith("_content.dart"))
                   else "chrome")
         found.append((bucket, line_no, body[:90]))
-    return found
+    return found, skipped
 
 
 def main():
-    per_file, total = {}, 0
+    per_file, total, allowlisted = {}, 0, 0
     for dirpath, _dirs, files in os.walk(LIB):
         for f in sorted(files):
             if not f.endswith(".dart"):
@@ -134,7 +270,8 @@ def main():
             short = rel.split("lib/", 1)[-1]
             if short in NOT_USER_VISIBLE:
                 continue
-            found = audit_file(p, short)
+            found, skipped = audit_file(p, short)
+            allowlisted += skipped
             if found:
                 per_file[rel] = found
                 total += len(found)
@@ -144,8 +281,10 @@ def main():
     out.write("UNTRANSLATED USER-VISIBLE STRINGS: %d in %d files\n" %
               (total, len(per_file)))
     out.write("   chrome  (UI text that must go through .tr()): %d\n" % chrome)
-    out.write("   content (Arabic the app authors, needs translating): %d\n\n"
+    out.write("   content (Arabic the app authors, needs translating): %d\n"
               % (total - chrome))
+    out.write("   allowlisted (deliberate, with a reason in this script): %d\n\n"
+              % allowlisted)
     for rel in sorted(per_file, key=lambda k: -len(per_file[k])):
         v = per_file[rel]
         c = sum(1 for b, _, _ in v if b == "chrome")

@@ -13,6 +13,21 @@ import '../../../../core/services/adhan_native.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/azan_subtitle.dart';
 
+/// The prayer's name in the app's *current* language.
+///
+/// [AdhanSpec.prayerLabel] is baked in when the alarm is scheduled — it used
+/// to be a hardcoded Arabic table, so this line read "Adhan de الظهر" on a
+/// French UI. Even localised at schedule time it goes stale the moment the
+/// language changes before the alarm fires, and the key does not, so the name
+/// is resolved here. The baked label stays as the fallback for a spec whose
+/// key this build does not know.
+String _prayerName(AdhanSpec spec) {
+  const known = {'fajr', 'dhuhr', 'asr', 'maghrib', 'isha'};
+  return known.contains(spec.prayerKey)
+      ? 'prayer.${spec.prayerKey}'.tr()
+      : spec.prayerLabel;
+}
+
 /// Why this screen is on: a real prayer alarm, or the settings preview.
 ///
 /// The two differ in exactly two places — who starts the sound, and what
@@ -323,7 +338,7 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
                     const Icon(Icons.mosque, size: 44, color: AppColors.gold),
                     const SizedBox(height: 10),
                     Text(
-                      'prayer.azan_of'.tr(args: [widget.spec.prayerLabel]),
+                      'prayer.azan_of'.tr(args: [_prayerName(widget.spec)]),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: AppColors.textHigh,
