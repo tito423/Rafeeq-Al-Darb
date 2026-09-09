@@ -83,9 +83,15 @@ class _MushafPageViewState extends State<MushafPageView> {
     }
   }
 
-  Future<File?> _loadRaster() =>
-      MushafPageService.instance.cachedImageFile(widget.edition.id, widget.page,
-          ext: widget.edition.imageExt);
+  /// A raster edition that borrows the Hafs polygon layer needs it parsed
+  /// before the first highlight can be painted, exactly as the vector path
+  /// does. `ensureLoaded` is a no-op for a printing with no layer.
+  Future<File?> _loadRaster() async {
+    await _coords.ensureLoaded(widget.edition.polygonsAsset);
+    return MushafPageService.instance.cachedImageFile(
+        widget.edition.id, widget.page,
+        ext: widget.edition.imageExt);
+  }
 
   @override
   void dispose() {
@@ -94,7 +100,7 @@ class _MushafPageViewState extends State<MushafPageView> {
   }
 
   Future<String> _load() async {
-    await _coords.ensureLoaded(widget.edition.id, widget.edition.polygonsAsset);
+    await _coords.ensureLoaded(widget.edition.polygonsAsset);
     return MushafPageService.instance.svgForPage(
       editionId: widget.edition.id,
       sourcePath: widget.edition.sourcePath,
@@ -207,10 +213,17 @@ class _MushafPageViewState extends State<MushafPageView> {
   }
 
   /// Raster (scan) rendering: the finished coloured page as an image, disk-
-  /// first for offline then streamed + cached from R2. No polygon layer, so a
-  /// tap just forwards to [onBackgroundTap] (e.g. exit full-screen). A capped
+  /// first for offline then streamed + cached from R2. A capped
   /// `memCacheWidth` keeps a ~1 MB JPEG from being decoded at full size into
   /// memory (P3‑53 perf).
+  ///
+  /// A printing that has been fitted to the Hafs polygon layer (the Tajweed
+  /// mushaf) gets the same tap and highlight the vector edition has. Its image
+  /// is laid out inside an [AspectRatio] of the page's own measured shape so
+  /// the overlay box is exactly the drawn page — with `BoxFit.contain` alone
+  /// the drawn rect depends on the surrounding box and the highlight would
+  /// float free of the text. A printing with no layer keeps the plain centred
+  /// image and a tap that only forwards to [onBackgroundTap].
   Widget _buildRaster(ThemeData theme) {
     final dpr = MediaQuery.of(context).devicePixelRatio;
     final memCacheWidth =
@@ -265,16 +278,48 @@ class _MushafPageViewState extends State<MushafPageView> {
                 ),
               );
 
+        final fit = widget.edition.fitForPage(widget.page);
+        final Widget page = fit == null
+            ? GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => widget.onBackgroundTap?.call(),
+                child: Center(child: image),
+              )
+            : Center(
+                child: AspectRatio(
+                  aspectRatio: fit.pageAspect,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final w = constraints.maxWidth;
+                      final h = constraints.maxHeight;
+                      return GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTapUp: (d) => _handleTap(d.localPosition, w, h),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            image,
+                            if (widget.highlight != null)
+                              CustomPaint(
+                                painter: _AyahHighlightPainter(
+                                  region: widget.highlight!,
+                                  fit: fit,
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+
         return ClipRect(
           child: InteractiveViewer(
             transformationController: _transform,
             minScale: 1,
             maxScale: 5,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => widget.onBackgroundTap?.call(),
-              child: Center(child: image),
-            ),
+            child: page,
           ),
         );
       },
@@ -286,7 +331,10 @@ class _MushafPageViewState extends State<MushafPageView> {
     final nx = local.dx / width;
     final ny = local.dy / height;
     if (nx < 0 || nx > 1 || ny < 0 || ny > 1) return;
-    final hit = _coords.hitTest(widget.edition.id, widget.page, nx, ny);
+    final fit = widget.edition.fitForPage(widget.page);
+    final p = fit == null ? Offset(nx, ny) : fit.invert(nx, ny);
+    final hit = _coords.hitTest(
+        widget.edition.polygonsAsset, widget.page, p.dx, p.dy);
     if (hit != null) {
       widget.onAyahTap(hit);
     } else {
@@ -301,7 +349,11 @@ class _MushafPageViewState extends State<MushafPageView> {
 class _AyahHighlightPainter extends CustomPainter {
   final AyahRegion region;
 
-  const _AyahHighlightPainter({required this.region});
+  /// Null when the polygons are already in this page's own space (the vector
+  /// edition); set when a printing borrows the Hafs layer.
+  final AyahPolygonFit? fit;
+
+  const _AyahHighlightPainter({required this.region, this.fit});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -313,12 +365,17 @@ class _AyahHighlightPainter extends CustomPainter {
       ..strokeWidth = 1.2
       ..color = AppColors.gold.withValues(alpha: 0.7);
 
+    final f = fit;
+    Offset at(Offset p) => f == null ? p : f.apply(p);
+
     final path = Path();
     for (final ring in region.rings) {
       if (ring.length < 3) continue;
-      path.moveTo(ring.first.dx * size.width, ring.first.dy * size.height);
+      final first = at(ring.first);
+      path.moveTo(first.dx * size.width, first.dy * size.height);
       for (var i = 1; i < ring.length; i++) {
-        path.lineTo(ring[i].dx * size.width, ring[i].dy * size.height);
+        final p = at(ring[i]);
+        path.lineTo(p.dx * size.width, p.dy * size.height);
       }
       path.close();
     }
@@ -328,7 +385,7 @@ class _AyahHighlightPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _AyahHighlightPainter old) =>
-      old.region != region;
+      old.region != region || old.fit != fit;
 }
 
 class _Centered extends StatelessWidget {

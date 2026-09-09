@@ -78,30 +78,38 @@ class AyahRegion {
   }
 }
 
-/// Real ayah tap regions for the mushaf pages, one set per edition.
+/// Real ayah tap regions for the mushaf pages, one set per polygon asset.
 ///
 /// Source: the `ayahPolygon` hit layer shipped inside the quranpedia/quran-svg
 /// pages (CC0-1.0), rebuilt by `scripts/build_mushaf_svg.py` into normalized
 /// page space. The Hafs set is verified against the bundled `quran_local.db`:
 /// 6,236 / 6,236 ayahs. Nothing here is estimated or hand-drawn.
+///
+/// Keyed by ASSET PATH rather than edition id, because more than one printing
+/// can share a layer: the Tajweed scan sets the same Madinah page as the
+/// vector edition and reuses its polygons through an `AyahPolygonFit`. Keying
+/// by edition would parse the same 0.7 MB file twice and hold two copies of
+/// 6,236 regions.
 class AyahCoordsRepository {
   AyahCoordsRepository._();
   static final AyahCoordsRepository instance = AyahCoordsRepository._();
 
-  final Map<String, Map<int, List<AyahRegion>>> _byEdition = {};
+  final Map<String, Map<int, List<AyahRegion>>> _byAsset = {};
   final Map<String, Future<void>> _loading = {};
 
-  bool isLoaded(String editionId) => _byEdition.containsKey(editionId);
+  bool isLoaded(String assetPath) => _byAsset.containsKey(assetPath);
 
-  /// Parses one edition's polygon asset. Concurrent callers share a single
-  /// future, so several page widgets building at once cannot each kick off a
-  /// duplicate decode of the ~0.7 MB asset.
-  Future<void> ensureLoaded(String editionId, String assetPath) {
-    if (_byEdition.containsKey(editionId)) return Future.value();
-    return _loading[editionId] ??= _load(editionId, assetPath);
+  /// Parses a polygon asset. Concurrent callers share a single future, so
+  /// several page widgets building at once cannot each kick off a duplicate
+  /// decode of the ~0.7 MB asset.
+  Future<void> ensureLoaded(String assetPath) {
+    if (assetPath.isEmpty || _byAsset.containsKey(assetPath)) {
+      return Future.value();
+    }
+    return _loading[assetPath] ??= _load(assetPath);
   }
 
-  Future<void> _load(String editionId, String assetPath) async {
+  Future<void> _load(String assetPath) async {
     try {
       final raw = await rootBundle.loadString(assetPath);
       final doc = jsonDecode(raw) as Map<String, dynamic>;
@@ -130,19 +138,23 @@ class AyahCoordsRepository {
         }
         parsed[page] = regions;
       }
-      _byEdition[editionId] = parsed;
+      _byAsset[assetPath] = parsed;
     } finally {
-      _loading.remove(editionId);
+      _loading.remove(assetPath);
     }
   }
 
-  List<AyahRegion> regionsForPage(String editionId, int page) =>
-      _byEdition[editionId]?[page] ?? const [];
+  List<AyahRegion> regionsForPage(String assetPath, int page) =>
+      _byAsset[assetPath]?[page] ?? const [];
 
   /// The ayah under a normalized tap point, or null when the tap lands in a
   /// margin, a surah header, or between lines.
-  AyahRegion? hitTest(String editionId, int page, double nx, double ny) {
-    for (final region in regionsForPage(editionId, page)) {
+  ///
+  /// [nx]/[ny] are already in the polygon layer's own space — a printing that
+  /// borrows the layer maps the tap back with `AyahPolygonFit.invert` first,
+  /// which is one multiply instead of transforming every polygon on the page.
+  AyahRegion? hitTest(String assetPath, int page, double nx, double ny) {
+    for (final region in regionsForPage(assetPath, page)) {
       if (region.contains(nx, ny)) return region;
     }
     return null;

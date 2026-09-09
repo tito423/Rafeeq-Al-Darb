@@ -335,14 +335,16 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   Future<List<Ayah>> _ayahsOfPage(int page, MushafData data) =>
       _pageFutures.putIfAbsent(page, () => data.repo.ayahsOfPage(page));
 
-  AyahRegion? _highlightRegion(String editionId, int page) {
+  AyahRegion? _highlightRegion(MushafEdition edition, int page) {
     if (_current != page) return null;
     // While reciting, the verse being read wins over a tap selection — it is
     // the one the reader is actually following.
     final surah = _recite.active ? _recite.surahId : _highlightSurah;
     final ayah = _recite.active ? _recite.ayahNumber : _highlightAyah;
     if (surah == null || ayah == null) return null;
-    for (final r in _coords.regionsForPage(editionId, page)) {
+    // The regions are in the polygon layer's own space; `MushafPageView`
+    // applies the printing's fit when it paints them.
+    for (final r in _coords.regionsForPage(edition.polygonsAsset, page)) {
       if (r.surah == surah && r.ayah == ayah) return r;
     }
     return null;
@@ -754,7 +756,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               return MushafPageView(
                 edition: edition,
                 page: page,
-                highlight: _highlightRegion(edition.id, page),
+                highlight: _highlightRegion(edition, page),
                 onAyahTap: (region) =>
                     _onImageAyahTap(region, ayahs, data, edition),
                 onLoadFailed: edition.isRaster
