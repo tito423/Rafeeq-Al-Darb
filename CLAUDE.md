@@ -291,6 +291,44 @@ Do not rediscover these.
     `py -3 scripts/shamela_index.py find "<title>"` (8,598 books, built once
     from the 40 category pages by `shamela_index.py build`).
 
+18. **A free scan is not automatically free to rehost. Read its back matter.**
+    The Taj Company 16-line mushaf on archive.org is a clean, complete,
+    legible 559-page scan with no licence stated — and its own last page
+    prints «جملہ حقوق محفوظ» plus a copyright warning naming Taj Company Ltd.
+    The Qur'an text is nobody's property; a publisher's typesetting and scan
+    can be. **Render the first and last few pages of any scan and read them
+    before building an edition from it.** مصحف قطر was used instead precisely
+    because its archive.org item states CC BY-NC-SA 3.0.
+
+19. **R2's public endpoint answers a bare `urllib` request with HTTP 403.**
+    It wants a `User-Agent`. `curl` sends one by default, which is why a URL
+    can work in the shell and 403 from Python in the same minute. Every
+    script that reads the bucket over HTTP sets one — see
+    `scripts/fit_mushaf_polygon_transform.py`.
+
+20. **`py -3` already has PyMuPDF (`import fitz`)**, so a scanned mushaf PDF
+    can be rasterised without installing anything. There is no `pdftoppm`,
+    `mutool`, `gs` or `magick` on this machine, and `pdf2image` is not
+    installed — do not reach for them.
+
+21. **Two printings "looking the same" is not evidence they set the same
+    page.** The Tajweed mushaf really does set the Madinah 15-line grid, and
+    that was established by clustering line positions on 30 scans and on the
+    Hafs polygons and finding *exactly 15 clusters on both sides with matching
+    counts* — not by looking at a page. `madinah_gold` looks like the Madinah
+    mushaf too and sets 6 lines where it sets 15. Measure the grid, then
+    render the mapped polygons over the real pages and **look at the
+    pictures** — the residuals are not the evidence.
+
+22. **A scanned edition's pages are not all the same size.** All 604 Tajweed
+    pages were read from their JPEG headers: two groups, 602 at 861×1317 and
+    the two illuminated openings at 901×1476. مصحف قطر varies page to page
+    (1720–1779 × 2294–2399) because each leaf was cropped separately. Census
+    the real dimensions before assuming one aspect ratio, and never lay a
+    coordinate overlay on a `BoxFit.contain` box — the drawn rectangle depends
+    on the surrounding box, so put the page in an `AspectRatio` of its own
+    measured shape.
+
 ---
 
 ## 4. Where things live

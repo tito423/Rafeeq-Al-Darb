@@ -27,17 +27,28 @@ Phases 1–3 are complete. Everything since is owner-driven. **Read
    raster printing to have them. It has no polygon layer of its own; it borrows
    the Hafs one through a fitted affine. See §5 and
    `scripts/fit_mushaf_polygon_transform.py`.
-3. A dangling separator the new books exposed: al-Qarni is alive, so
+3. **مصحف قطر — the sixth printing.** 604 pages, Hafs, from archive.org
+   (`QuranMushafQatar`, CC BY-NC-SA 3.0). Its page division was verified
+   against the bundled Hafs polygon layer on 11 pages spanning the mushaf, and
+   all 604 uploaded pages were range-requested on the public endpoint before
+   anything entered `editions.json`. Built by the new, reusable
+   `scripts/build_mushaf_from_pdf.py`.
+4. A dangling separator the new books exposed: al-Qarni is alive, so
    `la_tahzan`'s `authorDeathAr` is empty, and both render sites in
    `library_screen.dart` concatenated it unconditionally.
+
+**Rejected on purpose:** the Taj Company 16-line Indo-Pak scan
+(`AlQuran16LinesTaj`) is clean and complete, but its own back page prints
+«جملہ حقوق محفوظ» and a copyright warning naming Taj Company Ltd. It is not
+ours to rehost. Check a scan's back matter before building it.
 
 ### Measured facts (2026-09-09, measured this session, not from memory)
 
 | | |
 |---|---|
 | Locales | **7** — ar (default, RTL), en, es, fr, pt, ru, ur · **665** leaf keys, parity enforced by `test/translation_parity_test.dart` |
-| Ayah layer | **2 of 5** printings — `hafs_kfqc` (its own polygons) and `tajweed_color` (the Hafs polygons under a measured affine). The other three paginate their own way and honestly ship without one. |
-| Mushaf editions | **5** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`. Warsh and Qalun were **deleted** on the owner's instruction («احذف مصاحف الروايات»): they are riwayat, not printings. He wants 10 verified printings; five still need sourcing. |
+| Ayah layer | **2 of 6** printings — `hafs_kfqc` (its own polygons) and `tajweed_color` (the Hafs polygons under a measured affine). The other four ship without one rather than with a wrong one; see §5.0. |
+| Mushaf editions | **6** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`, `qatar`. Warsh and Qalun were **deleted** on the owner's instruction («احذف مصاحف الروايات»): they are riwayat, not printings — but note their 1,208 page images are still on R2, unreferenced, 270 MB; see `NEXT_SESSION_PROMPT.md` §3. He wants 10 verified printings; four still need sourcing. |
 | Text-mushaf appearance | **10 themes × 10 frames × 11 frame colours**, one picker card, all painted |
 | Text library | **226** books |
 | Adhans | **14** — the owner's own three plus أذان قناة الناس are the first four |
@@ -251,9 +262,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 07:22 — IN PROGRESS — resume here**
+**2026-09-09 07:26 — IN PROGRESS — resume here**
 
-Sixth mushaf printing: MUSHAF QATAR, 604 pages, Hafs. Sourced on archive.org (QuranMushafQatar), the only candidate found carrying an explicit open licence (CC BY-NC-SA 3.0). The Taj Company 16-line scan was REJECTED although it is clean and complete: its own back page prints an all-rights-reserved notice and a copyright warning, so it is not ours to rehost. Measured, not assumed: the PDF's index 4 is mushaf page 1 and index 607 is page 604, established by rendering 606-608 and reading the printed folios; 604 pages exactly, front matter and an afterword excluded. Page division verified against the bundled Hafs polygon layer on 11 pages spanning the mushaf - 1, 2, 50, 100, 200, 300, 400, 500, 550, 603, 604 - each carrying the same surah AND the same juz as the Madinah page of that number, which is what licenses hafs_pagination. Rendered 604 JPEGs at 880px from each page's own rect (not a common box, so a differently-cropped scan keeps its proportions), 153.8 MB, uploaded, then all 604 range-requested on the public endpoint: 206, image/jpeg, ffd8 magic, 195072-321688 bytes each. Nothing entered editions.json until that passed. Real printed title page as the cover. New reusable scripts/build_mushaf_from_pdf.py since four more printings are still wanted. No ayah layer yet: it DOES follow the Madinah line division, but its scans are cropped differently page to page so it needs a per-page fit - documented as the next stage, not claimed. analyze clean, 30/30
+Docs brought to the measured state for v3.7.0. HANDOVER gains section 5.0 - when a raster printing may borrow the Hafs polygons and, more importantly, when it may not, with the measurements that decide it. NEXT_SESSION_PROMPT rewritten: Qatar's per-page ayah fit as the next job (the mechanism already exists - polygonFitPages), the four remaining printings with what is known about each candidate including the Taj rejection, and two corrections the previous brief needed. First: it promised '12 books by al-Huwaini, 5 by Hassan, 3 by al-Adawi, 3 by al-Qarni, all confirmed in the Shamela index' - searched again against all 8,598 books, what actually exists is four books by those authors plus five transcribed lecture series; do not promise him 23 titles. Second: mushaf/warsh (604 objects, 173.2 MB) and mushaf/qaloon (604, 97.2 MB) are still on R2 although both editions were deleted from the app - 270 MB referenced by nothing. NOT deleted: 1,208 objects is irreversible and re-uploading costs hours, so it is his call. CLAUDE.md gains traps 18-22 this session paid for: read a scan's back matter before rehosting it, R2 403s a bare urllib request without a User-Agent, PyMuPDF is already installed and no pdftoppm/mutool/gs/magick is, two printings looking alike is not evidence they set the same page, and a scanned edition's pages are not all one size
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -347,6 +358,56 @@ See §5.4.
 ---
 
 ## 5. DESIGN DECISIONS — understand these before changing them
+
+### 5.0 A raster printing may borrow the Hafs ayah polygons — but only if
+### its layout was *measured* to match
+
+The KFQC vector edition ships the only real ayah polygon layer this app has.
+`tajweed_color` has none of its own, and since v3.7.0 it borrows that one
+through an axis-aligned affine (`AyahPolygonFit` in `mushaf_edition.dart`,
+declared in `editions.json`, fitted by
+`scripts/fit_mushaf_polygon_transform.py`).
+
+**This is only legitimate where the two printings really do set the same page,
+and that has to be measured.** How it was established for the Tajweed
+printing:
+
+* Line positions on 30 Tajweed scans and on the Hafs polygons **both collapse
+  to exactly 15 clusters**, with matching per-cluster sample counts. That is
+  the evidence the printing sets the Madinah grid — not that it looks like it.
+* All 604 pages' real pixel sizes were read from their JPEG headers: two
+  groups, 602 at 861×1317 and pages 1–2 at 901×1476. Pages 1–2 are illuminated
+  openings with their own frame and their own text block, so they carry their
+  own fits in `polygonFitPages`.
+* 841 real polygon rings across 86 pages land a median 3.9 px from their
+  printed line on an 84 px line pitch (95th percentile 11.9 px).
+* The mapped polygons were **rendered over the real scans and looked at** —
+  pages 1, 2, 50, 200, 400, 584, 604, including 604, which sets three surah
+  headers and three basmalahs that the polygons correctly skip.
+* Then run on `emulator-5554`: a tap opened the sciences sheet on exactly 2:3,
+  and the recitation highlight painted 2:2 across its two-line wrap on the
+  opening page and 3:2 marker-to-marker on body page 50.
+
+**Do not extend this to a printing whose layout has not been measured.**
+`madinah_gold` sets 6 lines on its page 2 where the Madinah mushaf sets 15;
+`shamarly` (521 pages) and `indopak_tajweed` (564) paginate differently
+outright. No affine can fix a different typesetting, and those three ship with
+no highlight rather than a wrong one — which is the honest answer, and what
+`test/mushaf_polygon_fit_test.dart` asserts. `qatar` **does** follow the
+Madinah division but its scans are cropped differently page to page, so it
+needs a per-page fit that has not been built; it is in that same list for now.
+
+Two implementation points worth keeping:
+
+* `AyahCoordsRepository` is keyed by **asset path**, not edition id, so two
+  editions naming the same layer parse the 0.7 MB file once and hold one copy
+  of the 6,236 regions.
+* Hit testing maps the **tap point backwards** (`AyahPolygonFit.invert`) rather
+  than mapping every polygon on the page forwards — one multiply instead of
+  thousands, and exact rather than approximately so.
+* A fitted raster page is laid out inside an `AspectRatio` of the page group's
+  own measured shape. With `BoxFit.contain` alone the drawn rectangle depends
+  on the surrounding box, and the overlay would float free of the text.
 
 ### 5.1 QuranFlash content was removed on purpose
 
