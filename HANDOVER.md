@@ -236,9 +236,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 06:03 — IN PROGRESS — resume here**
+**2026-09-09 06:16 — IN PROGRESS — resume here**
 
-v3.6.0 prep: 8 Seerah books uploaded and catalogued (223 total), version bumped, HANDOVER + NEXT_SESSION_PROMPT rewritten to the measured state
+v3.6.0 released and verified (tag = HEAD, target master, 268MB APK, release build installed and run). CLAUDE.md gains traps 13-17 this session paid for (Avast TLS interception, ffmpeg already present, translucent-highlight contrast, Arabic bidi on sizes, Shamela search searches inside books). The last 3 books finished crawling after the release - built, not yet uploaded, documented as the first job next session
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

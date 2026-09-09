@@ -32,24 +32,27 @@ Egyptian Arabic; **reply in Arabic**, keep code and commits in English.
 
 ## UNFINISHED — pick this up first
 
-### 1. Three books were still crawling when the session ended
+### 1. Three books are BUILT but not yet uploaded or catalogued
 
-`scripts/build_book_text.py` was running these three and they had **not**
-finished:
+The crawl finished after v3.6.0 was already published, so these three are
+sitting in `scripts/book_text_build/` and are **not** in the app yet:
 
-- `as_seerah_ibn_kathir` (Shamela 930) — 4 volumes, the slow one
+- `as_seerah_ibn_kathir` (Shamela 930)
 - `rijal_hawl_ar_rasul` (Shamela 9835) — **the owner asked for this by name**
 - `la_tahzan` (Shamela 12729) — **asked for by name**
 
-Their `BOOKS` entries are already in `build_book_text.py` with the real
-edition labels, and `META` entries are already in
-`scripts/add_seerah_catalog_entries.py`. So the whole remaining job is:
+Their `META` entries are already in `scripts/add_seerah_catalog_entries.py`,
+so the remaining job is three commands, then a rebuild and a re-release:
 
 ```bash
-py -3 scripts/build_book_text.py as_seerah_ibn_kathir rijal_hawl_ar_rasul la_tahzan
 py -3 scripts/r2_upload_seerah_books.py as_seerah_ibn_kathir rijal_hawl_ar_rasul la_tahzan
 py -3 scripts/add_seerah_catalog_entries.py
+# then: bump pubspec to 3.6.1, flutter build apk --release,
+# delete the v3.6.0 release + tag, publish v3.6.1 from master
 ```
+
+**Do this first** — it is the cheapest win on the list and it closes out two
+books the owner named personally.
 
 `add_seerah_catalog_entries.py` skips anything already in the catalogue and
 anything not yet uploaded, so it is safe to re-run. **Set

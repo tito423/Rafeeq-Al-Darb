@@ -257,6 +257,40 @@ Do not rediscover these.
     Python has no CA bundle (TLS verification fails). Use `py -3` for anything
     touching R2 or images, and `curl` for HTTPS downloads.
 
+13. **Avast intercepts TLS on this machine, and it breaks every `boto3`
+    upload.** R2 fails with `CERTIFICATE_VERIFY_FAILED: unable to get local
+    issuer certificate` while `curl` to the same endpoint is fine. Two causes
+    stack: Avast's Web Shield re-signs the certificate with its own root, which
+    lives in the **Windows** store and will never be in `certifi`; and R2 sends
+    only the leaf certificate, which curl chases via AIA and Python does not.
+    Fixed once, in **`scripts/r2_common.py`** — use `r2_client()` from there
+    for every R2 script. **Never `verify=False`:** those requests carry the
+    bucket's access key and secret.
+
+14. **`ffmpeg` is already on this machine**, bundled with ShareX at
+    `C:\Program Files\ShareX\ffmpeg.exe`. Nothing needs downloading to
+    transcode audio the owner supplies.
+
+15. **A translucent highlight over a dark ground composites dark**, however
+    bright the highlight colour looks on its own. Three mushaf themes shipped
+    dark ink on that composite and measured 2.3–2.6 : 1 against a 4.5 : 1
+    floor. **Compute the composite and its contrast ratio; do not judge a
+    colour pairing by eye.**
+
+16. **A number next to a Latin unit reverses in an Arabic paragraph.**
+    `60.5 MB` rendered as `MB 60.5` on every size label in the app, because a
+    numeral is bidi-weak and takes its direction from what surrounds it. Wrap
+    such fragments in a left-to-right isolate — `ltr()` and `formatBytes()` in
+    `lib/core/utils/byte_formatter.dart` do it. There were five copies of that
+    formatter, all with the same bug; there is one now.
+
+17. **Shamela's own search searches *inside* books, not their titles.** Asking
+    it for «الرحيق المختوم» returns a *commentary on* al-Raheeq above
+    al-Raheeq itself — which is exactly how a session ends up cataloguing the
+    wrong book id. Use the local index instead:
+    `py -3 scripts/shamela_index.py find "<title>"` (8,598 books, built once
+    from the 40 category pages by `shamela_index.py build`).
+
 ---
 
 ## 4. Where things live
