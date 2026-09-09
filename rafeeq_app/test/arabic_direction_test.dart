@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rafeeq_app/core/utils/time_formatter.dart';
 import 'package:rafeeq_app/core/widgets/arabic_text.dart';
 
 /// The second half of the «"" and the stray dot» bug.
@@ -40,6 +41,48 @@ void main() {
     expect(stopPosition(TextDirection.rtl), lessThan(0.2));
     // LTR: the same stop is flung to the right edge — the reported bug.
     expect(stopPosition(TextDirection.ltr), greaterThan(0.8));
+  });
+
+  // The mirror of the same bug, on the other side of the app: a Latin
+  // fragment inside an Arabic or Urdu paragraph. «7:36 AM» is a bidi-weak
+  // numeral and a Latin marker with a space between them, and in an RTL
+  // paragraph that space resolves right-to-left and swaps the two halves.
+  // The Urdu build's sunrise tile read «AM 7:36» on emulator-5554.
+  group('a 12-hour time inside an RTL paragraph', () {
+    /// Left edge of the run holding [selection], as a fraction of the line.
+    double position(String text, TextSelection selection) {
+      final painter = TextPainter(
+        text: TextSpan(text: text),
+        textDirection: TextDirection.rtl,
+      )..layout();
+      return painter.getBoxesForSelection(selection).first.left /
+          painter.width;
+    }
+
+    test('swaps the number and the marker when nothing pins it', () {
+      const bare = '7:36 AM';
+      // "7:36" is the first four characters, "AM" the last two.
+      final number = position(bare, const TextSelection(
+          baseOffset: 0, extentOffset: 4));
+      final marker = position(bare, const TextSelection(
+          baseOffset: 5, extentOffset: 7));
+      expect(marker, lessThan(number),
+          reason: 'the marker should have been thrown to the left of the '
+              'number — that is the bug this test exists to describe');
+    });
+
+    test('formatTime12h isolates it, so the order survives', () {
+      final formatted = formatTime12h('07:36');
+      // The isolate characters are invisible; they add two code units at the
+      // ends, so the offsets shift by one.
+      final number = position(formatted, const TextSelection(
+          baseOffset: 1, extentOffset: 5));
+      final marker = position(formatted, const TextSelection(
+          baseOffset: 6, extentOffset: 8));
+      expect(marker, greaterThan(number),
+          reason: 'inside a LEFT-TO-RIGHT ISOLATE the marker must stay to the '
+              'right of the number: $formatted');
+    });
   });
 
   testWidgets('ArabicText lays Arabic out RTL under an LTR ancestor',

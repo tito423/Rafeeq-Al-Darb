@@ -486,9 +486,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 21:38 — IN PROGRESS — resume here**
+**2026-09-09 21:55 — IN PROGRESS — resume here**
 
-Russian sweep on emulator-5554: three real bugs - the Library tab wrapped, the home header had no gap, and easy_localization's plural rules were off, so every few/many form in all seven locales was dead
+Urdu sweep: the prayer tiles read 'AM 7:36' - a Latin meridiem beside a numeral in an RTL card, trap 16 again. formatTime12h isolates it now, and the test measures the swap before it measures the fix
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
