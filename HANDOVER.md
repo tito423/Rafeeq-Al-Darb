@@ -227,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 04:57 — IN PROGRESS — resume here**
+**2026-09-09 05:01 — IN PROGRESS — resume here**
 
-owner-supplied audio: 3 adhans added and moved to the top of the muezzin list (the 40MB 24-bit WAV transcoded to 2.8MB mono 160k with the ffmpeg already on this machine, duration preserved exactly); his ruqyah recording mirrored to R2 as m4a, kept as-is rather than re-encoded lossy-to-lossy, and shown with 'reciter not named in the source' because the file names none
+verified on device: his 3 adhans are the first 3 in the muezzin list and his own recording plays through the native alarm player (mono 44.1k, USAGE_ALARM); his ruqyah shows with an honest 'reciter not named in the source'
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
