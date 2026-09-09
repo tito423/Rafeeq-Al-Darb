@@ -1,6 +1,6 @@
 # Rafiq Al-Darb — next session brief
 
-**Last written:** 2026-09-09, at the end of the session that shipped v3.5.0.
+**Last written:** 2026-09-09, at the end of the session that shipped **v3.6.0**.
 
 You are picking up **رفيق الدرب / Rafeeq Al-Darb**, a personal **sideloaded**
 Android Islamic app in Flutter. The owner's own app on his own repo
@@ -9,105 +9,133 @@ Egyptian Arabic; **reply in Arabic**, keep code and commits in English.
 
 ## Read these, in this order, before touching anything
 
-1. **`CLAUDE.md`** — the mandatory working method. It is not optional and it is
-   not a summary of this file; it is the rules. The owner made following it a
-   hard requirement so that any agent works the way the last one did.
-2. **`HANDOVER.md`** — the state block at the top is current as of 2026-09-09.
-3. This file — what is next.
+1. **`CLAUDE.md`** — the mandatory working method. **Start with §2.0: check the
+   quota before you plan.** The previous session ran to 90% and had to wrap up
+   in a hurry; that is exactly what §2.0 exists to prevent.
+2. **`HANDOVER.md`** — the state block at the top.
+3. This file.
 
 ## Where things stand
 
-Everything the owner has asked for so far is **done, verified on the emulator,
-committed, pushed, and released as v3.5.0** — the only release in the repo.
-
 | | |
 |---|---|
-| Version | `3.5.0+1`, tag `v3.5.0` = `d2391a2` on `master` |
-| Checks | `flutter analyze lib test` clean · `flutter test` 25/25 · every R2 content path answered a range request on 2026-09-09 |
-| Locales | 7 (ar default/RTL, en, es, fr, pt, ru, ur), 584 keys, parity test enforces it |
-| Mushaf | 7 printings, each with its real printed cover bundled |
-| Library | 215 books, gzip on R2, indexed + chaptered + cross-book search |
-| Hadith | 67,153 in 9 books, 45,219 graded (67%) |
+| Version | `3.6.0+2` |
+| Checks | `flutter analyze lib test` clean · `flutter test` 25/25 |
+| Locales | 7 · **665** leaf keys, parity enforced |
+| Mushaf editions | **5** (the two riwayah editions were deleted at the owner's request) |
+| Text-mushaf themes | **10** + 10 frames + 11 frame colours |
+| Library | **223** books (8 Seerah titles added this session) |
+| Adhans | **14** (3 supplied by the owner + أذان قناة الناس, all first in the list) |
+| Ruqyah | 6 recordings on R2 + a composed reading screen |
+| Channels | 7, every id/avatar verified against YouTube itself |
+| Hadith | 67,153 in 9 books · `hadith.db` 109.7 MB |
 
-**There is no outstanding bug the owner has reported.** The queue below is work
-he has discussed but not yet green-lit, plus honest gaps.
+## UNFINISHED — pick this up first
 
----
+### 1. Three books were still crawling when the session ended
 
-## Next up — nothing here is started
+`scripts/build_book_text.py` was running these three and they had **not**
+finished:
 
-### 1. The deferred big question: fetching any book from the internet
+- `as_seerah_ibn_kathir` (Shamela 930) — 4 volumes, the slow one
+- `rijal_hawl_ar_rasul` (Shamela 9835) — **the owner asked for this by name**
+- `la_tahzan` (Shamela 12729) — **asked for by name**
 
-The owner asked (and it is still open):
+Their `BOOKS` entries are already in `build_book_text.py` with the real
+edition labels, and `META` entries are already in
+`scripts/add_seerah_catalog_entries.py`. So the whole remaining job is:
 
-> «هل من الممكن يكون فيه اليه ان التطبيق يقدر يدور على اي كتاب في الانترنت
-> وينزله ويعمله فهرسة وابواب بشرط يبقى نص ولو لقاه pdf يحوله نص؟»
+```bash
+py -3 scripts/build_book_text.py as_seerah_ibn_kathir rijal_hawl_ar_rasul la_tahzan
+py -3 scripts/r2_upload_seerah_books.py as_seerah_ibn_kathir rijal_hawl_ar_rasul la_tahzan
+py -3 scripts/add_seerah_catalog_entries.py
+```
 
-The recommendation already given to him, which he has not yet accepted or
-rejected:
+`add_seerah_catalog_entries.py` skips anything already in the catalogue and
+anything not yet uploaded, so it is safe to re-run. **Set
+`PYTHONIOENCODING=utf-8`** or the build script dies printing Arabic (trap #10).
 
-- **Not inside the app.** A command-line tool on a PC, one source at a time,
-  with the output reviewed before it is uploaded to R2. The app keeps consuming
-  only verified content.
-- **PDF → text is the risky half.** Where the PDF has a text layer it is fine;
-  most of the Islamic heritage is scanned images, and Arabic OCR mangles
-  tashkeel and names — which is exactly the failure mode «علم الحديث مفيش فيه
-  هزار» forbids. A book that is 2% wrong is worse than a book that is absent.
-- **The realistic first step**, which he was offered: generalise what already
-  exists — `scripts/fetch_shamela_pages.py` already crawls any Shamela book
-  resumably — into a tool that pulls any Shamela title with its chapters and
-  text. That widens the library to thousands of books from a source already
-  trusted, with no OCR risk.
+### 2. Ayah highlighting on the raster mushafs — measured, and mostly impossible
 
-**Do not start this without his word on which shape he wants.**
+The owner asked for highlighting in **every** mushaf. The honest position,
+established this session by overlaying the real polygons on real pages and
+looking at the result (the images are in the conversation):
 
-### 2. Honest content gaps (no action without a real source)
+- **`hafs_kfqc`** (vector) — works today. Polygons, tap-to-select, sciences.
+- **`tajweed_color`** — **the same Madinah line layout**, verified word-for-word
+  on page 2; only the scale and offset differ because of its decorative
+  border. This one is **solvable** with a per-edition affine fit (find the text
+  block rectangle once, map the normalised polygons into it). Not started.
+- **`madinah_gold`** — a *different typesetting*. Its page 2 sets 6 lines where
+  the Madinah mushaf sets 15. No transform can fix that.
+- **`shamarly`** (521 pages) and **`indopak_tajweed`** (564) — different
+  paginations entirely. Same verdict.
 
-| Gap | Status |
-|---|---|
-| Muwatta Malik ungraded (1,985) | **Correct as-is.** al-A'zami's edition gives takhrij, no per-hadith verdict. Do not fill it. |
-| ~3,054 Musnad Ahmad hadiths ungraded | Arna'ut does not rule on them. Correct as-is. |
-| 764 Darimi hadiths unmatched | Text drift between two printings; a prefix shared by two hadiths is dropped rather than guessed. Could be improved with a better matcher, not with a guess. |
-| 63 of 27,647 Musnad Ahmad numbers missing | 99.8% recovered. The rest need individual page inspection. Low value. |
+Do not promise highlighting on the last three without building them a
+coordinate layer from scratch.
 
-### 3. Offered but never confirmed
+### 3. Mushaf editions: 5, the owner wants 10
 
-- **`scripts/health_check.py`** — the owner asked whether a script could exist
-  that knows the app's structure well enough to diagnose faults. Never built.
-  Given how the last three sessions went (four independent faults that only a
-  device run exposed), a script that range-requests every catalogue entry,
-  opens the bundled DBs, and asserts the locale key sets would have caught real
-  bugs. Worth proposing again.
-- **archive.org mirror of R2 content** with a `mirror_url` fallback in the
-  client. He asked how much space archive.org gives; the answer was given, the
-  mirror was never built.
+Five verified free printings are shipping. Five more need sourcing and
+verifying (archive.org is the proven route — see trap #9). **Never add an
+edition before a range request on a real page answers 206 with a real
+`Content-Type` and a real byte size** — eight editions once shipped whose pages
+all 404'd.
 
-### 4. Never verified on real hardware
+### 4. Books that are not on Shamela
+
+Checked against a **local index of all 8,598 Shamela books**
+(`scripts/shamela_index.json`, built by `scripts/shamela_index.py`; use
+`find` on it rather than Shamela's own search, which searches *inside* books
+and will hand you a commentary on a title instead of the title):
+
+- **مفاتيح الفرج** — not there.
+- **من فتاوى الرسول (عبد الله العفيفي)** — not there. Shamela has exactly one
+  book by that author and it is a different one.
+- **كتب د. مصطفى محمود** — he is not in Shamela's author list at all.
+- **شريف شحاتة** — **no such author on Shamela.** The owner clarified he means
+  a contemporary preacher. A web search finds a «الدكتور شريف شحاتة» who writes
+  self-development books **sold commercially by a publisher**; there is no
+  verified free source, so nothing was added. The owner's instruction was «مش
+  نزلت خلاص انسى امرو» — treat this as closed unless he raises it again.
+
+Also available and **not yet built**: 12 books by أبو إسحاق الحويني, 5 by
+محمد حسان, 3 by مصطفى العدوي, 3 more by عائض القرني — all confirmed present in
+the Shamela index with ids.
+
+### 5. Never verified on real hardware
 
 The full-screen adhan video render (notification tap / lock-screen
-full-screen-intent) has never fired under ADB on this emulator. It needs the
-owner's actual phone. Do not mark it verified.
+full-screen-intent) has still never fired under ADB on this emulator. It needs
+the owner's actual phone.
 
----
+## Traps this session added — read §3 of CLAUDE.md too
 
-## What to do first, in this session
-
-1. Read `CLAUDE.md`.
-2. Run the verification set — `flutter analyze lib test`, `flutter test`, and a
-   range request against `hadith/hadith.zip`, one book, and one page of each
-   mushaf edition. Confirm the state above still holds before believing it.
-3. Ask the owner what he wants next. Do not pick something off this list and
-   start; §1 in particular is his decision.
+- **Avast intercepts TLS on this machine.** Every `boto3` upload to R2 fails
+  with `CERTIFICATE_VERIFY_FAILED` because Avast re-signs the certificate with
+  its own root, which is in the *Windows* store and never in `certifi`. R2 also
+  sends only the leaf certificate, and Python does no AIA chasing. Fixed once
+  in **`scripts/r2_common.py`**, which builds a bundle from certifi + the
+  Windows root store. **Use `r2_client()` from there for every R2 script.**
+  Never `verify=False` — those requests carry the bucket credentials.
+- **`ffmpeg` is already on this machine** at `C:\Program Files\ShareX\ffmpeg.exe`.
+  Nothing needs downloading to transcode audio.
+- **A translucent highlight over a dark ground composites dark.** Three mushaf
+  themes shipped dark ink on it and measured 2.3–2.6 : 1. Compute the composite
+  and its contrast ratio before trusting any colour pairing.
+- **Numbers mixed with Latin units reverse in Arabic.** `60.5 MB` rendered as
+  `MB 60.5`. Everything now goes through `formatBytes()` in
+  `lib/core/utils/byte_formatter.dart`, which wraps the fragment in a
+  left-to-right isolate. There were five copies of that formatter; there is one
+  now.
 
 ## Reminders that repeatedly matter
 
-- **Verify on the emulator and look at the screenshot.** Everything serious
-  found here was found by running it.
-- **`adb shell input text` cannot type Arabic.** Copy text from inside the app
-  and paste it.
-- **Never FTS5.** Android's SQLite has no such module and it takes the whole
-  database down with it.
+- **Verify on the emulator and look at the screenshot.** Four real bugs this
+  session (a 0.8px slide overflow, a 6px reader-bar overflow, the AM/PM marker
+  cut by the clock hands, the reversed size text) were all found by looking,
+  not by reading.
+- **Never FTS5.** Android's SQLite has no such module.
 - **One release at a time**, previous release *and tag* deleted, tagged from
-  `master`, `pubspec.yaml` version bumped to match.
-- **Checkpoint with `.\cp.bat "…"` constantly.** Sessions die from quota
-  exhaustion mid-task.
+  `master`, `pubspec.yaml` bumped to match.
+- **Checkpoint with `.\cp.bat "…"` constantly.**

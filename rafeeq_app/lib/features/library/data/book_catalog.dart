@@ -3964,4 +3964,171 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — منهاج الطالبين وعمدة المفتين في الفقه، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الفكر، تحقيق عوض قاسم أحمد عوض',
     ),
   ),
+  LibraryBook(
+    id: 'ar_raheeq_al_makhtum',
+    titleAr: 'الرحيق المختوم',
+    titleEn: 'Ar-Raheeq Al-Makhtum (The Sealed Nectar)',
+    authorAr: 'صفي الرحمن المباركفوري',
+    authorEn: 'Safi-ur-Rahman al-Mubarakpuri',
+    authorDeathAr: 'توفي ١٤٢٧ هـ',
+    descriptionAr:
+        'سيرة نبوية معاصرة نالت الجائزة الأولى في مسابقة رابطة العالم '
+        'الإسلامي للسيرة، تجمع الأحداث مرتَّبة على السنين مع تحرير الروايات.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/ar_raheeq_al_makhtum.json',
+      sizeBytes: 386968,
+      sourceLabel:
+          'المكتبة الشاملة — الرحيق المختوم، صفي الرحمن المباركفوري (ت ١٤٢٧هـ)، '
+          'دار الفكر (طبعة خاصة بدار ومكتبة الهلال) - بيروت، ٢٠٠٢م',
+    ),
+  ),
+  LibraryBook(
+    id: 'seerat_ibn_hisham',
+    titleAr: 'السيرة النبوية لابن هشام',
+    titleEn: 'The Prophetic Biography of Ibn Hisham',
+    authorAr: 'ابن هشام',
+    authorEn: 'Ibn Hisham',
+    authorDeathAr: 'توفي ٢١٣ هـ',
+    descriptionAr:
+        'أقدم سيرة وصلت إلينا كاملة، وهي تهذيب ابن هشام لسيرة ابن إسحاق. '
+        'النسخة الإلكترونية تقتصر على الجزأين الأولين من الطبعة المذكورة.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/seerat_ibn_hisham.json',
+      sizeBytes: 605696,
+      sourceLabel:
+          'المكتبة الشاملة — السيرة النبوية لابن هشام (ت ٢١٣هـ)، قدّم لها وعلّق '
+          'عليها وضبطها طه عبد الرؤوف سعد، شركة الطباعة الفنية المتحدة — النسخة '
+          'الإلكترونية تقتصر على الجزأين الأولين',
+    ),
+  ),
+  LibraryBook(
+    id: 'zad_al_maad',
+    titleAr: 'زاد المعاد في هَدي خير العباد',
+    titleEn: 'Zad al-Ma\'ad',
+    authorAr: 'شمس الدين، أبو عبد الله، محمد بن أبي بكر الزرعي الدمشقي، ابن قيم الجوزية (٦٩١ - ٧٥١ هـ)',
+    authorEn: 'Ibn Qayyim al-Jawziyyah',
+    authorDeathAr: 'توفي ٧٥١ هـ',
+    descriptionAr:
+        'هدي النبي ﷺ في عبادته ومعاملاته وغزواته وطبّه، بتحقيق الأرناؤوطين. '
+        'من أجمع ما كُتب في الهدي النبوي.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/zad_al_maad.json',
+      sizeBytes: 1868002,
+      sourceLabel:
+          'المكتبة الشاملة — زاد المعاد في هدي خير العباد، ابن قيم الجوزية (ت '
+          '٧٥١هـ)، تحقيق شعيب الأرنؤوط وعبد القادر الأرنؤوط، مؤسسة الرسالة - '
+          'بيروت، الإصدار الثاني المنقّح المزيد، الطبعة الأولى ١٤١٧هـ/١٩٩٦م',
+    ),
+  ),
+  LibraryBook(
+    id: 'sahih_as_seerah_albani',
+    titleAr: 'صحيح السيرة النبوية [من «البداية والنهاية» لابن كثير]',
+    titleEn: 'Sahih as-Seerah an-Nabawiyyah',
+    authorAr: '',
+    authorEn: 'Abridged by Muhammad Nasir ad-Din al-Albani',
+    authorDeathAr: 'توفي ١٤٢٠ هـ',
+    descriptionAr:
+        'ما صحّ من سيرة ابن كثير، لخّصه الألباني وعلّق عليه. توفي الشيخ قبل '
+        'إتمامه، فينتهي عند ٢/٩٤ من طبعة عبد الواحد.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/sahih_as_seerah_albani.json',
+      sizeBytes: 124141,
+      sourceLabel:
+          'المكتبة الشاملة — صحيح السيرة النبوية (من البداية والنهاية لابن '
+          'كثير)، لخّصه وعلّق عليه محمد ناصر الدين الألباني (ت ١٤٢٠هـ)، المكتبة '
+          'الإسلامية - عمّان، الطبعة الأولى ١٤٢١هـ — توفي الشيخ قبل إتمامه',
+    ),
+  ),
+  LibraryBook(
+    id: 'uyun_al_athar',
+    titleAr: 'عيون الأثر في فنون المغازي والشمائل والسير',
+    titleEn: 'Uyun al-Athar',
+    authorAr: 'محمد بن محمد بن محمد بن أحمد، ابن سيد الناس، اليعمري الربعي، أبو الفتح، فتح الدين (ت ٧٣٤هـ)',
+    authorEn: 'Ibn Sayyid an-Nas',
+    authorDeathAr: 'توفي ٧٣٤ هـ',
+    descriptionAr:
+        'سيرة محرَّرة على طريقة المحدّثين في المغازي والشمائل والسير، من عمد '
+        'كتب السيرة عند المتأخرين.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/uyun_al_athar.json',
+      sizeBytes: 763255,
+      sourceLabel:
+          'المكتبة الشاملة — عيون الأثر في فنون المغازي والشمائل والسير، ابن '
+          'سيد الناس (ت ٧٣٤هـ)، تعليق إبراهيم محمد رمضان، دار القلم - بيروت، '
+          'الطبعة الأولى ١٤١٤هـ/١٩٩٣م',
+    ),
+  ),
+  LibraryBook(
+    id: 'nur_al_yaqin',
+    titleAr: 'نور اليقين في سيرة سيد المرسلين',
+    titleEn: 'Nur al-Yaqin',
+    authorAr: 'محمد بن عفيفي الباجوري، المعروف بالشيخ الخضري (ت ١٣٤٥هـ)',
+    authorEn: 'Muhammad al-Khudari',
+    authorDeathAr: 'توفي ١٣٤٥ هـ',
+    descriptionAr:
+        'سيرة مختصرة سهلة العبارة، وُضعت للتدريس فاشتهرت وصارت من أكثر '
+        'المختصرات تداولًا.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/nur_al_yaqin.json',
+      sizeBytes: 268494,
+      sourceLabel:
+          'المكتبة الشاملة — نور اليقين في سيرة سيد المرسلين، محمد بن عفيفي '
+          'الباجوري المعروف بالشيخ الخضري (ت ١٣٤٥هـ)، دار الفيحاء - دمشق، '
+          'الطبعة الثانية ١٤٢٥هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'as_seerah_nadwi',
+    titleAr: 'السيرة النبوية لأبي الحسن الندوي',
+    titleEn: 'The Prophetic Biography',
+    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
+    authorEn: 'Abul Hasan Ali an-Nadwi',
+    authorDeathAr: 'توفي ١٤٢٠ هـ',
+    descriptionAr:
+        'سيرة تعنى بالسياق التاريخي لحال العالم قبل البعثة وبأثر الرسالة فيه، '
+        'بأسلوب أدبي رفيع.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/as_seerah_nadwi.json',
+      sizeBytes: 429415,
+      sourceLabel:
+          'المكتبة الشاملة — السيرة النبوية، أبو الحسن علي الحسني الندوي (ت '
+          '١٤٢٠هـ)، تحقيق وتعليق سيد عبد الماجد الغوري، دار ابن كثير - دمشق '
+          'وبيروت، الطبعة الثانية عشرة ١٤٢٥هـ/٢٠٠٤م',
+    ),
+  ),
+  LibraryBook(
+    id: 'fiqh_as_seerah_ghazali',
+    titleAr: 'فقه السيرة',
+    titleEn: 'Fiqh as-Seerah',
+    authorAr: 'محمد الغزالي السقا (ت ١٤١٦هـ)',
+    authorEn: 'Muhammad al-Ghazali',
+    authorDeathAr: 'توفي ١٤١٦ هـ',
+    descriptionAr:
+        'قراءة في السيرة تستخرج منها الدروس والعبر، مع تخريج الشيخ الألباني '
+        'لأحاديثها.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/fiqh_as_seerah_ghazali.json',
+      sizeBytes: 379706,
+      sourceLabel:
+          'المكتبة الشاملة — فقه السيرة، محمد الغزالي السقا (ت ١٤١٦هـ)، تخريج '
+          'الأحاديث محمد ناصر الدين الألباني، دار القلم - دمشق، الطبعة الأولى '
+          '١٤٢٧هـ',
+    ),
+  ),
 ];

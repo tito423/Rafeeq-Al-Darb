@@ -7,55 +7,64 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-09 |
-| **Released** | **v3.5.0** — the only release; every earlier release *and tag* was deleted at the owner's request so the repo reads clean. Tag `v3.5.0` = `d2391a2` on `master`. |
-| **App version** | `pubspec.yaml` `3.5.0+1` (this is what the About card shows — keep it equal to the release tag) |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **25/25** · every hosted content path answered a range request (206) on 2026-09-09 · **but the Home-screen work committed today is only PARTLY device-verified — read §"Home screen rebuild" below before trusting it** |
+| **Released** | **v3.6.0** — the only release; every earlier release *and tag* is deleted at the owner's request so the repo reads clean. |
+| **App version** | `pubspec.yaml` `3.6.0+2` (this is what the About card shows — keep it equal to the release tag) |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **25/25** · every feature below was opened on `emulator-5554` and looked at, except where this file says otherwise |
 
-## STATE AS OF 2026-09-09
+## STATE AS OF 2026-09-09 (v3.6.0)
 
-Phases 1–3 are complete. The work since then has been driven directly by the
-owner rather than by a phase document, and the last three sessions were mostly
-**repairs to things that were shipped broken** — read §"What was found broken"
-below before assuming any area is sound.
+Phases 1–3 are complete. Everything since is owner-driven. **Read
+`NEXT_SESSION_PROMPT.md` for what is unfinished** — in particular three books
+were still being crawled when the session ended.
 
-### Measured facts (2026-09-09, not from memory)
+### Measured facts (2026-09-09, measured this session, not from memory)
 
 | | |
 |---|---|
-| Locales | **7** — ar (default, RTL), en, es, fr, pt, ru, **ur** · 584 leaf keys, parity enforced by `test/translation_parity_test.dart` |
-| Mushaf editions | **7** raster/vector printings, all 7 with a real bundled cover image |
-| Text library | **215** books, hosted gzipped on R2, indexed + chaptered + searchable across all of them |
-| Hadith | **67,153** hadiths in 9 books, **45,219 graded (67%)** — `hadith.db` 104.6 MB bundled, mirrored at `hadith/hadith.zip`, `hadithDbVersion = 'v3'` |
-| APK | 248.4 MB |
+| Locales | **7** — ar (default, RTL), en, es, fr, pt, ru, ur · **665** leaf keys, parity enforced by `test/translation_parity_test.dart` |
+| Mushaf editions | **5** — `hafs_kfqc`, `tajweed_color`, `shamarly`, `madinah_gold`, `indopak_tajweed`. Warsh and Qalun were **deleted** on the owner's instruction («احذف مصاحف الروايات»): they are riwayat, not printings. He wants 10 verified printings; five still need sourcing. |
+| Text-mushaf appearance | **10 themes × 10 frames × 11 frame colours**, one picker card, all painted |
+| Text library | **223** books (8 Seerah titles added; 3 more mid-crawl) |
+| Adhans | **14** — the owner's own three plus أذان قناة الناس are the first four |
+| Ruqyah | 6 recordings mirrored on R2 + a composed reading screen |
+| Islamic channels | 7, each id/handle/avatar read off YouTube itself |
+| Hadith | **67,153** in 9 books · `hadith.db` **109.7 MB** bundled |
 
-### The nine hadith books
+### What v3.6.0 added
 
-| Book | Hadiths | Chapters | Grading |
-|---|---|---|---|
-| صحيح البخاري | 7,277 | 97 | none by design — app shows «من الصحيحين» |
-| صحيح مسلم | 7,459 | 57 | none by design |
-| سنن أبي داود | 5,276 | 43 | 4,896 (al-Albani, via sunnah.com-derived set) |
-| جامع الترمذي | 4,053 | 49 | 3,898 |
-| سنن النسائي | 5,768 | 52 | 5,321 |
-| سنن ابن ماجه | 4,345 | 38 | 3,932 |
-| **مسند الإمام أحمد** | **27,584** | **1,061** | **24,530 — شعيب الأرناؤوط، ط الرسالة** |
-| موطأ مالك | 1,985 | 61 | **none, and that is the correct answer** — see below |
-| سنن الدارمي | 3,406 | 24 | 2,642 — حسين سليم أسد الداراني |
+1. **Cards open as animated card screens, not inline.** `lib/core/widgets/card_route.dart`
+   (`CardRoute` + `CardScreen`) — the card grows out of the widget that was
+   tapped, the page behind stays put and blurs, and the card is sized to its
+   own content. The prayer editor and the clock gallery were converted; use it
+   for any future card. The owner's complaint was that an inline expansion
+   fights the page's scroll, which it did.
+2. **Home**: the carousel bug is fixed (it opens on the next prayer); the
+   expanded prayer editor writes through the same providers as the Adhan
+   settings screen (verified: `+3` moved Fajr from 4:43 to 4:46 live); the
+   weekday name renders; the clock gallery's 20 faces all run on real time.
+3. **Ruqyah** (`lib/features/ruqyah/`) — verses read from `quran_local.db` and
+   six duas addressed **by row id** in `azkar_items` so they carry their own
+   takhrij. No scripture is duplicated into Dart. Three honestly-separated
+   groups; see the doc comment in `ruqyah_catalog.dart` for why.
+4. **المزيد** reordered to «المزيد» destinations then «الإعدادات».
+   `SettingsScreen` was deleted (dead — nothing pushed it).
+5. **10 text-mushaf themes + 10 painted Islamic frames + 11 frame colours**,
+   all in one card. Every preview is drawn on the active theme's own paper.
+6. **Sunan Suwar reader** rebuilt with the full text-mushaf option set, still
+   locked to the surah (`wholeMushaf: false` keeps the recitation inside it).
+7. **Islamic channels** section, grid/list, avatars mirrored to R2.
+8. **Owner-supplied audio**: three adhans (his 24-bit 40 MB WAV transcoded to
+   2.8 MB mono 160k, duration preserved exactly) and his own ruqyah recording.
 
-**Musnad Ahmad** was 1,374 hadiths in 8 chapters until 2026-09-09 — a fragment,
-because hadith-json's own metadata says `length: 1374` and chapters 8–30 are
-absent upstream. It is now taken whole from `مسند أحمد - ط الرسالة` (Shamela
-25794): 23,340 pages crawled by `scripts/fetch_shamela_pages.py`, parsed by
-`scripts/parse_musnad_ahmad_arnaut.py`. The edition numbers to 27,647 and 27,584
-were recovered. Rulings are paired to hadiths **by order within a page**, because
-the footnote marker is a superscript that usually does not survive as text —
-verified against eight hadiths whose printed footnotes were read by hand, all
-eight exact.
+### Bugs found by running it, not by reading it
 
-**Muwatta Malik has no grading on purpose.** al-A'zami's critical edition
-(Shamela 28107) was checked directly: it gives takhrij («أخرجه أبو مصعب
-الزهري، ٢٥١ …») but no per-hadith verdict, because the Muwatta is not graded
-hadith-by-hadith the way the Sunan are. Do not "complete" this column.
+| Bug | How it showed |
+|---|---|
+| Prayer slide overflowed by 0.8px | only once a manual correction added a `+3` line |
+| Sunan reader bar overflowed by 6px | seven controls do not fit at default IconButton metrics |
+| AM/PM marker unreadable | the clock hands crossed it; it now has a capsule |
+| `60.5 MB` rendered as `MB 60.5` | bidi: a number next to a Latin unit reverses in an RTL paragraph. Five duplicate formatters replaced by one |
+| 3 mushaf themes at 2.3–2.6 : 1 contrast | dark ink on a translucent wash over a dark ground. All ten now 6.0–12.3 : 1 |
 
 ### What was found broken (and fixed) in the last three sessions
 
@@ -227,9 +236,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 05:49 — IN PROGRESS — resume here**
+**2026-09-09 06:03 — IN PROGRESS — resume here**
 
-verified the frames and the rebuilt Sunan reader on the device: star-chain frame renders around a real mushaf page in the theme's gold; the locked reader's new bar overflowed by 6px and is fixed; recitation runs inside it and the verse highlight follows the recited ayah across a line wrap
+v3.6.0 prep: 8 Seerah books uploaded and catalogued (223 total), version bumped, HANDOVER + NEXT_SESSION_PROMPT rewritten to the measured state
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
