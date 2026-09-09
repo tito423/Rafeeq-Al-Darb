@@ -45,22 +45,87 @@ void main() {
   test('only printings whose layout was verified carry an ayah layer', () {
     expect(byId('hafs_kfqc').hasAyahLayer, isTrue);
     expect(byId('tajweed_color').hasAyahLayer, isTrue);
-    for (final id in ['qatar', 'kuwait', 'madinah_night']) {
+    for (final id in ['qatar', 'kuwait', 'madinah_night', 'madinah_gold']) {
       expect(byId(id).hasAyahLayer, isTrue, reason: id);
     }
-    // These ship without a highlight rather than with a wrong one. shamarly
+    // These ship without a highlight rather than with a wrong one: shamarly
     // (521 pages), indopak_tajweed (564) and madinah_nastaleeq (611) paginate
-    // their own way; madinah_gold sets 6 lines on its page 2 where the
-    // Madinah mushaf sets 15. No affine can map the Hafs polygons onto them.
+    // their own way, and no affine can map the Hafs polygons onto a different
+    // typesetting.
+    //
+    // `madinah_gold` used to be in this list, on the claim that it "sets 6
+    // lines on its page 2 where the Madinah mushaf sets 15". That claim was a
+    // measurement of the wrong thing and is now known to be false — see the
+    // dedicated case below.
     for (final id in [
       'shamarly',
-      'madinah_gold',
       'indopak_tajweed',
       'madinah_nastaleeq',
     ]) {
       expect(byId(id).hasAyahLayer, isFalse, reason: id);
       expect(byId(id).fitForPage(1), isNull, reason: id);
     }
+  });
+
+  test('page 2 of a Madinah printing sets six lines, not fifteen', () {
+    // The fact that kept `madinah_gold` unfitted for three sessions. Page 2 of
+    // ANY Madinah printing is al-Baqarah's illuminated opening: six lines of
+    // text under a gold basmalah that is not itself an ayah. Fifteen is what a
+    // BODY page sets. So «it sets 6 lines on page 2» was never evidence of a
+    // different typesetting — it is what the reference edition does too.
+    //
+    // Asserted against the Hafs polygon layer itself rather than a comment, so
+    // the claim cannot rot again: the number of distinct line bands the
+    // polygons occupy on page 2, and on page 50 for contrast.
+    // Counted exactly as `scripts/fit_mushaf_polygon_per_page.py:hafs_lines`
+    // counts it: collect every ring's top and bottom edge, merge edges closer
+    // than a hair, then split each band by the shortest ring on the page —
+    // an ayah that runs over two lines contributes one tall ring, not two.
+    int linesOnPage(int page) {
+      final rows = (polygons['pages'] as Map<String, dynamic>)['$page']
+          as List<dynamic>;
+      final edges = <double>{};
+      final heights = <double>[];
+      for (final row in rows) {
+        for (final ring in (row as List<dynamic>)[2] as List<dynamic>) {
+          final ys = [
+            for (final q in ring as List<dynamic>)
+              ((q as List<dynamic>)[1] as num).toDouble()
+          ];
+          final lo = ys.reduce((a, b) => a < b ? a : b);
+          final hi = ys.reduce((a, b) => a > b ? a : b);
+          edges..add(lo)..add(hi);
+          heights.add(hi - lo);
+        }
+      }
+      final sorted = edges.toList()..sort();
+      final merged = <double>[sorted.first];
+      for (final v in sorted.skip(1)) {
+        if (v - merged.last > 0.004) merged.add(v);
+      }
+      final unit = heights.where((h) => h > 0.02).reduce((a, b) => a < b ? a : b);
+      var n = 0;
+      for (var i = 0; i + 1 < merged.length; i++) {
+        final span = merged[i + 1] - merged[i];
+        n += (span / unit).round().clamp(1, 20);
+      }
+      return n;
+    }
+
+    expect(linesOnPage(2), 6,
+        reason: 'al-Baqarah opens on six lines in the reference edition too, '
+            'so «madinah_gold sets 6 lines on page 2» was never evidence of a '
+            'different typesetting');
+    expect(linesOnPage(1), 7, reason: 'al-Fatiha sets seven');
+    // Page 3 is a full body page: fifteen lines, every one of them Quran, so
+    // the polygon layer covers all fifteen slots of the Madinah grid.
+    expect(linesOnPage(3), 15, reason: 'a body page is the fifteen-line grid');
+    // Page 50 also sets fifteen slots, but two of them are آل عمران's header
+    // band and its basmalah, which carry no ayah polygon — which is precisely
+    // why the per-page fitter matches printed ink runs against the GLOBAL
+    // 15-slot grid on a body page rather than against that page's own rings.
+    expect(linesOnPage(50), 13,
+        reason: '15 slots minus the surah header and the basmalah');
   });
 
   test('the Hafs edition needs no fit; the Tajweed one has its own per group',

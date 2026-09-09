@@ -105,18 +105,24 @@ EDITIONS = {
     # is why this is here and not in `fit_mushaf_polygon_transform.py`.
     "madinah_gold": dict(
         dir=os.path.join(ROOT, "scripts", "mushaf_pdf_build", "madinah_gold"),
-        pages=604, sat_min=45, ink_max=150, inset=(0.08, 0.04),
+        pages=604, sat_min=45, ink_max=150, inset=(0.08, 0.04), robust=True,
         # The two illuminated openings, panel read off the rendered page. Both
         # need the saturation mask: the leaf is cream and the illumination
         # gold, so darkness alone does not isolate the text.
         special={
+            # `min_run` below the 0.02 default because these lines are
+            # short: the default cut BOTH halves of the split line and the
+            # last line outright, and the page then failed the count. Merged,
+            # the answer is 6 lines at every min_run from 0.008 to 0.014.
             1: dict(panel=(0.25, 0.72, 0.22, 0.82), ink_max=130, sat_max=30,
+                    min_run=0.012, merge=True,
                     # al-Fatiha's basmalah IS ayah 1 and has a polygon, but it
                     # is set in gold and no ink threshold finds it — so the
                     # HAFS slot is dropped, not a run, and the affine fitted
                     # on the six visible lines places it.
                     drop_target=1),
-            2: dict(panel=(0.25, 0.72, 0.22, 0.82), ink_max=130, sat_max=30),
+            2: dict(panel=(0.25, 0.72, 0.22, 0.82), ink_max=130, sat_max=30,
+                    min_run=0.012, merge=True),
         },
     ),
     "madinah_night": dict(
@@ -213,7 +219,8 @@ def merge_close(runs, frac=0.35):
     return out
 
 
-def panel_lines(rgb, ink_max, panel, pad=0.004, invert=False, sat_max=None):
+def panel_lines(rgb, ink_max, panel, pad=0.004, invert=False, sat_max=None,
+                min_run=0.02):
     """Text runs inside a hand-measured panel box.
 
     The two illuminated openings defeated every automatic attempt: the text
@@ -245,7 +252,7 @@ def panel_lines(rgb, ink_max, panel, pad=0.004, invert=False, sat_max=None):
         if v and st is None:
             st = i
         elif not v and st is not None:
-            if i - st >= h * 0.02:
+            if i - st >= h * min_run:
                 cc = np.where(core[st:i].any(axis=0))[0]
                 runs.append(dict(y0=(st + y0) / H, y1=(i - 1 + y0) / H,
                                  x0=(cc.min() + x0) / W,
@@ -367,8 +374,11 @@ def fit(edition, verbose=True):
             runs = panel_lines(rgb, sp.get("ink_max", spec["ink_max"]),
                                sp["panel"],
                                invert=spec.get("invert", False),
-                               sat_max=sp.get("sat_max"))
-            if sp.get("merge", True):
+                               sat_max=sp.get("sat_max"),
+                               min_run=sp.get("min_run", 0.02))
+            # Opt-in, like `robust`: the printings already fitted, verified
+            # and shipped must come out byte-identical from this script.
+            if sp.get("merge", False):
                 runs = merge_close(runs)
         else:
             runs = printed_lines(rgb, box, spec["ink_max"],
@@ -395,7 +405,29 @@ def fit(edition, verbose=True):
             skipped.append((page, len(runs), len(targets)))
             continue
 
-        ay, by, ry = lsq(targets, [(L["y0"] + L["y1"]) / 2 for L in runs])
+        ys = [(L["y0"] + L["y1"]) / 2 for L in runs]
+        ay, by, ry = lsq(targets, ys)
+        # One bad point out of fifteen, refitted without it. Opt-in per
+        # edition so the three printings already fitted and shipped keep the
+        # exact numbers they were verified with.
+        #
+        # What it is for, concretely: on `madinah_gold` page 50 the first slot
+        # holds آل عمران's ornamental header cartouche, not a line of text,
+        # and its ink centre sits 0.021 above where the other fourteen say it
+        # should — enough to drag the whole page's affine and then to fail the
+        # outlier cut, so the page fell back to a frame-derived fit that
+        # visibly floated a quarter of a line high. Refitting on the other
+        # fourteen brings it to 0.0127 and the page is fitted directly.
+        # Measured over 86 sample pages the step is a small, uniform
+        # improvement (median 0.00324 -> 0.00282, max 0.0210 -> 0.0141), not
+        # a licence to accept a page that does not really match.
+        if spec.get("robust") and len(targets) > 3:
+            k = int(np.argmax(abs(ry)))
+            if abs(ry)[k] > 3 * float(np.median(abs(ry))):
+                ay, by, ry = lsq(
+                    [t for i, t in enumerate(targets) if i != k],
+                    [y for i, y in enumerate(ys) if i != k],
+                )
         sx0 = float(np.median([L["x0"] for L in runs]))
         sx1 = float(np.median([L["x1"] for L in runs]))
         ax = (sx1 - sx0) / (hx1 - hx0)
