@@ -79,14 +79,24 @@ EDITIONS = {
     "kuwait": dict(
         dir=os.path.join(ROOT, "scripts", "mushaf_pdf_build", "kuwait"),
         pages=604, sat_min=28, ink_max=150, inset=(0.095, 0.045),
-        # Its two illuminated openings resisted every panel measurement — the
-        # warm cream ground and the brown ink sit too close together for a
-        # threshold that also separates the lines, and the best attempt found
-        # six of seven lines. Rather than ship a highlight that is one line out
-        # on al-Fatiha, they get NO fit: `fitForPage` returns null for them and
-        # `MushafPageView` simply paints no highlight on those two pages. The
-        # other 602 are fitted.
-        skip=(1, 2),
+        # Its two illuminated openings resisted every attempt for two
+        # sessions, and the reason was never the darkness threshold — it was
+        # that darkness is the wrong test here. The illumination is COLOURED
+        # (red, teal, gold, violet) and the Quranic ink is neutral brown on a
+        # near-white panel, so a saturation mask separates them where no
+        # luminance cut can: at ink_max 130 with sat_max 40, page 1 reads 7
+        # lines and page 2 reads 6 across every min_run from 0.012 to 0.02.
+        # Merging the split runs is the other half — an Arabic line here also
+        # breaks in two where only the diacritics reach the upper rows. Over a
+        # 60-combination sweep page 1 answers 7 in 36 of them and page 2
+        # answers 6 in 25, and the chosen point sits in the middle of both
+        # plateaus rather than on an edge.
+        special={
+            1: dict(panel=(0.325, 0.630, 0.26, 0.73), ink_max=130,
+                    sat_max=40, min_run=0.016, merge=True),
+            2: dict(panel=(0.325, 0.630, 0.26, 0.73), ink_max=130,
+                    sat_max=40, min_run=0.016, merge=True),
+        },
     ),
     # مصحف المدينة، الطبعة الليلية — white ink on black, and no printed frame
     # at all, so there is no coloured fiducial to find. `no_frame` makes the

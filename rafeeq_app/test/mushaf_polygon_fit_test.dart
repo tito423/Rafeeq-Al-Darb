@@ -203,10 +203,12 @@ void main() {
     for (final row in [
       ('qatar', 604, 604),
       ('madinah_night', 604, 604),
-      // Kuwait's two illuminated openings are deliberately unfitted: the
-      // warm cream ground and brown ink defeated every panel measurement,
-      // and one line out on al-Fatiha is worse than no highlight.
-      ('kuwait', 604, 602),
+      ('madinah_gold', 604, 604),
+      // Kuwait's two illuminated openings shipped unfitted at v3.8.0 because
+      // no luminance threshold separated their seven lines. Darkness was the
+      // wrong test: the illumination is coloured and the ink is neutral, so
+      // a saturation mask does it, and both openings are fitted now.
+      ('kuwait', 604, 604),
     ]) {
       final (id, pages, fitted) = row;
       final e = byId(id);
@@ -229,10 +231,18 @@ void main() {
           reason: '$id: no page-to-page variation');
     }
 
-    // Kuwait pages 1-2 really do come back with nothing.
-    expect(byId('kuwait').fitForPage(1), isNull);
-    expect(byId('kuwait').fitForPage(2), isNull);
-    expect(byId('kuwait').fitForPage(3), isNotNull);
+    // Every per-page printing's illuminated openings carry their OWN affine,
+    // not the body one — they set a smaller text block inside a heavy frame,
+    // so an entry equal to page 3's would mean the opening was never measured.
+    for (final id in ['qatar', 'kuwait', 'madinah_night', 'madinah_gold']) {
+      final e = byId(id);
+      for (final p in [1, 2]) {
+        final f = e.fitForPage(p);
+        expect(f, isNotNull, reason: '$id page $p');
+        expect(f!.sy, isNot(closeTo(e.fitForPage(3)!.sy, 0.001)),
+            reason: '$id page $p uses the body affine');
+      }
+    }
   });
 
   test('only a printing on the Madinah page claims the running header', () {
