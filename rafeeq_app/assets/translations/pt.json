@@ -280,7 +280,8 @@
     "search_all_empty": "Pesquise em todos os livros transferidos de uma vez",
     "died_ah": "Faleceu em {} AH",
     "died_circa_ah": "Faleceu por volta de {} AH",
-    "death_8th_century": "Um sábio do século VIII da Hégira"
+    "death_8th_century": "Um sábio do século VIII da Hégira",
+    "book_desc_generated": "Uma obra de {}, {} páginas, na secção de {}."
   },
   "azkar": {
     "title": "Adhkar",
@@ -956,5 +957,36 @@
     "quran_2_b": "Divide-se em 114 suras, mecanas (reveladas antes da Hégira) e medinenses (depois), e também em 30 partes (juz) para facilitar a leitura completa ao longo do mês.",
     "quran_3_h": "Por onde começo?",
     "quran_3_b": "Muitos muçulmanos novos começam por memorizar a sura Al-Fátiha (recitada em cada unidade da oração) e as suras breves da última parte do Alcorão (juz Amma), e depois avançam na leitura e na compreensão. Tudo isso está no separador «Alcorão» desta aplicação, com o texto, a recitação e a tradução do significado."
+  },
+  "book_desc": {
+    "adab_al_nafs": "A obra de al-Hakim at-Tirmidhi sobre a disciplina e purificação da alma, tratando dos tipos de alma nomeados no Alcorão (a que incita, a serena e a que se recrimina), do estado do coração, da certeza e do esforço dos caminhantes.",
+    "al_adab_al_mufrad": "O livro de al-Bukhari sobre o carácter e as boas maneiras, a bondade para com os pais, os laços de família e o bom convívio. Manteve-o à parte do seu Sahih com uma condição mais ampla, pelo que nem tudo nele atinge o grau de al-Jami' as-Sahih.",
+    "al_aqidah_al_wasitiyyah": "O célebre tratado de Ibn Taymiyyah sobre o credo de Ahl as-Sunnah wal-Jama'ah, escrito a pedido de um juiz de Wasit, e um dos textos de credo mais comentados e difundidos.",
+    "al_fawaid": "Um dos melhores livros de Ibn al-Qayyim: benefícios, exortações e sabedorias dispersas sobre credo, conduta e educação, organizados não por capítulos mas ao sabor dos impulsos da fé.",
+    "al_hasanah_wa_al_sayyiah": "O tratado de Ibn Taymiyyah sobre as causas das boas e das más obras: que a ignorância é a raiz da desobediência, e que o conhecimento proveitoso gera o temor que leva à obediência e afasta do mal.",
+    "al_samt_wa_adab_al_lisan": "A obra de Ibn Abi ad-Dunya sobre o mérito do silêncio, o guardar da língua e os males da fala, reunindo hadiths e relatos sobre as maneiras da fala e do silêncio entre os antigos.",
+    "al_shamail_al_muhammadiyyah": "A recolha de at-Tirmidhi do que é transmitido sobre o Profeta ﷺ na forma e no carácter: o seu aspeto, o vestuário, a comida, a adoração e as maneiras, organizada por capítulos.",
+    "al_targhib_wal_tarhib": "Recolha de al-Mundhiri de hadiths que incentivam à obediência e advertem contra o pecado, organizada por capítulos. O próprio al-Mundhiri indica o grau de muitos deles; contém relatos autênticos, bons e fracos.",
+    "al_ubudiyyah": "O tratado de Ibn Taymiyyah sobre o verdadeiro significado da servidão só a Allah, e que a perfeição do servo está na perfeição da sua servidão ao seu Senhor; do mais importante que se escreveu sobre o tema.",
+    "ar_raheeq_al_makhtum": "Uma biografia contemporânea do Profeta ﷺ, primeiro prémio no concurso da Liga do Mundo Islâmico sobre a sira, expondo os acontecimentos ano a ano com as narrações depuradas.",
+    "as_seerah_ibn_kathir": "A biografia profética extraída de al-Bidaya wa an-Nihaya, na qual Ibn Kathir reuniu as narrações e discutiu as suas cadeias.",
+    "as_seerah_nadwi": "Uma biografia atenta ao contexto histórico — o estado do mundo antes da missão e o efeito que a mensagem teve sobre ele — num estilo literário refinado.",
+    "bulugh_al_maram": "Ibn Hajar reuniu os hadiths das normas jurídicas em que os juristas se apoiaram, organizados por capítulos de fiqh, indicando após cada hadith quem o transmitiu e o seu grau. Um dos compêndios de normas mais conhecidos e estudados.",
+    "fiqh_as_seerah_ghazali": "Uma leitura da sira que dela extrai as lições, com a verificação dos seus hadiths pelo xeque al-Albani.",
+    "la_tahzan": "Um livro de abrandamento dos corações e alívio da alma, reunindo versículos, relatos e sabedorias para enfrentar a preocupação e a ansiedade.",
+    "mishkat_al_masabih": "Uma ampliação e depuração do Masabih as-Sunnah de al-Baghawi: at-Tibrizi organizou-o por capítulos, acrescentou-lhe uma terceira secção e atribuiu cada hadith a quem o transmitiu. Um dos livros ordenados da Sunnah mais completos.",
+    "mukhtasar_minhaj_al_qasidin": "O resumo por Ibn Qudama al-Maqdisi do Minhaj al-Qasidin de Ibn al-Jawzi, sobre purificação espiritual, carácter e desapego; um dos livros centrais de conduta entre Ahl as-Sunnah.",
+    "nawadir_al_usul": "Uma das obras mais conhecidas de al-Hakim at-Tirmidhi, explicando princípios extraídos do hadith profético num estilo sufi e formativo característico. Dito com franqueza: o livro — tal como o seu autor junto dos especialistas em hadith — contém vários hadiths fracos e não estabelecidos a par dos autênticos, e deve ser lido com isso em mente.",
+    "nur_al_yaqin": "Uma biografia breve e de expressão simples, escrita para o ensino, que se tornou famosa e um dos resumos mais difundidos.",
+    "qasr_al_amal": "A obra de Ibn Abi ad-Dunya sobre encurtar as esperanças e a censura da longa esperança e do adiamento, reunindo hadiths e relatos dos antigos sobre preparar-se para a morte e apressar-se às boas obras.",
+    "rijal_hawl_ar_rasul": "Sessenta retratos dos Companheiros do Mensageiro de Allah ﷺ em estilo literário; uma das obras mais difundidas para dar a conhecer aquela geração.",
+    "riyad_as_salihin": "O mais conhecido compêndio de hadiths sobre carácter, boas maneiras e o abrandamento dos corações, reunido pelo imã an-Nawawi a partir dos dois Sahihs e de outros livros da Sunnah.",
+    "sahih_al_adab_al_mufrad": "Os hadiths de al-Adab al-Mufrad que o xeque Muhammad Nasir ad-Din al-Albani classificou como autênticos, separados dos fracos.",
+    "sahih_as_seerah_albani": "O que está estabelecido como autêntico da sira de Ibn Kathir, resumido e anotado por al-Albani. Morreu antes de a concluir, pelo que termina em 2/94 da edição de Abd al-Wahid.",
+    "sayd_al_khatir": "Os pensamentos e reflexões de Ibn al-Jawzi sobre a alma, a religião e o mundo; do mais delicado que se escreveu sobre exortação e formação espiritual entre os sábios de Ahl as-Sunnah.",
+    "seerat_ibn_hisham": "A mais antiga biografia que nos chegou completa: a depuração por Ibn Hisham da sira de Ibn Ishaq. Esta cópia eletrónica abrange apenas os dois primeiros volumes da edição indicada.",
+    "umdat_al_ahkam": "Um compêndio breve dos hadiths das normas jurídicas, no qual al-Maqdisi se limitou ao que al-Bukhari e Muslim transmitem em conjunto, o que o torna dos mais solidamente estabelecidos. Um dos textos por onde se começa.",
+    "uyun_al_athar": "Uma sira composta segundo o método dos especialistas em hadith, sobre as expedições, as qualidades do Profeta e a sua vida; uma das obras de referência da sira entre os sábios posteriores.",
+    "zad_al_maad": "O caminho do Profeta ﷺ na adoração, nos tratos, nas expedições e na medicina, na edição dos dois al-Arna'ut. Entre as obras mais completas sobre a orientação profética."
   }
 }

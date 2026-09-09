@@ -57,7 +57,12 @@ void main() {
     for (final book in libraryBookCatalog) {
       expect(book.titleAr.trim(), isNotEmpty, reason: book.id);
       expect(book.authorAr.trim(), isNotEmpty, reason: book.id);
-      expect(book.descriptionAr.trim(), isNotEmpty, reason: book.id);
+      // Every book still says something about itself: either a written blurb
+      // under `book_desc.<id>`, or the generated sentence, which needs a page
+      // count to be worth printing. A book with neither would render a blank
+      // line where the description goes.
+      expect(book.descKey.isNotEmpty || book.pages > 0, isTrue,
+          reason: book.id);
     }
   });
 

@@ -650,7 +650,7 @@ class _BookCard extends StatelessWidget {
               );
             }),
             const SizedBox(height: 8),
-            ArabicText(book.descriptionAr,
+            Text(book.description(),
                 style: const TextStyle(fontSize: 13)),
             const SizedBox(height: 10),
 

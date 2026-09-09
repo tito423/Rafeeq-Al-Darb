@@ -280,7 +280,8 @@
     "search_all_empty": "Cherchez dans tous les livres téléchargés à la fois",
     "died_ah": "Mort en {} AH",
     "died_circa_ah": "Mort vers {} AH",
-    "death_8th_century": "Un savant du VIIIe siècle de l’Hégire"
+    "death_8th_century": "Un savant du VIIIe siècle de l’Hégire",
+    "book_desc_generated": "Un ouvrage de {}, {} pages, dans la section {}."
   },
   "azkar": {
     "title": "Adhkar",
@@ -956,5 +957,36 @@
     "quran_2_b": "Il se divise en 114 sourates, mecquoises (révélées avant l’Hégire) et médinoises (après), et aussi en 30 parties (juz) afin d’en faciliter la lecture complète au fil du mois.",
     "quran_3_h": "Par où commencer ?",
     "quran_3_b": "Beaucoup de nouveaux musulmans commencent par mémoriser la sourate Al-Fâtiha (récitée à chaque unité de prière) et les sourates brèves de la dernière partie du Coran (juz ‘Amma), puis progressent dans la lecture et la compréhension. Tout cela se trouve dans l’onglet « Coran » de cette application, avec le texte, la récitation et la traduction du sens."
+  },
+  "book_desc": {
+    "adab_al_nafs": "L’ouvrage d’al-Hakim at-Tirmidhi sur la discipline et la purification de l’âme, traitant des types d’âme nommés dans le Coran (celle qui incite, l’apaisée, celle qui se blâme), de l’état du cœur, de la certitude et de l’effort des cheminants.",
+    "al_adab_al_mufrad": "Le livre d’al-Bukhari sur le caractère et les bonnes manières, la piété filiale, les liens de parenté et la bonne compagnie. Il l’a tenu à part de son Sahih avec une condition plus large : tout ce qu’il contient n’atteint donc pas le degré d’al-Jami' as-Sahih.",
+    "al_aqidah_al_wasitiyyah": "Le célèbre traité d’Ibn Taymiyya sur le credo des gens de la Sunna et du groupe, écrit à la demande d’un juge de Wasit, et l’un des textes de credo les plus commentés et les plus répandus.",
+    "al_fawaid": "L’un des plus beaux livres d’Ibn al-Qayyim : bienfaits, exhortations et sagesses épars sur le credo, le comportement et l’éducation, classés non par chapitres mais au fil des élans de la foi.",
+    "al_hasanah_wa_al_sayyiah": "Le traité d’Ibn Taymiyya sur les causes des bonnes et des mauvaises actions : l’ignorance est la racine de la désobéissance, et la science utile engendre la crainte qui porte à l’obéissance et éloigne du mal.",
+    "al_samt_wa_adab_al_lisan": "L’ouvrage d’Ibn Abi ad-Dunya sur le mérite du silence, la préservation de la langue et les méfaits de la parole, réunissant hadiths et récits sur les convenances de la parole et du silence chez les anciens.",
+    "al_shamail_al_muhammadiyyah": "Le recueil d’at-Tirmidhi de ce qui est rapporté du Prophète ﷺ dans son apparence et son caractère : son aspect, son vêtement, sa nourriture, son adoration et ses manières, classé par chapitres.",
+    "al_targhib_wal_tarhib": "Recueil d’al-Mundhiri des hadiths incitant à l’obéissance et mettant en garde contre le péché, classé par chapitres. Al-Mundhiri indique lui-même le degré de beaucoup d’entre eux ; on y trouve de l’authentique, du bon et du faible.",
+    "al_ubudiyyah": "Le traité d’Ibn Taymiyya sur le sens véritable de la servitude à Allah seul, et sur le fait que la perfection du serviteur réside dans la perfection de sa servitude envers son Seigneur ; parmi les écrits majeurs sur le sujet.",
+    "ar_raheeq_al_makhtum": "Une biographie contemporaine du Prophète ﷺ, premier prix du concours de la Ligue islamique mondiale sur la sîra, présentant les événements année par année avec un tri critique des récits.",
+    "as_seerah_ibn_kathir": "La biographie prophétique extraite d’al-Bidaya wa an-Nihaya, dans laquelle Ibn Kathir a réuni les récits et discuté leurs chaînes.",
+    "as_seerah_nadwi": "Une biographie attentive au contexte historique — l’état du monde avant la mission et l’effet du message sur lui — dans un style littéraire raffiné.",
+    "bulugh_al_maram": "Ibn Hajar y a réuni les hadiths des règles juridiques sur lesquels les juristes se sont appuyés, classés par chapitres de fiqh, en indiquant après chaque hadith qui l’a rapporté et son degré. L’un des recueils de règles les plus connus et les plus étudiés.",
+    "fiqh_as_seerah_ghazali": "Une lecture de la sîra qui en tire les leçons, avec l’authentification de ses hadiths par le cheikh al-Albani.",
+    "la_tahzan": "Un livre d’adoucissement des cœurs et d’allègement de l’âme, réunissant versets, récits et sagesses pour faire face au souci et à l’angoisse.",
+    "mishkat_al_masabih": "Un élargissement et une mise au point des Masabih as-Sunnah d’al-Baghawi : at-Tibrizi l’a classé par chapitres, y a ajouté une troisième section et a attribué chaque hadith à celui qui l’a rapporté. L’un des livres ordonnés de la Sunna les plus complets.",
+    "mukhtasar_minhaj_al_qasidin": "L’abrégé par Ibn Qudama al-Maqdisi du Minhaj al-Qasidin d’Ibn al-Jawzi, sur la purification de l’âme, le caractère et le détachement ; l’un des livres centraux du comportement chez les gens de la Sunna.",
+    "nawadir_al_usul": "L’un des ouvrages les plus connus d’al-Hakim at-Tirmidhi, expliquant des principes tirés du hadith prophétique dans un style soufi et formatif caractéristique. Dit franchement : le livre — comme son auteur auprès des spécialistes du hadith — contient plusieurs hadiths faibles et non établis à côté des authentiques, et doit être lu en le sachant.",
+    "nur_al_yaqin": "Une biographie brève et d’expression simple, écrite pour l’enseignement, devenue célèbre et l’un des abrégés les plus répandus.",
+    "qasr_al_amal": "L’ouvrage d’Ibn Abi ad-Dunya sur le raccourcissement des espoirs et le blâme du long espoir et de l’ajournement, réunissant hadiths et récits des anciens sur la préparation à la mort et l’empressement aux bonnes œuvres.",
+    "rijal_hawl_ar_rasul": "Soixante portraits des Compagnons du Messager d’Allah ﷺ dans un style littéraire ; l’un des ouvrages les plus répandus pour faire connaître cette génération.",
+    "riyad_as_salihin": "Le plus connu des abrégés de hadiths sur le caractère, les bonnes manières et l’adoucissement des cœurs, réuni par l’imam an-Nawawi à partir des deux Sahihs et d’autres livres de la Sunna.",
+    "sahih_al_adab_al_mufrad": "Les hadiths d’al-Adab al-Mufrad que le cheikh Muhammad Nasir ad-Din al-Albani a jugés authentiques, séparés des faibles.",
+    "sahih_as_seerah_albani": "Ce qui est établi comme authentique de la sîra d’Ibn Kathir, résumé et annoté par al-Albani. Il est mort avant de l’achever : l’ouvrage s’arrête à 2/94 de l’édition d’Abd al-Wahid.",
+    "sayd_al_khatir": "Les pensées et réflexions d’Ibn al-Jawzi sur l’âme, la religion et le monde ; parmi les pages les plus fines écrites sur l’exhortation et la formation spirituelle chez les savants de la Sunna.",
+    "seerat_ibn_hisham": "La plus ancienne biographie qui nous soit parvenue complète : la mise au point par Ibn Hicham de la sîra d’Ibn Ishaq. Cette copie électronique ne couvre que les deux premiers volumes de l’édition indiquée.",
+    "umdat_al_ahkam": "Un bref recueil des hadiths des règles juridiques, dans lequel al-Maqdisi s’est limité à ce que rapportent à la fois al-Bukhari et Muslim, ce qui en fait l’un des plus solidement établis. L’un des textes par lesquels on commence.",
+    "uyun_al_athar": "Une sîra composée selon la méthode des spécialistes du hadith, portant sur les expéditions, les qualités du Prophète et sa vie ; l’un des ouvrages de référence de la sîra chez les savants postérieurs.",
+    "zad_al_maad": "La voie du Prophète ﷺ dans son adoration, ses transactions, ses expéditions et sa médecine, dans l’édition des deux al-Arna'ut. Parmi les ouvrages les plus complets sur la guidance prophétique."
   }
 }

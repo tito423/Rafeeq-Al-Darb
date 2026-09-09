@@ -1,10 +1,10 @@
 hadith ids: 3574
 
 lang    stored   graded   attrib
-ar           0        0        0
-en           0        0        0
-es           0        0        0
-fr           0        0        0
-pt           0        0        0
-ru           0        0        0
-ur           0        0        0
+ar         131      131      131
+en         127      127      127
+es         104      104      104
+fr         108      108      108
+pt          40       40       40
+ru         119      119      119
+ur         121      121      121

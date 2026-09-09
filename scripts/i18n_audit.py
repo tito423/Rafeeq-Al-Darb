@@ -173,6 +173,12 @@ ALLOWLIST = {
     ("features/home/presentation/widgets/analog_clock_faces.dart",
      "١١"): "Arabic-numeral clock face",
 
+    # A regex character class in `LibraryBook.sortKey`, which folds the alef
+    # forms so «الفوائد» files under fā'. Same class as arabic_normalize.dart,
+    # which is excluded whole: it is never rendered.
+    ("features/library/data/book_catalog.dart",
+     "[إأآٱ]"): "alef forms folded for Arabic collation — a regex, not text",
+
     # The owner's own name.
     ("features/settings/presentation/screens/about_screen.dart",
      "Tito Abo Malak"): "the owner's name",
