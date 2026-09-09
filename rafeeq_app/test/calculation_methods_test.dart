@@ -17,9 +17,9 @@ import 'package:rafeeq_app/features/adhan/data/prayer_calculation_methods.dart';
 ///     every Isha interval in `kPrayerCalculationMethods` has to equal what
 ///     the organisation publishes.
 ///   * `prayer_timings.json` — a grid of real answers from the same API
-///     (4 cities × 2 dates × every method, requested in UTC so nothing has to
-///     be guessed about timezones). The app's own calculation has to land on
-///     those times.
+///     (every method × 4 cities × 2 dates × both Asr schools, requested in
+///     UTC so nothing has to be guessed about timezones). The app's own
+///     calculation has to land on those times.
 ///
 /// The tolerance below is measured, not assumed: the two engines are
 /// different implementations (AlAdhan is PrayTimes-derived, the app uses the
@@ -92,9 +92,14 @@ void main() {
       final method = offered[row['method'] as int];
       if (method == null) continue; // a method the app does not offer
 
-      // The grid was fetched with AlAdhan's own defaults, so match them
-      // rather than the app's user settings.
-      expect(row['school'], 'STANDARD');
+      // Each row carries the Asr school it was fetched with, so both of the
+      // app's madhab settings are checked against real answers rather than
+      // one of them being taken on trust. The high-latitude rule is
+      // AlAdhan's default throughout.
+      final madhab = row['school'] == 'HANAFI'
+          ? adhan.Madhab.hanafi
+          : adhan.Madhab.shafi;
+      expect(row['school'], anyOf('STANDARD', 'HANAFI'));
       expect(row['latitudeAdjustmentMethod'], 'ANGLE_BASED');
 
       final parts = (row['date'] as String).split('-').map(int.parse).toList();
@@ -107,7 +112,7 @@ void main() {
           // Umm al-Qura's Isha moves by half an hour in Ramadan, so the date
           // is part of the calculation, not just of the request.
           date: DateTime.utc(parts[2], parts[1], parts[0]),
-          madhab: adhan.Madhab.shafi,
+          madhab: madhab,
           highLatitudeRule: adhan.HighLatitudeRule.twilight_angle,
         ),
       );
@@ -135,7 +140,8 @@ void main() {
         }
         if (diff > _toleranceMinutes) {
           failures.add('${method.nameEn} (${method.id}) ${row['city']} '
-              '${row['date']} $prayer: ours ${_hhmmUtc(ours[prayer]!)} vs '
+              '${row['date']} ${row['school']} $prayer: '
+              'ours ${_hhmmUtc(ours[prayer]!)} vs '
               'AlAdhan ${row[prayer]} (${diff}m)');
         }
       }

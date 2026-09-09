@@ -486,9 +486,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 21:03 — IN PROGRESS — resume here**
+**2026-09-09 21:16 — IN PROGRESS — resume here**
 
-prayer times: 21 calculation methods, the Asr madhab and the high-latitude rule - every one checked against AlAdhan's published table and 960 real timings
+prayer methods verified on emulator-5554: switching Umm al-Qura to Egypt moved Isha 9:38 to 9:27 PM, matching AlAdhan to the minute; both Asr schools now in the grid (1,920 comparisons, worst 2m)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

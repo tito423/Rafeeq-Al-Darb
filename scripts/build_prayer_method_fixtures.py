@@ -65,6 +65,11 @@ CITIES = [
 # not prove it.
 DATES = ["15-03-2026", "21-06-2026"]
 
+# Both Asr schools. AlAdhan calls them `school=0` (STANDARD — Maliki,
+# Shafi'i, Hanbali: one shadow-length) and `school=1` (HANAFI — two). The app
+# offers both and the difference is up to an hour, so both are checked.
+SCHOOLS = [(0, "STANDARD"), (1, "HANAFI")]
+
 # The ids the app actually offers, read straight out of the Dart catalogue so
 # the two can never drift apart.
 CATALOGUE = os.path.join(ROOT, "rafeeq_app", "lib", "features", "adhan",
@@ -129,18 +134,20 @@ def main():
             if not line:
                 continue
             row = json.loads(line)
-            done[(row["method"], row["city"], row["date"])] = row
+            done[(row["method"], row["city"], row["date"],
+                  1 if row.get("school") == "HANAFI" else 0)] = row
         log("resuming with %d rows already fetched" % len(done))
 
-    wanted = [(mid, city, lat, lon, date)
+    wanted = [(mid, city, lat, lon, date, school)
+              for school, _name in SCHOOLS
               for date in DATES for city, lat, lon in CITIES for mid in ids]
-    todo = [w for w in wanted if (w[0], w[1], w[4]) not in done]
+    todo = [w for w in wanted if (w[0], w[1], w[4], w[5]) not in done]
     log("to fetch: %d of %d" % (len(todo), len(wanted)))
 
     progress = io.open(PROGRESS, "a", encoding="utf-8", newline="\n")
-    for n, (mid, city, lat, lon, date) in enumerate(todo, 1):
-        url = ("%s/timings/%s?latitude=%s&longitude=%s&method=%d"
-               "&timezonestring=UTC" % (API, date, lat, lon, mid))
+    for n, (mid, city, lat, lon, date, school) in enumerate(todo, 1):
+        url = ("%s/timings/%s?latitude=%s&longitude=%s&method=%d&school=%d"
+               "&timezonestring=UTC" % (API, date, lat, lon, mid, school))
         data = get(url)["data"]
         t = data["timings"]
         row = {
@@ -161,14 +168,15 @@ def main():
                 data["meta"].get("latitudeAdjustmentMethod"),
             "school": data["meta"].get("school"),
         }
-        done[(mid, city, date)] = row
+        done[(mid, city, date, school)] = row
         progress.write(json.dumps(row, ensure_ascii=False) + u"\n")
         progress.flush()
         if n % 10 == 0 or n == len(todo):
             log("  %d / %d" % (n, len(todo)))
     progress.close()
 
-    grid = [done[(mid, city, date)]
+    grid = [done[(mid, city, date, school)]
+            for school, _name in SCHOOLS
             for date in DATES for city, _lat, _lon in CITIES for mid in ids]
     with io.open(os.path.join(OUT, "prayer_timings.json"), "w",
                  encoding="utf-8", newline="\n") as f:
