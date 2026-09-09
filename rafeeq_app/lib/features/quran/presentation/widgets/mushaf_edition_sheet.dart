@@ -131,7 +131,8 @@ class _EditionTile extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          edition.nameAr,
+                          edition.localizedName(
+                              context.locale.languageCode),
                           style: theme.textTheme.titleSmall
                               ?.copyWith(fontWeight: FontWeight.w700),
                         ),
@@ -142,7 +143,8 @@ class _EditionTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${'quran.riwayah'.tr()}: ${edition.riwayahAr}',
+                    '${'quran.riwayah'.tr()}: '
+                    '${edition.localizedRiwayah(context.locale.languageCode)}',
                     style: theme.textTheme.bodySmall
                         ?.copyWith(color: theme.colorScheme.outline),
                   ),

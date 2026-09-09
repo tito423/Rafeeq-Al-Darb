@@ -94,6 +94,29 @@ class MushafEdition {
   final String riwayahAr;
   final String riwayahEn;
 
+  /// The printing's title and its riwayah line in the app's other locales,
+  /// keyed by language code. Populated from `name_<loc>` / `riwayah_<loc>` in
+  /// `editions.json`.
+  ///
+  /// P3‑57: a fresh install in Spanish used to list every printing under its
+  /// ARABIC title, on an otherwise Spanish onboarding screen — the owner's
+  /// «اول مرة بعد تسطيب التطبيق ترجم اسماء المصاحف». These are descriptive
+  /// titles of printings, so they are translated; the riwayah is a person's
+  /// name and is transliterated in Latin scripts and written in its own
+  /// script in Urdu, which shares the Arabic alphabet.
+  final Map<String, String> namesByLocale;
+  final Map<String, String> riwayahsByLocale;
+
+  /// The title to show in [locale], falling back to English and then to
+  /// Arabic. Arabic is last rather than first on purpose: a missing
+  /// translation should degrade to a script the reader can probably read.
+  String localizedName(String locale) =>
+      locale == 'ar' ? nameAr : (namesByLocale[locale] ?? nameEn.orIfEmpty(nameAr));
+
+  String localizedRiwayah(String locale) => locale == 'ar'
+      ? riwayahAr
+      : (riwayahsByLocale[locale] ?? riwayahEn.orIfEmpty(riwayahAr));
+
   /// Ayah-polygon asset. Empty for a printing with no hit layer, and then
   /// tap-to-highlight and the sciences sheet do not apply to it.
   ///
@@ -164,6 +187,8 @@ class MushafEdition {
     required this.nameEn,
     required this.riwayahAr,
     required this.riwayahEn,
+    this.namesByLocale = const {},
+    this.riwayahsByLocale = const {},
     required this.polygonsAsset,
     this.polygonFit,
     this.polygonFitPages = const {},
@@ -187,6 +212,8 @@ class MushafEdition {
         nameEn: j['name_en'] as String,
         riwayahAr: j['riwayah_ar'] as String? ?? '',
         riwayahEn: j['riwayah_en'] as String? ?? '',
+        namesByLocale: _byLocale(j, 'name_'),
+        riwayahsByLocale: _byLocale(j, 'riwayah_'),
         polygonsAsset: j['polygons_asset'] as String? ?? '',
         // `default` is optional. A printing whose leaves were cropped one by
         // one carries a fit per page and no edition-wide one, and a page with
@@ -296,3 +323,22 @@ final currentMushafEditionProvider =
     ),
   );
 });
+
+/// Collects `<prefix><lang>` string entries into a language-keyed map, so a
+/// locale added to `editions.json` needs no Dart change here.
+Map<String, String> _byLocale(Map<String, dynamic> j, String prefix) {
+  final out = <String, String>{};
+  for (final e in j.entries) {
+    if (!e.key.startsWith(prefix)) continue;
+    final lang = e.key.substring(prefix.length);
+    // Two letters only: skips `name_ar`/`name_en`? No — those are wanted too,
+    // and keeping them means `localizedName('en')` reads from the same map.
+    if (lang.length != 2 || e.value is! String) continue;
+    out[lang] = e.value as String;
+  }
+  return out;
+}
+
+extension _Fallback on String {
+  String orIfEmpty(String other) => isEmpty ? other : this;
+}

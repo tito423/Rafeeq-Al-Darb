@@ -113,7 +113,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
         imagePath: widget.edition.imagePath,
         imageExt: widget.edition.imageExt,
         toPage: widget.edition.pages,
-        title: widget.edition.nameAr,
+        title: widget.edition.localizedName(context.locale.languageCode),
       ),
     );
   }
@@ -157,7 +157,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                     children: [
                       Expanded(
                         child: Text(
-                          e.nameAr,
+                          e.localizedName(context.locale.languageCode),
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w700,
                           ),

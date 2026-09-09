@@ -175,6 +175,8 @@
     "hadiths_count": "хадисов",
     "chapters": "Главы",
     "hadith_number": "Хадис №",
+    "translation_en_label": "Английский перевод — sunnah.com",
+    "translation_none": "Опубликованного перевода этого сборника нет",
     "grade": "Степень достоверности",
     "search_hadith": "Поиск по хадисам…",
     "sources_pending": "Список книг проверяется владельцем приложения перед загрузкой",

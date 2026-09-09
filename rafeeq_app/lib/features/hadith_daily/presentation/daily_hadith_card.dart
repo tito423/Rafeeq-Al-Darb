@@ -10,6 +10,7 @@ import '../../../core/db/hadith_repository.dart';
 import '../../../core/services/download_manager.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../library/presentation/screens/hadith_detail_screen.dart';
+import '../../library/presentation/widgets/hadith_translation.dart';
 import '../data/daily_hadith_provider.dart';
 
 /// Home, bottom card (P2‑13) — one full hadith (complete text, narrator,
@@ -400,6 +401,9 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                   height: 1.9,
                 ),
               ),
+              // P3‑57: the owner asked for the hadith's translation under it
+              // wherever a hadith is shown — the card as well as the book.
+              HadithTranslation(item: item, maxLines: 4),
               const SizedBox(height: 10),
               Text(
                 '${book.nameAr} · ${'library.hadith_number'.tr()} ${item.numberInBook}',

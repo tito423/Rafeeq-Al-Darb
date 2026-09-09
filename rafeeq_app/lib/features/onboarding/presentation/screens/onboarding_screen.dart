@@ -342,7 +342,7 @@ class _RecitationPicker extends ConsumerWidget {
                     DropdownMenuItem(
                       value: r.identifier,
                       child: Text(
-                        r.nameAr.isEmpty ? r.nameEn : r.nameAr,
+                        r.displayName(context.locale.languageCode),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

@@ -699,7 +699,7 @@ class _ReciterPicker extends ConsumerWidget {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                r.nameAr.isEmpty ? r.nameEn : r.nameAr,
+                                r.displayName(context.locale.languageCode),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),

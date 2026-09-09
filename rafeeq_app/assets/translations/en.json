@@ -175,6 +175,8 @@
     "hadiths_count": "hadiths",
     "chapters": "Chapters",
     "hadith_number": "Hadith no.",
+    "translation_en_label": "English translation — sunnah.com",
+    "translation_none": "No published translation of this collection is available",
     "grade": "Grade",
     "search_hadith": "Search hadiths…",
     "sources_pending": "The book list is under review with the app owner before anything is downloaded",

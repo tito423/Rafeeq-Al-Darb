@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/rgb_backdrop.dart';
 import '../core/theme/theme_controller.dart';
+import '../features/quran/data/translation_lang_provider.dart';
 import '../features/splash/presentation/screens/splash_screen.dart';
 import 'navigation.dart';
 
@@ -20,6 +21,16 @@ class RafeeqApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final variant = ref.watch(themeControllerProvider);
+
+    // P3‑57: the reader's translation follows the app's language. Done here
+    // because this is the one widget that rebuilds on every locale change and
+    // has `context.locale`; scheduled off the frame because it writes provider
+    // state and touches SharedPreferences.
+    final localeCode = context.locale.languageCode;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(selectedTranslationLangProvider.notifier)
+          .followAppLocale(localeCode);
+    });
 
     // Resolve the active variant into MaterialApp's theme slots. Only `rgb`
     // needs the animated backdrop; the other three are plain.

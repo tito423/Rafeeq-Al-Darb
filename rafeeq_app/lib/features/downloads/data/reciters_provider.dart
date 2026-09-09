@@ -18,6 +18,27 @@ class Reciter {
     required this.nameAr,
     required this.nameEn,
   });
+
+  /// The reciter's name as it should read in [locale].
+  ///
+  /// A person's name is **transliterated, not translated**, so there are only
+  /// two forms and the choice is by script, not by language: Arabic script for
+  /// the Arabic-script locales (ar and ur — Urdu writes these names with the
+  /// same letters), and the catalogue's Latin transliteration for the rest.
+  /// That transliteration is the form Spanish, French, Portuguese and Russian
+  /// sources use for these names too, so nothing here is invented.
+  ///
+  /// P3‑57: before this, every locale saw `nameAr`, so a fresh English or
+  /// Spanish install listed the reciters in Arabic script — the owner's «اول
+  /// مرة بعد تسطيب التطبيق ترجم … اسم قارئ التلاوة للغة التطبيق المختارة».
+  static const arabicScriptLocales = {'ar', 'ur'};
+
+  String displayName(String locale) {
+    if (arabicScriptLocales.contains(locale)) {
+      return nameAr.isEmpty ? nameEn : nameAr;
+    }
+    return nameEn.isEmpty ? nameAr : nameEn;
+  }
 }
 
 /// Arabic ayah-by-ayah reciters from the bundled editions catalog.
@@ -35,7 +56,9 @@ final recitersProvider = FutureProvider<List<Reciter>>((ref) async {
       nameEn: (m['englishName'] as String?) ?? '',
     ));
   }
-  out.sort((a, b) => a.nameAr.compareTo(b.nameAr));
+  // Sorted by the Latin form: it is the only field every entry really has,
+  // and an Arabic-script sort of a list rendered in Latin looked arbitrary.
+  out.sort((a, b) => a.nameEn.compareTo(b.nameEn));
   return out;
 });
 

@@ -175,6 +175,8 @@
     "hadiths_count": "حديث",
     "chapters": "الأبواب",
     "hadith_number": "حديث رقم",
+    "translation_en_label": "الترجمة الإنجليزية — sunnah.com",
+    "translation_none": "لا تتوفّر ترجمة منشورة لهذه المجموعة",
     "grade": "الدرجة",
     "search_hadith": "ابحث في الأحاديث…",
     "sources_pending": "قائمة الكتب قيد المراجعة مع صاحب التطبيق قبل تنزيل أي محتوى",

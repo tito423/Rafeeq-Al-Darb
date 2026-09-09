@@ -141,7 +141,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
         imagePath: widget.edition.imagePath,
         imageExt: widget.edition.imageExt,
         toPage: widget.edition.pages,
-        title: widget.edition.nameAr,
+        title: widget.edition.localizedName(context.locale.languageCode),
       ),
     );
   }
@@ -198,7 +198,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                 child: Column(
                   children: [
                     Text(
-                      e.nameAr,
+                      e.localizedName(context.locale.languageCode),
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                         fontFamily: 'AmiriQuran',
@@ -207,7 +207,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      e.riwayahAr,
+                      e.localizedRiwayah(context.locale.languageCode),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w600,

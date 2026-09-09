@@ -1,4 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
+
+import '../widgets/hadith_translation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/hadith_repository.dart';
@@ -151,22 +153,13 @@ class _HadithContent extends StatelessWidget {
             height: 2.0,
           ),
         ),
-        // The English gloss only shows when the app isn't in Arabic.
-        if (!isArabic && (item.textEn ?? '').isNotEmpty) ...[
+        // The translation, shown under the Arabic whenever the app isn't in
+        // Arabic. It used to appear unlabelled, which left a Spanish reader
+        // to work out for themselves that the paragraph was English — and a
+        // collection with no translation at all said nothing whatsoever.
+        if (!isArabic) ...[
           const Divider(height: 32),
-          if ((item.narratorEn ?? '').isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(
-                item.narratorEn!,
-                style: theme.textTheme.labelMedium
-                    ?.copyWith(color: scheme.onSurfaceVariant),
-              ),
-            ),
-          Text(
-            item.textEn!,
-            style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
-          ),
+          HadithTranslation(item: item),
         ],
         // Every hadith now says something about its takhrij, because saying
         // nothing is itself ambiguous — a reader can't tell an ungraded

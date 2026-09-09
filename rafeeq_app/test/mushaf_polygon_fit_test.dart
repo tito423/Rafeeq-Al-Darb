@@ -67,6 +67,33 @@ void main() {
     }
   });
 
+  test('every printing names itself in all seven app locales', () {
+    // A fresh install in Spanish used to list every printing under its ARABIC
+    // title. `localizedName` must return something in the reader's own script
+    // for every locale the app ships — and must not fall back to Arabic for a
+    // locale that has a name of its own.
+    const locales = ['ar', 'en', 'es', 'fr', 'pt', 'ru', 'ur'];
+    final arabicLetters = RegExp(r'[؀-ۿ]');
+    for (final e in editions) {
+      for (final loc in locales) {
+        final name = e.localizedName(loc);
+        final riwayah = e.localizedRiwayah(loc);
+        expect(name.trim(), isNotEmpty, reason: '${e.id} name/$loc');
+        expect(riwayah.trim(), isNotEmpty, reason: '${e.id} riwayah/$loc');
+        if (loc == 'ar' || loc == 'ur') {
+          // Both are Arabic-script locales, so both should read in it.
+          expect(arabicLetters.hasMatch(name), isTrue,
+              reason: '${e.id}: $loc name is not in Arabic script: $name');
+        } else {
+          expect(name, isNot(e.nameAr),
+              reason: '${e.id}: $loc fell back to the Arabic title');
+        }
+      }
+      // Urdu is a different language, not a copy of the Arabic row.
+      expect(e.localizedName('ur'), isNot(e.nameAr), reason: e.id);
+    }
+  });
+
   test('page 2 of a Madinah printing sets six lines, not fifteen', () {
     // The fact that kept `madinah_gold` unfitted for three sessions. Page 2 of
     // ANY Madinah printing is al-Baqarah's illuminated opening: six lines of
