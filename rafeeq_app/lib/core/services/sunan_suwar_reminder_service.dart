@@ -1,4 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'notification_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -22,18 +24,12 @@ class SunanSuwarReminderService {
 
   Future<void> initialize() async {
     if (_ready) return;
-    await _plugin.initialize(
-      const InitializationSettings(
-          android: AndroidInitializationSettings('@mipmap/ic_launcher')),
-      onDidReceiveNotificationResponse: _onResponse,
-      onDidReceiveBackgroundNotificationResponse: _onResponse,
-    );
+    // Through the router. This service's own `initialize` was being
+    // overwritten by `PrayerStatusNotification`'s empty tap handler on the
+    // first frame, so tapping a surah reminder did nothing at all — which
+    // looked like it worked, because it opened the app.
+    await NotificationRouter.instance.ensureInitialized();
     _ready = true;
-  }
-
-  @pragma('vm:entry-point')
-  static void _onResponse(NotificationResponse response) {
-    if (response.payload != null) onOpenSurah?.call(response.payload!);
   }
 
   Future<void> _ensureChannel() async {

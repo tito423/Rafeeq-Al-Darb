@@ -3,6 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'notification_router.dart';
+
 /// Android status-bar progress for the one download path that is **not** a
 /// file transfer: `MushafPageService`'s page prefetch, which renders and
 /// caches pages itself rather than handing a URL to the platform downloader.
@@ -25,11 +27,9 @@ class DownloadNotifications {
     if (_ready) return;
     try {
       final plugin = FlutterLocalNotificationsPlugin();
-      const android = AndroidInitializationSettings('@mipmap/ic_launcher');
-      await plugin.initialize(
-        const InitializationSettings(android: android),
-        onDidReceiveNotificationResponse: (_) {},
-      );
+      // Through the router. This used to install `onDidReceiveNotificationResponse: (_) {}`,
+      // which swallowed every tap in the app — see `NotificationRouter`.
+      await NotificationRouter.instance.ensureInitialized();
       // Android 13+ needs the runtime POST_NOTIFICATIONS grant before any
       // progress notification will show. Ask once, on the first download.
       final androidImpl = plugin

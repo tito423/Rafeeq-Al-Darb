@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../features/quotes/data/quote_repository.dart';
+import 'notification_router.dart';
 
 /// «إشعار كل مدة يحددها المالك … لما يضغط عليه يفتح كارت جوّه التطبيق».
 ///
@@ -34,32 +35,20 @@ class QuoteReminderService {
   /// stacking a second one on top of it.
   static const _baseId = 7500;
 
-  /// Android will hold far more than this, but a window longer than a day is
-  /// stale by the time it fires — the app will have been opened.
-  static const maxSlots = 48;
-
-  /// Set by `main()`; called with the payload when a quote notification is
-  /// tapped, so the app can open the card.
-  static void Function(String payload)? onOpenQuote;
+  /// How many notifications one window holds.
+  ///
+  /// 24 rather than a day's worth, because these are EXACT alarms and 48 of
+  /// them is a lot to ask of the system for a nudge. At the owner's default
+  /// half-hour that is twelve hours of coverage, re-armed every time the app
+  /// is opened.
+  static const maxSlots = 24;
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
   bool _channelReady = false;
 
-  @pragma('vm:entry-point')
-  static void _onResponse(NotificationResponse response) {
-    final payload = response.payload;
-    if (payload != null && payload.isNotEmpty) onOpenQuote?.call(payload);
-  }
-
-  Future<void> initialize() async {
-    await _plugin.initialize(
-      const InitializationSettings(
-          android: AndroidInitializationSettings('@mipmap/ic_launcher')),
-      onDidReceiveNotificationResponse: _onResponse,
-      onDidReceiveBackgroundNotificationResponse: _onResponse,
-    );
-  }
+  Future<void> initialize() =>
+      NotificationRouter.instance.ensureInitialized();
 
   Future<void> _ensureChannel() async {
     if (_channelReady) return;
@@ -135,16 +124,26 @@ class QuoteReminderService {
             ),
           ),
         ),
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        // EXACT, and this was measured before it was chosen: with
+        // `inexactAllowWhileIdle` a slot armed for 02:35 had still not fired
+        // at 02:43 on emulator-5554, because Doze batches inexact alarms.
+        // The owner picks this interval — «كل مدة يحددها المالك» — and a
+        // 15-minute setting that fires whenever Android feels like it is not
+        // the setting he chose. The app already holds the exact-alarm
+        // permission for the adhan.
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
-        payload: Quote.key(pick.$1, pick.$2),
+        // The router dispatches on this prefix; a bare integer payload is
+        // the سنن السور reminder's and must stay unambiguous.
+        payload: '${NotificationRouter.quotePrefix}${Quote.key(pick.$1, pick.$2)}',
       );
     }
   }
 
   /// How many slots a window of [everyMinutes] holds: a day's worth, capped
-  /// at [maxSlots]. At 30 minutes that is 48 (24 hours); at 6 hours it is 4.
+  /// at [maxSlots]. At 30 minutes that is 24 (twelve hours); at 6 hours the
+  /// day's worth is only 4, and 4 is what is armed.
   static int slotCount(int everyMinutes) {
     if (everyMinutes <= 0) return 0;
     final perDay = (24 * 60) ~/ everyMinutes;

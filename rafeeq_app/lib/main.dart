@@ -20,6 +20,7 @@ import 'core/services/alarm_permissions_service.dart';
 import 'core/services/quran_translation_store.dart';
 import 'core/services/download_engine.dart';
 import 'core/services/sunan_suwar_reminder_service.dart';
+import 'core/services/notification_router.dart';
 import 'core/services/quote_reminder_service.dart';
 import 'features/quotes/presentation/quote_navigation.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
@@ -117,7 +118,7 @@ Future<void> main() async {
   unawaited(DownloadEngine.resumeFromBackground());
 
   await SunanSuwarReminderService.instance.initialize();
-  SunanSuwarReminderService.onOpenSurah = openSunanSuwarFromPayload;
+  NotificationRouter.onSurah = openSunanSuwarFromPayload;
 
   // The Islamic-quote notification. The window is NOT re-armed here: the
   // interval lives in SharedPreferences and the corpus is an asset, and
@@ -125,7 +126,7 @@ Future<void> main() async {
   // language is known, so the notification's title is in the language the
   // reader is actually using.
   await QuoteReminderService.instance.initialize();
-  QuoteReminderService.onOpenQuote = openQuoteFromPayload;
+  NotificationRouter.onQuote = openQuoteFromPayload;
 
   runApp(
     EasyLocalization(

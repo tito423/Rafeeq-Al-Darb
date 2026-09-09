@@ -1,5 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'notification_router.dart';
+
 import '../i18n/hijri_months.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:hijri/hijri_calendar.dart';
@@ -38,11 +40,9 @@ class PrayerStatusNotification {
   Future<void> _ensureReady() async {
     if (_ready) return;
     try {
-      const android = AndroidInitializationSettings('@mipmap/ic_launcher');
-      await _plugin.initialize(
-        const InitializationSettings(android: android),
-        onDidReceiveNotificationResponse: (_) {},
-      );
+      // Through the router. This used to install `onDidReceiveNotificationResponse: (_) {}`,
+      // which swallowed every tap in the app — see `NotificationRouter`.
+      await NotificationRouter.instance.ensureInitialized();
       final androidImpl = _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
       await androidImpl?.requestNotificationsPermission();

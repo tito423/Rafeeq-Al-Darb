@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'notification_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'adhan_native.dart';
@@ -39,10 +40,10 @@ class AlarmPermissionsService {
   /// its own — the Adhan no longer posts anything through this plugin.
   Future<void> initialize() async {
     if (_ready) return;
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    await _plugin.initialize(
-      const InitializationSettings(android: androidInit),
-    );
+    // Through the router: this used to call `initialize` with no tap
+    // handler, which CLEARS whatever handler was installed before it. See
+    // `NotificationRouter`.
+    await NotificationRouter.instance.ensureInitialized();
     _ready = true;
   }
 
