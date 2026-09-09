@@ -58,17 +58,54 @@ EDITIONS = {
         first_index=4,        # PDF index of mushaf page 1 — MEASURED, see above
         width=880,            # output width in px; height follows each scan
         quality=84,
+        # SIX pages differ between this archive.org item and a second copy of
+        # the SAME scan set (`holy-quran-in-high-quality-qatar-interpret-
+        # network-15-lines`). That the two are one scan set is not assumed:
+        # every one of the other 598 pages is byte-identical between them, and
+        # each differing page has the same byte length in both — the signature
+        # of a corrupted copy, not a different scan.
+        #
+        # Four of the six are visibly damaged here and clean there, so those
+        # four are lifted from the second copy. This is recovery of the same
+        # file, not a mix of sources.
+        #   p5    a pink wash over the whole sheet
+        #   p167  a grey wash over the whole sheet
+        #   p210  a flat green block over most of the sheet
+        #   p323  a torn orange band across the lower border
+        # p241 and p385 also differ, but both copies of each are clean — the
+        # difference there is confined to glyph edges, i.e. re-encoding, not
+        # damage — so those keep the primary copy.
+        patch_pdf="qatar_alt.pdf",
+        patch_pages=(5, 167, 210, 323),
     ),
 }
 
 
-def render(spec, out_dir):
+def render(spec, out_dir, only=None):
     doc = fitz.open(os.path.join(WORK, spec["pdf"]))
+    patch = (fitz.open(os.path.join(WORK, spec["patch_pdf"]))
+             if spec.get("patch_pdf") else None)
     os.makedirs(out_dir, exist_ok=True)
     total = 0
     for page in range(1, spec["pages"] + 1):
+        if only and page not in only:
+            continue
         idx = spec["first_index"] + page - 1
-        src = doc[idx]
+        patched = page in spec.get("patch_pages", ())
+        src = (patch if patched else doc)[idx]
+        if patched:
+            # The second copy carries a "www.Quranpdf.blogspot.com" watermark
+            # drawn as TEXT over the top of every page — it is not in the
+            # embedded scan, only in the PDF. Redact the text and leave the
+            # image alone, or the four repaired pages would ship defaced while
+            # their 600 neighbours are clean.
+            for b in src.get_text("dict")["blocks"]:
+                if b["type"] != 0:
+                    continue
+                for line in b["lines"]:
+                    for sp in line["spans"]:
+                        src.add_redact_annot(fitz.Rect(sp["bbox"]))
+            src.apply_redactions(images=fitz.PDF_REDACT_IMAGE_NONE)
         # Scale from the page's own rect so a scan cropped slightly differently
         # from its neighbours keeps its true proportions instead of being
         # stretched to a common box.
@@ -148,6 +185,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("edition", choices=sorted(EDITIONS))
     ap.add_argument("--render", action="store_true")
+    ap.add_argument("--only", nargs="*", type=int,
+                    help="re-render just these pages (e.g. the patched ones)")
     ap.add_argument("--upload", action="store_true")
     ap.add_argument("--verify", action="store_true")
     a = ap.parse_args()
@@ -156,7 +195,7 @@ def main():
     out_dir = os.path.join(WORK, a.edition)
 
     if a.render:
-        total = render(spec, out_dir)
+        total = render(spec, out_dir, only=set(a.only) if a.only else None)
         print(f"rendered {spec['pages']} pages, {total/1e6:.1f} MB -> {out_dir}")
     if a.upload:
         if not upload(a.edition, out_dir, spec):
