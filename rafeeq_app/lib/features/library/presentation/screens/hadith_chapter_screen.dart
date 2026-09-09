@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/hadith_repository.dart';
+import '../../../../core/utils/arabic_normalize.dart';
 import 'hadith_detail_screen.dart';
 
 /// All hadiths in one chapter — numbered exactly as they are in the book,
@@ -56,7 +57,7 @@ class _HadithChapterScreenState extends State<HadithChapterScreen> {
                       style: const TextStyle(fontSize: 12)),
                 ),
                 title: Text(
-                  h.arabic,
+                  stripBidiControls(h.arabic),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 15),

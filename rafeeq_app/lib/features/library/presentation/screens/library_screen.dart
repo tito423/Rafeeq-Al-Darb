@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/utils/arabic_normalize.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -1218,7 +1219,7 @@ class _SearchResultsState extends State<_SearchResults> {
             final book = books[h.bookId];
             return ListTile(
               title: Text(
-                h.arabic,
+                stripBidiControls(h.arabic),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 15),

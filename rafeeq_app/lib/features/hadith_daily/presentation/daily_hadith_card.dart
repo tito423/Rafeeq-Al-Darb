@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import '../../../core/utils/arabic_normalize.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -391,7 +392,7 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
               ),
               const SizedBox(height: 6),
               Text(
-                item.arabic,
+                stripBidiControls(item.arabic),
                 maxLines: 6,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.justify,

@@ -2,6 +2,7 @@
 // collides with the `dart:ui` enum (ltr/rtl) this file needs for the hadith's
 // own right-to-left layout.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../../core/utils/arabic_normalize.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/arabic_text.dart';
@@ -149,7 +150,7 @@ class _HadithContent extends StatelessWidget {
         ],
         const Divider(height: 28),
         SelectableText(
-          item.arabic,
+          stripBidiControls(item.arabic),
           textDirection: TextDirection.rtl,
           textAlign: TextAlign.justify,
           style: const TextStyle(

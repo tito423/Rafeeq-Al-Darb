@@ -109,6 +109,34 @@ String stripTashkeelForDisplay(String s) => s.replaceAll(_arabicDiacritics, '');
 /// name is touched, so fully-vocalized names stay fully vocalized.
 String surahNameForDisplay(String s) => s.replaceAll('ۡ', 'ْ');
 
+/// The invisible bidi formatting characters, removed before hadith text is
+/// drawn — and **only** those.
+///
+/// The owner photographed Sunan Abi Dawud 1417 ending «… الْوِتْرَ ""» with a
+/// lone «.» beneath it. Byte by byte, that hadith ends:
+///
+///     … الْوِتْرَ ␣ U+200F " U+200F ␣ U+200F . U+200F
+///
+/// The source wraps the closing quote and the full stop each in a RIGHT-TO-LEFT
+/// MARK. Those force the two neutral characters to resolve RTL, so the renderer
+/// carries them away from the words they belong to: the closing quote lands
+/// beside the opening one and the stop is orphaned. 35,860 of the 67,153
+/// bundled hadiths carry U+200F, one carries U+200E, and none carry the
+/// embedding or override codes.
+///
+/// This removes characters that have **no glyph**: nothing a reader can see is
+/// added, removed or reordered by it, and the sequence of visible characters is
+/// identical before and after. CLAUDE.md §1.2 forbids rewriting the text of a
+/// hadith — this rewrites nothing visible; it drops formatting hints written
+/// for a different renderer, so Flutter can place the punctuation the way the
+/// printed edition does.
+///
+/// The database keeps the source's own bytes: this is applied where the text is
+/// drawn, never where it is stored.
+String stripBidiControls(String s) =>
+    s.replaceAll(RegExp('[\u200E\u200F\u2066-\u2069]'), '');
+
+
 /// True if [needle] occurs in [haystack] starting at a word boundary (index
 /// 0, or right after a space) — not merely anywhere `.contains()` would
 /// find it, which also matches inside an unrelated longer word (P3‑9: e.g.

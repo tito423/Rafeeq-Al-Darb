@@ -158,20 +158,54 @@ that happens before deciding how the card should read.
 
 ---
 
-## 2. Two things still waiting on the OWNER's decision
+## 2. THE OWNER HAS DECIDED BOTH. Do not reopen them.
 
-He has been told about both and has not answered:
+> «انا عايز الافضل لتجربة المستخدم وللامانة العلمية والموثوقية. في النهاية ده
+> تطبيق اسلامي، متحطش حاجة مجهولة المصدر إلا لو انت متأكد إن كل المطورين
+> بيعملوا كده.»
 
-* **The `""` and stray `.` in the hadith text** (Sunan Abi Dawud 1417 — he
-  photographed it again this session). Not corrupt data: the source wraps
-  speech in ASCII quotes surrounded by invisible RLM marks, and 51,460 hadiths
-  contain them. Stripping the invisible *control characters* at render time
-  changes no letter and no punctuation — but CLAUDE.md §1.2 forbids editing
-  hadith text, so it is his call.
-* **Whether to ship the unattributed fr/ur/ru hadith sets** if HadeethEnc turns
-  out not to cover something he wants.
+### 2.1 Nothing of unknown provenance ships. **Settled: no.**
 
----
+The `fawazahmed0/hadith-api` French, Urdu and Russian sets are public domain but
+**name no translator**, and the French Bukhari sampled reads as a translation of
+the English rather than of the Arabic. They are not shipped, and "other apps do
+it" is not a reason — the owner's instruction is the opposite of that test.
+
+This costs nothing now: **HadeethEnc serves all seven of the app's languages
+with a per-language `attribution` (تخريج) and `grade` (درجة)**, which is exactly
+what CLAUDE.md §1.2 asks for. Where it has no translation for a hadith, the app
+says so — it does not fill the gap.
+
+The same rule governs everything downstream: a grading with no named grader, a
+translation with no named translator, a scan with no stated licence. If you
+cannot name the source, do not ship the content.
+
+### 2.2 The `""` and the orphaned `.` — **fixed, as a rendering bug.**
+
+Read byte by byte out of the bundled `hadith.db`, Sunan Abi Dawud 1417 ends:
+
+```
+… الْوِتْرَ ␣ U+200F " U+200F ␣ U+200F . U+200F
+```
+
+The source wraps the closing quote and the full stop each in a RIGHT-TO-LEFT
+MARK. Those force the two neutral characters to resolve RTL, so Flutter carries
+them away from the words they belong to — the closing quote lands beside the
+opening one («""») and the stop is orphaned. Measured: **35,860 of 67,153**
+hadiths carry U+200F, one carries U+200E, none carry the embedding or override
+codes; 51,460 contain an ASCII quote.
+
+`stripBidiControls()` in `core/utils/arabic_normalize.dart` removes U+200E,
+U+200F and the four isolate codes — **characters with no glyph** — at the four
+places the Arabic is drawn. The database keeps the source's own bytes. Nothing
+visible is added, removed or reordered: the sequence of visible characters is
+identical before and after, which is why this does not run into §1.2's ban on
+rewriting hadith text. It drops formatting hints written for a different
+renderer. `test/bidi_controls_test.dart` pins that promise on the real tail of
+1417 and on samples that must come back byte-identical.
+
+**Do not extend this to anything visible.** A typo in a source's own text stays
+(`إسناده صحح` stays), a quotation mark stays, a full stop stays.
 
 ## 3. Still open, in the order worth doing
 
