@@ -118,6 +118,42 @@ abstract final class AppConfig {
   /// 40,943 hadiths -> 67,153; graded 44% -> 67%.
   static const String hadithDbVersion = 'v3';
 
+  /// موسوعة الأحاديث النبوية (hadeethenc.com) — a **separate** collection from
+  /// the nine books above, one downloadable pack per language.
+  ///
+  /// WHY IT EXISTS. The nine collections in `hadith.db` are 67,153 hadiths in
+  /// Arabic and nothing translates that corpus into Spanish, French,
+  /// Portuguese, Russian or Urdu with a grading anyone would stand behind. An
+  /// earlier session told the owner no such source existed; that was wrong.
+  /// HadeethEnc publishes a smaller curated corpus where **every** record
+  /// carries both a takhrij (تخريج) and a grading (درجة) in the reader's own
+  /// language — measured across all 15,498 (hadith, language) rows by
+  /// `scripts/build_hadeethenc_packs.py`: 0 ungraded, 0 without takhrij.
+  ///
+  /// WHY IT IS ALLOWED TO BE REHOSTED. The publisher's own «الشروط
+  /// والسياسات» (hadeethenc.com/ar/home, read 2026‑09‑10) permits downloading
+  /// and republishing the translations on conditions: no modification,
+  /// addition or deletion; clear credit to the publisher and the source;
+  /// the version number; and no ads unbefitting the content. This app
+  /// modifies nothing, credits the source on the collection screen, on every
+  /// hadith and on the Sources screen, and carries no advertising at all.
+  /// CLAUDE.md trap #18 — a free file is not automatically free to rehost —
+  /// is why those terms were read before a byte was uploaded.
+  ///
+  /// One pack per language, 1.3–3.5 MB zipped, unpacked to
+  /// `hadeethenc_<lang>.db` by the same `unzipToDatabases` path `hadith.zip`
+  /// uses. `assets/data/catalogs/hadeethenc.json` lists what is on offer, and
+  /// every size in it is the byte count the bucket actually answered with.
+  static String hadeethEncUrl(String lang) =>
+      '$contentBaseUrl/hadeethenc/$lang.zip';
+
+  /// Same contract as [hadithDbVersion]: stamped beside the extracted file so
+  /// a device holding an older pack re-fetches instead of opening it.
+  ///
+  /// v1 (2026‑09‑10): first packs — 3,574 hadiths across seven languages,
+  /// crawled 2026‑09‑09, category titles refetched per language 2026‑09‑10.
+  static const String hadeethEncVersion = 'v1';
+
 
   /// One ayah on everyayah.com: `<folder>/SSSAAA.mp3`, both parts zero-padded
   /// to three digits (so 2:286 is `002286.mp3`). [folder] comes from

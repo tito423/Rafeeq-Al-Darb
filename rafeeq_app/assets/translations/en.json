@@ -296,7 +296,8 @@
     "died_ah": "Died {} AH",
     "died_circa_ah": "Died c. {} AH",
     "death_8th_century": "A scholar of the eighth Hijri century",
-    "book_desc_generated": "A work by {}, {} pages, in the {} section."
+    "book_desc_generated": "A work by {}, {} pages, in the {} section.",
+    "tab_hadeethenc": "Encyclopedia"
   },
   "azkar": {
     "title": "Adhkar",
@@ -738,7 +739,8 @@
     "src_aladhan": "Calculation methods table — the published angles behind each one",
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
     "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
-    "src_ruqyah": "A complete recorded ruqyah, from the Internet Archive"
+    "src_ruqyah": "A complete recorded ruqyah, from the Internet Archive",
+    "src_hadeethenc": "Hadeeth Encyclopedia — selected hadiths with takhrij, grading and explanation in seven languages"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -1029,5 +1031,23 @@
     "umdat_al_ahkam": "A short primer of the hadiths of legal rulings, in which al-Maqdisi confined himself to what al-Bukhari and Muslim both reported, making it among the most firmly established books of rulings. One of the texts a student begins with.",
     "uyun_al_athar": "A sira composed on the method of the hadith scholars, covering the expeditions, the Prophet's qualities and his life; one of the standard works of sira among the later scholars.",
     "zad_al_maad": "The Prophet's ﷺ way in worship, dealings, expeditions and medicine, edited by the two al-Arna'uts. Among the most comprehensive works on prophetic guidance."
+  },
+  "hadeethenc": {
+    "title": "Hadeeth Encyclopedia",
+    "intro": "A curated collection in which every hadith carries its takhrij and its grading in your own language, with a plain explanation.",
+    "search_hint": "Search the encyclopedia",
+    "no_results": "No results",
+    "no_pack_for_language": "No pack is available for this language",
+    "pack_title": "{name} pack",
+    "pack_summary": "{name}: {count} — download {size}",
+    "takhrij": "Takhrij (source)",
+    "grade": "Grade",
+    "grade_by": "Graded by {source}",
+    "grade_inline": "Grade: {grade}",
+    "grade_missing": "Not stated",
+    "explanation": "Explanation",
+    "hints": "Benefits of the hadith",
+    "reference": "References",
+    "credit": "Source: {source}"
   }
 }

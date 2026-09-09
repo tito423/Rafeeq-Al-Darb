@@ -100,6 +100,12 @@ final _groups = <(String, List<_Source>)>[
           'about.src_musnad_arnaut'),
       _Source('سنن الدارمي — ت حسين أسد', 'https://shamela.ws/book/21795',
           'about.src_darimi_asad'),
+      // موسوعة الأحاديث النبوية — the separate multilingual collection. Its
+      // own republication terms require clear credit to the publisher and
+      // the source; this row is part of meeting them, alongside the credit
+      // on the collection screen and on every hadith it shows.
+      _Source('hadeethenc.com', 'https://hadeethenc.com',
+          'about.src_hadeethenc'),
     ]
   ),
   (

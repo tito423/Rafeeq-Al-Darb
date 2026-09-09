@@ -3,7 +3,7 @@
     "lang": "ar",
     "hadeeths": 3574,
     "db_bytes": 20045824,
-    "zip_bytes": 3523818,
+    "zip_bytes": 3524108,
     "ungraded": 0,
     "no_takhrij": 0,
     "categories": 7
@@ -12,7 +12,7 @@
     "lang": "en",
     "hadeeths": 2328,
     "db_bytes": 10010624,
-    "zip_bytes": 2134443,
+    "zip_bytes": 2134784,
     "ungraded": 0,
     "no_takhrij": 0,
     "categories": 7
@@ -21,7 +21,7 @@
     "lang": "es",
     "hadeeths": 1955,
     "db_bytes": 8372224,
-    "zip_bytes": 1755528,
+    "zip_bytes": 1755952,
     "ungraded": 0,
     "no_takhrij": 0,
     "categories": 7
@@ -30,7 +30,7 @@
     "lang": "fr",
     "hadeeths": 1790,
     "db_bytes": 8163328,
-    "zip_bytes": 1771671,
+    "zip_bytes": 1771948,
     "ungraded": 0,
     "no_takhrij": 0,
     "categories": 7
@@ -39,7 +39,7 @@
     "lang": "pt",
     "hadeeths": 1382,
     "db_bytes": 5951488,
-    "zip_bytes": 1307599,
+    "zip_bytes": 1308019,
     "ungraded": 0,
     "no_takhrij": 0,
     "categories": 7
@@ -48,7 +48,7 @@
     "lang": "ru",
     "hadeeths": 2249,
     "db_bytes": 14610432,
-    "zip_bytes": 2536011,
+    "zip_bytes": 2536455,
     "ungraded": 0,
     "no_takhrij": 0,
     "categories": 7
@@ -57,7 +57,7 @@
     "lang": "ur",
     "hadeeths": 2220,
     "db_bytes": 12447744,
-    "zip_bytes": 2170641,
+    "zip_bytes": 2170978,
     "ungraded": 0,
     "no_takhrij": 0,
     "categories": 7

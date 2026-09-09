@@ -155,3 +155,35 @@ bool arabicWordBoundaryContains(String haystack, String needle) {
     from = i + 1;
   }
 }
+
+/// Any character that is not a letter in any script. Built once, because a
+/// `RegExp` with `unicode: true` is not free to construct.
+final RegExp _anyLetter = RegExp(r'\p{L}', unicode: true);
+
+/// [needle] occurs in [haystack] at a word boundary, where a boundary is
+/// **any non-letter** — not just a space.
+///
+/// Two existing tests do nearly this and neither fits a corpus that is
+/// Arabic, Latin and Cyrillic at once:
+///
+///  * [arabicWordBoundaryContains] treats only U+0020 as a boundary. That is
+///    CLAUDE.md trap #3: book text quotes hadith inside guillemets, so
+///    «انما الاعمال بالنيات» matched nothing at all.
+///  * `LibraryApiService._boundaryIndexOf` fixed that by calling anything
+///    outside U+0621..U+064A a boundary. Correct for Arabic-only text, wrong
+///    the moment the corpus has Latin in it: in an English pack «the» would
+///    match inside «other», because the preceding «o» is not an Arabic
+///    letter and so reads as a boundary.
+///
+/// The HadeethEnc packs are seven languages in three scripts, so the test has
+/// to be "is the previous character a letter", in any script.
+bool wordBoundaryContains(String haystack, String needle) {
+  if (needle.isEmpty) return false;
+  var from = 0;
+  while (true) {
+    final i = haystack.indexOf(needle, from);
+    if (i == -1) return false;
+    if (i == 0 || !_anyLetter.hasMatch(haystack[i - 1])) return true;
+    from = i + 1;
+  }
+}

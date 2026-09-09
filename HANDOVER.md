@@ -615,9 +615,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 00:33 — IN PROGRESS — resume here**
+**2026-09-10 00:49 — IN PROGRESS — resume here**
 
-HadeethEnc packs built and on R2: seven per-language SQLite packs, 1.3-3.5 MB zipped, every one of the 15,498 rows carrying both a takhrij and a grading in its own language - measured, 0 ungraded and 0 without takhrij. Category titles refetched in all seven languages so no pack ships Arabic headings over a Spanish hadith. Each upload was read back over the public endpoint and had to answer PK with a matching Content-Length before the catalogue was written
+HadeethEnc wired into the app: a fifth Library tab, one downloadable pack per language keyed to the app's own locale, categories and paged reading, Dart-side search over a pre-normalised column (no FTS5, trap 1), and the grading never shown bare - always with whose ruling it is, per CLAUDE.md 1.2. The publisher's terms permit republication on conditions and the credit they require is on the collection screen, on every hadith and on the Sources screen. Not yet opened on a device
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

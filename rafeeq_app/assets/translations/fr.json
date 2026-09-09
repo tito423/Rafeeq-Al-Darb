@@ -296,7 +296,8 @@
     "died_ah": "Mort en {} AH",
     "died_circa_ah": "Mort vers {} AH",
     "death_8th_century": "Un savant du VIIIe siècle de l’Hégire",
-    "book_desc_generated": "Un ouvrage de {}, {} pages, dans la section {}."
+    "book_desc_generated": "Un ouvrage de {}, {} pages, dans la section {}.",
+    "tab_hadeethenc": "Encyclopédie"
   },
   "azkar": {
     "title": "Adhkar",
@@ -738,7 +739,8 @@
     "src_aladhan": "Table des méthodes de calcul — les angles publiés de chacune",
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
     "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
-    "src_ruqyah": "Une roqya complète enregistrée, depuis Internet Archive"
+    "src_ruqyah": "Une roqya complète enregistrée, depuis Internet Archive",
+    "src_hadeethenc": "Encyclopédie du hadith — hadiths choisis avec takhrij, degré et explication en sept langues"
   },
   "ruqyah": {
     "title": "Roqya",
@@ -1029,5 +1031,23 @@
     "umdat_al_ahkam": "Un bref recueil des hadiths des règles juridiques, dans lequel al-Maqdisi s’est limité à ce que rapportent à la fois al-Bukhari et Muslim, ce qui en fait l’un des plus solidement établis. L’un des textes par lesquels on commence.",
     "uyun_al_athar": "Une sîra composée selon la méthode des spécialistes du hadith, portant sur les expéditions, les qualités du Prophète et sa vie ; l’un des ouvrages de référence de la sîra chez les savants postérieurs.",
     "zad_al_maad": "La voie du Prophète ﷺ dans son adoration, ses transactions, ses expéditions et sa médecine, dans l’édition des deux al-Arna'ut. Parmi les ouvrages les plus complets sur la guidance prophétique."
+  },
+  "hadeethenc": {
+    "title": "Encyclopédie du hadith",
+    "intro": "Une collection choisie où chaque hadith porte son takhrij et son degré d’authenticité dans votre propre langue, avec une explication simple.",
+    "search_hint": "Rechercher dans l’encyclopédie",
+    "no_results": "Aucun résultat",
+    "no_pack_for_language": "Aucun pack n’est disponible pour cette langue",
+    "pack_title": "Pack {name}",
+    "pack_summary": "{name} : {count} — téléchargement {size}",
+    "takhrij": "Takhrij (source)",
+    "grade": "Degré d’authenticité",
+    "grade_by": "Classé par {source}",
+    "grade_inline": "Degré : {grade}",
+    "grade_missing": "Non indiqué",
+    "explanation": "Explication",
+    "hints": "Enseignements du hadith",
+    "reference": "Références",
+    "credit": "Source : {source}"
   }
 }

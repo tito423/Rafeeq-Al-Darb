@@ -10,7 +10,7 @@
       "name": "العربية",
       "hadeeths": 3574,
       "categories": 7,
-      "bytes": 3523818,
+      "bytes": 3524108,
       "db_bytes": 20045824
     },
     {
@@ -18,7 +18,7 @@
       "name": "English",
       "hadeeths": 2328,
       "categories": 7,
-      "bytes": 2134443,
+      "bytes": 2134784,
       "db_bytes": 10010624
     },
     {
@@ -26,7 +26,7 @@
       "name": "Español",
       "hadeeths": 1955,
       "categories": 7,
-      "bytes": 1755528,
+      "bytes": 1755952,
       "db_bytes": 8372224
     },
     {
@@ -34,7 +34,7 @@
       "name": "Français",
       "hadeeths": 1790,
       "categories": 7,
-      "bytes": 1771671,
+      "bytes": 1771948,
       "db_bytes": 8163328
     },
     {
@@ -42,7 +42,7 @@
       "name": "Português",
       "hadeeths": 1382,
       "categories": 7,
-      "bytes": 1307599,
+      "bytes": 1308019,
       "db_bytes": 5951488
     },
     {
@@ -50,7 +50,7 @@
       "name": "Русский",
       "hadeeths": 2249,
       "categories": 7,
-      "bytes": 2536011,
+      "bytes": 2536455,
       "db_bytes": 14610432
     },
     {
@@ -58,7 +58,7 @@
       "name": "اردو",
       "hadeeths": 2220,
       "categories": 7,
-      "bytes": 2170641,
+      "bytes": 2170978,
       "db_bytes": 12447744
     }
   ]

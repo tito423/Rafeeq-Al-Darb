@@ -137,11 +137,30 @@ def build(lang, cats, src):
     meta = {
         "lang": lang,
         "count": str(len(rows)),
-        "source": "موسوعة الأ"
-                  "حاديث النب"
-                  "وية - hadeethenc.com",
+        "source_ar": "موسوعة الأحاديث النبوية",
+        "source_en": "Hadeeth Encyclopedia (HadeethEnc.com)",
         "source_url": "https://hadeethenc.com",
         "built_from": "hadeethenc.com/api/v1",
+        # The publisher's own redistribution terms, read from the "الشروط
+        # والسياسات" modal on hadeethenc.com/ar/home on
+        # 2026-09-10. Redistribution IS permitted, conditionally — CLAUDE.md
+        # trap #18 is why this was read before a byte was rehosted rather
+        # than after.
+        "terms_url": "https://hadeethenc.com/ar/home",
+        "terms_summary_ar": "يتاح تنزيل محتوى الترجمات وإعادة نشره "
+                            "بشرط عدم التعديل أو الإضافة أو الحذف، "
+                            "والإشارة بوضوح للناشر وللمصدر (HadeethEnc.com)، "
+                            "وذكر رقم الإصدار، وعدم تضمين إعلانات "
+                            "لا تليق بمحتوى الأحاديث.",
+        # Condition 3 asks for the version number and condition 4 for the
+        # version information "inside the document". The API carries neither:
+        # `hadeeths/one/` returns no version field, `hadeeths/list/`'s `meta`
+        # is only paging, and the PDF downloads answer with a placeholder
+        # `Last-Modified: Thu, 26 Mar 2000`. So the retrieval date is what is
+        # true and what is recorded; nothing is invented to fill the field.
+        "version": "",
+        "retrieved_hadeeths": "2026-09-09",
+        "retrieved_categories": "2026-09-10",
     }
     for k, v in meta.items():
         out.execute("INSERT INTO meta VALUES (?,?)", (k, v))

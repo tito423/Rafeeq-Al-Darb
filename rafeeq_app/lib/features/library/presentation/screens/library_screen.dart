@@ -21,6 +21,7 @@ import '../../data/hadith_imam_bios.dart';
 import '../../data/book_category.dart';
 import 'book_text_reader_screen.dart';
 import 'books_search_screen.dart';
+import '../../../hadeethenc/presentation/screens/hadeethenc_tab.dart';
 import 'hadith_book_screen.dart';
 import 'hadith_detail_screen.dart';
 import '../../../../core/utils/byte_formatter.dart';
@@ -30,6 +31,9 @@ import '../../../../core/utils/byte_formatter.dart';
 ///  • "الكتب المتوفرة" — the books catalog, itself split into
 ///    (كل الكتب · التصنيفات · مكتبتي).
 ///  • "الحديث" — the 9-collection hadith hub (downloaded on demand).
+///  • "الموسوعة" — موسوعة الأحاديث النبوية, a separate collection whose
+///    every record carries a takhrij and a grading in the reader's own
+///    language, one downloadable pack per language.
 class LibraryScreen extends ConsumerStatefulWidget {
   const LibraryScreen({super.key});
 
@@ -45,7 +49,7 @@ class LibraryScreen extends ConsumerStatefulWidget {
 class _LibraryScreenState extends ConsumerState<LibraryScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController =
-      TabController(length: 4, vsync: this);
+      TabController(length: 5, vsync: this);
 
   @override
   void dispose() {
@@ -76,6 +80,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
           tabs: [
             Tab(text: 'library.tab_books'.tr()),
             Tab(text: 'library.tab_hadith'.tr()),
+            Tab(text: 'library.tab_hadeethenc'.tr()),
             Tab(text: 'library.tab_channels'.tr()),
             Tab(text: 'library.tab_websites'.tr()),
           ],
@@ -97,6 +102,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
         children: const [
           _BooksTab(),
           _HadithTab(),
+          HadeethEncTab(),
           _IslamicChannelsTab(),
           _IslamicWebsitesTab(),
         ],
