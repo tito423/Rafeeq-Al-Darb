@@ -4017,4 +4017,47 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — لا تحزن، عائض بن عبد الله القرني، مكتبة العبيكان',
     ),
   ),
+  // Added 2026-09-10 because the owner named them as the sources for the
+  // Islamic-quote notifications and neither was in the catalogue. Both are
+  // Shamela text editions built by `build_book_text.py` from a local crawl
+  // and uploaded by `r2_upload_book_text.py`; `sizeBytes` is the byte count
+  // the bucket answered with, not an estimate.
+  LibraryBook(
+    id: 'rawdat_al_uqala',
+    titleAr: 'روضة العقلاء ونزهة الفضلاء',
+    titleEn: 'Rawdat al-Uqala wa Nuzhat al-Fudala',
+    authorAr: 'أبو حاتم محمد بن حبان البستي',
+    authorEn: 'Ibn Hibban al-Busti',
+    deathYearAh: 354,
+    descKey: 'book_desc.rawdat_al_uqala',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/rawdat_al_uqala.json',
+      sizeBytes: 177994,
+      sourceLabel:
+          'المكتبة الشاملة — روضة العقلاء ونزهة الفضلاء، لأبي حاتم محمد بن '
+          'حبان البستي، تحقيق محمد محيي الدين عبد الحميد وآخرين، دار الكتب '
+          'العلمية، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'hilyat_al_awliya',
+    titleAr: 'حلية الأولياء وطبقات الأصفياء',
+    titleEn: 'Hilyat al-Awliya wa Tabaqat al-Asfiya',
+    authorAr: 'أبو نعيم أحمد بن عبد الله الأصبهاني',
+    authorEn: 'Abu Nuaym al-Isbahani',
+    deathYearAh: 430,
+    descKey: 'book_desc.hilyat_al_awliya',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/hilyat_al_awliya.json',
+      sizeBytes: 2498616,
+      sourceLabel:
+          'المكتبة الشاملة — حلية الأولياء وطبقات الأصفياء، لأبي نعيم '
+          'الأصبهاني، مطبعة السعادة، مصر، الطبعة الأولى ١٣٩٤هـ/١٩٧٤م '
+          '(١٠ أجزاء)',
+    ),
+  ),
 ];

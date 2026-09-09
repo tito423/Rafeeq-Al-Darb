@@ -65,6 +65,7 @@ Only the Python standard library is used (matches build_hadith_db.py).
 import gzip
 import html
 import http.client
+import io
 import json
 import os
 import re
@@ -77,6 +78,23 @@ from datetime import datetime, timezone
 # id  -> must match LibraryBook.id in book_catalog.dart
 # See PHASE2.md stage P2-4b "Sourcing decisions" for the reasoning.
 BOOKS = {
+    # Added 2026-09-10 for the Islamic-quote notifications: the owner named
+    # these two by title and they were not in the catalogue. Their Shamela
+    # ids were looked up in the local index (`shamela_index.py find`) rather
+    # than through Shamela's own search, which searches INSIDE books and not
+    # their titles (CLAUDE.md trap #17).
+    "rawdat_al_uqala": {
+        "shamela_id": 6944,
+        "source_label": "المكتبة الشاملة — روضة العقلاء ونزهة الفضلاء، "
+        "لأبي حاتم محمد بن حبان البستي، تحقيق محمد محيي الدين عبد الحميد "
+        "وآخرين، دار الكتب العلمية، بيروت",
+    },
+    "hilyat_al_awliya": {
+        "shamela_id": 10495,
+        "source_label": "المكتبة الشاملة — حلية الأولياء وطبقات الأصفياء، "
+        "لأبي نعيم الأصبهاني، مطبعة السعادة، مصر، الطبعة الأولى "
+        "١٣٩٤هـ/١٩٧٤م",
+    },
     "riyad_as_salihin": {
         "shamela_id": 12014,
         "source_label": "المكتبة الشاملة — رياض الصالحين، تحقيق شعيب الأرنؤوط، "
@@ -284,6 +302,8 @@ BOOKS = {
 }
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "book_text_build")
+RAW_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                       "shamela_raw")
 UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
@@ -416,8 +436,37 @@ def parse_nass(nass):
 
 
 # --- walk a whole book ------------------------------------------------------
+def load_cache(book_id):
+    """Pages already crawled by `fetch_shamela_pages.py`, keyed by pageId.
+
+    That script stores one API response per line verbatim, which is the whole
+    point of it: «changing how a book is parsed never costs another crawl of
+    someone else's server». حلية الأولياء is 3,891 pages, and walking `nextId`
+    one request at a time to re-read text already on disk would be both slow
+    and rude.
+    """
+    path = os.path.join(RAW_DIR, f"{book_id}.jsonl")
+    if not os.path.exists(path):
+        return {}
+    cache = {}
+    with io.open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                doc = json.loads(line)
+            except ValueError:
+                continue
+            cache[str(doc.get("pageId"))] = doc
+    return cache
+
+
 def build_book(book_id, shamela_id, source_label):
     base = f"/ajax/pageContent/{shamela_id}"
+    cache = load_cache(book_id)
+    if cache:
+        print(f"  {len(cache)} pages read from the local crawl, not refetched")
     meta_card = fetch_meta_card(shamela_id)
 
     pages = []
@@ -431,8 +480,9 @@ def build_book(book_id, shamela_id, source_label):
             raise RuntimeError(f"loop detected at pageId {page_id}")
         seen_ids.add(page_id)
 
-        raw = _get(f"{base}/{page_id}")
-        data = json.loads(raw)
+        data = cache.get(str(page_id))
+        if data is None:
+            data = json.loads(_get(f"{base}/{page_id}"))
         printed = int(data.get("pageNum") or 0)
         title = (data.get("title") or "").strip()
         paras = parse_nass(data.get("nass") or "")

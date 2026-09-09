@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-10, end of the **eighth** session |
+| **Last updated** | 2026-09-10 |
 | **Released** | **v3.9.0** — the eight sessions of work since v3.8.0 are in it |
 | **App version** | `pubspec.yaml` `3.9.0+5` |
 | **Build verified?** | `flutter analyze lib test` clean · `flutter test` **71/71** · `py -3 scripts/i18n_audit.py` **0** · hosted content **30 paths, 0 failed** · APK **281,598,575 bytes** · everything below was opened on `emulator-5554` and looked at |
@@ -727,9 +727,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 01:10 — IN PROGRESS — resume here**
+**2026-09-10 01:47 — IN PROGRESS — resume here**
 
-opened the Encyclopedia tab on emulator-5554 and it was dead: the download and the unzip both reported success and the tab kept showing its download button. DownloadManager names the extracted database after the ZIP's basename, not the entry's, so ar.zip unpacked to ar.db while the repository opened hadeethenc_ar.db - hadith.zip has always worked only because those two names are the same word. Fixed by deriving the zip name from the db name, with a test that reproduces the device's exact complaint. Re-verified live in Arabic and in English: seven sections with their measured counts, the hadith with its takhrij and whose grading it is, and search
+quotes, sourced and hand-read: 352 from the three books that can honestly give them. Rawdat al-Uqala and Hilyat al-Awliya were crawled from Shamela, built, uploaded and added to the catalogue with their measured sizes. Hilyat is EXCLUDED as a quote source and said so in the script: a hand-read sample of its 1,032 candidates carried ungraded hadith, half-isnads and editorial notes on chains, which is what CLAUDE.md 1.2 forbids. Four filters were only found by reading real pages - ayahs in plain braces, hadith in doubled parens, the editor's footnotes inside the body stream, and isnads that a plain substring missed because the text is fully diacritised
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
