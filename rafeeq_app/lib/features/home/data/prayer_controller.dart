@@ -116,6 +116,8 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       cityName: pos.locality ?? '',
       countryName: pos.country ?? '',
       method: settings.calculationMethod,
+      madhab: settings.asrMadhab,
+      highLatitudeRule: settings.highLatitudeRule,
     );
     // The user's own corrections are applied here, before scheduling, so the
     // Adhan fires at the time they actually see on the card rather than the

@@ -486,9 +486,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 20:29 — IN PROGRESS — resume here**
+**2026-09-09 21:03 — IN PROGRESS — resume here**
 
-hadith rendering: the marks were only half the bug - an Arabic paragraph in an LTR locale moves its punctuation too
+prayer times: 21 calculation methods, the Asr madhab and the high-latitude rule - every one checked against AlAdhan's published table and 960 real timings
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

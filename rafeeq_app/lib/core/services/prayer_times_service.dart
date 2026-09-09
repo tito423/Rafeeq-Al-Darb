@@ -5,6 +5,7 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/adhan/data/prayer_calculation_methods.dart';
 import '../models/prayer_times.dart';
 
 /// Real prayer times calculated offline using the 'adhan' package.
@@ -12,13 +13,20 @@ class PrayerTimesService {
   static const _cacheKey = 'prayer_times_cache_v2';
   static const _cacheDateKey = 'prayer_times_cache_date_v2';
 
-  /// [method]: 4 = Umm Al-Qura, 2 = ISNA, 3 = MWL, 5 = Egypt.
+  /// [method] is an AlAdhan method id — see `kPrayerCalculationMethods`,
+  /// which carries every id the picker offers and the angles behind it.
+  /// [madhab] decides when Asr starts and [highLatitudeRule] what happens
+  /// where Fajr and Isha have no real time; both are the reader's settings,
+  /// not the method's.
   Future<PrayerTimes> fetchPrayerTimes({
     required double lat,
     required double lon,
     String cityName = '',
     String countryName = '',
     int method = 4,
+    adhan.Madhab madhab = adhan.Madhab.shafi,
+    adhan.HighLatitudeRule highLatitudeRule =
+        adhan.HighLatitudeRule.twilight_angle,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now().toIso8601String().substring(0, 10);
@@ -34,7 +42,7 @@ class PrayerTimesService {
 
     try {
       final coordinates = adhan.Coordinates(lat, lon);
-      final params = _getParams(method);
+      final params = _getParams(method, madhab, highLatitudeRule);
       final date = adhan.DateComponents.from(DateTime.now());
       
       final ptAdhan = adhan.PrayerTimes(coordinates, date, params);
@@ -84,19 +92,16 @@ class PrayerTimesService {
     return PrayerTimes.empty();
   }
 
-  adhan.CalculationParameters _getParams(int method) {
-    switch (method) {
-      case 2:
-        return adhan.CalculationMethod.north_america.getParameters();
-      case 3:
-        return adhan.CalculationMethod.muslim_world_league.getParameters();
-      case 5:
-        return adhan.CalculationMethod.egyptian.getParameters();
-      case 4:
-      default:
-        return adhan.CalculationMethod.umm_al_qura.getParameters();
-    }
-  }
+  adhan.CalculationParameters _getParams(
+    int method,
+    adhan.Madhab madhab,
+    adhan.HighLatitudeRule highLatitudeRule,
+  ) =>
+      prayerCalculationMethodById(method).parameters(
+        date: DateTime.now(),
+        madhab: madhab,
+        highLatitudeRule: highLatitudeRule,
+      );
 
   String _formatTime(DateTime time) {
     return DateFormat('HH:mm').format(time);

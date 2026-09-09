@@ -404,10 +404,6 @@
     "every_minutes": "Каждые {} мин.",
     "every_hours": "Каждые {} ч.",
     "calc_method": "Метод расчёта",
-    "calc_umm_alqura": "Умм аль-Кура",
-    "calc_egyptian": "Египетское управление геодезии",
-    "calc_mwl": "Всемирная исламская лига",
-    "calc_isna": "ISNA (Северная Америка)",
     "adjustments": "Коррекция времени и даты",
     "adjustments_hint": "Метод расчёта, ручная коррекция даты хиджры и времени намазов",
     "hijri_adjust": "Дата по хиджре",
@@ -417,7 +413,15 @@
     "reset_adjustments": "Сбросить",
     "days_unit": "дн.",
     "minutes_unit": "мин.",
-    "sunrise_no_adhan": "Восход — это время, а не молитва: азана нет. Можно изменить только само время."
+    "sunrise_no_adhan": "Восход — это время, а не молитва: азана нет. Можно изменить только само время.",
+    "asr_method": "Расчёт времени аср",
+    "asr_standard": "Большинство (маликиты, шафииты, ханбалиты)",
+    "asr_hanafi": "Ханафитский",
+    "high_latitude": "Высокие широты",
+    "high_latitude_desc": "Вдали от экватора сумерки могут не заканчиваться, и у фаджра и иша нет вычисляемого времени. Выберите правило, которого придерживаетесь.",
+    "high_lat_angle": "По углу",
+    "high_lat_midnight": "Середина ночи",
+    "high_lat_seventh": "Одна седьмая ночи"
   },
   "qibla": {
     "locating": "Определяем ваше местоположение...",
@@ -702,7 +706,7 @@
     "src_mp3quran": "Чтения сур целиком",
     "src_sunnah": "Тексты девяти сборников",
     "src_shamela": "Книги и биографии",
-    "src_aladhan": "Расчёт времени намаза",
+    "src_aladhan": "Таблица методов расчёта — опубликованные углы для каждого",
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
     "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
     "src_ruqyah": "Полная запись рукьи из «Архива Интернета»"

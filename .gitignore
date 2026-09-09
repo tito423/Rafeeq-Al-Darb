@@ -75,3 +75,4 @@ scripts/mushaf_fit_build/
 # measurement, and they are small.
 hadeethenc.db
 hadeethenc.db-journal
+prayer_fixture_progress.jsonl

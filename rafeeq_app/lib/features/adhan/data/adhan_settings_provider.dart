@@ -1,3 +1,4 @@
+import 'package:adhan/adhan.dart' as adhan;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +21,17 @@ class AdhanSettings {
   final Map<String, AdhanMode> modeByPrayer;
   final int calculationMethod;
 
+  /// Which madhab decides when Asr starts. Shafi'i/Maliki/Hanbali put it at
+  /// one shadow-length, Hanafi at two — a real difference of up to an hour,
+  /// and the reason the app cannot just pick one. Persisted by name.
+  final adhan.Madhab asrMadhab;
+
+  /// What to do where the sun never gets far enough below the horizon for
+  /// Fajr or Isha to have a real time — north of roughly 48°, for part of the
+  /// year. `twilight_angle` is the angle-based rule and the app's default;
+  /// the other two are the fractions of the night the classical fatwas use.
+  final adhan.HighLatitudeRule highLatitudeRule;
+
   /// Whether the app re-acquires the device position on a timer while it is
   /// open, instead of only on launch.
   final bool autoLocationUpdate;
@@ -36,6 +48,8 @@ class AdhanSettings {
     required this.modeByPrayer,
     required this.adhanIdByPrayer,
     required this.calculationMethod,
+    required this.asrMadhab,
+    required this.highLatitudeRule,
     required this.autoLocationUpdate,
     required this.locationUpdateMinutes,
   });
@@ -51,6 +65,8 @@ class AdhanSettings {
     Map<String, AdhanMode>? modeByPrayer,
     Map<String, String?>? adhanIdByPrayer,
     int? calculationMethod,
+    adhan.Madhab? asrMadhab,
+    adhan.HighLatitudeRule? highLatitudeRule,
     bool? autoLocationUpdate,
     int? locationUpdateMinutes,
   }) =>
@@ -59,6 +75,8 @@ class AdhanSettings {
         modeByPrayer: modeByPrayer ?? this.modeByPrayer,
         adhanIdByPrayer: adhanIdByPrayer ?? this.adhanIdByPrayer,
         calculationMethod: calculationMethod ?? this.calculationMethod,
+        asrMadhab: asrMadhab ?? this.asrMadhab,
+        highLatitudeRule: highLatitudeRule ?? this.highLatitudeRule,
         autoLocationUpdate: autoLocationUpdate ?? this.autoLocationUpdate,
         locationUpdateMinutes:
             locationUpdateMinutes ?? this.locationUpdateMinutes,
@@ -70,6 +88,9 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
       : super(AdhanSettings(
           defaultAdhanId: _prefs.getString(_defaultKey) ?? 'azan1',
           calculationMethod: _prefs.getInt(_calcMethodKey) ?? 4,
+          asrMadhab: _madhabFromName(_prefs.getString(_asrMadhabKey)),
+          highLatitudeRule:
+              _highLatitudeFromName(_prefs.getString(_highLatitudeKey)),
           autoLocationUpdate: _prefs.getBool(_autoLocationKey) ?? false,
           locationUpdateMinutes:
               _prefs.getInt(_locationIntervalKey) ?? 60,
@@ -86,6 +107,8 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
 
   static const _defaultKey = 'adhan_default_id_v1';
   static const _calcMethodKey = 'adhan_calc_method_v1';
+  static const _asrMadhabKey = 'prayer_asr_madhab_v1';
+  static const _highLatitudeKey = 'prayer_high_latitude_rule_v1';
   static const _autoLocationKey = 'prayer_auto_location_v1';
   static const _locationIntervalKey = 'prayer_location_interval_min_v1';
   static const _modePrefix = 'adhan_mode_v1_';
@@ -100,6 +123,18 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
     state = state.copyWith(calculationMethod: method);
     await _prefs.setInt(_calcMethodKey, method);
     // Force prayer times to re-fetch instead of using the cached times for the old method
+    await _prefs.remove('prayer_times_cache_date_v2');
+  }
+
+  Future<void> setAsrMadhab(adhan.Madhab madhab) async {
+    state = state.copyWith(asrMadhab: madhab);
+    await _prefs.setString(_asrMadhabKey, madhab.name);
+    await _prefs.remove('prayer_times_cache_date_v2');
+  }
+
+  Future<void> setHighLatitudeRule(adhan.HighLatitudeRule rule) async {
+    state = state.copyWith(highLatitudeRule: rule);
+    await _prefs.setString(_highLatitudeKey, rule.name);
     await _prefs.remove('prayer_times_cache_date_v2');
   }
 
@@ -130,6 +165,23 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
       await _prefs.setString('$_choicePrefix$prayerKey', adhanId);
     }
   }
+}
+
+/// Reads back what [AdhanSettingsNotifier.setAsrMadhab] wrote. An unknown or
+/// absent name is the majority position (one shadow-length), which is what the
+/// app calculated before this setting existed — so no install has its Asr
+/// moved by an upgrade.
+adhan.Madhab _madhabFromName(String? name) =>
+    name == adhan.Madhab.hanafi.name ? adhan.Madhab.hanafi : adhan.Madhab.shafi;
+
+/// `twilight_angle` is AlAdhan's ANGLE_BASED, the rule the reference timings
+/// in `test/calculation_methods_test.dart` were fetched with, and the default
+/// most prayer-time apps ship.
+adhan.HighLatitudeRule _highLatitudeFromName(String? name) {
+  for (final r in adhan.HighLatitudeRule.values) {
+    if (r.name == name) return r;
+  }
+  return adhan.HighLatitudeRule.twilight_angle;
 }
 
 final adhanSettingsProvider =

@@ -404,10 +404,6 @@
     "every_minutes": "Cada {} minutos",
     "every_hours": "Cada {} horas",
     "calc_method": "Método de cálculo",
-    "calc_umm_alqura": "Umm Al-Qura",
-    "calc_egyptian": "Autoridad General Egipcia de Topografía",
-    "calc_mwl": "Liga Islámica Mundial",
-    "calc_isna": "ISNA (Norteamérica)",
     "adjustments": "Ajuste de horarios y fecha",
     "adjustments_hint": "Método de cálculo y corrección manual de la fecha hégira y los horarios",
     "hijri_adjust": "Fecha hégira",
@@ -417,7 +413,15 @@
     "reset_adjustments": "Restablecer",
     "days_unit": "días",
     "minutes_unit": "min",
-    "sunrise_no_adhan": "El amanecer es un horario, no una oración: no tiene adhan. Solo se puede ajustar su hora."
+    "sunrise_no_adhan": "El amanecer es un horario, no una oración: no tiene adhan. Solo se puede ajustar su hora.",
+    "asr_method": "Cálculo del Asr",
+    "asr_standard": "Mayoría (malikí, shafi'í, hanbalí)",
+    "asr_hanafi": "Hanafí",
+    "high_latitude": "Latitudes altas",
+    "high_latitude_desc": "Lejos del ecuador el crepúsculo puede no terminar, y el Fayr y el Isha no tienen hora calculada. Elige la regla que sigues.",
+    "high_lat_angle": "Basado en el ángulo",
+    "high_lat_midnight": "Mitad de la noche",
+    "high_lat_seventh": "Un séptimo de la noche"
   },
   "qibla": {
     "locating": "Localizándote...",
@@ -702,7 +706,7 @@
     "src_mp3quran": "Recitaciones de suras completas",
     "src_sunnah": "Textos de las nueve colecciones",
     "src_shamela": "Libros de texto y biografías",
-    "src_aladhan": "Cálculo de los horarios de oración",
+    "src_aladhan": "Tabla de métodos de cálculo — los ángulos publicados de cada uno",
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
     "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
     "src_ruqyah": "Una ruqyah completa grabada, del Internet Archive"

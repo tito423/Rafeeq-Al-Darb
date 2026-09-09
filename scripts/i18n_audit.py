@@ -238,6 +238,14 @@ ALLOWLIST_FIELDS = {
             "page is (CLAUDE.md §1.2). The headings and the instructions "
             "around them ARE translated, under guide.*",
     },
+    "features/adhan/data/prayer_calculation_methods.dart": {
+        "nameAr":
+            "the organisation that publishes the calculation method — "
+            "«رابطة العالم الإسلامي», «الهيئة المصرية العامة للمساحة». A "
+            "proper name, paired with nameEn and picked by properName(): "
+            "Arabic script for ar/ur, the Latin form for the other five. "
+            "Renaming a ministry in French is not localisation",
+    },
     "features/library/data/book_catalog.dart": {
         "titleAr":
             "a book's title is its name, paired with `titleEn` and picked by "

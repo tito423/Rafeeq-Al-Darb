@@ -1,3 +1,4 @@
+import 'package:adhan/adhan.dart' as adhan;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import '../../../../core/i18n/hijri_months.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_settings_provider.dart';
+import '../../data/prayer_calculation_methods.dart';
 import '../../data/prayer_adjustments_provider.dart';
 
 /// Manual corrections for the Hijri date and each prayer time, plus the
@@ -39,35 +41,43 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // ── Calculation method (moved here from Adhan settings) ──
+          // ── What decides the times (moved here from Adhan settings) ──
+          //
+          // A dropdown held four methods; there are twenty-one now, with
+          // names as long as the Jordanian ministry's, so each of the three
+          // settings opens its own list and the card shows what is chosen.
           Card(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: DropdownButtonFormField<int>(
-                decoration: InputDecoration(
-                  labelText: 'prayer.calc_method'.tr(),
-                  icon: const Icon(Icons.calculate_outlined),
-                  border: InputBorder.none,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.calculate_outlined),
+                  title: Text('prayer.calc_method'.tr()),
+                  subtitle: Text(
+                    prayerCalculationMethodById(settings.calculationMethod)
+                        .name,
+                  ),
+                  // chevron_right, not chevron_left: chevron_left auto-mirrors
+                  // in RTL and would point the wrong way in Arabic.
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _pickCalculationMethod(context, ref, settings),
                 ),
-                initialValue: settings.calculationMethod,
-                items: [
-                  DropdownMenuItem(
-                      value: 4, child: Text('prayer.calc_umm_alqura'.tr())),
-                  DropdownMenuItem(
-                      value: 5, child: Text('prayer.calc_egyptian'.tr())),
-                  DropdownMenuItem(
-                      value: 3, child: Text('prayer.calc_mwl'.tr())),
-                  DropdownMenuItem(
-                      value: 2, child: Text('prayer.calc_isna'.tr())),
-                ],
-                onChanged: (v) {
-                  if (v == null) return;
-                  ref
-                      .read(adhanSettingsProvider.notifier)
-                      .setCalculationMethod(v);
-                  ref.read(prayerControllerProvider.notifier).refresh();
-                },
-              ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.wb_twilight_outlined),
+                  title: Text('prayer.asr_method'.tr()),
+                  subtitle: Text(_asrLabel(settings.asrMadhab)),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _pickAsrMadhab(context, ref, settings),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.public_outlined),
+                  title: Text('prayer.high_latitude'.tr()),
+                  subtitle: Text(_highLatitudeLabel(settings.highLatitudeRule)),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _pickHighLatitudeRule(context, ref, settings),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
@@ -180,6 +190,123 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
     return '${date.hDay} ${hijriMonthName(date.hMonth)} ${date.hYear}'
         '${'hijri.suffix'.tr()}';
   }
+}
+
+String _asrLabel(adhan.Madhab madhab) => madhab == adhan.Madhab.hanafi
+    ? 'prayer.asr_hanafi'.tr()
+    : 'prayer.asr_standard'.tr();
+
+String _highLatitudeLabel(adhan.HighLatitudeRule rule) {
+  switch (rule) {
+    case adhan.HighLatitudeRule.middle_of_the_night:
+      return 'prayer.high_lat_midnight'.tr();
+    case adhan.HighLatitudeRule.seventh_of_the_night:
+      return 'prayer.high_lat_seventh'.tr();
+    case adhan.HighLatitudeRule.twilight_angle:
+      return 'prayer.high_lat_angle'.tr();
+  }
+}
+
+/// One row of a chooser: the label, and a tick when it is the current value.
+Widget _choice({
+  required String label,
+  required bool selected,
+  required VoidCallback onTap,
+}) =>
+    ListTile(
+      title: Text(label),
+      trailing: selected
+          ? const Icon(Icons.check, color: AppColors.gold)
+          : const SizedBox(width: 24),
+      onTap: onTap,
+    );
+
+Future<void> _pickCalculationMethod(
+    BuildContext context, WidgetRef ref, AdhanSettings settings) async {
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (sheet) => SafeArea(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+            child: Text(
+              'prayer.calc_method'.tr(),
+              style: Theme.of(sheet).textTheme.titleMedium,
+            ),
+          ),
+          for (final m in kPrayerCalculationMethods)
+            _choice(
+              label: m.name,
+              selected: m.id == settings.calculationMethod,
+              onTap: () {
+                Navigator.of(sheet).pop();
+                ref
+                    .read(adhanSettingsProvider.notifier)
+                    .setCalculationMethod(m.id);
+                ref.read(prayerControllerProvider.notifier).refresh();
+              },
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+Future<void> _pickAsrMadhab(
+    BuildContext context, WidgetRef ref, AdhanSettings settings) async {
+  await showDialog<void>(
+    context: context,
+    builder: (dialog) => SimpleDialog(
+      title: Text('prayer.asr_method'.tr()),
+      children: [
+        for (final m in [adhan.Madhab.shafi, adhan.Madhab.hanafi])
+          _choice(
+            label: _asrLabel(m),
+            selected: m == settings.asrMadhab,
+            onTap: () {
+              Navigator.of(dialog).pop();
+              ref.read(adhanSettingsProvider.notifier).setAsrMadhab(m);
+              ref.read(prayerControllerProvider.notifier).refresh();
+            },
+          ),
+      ],
+    ),
+  );
+}
+
+Future<void> _pickHighLatitudeRule(
+    BuildContext context, WidgetRef ref, AdhanSettings settings) async {
+  await showDialog<void>(
+    context: context,
+    builder: (dialog) => SimpleDialog(
+      title: Text('prayer.high_latitude'.tr()),
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+          child: Text(
+            'prayer.high_latitude_desc'.tr(),
+            style: Theme.of(dialog).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(dialog).colorScheme.onSurfaceVariant,
+                ),
+          ),
+        ),
+        for (final r in adhan.HighLatitudeRule.values)
+          _choice(
+            label: _highLatitudeLabel(r),
+            selected: r == settings.highLatitudeRule,
+            onTap: () {
+              Navigator.of(dialog).pop();
+              ref.read(adhanSettingsProvider.notifier).setHighLatitudeRule(r);
+              ref.read(prayerControllerProvider.notifier).refresh();
+            },
+          ),
+      ],
+    ),
+  );
 }
 
 class _SectionLabel extends StatelessWidget {
