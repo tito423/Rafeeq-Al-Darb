@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import 'hadith_detail_screen.dart';
 
 /// All hadiths in one chapter — numbered exactly as they are in the book,
@@ -56,7 +57,10 @@ class _HadithChapterScreenState extends State<HadithChapterScreen> {
                   child: Text('${h.numberInBook}',
                       style: const TextStyle(fontSize: 12)),
                 ),
-                title: Text(
+                // ArabicText: a preview cut to two lines still ends on a
+                // neutral, and in an LTR locale a plain Text lays the
+                // paragraph out LTR and moves it. See daily_hadith_card.
+                title: ArabicText(
                   stripBidiControls(h.arabic),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

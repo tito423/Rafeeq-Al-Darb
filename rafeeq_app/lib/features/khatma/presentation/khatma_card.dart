@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/arabic_text.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../data/khatma_range.dart';
@@ -257,7 +258,9 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          Text(
+          // ArabicText: an ayah laid out in an LTR paragraph moves its
+          // trailing marks. See daily_hadith_card for the measured case.
+          ArabicText(
             range.start.textUthmani,
             style: const TextStyle(
               fontFamily: 'AmiriQuran',

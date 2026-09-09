@@ -1218,7 +1218,9 @@ class _SearchResultsState extends State<_SearchResults> {
             final h = items[i];
             final book = books[h.bookId];
             return ListTile(
-              title: Text(
+              // ArabicText: same reason as the chapter list — an Arabic
+              // result laid out in an LTR paragraph moves its punctuation.
+              title: ArabicText(
                 stripBidiControls(h.arabic),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

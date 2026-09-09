@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../data/azkar_repeat.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
@@ -214,7 +215,13 @@ class _DhikrPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            // ArabicText: the dhikr and its takhrij are Arabic, but this
+            // screen inherits the app's Directionality, which is LTR in six
+            // of the seven locales — and an Arabic paragraph in an LTR box
+            // puts its edge punctuation at the wrong end. On the Portuguese
+            // build «Fonte:» sat at the left of the first line instead of
+            // leading the citation.
+            ArabicText(
               item.body,
               textAlign: TextAlign.center,
               style: const TextStyle(
@@ -228,7 +235,7 @@ class _DhikrPage extends StatelessWidget {
               const SizedBox(height: 20),
               Divider(color: Colors.white.withValues(alpha: 0.25)),
               const SizedBox(height: 8),
-              Text(
+              ArabicText(
                 '${'azkar.source'.tr()}: ${item.footnote}',
                 textAlign: TextAlign.center,
                 style: TextStyle(

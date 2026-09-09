@@ -1,6 +1,8 @@
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
+// easy_localization re-exports package:intl, whose TextDirection collides
+// with dart:ui's — and the ayah highlighter below needs dart:ui's.
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +10,7 @@ import '../../../../core/db/models.dart';
 import '../../../../core/db/quran_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../data/topic_tree.dart';
 
 /// Thematic + keyword Quran search (WORK_QUEUE Stage 6). Returns the tapped
@@ -192,7 +195,10 @@ class _HighlightedAyahText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (query.isEmpty) {
-      return Text(
+      // ArabicText / an RTL Directionality below: an ayah is Arabic, and the
+      // search screen inherits the app's direction, which is LTR in six of
+      // the seven locales. See daily_hadith_card for the measured case.
+      return ArabicText(
         text,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
@@ -233,16 +239,19 @@ class _HighlightedAyahText extends StatelessWidget {
       spans.add(TextSpan(text: text.substring(start)));
     }
 
-    return RichText(
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      text: TextSpan(
-        style: TextStyle(
-          fontFamily: 'AmiriQuran',
-          fontSize: 16,
-          color: Theme.of(context).colorScheme.onSurface,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: RichText(
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        text: TextSpan(
+          style: TextStyle(
+            fontFamily: 'AmiriQuran',
+            fontSize: 16,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+          children: spans,
         ),
-        children: spans,
       ),
     );
   }
@@ -401,7 +410,7 @@ class _TopicsTabState extends State<_TopicsTab> {
                           title: '$label • ${a.surahId}:${a.ayahNumber}',
                         ),
                       ),
-                      title: Text(
+                      title: ArabicText(
                         a.textUthmani,
                         style: const TextStyle(
                             fontFamily: 'AmiriQuran', fontSize: 17, height: 1.6),

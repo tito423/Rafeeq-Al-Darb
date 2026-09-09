@@ -10,6 +10,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/db/hadith_repository.dart';
 import '../../../core/services/download_manager.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/arabic_text.dart';
 import '../../library/presentation/screens/hadith_detail_screen.dart';
 import '../../library/presentation/widgets/hadith_translation.dart';
 import '../data/daily_hadith_provider.dart';
@@ -391,7 +392,16 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                 ],
               ),
               const SizedBox(height: 6),
-              Text(
+              // ArabicText, not Text: this card sits under the app's own
+              // Directionality, which is LTR in six of the seven locales. An
+              // Arabic paragraph laid out in an LTR box puts its trailing
+              // neutrals — the closing quote, the full stop — at the wrong
+              // end of the last line. Bukhari 4543 was photographed on the
+              // Portuguese build with its full stop flung to the right of
+              // «كِبْرَهُ}» instead of ending the sentence after «سَلُولَ».
+              // stripBidiControls removes the source's RLMs; only an RTL
+              // paragraph puts what is left in the right place.
+              ArabicText(
                 stripBidiControls(item.arabic),
                 maxLines: 6,
                 overflow: TextOverflow.ellipsis,

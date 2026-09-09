@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../data/guide_content.dart';
 
 /// One guide topic's steps/points, e.g. Wudu's 8 steps.
@@ -47,7 +48,9 @@ class NewMuslimSectionScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
                       ),
-                      child: Text(
+                      // ArabicText: the phrase is Arabic (the shahada, the
+                      // tasbeeh) shown in a UI that is LTR in six locales.
+                      child: ArabicText(
                         item.phraseAr!,
                         textAlign: TextAlign.center,
                         style: const TextStyle(

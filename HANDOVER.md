@@ -486,9 +486,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 19:07 — IN PROGRESS — resume here**
+**2026-09-09 20:29 — IN PROGRESS — resume here**
 
-i18n: New Muslim Guide translated in all 7 locales (5 titles, 32 headings, 32 bodies) with the 10 recitation phrases deliberately left Arabic; and the khatma undo SnackBar no longer survives a language change - that was the 'Lu aujourd'hui' the owner photographed over English and Arabic screens. Audit down to 266 in ONE file: the 226 book blurbs. VERIFIED in Spanish on emulator-5554.
+hadith rendering: the marks were only half the bug - an Arabic paragraph in an LTR locale moves its punctuation too
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
