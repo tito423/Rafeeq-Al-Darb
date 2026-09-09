@@ -414,7 +414,10 @@ class AyahAudioService {
     try {
       final dir = await _editionDir(edition);
       if (_looksComplete(_fileFor(dir, global))) return;
-      await DownloadEngine.ensureInitialized();
+      // Silent, invisible caching of an ayah the reader is already hearing —
+      // it must never be the thing that raises a permission dialog over the
+      // page. The user-initiated whole-surah download still asks.
+      await DownloadEngine.ensureInitialized(askForNotifications: false);
       DownloadEngine.recitationQueue.add(
         bd.DownloadTask(
           url: url,

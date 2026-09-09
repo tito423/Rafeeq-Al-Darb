@@ -86,17 +86,45 @@ class DownloadEngine {
 
   static StreamSubscription<TaskUpdate>? _sourceSub;
 
+  static bool _askedNotifications = false;
+
+  /// Android 13+ will not show any of the notifications below without the
+  /// runtime grant. Asked once, and only from a path that is really about to
+  /// move bytes.
+  ///
+  /// This used to live inside [ensureInitialized], with a comment claiming it
+  /// meant "the first download prompts, rather than the app demanding it at
+  /// launch". That was not what happened: `main()` calls
+  /// [resumeFromBackground], which calls [ensureInitialized], so on a fresh
+  /// install the POST_NOTIFICATIONS dialog came up about 4.8 seconds into the
+  /// cold start — measured on emulator-5554 from logcat, `START ...
+  /// REQUEST_PERMISSIONS ... from uid (com.tito.rafeeq_aldarb)`, 4.8s after
+  /// the activity started — which is squarely in the middle of the ~8s splash
+  /// video. That is the owner's «أخّر الأذونات عشان تظهر الاسبلاش اسكرين
+  /// كاملة».
+  static Future<void> ensureNotificationPermission() async {
+    if (_askedNotifications) return;
+    _askedNotifications = true;
+    try {
+      await FileDownloader().permissions.request(PermissionType.notifications);
+    } catch (_) {
+      // Notifications are a convenience; a refused grant must not stop a
+      // download from running.
+    }
+  }
+
   /// Idempotent — safe to call from every entry point that might be first.
-  static Future<void> ensureInitialized() async {
+  ///
+  /// [askForNotifications] is false only for the startup reconciliation, which
+  /// runs while the splash is on screen and enqueues nothing of its own.
+  static Future<void> ensureInitialized({
+    bool askForNotifications = true,
+  }) async {
+    if (askForNotifications) await ensureNotificationPermission();
     if (_ready) return;
     _ready = true;
 
     final downloader = FileDownloader();
-
-    // Android 13+ will not show any of the notifications below without the
-    // runtime grant. Asking here means the first download prompts, rather
-    // than the app demanding it at launch for something the user may never use.
-    await downloader.permissions.request(PermissionType.notifications);
 
     // ── One grouped notification per kind ────────────────────────────────
     // With `groupNotificationId` set, the plugin posts a single entry whose
@@ -145,7 +173,11 @@ class DownloadEngine {
   /// Called once at startup; without it, a download that completed in the
   /// background would never post its completion back into the app.
   static Future<void> resumeFromBackground() async {
-    await ensureInitialized();
+    // No permission prompt from here: this runs from `main()` with the splash
+    // still on screen. The grant is asked for after the splash (see
+    // `AlarmPermissionsService.requestStartupPermissions`), and again by the
+    // first real download if it was refused then.
+    await ensureInitialized(askForNotifications: false);
     try {
       await FileDownloader().resumeFromBackground();
     } catch (_) {
