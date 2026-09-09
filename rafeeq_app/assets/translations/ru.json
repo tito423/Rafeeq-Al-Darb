@@ -684,6 +684,34 @@
     "emerald": "Изумруд с золотом",
     "parchment": "Старый пергамент",
     "rose": "Мягкий розовый",
-    "contrast": "Высокий контраст"
+    "contrast": "Высокий контраст",
+    "tab_theme": "Тема",
+    "tab_frame": "Рамка",
+    "tab_colour": "Цвет рамки"
+  },
+  "mushaf_frame": {
+    "none": "Без рамки",
+    "khatim": "Цепь звёзд",
+    "arabesque": "Арабеска",
+    "geometric": "Геометрический",
+    "mihrab": "Арка михраба",
+    "zellij": "Зеллидж",
+    "muqarnas": "Мукарнас",
+    "doubleRule": "Двойная линия",
+    "cornerFloret": "Угловые розетки",
+    "chain": "Переплетённая коса"
+  },
+  "mushaf_frame_accent": {
+    "follow": "Цвет темы",
+    "gold": "Золото",
+    "emerald": "Изумруд",
+    "turquoise": "Бирюза",
+    "sapphire": "Сапфир",
+    "ruby": "Рубин",
+    "amethyst": "Аметист",
+    "copper": "Медь",
+    "ivory": "Слоновая кость",
+    "ink": "Чернила",
+    "rose": "Розовый"
   }
 }

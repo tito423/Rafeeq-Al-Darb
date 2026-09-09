@@ -684,6 +684,34 @@
     "emerald": "زمردي مُذهَّب",
     "parchment": "رقّ قديم",
     "rose": "وردي هادئ",
-    "contrast": "تباين عالٍ"
+    "contrast": "تباين عالٍ",
+    "tab_theme": "الثيم",
+    "tab_frame": "الإطار",
+    "tab_colour": "لون الإطار"
+  },
+  "mushaf_frame": {
+    "none": "بدون إطار",
+    "khatim": "خاتم النجوم",
+    "arabesque": "أرابيسك",
+    "geometric": "هندسي",
+    "mihrab": "محراب",
+    "zellij": "زليج",
+    "muqarnas": "مقرنص",
+    "doubleRule": "خطّان مذهّبان",
+    "cornerFloret": "زوايا مزخرفة",
+    "chain": "ضفيرة متشابكة"
+  },
+  "mushaf_frame_accent": {
+    "follow": "لون الثيم",
+    "gold": "ذهبي",
+    "emerald": "زمردي",
+    "turquoise": "فيروزي",
+    "sapphire": "أزرق ياقوتي",
+    "ruby": "عقيقي",
+    "amethyst": "بنفسجي",
+    "copper": "نحاسي",
+    "ivory": "عاجي",
+    "ink": "حبري",
+    "rose": "وردي"
   }
 }

@@ -19,6 +19,7 @@ import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
 import '../../data/quran_fullscreen_provider.dart';
 import '../../data/quran_jump_provider.dart';
+import '../../data/mushaf_frame.dart';
 import '../../data/mushaf_theme.dart';
 import '../../data/text_layout_provider.dart';
 import '../../data/quran_last_read.dart';
@@ -766,12 +767,16 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 onBackgroundTap: _pageFillScreen ? _togglePageFillScreen : null,
               );
             }
+            final mushafTheme = resolveMushafTheme(
+              ref.watch(mushafThemeProvider),
+              Theme.of(context).brightness,
+            );
+            final frame = ref.watch(mushafFrameProvider);
             return MushafTextPage(
               layout: textLayout,
-              mushafTheme: resolveMushafTheme(
-                ref.watch(mushafThemeProvider),
-                Theme.of(context).brightness,
-              ),
+              mushafTheme: mushafTheme,
+              frameStyle: frame.style,
+              frameColor: frame.accent.color ?? mushafTheme.gold,
               ayahs: ayahs,
               surahNameOf: data.surahNameAr,
               playingSurah: _recite.active ? _recite.surahId : null,

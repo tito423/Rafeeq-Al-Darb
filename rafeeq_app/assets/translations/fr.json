@@ -684,6 +684,34 @@
     "emerald": "Émeraude doré",
     "parchment": "Vieux parchemin",
     "rose": "Rose doux",
-    "contrast": "Contraste élevé"
+    "contrast": "Contraste élevé",
+    "tab_theme": "Thème",
+    "tab_frame": "Cadre",
+    "tab_colour": "Couleur du cadre"
+  },
+  "mushaf_frame": {
+    "none": "Sans cadre",
+    "khatim": "Chaîne d'étoiles",
+    "arabesque": "Arabesque",
+    "geometric": "Géométrique",
+    "mihrab": "Arc du mihrab",
+    "zellij": "Bande zellige",
+    "muqarnas": "Muqarnas",
+    "doubleRule": "Double filet",
+    "cornerFloret": "Fleurons d'angle",
+    "chain": "Tresse entrelacée"
+  },
+  "mushaf_frame_accent": {
+    "follow": "Couleur du thème",
+    "gold": "Or",
+    "emerald": "Émeraude",
+    "turquoise": "Turquoise",
+    "sapphire": "Saphir",
+    "ruby": "Rubis",
+    "amethyst": "Améthyste",
+    "copper": "Cuivre",
+    "ivory": "Ivoire",
+    "ink": "Encre",
+    "rose": "Rose"
   }
 }

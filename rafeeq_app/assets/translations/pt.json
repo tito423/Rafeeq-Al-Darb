@@ -684,6 +684,34 @@
     "emerald": "Esmeralda dourada",
     "parchment": "Pergaminho antigo",
     "rose": "Rosa suave",
-    "contrast": "Alto contraste"
+    "contrast": "Alto contraste",
+    "tab_theme": "Tema",
+    "tab_frame": "Moldura",
+    "tab_colour": "Cor da moldura"
+  },
+  "mushaf_frame": {
+    "none": "Sem moldura",
+    "khatim": "Corrente de estrelas",
+    "arabesque": "Arabesco",
+    "geometric": "Geométrico",
+    "mihrab": "Arco do mihrab",
+    "zellij": "Faixa zellij",
+    "muqarnas": "Muqarnas",
+    "doubleRule": "Filete duplo",
+    "cornerFloret": "Florões de canto",
+    "chain": "Trança entrelaçada"
+  },
+  "mushaf_frame_accent": {
+    "follow": "Cor do tema",
+    "gold": "Ouro",
+    "emerald": "Esmeralda",
+    "turquoise": "Turquesa",
+    "sapphire": "Safira",
+    "ruby": "Rubi",
+    "amethyst": "Ametista",
+    "copper": "Cobre",
+    "ivory": "Marfim",
+    "ink": "Tinta",
+    "rose": "Rosa"
   }
 }

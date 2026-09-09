@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
 
 import '../../../../core/db/models.dart';
+import '../../data/mushaf_frame.dart';
 import '../../data/mushaf_theme.dart';
+import 'mushaf_frame_painter.dart';
 import '../../data/text_layout_provider.dart';
 
 /// Renders one mushaf page (or a surah's ayahs) as a **vertical list** of
@@ -67,6 +69,13 @@ class MushafTextPage extends StatefulWidget {
   /// Whether verses are set as boxed cards or as one flowing justified page.
   final QuranTextLayout layout;
 
+  /// The decorative border, if the reader has turned one on.
+  final MushafFrameStyle frameStyle;
+
+  /// The border's colour. Null takes the theme's own accent, which is what
+  /// keeps every frame/theme pairing coherent by default.
+  final Color? frameColor;
+
   /// The page's colour scheme. Null follows the app's light/dark theme, which
   /// is what a reader who has never opened the theme picker gets.
   ///
@@ -92,6 +101,8 @@ class MushafTextPage extends StatefulWidget {
     this.playingAyah,
     this.layout = QuranTextLayout.page,
     this.mushafTheme,
+    this.frameStyle = MushafFrameStyle.none,
+    this.frameColor,
   });
 
   @override
@@ -448,7 +459,14 @@ class _MushafTextPageState extends State<MushafTextPage> {
       content = body;
     }
 
-    return Container(color: paper, child: content);
+    return Container(
+      color: paper,
+      child: MushafFrame(
+        style: widget.frameStyle,
+        color: widget.frameColor ?? mt.gold,
+        child: content,
+      ),
+    );
   }
 }
 

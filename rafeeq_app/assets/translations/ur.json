@@ -684,6 +684,34 @@
     "emerald": "زمردی مطلا",
     "parchment": "پرانا رَق",
     "rose": "نرم گلابی",
-    "contrast": "زیادہ کنٹراسٹ"
+    "contrast": "زیادہ کنٹراسٹ",
+    "tab_theme": "تھیم",
+    "tab_frame": "فریم",
+    "tab_colour": "فریم کا رنگ"
+  },
+  "mushaf_frame": {
+    "none": "بغیر فریم",
+    "khatim": "ستارہ زنجیر",
+    "arabesque": "عرب نقش",
+    "geometric": "ہندسی",
+    "mihrab": "محراب",
+    "zellij": "زلیج",
+    "muqarnas": "مقرنص",
+    "doubleRule": "دوہری لکیر",
+    "cornerFloret": "کونے کے پھول",
+    "chain": "بٹی ہوئی چوٹی"
+  },
+  "mushaf_frame_accent": {
+    "follow": "تھیم کا رنگ",
+    "gold": "سنہری",
+    "emerald": "زمرد",
+    "turquoise": "فیروزی",
+    "sapphire": "نیلم",
+    "ruby": "یاقوت",
+    "amethyst": "جامنی",
+    "copper": "تانبا",
+    "ivory": "ہاتھی دانت",
+    "ink": "سیاہی",
+    "rose": "گلابی"
   }
 }
