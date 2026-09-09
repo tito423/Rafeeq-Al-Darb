@@ -384,6 +384,42 @@ Do not rediscover these.
     in `editions.json`: a page with no entry must fall through to nothing, not
     to an affine measured on a differently-set page.
 
+27. **A downloaded zip unpacks under the ZIP's name, not the entry's.**
+    `DownloadManager._unzipToDatabases` writes
+    `basename(zipPath) + '.db'`, ignoring what the archive entry is called.
+    `hadith.zip` has always worked only because those two names are the same
+    word. The HadeethEnc packs were saved as `ar.zip`, unpacked to `ar.db`,
+    and the repository opened `hadeethenc_ar.db` — so the download reported
+    success, the unzip reported success, `flutter analyze` was clean, 66 tests
+    passed, every pack had been range-checked on the bucket, **and the tab sat
+    on its download button for ever.** Name a pack's local file after the
+    database it becomes, and derive one from the other so they cannot drift.
+    This is §1.3 in one sentence: **the bytes being on the bucket is not the
+    feature working, and neither is a green test run.**
+
+28. **`adb shell date` cannot set the clock on a Google Play emulator image**
+    — no root, `Operation not permitted`. **`adb shell cmd alarm set-time
+    <epoch-millis>` can**, and it is how a scheduled notification was made to
+    fire within two minutes instead of waiting for Fajr. `settings put global
+    auto_time 0` first. Jumping the clock *past* pending alarms fires them all
+    at once, so jump to just before the one you want to watch.
+
+29. **A notification's text is frozen when the alarm is ARMED, not when it
+    fires.** `.tr()` runs at schedule time and the resulting strings sit
+    inside AlarmManager until they are shown. Changing the app's language did
+    nothing to the fifteen already-armed prayer reminders, so tomorrow's Fajr
+    reminder stayed in yesterday's language until the next times fetch.
+    Anything that changes wording has to re-arm — `RafeeqApp` does it on every
+    locale change.
+
+30. **`Localization` and `Translations` are not exported by
+    `easy_localization`.** A test that wants the real `plural()` has to import
+    them from `package:easy_localization/src/…` and **must** pass
+    `ignorePluralRules: false`, exactly as `main.dart` and `adhan_entry.dart`
+    do — otherwise the package's fallback collapses Arabic's six CLDR cases
+    into zero/one/two/other and `few` becomes unreachable, which is the
+    difference between «١٠ دقائق» and «١٠ دقيقة».
+
 ---
 
 ## 4. Where things live
