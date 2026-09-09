@@ -184,7 +184,12 @@ def main():
             f"    category: BookCategory.{cat},\n"
             "    textEdition: TextEdition(\n"
             "      url:\n"
-            f"          '\\${{AppConfig.contentBaseUrl}}/books/text/{book_id}.json',\n"
+            # NOT \$ -- in Dart a backslash-dollar inside a string is an
+            # ESCAPED dollar, so the url shipped as the literal text
+            # "${AppConfig.contentBaseUrl}/books/text/x.json" and every
+            # book written by this script 404'd with "No host specified
+            # in URI". Eleven of them did, eight of which shipped.
+            f"          '${{AppConfig.contentBaseUrl}}/books/text/{book_id}.json'," \\n"
             f"      sizeBytes: {sizes[book_id]},\n"
             "      sourceLabel:\n          " + wrap(source_label, 10) + ",\n"
             "    ),\n"

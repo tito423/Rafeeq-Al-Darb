@@ -3977,7 +3977,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/ar_raheeq_al_makhtum.json',
+          '${AppConfig.contentBaseUrl}/books/text/ar_raheeq_al_makhtum.json',
       sizeBytes: 386968,
       sourceLabel:
           'المكتبة الشاملة — الرحيق المختوم، صفي الرحمن المباركفوري (ت ١٤٢٧هـ)، '
@@ -3997,7 +3997,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/seerat_ibn_hisham.json',
+          '${AppConfig.contentBaseUrl}/books/text/seerat_ibn_hisham.json',
       sizeBytes: 605696,
       sourceLabel:
           'المكتبة الشاملة — السيرة النبوية لابن هشام (ت ٢١٣هـ)، قدّم لها وعلّق '
@@ -4018,7 +4018,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/zad_al_maad.json',
+          '${AppConfig.contentBaseUrl}/books/text/zad_al_maad.json',
       sizeBytes: 1868002,
       sourceLabel:
           'المكتبة الشاملة — زاد المعاد في هدي خير العباد، ابن قيم الجوزية (ت '
@@ -4044,7 +4044,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/sahih_as_seerah_albani.json',
+          '${AppConfig.contentBaseUrl}/books/text/sahih_as_seerah_albani.json',
       sizeBytes: 124141,
       sourceLabel:
           'المكتبة الشاملة — صحيح السيرة النبوية (من البداية والنهاية لابن '
@@ -4065,7 +4065,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/uyun_al_athar.json',
+          '${AppConfig.contentBaseUrl}/books/text/uyun_al_athar.json',
       sizeBytes: 763255,
       sourceLabel:
           'المكتبة الشاملة — عيون الأثر في فنون المغازي والشمائل والسير، ابن '
@@ -4086,7 +4086,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/nur_al_yaqin.json',
+          '${AppConfig.contentBaseUrl}/books/text/nur_al_yaqin.json',
       sizeBytes: 268494,
       sourceLabel:
           'المكتبة الشاملة — نور اليقين في سيرة سيد المرسلين، محمد بن عفيفي '
@@ -4107,7 +4107,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/as_seerah_nadwi.json',
+          '${AppConfig.contentBaseUrl}/books/text/as_seerah_nadwi.json',
       sizeBytes: 429415,
       sourceLabel:
           'المكتبة الشاملة — السيرة النبوية، أبو الحسن علي الحسني الندوي (ت '
@@ -4128,7 +4128,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/fiqh_as_seerah_ghazali.json',
+          '${AppConfig.contentBaseUrl}/books/text/fiqh_as_seerah_ghazali.json',
       sizeBytes: 379706,
       sourceLabel:
           'المكتبة الشاملة — فقه السيرة، محمد الغزالي السقا (ت ١٤١٦هـ)، تخريج '
@@ -4149,7 +4149,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/as_seerah_ibn_kathir.json',
+          '${AppConfig.contentBaseUrl}/books/text/as_seerah_ibn_kathir.json',
       sizeBytes: 1880427,
       sourceLabel:
           'المكتبة الشاملة — السيرة النبوية، ابن كثير (ت ٧٧٤هـ)، مستلًّا من '
@@ -4170,7 +4170,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.seerah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/rijal_hawl_ar_rasul.json',
+          '${AppConfig.contentBaseUrl}/books/text/rijal_hawl_ar_rasul.json',
       sizeBytes: 293158,
       sourceLabel:
           'المكتبة الشاملة — رجال حول الرسول، خالد محمد خالد ثابت (ت ١٤١٦هـ)، '
@@ -4190,7 +4190,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url:
-          '\${AppConfig.contentBaseUrl}/books/text/la_tahzan.json',
+          '${AppConfig.contentBaseUrl}/books/text/la_tahzan.json',
       sizeBytes: 344210,
       sourceLabel:
           'المكتبة الشاملة — لا تحزن، عائض بن عبد الله القرني، مكتبة العبيكان',
