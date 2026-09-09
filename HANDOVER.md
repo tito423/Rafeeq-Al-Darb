@@ -615,9 +615,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 00:49 — IN PROGRESS — resume here**
+**2026-09-10 01:10 — IN PROGRESS — resume here**
 
-HadeethEnc wired into the app: a fifth Library tab, one downloadable pack per language keyed to the app's own locale, categories and paged reading, Dart-side search over a pre-normalised column (no FTS5, trap 1), and the grading never shown bare - always with whose ruling it is, per CLAUDE.md 1.2. The publisher's terms permit republication on conditions and the credit they require is on the collection screen, on every hadith and on the Sources screen. Not yet opened on a device
+opened the Encyclopedia tab on emulator-5554 and it was dead: the download and the unzip both reported success and the tab kept showing its download button. DownloadManager names the extracted database after the ZIP's basename, not the entry's, so ar.zip unpacked to ar.db while the repository opened hadeethenc_ar.db - hadith.zip has always worked only because those two names are the same word. Fixed by deriving the zip name from the db name, with a test that reproduces the device's exact complaint. Re-verified live in Arabic and in English: seven sections with their measured counts, the hadith with its takhrij and whose grading it is, and search
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

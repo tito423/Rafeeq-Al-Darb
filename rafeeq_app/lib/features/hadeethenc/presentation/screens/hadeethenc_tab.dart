@@ -75,7 +75,8 @@ class _HadeethEncTabState extends ConsumerState<HadeethEncTab> {
       id: pack.downloadId,
       url: pack.url,
       category: 'hadeethenc',
-      fileName: '${pack.lang}.zip',
+      // Not '<lang>.zip' — see `HadeethEncPack.zipFileName`.
+      fileName: pack.zipFileName,
       unzipToDatabases: true,
       dbVersion: AppConfig.hadeethEncVersion,
       title: 'hadeethenc.pack_title'.tr(namedArgs: {'name': pack.name}),

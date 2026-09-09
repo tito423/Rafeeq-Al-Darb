@@ -48,7 +48,27 @@ class HadeethEncPack {
         dbBytes: j['db_bytes'] as int? ?? 0,
       );
 
+  /// The database the pack becomes on the device.
   String get fileName => 'hadeethenc_$lang.db';
+
+  /// The name the zip is SAVED UNDER locally — and it has to be
+  /// `<fileName without .db>.zip`, not `<lang>.zip`.
+  ///
+  /// `DownloadManager._unzipToDatabases` names the extracted database after
+  /// the **zip's** basename, not after the entry inside it:
+  /// `p.basenameWithoutExtension(zipPath) + '.db'`. `hadith.zip` has always
+  /// worked because those two names happen to be the same word. Saving these
+  /// packs as `ar.zip` produced `ar.db`, while the repository opened
+  /// `hadeethenc_ar.db` — so the download succeeded, the unzip succeeded, and
+  /// the tab kept showing its download button forever. Found by opening the
+  /// tab on emulator-5554; `flutter analyze`, 66 passing tests and a verified
+  /// upload all said it was fine (CLAUDE.md §1.3, and trap #23's lesson
+  /// exactly).
+  ///
+  /// Derived from [fileName] rather than written out again, so the two cannot
+  /// drift apart; `hadeethenc_pack_test.dart` asserts they never do.
+  String get zipFileName => '${fileName.substring(0, fileName.length - 3)}.zip';
+
   String get downloadId => 'hadeethenc_$lang';
   String get url => AppConfig.hadeethEncUrl(lang);
 
