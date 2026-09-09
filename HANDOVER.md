@@ -14,8 +14,8 @@ Cline, or any other).
 ## STATE AS OF 2026-09-09 — SIXTH SESSION (still unreleased, on top of v3.8.0)
 
 **The tree is clean, `flutter analyze lib test` is clean, `flutter test` is
-44/44, and `py -3 scripts/i18n_audit.py` reports 0.** The session ended at
-**75 % quota**, deliberately, with everything committed. Nothing here is in any
+48/48, and `py -3 scripts/i18n_audit.py` reports 0.** The session ended at
+**93 % quota** with everything committed and pushed. Nothing here is in any
 APK the owner has.
 
 ### The localisation job the owner asked for is finished, and measured
@@ -91,14 +91,48 @@ language — which is what CLAUDE.md §1.2 requires.
 4,273 category entries -> 3,574 DISTINCT hadiths (the old 4,273 double-counted)
 ```
 
-`scripts/hadeethenc_crawl.py` is resumable and was left running: **750 of
+`scripts/hadeethenc_crawl.py` is resumable and was left running: **2,900 of
 roughly 25,000 (id, language) rows** at handover. `hadeethenc.db` is gitignored.
 Nothing is wired into the app and nothing is on R2 yet — see
 `NEXT_SESSION_PROMPT.md` §1 for the shape that fits.
 
+### The owner's two decisions, taken and recorded
+
+> «انا عايز الافضل لتجربة المستخدم وللامانة العلمية والموثوقية … متحطش حاجة
+> مجهولة المصدر إلا لو انت متأكد إن كل المطورين بيعملوا كده.»
+
+* **Unattributed translations do not ship.** The `fawazahmed0` fr/ur/ru hadith
+  sets name no translator; they stay out. HadeethEnc covers all seven languages
+  with a per-language takhrij and grade, so nothing is lost.
+* **The «""» and the orphaned «.» are a rendering bug, and are fixed as one.**
+  Sunan Abi Dawud 1417 ends `… الْوِتْرَ ␣ U+200F " U+200F ␣ U+200F . U+200F`;
+  those RIGHT-TO-LEFT MARKs force the quote and the stop to resolve RTL and be
+  carried away from their words. 35,860 of 67,153 hadiths carry U+200F.
+  `stripBidiControls()` removes only characters with **no glyph**, at the four
+  places the Arabic is drawn; the database keeps the source's own bytes and the
+  sequence of visible characters is identical before and after — so §1.2's ban
+  on rewriting hadith text is not touched. Guarded by
+  `test/bidi_controls_test.dart`.
+
+### Everything verified this session, by hand
+
+* `flutter analyze lib test` clean · `flutter test` **48/48**
+* **every hosted content path range-requested: 23 checked, 0 failed** — all 206
+  with the right content type and magic bytes (hadith.zip 22.2 MB `504b`, the
+  first and last page of all nine mushaf printings, four books `1f8b`, a
+  translation).
+* 7 locales · **912 keys each, key sets identical** · 9 mushaf editions
+  (already named in all seven languages) · 226 library books (29 with a written
+  blurb, 197 on the generated sentence) · `hadith.db` 109.7 MB, 67,153 hadiths
+  in 9 books, 45,219 graded · `pubspec.yaml` **3.8.0+4**
+
 ### Honest gaps from the sixth session
 
 * **Three languages were never opened on the device** (ru, ur, ar).
+* **`stripBidiControls` has never been seen on a device.** It is proven by
+  a test on the real text and the APK builds, but no one has looked at a
+  rendered hadith since it went in — the session ran out of quota with the
+  emulator on the wrong screen. Look before trusting it.
 * **The HadeethEnc crawl is ~3 % done.** Every number quoted about it is from
   the survey and the first 750 rows, not from a finished corpus.
 * In the sampled record, **Urdu returned `attribution` and `grade` still in

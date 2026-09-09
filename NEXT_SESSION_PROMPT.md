@@ -1,7 +1,7 @@
 # Rafiq Al-Darb — next session brief
 
-**Last written:** 2026-09-09, at the end of the sixth session, at **75 % quota**
-on a clean tree with `flutter analyze lib test` clean and `flutter test` 44/44.
+**Last written:** 2026-09-09, at the end of the sixth session, at **93 % quota**
+on a clean tree with `flutter analyze lib test` clean and `flutter test` 48/48.
 **Nothing is released.** Everything below and everything from the fifth session
 is committed on `master` and not in any APK the owner has.
 
@@ -107,9 +107,15 @@ Hadith tab end to end, with the imam biographies in English. Spanish: the New
 Muslim Guide, headings and bodies translated with the shahada still Arabic in
 its own box.
 
-**NOT swept on the device: Portuguese, Russian, Urdu and Arabic.** The owner
-asked for exactly that — «كل اللي انت عملته مع الفرنساوي اعمله بالتفصيل مع باقي
-اللغات لغه لغه». Do it, and screenshot each.
+Portuguese too, at the end: the Library card read «Faleceu em 1420 AH ▪ 1
+livro», the blurb in Portuguese, «Tamanho: 419.4 KB», «Transferir».
+
+**NOT swept on the device: Russian, Urdu and Arabic.** The owner asked for
+exactly that — «كل اللي انت عملته مع الفرنساوي اعمله بالتفصيل مع باقي اللغات
+لغه لغه». Do those three, and screenshot each. **Note for whoever does it: in
+Arabic and Urdu the bottom nav mirrors**, so the tab at the far right is Home,
+not «المزيد» — an `adb input tap` aimed by an LTR screenshot lands on the wrong
+tab, which cost this session two screenshots.
 
 ---
 
@@ -138,7 +144,7 @@ py -3 scripts/hadeethenc_crawl.py            # resume; skips what it has
 py -3 scripts/hadeethenc_crawl.py --status   # writes hadeethenc_status.txt
 ```
 
-**At handover: 750 of roughly 25,000 (id, language) rows.** The crawl is slow
+**At handover: 2,900 of roughly 25,000 (id, language) rows** — about 12 %. The crawl is slow
 and polite (0.25 s between requests) and fully resumable — every row is
 committed as it arrives. `hadeethenc.db` is gitignored.
 
@@ -206,6 +212,19 @@ renderer. `test/bidi_controls_test.dart` pins that promise on the real tail of
 
 **Do not extend this to anything visible.** A typo in a source's own text stays
 (`إسناده صحح` stays), a quotation mark stays, a full stop stays.
+
+## 2.3 ONE THING IS NOT DEVICE-VERIFIED
+
+`stripBidiControls()` is proven by `test/bidi_controls_test.dart` on the real
+tail of Sunan Abi Dawud 1417, `flutter analyze` is clean and the debug APK
+builds — but **nobody has opened a hadith on a device since it went in.** The
+session hit 93 % quota with the emulator on the wrong screen. First thing next
+session: open Sunan Abi Dawud 1417 (or any hadith on the Home daily card, one of
+the four patched render sites) and look at where the quote and the full stop
+land. If they are still adrift, the marks are not the whole story and the fix is
+wrong — say so rather than shipping it.
+
+---
 
 ## 3. Still open, in the order worth doing
 
