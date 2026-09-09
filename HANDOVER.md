@@ -227,9 +227,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 05:39 — IN PROGRESS — resume here**
+**2026-09-09 05:49 — IN PROGRESS — resume here**
 
-10 painted Islamic page frames + 11 frame colours, in the same card as the themes (3 tabs), every preview drawn on the active theme's own paper so a clashing pair cannot be picked blind. Sunan Suwar reader rebuilt with the full text-mushaf option set - fullscreen, auto-scroll, recitation with verse highlight, layout switch, theme/frame picker - all still locked to the surah (recitation uses wholeMushaf:false). Reused the reader's existing translation keys instead of inventing three that would have rendered as raw key names
+verified the frames and the rebuilt Sunan reader on the device: star-chain frame renders around a real mushaf page in the theme's gold; the locked reader's new bar overflowed by 6px and is fixed; recitation runs inside it and the verse highlight follows the recited ayah across a line wrap
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -439,9 +439,22 @@ class _ReaderBar extends StatelessWidget {
                 ],
               ),
             ),
+          // Seven controls plus the page counter is more than a phone width
+          // fits at default IconButton metrics — it overflowed by 6px on the
+          // device. Compact density and a flexible counter make it fit at any
+          // width instead of only at this one.
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-            child: Row(
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+            child: IconButtonTheme(
+              data: IconButtonThemeData(
+                style: IconButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  padding: const EdgeInsets.all(6),
+                  minimumSize: const Size(38, 38),
+                  iconSize: 21,
+                ),
+              ),
+              child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
@@ -491,17 +504,22 @@ class _ReaderBar extends StatelessWidget {
                   icon: const Icon(Icons.fullscreen),
                   onPressed: onFullScreen,
                 ),
-                Text(
-                  '${'quran.page'.tr()}  ${current - startPage + 1} / $pageCount',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: scheme.primary,
-                      ),
+                Flexible(
+                  child: Text(
+                    '${current - startPage + 1} / $pageCount',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: scheme.primary,
+                        ),
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.chevron_right),
                   onPressed: onNext,
                 ),
               ],
+            ),
             ),
           ),
         ],
