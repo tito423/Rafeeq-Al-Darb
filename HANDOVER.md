@@ -7,11 +7,81 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-10 |
-| **Released** | **v3.9.0** — the eight sessions of work since v3.8.0 are in it |
-| **App version** | `pubspec.yaml` `3.9.0+5` |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **71/71** · `py -3 scripts/i18n_audit.py` **0** · hosted content **30 paths, 0 failed** · APK **281,598,575 bytes** · everything below was opened on `emulator-5554` and looked at |
+| **Released** | **v3.10.0** |
+| **App version** | `pubspec.yaml` `3.10.0+6` |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **80/80** · `py -3 scripts/i18n_audit.py` **0** · hosted content **32 paths, 0 failed** · APK **281,669,162 bytes** · everything below was opened on `emulator-5554` and looked at |
 
-## STATE AS OF 2026-09-10 — EIGHTH SESSION (released as v3.9.0)
+## STATE AS OF 2026-09-10 — EIGHTH SESSION, SECOND HALF (after v3.9.0)
+
+### 5. Islamic-quote notifications — the owner's fourth request, working
+
+A notification every N minutes the owner picks (15 · 30 · 1h · 2h · 3h · 6h ·
+12h, or off), each carrying a **different** saying, and tapping it opens a
+card inside the app that covers what is behind it, on an Islamic background
+that changes at random, with a dismiss button in the interface language.
+Verified on `emulator-5554` end to end: a slot armed for 02:49:58 posted at
+02:50:03, was tapped, and the card opened **on that saying** with its book and
+its author.
+
+**Where the sayings come from, and what was refused.** 352 quotes from three
+of the four books the owner named. `scripts/build_quotes.py` takes the
+author's own prose and throws away anything carrying an ayah, a hadith or an
+isnad — because a floating ayah with no reference and a hadith with no grading
+are both things §1.2 forbids, and there is no grading to attach here. Four of
+its filters exist only because real pages were read (§1.4):
+
+* ayahs are marked with plain `{ }` in these editions, not `﴿ ﴾`;
+* hadith are marked with doubled parentheses `(( ))`;
+* «صيد الخاطر»'s edition puts the **editor's footnotes** in the same body
+  stream as Ibn al-Jawzi's text, with markers welded to words as Arabic-Indic
+  digits;
+* «روضة العقلاء» sets its isnads **fully diacritised**, so `"حدثنا" in t`
+  matched none of them — trap #2 in a new place.
+
+**حلية الأولياء is in the library but is NOT a quote source**, and the script
+says so at length. A hand-read sample of its 1,032 candidates carried a hadith
+qudsi fragment, a hadith in guillemets, half an isnad and an editorial note on
+a chain. Tuning the filter until the sample looked clean would have been
+guessing at the rest.
+
+**Both new books were crawled, built, uploaded and catalogued**: روضة العقلاء
+(Shamela 6944, 276 pages, 177,994 bytes) and حلية الأولياء (Shamela 10495,
+3,891 pages, 10 volumes, 2,498,616 bytes). 227 books.
+
+### 6. Two defects the feature uncovered, both fixed
+
+**Every notification tap in the app was being thrown away.**
+`FlutterLocalNotificationsPlugin` is a singleton and `initialize` installs one
+tap handler for the whole app. Five services were calling it, and two of them
+passed `onDidReceiveNotificationResponse: (_) {}`.
+`PrayerStatusNotification`'s empty handler is installed lazily from
+`AppShell`'s first frame — after `main()` — so it won. The quote card did not
+open on a tap; **neither had the سنن السور reminder, silently, for as long as
+that code has existed.** `NotificationRouter` is the only caller now and
+`test/notification_router_test.dart` pins it.
+
+**A 15-minute setting was not 15 minutes.** With
+`inexactAllowWhileIdle`, a slot armed for 02:35 had still not fired at 02:43.
+Doze batches inexact alarms, and an interval the owner chose is not something
+to hand to Android's convenience. `exactAllowWhileIdle` now, with the window
+cut from 48 slots to 24 so the app is not holding 48 exact alarms for a nudge.
+
+**And one the test flood exposed:** Android caps a package at 25 posted
+notifications and drops the rest. 24 undismissed quotes can spend the whole
+budget. Each quote now clears itself when the next is due (`timeoutAfter`).
+
+### 7. Found and NOT fixed — the first thing for the next session
+
+**The سنن السور reminder fires and posts nothing.** Set for Friday 20:00 and
+watched twice: the alarm left the pending list and re-armed itself for the
+following Friday — so it fired — and no notification ever appeared on
+`rafeeq_sunan_suwar_reminder`. `dumpsys` still reports that channel's
+`mLastNotificationUpdateTimeMs` as **0**, i.e. nothing has ever been posted on
+it. This is independent of the router change: posting is done natively by the
+plugin's `ScheduledNotificationReceiver` and does not go through
+`initialize`. Not diagnosed further; it is the next session's first job.
+
+## STATE AS OF 2026-09-10 — EIGHTH SESSION, FIRST HALF (released as v3.9.0)
 
 ### 1. A prayer reminder was watched firing, and the wording it fired with was wrong
 

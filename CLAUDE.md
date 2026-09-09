@@ -420,6 +420,43 @@ Do not rediscover these.
     into zero/one/two/other and `few` becomes unreachable, which is the
     difference between «١٠ دقائق» and «١٠ دقيقة».
 
+31. **One tap handler owns every notification in the app.**
+    `FlutterLocalNotificationsPlugin()` is a singleton and `initialize`
+    installs exactly one `onDidReceiveNotificationResponse`. Five services
+    were each calling it and two passed `(_) {}`;
+    `PrayerStatusNotification`'s empty one is installed lazily from
+    `AppShell`'s first frame — *after* `main()` — so it won, and **every**
+    notification tap in the app was thrown away. The سنن السور reminder had
+    been dead that way for as long as it existed, invisibly, because a tap
+    that opens the app on the screen it was already on looks like it worked.
+    `NotificationRouter` is the only caller now and
+    `test/notification_router_test.dart` fails the build on a second one.
+
+32. **`inexactAllowWhileIdle` is not an interval.** A quote slot armed for
+    02:35 had still not fired at 02:43 — Doze batches inexact alarms. When
+    the owner picks «كل ١٥ دقيقة», use `exactAllowWhileIdle`; the app already
+    holds the permission for the adhan. And keep the count down: exact alarms
+    are a real ask.
+
+33. **Android drops a package's notifications past 25 posted.** Twenty-four
+    undismissed quote notifications spent the whole budget and the app could
+    no longer post anything else. Anything that posts repeatedly needs
+    `timeoutAfter` so it clears itself.
+
+34. **A Shamela edition puts the EDITOR's footnotes in the body stream, and
+    its isnads are fully diacritised.** «صيد الخاطر» interleaves «١ التحقيق:
+    أي تفصيل المسائل…» with Ibn al-Jawzi's own text and welds superscript
+    markers to words as Arabic-Indic digits; «روضة العقلاء» writes
+    «حَدَّثَنَا», which `"حدثنا" in t` does not match — trap #2 again, in a
+    new place. Read real pages before writing the filter, and compare on a
+    diacritic-stripped copy while keeping the original verbatim.
+
+35. **Ayahs and hadith are marked typographically, not by wording.** These
+    editions set an ayah in plain `{ }` — not `﴿ ﴾` — and a hadith in doubled
+    parentheses `(( ))`. A filter that only looked for `﴿` shipped four
+    floating ayahs and a hadith of Muslim's with no grading, which is exactly
+    what §1.2 forbids.
+
 ---
 
 ## 4. Where things live

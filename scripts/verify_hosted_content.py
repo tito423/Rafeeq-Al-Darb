@@ -29,7 +29,7 @@ for e in editions:
                            "/mushaf/%s/%03d.%s" % (e["image_path"], p, ext)))
 # one book from each of the three added this session, plus one old one
 for b in ("as_seerah_ibn_kathir", "rijal_hawl_ar_rasul", "la_tahzan",
-          "riyad_as_salihin"):
+          "riyad_as_salihin", "rawdat_al_uqala", "hilyat_al_awliya"):
     checks.append(("book " + b, "/books/text/%s.json" % b))
 # Every HadeethEnc language pack, from the catalogue the app bundles —
 # so a pack the app offers and the bucket does not have fails here
