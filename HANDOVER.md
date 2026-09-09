@@ -236,9 +236,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 06:16 — IN PROGRESS — resume here**
+**2026-09-09 06:31 — IN PROGRESS — resume here**
 
-v3.6.0 released and verified (tag = HEAD, target master, 268MB APK, release build installed and run). CLAUDE.md gains traps 13-17 this session paid for (Avast TLS interception, ffmpeg already present, translucent-highlight contrast, Arabic bidi on sizes, Shamela search searches inside books). The last 3 books finished crawling after the release - built, not yet uploaded, documented as the first job next session
+3 remaining Seerah/tazkiyah books uploaded and catalogued (226 total): as_seerah_ibn_kathir, rijal_hawl_ar_rasul, la_tahzan. Each verified with a public range request before cataloguing - 206, application/json, 1f 8b gzip magic, byte totals 1880427/293158/344210 matching head_object. Sizes come from the bucket, never estimated. Also fixed a dangling separator the new entries exposed: la_tahzan's author is alive so authorDeathAr is empty, and both render sites concatenated it unconditionally, producing 'name . ' and a leading bullet. analyze clean, 25/25 tests
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

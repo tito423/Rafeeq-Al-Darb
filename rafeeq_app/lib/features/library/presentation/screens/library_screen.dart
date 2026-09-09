@@ -316,7 +316,10 @@ class _AuthorExpansionTile extends StatelessWidget {
             ?.copyWith(fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        '$deathDate • ${books.length} ${'library.book_count'.tr()}',
+        // A living author has no death date; do not render a dangling bullet.
+        deathDate.isEmpty
+            ? '${books.length} ${'library.book_count'.tr()}'
+            : '$deathDate • ${books.length} ${'library.book_count'.tr()}',
         style: TextStyle(
           color: scheme.onSurfaceVariant,
           fontSize: 12,
@@ -628,7 +631,9 @@ class _BookCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${book.authorAr} · ${book.authorDeathAr}',
+              book.authorDeathAr.isEmpty
+                  ? book.authorAr
+                  : '${book.authorAr} · ${book.authorDeathAr}',
               style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
             ),
             const SizedBox(height: 8),

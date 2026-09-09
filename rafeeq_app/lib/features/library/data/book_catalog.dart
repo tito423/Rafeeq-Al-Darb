@@ -4131,4 +4131,64 @@ const List<LibraryBook> libraryBookCatalog = [
           '١٤٢٧هـ',
     ),
   ),
+  LibraryBook(
+    id: 'as_seerah_ibn_kathir',
+    titleAr: 'السيرة النبوية',
+    titleEn: 'The Prophetic Biography of Ibn Kathir',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    authorDeathAr: 'توفي ٧٧٤ هـ',
+    descriptionAr:
+        'السيرة النبوية مستلّة من «البداية والنهاية»، جمع فيها ابن كثير '
+        'الروايات وتكلّم على أسانيدها.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/as_seerah_ibn_kathir.json',
+      sizeBytes: 1880427,
+      sourceLabel:
+          'المكتبة الشاملة — السيرة النبوية، ابن كثير (ت ٧٧٤هـ)، مستلًّا من '
+          'البداية والنهاية، تحقيق د. مصطفى عبد الواحد، عيسى البابي الحلبي - '
+          'القاهرة، ١٣٩٥هـ/١٩٧٦م',
+    ),
+  ),
+  LibraryBook(
+    id: 'rijal_hawl_ar_rasul',
+    titleAr: 'رجال حول الرسول',
+    titleEn: 'Men Around the Messenger',
+    authorAr: 'خالد محمد خالد ثابت (ت ١٤١٦هـ)',
+    authorEn: 'Khalid Muhammad Khalid',
+    authorDeathAr: 'توفي ١٤١٦ هـ',
+    descriptionAr:
+        'ستون ترجمة لصحابة رسول الله ﷺ بأسلوب أدبي، من أوسع الكتب انتشارًا في '
+        'التعريف بجيل الصحابة.',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/rijal_hawl_ar_rasul.json',
+      sizeBytes: 293158,
+      sourceLabel:
+          'المكتبة الشاملة — رجال حول الرسول، خالد محمد خالد ثابت (ت ١٤١٦هـ)، '
+          'دار الفكر - بيروت، الطبعة الأولى ١٤٢١هـ/٢٠٠٠م',
+    ),
+  ),
+  LibraryBook(
+    id: 'la_tahzan',
+    titleAr: 'لا تحزن',
+    titleEn: 'Don\'t Be Sad',
+    authorAr: 'عائض بن عبد الله القرني',
+    authorEn: 'Aid al-Qarni',
+    authorDeathAr: '',
+    descriptionAr:
+        'كتاب في الرقائق والتخفيف عن النفس، يجمع الآيات والآثار والحكم في '
+        'مواجهة الهمّ والقلق.',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '\${AppConfig.contentBaseUrl}/books/text/la_tahzan.json',
+      sizeBytes: 344210,
+      sourceLabel:
+          'المكتبة الشاملة — لا تحزن، عائض بن عبد الله القرني، مكتبة العبيكان',
+    ),
+  ),
 ];
