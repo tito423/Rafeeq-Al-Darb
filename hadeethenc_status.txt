@@ -1,0 +1,10 @@
+hadith ids: 3574
+
+lang    stored   graded   attrib
+ar           0        0        0
+en           0        0        0
+es           0        0        0
+fr           0        0        0
+pt           0        0        0
+ru           0        0        0
+ur           0        0        0
