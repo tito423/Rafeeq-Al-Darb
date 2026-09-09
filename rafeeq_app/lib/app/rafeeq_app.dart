@@ -16,6 +16,12 @@ final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError('sharedPrefsProvider must be overridden in main');
 });
 
+/// The locale the last frame was built in, so a *change* can be told from a
+/// rebuild. `RafeeqApp` is a `ConsumerWidget` and holds no state of its own;
+/// this is a single string for the whole app and the only thing that reads it
+/// is the callback below.
+String? _lastLocale;
+
 class RafeeqApp extends ConsumerWidget {
   const RafeeqApp({super.key});
 
@@ -39,6 +45,13 @@ class RafeeqApp extends ConsumerWidget {
       // widget that rebuilds on every locale change, so startup and a
       // language switch are the same code path.
       NativeStrings.sync();
+      // Anything already on screen was built in the previous language and
+      // will never be rebuilt — a snackbar least of all. An undo offer for
+      // something done before the switch is stale anyway.
+      if (localeCode != _lastLocale) {
+        _lastLocale = localeCode;
+        rootScaffoldMessengerKey.currentState?.clearSnackBars();
+      }
     });
 
     // Resolve the active variant into MaterialApp's theme slots. Only `rgb`
@@ -52,6 +65,7 @@ class RafeeqApp extends ConsumerWidget {
 
     return MaterialApp(
       navigatorKey: rootNavigatorKey,
+      scaffoldMessengerKey: rootScaffoldMessengerKey,
       title: 'app.name'.tr(),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,

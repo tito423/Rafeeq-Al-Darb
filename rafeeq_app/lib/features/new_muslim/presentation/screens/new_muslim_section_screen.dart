@@ -11,12 +11,11 @@ class NewMuslimSectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = context.locale.languageCode == 'ar';
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(isAr ? section.titleAr : section.titleEn)),
+      appBar: AppBar(title: Text(section.titleKey.tr())),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: section.items.length,
@@ -30,13 +29,13 @@ class NewMuslimSectionScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isAr ? item.headingAr : item.headingEn,
+                    item.headingKey.tr(),
                     style: theme.textTheme.titleMedium
                         ?.copyWith(color: scheme.primary, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    isAr ? item.bodyAr : item.bodyEn,
+                    item.bodyKey.tr(),
                     style: theme.textTheme.bodyMedium?.copyWith(height: 1.7),
                   ),
                   if (item.phraseAr != null) ...[

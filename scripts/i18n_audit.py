@@ -224,6 +224,14 @@ ALLOWLIST_NAMES = {
 # Listing 226 book titles one by one would be noise; what matters is that the
 # field has an answer, and the answer is the same for every row in it.
 ALLOWLIST_FIELDS = {
+    "features/new_muslim/data/guide_content.dart": {
+        "phraseAr":
+            "what the reader SAYS at that step — the shahada, «سُبْحَانَ "
+            "رَبِّيَ الْعَظِيمِ», the tashahhud — fully vowelled and set in "
+            "the Quran font. Arabic for the same reason an ayah on a mushaf "
+            "page is (CLAUDE.md §1.2). The headings and the instructions "
+            "around them ARE translated, under guide.*",
+    },
     "features/library/data/book_catalog.dart": {
         "titleAr":
             "a book's title is its name, paired with `titleEn` and picked by "
@@ -275,7 +283,11 @@ def strip_comments(src):
     return "".join(out)
 
 
-KEYED = re.compile(r"\s*\.tr\b")
+# `.plural` and `.gender` are easy_localization's other two lookups, and a key
+# reached through them is just as translated as one reached through `.tr`. The
+# pattern used to name only `.tr`, so the seven count labels came back as
+# "untranslated" the moment they became plurals.
+KEYED = re.compile(r"\s*\.(?:tr|plural|gender)\b")
 
 
 def audit_file(path, short):

@@ -138,7 +138,7 @@ class NewMuslimGuideScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
                         Text(
-                          isAr ? section.titleAr : section.titleEn,
+                          section.titleKey.tr(),
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,

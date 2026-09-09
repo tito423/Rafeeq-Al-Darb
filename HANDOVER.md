@@ -356,9 +356,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-09 18:48 — IN PROGRESS — resume here**
+**2026-09-09 19:07 — IN PROGRESS — resume here**
 
-i18n content batch 2 + plurals: the 226 books' titles and authors go through properName(), the death line is 3 templates instead of 226 strings (deathYearAh/deathApprox/deathNoteKey), the edition citation stays Arabic but reads RTL, and 7 count labels became real CLDR plurals so '1 livres' is '1 livre'. The audit learned to allowlist a whole FIELD with a reason. Down to 396 in two files: 266 book blurbs and 130 New Muslim Guide. Device re-verification of the plural fix is the next step - APK still building at the time of this note.
+i18n: New Muslim Guide translated in all 7 locales (5 titles, 32 headings, 32 bodies) with the 10 recitation phrases deliberately left Arabic; and the khatma undo SnackBar no longer survives a language change - that was the 'Lu aujourd'hui' the owner photographed over English and Arabic screens. Audit down to 266 in ONE file: the 226 book blurbs. VERIFIED in Spanish on emulator-5554.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

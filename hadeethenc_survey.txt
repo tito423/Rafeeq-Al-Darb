@@ -1,0 +1,68 @@
+languages served: 72
+of the app's seven: ar=yes, en=yes, es=yes, fr=yes, pt=yes, ru=yes, ur=yes
+MISSING: none
+
+categories: 493 total, 7 top-level
+
+  id=1     القرآن الكريم وعلومه                          0
+  id=2     الحديث وعلومه                                 0
+  id=3     العقيدة                                       0
+  id=4     الفقه وأصوله                                  0
+  id=5     الفضائل والآداب                               0
+  id=6     الدعوة والحسبة                                0
+  id=7     السيرة والتاريخ                               0
+
+top-level total: 0 hadiths
+requests for a full crawl (7 languages): 0
+
+---- one record, id=5907 ----
+
+== ar   keys: attribution, categories, explanation, grade, hadeeth, hadeeth_intro, hints, id, reference, title, translations, words_meanings
+   title        تعاهدوا هذا القرآن، فوالذي نفس محمد بيده لهو أشد تفلتا من الإبل في عقلها
+   hadeeth      عن أبي موسى الأشعري رضي الله عنه عن النبي صلى الله عليه وسلم قال: «تَعَاهَدُوا هَذَا الْقُرْآنَ، فَوَالَّذِي نَفْسُ مُحَمَّدٍ بِيَدِهِ لَهُوَ أَشَدُّ تَفَلُّتًا مِنَ الْإِبِلِ فِي عُقُلِهَا».
+   attribution  متفق عليه
+   grade        صحيح
+   explanation  أَمَرَ النبيُّ صلى الله عليه وسلم بمُعاهَدةِ القرآنِ والمواظبةِ على تلاوتِهِ كي لا ينساه بعد أن كان حافظًا له في صدرِهِ، وأَكَّدَ ذلك بِحَلِفِهِ صلى الله عليه وسلم على أنَّ القرآنَ أشدُّ تَخَلُّصًا وذهابًا من الصدور مِن 
+
+== en   keys: attribution, attribution_ar, categories, explanation, explanation_ar, grade, grade_ar, hadeeth, hadeeth_ar, hadeeth_intro, hadeeth_intro_ar, hints, hints_ar, id, title, translations, words_meanings_ar
+   title        Keep on reciting this Qur'an, for by the One in Whose Hand my soul is, the Qur'an slips away from memory faster than camels escaping their tying ropes
+   hadeeth      Abu Mūsa al-Ash‘ari (may Allah be pleased with him) reported: The Prophet (may Allah’s peace and blessings be upon him) said: "Keep on reciting this Qur'an, for by the One in Whose Hand my soul is, the Qur'an slips away 
+   attribution  Agreed upon
+   grade        Authentic
+   explanation  The Prophet (may Allah's peace and blessings be upon him) ordered the Companions to recite the Qur'an regularly and not to forget it after they had learned it by heart. He emphasized this fact by swearing that the Qur'an
+
+== es   keys: attribution, attribution_ar, categories, explanation, explanation_ar, grade, grade_ar, hadeeth, hadeeth_ar, hadeeth_intro, hadeeth_intro_ar, hints, hints_ar, id, title, translations, words_meanings_ar
+   title        Comprométanse con la recitación de este Corán, pues, por Aquel en cuya mano está el alma de Muhammad, se escapa más fácilmente que el camello de su atadura
+   hadeeth      Abu Musa Al Ash'ary —que Al-lah esté complacido con él— narró que el Profeta —la paz y las bendiciones de Al-lah sean con él— dijo: «Comprométanse con la recitación de este Corán, pues, por Aquel en cuya mano está el alm
+   attribution  Registrado por Al-Bujari y Muslim
+   grade        Verídico (sahih)
+   explanation  El Profeta —la paz y las bendiciones de Al-lah sean con él— ordenó comprometerse con el Corán y recitarlo regularmente para no olvidarlo después de haberlo memorizado. Esto lo confirmó con su juramento de que el Corán se
+
+== fr   keys: attribution, attribution_ar, categories, explanation, explanation_ar, grade, grade_ar, hadeeth, hadeeth_ar, hadeeth_intro, hadeeth_intro_ar, hints, hints_ar, id, title, translations, words_meanings_ar
+   title        Soyez assidus à ce Coran car, par Celui qui détient l’âme de Mouḥammad en Sa main, il s’échappe encore plus vite que le chameau lorsqu’il se détache de ses liens !
+   hadeeth      Aboû Moûsâ Al-Ach’arî (qu’Allah l’agrée) relate que le Prophète (qu'Allah le couvre d'éloges et le préserve) a dit : « Soyez assidus à ce Coran car, par Celui qui détient l’âme de Mouḥammad en Sa main, il s’échappe encor
+   attribution  Rapporté par Al Bukhârî et Muslim
+   grade        Authentique
+   explanation  Le Prophète (qu'Allah le couvre d'éloges et le préserve) a ordonné de bien s'attacher au Coran et d'être assidu dans sa récitation afin de ne pas l'oublier après l'avoir mémorisé dans sa poitrine. Il a appuyé cela en jur
+
+== pt   keys: attribution, attribution_ar, categories, explanation, explanation_ar, grade, grade_ar, hadeeth, hadeeth_ar, hadeeth_intro, hadeeth_intro_ar, hints, hints_ar, id, title, translations, words_meanings_ar
+   title        “Preservai o Sagrado Alcorão (recitando-o constantemente)! Juro por Aquele em Cujas Mãos a alma de Mohammad está, que o Alcorão é mais fácil de se escapar da memória do que camelos das suas cordas atadas.”
+   hadeeth      Abu Mussa Al- Ash'ari - que ALLAH esteja satisfeito com ele - narrou que o Profeta - que a paz e bênçãos de ALLAH esteja sobre ele - disse: “Preservai o Sagrado Alcorão (recitando-o constantemente)! Juro por Aquele em Cu
+   attribution  Bukhari e Musslim
+   grade        Sahih
+   explanation  O Profeta (que a paz e bênçãos de ALLAH estejam sobre ele) ordenou aos Companheiros que recitassem o Alcorão regularmente e não o esquecessem depois de o decorarem.
+Enfatizou este facto jurando que o Alcorão escapa da me
+
+== ru   keys: attribution, attribution_ar, categories, explanation, explanation_ar, grade, grade_ar, hadeeth, hadeeth_ar, hadeeth_intro, hadeeth_intro_ar, hints, hints_ar, id, title, translations, words_meanings_ar
+   title        Заботьтесь (неуклонно читая и заучивая его наизусть) об этом Коране, ибо, клянусь Тем, в Чьей руке душа Мухаммада, он ускользает (из сердец) быстрее, чем верблюд высвобождается из своих пут
+   hadeeth      От Абу Мусы аль-Аш'ари (да будет доволен им Аллах) передаётся, что Пророк (да благословит его Аллах и приветствует) сказал: «Заботьтесь (неуклонно читая и заучивая его наизусть) об этом Коране, ибо, клянусь Тем, в Чьей р
+   attribution  Привели Аль-Бухари и Муслим
+   grade        Достоверный хадис
+   explanation  Пророк (да благословит его Аллах и приветствует) повелел людям беречь Коран, постоянно читая его, чтобы не забыть его после того, как он был в груди человека (выучен наизусть). Он (да благословит его Аллах и приветствует
+
+== ur   keys: attribution, attribution_ar, categories, explanation, explanation_ar, grade, grade_ar, hadeeth, hadeeth_ar, hadeeth_intro, hadeeth_intro_ar, hints, hints_ar, id, title, translations, words_meanings_ar
+   title        ”اس قرآن کی حفاظت (دیکھ بھال) کرو اور اس كى برابر تلاوت كيا كرو۔ قسم ہے اس ذات کی جس کے ہاتھ میں محمد کی جان ہے، یہ قرآن لوگوں کے سینوں سے نکل جانے میں اس اونٹ سے زیادہ تیز ہے جو رسی میں بندھا ہوا ہو“۔
+   hadeeth      ابو موسی اشعری رضی اللہ عنہ سے روایت ہے کہ اللہ کے نبی صلی اللہ علیہ نے فرمایا : ”اس قرآن کی حفاظت (دیکھ بھال) کرو اور اس كى برابر تلاوت كيا كرو۔ قسم ہے اس ذات کی جس کے ہاتھ میں محمد کی جان ہے، یہ قرآن لوگوں کے سینوں سے 
+   attribution  متفق عليه
+   grade        صحيح
+   explanation  اللہ کے نبی صلی اللہ علیہ و سلم نے قرآن کا دھیان رکھنے اور پابندی سے اس کی تلاوت کرنے کا حکم دیا ہے، تاکہ قرآن یاد ہونے کے بعد انسان کے حافظے سے نکل نہ جائے۔ آپ نے اس بات کے اندر تاکید پیدا کرنے کے لیے قسم کھاکر بتایا کہ
