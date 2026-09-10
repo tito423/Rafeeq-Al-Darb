@@ -529,6 +529,33 @@ Do not rediscover these.
     the owner's to back up.** If it is lost, no further update can ever be
     installed over the app without an uninstall.
 
+42. **A chapter number is not always an integer, and one row that isn't took a
+    whole collection down.** Sunan an-Nasa'i's «كتاب المزارعة» is numbered
+    **35.2** — a real sub-book between 35 and 36, carrying 83 hadiths, stored
+    by SQLite as a REAL. `HadithChapter.fromRow` read it with
+    `r['chapter_no'] as int`, which throws `type 'double' is not a subtype of
+    type 'int'`; and because the cast runs while mapping the result set, the
+    throw lost **all 52** of that collection's books, not just the odd one.
+
+    Two lessons, both cheap:
+
+    * **`X as int` on a database row is a claim about the data.** Check it.
+      `py -3 scripts/db_type_audit.py` finds every non-nullable `as int` in
+      `lib/core/db/` and asks the bundled databases whether that column really
+      holds integers everywhere. Run it after any DB rebuild. As of this
+      writing it clears every other column across all three databases — 67k
+      hadiths, 42k tafsir rows, 83k word meanings — so those two were the
+      only mines.
+    * **Do not "clean" the data to fit the code.** Rounding 35.2 to 35 merges
+      two books, renumbering it to 36 pushes every later book out of step with
+      the printed edition, and deleting it drops 83 hadiths. The column was
+      widened to `num` and the label prints «35.2» as the source writes it.
+
+    And the reason it was findable at all: the screen used to render the throw
+    as a **spinner** (`if (!snapshot.hasData)` — see `FutureView`), so for
+    however long it had been broken it looked like a slow load. An error that
+    is invisible is an error nobody can report properly.
+
 ---
 
 ## 4. Where things live

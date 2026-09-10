@@ -86,3 +86,5 @@ code_health.txt
 key.properties
 lineage.bin
 KEYSTORE-PASSWORD.txt
+
+db_type_audit.txt
