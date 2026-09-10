@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:easy_localization/easy_localization.dart';
+import '../i18n/isolate_strings.dart';
 
 import 'package:background_downloader/background_downloader.dart';
 
@@ -127,6 +127,29 @@ class DownloadEngine {
 
     final downloader = FileDownloader();
 
+    // Resolved off the translation asset rather than through `.tr()`:
+    // this method can run in a headless isolate where
+    // `Localization.instance` does not exist and `.tr()` silently
+    // returns the key — which is exactly what shipped to the shade.
+    final t = <String, String>{
+      'notif.dl_files_complete_body': await IsolateStrings.tr('notif.dl_files_complete_body'),
+      'notif.dl_files_complete_title': await IsolateStrings.tr('notif.dl_files_complete_title'),
+      'notif.dl_files_error_body': await IsolateStrings.tr('notif.dl_files_error_body'),
+      'notif.dl_files_error_title': await IsolateStrings.tr('notif.dl_files_error_title'),
+      'notif.dl_files_running_body': await IsolateStrings.tr('notif.dl_files_running_body'),
+      'notif.dl_files_running_title': await IsolateStrings.tr('notif.dl_files_running_title'),
+      'notif.dl_paused_body': await IsolateStrings.tr('notif.dl_paused_body'),
+      'notif.dl_paused_title': await IsolateStrings.tr('notif.dl_paused_title'),
+      'notif.dl_recit_complete_body': await IsolateStrings.tr('notif.dl_recit_complete_body'),
+      'notif.dl_recit_complete_title': await IsolateStrings.tr('notif.dl_recit_complete_title'),
+      'notif.dl_recit_error_body': await IsolateStrings.tr('notif.dl_recit_error_body'),
+      'notif.dl_recit_error_title': await IsolateStrings.tr('notif.dl_recit_error_title'),
+      'notif.dl_recit_paused_title': await IsolateStrings.tr('notif.dl_recit_paused_title'),
+      'notif.dl_recit_running_body': await IsolateStrings.tr('notif.dl_recit_running_body'),
+      'notif.dl_recit_running_title': await IsolateStrings.tr('notif.dl_recit_running_title'),
+    };
+
+
     // ── One grouped notification per kind ────────────────────────────────
     // With `groupNotificationId` set, the plugin posts a single entry whose
     // progress bar counts *finished tasks out of total*, and removes it when
@@ -134,28 +157,28 @@ class DownloadEngine {
     // download from filling the shade with hundreds of rows.
     downloader.configureNotificationForGroup(
       groupFiles,
-      running: TaskNotification('notif.dl_files_running_title'.tr(),
-          'notif.dl_files_running_body'.tr()),
-      complete: TaskNotification('notif.dl_files_complete_title'.tr(),
-          'notif.dl_files_complete_body'.tr()),
-      error: TaskNotification('notif.dl_files_error_title'.tr(),
-          'notif.dl_files_error_body'.tr()),
-      paused: TaskNotification('notif.dl_paused_title'.tr(),
-          'notif.dl_paused_body'.tr()),
+      running: TaskNotification(t['notif.dl_files_running_title']!,
+          t['notif.dl_files_running_body']!),
+      complete: TaskNotification(t['notif.dl_files_complete_title']!,
+          t['notif.dl_files_complete_body']!),
+      error: TaskNotification(t['notif.dl_files_error_title']!,
+          t['notif.dl_files_error_body']!),
+      paused: TaskNotification(t['notif.dl_paused_title']!,
+          t['notif.dl_paused_body']!),
       progressBar: true,
       groupNotificationId: _notifGroupFiles,
     );
 
     downloader.configureNotificationForGroup(
       groupRecitations,
-      running: TaskNotification('notif.dl_recit_running_title'.tr(),
-          'notif.dl_recit_running_body'.tr()),
-      complete: TaskNotification('notif.dl_recit_complete_title'.tr(),
-          'notif.dl_recit_complete_body'.tr()),
-      error: TaskNotification('notif.dl_recit_error_title'.tr(),
-          'notif.dl_recit_error_body'.tr()),
-      paused: TaskNotification('notif.dl_recit_paused_title'.tr(),
-          'notif.dl_paused_body'.tr()),
+      running: TaskNotification(t['notif.dl_recit_running_title']!,
+          t['notif.dl_recit_running_body']!),
+      complete: TaskNotification(t['notif.dl_recit_complete_title']!,
+          t['notif.dl_recit_complete_body']!),
+      error: TaskNotification(t['notif.dl_recit_error_title']!,
+          t['notif.dl_recit_error_body']!),
+      paused: TaskNotification(t['notif.dl_recit_paused_title']!,
+          t['notif.dl_paused_body']!),
       progressBar: true,
       groupNotificationId: _notifGroupRecitations,
     );

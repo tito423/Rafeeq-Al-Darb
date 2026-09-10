@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
-import '../../../channels/presentation/screens/islamic_channels_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
@@ -45,18 +44,11 @@ class MoreScreen extends StatelessWidget {
             ),
           ),
 
-          IslamicActionCard(
-            icon: Icons.ondemand_video_rounded,
-            accent: AppColors.error,
-            title: 'channels.title'.tr(),
-            subtitle: 'channels.intro'.tr(),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const IslamicChannelsScreen(),
-              ),
-            ),
-          ),
-
+          // The Islamic-channels card used to sit here as well as in the
+          // Library's own "القنوات" tab — two routes to the same screen, which
+          // the owner found while using it. The Library is where the app
+          // already keeps its directories of external content (books, hadith,
+          // channels, websites), so the duplicate here is the one that goes.
           IslamicActionCard(
             icon: Icons.auto_stories_outlined,
             accent: AppColors.primarySoft,

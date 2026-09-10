@@ -23,7 +23,7 @@ import '../../../core/i18n/proper_name.dart';
 /// difference is a per-method offset rather than noise:
 ///
 ///   * Turkey  — sunrise −7, dhuhr +5, asr +4, maghrib +7
-///   * Dubai   — dhuhr +3, maghrib +3
+///   * UAE (Awqaf) — dhuhr +3, maghrib +3
 ///   * Morocco — dhuhr +5, maghrib +5
 ///   * Lisbon  — dhuhr +5, isha +3
 ///   * Jordan and Lisbon also add minutes to Maghrib, which the table does
@@ -202,10 +202,14 @@ const kPrayerCalculationMethods = <PrayerCalculationMethod>[
     fajrAngle: 19.5,
     ishaInterval: 90,
   ),
+  // The owner asked for the authority's real name rather than the city:
+  // method 16 is the UAE General Authority of Islamic Affairs and Endowments'
+  // calendar (18.2° for both Fajr and Isha, with the +3 minute Dhuhr and
+  // Maghrib offsets it prints), not a "Dubai" of anyone's devising.
   PrayerCalculationMethod(
     id: 16,
-    nameAr: 'دبي',
-    nameEn: 'Dubai',
+    nameAr: 'الهيئة العامة للشئون الإسلامية والأوقاف — الإمارات',
+    nameEn: 'UAE General Authority of Islamic Affairs and Endowments',
     fajrAngle: 18.2,
     ishaAngle: 18.2,
     dhuhrOffsetMinutes: 3,

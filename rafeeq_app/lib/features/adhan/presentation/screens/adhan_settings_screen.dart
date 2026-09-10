@@ -52,7 +52,12 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   /// Dart audio player here any more: previews go through the same native
   /// [AdhanNative] player a real alarm uses (see its doc for why), so this
   /// is just which row's button should read "stop".
-  String? _playingId;
+  /// Which row is sounding. A `ValueNotifier` rather than a field with
+  /// `setState`, because the picker lives in a **pushed route**: calling
+  /// `setState` here rebuilds this screen, not the page on top of it, so
+  /// the play/stop button on every row stayed frozen at whatever it was
+  /// when the page was opened.
+  final ValueNotifier<String?> _playingId = ValueNotifier<String?>(null);
   Timer? _previewWatch;
 
   bool? _batteryExempt;
@@ -100,6 +105,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _previewWatch?.cancel();
+    _playingId.dispose();
     // Leaving this screen must never leave an adhan sounding behind it.
     AdhanNative.stop();
     super.dispose();
@@ -114,10 +120,10 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   /// failure was caught and swallowed, which is why previews were silent.
   Future<void> _togglePreview(AdhanOption option, {bool forcePlay = false}) async {
     final messenger = ScaffoldMessenger.of(context);
-    if (!forcePlay && _playingId == option.id) {
+    if (!forcePlay && _playingId.value == option.id) {
       _previewWatch?.cancel();
       await AdhanNative.stop();
-      if (mounted) setState(() => _playingId = null);
+      _playingId.value = null;
       return;
     }
     final started = await AdhanNative.preview(
@@ -132,11 +138,11 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     );
     if (!mounted) return;
     if (!started) {
-      setState(() => _playingId = null);
+      _playingId.value = null;
       messenger.showSnackBar(SnackBar(content: Text('errors.generic'.tr())));
       return;
     }
-    setState(() => _playingId = option.id);
+    _playingId.value = option.id;
     _watchPreview();
   }
 
@@ -153,7 +159,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
       }
       if (!state.playing) {
         t.cancel();
-        setState(() => _playingId = null);
+        _playingId.value = null;
       }
     });
   }
@@ -214,7 +220,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     _previewWatch?.cancel();
     await AdhanNative.stop();
     if (!mounted) return;
-    setState(() => _playingId = null);
+    _playingId.value = null;
 
     final spec = previewSpec(
       settings: settings,
@@ -264,15 +270,25 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   /// settings sub-pages with their own back affordance, and the adhan list in
   /// particular is long enough that a sheet would just reintroduce the nested
   /// scrolling this replaced.
+  /// Pushes a sub-page that can **watch** the same providers this screen does.
+  ///
+  /// It used to take a plain `WidgetBuilder` and be handed a closure that had
+  /// already captured `settings` and `catalog` by value. A pushed route is not
+  /// rebuilt when the pushing screen rebuilds, so those values were frozen at
+  /// the moment the page opened: choosing an adhan saved correctly and the tick
+  /// never moved to it, which reads exactly like "the adhan cannot be changed".
+  /// Building inside a [Consumer] gives the page its own `ref`.
   Future<void> _openFullScreen({
     required String title,
-    required WidgetBuilder builder,
+    required Widget Function(BuildContext context, WidgetRef ref) builder,
   }) {
     return Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => Scaffold(
-          appBar: AppBar(title: Text(title)),
-          body: SafeArea(child: builder(context)),
+        builder: (_) => Consumer(
+          builder: (context, ref, _) => Scaffold(
+            appBar: AppBar(title: Text(title)),
+            body: SafeArea(child: builder(context, ref)),
+          ),
         ),
       ),
     );
@@ -436,14 +452,23 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => _openFullScreen(
                   title: 'prayer.default_adhan_label'.tr(),
-                  builder: (context) => ListView(
+                  // Read live inside the page, not captured from the screen
+                  // underneath it - see _openFullScreen's doc.
+                  builder: (context, pageRef) {
+                    final live = pageRef.watch(adhanSettingsProvider);
+                    final options =
+                        pageRef.watch(adhanCatalogProvider).valueOrNull ??
+                            const <AdhanOption>[];
+                    return ValueListenableBuilder<String?>(
+                      valueListenable: _playingId,
+                      builder: (context, playingId, _) => ListView(
                     padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
                     children: [
-                      for (final option in catalog)
+                      for (final option in options)
                         _AdhanCard(
                           option: option,
-                          isSelected: settings.defaultAdhanId == option.id,
-                          isPlaying: _playingId == option.id,
+                          isSelected: live.defaultAdhanId == option.id,
+                          isPlaying: playingId == option.id,
                           onTap: () {
                             _saveDefault(option.id);
                             _togglePreview(option, forcePlay: true);
@@ -467,7 +492,9 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                         ),
                       ),
                     ],
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -484,23 +511,29 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => _openFullScreen(
                   title: 'prayer.per_prayer'.tr(),
-                  builder: (context) => ListView(
+                  builder: (context, pageRef) {
+                    final live = pageRef.watch(adhanSettingsProvider);
+                    final options =
+                        pageRef.watch(adhanCatalogProvider).valueOrNull ??
+                            const <AdhanOption>[];
+                    return ListView(
                     padding: const EdgeInsets.fromLTRB(8, 12, 8, 24),
                     children: [
                       for (final key in adhanPrayerKeys)
                         _PrayerModeCard(
                           prayerKey: key,
                           label: _prayerLabels[key]!.tr(),
-                          mode: settings.modeFor(key),
-                          adhanId: settings.adhanIdByPrayer[key],
-                          catalog: catalog,
+                          mode: live.modeFor(key),
+                          adhanId: live.adhanIdByPrayer[key],
+                          catalog: options,
                           onModeChanged: (m) => _saveMode(key, m),
                           onAdhanChanged: (id) => _saveChoice(key, id),
                           onTest: () => _test(key),
                           accent: scheme.primary,
                         ),
                     ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ),

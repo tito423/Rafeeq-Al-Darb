@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/services/notification_router.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -45,9 +46,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   /// another isolate mute a video that is already running.
   bool _videoSound = true;
 
+  /// Set when the app was cold-started by tapping a notification. The splash
+  /// is then skipped outright — the owner asked for exactly that: «خلي أول
+  /// ما أضغط على الإشعار يفتح شاشته مباشرة حتى لو التطبيق كان مقفول وخليه
+  /// يعمل إسكيب ساعتها للاسبلاش». A four-second logo animation between a
+  /// tap and the thing tapped is the wrong trade every time.
+  String? _launchPayload;
+
   @override
   void initState() {
     super.initState();
+    _checkNotificationLaunch();
     final firstRun = !ref.read(splashFirstRunProvider);
     final shouldPlayVideo = firstRun || ref.read(splashVideoEnabledProvider);
     final reduceMotion = WidgetsBinding
@@ -67,6 +76,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         _proceed,
       );
     }
+  }
+
+  /// Asks the plugin whether a notification tap is what started this process.
+  /// If so, hand off immediately instead of running the intro.
+  Future<void> _checkNotificationLaunch() async {
+    final payload = await NotificationRouter.instance.takeLaunchPayload();
+    if (payload == null || !mounted) return;
+    _launchPayload = payload;
+    _proceed();
   }
 
   bool _nativeSplashRemoved = false;
@@ -140,6 +158,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             : const OnboardingScreen(),
       ),
     );
+    // A notification tap that started the app cold: route it now that there is
+    // a navigator to push onto. `_proceed` has already replaced the splash, so
+    // the card lands on top of the app rather than on top of the splash.
+    final payload = _launchPayload;
+    if (payload != null) {
+      _launchPayload = null;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => NotificationRouter.route(payload),
+      );
+    }
+
     // The startup permission prompts used to fire from here. They do not
     // any more: timed on a fresh install, the dialog landed on top of the
     // ONBOARDING screen while the user was choosing a mushaf, not on the

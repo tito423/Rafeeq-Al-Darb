@@ -69,4 +69,39 @@ class NotificationRouter {
       onDidReceiveBackgroundNotificationResponse: _dispatch,
     );
   }
+
+  /// The payload of the notification that **launched** the app, if that is why
+  /// it started — read once and then forgotten.
+  ///
+  /// `onDidReceiveNotificationResponse` only fires while the process is alive.
+  /// Tap a quote reminder with the app closed and Android starts the app cold;
+  /// the callback never runs and the payload is only retrievable from
+  /// `getNotificationAppLaunchDetails()`. That is why the owner reported
+  /// «مش بتفتح المقولة في التطبيق كأنه لسه بيفتح من أول وجديد» — the app really was
+  /// just starting, and the tap was going nowhere.
+  ///
+  /// Returns null when the app was started any other way.
+  Future<String?> takeLaunchPayload() async {
+    if (_launchPayloadTaken) return null;
+    _launchPayloadTaken = true;
+    try {
+      final details = await _plugin.getNotificationAppLaunchDetails();
+      if (details?.didNotificationLaunchApp != true) return null;
+      final payload = details?.notificationResponse?.payload;
+      return (payload == null || payload.isEmpty) ? null : payload;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  bool _launchPayloadTaken = false;
+
+  /// Routes a payload the same way a live tap is routed. Public so the launch
+  /// path and the tap path cannot drift apart.
+  static void route(String payload) =>
+      _dispatch(NotificationResponse(
+        notificationResponseType:
+            NotificationResponseType.selectedNotification,
+        payload: payload,
+      ));
 }
