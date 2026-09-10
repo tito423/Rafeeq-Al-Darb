@@ -77,6 +77,21 @@ REJECT = {
 }
 
 
+# Four of the eleven are plates from 19th-century ornament books, and their
+# printed captions — «PARALLEL of HISTORICAL ORNAMENT», «SLOH ARABSKÝ» — sit
+# in the top and bottom margins. Seen on emulator-5554 behind an Arabic
+# saying, a Latin running head is exactly the sort of thing that makes a card
+# look borrowed. The plate is cropped in past its margins; the 1.3x rescale
+# that costs is invisible under an 80% scrim, and it keeps the picture rather
+# than dropping it.
+PLATE_INSET = {
+    "parallel_of_historical_ornament_arabian_and_moor": 0.14,
+    "ornament_sborn_k_slohov_ch_ozdob_v_ech_obdob_um_": 0.12,
+    "styles_of_ornament_exhibited_in_designs_and_arra": 0.12,
+    "l_ornement_polychrome_met_dp146521": 0.08,
+}
+
+
 def luminance(rgb):
     def ch(v):
         v /= 255.0
@@ -127,6 +142,12 @@ def main():
             continue
 
         im = Image.open(os.path.join(SRC, name)).convert("RGB")
+        inset = next((v for k, v in PLATE_INSET.items()
+                      if vid.startswith(k[:40])), 0.0)
+        if inset:
+            cut = int(im.height * inset)
+            im = im.crop((0, cut, im.width, im.height - cut)).resize(
+                (1080, 1920), Image.LANCZOS)
         bright = brightest_block(im)
         # What the eye receives where the picture is brightest.
         composite = tuple(

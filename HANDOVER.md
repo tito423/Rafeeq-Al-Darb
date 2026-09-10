@@ -808,9 +808,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 12:46 — IN PROGRESS — resume here**
+**2026-09-10 12:56 — IN PROGRESS — resume here**
 
-photographic quote backgrounds, licence-checked one file at a time. Pixabay and Pexels 403 without a key and Mixkits licence is rendered by JavaScript - an unreadable licence is a no - so the source is Wikimedia Commons, which states each files licence machine-readably: 190 candidates from curated Islamic-ornament CATEGORIES (a free-text search had returned Hindu temple carvings from Karnataka), 37 public domain or CC0, 18 downloaded, and then somebody looked at them and threw out seven that were paintings of people, a page of an illuminated Quran manuscript, and a snapshot with a wall clock and plastic bags in it. The eleven that ship were measured through the exact scrim the card draws - brightest 60px region, 9:1 at worst. Also: the notification title and body no longer both name the prayer, which the owner spotted in the shade
+quote card backgrounds verified on emulator-5554: three different pictures in three opens, the saying legible on every one, book and author on the card. The four ornament-book plates are cropped past their printed margins - a Latin running head like PARALLEL of HISTORICAL ORNAMENT sitting over an Arabic saying looked borrowed
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
