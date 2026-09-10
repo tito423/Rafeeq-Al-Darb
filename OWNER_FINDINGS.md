@@ -99,3 +99,20 @@ Ordered by severity, not by the order he wrote them.
 * 11 · swiping the hadith card BACK
 * 12 · a hadith explanation
 * 15 · the toolbar's looks (its landscape shape is done; the styling is not)
+
+18. **An ANR during startup, caught on the emulator, not reported by him.**
+    Logcat, 2026-09-10 19:22:04, about a minute after the app was launched:
+
+        ANR in com.tito.rafeeq_aldarb (.MainActivity)
+        Reason: Input dispatching timed out ... Waited 5007ms for MotionEvent
+
+    The main thread was blocked for over five seconds. **This was a `--debug`
+    build**, where Dart runs unoptimised, so the number is not the number a
+    release build would give — but a five-second block is far past what
+    optimisation alone explains, and this is the same startup the owner sits
+    through every launch. It is the first hard evidence for the smoothness
+    question that `dumpsys gfxinfo` could not answer.
+
+    Next session: reproduce with `flutter run --profile` and read the DevTools
+    timeline for the first ten seconds. Do not report the app as smooth until
+    that number exists. STATUS: open, unexplained.
