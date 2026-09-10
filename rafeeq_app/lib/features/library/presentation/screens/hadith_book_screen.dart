@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../../../core/widgets/arabic_text.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/widgets/future_view.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import 'hadith_chapter_screen.dart';
@@ -18,8 +20,14 @@ class HadithBookScreen extends StatefulWidget {
 }
 
 class _HadithBookScreenState extends State<HadithBookScreen> {
-  late final Future<List<HadithChapter>> _future =
+  late Future<List<HadithChapter>> _future = _load();
+
+  Future<List<HadithChapter>> _load() =>
       widget.repo.chaptersOfBook(widget.book.id);
+
+  /// Re-runs the query. Without this a failed load had no way back at all —
+  /// see `FutureView`'s doc for what the user saw instead.
+  void _retry() => setState(() => _future = _load());
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +43,12 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
           Expanded(
             child: FutureBuilder<List<HadithChapter>>(
               future: _future,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final chapters = snapshot.data!;
+              builder: (context, snapshot) => FutureView<List<HadithChapter>>(
+                snapshot: snapshot,
+                onRetry: _retry,
+                isEmpty: (chapters) => chapters.isEmpty,
+                empty: Center(child: Text('errors.empty'.tr())),
+                builder: (chapters) {
                 return ListView.separated(
                   itemCount: chapters.length,
                   separatorBuilder: (_, _) => const Divider(height: 1),
@@ -74,7 +83,8 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
                     );
                   },
                 );
-              },
+                },
+              ),
             ),
           ),
         ],

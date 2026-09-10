@@ -1,4 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/widgets/future_view.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/utils/arabic_normalize.dart';
@@ -25,8 +28,12 @@ class HadithChapterScreen extends StatefulWidget {
 }
 
 class _HadithChapterScreenState extends State<HadithChapterScreen> {
-  late final Future<List<HadithItem>> _future =
+  late Future<List<HadithItem>> _future = _load();
+
+  Future<List<HadithItem>> _load() =>
       widget.repo.hadithsOfChapter(widget.book.id, widget.chapter.chapterNo);
+
+  void _retry() => setState(() => _future = _load());
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +47,12 @@ class _HadithChapterScreenState extends State<HadithChapterScreen> {
       ),
       body: FutureBuilder<List<HadithItem>>(
         future: _future,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final items = snapshot.data!;
+        builder: (context, snapshot) => FutureView<List<HadithItem>>(
+          snapshot: snapshot,
+          onRetry: _retry,
+          isEmpty: (items) => items.isEmpty,
+          empty: Center(child: Text('errors.empty'.tr())),
+          builder: (items) {
           return ListView.separated(
             padding: const EdgeInsets.symmetric(vertical: 8),
             itemCount: items.length,
@@ -78,7 +86,8 @@ class _HadithChapterScreenState extends State<HadithChapterScreen> {
               );
             },
           );
-        },
+          },
+        ),
       ),
     );
   }

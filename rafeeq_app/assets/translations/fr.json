@@ -619,7 +619,8 @@
   },
   "errors": {
     "offline": "Aucune connexion internet",
-    "generic": "Une erreur est survenue, réessayez"
+    "generic": "Une erreur est survenue, réessayez",
+    "empty": "Rien ici"
   },
   "khatma": {
     "title": "Khatma du Coran",

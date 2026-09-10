@@ -619,7 +619,8 @@
   },
   "errors": {
     "offline": "Sem ligação à internet",
-    "generic": "Algo correu mal, tente novamente"
+    "generic": "Algo correu mal, tente novamente",
+    "empty": "Nada aqui"
   },
   "khatma": {
     "title": "Khatma do Alcorão",

@@ -619,7 +619,8 @@
   },
   "errors": {
     "offline": "No internet connection",
-    "generic": "Something went wrong, try again"
+    "generic": "Something went wrong, try again",
+    "empty": "Nothing here"
   },
   "khatma": {
     "title": "Quran Khatma",

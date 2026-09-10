@@ -619,7 +619,8 @@
   },
   "errors": {
     "offline": "Sin conexión a internet",
-    "generic": "Algo salió mal, inténtalo de nuevo"
+    "generic": "Algo salió mal, inténtalo de nuevo",
+    "empty": "No hay nada aquí"
   },
   "khatma": {
     "title": "Jatma del Corán",

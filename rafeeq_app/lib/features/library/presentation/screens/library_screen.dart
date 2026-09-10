@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/widgets/future_view.dart';
 import '../../../../core/utils/arabic_normalize.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -943,15 +944,24 @@ class _BookListState extends State<_BookList> {
     ));
   }
 
+  /// Held in state, not created in `build`. It used to read
+  /// `future: widget.repo.books()` inline, which starts a **new** query
+  /// against the 110 MB hadith database on every single rebuild of this tab —
+  /// and a `FutureBuilder` handed a new future rebuilds again when it
+  /// resolves. Hoisting it means one query per visit.
+  late Future<List<HadithBook>> _booksFuture = widget.repo.books();
+
+  void _retryBooks() =>
+      setState(() => _booksFuture = widget.repo.books());
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<HadithBook>>(
-      future: widget.repo.books(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final books = snapshot.data!;
+      future: _booksFuture,
+      builder: (context, snapshot) => FutureView<List<HadithBook>>(
+        snapshot: snapshot,
+        onRetry: _retryBooks,
+        builder: (books) {
         return ListView(
           padding: const EdgeInsets.all(14),
           children: [
@@ -990,7 +1000,8 @@ class _BookListState extends State<_BookList> {
             ],
           ],
         );
-      },
+        },
+      ),
     );
   }
 }
