@@ -7,9 +7,95 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-10 |
-| **Released** | **v3.11.1** |
-| **App version** | `pubspec.yaml` `3.11.1+8` |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **97** · `py -3 scripts/i18n_audit.py` **0** · hosted content **36 paths, 0 failed** · APK **286,479,215 bytes** · everything below was opened on `emulator-5554` and looked at |
+| **Released** | **v3.12.0** |
+| **App version** | `pubspec.yaml` `3.12.0+9` |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **100** · hosted content **36 paths, 0 failed** · APK **286,479,215 bytes** · everything below was opened on `emulator-5554` and looked at |
+
+## STATE AS OF 2026-09-10 — v3.12.0: the audit, and the two things it found
+
+The owner asked for a full pass — organisation, maintainability, usability,
+security, ease of future maintenance — and specifically for the permission
+prompts to stop landing on the splash. Findings, all measured:
+
+### Permission timing (fixed, verified)
+
+The dialog was never on the splash. Measured on a fresh install: splash ended
+~12s, onboarding appeared ~13s, and the location dialog landed at ~15s **on
+top of the onboarding screen**, over the mushaf picker.
+
+`AlarmPermissionsService.requestStartupGrants()` is now called from
+`AppShell`'s first frame (900 ms in), and the splash asks for nothing.
+`PrayerStatusNotification` also used to call
+`requestNotificationsPermission()` on init, which jumped ahead of location;
+removed, so location comes first. Re-measured: nothing interrupts the splash
+or the onboarding, and the dialog appears 2.1s after onboarding ends, on Home.
+
+### Two orphaned download categories (fixed, verified)
+
+`hadeethenc` and `ruqyah` were enqueued under `DownloadManager` category
+strings no bucket in `DownloadCategoryX.managerCategories` claimed. The bytes
+sat on disk while the storage hub said "Nothing downloaded" and its delete
+button skipped them. On device, after downloading the English pack: the Hadith
+row went from empty to `1 · 10.4 MB` with a working delete, total
+348.1 → 358.5 MB.
+
+While fixing it I made `mushafs` count twice — the header read 696.2 MB over a
+single 348.1 MB row. Caught on the screenshot, not in review.
+`StorageSummary`'s constructor now asserts one entry per category.
+`test/downloads_categories_test.dart` reads the `category:` literals out of
+`lib/` and fails on any that no bucket claims; proven to reproduce the original
+complaint before it was trusted.
+
+### Security — one real finding, awaiting the owner's decision
+
+Measured, not assumed:
+
+* No secrets tracked; no `.env`, keystore or key material in git.
+* No `http://` anywhere in `lib/`; no WebView.
+* 3 exported Android components, all necessary.
+* R8 minify + proguard rules on in release.
+* **The release APK is signed with the Android debug key.**
+  `apksigner verify --print-certs` reports
+  `Signer #1 certificate DN: C=US, O=Android, CN=Android Debug`, and
+  `android/app/build.gradle.kts` still carries Flutter's
+  `// TODO: Add your own signing config`.
+
+  Why it matters: anyone can produce an APK that Android accepts as an update
+  to this one, because the debug key is not a secret. For a sideloaded app the
+  owner installs himself from his own releases, the practical exposure is small.
+  **Switching to a real key means uninstalling first** — Android refuses an
+  update signed by a different key — which loses the ~348 MB of downloaded
+  mushaf pages and every local setting. That is the owner's call and it has been
+  put to him; nothing was changed.
+
+### Performance and smoothness — what could and could not be measured
+
+* Cold start: `TotalTime: 2676` ms (`am start -W`).
+* Memory: TOTAL PSS 111,961 KB (`dumpsys meminfo`).
+* **Frame-level jank could NOT be measured.** `dumpsys gfxinfo` reports 0
+  frames for a Flutter app (it renders on its own thread), and
+  `dumpsys SurfaceFlinger --latency` returned no rows on Android 16. So there
+  is no jank number in this handover, and any claim of "smooth" here rests on
+  watching it, not on a percentile. A `flutter run --profile` session with the
+  DevTools frame chart is the way to get a real one.
+
+### Code health (`py -3 scripts/code_health.py`)
+
+178 files / 47,028 lines in `lib`, median 163. 23 test files / 2,155 lines
+(5% of lib). 15% comment lines. **No dead code**: the one name the script
+flagged (`DownloadCategoryX`) is used on five lines — Dart extension names
+never appear at the call site, and that caveat is now written into the script.
+
+One TODO left, `lib/core/config/app_config.dart:13`: the default mushaf SVG
+base is GitHub raw. Measured today — pages 001/050/200/400/604 all answer 200
+in 0.4–1.0s at 196–626 KB, so it works; the note stands as a scaling caution,
+not a defect for a one-user sideloaded app.
+
+Five files are over 1,000 lines (`book_catalog.dart` 4,063 is pure data;
+`library_screen.dart` 1,582 and `ayah_sciences_sheet.dart` 1,548 are the two
+worth splitting when someone next has reason to touch them).
+
+---
 
 ## STATE AS OF 2026-09-10 — v3.11.1: the Urdu question, answered by measuring
 
