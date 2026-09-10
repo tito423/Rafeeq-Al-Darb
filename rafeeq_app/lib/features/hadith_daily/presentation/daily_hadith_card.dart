@@ -15,6 +15,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../library/presentation/screens/hadith_detail_screen.dart';
 import '../../library/presentation/widgets/hadith_translation.dart';
+import '../../hadeethenc/data/hadeethenc_providers.dart';
+import '../../hadeethenc/presentation/screens/hadeethenc_detail_screen.dart';
 import '../data/daily_hadith_provider.dart';
 
 /// Home, bottom card (P2‑13) — one full hadith (complete text, narrator,
@@ -288,6 +290,28 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
   /// for any reason we fall back to the single hadith, which is no worse than
   /// the old behaviour.
   Future<void> _openDetail(DailyHadith daily) async {
+    // A card drawn from the Encyclopaedia opens the Encyclopaedia's own
+    // screen — word meanings, hints, the full explanation and the source
+    // link. Sending it to the nine-books reader instead would look up a
+    // chapter it does not belong to.
+    final enc = daily.encyclopaedia;
+    if (enc != null) {
+      final catalog = ref.read(hadeethEncCatalogProvider).valueOrNull;
+      final pack = ref.read(hadeethEncPackProvider).valueOrNull;
+      if (!mounted) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => HadeethEncDetailScreen(
+            item: enc,
+            sourceName: catalog?.nameFor(pack?.lang ?? 'ar') ?? '',
+            sourceUrl: catalog?.sourceUrl ?? '',
+            rtl: pack?.isRtl ?? true,
+          ),
+        ),
+      );
+      return;
+    }
+
     var chapter = <HadithItem>[daily.item];
     var index = 0;
     try {
@@ -459,7 +483,7 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
               // stripBidiControls removes the source's RLMs; only an RTL
               // paragraph puts what is left in the right place.
               ArabicText(
-                stripBidiControls(item.arabic),
+                stripBidiControls(daily.arabic),
                 maxLines: 6,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.justify,
@@ -471,13 +495,44 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
               ),
               // P3‑57: the owner asked for the hadith's translation under it
               // wherever a hadith is shown — the card as well as the book.
-              HadithTranslation(item: item, maxLines: 4),
+              if (daily.encyclopaedia == null)
+                HadithTranslation(item: item, maxLines: 4),
               const SizedBox(height: 10),
-              Text(
-                '${book.nameAr} · ${'library.hadith_number'.tr()} ${item.numberInBook}',
-                style: theme.textTheme.labelSmall
-                    ?.copyWith(color: scheme.onSurfaceVariant),
-              ),
+              // Two bylines, because the two corpora say different things.
+              // The Encyclopaedia gives a takhrij and a grading with a named
+              // source; the nine books give the collection and the number.
+              if (daily.encyclopaedia case final enc?) ...[
+                Text(
+                  [
+                    if (enc.attributionAr.isNotEmpty) enc.attributionAr,
+                    if (enc.gradeAr.isNotEmpty) enc.gradeAr,
+                  ].join(' · '),
+                  style: theme.textTheme.labelSmall
+                      ?.copyWith(color: scheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 10),
+                // «خلي كارت الحديث يعرض بس الأحاديث منها على أساس إنها
+                // مشروحة». The explanation is the reason this corpus is
+                // preferred, so it is on the card, not one tap away.
+                Text(
+                  'hadeethenc.explanation'.tr(),
+                  style: theme.textTheme.labelMedium
+                      ?.copyWith(color: scheme.primary),
+                ),
+                const SizedBox(height: 4),
+                ArabicText(
+                  stripBidiControls(enc.explanation),
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.7),
+                ),
+              ] else
+                Text(
+                  '${book.nameAr} · ${'library.hadith_number'.tr()} ${item.numberInBook}',
+                  style: theme.textTheme.labelSmall
+                      ?.copyWith(color: scheme.onSurfaceVariant),
+                ),
               // P3‑41: the owner's real-device feedback — no "Grade:"
               // label, just the grade itself, localized where we honestly
               // can (see hadith_grade_i18n.dart). For Bukhari/Muslim, the

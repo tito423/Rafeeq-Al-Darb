@@ -21,13 +21,6 @@
     "source": "ملف قدّمه صاحب التطبيق (اسم المؤذّن كما ورد في اسم الملف)، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
-    "id": "azan14",
-    "name": "أذان قناة الناس",
-    "asset": "assets/audio/adhan/azan14.mp3",
-    "raw": "azan14",
-    "source": "ملف قدّمه صاحب التطبيق — من قناة الناس، والمؤذّن غير مسمّى في المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
-  },
-  {
     "id": "azan1",
     "name": "محمود علي البنا",
     "asset": "assets/audio/adhan/azan1.mp3",
@@ -61,7 +54,7 @@
   },
   {
     "id": "azan5",
-    "name": "مشاري راشد العفاسي",
+    "name": "مشاري راشد العفاسي (١)",
     "asset": "assets/audio/adhan/azan5.mp3",
     "raw": "azan5",
     "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-1-kuwait.mp3",
@@ -73,14 +66,6 @@
     "asset": "assets/audio/adhan/azan6.mp3",
     "raw": "azan6",
     "url": "https://archive.org/download/adhan-mp3-collection/ali-ibn-ahmad-mala-hq.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
-  },
-  {
-    "id": "azan7",
-    "name": "عاصم بخاري (الحرم المكي)",
-    "asset": "assets/audio/adhan/azan7.mp3",
-    "raw": "azan7",
-    "url": "https://archive.org/download/adhan-mp3-collection/assem-bukhrare-al-haram-al-maki.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
@@ -100,11 +85,27 @@
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
-    "id": "azan10",
-    "name": "محمد خليل رمل (الحرم المكي)",
-    "asset": "assets/audio/adhan/azan10.mp3",
-    "raw": "azan10",
-    "url": "https://archive.org/download/adhan-mp3-collection/muhammad-khaleel-raml-al-haram-al-maki.mp3",
+    "id": "azan15",
+    "name": "مشاري راشد العفاسي (٢)",
+    "asset": "assets/audio/adhan/azan15.mp3",
+    "raw": "azan15",
+    "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-2-kuwait.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+  },
+  {
+    "id": "azan16",
+    "name": "مشاري راشد العفاسي — أذان الفجر (١)",
+    "asset": "assets/audio/adhan/azan16.mp3",
+    "raw": "azan16",
+    "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-3-fajr-kuwait.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+  },
+  {
+    "id": "azan17",
+    "name": "مشاري راشد العفاسي — أذان الفجر (٢)",
+    "asset": "assets/audio/adhan/azan17.mp3",
+    "raw": "azan17",
+    "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-4-fajr-kuwait.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   }
 ]

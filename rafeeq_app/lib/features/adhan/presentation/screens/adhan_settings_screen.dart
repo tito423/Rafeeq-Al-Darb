@@ -305,7 +305,19 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
       body: catalogAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => ErrorRetry(onRetry: () => ref.invalidate(adhanCatalogProvider)),
-        data: (catalog) => ListView(
+        data: (catalog) {
+          // Three adhans were removed from the catalogue at the owner's
+          // request. If the stored default was one of them, the picker would
+          // show no selection at all and the subtitle would be blank, while
+          // the alarm quietly fell back to `catalog.first` anyway. Heal it
+          // instead of leaving the screen disagreeing with what will play.
+          if (catalog.isNotEmpty &&
+              !catalog.any((o) => o.id == settings.defaultAdhanId)) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _saveDefault(catalog.first.id);
+            });
+          }
+          return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             if (_exactAlarmOk == false)
@@ -538,7 +550,8 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
               ),
             ),
           ],
-        ),
+          );
+        },
       ),
     );
   }

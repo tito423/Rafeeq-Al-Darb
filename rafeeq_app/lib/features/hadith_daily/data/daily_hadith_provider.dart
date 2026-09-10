@@ -1,12 +1,40 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/db/hadeethenc_repository.dart';
 import '../../../core/db/hadith_repository.dart';
+import '../../hadeethenc/data/hadeethenc_providers.dart';
 
-/// One randomly-picked hadith (+ its book) for the Home card (P2‑13).
+/// One randomly-picked hadith for the Home card (P2‑13), from whichever of the
+/// app's two hadith corpora can actually explain it.
+///
+/// «خلي كارت الحديث يعرض بس الأحاديث منها على أساس إنها مشروحة … ولو مش أختار
+/// تحميلهم مثلًا عشان مساحة ذاكرة تليفونه يظهرله الكارت من غير شرح».
+///
+/// So there are two shapes, and which one you get depends only on whether the
+/// Hadeeth Encyclopaedia pack is on the device:
+///
+///  * [encyclopaedia] set — the pack is installed, and this hadith comes with
+///    its own explanation, grading and named source.
+///  * [encyclopaedia] null — the nine books, exactly as before. They carry no
+///    published explanation, and the app does not invent one (§1.2).
 class DailyHadith {
   final HadithItem item;
   final HadithBook book;
-  const DailyHadith(this.item, this.book);
+
+  /// The Encyclopaedia's own record, when that is where this came from.
+  final HadeethItem? encyclopaedia;
+
+  const DailyHadith(this.item, this.book, {this.encyclopaedia});
+
+  /// The Arabic text to draw.
+  String get arabic => encyclopaedia?.hadeethAr.isNotEmpty == true
+      ? encyclopaedia!.hadeethAr
+      : item.arabic;
+
+  /// The explanation, or empty when this corpus has none to give.
+  String get explanation => encyclopaedia?.explanation ?? '';
+
+  bool get isExplained => explanation.trim().isNotEmpty;
 }
 
 /// Picks [DailyHadith] once per app launch and holds it — a provider's state
@@ -86,6 +114,12 @@ class DailyHadithNotifier extends AsyncNotifier<DailyHadith?> {
   }
 
   Future<DailyHadith?> _pick() async {
+    // The Encyclopaedia first, because every hadith in it is explained. If
+    // its pack is not on the device this falls straight through to the nine
+    // books, which is the same card he has always had, minus the explanation.
+    final enc = await _pickFromEncyclopaedia();
+    if (enc != null) return enc;
+
     final repo = await ref.read(hadithRepositoryProvider.future);
     if (repo == null) return null;
     final item = await repo.randomDailyHadith();
@@ -96,6 +130,49 @@ class DailyHadithNotifier extends AsyncNotifier<DailyHadith?> {
       orElse: () => books.first,
     );
     return DailyHadith(item, book);
+  }
+
+  /// A random explained hadith, or null when the pack is not installed, the
+  /// pick has no Arabic text, or it has no explanation after all — the card
+  /// promises an explanation when it draws from here, so an entry that cannot
+  /// keep that promise is passed over rather than shown bare.
+  Future<DailyHadith?> _pickFromEncyclopaedia() async {
+    try {
+      final encRepo = await ref.read(hadeethEncRepositoryProvider.future);
+      if (encRepo == null) return null;
+      for (var attempt = 0; attempt < 5; attempt++) {
+        final hit = await encRepo.random();
+        if (hit == null) return null;
+        if (hit.hadeethAr.trim().isEmpty) continue;
+        if (hit.explanation.trim().isEmpty) continue;
+        // The nine-books shape the card still needs for its byline. The
+        // Encyclopaedia's own attribution is what actually gets shown.
+        return DailyHadith(
+          HadithItem(
+            id: 0,
+            bookId: 0,
+            chapterNo: 0,
+            numberInBook: 0,
+            arabic: hit.hadeethAr,
+          ),
+          const HadithBook(
+            id: 0,
+            key: '',
+            nameAr: '',
+            nameEn: '',
+            authorAr: '',
+            authorEn: '',
+            hadithCount: 0,
+            chapterCount: 0,
+          ),
+          encyclopaedia: hit,
+        );
+      }
+      return null;
+    } catch (_) {
+      // A pack that will not open is not a reason to have no card at all.
+      return null;
+    }
   }
 }
 

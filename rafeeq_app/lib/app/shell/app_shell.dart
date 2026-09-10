@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
 import '../../core/services/alarm_permissions_service.dart';
+import '../../features/hadeethenc/data/hadeethenc_autofetch.dart';
 import '../../core/services/prayer_status_notification.dart';
 import '../../features/adhan/data/prayer_status_enabled_provider.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
@@ -66,6 +67,12 @@ class _AppShellState extends ConsumerState<AppShell>
       // once per launch.
       Future<void>.delayed(const Duration(milliseconds: 900), () {
         AlarmPermissionsService.instance.requestStartupGrants();
+      });
+      // «حمّل الموسوعة الحديثية دي جوّه التطبيق أوتوماتيك بعد أول مرة
+      // تشغيل». Later than the permission prompt on purpose — a download
+      // that starts while a dialog is up reads as the dialog causing it.
+      Future<void>.delayed(const Duration(seconds: 4), () {
+        if (mounted) HadeethEncAutoFetch.maybeFetch(ref);
       });
     });
   }
