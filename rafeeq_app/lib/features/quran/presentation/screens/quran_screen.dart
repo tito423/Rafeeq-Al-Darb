@@ -500,7 +500,23 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             ? ToolbarAction.compactHeight + 8
                             : 116,
                       ),
-                      child: Padding(
+                      // The bar is toggled by tapping the page, and it used
+                      // to blink in and out between two frames. It fades and
+                      // lifts now — the owner asked for it to be animated and
+                      // to look like something.
+                      child: TweenAnimationBuilder<double>(
+                        key: ValueKey(_toolbarLandscape(context)),
+                        tween: Tween<double>(begin: 0, end: 1),
+                        duration: const Duration(milliseconds: 220),
+                        curve: Curves.easeOutCubic,
+                        builder: (context, t, child) => Opacity(
+                          opacity: t,
+                          child: Transform.translate(
+                            offset: Offset(0, (1 - t) * -8),
+                            child: child,
+                          ),
+                        ),
+                        child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 4,
@@ -514,8 +530,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               // rather than one replacing the other.
                               ToolbarAction(
                                 icon: textLayout == QuranTextLayout.page
-                                    ? Icons.view_agenda_outlined
-                                    : Icons.article_outlined,
+                                    ? Icons.view_agenda_rounded
+                                    : Icons.article_rounded,
                                 label: textLayout == QuranTextLayout.page
                                     ? 'quran.layout_cards'.tr()
                                     : 'quran.layout_page'.tr(),
@@ -524,12 +540,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                     .toggle(),
                               ),
                               ToolbarAction(
-                                icon: Icons.text_decrease,
+                                icon: Icons.text_decrease_rounded,
                                 label: 'quran.font_smaller'.tr(),
                                 onPressed: () => _changeFontScale(-0.1),
                               ),
                               ToolbarAction(
-                                icon: Icons.text_increase,
+                                icon: Icons.text_increase_rounded,
                                 label: 'quran.font_larger'.tr(),
                                 onPressed: () => _changeFontScale(0.1),
                               ),
@@ -549,7 +565,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             // turns its own pages to follow the reciter.
                             ToolbarAction(
                               icon: _recite.active
-                                  ? Icons.stop_circle_outlined
+                                  ? Icons.stop_circle_rounded
                                   : Icons.headphones_rounded,
                               label: _recite.active
                                   ? 'quran.recite_stop'.tr()
@@ -562,15 +578,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             // image mushaf too, not just the text one.
                             ToolbarAction(
                               icon: _pageFillScreen
-                                  ? Icons.fullscreen_exit
-                                  : Icons.fullscreen,
+                                  ? Icons.fullscreen_exit_rounded
+                                  : Icons.fullscreen_rounded,
                               label: _pageFillScreen
                                   ? 'quran.page_fit_small'.tr()
                                   : 'quran.page_fit_full'.tr(),
                               onPressed: _togglePageFillScreen,
                             ),
                             ToolbarAction(
-                              icon: Icons.travel_explore_outlined,
+                              icon: Icons.travel_explore_rounded,
                               label: 'search.title'.tr(),
                               onPressed: () async {
                                 final page = await Navigator.of(context)
@@ -586,7 +602,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             ),
                             if (canIndexBySurah)
                             ToolbarAction(
-                              icon: Icons.format_list_numbered,
+                              icon: Icons.format_list_bulleted_rounded,
                               label: 'quran.surah_list'.tr(),
                               onPressed: () => showSurahSheet(
                                 context,
@@ -597,7 +613,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             ),
                             if (canIndexBySurah)
                             ToolbarAction(
-                              icon: Icons.filter_9_plus,
+                              icon: Icons.layers_rounded,
                               label: 'quran.juz'.tr(),
                               onPressed: () => showJuzSheet(
                                 context,
@@ -606,7 +622,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               ),
                             ),
                             ToolbarAction(
-                              icon: Icons.pin_drop_outlined,
+                              icon: Icons.numbers_rounded,
                               label: 'quran.jump_to'.tr(),
                               onPressed: () => showGotoPageSheet(
                                 context,
@@ -615,7 +631,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               ),
                             ),
                             ToolbarAction(
-                              icon: Icons.auto_stories_outlined,
+                              icon: Icons.auto_stories_rounded,
                               label: 'quran.editions'.tr(),
                               onPressed: () => MushafEditionSheet.show(context),
                             ),
@@ -628,8 +644,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             // edition as well as the mode.
                             ToolbarAction(
                               icon: (_mode == MushafMode.text && !isRaster)
-                                  ? Icons.image_outlined
-                                  : Icons.notes,
+                                  ? Icons.image_rounded
+                                  : Icons.notes_rounded,
                               label: (_mode == MushafMode.text && !isRaster)
                                   ? 'quran.mushaf_mode'.tr()
                                   : 'quran.text_mode'.tr(),
@@ -651,6 +667,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               },
                             ),
                           ],
+                        ),
                         ),
                       ),
                     )

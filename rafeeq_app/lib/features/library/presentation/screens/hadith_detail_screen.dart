@@ -5,6 +5,9 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import '../../../../core/utils/arabic_normalize.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/hadith_matn.dart';
+import 'hadith_explanation_screen.dart';
+
 import '../../../../core/widgets/arabic_text.dart';
 import '../widgets/hadith_translation.dart';
 
@@ -182,6 +185,28 @@ class _HadithContent extends StatelessWidget {
           padding: const EdgeInsets.only(top: 16),
           child: _TakhrijChip(book: book, item: item),
         ),
+        // «ولو أمكن شرح الحديث يبقى تمام». The nine books carry no
+        // published explanation and the app will not invent one. The
+        // Hadeeth Encyclopaedia does carry one per hadith, so this offers
+        // to go and look. The button appears only when there is a quoted
+        // matn to search with, and what it opens is a list of candidates
+        // the reader judges — never a match the app asserts.
+        Builder(builder: (context) {
+          final query = matnQuery(stripBidiControls(item.arabic));
+          if (query == null) return const SizedBox.shrink();
+          return Padding(
+            padding: const EdgeInsets.only(top: 18),
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.menu_book_rounded, size: 18),
+              label: Text('hadith_daily.explain_action'.tr()),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => HadithExplanationScreen(query: query),
+                ),
+              ),
+            ),
+          );
+        }),
       ],
     );
   }

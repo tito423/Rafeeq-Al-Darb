@@ -703,7 +703,12 @@
     "download_prompt": "Téléchargez la bibliothèque de hadiths pour voir un hadith aléatoire ici",
     "downloading": "Téléchargement…",
     "another": "Autre hadith",
-    "previous": "Précédent"
+    "previous": "Précédent",
+    "explain_action": "Chercher son explication dans l’Encyclopédie",
+    "explain_title": "Explication",
+    "explain_candidates": "Voici les hadiths les plus proches dans l’Encyclopédie — choisissez celui que vous jugez identique. L’application ne décide pas.",
+    "explain_none": "Rien de proche n’a été trouvé dans l’Encyclopédie.",
+    "explain_needs_pack": "Téléchargez d’abord le pack de l’Encyclopédie — Bibliothèque › Encyclopédie."
   },
   "about": {
     "blurb": "Rafeeq Al-Darb est une application islamique complète bâtie sur des sources fiables et librement accessibles aux développeurs. Chaque moushaf, traduction et enregistrement d'adhan a été vérifié à la source avant publication, et chaque source est citée pour que vous puissiez la vérifier.",

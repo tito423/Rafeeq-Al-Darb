@@ -703,7 +703,12 @@
     "download_prompt": "Descarga la biblioteca de hadices para ver uno aleatorio aquí",
     "downloading": "Descargando…",
     "another": "Otro hadiz",
-    "previous": "Anterior"
+    "previous": "Anterior",
+    "explain_action": "Buscar su explicación en la Enciclopedia",
+    "explain_title": "Explicación",
+    "explain_candidates": "Estos son los hadices más parecidos en la Enciclopedia; elige el que consideres el mismo. La aplicación no decide la coincidencia.",
+    "explain_none": "No se encontró nada parecido en la Enciclopedia.",
+    "explain_needs_pack": "Descarga primero el paquete de la Enciclopedia — Biblioteca › Enciclopedia."
   },
   "about": {
     "blurb": "Rafeeq Al-Darb es una app islámica integral basada en fuentes fiables y de libre acceso para desarrolladores. Cada mushaf, traducción y grabación de adhan fue comprobado en su fuente antes de publicarse, y todas las fuentes están citadas para que puedas verificarlas.",
