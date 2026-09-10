@@ -44,9 +44,23 @@ class DownloadEngine {
   /// Large artifacts, a couple at a time — they are big enough that more
   /// parallelism just splits the same bandwidth and makes each one look
   /// stalled.
+  /// **Why this is 8 and not 2.** He downloaded four mushafs at once and
+  /// reported «التنزيلات بتقف خالص لما أجي أنزل حاجات كتيرة». They were not
+  /// stopping. Every file the app fetches that is not an ayah goes through
+  /// this one queue — mushaf pages, books, the hadith database, adhan clips —
+  /// and it was two wide **in total**. Four mushafs is 4 × 604 = 2,416 page
+  /// tasks sharing two slots, so the third and fourth genuinely do not move
+  /// until the first two are done. From the outside that is indistinguishable
+  /// from stalled.
+  ///
+  /// `maxConcurrentByHost` is what keeps it polite, and that is the number
+  /// that must stay modest — the global cap only ever hurt. Measured against
+  /// both audio hosts before changing it: 16 simultaneous requests were served
+  /// without a single refusal (`scripts`-side probe, 2026-09-10), so 4 per
+  /// host is well inside what they will take.
   static final MemoryTaskQueue fileQueue = MemoryTaskQueue()
-    ..maxConcurrent = 2
-    ..maxConcurrentByHost = 2;
+    ..maxConcurrent = 8
+    ..maxConcurrentByHost = 4;
 
   /// Ayah files are small and numerous, so the win here is concurrency. Six
   /// at a time turns a 286-request surah from a several-minute crawl into
@@ -54,7 +68,7 @@ class DownloadEngine {
   /// hammering the CDN hard enough to get rate-limited (which is its own way
   /// of "stopping at البقرة").
   static final MemoryTaskQueue recitationQueue = MemoryTaskQueue()
-    ..maxConcurrent = 6
+    ..maxConcurrent = 12
     ..maxConcurrentByHost = 6;
 
   static bool _ready = false;

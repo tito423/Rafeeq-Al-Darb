@@ -988,16 +988,24 @@ class _RepairButtonState extends ConsumerState<_RepairButton> {
       // 1. Hadith / books / adhan — the platform downloader's own queue.
       await DownloadManager.instance.resumeAll();
 
-      // 2. Recitations — partial surahs for the reciter in use.
+      // 2. Recitations — every reciter with files on disk, not only the one
+      // currently selected. A surah left half-finished under a reciter he had
+      // since switched away from was invisible to repair, and the button said
+      // «لا يوجد ما يُصلَح» while the storage screen still showed it.
       try {
         final repo = await ref.read(quranRepositoryProvider.future);
         final data = await ref.read(mushafDataProvider.future);
-        final edition = ref.read(selectedReciterProvider);
-        resumed += await AyahAudioService.instance.repairPartialDownloads(
-          edition: edition,
-          surahs: data.surahs,
-          repo: repo,
-        );
+        final editions = <String>{
+          ref.read(selectedReciterProvider),
+          ...await AyahAudioService.instance.editionsWithFiles(),
+        };
+        for (final edition in editions) {
+          resumed += await AyahAudioService.instance.repairPartialDownloads(
+            edition: edition,
+            surahs: data.surahs,
+            repo: repo,
+          );
+        }
       } catch (_) {
         // A missing Quran DB just means there is nothing to repair here.
       }

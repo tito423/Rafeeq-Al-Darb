@@ -27,14 +27,31 @@ STATUS: open
 
 ## A2 · «تعذّر تنزيل التلاوة — تعذّر إكمال بعض الآيات»
 
-Screenshot of the shade shows that notification. Find the actual failure — a
-surah is 286 separate ayah files and something is dropping some of them.
+**Measured against the live hosts, 2026-09-10.** Both are reachable and both
+serve 16 simultaneous requests without a refusal — but both are
+*intermittently* bad: a burst of fifteen HEADs to `cdn.islamic.network`
+returned 502 to every one, one ranged GET returned 403, `everyayah.com` stalled
+21.5 seconds on a single file, and a minute later everything answered 200/206.
 
-And: **«زر إصلاح التحميل ده حرفيًا مالوش لازمة خليه فعلاً فعّال»** — the "repair
-downloads" button does nothing useful. Either it repairs (re-fetches exactly
-the missing ayahs and reports what it did) or it comes off the screen.
+A correction to my own first reading: I nearly concluded «the CDN rejects Range
+requests», and re-testing with six different User-Agents showed 206 for all of
+them. It is not Range and not the User-Agent — it is a host that fails under
+bursts.
 
-STATUS: open
+Against a host like that, `retries: 2` is what turns a blip into «تعذّر إكمال
+بعض الآيات» permanently, because nothing ever comes back for that ayah. Now 4.
+
+**The repair button.** It was not doing nothing, but it had two silent holes:
+
+* it only ever repaired the **currently selected reciter**, so a surah left
+  half-finished under a reciter he had switched away from was invisible to it;
+* a download job whose tracking was lost (process killed, an update that never
+  arrived) stays in the in-memory map for ever, `isDownloading` then reports
+  true, and the loop skipped that surah **in silence**. A job that has heard
+  nothing for three minutes is now treated as abandoned, because repair is an
+  explicit request to start again.
+
+STATUS: FIXED, tests pass — **not yet opened on a device**
 
 ## A3 · Downloads stall when several run at once
 
@@ -42,10 +59,21 @@ STATUS: open
 > اللي في التطبيق من تلاوات ومصاحف وكتب وكل حاجة في وقت واحد ميهنجش لحظة»
 
 His shade shows four mushafs downloading at once (445/604, 375/604, …) plus a
-recitation. The requirement is not "faster", it is **never blocks the UI and
-never stops**.
+recitation.
 
-STATUS: open
+**They were not stopping — they were queued.** Every file the app fetches that
+is not an ayah goes through one `MemoryTaskQueue`, and it was **two wide in
+total**: mushaf pages, books, the hadith database and adhan clips all share it.
+Four mushafs is 4 × 604 = 2,416 page tasks through two slots, so the third and
+fourth genuinely do not move until the first two finish. From the outside that
+is indistinguishable from stalled.
+
+Now 8 wide with 4 per host (the per-host cap is what keeps it polite, and 16
+simultaneous was measured as fine on both audio hosts). Recitations go 6 → 12,
+still 6 per host.
+
+STATUS: FIXED, tests pass — **not yet opened on a device**, and the honest test
+is his own phone with four mushafs at once, not the emulator.
 
 ## A4 · Thematic search returns almost nothing
 

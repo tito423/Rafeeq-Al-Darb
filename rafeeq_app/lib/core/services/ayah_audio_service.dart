@@ -912,7 +912,13 @@ class AyahAudioService {
       directory: _editionRelativeDir(attempt.edition),
       group: DownloadEngine.groupRecitations,
       updates: bd.Updates.status,
-      retries: 2,
+      // Four, not two. Both audio hosts are intermittently slow rather than
+      // down: probing them on 2026-09-10 produced a 502 to a burst of HEADs,
+      // a 403 to one ranged GET, a 21.5-second stall on everyayah, and 206s
+      // to everything a minute later. Two attempts against a host like that
+      // is what turns a transient blip into «تعذّر إكمال بعض الآيات» —
+      // permanently, because nothing ever comes back for the ayah.
+      retries: 4,
       displayName: attempt.displayName,
       metaData: '${attempt.edition}|${attempt.globalAyah}',
     );
@@ -989,6 +995,32 @@ class AyahAudioService {
     );
   }
 
+  /// Every reciter that has at least one file on disk.
+  ///
+  /// Repair used to run against `selectedReciterProvider` only, so a surah
+  /// left half-finished under a reciter he had since switched away from was
+  /// invisible to it — and the button reported «لا يوجد ما يُصلَح» while the
+  /// storage screen still showed the partial download.
+  Future<List<String>> editionsWithFiles() async {
+    try {
+      final base = await getApplicationDocumentsDirectory();
+      final root = Directory(p.join(base.path, 'recitations'));
+      if (!root.existsSync()) return const [];
+      final out = <String>[];
+      for (final e in root.listSync()) {
+        if (e is! Directory) continue;
+        final hasAny = e
+            .listSync()
+            .whereType<File>()
+            .any((f) => f.path.endsWith('.mp3') && _looksComplete(f));
+        if (hasAny) out.add(p.basename(e.path));
+      }
+      return out;
+    } catch (_) {
+      return const [];
+    }
+  }
+
   /// Finds every surah of [edition] that is partly downloaded and resumes it.
   ///
   /// This is what the Downloads screen's "repair" action needs for recitations.
@@ -1009,6 +1041,19 @@ class AyahAudioService {
     required QuranRepository repo,
   }) async {
     var repaired = 0;
+    // A job whose tracking was lost — the process was killed mid-download, or
+    // a task update never arrived — stays in `_jobs` for ever, and
+    // `isDownloading` then reports true and this loop skips the surah in
+    // silence. That is what made the button look like it did nothing:
+    // «زر إصلاح التحميل ده حرفيًا مالوش لازمة». Repair is an explicit request
+    // to start again, so a stale claim is dropped rather than obeyed.
+    for (final s in surahs) {
+      final key = _jobKey(edition, s.id);
+      final job = _jobs[key];
+      if (job != null && job.isStale) {
+        _jobs.remove(key);
+      }
+    }
     for (final s in surahs) {
       if (isDownloading(edition, s.id)) continue;
       final progress = await surahProgress(
@@ -1332,6 +1377,13 @@ class _AyahAttempt {
 /// Tracks the outstanding ayah transfers of one surah and completes once
 /// every one of them has settled (finished, exhausted its fallbacks, or been
 /// cancelled).
+/// How long a download job may go without a single task update before repair
+/// treats its claim on the surah as abandoned.
+///
+/// Not a timeout on the download — the platform queue owns that. This is only
+/// about the in-memory bookkeeping that `isDownloading` reads.
+const Duration _staleJobAfter = Duration(minutes: 3);
+
 class _SurahDownloadJob {
   final String edition;
   final int surah;
@@ -1367,9 +1419,21 @@ class _SurahDownloadJob {
 
   Future<void> get whenSettled => _completer.future;
 
-  void track(String taskId) => _outstanding.add(taskId);
+  /// When this job last heard anything at all from the platform queue.
+  DateTime _lastHeard = DateTime.now();
+
+  /// Nothing has settled for [_staleJobAfter]. The claim this job holds on
+  /// its surah is then treated as abandoned by repair — see
+  /// `repairPartialDownloads`.
+  bool get isStale => DateTime.now().difference(_lastHeard) > _staleJobAfter;
+
+  void track(String taskId) {
+    _outstanding.add(taskId);
+    _lastHeard = DateTime.now();
+  }
 
   void settle(_AyahAttempt attempt, {required bool succeeded}) {
+    _lastHeard = DateTime.now();
     final id = attempt.taskId;
     if (id != null) _outstanding.remove(id);
     if (succeeded) {
