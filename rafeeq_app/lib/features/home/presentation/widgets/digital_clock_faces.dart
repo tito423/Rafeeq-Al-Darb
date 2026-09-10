@@ -66,9 +66,13 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
   @override
   void initState() {
     super.initState();
+    // The ticker fires every frame; the 40 ms gate meant ~25 rebuilds a second
+    // of a face that only ever shows whole seconds. Rebuild when the displayed
+    // value actually changes and not before — sixty a minute instead of
+    // fifteen hundred, for exactly the same picture.
     _ticker = createTicker((_) {
       final now = DateTime.now();
-      if (now.difference(_now).inMilliseconds < 40) return;
+      if (now.second == _now.second && now.minute == _now.minute) return;
       setState(() => _now = now);
     })
       ..start();

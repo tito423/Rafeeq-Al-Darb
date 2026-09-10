@@ -46,10 +46,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Future.microtask(
       () => ref.read(prayerControllerProvider.notifier).refresh(),
     );
-    // P3‑22: ticks every second so the new prayer card's live HH:MM:SS clock
-    // actually moves (was 30s, fine for the old static "متبقي" text but not
-    // for a real ticking clock).
-    _clock = Timer.periodic(const Duration(seconds: 1), (_) {
+    // This used to tick every second, with a comment saying the live HH:MM:SS
+    // clock needed it. It does not: `DigitalClockFaceView` drives itself from
+    // its own `Ticker`, and `PrayerCountdown` has its own one-second timer.
+    // What this `setState` actually did was rebuild the **whole** Home tree
+    // sixty times a minute — the ornate frames and their `CustomPaint`s, the
+    // hadith card, the sunan card, the prayer card, all of it — to move a
+    // number that two widgets were already moving themselves.
+    //
+    // What is genuinely left to it is minute-scale: the AM/PM label, the day
+    // name, the Hijri line, and which prayer is next. Thirty seconds is finer
+    // than any of those need.
+    _clock = Timer.periodic(const Duration(seconds: 30), (_) {
       if (mounted) setState(() {});
     });
   }
