@@ -70,16 +70,27 @@ cut from 48 slots to 24 so the app is not holding 48 exact alarms for a nudge.
 notifications and drops the rest. 24 undismissed quotes can spend the whole
 budget. Each quote now clears itself when the next is due (`timeoutAfter`).
 
-### 7. Found and NOT fixed — the first thing for the next session
+### 7. A claim I made and then disproved: the سنن السور reminder is fine
 
-**The سنن السور reminder fires and posts nothing.** Set for Friday 20:00 and
-watched twice: the alarm left the pending list and re-armed itself for the
-following Friday — so it fired — and no notification ever appeared on
-`rafeeq_sunan_suwar_reminder`. `dumpsys` still reports that channel's
-`mLastNotificationUpdateTimeMs` as **0**, i.e. nothing has ever been posted on
-it. This is independent of the router change: posting is done natively by the
-plugin's `ScheduledNotificationReceiver` and does not go through
-`initialize`. Not diagnosed further; it is the next session's first job.
+Mid-session this was written up as "fires and posts nothing, first job for the
+next session". **That was wrong, and both pieces of evidence behind it were
+misread.**
+
+* `dumpsys`'s `mLastNotificationUpdateTimeMs = 0` on the channel is not "no
+  notification has ever been posted here" — `rafeeq_prayer_reminder` reads 0
+  too, and it had just posted nine.
+* The notification really was missing after the test — because the test
+  jumped the emulator's clock forward 41 hours, which fired 24 quote slots at
+  once. **Android caps a package at 25 posted notifications and drops the
+  rest**, and the dump showed exactly 25 quote records. The surah reminder was
+  one of the ones dropped, by the app's own flood.
+
+Re-run properly — clock moved to 19:59, one real minute waited, quotes off —
+it posted, rescheduled itself for the following Friday, and **tapping it
+opened سورة الملك's reader**. Which also proves the `NotificationRouter` fix:
+before it, that tap went to `PrayerStatusNotification`'s `(_) {}`.
+
+The pile-up that caused the false alarm is itself fixed (`timeoutAfter`).
 
 ## STATE AS OF 2026-09-10 — EIGHTH SESSION, FIRST HALF (released as v3.9.0)
 
@@ -797,9 +808,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 03:00 — IN PROGRESS — resume here**
+**2026-09-10 11:30 — IN PROGRESS — resume here**
 
-each quote notification now clears itself before the next is due. Not cosmetic: Android caps a package at 25 posted notifications, and 24 undismissed quotes can spend the whole budget so the app cannot post what matters. Re-verified on emulator-5554 after the change - a slot armed for 20:22:58 posted at 20:22:59. Also found and NOT fixed: the surah reminder rescheduled itself for the following Friday twice, so its alarm fired, and no notification was ever posted on its channel - mLastNotificationUpdateTimeMs is still 0. That is independent of the router change, since posting is native and does not go through initialize
+correction: the surah reminder is NOT broken. Both pieces of evidence behind that claim were misread - mLastNotificationUpdateTimeMs is not a post counter (the prayer channel reads 0 with nine posted), and the notification was missing because the 41-hour clock jump fired 24 quote slots at once and Android drops a package past 25 posted, which the dump showed exactly. Re-run properly it posts, reschedules for the following Friday, and its tap opens surah al-Mulk - which also proves the router fix, since that tap used to reach an empty handler
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
