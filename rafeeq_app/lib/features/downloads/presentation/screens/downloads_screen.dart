@@ -17,6 +17,7 @@ import '../../../quran/data/mushaf_edition.dart';
 import '../../data/downloads_controller.dart';
 import '../../data/reciters_provider.dart';
 import '../widgets/full_recitation_card.dart';
+import '../widgets/playback_source_card.dart';
 import '../widgets/mushaf_download_tile.dart';
 import '../../../../core/utils/byte_formatter.dart';
 
@@ -619,6 +620,11 @@ class _RecitationsTabState extends ConsumerState<_RecitationsTab> {
                         data: data,
                         onFinished: () {},
                       ),
+                      // Whose recitation is on the device, and where playback
+                      // comes from — «ولو أكتر من قارئ يقوللي فلان وفلان
+                      // ويحطهم في قايمة وأنا أختار أشغّل من التلاوة المحملة
+                      // ولا من الـ API».
+                      const PlaybackSourceCard(),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(14, 2, 14, 8),
                         child: TextField(

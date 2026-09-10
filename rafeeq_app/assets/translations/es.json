@@ -571,7 +571,17 @@
     "repair": "Reparar descargas",
     "repairing": "Reanudando descargas detenidas...",
     "repair_resumed": "Se reanudaron {} descarga(s) incompleta(s)",
-    "repair_nothing": "No hay descargas incompletas"
+    "repair_nothing": "No hay descargas incompletas",
+    "play_from": "Reproducir la recitación desde",
+    "play_auto": "Automático",
+    "play_stream": "En línea",
+    "play_offline": "Descargado",
+    "play_auto_desc": "Lo descargado si está, si no en línea.",
+    "play_stream_desc": "Siempre en línea: escucha de inmediato sin esperar la descarga.",
+    "play_offline_desc": "Solo lo descargado: no se descarga nada y se omite la aleya que falte.",
+    "on_this_device": "En este dispositivo",
+    "whole_recitation": "La recitación completa",
+    "surahs_complete": "{} de {} suras completas"
   },
   "new_muslim": {
     "title": "Guía del nuevo musulmán",

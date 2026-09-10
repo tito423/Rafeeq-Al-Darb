@@ -571,7 +571,17 @@
     "repair": "Réparer les téléchargements",
     "repairing": "Reprise des téléchargements interrompus...",
     "repair_resumed": "{} téléchargement(s) inachevé(s) repris",
-    "repair_nothing": "Aucun téléchargement inachevé"
+    "repair_nothing": "Aucun téléchargement inachevé",
+    "play_from": "Lire la récitation depuis",
+    "play_auto": "Automatique",
+    "play_stream": "En ligne",
+    "play_offline": "Téléchargé",
+    "play_auto_desc": "Le téléchargé s’il existe, sinon en ligne.",
+    "play_stream_desc": "Toujours en ligne : écoutez tout de suite sans attendre le téléchargement.",
+    "play_offline_desc": "Uniquement le téléchargé : rien n’est récupéré, un verset manquant est passé.",
+    "on_this_device": "Sur cet appareil",
+    "whole_recitation": "La récitation complète",
+    "surahs_complete": "{} sourates complètes sur {}"
   },
   "new_muslim": {
     "title": "Guide du nouveau musulman",

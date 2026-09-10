@@ -15,15 +15,23 @@ marked **DONE (seen)** only after it has been run on a device and looked at
 > التلاوة … خليه يديني اختيار تحميل التلاوة عادي من الـ API لحد ما يخلص
 > التطبيق تحميل التلاوة»
 
-What he wants, in order:
+What he wants, in order, and where each part stands:
 
-1. Press play → **it plays**, streamed from the API, immediately.
-2. The download runs in the background at the same time.
-3. When it finishes: «تم تحميل التلاوة بصوت الشيخ كذا».
-4. If more than one reciter is downloaded, list them and let him pick.
-5. He chooses per-play: from the downloaded copy, or from the API.
+1. Press play → **it plays**, streamed, immediately. DONE — the cause was a
+   truncated cached file that passed the old 2 KB floor and that `just_audio`
+   then refused, failing the whole surah. The floor is measured now, and a
+   third load attempt streams every verse.
+2. The download runs in the background at the same time. DONE.
+3. «تم تحميل التلاوة بصوت الشيخ كذا» when it finishes. DONE — only on a real,
+   complete finish.
+4. **List the downloaded reciters.** DONE — `downloadedRecitersProvider` counts
+   from the files themselves, so a reciter who is 112 of 114 surahs in says so
+   rather than looking finished.
+5. **Choose per play: downloaded, or the API.** DONE — `PlaybackSource` with
+   three settings (automatic / online / downloaded only), honoured in one
+   place so the single-ayah path and the continuous queue cannot disagree.
 
-STATUS: open
+STATUS: FIXED, tests pass — **not yet opened on a device**
 
 ## A2 · «تعذّر تنزيل التلاوة — تعذّر إكمال بعض الآيات»
 

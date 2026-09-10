@@ -571,7 +571,17 @@
     "preparing": "Preparing…",
     "now_downloading": "Downloading {}",
     "repair_resumed": "Resumed {} unfinished download(s)",
-    "repair_nothing": "Nothing was left unfinished"
+    "repair_nothing": "Nothing was left unfinished",
+    "play_from": "Play the recitation from",
+    "play_auto": "Automatic",
+    "play_stream": "Online",
+    "play_offline": "Downloaded",
+    "play_auto_desc": "Downloaded when it is there, online otherwise.",
+    "play_stream_desc": "Always online — listen straight away without waiting for the download.",
+    "play_offline_desc": "Downloaded only — nothing is fetched, and a missing verse is skipped.",
+    "on_this_device": "On this device",
+    "whole_recitation": "The whole recitation",
+    "surahs_complete": "{} of {} surahs complete"
   },
   "new_muslim": {
     "title": "New Muslim Guide",

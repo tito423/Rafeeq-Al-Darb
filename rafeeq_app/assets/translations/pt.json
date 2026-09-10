@@ -571,7 +571,17 @@
     "repair": "Reparar transferências",
     "repairing": "A retomar transferências interrompidas...",
     "repair_resumed": "Retomada(s) {} transferência(s) incompleta(s)",
-    "repair_nothing": "Não há transferências incompletas"
+    "repair_nothing": "Não há transferências incompletas",
+    "play_from": "Reproduzir a recitação a partir de",
+    "play_auto": "Automático",
+    "play_stream": "Online",
+    "play_offline": "Descarregado",
+    "play_auto_desc": "O descarregado quando existe, caso contrário online.",
+    "play_stream_desc": "Sempre online — ouça já, sem esperar pelo descarregamento.",
+    "play_offline_desc": "Apenas o descarregado — nada é obtido e um versículo em falta é ignorado.",
+    "on_this_device": "Neste dispositivo",
+    "whole_recitation": "A recitação completa",
+    "surahs_complete": "{} de {} suras completas"
   },
   "new_muslim": {
     "title": "Guia do novo muçulmano",

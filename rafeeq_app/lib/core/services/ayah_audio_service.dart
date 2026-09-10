@@ -406,11 +406,15 @@ class AyahAudioService {
 
       await _player.stop();
 
-      if (_looksComplete(file)) {
+      if (_shouldUseFile(file)) {
         await _player.setAudioSource(AudioSource.file(file.path, tag: tag));
         unawaited(_player.play());
         return;
       }
+      // "Only what is downloaded" means exactly that: nothing is fetched, and
+      // a verse that is not there stays silent rather than costing data on a
+      // metered connection nobody asked it to use.
+      if (playbackOfflineOnly) return;
 
       final urls = RecitationSource.urlsFor(
         edition: edition,
@@ -481,6 +485,25 @@ class AyahAudioService {
   ///
   /// Returns false if the source could not be opened, so the caller can say so
   /// instead of leaving a dead play button.
+  /// Mirrors the reader's own choice of where a recitation comes from — see
+  /// `PlaybackSource`. Held here as plain fields because the audio sources are
+  /// built synchronously, deep inside the service, with no provider container
+  /// in reach.
+  ///
+  /// Both false is the default and the old behaviour: whatever is on disk,
+  /// otherwise the network.
+  bool playbackPrefersNetwork = false;
+  bool playbackOfflineOnly = false;
+
+  /// Whether this ayah should be played from [file] rather than fetched.
+  ///
+  /// The one place the preference is applied, so the single-ayah path and the
+  /// continuous queue cannot disagree about it.
+  bool _shouldUseFile(File file) {
+    if (playbackPrefersNetwork) return false;
+    return _looksComplete(file);
+  }
+
   /// True while continuous recitation is playing from the network because the
   /// downloaded copy would not load — see the third attempt in
   /// `_startContinuous`. The reader shows a quiet line rather than letting it
@@ -648,7 +671,7 @@ class AyahAudioService {
               final global = firstGlobal + (a.ayahNumber - 1);
               final tag = _tag(_continuousEdition, global, a, null);
               final file = _fileFor(dir, global);
-              return (!networkOnly && _looksComplete(file))
+              return (!networkOnly && _shouldUseFile(file))
                   ? AudioSource.file(file.path, tag: tag)
                   : AudioSource.uri(
                       Uri.parse(
