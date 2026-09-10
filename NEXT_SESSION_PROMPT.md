@@ -1,13 +1,41 @@
 # Rafiq Al-Darb — next session brief
 
-**Last written:** 2026-09-10, at the end of the **eighth** session, on a clean
-tree with `flutter analyze lib test` clean, `flutter test` **71/71**,
-`i18n_audit` **0**, and **30** hosted content paths range-requested with **0**
-failures.
+**Last written:** 2026-09-11, at the end of the **tenth** session, on a clean
+tree with `flutter analyze lib test` clean, `flutter test` **147 passed**, and
+**15** hosted content paths range-requested with **0** failures.
 
-**`v3.9.0` is released.** Eight sessions of work that had never reached an APK
-are in the owner's hands. The tag is on `master` and its SHA equals
-`git rev-parse HEAD`.
+**`v3.15.0` is released**, at `eb210cf`. The tag is on `master`, its SHA equals
+`git rev-parse HEAD`, and it is the only release in the repo. The published APK
+was downloaded back from GitHub and its certificate checked:
+`CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+.
+
+## What changed about how this project works
+
+Two things are new since the last brief and both change the first hour of a
+session:
+
+1. **The owner now tests every release on his own phone and sends findings.**
+   They live in `OWNER_FINDINGS.md` (the first batch) and `WORK_QUEUE.md`
+   (the second, A1–A7), each item marked with whether it was seen on a device.
+   Those two files, not this one, are where the work comes from.
+
+2. **The app signs itself with a real key.** Gradle still signs debug *on
+   purpose*; `py -3 scripts/sign_release.py` re-signs the built APK with the
+   release key and a SigningCertificateLineage, so an update installs over the
+   old debug-signed copy without an uninstall. **Never publish
+   `flutter build apk` output directly** — trap #41. The keystore is in
+   `../Rafeeq-Keys/`, outside this repository, and backing it up is his job.
+
+Three scripts were added that answer questions this project keeps asking:
+
+* `scripts/verify_hosted_content.py` — range-requests every hosted path, and
+  checks the content type and the magic bytes, because a soft-404 answers 200
+  (trap #5).
+* `scripts/db_type_audit.py` — every non-nullable `as int` in `lib/core/db/`,
+  checked against the real databases. One row in 1,482 was fractional and it
+  took a whole hadith collection down.
+* `scripts/sign_release.py` — the signing path above, which refuses to finish
+  unless the result really carries the release certificate.
 
 You are picking up **رفيق الدرب / Rafeeq Al-Darb**, a personal **sideloaded**
 Android Islamic app in Flutter, on the owner's own repo

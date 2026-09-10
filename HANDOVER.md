@@ -6,10 +6,81 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-10 |
-| **Released** | **v3.13.0** |
-| **App version** | `pubspec.yaml` `3.13.0+10` |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **119** · hosted content **36 paths, 0 failed** · APK **325,971,517 bytes** (the adhan upgrade adds ~39 MB across both bundle copies) · everything below was opened on `emulator-5554` and looked at |
+| **Last updated** | 2026-09-11 |
+| **Released** | **v3.15.0** at `eb210cf` — tag on `master`, tag SHA == HEAD, one release in the repo |
+| **App version** | `pubspec.yaml` `3.15.0+12` |
+| **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+. **Gradle still signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
+| **Verified today** | `flutter analyze lib test` clean · `flutter test` **147 passed** · `py -3 scripts/verify_hosted_content.py` **15 paths, 0 failed** · release APK installed on a freshly-rebooted emulator, launched with **0 ANRs**, and downloaded a book it did not already have |
+
+## MEASURED, 2026-09-11 (not remembered)
+
+| | |
+|---|---|
+| locales × keys | 7 × 1,030 |
+| mushaf editions | 9 |
+| library books | 228 |
+| `hadith.db` | 109,731,840 bytes · 9 books · 1,482 chapters · 67,153 hadiths · 45,219 graded (67%) |
+| Hadeeth Encyclopaedia | 7 language packs · 3,574 hadiths in Arabic, **every one with an explanation** |
+| adhans | 14 · nothing below 48 kb/s · loudness spread 6.5 dB |
+| release APK | 330,145,342 bytes |
+| code | `lib` 189 files / 49,361 lines · `test` 36 files / 2,891 lines |
+| history | 336 commits |
+
+## STATE AS OF 2026-09-11 — two rounds of his own findings, and the ANR explained
+
+He installed each release, used it, and sent findings with screenshots. Two
+batches, tracked in **`OWNER_FINDINGS.md`** (the first) and **`WORK_QUEUE.md`**
+(the second, A1–A7). Read those before this file: they say, item by item, what
+was seen on a device and what was not.
+
+### The ANR, measured at last
+
+Every normal tool failed on it — `dumpsys gfxinfo` reports zero frames for a
+Flutter app, `SurfaceFlinger --latency` returned no rows on Android 16, and
+`flutter run --trace-startup` produced no `start_up_info.json` on this machine.
+The answer came out of the system log:
+
+    ANR in com.tito.rafeeq_aldarb
+    Reason: Process ... failed to complete startup
+
+Not the input-dispatch kind. Android gives a process ten seconds to finish
+binding; in the same log the runtime reported **65 slow class verifications
+totalling 9,724 ms** — the whole budget — before app code ran. 45 of them were
+`androidx.work`, dragging Room, SQLite and coroutines with it, because
+`androidx.startup` initialised WorkManager in a ContentProvider on **every**
+process start. Both ANRs were on a process woken by a scheduled-notification
+broadcast that had no use for WorkManager at all.
+
+`RafeeqApplication` implements `Configuration.Provider` and the manifest
+removes only the `WorkManagerInitializer` meta-data. After: **0 slow
+verifications, 0 ms, 0 ANRs**, and a book downloaded on the R8 release build to
+prove on-demand initialisation did not silently break `background_downloader` —
+which was the whole risk of the change.
+
+**He has never seen this ANR.** The emulator is x86_64 with no AOT profile, so
+it verifies every method at runtime; a real ARM phone verifies a fraction. Do
+not tell him it fixed something he reported.
+
+### What else this round changed, and what proved it
+
+* **The running header named the wrong surah** — «سورة يوسف» over the close of
+  Hud. A page is not a surah; every surah on the page is named now. Seen on
+  page 235.
+* **One fractional chapter number lost a whole collection.** an-Nasa'i's
+  «كتاب المزارعة» is chapter **35.2** with 83 hadiths; `as int` threw and took
+  all 52 books with it. `scripts/db_type_audit.py` now checks every
+  non-nullable int cast against the real databases and clears the rest.
+* **The Qur'an search could not see half the Qur'an.** «الرحمة» found 6 ayahs of
+  72 — a space-only word boundary cannot see «وَرَحْمَةٌ», and a query carrying
+  the article only matched the article form.
+* **Downloads were not stalling, they were queued two at a time.**
+* **Only the adhan may take the lock screen now.** `MainActivity` declared
+  `showWhenLocked` in the manifest *and* in code, so every notification tap
+  opened the whole app on a locked phone.
+* **The adhan list is his**: three removed by name, Mishary's four in
+  (two of them Fajr), everything levelled to one EBU R128 target.
+
+---
 
 ## STATE AS OF 2026-09-10 — v3.13.0: his findings, from real use
 

@@ -88,3 +88,5 @@ lineage.bin
 KEYSTORE-PASSWORD.txt
 
 db_type_audit.txt
+
+content_verification.txt
