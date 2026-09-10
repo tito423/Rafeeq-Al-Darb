@@ -55,6 +55,15 @@ class HadeethItem {
   final String attributionAr;
   final String gradeAr;
 
+  /// معاني الكلمات — the encyclopedia's own glossary for this hadith, as
+  /// `(word, meaning)` pairs. Arabic whatever the pack's language is, because
+  /// it explains the **Arabic** word, and the Arabic original is on the card
+  /// above it in every language.
+  ///
+  /// Empty for most records: `build_hadeethenc_packs.py` reports how many
+  /// carry one, and it is a real count, not an assumption.
+  final List<({String word, String meaning})> words;
+
   const HadeethItem({
     required this.id,
     required this.categoryId,
@@ -68,12 +77,32 @@ class HadeethItem {
     required this.hadeethAr,
     required this.attributionAr,
     required this.gradeAr,
+    required this.words,
   });
 
   /// True when the pack's language IS Arabic, i.e. the translation and the
   /// original are the same text. The detail screen shows one of them, not the
   /// same paragraph twice.
   bool get isArabicOriginal => hadeeth == hadeethAr;
+
+  /// `[{"word": …, "meaning": …}, …]`, defensively. A malformed list is
+  /// dropped rather than guessed at.
+  static List<({String word, String meaning})> _words(String? raw) {
+    if (raw == null || raw.isEmpty || raw == '[]') return const [];
+    try {
+      return [
+        for (final e in jsonDecode(raw) as List<dynamic>)
+          if (e is Map<String, dynamic> &&
+              (e['word'] as String? ?? '').trim().isNotEmpty)
+            (
+              word: (e['word'] as String).trim(),
+              meaning: (e['meaning'] as String? ?? '').trim(),
+            )
+      ];
+    } catch (_) {
+      return const [];
+    }
+  }
 
   factory HadeethItem.fromRow(Map<String, Object?> r) {
     final rawHints = r['hints'] as String? ?? '';
@@ -102,6 +131,7 @@ class HadeethItem {
       hadeethAr: r['hadeeth_ar'] as String? ?? '',
       attributionAr: r['attribution_ar'] as String? ?? '',
       gradeAr: r['grade_ar'] as String? ?? '',
+      words: _words(r['words_ar'] as String?),
     );
   }
 }
@@ -120,7 +150,7 @@ class HadeethEncRepository {
 
   static const _columns =
       'id, category_id, title, hadeeth, attribution, grade, explanation, '
-      'hints, reference, hadeeth_ar, attribution_ar, grade_ar';
+      'hints, reference, hadeeth_ar, attribution_ar, grade_ar, words_ar';
 
   Future<Map<String, String>> meta() async {
     final rows = await _db.query('meta');

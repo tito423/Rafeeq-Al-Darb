@@ -1050,7 +1050,8 @@
     "explanation": "Explicação",
     "hints": "Benefícios do hadith",
     "reference": "Referências",
-    "credit": "Fonte: {source}"
+    "credit": "Fonte: {source}",
+    "words": "Significado das palavras"
   },
   "quotes": {
     "section_title": "Citações",

@@ -1,4 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
+// : easy_localization re-exports intl, which has a
+// TextDirection of its own that shadows the one Directionality wants.
+import 'package:easy_localization/easy_localization.dart'
+    hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -100,6 +103,25 @@ class HadeethEncDetailScreen extends StatelessWidget {
             emphasis: item.grade.isNotEmpty,
           ),
 
+          // معاني الكلمات, right under the text it explains — before the
+          // commentary, because a word you did not understand blocks the
+          // sentence you are trying to read.
+          if (item.words.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            _SectionLabel('hadeethenc.words'.tr()),
+            const SizedBox(height: 6),
+            for (final w in item.words)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: _GlossaryLine(
+                  word: w.word,
+                  meaning: w.meaning,
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.7),
+                ),
+              ),
+            const SizedBox(height: 6),
+          ],
+
           if (item.explanation.isNotEmpty) ...[
             const SizedBox(height: 18),
             _SectionLabel('hadeethenc.explanation'.tr()),
@@ -177,6 +199,45 @@ class HadeethEncDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// One «الكلمة: معناها» line.
+///
+/// Always right-to-left, whatever the app's chrome is: both halves are Arabic
+/// — the glossary explains the Arabic word, and it is the same glossary in the
+/// French pack as in the Arabic one.
+class _GlossaryLine extends StatelessWidget {
+  final String word;
+  final String meaning;
+  final TextStyle? style;
+
+  const _GlossaryLine({
+    required this.word,
+    required this.meaning,
+    this.style,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Text.rich(
+        TextSpan(children: [
+          TextSpan(
+            text: stripBidiControls(word),
+            style: style?.copyWith(
+                color: AppColors.gold, fontWeight: FontWeight.w700),
+          ),
+          if (meaning.isNotEmpty)
+            TextSpan(
+              text: ': ${stripBidiControls(meaning)}',
+              style: style?.copyWith(color: scheme.onSurface),
+            ),
+        ]),
       ),
     );
   }

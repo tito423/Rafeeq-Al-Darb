@@ -1050,7 +1050,8 @@
     "explanation": "Разъяснение",
     "hints": "Польза хадиса",
     "reference": "Источники",
-    "credit": "Источник: {source}"
+    "credit": "Источник: {source}",
+    "words": "Значения слов"
   },
   "quotes": {
     "section_title": "Изречения",

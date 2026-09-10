@@ -1050,7 +1050,8 @@
     "explanation": "شرح",
     "hints": "فوائدِ حدیث",
     "reference": "مراجع",
-    "credit": "مصدر: {source}"
+    "credit": "مصدر: {source}",
+    "words": "الفاظ کے معانی"
   },
   "quotes": {
     "section_title": "اقوال",

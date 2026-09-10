@@ -94,10 +94,19 @@ def main():
         con.execute(
             "UPDATE hadeeths SET words_meanings_ar=?, explanation_ar=?, "
             "hints_ar=? WHERE id=?",
-            (json.dumps(rec.get("words_meanings_ar") or [],
+            # On the ARABIC record the fields carry no `_ar` suffix — the
+            # suffixed ones exist only on a translation, where they hold the
+            # original beside it. The first run of this script asked for
+            # `words_meanings_ar` because that is what the ENGLISH response
+            # was read to contain, and fetched all 3,574 records to find
+            # exactly zero glossaries. CLAUDE.md §1.4: read the real thing —
+            # the real thing being the response you are actually going to
+            # parse, not its cousin.
+            (json.dumps(rec.get("words_meanings")
+                        or rec.get("words_meanings_ar") or [],
                         ensure_ascii=False),
-             rec.get("explanation_ar") or rec.get("explanation") or "",
-             json.dumps(rec.get("hints_ar") or rec.get("hints") or [],
+             rec.get("explanation") or rec.get("explanation_ar") or "",
+             json.dumps(rec.get("hints") or rec.get("hints_ar") or [],
                         ensure_ascii=False),
              hid))
         done += 1

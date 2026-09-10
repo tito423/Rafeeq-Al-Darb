@@ -1050,7 +1050,8 @@
     "explanation": "الشرح",
     "hints": "من فوائد الحديث",
     "reference": "المراجع",
-    "credit": "المصدر: {source}"
+    "credit": "المصدر: {source}",
+    "words": "معاني الكلمات"
   },
   "quotes": {
     "section_title": "المقولات",

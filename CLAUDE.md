@@ -457,6 +457,45 @@ Do not rediscover these.
     floating ayahs and a hadith of Muslim's with no grading, which is exactly
     what §1.2 forbids.
 
+36. **A catalogue nobody opened is a catalogue of claims.** Six of the ten
+    adhan background clips were not the scene the app named them — a flag of
+    Pakistan was «رحاب مسجد», gold calligraphy was «الكعبة المشرّفة عن قرب», a
+    cartoon was «ساحات الحرم المكي», a Turkish city was «رحاب المسجد النبوي».
+    ffmpeg reads four frames from across a clip in seconds
+    (`contact_sheet_adhan_videos.py`); the resolution was checked first and
+    was the *smaller* problem. **Look at the frames of anything you catalogue,
+    and record what you saw** — `adhan_video_content.json` is that record and
+    a test checks the catalogue against it.
+
+37. **`BoxFit.cover` on a portrait screen is a magnifying glass.** A 640×360
+    landscape clip drawn full-screen on a 1080×2400 phone is scaled 6.7× and
+    most of its frame is cropped away. Whatever is first in a catalogue is
+    usually the default; make the default the one that fits.
+
+38. **Wikimedia refuses a User-Agent with no contact in it.**
+    `upload.wikimedia.org` answers **429 to every request** from
+    `SomeApp/1.0 (personal)` and 200 to
+    `RafeeqAlDarb/3.10 (https://github.com/... ) curl/8`. Its API throttles
+    bursts as well, and a helper that swallows the failure and returns `{}`
+    turns "you are being rate-limited" into "there is nothing there" — the
+    Commons search reported «0 of 105 are public domain» for exactly that
+    reason. Same family as trap #19.
+
+39. **A Windows filename cannot contain `?`, and curl will not tell you.**
+    Commons' API appends `?utm_source=…` to every file URL; naming the
+    download after the URL gave curl a path it could not create and it
+    reported **`code=200 size=0`** for all 37 files. A 200 that writes nothing
+    is the most misleading success there is — name a download after your own
+    slug, and check the size.
+
+40. **Read the response you are going to parse, not its cousin.** The
+    HadeethEnc record for a translation carries `words_meanings_ar`; the
+    **Arabic** record carries `words_meanings`, with no suffix, exactly as it
+    carries `hadeeth` and `grade` unsuffixed. A crawl written from the English
+    response fetched all 3,574 Arabic records and stored 3,574 empty
+    glossaries before anyone noticed. §1.4, applied to the specific call you
+    are making.
+
 ---
 
 ## 4. Where things live

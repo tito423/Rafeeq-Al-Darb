@@ -11,6 +11,91 @@ Cline, or any other).
 | **App version** | `pubspec.yaml` `3.10.0+6` |
 | **Build verified?** | `flutter analyze lib test` clean · `flutter test` **80/80** · `py -3 scripts/i18n_audit.py` **0** · hosted content **32 paths, 0 failed** · APK **281,669,162 bytes** · everything below was opened on `emulator-5554` and looked at |
 
+## STATE AS OF 2026-09-10 — EIGHTH SESSION, THIRD HALF (after v3.10.0)
+
+### 8. The adhan video complaint — and what measuring it actually found
+
+> «الفيديو بتاع الأذان لما بيشتغل بتبقى جودته سيئة جدًا»
+
+`scripts/probe_adhan_videos.py` read every hosted clip with ffmpeg. Three of
+the ten were standard definition, and the **640×360 one was the default** —
+`adhan_presentation_provider.dart` falls back to `adhanVideoCatalog.first`.
+The adhan screen is portrait and draws the clip with `BoxFit.cover`, so on a
+1080×2400 phone that clip was being scaled **6.7×**. The background he saw out
+of the box was the worst file in the set.
+
+**Then the frames were looked at, and the resolution turned out to be the
+smaller problem.** `scripts/contact_sheet_adhan_videos.py` pulls four frames
+from across each clip; six of the ten were **not the scene the app named**:
+
+| id | the app said | it actually is |
+|---|---|---|
+| `mosque_view` | رحاب مسجد | the **flag of Pakistan** |
+| `kaaba_close` | الكعبة المشرّفة عن قرب | gold «محمد» calligraphy |
+| `kaaba_tawaf` | الحرم والكعبة | the same calligraphy |
+| `kaaba` | الكعبة المشرفة | a **cartoon** 3-D animation |
+| `haram_makkah2` | ساحات الحرم المكي | the same cartoon |
+| `madina_haram` | رحاب المسجد النبوي | an Ottoman mosque over a **Turkish city** |
+
+The only three that matched their labels were the three SD ones. This is
+§1.1's failure mode exactly — a catalogue written from uploads nobody opened,
+the same shape as the eight mushaf editions whose pages were never there. And
+the first version of the fix had made `madina_haram` the **default**, i.e. a
+Turkish city labelled «رحاب المسجد النبوي» as the first thing the owner sees.
+
+Five clips are gone (two cartoons, the flag, two lower-quality duplicates).
+The five that remain are labelled for what their frames show, and
+`adhan_video_content.json` is the record `test/adhan_video_catalog_test.dart`
+checks the catalogue against. **No HD Haram footage was sourced**: Pixabay and
+Pexels answer 403 without an API key, Mixkit's licence is rendered by
+JavaScript and could not be read, and archive.org's CC video for this subject
+is hour-long broadcast footage.
+
+### 9. Photographic quote backgrounds — eleven, licence-checked one at a time
+
+The owner asked for «صور من النت، كمية كبيرة وجودة عالية». The source had to
+be one whose licence can be **read per file**, so it is Wikimedia Commons:
+190 candidates from curated Islamic-ornament **categories** (a free-text
+search had returned Hindu temple carvings from Karnataka), 37 public domain or
+CC0, 18 downloaded — and then somebody looked at them and threw out seven that
+were paintings of people, a page of an illuminated **Qur'an manuscript**, and
+a snapshot with a wall clock and plastic bags in it.
+
+The eleven that ship were measured through the exact scrim the card draws:
+brightest 60-pixel region, worst case **9.07 : 1** against a 4.5 floor (trap
+#15 — the composite, not the swatch). Bundled, not downloaded, so a
+notification that fires with no connection still opens on a picture. Commons
+is credited on the Sources screen and every file's licence, author and Commons
+page is in `assets/data/quote_backgrounds.json`.
+
+### 10. Smaller things
+
+* **The prayer notification said the prayer's name twice.** The owner read the
+  shade: «اقترب موعد صلاة المغرب» beside «بقيت ١٠ دقائق على صلاة المغرب» —
+  Android collapses a group into «title · body», so both landed on one line.
+  The body carries the number and nothing else now, in all seven locales.
+* **`QuranTranslationInfo.sizeLabel` was the sixth copy of the byte
+  formatter**, hand-built and missing the LTR isolate. It uses
+  `formatBytesBinary` now and `test/byte_formatter_is_the_only_one_test.dart`
+  fails the build on a seventh.
+* **Urdu keeps Latin digits, deliberately.** Not an oversight: Pakistani Urdu
+  digital text overwhelmingly uses ASCII digits, and the rest of the Urdu
+  build already does.
+
+### 11. Two of my own claims that were wrong, and the corrections
+
+* **«The سنن السور reminder fires and posts nothing.»** Wrong.
+  `mLastNotificationUpdateTimeMs = 0` is not a post counter — the prayer
+  channel reads 0 with nine posted — and the notification was missing because
+  the test's own 41-hour clock jump fired 24 quote slots at once and **Android
+  drops a package past 25 posted**. Re-run properly it posts, reschedules for
+  the following Friday, and its tap opens سورة الملك's reader.
+* **«0 of 105 Commons files are public domain.»** Also wrong, and for the same
+  kind of reason: Commons answered **429** to a burst and `api()` swallowed
+  the failure and returned `{}`, which reads exactly like "there is nothing
+  there". With pacing it is 37 of 190. `upload.wikimedia.org` additionally
+  refuses any User-Agent with no contact in it — trap #19's family.
+
 ## STATE AS OF 2026-09-10 — EIGHTH SESSION, SECOND HALF (after v3.9.0)
 
 ### 5. Islamic-quote notifications — the owner's fourth request, working
@@ -808,9 +893,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 12:56 — IN PROGRESS — resume here**
+**2026-09-10 13:12 — IN PROGRESS — resume here**
 
-quote card backgrounds verified on emulator-5554: three different pictures in three opens, the saying legible on every one, book and author on the card. The four ornament-book plates are cropped past their printed margins - a Latin running head like PARALLEL of HISTORICAL ORNAMENT sitting over an Arabic saying looked borrowed
+the glossary crawl asked for the wrong field: on the ARABIC record the key is words_meanings, with no suffix, exactly as hadeeth and grade are unsuffixed there - words_meanings_ar exists only on a translation. The first run fetched all 3,574 records and stored 3,574 empty glossaries. Re-running now with both keys accepted, and 71 of the first 100 carry a real one. Five more traps written into CLAUDE.md, and HANDOVER carries the two claims I made this session that turned out to be wrong
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

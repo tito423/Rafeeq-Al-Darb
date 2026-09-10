@@ -79,6 +79,7 @@ CREATE TABLE hadeeths (
     hadeeth_ar TEXT,
     attribution_ar TEXT,
     grade_ar TEXT,
+    words_ar TEXT,
     search TEXT);
 CREATE INDEX hadeeths_category ON hadeeths(category_id);
 """
@@ -99,7 +100,8 @@ def build(lang, cats, src):
     rows = src.execute(
         "SELECT t.id, h.category_id, t.title, t.hadeeth, t.attribution,"
         "       t.grade, t.explanation, t.hints, t.reference,"
-        "       t.hadeeth_ar, t.attribution_ar, t.grade_ar"
+        "       t.hadeeth_ar, t.attribution_ar, t.grade_ar,"
+        "       h.words_meanings_ar"
         "  FROM texts t JOIN hadeeths h ON h.id = t.id"
         " WHERE t.lang = ?"
         " ORDER BY CAST(h.category_id AS INTEGER), CAST(t.id AS INTEGER)",
@@ -108,9 +110,10 @@ def build(lang, cats, src):
     per_cat = {}
     ungraded = 0
     no_takhrij = 0
+    with_words = 0
     for r in rows:
         (hid, cat, title, hadeeth, attribution, grade, explanation, hints,
-         reference, hadeeth_ar, attribution_ar, grade_ar) = r
+         reference, hadeeth_ar, attribution_ar, grade_ar, words_ar) = r
         # Arabic is its own original: the crawl leaves `*_ar` empty on the
         # Arabic row rather than duplicating the same string twice. Fill it
         # here so every pack answers the same question the same way.
@@ -122,11 +125,17 @@ def build(lang, cats, src):
             ungraded += 1
         if not (attribution or "").strip():
             no_takhrij += 1
+        if (words_ar or "[]") not in ("", "[]"):
+            with_words += 1
         per_cat[cat] = per_cat.get(cat, 0) + 1
+        # معاني الكلمات — the per-hadith glossary. It is Arabic whatever the
+        # pack's language is, because it explains the ARABIC word; a reader of
+        # the translation still meets the original above it.
         out.execute(
-            "INSERT INTO hadeeths VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO hadeeths VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (hid, cat, title, hadeeth, attribution, grade, explanation,
              hints, reference, hadeeth_ar, attribution_ar, grade_ar,
+             words_ar or "[]",
              normalize("%s %s" % (title or "", hadeeth or ""))))
 
     for cid in sorted(cats, key=int):
@@ -179,6 +188,7 @@ def build(lang, cats, src):
         "zip_bytes": os.path.getsize(zip_path),
         "ungraded": ungraded,
         "no_takhrij": no_takhrij,
+        "with_words": with_words,
         "categories": sum(1 for c in cats if per_cat.get(c)),
     }
 
@@ -201,10 +211,10 @@ def main():
     # summary is deliberately ASCII.
     for r in report:
         print("%-3s %5d hadeeths  %3d cats  db %7.2f MB  zip %6.2f MB"
-              "  ungraded %d  no-takhrij %d"
+              "  ungraded %d  no-takhrij %d  glossary %d"
               % (r["lang"], r["hadeeths"], r["categories"],
                  r["db_bytes"] / 1e6, r["zip_bytes"] / 1e6,
-                 r["ungraded"], r["no_takhrij"]))
+                 r["ungraded"], r["no_takhrij"], r["with_words"]))
     print("wrote %s" % path)
 
 

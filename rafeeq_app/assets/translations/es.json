@@ -1050,7 +1050,8 @@
     "explanation": "Explicación",
     "hints": "Beneficios del hadiz",
     "reference": "Referencias",
-    "credit": "Fuente: {source}"
+    "credit": "Fuente: {source}",
+    "words": "Significado de las palabras"
   },
   "quotes": {
     "section_title": "Citas",

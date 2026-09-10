@@ -1050,7 +1050,8 @@
     "explanation": "Explication",
     "hints": "Enseignements du hadith",
     "reference": "Références",
-    "credit": "Source : {source}"
+    "credit": "Source : {source}",
+    "words": "Sens des mots"
   },
   "quotes": {
     "section_title": "Citations",
