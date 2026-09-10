@@ -458,7 +458,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       appBar: _pageFillScreen
           ? null
           : AppBar(
-              title: Text('nav.quran'.tr()),
+              // In landscape the title row is 56 of the 393 logical pixels the
+              // whole screen has, spent restating which tab you are on — the
+              // nav bar below already shows Qur'an selected. Collapsing it
+              // leaves only the toolbar in the app-bar slot.
+              toolbarHeight: _toolbarLandscape(context) ? 0 : null,
+              title: _toolbarLandscape(context)
+                  ? null
+                  : Text('nav.quran'.tr()),
               // P3‑34 built this as a single horizontal-scroll row; P3‑41's
               // real-device feedback was that this "takes place from the
               // screen" — a long scrolling strip hides most actions until you
@@ -660,9 +667,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     top: _pageFillScreen
                         ? (isLandscape ? 32 : 44)
                         : (isLandscape ? 28 : 40),
+                    // Landscape floats the page badge over the page (the bar
+                    // that used to carry it is gone, see below), so the text
+                    // has to stop short of it or the last line runs underneath
+                    // the number — which is what the first attempt at this
+                    // shipped to the emulator.
                     bottom: _pageFillScreen
                         ? (isLandscape ? 36 : 56)
-                        : 0,
+                        : (isLandscape ? 34 : 0),
                   ),
                   child: _buildViewer(data, edition, textLayout),
                 ),
@@ -682,7 +694,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   juzNumber: (edition?.hafsPagination ?? true)
                       ? _currentJuzNumber(data)
                       : null,
-                  pageNumber: _pageFillScreen ? _current : null,
+                  // Landscape drops the page-number bar under the text, so
+                  // the number has to live here instead of nowhere.
+                  pageNumber: (_pageFillScreen || isLandscape) ? _current : null,
                 ),
                 // P3‑54: a translucent floating "exit immersive" button — the
                 // always-visible, discoverable way back out (alongside the
@@ -749,8 +763,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                       ),
                     // (b) The page-number info bar — its own row, centred, so
                     // it sits cleanly below the text instead of over it.
-                    Center(child: _PageNumberBadge(page: _current)),
-                    const SizedBox(height: 6),
+                    //
+                    // Not in landscape: it costs about 60 logical pixels of a
+                    // 393-pixel screen to show a number the running header
+                    // already carries, and those pixels are the difference
+                    // between a page of Qur'an and none.
+                    if (!_toolbarLandscape(context)) ...[
+                      Center(child: _PageNumberBadge(page: _current)),
+                      const SizedBox(height: 6),
+                    ],
                     // (c) One real drag-to-scrub scrollbar (P3‑43 #4/#5: the
                     // old surah strip + ‹ › arrows were removed per the
                     // owner's repeated ask).

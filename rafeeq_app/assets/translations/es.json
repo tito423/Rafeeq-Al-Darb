@@ -701,7 +701,8 @@
     "title": "Hadiz del día",
     "download_prompt": "Descarga la biblioteca de hadices para ver uno aleatorio aquí",
     "downloading": "Descargando…",
-    "another": "Otro hadiz"
+    "another": "Otro hadiz",
+    "previous": "Anterior"
   },
   "about": {
     "blurb": "Rafeeq Al-Darb es una app islámica integral basada en fuentes fiables y de libre acceso para desarrolladores. Cada mushaf, traducción y grabación de adhan fue comprobado en su fuente antes de publicarse, y todas las fuentes están citadas para que puedas verificarlas.",

@@ -379,19 +379,11 @@ class _CategoryGround extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            bottom: -40,
-            left: -30,
-            child: Opacity(
-              opacity: 0.05,
-              child: Image.asset(
-                'assets/branding/app_mark.png',
-                width: 240,
-                fit: BoxFit.contain,
-                errorBuilder: (_, _, _) => const SizedBox.shrink(),
-              ),
-            ),
-          ),
+          // No app-mark watermark here. It works on the dark card ground of
+          // `azkar_section_screen.dart`, but seen on this light one it showed
+          // its own PNG bounding box as a pale square — photographed on the
+          // emulator before this line was removed. The tile alone carries the
+          // identity.
           Positioned.fill(child: child),
         ],
       ),

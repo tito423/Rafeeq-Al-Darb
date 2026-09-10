@@ -701,7 +701,8 @@
     "title": "Hadith do Dia",
     "download_prompt": "Baixe a biblioteca de hadiths para ver um aleatório aqui",
     "downloading": "A transferir…",
-    "another": "Outro hadith"
+    "another": "Outro hadith",
+    "previous": "Anterior"
   },
   "about": {
     "blurb": "O Rafeeq Al-Darb é uma aplicação islâmica completa construída sobre fontes fiáveis e de acesso livre para programadores. Cada mushaf, tradução e gravação de adhan foi verificado na fonte antes de ser publicado, e todas as fontes são citadas para que possa confirmá-las.",

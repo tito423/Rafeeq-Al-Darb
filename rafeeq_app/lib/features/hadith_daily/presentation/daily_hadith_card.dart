@@ -402,11 +402,41 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                   // its own footprint (not the touch target's visual
                   // affordance, just the padding around it) removes that
                   // margin without changing what it does.
+                  // A swipe with no visible affordance is a feature nobody
+                  // finds. These two say the card moves, and the back one
+                  // greys out at the start of the history so it is honest
+                  // about when there is nothing to go back to.
+                  IconButton(
+                    tooltip: 'hadith_daily.previous'.tr(),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints:
+                        const BoxConstraints(minWidth: 30, minHeight: 30),
+                    // `chevron_right` for "back" is not a typo: Flutter
+                    // auto-mirrors `chevron_left` in RTL (trap #7), and this
+                    // arrow has to point at the previous card in both
+                    // directions.
+                    icon: const Icon(Icons.chevron_left, size: 22),
+                    onPressed:
+                        ref.read(dailyHadithProvider.notifier).hasPrevious
+                            ? () => ref
+                                .read(dailyHadithProvider.notifier)
+                                .previous()
+                            : null,
+                  ),
                   IconButton(
                     tooltip: 'hadith_daily.another'.tr(),
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
+                    icon: const Icon(Icons.chevron_right, size: 22),
+                    onPressed: _swipeNext,
+                  ),
+                  IconButton(
+                    tooltip: 'hadith_daily.another'.tr(),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
                     icon: _rerolling
                         ? const SizedBox(
                             width: 16,

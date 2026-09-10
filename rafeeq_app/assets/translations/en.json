@@ -701,7 +701,8 @@
     "title": "Hadith of the Day",
     "download_prompt": "Download the hadith library to see a random hadith here",
     "downloading": "Downloading…",
-    "another": "Another hadith"
+    "another": "Another hadith",
+    "previous": "Previous"
   },
   "about": {
     "blurb": "Rafeeq Al-Darb is a comprehensive Islamic app built on trusted sources that are freely available to developers. Every mushaf, translation and adhan recording was checked against its source before it shipped, and every source is named so you can verify it yourself.",
