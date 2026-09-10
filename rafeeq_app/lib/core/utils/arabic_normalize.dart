@@ -156,6 +156,64 @@ bool arabicWordBoundaryContains(String haystack, String needle) {
   }
 }
 
+/// The one-letter particles and the article that Arabic writes **joined to the
+/// front of the next word**, longest first so the longest prefix wins.
+///
+/// و (and) ف (so) ب (with/by) ل (for) ك (like), the article ال, and the
+/// combinations of the two — plus لل, which is ل + ال contracted.
+const List<String> arabicProclitics = [
+  'وبال', 'فبال', 'وكال', 'فكال',
+  'وال', 'فال', 'بال', 'كال', 'ولل', 'فلل',
+  'ال', 'لل',
+  'و', 'ف', 'ب', 'ل', 'ك',
+];
+
+/// True if [needle] occurs in [haystack] at the start of a word, **allowing
+/// for the particles Arabic writes joined to it**.
+///
+/// THE BUG THIS FIXES, reported as «اتأكد إن البحث الموضوعي فعلاً بيبحث في
+/// المصحف كله — بحثت في الرحمة طلعلي ٣ آيات بس وده مش ممكن طبعًا». He is
+/// right that it is not possible. Measured over the real corpus with the
+/// app's own normalisation:
+///
+///     query        space-only   + proclitics   + article stripped
+///     الرحمة            6            6                72
+///     رحمة             34           72                72
+///     الصبر            12           19                52
+///     العلم            91           91               250
+///
+/// Two separate losses, and both are ordinary Arabic:
+///
+///  * [arabicWordBoundaryContains] wants a space before the match, so
+///    «رحمة» never saw «وَرَحْمَةً», «بِرَحْمَةٍ», «لِرَحْمَتِهِ» — half of every
+///    occurrence in the book.
+///  * A query carrying the article only ever matched the article form, so
+///    «الرحمة» found six ayahs out of seventy-two. The caller strips it and
+///    searches for both.
+///
+/// The prefix set is closed and short on purpose. It is not "any letter may
+/// precede": that would bring back the P3‑9 defect this boundary test exists
+/// for, where «نشورا» matched inside «مَّنشُورًا», a different word.
+bool arabicProcliticContains(String haystack, String needle) {
+  if (needle.isEmpty) return false;
+  if (arabicWordBoundaryContains(haystack, needle)) return true;
+  for (final p in arabicProclitics) {
+    if (arabicWordBoundaryContains(haystack, '$p$needle')) return true;
+  }
+  return false;
+}
+
+/// The query with its definite article removed, or null when there is none to
+/// remove.
+///
+/// Only for a query long enough that the remainder is still a word: stripping
+/// «ال» from «الم» would leave «م», which matches most of the corpus.
+String? withoutArabicArticle(String query) {
+  final q = query.trim();
+  if (!q.startsWith('ال') || q.length < 5) return null;
+  return q.substring(2);
+}
+
 /// Any character that is not a letter in any script. Built once, because a
 /// `RegExp` with `unicode: true` is not free to construct.
 final RegExp _anyLetter = RegExp(r'\p{L}', unicode: true);

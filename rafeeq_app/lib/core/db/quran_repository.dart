@@ -125,15 +125,36 @@ class QuranRepository {
   /// 2. **The dagger-alif ambiguity** — see `normalizeArabic`'s doc. A query
   ///    is checked against both the strict and loose normalized index, so
   ///    both "فاسقين" (strict) and "الرحمن" (loose) find their ayahs.
-  Future<List<Ayah>> search(String query, {int limit = 50}) async {
+  /// 3. **Arabic's joined particles, and the article in the query** (this
+  ///    round). He searched «الرحمة» and got three ayahs. Measured over the
+  ///    real corpus: «الرحمة» matched 6, «رحمة» matched 34, and the honest
+  ///    answer is 72. Two losses, both ordinary Arabic — a space-only word
+  ///    boundary cannot see «وَرَحْمَةً» or «بِرَحْمَةٍ», and a query carrying the
+  ///    article only ever matched the article form. Both sides are searched
+  ///    now: see [arabicProcliticContains] and [withoutArabicArticle].
+  ///
+  /// The default limit is 200, not 50: «العلم» alone has 250 real matches,
+  /// and a search that silently stops at fifty is the same kind of quiet
+  /// under-reporting as the boundary bug.
+  Future<List<Ayah>> search(String query, {int limit = 200}) async {
     final strict = normalizeArabic(query.trim());
     final loose = normalizeArabicLoose(query.trim());
     if (strict.isEmpty) return [];
+
+    // The same query without its definite article, when it has one.
+    final bare = withoutArabicArticle(query);
+    final bareStrict = bare == null ? null : normalizeArabic(bare);
+    final bareLoose = bare == null ? null : normalizeArabicLoose(bare);
+
     final idx = await _index();
     final matches = <Ayah>[];
     for (final (normStrict, normLoose, ayah) in idx) {
-      if (arabicWordBoundaryContains(normStrict, strict) ||
-          arabicWordBoundaryContains(normLoose, loose)) {
+      final hit = arabicProcliticContains(normStrict, strict) ||
+          arabicProcliticContains(normLoose, loose) ||
+          (bareStrict != null &&
+              arabicProcliticContains(normStrict, bareStrict)) ||
+          (bareLoose != null && arabicProcliticContains(normLoose, bareLoose));
+      if (hit) {
         matches.add(ayah);
         if (matches.length >= limit) break;
       }
