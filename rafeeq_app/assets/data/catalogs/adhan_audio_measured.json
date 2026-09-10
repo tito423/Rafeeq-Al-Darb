@@ -1,0 +1,114 @@
+[
+  {
+    "id": "azan11",
+    "name": "تامر شعبان (١)",
+    "seconds": 142,
+    "kbps": 160,
+    "mean_volume_db": -15.6,
+    "bytes": 2848959
+  },
+  {
+    "id": "azan12",
+    "name": "تامر شعبان (٢)",
+    "seconds": 178,
+    "kbps": 160,
+    "mean_volume_db": -16.0,
+    "bytes": 3567849
+  },
+  {
+    "id": "azan13",
+    "name": "الشيخ ربيع القاضي",
+    "seconds": 138,
+    "kbps": 160,
+    "mean_volume_db": -15.8,
+    "bytes": 2771114
+  },
+  {
+    "id": "azan14",
+    "name": "أذان قناة الناس",
+    "seconds": 186,
+    "kbps": 48,
+    "mean_volume_db": -17.2,
+    "bytes": 1116805
+  },
+  {
+    "id": "azan1",
+    "name": "محمود علي البنا",
+    "seconds": 165,
+    "kbps": 48,
+    "mean_volume_db": -17.4,
+    "bytes": 996276
+  },
+  {
+    "id": "azan2",
+    "name": "عبد الباسط عبد الصمد",
+    "seconds": 188,
+    "kbps": 192,
+    "mean_volume_db": -20.5,
+    "bytes": 4535946
+  },
+  {
+    "id": "azan3",
+    "name": "محمد صديق المنشاوي",
+    "seconds": 246,
+    "kbps": 128,
+    "mean_volume_db": -21.3,
+    "bytes": 3951848
+  },
+  {
+    "id": "azan4",
+    "name": "نصر الدين طوبار",
+    "seconds": 264,
+    "kbps": 128,
+    "mean_volume_db": -21.4,
+    "bytes": 4231880
+  },
+  {
+    "id": "azan5",
+    "name": "مشاري راشد العفاسي",
+    "seconds": 240,
+    "kbps": 64,
+    "mean_volume_db": -20.0,
+    "bytes": 1926626
+  },
+  {
+    "id": "azan6",
+    "name": "علي بن أحمد ملا",
+    "seconds": 244,
+    "kbps": 128,
+    "mean_volume_db": -20.6,
+    "bytes": 3910888
+  },
+  {
+    "id": "azan7",
+    "name": "عاصم بخاري (الحرم المكي)",
+    "seconds": 281,
+    "kbps": 48,
+    "mean_volume_db": -19.0,
+    "bytes": 1691081
+  },
+  {
+    "id": "azan8",
+    "name": "عبد المجيد السريحي",
+    "seconds": 210,
+    "kbps": 128,
+    "mean_volume_db": -22.1,
+    "bytes": 3369213
+  },
+  {
+    "id": "azan9",
+    "name": "منصور الزهراني",
+    "seconds": 184,
+    "kbps": 128,
+    "mean_volume_db": -19.6,
+    "bytes": 2955851
+  },
+  {
+    "id": "azan10",
+    "name": "محمد خليل رمل (الحرم المكي)",
+    "seconds": 191,
+    "kbps": 48,
+    "mean_volume_db": -18.2,
+    "bytes": 1151286
+  }
+]

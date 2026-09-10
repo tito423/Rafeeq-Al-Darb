@@ -4,28 +4,28 @@
     "name": "تامر شعبان (١)",
     "asset": "assets/audio/adhan/azan11.mp3",
     "raw": "azan11",
-    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه"
+    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan12",
     "name": "تامر شعبان (٢)",
     "asset": "assets/audio/adhan/azan12.mp3",
     "raw": "azan12",
-    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه"
+    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan13",
     "name": "الشيخ ربيع القاضي",
     "asset": "assets/audio/adhan/azan13.mp3",
     "raw": "azan13",
-    "source": "ملف قدّمه صاحب التطبيق (اسم المؤذّن كما ورد في اسم الملف)"
+    "source": "ملف قدّمه صاحب التطبيق (اسم المؤذّن كما ورد في اسم الملف)، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan14",
     "name": "أذان قناة الناس",
     "asset": "assets/audio/adhan/azan14.mp3",
     "raw": "azan14",
-    "source": "ملف قدّمه صاحب التطبيق — من قناة الناس، والمؤذّن غير مسمّى في المصدر"
+    "source": "ملف قدّمه صاحب التطبيق — من قناة الناس، والمؤذّن غير مسمّى في المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan1",
@@ -33,23 +33,23 @@
     "asset": "assets/audio/adhan/azan1.mp3",
     "raw": "azan1",
     "url": "https://archive.org/download/adhan-mp3-collection/mahmoud-ali-al-banna-cairo.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan2",
     "name": "عبد الباسط عبد الصمد",
     "asset": "assets/audio/adhan/azan2.mp3",
     "raw": "azan2",
-    "url": "https://archive.org/download/adhan-mp3-collection/abdulbasit-abdusamad-1-egypt.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "url": "https://archive.org/download/adhan-mp3-collection/abdulbasit-abdusamad-4-egypt.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan3",
     "name": "محمد صديق المنشاوي",
     "asset": "assets/audio/adhan/azan3.mp3",
     "raw": "azan3",
-    "url": "https://archive.org/download/adhan-mp3-collection/mohamed-siddiq-el-minshawi-egypt-1.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "url": "https://archive.org/download/adhan-mp3-collection/mohamed-siddiq-el-minshawi-egypt-2.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan4",
@@ -57,7 +57,7 @@
     "asset": "assets/audio/adhan/azan4.mp3",
     "raw": "azan4",
     "url": "https://archive.org/download/adhan-mp3-collection/nasreddine-toubar.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan5",
@@ -65,15 +65,15 @@
     "asset": "assets/audio/adhan/azan5.mp3",
     "raw": "azan5",
     "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-1-kuwait.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan6",
-    "name": "علي بن أحمد ملا (الحرم المكي)",
+    "name": "علي بن أحمد ملا",
     "asset": "assets/audio/adhan/azan6.mp3",
     "raw": "azan6",
-    "url": "https://archive.org/download/adhan-mp3-collection/ali-ibn-ahmad-mala-1-al-haram-al-maki.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "url": "https://archive.org/download/adhan-mp3-collection/ali-ibn-ahmad-mala-hq.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan7",
@@ -81,23 +81,23 @@
     "asset": "assets/audio/adhan/azan7.mp3",
     "raw": "azan7",
     "url": "https://archive.org/download/adhan-mp3-collection/assem-bukhrare-al-haram-al-maki.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan8",
     "name": "عبد المجيد السريحي",
     "asset": "assets/audio/adhan/azan8.mp3",
     "raw": "azan8",
-    "url": "https://archive.org/download/adhan-mp3-collection/abdul-majid-al-surehi-1.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "url": "https://archive.org/download/adhan-mp3-collection/abdul-majid-al-surehi-3.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan9",
     "name": "منصور الزهراني",
     "asset": "assets/audio/adhan/azan9.mp3",
     "raw": "azan9",
-    "url": "https://archive.org/download/adhan-mp3-collection/mansur-al-zahrane-hq.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "url": "https://archive.org/download/adhan-mp3-collection/mansur-al-zahrane.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
     "id": "azan10",
@@ -105,6 +105,6 @@
     "asset": "assets/audio/adhan/azan10.mp3",
     "raw": "azan10",
     "url": "https://archive.org/download/adhan-mp3-collection/muhammad-khaleel-raml-al-haram-al-maki.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   }
 ]
