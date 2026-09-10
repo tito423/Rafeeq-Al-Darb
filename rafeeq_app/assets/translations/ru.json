@@ -740,7 +740,9 @@
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
     "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
     "src_ruqyah": "Полная запись рукьи из «Архива Интернета»",
-    "src_hadeethenc": "Энциклопедия хадисов — отобранные хадисы с тахриджем, степенью достоверности и разъяснением на семи языках"
+    "src_hadeethenc": "Энциклопедия хадисов — отобранные хадисы с тахриджем, степенью достоверности и разъяснением на семи языках",
+    "src_quotes": "Изречения и их фоны",
+    "src_commons": "Wikimedia Commons — фоны с исламским орнаментом, общественное достояние или CC0; лицензия и автор каждого файла хранятся в приложении"
   },
   "ruqyah": {
     "title": "Рукья",
@@ -868,11 +870,11 @@
     "prayer_reminder_channel": "Напоминания о молитве",
     "prayer_reminder_channel_desc": "До и после азана, и икама",
     "pre_title": "Скоро {prayer}",
-    "pre_body": "{minutes} до {prayer}",
+    "pre_body": "Осталось {minutes}",
     "post_title": "Азан {prayer} уже прозвучал",
-    "post_body": "{minutes} с азана {prayer}",
+    "post_body": "{minutes} назад",
     "iqama_title": "Икама {prayer}",
-    "iqama_body": "Время икамы {prayer}",
+    "iqama_body": "Время икамы",
     "quote_channel": "Изречения",
     "quote_channel_desc": "Изречение из книг библиотеки, через выбранный интервал",
     "quote_title": "Изречение"

@@ -1,0 +1,103 @@
+{
+ "schema": 1,
+ "source": {
+  "name": "Wikimedia Commons",
+  "url": "https://commons.wikimedia.org",
+  "note": "Only files whose licence is public domain or CC0 were taken; each file's licence, author and Commons page is recorded below. CC BY and CC BY-SA were deliberately excluded."
+ },
+ "scrim": {
+  "argb": "0xCC071626",
+  "alpha": 0.8,
+  "why": "the saying is drawn over this; every image's brightest region was measured through it and clears 4.5:1"
+ },
+ "images": [
+  {
+   "id": "abu_hanifa_mosque_muqarnas",
+   "licence": "CC0",
+   "author": "Ayham4002",
+   "page": "https://commons.wikimedia.org/wiki/File:Abu_Hanifa_Mosque_muqarnas.jpg",
+   "contrast": 9.61,
+   "bytes": 566194
+  },
+  {
+   "id": "coa_nasrid_kings_alhambra_granada_spain",
+   "licence": "CC0",
+   "author": "Jebulon",
+   "page": "https://commons.wikimedia.org/wiki/File:CoA_Nasrid_kings_Alhambra_Granada_Spain.jpg",
+   "contrast": 11.92,
+   "bytes": 420632
+  },
+  {
+   "id": "dado_panel2",
+   "licence": "Public domain",
+   "author": "unknown artisan, 15th century",
+   "page": "https://commons.wikimedia.org/wiki/File:Dado_panel2.JPG",
+   "contrast": 11.92,
+   "bytes": 475360
+  },
+  {
+   "id": "ghulam_ali_khan_020b",
+   "licence": "Public domain",
+   "author": "Ghulam Ali Khan",
+   "page": "https://commons.wikimedia.org/wiki/File:Ghulam_Ali_Khan_020b.jpg",
+   "contrast": 9.07,
+   "bytes": 465726
+  },
+  {
+   "id": "l_ornement_polychrome_met_dp146521",
+   "licence": "CC0",
+   "author": "Creator:Albert-Charles-Auguste Racinet",
+   "page": "https://commons.wikimedia.org/wiki/File:L%27Ornement_Polychrome_MET_DP146521.jpg",
+   "contrast": 9.39,
+   "bytes": 482807
+  },
+  {
+   "id": "mashrabiya_screen_met_dp155281",
+   "licence": "CC0",
+   "author": "—",
+   "page": "https://commons.wikimedia.org/wiki/File:Mashrabiya_Screen_MET_DP155281.jpg",
+   "contrast": 10.97,
+   "bytes": 309989
+  },
+  {
+   "id": "muqarna_met_38_40_252",
+   "licence": "Public domain",
+   "author": "Jastrow",
+   "page": "https://commons.wikimedia.org/wiki/File:Muqarna_MET_38-40-252.jpg",
+   "contrast": 10.67,
+   "bytes": 231649
+  },
+  {
+   "id": "ornament_sborn_k_slohov_ch_ozdob_v_ech_obdob_um_",
+   "licence": "Public domain",
+   "author": "Heinrich Dolmetsch",
+   "page": "https://commons.wikimedia.org/wiki/File:Ornament_%E2%80%93_sborn%C3%ADk_slohov%C3%BDch_ozdob_v%C5%A1ech_obdob%C3%AD_um%C4%9Bn%C3%AD_(1906),_Table_29_(Heinrich_Dolmetsch).jpg",
+   "contrast": 10.36,
+   "bytes": 456727
+  },
+  {
+   "id": "parallel_of_historical_ornament_arabian_and_moor",
+   "licence": "Public domain",
+   "author": "L. Prang &amp; Co",
+   "page": "https://commons.wikimedia.org/wiki/File:Parallel_of_historical_ornament,_Arabian_and_Moorish_-_DPLA_-_02f3c830545a74747672e6c0209eae49.jpg",
+   "contrast": 9.61,
+   "bytes": 559548
+  },
+  {
+   "id": "styles_of_ornament_exhibited_in_designs_and_arra",
+   "licence": "No restrictions",
+   "author": "Internet Archive Book Images",
+   "page": "https://commons.wikimedia.org/wiki/File:Styles_of_ornament,_exhibited_in_designs,_and_arranged_in_historical_order,_with_descriptive_text._A_handbook_for_architects,_designers,_painters,_sculptors,_wood-carvers,_chasers,_modellers,_(14578896547).jpg",
+   "contrast": 9.37,
+   "bytes": 333011
+  },
+  {
+   "id": "turquoise_muqarna_mba_lyon_1969_331",
+   "licence": "Public domain",
+   "author": "Marie-Lan Nguyen",
+   "page": "https://commons.wikimedia.org/wiki/File:Turquoise_muqarna_MBA_Lyon_1969-331.jpg",
+   "contrast": 10.61,
+   "bytes": 214068
+  }
+ ]
+}

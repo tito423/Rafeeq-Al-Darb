@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../../core/widgets/islamic_pattern.dart';
+import '../data/quote_background_catalog.dart';
 import '../data/quote_repository.dart';
 
 /// The card the quote notification opens: it **covers what is behind it**,
@@ -14,15 +15,17 @@ import '../data/quote_repository.dart';
 /// on a dismiss button written in the interface language — which is exactly
 /// what the owner asked for.
 ///
-/// WHY THE BACKGROUND IS DRAWN AND NOT DOWNLOADED.
-/// The owner also asked for photographic backgrounds «من النت، كمية كبيرة
-/// وجودة عالية». CLAUDE.md trap #18 is that a free image is not automatically
-/// free to rehost, and licences have to be read one by one and recorded. That
-/// work is real and is not done yet, so this ships with the ornament the
-/// adhkar cards already use — `IslamicPatternPainter`, drawn by the app, no
-/// licence question at all — over a palette that changes per quote. The
-/// photographic set is additive when its licences are verified; nothing here
-/// has to change to accept it.
+/// TWO KINDS OF BACKGROUND, DRAWN FROM ONE POOL.
+/// Six are the ornament the adhkar cards already use —
+/// `IslamicPatternPainter`, drawn by the app, no licence question at all —
+/// each over its own measured palette. Eleven are photographs of Islamic
+/// ornament from Wikimedia Commons, every one of them public domain or CC0
+/// and checked file by file; see `QuoteBackground` for what was refused and
+/// why. The card picks from all seventeen, so «تتغير عشوائي كل مرة» is a
+/// real seventeen and not a rotation of six.
+///
+/// A photograph is drawn under the scrim it was **measured** through, so the
+/// saying's contrast is a computed number rather than a hope.
 ///
 /// The route is opaque and full-screen on purpose: a notification tapped from
 /// a locked-away phone should land on the saying, not on whatever screen the
@@ -33,7 +36,18 @@ class QuoteCardScreen extends StatefulWidget {
   /// Fixed only in tests and in the gallery; null means "pick one now".
   final int? paletteIndex;
 
-  const QuoteCardScreen({super.key, required this.quote, this.paletteIndex});
+  /// The photographic backgrounds available, or null when they could not be
+  /// read. The card then falls back to the drawn ornament, which needs no
+  /// asset and cannot fail — a notification that fires with no connection and
+  /// a cold cache still has to open on something.
+  final QuoteBackgroundSet? photos;
+
+  const QuoteCardScreen({
+    super.key,
+    required this.quote,
+    this.paletteIndex,
+    this.photos,
+  });
 
   @override
   State<QuoteCardScreen> createState() => _QuoteCardScreenState();
@@ -119,6 +133,9 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
   late final QuotePalette _palette;
   late final double _tile;
 
+  /// The photograph this card drew, or null when it drew the ornament.
+  QuoteBackground? _photo;
+
   @override
   void initState() {
     super.initState();
@@ -128,6 +145,14 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
     // The lattice scale changes too, so two cards on the same palette still
     // do not look like the same picture.
     _tile = 56.0 + rng.nextInt(5) * 12;
+    // «خلفية إسلامية تتغير عشوائي كل مرة» — the whole pool, drawn ornaments
+    // and photographs together, so «كل مرة» really is a different picture
+    // rather than a rotation of six.
+    final photos = widget.photos?.images ?? const <QuoteBackground>[];
+    if (photos.isNotEmpty && widget.paletteIndex == null) {
+      final n = rng.nextInt(photos.length + kQuotePalettes.length);
+      if (n < photos.length) _photo = photos[n];
+    }
   }
 
   @override
@@ -138,22 +163,38 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [_palette.top, _palette.bottom],
+          if (_photo != null) ...[
+            Image.asset(
+              _photo!.asset,
+              fit: BoxFit.cover,
+              // A missing or unreadable asset must not leave a blank card:
+              // fall through to the gradient underneath.
+              errorBuilder: (_, _, _) => const SizedBox.shrink(),
+            ),
+            // The scrim the photograph was MEASURED through. Every image's
+            // brightest region clears 4.5:1 against the ink under exactly
+            // this layer (trap #15 — the composite is what the eye gets, not
+            // either colour on its own), so the value comes from the manifest
+            // rather than from a number typed here.
+            ColoredBox(color: Color(widget.photos!.scrimArgb)),
+          ] else ...[
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [_palette.top, _palette.bottom],
+                ),
               ),
             ),
-          ),
-          CustomPaint(
-            painter: IslamicPatternPainter(
-              tile: _tile,
-              color: _palette.ornament,
-              strokeWidth: 1,
+            CustomPaint(
+              painter: IslamicPatternPainter(
+                tile: _tile,
+                color: _palette.ornament,
+                strokeWidth: 1,
+              ),
             ),
-          ),
+          ],
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),

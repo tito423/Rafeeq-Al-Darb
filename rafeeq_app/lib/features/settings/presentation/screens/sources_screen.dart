@@ -109,6 +109,17 @@ final _groups = <(String, List<_Source>)>[
     ]
   ),
   (
+    'about.src_quotes',
+    [
+      // The books the sayings are taken from are already credited by their
+      // own catalogue entries; this row is the picture behind them. Only
+      // public-domain and CC0 files were taken, and each file's licence,
+      // author and Commons page is in `assets/data/quote_backgrounds.json`.
+      _Source('Wikimedia Commons', 'https://commons.wikimedia.org',
+          'about.src_commons'),
+    ]
+  ),
+  (
     'about.src_prayer',
     [
       _Source('api.aladhan.com', 'https://aladhan.com', 'about.src_aladhan'),

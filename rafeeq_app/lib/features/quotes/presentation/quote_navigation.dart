@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import '../../../app/navigation.dart';
+import '../data/quote_background_catalog.dart';
 import '../data/quote_repository.dart';
 import 'quote_card_screen.dart';
 
@@ -42,9 +43,36 @@ Future<void> openQuoteFromPayload(String rawPayload) async {
     ]);
     final quote = library.byKey(rawPayload);
     if (quote == null) return;
+
+    // The photographic backgrounds, read the same way and just as
+    // defensively: if this throws, the card still opens on the drawn
+    // ornament rather than not opening at all.
+    QuoteBackgroundSet? photos;
+    try {
+      final bgRaw =
+          await rootBundle.loadString('assets/data/quote_backgrounds.json');
+      final bgDoc = jsonDecode(bgRaw) as Map<String, dynamic>;
+      final scrim = (bgDoc['scrim'] as Map<String, dynamic>)['argb'] as String;
+      photos = QuoteBackgroundSet(
+        scrimArgb: int.parse(scrim.substring(2), radix: 16),
+        images: [
+          for (final e in bgDoc['images'] as List<dynamic>)
+            QuoteBackground(
+              id: (e as Map<String, dynamic>)['id'] as String,
+              licence: e['licence'] as String? ?? '',
+              author: e['author'] as String? ?? '',
+              page: e['page'] as String? ?? '',
+              contrast: (e['contrast'] as num?)?.toDouble() ?? 0,
+            )
+        ],
+      );
+    } catch (_) {
+      photos = null;
+    }
+
     await navigator.push(
       MaterialPageRoute<void>(
-        builder: (_) => QuoteCardScreen(quote: quote),
+        builder: (_) => QuoteCardScreen(quote: quote, photos: photos),
       ),
     );
   } catch (_) {

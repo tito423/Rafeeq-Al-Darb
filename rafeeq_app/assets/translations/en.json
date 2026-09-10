@@ -740,7 +740,9 @@
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
     "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
     "src_ruqyah": "A complete recorded ruqyah, from the Internet Archive",
-    "src_hadeethenc": "Hadeeth Encyclopedia — selected hadiths with takhrij, grading and explanation in seven languages"
+    "src_hadeethenc": "Hadeeth Encyclopedia — selected hadiths with takhrij, grading and explanation in seven languages",
+    "src_quotes": "Quotes and their backgrounds",
+    "src_commons": "Wikimedia Commons — the Islamic-ornament backgrounds, public domain or CC0, each file’s licence and author kept in the app"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -868,11 +870,11 @@
     "prayer_reminder_channel": "Prayer reminders",
     "prayer_reminder_channel_desc": "Before and after the adhan, and the iqama",
     "pre_title": "{prayer} is near",
-    "pre_body": "{minutes} until {prayer}",
-    "post_title": "{prayer} adhan has passed",
-    "post_body": "{minutes} since the {prayer} adhan",
+    "pre_body": "{minutes} left",
+    "post_title": "The {prayer} adhan has passed",
+    "post_body": "{minutes} ago",
     "iqama_title": "{prayer} iqama",
-    "iqama_body": "It is time for the {prayer} iqama",
+    "iqama_body": "It is time for the iqama",
     "quote_channel": "Quotes",
     "quote_channel_desc": "A saying from the library's books, at your chosen interval",
     "quote_title": "A saying"

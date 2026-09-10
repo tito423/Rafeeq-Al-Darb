@@ -740,7 +740,9 @@
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
     "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
     "src_ruqyah": "Una ruqyah completa grabada, del Internet Archive",
-    "src_hadeethenc": "Enciclopedia del Hadiz — hadices seleccionados con takhrij, grado y explicación en siete idiomas"
+    "src_hadeethenc": "Enciclopedia del Hadiz — hadices seleccionados con takhrij, grado y explicación en siete idiomas",
+    "src_quotes": "Citas y sus fondos",
+    "src_commons": "Wikimedia Commons — los fondos de ornamento islámico, dominio público o CC0, con la licencia y el autor de cada archivo guardados en la app"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -868,11 +870,11 @@
     "prayer_reminder_channel": "Avisos de oración",
     "prayer_reminder_channel_desc": "Antes y después del adhan, y el iqama",
     "pre_title": "Se acerca el {prayer}",
-    "pre_body": "{minutes} para el {prayer}",
+    "pre_body": "Quedan {minutes}",
     "post_title": "Ya pasó el adhan del {prayer}",
-    "post_body": "{minutes} desde el adhan del {prayer}",
+    "post_body": "Hace {minutes}",
     "iqama_title": "Iqama del {prayer}",
-    "iqama_body": "Es hora del iqama del {prayer}",
+    "iqama_body": "Es hora del iqama",
     "quote_channel": "Citas",
     "quote_channel_desc": "Un dicho de los libros de la biblioteca, en el intervalo que elijas",
     "quote_title": "Una cita"

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/services/quote_reminder_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../data/quote_background_catalog.dart';
 import '../data/quote_repository.dart';
 import '../data/quote_reminder_provider.dart';
 import 'quote_card_screen.dart';
@@ -105,9 +106,13 @@ class QuoteReminderSection extends ConsumerWidget {
                   if (pick == null) return;
                   final quote = lib.at(pick.$1, pick.$2);
                   if (quote == null || !context.mounted) return;
+                  final photos =
+                      await ref.read(quoteBackgroundsProvider.future);
+                  if (!context.mounted) return;
                   await Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) => QuoteCardScreen(quote: quote),
+                      builder: (_) =>
+                          QuoteCardScreen(quote: quote, photos: photos),
                     ),
                   );
                 },

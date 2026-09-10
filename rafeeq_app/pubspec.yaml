@@ -101,6 +101,8 @@ flutter:
     - assets/data/quran_sciences.db
     - assets/data/hadith.db
     - assets/data/quotes.json
+    - assets/data/quote_backgrounds.json
+    - assets/quote_backgrounds/
     - assets/data/mushaf/
     - assets/mushaf_covers/
     - assets/data/catalogs/

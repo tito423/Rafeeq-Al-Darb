@@ -121,11 +121,22 @@ void main() {
       // No single verb form agrees with «{prayer}», so the sentence is
       // built on «صلاة» — which `notif.iqama_body` already did.
       final ar = load('ar')['notif'] as Map<String, dynamic>;
-      for (final key in ['pre_title', 'pre_body']) {
+      // Only the TITLES name the prayer now. The owner read the shade and
+      // said the two lines «اقترب موعد صلاة المغرب» and «بقيت ١٠ دقائق
+      // على صلاة المغرب» beside each other read as one repetitive
+      // sentence — Android collapses a group into «title · body», so the
+      // prayer's name was printed twice on one line. The body carries the
+      // number and nothing else now.
+      for (final key in ['pre_title', 'iqama_title']) {
         expect(ar[key] as String, contains('صلاة'),
             reason: 'notif.$key agrees with {prayer} instead of «صلاة»');
       }
       expect(ar['pre_title'], 'اقترب موعد صلاة {prayer}');
+      for (final key in ['pre_body', 'post_body', 'iqama_body']) {
+        expect((ar[key] as String).contains('{prayer}'), isFalse,
+            reason: 'notif.$key repeats the prayer name the title already '
+                'carries; in a collapsed group they land on one line');
+      }
       // «مضى ١٠ دقائق» → «مضت»: a broken plural of a non-human takes
       // feminine singular agreement, and so does «١٥ دقيقة».
       expect(ar['post_body'] as String, startsWith('مضت '));

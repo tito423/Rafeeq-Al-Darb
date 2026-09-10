@@ -740,7 +740,9 @@
     "src_musnad_arnaut": "Ed. Shu'ayb al-Arna'ut — the complete Musnad and his rulings on its hadiths",
     "src_darimi_asad": "Ed. Husayn Salim Asad al-Darani — his rulings on the Sunan's hadiths",
     "src_ruqyah": "مکمل ریکارڈ شدہ رقیہ، انٹرنیٹ آرکائیو سے",
-    "src_hadeethenc": "موسوعۂ احادیثِ نبویہ — منتخب احادیث، تخریج، درجہ اور شرح کے ساتھ، سات زبانوں میں"
+    "src_hadeethenc": "موسوعۂ احادیثِ نبویہ — منتخب احادیث، تخریج، درجہ اور شرح کے ساتھ، سات زبانوں میں",
+    "src_quotes": "اقوال اور ان کے پس منظر",
+    "src_commons": "ویکیمیڈیا کامنز — اسلامی نقش و نگار کے پس منظر، پبلک ڈومین یا CC0، ہر فائل کا لائسنس اور مصنف ایپ میں محفوظ ہے"
   },
   "ruqyah": {
     "title": "رقیہ شرعیہ",
@@ -868,11 +870,11 @@
     "prayer_reminder_channel": "نماز کے تنبیہات",
     "prayer_reminder_channel_desc": "اذان سے پہلے اور بعد، اور اقامت",
     "pre_title": "{prayer} قریب ہے",
-    "pre_body": "{prayer} میں {minutes} باقی",
+    "pre_body": "{minutes} باقی",
     "post_title": "{prayer} کی اذان ہو چکی",
-    "post_body": "{prayer} کی اذان کو {minutes} ہو گئے",
+    "post_body": "{minutes} پہلے",
     "iqama_title": "{prayer} کی اقامت",
-    "iqama_body": "{prayer} کی اقامت کا وقت ہو گیا",
+    "iqama_body": "اقامت کا وقت ہو گیا",
     "quote_channel": "اقوال",
     "quote_channel_desc": "لائبریری کی کتابوں سے ایک قول، آپ کے منتخب وقفے پر",
     "quote_title": "ایک قول"

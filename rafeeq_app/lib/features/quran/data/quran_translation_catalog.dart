@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/byte_formatter.dart';
+
 /// One Quran translation language the reader can choose.
 ///
 /// The owner asked for 30+ languages for the **Quran translation** — not for
@@ -58,9 +60,19 @@ class QuranTranslationInfo {
 
   bool get isRtl => _rtl.contains(lang);
 
-  String get sizeLabel => gzBytes < 1024 * 1024
-      ? '${(gzBytes / 1024).round()} KB'
-      : '${(gzBytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  /// `formatBytes`, not a sixth hand-rolled copy of it.
+  ///
+  /// CLAUDE.md trap #16: «60.5 MB» renders as «MB 60.5» inside an Arabic
+  /// paragraph, because a numeral is bidi-weak and takes its direction from
+  /// what surrounds it. There were five copies of that formatter and all five
+  /// had the bug; this was quietly the sixth, built the same way and missing
+  /// the same left-to-right isolate. The picker it feeds is a list of
+  /// language names in an Arabic UI, which is exactly the paragraph that
+  /// reverses it.
+  ///
+  /// `formatBytesBinary` rather than `formatBytes` so the number does not
+  /// move: this label has always been 1024-based.
+  String get sizeLabel => formatBytesBinary(gzBytes);
 }
 
 /// Every translation language on offer, newest catalog wins.
