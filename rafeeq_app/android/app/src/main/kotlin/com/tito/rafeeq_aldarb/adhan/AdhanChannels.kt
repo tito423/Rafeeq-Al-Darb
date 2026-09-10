@@ -3,6 +3,7 @@ package com.tito.rafeeq_aldarb.adhan
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -108,6 +109,52 @@ object AdhanChannels {
                     result.success(null)
                 }
                 "canScheduleExact" -> result.success(AdhanScheduler.canScheduleExact(appContext))
+                /*
+                 * The adhan plays on STREAM_ALARM (see AdhanPlayer's
+                 * AudioAttributes) so it is heard when the phone is silent or
+                 * in Do Not Disturb. That is deliberate, and it is also why
+                 * the volume rocker does nothing to it: the rocker moves the
+                 * media stream. The owner hit exactly that — «صوتهم مش بيعلى
+                 * إلا لما أعلي صوت المنبه من الفون» — so the alarm stream is
+                 * readable and settable from inside the app now, instead of
+                 * sending him to the system settings and back.
+                 */
+                "alarmVolume" -> {
+                    val am = appContext.getSystemService(Context.AUDIO_SERVICE)
+                        as? AudioManager
+                    if (am == null) {
+                        result.success(null)
+                    } else {
+                        result.success(
+                            mapOf(
+                                "current" to am.getStreamVolume(AudioManager.STREAM_ALARM),
+                                "max" to am.getStreamMaxVolume(AudioManager.STREAM_ALARM),
+                            )
+                        )
+                    }
+                }
+                "setAlarmVolume" -> {
+                    val am = appContext.getSystemService(Context.AUDIO_SERVICE)
+                        as? AudioManager
+                    val value = (call.argument<Number>("value") ?: 0).toInt()
+                    if (am == null) {
+                        result.success(false)
+                    } else {
+                        try {
+                            val max = am.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+                            am.setStreamVolume(
+                                AudioManager.STREAM_ALARM,
+                                value.coerceIn(0, max),
+                                0,
+                            )
+                            result.success(true)
+                        } catch (e: SecurityException) {
+                            // A Do Not Disturb policy can forbid this. Saying
+                            // so is better than pretending the slider moved.
+                            result.success(false)
+                        }
+                    }
+                }
                 "openExactAlarmSettings" -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         try {

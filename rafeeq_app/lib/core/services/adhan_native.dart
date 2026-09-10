@@ -258,6 +258,42 @@ class AdhanNative {
   /// Fires one prayer's adhan [delay] from now, through the identical alarm
   /// → receiver → service path a real prayer takes, under its own request
   /// code so it cannot disturb the daily schedule.
+  /// The phone's **alarm** volume, as `(current, max)`, or null when it
+  /// cannot be read.
+  ///
+  /// The adhan plays on `STREAM_ALARM` so that it is heard when the phone is
+  /// silent or in Do Not Disturb — which also means the volume rocker, which
+  /// moves the media stream, does nothing to it. «صوتهم مش بيعلى إلا لما أعلي
+  /// صوت المنبه من الفون». That is correct behaviour and a bad errand, so the
+  /// setting lives in the app now.
+  static Future<({int current, int max})?> alarmVolume() async {
+    try {
+      final m = await _alarm.invokeMapMethod<String, dynamic>('alarmVolume');
+      if (m == null) return null;
+      return (
+        current: (m['current'] as num?)?.toInt() ?? 0,
+        max: (m['max'] as num?)?.toInt() ?? 0,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Returns false when the system refused — a Do Not Disturb policy can
+  /// forbid changing this stream, and saying so beats a slider that moves and
+  /// changes nothing.
+  static Future<bool> setAlarmVolume(int value) async {
+    try {
+      return await _alarm.invokeMethod<bool>(
+            'setAlarmVolume',
+            {'value': value},
+          ) ??
+          false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   static Future<bool> scheduleTest(
     AdhanSpec prayer, {
     Duration delay = const Duration(seconds: 8),

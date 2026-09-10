@@ -22,6 +22,7 @@ import '../../data/adhan_catalog_provider.dart';
 import '../../data/adhan_presentation_provider.dart';
 import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
+import '../widgets/alarm_volume_tile.dart';
 import '../../data/adhan_video_catalog.dart';
 import '../../data/prayer_status_enabled_provider.dart';
 import 'azan_player_screen.dart';
@@ -413,6 +414,10 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
             const SizedBox(height: 20),
             const _PresentationCard(),
             const SizedBox(height: 20),
+            // The alarm-stream volume, right where the adhans are chosen: the
+            // adhan plays on STREAM_ALARM by design, so the volume rocker
+            // does nothing to it — see AlarmVolumeTile's doc.
+            const AlarmVolumeTile(),
             // Preview the full Azan experience on demand — opens the real
             // full-screen player right now (video + audio + synced text) so
             // the owner can test it without waiting for an actual prayer.

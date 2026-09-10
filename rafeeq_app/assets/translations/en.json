@@ -453,7 +453,10 @@
       "few": "{} min",
       "many": "{} min",
       "other": "{} min"
-    }
+    },
+    "alarm_volume": "Alarm volume",
+    "alarm_volume_desc": "The adhan plays on the alarm stream so it is heard even on silent — which is why the volume keys do not change it.",
+    "alarm_volume_refused": "The system refused the change, most likely because of Do Not Disturb."
   },
   "qibla": {
     "locating": "Locating you...",

@@ -453,7 +453,10 @@
       "few": "{} min",
       "many": "{} min",
       "other": "{} min"
-    }
+    },
+    "alarm_volume": "Volume de l'alarme",
+    "alarm_volume_desc": "L'adhan passe sur le canal d'alarme pour être entendu même en silencieux — d'où le fait que les touches de volume n'y changent rien.",
+    "alarm_volume_refused": "Le système a refusé la modification, sans doute à cause du mode Ne pas déranger."
   },
   "qibla": {
     "locating": "Localisation en cours...",
