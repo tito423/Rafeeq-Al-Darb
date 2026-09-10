@@ -1,118 +1,72 @@
-# Owner's findings — 2026-09-10, from real use on his own phone
+# Owner's findings — 2026-09-10
 
-Reported with screenshots after installing v3.12.0. This file is the working
-list; each item is struck through only when it has been fixed **and seen
-working on a device** (§1.3), not when the code compiles.
-
-Ordered by severity, not by the order he wrote them.
-
-## A. Broken, and content-integrity issues
-
-1. **The adhan audio is not the muezzin the entry names.** His words: «كل
-   الأذانات ماعدا الأول والتاني والتالت أسماء بس، لكن الأذان الفعلي مش بتاعهم
-   وهما أصوات تانية خالص غير أصواتـ أسماءها الفعليين». This is §1.1 and §1.2:
-   an attribution nobody verified. Trap #36 is the same mistake in the video
-   catalogue. Either every clip's attribution is verified against a named
-   source, or the name comes off the entry.
-   STATUS: open
-
-2. **The default adhan is stuck on al-Banna and cannot be changed**, and
-   **selecting an adhan does not register** — «ظاهرته مش بتنوّر إنه تم
-   اختياره».
-   STATUS: FIXED (the picker was a stale pushed route) — not yet re-seen on a device
-
-3. **The adhan preview button does not play; it opens Settings.**
-   STATUS: open
-
-4. **The before/after prayer reminders do not fire** on his phone. They were
-   verified on the emulator by `dumpsys alarm`, so the gap is between "the
-   alarm is armed" and "the notification appears on a real phone" — most
-   likely OEM battery management. Needs measuring on the real device, not the
-   emulator.
-   STATUS: open
-
-5. **Raw translation keys ship in a notification.** Not reported by him — read
-   off two of his screenshots: the download notification shows
-   `notif.dl_recit_running_title` / `notif.dl_recit_running_body` literally.
-   Trap #8.
-   STATUS: FIXED
-
-6. **Landscape breaks the text mushaf** — «في الأورينتيشن المصاحف النصية مش
-   بتشتغل»; the image mushafs need checking too. His landscape screenshot shows
-   the toolbar over an empty page.
-   STATUS: FIXED, seen on emulator-5554: the Qur'an text renders in landscape now
-
-7. **A quote notification does not open the quote.** Tapping it cold-starts the
-   app instead. He wants the tap to open the quote screen directly, skipping
-   the splash, even when the app was closed.
-   STATUS: FIXED — not yet re-seen on a device
-
-8. **The calculation method is labelled «دبي».** The real name is «وزارة
-   الأوقاف والشؤون الإسلامية بالإمارات».
-   STATUS: FIXED
-
-9. **Islamic channels / sites are duplicated** between the Library tab and
-   More.
-   STATUS: FIXED
-
-10. **A hadith book screen came up blank** (سنن النسائي, portrait, only a
-    spinner). Possibly the same root cause as (6), possibly its own. Reproduce
-    before assuming.
-    STATUS: open
-
-## B. Missing, asked for
-
-11. **Swipe navigation on the hadith card** — both the card on Home and the
-    one on its own screen. «خليه فيه إمكانية تنقل».
-12. **A hadith explanation (شرح)** if a real source can be found. HadeethEnc
-    carries explanations; it is already in the app, so this may be free.
-13. **Ruqyah has no media player** — no icons, no control. «مافيش ميديا بلاير
-    بأيقونات يخليني أتحكم فيها».
-14. **Some adhkar screens have no background** (e.g. أذكار السفر). He wants
-    backgrounds **drawn in code, not downloaded** — «اعملها برمجيًا زي آخر
-    خلفية في آخر صورة بعتهالك» (the أذكار الاستيقاظ من النوم screen).
-15. **The mushaf toolbar at the top of the text reader** should be animated and
-    better looking, with nicer icons.
-
+Reported with screenshots after installing v3.12.0, from real use on his own
+phone. Nothing here is marked done on the strength of a clean analyze:
+**seen** means opened on `emulator-5554` and looked at (§1.3).
 
 ---
 
-## Added 2026-09-10, after he sent more screenshots
+## Verified on the device this session
 
-16. **The running header named the wrong surah.** «الصورة بتاعة سورة
-    يوسف مطلعه سورة هود وفوق على اليمين كاتب سورة يوسف». Page 235 holds the end
-    of Hud and the start of Yusuf; the header named only Yusuf. FIXED —
-    `page_surahs.dart`, six tests. **Not yet seen on a device.**
+| # | What he reported | Evidence |
+|---|---|---|
+| 16 | The header named the wrong surah — «الصورة بتاعة سورة يوسف مطلعه سورة هود وفوق على اليمين كاتب سورة يوسف» | Went to Surah Yusuf (page 235, from the app's own index). The header reads **«سُورَةُ هُودٍ · سُورَةُ يُوسُفَ»** — both surahs that are actually on the page. |
+| 17 | Picking a surah could land on a different one | On the Shamarly printing (521 pages) the toolbar now offers **no «Surahs» and no «Juz»** — only Full screen, Thematic Search, Jump to, Mushafs, Text mode. |
+| 2 | «الأذان الافتراضي ثابت على البنا» / «ظاهرته مش بتنوّر إنه تم اختياره» | Tapped عبد الباسط عبد الصمد: the tick **moved to it immediately**, the row went gold, the preview played. Left the screen and came back — still selected. |
+| 6 | Landscape broke the text mushaf | The Qur'an text renders in landscape. It did not before. |
+| 13 | Ruqyah had no player | The transport plays and seeks, and read **00:03 / 25:11** with ±10 s and stop. |
+| 14 | Adhkar lists had no background | The drawn ground (category colour + geometric tile) is on screen. |
+| 11 | Swipe / navigate the hadith card | Next loads a new hadith and enables ‹; ‹ returns to the previous one and greys out again at the start of the history. |
+| 3 | «الأذان فعليا مش شغال في زر التجربة» | **Could not reproduce.** Preview Adhan opens the real player with the synced «الله أكبر». The per-prayer **Test** fired the real alarm ~8 s later → `AdhanActivity` plus a heads-up with Stop/Mute. See "still open" below. |
+| 5 | (not reported — read off his screenshots) raw keys `notif.dl_recit_running_title` in the shade | Resolved off the translation asset now; a test fails the build if it goes back to `.tr()`. |
 
-17. **Picking a surah could land on a different one.** Three of the nine
-    printings paginate their own way (Shamarly 521, Indo-Pak 564, Nastaliq
-    611) while the surah→page table is the Madinah 604. FIXED by withholding
-    the surah and juz indexes on those three, matching how the running header
-    was already handled. **Not yet seen on a device.**
+## Fixed, analyze- and test-clean, **not yet opened on a device**
 
-## Still open
+* **7** — a quote notification tapped with the app closed skips the splash and
+  opens the quote. Needs a real notification to exercise; not done here.
+* **8** — «دبي» is now «الهيئة العامة للشئون الإسلامية والأوقاف — الإمارات».
+* **9** — the duplicate Islamic-channels entry point is gone from More.
+* **10** — a failed query no longer renders as an endless spinner («سنن النسائي
+  بتحمل على الفاضي»). The `FutureView` path is in, but the failure that
+  triggered it was never reproduced — see below.
+* **12** — the hadith detail screen offers to find its explanation in the
+  Hadeeth Encyclopaedia, as candidates the reader judges rather than a match
+  the app asserts.
+* **15** — the Qur'an toolbar's icons are rounded and non-directional, and the
+  bar fades in.
+* **1** — five adhans replaced with much better takes of the same muezzin
+  (16 → 128/192 kb/s) and all fourteen levelled to one loudness target.
 
-* 1 · the adhan attribution, and the 16 kb/s encodings
-* 3 · the adhan test button opening Settings
-* 4 · before/after prayer reminders not firing on HIS phone
-* 10 · the blank سنن النسائي screen
-* 11 · swiping the hadith card BACK
-* 12 · a hadith explanation
-* 15 · the toolbar's looks (its landscape shape is done; the styling is not)
+## Still open, and honest about why
 
-18. **An ANR during startup, caught on the emulator, not reported by him.**
-    Logcat, 2026-09-10 19:22:04, about a minute after the app was launched:
+1. **Who the muezzins are.** The files are byte-identical to their archive.org
+   sources, so the app is not mis-mapping them — but the *names* rest on the
+   source's filenames and nothing else, and he says his ear disagrees. His ear
+   is better evidence than a filename. **Listen to the five new takes**; if they
+   still sound wrong, the names come off the entries (§1.1, §1.2).
 
-        ANR in com.tito.rafeeq_aldarb (.MainActivity)
-        Reason: Input dispatching timed out ... Waited 5007ms for MotionEvent
+2. **The ANR.** Twice on a debug build: `Waited 5007ms for MotionEvent`, the app
+   frozen on Home. **Not reproduced on the profile build** — this session's
+   whole verification pass ran ANR-free. Two measured rebuild loops on Home were
+   removed (a one-second whole-tree `setState`, and a clock rebuilding ~25×/s to
+   show whole seconds), which is real waste but is **not claimed as the cause**.
+   Next session: `flutter run --profile` and read the DevTools timeline for the
+   first ten seconds.
 
-    The main thread was blocked for over five seconds. **This was a `--debug`
-    build**, where Dart runs unoptimised, so the number is not the number a
-    release build would give — but a five-second block is far past what
-    optimisation alone explains, and this is the same startup the owner sits
-    through every launch. It is the first hard evidence for the smoothness
-    question that `dumpsys gfxinfo` could not answer.
+3. **Before/after prayer reminders on HIS phone.** Verified armed on the
+   emulator by `dumpsys alarm`; the gap is between "armed" and "shown on a real
+   phone", almost certainly the manufacturer's battery management. Needs
+   measuring on his device, not this one.
 
-    Next session: reproduce with `flutter run --profile` and read the DevTools
-    timeline for the first ten seconds. Do not report the app as smooth until
-    that number exists. STATUS: open, unexplained.
+4. **The Test button opening Settings.** Not reproducible here. The likely cause
+   is a missing permission on his phone: the adhan settings screen shows a card
+   for the exact-alarm grant and another for the full-screen-intent grant, and
+   those cards' buttons *do* open Settings. **He should check that both cards
+   are absent from that screen on his phone**, and take the battery-optimisation
+   exemption the same screen offers.
+
+5. **The blank سنن النسائي screen.** The endless-spinner path is fixed, but the
+   underlying failure was never seen: the bundled DB has 52 chapters and 5,768
+   hadiths for that collection, the on-device copy is the same size to the byte,
+   and the app opens it fine. If it recurs it will now show a message and a
+   retry instead of spinning — the message is the next clue.
