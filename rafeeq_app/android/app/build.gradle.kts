@@ -74,4 +74,12 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
+    // Only so `RafeeqApplication` can implement `Configuration.Provider` and
+    // stop WorkManager initialising itself at every process start — see that
+    // class for the measurement behind it. WorkManager itself arrives
+    // transitively with `background_downloader`; this version is pinned to
+    // the one that plugin declares (9.5.9 -> work-runtime-ktx:2.11.0) so the
+    // two can never resolve to different majors behind our back.
+    implementation("androidx.work:work-runtime-ktx:2.11.0")
 }

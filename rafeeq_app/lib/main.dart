@@ -21,6 +21,7 @@ import 'core/services/quran_translation_store.dart';
 import 'core/services/download_engine.dart';
 import 'core/services/sunan_suwar_reminder_service.dart';
 import 'core/services/notification_router.dart';
+import 'core/utils/startup_trace.dart';
 import 'core/services/quote_reminder_service.dart';
 import 'features/quotes/presentation/quote_navigation.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
@@ -58,6 +59,7 @@ Future<void> main() async {
   // the OS's default font, which is what produced the broken/disconnected
   // Arabic letterforms the owner saw (a fallback font without proper
   // Arabic shaping standing in for Cairo while it was still downloading).
+  StartupTrace.begin();
   GoogleFonts.config.allowRuntimeFetching = false;
 
   // P3‑45: real-device feedback — "rotation and orientation not working at
@@ -76,6 +78,7 @@ Future<void> main() async {
   );
 
   final sharedPreferences = await SharedPreferences.getInstance();
+  StartupTrace.step('SharedPreferences');
 
   try {
     await JustAudioBackground.init(
@@ -84,15 +87,18 @@ Future<void> main() async {
       androidNotificationOngoing: true,
     );
   } catch (_) {}
+  StartupTrace.step('JustAudioBackground.init');
 
   // Preload translations (required by easy_localization).
   await EasyLocalization.ensureInitialized();
+  StartupTrace.step('EasyLocalization.ensureInitialized');
   try {
     await initializeDateFormatting('ar');
     tz.initializeTimeZones();
     final name = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(name));
   } catch (_) {}
+  StartupTrace.step('dates + timezones');
 
   // The Adhan itself no longer boots anything here. Its alarms are armed
   // natively (AlarmManager.setAlarmClock), it fires into its own Kotlin
@@ -102,6 +108,7 @@ Future<void> main() async {
   // whole point. All that is left for main() is the notifications plugin
   // and the permission gates.
   await AlarmPermissionsService.instance.initialize();
+  StartupTrace.step('AlarmPermissionsService.initialize');
 
   // Which downloaded Quran translations are already on disk. Cheap (one
   // SELECT over a tiny table) and needed before the reader's translation
@@ -109,6 +116,7 @@ Future<void> main() async {
   try {
     await QuranTranslationStore.instance.refreshInstalled();
   } catch (_) {}
+  StartupTrace.step('QuranTranslationStore.refreshInstalled');
 
   // Re-attach to any download the OS kept running while the app was gone.
   // `background_downloader` hands transfers to Android's own WorkManager, so a
@@ -119,6 +127,7 @@ Future<void> main() async {
 
   await SunanSuwarReminderService.instance.initialize();
   NotificationRouter.onSurah = openSunanSuwarFromPayload;
+  StartupTrace.step('SunanSuwarReminderService.initialize');
 
   // The Islamic-quote notification. The window is NOT re-armed here: the
   // interval lives in SharedPreferences and the corpus is an asset, and
@@ -127,6 +136,8 @@ Future<void> main() async {
   // reader is actually using.
   await QuoteReminderService.instance.initialize();
   NotificationRouter.onQuote = openQuoteFromPayload;
+  StartupTrace.step('QuoteReminderService.initialize');
+  StartupTrace.report();
 
   runApp(
     EasyLocalization(

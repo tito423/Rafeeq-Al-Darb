@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- ─── Permissions ──────────────────────────────────────────────────────── -->
     <!-- Internet: required for audio streaming, prayer times API, tafseer download -->
@@ -59,8 +60,33 @@
 
     <application
         android:label="@string/app_name"
-        android:name="${applicationName}"
+        android:name=".RafeeqApplication"
         android:icon="@mipmap/ic_launcher">
+        <!-- WorkManager initialises on demand, not at every process start.
+
+             Measured on emulator-5554: 65 slow class verifications totalling
+             9,724 ms before the app did anything, 45 of them androidx.work,
+             against Android's 10-second process-startup limit — twice
+             producing «ANR … Process failed to complete startup», both times
+             on a process woken by a scheduled-notification broadcast that had
+             no use for WorkManager at all.
+
+             Removing only the WorkManagerInitializer entry, not the whole
+             InitializationProvider: ProcessLifecycleInitializer and
+             ProfileInstallerInitializer are cheap and other things rely on
+             them. `RafeeqApplication` supplies the Configuration, which is
+             what makes on-demand initialisation legal. -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
