@@ -52,11 +52,19 @@ STATUS: open
 > «اتأكد إن البحث الموضوعي فعلاً بيبحث في المصحف كله — بحثت في الرحمة طلعلي ٣
 > آيات بس وده مش ممكن طبعًا»
 
-He is right that it is not possible: «رحمة» and its forms occur far more often
-than three times. Measure the real count against the corpus first, then find
-where the rest are being lost.
+He is right that it is not possible. Measured over the real corpus with the
+app's own normalisation:
 
-STATUS: open
+    query        space-only   + proclitics   + article stripped
+    الرحمة            6            6                72
+    رحمة             34           72                72
+    العلم            91           91               250
+
+Two losses, both ordinary Arabic: a space-only word boundary cannot see
+«وَرَحْمَةٌ» or «بِرَحْمَةٍ», and a query carrying «ال» only matched the article
+form. Both fixed, plus the 50-result cap raised to 200 («العلم» has 250).
+
+STATUS: FIXED, tests pass — **not yet opened on a device**
 
 ## A5 · Khatma
 
@@ -73,9 +81,15 @@ STATUS: open
 ## A6 · Search inside the Surahs and Juz sheets
 
 The recitation downloads screen already has «ابحث عن سورة…». The reader's own
-Surahs sheet (114 rows) and Juz sheet do not. Add the same box to both.
+Surahs sheet (114 rows) and Juz sheet do not.
 
-STATUS: open
+Both have one now. It matches the **normalised** name, because the stored
+names are vocalised and «الفاتحة» typed plainly cannot reach «ٱلْفَاتِحَة» with a
+`contains` (trap #2); it matches a fragment from the middle, because in a list
+this short that is what someone expects from «قرة» → «البقرة»; and it matches
+the number, so «36» finds Ya-Sin.
+
+STATUS: FIXED, tests pass — **not yet opened on a device**
 
 ## A7 · The Encyclopaedia and the شروح, downloaded for him
 

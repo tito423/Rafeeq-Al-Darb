@@ -180,7 +180,9 @@
     "downloading_translation": "جارٍ تنزيل ترجمة {}…",
     "translation_not_downloaded": "ترجمة {} غير منزَّلة بعد",
     "layout_page": "شكل الصفحة",
-    "layout_cards": "شكل البطاقات"
+    "layout_cards": "شكل البطاقات",
+    "search_surah_hint": "ابحث عن سورة أو رقمها…",
+    "search_juz_hint": "ابحث عن رقم الجزء…"
   },
   "library": {
     "title": "المكتبة",

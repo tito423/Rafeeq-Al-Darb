@@ -180,7 +180,9 @@
     "downloading_translation": "Downloading {} translation…",
     "translation_not_downloaded": "The {} translation is not downloaded yet",
     "layout_page": "Page layout",
-    "layout_cards": "Card layout"
+    "layout_cards": "Card layout",
+    "search_surah_hint": "Search a surah or its number…",
+    "search_juz_hint": "Search a juz number…"
   },
   "library": {
     "title": "Library",

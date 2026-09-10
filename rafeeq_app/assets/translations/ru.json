@@ -180,7 +180,9 @@
     "downloading_translation": "Загрузка перевода на {}…",
     "translation_not_downloaded": "Перевод на {} ещё не загружен",
     "layout_page": "Вид страницы",
-    "layout_cards": "Вид карточек"
+    "layout_cards": "Вид карточек",
+    "search_surah_hint": "Найти суру или её номер…",
+    "search_juz_hint": "Найти номер джуза…"
   },
   "library": {
     "title": "Библиотека",

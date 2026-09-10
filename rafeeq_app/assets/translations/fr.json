@@ -180,7 +180,9 @@
     "downloading_translation": "Téléchargement de la traduction en {}…",
     "translation_not_downloaded": "La traduction en {} n'est pas encore téléchargée",
     "layout_page": "Vue page",
-    "layout_cards": "Vue cartes"
+    "layout_cards": "Vue cartes",
+    "search_surah_hint": "Chercher une sourate ou son numéro…",
+    "search_juz_hint": "Chercher un numéro de juz…"
   },
   "library": {
     "title": "Bibliothèque",

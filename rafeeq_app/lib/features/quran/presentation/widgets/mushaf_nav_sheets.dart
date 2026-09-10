@@ -2,6 +2,59 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/models.dart';
+import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/digits.dart';
+
+/// What is typed in each sheet's search box. File-level because the sheets
+/// are functions, not widgets, and the box has to survive the rebuild it
+/// causes. Cleared when each sheet opens.
+String _surahQuery = '';
+String _juzQuery = '';
+
+/// A search field for a sheet that lists a hundred and fourteen things.
+///
+/// «أضف بحث في أيقونة السور والأجزاء». Scrolling to Surah al-Mursalat past
+/// seventy-six others is not navigation.
+///
+/// It matches on the **normalised** name, because the stored names are fully
+/// vocalised (trap #2): «الفاتحة» typed plainly cannot match «ٱلْفَاتِحَة» with a
+/// `contains`. It also matches the number, so «36» finds Ya-Sin.
+class _SheetSearchField extends StatelessWidget {
+  final String hint;
+  final ValueChanged<String> onChanged;
+
+  const _SheetSearchField({required this.hint, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+        child: TextField(
+          autofocus: false,
+          textInputAction: TextInputAction.search,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            isDense: true,
+            prefixIcon: const Icon(Icons.search_rounded, size: 20),
+            hintText: hint,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+      );
+}
+
+/// True when [query] matches this row, by name or by number.
+bool _rowMatches(String query, String name, int number) {
+  final q = normalizeArabic(query.trim()).toLowerCase();
+  if (q.isEmpty) return true;
+  // The number, both as the reader types it and as the app draws it.
+  if ('$number'.startsWith(q) || localizeDigits('$number', 'ar').startsWith(q)) {
+    return true;
+  }
+  final n = normalizeArabic(name).toLowerCase();
+  // Not a word-boundary test: in a list this short, a plain substring is what
+  // someone expects — typing «قره» should find «البقرة».
+  return n.contains(q) || normalizeArabicLoose(name).toLowerCase().contains(q);
+}
 
 void showSurahSheet(
   BuildContext context, {
@@ -9,6 +62,7 @@ void showSurahSheet(
   required Map<int, int> startPages,
   required ValueChanged<int> onSelect,
 }) {
+  _surahQuery = '';
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -18,6 +72,12 @@ void showSurahSheet(
       initialChildSize: 0.75,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
+        return StatefulBuilder(builder: (context, setSheetState) {
+        final query = _surahQuery;
+        final shown = [
+          for (final s in surahs)
+            if (_rowMatches(query, s.nameAr, s.id)) s,
+        ];
         return Column(
           children: [
             Padding(
@@ -27,13 +87,17 @@ void showSurahSheet(
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
+            _SheetSearchField(
+              hint: 'quran.search_surah_hint'.tr(),
+              onChanged: (v) => setSheetState(() => _surahQuery = v),
+            ),
             const Divider(height: 1),
             Expanded(
               child: ListView.builder(
                 controller: scrollController,
-                itemCount: surahs.length,
+                itemCount: shown.length,
                 itemBuilder: (context, i) {
-                  final s = surahs[i];
+                  final s = shown[i];
                   return ListTile(
                     dense: true,
                     leading: CircleAvatar(
@@ -66,6 +130,7 @@ void showSurahSheet(
             ),
           ],
         );
+        });
       },
     ),
   );
@@ -76,6 +141,7 @@ void showJuzSheet(
   required Map<int, int> juzStartPages,
   required ValueChanged<int> onSelect,
 }) {
+  _juzQuery = '';
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -85,6 +151,11 @@ void showJuzSheet(
       initialChildSize: 0.75,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
+        return StatefulBuilder(builder: (context, setSheetState) {
+        final shown = [
+          for (var j = 1; j <= 30; j++)
+            if (_rowMatches(_juzQuery, '', j)) j,
+        ];
         return Column(
           children: [
             Padding(
@@ -94,13 +165,17 @@ void showJuzSheet(
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
+            _SheetSearchField(
+              hint: 'quran.search_juz_hint'.tr(),
+              onChanged: (v) => setSheetState(() => _juzQuery = v),
+            ),
             const Divider(height: 1),
             Expanded(
               child: ListView.builder(
                 controller: scrollController,
-                itemCount: 30,
+                itemCount: shown.length,
                 itemBuilder: (context, i) {
-                  final juz = i + 1;
+                  final juz = shown[i];
                   return ListTile(
                     leading: const Icon(Icons.radio_button_unchecked),
                     title: Text(
@@ -119,6 +194,7 @@ void showJuzSheet(
             ),
           ],
         );
+        });
       },
     ),
   );
