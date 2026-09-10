@@ -18,6 +18,7 @@ import '../../../../core/services/ayah_audio_service.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
+import '../../data/page_surahs.dart';
 import '../../data/quran_fullscreen_provider.dart';
 import '../../data/quran_jump_provider.dart';
 import '../../data/mushaf_frame.dart';
@@ -376,20 +377,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return null;
   }
 
-  /// P3‑43 #7: the real surah covering `_current` — "which surah's start
-  /// page is the highest one at or before the current page", the same
-  /// real-data rule `_SurahStrip` already uses, not a second guess at it.
-  String _currentSurahName(MushafData data) {
-    var name = data.surahs.isEmpty ? '' : data.surahs.first.nameAr;
-    for (final s in data.surahs) {
-      if ((data.surahStartPages[s.id] ?? 1) <= _current) {
-        name = s.nameAr;
-      } else {
-        break;
-      }
-    }
-    return name;
-  }
+  /// The surahs on the page being read — see `page_surahs.dart` for the rule
+  /// and for the defect that made it necessary.
+  String _currentSurahName(MushafData data) => surahNamesOnPage(
+        surahs: data.surahs,
+        startPages: data.surahStartPages,
+        page: _current,
+      ).join(' · ');
 
   /// Same rule as [_currentSurahName], against `juzStartPages` instead.
   int _currentJuzNumber(MushafData data) {
