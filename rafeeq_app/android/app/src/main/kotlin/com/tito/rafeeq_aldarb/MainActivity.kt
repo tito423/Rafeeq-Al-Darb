@@ -20,28 +20,22 @@ class MainActivity: AudioServiceActivity() {
     private val DOWNLOAD_SERVICE_CHANNEL = "com.tito.rafeeq_aldarb/download_service"
     private val NATIVE_STRINGS_CHANNEL = "com.tito.rafeeq_aldarb/native_strings"
 
-    // P3‑53: guarantee that a full-screen-intent launch (the Adhan alert) wakes
-    // the screen and draws OVER the lock screen without a biometric unlock
-    // first — exactly like an alarm-clock or incoming-call screen. The manifest
-    // already declares `showWhenLocked`/`turnScreenOn`, but Google's own docs
-    // recommend setting them programmatically as well (some OEM skins honor only
-    // one path), so this is deliberate belt-and-braces, not a duplicate. No
-    // FLAG_KEEP_SCREEN_ON here on purpose — keeping the screen awake is scoped
-    // to the Adhan player itself (via WakelockPlus in Dart) so ordinary reading
-    // doesn't hold a wakelock and drain the battery.
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true)
-            setTurnScreenOn(true)
-        } else {
-            @Suppress("DEPRECATION")
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-            )
-        }
-    }
+    /*
+     * NO showWhenLocked / turnScreenOn here — deliberately, and this is a
+     * removal, not an omission.
+     *
+     * P3‑53 set both on this activity, on the reasoning that the Adhan alert
+     * arrives as a full-screen intent. It does not arrive here: the alert is
+     * `AdhanActivity`, which lives in its own task and declares both flags
+     * itself. What these lines actually did was make **every** launch of the
+     * app draw over the lock screen and wake the display — tap a quote
+     * reminder, a surah reminder, a finished download, and the whole app is
+     * open on a locked phone with no unlock. The owner reported it as
+     * «التطبيق ساعات بيفتح بعد اللوك اسكرين», and it is a privacy problem as
+     * much as a surprise: anyone holding the phone could read and use it.
+     *
+     * The adhan keeps its lock-screen takeover. Nothing else gets one.
+     */
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

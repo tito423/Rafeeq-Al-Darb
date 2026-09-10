@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import com.tito.rafeeq_aldarb.MainActivity
 import org.json.JSONArray
 import java.util.Calendar
 
@@ -117,13 +116,15 @@ object AdhanScheduler {
         val operation = operationFor(context, spec)
         return try {
             if (canScheduleExact(context)) {
-                val show = PendingIntent.getActivity(
-                    context,
-                    spec.requestCode,
-                    Intent(context, MainActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-                )
+                /*
+                 * `setAlarmClock`'s show-intent is the alarm's own UI: what
+                 * the system opens from the alarm chip on the status bar or
+                 * the lock screen. It pointed at MainActivity, so on a locked
+                 * phone that route surfaced the app's last screen instead of
+                 * the adhan. It is the adhan screen now, like every other
+                 * path.
+                 */
+                val show = AdhanActivity.pendingIntent(context, spec)
                 am.setAlarmClock(AlarmManager.AlarmClockInfo(triggerAtMillis, show), operation)
                 true
             } else {

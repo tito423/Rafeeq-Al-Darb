@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.tito.rafeeq_aldarb.MainActivity
 import com.tito.rafeeq_aldarb.NativeStrings
 import com.tito.rafeeq_aldarb.R
 
@@ -92,17 +91,20 @@ object AdhanNotifications {
         val stop = servicePendingIntent(context, spec, AdhanService.ACTION_STOP, 1)
         val mute = servicePendingIntent(context, spec, AdhanService.ACTION_MUTE, 2)
 
-        val contentIntent = if (spec.isFullScreen) {
-            AdhanActivity.pendingIntent(context, spec)
-        } else {
-            PendingIntent.getActivity(
-                context,
-                3,
-                Intent(context, MainActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
+        /*
+         * Tapping "the adhan is playing" opens the adhan screen, in every
+         * mode — not the app's last route.
+         *
+         * This used to send the quiet modes (audio only / vibrate / silent)
+         * to MainActivity, which restores whatever screen was last open. If
+         * that was the adhan settings, the adhan appeared to "open on the
+         * settings screen": «الأذان التجربة بيفتح على شاشة الإعدادات بتاعة
+         * الأذان مش أذان الفيديو». AdhanActivity is where Stop and Mute are,
+         * which is what someone reaching for a sounding adhan wants, and it
+         * is the same destination as the full-screen intent so the two paths
+         * cannot disagree.
+         */
+        val contentIntent = AdhanActivity.pendingIntent(context, spec)
 
         val builder = NotificationCompat.Builder(context, channelFor(spec))
             .setSmallIcon(R.mipmap.ic_launcher)

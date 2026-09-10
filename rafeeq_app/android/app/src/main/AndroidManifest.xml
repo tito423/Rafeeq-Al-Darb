@@ -30,9 +30,16 @@
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <!-- Draw-over-other-apps: a fallback path for the Adhan alert to surface
          over the lock screen on Android 14+/16 OEM skins that throttle a
-         background full-screen-intent launch. The primary path stays the
+         background full-screen-intent launch. The primary path is the
          fullScreenIntent notification (category=alarm, max importance) that
-         launches MainActivity (which is showWhenLocked + turnScreenOn). -->
+         launches **AdhanActivity** — which is the alert screen, declares
+         showWhenLocked + turnScreenOn, and lives in its own task.
+
+         This note used to say the intent launched MainActivity, and
+         MainActivity carried those two flags to match. That was the bug the
+         owner hit twice: the whole app opening over the lock screen, and the
+         adhan "opening on the settings screen instead of the video". Only
+         AdhanActivity bypasses the keyguard now. -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     
     <!-- The rebuilt Adhan fires as a real alarm: AdhanScheduler arms it with
@@ -62,8 +69,6 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:showWhenLocked="true"
-            android:turnScreenOn="true"
             android:windowSoftInputMode="adjustResize">
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
