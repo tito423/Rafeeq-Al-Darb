@@ -57,7 +57,7 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
                     return ListTile(
                       leading: CircleAvatar(
                         radius: 14,
-                        child: Text('${c.chapterNo}',
+                        child: Text(c.chapterLabel,
                             style: const TextStyle(fontSize: 11)),
                       ),
                       title: ArabicText(c.nameAr),

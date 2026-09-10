@@ -42,7 +42,25 @@ class HadithBook {
 
 class HadithChapter {
   final int bookId;
-  final int chapterNo;
+
+  /// A `num`, not an `int`, because one of them genuinely is not whole.
+  ///
+  /// THE BUG THIS FIXES, reported as «لما بفتح سنن النسائي بتحمل على الفاضي
+  /// ومش بتنزل حاجة» and reproduced on emulator-5554.
+  ///
+  /// In Sunan an-Nasa'i, «كتاب المزارعة» is numbered **35.2** — a sub-book
+  /// between «كتاب الأيمان والنذور» (35) and «كتاب عشرة النساء» (36), and it
+  /// carries 83 hadiths. SQLite stores it as a REAL, `r['chapter_no'] as int`
+  /// threw a `TypeError` on that one row, and because the cast happens while
+  /// mapping the result set, **all 52 of the collection's books were lost** —
+  /// not just the odd one. It is the only such row in the whole database:
+  /// 1,482 chapters across nine collections, one of them fractional.
+  ///
+  /// The number is not corrupt data to be rounded away or renumbered.
+  /// Renumbering it to 36 would push every later book out of step with the
+  /// printed edition, and dropping it would drop 83 hadiths. The column is
+  /// read as what it is.
+  final num chapterNo;
   final String nameAr;
   final String nameEn;
 
@@ -53,9 +71,16 @@ class HadithChapter {
     required this.nameEn,
   });
 
+  /// How the number is written on screen: `35` stays «35», `35.2` stays
+  /// «35.2». Faithful to the source either way.
+  String get chapterLabel {
+    final n = chapterNo;
+    return n == n.roundToDouble() ? n.toInt().toString() : n.toString();
+  }
+
   factory HadithChapter.fromRow(Map<String, Object?> r) => HadithChapter(
         bookId: r['book_id'] as int,
-        chapterNo: r['chapter_no'] as int,
+        chapterNo: (r['chapter_no'] as num?) ?? 0,
         nameAr: r['name_ar'] as String,
         nameEn: r['name_en'] as String,
       );
@@ -64,7 +89,10 @@ class HadithChapter {
 class HadithItem {
   final int id;
   final int bookId;
-  final int chapterNo;
+
+  /// See [HadithChapter.chapterNo] — an-Nasa'i's «كتاب المزارعة» is 35.2, and
+  /// 83 hadiths carry that value.
+  final num chapterNo;
 
   /// The hadith's number **within its book** — always read/ordered as an
   /// INTEGER. WORK_QUEUE's Stage 2 flags a real bug from before this
@@ -105,7 +133,7 @@ class HadithItem {
   factory HadithItem.fromRow(Map<String, Object?> r) => HadithItem(
         id: r['id'] as int,
         bookId: r['book_id'] as int,
-        chapterNo: r['chapter_no'] as int,
+        chapterNo: (r['chapter_no'] as num?) ?? 0,
         numberInBook: r['number_in_book'] as int,
         arabic: r['arabic'] as String,
         narratorEn: r['narrator_en'] as String?,
@@ -161,7 +189,7 @@ class HadithRepository {
     return rows.map(HadithChapter.fromRow).toList();
   }
 
-  Future<List<HadithItem>> hadithsOfChapter(int bookId, int chapterNo) async {
+  Future<List<HadithItem>> hadithsOfChapter(int bookId, num chapterNo) async {
     final rows = await _db.query(
       'hadiths',
       where: 'book_id = ? AND chapter_no = ?',
