@@ -891,7 +891,10 @@
     "iqama_body": "حان وقت الإقامة",
     "quote_channel": "مقولات",
     "quote_channel_desc": "مقولة من كتب المكتبة، كل مدة تختارها",
-    "quote_title": "مقولة"
+    "quote_title": "مقولة",
+    "recitation_ready_channel": "اكتمال تحميل التلاوة",
+    "recitation_ready_title": "تم تحميل التلاوة",
+    "recitation_ready_body": "التلاوة كاملة بصوت {reciter} صارت متاحة بدون إنترنت"
   },
   "hijri": {
     "m1": "محرم",

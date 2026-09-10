@@ -610,6 +610,12 @@ class _RecitationsTabState extends ConsumerState<_RecitationsTab> {
                       FullRecitationCard(
                         key: ValueKey('full/$current'),
                         edition: current,
+                        reciterName: list
+                            .where((r) => r.identifier == current)
+                            .map((r) => context.locale.languageCode == 'ar'
+                                ? r.nameAr
+                                : r.nameEn)
+                            .firstOrNull,
                         data: data,
                         onFinished: () {},
                       ),

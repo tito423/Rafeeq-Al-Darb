@@ -891,7 +891,10 @@
     "iqama_body": "It is time for the iqama",
     "quote_channel": "Quotes",
     "quote_channel_desc": "A saying from the library's books, at your chosen interval",
-    "quote_title": "A saying"
+    "quote_title": "A saying",
+    "recitation_ready_channel": "Recitation download finished",
+    "recitation_ready_title": "Recitation downloaded",
+    "recitation_ready_body": "The full recitation by {reciter} is now available offline"
   },
   "hijri": {
     "m1": "Muharram",

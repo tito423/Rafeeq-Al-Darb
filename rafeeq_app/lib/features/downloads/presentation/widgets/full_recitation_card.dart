@@ -20,10 +20,16 @@ import '../../../quran/data/mushaf_data_provider.dart';
 /// offer the exact same real download.
 class FullRecitationCard extends StatefulWidget {
   final String edition;
+
+  /// The reciter's name as the reader sees it, for the «تم تحميل التلاوة»
+  /// notification. Null falls back to the edition id, which is honest but
+  /// ugly, so callers pass it where they have it.
+  final String? reciterName;
   final MushafData data;
   final VoidCallback onFinished;
 
   const FullRecitationCard({
+    this.reciterName,
     super.key,
     required this.edition,
     required this.data,
@@ -148,6 +154,7 @@ class _FullRecitationCardState extends State<FullRecitationCard> {
                                   edition: widget.edition,
                                   surahs: widget.data.surahs,
                                   repo: widget.data.repo,
+                                  reciterName: widget.reciterName,
                                 );
                                 widget.onFinished();
                               },

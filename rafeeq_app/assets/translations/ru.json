@@ -891,7 +891,10 @@
     "iqama_body": "Время икамы",
     "quote_channel": "Изречения",
     "quote_channel_desc": "Изречение из книг библиотеки, через выбранный интервал",
-    "quote_title": "Изречение"
+    "quote_title": "Изречение",
+    "recitation_ready_channel": "Загрузка чтения завершена",
+    "recitation_ready_title": "Чтение загружено",
+    "recitation_ready_body": "Полное чтение {reciter} теперь доступно без интернета"
   },
   "hijri": {
     "m1": "Мухаррам",

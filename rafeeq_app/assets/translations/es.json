@@ -891,7 +891,10 @@
     "iqama_body": "Es hora del iqama",
     "quote_channel": "Citas",
     "quote_channel_desc": "Un dicho de los libros de la biblioteca, en el intervalo que elijas",
-    "quote_title": "Una cita"
+    "quote_title": "Una cita",
+    "recitation_ready_channel": "Descarga de recitación finalizada",
+    "recitation_ready_title": "Recitación descargada",
+    "recitation_ready_body": "La recitación completa de {reciter} ya está disponible sin conexión"
   },
   "hijri": {
     "m1": "Muharram",

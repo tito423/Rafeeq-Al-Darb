@@ -12,6 +12,9 @@ import 'package:path_provider/path_provider.dart';
 import '../db/models.dart';
 import '../db/quran_repository.dart';
 import 'download_engine.dart';
+import 'notification_router.dart';
+import '../i18n/isolate_strings.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'recitation_source.dart';
 
 /// Progress of a surah recitation download.
@@ -337,7 +340,31 @@ class AyahAudioService {
   File _fileFor(Directory dir, int globalAyah) =>
       File(p.join(dir.path, '$globalAyah.mp3'));
 
-  static bool _looksComplete(File f) => f.existsSync() && f.lengthSync() > 2048;
+  /// A file is treated as a usable ayah when it is on disk and big enough to
+  /// be one.
+  ///
+  /// **Why 8 KB and not 2.** An interrupted download leaves a truncated file,
+  /// and at a 2 KB floor a fragment of a few frames passed as complete: the
+  /// downloader then skipped it for ever ("already have it") and `just_audio`
+  /// refused it at play time. One such child is enough to fail a whole
+  /// `ConcatenatingAudioSource`, which is «تعذّر تشغيل التلاوة» with nothing
+  /// playing at all.
+  ///
+  /// Measured against the live hosts on 2026-09-10, not estimated — the
+  /// smallest real files are far bigger than the old floor:
+  ///
+  ///     الإخلاص 112:1   128 kbps   48,192 B
+  ///     الكوثر 108:1    64 kbps   33,469 B
+  ///     الناس 114:6    128 kbps  132,620 B
+  ///
+  /// So 8 KB sits well below every real ayah at every bitrate the app uses,
+  /// and well above a fragment worth keeping. It is deliberately not a strict
+  /// "must decode as MP3" check — that would mean decoding 6,236 files to
+  /// answer "how much of this surah is downloaded".
+  static const int _minAyahBytes = 8 * 1024;
+
+  static bool _looksComplete(File f) =>
+      f.existsSync() && f.lengthSync() >= _minAyahBytes;
 
   /// Every audio source must carry a [MediaItem] tag: `main()` initialises
   /// `just_audio_background`, which throws on any untagged source.
@@ -454,6 +481,12 @@ class AyahAudioService {
   ///
   /// Returns false if the source could not be opened, so the caller can say so
   /// instead of leaving a dead play button.
+  /// True while continuous recitation is playing from the network because the
+  /// downloaded copy would not load — see the third attempt in
+  /// `_startContinuous`. The reader shows a quiet line rather than letting it
+  /// look like an unexplained slowdown.
+  final ValueNotifier<bool> continuousStreaming = ValueNotifier(false);
+
   Future<bool> playTrack({
     required String id,
     required String url,
@@ -600,13 +633,22 @@ class AyahAudioService {
     // Built fresh on each attempt below: an `AudioSource` is bound to the
     // player it was given to, so the retry after [_recreatePlayer] must not
     // reuse the objects the disposed player already saw.
-    List<AudioSource> buildChildren() => [
+    /// [networkOnly] ignores whatever is cached and streams every verse.
+    ///
+    /// A download that was interrupted leaves a file that is **larger than the
+    /// 2 KB `_looksComplete` floor and still truncated** — which is exactly
+    /// what «تعذّر إكمال بعض الآيات» leaves behind. `just_audio` refuses such a
+    /// child, and one refused child is enough to fail the whole
+    /// `ConcatenatingAudioSource`: «لو فتحت التطبيق ورحت على تشغيل التلاوة مش
+    /// بيشغل أي حاجة ويقولي تعذّر تشغيل التلاوة». Streaming does not care what
+    /// is on disk, so the third attempt below asks for exactly that.
+    List<AudioSource> buildChildren({bool networkOnly = false}) => [
           for (final a in ayahs)
             () {
               final global = firstGlobal + (a.ayahNumber - 1);
               final tag = _tag(_continuousEdition, global, a, null);
               final file = _fileFor(dir, global);
-              return _looksComplete(file)
+              return (!networkOnly && _looksComplete(file))
                   ? AudioSource.file(file.path, tag: tag)
                   : AudioSource.uri(
                       Uri.parse(
@@ -634,23 +676,34 @@ class AyahAudioService {
     // call afterwards. Rebuilding it and loading the same sources again
     // recovers, and a failure that survives a fresh player is a real failure,
     // reported rather than swallowed.
+    // Three attempts now, not two, and the third is the one he asked for:
+    // «خليه يديني اختيار تحميل التلاوة عادي من الـ API». If the cached copy
+    // will not load, the recitation is not over — it streams.
     var loaded = false;
-    for (var attempt = 0; attempt < 2 && !loaded; attempt++) {
+    var playingFromNetwork = false;
+    for (var attempt = 0; attempt < 3 && !loaded; attempt++) {
       if (attempt == 1) {
         await _recreatePlayer();
         if (token != _continuousToken) return;
       }
+      final networkOnly = attempt == 2;
       try {
         await _player.stop();
         await _player.setAudioSource(
-          ConcatenatingAudioSource(children: buildChildren()),
+          ConcatenatingAudioSource(
+            children: buildChildren(networkOnly: networkOnly),
+          ),
           initialIndex: 0,
         );
         loaded = true;
+        playingFromNetwork = networkOnly;
       } catch (_) {
         // fall through to the retry, then to the report below
       }
     }
+    // Told to the caller so the reader can say so rather than leaving someone
+    // wondering why it is slower than usual.
+    continuousStreaming.value = playingFromNetwork;
     if (token != _continuousToken) return;
     if (!loaded) {
       await stopContinuous();
@@ -1232,6 +1285,9 @@ class AyahAudioService {
     required String edition,
     required List<Surah> surahs,
     required QuranRepository repo,
+    /// Shown in the "it is ready" notification. The edition id is used when
+    /// the caller has no display name, which is honest but ugly.
+    String? reciterName,
   }) async {
     final full = fullJob(edition);
     if (full.value.running) return;
@@ -1286,6 +1342,57 @@ class AyahAudioService {
         totalSurahs: surahs.length,
         running: false,
       );
+      // «وتطلع رسالة تم تحميل التلاوة بشيخ القارئ كذا». A whole-mushaf
+      // recitation is an hours-long download that finishes while the app is
+      // in the background, so the shade is the only place it can say so.
+      // Only on a real, complete finish — not on a cancel, and not on a run
+      // that gave up part-way, because a notification that says "done" when
+      // it is not is worse than none.
+      if (completed.length >= surahs.length && surahs.isNotEmpty) {
+        unawaited(_notifyRecitationReady(edition, reciterName));
+      }
+    }
+  }
+
+  /// One notification when a reciter's whole recitation is on the device.
+  ///
+  /// Goes through [NotificationRouter] like everything else — the plugin
+  /// installs exactly one tap handler for the app and a second `initialize`
+  /// would silently take every other notification's tap with it (trap #31).
+  Future<void> _notifyRecitationReady(String edition, String? name) async {
+    try {
+      await NotificationRouter.instance.ensureInitialized();
+      final plugin = FlutterLocalNotificationsPlugin();
+      final android = plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      const channelId = 'rafeeq_recitation_ready';
+      await android?.createNotificationChannel(
+        AndroidNotificationChannel(
+          channelId,
+          await IsolateStrings.tr('notif.recitation_ready_channel'),
+          importance: Importance.defaultImportance,
+        ),
+      );
+      final title = await IsolateStrings.tr('notif.recitation_ready_title');
+      final body = (await IsolateStrings.tr('notif.recitation_ready_body'))
+          .replaceFirst('{reciter}', name ?? edition);
+      await plugin.show(
+        // A stable id per reciter, so finishing a second one does not replace
+        // the first one's notice.
+        0x52 * 1000 + edition.hashCode.abs() % 1000,
+        title,
+        body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channelId,
+            await IsolateStrings.tr('notif.recitation_ready_channel'),
+            importance: Importance.defaultImportance,
+            priority: Priority.defaultPriority,
+          ),
+        ),
+      );
+    } catch (_) {
+      // A missing notification is not a reason to fail a finished download.
     }
   }
 

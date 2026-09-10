@@ -891,7 +891,10 @@
     "iqama_body": "اقامت کا وقت ہو گیا",
     "quote_channel": "اقوال",
     "quote_channel_desc": "لائبریری کی کتابوں سے ایک قول، آپ کے منتخب وقفے پر",
-    "quote_title": "ایک قول"
+    "quote_title": "ایک قول",
+    "recitation_ready_channel": "تلاوت ڈاؤن لوڈ مکمل",
+    "recitation_ready_title": "تلاوت ڈاؤن لوڈ ہو گئی",
+    "recitation_ready_body": "{reciter} کی مکمل تلاوت اب آف لائن دستیاب ہے"
   },
   "hijri": {
     "m1": "محرم",
