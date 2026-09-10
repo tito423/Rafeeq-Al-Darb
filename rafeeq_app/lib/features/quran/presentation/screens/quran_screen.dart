@@ -417,6 +417,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final edition = ref.watch(currentMushafEditionProvider).valueOrNull;
     final textLayout = ref.watch(quranTextLayoutProvider);
     final isRaster = edition?.isRaster ?? false;
+    // Three of the nine printings paginate their own way — Shamarly's 521
+    // pages, the Indo-Pak 564, the Nastaliq 611 — and the app's surah->page
+    // and juz->page tables are the Madinah 604-page layout's. On those three,
+    // picking «سورة يوسف» jumps to Madinah page 235, which in that printing
+    // is some other surah entirely. That is the owner's «عدم اتساق بين اسم
+    // السورة اللي بختاره والسورة اللي بتطلع على الشاشة فعليا». The running header is
+    // already hidden on them for the same reason; the two indexes that would
+    // navigate wrong are withheld here rather than silently missing.
+    final canIndexBySurah = edition?.hafsPagination ?? true;
     // Adopt the open edition's real page count. Plain assignment rather than
     // setState: we are already inside build and the new value is used by this
     // very frame. If the reader was deeper into a longer printing than the
@@ -575,6 +584,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                 if (page != null) _goToPage(page);
                               },
                             ),
+                            if (canIndexBySurah)
                             ToolbarAction(
                               icon: Icons.format_list_numbered,
                               label: 'quran.surah_list'.tr(),
@@ -585,6 +595,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                 onSelect: _goToPage,
                               ),
                             ),
+                            if (canIndexBySurah)
                             ToolbarAction(
                               icon: Icons.filter_9_plus,
                               label: 'quran.juz'.tr(),

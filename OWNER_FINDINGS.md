@@ -19,7 +19,7 @@ Ordered by severity, not by the order he wrote them.
 2. **The default adhan is stuck on al-Banna and cannot be changed**, and
    **selecting an adhan does not register** — «ظاهرته مش بتنوّر إنه تم
    اختياره».
-   STATUS: open
+   STATUS: FIXED (the picker was a stale pushed route) — not yet re-seen on a device
 
 3. **The adhan preview button does not play; it opens Settings.**
    STATUS: open
@@ -35,25 +35,25 @@ Ordered by severity, not by the order he wrote them.
    off two of his screenshots: the download notification shows
    `notif.dl_recit_running_title` / `notif.dl_recit_running_body` literally.
    Trap #8.
-   STATUS: open
+   STATUS: FIXED
 
 6. **Landscape breaks the text mushaf** — «في الأورينتيشن المصاحف النصية مش
    بتشتغل»; the image mushafs need checking too. His landscape screenshot shows
    the toolbar over an empty page.
-   STATUS: open
+   STATUS: FIXED, seen on emulator-5554: the Qur'an text renders in landscape now
 
 7. **A quote notification does not open the quote.** Tapping it cold-starts the
    app instead. He wants the tap to open the quote screen directly, skipping
    the splash, even when the app was closed.
-   STATUS: open
+   STATUS: FIXED — not yet re-seen on a device
 
 8. **The calculation method is labelled «دبي».** The real name is «وزارة
    الأوقاف والشؤون الإسلامية بالإمارات».
-   STATUS: open
+   STATUS: FIXED
 
 9. **Islamic channels / sites are duplicated** between the Library tab and
    More.
-   STATUS: open
+   STATUS: FIXED
 
 10. **A hadith book screen came up blank** (سنن النسائي, portrait, only a
     spinner). Possibly the same root cause as (6), possibly its own. Reproduce
@@ -73,3 +73,29 @@ Ordered by severity, not by the order he wrote them.
     خلفية في آخر صورة بعتهالك» (the أذكار الاستيقاظ من النوم screen).
 15. **The mushaf toolbar at the top of the text reader** should be animated and
     better looking, with nicer icons.
+
+
+---
+
+## Added 2026-09-10, after he sent more screenshots
+
+16. **The running header named the wrong surah.** «الصورة بتاعة سورة
+    يوسف مطلعه سورة هود وفوق على اليمين كاتب سورة يوسف». Page 235 holds the end
+    of Hud and the start of Yusuf; the header named only Yusuf. FIXED —
+    `page_surahs.dart`, six tests. **Not yet seen on a device.**
+
+17. **Picking a surah could land on a different one.** Three of the nine
+    printings paginate their own way (Shamarly 521, Indo-Pak 564, Nastaliq
+    611) while the surah→page table is the Madinah 604. FIXED by withholding
+    the surah and juz indexes on those three, matching how the running header
+    was already handled. **Not yet seen on a device.**
+
+## Still open
+
+* 1 · the adhan attribution, and the 16 kb/s encodings
+* 3 · the adhan test button opening Settings
+* 4 · before/after prayer reminders not firing on HIS phone
+* 10 · the blank سنن النسائي screen
+* 11 · swiping the hadith card BACK
+* 12 · a hadith explanation
+* 15 · the toolbar's looks (its landscape shape is done; the styling is not)
