@@ -149,6 +149,153 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
           ),
         ],
       ),
+      // The transport the owner asked for — «الرقية الشرعية مافيش ميديا
+      // بلاير بأيقونات يخليني أقدر أتحكم فيها». A row of play buttons is not a
+      // player: a ruqyah recording runs the better part of an hour, and there
+      // was no way to see where you were in it, move within it, or come back
+      // to where you left off. It only appears while this screen's own track
+      // is loaded, so it never covers the list for nothing.
+      bottomNavigationBar: _current == null
+          ? null
+          : _RuqyahTransport(
+              title: ruqyahRecordings
+                  .firstWhere((r) => r.id == _current)
+                  .heading(),
+              isPlaying: _isPlaying,
+              onPlayPause: () => AyahAudioService.instance.pauseResumeTrack(),
+              onStop: () async {
+                await AyahAudioService.instance.stop();
+                if (mounted) setState(() => _current = null);
+              },
+            ),
+    );
+  }
+}
+
+/// The bottom transport: elapsed / total, a real seek bar, and 10-second
+/// jumps either side of play-pause.
+///
+/// It reads position from the shared player's own stream rather than a timer,
+/// so the thumb cannot drift away from the audio, and the seek is committed
+/// on change (not on every drag pixel) so scrubbing does not stutter the
+/// decoder.
+class _RuqyahTransport extends StatelessWidget {
+  final String title;
+  final bool isPlaying;
+  final VoidCallback onPlayPause;
+  final Future<void> Function() onStop;
+
+  const _RuqyahTransport({
+    required this.title,
+    required this.isPlaying,
+    required this.onPlayPause,
+    required this.onStop,
+  });
+
+  static String _clock(Duration d) {
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final sec = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return h > 0 ? '$h:$m:$sec' : '$m:$sec';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return SafeArea(
+      child: Material(
+        color: scheme.surfaceContainerHighest,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 6, 12, 8),
+          child: StreamBuilder<Duration>(
+            stream: AyahAudioService.instance.positionStream,
+            builder: (context, snap) {
+              final total = AyahAudioService.instance.trackDuration ??
+                  Duration.zero;
+              var pos = snap.data ?? Duration.zero;
+              if (total > Duration.zero && pos > total) pos = total;
+              final max = total.inMilliseconds.toDouble();
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 12, color: scheme.onSurfaceVariant),
+                  ),
+                  Row(
+                    children: [
+                      // The clock is Latin-digit and sits beside Arabic text,
+                      // so it needs the LTR isolate (trap #16).
+                      Text(ltr(_clock(pos)),
+                          style: const TextStyle(fontSize: 11)),
+                      Expanded(
+                        child: Slider(
+                          value: max <= 0
+                              ? 0
+                              : pos.inMilliseconds.clamp(0, max.toInt())
+                                  .toDouble(),
+                          max: max <= 0 ? 1 : max,
+                          onChanged: max <= 0 ? null : (_) {},
+                          onChangeEnd: max <= 0
+                              ? null
+                              : (v) => AyahAudioService.instance.seekTrack(
+                                  Duration(milliseconds: v.round())),
+                        ),
+                      ),
+                      Text(ltr(_clock(total)),
+                          style: const TextStyle(fontSize: 11)),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        tooltip: 'ruqyah.back_10'.tr(),
+                        icon: const Icon(Icons.replay_10),
+                        onPressed: () {
+                          final to = pos - const Duration(seconds: 10);
+                          AyahAudioService.instance.seekTrack(
+                              to < Duration.zero ? Duration.zero : to);
+                        },
+                      ),
+                      IconButton(
+                        iconSize: 44,
+                        tooltip: isPlaying
+                            ? 'ruqyah.pause'.tr()
+                            : 'ruqyah.play'.tr(),
+                        icon: Icon(isPlaying
+                            ? Icons.pause_circle_filled_rounded
+                            : Icons.play_circle_fill_rounded),
+                        color: AppColors.gold,
+                        onPressed: onPlayPause,
+                      ),
+                      IconButton(
+                        tooltip: 'ruqyah.forward_10'.tr(),
+                        icon: const Icon(Icons.forward_10),
+                        onPressed: () {
+                          final to = pos + const Duration(seconds: 10);
+                          AyahAudioService.instance
+                              .seekTrack(to > total && total > Duration.zero
+                                  ? total
+                                  : to);
+                        },
+                      ),
+                      IconButton(
+                        tooltip: 'ruqyah.stop'.tr(),
+                        icon: const Icon(Icons.stop_circle_outlined),
+                        onPressed: onStop,
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'dart:async';
 import 'dart:math' as math;
 import '../../../core/utils/arabic_normalize.dart';
@@ -328,6 +330,12 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
     if (mounted) setState(() => _rerolling = false);
   }
 
+  /// Forward by swipe. Same path as the button, minus its spinner: a swipe
+  /// that already moved the card should not then flash a loading state on it.
+  Future<void> _swipeNext() async {
+    await ref.read(dailyHadithProvider.notifier).next();
+  }
+
   @override
   Widget build(BuildContext context) {
     final async = ref.watch(dailyHadithProvider);
@@ -346,7 +354,26 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
         final item = daily.item;
         final book = daily.book;
 
-        return InkWell(
+        return GestureDetector(
+          // Swipe to move between hadiths, which is what the owner asked for.
+          // The direction follows the text: in Arabic (RTL) a swipe to the
+          // RIGHT goes forward, the way a page turns in an Arabic book, and
+          // in the six LTR locales it is the other way round. Hard-coding one
+          // of the two would feel backwards in the other.
+          onHorizontalDragEnd: (details) {
+            final v = details.primaryVelocity ?? 0;
+            if (v.abs() < 120) return;
+            // `TextDirection` is ambiguous here: easy_localization re-exports
+            // intl's, which is a different type from dart:ui's.
+            final rtl = Directionality.of(context) == ui.TextDirection.rtl;
+            final forward = rtl ? v > 0 : v < 0;
+            if (forward) {
+              _swipeNext();
+            } else {
+              ref.read(dailyHadithProvider.notifier).previous();
+            }
+          },
+          child: InkWell(
           onTap: () => _openDetail(daily),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -430,6 +457,7 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
               // than shown twice.
               // Note: Grade UI removed completely as per user request.
             ],
+          ),
           ),
         );
       },

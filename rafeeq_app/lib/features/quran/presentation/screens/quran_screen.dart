@@ -406,6 +406,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return juz;
   }
 
+  /// True when the toolbar has to earn its vertical space.
+  ///
+  /// `MediaQuery.orientationOf` rather than the body's `OrientationBuilder`:
+  /// the bar is built in the `appBar` slot, above and outside that builder.
+  bool _toolbarLandscape(BuildContext context) =>
+      MediaQuery.orientationOf(context) == Orientation.landscape;
+
   @override
   Widget build(BuildContext context) {
     final mushaf = ref.watch(mushafDataProvider);
@@ -462,23 +469,34 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               // nothing when `_toolbarVisible` is false (tapping the page
               // itself toggles it — see `_buildViewer`), handing that space
               // back to the page.
+              // LANDSCAPE. A phone in landscape is about 393 logical pixels
+              // tall in total. This bar was a fixed 116 of them — two wrapped
+              // rows of captioned actions — which, with the 56pt title above
+              // it, the page-number bar and the app's own nav below, left the
+              // Qur'an text roughly 80 pixels. Measured on emulator-5554: the
+              // surah and juz badges were sliced in half and not one line of
+              // text fitted. That is the whole of «في الأورينتيشن المصاحف
+              // النصية مش بتشتغل».
+              //
+              // So in landscape the bar drops its captions, becomes one
+              // horizontally-scrolling row, and costs 44 instead of 116 —
+              // giving the page back 72 pixels, nearly doubling the text area.
+              // The height comes from `ToolbarAction`'s own constants rather
+              // than from another guessed number.
               bottom: mushaf.hasValue && _toolbarVisible
                   ? PreferredSize(
-                      // P3‑43 #6: image mode's toolbar gained the full-screen
-                      // action too (moved out of the text-only block below), so
-                      // it now wraps to two rows the same as text mode's own —
-                      // this height was still the old single-row estimate and
-                      // would have clipped/overflowed the extra row.
-                      preferredSize: const Size.fromHeight(116),
+                      preferredSize: Size.fromHeight(
+                        _toolbarLandscape(context)
+                            ? ToolbarAction.compactHeight + 8
+                            : 116,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 4,
                         ),
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 4,
-                          runSpacing: 0,
+                        child: _ToolbarStrip(
+                          compact: _toolbarLandscape(context),
                           children: [
                             if (_mode == MushafMode.text && !isRaster) ...[
                               // Both verse layouts are real reading
@@ -1280,3 +1298,53 @@ class _FastPageScrollBarState extends State<_FastPageScrollBar> {
 // P3‑34's `_ToolbarAction` moved to `core/widgets/toolbar_action.dart`
 // (P3‑29) so `book_text_reader_screen.dart` can reuse the exact same
 // widget instead of a second copy — see `ToolbarAction` there.
+
+
+/// The Qur'an toolbar's two shapes.
+///
+/// Portrait keeps the captioned `Wrap` — every action visible at once, which
+/// is what P3‑41's device feedback asked for. Landscape cannot afford it (see
+/// the `bottom:` comment above), so the same actions become one compact,
+/// horizontally-scrolling row.
+///
+/// The children arrive as ordinary [ToolbarAction]s and are rebuilt compact
+/// here rather than each of the thirteen call sites having to pass a flag —
+/// a flag that would then be possible to forget on the fourteenth.
+class _ToolbarStrip extends StatelessWidget {
+  final bool compact;
+  final List<Widget> children;
+
+  const _ToolbarStrip({required this.compact, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!compact) {
+      return Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 4,
+        runSpacing: 0,
+        children: children,
+      );
+    }
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final child in children)
+            if (child is ToolbarAction)
+              ToolbarAction(
+                icon: child.icon,
+                label: child.label,
+                onPressed: child.onPressed,
+                active: child.active,
+                compact: true,
+              )
+            else
+              child,
+        ],
+      ),
+    );
+  }
+}

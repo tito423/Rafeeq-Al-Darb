@@ -762,7 +762,12 @@
     "minutes": "{n} min",
     "reciter_unnamed": "O recitador não é nomeado na fonte",
     "rec_tarteel_hadi": "Ruqyah — para auscultadores",
-    "audio_source": "As gravações vêm do Internet Archive (archive.org), replicadas no servidor da aplicação"
+    "audio_source": "As gravações vêm do Internet Archive (archive.org), replicadas no servidor da aplicação",
+    "play": "Reproduzir",
+    "pause": "Pausar",
+    "stop": "Parar",
+    "back_10": "Voltar 10 segundos",
+    "forward_10": "Avançar 10 segundos"
   },
   "more": {
     "section_more": "Mais",

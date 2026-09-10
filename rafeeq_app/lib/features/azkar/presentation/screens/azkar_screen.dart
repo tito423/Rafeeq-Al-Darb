@@ -282,20 +282,38 @@ class _CategorySectionsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: Text(categoryInfo.titleKey.tr()),
         backgroundColor: categoryInfo.gradient.first,
         foregroundColor: Colors.white,
       ),
-      body: ListView.builder(
+      // The owner found these lists bare next to the rest of the app — «فيه
+      // في الأذكار شاشات مالهاش خلفيات زي مثلا أذكار السفر» — and asked
+      // for the ground to be **drawn, not downloaded**: «ومش تنزلها لاء
+      // اعملها برمجيا». So it is: the category's own two colours, the
+      // geometric tile the app already paints elsewhere, and the app mark.
+      // Nothing fetched, nothing bundled, and it costs no bytes.
+      body: _CategoryGround(
+        colors: categoryInfo.gradient,
+        child: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: sections.length,
         itemBuilder: (context, i) {
           final s = sections[i];
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            // Slightly translucent so the ground reads through it without
+            // costing the dark-on-light contrast the list depends on.
+            color: scheme.surface.withValues(alpha: 0.92),
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(
+                color: categoryInfo.gradient.first.withValues(alpha: 0.18),
+              ),
+            ),
             child: ListTile(
               leading: Icon(categoryInfo.icon, color: categoryInfo.gradient.first),
               title: Text(s.title, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -313,6 +331,69 @@ class _CategorySectionsListScreen extends StatelessWidget {
             ),
           );
         },
+        ),
+      ),
+    );
+  }
+}
+
+/// The drawn ground behind a category's list of adhkar.
+///
+/// Three layers, all painted: a soft wash of the category's own gradient at
+/// the top, the app's geometric tile at low opacity, and the app mark as a
+/// faint watermark in the corner. It deliberately stays light — the list's
+/// text is dark-on-light and a deep ground would have cost that contrast
+/// (trap #15: judge a pairing by its composite, not by how the colour looks
+/// alone).
+class _CategoryGround extends StatelessWidget {
+  final List<Color> colors;
+  final Widget child;
+
+  const _CategoryGround({required this.colors, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final tint = colors.first;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.alphaBlend(tint.withValues(alpha: 0.16), scheme.surface),
+            Color.alphaBlend(
+                colors.last.withValues(alpha: 0.06), scheme.surface),
+            scheme.surface,
+          ],
+          stops: const [0, 0.45, 1],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(
+              painter: IslamicPatternPainter(
+                tile: 52,
+                color: tint.withValues(alpha: 0.07),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -40,
+            left: -30,
+            child: Opacity(
+              opacity: 0.05,
+              child: Image.asset(
+                'assets/branding/app_mark.png',
+                width: 240,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => const SizedBox.shrink(),
+              ),
+            ),
+          ),
+          Positioned.fill(child: child),
+        ],
       ),
     );
   }

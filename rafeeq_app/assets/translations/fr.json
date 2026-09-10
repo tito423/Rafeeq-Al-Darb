@@ -762,7 +762,12 @@
     "minutes": "{n} min",
     "reciter_unnamed": "Le récitant n'est pas nommé dans la source",
     "rec_tarteel_hadi": "Roqya — pour écouteurs",
-    "audio_source": "Les enregistrements proviennent d’Internet Archive (archive.org), copiés sur le serveur de l’application"
+    "audio_source": "Les enregistrements proviennent d’Internet Archive (archive.org), copiés sur le serveur de l’application",
+    "play": "Lecture",
+    "pause": "Pause",
+    "stop": "Arrêter",
+    "back_10": "Reculer de 10 secondes",
+    "forward_10": "Avancer de 10 secondes"
   },
   "more": {
     "section_more": "Plus",

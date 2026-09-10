@@ -22,7 +22,11 @@ class DailyHadith {
 /// than guessing from this being null.
 class DailyHadithNotifier extends AsyncNotifier<DailyHadith?> {
   @override
-  Future<DailyHadith?> build() => _pick();
+  Future<DailyHadith?> build() async {
+    final first = await _pick();
+    if (first != null) _remember(first);
+    return first;
+  }
 
   /// P3‑36: this used to set `state = const AsyncLoading()` before picking —
   /// harmless in isolation, but the Home card's `AsyncValue.when()` reacted
@@ -36,7 +40,49 @@ class DailyHadithNotifier extends AsyncNotifier<DailyHadith?> {
   /// instead (`daily_hadith_card.dart`'s `_rerolling`), without touching
   /// this provider's state or the card's layout at all.
   Future<void> reroll() async {
-    state = await AsyncValue.guard(_pick);
+    final picked = await AsyncValue.guard(_pick);
+    state = picked;
+    final value = picked.valueOrNull;
+    if (value != null) _remember(value);
+  }
+
+  // ── Swipe navigation ───────────────────────────────────────────
+  // The owner asked for the card to be flickable — «خليه فيه إمكانية تنقل».
+  // A refresh button alone can only ever go forward, and a random pick with
+  // no memory cannot go back at all: swiping away from a hadith you were
+  // still reading would lose it for good. So the picks are kept in order and
+  // the swipe walks that list, appending a fresh one only at its end.
+
+  final List<DailyHadith> _history = [];
+  int _index = -1;
+
+  void _remember(DailyHadith value) {
+    // Trim anything ahead of the cursor first, so going back and then
+    // forward again does not interleave two different futures.
+    if (_index >= 0 && _index < _history.length - 1) {
+      _history.removeRange(_index + 1, _history.length);
+    }
+    _history.add(value);
+    _index = _history.length - 1;
+  }
+
+  /// True when [previous] would actually move — the card uses it to know
+  /// whether a swipe should do anything at all.
+  bool get hasPrevious => _index > 0;
+
+  Future<void> next() async {
+    if (_index >= 0 && _index < _history.length - 1) {
+      _index++;
+      state = AsyncData(_history[_index]);
+      return;
+    }
+    await reroll();
+  }
+
+  void previous() {
+    if (!hasPrevious) return;
+    _index--;
+    state = AsyncData(_history[_index]);
   }
 
   Future<DailyHadith?> _pick() async {

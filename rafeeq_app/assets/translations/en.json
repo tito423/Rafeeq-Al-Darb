@@ -762,7 +762,12 @@
     "minutes": "{n} min",
     "reciter_unnamed": "Reciter not named in the source",
     "rec_tarteel_hadi": "Ruqyah — for headphones",
-    "audio_source": "The recordings come from the Internet Archive (archive.org), mirrored on the app's own server"
+    "audio_source": "The recordings come from the Internet Archive (archive.org), mirrored on the app's own server",
+    "play": "Play",
+    "pause": "Pause",
+    "stop": "Stop",
+    "back_10": "Back 10 seconds",
+    "forward_10": "Forward 10 seconds"
   },
   "more": {
     "section_more": "More",
