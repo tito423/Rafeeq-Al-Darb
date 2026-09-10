@@ -1035,10 +1035,27 @@ class _VideoRow extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(option.labelKey.tr(),
-                  style: TextStyle(
-                      fontWeight:
-                          selected ? FontWeight.w700 : FontWeight.w400)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(option.labelKey.tr(),
+                      style: TextStyle(
+                          fontWeight:
+                              selected ? FontWeight.w700 : FontWeight.w400)),
+                  // The measured pixel size and the download size, so a clip
+                  // is chosen knowingly. `ltr()` around each because a
+                  // numeral beside a Latin unit reverses inside an Arabic
+                  // line (trap #16) — «1080×1920» and «12.6 MB» are both
+                  // that shape.
+                  Text(
+                    '${ltr(option.sizeLabel)} · '
+                    '${formatBytes(option.approxSizeBytes)}',
+                    style: TextStyle(
+                        fontSize: 11, color: scheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
             ),
             if (busy)
               SizedBox(

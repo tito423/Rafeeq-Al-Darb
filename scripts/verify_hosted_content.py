@@ -40,7 +40,16 @@ henc = json.load(io.open(os.path.join(
 for lang in henc:
     checks.append(("hadeethenc " + lang["lang"],
                    "/hadeethenc/%s.zip" % lang["lang"]))
-checks.append(("adhan video", "/adhan/video/"))
+# The adhan background clips the catalogue actually offers. This used to
+# be a bare directory prefix that the checker skipped, which is how a
+# catalogue of ten clips went unverified long enough for six of them to
+# be the wrong scene entirely.
+import re as _re
+_vid_src = io.open(os.path.join(
+    APP, "lib", "features", "adhan", "data", "adhan_video_catalog.dart"),
+    encoding="utf-8").read()
+for _v in _re.findall(r"id: '([a-z0-9_]+)'", _vid_src):
+    checks.append(("adhan video " + _v, "/adhan/video/%s.mp4" % _v))
 
 
 def one(item):

@@ -31,8 +31,17 @@ class AdhanPresentationNotifier extends StateNotifier<AdhanPresentationState> {
           mode: (_prefs.getString(_modeKey) == 'video')
               ? AdhanPresentation.video
               : AdhanPresentation.audioOnly,
-          videoId: _prefs.getString(_videoKey) ?? adhanVideoCatalog.first.id,
+          // A saved id that is no longer in the catalogue falls back to the
+          // default rather than to nothing. Three SD clips were dropped when
+          // the owner reported the adhan background looked bad (see
+          // `adhan_video_catalog.dart`), and a device that had one of them
+          // selected must land on a clip that exists, not on a blank
+          // selection whose download button does nothing.
+          videoId: _validId(_prefs.getString(_videoKey)),
         ));
+
+  static String _validId(String? saved) =>
+      adhanVideoById(saved) != null ? saved! : adhanVideoCatalog.first.id;
 
   final SharedPreferences _prefs;
   static const _modeKey = 'adhan_presentation_v1';

@@ -808,9 +808,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-10 11:30 — IN PROGRESS — resume here**
+**2026-09-10 11:52 — IN PROGRESS — resume here**
 
-correction: the surah reminder is NOT broken. Both pieces of evidence behind that claim were misread - mLastNotificationUpdateTimeMs is not a post counter (the prayer channel reads 0 with nine posted), and the notification was missing because the 41-hour clock jump fired 24 quote slots at once and Android drops a package past 25 posted, which the dump showed exactly. Re-run properly it posts, reschedules for the following Friday, and its tap opens surah al-Mulk - which also proves the router fix, since that tap used to reach an empty handler
+the adhan video complaint, measured - and measuring it found something worse than resolution. ffmpeg read every hosted clip: three of ten were SD and the 640x360 one was the DEFAULT, scaled 6.7x by BoxFit.cover on a portrait screen. Then four frames were pulled from across each clip and looked at, and SIX of the ten were not the scene the app named: the flag of Pakistan was 'a mosque', gold Muhammad calligraphy was 'the Kaaba up close', a cartoon was 'the courtyards of the Haram', and a Turkish city was 'the Prophets Mosque' - which my own first fix had just made the default. Five clips removed, five relabelled for what their frames actually show, and adhan_video_content.json is the record a test now checks the catalogue against
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

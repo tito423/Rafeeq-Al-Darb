@@ -911,16 +911,11 @@
   },
   "adhan_video": {
     "source": "Fonte: Pixabay — licença Pixabay (uso livre, sem atribuição)",
-    "haram_makkah": "A Grande Mesquita de Meca",
-    "kaaba": "A Caaba",
-    "madina_nabawi": "A Mesquita do Profeta, Medina",
-    "mosque_ottoman": "Uma mesquita de estilo otomano",
-    "kaaba_tawaf": "O Haram e a Caaba",
-    "haram_makkah2": "Os pátios da Grande Mesquita",
-    "kaaba_close": "A Caaba, de perto",
-    "madina_haram": "Os recintos da Mesquita do Profeta",
-    "mosque_minaret": "O minarete de uma mesquita",
-    "mosque_view": "O recinto de uma mesquita"
+    "haram_makkah": "A Mesquita Sagrada à noite",
+    "madina_nabawi": "A Mesquita do Profeta vista de cima",
+    "kaaba_close": "Caligrafia árabe: Muhammad ﷺ",
+    "madina_haram": "Uma mesquita otomana sobre a cidade",
+    "mosque_minaret": "Dentro de uma mesquita otomana"
   },
   "imam_bio": {
     "bukhari": "Nasceu em Bucara em 194 AH e morreu em 256 AH. Viajou em busca do hadith para o Hijaz, a Síria, o Iraque e o Egito, e compilou al-Jami' as-Sahih, no qual exigiu o mais alto grau de continuidade na cadeia de transmissão.",

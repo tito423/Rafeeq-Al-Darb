@@ -911,16 +911,11 @@
   },
   "adhan_video": {
     "source": "Fuente: Pixabay — licencia Pixabay (uso libre, sin atribución)",
-    "haram_makkah": "La Gran Mezquita de La Meca",
-    "kaaba": "La Kaaba",
-    "madina_nabawi": "La Mezquita del Profeta, Medina",
-    "mosque_ottoman": "Una mezquita de estilo otomano",
-    "kaaba_tawaf": "El Haram y la Kaaba",
-    "haram_makkah2": "Los patios de la Gran Mezquita",
-    "kaaba_close": "La Kaaba, de cerca",
-    "madina_haram": "Los recintos de la Mezquita del Profeta",
-    "mosque_minaret": "El alminar de una mezquita",
-    "mosque_view": "El recinto de una mezquita"
+    "haram_makkah": "La Mezquita Sagrada de noche",
+    "madina_nabawi": "La Mezquita del Profeta desde arriba",
+    "kaaba_close": "Caligrafía árabe: Muhammad ﷺ",
+    "madina_haram": "Una mezquita otomana sobre la ciudad",
+    "mosque_minaret": "Dentro de una mezquita otomana"
   },
   "imam_bio": {
     "bukhari": "Nació en Bujará en 194 AH y murió en 256 AH. Viajó en busca del hadiz al Hiyaz, Siria, Irak y Egipto, y compiló Al-Yami' as-Sahih, exigiendo en él el grado más alto de continuidad en la cadena de transmisión.",

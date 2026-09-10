@@ -911,16 +911,11 @@
   },
   "adhan_video": {
     "source": "Source: Pixabay — Pixabay licence (free use, no attribution required)",
-    "haram_makkah": "The Grand Mosque, Makkah",
-    "kaaba": "The Kaaba",
-    "madina_nabawi": "The Prophet's Mosque, Madinah",
-    "mosque_ottoman": "An Ottoman-style mosque",
-    "kaaba_tawaf": "The Haram and the Kaaba",
-    "haram_makkah2": "The Grand Mosque courtyards",
-    "kaaba_close": "The Kaaba, up close",
-    "madina_haram": "The Prophet's Mosque grounds",
-    "mosque_minaret": "A mosque minaret",
-    "mosque_view": "A mosque's grounds"
+    "haram_makkah": "The Masjid al-Haram at night",
+    "madina_nabawi": "The Prophet's Mosque from above",
+    "kaaba_close": "Arabic calligraphy: Muhammad ﷺ",
+    "madina_haram": "An Ottoman mosque above the city",
+    "mosque_minaret": "Inside an Ottoman mosque"
   },
   "imam_bio": {
     "bukhari": "Born in Bukhara in 194 AH, died in 256 AH. He travelled in search of hadith to the Hijaz, Syria, Iraq and Egypt, and compiled al-Jami' as-Sahih, for which he required the highest degree of continuity in the chain of transmission.",
