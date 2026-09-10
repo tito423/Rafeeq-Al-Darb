@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/digits.dart';
+
 import '../../../../core/theme/hero_surface.dart';
 
 /// The live countdown to the next prayer, on the Home clock card.
@@ -144,12 +146,11 @@ class _Unit extends StatelessWidget {
     required this.pad,
   });
 
-  static const _arabicIndic = '٠١٢٣٤٥٦٧٨٩';
-
   String get _text {
     final raw = pad ? value.toString().padLeft(2, '0') : value.toString();
-    if (!arabicDigits) return raw;
-    return raw.split('').map((c) => _arabicIndic[int.parse(c)]).join();
+    // `localizeDigits`, not a fourth digit table. There were five of them in
+    // this app before `test/digits_test.dart` went looking.
+    return localizeDigits(raw, arabicDigits ? 'ar' : 'en');
   }
 
   @override

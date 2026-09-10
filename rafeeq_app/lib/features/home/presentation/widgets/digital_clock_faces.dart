@@ -3,26 +3,23 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../../../core/utils/digits.dart' as digits;
 import '../../data/clock_settings_provider.dart';
 
 const _kTeal = Color(0xFF15C7B0);
 const _kGold = Color(0xFFD4AF37);
 const _kViolet = Color(0xFF9B6BFF);
 
-const _kWesternDigits = '0123456789';
-const _kArabicDigits = '٠١٢٣٤٥٦٧٨٩';
-
-/// Converts the ASCII digits in [s] to Arabic-Indic when [arabic] is set.
-/// Anything that isn't a digit (the colon, the AM/PM marker) is left alone.
-String localizeDigits(String s, bool arabic) {
-  if (!arabic) return s;
-  final b = StringBuffer();
-  for (final ch in s.split('')) {
-    final i = _kWesternDigits.indexOf(ch);
-    b.write(i >= 0 ? _kArabicDigits[i] : ch);
-  }
-  return b.toString();
-}
+/// The clock faces' spelling of the shared converter.
+///
+/// This file used to carry its own digit table and its own loop, which is how
+/// `core/utils/digits.dart` came to say «this was written twice before it was
+/// written here» while it was in fact still written twice — the third copy was
+/// created and the second was never removed. One implementation now; the
+/// boolean stays because a clock face asks "Arabic numerals or not", not
+/// "which locale".
+String localizeDigits(String s, bool arabic) =>
+    digits.localizeDigits(s, arabic ? 'ar' : 'en');
 
 /// Ten digital clock faces, all reading the same live `DateTime`.
 ///

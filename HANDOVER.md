@@ -7,9 +7,42 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-10 |
-| **Released** | **v3.11.0** |
-| **App version** | `pubspec.yaml` `3.11.0+7` |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **93** · `py -3 scripts/i18n_audit.py` **0** · hosted content **36 paths, 0 failed** · APK **286,479,215 bytes** · everything below was opened on `emulator-5554` and looked at |
+| **Released** | **v3.11.1** |
+| **App version** | `pubspec.yaml` `3.11.1+8` |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **97** · `py -3 scripts/i18n_audit.py` **0** · hosted content **36 paths, 0 failed** · APK **286,479,215 bytes** · everything below was opened on `emulator-5554` and looked at |
+
+## STATE AS OF 2026-09-10 — v3.11.1: the Urdu question, answered by measuring
+
+The owner asked «شوف الصح في موضوع الأوردو باللاتيني» — is Latin right for
+Urdu? It has a measurable answer, so CLDR was asked through the `intl`
+package the app already ships (`numberFormatSymbols[locale]`):
+
+    ur   ZERO_DIGIT = '0'   1,234,567
+    fa   ZERO_DIGIT = '۰'   ۱٬۲۳۴٬۵۶۷
+    ps   ZERO_DIGIT = '۰'   ۱٬۲۳۴٬۵۶۷
+    ar   ZERO_DIGIT = '0'   1,234,567
+
+Persian and Pashto default to the **extended** Arabic-Indic digits (U+06F0,
+which are not the Arabic U+0660 set). **Urdu defaults to Latin** — and so, in
+modern CLDR, does Arabic. So the app was already right, and the two cases are
+different in kind rather than inconsistent:
+
+* Urdu keeps Latin because that is the standard and nobody asked otherwise;
+* Arabic gets Arabic-Indic because the owner wants it in the Arabic UI, which
+  is a deliberate departure from CLDR.
+
+`test/digits_test.dart` pins both, so neither gets "fixed" by someone reading
+only half of it.
+
+**And writing that test found something worse than the question.**
+`core/utils/digits.dart` was created earlier this session with a doc comment
+saying it existed to end a duplicate. There were in fact **five** copies of
+the conversion in the app — `digital_clock_faces.dart`,
+`prayer_countdown.dart` and `quran_screen.dart` each carried their own digit
+table and their own loop, and I had not looked. The test greps for the table
+itself, which is what found them. One implementation now; the clock, the
+countdown and the mushaf page number were each re-checked on the device
+afterwards.
 
 ## STATE AS OF 2026-09-10 — EIGHTH SESSION, THIRD HALF (after v3.10.0)
 

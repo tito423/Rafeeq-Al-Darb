@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/config/app_config.dart';
 import '../../../../core/db/models.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/toolbar_action.dart';
@@ -1014,10 +1015,10 @@ class _PersistentPageOverlay extends StatelessWidget {
   }
 }
 
-String _arabicNumber(int n) {
-  const digits = '٠١٢٣٤٥٦٧٨٩';
-  return n.toString().split('').map((c) => digits[int.parse(c)]).join();
-}
+/// A mushaf page number, always in Arabic-Indic digits — every printing sets
+/// them that way, whatever language the app is in. The conversion itself
+/// comes from `core/utils/digits.dart`; this was the fifth copy of it.
+String _arabicNumber(int n) => localizeDigits('$n', 'ar');
 
 /// P3‑51: a uniform, perfectly-centred badge for the running header.
 ///

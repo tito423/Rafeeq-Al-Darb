@@ -13,13 +13,30 @@
 /// below it in the same shade, read «الفجر · ٠٦:١٣». Same app, same language,
 /// two digit systems on screen at once.
 ///
-/// ARABIC ONLY, DELIBERATELY.
-/// Urdu writes its own extended Arabic-Indic digits (U+06F0 ۰۱۲۳…), which are
-/// *not* the Arabic ones (U+0660 ٠١٢٣…). The Urdu build renders every other
-/// number — the Hijri line, the prayer tiles, the sizes — in Latin digits, so
-/// shaping only the reminder would make Urdu inconsistent with itself rather
-/// than consistent with Urdu. Left as it is on purpose; if it is ever changed
-/// it has to be changed everywhere at once, and looked at on a device.
+/// ARABIC ONLY — AND URDU'S LATIN DIGITS ARE THE STANDARD, NOT AN OVERSIGHT.
+///
+/// The owner asked which is right for Urdu. It is a question with a measurable
+/// answer rather than an opinion, so CLDR was asked — through the `intl`
+/// package this app already depends on, `numberFormatSymbols[locale]`:
+///
+///     ur   ZERO_DIGIT = '0'   1,234,567
+///     fa   ZERO_DIGIT = '۰'   ۱٬۲۳۴٬۵۶۷
+///     ps   ZERO_DIGIT = '۰'   ۱٬۲۳۴٬۵۶۷
+///     ar   ZERO_DIGIT = '0'   1,234,567
+///
+/// Persian and Pashto default to the **extended** Arabic-Indic digits
+/// (U+06F0 ۰۱۲۳…, which are not the Arabic U+0660 ٠١٢٣…). **Urdu defaults to
+/// Latin**, and so, in modern CLDR, does Arabic itself.
+///
+/// So the two cases are different in kind, and both are deliberate:
+///
+///  * **Urdu gets Latin** because that is the standard default and nobody
+///    asked for anything else. Not "for consistency" — it is simply correct.
+///  * **Arabic gets Arabic-Indic** because the owner wants it in the Arabic
+///    UI — the clock, the Hijri line, the prayer notifications — which is a
+///    deliberate departure from CLDR, not an accident. `test/digits_test.dart`
+///    pins both so neither is "fixed" later by someone reading only half of
+///    this.
 library;
 
 const String _latin = '0123456789';
