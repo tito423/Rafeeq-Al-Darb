@@ -29,7 +29,7 @@ const Map<String, String> _buckwalterMap = {
   'r': 'ر', // ر
   'z': 'ز', // ز
   's': 'س', // س
-  '\$': 'ش', // ش
+  '\$': 'ش', // ش — a literal dollar character, the Buckwalter code for it
   'S': 'ص', // ص
   'D': 'ض', // ض
   'T': 'ط', // ط

@@ -98,13 +98,25 @@ STATUS: FIXED, tests pass — **not yet opened on a device**
 
 Four separate things, from his screenshots:
 
-* **It cuts the ayah off mid-word** when it displays the day's portion.
-* **«ختمة جديدة» sits at the bottom** of an otherwise empty screen — merge it
-  with the "start from" sheet instead of being a separate step.
-* **Add «من أي سورة»** alongside «بداية المصحف» and «من أي جزء».
-* **Put the options in the middle of the screen**, not pinned low.
+* **It cut the ayah off mid-word.** `maxLines: 2` + `TextOverflow.ellipsis`
+  lets the text engine break wherever the line runs out, and the card's label
+  says «من قوله تعالى» — an opening is right, a damaged one is not.
+  `ayahOpening` cuts on a whole word and adds «…» only when something was
+  actually left, and never rewrites the text it keeps (§1.2).
+* **The two steps are one sheet now**, so «ختمة جديدة» is not a separate
+  screen with a lone button at the bottom.
+* **«من أي سورة» is in the same list** as «بداية المصحف» and the thirty juz —
+  one dropdown, three kinds of choice, 145 entries.
+* Changing the starting point now recomputes the daily amount, which it did
+  not do before: the plan is derived from how much is left to read.
 
-STATUS: open
+Found while doing it, and worth its own line: the generator wrote
+`value: 'j\$j'` into the dropdown — **trap #23**, a backslash before `$` is an
+escape, so all thirty juz would have carried the same value and the dropdown
+would have thrown. `flutter analyze` said nothing, exactly as the trap says.
+`no_escaped_dollar_test.dart` now fails the build on it anywhere in `lib/`.
+
+STATUS: FIXED, tests pass — **not yet opened on a device**
 
 ## A6 · Search inside the Surahs and Juz sheets
 

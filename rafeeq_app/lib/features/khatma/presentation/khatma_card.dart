@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import '../data/ayah_opening.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -260,15 +262,18 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
           const SizedBox(height: 6),
           // ArabicText: an ayah laid out in an LTR paragraph moves its
           // trailing marks. See daily_hadith_card for the measured case.
+          // Cut on a whole word, not wherever the line runs out. `maxLines`
+          // with an ellipsis was breaking the ayah mid-word — «بياكل جزء
+          // من الآية وهو بيعرضها» — which is not something to do to an
+          // ayah. See `ayah_opening.dart`. No `maxLines` here now: the string
+          // is already bounded before it reaches the text engine.
           ArabicText(
-            range.start.textUthmani,
+            ayahOpening(range.start.textUthmani),
             style: const TextStyle(
               fontFamily: 'AmiriQuran',
               fontSize: 17,
               height: 1.6,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10),

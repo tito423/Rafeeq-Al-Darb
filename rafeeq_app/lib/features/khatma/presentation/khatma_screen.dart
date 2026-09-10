@@ -424,10 +424,14 @@ class _CreateKhatmaSheet extends ConsumerStatefulWidget {
 }
 
 class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
-  int _step = 0;
-
-  // Step 1 — where to start.
-  int? _startJuz; // null = بداية المصحف (page 1)
+  // Where to start. Both null = بداية المصحف (page 1); at most one is set.
+  //
+  // «ولية بدء ختمة جديدة في نص الصفحة ادمجه مع اختيار من اول المصحف ولا من اي
+  // جزء وزود من اي سورة» — so the two steps this sheet used to have are one
+  // now, and the list it offers is: the beginning, any of the thirty juz, or
+  // any of the hundred and fourteen surahs.
+  int? _startJuz;
+  int? _startSurah;
 
   // Step 2 — linked duration/amount. _dailyAmount starts consistent with
   // _durationDays (recomputed once real mushaf data is available in
@@ -452,9 +456,47 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
   }
 
   int _startPage(MushafData? mushaf) {
+    if (mushaf == null) return 1;
+    final surah = _startSurah;
+    if (surah != null) return mushaf.surahStartPages[surah] ?? 1;
     final juz = _startJuz;
-    if (juz == null || mushaf == null) return 1;
+    if (juz == null) return 1;
     return mushaf.juzStartPages[juz] ?? 1;
+  }
+
+  /// The dropdown's value: null for the beginning, `j5` for a juz, `s36` for
+  /// a surah. A single key keeps one list showing all three kinds of choice,
+  /// which is what he asked for.
+  String? get _startKey {
+    if (_startSurah != null) return 's$_startSurah';
+    if (_startJuz != null) return 'j$_startJuz';
+    return null;
+  }
+
+  void _setStart(String? key) {
+    setState(() {
+      if (key == null) {
+        _startJuz = null;
+        _startSurah = null;
+      } else if (key.startsWith('j')) {
+        _startJuz = int.tryParse(key.substring(1));
+        _startSurah = null;
+      } else {
+        _startSurah = int.tryParse(key.substring(1));
+        _startJuz = null;
+      }
+      // The daily amount is derived from how much is left to read, and that
+      // changes the moment the starting point does.
+      _amountInitialized = false;
+    });
+    final mushaf = ref.read(mushafDataProvider).valueOrNull;
+    if (mushaf != null) {
+      final plan = _totalPlan(mushaf, _startPage(mushaf));
+      setState(() {
+        _amountInitialized = true;
+        _dailyAmount = (plan / _durationDays).ceil().clamp(1, plan);
+      });
+    }
   }
 
   int _startJuzNumber(MushafData? mushaf, int startPage) {
@@ -538,30 +580,20 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              if (_step == 1)
-                IconButton(
-                  onPressed: () => setState(() => _step = 0),
-                  icon: const Icon(Icons.arrow_back),
-                  visualDensity: VisualDensity.compact,
-                ),
-              Text(
-                'khatma.new'.tr(),
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ],
+          Text(
+            'khatma.new'.tr(),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          if (_step == 0)
-            _StartStep(
-              mushaf: mushaf,
-              startJuz: _startJuz,
-              onChanged: (v) => setState(() => _startJuz = v),
-              onContinue: () => setState(() => _step = 1),
-            )
-          else
-            _DurationStep(
+          _StartStep(
+            mushaf: mushaf,
+            startKey: _startKey,
+            onChanged: _setStart,
+          ),
+          const SizedBox(height: 18),
+          const Divider(height: 1),
+          const SizedBox(height: 18),
+          _DurationStep(
               unit: _unit,
               durationDays: _durationDays,
               dailyAmount: _dailyAmount,
@@ -596,19 +628,18 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
 
 class _StartStep extends StatelessWidget {
   final MushafData? mushaf;
-  final int? startJuz;
-  final ValueChanged<int?> onChanged;
-  final VoidCallback onContinue;
+  final String? startKey;
+  final ValueChanged<String?> onChanged;
 
   const _StartStep({
     required this.mushaf,
-    required this.startJuz,
+    required this.startKey,
     required this.onChanged,
-    required this.onContinue,
   });
 
   @override
   Widget build(BuildContext context) {
+    final surahs = mushaf?.surahs ?? const [];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -619,9 +650,10 @@ class _StartStep extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 20),
-        DropdownButtonFormField<int?>(
-          initialValue: startJuz,
+        const SizedBox(height: 16),
+        DropdownButtonFormField<String?>(
+          initialValue: startKey,
+          isExpanded: true,
           decoration: InputDecoration(
             labelText: 'khatma.start_from'.tr(),
             border: const OutlineInputBorder(),
@@ -633,19 +665,22 @@ class _StartStep extends StatelessWidget {
             ),
             for (var j = 1; j <= 30; j++)
               DropdownMenuItem(
-                value: j,
+                value: 'j$j',
                 child: Text('khatma.juz_label'.tr(args: ['$j'])),
+              ),
+            // «وزود من اي سورة». The names come from the mushaf data, so
+            // they are the same ones the reader sees everywhere else.
+            for (final s in surahs)
+              DropdownMenuItem(
+                value: 's${s.id}',
+                child: Text(
+                  s.nameAr,
+                  style: const TextStyle(fontFamily: 'AmiriQuran'),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
           ],
           onChanged: onChanged,
-        ),
-        const SizedBox(height: 18),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: mushaf == null ? null : onContinue,
-            child: Text('khatma.continue_button'.tr()),
-          ),
         ),
       ],
     );
