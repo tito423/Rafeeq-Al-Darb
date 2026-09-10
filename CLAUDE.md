@@ -496,6 +496,39 @@ Do not rediscover these.
     glossaries before anyone noticed. §1.4, applied to the specific call you
     are making.
 
+41. **The release APK is signed OUTSIDE Gradle, and Gradle still says debug.**
+    `build.gradle.kts` deliberately keeps `signingConfig =
+    signingConfigs.getByName("debug")`; `scripts/sign_release.py` re-signs the
+    built APK with the real key afterwards. **Never publish `flutter build
+    apk` output directly** — it is debug-signed, which is how every release up
+    to and including the first upload of v3.12.0 shipped.
+
+    The reason it is done this way: switching keys normally forces an
+    uninstall, and this app holds hundreds of MB of downloaded mushaf pages
+    that an uninstall destroys. APK Signature Scheme v3 allows a
+    **SigningCertificateLineage** — a signed proof that the new key inherited
+    from the old — and Gradle's DSL has no field for one.
+
+    Two things that cost time here:
+    * `apksigner sign --lineage` **refuses** unless the *oldest* signer is
+      passed too (`--ks <debug> --next-signer --ks <release>`). The v1/v2
+      blocks stay signed by the old key so a device that cannot read v3 still
+      sees an update rather than a signature mismatch.
+    * It defaults to `--rotation-min-sdk-version 33`, which silently leaves
+      Android 9–12 on the old key. Pass `28`.
+
+    And verify it the way it is actually consumed — one `apksigner verify`
+    hides half the answer, because the certificate presented **differs by
+    Android version**. The script runs it twice (`--min-sdk-version 28`, then
+    `24`–`27`) and refuses to finish unless the new key covers 9+ *and* the
+    old one still covers below it. Proven on the emulator: the signed APK
+    installed over the debug-signed 3.11.1 with `adb install -r` → `Success`,
+    and all 358.5 MB of downloaded content survived.
+
+    **The keystore lives in `../Rafeeq-Keys/`, outside this repository, and is
+    the owner's to back up.** If it is lost, no further update can ever be
+    installed over the app without an uninstall.
+
 ---
 
 ## 4. Where things live

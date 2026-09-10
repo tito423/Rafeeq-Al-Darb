@@ -54,19 +54,33 @@ Measured, not assumed:
 * No `http://` anywhere in `lib/`; no WebView.
 * 3 exported Android components, all necessary.
 * R8 minify + proguard rules on in release.
-* **The release APK is signed with the Android debug key.**
-  `apksigner verify --print-certs` reports
-  `Signer #1 certificate DN: C=US, O=Android, CN=Android Debug`, and
-  `android/app/build.gradle.kts` still carries Flutter's
-  `// TODO: Add your own signing config`.
+* **The debug signing key — FOUND, and FIXED without any data loss.**
+  Every release up to the first upload of v3.12.0 was signed with the Android
+  debug key (`C=US, O=Android, CN=Android Debug`) — a key that ships with the
+  SDK and whose password is the word "android", so anyone could build an APK
+  that Android accepts as an update to this one.
 
-  Why it matters: anyone can produce an APK that Android accepts as an update
-  to this one, because the debug key is not a secret. For a sideloaded app the
-  owner installs himself from his own releases, the practical exposure is small.
-  **Switching to a real key means uninstalling first** — Android refuses an
-  update signed by a different key — which loses the ~348 MB of downloaded
-  mushaf pages and every local setting. That is the owner's call and it has been
-  put to him; nothing was changed.
+  The obvious fix costs an uninstall, because Android refuses an update signed
+  by a different key, and that destroys the downloaded mushaf pages. It was
+  avoided: APK Signature Scheme v3 takes a **SigningCertificateLineage**, a
+  signed proof that the new key inherited from the old one, and an APK carrying
+  it updates in place.
+
+  Done and verified:
+  * RSA-4096 keystore, 30-year validity, in `../Rafeeq-Keys/` — **outside this
+    repository**, with its password beside it. The owner has been told to back
+    it up; if it is lost, no update can ever be installed over the app again.
+  * `scripts/sign_release.py` re-signs the built APK with the lineage and
+    refuses to finish unless the result really carries the release certificate.
+    Gradle still signs debug — see trap #41; **never publish `flutter build
+    apk` output directly.**
+  * Measured on the published asset, downloaded back from GitHub:
+    Android 9+ → `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG`;
+    Android 7–8 → the old debug cert, so those devices still see an update.
+  * Proven on the device, which is the only thing that settles it:
+    `adb install -r` of the signed APK over the debug-signed 3.11.1 returned
+    **Success**, and the Downloads screen still read **358.5 MB** afterwards —
+    nothing was lost.
 
 ### Performance and smoothness — what could and could not be measured
 

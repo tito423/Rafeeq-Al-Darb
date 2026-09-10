@@ -78,3 +78,11 @@ hadeethenc.db-journal
 prayer_fixture_progress.jsonl
 
 code_health.txt
+
+# Signing material — the real keystore lives OUTSIDE this repo
+# (../Rafeeq-Keys). These rules are a second line of defence.
+*.jks
+*.keystore
+key.properties
+lineage.bin
+KEYSTORE-PASSWORD.txt
