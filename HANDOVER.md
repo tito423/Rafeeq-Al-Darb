@@ -7,9 +7,45 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-10 |
-| **Released** | **v3.12.0** |
-| **App version** | `pubspec.yaml` `3.12.0+9` |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **100** · hosted content **36 paths, 0 failed** · APK **286,479,215 bytes** · everything below was opened on `emulator-5554` and looked at |
+| **Released** | **v3.13.0** |
+| **App version** | `pubspec.yaml` `3.13.0+10` |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **119** · hosted content **36 paths, 0 failed** · APK **325,971,517 bytes** (the adhan upgrade adds ~39 MB across both bundle copies) · everything below was opened on `emulator-5554` and looked at |
+
+## STATE AS OF 2026-09-10 — v3.13.0: his findings, from real use
+
+He installed v3.12.0, used it, and sent fifteen findings with screenshots.
+`OWNER_FINDINGS.md` is the working list and says, item by item, what was seen
+on a device and what was not. Do not restate it here; read it.
+
+The two that mattered most, both content-correctness on the Qur'an screen:
+
+* **The running header named a surah the reader was not looking at.** The rule
+  was "the last surah whose start page is at or before this page", which at a
+  boundary page names the surah that *begins* rather than the one filling the
+  screen. His page is 235: Hud's last verses, Yusuf beginning below. Now every
+  surah on the page is named. `page_surahs.dart` + six tests on the real
+  Madinah page numbers.
+* **Picking a surah could land on a different one.** Three of the nine
+  printings paginate their own way while the surah→page table is the Madinah
+  604's. The two indexes that would navigate wrong are withheld on those three.
+
+On the adhan: the bundled files are byte-identical to their archive.org
+sources, so nothing is mis-mapped — but **six of ten were encoded at 16 kb/s**
+and the fourteen ranged over **21 dB** of loudness. Five now use much better
+takes of the same muezzin and all fourteen are levelled. Who the muezzins
+actually are is still unverified and still his to judge by ear.
+
+Also fixed and seen: landscape (the toolbar's fixed 116pt height left the
+Qur'an ~80 logical pixels), the adhan picker's frozen tick (a pushed route
+handed captured values), the ruqyah transport, the adhkar grounds, hadith card
+navigation. Fixed and NOT yet seen: the cold-start quote notification, the
+endless-spinner path, the explanation button.
+
+**The ANR is open.** Twice on debug (`Waited 5007ms for MotionEvent`), not
+reproduced on profile. Two rebuild loops on Home were removed — real waste,
+not a claimed cause.
+
+---
 
 ## STATE AS OF 2026-09-10 — v3.12.0: the audit, and the two things it found
 
@@ -153,7 +189,7 @@ HadeethEnc **3,574** hadiths in 7 languages, **2,538** of them now carrying a
 word glossary, packs **16,860,292** bytes on the bucket · **352** quotes from
 3 books · **11** photographic backgrounds, worst contrast **9.07 : 1** ·
 **5** adhan clips, all verified frame by frame · **93** tests · **36** hosted
-paths, 0 failed · APK **286,479,215 bytes**.
+paths, 0 failed · APK **325,971,517 bytes** (the adhan upgrade adds ~39 MB across both bundle copies).
 
 **A correction to v3.10.0's notes:** they said 227 library books. The real
 number was 228 — the count came from `src.count('LibraryBook(')`, which
