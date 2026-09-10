@@ -7,11 +7,24 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-10 |
-| **Released** | **v3.10.0** |
-| **App version** | `pubspec.yaml` `3.10.0+6` |
-| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **80/80** · `py -3 scripts/i18n_audit.py` **0** · hosted content **32 paths, 0 failed** · APK **281,669,162 bytes** · everything below was opened on `emulator-5554` and looked at |
+| **Released** | **v3.11.0** |
+| **App version** | `pubspec.yaml` `3.11.0+7` |
+| **Build verified?** | `flutter analyze lib test` clean · `flutter test` **93** · `py -3 scripts/i18n_audit.py` **0** · hosted content **36 paths, 0 failed** · APK **286,479,215 bytes** · everything below was opened on `emulator-5554` and looked at |
 
 ## STATE AS OF 2026-09-10 — EIGHTH SESSION, THIRD HALF (after v3.10.0)
+
+### 12. Measured for v3.11.0
+
+7 locales × **1,000** keys · **9** mushaf editions · **228** library books ·
+HadeethEnc **3,574** hadiths in 7 languages, **2,538** of them now carrying a
+word glossary, packs **16,860,292** bytes on the bucket · **352** quotes from
+3 books · **11** photographic backgrounds, worst contrast **9.07 : 1** ·
+**5** adhan clips, all verified frame by frame · **93** tests · **36** hosted
+paths, 0 failed · APK **286,479,215 bytes**.
+
+**A correction to v3.10.0's notes:** they said 227 library books. The real
+number was 228 — the count came from `src.count('LibraryBook(')`, which
+includes one occurrence that is not a catalogue entry.
 
 ### 8. The adhan video complaint — and what measuring it actually found
 

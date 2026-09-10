@@ -2,64 +2,71 @@
   {
     "lang": "ar",
     "hadeeths": 3574,
-    "db_bytes": 20045824,
-    "zip_bytes": 3524108,
+    "db_bytes": 21168128,
+    "zip_bytes": 3819309,
     "ungraded": 0,
     "no_takhrij": 0,
+    "with_words": 2538,
     "categories": 7
   },
   {
     "lang": "en",
     "hadeeths": 2328,
-    "db_bytes": 10010624,
-    "zip_bytes": 2134784,
+    "db_bytes": 10903552,
+    "zip_bytes": 2410161,
     "ungraded": 0,
     "no_takhrij": 0,
+    "with_words": 1484,
     "categories": 7
   },
   {
     "lang": "es",
     "hadeeths": 1955,
-    "db_bytes": 8372224,
-    "zip_bytes": 1755952,
+    "db_bytes": 9101312,
+    "zip_bytes": 1974022,
     "ungraded": 0,
     "no_takhrij": 0,
+    "with_words": 1239,
     "categories": 7
   },
   {
     "lang": "fr",
     "hadeeths": 1790,
-    "db_bytes": 8163328,
-    "zip_bytes": 1771948,
+    "db_bytes": 8994816,
+    "zip_bytes": 2034476,
     "ungraded": 0,
     "no_takhrij": 0,
+    "with_words": 1459,
     "categories": 7
   },
   {
     "lang": "pt",
     "hadeeths": 1382,
-    "db_bytes": 5951488,
-    "zip_bytes": 1308019,
+    "db_bytes": 6299648,
+    "zip_bytes": 1423620,
     "ungraded": 0,
     "no_takhrij": 0,
+    "with_words": 594,
     "categories": 7
   },
   {
     "lang": "ru",
     "hadeeths": 2249,
-    "db_bytes": 14610432,
-    "zip_bytes": 2536455,
+    "db_bytes": 15351808,
+    "zip_bytes": 2790857,
     "ungraded": 0,
     "no_takhrij": 0,
+    "with_words": 1440,
     "categories": 7
   },
   {
     "lang": "ur",
     "hadeeths": 2220,
-    "db_bytes": 12447744,
-    "zip_bytes": 2170978,
+    "db_bytes": 13213696,
+    "zip_bytes": 2407847,
     "ungraded": 0,
     "no_takhrij": 0,
+    "with_words": 1429,
     "categories": 7
   }
 ]

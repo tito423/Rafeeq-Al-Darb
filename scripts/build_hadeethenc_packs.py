@@ -170,6 +170,7 @@ def build(lang, cats, src):
         "version": "",
         "retrieved_hadeeths": "2026-09-09",
         "retrieved_categories": "2026-09-10",
+        "retrieved_word_meanings": "2026-09-10",
     }
     for k, v in meta.items():
         out.execute("INSERT INTO meta VALUES (?,?)", (k, v))

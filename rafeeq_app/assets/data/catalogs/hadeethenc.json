@@ -10,56 +10,56 @@
       "name": "العربية",
       "hadeeths": 3574,
       "categories": 7,
-      "bytes": 3524108,
-      "db_bytes": 20045824
+      "bytes": 3819309,
+      "db_bytes": 21168128
     },
     {
       "lang": "en",
       "name": "English",
       "hadeeths": 2328,
       "categories": 7,
-      "bytes": 2134784,
-      "db_bytes": 10010624
+      "bytes": 2410161,
+      "db_bytes": 10903552
     },
     {
       "lang": "es",
       "name": "Español",
       "hadeeths": 1955,
       "categories": 7,
-      "bytes": 1755952,
-      "db_bytes": 8372224
+      "bytes": 1974022,
+      "db_bytes": 9101312
     },
     {
       "lang": "fr",
       "name": "Français",
       "hadeeths": 1790,
       "categories": 7,
-      "bytes": 1771948,
-      "db_bytes": 8163328
+      "bytes": 2034476,
+      "db_bytes": 8994816
     },
     {
       "lang": "pt",
       "name": "Português",
       "hadeeths": 1382,
       "categories": 7,
-      "bytes": 1308019,
-      "db_bytes": 5951488
+      "bytes": 1423620,
+      "db_bytes": 6299648
     },
     {
       "lang": "ru",
       "name": "Русский",
       "hadeeths": 2249,
       "categories": 7,
-      "bytes": 2536455,
-      "db_bytes": 14610432
+      "bytes": 2790857,
+      "db_bytes": 15351808
     },
     {
       "lang": "ur",
       "name": "اردو",
       "hadeeths": 2220,
       "categories": 7,
-      "bytes": 2170978,
-      "db_bytes": 12447744
+      "bytes": 2407847,
+      "db_bytes": 13213696
     }
   ]
 }

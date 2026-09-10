@@ -152,7 +152,12 @@ abstract final class AppConfig {
   ///
   /// v1 (2026‑09‑10): first packs — 3,574 hadiths across seven languages,
   /// crawled 2026‑09‑09, category titles refetched per language 2026‑09‑10.
-  static const String hadeethEncVersion = 'v1';
+  /// v1 -> v2 (2026‑09‑10): معاني الكلمات. The first crawl never stored the
+  /// per-hadith glossary, and a second one asking for `words_meanings_ar`
+  /// found nothing because on the **Arabic** record that field is
+  /// `words_meanings`, unsuffixed. 2,538 of the 3,574 carry one; a pack now
+  /// ships it and the detail screen shows it under the hadith.
+  static const String hadeethEncVersion = 'v2';
 
 
   /// One ayah on everyayah.com: `<folder>/SSSAAA.mp3`, both parts zero-padded
