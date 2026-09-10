@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geolocator/geolocator.dart';
 import 'notification_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -47,10 +48,41 @@ class AlarmPermissionsService {
     _ready = true;
   }
 
-  /// Notification + exact-alarm prompts, called once **after** the splash
-  /// screen finishes (not from `main()`, which would pop them over the
-  /// splash video). Safe to call more than once — each request no-ops if
-  /// already granted.
+  /// Every startup grant, asked **once per launch and only once the user is
+  /// actually inside the app** — location first, then notifications and the
+  /// exact-alarm gate.
+  ///
+  /// WHERE THIS IS CALLED FROM, AND WHY IT MOVED.
+  /// It used to fire from `SplashScreen._proceed`, 900 ms after the hand-off,
+  /// so that no dialog could cover the splash video. Timed on a **fresh
+  /// install** (`dumpsys window` polled every 200 ms plus screenshots): the
+  /// splash ended at ~12 s, the onboarding screen «اختر مصحفك» came up at
+  /// ~13 s, and the location dialog landed at ~15 s — **on top of the
+  /// onboarding**, while the user was choosing a mushaf. The splash was never
+  /// the screen being covered.
+  ///
+  /// So it is asked from `AppShell`'s first frame instead, which is the one
+  /// point both paths pass through: splash → shell for a returning user, and
+  /// splash → onboarding → shell on a first run. Nothing the app does in its
+  /// first seconds depends on these grants.
+  bool _askedThisLaunch = false;
+
+  Future<void> requestStartupGrants() async {
+    if (_askedThisLaunch) return;
+    _askedThisLaunch = true;
+    try {
+      // Location first — the owner asked for it to be the first prompt.
+      if (await Geolocator.checkPermission() == LocationPermission.denied) {
+        await Geolocator.requestPermission();
+      }
+    } catch (_) {
+      // Best-effort: prayer times fall back to the cached fix without it.
+    }
+    await requestStartupPermissions();
+  }
+
+  /// Notification + exact-alarm prompts. Safe to call more than once — each
+  /// request no-ops if already granted.
   Future<void> requestStartupPermissions() async {
     final androidPlugin = _plugin
         .resolvePlatformSpecificImplementation<

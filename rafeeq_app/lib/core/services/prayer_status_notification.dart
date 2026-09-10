@@ -45,7 +45,13 @@ class PrayerStatusNotification {
       await NotificationRouter.instance.ensureInitialized();
       final androidImpl = _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
-      await androidImpl?.requestNotificationsPermission();
+      // Deliberately does NOT ask for the notification permission here.
+      // This runs from `AppShell`'s first frame, before
+      // `AlarmPermissionsService.requestStartupGrants` has had its
+      // delay, so its dialog jumped the queue and the owner's stated
+      // order — location first — came out backwards on a fresh
+      // install. The startup sequence owns the asking; this only
+      // needs the channel.
       await androidImpl?.createNotificationChannel(
         AndroidNotificationChannel(
           _channelId,

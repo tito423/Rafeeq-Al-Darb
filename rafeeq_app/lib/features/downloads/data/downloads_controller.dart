@@ -22,13 +22,25 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.adhan => 'downloads.cat_adhan',
       };
 
-  /// [DownloadManager] `category` string(s) that map to this bucket
-  /// (empty for the two that don't go through DownloadManager).
+  /// [DownloadManager] `category` string(s) that map to this bucket.
+  ///
+  /// **Every** string any screen passes as `DownloadManager.enqueue(category:)`
+  /// has to appear here, or that download becomes invisible: it occupies disk
+  /// and the storage hub neither counts it nor can free it. That is exactly
+  /// what happened to `hadeethenc` (the per-language hadith packs, ~1-4 MB
+  /// each) and `ruqyah` (audio, tens of MB) — both shipped enqueueing under a
+  /// category no bucket claimed. `downloads_categories_test.dart` reads the
+  /// enqueue sites out of `lib/` and fails if a new one is unclaimed.
+  ///
+  /// `mushafs` and `recitations` also hold content of their own outside
+  /// DownloadManager (MushafPageService / AyahAudioService); for those two the
+  /// two sources are added together below.
   List<String> get managerCategories => switch (this) {
-        DownloadCategory.hadith => const ['hadith'],
+        DownloadCategory.mushafs => const [],
+        DownloadCategory.recitations => const ['ruqyah'],
+        DownloadCategory.hadith => const ['hadith', 'hadeethenc'],
         DownloadCategory.books => const ['books', 'books_text'],
         DownloadCategory.adhan => const ['adhan', 'adhan_video'],
-        _ => const [],
       };
 }
 
@@ -41,7 +53,17 @@ class CategoryUsage {
 
 class StorageSummary {
   final List<CategoryUsage> categories;
-  const StorageSummary(this.categories);
+
+  /// One entry per bucket, enforced. A category listed twice reads as a
+  /// plausible screen — the row shows the first entry's size while the
+  /// "Storage used" total silently doubles it. That shipped for one build of
+  /// this file: 348.1 MB of mushaf pages, one row, and a headline of 696.2 MB.
+  StorageSummary(this.categories)
+      : assert(
+          categories.map((c) => c.category).toSet().length ==
+              categories.length,
+          'a category is listed twice; totalBytes would double-count it',
+        );
 
   int get totalBytes =>
       categories.fold(0, (sum, c) => sum + c.bytes);
@@ -70,8 +92,6 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       mushafItems++;
     }
   }
-  out.add(CategoryUsage(DownloadCategory.mushafs, mushafBytes, mushafItems));
-
   // ── Recitations (AyahAudioService, one dir per reciter identifier) ──
   final reciters = await ref.watch(recitersProvider.future);
   var reciteBytes = 0;
@@ -83,16 +103,12 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       reciteItems++;
     }
   }
-  out.add(
-      CategoryUsage(DownloadCategory.recitations, reciteBytes, reciteItems));
-
-  // ── DownloadManager-backed buckets (hadith / books / adhan) ──
+  // ── DownloadManager artifacts, folded into whichever bucket claims them ──
+  // Ruqyah audio lands in `recitations` on top of the per-reciter caches, so
+  // the loop covers every bucket rather than only the three that have no
+  // service of their own.
   final artifacts = await DownloadManager.instance.registeredArtifacts();
-  for (final cat in [
-    DownloadCategory.hadith,
-    DownloadCategory.books,
-    DownloadCategory.adhan,
-  ]) {
+  for (final cat in DownloadCategory.values) {
     final ids = artifacts
         .where((a) => cat.managerCategories.contains(a['category']))
         .map((a) => a['id'] as String)
@@ -101,7 +117,13 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
     for (final id in ids) {
       bytes += await DownloadManager.instance.artifactSize(id);
     }
-    out.add(CategoryUsage(cat, bytes, ids.length));
+    if (cat == DownloadCategory.mushafs) {
+      out.add(CategoryUsage(cat, mushafBytes + bytes, mushafItems + ids.length));
+    } else if (cat == DownloadCategory.recitations) {
+      out.add(CategoryUsage(cat, reciteBytes + bytes, reciteItems + ids.length));
+    } else {
+      out.add(CategoryUsage(cat, bytes, ids.length));
+    }
   }
 
   return StorageSummary(out);
@@ -123,12 +145,16 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
     case DownloadCategory.hadith:
     case DownloadCategory.books:
     case DownloadCategory.adhan:
-      final artifacts = await DownloadManager.instance.registeredArtifacts();
-      for (final a in artifacts) {
-        if (category.managerCategories.contains(a['category'])) {
-          await DownloadManager.instance.remove(a['id'] as String);
-        }
-      }
+      break;
+  }
+  // Whatever the bucket also owns in DownloadManager goes with it — for
+  // `recitations` that is the ruqyah audio, which the per-reciter caches above
+  // know nothing about.
+  final artifacts = await DownloadManager.instance.registeredArtifacts();
+  for (final a in artifacts) {
+    if (category.managerCategories.contains(a['category'])) {
+      await DownloadManager.instance.remove(a['id'] as String);
+    }
   }
   ref.invalidate(storageSummaryProvider);
 }

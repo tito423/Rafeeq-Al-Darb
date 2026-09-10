@@ -4,11 +4,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../app/shell/app_shell.dart';
-import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../onboarding/data/onboarding_state.dart';
@@ -142,39 +140,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             : const OnboardingScreen(),
       ),
     );
-    // P3‑50: request the startup permissions now that the splash is gone —
-    // location first (the owner asked for it to be the first prompt), then
-    // notifications + exact alarm. Scheduled on the binding (not this
-    // widget's context) so it still fires after this screen is disposed.
-    //
-    // P3‑57: and only after the hand-off has finished *drawing*. A
-    // post-frame callback fires on the very next frame, i.e. one frame into
-    // the 300ms `MaterialPageRoute` transition, so the OS permission dialog
-    // came up over a splash that was still fading out — which is what the
-    // owner saw as the splash "not showing completely". The delay is longer
-    // than the transition on purpose; nothing depends on these grants
-    // arriving in the first second.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(_requestStartupPermissions());
-    });
-  }
-
-  /// Long enough to outlast the `MaterialPageRoute` transition (300ms) plus
-  /// the first real frame of the screen behind it, so no permission dialog
-  /// can ever overlap the splash video or its hand-off.
-  static const _permissionDelay = Duration(milliseconds: 900);
-
-  Future<void> _requestStartupPermissions() async {
-    await Future<void>.delayed(_permissionDelay);
-    try {
-      final loc = await Geolocator.checkPermission();
-      if (loc == LocationPermission.denied) {
-        await Geolocator.requestPermission();
-      }
-    } catch (_) {
-      // best-effort — prayer times fall back to cache without it
-    }
-    await AlarmPermissionsService.instance.requestStartupPermissions();
+    // The startup permission prompts used to fire from here. They do not
+    // any more: timed on a fresh install, the dialog landed on top of the
+    // ONBOARDING screen while the user was choosing a mushaf, not on the
+    // splash. `AppShell` asks for them now — see
+    // `AlarmPermissionsService.requestStartupGrants`.
   }
 
   @override

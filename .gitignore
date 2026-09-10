@@ -76,3 +76,5 @@ scripts/mushaf_fit_build/
 hadeethenc.db
 hadeethenc.db-journal
 prayer_fixture_progress.jsonl
+
+code_health.txt

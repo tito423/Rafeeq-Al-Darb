@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
+import '../../core/services/alarm_permissions_service.dart';
 import '../../core/services/prayer_status_notification.dart';
 import '../../features/adhan/data/prayer_status_enabled_provider.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
@@ -58,6 +59,14 @@ class _AppShellState extends ConsumerState<AppShell>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _syncPrayerStatus();
+      // The one point both first-run and returning users pass through, so
+      // this is where the startup grants are asked for. Delayed past the
+      // route transition so the dialog lands on a settled screen rather than
+      // on one that is still animating in; the service itself only ever asks
+      // once per launch.
+      Future<void>.delayed(const Duration(milliseconds: 900), () {
+        AlarmPermissionsService.instance.requestStartupGrants();
+      });
     });
   }
 
