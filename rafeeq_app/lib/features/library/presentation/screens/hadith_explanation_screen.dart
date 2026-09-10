@@ -53,7 +53,9 @@ class HadithExplanationScreen extends ConsumerWidget {
             );
           }
           return FutureBuilder<List<HadeethItem>>(
-            future: repo.search(query, limit: 20),
+            // searchArabic, not search: the query is an Arabic matn and a
+            // non-Arabic pack's `search` column holds the translation.
+            future: repo.searchArabic(query, limit: 20),
             builder: (context, snap) {
               if (snap.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

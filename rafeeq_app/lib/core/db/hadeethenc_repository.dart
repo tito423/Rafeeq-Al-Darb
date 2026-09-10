@@ -216,6 +216,61 @@ class HadeethEncRepository {
   /// The boundary test is [wordBoundaryContains], not
   /// [arabicWordBoundaryContains]: see its doc for why a space-only and
   /// an Arabic-only test both fail on a corpus in three scripts.
+  /// Search the **Arabic** text, whatever language the pack is in.
+  ///
+  /// THE BUG THIS FIXES, seen on emulator-5554. [search] matches the pack's
+  /// `search` column, and in a non-Arabic pack that column holds the
+  /// *translation*: in `hadeethenc_en.db` row 3377 it reads
+  /// «‘umar (may allah be pleased with him) used to make me sit with…».
+  /// The "find this hadith's explanation" flow searches with an Arabic matn
+  /// lifted from the nine books, so against an English pack it could never
+  /// match anything, and the screen said «Nothing close to its wording was
+  /// found» to every reader whose app was not in Arabic — six of the seven
+  /// locales.
+  ///
+  /// Every pack carries `hadeeth_ar` regardless of its language, so that is
+  /// what this reads. The column is not pre-normalised the way `search` is
+  /// (trap #2: the stored Arabic is fully diacritised, so a plain `LIKE`
+  /// matches nothing), so each row is normalised here, in Dart, exactly as
+  /// [search] normalises its own column — and paged for the same
+  /// memory-budget reason (trap #4).
+  Future<List<HadeethItem>> searchArabic(String query, {int limit = 30}) async {
+    final q = query.trim();
+    if (q.length < 2) return const [];
+    final needles = <String>{
+      normalizeArabic(q).toLowerCase(),
+      normalizeArabicLoose(q).toLowerCase(),
+    }..removeWhere((n) => n.isEmpty);
+    if (needles.isEmpty) return const [];
+
+    final out = <HadeethItem>[];
+    const page = 400;
+    var offset = 0;
+    while (out.length < limit) {
+      final rows = await _db.query(
+        'hadeeths',
+        columns: ['$_columns, hadeeth_ar'],
+        orderBy: 'CAST(id AS INTEGER)',
+        limit: page,
+        offset: offset,
+      );
+      if (rows.isEmpty) break;
+      for (final r in rows) {
+        final raw = r['hadeeth_ar'] as String? ?? '';
+        if (raw.isEmpty) continue;
+        final hay = normalizeArabic(raw).toLowerCase();
+        final loose = normalizeArabicLoose(raw).toLowerCase();
+        if (needles.any((n) =>
+            wordBoundaryContains(hay, n) || wordBoundaryContains(loose, n))) {
+          out.add(HadeethItem.fromRow(r));
+          if (out.length >= limit) break;
+        }
+      }
+      offset += page;
+    }
+    return out;
+  }
+
   Future<List<HadeethItem>> search(String query, {int limit = 100}) async {
     final q = query.trim();
     if (q.length < 2) return const [];

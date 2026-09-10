@@ -14,6 +14,19 @@
 /// Deliberately conservative: it returns null rather than a guess when there
 /// is no quoted span to take, because the caller uses this to *search*, and a
 /// bad query is worse than no button.
+///
+/// HOW FAR THAT REACHES, measured over the bundled database rather than
+/// guessed — **49,019 of 67,153 hadiths (73%)** quote their matn, so the
+/// button appears on close to three quarters of them:
+///
+///     مسند أحمد       89%      سنن الدارمي     90%
+///     الترمذي / ابن ماجه  68%      البخاري         61%
+///     أبو داود / النسائي  58%      مسلم           56%
+///     موطأ مالك        28%   ← its style embeds sayings differently
+///
+/// On the rest the button is simply absent, which is the honest outcome: an
+/// isnad is particular to its edition and searching another collection for it
+/// returns nothing, or worse, something else.
 library;
 
 /// The quote marks these editions actually use, gathered by reading the real
