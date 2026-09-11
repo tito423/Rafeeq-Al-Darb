@@ -71,7 +71,28 @@ finished, and did «إصلاح التحميلات» bring it back? Those three a
 separate a queue problem from a host refusing a burst (already measured as
 intermittent, see the second batch's A2) from a task the app lost track of.
 
-STATUS: **open, and honestly open**
+STATUS: **FIXED in v3.16.0** — see the entry below; the cause turned out to
+be a leaked queue slot, not the thread pool. The hypothesis and its rejection
+are kept here because the rejection is the useful part.
+
+## C2b · The jam, found
+
+ counts a task active the moment it hands it to
+the platform, and on a refused enqueue it logs and **never removes it or
+decrements the counters** — only  does, and a task that never
+started never produces the update that would call it. Every refusal burns a
+slot for the life of the process: **eight kill the file queue, twelve kill the
+recitation queue** («بتهنج تماما»), and repair adds to that dead queue
+(«ولا بيعمل اي حاجة نهائي»).
+
+Fixed on both sides: the plugin publishes  and nobody was
+listening — the slot is returned and the task retried up to three times with a
+growing delay; and repair calls  first, freeing every slot held
+by a task the platform has never heard of, while a live task keeps its slot.
+
+STATUS: **FIXED, 5 tests against the real ** — the repair
+button was seen reporting «تم استئناف 2 تحميل غير مكتمل» on emulator-5554,
+but **the jammed state itself was never reproduced on a device.**
 
 ## C3 · A third text layout, exactly like the one he reads in
 

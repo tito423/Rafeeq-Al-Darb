@@ -6,25 +6,45 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-11 |
-| **Released** | **v3.15.0** at `eb210cf` — tag on `master`, tag SHA == HEAD, one release in the repo |
-| **App version** | `pubspec.yaml` `3.15.0+12` |
-| **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+. **Gradle still signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
-| **Verified today** | `flutter analyze lib test` clean · `flutter test` **147 passed** · `py -3 scripts/verify_hosted_content.py` **15 paths, 0 failed** · release APK installed on a freshly-rebooted emulator, launched with **0 ANRs**, and downloaded a book it did not already have |
+| **Last updated** | 2026-09-11 (late) |
+| **Released** | **v3.16.0** at `32bc414` — tag on `master`, tag SHA == HEAD, one release in the repo |
+| **App version** | `pubspec.yaml` `3.16.0+13` |
+| **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
+| **Verified today** | `flutter analyze lib test` clean · `flutter test` **170 passed** · on emulator-5554: the per-line highlight, the third text layout, rotation opening the page by itself, the image mode refusing to rotate, the six-printing list, and «إصلاح التحميلات» reporting «تم استئناف 2 تحميل غير مكتمل» |
 
 ## MEASURED, 2026-09-11 (not remembered)
 
 | | |
 |---|---|
-| locales × keys | 7 × 1,030 |
-| mushaf editions | 9 |
+| locales × keys | 7 × 1,032 |
+| mushaf editions | **6** — three were removed for having no ayah coordinates |
 | library books | 228 |
 | `hadith.db` | 109,731,840 bytes · 9 books · 1,482 chapters · 67,153 hadiths · 45,219 graded (67%) |
 | Hadeeth Encyclopaedia | 7 language packs · 3,574 hadiths in Arabic, **every one with an explanation** |
 | adhans | 14 · nothing below 48 kb/s · loudness spread 6.5 dB |
-| release APK | 330,145,342 bytes |
-| code | `lib` 189 files / 49,361 lines · `test` 36 files / 2,891 lines |
-| history | 336 commits |
+| release APK | 330,194,494 bytes |
+| code | `lib` 190 files / 50,056 lines · `test` 41 files / 3,394 lines |
+| history | 351 commits |
+
+## WHAT v3.16.0 FIXED, and the one thing it did not
+
+**The download jam.** `MemoryTaskQueue.advanceQueue` counts a task as active
+the moment it hands it to the platform, and on a refused enqueue it neither
+removes it nor decrements the counters — so every refusal burns one slot for
+the life of the process, eight kill the file queue and twelve kill the
+recitation queue, and repair then adds to a queue with no slots left. The app
+now listens to the plugin's `enqueueErrors` (nobody did), gives the slot back,
+and retries up to three times; and repair unjams against the platform's live
+task list before it does anything else. **The jammed state itself has never
+been reproduced on a device — only the healthy path was seen.**
+
+**A correction that cost a rebuild and was worth it.** The stall was first
+blamed on WorkManager's four-thread default executor, read correctly out of
+`work-runtime-2.11.0.aar`. A 20-thread pool was written, shipped into a
+checkpoint, then **measured on the device and reverted**: 20 threads gave 11
+established connections, a deliberately narrowed 2-thread pool gave 10.
+`TaskWorker` is a `CoroutineWorker`, so the transfer never occupies a
+WorkManager thread at all. Reading gives a hypothesis; the device decides.
 
 ## STATE AS OF 2026-09-11 — two rounds of his own findings, and the ANR explained
 
