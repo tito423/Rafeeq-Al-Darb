@@ -3,9 +3,6 @@ package com.tito.rafeeq_aldarb
 import android.app.Application
 import android.util.Log
 import androidx.work.Configuration
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 /**
  * The app's Application class, and it exists for exactly one reason:
@@ -64,42 +61,5 @@ class RafeeqApplication : Application(), Configuration.Provider {
             // every state change, and this app enqueues one task per ayah —
             // 286 for a single surah.
             .setMinimumLoggingLevel(Log.WARN)
-            .setExecutor(downloadExecutor)
             .build()
-
-    /**
-     * The pool every download in this app actually runs on.
-     *
-     * THE STALL THIS ADDRESSES: «التلاوة بتقف تنزيل لما بحمل حاجات كتير في
-     * نفس الوقت». The recitation was not failing and the CDN was not refusing
-     * — the tasks were queued behind a thread pool four threads wide.
-     *
-     * Read out of `work-runtime-2.11.0.aar` itself rather than assumed —
-     * `ConfigurationKt.createDefaultExecutor` compiles to:
-     *
-     *     Executors.newFixedThreadPool(max(2, min(availableProcessors - 1, 4)))
-     *
-     * so it is **2 to 4 threads, and never more than 4**, on any device: 6
-     * cores on emulator-5554 gives 4, and a modern 8-core phone also gives 4.
-     * Every transfer the app makes goes through `background_downloader`, which
-     * runs each one as a WorkManager Worker on that pool — mushaf pages, books,
-     * the hadith database, adhan clips, and every single ayah of a recitation.
-     *
-     * `DownloadEngine` allows 8 file tasks and 12 recitation tasks in flight,
-     * i.e. 20, and widening those queues was never going to help while the
-     * platform underneath ran four at a time. Whatever was enqueued first —
-     * 604 mushaf pages, say — held every thread, and the ayah tasks behind
-     * them did not move. From the outside that is a recitation that stopped.
-     *
-     * 20 threads, matching the two queues' combined cap, so the Dart-side
-     * limits are the real ones again; `maxConcurrentByHost` (4 and 6) is what
-     * keeps the app polite to the CDNs, and that is untouched. These threads
-     * sit blocked on a socket rather than burning CPU, and
-     * `allowCoreThreadTimeOut` lets every one of them die 30 seconds after the
-     * last download finishes, so an app that is not downloading carries none
-     * of them.
-     */
-    private val downloadExecutor = ThreadPoolExecutor(
-        20, 20, 30L, TimeUnit.SECONDS, LinkedBlockingQueue(),
-    ).apply { allowCoreThreadTimeOut(true) }
 }

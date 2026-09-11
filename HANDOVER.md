@@ -1146,9 +1146,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 11:40 — IN PROGRESS — resume here**
+**2026-09-11 12:10 — IN PROGRESS — resume here**
 
-the third text layout, «زي بتاع ختمة بالظبط». QuranTextLayout.reading is the page layout with the ornament taken out: the illuminated surah banner drops to a plain centred name, the open rosette becomes a filled disc with the number in the paper colour, leading goes 2.1 to 1.85 and the side margins 18 to 8, which is most of why the reference page fits more of the surah on one screen. The toolbar control cycles now instead of flipping, and it is labelled with the layout it will GIVE you. Two things that break quietly when an enum like this grows are covered: isFlowing exists so nobody writes == page and sends reading down the cards branch, and the test walks one full lap to prove no value is unreachable. layout_reading is in all seven locales (trap 8). 166 tests pass, analyze clean. Nothing in this batch has been opened on a device yet - building next.
+CORRECTION, and it is mine. The previous checkpoint said the recitation stall was caused by WorkManager's 4-thread default executor and that a 20-thread pool fixed it. That is wrong and the pool is reverted. Tested on emulator-5554 with two mushafs and al-Baqarah's 286 ayahs downloading together, counting established TCP connections out of /proc/net/tcp: a 20-thread pool gave 11 connections with al-Baqarah at 10 of 286 and climbing, and a deliberately narrowed 2-thread pool gave 10 connections with al-Baqarah at 53 of 286 and climbing. No difference. The reason is in the plugin's own source - TaskWorker is a CoroutineWorker, so doWork runs on the coroutine context and the transfer sits in withContext(Dispatchers.IO), never occupying a WorkManager executor thread at all. The bytecode reading was right and the conclusion drawn from it was not. C2 is open again and says so, with the three questions that would actually identify it. The test now documents the rejected hypothesis and guards only what was measured. 165 tests pass.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -1,4 +1,127 @@
-# Work queue — the owner's third batch, 2026-09-11
+# Work queue — the owner's fourth batch, 2026-09-11 (late)
+
+Five decisions in one message, after reading the third batch's answers.
+
+## C1 · Any imaged mushaf without ayah coordinates leaves the app
+
+> «حل جذري لتظليل المصاحف … اي مصحف مصورة مش محدد اجزاء الايات عشان التظليل
+> شيله من التطبيق كله وريح نفسك وريحني»
+
+Removed: **shamarly** (521 pages), **indopak_tajweed** (564),
+**madinah_nastaleeq** (611). Nine editions → six, and the test asserting a
+good layer is now an invariant over the whole catalogue instead of a
+hand-kept list of ids.
+
+The consequence that would have bitten silently: `storageSummaryProvider`
+walks the catalogue, so those printings' downloaded pages would have sat on
+the device for ever with no button left that could free them.
+`purgeUnknownEditions` deletes a page directory whose edition is gone, and can
+only ever do that for an id the live catalogue does not contain.
+
+STATUS: FIXED, tests pass — **not yet opened on a device**
+
+## C2 · The recitation stalls while other downloads run
+
+> «بس حل موضوع التلاوة بتقف تنزيل لما بحمل حاجات كتير في نفس الوقت»
+
+**NOT FIXED. A hypothesis was tested on the device and rejected, and the
+change that went with it was reverted rather than shipped with a story
+attached to it.**
+
+The hypothesis, and why it looked right: `background_downloader` runs every
+transfer as a WorkManager Worker, and WorkManager's default executor — read
+out of `work-runtime-2.11.0.aar`, `ConfigurationKt.createDefaultExecutor` —
+compiles to
+
+```
+Executors.newFixedThreadPool(max(2, min(availableProcessors - 1, 4)))
+```
+
+**four threads at most on any device**, against `DownloadEngine`'s 20 tasks in
+flight. That reads exactly like sixteen tasks waiting for a thread.
+
+The measurement that killed it, on emulator-5554 — two mushafs and
+al-Baqarah's 286 ayahs downloading together, counting established TCP
+connections out of `/proc/net/tcp`:
+
+| WorkManager pool | connections | al-Baqarah |
+|---|---|---|
+| 20 threads | 11 | 10 / 286, climbing |
+| **2 threads** | 10 | 53 / 286, climbing |
+
+No difference at all. The reason is in the plugin's own source: `TaskWorker`
+is a **`CoroutineWorker`**, so `doWork` runs on the coroutine context and the
+transfer sits inside `withContext(Dispatchers.IO)` — it never occupies a
+WorkManager executor thread in the first place.
+
+**What is now known:**
+
+* Two mushafs + a full surah download together on this emulator, at ~10
+  simultaneous connections, and every one of them keeps advancing. **The stall
+  did not reproduce here.**
+* The two queues are separate objects with separate per-host counters, so a
+  mushaf download cannot consume a recitation slot.
+* The mushaf pages come from R2 and the ayahs from the audio CDNs, so the
+  per-host caps cannot collide either.
+
+**What would identify it — needs him:** when the recitation stopped, what else
+was downloading at that moment, did it start again on its own after the others
+finished, and did «إصلاح التحميلات» bring it back? Those three answers
+separate a queue problem from a host refusing a burst (already measured as
+intermittent, see the second batch's A2) from a task the app lost track of.
+
+STATUS: **open, and honestly open**
+
+## C3 · A third text layout, exactly like the one he reads in
+
+> «انت تضيف وضع نصي زي بتاع ختمة بالظبط يبقى المجموع نصي ٣»
+
+`QuranTextLayout.reading` — the page layout with the ornament taken out:
+
+| | page | reading |
+|---|---|---|
+| surah banner | illuminated frame | plain centred name |
+| ayah marker | open rosette, gold number | filled disc, number in paper colour |
+| leading | 2.1 | 1.85 |
+| side margins | 18 | 8 |
+
+The toolbar control cycles instead of flipping, and is labelled with the
+layout it will give you.
+
+STATUS: FIXED, 4 tests — **not yet opened on a device**
+
+## C4 · The reciting ayah must be fully visible
+
+> «لما تيجي الاية عليه وفيه جزء منها مش باين في الصفحة خليها تقزح لفوق عشان
+> تبان كلها»
+
+Centring a card is right only while the card fits. Al-Baqarah 282 is a card
+several screens tall, so centring it lost its beginning AND its end. A card
+taller than the viewport is now shown from the top. The flowing layouts put
+the verse's start a third of the way down rather than centred — they know
+where a verse begins but not how tall it is, so leaving twice as much room
+below it is the best available guess.
+
+STATUS: FIXED — **not yet opened on a device**
+
+## C5 · Rotation belongs to the text mode, and opens the page
+
+> «خلي الاورينتيشن بس على النص لو ده افضل واول ماعمل اورينتيشن الصفحة تكبر
+> بملئ الشاشة اوتوماتيك زي ختمة»
+
+The image mode is locked to portrait; the text mode rotates. The lock is
+released when the screen goes away, so nothing else in the app inherits it.
+
+Turning sideways enables full-screen by itself and restores what he had when
+he turns back. Deliberately **not persisted** — it is how the phone is being
+held, not a preference, and persisting it would leave a reader who rotated
+once permanently immersed in portrait.
+
+STATUS: FIXED — **not yet opened on a device**
+
+---
+
+## الدفعة الثالثة — 2026-09-11
 
 Sent while testing v3.15.0 on his own phone, with 30 screenshots — including
 **screenshots of two other apps** as references for how a highlight and a dark

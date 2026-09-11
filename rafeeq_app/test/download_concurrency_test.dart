@@ -2,80 +2,80 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// The Dart download queues are only real if the platform underneath them is
-/// at least as wide.
+/// What the app's download concurrency actually is, and one hypothesis about
+/// it that was tested on a device and **rejected**.
 ///
 /// The owner reported «التلاوة بتقف تنزيل لما بحمل حاجات كتير في نفس الوقت».
-/// Nothing was failing: `background_downloader` runs every transfer as a
-/// WorkManager Worker, and WorkManager's default executor — read out of
-/// `work-runtime-2.11.0.aar`, `ConfigurationKt.createDefaultExecutor` —
-/// is
+///
+/// THE HYPOTHESIS, AND WHY IT LOOKED RIGHT. `background_downloader` runs every
+/// transfer as a WorkManager Worker, and WorkManager's default executor — read
+/// out of `work-runtime-2.11.0.aar`, `ConfigurationKt.createDefaultExecutor` —
+/// compiles to
 ///
 ///     Executors.newFixedThreadPool(max(2, min(availableProcessors - 1, 4)))
 ///
-/// **four threads at most, on any device.** `DownloadEngine` allows 20 tasks
-/// in flight; sixteen of them were waiting on a thread. Widening the Dart
-/// queues (which a previous session did, 2 → 8 and 6 → 12) could not help.
+/// i.e. **four threads at most on any device**, while `DownloadEngine` allows
+/// 20 tasks in flight. That reads like sixteen tasks waiting on a thread.
 ///
-/// So this test ties the two together: whatever the queues are set to, the
-/// pool in `RafeeqApplication` has to cover them.
+/// THE MEASUREMENT THAT KILLED IT, on emulator-5554: two mushafs and
+/// al-Baqarah's 286 ayahs downloading together, counting the app's established
+/// TCP connections out of `/proc/net/tcp`.
+///
+///   * a 20-thread pool → **11 connections**, al-Baqarah at 10/286 climbing;
+///   * a **2**-thread pool → **10 connections**, al-Baqarah at 53/286.
+///
+/// No difference. The reason is in the plugin: `TaskWorker` is a
+/// `CoroutineWorker`, so `doWork` runs on the coroutine context and the
+/// transfer itself sits in `withContext(Dispatchers.IO)` — it never occupies
+/// a WorkManager executor thread at all. The pool was reverted rather than
+/// shipped with a story attached to it.
+///
+/// So what this test guards is what is actually true: the Dart-side queues are
+/// the app's real limits, and the per-host caps are the measured, polite ones.
+/// **The owner's stall is not reproduced and not explained** — see
+/// `WORK_QUEUE.md` C2.
 void main() {
   final engine =
       File('lib/core/services/download_engine.dart').readAsStringSync();
-  final application = File(
-    'android/app/src/main/kotlin/com/tito/rafeeq_aldarb/RafeeqApplication.kt',
-  ).readAsStringSync();
 
-  int sumOf(RegExp re, String src) {
-    final hits = re.allMatches(src).map((m) => int.parse(m.group(1)!));
-    expect(hits, isNotEmpty, reason: 'nothing matched ${re.pattern}');
-    return hits.reduce((a, b) => a + b);
-  }
-
-  test('the WorkManager pool covers both download queues', () {
-    // `maxConcurrentByHost` also ends in `Concurrent...`, so the match is
-    // anchored on the exact field name.
-    final queued = sumOf(
-      RegExp(r'\.\.maxConcurrent = (\d+)'),
-      engine,
-    );
-    expect(queued, greaterThanOrEqualTo(12),
-        reason: 'the queues were widened for a reason; this reads them');
-
-    final pool = RegExp(r'ThreadPoolExecutor\(\s*(\d+),').firstMatch(application);
-    expect(pool, isNotNull,
-        reason: 'RafeeqApplication no longer sizes a pool — WorkManager is '
-            'back to its 4-thread default and the recitation will stall '
-            'behind any other download');
-    expect(int.parse(pool!.group(1)!), greaterThanOrEqualTo(queued),
-        reason: 'the queues allow $queued tasks in flight and the platform '
-            'pool is narrower, so that many can never actually run');
-  });
-
-  test('the pool is actually handed to WorkManager', () {
-    // A pool that is built and not passed to `Configuration.Builder` changes
-    // nothing at all, and would still satisfy the test above.
-    expect(application, contains('.setExecutor('));
-    expect(application, contains('Configuration.Provider'));
-  });
-
-  test('the pool lets its threads go when nothing is downloading', () {
-    // 20 threads that never die would be 20 threads on a phone that is just
-    // reading the mushaf.
-    expect(application, contains('allowCoreThreadTimeOut(true)'));
-  });
-
-  test('per-host politeness is unchanged', () {
-    // Widening the pool must not turn into a burst at one CDN: the host caps
-    // are what keep this polite, and they are the numbers that were measured
-    // against the real hosts.
-    final hostCaps = RegExp(r'maxConcurrentByHost = (\d+)')
+  List<int> fieldValues(String field) {
+    final hits = RegExp('$field = (\\d+)')
         .allMatches(engine)
         .map((m) => int.parse(m.group(1)!))
         .toList();
-    expect(hostCaps, isNotEmpty);
+    expect(hits, isNotEmpty, reason: 'no $field in DownloadEngine');
+    return hits;
+  }
+
+  test('both queues are wide enough to be worth having', () {
+    // These were 2 and 6 and were widened after he first reported downloads
+    // «بتقف خالص» with four mushafs going. Two queues: files, recitations.
+    final caps = fieldValues(r'\.\.maxConcurrent');
+    expect(caps.length, 2);
+    for (final c in caps) {
+      expect(c, greaterThanOrEqualTo(8));
+    }
+  });
+
+  test('per-host politeness is capped, and measured', () {
+    // 16 simultaneous requests were served by both audio hosts without a
+    // refusal (probe, 2026-09-10), so 4 and 6 are well inside what they take.
+    // This is the number that must stay modest: the global cap only ever hurt.
+    final hostCaps = fieldValues('maxConcurrentByHost');
+    expect(hostCaps.length, 2);
     for (final c in hostCaps) {
       expect(c, lessThanOrEqualTo(6));
+      expect(c, greaterThanOrEqualTo(2));
     }
+  });
+
+  test('recitations and files do not share a queue', () {
+    // They are separate `MemoryTaskQueue`s on purpose: a surah of 286 small
+    // ayah files and a 604-page mushaf have nothing to gain from queueing
+    // behind each other, and each queue counts its hosts separately.
+    expect(engine, contains('MemoryTaskQueue fileQueue'));
+    expect(engine, contains('MemoryTaskQueue recitationQueue'));
+    expect(engine, contains('addTaskQueue(fileQueue)'));
+    expect(engine, contains('addTaskQueue(recitationQueue)'));
   });
 }
