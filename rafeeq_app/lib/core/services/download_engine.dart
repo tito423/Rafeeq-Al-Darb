@@ -145,6 +145,29 @@ class DownloadEngine {
         releaseStuckTasks(quranAudioQueue, live);
   }
 
+  /// When each task last said anything.
+  static final Map<String, DateTime> _lastSeen = {};
+
+  /// Cancels whole-surah downloads the platform still calls running but that
+  /// have reported nothing for [after] — a connection that died without an
+  /// error holds its slot for ever otherwise. Only this queue: its owner,
+  /// `QuranAudioLibrary`, re-queues what was asked for on its next repair.
+  static Future<int> cancelStalled({
+    Duration after = const Duration(minutes: 2),
+  }) async {
+    final now = DateTime.now();
+    final ids = [
+      for (final t in quranAudioQueue.enqueued)
+        if (_lastSeen[t.taskId] case final seen?)
+          if (now.difference(seen) > after) t.taskId,
+    ];
+    if (ids.isEmpty) return 0;
+    try {
+      await FileDownloader().cancelTasksWithIds(ids);
+    } catch (_) {}
+    return ids.length;
+  }
+
   /// Puts a refused task back, a bounded number of times.
   ///
   /// The slot is freed first — without that, a queue that has refused
@@ -309,7 +332,10 @@ class DownloadEngine {
     // The one and only subscription to the plugin's single-subscription
     // stream; everyone else reads [updates].
     _sourceSub ??= downloader.updates.listen(
-      _updates.add,
+      (u) {
+        _lastSeen[u.task.taskId] = DateTime.now();
+        _updates.add(u);
+      },
       onError: _updates.addError,
     );
   }

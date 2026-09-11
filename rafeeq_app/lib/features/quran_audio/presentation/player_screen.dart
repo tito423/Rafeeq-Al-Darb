@@ -73,7 +73,7 @@ class QuranAudioPlayerScreen extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      _Artwork(name: track.artist, playing: player.playing),
+                                      _Artwork(track: track, playing: player.playing),
                                       _Titles(track: track),
                                       const _SeekBar(),
                                       const _Transport(),
@@ -214,42 +214,24 @@ class _TopBar extends StatelessWidget {
 }
 
 class _Artwork extends StatelessWidget {
-  final String name;
+  final PlayerTrack track;
   final bool playing;
-  const _Artwork({required this.name, required this.playing});
+  const _Artwork({required this.track, required this.playing});
 
   @override
   Widget build(BuildContext context) {
-    final size = (MediaQuery.sizeOf(context).width * 0.62).clamp(180.0, 300.0);
+    final size = (MediaQuery.sizeOf(context).width * 0.72).clamp(200.0, 340.0);
     return AnimatedScale(
-      scale: playing ? 1.0 : 0.9,
+      scale: playing ? 1.0 : 0.92,
       duration: const Duration(milliseconds: 420),
       curve: Curves.easeOutBack,
-      child: Container(
-        width: size,
-        height: size,
-        padding: EdgeInsets.all(size * 0.05),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: AppColors.gold.withValues(alpha: 0.55), width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.gold.withValues(alpha: playing ? 0.28 : 0.08),
-              blurRadius: 48,
-              spreadRadius: 4,
-            ),
-          ],
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
-          ),
-          padding: EdgeInsets.all(size * 0.06),
-          child: Hero(
-            tag: 'quran-audio-art',
-            child: ReciterAvatar(name: name, size: size * 0.78),
-          ),
+      child: Hero(
+        tag: 'quran-audio-art',
+        child: RecitationCover(
+          title: track.title,
+          artist: track.artist,
+          album: track.album,
+          size: size,
         ),
       ),
     );

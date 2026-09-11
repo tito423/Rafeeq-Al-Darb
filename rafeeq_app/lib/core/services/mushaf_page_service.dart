@@ -51,6 +51,9 @@ class PrefetchProgress extends ChangeNotifier {
     if (running != null) this.running = running;
     if (paused != null) this.paused = paused;
     notifyListeners();
+    if (running != null || (done != null && done % 10 == 0)) {
+      MushafPageService.instance.changes.value++;
+    }
   }
 }
 
@@ -63,6 +66,10 @@ class PrefetchProgress extends ChangeNotifier {
 class MushafPageService {
   MushafPageService._();
   static final MushafPageService instance = MushafPageService._();
+
+  /// Bumped when any edition download starts, stops, or moves ten pages — for
+  /// a screen that shows totals rather than one edition.
+  final ValueNotifier<int> changes = ValueNotifier(0);
 
   // P3‑47: add a connectTimeout (the per-request receiveTimeout on
   // svgForPage was already set) so a stalled connection can't hang a page

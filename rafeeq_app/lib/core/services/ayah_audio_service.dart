@@ -448,6 +448,30 @@ class AyahAudioService {
 
   bool get isContinuousActive => continuous.value.active;
 
+  /// The surah whose verses are loaded in the player right now.
+  int? _loadedSurahId;
+
+  /// The reciter of the running recitation.
+  String get continuousEdition => _continuousEdition;
+
+  /// Moves a running recitation to another reciter, at the verse it had
+  /// reached. Does nothing when no recitation is running.
+  Future<void> switchReciter(String edition) async {
+    final state = continuous.value;
+    final repo = _continuousRepo;
+    if (!state.active || repo == null) return;
+    if (state.surahId == null || state.ayahNumber == null) return;
+    if (edition == _continuousEdition) return;
+    final row = await repo.ayah(state.surahId!, state.ayahNumber!);
+    if (row == null) return;
+    await startContinuous(
+      from: row,
+      repo: repo,
+      edition: edition,
+      wholeMushaf: _continuousWholeMushaf,
+    );
+  }
+
   /// Starts continuous recitation from [from], reading to the end of its
   /// surah and — when [wholeMushaf] is true — straight on into the next one.
   Future<void> startContinuous({
@@ -458,6 +482,31 @@ class AyahAudioService {
   }) async {
     _queueToken = 0; // supersede any repeat-loop/playlist run
     musicOwnsPlayer.value = false;
+
+    // «لو التلاوة شغّالة وأنا رجعت لآيات في الخلف أو اخترت سورة تانية ينتقل
+    // بسرعة». The surah being read is already in the player as one playlist of
+    // all its verses, so moving to another verse of it is a seek — no
+    // playlist rebuilt, no first-verse round trip to the host. Only a different
+    // surah, reciter or a dead player loads again.
+    final current = continuous.value;
+    if (current.active &&
+        !current.stalled &&
+        edition == _continuousEdition &&
+        wholeMushaf == _continuousWholeMushaf &&
+        from.surahId == _loadedSurahId &&
+        !_playerIsIdle) {
+      final i = _continuousAyahs.indexWhere((a) => a.ayahNumber == from.ayahNumber);
+      if (i >= 0) {
+        try {
+          await _player.seek(Duration.zero, index: i);
+          if (!_player.playing) unawaited(_player.play());
+          return;
+        } catch (_) {
+          // fall through to a full load
+        }
+      }
+    }
+
     final token = ++_continuousToken;
     _continuousEdition = edition;
     _continuousWholeMushaf = wholeMushaf;
@@ -492,8 +541,11 @@ class AyahAudioService {
       return;
     }
 
+    // The WHOLE surah, starting at the chosen verse — so a later jump back to
+    // an earlier verse of it is a seek (see `startContinuous`).
     final startIndex = all.indexWhere((a) => a.ayahNumber == startAyahNumber);
-    final ayahs = all.sublist(startIndex < 0 ? 0 : startIndex);
+    final ayahs = all;
+    final initialIndex = startIndex < 0 ? 0 : startIndex;
     _continuousAyahs = ayahs;
 
     final firstGlobal = await repo.globalAyahNumber(surahId, 1);
@@ -541,7 +593,7 @@ class AyahAudioService {
           ConcatenatingAudioSource(
             children: buildChildren(host: attempt == 2 ? 1 : 0),
           ),
-          initialIndex: 0,
+          initialIndex: initialIndex,
         );
         loaded = true;
       } catch (_) {
@@ -549,6 +601,7 @@ class AyahAudioService {
       }
     }
     if (token != _continuousToken) return;
+    if (loaded) _loadedSurahId = surahId;
     if (!loaded) {
       await stopContinuous();
       continuousError.value = ContinuousError.loadFailed;
@@ -699,6 +752,7 @@ class AyahAudioService {
     if (_continuousToken == 0 && !continuous.value.active) return;
     _continuousToken++;
     _continuousRepo = null;
+    _loadedSurahId = null;
     await _cancelContinuousSubs();
     _continuousAyahs = const [];
     continuous.value = ContinuousRecitation.stopped;

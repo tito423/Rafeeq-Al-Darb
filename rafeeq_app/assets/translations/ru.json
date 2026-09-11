@@ -181,7 +181,9 @@
     "layout_cards": "Вид карточек",
     "layout_reading": "Режим чтения",
     "search_surah_hint": "Найти суру или её номер…",
-    "search_juz_hint": "Найти номер джуза…"
+    "search_juz_hint": "Найти номер джуза…",
+    "recite_choose_reciter": "Выбрать чтеца",
+    "recite_search_reciter": "Поиск чтеца"
   },
   "library": {
     "title": "Библиотека",
@@ -1098,7 +1100,7 @@
     }
   },
   "quran_audio": {
-    "title": "Чтения Корана",
+    "title": "Плеер чтения Корана",
     "subtitle": "Полноценный плеер — скачайте полное чтение чтеца и слушайте без интернета",
     "tab_reciters": "Чтецы",
     "tab_library": "Моя библиотека",

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -183,6 +185,7 @@ class _OverviewTab extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(14, 14, 14, kRepairButtonClearance),
           children: [
+            const _StorageAutoRefresh(),
             _StorageHero(
               summary: summary,
               onFreeAll: summary.totalBytes > 0
@@ -223,6 +226,52 @@ class _OverviewTab extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Re-reads the totals while downloads move, so the overview is never a
+/// snapshot of when the screen opened — «الـ UI بتاع التنزيلات يتحدث تلقائيًا
+/// لكل تحميل». At most every two seconds: the totals walk six page folders.
+class _StorageAutoRefresh extends ConsumerStatefulWidget {
+  const _StorageAutoRefresh();
+
+  @override
+  ConsumerState<_StorageAutoRefresh> createState() => _StorageAutoRefreshState();
+}
+
+class _StorageAutoRefreshState extends ConsumerState<_StorageAutoRefresh> {
+  StreamSubscription<List<DownloadTask>>? _sub;
+  Timer? _timer;
+  DateTime _last = DateTime.fromMillisecondsSinceEpoch(0);
+
+  @override
+  void initState() {
+    super.initState();
+    _sub = DownloadManager.instance.stream.listen((_) => _poke());
+    QuranAudioLibrary.instance.addListener(_poke);
+    MushafPageService.instance.changes.addListener(_poke);
+  }
+
+  void _poke() {
+    if (_timer != null) return;
+    final wait = const Duration(seconds: 2) - DateTime.now().difference(_last);
+    _timer = Timer(wait.isNegative ? Duration.zero : wait, () {
+      _timer = null;
+      _last = DateTime.now();
+      if (mounted) ref.invalidate(storageSummaryProvider);
+    });
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    _timer?.cancel();
+    QuranAudioLibrary.instance.removeListener(_poke);
+    MushafPageService.instance.changes.removeListener(_poke);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }
 
 /// The hero panel: total on-disk size over the lattice, with a stacked bar
@@ -451,11 +500,27 @@ class _ArtifactList extends StatefulWidget {
 class _ArtifactListState extends State<_ArtifactList> {
   List<Map<String, dynamic>> _items = const [];
   final Map<String, int> _sizes = {};
+  StreamSubscription<List<DownloadTask>>? _sub;
+  Timer? _reload;
 
   @override
   void initState() {
     super.initState();
     _load();
+    // A finished book or pack appears here without leaving the screen.
+    _sub = DownloadManager.instance.stream.listen((_) {
+      _reload ??= Timer(const Duration(seconds: 1), () {
+        _reload = null;
+        if (mounted) _load();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    _reload?.cancel();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -596,27 +661,38 @@ class _RepairButtonState extends ConsumerState<_RepairButton> {
 
     var resumed = 0;
     var freed = 0;
+    // Every step has its own deadline. The steps used to be awaited one after
+    // another with none, so a single call that never returned — a platform
+    // query on a wedged downloader — left the button spinning for good: «زر
+    // الإصلاح مش عايزه stuck أبدًا».
+    Future<T?> step<T>(Future<T> Function() run) async {
+      try {
+        return await run().timeout(const Duration(seconds: 12));
+      } catch (_) {
+        return null;
+      }
+    }
+
     try {
-      // 0. UNJAM FIRST. Everything below adds tasks to the two queues, and a
-      // queue whose slots have leaked accepts them and never enqueues one —
-      // which is exactly why the owner reported this button «ولا بيعمل اي
-      // حاجة نهائي». See `DownloadEngine.releaseStuckTasks` for the leak.
-      freed = await DownloadEngine.unjamQueues();
+      // 0. Unjam first: leaked queue slots, then live transfers that stopped
+      // moving. Everything below adds tasks to those queues.
+      freed = await step(DownloadEngine.unjamQueues) ?? 0;
+      freed += await step(DownloadEngine.cancelStalled) ?? 0;
 
       // 1. Hadith / books / adhan — the platform downloader's own queue.
-      await DownloadManager.instance.resumeAll();
+      await step(DownloadManager.instance.resumeAll);
+      // Let the cancellations above land before re-queueing.
+      await Future<void>.delayed(const Duration(milliseconds: 800));
 
       // 2. Whole-surah recitations that were asked for and are not on disk.
-      try {
-        resumed += await QuranAudioLibrary.instance.repair();
-      } catch (_) {}
+      resumed += await step(QuranAudioLibrary.instance.repair) ?? 0;
 
-      // 3. Mushaf editions with a partial page cache.
-      try {
-        final editions = await ref.read(mushafEditionsProvider.future);
-        resumed +=
-            await MushafPageService.instance.repairPartialEditions(editions);
-      } catch (_) {}
+      // 3. Mushaf editions: paused, stuck, or asked for and not complete.
+      resumed += await step(() async {
+            final editions = await ref.read(mushafEditionsProvider.future);
+            return MushafPageService.instance.repairPartialEditions(editions);
+          }) ??
+          0;
     } finally {
       if (mounted) setState(() => _busy = false);
     }

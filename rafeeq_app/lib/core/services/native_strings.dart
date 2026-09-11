@@ -45,6 +45,8 @@ class NativeStrings {
         'dl_channel_desc': 'notif.dl_service_channel_desc'.tr(),
         'dl_title': 'notif.dl_files_running_title'.tr(),
         'dl_body': 'notif.dl_service_body'.tr(),
+        'prayer_channel': 'notif.prayer_channel'.tr(),
+        'prayer_channel_desc': 'notif.prayer_channel_desc'.tr(),
       };
 
   /// Best-effort: a phone with no method channel attached (the Adhan alert's

@@ -181,7 +181,9 @@
     "layout_cards": "شكل البطاقات",
     "layout_reading": "وضع القراءة",
     "search_surah_hint": "ابحث عن سورة أو رقمها…",
-    "search_juz_hint": "ابحث عن رقم الجزء…"
+    "search_juz_hint": "ابحث عن رقم الجزء…",
+    "recite_choose_reciter": "اختر القارئ",
+    "recite_search_reciter": "ابحث عن قارئ"
   },
   "library": {
     "title": "المكتبة",
@@ -1098,7 +1100,7 @@
     }
   },
   "quran_audio": {
-    "title": "تحميل تلاوات القرآن",
+    "title": "مشغّل تلاوة القرآن",
     "subtitle": "مشغّل تلاوات كامل — نزّل تلاوة القارئ كاملة واسمعها بدون إنترنت",
     "tab_reciters": "القرّاء",
     "tab_library": "مكتبتي",

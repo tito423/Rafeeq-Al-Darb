@@ -181,7 +181,9 @@
     "layout_cards": "Vista de cartões",
     "layout_reading": "Modo de leitura",
     "search_surah_hint": "Procurar uma sura ou o seu número…",
-    "search_juz_hint": "Procurar um número de juz…"
+    "search_juz_hint": "Procurar um número de juz…",
+    "recite_choose_reciter": "Escolher recitador",
+    "recite_search_reciter": "Buscar recitador"
   },
   "library": {
     "title": "Biblioteca",
@@ -1098,7 +1100,7 @@
     }
   },
   "quran_audio": {
-    "title": "Recitações do Alcorão",
+    "title": "Player de recitação do Alcorão",
     "subtitle": "Um player completo — baixe a recitação inteira de um recitador e ouça offline",
     "tab_reciters": "Recitadores",
     "tab_library": "Minha biblioteca",

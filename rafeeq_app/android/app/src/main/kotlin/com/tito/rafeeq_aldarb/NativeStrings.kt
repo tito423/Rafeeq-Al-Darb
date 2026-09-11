@@ -47,6 +47,8 @@ object NativeStrings {
     const val DL_CHANNEL_DESC = "dl_channel_desc"
     const val DL_TITLE = "dl_title"
     const val DL_BODY = "dl_body"
+    const val PRAYER_CHANNEL = "prayer_channel"
+    const val PRAYER_CHANNEL_DESC = "prayer_channel_desc"
 
     private val fallback = mapOf(
         ADHAN_CHANNEL to "الأذان",
@@ -64,6 +66,8 @@ object NativeStrings {
         DL_CHANNEL_DESC to "يبقي التطبيق نشطًا أثناء تنزيل المحتوى في الخلفية",
         DL_TITLE to "جارٍ التنزيل",
         DL_BODY to "يتابع التطبيق التنزيل في الخلفية",
+        PRAYER_CHANNEL to "الصلاة القادمة",
+        PRAYER_CHANNEL_DESC to "بطاقة الصلاة القادمة مع العدّ التنازلي",
     )
 
     /** Called from Dart whenever the app language is set or changes. */

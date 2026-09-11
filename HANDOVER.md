@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-11 (night) |
+| **Last updated** | 2026-09-11 |
 | **Released** | **v3.17.0** — tag on `master`, one release in the repo (see NEXT_PROMPT for the verified SHA) |
 | **App version** | `pubspec.yaml` `3.17.0+14` |
 | **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
@@ -1185,9 +1185,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 15:19 — IN PROGRESS — resume here**
+**2026-09-11 15:49 — IN PROGRESS — resume here**
 
-3.17 stage 2 (not yet on a device): per-ayah recitation downloads removed entirely - reader streams only, playback-source option gone, legacy ayah files and tasks purged once at launch; new More section «تحميل تلاوات القرآن»: mp3quran API v3 (verified 241 reciters/287 moshafs), whole-surah downloads on their own queue, library indexed reciter>recitation folders, device files, full player (seek, 10s skips, shuffle, repeat one/all, speed, sleep timer incl. end of surah, queue, mini player). 7 locales, 30 dead keys removed. analyze clean, 170 tests pass. version 3.17.0+14.
+3.17.1 (not yet on a device): continuous recitation loads the whole surah and moves within it by seek; surah/juz/page index moves a running recitation; reciter picker in the recitation bar (switches at the current ayah); player cover typeset from surah+reciter names; section renamed مشغّل تلاوة القرآن; prayer card posted natively with a delete intent that re-posts it, native rollover + boot restore; downloads overview and item list refresh live; repair steps each time out at 12 s and stalled whole-surah transfers are cancelled and re-queued. analyze clean, 176 tests pass.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

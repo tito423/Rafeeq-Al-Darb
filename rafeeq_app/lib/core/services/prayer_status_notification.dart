@@ -1,57 +1,56 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-import 'notification_router.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 import '../i18n/hijri_months.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:hijri/hijri_calendar.dart';
-import 'package:timezone/timezone.dart' as tz;
-
 import '../models/prayer_times.dart';
 import '../utils/digits.dart';
+import 'notification_router.dart';
 import 'prayer_times_service.dart';
 
-/// P2‑6 — an ongoing, low-priority status-bar card showing the **next prayer**
-/// (name + clock time), the **Hijri date**, and a **live countdown**.
+/// P2‑6 — a low-priority status-bar card showing the **next prayer** (name +
+/// clock time), the **Hijri date**, and a **live countdown**.
 ///
-/// The countdown ticks natively via Android's notification **chronometer**
-/// (`usesChronometer` + `chronometerCountDown` + a future `when`), so it keeps
-/// counting even while the app is killed — no background Dart, no foreground
-/// service. Rollover to the *next* prayer while the app is closed is handled
-/// by one `zonedSchedule` re-post at the current prayer's time; anything
-/// longer is corrected the moment the app is next opened (`main.dart` /
-/// `PrayerController` call [refresh] again).
+/// The countdown is Android's notification chronometer, so it keeps counting
+/// with the app killed. Since 3.17.1 the card itself is posted natively
+/// (`PrayerCard.kt`): «خلّي دايمًا إشعار الصلاة القادمة بعدّاده شغّال حتى لو
+/// حذفته بالغلط». Android 14 lets a user swipe away even a foreground
+/// service's notification, and flutter_local_notifications cannot hear the
+/// dismissal; a native delete intent can, and posts the card straight back.
+/// The rollover to the prayer after it, and re-posting after a reboot or an
+/// update, are native too. This class only decides what the card says.
 ///
-/// Opt-in: `prayer_status_enabled_provider` (default off). Offline-first: the
-/// [PrayerTimes] passed in already come from `PrayerTimesService`'s cache when
-/// there's no network; if they're empty the card is hidden, not faked.
+/// Opt-in: `prayer_status_enabled_provider`. Offline-first: the [PrayerTimes]
+/// come from `PrayerTimesService`'s cache when there's no network; if they're
+/// empty the card says so rather than inventing times.
 class PrayerStatusNotification {
   PrayerStatusNotification._();
   static final PrayerStatusNotification instance = PrayerStatusNotification._();
 
   static const _channelId = 'rafeeq_prayer_status';
-  static const _liveId = 6100; // the visible card
-  static const _rolloverId = 6101; // the scheduled "next prayer" re-post
+  static const _liveId = 6100;
+
+  /// The scheduled re-post earlier builds kept in the plugin's own storage.
+  /// Cancelled on every refresh, or it would post a second card at the next
+  /// prayer.
+  static const _legacyRolloverId = 6101;
+
+  static const _native = MethodChannel('com.tito.rafeeq_aldarb/prayer_card');
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
   bool _ready = false;
+  bool _legacyStopped = false;
 
   Future<void> _ensureReady() async {
     if (_ready) return;
     try {
-      // Through the router. This used to install `onDidReceiveNotificationResponse: (_) {}`,
-      // which swallowed every tap in the app — see `NotificationRouter`.
+      // Through the router — see `NotificationRouter` (trap #31).
       await NotificationRouter.instance.ensureInitialized();
       final androidImpl = _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
-      // Deliberately does NOT ask for the notification permission here.
-      // This runs from `AppShell`'s first frame, before
-      // `AlarmPermissionsService.requestStartupGrants` has had its
-      // delay, so its dialog jumped the queue and the owner's stated
-      // order — location first — came out backwards on a fresh
-      // install. The startup sequence owns the asking; this only
-      // needs the channel.
+      // No permission request here: the startup sequence owns the asking.
       await androidImpl?.createNotificationChannel(
         AndroidNotificationChannel(
           _channelId,
@@ -69,8 +68,25 @@ class PrayerStatusNotification {
     }
   }
 
-  /// Post / refresh the card from real [times]. When [enabled] is false or the
-  /// times are empty, the card is removed.
+  /// Earlier builds posted the card as the plugin's foreground service, with
+  /// a scheduled re-post. Both are stopped once per process so the native card
+  /// is the only one.
+  Future<void> _stopLegacy() async {
+    if (_legacyStopped) return;
+    _legacyStopped = true;
+    try {
+      await _plugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.stopForegroundService();
+    } catch (_) {}
+    try {
+      await _plugin.cancel(_legacyRolloverId);
+    } catch (_) {}
+  }
+
+  /// Post / refresh the card from real [times]. When [enabled] is false the
+  /// card is removed.
   Future<void> refresh({
     required PrayerTimes times,
     required String localeCode,
@@ -78,6 +94,7 @@ class PrayerStatusNotification {
   }) async {
     await _ensureReady();
     if (!_ready) return;
+    await _stopLegacy();
     if (!enabled) {
       await hide();
       return;
@@ -87,118 +104,61 @@ class PrayerStatusNotification {
     final now = DateTime.now();
     final next = times.isEmpty ? null : _nextPrayer(svc, times, now);
 
-    // P3‑45: real-device testing found `flutter_local_notifications`
-    // throwing ("Missing type parameter") from its own persisted
-    // scheduled-notification storage on some devices/emulators carrying
-    // notification history from earlier plugin versions — this whole
-    // method was previously unguarded and this class's own header already
-    // documents the card as optional ("the app is fine without this
-    // card"); the try/catch here just actually enforces that promise
-    // instead of leaving these calls to throw as unhandled exceptions.
     try {
       if (next == null) {
         // Enabled but no real times yet — be honest, don't invent them.
-        await _plugin.cancel(_rolloverId);
-        await _startLiveCard(
-          _needLocationTitle(localeCode),
-          _needLocationBody(localeCode),
-          AndroidNotificationDetails(
-            _channelId,
-            'notif.prayer_channel'.tr(),
-            importance: Importance.low,
-            priority: Priority.low,
-            ongoing: true,
-            autoCancel: false,
-            onlyAlertOnce: true,
-            category: AndroidNotificationCategory.status,
-            largeIcon:
-                const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-          ),
-        );
+        await _show(_needLocationTitle(localeCode), _needLocationBody(localeCode));
         return;
       }
 
-      // Prefer the AlAdhan Hijri date already in [times] (Umm al-Qura,
-      // matches the Home card and works from cache offline); fall back to
-      // the `hijri` package only if that string is missing/old-format.
+      // AlAdhan's Umm al-Qura date first (matches Home, works offline).
       final hijriToday = _hijriLine(times.hijriDate, now, localeCode);
-
-      await _startLiveCard(
-        _titleFor(next.$1, next.$2, localeCode),
-        hijriToday,
-        _details(next.$2),
-      );
-
-      // One rollover while the app is closed: at `next` time, re-post the
-      // card for the prayer after it. Same id as any previous schedule →
-      // replaces.
       final after =
           _nextPrayer(svc, times, next.$2.add(const Duration(minutes: 1)));
-      await _plugin.cancel(_rolloverId);
-      if (after != null) {
-        // If the rollover crosses midnight the printed Hijri day advances
-        // by one.
-        final crossesMidnight = after.$2.day != next.$2.day;
-        final hijriRollover = crossesMidnight
-            ? _hijriLine('', after.$2, localeCode)
-            : hijriToday;
-        await _plugin.zonedSchedule(
-          _rolloverId,
-          _titleFor(after.$1, after.$2, localeCode),
-          hijriRollover,
-          tz.TZDateTime.from(next.$2, tz.local),
-          NotificationDetails(android: _details(after.$2)),
-          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-          uiLocalNotificationDateInterpretation:
-              UILocalNotificationDateInterpretation.absoluteTime,
-        );
-      }
+      final crossesMidnight = after != null && after.$2.day != next.$2.day;
+      await _show(
+        _titleFor(next.$1, next.$2, localeCode),
+        hijriToday,
+        at: next.$2,
+        nextTitle: after == null ? null : _titleFor(after.$1, after.$2, localeCode),
+        nextBody: after == null
+            ? null
+            : crossesMidnight
+                ? _hijriLine('', after.$2, localeCode)
+                : hijriToday,
+        nextAt: after?.$2,
+      );
     } catch (_) {
       // Notifications are optional; the app is fine without this card.
     }
   }
 
-  /// P3‑47: post the live card as a real **foreground service** so Android
-  /// treats it as non-dismissible and keeps it (and the process) alive while
-  /// the app is closed — the owner asked for it to stay put like Salatuk's,
-  /// rather than a plain `ongoing` notification that Android 14 now lets the
-  /// user swipe away. `specialUse` is the honest FGS type for a standing
-  /// countdown card; the manifest declares the matching service + subtype.
-  /// Falls back to a plain `show` if the platform impl isn't available.
-  Future<void> _startLiveCard(
+  Future<void> _show(
     String title,
-    String body,
-    AndroidNotificationDetails details,
-  ) async {
-    final androidImpl = _plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
-    if (androidImpl == null) {
-      await _plugin.show(
-          _liveId, title, body, NotificationDetails(android: details));
-      return;
-    }
-    await androidImpl.startForegroundService(
-      _liveId,
-      title,
-      body,
-      notificationDetails: details,
-      foregroundServiceTypes: {
-        AndroidServiceForegroundType.foregroundServiceTypeSpecialUse,
-      },
-    );
+    String body, {
+    DateTime? at,
+    String? nextTitle,
+    String? nextBody,
+    DateTime? nextAt,
+  }) async {
+    await _native.invokeMethod<void>('show', {
+      'title': title,
+      'body': body,
+      'when': at?.millisecondsSinceEpoch ?? 0,
+      'nextTitle': nextTitle,
+      'nextBody': nextBody,
+      'nextWhen': nextAt?.millisecondsSinceEpoch ?? 0,
+    });
   }
 
   Future<void> hide() async {
-    if (!_ready) return;
     try {
-      final androidImpl = _plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
-      await androidImpl?.stopForegroundService();
+      await _native.invokeMethod<void>('hide');
+    } catch (_) {}
+    try {
       await _plugin.cancel(_liveId);
-      await _plugin.cancel(_rolloverId);
-    } catch (_) {
-      // Notifications are optional; the app is fine without this card.
-    }
+      await _plugin.cancel(_legacyRolloverId);
+    } catch (_) {}
   }
 
   // ── content helpers ──────────────────────────────────────────────────────
@@ -210,49 +170,20 @@ class PrayerStatusNotification {
     final raw = svc.nextPrayer(t, from);
     if (raw == null) return null;
     if (raw.$1 != 'sunrise') return raw;
-    // Skip sunrise → look again from just after it.
     return svc.nextPrayer(t, raw.$2.add(const Duration(minutes: 1)));
   }
 
-  AndroidNotificationDetails _details(DateTime target) {
-    return AndroidNotificationDetails(
-      _channelId,
-      'notif.prayer_channel'.tr(),
-      channelDescription:
-          'notif.prayer_channel_desc'.tr(),
-      importance: Importance.low,
-      priority: Priority.low,
-      ongoing: true,
-      autoCancel: false,
-      onlyAlertOnce: true,
-      category: AndroidNotificationCategory.status,
-      // Native live countdown — keeps ticking even with the app killed.
-      when: target.millisecondsSinceEpoch,
-      usesChronometer: true,
-      chronometerCountDown: true,
-      largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-    );
-  }
-
   String _titleFor(String key, DateTime at, String localeCode) {
-    final name = _prayerName(key, localeCode);
+    final name = 'prayer.$key'.tr();
     final hh = at.hour.toString().padLeft(2, '0');
     final mm = at.minute.toString().padLeft(2, '0');
     final clock = localizeDigits('$hh:$mm', localeCode);
     return '$name · $clock';
   }
 
-  /// Prayer names come from the same keys the rest of the app uses, rather
-  /// than a table kept here. The table this replaced covered ar/en/es/ru/pt
-  /// and silently fell back to English for French and Urdu.
-
-
-  String _prayerName(String key, String localeCode) => 'prayer.$key'.tr();
-
   String _needLocationTitle(String l) => 'app.name'.tr();
 
   String _needLocationBody(String l) => 'notif.prayer_enable_location'.tr();
-
 
   /// Formats the Hijri line. [aladhanHijri] is AlAdhan's "DD-MM-YYYY" string
   /// (Umm al-Qura — authoritative, offline via cache); when it's empty/bad we

@@ -29,6 +29,7 @@ import '../widgets/ayah_sciences_sheet.dart';
 import '../widgets/mushaf_edition_sheet.dart';
 import '../widgets/mushaf_page_view.dart';
 import '../widgets/mushaf_nav_sheets.dart';
+import '../widgets/reciter_picker_sheet.dart';
 import '../widgets/mushaf_theme_picker.dart';
 import '../widgets/mushaf_text_page.dart';
 
@@ -349,6 +350,44 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     if (page == _current || page == _followedPage) return;
     _followedPage = page;
     _goToPage(page);
+  }
+
+  /// A jump from the surah, juz or page index. While the reciter is reading,
+  /// the recitation goes with it — to the surah's first verse when a surah was
+  /// picked, otherwise to the page's first verse. Swiping pages by hand does
+  /// not move it: that is looking around, not choosing.
+  Future<void> _navigateFromIndex(
+    int page,
+    MushafData data, {
+    bool surahStart = false,
+  }) async {
+    _goToPage(page, animate: false);
+    if (!_recite.active) return;
+    final ayahs = await _ayahsOfPage(page, data);
+    if (ayahs.isEmpty || !mounted) return;
+    final start = surahStart
+        ? ayahs.firstWhere((a) => a.ayahNumber == 1, orElse: () => ayahs.first)
+        : ayahs.first;
+    _followedPage = page;
+    await AyahAudioService.instance.startContinuous(
+      from: start,
+      repo: data.repo,
+      edition: ref.read(selectedReciterProvider),
+    );
+  }
+
+  Future<void> _pickReciter() async {
+    final id = await showReciterPickerSheet(context);
+    if (id == null || !mounted) return;
+    await ref.read(selectedReciterProvider.notifier).select(id);
+    await AyahAudioService.instance.switchReciter(id);
+  }
+
+  String _reciterName() {
+    final id = ref.watch(selectedReciterProvider);
+    final list = ref.watch(recitersProvider).valueOrNull;
+    final r = list?.where((x) => x.identifier == id).firstOrNull;
+    return r?.displayName(context.locale.languageCode) ?? '';
   }
 
   /// Starts continuous recitation from the current page (or from the verse
@@ -723,7 +762,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                 context,
                                 surahs: mushaf.value!.surahs,
                                 startPages: mushaf.value!.surahStartPages,
-                                onSelect: _goToPage,
+                                onSelect: (page) => _navigateFromIndex(
+                                  page,
+                                  mushaf.value!,
+                                  surahStart: true,
+                                ),
                               ),
                             ),
                             if (canIndexBySurah)
@@ -733,7 +776,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               onPressed: () => showJuzSheet(
                                 context,
                                 juzStartPages: mushaf.value!.juzStartPages,
-                                onSelect: _goToPage,
+                                onSelect: (page) => _navigateFromIndex(page, mushaf.value!),
                               ),
                             ),
                             ToolbarAction(
@@ -743,7 +786,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                 context,
                                 current: _current,
                                 totalPages: _totalPages,
-                                onSelect: _goToPage,
+                                onSelect: (page) => _navigateFromIndex(page, mushaf.value!),
                               ),
                             ),
                             ToolbarAction(
@@ -897,7 +940,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     // The reciter's transport, only while it is actually
                     // running — skip back/forward a verse, pause, or stop
                     // without digging back into the toolbar.
-                    if (_recite.active) _ReciteBar(state: _recite),
+                    if (_recite.active)
+                      _ReciteBar(
+                        state: _recite,
+                        reciterName: _reciterName(),
+                        onPickReciter: _pickReciter,
+                      ),
                     // Only shown once auto-scroll is actually on — no point
                     // occupying screen space with a speed control for a feature
                     // that isn't running.
@@ -1055,7 +1103,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 /// actually reaches for.
 class _ReciteBar extends StatelessWidget {
   final ContinuousRecitation state;
-  const _ReciteBar({required this.state});
+  final String reciterName;
+  final VoidCallback onPickReciter;
+  const _ReciteBar({
+    required this.state,
+    required this.reciterName,
+    required this.onPickReciter,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1091,11 +1145,18 @@ class _ReciteBar extends StatelessWidget {
                             '${state.surahId ?? ''}',
                             '${state.ayahNumber ?? ''}',
                           ],
-                        ),
+                        ) + (reciterName.isEmpty ? '' : '  ·  $reciterName'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 12, color: scheme.onSurface),
                 ),
+              ),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: 'quran.recite_choose_reciter'.tr(),
+                icon: const Icon(Icons.record_voice_over_rounded,
+                    color: AppColors.gold),
+                onPressed: onPickReciter,
               ),
               IconButton(
                 visualDensity: VisualDensity.compact,

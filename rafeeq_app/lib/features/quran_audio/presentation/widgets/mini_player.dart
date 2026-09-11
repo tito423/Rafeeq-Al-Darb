@@ -55,7 +55,12 @@ class MiniPlayer extends StatelessWidget {
                         children: [
                           Hero(
                             tag: 'quran-audio-art',
-                            child: ReciterAvatar(name: track.artist, size: 40),
+                            child: RecitationCover(
+                              title: track.title,
+                              artist: track.artist,
+                              size: 44,
+                              compact: true,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(

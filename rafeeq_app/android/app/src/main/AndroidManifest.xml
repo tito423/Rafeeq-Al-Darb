@@ -133,6 +133,16 @@
 
         <!-- Receives the exact alarm. Not exported: only AlarmManager, acting
              on our own PendingIntent, ever delivers to it. -->
+        <!-- The next-prayer card: re-posted when dismissed, rolled over at the
+             prayer's time, and restored after a reboot or an update. -->
+        <receiver
+            android:name=".PrayerCardReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
         <receiver
             android:name=".adhan.AdhanAlarmReceiver"
             android:exported="false"

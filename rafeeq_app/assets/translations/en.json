@@ -181,7 +181,9 @@
     "layout_cards": "Card layout",
     "layout_reading": "Reading view",
     "search_surah_hint": "Search a surah or its number…",
-    "search_juz_hint": "Search a juz number…"
+    "search_juz_hint": "Search a juz number…",
+    "recite_choose_reciter": "Choose reciter",
+    "recite_search_reciter": "Search reciters"
   },
   "library": {
     "title": "Library",
@@ -1098,7 +1100,7 @@
     }
   },
   "quran_audio": {
-    "title": "Quran Recitations",
+    "title": "Quran Recitation Player",
     "subtitle": "A full recitation player — download a reciter's complete recitation and listen offline",
     "tab_reciters": "Reciters",
     "tab_library": "My library",

@@ -181,7 +181,9 @@
     "layout_cards": "Vista de tarjetas",
     "layout_reading": "Vista de lectura",
     "search_surah_hint": "Buscar una sura o su número…",
-    "search_juz_hint": "Buscar un número de yuz…"
+    "search_juz_hint": "Buscar un número de yuz…",
+    "recite_choose_reciter": "Elegir recitador",
+    "recite_search_reciter": "Buscar recitador"
   },
   "library": {
     "title": "Biblioteca",
@@ -1098,7 +1100,7 @@
     }
   },
   "quran_audio": {
-    "title": "Recitaciones del Corán",
+    "title": "Reproductor de recitación del Corán",
     "subtitle": "Un reproductor completo — descarga la recitación entera de un recitador y escúchala sin conexión",
     "tab_reciters": "Recitadores",
     "tab_library": "Mi biblioteca",
