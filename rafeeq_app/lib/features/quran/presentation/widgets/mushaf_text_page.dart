@@ -176,9 +176,18 @@ class _MushafTextPageState extends State<MushafTextPage> {
         if (!mounted || index >= _ayahKeys.length) return;
         final ctx = _ayahKeys[index].currentContext;
         if (ctx == null || !_scroll.hasClients) return;
+        // Centring a card is right only while the whole card fits. A long
+        // verse — al-Baqarah 282 is a card several screens tall — gets its
+        // middle centred, which cuts off both its beginning AND its end:
+        // «فيه جزء منها مش باين في الصفحة». When it cannot fit, show it from
+        // the top instead, so the reader is at the start of the verse and the
+        // rest is below them where reading goes.
+        final box = ctx.findRenderObject();
+        final fits = box is! RenderBox ||
+            box.size.height <= _scroll.position.viewportDimension;
         Scrollable.ensureVisible(
           ctx,
-          alignment: 0.5,
+          alignment: fits ? 0.5 : 0.0,
           duration: const Duration(milliseconds: 450),
           curve: Curves.easeInOut,
         );
@@ -199,10 +208,14 @@ class _MushafTextPageState extends State<MushafTextPage> {
       final box = ctx.findRenderObject();
       if (dy == null || box is! RenderBox) return;
       // The paragraph's own top in scroll coordinates, plus the verse's
-      // offset inside it, centred in the viewport.
+      // offset inside it. Placed a third of the way down rather than centred:
+      // this layout knows where the verse STARTS and not how tall it is, and
+      // a centred start puts half the viewport above the verse and only half
+      // below it — so a long verse runs off the bottom. A third leaves twice
+      // as much room in the direction the verse actually continues.
       final top = box.localToGlobal(Offset.zero).dy;
       final viewport = _scroll.position.viewportDimension;
-      final target = _scroll.offset + top + dy - viewport / 2;
+      final target = _scroll.offset + top + dy - viewport / 3;
       _scroll.animateTo(
         target.clamp(
           _scroll.position.minScrollExtent,

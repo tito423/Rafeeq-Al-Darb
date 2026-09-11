@@ -58,6 +58,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   final AyahCoordsRepository _coords = AyahCoordsRepository.instance;
 
   MushafMode _mode = MushafMode.text;
+
+  /// The orientation the last frame was built for, so a rotation can be told
+  /// apart from an ordinary rebuild.
+  Orientation? _lastOrientation;
+
+  /// What full-screen was set to before the phone was turned sideways.
+  bool? _fillBeforePortrait;
   int _current = 1;
   int _initialPage = 1;
   int? _highlightSurah;
@@ -140,6 +147,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     });
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
     if (_pageFillScreen) _applyImmersive(true);
+    // The stored mode decides whether this screen may rotate at all.
+    _applyOrientationLock();
   }
 
   void _changeFontScale(double delta) {
@@ -181,8 +190,63 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     setState(() => _toolbarVisible = !forward);
   }
 
-  void _togglePageFillScreen() {
-    final entering = !_pageFillScreen;
+  /// Rotation belongs to the text mode.
+  ///
+  /// The owner's call: «خلي الاورينتيشن بس على النص لو ده أفضل». It is. A
+  /// scanned page has one fixed shape, and on a phone's side it can only be
+  /// drawn full-width and scrolled — readable, but never the page the printer
+  /// set. The text reflows, so landscape genuinely gives it longer lines.
+  /// Reverting this is one list.
+  void _applyOrientationLock() {
+    SystemChrome.setPreferredOrientations(
+      _mode == MushafMode.text
+          ? const [
+              DeviceOrientation.portraitUp,
+              DeviceOrientation.portraitDown,
+              DeviceOrientation.landscapeLeft,
+              DeviceOrientation.landscapeRight,
+            ]
+          : const [
+              DeviceOrientation.portraitUp,
+              DeviceOrientation.portraitDown,
+            ],
+    );
+  }
+
+  /// Turning the phone sideways opens the page up, «زي ختمة».
+  ///
+  /// Called from `build` with the orientation it is building for, and does
+  /// its work in a post-frame callback because this changes state.
+  ///
+  /// The automatic full-screen is deliberately NOT persisted: it is a
+  /// consequence of how the phone is being held, not a preference, and
+  /// writing it would mean a reader who rotated once came back to portrait
+  /// permanently immersed. What he chose in portrait is remembered and put
+  /// back when he rotates back.
+  void _syncOrientationFullScreen(Orientation orientation) {
+    if (orientation == _lastOrientation) return;
+    final previous = _lastOrientation;
+    _lastOrientation = orientation;
+    if (previous == null) return; // first build — leave his stored choice
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (orientation == Orientation.landscape) {
+        _fillBeforePortrait = _pageFillScreen;
+        if (!_pageFillScreen) _setPageFillScreen(true, persist: false);
+      } else {
+        final back = _fillBeforePortrait;
+        _fillBeforePortrait = null;
+        if (back != null && back != _pageFillScreen) {
+          _setPageFillScreen(back, persist: false);
+        }
+      }
+    });
+  }
+
+  void _togglePageFillScreen() => _setPageFillScreen(!_pageFillScreen);
+
+  void _setPageFillScreen(bool entering, {bool persist = true}) {
+    if (entering == _pageFillScreen) return;
     setState(() {
       _pageFillScreen = entering;
       // P3‑54: exiting immersive mode also stops the auto-scroll — the owner's
@@ -194,6 +258,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     });
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
     _applyImmersive(_pageFillScreen);
+    if (!persist) return;
     SharedPreferences.getInstance().then(
       (p) => p.setBool(_kPageFillScreen, _pageFillScreen),
     );
@@ -238,6 +303,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   void initState() {
     super.initState();
     _restoreState();
+    _applyOrientationLock();
     AyahAudioService.instance.continuous.addListener(_onReciteChanged);
     AyahAudioService.instance.continuousError.addListener(_onReciteError);
   }
@@ -320,8 +386,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     AyahAudioService.instance.continuousError.removeListener(_onReciteError);
     _pages?.dispose();
     // Make sure the system bars are never left hidden if this screen goes
-    // away while full-screen.
+    // away while full-screen, and that the rest of the app is not left locked
+    // to portrait by the image mushaf's lock.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     super.dispose();
   }
 
@@ -688,12 +756,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                           .notifier)
                                       .select(AppConfig.defaultMushafEdition);
                                   setState(() => _mode = MushafMode.text);
+                                  _applyOrientationLock();
                                 } else {
                                   setState(() {
                                     _mode = _mode == MushafMode.text
                                         ? MushafMode.image
                                         : MushafMode.text;
                                   });
+                                  _applyOrientationLock();
                                 }
                                 _persistMode();
                               },
@@ -708,6 +778,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       body: OrientationBuilder(
         builder: (context, orientation) {
           final isLandscape = orientation == Orientation.landscape;
+          _syncOrientationFullScreen(orientation);
           return mushaf.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_, _) =>
@@ -880,7 +951,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     _onImageAyahTap(region, ayahs, data, edition),
                 onLoadFailed: edition.isRaster
                     ? null
-                    : () => setState(() => _mode = MushafMode.text),
+                    : () {
+                        setState(() => _mode = MushafMode.text);
+                        _applyOrientationLock();
+                      },
                 // Image mode never had a tap-to-hide-toolbar gesture (only
                 // text mode does, since P3‑42) — deliberately not adding
                 // one here. This only exists so a full-screen image-mode

@@ -1146,9 +1146,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 11:28 — IN PROGRESS — resume here**
+**2026-09-11 11:32 — IN PROGRESS — resume here**
 
-the recitation that stalls while other downloads run: found the cause and it was not ours. Read out of work-runtime-2.11.0.aar itself, ConfigurationKt.createDefaultExecutor compiles to newFixedThreadPool(max(2, min(availableProcessors - 1, 4))) - four threads at most on any device, 6 cores on emulator-5554 gives 4 and an 8-core phone also gives 4. background_downloader runs every transfer as a WorkManager Worker on that pool, so mushaf pages, books, the hadith DB, adhan clips and every ayah of a recitation share four threads. DownloadEngine allows 20 in flight; widening those queues from 2/6 to 8/12 last session could never have helped. RafeeqApplication now hands WorkManager a 20-thread pool that matches the queues, with allowCoreThreadTimeOut so none of them exist when nothing is downloading; maxConcurrentByHost (4 and 6) is untouched, since that is what keeps it polite. Proved the new test fails on the old file. 162 tests pass. NOT yet measured on a device - next step is counting the pool threads while a download runs.
+two more from his list. Rotation is the text mode's only - a scan has one fixed shape and on a phone's side can only be drawn full-width and scrolled, while the text reflows into genuinely longer lines; the lock is released when the screen goes away so nothing else in the app inherits it. Turning the phone sideways now opens the page to full screen by itself and puts back what he had when he turns it upright again: deliberately not persisted, because that is how the phone is being held, not a preference. And the reciting ayah: centring a card is right only while it fits, so al-Baqarah 282 - a card several screens tall - had its middle centred and lost both its beginning and its end. A card taller than the viewport is now shown from the top, and the flowing layout puts the verse's start a third down instead of centred, since that layout knows where a verse begins but not how tall it is. 162 tests pass, analyze clean. Neither seen on a device yet.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
