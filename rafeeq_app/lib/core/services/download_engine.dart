@@ -35,6 +35,13 @@ class DownloadEngine {
   /// Whole-surah recitation files, for «تحميل تلاوات القرآن».
   static const String groupQuranAudio = 'rafeeq_quran_audio';
 
+  /// The ruqyah recordings. Same queue as [groupFiles]; a group of their own
+  /// only so their notification can say what they are — «خلي في إشعار تنزيل
+  /// الرقية اسمها تحميل ملفات الرقية الصوتية».
+  static const String groupRuqyah = 'rafeeq_ruqyah';
+
+  static const String _notifGroupRuqyah = 'rafeeq_ruqyah_group';
+
   /// The per-ayah downloads that were removed in 3.17.0 — «شيل خيار تحميل
   /// التلاوات على الجهاز ده خالص». Kept only so their leftover tasks can be
   /// cancelled once; nothing enqueues into it any more.
@@ -123,7 +130,7 @@ class DownloadEngine {
   /// queues against that answer. Returns the number of slots recovered.
   static Future<int> unjamQueues() async {
     final live = <String>{};
-    for (final group in [groupFiles, groupQuranAudio]) {
+    for (final group in [groupFiles, groupRuqyah, groupQuranAudio]) {
       try {
         final tasks = await FileDownloader().allTasks(group: group);
         live.addAll(tasks.map((t) => t.taskId));
@@ -265,6 +272,9 @@ class DownloadEngine {
       'notif.dl_recit_paused_title': await IsolateStrings.tr('notif.dl_recit_paused_title'),
       'notif.dl_recit_running_body': await IsolateStrings.tr('notif.dl_recit_running_body'),
       'notif.dl_recit_running_title': await IsolateStrings.tr('notif.dl_recit_running_title'),
+      'notif.dl_ruqyah_running_title': await IsolateStrings.tr('notif.dl_ruqyah_running_title'),
+      'notif.dl_ruqyah_complete_title': await IsolateStrings.tr('notif.dl_ruqyah_complete_title'),
+      'notif.dl_ruqyah_error_title': await IsolateStrings.tr('notif.dl_ruqyah_error_title'),
     };
 
 
@@ -301,6 +311,20 @@ class DownloadEngine {
       groupNotificationId: _notifGroupQuranAudio,
     );
 
+    downloader.configureNotificationForGroup(
+      groupRuqyah,
+      running: TaskNotification(t['notif.dl_ruqyah_running_title']!,
+          t['notif.dl_files_running_body']!),
+      complete: TaskNotification(t['notif.dl_ruqyah_complete_title']!,
+          t['notif.dl_files_complete_body']!),
+      error: TaskNotification(t['notif.dl_ruqyah_error_title']!,
+          t['notif.dl_files_error_body']!),
+      paused: TaskNotification(t['notif.dl_paused_title']!,
+          t['notif.dl_paused_body']!),
+      progressBar: true,
+      groupNotificationId: _notifGroupRuqyah,
+    );
+
     downloader.addTaskQueue(fileQueue);
 
     // «تنزيل التلاوة الكاملة لو حطّيت التطبيق في الخلفية التنزيل بيقف ويعلّق
@@ -332,6 +356,7 @@ class DownloadEngine {
     // outlived the app can be reconciled on the next launch instead of
     // showing as lost.
     await downloader.trackTasksInGroup(groupFiles);
+    await downloader.trackTasksInGroup(groupRuqyah);
     await downloader.trackTasksInGroup(groupQuranAudio);
 
     // The one and only subscription to the plugin's single-subscription

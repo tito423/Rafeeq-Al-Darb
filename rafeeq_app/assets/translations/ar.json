@@ -889,7 +889,10 @@
     "iqama_body": "حان وقت الإقامة",
     "quote_channel": "مقولات",
     "quote_channel_desc": "مقولة من كتب المكتبة، كل مدة تختارها",
-    "quote_title": "مقولة"
+    "quote_title": "مقولة",
+    "dl_ruqyah_running_title": "تحميل ملفات الرقية الصوتية",
+    "dl_ruqyah_complete_title": "اكتمل تحميل ملفات الرقية",
+    "dl_ruqyah_error_title": "تعذّر تحميل ملفات الرقية"
   },
   "hijri": {
     "m1": "محرم",

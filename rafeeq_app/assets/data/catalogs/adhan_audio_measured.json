@@ -88,27 +88,11 @@
     "bytes": 2955851
   },
   {
-    "id": "azan15",
-    "name": "مشاري راشد العفاسي (٢)",
-    "seconds": 257,
-    "kbps": 64,
-    "mean_volume_db": -20.1,
-    "bytes": 2057866
-  },
-  {
     "id": "azan16",
     "name": "مشاري راشد العفاسي — أذان الفجر (١)",
     "seconds": 187,
     "kbps": 64,
     "mean_volume_db": -19.9,
     "bytes": 1498845
-  },
-  {
-    "id": "azan17",
-    "name": "مشاري راشد العفاسي — أذان الفجر (٢)",
-    "seconds": 288,
-    "kbps": 64,
-    "mean_volume_db": -20.1,
-    "bytes": 2308432
   }
 ]

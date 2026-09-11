@@ -4,20 +4,26 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/islamic_pattern.dart';
-import '../../data/ruqyah_catalog.dart';
 import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../quran_audio/data/quran_audio_player.dart';
+import '../../../quran_audio/presentation/player_screen.dart';
+import '../../../quran_audio/presentation/widgets/mini_player.dart';
+import '../../data/ruqyah_catalog.dart';
 
 /// Five recorded ruqyahs, listenable and downloadable.
 ///
-/// Playback goes through [AyahAudioService.playTrack] — the app's one and only
-/// player — rather than a second `AudioPlayer`, which `just_audio_background`
-/// refuses to allow. That is also what the reader wants here: a 40-minute
-/// ruqyah is something you start and then put the phone down on, so it needs
-/// the media notification, and only the one player has it.
+/// They play in the Qur'an player — «خلي الرقية الشرعية لما أجي أشغلها تشتغل
+/// في مشغل التلاوة لأنه بجد شكله جميل جدًا». That player already drives the
+/// app's one `AudioPlayer` with its media notification, and it brings the seek
+/// bar, the ten-second jumps, the sleep timer and the queue, so this screen no
+/// longer carries a transport of its own. The five recordings are queued in
+/// order starting from the one tapped.
+///
+/// A download can be paused, resumed and cancelled from its card — «اديني
+/// إمكانية إيقاف التحميل أو إلغاء أو استئناف التحميل للرقية».
 class RuqyahAudioScreen extends StatefulWidget {
   const RuqyahAudioScreen({super.key});
 
@@ -29,10 +35,8 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
   /// id -> local file, for the ones already downloaded.
   final Map<String, String> _paths = {};
   StreamSubscription<List<DownloadTask>>? _downloads;
-  StreamSubscription<bool>? _playing;
 
-  String? _current;
-  bool _isPlaying = false;
+  static String _trackId(RuqyahRecording r) => 'ruqyah_${r.id}';
 
   @override
   void initState() {
@@ -42,19 +46,11 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
       _loadPaths();
       if (mounted) setState(() {});
     });
-    _playing = AyahAudioService.instance.isPlayingStream.listen((p) {
-      if (!mounted) return;
-      // The player is shared, so "something is playing" is not the same as
-      // "this screen's track is playing" — ask which track it is on.
-      final mine = _current != null && AyahAudioService.instance.isTrack(_current!);
-      setState(() => _isPlaying = p && mine);
-    });
   }
 
   @override
   void dispose() {
     _downloads?.cancel();
-    _playing?.cancel();
     super.dispose();
   }
 
@@ -70,18 +66,26 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
     if (mounted) setState(() {});
   }
 
-  Future<void> _toggle(RuqyahRecording r) async {
-    if (_current == r.id && _isPlaying) {
-      await AyahAudioService.instance.pauseResumeTrack();
+  List<PlayerTrack> _tracks() => [
+        for (final r in ruqyahRecordings)
+          PlayerTrack(
+            id: _trackId(r),
+            title: r.heading(),
+            artist: 'ruqyah.audio_title'.tr(),
+            url: r.url,
+            filePath: _paths[r.id],
+          ),
+      ];
+
+  Future<void> _play(RuqyahRecording r) async {
+    final player = QuranAudioPlayer.instance;
+    if (player.active && player.current?.id == _trackId(r)) {
+      await player.togglePlay();
       return;
     }
-    final local = _paths[r.id];
-    final ok = await AyahAudioService.instance.playTrack(
-      id: r.id,
-      url: r.url,
-      title: 'ruqyah.audio_title'.tr(),
-      artist: r.heading(),
-      localFile: local == null ? null : File(local),
+    final ok = await player.playQueue(
+      _tracks(),
+      start: ruqyahRecordings.indexOf(r),
     );
     if (!mounted) return;
     if (!ok) {
@@ -89,10 +93,7 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
           .showSnackBar(SnackBar(content: Text('errors.offline'.tr())));
       return;
     }
-    setState(() {
-      _current = r.id;
-      _isPlaying = true;
-    });
+    unawaited(QuranAudioPlayerScreen.open(context));
   }
 
   Future<void> _download(RuqyahRecording r) => DownloadManager.instance.enqueue(
@@ -108,193 +109,57 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
     final arabic = context.locale.languageCode == 'ar';
     return Scaffold(
       appBar: AppBar(title: Text('ruqyah.audio_title'.tr())),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-        children: [
-          IslamicPatternPanel(
-            child: Row(
-              children: [
-                const Icon(Icons.healing_outlined,
-                    color: AppColors.goldSoft, size: 30),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'ruqyah.audio_intro'.tr(),
-                    style: const TextStyle(
-                        color: AppColors.textHigh, fontSize: 13, height: 1.5),
-                  ),
+      bottomNavigationBar: const MiniPlayer(),
+      body: ListenableBuilder(
+        listenable: QuranAudioPlayer.instance,
+        builder: (context, _) {
+          final player = QuranAudioPlayer.instance;
+          final currentId = player.active ? player.current?.id : null;
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
+            children: [
+              IslamicPatternPanel(
+                child: Row(
+                  children: [
+                    const Icon(Icons.healing_outlined,
+                        color: AppColors.goldSoft, size: 30),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'ruqyah.audio_intro'.tr(),
+                        style: const TextStyle(
+                            color: AppColors.textHigh, fontSize: 13, height: 1.5),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              const SizedBox(height: 16),
+              for (final r in ruqyahRecordings) ...[
+                _RecordingCard(
+                  recording: r,
+                  arabic: arabic,
+                  downloadedPath: _paths[r.id],
+                  task: DownloadManager.instance.taskById(r.downloadId),
+                  isCurrent: currentId == _trackId(r),
+                  isPlaying: currentId == _trackId(r) && player.playing,
+                  onToggle: () => _play(r),
+                  onDownload: () => _download(r),
+                  onPause: () => DownloadManager.instance.pause(r.downloadId),
+                  onResume: () => DownloadManager.instance.resume(r.downloadId),
+                  onCancel: () => DownloadManager.instance.cancel(r.downloadId),
+                ),
+                const SizedBox(height: 10),
               ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          for (final r in ruqyahRecordings) ...[
-            _RecordingCard(
-              recording: r,
-              arabic: arabic,
-              downloadedPath: _paths[r.id],
-              task: DownloadManager.instance.taskById(r.downloadId),
-              isCurrent: _current == r.id,
-              isPlaying: _current == r.id && _isPlaying,
-              onToggle: () => _toggle(r),
-              onDownload: () => _download(r),
-            ),
-            const SizedBox(height: 10),
-          ],
-          const SizedBox(height: 8),
-          Text(
-            ruqyahAudioSourceLabelKey.tr(),
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.textLow, fontSize: 11),
-          ),
-        ],
-      ),
-      // The transport the owner asked for — «الرقية الشرعية مافيش ميديا
-      // بلاير بأيقونات يخليني أقدر أتحكم فيها». A row of play buttons is not a
-      // player: a ruqyah recording runs the better part of an hour, and there
-      // was no way to see where you were in it, move within it, or come back
-      // to where you left off. It only appears while this screen's own track
-      // is loaded, so it never covers the list for nothing.
-      bottomNavigationBar: _current == null
-          ? null
-          : _RuqyahTransport(
-              title: ruqyahRecordings
-                  .firstWhere((r) => r.id == _current)
-                  .heading(),
-              isPlaying: _isPlaying,
-              onPlayPause: () => AyahAudioService.instance.pauseResumeTrack(),
-              onStop: () async {
-                await AyahAudioService.instance.stop();
-                if (mounted) setState(() => _current = null);
-              },
-            ),
-    );
-  }
-}
-
-/// The bottom transport: elapsed / total, a real seek bar, and 10-second
-/// jumps either side of play-pause.
-///
-/// It reads position from the shared player's own stream rather than a timer,
-/// so the thumb cannot drift away from the audio, and the seek is committed
-/// on change (not on every drag pixel) so scrubbing does not stutter the
-/// decoder.
-class _RuqyahTransport extends StatelessWidget {
-  final String title;
-  final bool isPlaying;
-  final VoidCallback onPlayPause;
-  final Future<void> Function() onStop;
-
-  const _RuqyahTransport({
-    required this.title,
-    required this.isPlaying,
-    required this.onPlayPause,
-    required this.onStop,
-  });
-
-  static String _clock(Duration d) {
-    final h = d.inHours;
-    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final sec = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return h > 0 ? '$h:$m:$sec' : '$m:$sec';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return SafeArea(
-      child: Material(
-        color: scheme.surfaceContainerHighest,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 6, 12, 8),
-          child: StreamBuilder<Duration>(
-            stream: AyahAudioService.instance.positionStream,
-            builder: (context, snap) {
-              final total = AyahAudioService.instance.trackDuration ??
-                  Duration.zero;
-              var pos = snap.data ?? Duration.zero;
-              if (total > Duration.zero && pos > total) pos = total;
-              final max = total.inMilliseconds.toDouble();
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 12, color: scheme.onSurfaceVariant),
-                  ),
-                  Row(
-                    children: [
-                      // The clock is Latin-digit and sits beside Arabic text,
-                      // so it needs the LTR isolate (trap #16).
-                      Text(ltr(_clock(pos)),
-                          style: const TextStyle(fontSize: 11)),
-                      Expanded(
-                        child: Slider(
-                          value: max <= 0
-                              ? 0
-                              : pos.inMilliseconds.clamp(0, max.toInt())
-                                  .toDouble(),
-                          max: max <= 0 ? 1 : max,
-                          onChanged: max <= 0 ? null : (_) {},
-                          onChangeEnd: max <= 0
-                              ? null
-                              : (v) => AyahAudioService.instance.seekTrack(
-                                  Duration(milliseconds: v.round())),
-                        ),
-                      ),
-                      Text(ltr(_clock(total)),
-                          style: const TextStyle(fontSize: 11)),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        tooltip: 'ruqyah.back_10'.tr(),
-                        icon: const Icon(Icons.replay_10),
-                        onPressed: () {
-                          final to = pos - const Duration(seconds: 10);
-                          AyahAudioService.instance.seekTrack(
-                              to < Duration.zero ? Duration.zero : to);
-                        },
-                      ),
-                      IconButton(
-                        iconSize: 44,
-                        tooltip: isPlaying
-                            ? 'ruqyah.pause'.tr()
-                            : 'ruqyah.play'.tr(),
-                        icon: Icon(isPlaying
-                            ? Icons.pause_circle_filled_rounded
-                            : Icons.play_circle_fill_rounded),
-                        color: AppColors.gold,
-                        onPressed: onPlayPause,
-                      ),
-                      IconButton(
-                        tooltip: 'ruqyah.forward_10'.tr(),
-                        icon: const Icon(Icons.forward_10),
-                        onPressed: () {
-                          final to = pos + const Duration(seconds: 10);
-                          AyahAudioService.instance
-                              .seekTrack(to > total && total > Duration.zero
-                                  ? total
-                                  : to);
-                        },
-                      ),
-                      IconButton(
-                        tooltip: 'ruqyah.stop'.tr(),
-                        icon: const Icon(Icons.stop_circle_outlined),
-                        onPressed: onStop,
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+              const SizedBox(height: 8),
+              Text(
+                ruqyahAudioSourceLabelKey.tr(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.textLow, fontSize: 11),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -309,6 +174,9 @@ class _RecordingCard extends StatelessWidget {
   final bool isPlaying;
   final VoidCallback onToggle;
   final VoidCallback onDownload;
+  final VoidCallback onPause;
+  final VoidCallback onResume;
+  final VoidCallback onCancel;
 
   const _RecordingCard({
     required this.recording,
@@ -319,6 +187,9 @@ class _RecordingCard extends StatelessWidget {
     required this.isPlaying,
     required this.onToggle,
     required this.onDownload,
+    required this.onPause,
+    required this.onResume,
+    required this.onCancel,
   });
 
   String get _duration {
@@ -330,9 +201,10 @@ class _RecordingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final busy = task != null &&
-        (task!.status == DownloadStatus.downloading ||
-            task!.status == DownloadStatus.queued);
+    final status = task?.status;
+    final busy = status == DownloadStatus.downloading ||
+        status == DownloadStatus.queued;
+    final paused = status == DownloadStatus.paused;
     final offline = downloadedPath != null;
 
     return ClipRRect(
@@ -367,7 +239,7 @@ class _RecordingCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+              padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
               child: Row(
                 children: [
                   IconButton(
@@ -416,30 +288,56 @@ class _RecordingCard extends StatelessWidget {
                           style: const TextStyle(
                               color: AppColors.textLow, fontSize: 12),
                         ),
-                        if (busy)
+                        if (busy || paused)
                           Padding(
                             padding: const EdgeInsets.only(top: 6),
                             child: GoldProgressBar(
                               value: task!.total == null
-                                  ? null
+                                  ? (paused ? 0 : null)
                                   : task!.progress,
                             ),
                           ),
                       ],
                     ),
                   ),
-                  if (!offline && !busy)
+                  if (offline)
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8, right: 8),
+                      child: Icon(Icons.offline_pin_rounded,
+                          size: 20, color: AppColors.success),
+                    )
+                  else if (busy) ...[
+                    IconButton(
+                      tooltip: 'downloads.pause'.tr(),
+                      onPressed: onPause,
+                      icon: const Icon(Icons.pause_rounded,
+                          color: AppColors.textMedium),
+                    ),
+                    IconButton(
+                      tooltip: 'downloads.cancel'.tr(),
+                      onPressed: onCancel,
+                      icon: const Icon(Icons.close_rounded,
+                          color: AppColors.textMedium),
+                    ),
+                  ] else if (paused) ...[
+                    IconButton(
+                      tooltip: 'downloads.resume'.tr(),
+                      onPressed: onResume,
+                      icon: const Icon(Icons.play_arrow_rounded,
+                          color: AppColors.goldSoft),
+                    ),
+                    IconButton(
+                      tooltip: 'downloads.cancel'.tr(),
+                      onPressed: onCancel,
+                      icon: const Icon(Icons.close_rounded,
+                          color: AppColors.textMedium),
+                    ),
+                  ] else
                     IconButton(
                       tooltip: 'downloads.title'.tr(),
                       onPressed: onDownload,
                       icon: const Icon(Icons.download_rounded,
                           color: AppColors.textMedium),
-                    )
-                  else if (offline)
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8, right: 8),
-                      child: Icon(Icons.offline_pin_rounded,
-                          size: 20, color: AppColors.success),
                     ),
                 ],
               ),

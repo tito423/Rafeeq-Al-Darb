@@ -889,7 +889,10 @@
     "iqama_body": "C’est l’heure de l’iqama",
     "quote_channel": "Citations",
     "quote_channel_desc": "Une parole tirée des livres de la bibliothèque, à l’intervalle choisi",
-    "quote_title": "Une parole"
+    "quote_title": "Une parole",
+    "dl_ruqyah_running_title": "Téléchargement des fichiers audio de roqya",
+    "dl_ruqyah_complete_title": "Fichiers audio de roqya téléchargés",
+    "dl_ruqyah_error_title": "Impossible de télécharger les fichiers de roqya"
   },
   "hijri": {
     "m1": "Mouharram",

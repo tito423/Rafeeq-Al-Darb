@@ -889,7 +889,10 @@
     "iqama_body": "It is time for the iqama",
     "quote_channel": "Quotes",
     "quote_channel_desc": "A saying from the library's books, at your chosen interval",
-    "quote_title": "A saying"
+    "quote_title": "A saying",
+    "dl_ruqyah_running_title": "Downloading ruqyah audio files",
+    "dl_ruqyah_complete_title": "Ruqyah audio downloaded",
+    "dl_ruqyah_error_title": "Could not download the ruqyah audio"
   },
   "hijri": {
     "m1": "Muharram",

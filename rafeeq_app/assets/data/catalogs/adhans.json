@@ -85,27 +85,11 @@
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   },
   {
-    "id": "azan15",
-    "name": "مشاري راشد العفاسي (٢)",
-    "asset": "assets/audio/adhan/azan15.mp3",
-    "raw": "azan15",
-    "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-2-kuwait.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
-  },
-  {
     "id": "azan16",
     "name": "مشاري راشد العفاسي — أذان الفجر (١)",
     "asset": "assets/audio/adhan/azan16.mp3",
     "raw": "azan16",
     "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-3-fajr-kuwait.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
-  },
-  {
-    "id": "azan17",
-    "name": "مشاري راشد العفاسي — أذان الفجر (٢)",
-    "asset": "assets/audio/adhan/azan17.mp3",
-    "raw": "azan17",
-    "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-4-fajr-kuwait.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
   }
 ]

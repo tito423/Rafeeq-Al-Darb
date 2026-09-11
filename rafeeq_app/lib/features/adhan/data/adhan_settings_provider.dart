@@ -104,10 +104,19 @@ class AdhanSettings {
       );
 }
 
+/// Adhans taken out of the catalogue — «احذف أذان مشاري راشد العفاسي ٢، وأذان
+/// مشاري راشد العفاسي الفجر ٢». A choice stored before that points at nothing:
+/// the scheduler already falls back to the first adhan, but the settings
+/// dropdown asserts on a value that is not among its items, so a stale id is
+/// read as "no choice" instead.
+const Set<String> removedAdhanIds = {'azan15', 'azan17'};
+
+String? _liveAdhanId(String? id) => removedAdhanIds.contains(id) ? null : id;
+
 class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
   AdhanSettingsNotifier(this._prefs)
       : super(AdhanSettings(
-          defaultAdhanId: _prefs.getString(_defaultKey) ?? 'azan1',
+          defaultAdhanId: _liveAdhanId(_prefs.getString(_defaultKey)) ?? 'azan1',
           calculationMethod: _prefs.getInt(_calcMethodKey) ?? 4,
           // Off until asked for: an app that starts buzzing three extra
           // times per prayer on first launch is one nobody keeps.
@@ -125,7 +134,8 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
               k: AdhanMode.fromName(_prefs.getString('$_modePrefix$k')),
           },
           adhanIdByPrayer: {
-            for (final k in adhanPrayerKeys) k: _prefs.getString('$_choicePrefix$k'),
+            for (final k in adhanPrayerKeys)
+              k: _liveAdhanId(_prefs.getString('$_choicePrefix$k')),
           },
         ));
 

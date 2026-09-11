@@ -166,23 +166,6 @@
    169264
   ]
  },
- "azan15.mp3": {
-  "total_ms": 257170,
-  "first_speech_ms": 0,
-  "last_speech_ms": 251714,
-  "threshold_db": -34,
-  "min_gap_s": 0.9,
-  "lines_fajr": [
-   0,
-   40131,
-   81069,
-   123036,
-   161968,
-   197670,
-   235090,
-   247965
-  ]
- },
  "azan16.mp3": {
   "total_ms": 187270,
   "first_speech_ms": 0,
@@ -197,23 +180,6 @@
    116189,
    140623,
    157032
-  ]
- },
- "azan17.mp3": {
-  "total_ms": 288490,
-  "first_speech_ms": 0,
-  "last_speech_ms": 283055,
-  "threshold_db": -36,
-  "min_gap_s": 0.9,
-  "rejected_lines": [
-   0,
-   40066,
-   81165,
-   123306,
-   162410,
-   198211,
-   232718,
-   266388
   ]
  }
 }

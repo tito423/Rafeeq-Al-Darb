@@ -70,14 +70,9 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => _pickAsrMadhab(context, ref, settings),
                 ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.public_outlined),
-                  title: Text('prayer.high_latitude'.tr()),
-                  subtitle: Text(_highLatitudeLabel(settings.highLatitudeRule)),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _pickHighLatitudeRule(context, ref, settings),
-                ),
+                // «احذف خيارات خطوط العرض العليا». The rule itself stays at its
+                // default in the calculation (twilight angle); only the choice
+                // is gone from the screen.
               ],
             ),
           ),
@@ -258,17 +253,6 @@ String _asrLabel(adhan.Madhab madhab) => madhab == adhan.Madhab.hanafi
     ? 'prayer.asr_hanafi'.tr()
     : 'prayer.asr_standard'.tr();
 
-String _highLatitudeLabel(adhan.HighLatitudeRule rule) {
-  switch (rule) {
-    case adhan.HighLatitudeRule.middle_of_the_night:
-      return 'prayer.high_lat_midnight'.tr();
-    case adhan.HighLatitudeRule.seventh_of_the_night:
-      return 'prayer.high_lat_seventh'.tr();
-    case adhan.HighLatitudeRule.twilight_angle:
-      return 'prayer.high_lat_angle'.tr();
-  }
-}
-
 /// One row of a chooser: the label, and a tick when it is the current value.
 Widget _choice({
   required String label,
@@ -332,37 +316,6 @@ Future<void> _pickAsrMadhab(
             onTap: () {
               Navigator.of(dialog).pop();
               ref.read(adhanSettingsProvider.notifier).setAsrMadhab(m);
-              ref.read(prayerControllerProvider.notifier).refresh();
-            },
-          ),
-      ],
-    ),
-  );
-}
-
-Future<void> _pickHighLatitudeRule(
-    BuildContext context, WidgetRef ref, AdhanSettings settings) async {
-  await showDialog<void>(
-    context: context,
-    builder: (dialog) => SimpleDialog(
-      title: Text('prayer.high_latitude'.tr()),
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-          child: Text(
-            'prayer.high_latitude_desc'.tr(),
-            style: Theme.of(dialog).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(dialog).colorScheme.onSurfaceVariant,
-                ),
-          ),
-        ),
-        for (final r in adhan.HighLatitudeRule.values)
-          _choice(
-            label: _highLatitudeLabel(r),
-            selected: r == settings.highLatitudeRule,
-            onTap: () {
-              Navigator.of(dialog).pop();
-              ref.read(adhanSettingsProvider.notifier).setHighLatitudeRule(r);
               ref.read(prayerControllerProvider.notifier).refresh();
             },
           ),

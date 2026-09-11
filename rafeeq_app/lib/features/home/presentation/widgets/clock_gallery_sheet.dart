@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/widgets/card_route.dart';
 import '../../data/clock_settings_provider.dart';
 import 'analog_clock_faces.dart';
@@ -16,6 +17,8 @@ import 'digital_clock_faces.dart';
 ///
 /// It opens as a [CardScreen] rather than a bottom sheet, so it grows out of
 /// the clock that was tapped and leaves Home visible (blurred) behind it.
+const Color _accent = Color(0xFF15C7B0);
+
 class ClockGallerySheet extends ConsumerStatefulWidget {
   const ClockGallerySheet({super.key});
 
@@ -108,11 +111,15 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
               ),
             ),
 
+            // Every colour below comes from the card's own surface. These were
+            // white — right on the dark card, and invisible on the light one:
+            // the owner's photo shows «عقارب», «رقمية», every face name and
+            // both switch labels as white on pale mint.
             TabBar(
               controller: _tabs,
-              indicatorColor: const Color(0xFF15C7B0),
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white54,
+              indicatorColor: HeroSurface.of(context).accent(_accent),
+              labelColor: HeroSurface.of(context).onSurface,
+              unselectedLabelColor: HeroSurface.of(context).onSurfaceMuted,
               tabs: [
                 Tab(text: 'home.clock_digital'.tr()),
                 Tab(text: 'home.clock_analog'.tr()),
@@ -174,7 +181,7 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
       padding: const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+          top: BorderSide(color: HeroSurface.of(context).hairline),
         ),
       ),
       child: Row(
@@ -229,6 +236,8 @@ class _FaceGrid extends StatelessWidget {
       itemCount: itemCount,
       itemBuilder: (context, i) {
         final selected = isSelected(i);
+        final surface = HeroSurface.of(context);
+        final accent = surface.accent(_accent);
         return GestureDetector(
           onTap: () => onTap(i),
           child: AnimatedContainer(
@@ -236,11 +245,9 @@ class _FaceGrid extends StatelessWidget {
             curve: Curves.easeOut,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.white.withValues(alpha: selected ? 0.08 : 0.03),
+              color: surface.onSurface.withValues(alpha: selected ? 0.08 : 0.03),
               border: Border.all(
-                color: selected
-                    ? const Color(0xFF15C7B0)
-                    : Colors.white.withValues(alpha: 0.10),
+                color: selected ? accent : surface.hairline,
                 width: selected ? 2 : 1,
               ),
               boxShadow: selected
@@ -271,11 +278,9 @@ class _FaceGrid extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: selected
-                          ? const Color(0xFF7DEBDA)
-                          : Colors.white60,
+                      fontSize: 12,
+                      fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                      color: selected ? accent : surface.onSurfaceMuted,
                     ),
                   ),
                 ),
@@ -312,7 +317,8 @@ class _MiniSwitch extends StatelessWidget {
           child: Text(
             label,
             maxLines: 2,
-            style: const TextStyle(color: Colors.white70, fontSize: 12),
+            style: TextStyle(
+                color: HeroSurface.of(context).onSurfaceMuted, fontSize: 12),
           ),
         ),
       ],

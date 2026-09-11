@@ -1197,9 +1197,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 22:10 — IN PROGRESS — resume here**
+**2026-09-11 22:21 — IN PROGRESS — resume here**
 
-3.19.0 batch 10 stage A (not yet on a device): tap anywhere on a mushaf page toggles full screen in text and image modes, long press opens the verse card, landscape stays full screen with no options; jump sheet with surah/page/juz tabs and no keyboard by default; AppShell no longer resizes the Quran tab for the keyboard and the image page reads sizeOf instead of the whole MediaQuery (the flicker behind the jump dialog); verse card expand-to-full-screen button; recite-verse button returns when the verse completes; repeat dialog slider plus typed count; text-mushaf themes hidden in image mode; scrollbar rewritten as its own rail (the old one rebuilt on every extent estimate and its thumb could not be dragged on the emulator). analyze clean.
+3.19.0 batch 10 stage C (not yet on a device): ruqyah recordings play in the Quran player (queued from the one tapped) with the mini player, cards get pause/resume/cancel, ruqyah downloads get their own notification group titled for ruqyah; clock gallery text takes the card surface's colours (white on pale mint in the owner's light-theme photo); high-latitude option removed from prayer adjustments; adhans azan15 and azan17 (Alafasy 2, Alafasy Fajr 2) removed from the three catalogues, assets and android raw, stored choices of them read as default. analyze clean.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

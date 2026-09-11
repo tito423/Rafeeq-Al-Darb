@@ -889,7 +889,10 @@
     "iqama_body": "É hora do iqama",
     "quote_channel": "Citações",
     "quote_channel_desc": "Um dito dos livros da biblioteca, no intervalo que escolher",
-    "quote_title": "Uma citação"
+    "quote_title": "Uma citação",
+    "dl_ruqyah_running_title": "Baixando os áudios de ruqyah",
+    "dl_ruqyah_complete_title": "Áudios de ruqyah baixados",
+    "dl_ruqyah_error_title": "Não foi possível baixar os áudios de ruqyah"
   },
   "hijri": {
     "m1": "Muharram",

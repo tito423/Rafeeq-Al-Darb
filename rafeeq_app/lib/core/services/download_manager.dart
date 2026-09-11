@@ -112,7 +112,10 @@ class DownloadManager {
   }
 
   void _onUpdate(bd.TaskUpdate update) {
-    if (update.task.group != DownloadEngine.groupFiles) return;
+    if (update.task.group != DownloadEngine.groupFiles &&
+        update.task.group != DownloadEngine.groupRuqyah) {
+      return;
+    }
     final id = _byPlatformId[update.task.taskId];
     if (id == null) return;
     final task = _tasks[id];
@@ -279,7 +282,11 @@ class DownloadManager {
       filename: fileName,
       baseDirectory: bd.BaseDirectory.applicationSupport,
       directory: 'downloads',
-      group: DownloadEngine.groupFiles,
+      // The ruqyah recordings get a group — and so a notification — of their
+      // own: «خلي في إشعار تنزيل الرقية اسمها تحميل ملفات الرقية الصوتية».
+      group: category == 'ruqyah'
+          ? DownloadEngine.groupRuqyah
+          : DownloadEngine.groupFiles,
       updates: bd.Updates.statusAndProgress,
       // Range-based resume, so a dropped connection continues instead of
       // starting the file over — the whole point for multi-hundred-MB packs.

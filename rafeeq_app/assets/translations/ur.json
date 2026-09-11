@@ -889,7 +889,10 @@
     "iqama_body": "اقامت کا وقت ہو گیا",
     "quote_channel": "اقوال",
     "quote_channel_desc": "لائبریری کی کتابوں سے ایک قول، آپ کے منتخب وقفے پر",
-    "quote_title": "ایک قول"
+    "quote_title": "ایک قول",
+    "dl_ruqyah_running_title": "رقیہ کی آڈیو فائلیں ڈاؤن لوڈ ہو رہی ہیں",
+    "dl_ruqyah_complete_title": "رقیہ کی آڈیو فائلیں ڈاؤن لوڈ ہو گئیں",
+    "dl_ruqyah_error_title": "رقیہ کی آڈیو ڈاؤن لوڈ نہیں ہو سکی"
   },
   "hijri": {
     "m1": "محرم",
