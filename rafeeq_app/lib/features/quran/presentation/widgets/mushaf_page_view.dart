@@ -115,6 +115,12 @@ class _MushafPageViewState extends State<MushafPageView> {
   /// vertical scroll and an `InteractiveViewer` cannot both own the drag, and
   /// full width is already the largest this page can be drawn — zooming past
   /// it is what portrait is for.
+  ///
+  /// NOTE, v3.16.0: the landscape branch is currently **unreachable** from the
+  /// app, because `QuranScreen` locks the image mode to portrait — the owner's
+  /// «خلي الاورينتيشن بس على النص». It is kept because that lock is a single
+  /// list in `_applyOrientationLock`, and the day it changes this is what the
+  /// page needs in order not to be drawn the size of a stamp again.
   Widget _stage({
     required double aspect,
     required Widget Function(double w, double h) build,
