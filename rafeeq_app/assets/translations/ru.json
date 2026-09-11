@@ -183,7 +183,8 @@
     "search_surah_hint": "Найти суру или её номер…",
     "search_juz_hint": "Найти номер джуза…",
     "recite_choose_reciter": "Выбрать чтеца",
-    "recite_search_reciter": "Поиск чтеца"
+    "recite_search_reciter": "Поиск чтеца",
+    "recite_text_only": "Непрерывное чтение работает в текстовом мусхафе — та же страница открыта как текст."
   },
   "library": {
     "title": "Библиотека",

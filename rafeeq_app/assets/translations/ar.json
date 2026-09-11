@@ -183,7 +183,8 @@
     "search_surah_hint": "ابحث عن سورة أو رقمها…",
     "search_juz_hint": "ابحث عن رقم الجزء…",
     "recite_choose_reciter": "اختر القارئ",
-    "recite_search_reciter": "ابحث عن قارئ"
+    "recite_search_reciter": "ابحث عن قارئ",
+    "recite_text_only": "التلاوة المستمرة بتشتغل في المصحف النصي — اتفتحت نفس الصفحة كنص."
   },
   "library": {
     "title": "المكتبة",

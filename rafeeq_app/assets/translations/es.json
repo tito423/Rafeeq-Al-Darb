@@ -183,7 +183,8 @@
     "search_surah_hint": "Buscar una sura o su número…",
     "search_juz_hint": "Buscar un número de yuz…",
     "recite_choose_reciter": "Elegir recitador",
-    "recite_search_reciter": "Buscar recitador"
+    "recite_search_reciter": "Buscar recitador",
+    "recite_text_only": "La recitación continua funciona en el mushaf de texto; se abrió la misma página como texto."
   },
   "library": {
     "title": "Biblioteca",

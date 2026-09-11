@@ -1185,9 +1185,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 15:49 — IN PROGRESS — resume here**
+**2026-09-11 16:05 — IN PROGRESS — resume here**
 
-3.17.1 (not yet on a device): continuous recitation loads the whole surah and moves within it by seek; surah/juz/page index moves a running recitation; reciter picker in the recitation bar (switches at the current ayah); player cover typeset from surah+reciter names; section renamed مشغّل تلاوة القرآن; prayer card posted natively with a delete intent that re-posts it, native rollover + boot restore; downloads overview and item list refresh live; repair steps each time out at 12 s and stalled whole-surah transfers are cancelled and re-queued. analyze clean, 176 tests pass.
+3.17.1 device round 1 on emulator-5554: prayer card swiped away came back in 46 ms (event log cancel reason 2 -> enqueue), reciter switch playing again in 1.3 s at the same ayah, surah index jump while reciting 1.26 s, in-surah jump by seek with no player re-init. FOUND: Tajweed page 77 highlights 4:3 about a line low -> continuous recitation now text mushaf only (image page opens the text page and starts). Also fixed: reciter avatars all read «أ» (family-name letter on a per-reciter ground), recitations storage counted library.json as 2 B, azkar card errorWidget Positioned outside a Stack (pre-existing, threw in release log). Rebuilding to verify.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

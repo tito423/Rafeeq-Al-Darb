@@ -188,10 +188,13 @@ class QuranAudioLibrary extends ChangeNotifier {
   Future<(int, int)> usage() async {
     await ensureReady();
     var bytes = 0;
+    // Audio only. The index and the cached catalogue are bookkeeping: counted,
+    // an empty library read «2 B» on the storage screen — the two bytes of
+    // `[]` in library.json.
     for (final f in _root.listSync(recursive: true)) {
-      if (f is File && !f.path.contains('${p.separator}cache${p.separator}')) {
-        bytes += f.lengthSync();
-      }
+      if (f is! File) continue;
+      if (!_audioExtensions.contains(p.extension(f.path).toLowerCase())) continue;
+      bytes += f.lengthSync();
     }
     final items = _entries.keys.where((id) => downloadedCount(id) > 0).length +
         (await localFiles()).length;

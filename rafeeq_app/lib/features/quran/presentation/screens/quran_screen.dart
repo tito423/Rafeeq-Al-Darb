@@ -352,6 +352,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _goToPage(page);
   }
 
+  /// True while the page is drawn as an image — the image mode of any
+  /// printing, or a scanned printing, which has no text mode of its own.
+  bool get _isImageView =>
+      _mode == MushafMode.image ||
+      (ref.read(currentMushafEditionProvider).valueOrNull?.isRaster ?? false);
+
   /// A jump from the surah, juz or page index. While the reciter is reading,
   /// the recitation goes with it — to the surah's first verse when a surah was
   /// picked, otherwise to the page's first verse. Swiping pages by hand does
@@ -394,6 +400,28 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// the reader has selected, if any), and reads on through the mushaf.
   Future<void> _toggleContinuousRecitation(MushafData data) async {
     final audio = AyahAudioService.instance;
+    // Continuous recitation belongs to the TEXT mushaf, in every layout and
+    // theme. «اتأكد إن المصحف المصوّر آية بآية تشغيل التلاوة فيه والتظليل
+    // شغّالين صح. لو فيه مشكلة … خلّيها محصورة بس في المصحف النصي». There was:
+    // on emulator-5554 the Tajweed printing's page 77 highlighted 4:3 about a
+    // line too low — from «ما طاب لكم» into the start of 4:4 — because the
+    // printing's polygon fit does not hold on every page. So from an image
+    // page the button opens the text page of the same number and starts there.
+    if (!_recite.active && _isImageView) {
+      final edition = ref.read(currentMushafEditionProvider).valueOrNull;
+      if (edition?.isRaster ?? false) {
+        await ref
+            .read(selectedMushafEditionProvider.notifier)
+            .select(AppConfig.defaultMushafEdition);
+      }
+      if (!mounted) return;
+      setState(() => _mode = MushafMode.text);
+      _applyOrientationLock();
+      _persistMode();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('quran.recite_text_only'.tr())),
+      );
+    }
     if (_recite.active) {
       // A run Android has already torn down (see `ContinuousRecitation
       // .stalled`) must RESUME on this press, not stop. Treating it as
@@ -549,6 +577,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // already hidden on them for the same reason; the two indexes that would
     // navigate wrong are withheld here rather than silently missing.
     final canIndexBySurah = edition?.hafsPagination ?? true;
+    // A recitation does not carry on into an image page (see
+    // `_toggleContinuousRecitation`): switching to the image mode, or to a
+    // scanned printing, while it runs ends it.
+    if (_recite.active && (_mode == MushafMode.image || isRaster)) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => AyahAudioService.instance.stopContinuous(),
+      );
+    }
     // Adopt the open edition's real page count. Plain assignment rather than
     // setState: we are already inside build and the new value is used by this
     // very frame. If the reader was deeper into a longer printing than the
@@ -697,10 +733,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                 onPressed: _toggleAutoScroll,
                               ),
                             ],
-                            // Continuous recitation works in both modes: the
-                            // text page tints the verse, the image page
-                            // highlights its polygon, and either way the reader
-                            // turns its own pages to follow the reciter.
+                            // Continuous recitation runs in the text mushaf only;
+                            // pressed on an image page it opens the text page
+                            // and starts there.
                             ToolbarAction(
                               icon: _recite.active
                                   ? Icons.stop_circle_rounded

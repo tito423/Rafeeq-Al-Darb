@@ -61,34 +61,61 @@ class ReciterAvatar extends StatelessWidget {
   final double size;
   const ReciterAvatar({super.key, required this.name, this.size = 44});
 
+  /// The letter that tells reciters apart. Most names in the catalogue begin
+  /// with «أحمد», «محمد» or «عبد», so the first letter of the whole name drew
+  /// the same «أ» down the entire list; the family name's, without its «ال»,
+  /// does not.
+  static String letterFor(String name) {
+    final words = name.trim().split(RegExp(r'\s+'));
+    if (words.isEmpty || words.first.isEmpty) return '•';
+    var word = words.last;
+    if (word.startsWith('ال') && word.length > 2) word = word.substring(2);
+    return word.characters.first;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final letter = name.trim().isEmpty ? '•' : name.trim().characters.first;
+    var h = 0;
+    for (final c in name.codeUnits) {
+      h = (h * 31 + c) & 0x7fffffff;
+    }
+    final ground = RecitationCover._grounds[h % RecitationCover._grounds.length];
     return Container(
       width: size,
       height: size,
-      alignment: Alignment.center,
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.goldSoft, AppColors.gold, AppColors.goldContainer],
+        borderRadius: BorderRadius.circular(size * 0.28),
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: ground,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.gold.withValues(alpha: 0.25),
-            blurRadius: size * 0.25,
-          ),
-        ],
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.55)),
       ),
-      child: Text(
-        letter,
-        style: TextStyle(
-          fontSize: size * 0.45,
-          fontWeight: FontWeight.w800,
-          color: AppColors.night,
-          height: 1.1,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(size * 0.28),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            CustomPaint(
+              painter: IslamicPatternPainter(
+                tile: size / 2,
+                color: AppColors.gold.withValues(alpha: 0.14),
+                strokeWidth: 0.8,
+              ),
+            ),
+            Center(
+              child: Text(
+                letterFor(name),
+                style: TextStyle(
+                  fontFamily: 'AmiriQuran',
+                  fontSize: size * 0.46,
+                  height: 1.3,
+                  color: AppColors.goldSoft,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

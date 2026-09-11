@@ -183,7 +183,8 @@
     "search_surah_hint": "سورت یا اس کا نمبر تلاش کریں…",
     "search_juz_hint": "پارہ نمبر تلاش کریں…",
     "recite_choose_reciter": "قاری منتخب کریں",
-    "recite_search_reciter": "قاری تلاش کریں"
+    "recite_search_reciter": "قاری تلاش کریں",
+    "recite_text_only": "مسلسل تلاوت متنی مصحف میں چلتی ہے — یہی صفحہ متن کی صورت میں کھول دیا گیا۔"
   },
   "library": {
     "title": "کتب خانہ",

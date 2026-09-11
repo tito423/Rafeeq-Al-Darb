@@ -214,7 +214,12 @@ class _CategoryCard extends ConsumerWidget {
                     child: CachedNetworkImage(
                       imageUrl: bgUrl!,
                       fit: BoxFit.cover,
-                      errorWidget: (context, url, error) => Positioned.fill(
+                      // Not `Positioned.fill`: this is laid out inside the
+                      // image widget, not inside the Stack, and a Positioned
+                      // there threw «type 'ParentData' is not a subtype of
+                      // type 'StackParentData'» — seen in the release log on
+                      // emulator-5554 whenever a card's photo failed to load.
+                      errorWidget: (context, url, error) => SizedBox.expand(
                         child: CustomPaint(
                           painter: IslamicPatternPainter(
                             tile: 46,
