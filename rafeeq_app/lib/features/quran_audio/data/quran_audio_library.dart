@@ -227,19 +227,27 @@ class QuranAudioLibrary extends ChangeNotifier {
     e.pending.addAll(want);
     await _save();
     unawaited(DownloadEngine.ensureNotificationPermission());
-    for (final s in want) {
-      _enqueue(e, s);
+    final batch = DateTime.now();
+    for (var i = 0; i < want.length; i++) {
+      _enqueue(e, want[i], at: batch.add(Duration(milliseconds: i)));
     }
     _notifyNow();
     return want.length;
   }
 
-  void _enqueue(LibraryEntry e, int surah) {
+  /// The native holding queue releases tasks by priority, then by
+  /// `creationTime`. A whole recitation is built inside one millisecond, so
+  /// every task tied and the order was arbitrary: on the emulator al-Fatiha
+  /// was still waiting after sixteen other surahs had finished, and the
+  /// screen said «جارٍ تنزيل سورة الفاتحة — 0%» the whole time. [at] spaces
+  /// the batch a millisecond apart so it goes in surah order.
+  void _enqueue(LibraryEntry e, int surah, {DateTime? at}) {
     final key = _key(e.moshafId, surah);
     if (_status[key]?.isActive ?? false) return;
     _status[key] = const SurahAudioStatus(SurahAudioState.queued);
     unawaited(FileDownloader().enqueue(
       DownloadTask(
+        creationTime: at ?? DateTime.now().add(Duration(milliseconds: surah)),
         taskId: taskIdFor(e.moshafId, surah),
         url: e.moshaf.urlFor(surah),
         filename: fileNameFor(surah),
@@ -268,8 +276,12 @@ class QuranAudioLibrary extends ChangeNotifier {
         _status.remove(key);
         final e = _entries[m];
         if (e != null && e.pending.remove(s)) unawaited(_save());
-      } else if (status == TaskStatus.enqueued ||
-          status == TaskStatus.running ||
+      } else if (status == TaskStatus.enqueued) {
+        // Held in the native queue, not transferring yet: «في الانتظار»,
+        // not a 0% bar that never moves.
+        _status[key] = SurahAudioStatus(
+            SurahAudioState.queued, _status[key]?.progress ?? 0);
+      } else if (status == TaskStatus.running ||
           status == TaskStatus.waitingToRetry) {
         _status[key] = SurahAudioStatus(
             SurahAudioState.running, _status[key]?.progress ?? 0);

@@ -1171,6 +1171,8 @@
     "add_files": "Ajouter des fichiers",
     "add_folder": "Ajouter un dossier",
     "auto_scan": "Analyser automatiquement à l’ouverture du lecteur",
-    "remove_folder": "Retirer ce dossier de la liste"
+    "remove_folder": "Retirer ce dossier de la liste",
+    "scan_none": "Aucun fichier audio trouvé sur l'appareil.",
+    "scan_found": "Fichiers audio sur l'appareil : {}"
   }
 }

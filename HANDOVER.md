@@ -1193,9 +1193,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 19:52 — IN PROGRESS — resume here**
+**2026-09-11 20:18 — IN PROGRESS — resume here**
 
-3.18.0 batch 9 (not yet on a device): whole-surah downloads handed to the plugin's native holding queue as foreground work with allowPause, resumed from bytes on repair/resume (the Dart queue did not advance with the app backgrounded); a tap on a verse selects it and opens its card (it started the recitation), the marker/card play one verse, continuous starts from the selected verse and does not scroll when the verse is visible; gharib tab removed; library tab renamed; reciter screen: themed lattice card, now-downloading line that jumps to the surah, back-to-top button; downloads overview lists every transfer with its percentage; player favourites tab, add folders, auto scan, audio permission after the splash; app-wide vertical scrollbar with arrows. analyze clean, 182 tests.
+3.18.0 device round on emulator-5554: continuous recitation starts at the tapped verse (media session 3:25 PLAYING, page did not move); device scan found a pushed mp3 under its folder; themes, favourites, disc seen; full recitation kept downloading with the app in the background (8 of 110 after 90 s at HOME, 10 on return, nothing restarted). FOUND and fixed: held tasks released in arbitrary order because all 110 shared one creationTime (Fatiha still waiting after 16 others) - tasks now spaced 1 ms in surah order, enqueued maps to queued, test proven failing on old source; finished queue still showed pause and a turning disc; scan with no result said nothing; 4th player tab label clipped; selected verse not marked in the flowing text layout.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

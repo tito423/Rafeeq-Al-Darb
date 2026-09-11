@@ -504,9 +504,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   // used to just be set and never cleared; `AyahSciencesSheet.show`
   // already returns a future that resolves on *any* dismissal (the
   // system back gesture, tapping the scrim, or an explicit close — all
-  // of them go through `Navigator.pop` under a `showModalBottomSheet`),
-  // so awaiting it and clearing the highlight there covers all three the
-  // same way, not just one specific close button.
+  // of them go through `Navigator.pop` under a `showModalBottomSheet`).
   Future<void> _openSciences(
     Ayah ayah,
     MushafData data, {
@@ -1110,8 +1108,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               frameColor: frame.accent.color ?? mushafTheme.gold,
               ayahs: ayahs,
               surahNameOf: data.surahNameAr,
-              playingSurah: _recite.active ? _recite.surahId : null,
-              playingAyah: _recite.active ? _recite.ayahNumber : null,
+              // The selected verse stays marked after its card closes, as it
+              // does on the image page, so the owner can see where the
+              // continuous recitation will start from.
+              playingSurah: _recite.active ? _recite.surahId : _highlightSurah,
+              playingAyah: _recite.active ? _recite.ayahNumber : _highlightAyah,
               onAyahTap: (a) => _openSciences(a, data),
               // `edition:` here is the RECITER, not the mushaf. It used to
               // be handed `edition?.id ?? 'hafs_kfqc'` — a *mushaf* printing

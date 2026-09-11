@@ -53,11 +53,14 @@ class _QuranAudioScreenState extends State<QuranAudioScreen> {
             indicatorSize: TabBarIndicatorSize.label,
             labelColor: AppColors.gold,
             labelStyle: const TextStyle(fontWeight: FontWeight.w700),
+            labelPadding: const EdgeInsets.symmetric(horizontal: 6),
+            // Four tabs on a phone: «ملفات الجهاز» was cut to «علفات الجهاز»
+            // at the edge. Each label shrinks only when it has to.
             tabs: [
-              Tab(icon: const Icon(Icons.record_voice_over_outlined, size: 20), text: 'quran_audio.tab_reciters'.tr()),
-              Tab(icon: const Icon(Icons.favorite_border_rounded, size: 20), text: 'quran_audio.tab_favorites'.tr()),
-              Tab(icon: const Icon(Icons.folder_special_outlined, size: 20), text: 'quran_audio.tab_library'.tr()),
-              Tab(icon: const Icon(Icons.phone_android_rounded, size: 20), text: 'quran_audio.tab_device'.tr()),
+              _tab(Icons.record_voice_over_outlined, 'quran_audio.tab_reciters'),
+              _tab(Icons.favorite_border_rounded, 'quran_audio.tab_favorites'),
+              _tab(Icons.folder_special_outlined, 'quran_audio.tab_library'),
+              _tab(Icons.phone_android_rounded, 'quran_audio.tab_device'),
             ],
           ),
         ),
@@ -69,6 +72,11 @@ class _QuranAudioScreenState extends State<QuranAudioScreen> {
     );
   }
 }
+
+Tab _tab(IconData icon, String key) => Tab(
+      icon: Icon(icon, size: 20),
+      child: FittedBox(fit: BoxFit.scaleDown, child: Text(key.tr(), maxLines: 1)),
+    );
 
 // ── Reciters ───────────────────────────────────────────────────────────────
 
@@ -337,6 +345,19 @@ class _DeviceTabState extends State<_DeviceTab> with AutomaticKeepAliveClientMix
     _scanner.autoScanIfAllowed();
   }
 
+  /// A scan that finds nothing used to change nothing on screen, which reads
+  /// as a dead button. Say what it found.
+  Future<void> _runScan() async {
+    await _scanner.scan();
+    if (!mounted || _scanner.denied) return;
+    final n = _scanner.items.length;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(n == 0
+          ? 'quran_audio.scan_none'.tr()
+          : 'quran_audio.scan_found'.tr(args: ['$n'])),
+    ));
+  }
+
   Future<void> _addFolder() async {
     final path = await FilePicker.getDirectoryPath();
     if (path != null) await _scanner.addFolder(path);
@@ -409,7 +430,7 @@ class _DeviceTabState extends State<_DeviceTab> with AutomaticKeepAliveClientMix
                           backgroundColor: AppColors.gold,
                           foregroundColor: AppColors.night,
                         ),
-                        onPressed: _scanner.scanning ? null : _scanner.scan,
+                        onPressed: _scanner.scanning ? null : _runScan,
                         icon: _scanner.scanning
                             ? const SizedBox(
                                 width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))

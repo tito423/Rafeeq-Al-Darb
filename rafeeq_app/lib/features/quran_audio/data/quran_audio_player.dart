@@ -103,7 +103,11 @@ class QuranAudioPlayer extends ChangeNotifier {
   Stream<Duration> get bufferedStream => _player.bufferedPositionStream;
   Stream<Duration?> get durationStream => _player.durationStream;
   Stream<PlayerState> get stateStream => AyahAudioService.instance.playerState;
-  bool get playing => active && _player.playing;
+  /// just_audio keeps `playing` true after the last track ends; the player
+  /// then showed a pause button over a finished queue and the disc kept
+  /// turning. A completed queue is not playing.
+  bool get playing =>
+      active && _player.playing && _player.processingState != ProcessingState.completed;
   ProcessingState get stateNow => _player.processingState;
 
   Future<bool> playQueue(List<PlayerTrack> tracks, {int start = 0}) async {
@@ -164,6 +168,12 @@ class QuranAudioPlayer extends ChangeNotifier {
   Future<void> togglePlay() async {
     if (!active) {
       if (_queue.isNotEmpty) await playQueue(_queue, start: _index);
+      return;
+    }
+    if (_player.processingState == ProcessingState.completed) {
+      // Play again from the top of the queue.
+      await _player.seek(Duration.zero, index: 0);
+      unawaited(_player.play());
       return;
     }
     _player.playing ? await _player.pause() : unawaited(_player.play());

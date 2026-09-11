@@ -1171,6 +1171,8 @@
     "add_files": "Add files",
     "add_folder": "Add a folder",
     "auto_scan": "Scan automatically when the player opens",
-    "remove_folder": "Remove this folder from the list"
+    "remove_folder": "Remove this folder from the list",
+    "scan_none": "No audio files found on the device.",
+    "scan_found": "Audio files on the device: {}"
   }
 }
