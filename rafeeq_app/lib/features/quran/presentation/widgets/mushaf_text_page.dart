@@ -58,6 +58,15 @@ class MushafTextPage extends StatefulWidget {
   /// Fires once when auto-scroll reaches the bottom of this page's content.
   final VoidCallback? onAutoScrollReachedEnd;
 
+  /// Fires while the reader drags the page: true when they are moving
+  /// FORWARD through the text (content going up), false when they pull back.
+  ///
+  /// The screen uses it to get out of the way — twelve toolbar actions in
+  /// three rows take about 16% of a 2400-pixel screen, and the owner's
+  /// reference app spends 8% on one bar. Reading hides it; pulling back
+  /// brings it straight down again, so nothing is buried behind a setting.
+  final void Function(bool forward)? onReadingScroll;
+
   /// In full-screen mode, a double-tap exits — non-null only when
   /// `pageFillScreen` is true.
   final VoidCallback? onExitFullScreen;
@@ -96,6 +105,7 @@ class MushafTextPage extends StatefulWidget {
     this.autoScrollSpeed = 40,
     this.isActive = true,
     this.onAutoScrollReachedEnd,
+    this.onReadingScroll,
     this.onExitFullScreen,
     this.playingSurah,
     this.playingAyah,
@@ -252,6 +262,20 @@ class _MushafTextPageState extends State<MushafTextPage> {
   }
 
   bool _onScrollNotification(ScrollNotification n) {
+    // The reader's own drag, before the auto-scroll bookkeeping: a
+    // programmatic scroll carries no drag details, so the toolbar is never
+    // moved by the app scrolling itself.
+    if (n is ScrollUpdateNotification &&
+        n.dragDetails != null &&
+        widget.isActive) {
+      final d = n.scrollDelta ?? 0;
+      // A couple of pixels is a finger resting, not a decision.
+      if (d > 2) {
+        widget.onReadingScroll?.call(true);
+      } else if (d < -2) {
+        widget.onReadingScroll?.call(false);
+      }
+    }
     if (!(widget.autoScroll && widget.isActive)) return false;
     if (n is ScrollStartNotification && n.dragDetails != null) {
       _pauseForUserScroll();

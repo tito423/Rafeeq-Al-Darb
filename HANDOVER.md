@@ -1146,9 +1146,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 05:33 — IN PROGRESS — resume here**
+**2026-09-11 11:01 — IN PROGRESS — resume here**
 
-work queue: B1, B2 and B3 marked DONE (seen) with what was actually looked at on emulator-5554, not with the fact that their tests pass. B4 and B5 stay unseen and say so.
+'zayy Khatmah': the layout he asked for already existed and was buried. Measured on emulator-5554 - text mode gives the Quran 51 percent of a 2400-pixel screen against about 80 percent in the app he sent, and the whole difference is three rows of toolbar; full-screen mode already reaches 82 percent and IS remembered between runs. The dark paper was five themes deep in Settings under a different tab, which is why he believed the app had no black page: its ayah marker measures 8.0:1 against the charcoal ground, so legibility was never the problem, discoverability was. Two changes: the mushaf theme picker is now an action on the Quran toolbar, and the toolbar hides itself while the reader scrolls forward and comes back on a pull up - nothing moved behind a preference. NOT yet seen on a device; building.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

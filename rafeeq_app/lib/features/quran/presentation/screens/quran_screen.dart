@@ -29,6 +29,7 @@ import '../widgets/ayah_sciences_sheet.dart';
 import '../widgets/mushaf_edition_sheet.dart';
 import '../widgets/mushaf_page_view.dart';
 import '../widgets/mushaf_nav_sheets.dart';
+import '../widgets/mushaf_theme_picker.dart';
 import '../widgets/mushaf_text_page.dart';
 
 /// Quran tab — a real mushaf browser.
@@ -164,6 +165,20 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     } else {
       setState(() => _toolbarVisible = !_toolbarVisible);
     }
+  }
+
+  /// The toolbar gets out of the way while the reader is reading.
+  ///
+  /// Measured on emulator-5554 before this existed: the text mode gave the
+  /// Qur'an 51% of a 2400-pixel screen, and the reference app the owner sent
+  /// gives it about 80% — the difference is three rows of toolbar plus its
+  /// title. Nothing is hidden behind a preference: a pull back up returns it.
+  void _onReadingScroll(bool forward) {
+    // In full-screen there is no toolbar to move, and the recitation bar is
+    // the reader's transport — leave both alone.
+    if (_pageFillScreen) return;
+    if (_toolbarVisible == !forward) return;
+    setState(() => _toolbarVisible = !forward);
   }
 
   void _togglePageFillScreen() {
@@ -573,6 +588,22 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               onPressed: () =>
                                   _toggleContinuousRecitation(mushaf.value!),
                             ),
+                            // The paper. It lived only in Settings, four taps
+                            // and a different tab away from the page whose
+                            // colour it changes — which is why the owner
+                            // reported the app had no black reading page while
+                            // shipping five of them. Khatmah puts it behind a
+                            // gear on the reading screen itself; so do we.
+                            Builder(
+                              builder: (tileContext) => ToolbarAction(
+                                icon: Icons.palette_outlined,
+                                label: 'mushaf_theme.title'.tr(),
+                                onPressed: () => MushafThemePicker.show(
+                                  context,
+                                  origin: tileContext,
+                                ),
+                              ),
+                            ),
                             // P3‑43 #6: moved out of the text-only block above —
                             // full-screen reading is a real, useful mode for the
                             // image mushaf too, not just the text one.
@@ -894,6 +925,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               isActive: page == _current,
               onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
               onBackgroundTap: _onBackgroundTap,
+              onReadingScroll: _onReadingScroll,
               pageFillScreen: _pageFillScreen,
               // Only wired in full-screen, so a stray double-tap never exits a
               // mode the reader isn't in.
