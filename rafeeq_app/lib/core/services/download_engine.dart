@@ -32,14 +32,19 @@ class DownloadEngine {
   /// Files: offline packs, books, the hadith DB, adhan clips.
   static const String groupFiles = 'rafeeq_files';
 
-  /// Per-ayah recitation audio.
-  static const String groupRecitations = 'rafeeq_recitations';
+  /// Whole-surah recitation files, for «تحميل تلاوات القرآن».
+  static const String groupQuranAudio = 'rafeeq_quran_audio';
+
+  /// The per-ayah downloads that were removed in 3.17.0 — «شيل خيار تحميل
+  /// التلاوات على الجهاز ده خالص». Kept only so their leftover tasks can be
+  /// cancelled once; nothing enqueues into it any more.
+  static const String legacyGroupRecitations = 'rafeeq_recitations';
 
   /// One status-bar entry for all file downloads.
   static const String _notifGroupFiles = 'rafeeq_files_group';
 
   /// One status-bar entry for all recitation downloads.
-  static const String _notifGroupRecitations = 'rafeeq_recitations_group';
+  static const String _notifGroupQuranAudio = 'rafeeq_quran_audio_group';
 
   /// Large artifacts, a couple at a time — they are big enough that more
   /// parallelism just splits the same bandwidth and makes each one look
@@ -62,14 +67,13 @@ class DownloadEngine {
     ..maxConcurrent = 8
     ..maxConcurrentByHost = 4;
 
-  /// Ayah files are small and numerous, so the win here is concurrency. Six
-  /// at a time turns a 286-request surah from a several-minute crawl into
-  /// something that finishes while the user is still looking at it, without
-  /// hammering the CDN hard enough to get rate-limited (which is its own way
-  /// of "stopping at البقرة").
-  static final MemoryTaskQueue recitationQueue = MemoryTaskQueue()
-    ..maxConcurrent = 12
-    ..maxConcurrentByHost = 6;
+  /// Whole surahs are big — al-Baqarah alone is 255 MB in the Minshawi
+  /// mujawwad (`Content-Length` read off server10.mp3quran.net) — so the win
+  /// is not width. Three at a time, two per host, keeps each file moving
+  /// visibly instead of splitting the line between a dozen crawling ones.
+  static final MemoryTaskQueue quranAudioQueue = MemoryTaskQueue()
+    ..maxConcurrent = 3
+    ..maxConcurrentByHost = 2;
 
   /// How many times one task may be put back after the platform refused to
   /// accept it, before it is left for «إصلاح التحميلات».
@@ -127,7 +131,7 @@ class DownloadEngine {
   /// queues against that answer. Returns the number of slots recovered.
   static Future<int> unjamQueues() async {
     final live = <String>{};
-    for (final group in [groupFiles, groupRecitations]) {
+    for (final group in [groupFiles, groupQuranAudio]) {
       try {
         final tasks = await FileDownloader().allTasks(group: group);
         live.addAll(tasks.map((t) => t.taskId));
@@ -138,7 +142,7 @@ class DownloadEngine {
       }
     }
     return releaseStuckTasks(fileQueue, live) +
-        releaseStuckTasks(recitationQueue, live);
+        releaseStuckTasks(quranAudioQueue, live);
   }
 
   /// Puts a refused task back, a bounded number of times.
@@ -271,7 +275,7 @@ class DownloadEngine {
     );
 
     downloader.configureNotificationForGroup(
-      groupRecitations,
+      groupQuranAudio,
       running: TaskNotification(t['notif.dl_recit_running_title']!,
           t['notif.dl_recit_running_body']!),
       complete: TaskNotification(t['notif.dl_recit_complete_title']!,
@@ -281,26 +285,26 @@ class DownloadEngine {
       paused: TaskNotification(t['notif.dl_recit_paused_title']!,
           t['notif.dl_paused_body']!),
       progressBar: true,
-      groupNotificationId: _notifGroupRecitations,
+      groupNotificationId: _notifGroupQuranAudio,
     );
 
     downloader
       ..addTaskQueue(fileQueue)
-      ..addTaskQueue(recitationQueue);
+      ..addTaskQueue(quranAudioQueue);
 
     // A refused enqueue is the one event that leaks a queue slot for ever —
     // see `releaseStuckTasks`. The plugin publishes it and then forgets it;
     // this is the only listener that can give the slot back.
     fileQueue.enqueueErrors
         .listen((task) => _onEnqueueRefused(fileQueue, task));
-    recitationQueue.enqueueErrors
-        .listen((task) => _onEnqueueRefused(recitationQueue, task));
+    quranAudioQueue.enqueueErrors
+        .listen((task) => _onEnqueueRefused(quranAudioQueue, task));
 
     // Keeps task records in the plugin's own database so a transfer that
     // outlived the app can be reconciled on the next launch instead of
     // showing as lost.
     await downloader.trackTasksInGroup(groupFiles);
-    await downloader.trackTasksInGroup(groupRecitations);
+    await downloader.trackTasksInGroup(groupQuranAudio);
 
     // The one and only subscription to the plugin's single-subscription
     // stream; everyone else reads [updates].
@@ -308,6 +312,15 @@ class DownloadEngine {
       _updates.add,
       onError: _updates.addError,
     );
+  }
+
+  /// Cancels, once, whatever the removed per-ayah downloads left with the
+  /// platform — a surah that «حمّل الفاتحة بس ووقف» was still sitting there as
+  /// hundreds of queued ayah tasks with a notification of its own.
+  static Future<void> purgeLegacyRecitationTasks() async {
+    try {
+      await FileDownloader().reset(group: legacyGroupRecitations);
+    } catch (_) {}
   }
 
   /// Re-attaches to transfers the OS kept running while the app was gone.

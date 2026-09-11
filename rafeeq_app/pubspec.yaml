@@ -1,8 +1,8 @@
-name: rafeeq_app
-description: "Rafeeq Al-Darb — Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
+﻿name: rafeeq_app
+description: "Rafeeq Al-Darb â€” Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
 publish_to: 'none'
 
-version: 3.16.0+13
+version: 3.17.0+14
 
 environment:
   sdk: ^3.10.7
@@ -44,8 +44,8 @@ dependencies:
   # Location (prayer times & qibla)
   geolocator: ^13.0.2
   flutter_compass: ^0.8.1
-  # Real reverse-geocoding for the Home prayer card's location line (P3‑22)
-  # — geolocator only returns lat/lon, this turns that into a real city
+  # Real reverse-geocoding for the Home prayer card's location line (P3â€‘22)
+  # â€” geolocator only returns lat/lon, this turns that into a real city
   # name via the platform's own Geocoder, no third-party API/key needed.
   geocoding: ^3.0.0
 
@@ -61,7 +61,7 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter_svg: ^2.0.10+1
 
-  # Background video for the video-mode Adhan (P2‑7) — clip downloaded on
+  # Background video for the video-mode Adhan (P2â€‘7) â€” clip downloaded on
   # demand, played muted + looped behind the karaoke text.
   video_player: ^2.9.2
 
@@ -73,13 +73,13 @@ dependencies:
 
   url_launcher: ^6.3.2
 
-  # Share an ayah card as an image (P2‑8)
+  # Share an ayah card as an image (P2â€‘8)
   share_plus: ^12.0.2
 
-  # P3‑56: native splash held until init completes. The OS-drawn splash stays
+  # P3â€‘56: native splash held until init completes. The OS-drawn splash stays
   # on screen through the Flutter engine warmup and main()'s bootstrap
   # (FlutterNativeSplash.preserve) and is lifted only when the app is actually
-  # ready (FlutterNativeSplash.remove) — killing the icon→flash→icon→video
+  # ready (FlutterNativeSplash.remove) â€” killing the iconâ†’flashâ†’iconâ†’video
   # glitch the old hand-built splash produced.
   flutter_native_splash: ^2.4.4
   background_downloader: ^9.5.9
@@ -109,20 +109,20 @@ flutter:
     # The Hadeeth Encyclopaedia, all seven language packs, bundled (3.17.0).
     - assets/data/hadeethenc/
     - assets/audio/adhan/
-    # P3‑49: the owner's AI-generated splash video (Gemini watermark removed)
+    # P3â€‘49: the owner's AI-generated splash video (Gemini watermark removed)
     # + its badge-fallback art, put back at his request.
     - assets/branding/
-    # P3‑41: the default mushaf edition (Hafs/KFQC), all 604 pages, bundled
-    # so it's usable fully offline the moment the app installs — see
+    # P3â€‘41: the default mushaf edition (Hafs/KFQC), all 604 pages, bundled
+    # so it's usable fully offline the moment the app installs â€” see
     # the cache/network fallback.
     - assets/mushaf/hafs_kfqc/
     - assets/icons/
-    # assets/icon/ is intentionally NOT bundled — the PNGs there are consumed
+    # assets/icon/ is intentionally NOT bundled â€” the PNGs there are consumed
     # by flutter_launcher_icons at build time only, never at runtime. Bundling
     # them would just bloat the install.
-    # P3‑43 #12: the `google_fonts` package fetches a font over the network
+    # P3â€‘43 #12: the `google_fonts` package fetches a font over the network
     # on first use unless a matching file already sits in the asset bundle
-    # (see AppTypography's own doc comment) — bundling Cairo's real static
+    # (see AppTypography's own doc comment) â€” bundling Cairo's real static
     # weight instances here means the app's own UI chrome text never
     # depends on a network round-trip, honoring the offline-first rule the
     # same way AmiriQuran already does for the Quran text itself.
@@ -143,10 +143,10 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   min_sdk_android: 21
 
-# P3‑56: native splash config. The colour matches `AppColors.night`
-# (#071625 — the same scaffold ground the Flutter `SplashScreen` uses), and
+# P3â€‘56: native splash config. The colour matches `AppColors.night`
+# (#071625 â€” the same scaffold ground the Flutter `SplashScreen` uses), and
 # the image is the app mark, so the OS splash and the Flutter frame that
-# replaces it are visually identical — the hand-off is seamless with no
+# replaces it are visually identical â€” the hand-off is seamless with no
 # flash. Regenerate the native drawables after any change here with:
 #   dart run flutter_native_splash:create
 flutter_native_splash:

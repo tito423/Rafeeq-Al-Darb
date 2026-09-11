@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
 import '../../core/services/alarm_permissions_service.dart';
+import '../../core/services/ayah_audio_service.dart';
 import '../../core/services/download_notifications.dart';
+import '../../features/quran_audio/data/quran_audio_library.dart';
 import '../../core/services/mushaf_page_service.dart';
 import '../../features/quran/data/mushaf_edition.dart';
 import '../../core/services/prayer_status_notification.dart';
@@ -82,6 +84,11 @@ class _AppShellState extends ConsumerState<AppShell>
           final editions = await ref.read(mushafEditionsProvider.future);
           await MushafPageService.instance.resumeWantedDownloads(editions);
         } catch (_) {}
+        // The per-ayah recitation files are gone from the app since 3.17.0;
+        // free what earlier builds left, once. Then pick up any whole-surah
+        // download that was on its way.
+        unawaited(AyahAudioService.instance.purgeLegacyAyahFiles());
+        unawaited(QuranAudioLibrary.instance.ensureReady());
       });
     });
   }

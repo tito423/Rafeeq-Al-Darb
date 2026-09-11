@@ -1,10 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/services/ayah_audio_service.dart';
+import '../../quran_audio/data/quran_audio_library.dart';
 import '../../../core/services/download_manager.dart';
 import '../../../core/services/mushaf_page_service.dart';
 import '../../quran/data/mushaf_edition.dart';
-import 'reciters_provider.dart';
 
 /// P2‑5 — a read-only aggregator over every place the app stores downloaded
 /// content, so the Downloads hub can show one storage picture and free space
@@ -33,7 +32,7 @@ extension DownloadCategoryX on DownloadCategory {
   /// enqueue sites out of `lib/` and fails if a new one is unclaimed.
   ///
   /// `mushafs` and `recitations` also hold content of their own outside
-  /// DownloadManager (MushafPageService / AyahAudioService); for those two the
+  /// DownloadManager (MushafPageService / QuranAudioLibrary); for those two the
   /// two sources are added together below.
   List<String> get managerCategories => switch (this) {
         DownloadCategory.mushafs => const [],
@@ -92,17 +91,10 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       mushafItems++;
     }
   }
-  // ── Recitations (AyahAudioService, one dir per reciter identifier) ──
-  final reciters = await ref.watch(recitersProvider.future);
-  var reciteBytes = 0;
-  var reciteItems = 0;
-  for (final r in reciters) {
-    final b = await AyahAudioService.instance.cacheSizeBytes(r.identifier);
-    if (b > 0) {
-      reciteBytes += b;
-      reciteItems++;
-    }
-  }
+  // ── Recitations («تحميل تلاوات القرآن»: whole surahs + imported files) ──
+  final library = QuranAudioLibrary.instance;
+  await library.ensureReady();
+  final (reciteBytes, reciteItems) = await library.usage();
   // ── DownloadManager artifacts, folded into whichever bucket claims them ──
   // Ruqyah audio lands in `recitations` on top of the per-reciter caches, so
   // the loop covers every bucket rather than only the three that have no
@@ -138,10 +130,7 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
         await MushafPageService.instance.clearCache(e.id);
       }
     case DownloadCategory.recitations:
-      final reciters = await ref.read(recitersProvider.future);
-      for (final r in reciters) {
-        await AyahAudioService.instance.clearCache(r.identifier);
-      }
+      await QuranAudioLibrary.instance.freeAll();
     case DownloadCategory.hadith:
     case DownloadCategory.books:
     case DownloadCategory.adhan:

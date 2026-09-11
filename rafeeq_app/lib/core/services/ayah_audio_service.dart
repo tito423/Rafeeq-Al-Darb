@@ -1,82 +1,21 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:background_downloader/background_downloader.dart' as bd;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'download_engine.dart';
 
 import '../db/models.dart';
 import '../db/quran_repository.dart';
-import 'download_engine.dart';
-import 'notification_router.dart';
-import '../i18n/isolate_strings.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'recitation_source.dart';
 
 /// Progress of a surah recitation download.
-class RecitationProgress {
-  final int done;
-  final int total;
-  const RecitationProgress(this.done, this.total);
-
-  double get fraction => total == 0 ? 0 : done / total;
-  bool get isComplete => total > 0 && done >= total;
-}
-
-/// The live state of one surah's recitation download, published through a
-/// [ValueNotifier] the service owns (see [AyahAudioService.surahJob]). The
-/// state lives in the service, not in a widget — so a `ListView` tile can be
-/// recycled/scrolled off and rebuilt, or the whole Downloads screen left and
-/// reopened, and it re-attaches to the *same* live state instead of resetting
-/// to a stale on-disk snapshot.
-enum RecitationJobStatus { idle, downloading, paused, completed, failed }
-
-class RecitationJob {
-  final int done;
-  final int total;
-  final RecitationJobStatus status;
-  const RecitationJob(this.done, this.total, this.status);
-
-  static const idle = RecitationJob(0, 0, RecitationJobStatus.idle);
-
-  double get fraction => total == 0 ? 0 : (done / total).clamp(0.0, 1.0);
-  bool get isComplete =>
-      status == RecitationJobStatus.completed || (total > 0 && done >= total);
-  bool get isActive =>
-      status == RecitationJobStatus.downloading ||
-      status == RecitationJobStatus.paused;
-
-  RecitationJob withStatus(RecitationJobStatus s) =>
-      RecitationJob(done, total, s);
-}
-
-/// Live state of a "download the whole reciter" run, published through
-/// [AyahAudioService.fullJob]. The 114-surah loop that drives it runs *inside*
-/// the service, not inside a widget, so navigating away from the Downloads
-/// screen no longer aborts it mid-way.
-class FullRecitationState {
-  final int doneSurahs;
-  final int totalSurahs;
-  final int? currentSurahId;
-  final bool running;
-  const FullRecitationState({
-    this.doneSurahs = 0,
-    this.totalSurahs = 0,
-    this.currentSurahId,
-    this.running = false,
-  });
-
-  bool get isComplete => totalSurahs > 0 && doneSurahs >= totalSurahs;
-  double? get fraction => totalSurahs == 0 ? null : doneSurahs / totalSurahs;
-}
-
-/// What continuous (ayah-by-ayah, auto-advancing) recitation is doing right
-/// now. Watched by the mushaf to highlight and scroll to the verse being
-/// recited.
 class ContinuousRecitation {
   final bool active;
 
@@ -165,6 +104,11 @@ class AyahAudioService {
   /// only a CDN stream.
   static const String defaultEdition = 'ar.minshawimujawwad';
 
+  /// Every recitation in the reader streams, and has since 3.17.0: «شيل خيار
+  /// تحميل التلاوات على الجهاز ده خالص وخليه دايما من الـ API آية بآية عشان
+  /// التطبيق يبقى خفيف». Whole-surah downloads for listening live in
+  /// «تحميل تلاوات القرآن» (`QuranAudioLibrary`) and are not tied to a mushaf.
+  ///
   /// **One** player for the whole app at a time, on purpose. `main()`
   /// initialises `just_audio_background`, whose platform implementation throws
   /// *"just_audio_background supports only a single player instance"* on a
@@ -199,6 +143,22 @@ class AyahAudioService {
   }
 
   bool get isPlaying => _player.playing;
+
+  /// The shared player, for «تحميل تلاوات القرآن»'s player — which has to use
+  /// this one rather than its own, see [_player]. Take it through
+  /// [claimForMusic] so whatever else was playing is stopped properly first.
+  AudioPlayer get player => _player;
+
+  /// True while the Qur'an audio player owns [player]. Every other playback
+  /// path clears it, which is how that player knows it has been superseded.
+  final ValueNotifier<bool> musicOwnsPlayer = ValueNotifier(false);
+
+  Future<AudioPlayer> claimForMusic() async {
+    await stopQueue();
+    await stopContinuous();
+    musicOwnsPlayer.value = true;
+    return _player;
+  }
 
   Stream<PlayerState> get playerState {
     if (!_bridged) _bridgePlayerState();
@@ -322,50 +282,6 @@ class AyahAudioService {
     await stop();
   }
 
-  // ── Storage layout ──────────────────────────────────────────────────────
-
-  Future<Directory> _editionDir(String edition) async {
-    final base = await getApplicationDocumentsDirectory();
-    final dir = Directory(p.join(base.path, 'recitations', edition));
-    if (!dir.existsSync()) await dir.create(recursive: true);
-    return dir;
-  }
-
-  /// Path relative to the documents directory, in the form
-  /// `background_downloader` wants (`BaseDirectory.applicationDocuments` plus
-  /// this). Kept in lockstep with [_editionDir] so a file the platform writes
-  /// lands exactly where playback looks for it.
-  String _editionRelativeDir(String edition) => 'recitations/$edition';
-
-  File _fileFor(Directory dir, int globalAyah) =>
-      File(p.join(dir.path, '$globalAyah.mp3'));
-
-  /// A file is treated as a usable ayah when it is on disk and big enough to
-  /// be one.
-  ///
-  /// **Why 8 KB and not 2.** An interrupted download leaves a truncated file,
-  /// and at a 2 KB floor a fragment of a few frames passed as complete: the
-  /// downloader then skipped it for ever ("already have it") and `just_audio`
-  /// refused it at play time. One such child is enough to fail a whole
-  /// `ConcatenatingAudioSource`, which is «تعذّر تشغيل التلاوة» with nothing
-  /// playing at all.
-  ///
-  /// Measured against the live hosts on 2026-09-10, not estimated — the
-  /// smallest real files are far bigger than the old floor:
-  ///
-  ///     الإخلاص 112:1   128 kbps   48,192 B
-  ///     الكوثر 108:1    64 kbps   33,469 B
-  ///     الناس 114:6    128 kbps  132,620 B
-  ///
-  /// So 8 KB sits well below every real ayah at every bitrate the app uses,
-  /// and well above a fragment worth keeping. It is deliberately not a strict
-  /// "must decode as MP3" check — that would mean decoding 6,236 files to
-  /// answer "how much of this surah is downloaded".
-  static const int _minAyahBytes = 8 * 1024;
-
-  static bool _looksComplete(File f) =>
-      f.existsSync() && f.lengthSync() >= _minAyahBytes;
-
   /// Every audio source must carry a [MediaItem] tag: `main()` initialises
   /// `just_audio_background`, which throws on any untagged source.
   MediaItem _tag(String edition, int global, Ayah ayah, String? title) =>
@@ -377,44 +293,26 @@ class AyahAudioService {
 
   // ── Single-ayah playback ────────────────────────────────────────────────
 
-  /// Plays one ayah, preferring the cached file so a downloaded surah works
-  /// offline; otherwise streams and caches in the background for next time.
+  /// Plays one ayah from the network, trying each host in turn.
   Future<void> play(
     Ayah ayah,
     QuranRepository repo, {
     String edition = defaultEdition,
     String? title,
   }) async {
+    musicOwnsPlayer.value = false;
     try {
       final global = await repo.globalAyahNumber(ayah.surahId, ayah.ayahNumber);
-      final dir = await _editionDir(edition);
-      final file = _fileFor(dir, global);
       final tag = _tag(edition, global, ayah, title);
 
-      // A single ayah supersedes continuous recitation *properly*. Stopping
-      // only the player used to leave `continuous.value.active == true` with
-      // its `currentIndexStream`/completion subscriptions still bound to a
-      // live token: the transport bar went on claiming a recitation was
-      // running while nothing played, and when this one ayah finished the
-      // stale completion listener fired `_advanceToNextSurah` and jumped to a
-      // surah nobody asked for. Guarded on `active` because `playQueue`
-      // already stopped continuous before its loop, and an unguarded call
-      // here would stop the player between every verse of the queue.
+      // A single ayah supersedes continuous recitation *properly* — see the
+      // history in `stopContinuous`: stopping only the player left a live
+      // completion listener that later jumped to a surah nobody asked for.
       if (continuous.value.active) {
         await stopContinuous();
       }
 
       await _player.stop();
-
-      if (_shouldUseFile(file)) {
-        await _player.setAudioSource(AudioSource.file(file.path, tag: tag));
-        unawaited(_player.play());
-        return;
-      }
-      // "Only what is downloaded" means exactly that: nothing is fetched, and
-      // a verse that is not there stays silent rather than costing data on a
-      // metered connection nobody asked it to use.
-      if (playbackOfflineOnly) return;
 
       final urls = RecitationSource.urlsFor(
         edition: edition,
@@ -428,10 +326,6 @@ class AyahAudioService {
             AudioSource.uri(Uri.parse(url), tag: tag),
           );
           unawaited(_player.play());
-          // Cache it for next time through the same platform downloader the
-          // bulk downloads use, so one ayah listened to online is one ayah
-          // that never needs downloading again.
-          unawaited(_cacheSingle(edition, global, url));
           return;
         } catch (_) {
           // try the next source
@@ -439,30 +333,6 @@ class AyahAudioService {
       }
     } catch (_) {
       // caller surfaces failure; never crash playback
-    }
-  }
-
-  Future<void> _cacheSingle(String edition, int global, String url) async {
-    try {
-      final dir = await _editionDir(edition);
-      if (_looksComplete(_fileFor(dir, global))) return;
-      // Silent, invisible caching of an ayah the reader is already hearing —
-      // it must never be the thing that raises a permission dialog over the
-      // page. The user-initiated whole-surah download still asks.
-      await DownloadEngine.ensureInitialized(askForNotifications: false);
-      DownloadEngine.recitationQueue.add(
-        bd.DownloadTask(
-          url: url,
-          filename: '$global.mp3',
-          baseDirectory: bd.BaseDirectory.applicationDocuments,
-          directory: _editionRelativeDir(edition),
-          group: DownloadEngine.groupRecitations,
-          updates: bd.Updates.status,
-          retries: 1,
-        ),
-      );
-    } catch (_) {
-      // best effort — playback already succeeded from the network
     }
   }
 
@@ -485,31 +355,6 @@ class AyahAudioService {
   ///
   /// Returns false if the source could not be opened, so the caller can say so
   /// instead of leaving a dead play button.
-  /// Mirrors the reader's own choice of where a recitation comes from — see
-  /// `PlaybackSource`. Held here as plain fields because the audio sources are
-  /// built synchronously, deep inside the service, with no provider container
-  /// in reach.
-  ///
-  /// Both false is the default and the old behaviour: whatever is on disk,
-  /// otherwise the network.
-  bool playbackPrefersNetwork = false;
-  bool playbackOfflineOnly = false;
-
-  /// Whether this ayah should be played from [file] rather than fetched.
-  ///
-  /// The one place the preference is applied, so the single-ayah path and the
-  /// continuous queue cannot disagree about it.
-  bool _shouldUseFile(File file) {
-    if (playbackPrefersNetwork) return false;
-    return _looksComplete(file);
-  }
-
-  /// True while continuous recitation is playing from the network because the
-  /// downloaded copy would not load — see the third attempt in
-  /// `_startContinuous`. The reader shows a quiet line rather than letting it
-  /// look like an unexplained slowdown.
-  final ValueNotifier<bool> continuousStreaming = ValueNotifier(false);
-
   Future<bool> playTrack({
     required String id,
     required String url,
@@ -517,6 +362,7 @@ class AyahAudioService {
     String? artist,
     File? localFile,
   }) async {
+    musicOwnsPlayer.value = false;
     try {
       await stopQueue();
       await stopContinuous();
@@ -611,6 +457,7 @@ class AyahAudioService {
     bool wholeMushaf = true,
   }) async {
     _queueToken = 0; // supersede any repeat-loop/playlist run
+    musicOwnsPlayer.value = false;
     final token = ++_continuousToken;
     _continuousEdition = edition;
     _continuousWholeMushaf = wholeMushaf;
@@ -649,84 +496,58 @@ class AyahAudioService {
     final ayahs = all.sublist(startIndex < 0 ? 0 : startIndex);
     _continuousAyahs = ayahs;
 
-    final dir = await _editionDir(_continuousEdition);
     final firstGlobal = await repo.globalAyahNumber(surahId, 1);
     if (token != _continuousToken) return;
 
     // Built fresh on each attempt below: an `AudioSource` is bound to the
     // player it was given to, so the retry after [_recreatePlayer] must not
-    // reuse the objects the disposed player already saw.
-    /// [networkOnly] ignores whatever is cached and streams every verse.
-    ///
-    /// A download that was interrupted leaves a file that is **larger than the
-    /// 2 KB `_looksComplete` floor and still truncated** — which is exactly
-    /// what «تعذّر إكمال بعض الآيات» leaves behind. `just_audio` refuses such a
-    /// child, and one refused child is enough to fail the whole
-    /// `ConcatenatingAudioSource`: «لو فتحت التطبيق ورحت على تشغيل التلاوة مش
-    /// بيشغل أي حاجة ويقولي تعذّر تشغيل التلاوة». Streaming does not care what
-    /// is on disk, so the third attempt below asks for exactly that.
-    List<AudioSource> buildChildren({bool networkOnly = false}) => [
+    // reuse the objects the disposed player already saw. [host] picks which
+    // of the reciter's hosts every verse comes from — 0 is everyayah where it
+    // mirrors the reciter, the last is islamic.network's CDN.
+    List<AudioSource> buildChildren({int host = 0}) => [
           for (final a in ayahs)
             () {
               final global = firstGlobal + (a.ayahNumber - 1);
-              final tag = _tag(_continuousEdition, global, a, null);
-              final file = _fileFor(dir, global);
-              return (!networkOnly && _shouldUseFile(file))
-                  ? AudioSource.file(file.path, tag: tag)
-                  : AudioSource.uri(
-                      Uri.parse(
-                        RecitationSource.primaryUrl(
-                          edition: _continuousEdition,
-                          surah: a.surahId,
-                          ayah: a.ayahNumber,
-                          globalAyah: global,
-                        ),
-                      ),
-                      tag: tag,
-                    );
+              final urls = RecitationSource.urlsFor(
+                edition: _continuousEdition,
+                surah: a.surahId,
+                ayah: a.ayahNumber,
+                globalAyah: global,
+              );
+              return AudioSource.uri(
+                Uri.parse(urls[host.clamp(0, urls.length - 1)]),
+                tag: _tag(_continuousEdition, global, a, null),
+              );
             }(),
         ];
 
     await _cancelContinuousSubs();
     if (token != _continuousToken) return;
 
-    // Two attempts, and the second one is on a **new** player.
-    //
-    // A `setAudioSource` that throws used to end the recitation outright —
-    // `stopContinuous()` and silence, with no way back except killing the
-    // app. The common cause is not a bad source but a platform player Android
-    // released while the app sat in the background, which throws on every
-    // call afterwards. Rebuilding it and loading the same sources again
-    // recovers, and a failure that survives a fresh player is a real failure,
-    // reported rather than swallowed.
-    // Three attempts now, not two, and the third is the one he asked for:
-    // «خليه يديني اختيار تحميل التلاوة عادي من الـ API». If the cached copy
-    // will not load, the recitation is not over — it streams.
+    // Three attempts. The second is on a **new** player: the common cause of
+    // a throw is not a bad source but a platform player Android released
+    // while the app sat in the background. The third asks the reciter's other
+    // host for every verse, so one host refusing is not the end of the
+    // recitation.
     var loaded = false;
-    var playingFromNetwork = false;
     for (var attempt = 0; attempt < 3 && !loaded; attempt++) {
       if (attempt == 1) {
         await _recreatePlayer();
         if (token != _continuousToken) return;
       }
-      final networkOnly = attempt == 2;
       try {
         await _player.stop();
         await _player.setAudioSource(
           ConcatenatingAudioSource(
-            children: buildChildren(networkOnly: networkOnly),
+            children: buildChildren(host: attempt == 2 ? 1 : 0),
           ),
           initialIndex: 0,
         );
         loaded = true;
-        playingFromNetwork = networkOnly;
       } catch (_) {
         // fall through to the retry, then to the report below
       }
     }
-    // Told to the caller so the reader can say so rather than leaving someone
-    // wondering why it is slower than usual.
-    continuousStreaming.value = playingFromNetwork;
     if (token != _continuousToken) return;
     if (!loaded) {
       await stopContinuous();
@@ -891,705 +712,41 @@ class AyahAudioService {
     _completionSub = null;
   }
 
-  // ── Whole-surah download (platform-backed, observable) ──────────────────
-  //
-  // Rebuilt on `background_downloader`. The old engine walked a surah's ayahs
-  // one at a time in Dart, awaiting a status-bar notification rebuild after
-  // every single file. For سورة البقرة — 286 separate requests — that took
-  // minutes and read as a permanent freeze, and any app suspension killed the
-  // loop outright. Now every missing ayah is handed to the platform's own
-  // downloader at once and run six-at-a-time by DownloadEngine's queue, which
-  // keeps going while the app is backgrounded and posts a single grouped
-  // notification counting finished files.
+  // ── The per-ayah downloads that were removed ────────────────────────────
 
-  String _jobKey(String edition, int surah) => '$edition/$surah';
+  static const _kLegacyPurgedKey = 'recitation.legacy_ayah_files_purged_v1';
 
-  /// Surah download jobs the user has paused (job key -> paused).
-  final Set<String> _paused = {};
-
-  /// Editions whose "download whole reciter" run has been asked to stop.
-  final Set<String> _fullCancel = {};
-
-  final Map<String, ValueNotifier<RecitationJob>> _jobNotifiers = {};
-  final Map<String, ValueNotifier<FullRecitationState>> _fullNotifiers = {};
-
-  /// Live download jobs, by job key.
-  final Map<String, _SurahDownloadJob> _jobs = {};
-
-  /// platform taskId -> the attempt it belongs to, so a 404 on one host can
-  /// be retried against the next candidate URL instead of losing the ayah.
-  final Map<String, _AyahAttempt> _attempts = {};
-
-  StreamSubscription<bd.TaskUpdate>? _downloadUpdates;
-  bool _wired = false;
-
-  ValueNotifier<RecitationJob> surahJob(String edition, int surah) =>
-      _jobNotifiers.putIfAbsent(
-        _jobKey(edition, surah),
-        () => ValueNotifier(RecitationJob.idle),
-      );
-
-  ValueNotifier<FullRecitationState> fullJob(String edition) => _fullNotifiers
-      .putIfAbsent(edition, () => ValueNotifier(const FullRecitationState()));
-
-  void _setJob(String edition, int surah, RecitationJob job) =>
-      surahJob(edition, surah).value = job;
-
-  bool isDownloading(String edition, int surah) =>
-      _jobs.containsKey(_jobKey(edition, surah));
-
-  bool isDownloadPaused(String edition, int surah) =>
-      _paused.contains(_jobKey(edition, surah));
-
-  Future<void> _ensureWired() async {
-    if (_wired) return;
-    _wired = true;
-    await DownloadEngine.ensureInitialized();
-    // Via DownloadEngine's broadcast fan-out — see its `updates` doc.
-    _downloadUpdates = DownloadEngine.updates.listen(_onDownloadUpdate);
-  }
-
-  void _onDownloadUpdate(bd.TaskUpdate update) {
-    if (update.task.group != DownloadEngine.groupRecitations) return;
-    if (update is! bd.TaskStatusUpdate) return;
-    final attempt = _attempts[update.task.taskId];
-    if (attempt == null) return;
-
-    switch (update.status) {
-      case bd.TaskStatus.enqueued:
-      case bd.TaskStatus.running:
-      case bd.TaskStatus.waitingToRetry:
-      case bd.TaskStatus.paused:
-        return; // nothing to settle yet
-      case bd.TaskStatus.complete:
-        _attempts.remove(update.task.taskId);
-        attempt.job?.settle(attempt, succeeded: true);
-      case bd.TaskStatus.canceled:
-        _attempts.remove(update.task.taskId);
-        attempt.job?.settle(attempt, succeeded: false);
-      case bd.TaskStatus.notFound:
-      case bd.TaskStatus.failed:
-        _attempts.remove(update.task.taskId);
-        // This host doesn't have the file (or refused it) — fall through to
-        // the next candidate URL before giving up on the ayah.
-        if (attempt.hasNextUrl) {
-          _enqueueAttempt(attempt.advanced());
-        } else {
-          attempt.job?.settle(attempt, succeeded: false);
-        }
-    }
-  }
-
-  void _enqueueAttempt(_AyahAttempt attempt) {
-    final task = bd.DownloadTask(
-      url: attempt.url,
-      filename: '${attempt.globalAyah}.mp3',
-      baseDirectory: bd.BaseDirectory.applicationDocuments,
-      directory: _editionRelativeDir(attempt.edition),
-      group: DownloadEngine.groupRecitations,
-      updates: bd.Updates.status,
-      // Four, not two. Both audio hosts are intermittently slow rather than
-      // down: probing them on 2026-09-10 produced a 502 to a burst of HEADs,
-      // a 403 to one ranged GET, a 21.5-second stall on everyayah, and 206s
-      // to everything a minute later. Two attempts against a host like that
-      // is what turns a transient blip into «تعذّر إكمال بعض الآيات» —
-      // permanently, because nothing ever comes back for the ayah.
-      retries: 4,
-      displayName: attempt.displayName,
-      metaData: '${attempt.edition}|${attempt.globalAyah}',
-    );
-    attempt.taskId = task.taskId;
-    _attempts[task.taskId] = attempt;
-    attempt.job?.track(task.taskId);
-    DownloadEngine.recitationQueue.add(task);
-  }
-
-  /// How many of [surah]'s ayahs are already on disk.
-  Future<RecitationProgress> surahProgress(
-    int surah,
-    int ayahCount,
-    QuranRepository repo, {
-    String edition = defaultEdition,
-  }) async {
-    final dir = await _editionDir(edition);
-    final first = await repo.globalAyahNumber(surah, 1);
-    var done = 0;
-    for (var i = 0; i < ayahCount; i++) {
-      if (_looksComplete(_fileFor(dir, first + i))) done++;
-    }
-    return RecitationProgress(done, ayahCount);
-  }
-
-  /// Seed a surah's live notifier from what's actually on disk — called by the
-  /// tile when it first appears. Never clobbers an actively downloading/paused
-  /// job (that state is more current than a disk read).
-  Future<void> refreshSurahJob(
-    String edition,
-    int surah,
-    int ayahCount,
-    QuranRepository repo,
-  ) async {
-    final n = surahJob(edition, surah);
-    if (n.value.isActive) return;
-    final progress = await surahProgress(
-      surah,
-      ayahCount,
-      repo,
-      edition: edition,
-    );
-    n.value = RecitationJob(
-      progress.done,
-      ayahCount,
-      progress.isComplete
-          ? RecitationJobStatus.completed
-          : RecitationJobStatus.idle,
-    );
-  }
-
-  /// Seed the "whole reciter" notifier from disk without starting a run.
-  Future<void> refreshFullJob(
-    String edition,
-    List<Surah> surahs,
-    QuranRepository repo,
-  ) async {
-    final n = fullJob(edition);
-    if (n.value.running) return;
-    var done = 0;
-    for (final s in surahs) {
-      final progress = await surahProgress(
-        s.id,
-        s.ayahsCount,
-        repo,
-        edition: edition,
-      );
-      if (progress.isComplete) done++;
-    }
-    n.value = FullRecitationState(
-      doneSurahs: done,
-      totalSurahs: surahs.length,
-      running: false,
-    );
-  }
-
-  /// Every reciter that has at least one file on disk.
+  /// Deletes, once, the per-ayah files earlier builds downloaded, and cancels
+  /// whatever of those downloads the platform still held.
   ///
-  /// Repair used to run against `selectedReciterProvider` only, so a surah
-  /// left half-finished under a reciter he had since switched away from was
-  /// invisible to it — and the button reported «لا يوجد ما يُصلَح» while the
-  /// storage screen still showed the partial download.
-  Future<List<String>> editionsWithFiles() async {
+  /// The option is gone and nothing reads those files any more, so leaving
+  /// them would be hundreds of megabytes the app can neither use nor show —
+  /// the emulator carried 280 MB of them. Everything under
+  /// `documents/recitations/` was written by that feature and nothing else.
+  Future<int> purgeLegacyAyahFiles() async {
+    var freed = 0;
     try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool(_kLegacyPurgedKey) ?? false) return 0;
+      await DownloadEngine.purgeLegacyRecitationTasks();
       final base = await getApplicationDocumentsDirectory();
-      final root = Directory(p.join(base.path, 'recitations'));
-      if (!root.existsSync()) return const [];
-      final out = <String>[];
-      for (final e in root.listSync()) {
-        if (e is! Directory) continue;
-        final hasAny = e
-            .listSync()
-            .whereType<File>()
-            .any((f) => f.path.endsWith('.mp3') && _looksComplete(f));
-        if (hasAny) out.add(p.basename(e.path));
+      final dir = Directory(p.join(base.path, 'recitations'));
+      if (dir.existsSync()) {
+        for (final f in dir.listSync(recursive: true)) {
+          if (f is File) freed += f.lengthSync();
+        }
+        await dir.delete(recursive: true);
       }
-      return out;
+      await prefs.setBool(_kLegacyPurgedKey, true);
     } catch (_) {
-      return const [];
+      // Tried again on the next launch.
     }
-  }
-
-  /// Finds every surah of [edition] that is partly downloaded and resumes it.
-  ///
-  /// This is what the Downloads screen's "repair" action needs for recitations.
-  /// `DownloadManager.resumeAll()` only ever knew about its own tasks (hadith,
-  /// books, adhan clips) — recitations run through this service instead, so a
-  /// surah left half-finished by a kill, a dropped connection or an OEM freeze
-  /// was invisible to repair and stayed stuck until the user found and tapped
-  /// that exact surah again. Large surahs are the ones this bites: al-Baqarah
-  /// alone is 286 separate files, so it is the most likely to be interrupted
-  /// and the most tedious to notice.
-  ///
-  /// Returns the number of surahs it restarted. Fully-downloaded and
-  /// not-started surahs are both left alone — repair resumes real partial
-  /// work, it does not start new downloads the user never asked for.
-  Future<int> repairPartialDownloads({
-    required String edition,
-    required List<Surah> surahs,
-    required QuranRepository repo,
-  }) async {
-    var repaired = 0;
-    // A job whose tracking was lost — the process was killed mid-download, or
-    // a task update never arrived — stays in `_jobs` for ever, and
-    // `isDownloading` then reports true and this loop skips the surah in
-    // silence. That is what made the button look like it did nothing:
-    // «زر إصلاح التحميل ده حرفيًا مالوش لازمة». Repair is an explicit request
-    // to start again, so a stale claim is dropped rather than obeyed.
-    for (final s in surahs) {
-      final key = _jobKey(edition, s.id);
-      final job = _jobs[key];
-      if (job != null && job.isStale) {
-        _jobs.remove(key);
-      }
-    }
-    for (final s in surahs) {
-      if (isDownloading(edition, s.id)) continue;
-      final progress = await surahProgress(
-        s.id,
-        s.ayahsCount,
-        repo,
-        edition: edition,
-      );
-      // Untouched or already complete — nothing to repair.
-      if (progress.done == 0 || progress.isComplete) continue;
-      _paused.remove(_jobKey(edition, s.id));
-      unawaited(
-        _downloadSurahInternal(
-          edition: edition,
-          surah: s.id,
-          ayahCount: s.ayahsCount,
-          repo: repo,
-        ),
-      );
-      repaired++;
-    }
-    return repaired;
-  }
-
-  /// Start (or no-op if already running) a single surah's download.
-  Future<void> startSurahDownload({
-    required String edition,
-    required int surah,
-    required int ayahCount,
-    required QuranRepository repo,
-    String? title,
-  }) => _downloadSurahInternal(
-    edition: edition,
-    surah: surah,
-    ayahCount: ayahCount,
-    repo: repo,
-    title: title,
-  );
-
-  /// Downloads every ayah of [surah] that is not already on disk, publishing
-  /// live progress to [surahJob]. Already-present ayahs are skipped, so an
-  /// interrupted download resumes instead of starting over.
-  Future<void> _downloadSurahInternal({
-    required String edition,
-    required int surah,
-    required int ayahCount,
-    required QuranRepository repo,
-    String? title,
-  }) async {
-    final key = _jobKey(edition, surah);
-    if (_jobs.containsKey(key)) return;
-    await _ensureWired();
-    _paused.remove(key);
-
-    final dir = await _editionDir(edition);
-    final first = await repo.globalAyahNumber(surah, 1);
-
-    final missing = <int>[]; // ayah numbers (1-based) still needed
-    var alreadyDone = 0;
-    for (var i = 0; i < ayahCount; i++) {
-      if (_looksComplete(_fileFor(dir, first + i))) {
-        alreadyDone++;
-      } else {
-        missing.add(i + 1);
-      }
-    }
-
-    if (missing.isEmpty) {
-      _setJob(
-        edition,
-        surah,
-        RecitationJob(ayahCount, ayahCount, RecitationJobStatus.completed),
-      );
-      return;
-    }
-
-    final job = _SurahDownloadJob(
-      edition: edition,
-      surah: surah,
-      ayahCount: ayahCount,
-      done: alreadyDone,
-      onProgress: (done, failed) {
-        _setJob(
-          edition,
-          surah,
-          RecitationJob(done, ayahCount, RecitationJobStatus.downloading),
-        );
-      },
-    );
-    _jobs[key] = job;
-    _setJob(
-      edition,
-      surah,
-      RecitationJob(alreadyDone, ayahCount, RecitationJobStatus.downloading),
-    );
-
-    final displayName = title ?? '${'quran.surah'.tr()} $surah';
-    for (final ayahNumber in missing) {
-      final global = first + (ayahNumber - 1);
-      _enqueueAttempt(
-        _AyahAttempt(
-          edition: edition,
-          globalAyah: global,
-          urls: RecitationSource.urlsFor(
-            edition: edition,
-            surah: surah,
-            ayah: ayahNumber,
-            globalAyah: global,
-          ),
-          displayName: displayName,
-          job: job,
-        ),
-      );
-    }
-
-    try {
-      await job.whenSettled;
-    } finally {
-      _jobs.remove(key);
-      final progress = await surahProgress(
-        surah,
-        ayahCount,
-        repo,
-        edition: edition,
-      );
-      final complete = progress.done >= ayahCount;
-      // Order matters here: `pauseDownload` sets the notifier to `paused` and
-      // *then* cancels the job, which is what releases the await above — so
-      // without this check the teardown would immediately overwrite the
-      // paused state with `idle` and the tile would lose its resume button.
-      final RecitationJobStatus status;
-      if (complete) {
-        status = RecitationJobStatus.completed;
-      } else if (_paused.contains(key)) {
-        status = RecitationJobStatus.paused;
-      } else if (job.cancelled) {
-        status = RecitationJobStatus.idle;
-      } else {
-        status = RecitationJobStatus.failed;
-      }
-      _setJob(edition, surah, RecitationJob(progress.done, ayahCount, status));
-    }
-  }
-
-  /// Pause: stop this surah's in-flight transfers. Every finished ayah is
-  /// already a complete file on disk, so resuming simply re-scans and asks
-  /// for whatever is still missing — at most a handful of in-flight files are
-  /// repeated, and each is a few dozen KB.
-  void pauseDownload(String edition, int surah) {
-    final key = _jobKey(edition, surah);
-    _paused.add(key);
-    _jobs[key]?.cancel();
-    final n = surahJob(edition, surah);
-    n.value = n.value.withStatus(RecitationJobStatus.paused);
-  }
-
-  void resumeDownload(String edition, int surah) {
-    _paused.remove(_jobKey(edition, surah));
-    final n = surahJob(edition, surah);
-    if (n.value.isActive) {
-      n.value = n.value.withStatus(RecitationJobStatus.downloading);
-    }
-  }
-
-  void cancelDownload(String edition, int surah) {
-    final key = _jobKey(edition, surah);
-    _paused.remove(key);
-    _jobs[key]?.cancel();
-    final n = surahJob(edition, surah);
-    n.value = n.value.withStatus(RecitationJobStatus.idle);
-  }
-
-  /// Download an entire reciter, surah by surah, from inside the service so it
-  /// survives the Downloads screen being left.
-  Future<void> startFullDownload({
-    required String edition,
-    required List<Surah> surahs,
-    required QuranRepository repo,
-    /// Shown in the "it is ready" notification. The edition id is used when
-    /// the caller has no display name, which is honest but ugly.
-    String? reciterName,
-  }) async {
-    final full = fullJob(edition);
-    if (full.value.running) return;
-    _fullCancel.remove(edition);
-    await _ensureWired();
-
-    final completed = <int>{};
-    for (final s in surahs) {
-      final progress = await surahProgress(
-        s.id,
-        s.ayahsCount,
-        repo,
-        edition: edition,
-      );
-      if (progress.isComplete) completed.add(s.id);
-    }
-    full.value = FullRecitationState(
-      doneSurahs: completed.length,
-      totalSurahs: surahs.length,
-      running: true,
-    );
-
-    try {
-      for (final s in surahs) {
-        if (_fullCancel.contains(edition)) break;
-        if (completed.contains(s.id)) continue;
-        full.value = FullRecitationState(
-          doneSurahs: completed.length,
-          totalSurahs: surahs.length,
-          currentSurahId: s.id,
-          running: true,
-        );
-        await _downloadSurahInternal(
-          edition: edition,
-          surah: s.id,
-          ayahCount: s.ayahsCount,
-          repo: repo,
-          title: '${s.id}. ${s.nameAr}',
-        );
-        final after = await surahProgress(
-          s.id,
-          s.ayahsCount,
-          repo,
-          edition: edition,
-        );
-        if (after.isComplete) completed.add(s.id);
-      }
-    } finally {
-      _fullCancel.remove(edition);
-      full.value = FullRecitationState(
-        doneSurahs: completed.length,
-        totalSurahs: surahs.length,
-        running: false,
-      );
-      // «وتطلع رسالة تم تحميل التلاوة بشيخ القارئ كذا». A whole-mushaf
-      // recitation is an hours-long download that finishes while the app is
-      // in the background, so the shade is the only place it can say so.
-      // Only on a real, complete finish — not on a cancel, and not on a run
-      // that gave up part-way, because a notification that says "done" when
-      // it is not is worse than none.
-      if (completed.length >= surahs.length && surahs.isNotEmpty) {
-        unawaited(_notifyRecitationReady(edition, reciterName));
-      }
-    }
-  }
-
-  /// One notification when a reciter's whole recitation is on the device.
-  ///
-  /// Goes through [NotificationRouter] like everything else — the plugin
-  /// installs exactly one tap handler for the app and a second `initialize`
-  /// would silently take every other notification's tap with it (trap #31).
-  Future<void> _notifyRecitationReady(String edition, String? name) async {
-    try {
-      await NotificationRouter.instance.ensureInitialized();
-      final plugin = FlutterLocalNotificationsPlugin();
-      final android = plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
-      const channelId = 'rafeeq_recitation_ready';
-      await android?.createNotificationChannel(
-        AndroidNotificationChannel(
-          channelId,
-          await IsolateStrings.tr('notif.recitation_ready_channel'),
-          importance: Importance.defaultImportance,
-        ),
-      );
-      final title = await IsolateStrings.tr('notif.recitation_ready_title');
-      final body = (await IsolateStrings.tr('notif.recitation_ready_body'))
-          .replaceFirst('{reciter}', name ?? edition);
-      await plugin.show(
-        // A stable id per reciter, so finishing a second one does not replace
-        // the first one's notice.
-        0x52 * 1000 + edition.hashCode.abs() % 1000,
-        title,
-        body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            channelId,
-            await IsolateStrings.tr('notif.recitation_ready_channel'),
-            importance: Importance.defaultImportance,
-            priority: Priority.defaultPriority,
-          ),
-        ),
-      );
-    } catch (_) {
-      // A missing notification is not a reason to fail a finished download.
-    }
-  }
-
-  /// Ask the "whole reciter" run to stop, and cancel the surah in flight.
-  void cancelFullDownload(String edition) {
-    _fullCancel.add(edition);
-    final cur = fullJob(edition).value.currentSurahId;
-    if (cur != null) cancelDownload(edition, cur);
-  }
-
-  /// Bytes this reciter's cached audio occupies.
-  Future<int> cacheSizeBytes(String edition) async {
-    final dir = await _editionDir(edition);
-    if (!dir.existsSync()) return 0;
-    var total = 0;
-    for (final e in dir.listSync()) {
-      if (e is File) total += e.lengthSync();
-    }
-    return total;
-  }
-
-  Future<void> clearCache(String edition) async {
-    cancelDownloadsFor(edition);
-    final dir = await _editionDir(edition);
-    if (dir.existsSync()) await dir.delete(recursive: true);
-  }
-
-  void cancelDownloadsFor(String edition) {
-    _fullCancel.add(edition);
-    final prefix = '$edition/';
-    for (final key in _jobs.keys.toList()) {
-      if (key.startsWith(prefix)) _jobs[key]?.cancel();
-    }
-    _paused.removeWhere((k) => k.startsWith(prefix));
-    // Reset the live notifiers for this edition so a "free space" clear is
-    // reflected immediately in any recitation tiles/card watching them.
-    for (final entry in _jobNotifiers.entries) {
-      if (entry.key.startsWith(prefix)) entry.value.value = RecitationJob.idle;
-    }
-    _fullNotifiers[edition]?.value = const FullRecitationState();
+    return freed;
   }
 
   /// Test/teardown hook — the singleton normally lives for the app session.
   Future<void> dispose() async {
-    await _downloadUpdates?.cancel();
     await _cancelContinuousSubs();
     await _player.dispose();
-  }
-}
-
-/// One ayah's download, and the fallback chain behind it.
-///
-/// `background_downloader` takes a single URL per task, but an ayah may be
-/// available on everyayah and not on the CDN (or the reverse). Holding the
-/// candidate list here lets a `notFound` re-enqueue the same ayah against the
-/// next host rather than counting it as a permanent failure.
-class _AyahAttempt {
-  final String edition;
-  final int globalAyah;
-  final List<String> urls;
-  final String displayName;
-  final _SurahDownloadJob? job;
-  final int urlIndex;
-
-  String? taskId;
-
-  _AyahAttempt({
-    required this.edition,
-    required this.globalAyah,
-    required this.urls,
-    required this.displayName,
-    required this.job,
-    this.urlIndex = 0,
-  });
-
-  String get url => urls[urlIndex];
-  bool get hasNextUrl => urlIndex + 1 < urls.length;
-
-  _AyahAttempt advanced() => _AyahAttempt(
-    edition: edition,
-    globalAyah: globalAyah,
-    urls: urls,
-    displayName: displayName,
-    job: job,
-    urlIndex: urlIndex + 1,
-  );
-}
-
-/// Tracks the outstanding ayah transfers of one surah and completes once
-/// every one of them has settled (finished, exhausted its fallbacks, or been
-/// cancelled).
-/// How long a download job may go without a single task update before repair
-/// treats its claim on the surah as abandoned.
-///
-/// Not a timeout on the download — the platform queue owns that. This is only
-/// about the in-memory bookkeeping that `isDownloading` reads.
-const Duration _staleJobAfter = Duration(minutes: 3);
-
-class _SurahDownloadJob {
-  final String edition;
-  final int surah;
-  final int ayahCount;
-  final void Function(int done, int failed) onProgress;
-
-  final Set<String> _outstanding = {};
-  final Completer<void> _completer = Completer<void>();
-
-  int done;
-  int failed = 0;
-  bool cancelled = false;
-
-  /// Set once every ayah has been handed to the queue, so an early gap in the
-  /// outstanding set (the first task settling before the last is enqueued)
-  /// cannot be mistaken for "all done".
-  bool _sealed = false;
-
-  _SurahDownloadJob({
-    required this.edition,
-    required this.surah,
-    required this.ayahCount,
-    required this.done,
-    required this.onProgress,
-  }) {
-    // The enqueue loop is synchronous after construction, so sealing on the
-    // next microtask is enough to cover it.
-    scheduleMicrotask(() {
-      _sealed = true;
-      _checkDone();
-    });
-  }
-
-  Future<void> get whenSettled => _completer.future;
-
-  /// When this job last heard anything at all from the platform queue.
-  DateTime _lastHeard = DateTime.now();
-
-  /// Nothing has settled for [_staleJobAfter]. The claim this job holds on
-  /// its surah is then treated as abandoned by repair — see
-  /// `repairPartialDownloads`.
-  bool get isStale => DateTime.now().difference(_lastHeard) > _staleJobAfter;
-
-  void track(String taskId) {
-    _outstanding.add(taskId);
-    _lastHeard = DateTime.now();
-  }
-
-  void settle(_AyahAttempt attempt, {required bool succeeded}) {
-    _lastHeard = DateTime.now();
-    final id = attempt.taskId;
-    if (id != null) _outstanding.remove(id);
-    if (succeeded) {
-      done++;
-    } else {
-      failed++;
-    }
-    onProgress(done, failed);
-    _checkDone();
-  }
-
-  void cancel() {
-    if (cancelled) return;
-    cancelled = true;
-    final ids = _outstanding.toList();
-    _outstanding.clear();
-    DownloadEngine.recitationQueue.removeTasksWithIds(ids);
-    unawaited(bd.FileDownloader().cancelTasksWithIds(ids));
-    _finish();
-  }
-
-  void _checkDone() {
-    if (_sealed && _outstanding.isEmpty) _finish();
-  }
-
-  void _finish() {
-    if (!_completer.isCompleted) _completer.complete();
   }
 }

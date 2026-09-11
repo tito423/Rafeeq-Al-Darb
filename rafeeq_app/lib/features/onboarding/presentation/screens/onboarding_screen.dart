@@ -6,10 +6,7 @@ import '../../../../app/rafeeq_app.dart' show sharedPrefsProvider;
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
-import '../../../downloads/data/reciters_provider.dart';
-import '../../../downloads/presentation/widgets/full_recitation_card.dart';
 import '../../../downloads/presentation/widgets/mushaf_download_tile.dart';
-import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/onboarding_state.dart';
 
@@ -42,9 +39,9 @@ const _onboardingLanguageNames = <String, String>{
 /// recitation, both essential") from the original feedback: the mushaf list
 /// reuses the exact same real per-edition download job
 /// (`MushafDownloadTile`/`MushafPageService`) the Downloads screen already
-/// uses, and the recitation section reuses the exact same bulk-recitation
-/// download (`FullRecitationCard`/`AyahAudioService`) P3‑27 already built —
-/// nothing here is a second, decorative copy. Downloading is offered, not
+/// uses, nothing here is a second, decorative copy. (The recitation download that
+/// used to sit below it went with the per-ayah downloads in 3.17.0; whole
+/// recitations are downloaded from «تحميل تلاوات القرآن».) Downloading is offered, not
 /// forced: both are real background jobs the user can also start later from
 /// Downloads, so the closing CTA never blocks on them finishing.
 class OnboardingScreen extends ConsumerWidget {
@@ -191,34 +188,6 @@ class OnboardingScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 18),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.graphic_eq,
-                        color: AppColors.gold,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'onboarding.recitation_title'.tr(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textHigh,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'onboarding.recitation_subtitle'.tr(),
-                    style: const TextStyle(
-                      color: AppColors.textMedium,
-                      fontSize: 12.5,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const _RecitationPicker(),
                 ],
               ),
             ),
@@ -297,80 +266,6 @@ class _SelectableEdition extends StatelessWidget {
             Expanded(child: MushafDownloadTile(edition: edition)),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// The G5 "essential recitation download" — reciter dropdown + the same
-/// real bulk-download card the Downloads screen's Recitations tab uses.
-class _RecitationPicker extends ConsumerWidget {
-  const _RecitationPicker();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final reciters = ref.watch(recitersProvider);
-    final selected = ref.watch(selectedReciterProvider);
-    final mushaf = ref.watch(mushafDataProvider);
-
-    return reciters.when(
-      loading: () => const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: Center(child: CircularProgressIndicator()),
-      ),
-      error: (_, _) =>
-          ErrorRetry(onRetry: () => ref.invalidate(recitersProvider)),
-      data: (list) => Column(
-        children: [
-          InputDecorator(
-            decoration: InputDecoration(
-              labelText: 'downloads.choose_reciter'.tr(),
-              border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 4,
-              ),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                isExpanded: true,
-                value: list.any((r) => r.identifier == selected)
-                    ? selected
-                    : list.first.identifier,
-                items: [
-                  for (final r in list)
-                    DropdownMenuItem(
-                      value: r.identifier,
-                      child: Text(
-                        r.displayName(context.locale.languageCode),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                ],
-                onChanged: (v) {
-                  if (v != null) {
-                    ref.read(selectedReciterProvider.notifier).select(v);
-                  }
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          mushaf.when(
-            loading: () => const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            error: (_, _) =>
-                ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
-            data: (data) => FullRecitationCard(
-              key: ValueKey('onboarding/$selected'),
-              edition: selected,
-              data: data,
-              onFinished: () {},
-            ),
-          ),
-        ],
       ),
     );
   }

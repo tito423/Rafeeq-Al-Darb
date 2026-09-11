@@ -47,14 +47,13 @@ void main() {
     return hits;
   }
 
-  test('both queues are wide enough to be worth having', () {
-    // These were 2 and 6 and were widened after he first reported downloads
-    // «بتقف خالص» with four mushafs going. Two queues: files, recitations.
+  test('the file queue is wide, the whole-surah queue is not', () {
+    // The file queue was 2 and was widened after he first reported downloads
+    // «بتقف خالص» with four mushafs going. The second queue carries whole
+    // surahs since 3.17.0 — files up to 255 MB — where a dozen at once only
+    // splits the line; three is deliberate.
     final caps = fieldValues(r'\.\.maxConcurrent');
-    expect(caps.length, 2);
-    for (final c in caps) {
-      expect(c, greaterThanOrEqualTo(8));
-    }
+    expect(caps, [8, 3]);
   });
 
   test('per-host politeness is capped, and measured', () {
@@ -74,8 +73,8 @@ void main() {
     // ayah files and a 604-page mushaf have nothing to gain from queueing
     // behind each other, and each queue counts its hosts separately.
     expect(engine, contains('MemoryTaskQueue fileQueue'));
-    expect(engine, contains('MemoryTaskQueue recitationQueue'));
+    expect(engine, contains('MemoryTaskQueue quranAudioQueue'));
     expect(engine, contains('addTaskQueue(fileQueue)'));
-    expect(engine, contains('addTaskQueue(recitationQueue)'));
+    expect(engine, contains('addTaskQueue(quranAudioQueue)'));
   });
 }

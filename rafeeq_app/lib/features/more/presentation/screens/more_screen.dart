@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
+import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 
@@ -31,6 +32,20 @@ class MoreScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
         children: [
           SectionLabel('more.section_more'.tr()),
+
+          // «انشئ في المزيد قسم جديد سميه تحميل تلاوات القرآن … عبارة عن
+          // music player احترافي». First, because it is the one he asked for.
+          IslamicActionCard(
+            icon: Icons.library_music_outlined,
+            accent: AppColors.gold,
+            title: 'quran_audio.title'.tr(),
+            subtitle: 'quran_audio.subtitle'.tr(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const QuranAudioScreen(),
+              ),
+            ),
+          ),
 
           IslamicActionCard(
             icon: Icons.healing_outlined,

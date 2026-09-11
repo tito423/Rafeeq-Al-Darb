@@ -1166,9 +1166,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 15:02 — IN PROGRESS — resume here**
+**2026-09-11 15:19 — IN PROGRESS — resume here**
 
-3.17 stage 1 (not yet on a device): header names surahs by first AND last page (55 of 113 boundaries were wrong), no third copy of the name in text mode; HadeethEnc all 7 packs bundled (verified vs catalogue), card from the encyclopaedia only, download gate and autofetch removed; mushaf downloads remembered and resumed, repair handles paused/stuck/zero-page, tile always listens, progress lives in the FGS notification, stale ones cleared at launch. analyze clean, 170 tests passed before the download patch.
+3.17 stage 2 (not yet on a device): per-ayah recitation downloads removed entirely - reader streams only, playback-source option gone, legacy ayah files and tasks purged once at launch; new More section «تحميل تلاوات القرآن»: mp3quran API v3 (verified 241 reciters/287 moshafs), whole-surah downloads on their own queue, library indexed reciter>recitation folders, device files, full player (seek, 10s skips, shuffle, repeat one/all, speed, sleep timer incl. end of surah, queue, mini player). 7 locales, 30 dead keys removed. analyze clean, 170 tests pass. version 3.17.0+14.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

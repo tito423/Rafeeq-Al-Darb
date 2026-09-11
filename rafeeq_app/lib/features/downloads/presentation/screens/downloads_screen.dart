@@ -3,22 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
-import '../../../../core/services/ayah_audio_service.dart';
-import '../../../../core/db/quran_repository.dart';
 import '../../../../core/services/download_engine.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/services/mushaf_page_service.dart';
-import '../../../../core/services/recitation_source.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
-import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/downloads_controller.dart';
-import '../../data/reciters_provider.dart';
-import '../widgets/full_recitation_card.dart';
-import '../widgets/playback_source_card.dart';
+import '../../../quran_audio/data/quran_audio_library.dart';
+import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../widgets/mushaf_download_tile.dart';
 import '../../../../core/utils/byte_formatter.dart';
 
@@ -59,7 +54,7 @@ class DownloadsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text('downloads.title'.tr()),
@@ -74,12 +69,11 @@ class DownloadsScreen extends ConsumerWidget {
             tabs: [
               Tab(text: 'downloads.tab_overview'.tr()),
               Tab(text: 'downloads.mushafs'.tr()),
-              Tab(text: 'downloads.recitations'.tr()),
             ],
           ),
         ),
         body: const TabBarView(
-          children: [_OverviewTab(), _MushafsTab(), _RecitationsTab()],
+          children: [_OverviewTab(), _MushafsTab()],
         ),
         floatingActionButton: const _RepairButton(),
       ),
@@ -146,7 +140,11 @@ class _OverviewTab extends ConsumerWidget {
       case DownloadCategory.mushafs:
         return () => DefaultTabController.of(context).animateTo(1);
       case DownloadCategory.recitations:
-        return () => DefaultTabController.of(context).animateTo(2);
+        // Whole-surah recitations and their player live in their own section
+        // since 3.17.0 — not tied to a mushaf, not in this screen.
+        return () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const QuranAudioScreen()),
+        );
       case DownloadCategory.hadith:
         return () {
           // `popUntil(isFirst)` rather than a single `pop()`: this screen is
@@ -565,419 +563,11 @@ class _MushafsTab extends ConsumerWidget {
   }
 }
 
-// ── Recitations ────────────────────────────────────────────────────────────
-
-class _RecitationsTab extends ConsumerStatefulWidget {
-  const _RecitationsTab();
-
-  @override
-  ConsumerState<_RecitationsTab> createState() => _RecitationsTabState();
-}
-
-class _RecitationsTabState extends ConsumerState<_RecitationsTab> {
-  /// Filters the 114-surah list — with سورة البقرة alone being a 286-file
-  /// download, finding one surah by scrolling was the slowest part of using
-  /// this screen.
-  String _filter = '';
-
-  @override
-  Widget build(BuildContext context) {
-    final reciters = ref.watch(recitersProvider);
-    final selected = ref.watch(selectedReciterProvider);
-    final mushaf = ref.watch(mushafDataProvider);
-
-    return reciters.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) =>
-          ErrorRetry(onRetry: () => ref.invalidate(recitersProvider)),
-      data: (list) {
-        final current = list.any((r) => r.identifier == selected)
-            ? selected
-            : list.first.identifier;
-        return Column(
-          children: [
-            _ReciterPicker(reciters: list, selected: current),
-            Expanded(
-              child: mushaf.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (_, _) =>
-                    ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
-                data: (data) {
-                  final surahs = _filter.isEmpty
-                      ? data.surahs
-                      : data.surahs
-                            .where(
-                              (s) =>
-                                  s.nameAr.contains(_filter) ||
-                                  s.nameEn.toLowerCase().contains(
-                                    _filter.toLowerCase(),
-                                  ) ||
-                                  s.id.toString() == _filter,
-                            )
-                            .toList();
-                  return Column(
-                    children: [
-                      FullRecitationCard(
-                        key: ValueKey('full/$current'),
-                        edition: current,
-                        reciterName: list
-                            .where((r) => r.identifier == current)
-                            .map((r) => context.locale.languageCode == 'ar'
-                                ? r.nameAr
-                                : r.nameEn)
-                            .firstOrNull,
-                        data: data,
-                        onFinished: () {},
-                      ),
-                      // Whose recitation is on the device, and where playback
-                      // comes from — «ولو أكتر من قارئ يقوللي فلان وفلان
-                      // ويحطهم في قايمة وأنا أختار أشغّل من التلاوة المحملة
-                      // ولا من الـ API».
-                      const PlaybackSourceCard(),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(14, 2, 14, 8),
-                        child: TextField(
-                          onChanged: (v) => setState(() => _filter = v.trim()),
-                          decoration: InputDecoration(
-                            isDense: true,
-                            hintText: 'downloads.find_surah'.tr(),
-                            prefixIcon: const Icon(Icons.search_rounded, size: 20),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(14, 0, 14, kRepairButtonClearance),
-                          itemCount: surahs.length,
-                          itemBuilder: (_, i) => _SurahAudioTile(
-                            key: ValueKey('$current/${surahs[i].id}'),
-                            surahId: surahs[i].id,
-                            surahName: surahs[i].nameAr,
-                            ayahCount: surahs[i].ayahsCount,
-                            edition: current,
-                            data: data,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-/// The reciter chooser, plus an honest note about where this reciter's audio
-/// comes from — a reciter with a verified everyayah mirror downloads faster
-/// and resumes properly, and saying so beats letting the user find out.
-class _ReciterPicker extends ConsumerWidget {
-  final List<Reciter> reciters;
-  final String selected;
-
-  const _ReciterPicker({required this.reciters, required this.selected});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final scheme = Theme.of(context).colorScheme;
-    final mirrored = RecitationSource.hasVerifiedMirror(selected);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
-      child: Material(
-        color: scheme.surfaceContainerHighest.withValues(alpha: 0.45),
-        borderRadius: BorderRadius.circular(18),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(14, 8, 14, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: selected,
-                  icon: const Icon(Icons.expand_more_rounded),
-                  items: [
-                    for (final r in reciters)
-                      DropdownMenuItem(
-                        value: r.identifier,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.record_voice_over_rounded,
-                              size: 18,
-                              color: RecitationSource.hasVerifiedMirror(
-                                    r.identifier,
-                                  )
-                                  ? AppColors.gold
-                                  : scheme.onSurfaceVariant,
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                r.displayName(context.locale.languageCode),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                  onChanged: (v) {
-                    if (v != null) {
-                      ref.read(selectedReciterProvider.notifier).select(v);
-                    }
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  Icon(
-                    mirrored ? Icons.bolt_rounded : Icons.cloud_outlined,
-                    size: 14,
-                    color: mirrored ? AppColors.gold : scheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      mirrored
-                          ? 'downloads.source_verified'.tr()
-                          : 'downloads.source_cdn'.tr(),
-                      style: TextStyle(
-                        color: scheme.onSurfaceVariant,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SurahAudioTile extends StatefulWidget {
-  final int surahId;
-  final String surahName;
-  final int ayahCount;
-  final String edition;
-  final MushafData data;
-
-  const _SurahAudioTile({
-    super.key,
-    required this.surahId,
-    required this.surahName,
-    required this.ayahCount,
-    required this.edition,
-    required this.data,
-  });
-
-  @override
-  State<_SurahAudioTile> createState() => _SurahAudioTileState();
-}
-
-class _SurahAudioTileState extends State<_SurahAudioTile> {
-  final _audio = AyahAudioService.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    // Seed this surah's live notifier from disk (won't clobber an in-flight
-    // download — see refreshSurahJob). All progress is then read straight from
-    // the service's notifier, so scrolling this tile off-screen and back, or
-    // leaving and reopening the screen, never loses the live progress.
-    _audio.refreshSurahJob(
-      widget.edition,
-      widget.surahId,
-      widget.ayahCount,
-      widget.data.repo,
-    );
-  }
-
-  void _start() => _audio.startSurahDownload(
-    edition: widget.edition,
-    surah: widget.surahId,
-    ayahCount: widget.ayahCount,
-    repo: widget.data.repo,
-    title: '${widget.surahId}. ${widget.surahName}',
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-
-    return ValueListenableBuilder<RecitationJob>(
-      valueListenable: _audio.surahJob(widget.edition, widget.surahId),
-      builder: (context, job, _) {
-        final complete = job.isComplete;
-        final downloading = job.status == RecitationJobStatus.downloading;
-        final paused = job.status == RecitationJobStatus.paused;
-        final failed = job.status == RecitationJobStatus.failed;
-        final active = downloading || paused;
-        final showBar = active || (job.done > 0 && !complete);
-
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Material(
-            color: complete
-                ? AppColors.success.withValues(alpha: 0.10)
-                : scheme.surfaceContainerHighest.withValues(alpha: 0.42),
-            borderRadius: BorderRadius.circular(16),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: complete || active ? null : _start,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 10, 6, 10),
-                child: Row(
-                  children: [
-                    // The surah number in a bordered rosette, the way a
-                    // mushaf marks its ayah numbers.
-                    Container(
-                      width: 36,
-                      height: 36,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColors.gold.withValues(alpha: 0.12),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.gold.withValues(alpha: 0.45),
-                        ),
-                      ),
-                      child: Text(
-                        '${widget.surahId}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                          color: AppColors.goldSoft,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.surahName,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          if (showBar) ...[
-                            GoldProgressBar(
-                              value: job.total == 0 ? null : job.fraction,
-                              height: 6,
-                              color: paused ? scheme.outline : AppColors.gold,
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              '${job.done} / ${job.total}'
-                              '${paused ? '  ·  ${'downloads.paused'.tr()}' : ''}',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: scheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ] else
-                            Text(
-                              complete
-                                  ? 'downloads.offline_ready'.tr()
-                                  : failed
-                                  ? 'downloads.incomplete_tap_retry'.tr()
-                                  : 'quran.ayahs'.plural(widget.ayahCount),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: complete
-                                    ? AppColors.success
-                                    : failed
-                                    ? scheme.error
-                                    : scheme.onSurfaceVariant,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    if (complete)
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8, left: 8),
-                        child: Icon(
-                          Icons.offline_pin_rounded,
-                          color: AppColors.success,
-                        ),
-                      )
-                    else if (active)
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            visualDensity: VisualDensity.compact,
-                            tooltip: paused
-                                ? 'downloads.resume'.tr()
-                                : 'downloads.pause'.tr(),
-                            icon: Icon(
-                              paused
-                                  ? Icons.play_arrow_rounded
-                                  : Icons.pause_rounded,
-                            ),
-                            onPressed: () {
-                              if (paused) {
-                                _audio.resumeDownload(
-                                  widget.edition,
-                                  widget.surahId,
-                                );
-                                // Resume re-scans disk and asks for whatever
-                                // is still missing — see pauseDownload's doc.
-                                _start();
-                              } else {
-                                _audio.pauseDownload(
-                                  widget.edition,
-                                  widget.surahId,
-                                );
-                              }
-                            },
-                          ),
-                          IconButton(
-                            visualDensity: VisualDensity.compact,
-                            tooltip: 'downloads.cancel'.tr(),
-                            icon: const Icon(Icons.stop_circle_outlined),
-                            onPressed: () => _audio.cancelDownload(
-                              widget.edition,
-                              widget.surahId,
-                            ),
-                          ),
-                        ],
-                      )
-                    else
-                      IconButton(
-                        tooltip: 'downloads.download'.tr(),
-                        icon: const Icon(Icons.download_rounded),
-                        color: AppColors.gold,
-                        onPressed: _start,
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-
 // ── Repair ─────────────────────────────────────────────────────────────────
 
 /// Resumes everything that was left half-finished, across all three download
-/// engines.
+/// engines: the platform downloader's files, the whole-surah recitations, and
+/// the mushaf pages.
 ///
 /// The button used to call `DownloadManager.resumeAll()` alone, which only
 /// knows about hadith, books and adhan clips. Recitations run through
@@ -1016,27 +606,10 @@ class _RepairButtonState extends ConsumerState<_RepairButton> {
       // 1. Hadith / books / adhan — the platform downloader's own queue.
       await DownloadManager.instance.resumeAll();
 
-      // 2. Recitations — every reciter with files on disk, not only the one
-      // currently selected. A surah left half-finished under a reciter he had
-      // since switched away from was invisible to repair, and the button said
-      // «لا يوجد ما يُصلَح» while the storage screen still showed it.
+      // 2. Whole-surah recitations that were asked for and are not on disk.
       try {
-        final repo = await ref.read(quranRepositoryProvider.future);
-        final data = await ref.read(mushafDataProvider.future);
-        final editions = <String>{
-          ref.read(selectedReciterProvider),
-          ...await AyahAudioService.instance.editionsWithFiles(),
-        };
-        for (final edition in editions) {
-          resumed += await AyahAudioService.instance.repairPartialDownloads(
-            edition: edition,
-            surahs: data.surahs,
-            repo: repo,
-          );
-        }
-      } catch (_) {
-        // A missing Quran DB just means there is nothing to repair here.
-      }
+        resumed += await QuranAudioLibrary.instance.repair();
+      } catch (_) {}
 
       // 3. Mushaf editions with a partial page cache.
       try {
