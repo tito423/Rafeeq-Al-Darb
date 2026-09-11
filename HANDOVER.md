@@ -7,10 +7,14 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-11 |
-| **Released** | **v3.17.0** — tag on `master`, one release in the repo (see NEXT_PROMPT for the verified SHA) |
-| **App version** | `pubspec.yaml` `3.17.0+14` |
+| **Released** | **v3.17.1** — tag on `master`, one release in the repo |
+| **App version** | `pubspec.yaml` `3.17.1+15` |
 | **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
-| **Verified today** | `flutter analyze lib test` clean · `flutter test` **176 passed** · on emulator-5554 (release build, signed): header on page 249, hadith card with explanation, streaming single ayah and continuous recitation (`PLAYING`, `error=null`), the new recitations player (list, download, play, next), a mushaf download surviving `am force-stop` and resuming by itself |
+| **Verified today** | `flutter analyze lib test` clean · `flutter test` **176 passed** · on emulator-5554 (signed release): prayer card re-posted 46 ms after being swiped away; reciter switch 1.3 s; surah index jump while reciting 1.26 s; in-surah jump by seek (no player re-init); image-page recitation button opens the text page; player cover and reciter avatars drawn; 0 Flutter errors in the log |
+
+## STATE AS OF 2026-09-11 (night, later) — v3.17.1: the sixth batch
+
+Read `WORK_QUEUE.md` E1–E8. In one paragraph: continuous recitation is **text-mushaf only** (the Tajweed printing's page 77 highlighted 4:3 a line low); the surah being recited is loaded whole and moved within by seek; the recitation bar has a reciter picker; the section is «مشغّل تلاوة القرآن» with a typeset cover; the prayer card is posted natively by `PrayerCard.kt` with a delete intent that re-posts it; repair steps have deadlines and stalled whole-surah transfers are re-queued; an adhkar `errorWidget` that threw in the release log is fixed. APK 347,222,322 bytes.
 
 ## STATE AS OF 2026-09-11 (night) — v3.17.0: the fifth batch
 

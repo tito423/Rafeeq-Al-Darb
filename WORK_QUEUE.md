@@ -1,3 +1,88 @@
+# Work queue — the owner's sixth batch, 2026-09-11 (night) → v3.17.1
+
+Everything below was run on emulator-5554 with the signed release build.
+
+## E1 · A running recitation must move fast
+
+The surah being read is now loaded whole, so moving within it is a `seek`
+(no playlist rebuilt, no host round trip); the surah/juz/page index moves a
+running recitation with it.
+
+STATUS: **DONE (seen)** — an-Nisa' picked from the index while 3:23 was
+playing: `PLAYING` from 4:1 in 1.26 s (adb-polled, so an upper bound). Back
+from 4:3 to 4:1 inside the surah: item id 2 → 0 with no new
+`ExoPlayerImpl: Init` in the log, i.e. no reload.
+
+## E2 · Choose the reciter from the small recitation bar
+
+STATUS: **DONE (seen)** — the bar shows the reciter's name and a picker (fast
+everyayah sources first, marked ⚡). Switching to Maher al-Muaiqly was
+`PLAYING` again at the same ayah in 1.3 s.
+
+## E3 · Image mushaf: recitation and highlight — or text only
+
+> «لو فيه مشكلة … خلّي التلاوة التلقائية آية بآية محصورة بس في المصحف النصي»
+
+There was a problem: the Tajweed printing's page 77 highlighted 4:3 about a
+line low (from «ما طاب لكم» into the start of 4:4). The Madinah vector image
+was right on the same verse. Continuous recitation is now text-only; from an
+image page the button opens the same page as text and starts there, and a
+recitation is stopped if the reader switches to an image page.
+
+STATUS: **DONE (seen)** — pressed on image page 53: text page 53, reciting
+3:23, verse tinted.
+
+## E4 · «مشغّل تلاوة القرآن»
+
+STATUS: **DONE (seen)** — the section's title on the device.
+
+## E5 · A cover instead of the letter «أ»
+
+The player's artwork is typeset from the surah name (Qur'an face), reciter and
+recitation on a lattice whose ground is chosen from the reciter's name. The
+list avatars — every one of which read «أ», because most names begin «أحمد» /
+«محمد» — now show the family name's letter on the reciter's own ground.
+
+STATUS: **DONE (seen)**. NOT fixed: the avatar letter sits a little below
+centre (the AmiriQuran face's ascent).
+
+## E6 · Downloads screen updates itself; notifications
+
+The overview re-reads its totals while anything downloads (at most every 2 s)
+and the downloaded-items list reloads on every download event. Recitations
+storage no longer counts `library.json` (an empty library read «2 B»).
+
+STATUS: code — the live refresh was not watched during a running download in
+this round.
+
+## E7 · The prayer card must come back when dismissed
+
+Posted natively (`PrayerCard.kt`) with a delete intent that posts it again,
+plus a native rollover alarm and a BOOT_COMPLETED / MY_PACKAGE_REPLACED
+receiver.
+
+STATUS: **DONE (seen)** — swiped away: event log `notification_canceled`
+reason 2 at 14:28:37.698, `notification_enqueue` again at 14:28:37.744.
+«Clear all» left it in place. NOT seen: rollover at the prayer's time, and
+restore after a reboot.
+
+## E8 · Repair must never hang
+
+Each step has a 12 s deadline, and a whole-surah transfer that has reported
+nothing for 2 minutes is cancelled and re-queued.
+
+STATUS: returned in under a second with «لا توجد تحميلات غير مكتملة» — but
+**a genuinely wedged download was not produced to press it on**.
+
+## Also found and fixed
+
+* Adhkar cards: the photo's `errorWidget` was a `Positioned.fill` inside the
+  image widget and threw «ParentData is not a subtype of StackParentData» in
+  the release log at every launch. Pre-existing. After the fix: 0 Flutter
+  errors in the log across launch, Qur'an, player and downloads.
+
+---
+
 # Work queue — the owner's fifth batch, 2026-09-11 (night) → v3.17.0
 
 One long message, then a second one mid-work: «الكوته ١٥ … عايز البلاير يبقى
