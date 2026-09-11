@@ -42,6 +42,14 @@ Color _colorFor(DownloadCategory c) => switch (c) {
   DownloadCategory.adhan => AppColors.success,
 };
 
+/// How much empty space every list in this screen keeps at its foot.
+///
+/// The «إصلاح التحميلات» button floats over all three tabs, and a floating
+/// button does not reserve any space — so the last row of each list sat
+/// underneath it. 48 for the button, 16 for its margin, and enough over that
+/// for the row to read as finished rather than as something hidden.
+const double kRepairButtonClearance = 96;
+
 /// The unified offline-content hub: a storage overview + free-space per
 /// category, then the mushaf and recitation download lists.
 class DownloadsScreen extends ConsumerWidget {
@@ -174,7 +182,7 @@ class _OverviewTab extends ConsumerWidget {
       data: (summary) => RefreshIndicator(
         onRefresh: () async => ref.invalidate(storageSummaryProvider),
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(14, 14, 14, 28),
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, kRepairButtonClearance),
           children: [
             _StorageHero(
               summary: summary,
@@ -547,7 +555,7 @@ class _MushafsTab extends ConsumerWidget {
       error: (_, _) =>
           ErrorRetry(onRetry: () => ref.invalidate(mushafEditionsProvider)),
       data: (list) => ListView.separated(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 28),
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, kRepairButtonClearance),
         itemCount: list.length,
         separatorBuilder: (_, _) => const SizedBox(height: 10),
         itemBuilder: (_, i) => MushafDownloadTile(edition: list[i]),
@@ -641,7 +649,7 @@ class _RecitationsTabState extends ConsumerState<_RecitationsTab> {
                       ),
                       Expanded(
                         child: ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(14, 0, 14, 24),
+                          padding: const EdgeInsets.fromLTRB(14, 0, 14, kRepairButtonClearance),
                           itemCount: surahs.length,
                           itemBuilder: (_, i) => _SurahAudioTile(
                             key: ValueKey('$current/${surahs[i].id}'),

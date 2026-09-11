@@ -1146,9 +1146,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 05:13 — IN PROGRESS — resume here**
+**2026-09-11 05:16 — IN PROGRESS — resume here**
 
-the ayah highlight is one mark per printed line. The shipped polygon layer is a TAP layer: its rings span a full line pitch with no gap, and 1,054 of 11,386 rings (9.3%) are ONE rectangle over several lines - the worst 8.59 lines tall, page 353 an-Nur 31 - which is the slab the owner photographed. Highlight rects are now cut at each page's own line grid and inset 9% of the pitch; measured over all 604 pages, re-measured by the test. Landscape lays the page out at full width and scrolls vertically instead of fitting it into the ~200 logical pixels left under the toolbar, which drew page 417 about 130 pixels wide. The goto-page dialog took a hard-coded 604: proved on the old code that it refused page 607 of the 611-page Nastaleeq and accepted page 600 of the 521-page Shamarly. 157 tests pass, analyze clean.
+work queue: the owner's third batch, with the verdict on the pasted OpenCV brief recorded next to the measurement that answers it - the coordinates were already relative and already one rectangle per line fragment; what was actually wrong was that those rectangles are a TAP layer, 9.3% of them spanning several lines at once. Also: the repair button floats over all three download tabs and reserved no space, so every list now keeps 96 logical pixels at its foot.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
