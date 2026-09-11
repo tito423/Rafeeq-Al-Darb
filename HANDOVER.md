@@ -7,10 +7,14 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-11 |
-| **Released** | **v3.17.2** — tag on `master`, one release in the repo |
-| **App version** | `pubspec.yaml` `3.17.2+16` |
+| **Released** | **v3.18.0** — tag on `master`, one release in the repo |
+| **App version** | `pubspec.yaml` `3.18.0+17` |
 | **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
-| **Verified today** | `flutter analyze lib test` clean · `flutter test` **176 passed** · on emulator-5554 (signed release): prayer card re-posted 46 ms after being swiped away; reciter switch 1.3 s; surah index jump while reciting 1.26 s; in-surah jump by seek (no player re-init); image-page recitation button opens the text page; player cover and reciter avatars drawn; 0 Flutter errors in the log |
+| **Verified today** | `flutter analyze lib test` clean · `flutter test` **186 passed** · on emulator-5554 (signed release 3.18.0): verse tap opens the card with media NONE; continuous recitation from the selected 3:25 (media PLAYING «3:25», page unmoved); a 110-surah recitation kept downloading with the app at HOME (8 done in 90 s, 10 on return, nothing restarted); device scan found a pushed mp3 under its folder and played it; favourites, ten themes, disc; sunan reminder on two days; splash-sound switch present; library tab «الموسوعة الحديثية». Rebuilt APK after the fixes: tasks released 1, 2, 3, 4, 5 in order; downloads overview shows 3 running + «في الانتظار · 97»; reciter jump and back-to-top; finished track shows play and replays; scan reports its count; selected verse stays marked in the flowing layout |
+
+## STATE AS OF 2026-09-11 — v3.18.0: the eighth and ninth batches
+
+Read `WORK_QUEUE.md` I1–I13 and G1–G9; each says what was seen. In one paragraph: whole-surah downloads run in background_downloader's **native holding queue** as foreground work (the Dart queue did not advance with the app in the background) — tasks carry a creation time spaced in surah order, because the native queue orders by priority then creation time and a batch built in one millisecond came out in arbitrary order. A tap on a verse selects it and opens its card; «تلاوة الآية» plays that verse; the continuous recitation starts from the selected verse. The player has favourites, ten themes, a turning disc, and a MediaStore scan of the device grouped by folder, album and artist. Every vertical scroll view has an arrow scrollbar (`ArrowScrollBehavior`, `lib/core/widgets/arrow_scrollbar.dart`). Sunan reminders take several days. Unseen: the adhan playlist switch and cross-fade, the adhan text timing against a real adhan, landscape continuous recitation, the reciter-screen jump and back-to-top taps, everything on his own phone.
 
 ## STATE AS OF 2026-09-11 (night, last) — v3.17.2
 

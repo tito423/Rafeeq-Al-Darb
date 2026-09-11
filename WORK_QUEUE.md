@@ -1,3 +1,39 @@
+# Work queue — the owner's eighth and ninth batches, 2026-09-11 → v3.18.0
+
+Run on emulator-5554 with the signed release build. "seen" means looked at on the device; anything else says what was not.
+
+## Ninth batch (I)
+
+* **I1 · A full recitation stopped in the background and restarted from zero.** Whole-surah tasks go to the plugin's native holding queue (4 per host, 3 per group) as foreground work with `allowPause`; resume and repair continue from the bytes already on disk. STATUS: **DONE (seen)** — 110-surah recitation started, HOME for 90 s: the notification read «السور المكتملة: 8 من 110», the screen read 10 on return, nothing restarted. **FOUND on the way:** every task of a batch shared one `creationTime`, and the native queue orders by priority then creation time, so surahs went 3, 4, 7, 10, 15, 9, 18, 2… and al-Fatiha was still held after sixteen had finished while the card announced «جارٍ تنزيل سورة الفاتحة — 0%». Tasks are now spaced 1 ms in surah order and a held task shows «في الانتظار»; `test/quran_audio_queue_order_test.dart` fails on the old source (2 of 2). On the rebuilt signed APK the log released `qa_205_1`, `_2`, `_3`, `_4`, `_5` in that order, and the waiting rows read «في الانتظار».
+* **I2 · A tap on a verse started the recitation and scrolled on.** A tap selects the verse and opens its card. STATUS: **DONE (seen)** — card opened, media session NONE.
+* **I3 · «غريب القرآن» removed from the verse card.** STATUS: **DONE (seen)** — three tabs: التفسير، الترجمة، الإعراب.
+* **I4 · «تلاوة الآية» in the card, separate from the continuous recitation.** STATUS: **DONE (seen)** — the button is in the card header.
+* **I5 · Continuous recitation starts at the selected verse and does not move the page.** STATUS: **DONE (seen)** — text mode, tapped 3:25, closed the card, «التلاوة المستمرة»: media session PLAYING «3:25», page unmoved. **FOUND:** the flowing layout did not mark the selected verse once its card closed (only the recited one); it now does (seen on the rebuilt APK: 3:25 stays marked). Landscape was not tried.
+* **I6 · Library tab «الموسوعة الحديثية».** STATUS: **DONE (seen)**.
+* **I7 · Reciter screen: themed card with a lattice, «جارٍ تنزيل سورة كذا — %» that jumps to the surah, a back-to-top button.** STATUS: **DONE (seen)** — card themed («فجر»); scrolled to surah 48, the back-to-top button returned to the top; tapping «جارٍ تنزيل سورة الأنعام — 74%» brought al-Anʿām into view.
+* **I8 · Downloads overview lists what is downloading with its percentage.** STATUS: **seen**, and **FOUND:** it listed all ~100 held surahs, each a «…» row. It now lists only transfers that are running, plus «في الانتظار · N» — seen on the rebuilt APK: Hūd 61%, Yūsuf 16%, ar-Raʿd 21%, «في الانتظار · 97».
+* **I9 · Player: add files or whole folders; auto scan on opening, grouped by device folders.** STATUS: scan **seen** (a pushed mp3 appeared under «TestFolder», played, album/artist read). **FOUND:** a scan that found nothing changed nothing on screen; it now says how many files it found («عدد ملفات الصوت في الجهاز: 1», seen). The folder picker was not opened (system UI).
+* **I10 · Audio permission after the splash with location, notifications.** STATUS: seen in the earlier round of this batch.
+* **I11 · Splash without sound, in More.** Already existed. STATUS: **seen** — «صوت الفيديو الافتتاحي» under «المظهر».
+* **I12 · Favourites tab in the player.** STATUS: **DONE (seen)** — heart in the player, track listed with «تشغيل الكل».
+* **I13 · A vertical scrollbar with arrows on every scrolling screen.** STATUS: **seen** on Home, More, the reader, the reciter list, Downloads. Dragging the thumb was not tried.
+
+Also found while testing: the player's 4th tab read «علفات الجهاز» (clipped) — labels now shrink to fit; a finished queue still showed pause and kept the disc turning — `playing` is false once the queue completes and play starts it again from the top. Both seen on the rebuilt APK (play icon over a finished track, disc still; one tap → PLAYING at 10 ms).
+
+## Eighth batch (G)
+
+* **G1 · «وضع المصاحف» "does not work at all".** Not reproduced: from text mode the button switches, and the vector Hafs looks like text in full screen. A hint now says «اضغط على الصفحة لإظهار الخيارات». STATUS: **open** — ask him for a screenshot.
+* **G2 · Mushaf download buttons never updated on a fresh install.** `addListener` had been glued into a comment. STATUS: **DONE (seen)**, test proven failing on the old source.
+* **G3 · Printed surah/juz names: the app's badges are hidden on printings that print them.** STATUS: **DONE (seen)** — page 100 of the five scans read.
+* **G4 · Sunan reminders on several days.** STATUS: **DONE (seen)** — al-Kahf on Monday and Friday: «كل الإثنين، الجمعة الساعة 20:00».
+* **G5 · Adhan clips back to back.** A switch under the video choices. STATUS: code only — **the switch and the cross-fade were not seen.**
+* **G6 · Adhan text early/late.** Line starts measured with ffmpeg where plausible (9 of 14 recordings), the spoken span otherwise. STATUS: measured; **not watched against an adhan on the device.**
+* **G7 · Per-download notifications, grouped.** STATUS: **DONE (seen)**.
+* **G8 · Player: 10 themes and a turning disc.** STATUS: **DONE (seen)** — «ليل الحرم» → «فجر» applied live.
+* **G9 · Scan all audio on the device by folder, album and artist.** STATUS: **DONE (seen)** — see I9.
+
+---
+
 # Work queue — the owner's seventh batch, 2026-09-11 (night) → v3.17.2
 
 Run on emulator-5554 with the signed release build before publishing.

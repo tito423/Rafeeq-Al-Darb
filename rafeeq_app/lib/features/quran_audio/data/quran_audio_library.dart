@@ -383,7 +383,9 @@ class QuranAudioLibrary extends ChangeNotifier {
   }
 
   /// What is transferring right now, for the downloads screen's summary card.
-  List<({LibraryEntry entry, int surah, double progress})> get activeDownloads => [
+  /// Every surah queued or transferring. [running] is false for one still
+  /// held in the native queue — a whole recitation is a hundred of those.
+  List<({LibraryEntry entry, int surah, double progress, bool running})> get activeDownloads => [
         for (final e in _status.entries)
           if (e.value.isActive)
             if (_entries[int.parse(e.key.split('/').first)] case final entry?)
@@ -391,6 +393,7 @@ class QuranAudioLibrary extends ChangeNotifier {
                 entry: entry,
                 surah: int.parse(e.key.split('/').last),
                 progress: e.value.progress,
+                running: e.value.state == SurahAudioState.running,
               ),
       ];
 

@@ -314,6 +314,10 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
     final editions = ref.watch(mushafEditionsProvider).valueOrNull ?? const [];
     final data = ref.watch(mushafDataProvider).valueOrNull;
     final service = MushafPageService.instance;
+    final audio = QuranAudioLibrary.instance.activeDownloads;
+    // A whole recitation is a hundred queued surahs; listing each one buried
+    // the few actually transferring. The waiting ones are one count.
+    final waiting = audio.where((d) => !d.running).length;
     final items = <(String, double?, VoidCallback)>[
       for (final e in editions)
         if (service.activeEditions.contains(e.id))
@@ -322,7 +326,8 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
             service.progressFor(e.id).fraction,
             () => DefaultTabController.of(context).animateTo(1),
           ),
-      for (final d in QuranAudioLibrary.instance.activeDownloads)
+      for (final d in audio)
+        if (d.running)
         (
           '${d.entry.reciterName} — ${surahTitle(data, d.surah, locale)}',
           d.progress <= 0 ? null : d.progress,
@@ -339,7 +344,7 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
       for (final t in DownloadManager.instance.activeTasks)
         (t.title.isEmpty ? t.fileName : t.title, t.total == null ? null : t.progress, () {}),
     ];
-    if (items.isEmpty) return const SizedBox.shrink();
+    if (items.isEmpty && waiting == 0) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(top: 14),
       child: Material(
@@ -387,6 +392,14 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
                         GoldProgressBar(value: value, height: 4, color: AppColors.gold),
                       ],
                     ),
+                  ),
+                ),
+              if (waiting > 0)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    '${'quran_audio.queued'.tr()} · ${ltr('$waiting')}',
+                    style: const TextStyle(fontSize: 12, color: AppColors.textLow),
                   ),
                 ),
             ],
