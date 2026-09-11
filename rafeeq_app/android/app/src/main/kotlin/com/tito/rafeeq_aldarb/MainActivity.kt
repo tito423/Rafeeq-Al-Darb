@@ -89,6 +89,18 @@ class MainActivity: AudioServiceActivity() {
                         result.success(false)
                     }
                 }
+                "update" -> {
+                    try {
+                        DownloadForegroundService.update(
+                            this,
+                            call.argument<String>("title"),
+                            call.argument<String>("text"),
+                            call.argument<Int>("done") ?: 0,
+                            call.argument<Int>("total") ?: 0,
+                        )
+                    } catch (_: Exception) {}
+                    result.success(null)
+                }
                 "stop" -> {
                     val intent = Intent(this, DownloadForegroundService::class.java)
                     intent.action = DownloadForegroundService.ACTION_STOP

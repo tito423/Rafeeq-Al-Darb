@@ -172,6 +172,18 @@ class QuranRepository {
     };
   }
 
+  /// Last page each surah has a verse on — see `page_surahs.dart` for why the
+  /// start page alone cannot say which surahs a page carries.
+  Future<Map<int, int>> surahEndPages() async {
+    final rows = await _db.rawQuery(
+      'SELECT surah_id, MAX(page_number) AS p FROM ayahs '
+      'GROUP BY surah_id ORDER BY surah_id',
+    );
+    return {
+      for (final r in rows) r['surah_id'] as int: r['p'] as int,
+    };
+  }
+
   /// First page of each juz.
   Future<Map<int, int>> juzStartPages() async {
     final rows = await _db.rawQuery(

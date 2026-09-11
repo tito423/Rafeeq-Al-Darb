@@ -465,6 +465,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   String _currentSurahName(MushafData data) => surahNamesOnPage(
         surahs: data.surahs,
         startPages: data.surahStartPages,
+        endPages: data.surahEndPages,
         page: _current,
       ).join(' · ');
 
@@ -828,7 +829,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // actually shares the Hafs pagination those labels come from
                 // — otherwise they would name a surah this page doesn't hold.
                 _PersistentPageOverlay(
-                  surahName: (edition?.hafsPagination ?? true)
+                  // Image mode only. The text page already carries its own
+                  // pinned header and a banner for every surah it opens, so a
+                  // third copy in the corner was «متكرر سورة الرعد ٣ مرات».
+                  surahName: (edition?.hafsPagination ?? true) &&
+                          (_mode == MushafMode.image || isRaster)
                       ? _currentSurahName(data)
                       : null,
                   juzNumber: (edition?.hafsPagination ?? true)

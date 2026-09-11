@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-11 (late) |
+| **Last updated** | 2026-09-11 |
 | **Released** | **v3.16.0** at `32bc414` — tag on `master`, tag SHA == HEAD, one release in the repo |
 | **App version** | `pubspec.yaml` `3.16.0+13` |
 | **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
@@ -1166,9 +1166,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 12:38 — IN PROGRESS — resume here**
+**2026-09-11 15:02 — IN PROGRESS — resume here**
 
-found the jam, and it is one bug behind both of his reports. MemoryTaskQueue.advanceQueue counts a task as active the moment it hands it to the platform; on a refused enqueue it logs 'did not enqueue successfully and will be ignored' and never removes it or decrements the counters - only taskFinished does that, and a task that never started never produces the status update that would call it. So every refusal burns one slot for the life of the process: eight kill the file queue, twelve kill the recitation queue, which is «لما تقف التلاوة بتهنج تماما», and «إصلاح التحميلات» then adds to a queue with no slots left, which is «ولا بيعمل اي حاجة نهائي». Two fixes, both in our code: the plugin publishes enqueueErrors and nobody was listening, so the slot is now given back and the task re-queued up to three times with a growing delay; and repair calls unjamQueues FIRST, which asks the platform which tasks are really in flight and frees every slot held by one it has never heard of. A live task keeps its slot - the live set decides, not a timeout. The button also says what it did instead of «لا يوجد ما يُصلَح» after freeing eleven slots. Proved against the real MemoryTaskQueue: a queue with two phantom entries returns null from getNextTask with work waiting, and returns the task after the release. 170 tests pass.
+3.17 stage 1 (not yet on a device): header names surahs by first AND last page (55 of 113 boundaries were wrong), no third copy of the name in text mode; HadeethEnc all 7 packs bundled (verified vs catalogue), card from the encyclopaedia only, download gate and autofetch removed; mushaf downloads remembered and resumed, repair handles paused/stuck/zero-page, tile always listens, progress lives in the FGS notification, stale ones cleared at launch. analyze clean, 170 tests passed before the download patch.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

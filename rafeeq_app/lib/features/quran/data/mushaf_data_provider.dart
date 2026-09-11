@@ -11,6 +11,7 @@ import '../../../core/utils/arabic_normalize.dart';
 class MushafData {
   final List<Surah> surahs;
   final Map<int, int> surahStartPages;
+  final Map<int, int> surahEndPages;
   final Map<int, int> juzStartPages;
 
   /// P3‑43 #9: real quarter-hizb (رُبع الحزب) start pages — index 0 is
@@ -29,6 +30,7 @@ class MushafData {
   const MushafData({
     required this.surahs,
     required this.surahStartPages,
+    required this.surahEndPages,
     required this.juzStartPages,
     required this.rubElHizbPages,
     required this.repo,
@@ -65,12 +67,14 @@ final mushafDataProvider = FutureProvider<MushafData>((ref) async {
     repo.surahStartPages(),
     repo.juzStartPages(),
     _loadRubElHizbPages(),
+    repo.surahEndPages(),
   ]);
   return MushafData(
     surahs: results[0] as List<Surah>,
     surahStartPages: results[1] as Map<int, int>,
     juzStartPages: results[2] as Map<int, int>,
     rubElHizbPages: results[3] as List<int>,
+    surahEndPages: results[4] as Map<int, int>,
     repo: repo,
   );
 });

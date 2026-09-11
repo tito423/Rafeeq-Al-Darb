@@ -90,7 +90,11 @@ class DownloadNotifications {
         importance: Importance.low,
         priority: Priority.low,
         onlyAlertOnce: true,
-        ongoing: true,
+        // Never `ongoing`: an ongoing notification outlives a killed process
+        // and cannot be swiped away. It also clears itself if nothing
+        // refreshes it — trap #33.
+        ongoing: false,
+        timeoutAfter: 120000,
         showProgress: hasSize,
         maxProgress: 100,
         progress: pct,
@@ -131,6 +135,26 @@ class DownloadNotifications {
         'notif.dl_done'.tr(),
         NotificationDetails(android: android),
       );
+    } catch (_) {}
+  }
+
+  /// Cancels every progress notification an earlier process left behind.
+  ///
+  /// Builds before 3.17.0 posted mushaf progress as `ongoing`, and a process
+  /// Android killed mid-download left it in the shade for good. No download
+  /// can be running in a process that has just started, so every id in the
+  /// progress range is stale here. 4800 is the foreground service's own and
+  /// is left to the service.
+  Future<void> clearStale() async {
+    if (!Platform.isAndroid) return;
+    try {
+      final plugin = FlutterLocalNotificationsPlugin();
+      final active = await plugin.getActiveNotifications();
+      for (final n in active) {
+        final id = n.id;
+        if (id == null || id == 4800) continue;
+        if (id >= 4700 && id < 5000) await plugin.cancel(id);
+      }
     } catch (_) {}
   }
 

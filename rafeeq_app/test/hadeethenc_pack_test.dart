@@ -56,6 +56,18 @@ void main() {
     }
   });
 
+  test('every pack ships inside the app, byte-identical to the catalogue', () {
+    // Bundled since 3.17.0 — «ادمجها مع التطبيق out of box». A language whose
+    // zip is missing from the assets would open to an error, with no download
+    // left to fall back on, so a missing or different file fails the build.
+    for (final p in packs) {
+      final f = File('assets/data/hadeethenc/${p.zipFileName}');
+      expect(f.existsSync(), isTrue, reason: '${f.path} is not bundled');
+      expect(f.lengthSync(), p.bytes,
+          reason: '${p.lang}: the bundled zip is not the catalogued one');
+    }
+  });
+
   test('Arabic and Urdu are laid out right-to-left, the rest are not', () {
     for (final p in packs) {
       expect(p.isRtl, p.lang == 'ar' || p.lang == 'ur', reason: p.lang);

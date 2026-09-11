@@ -43,6 +43,37 @@ class DownloadForegroundService : Service() {
         const val ACTION_START = "start"
         const val ACTION_STOP = "stop"
         const val EXTRA_TITLE = "title"
+
+        /** True between a start and a stop, so an update never posts a
+         *  notification for a service that is not running — that would be a
+         *  permanent phantom, the very thing this class exists to avoid. */
+        @Volatile var running = false
+
+        /** Rewrites the running service's notification with real progress. */
+        fun update(context: android.content.Context, title: String?, text: String?, done: Int, total: Int) {
+            if (!running) return
+            val nm = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            nm.notify(NOTIFICATION_ID, build(context, title, text, done, total))
+        }
+
+        fun build(context: android.content.Context, title: String?, text: String?, done: Int, total: Int): Notification {
+            val openApp = context.packageManager.getLaunchIntentForPackage(context.packageName)
+            val pendingIntent = openApp?.let {
+                PendingIntent.getActivity(
+                    context, 0, it,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+                )
+            }
+            val builder = Notification.Builder(context, CHANNEL_ID)
+                .setContentTitle(title ?: NativeStrings.get(context, NativeStrings.DL_TITLE))
+                .setContentText(text ?: NativeStrings.get(context, NativeStrings.DL_BODY))
+                .setSmallIcon(context.applicationInfo.icon)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setContentIntent(pendingIntent)
+            if (total > 0) builder.setProgress(total, done.coerceIn(0, total), false)
+            return builder.build()
+        }
     }
 
     private fun ensureChannel() {
@@ -61,33 +92,20 @@ class DownloadForegroundService : Service() {
         nm.createNotificationChannel(channel)
     }
 
-    private fun buildNotification(title: String?): Notification {
-        val openApp = packageManager.getLaunchIntentForPackage(packageName)
-        val pendingIntent = openApp?.let {
-            PendingIntent.getActivity(
-                this, 0, it,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
-            )
-        }
-        return Notification.Builder(this, CHANNEL_ID)
-            .setContentTitle(title ?: NativeStrings.get(this, NativeStrings.DL_TITLE))
-            .setContentText(NativeStrings.get(this, NativeStrings.DL_BODY))
-            .setSmallIcon(applicationInfo.icon)
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .setContentIntent(pendingIntent)
-            .build()
-    }
+    private fun buildNotification(title: String?): Notification =
+        build(this, title, null, 0, 0)
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_STOP -> {
+                running = false
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
                 return START_NOT_STICKY
             }
             else -> {
                 ensureChannel()
+                running = true
                 val notification = buildNotification(intent?.getStringExtra(EXTRA_TITLE))
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     startForeground(
@@ -106,6 +124,11 @@ class DownloadForegroundService : Service() {
         // zero — this service being restarted by the OS with a stale/no
         // download to protect would just be a permanent phantom notification.
         return START_NOT_STICKY
+    }
+
+    override fun onDestroy() {
+        running = false
+        super.onDestroy()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

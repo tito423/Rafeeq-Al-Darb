@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'dart:async';
 import 'dart:math' as math;
 import '../../../core/utils/arabic_normalize.dart';
 
@@ -8,13 +7,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/config/app_config.dart';
-import '../../../core/db/hadith_repository.dart';
-import '../../../core/services/download_manager.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/arabic_text.dart';
-import '../../library/presentation/screens/hadith_detail_screen.dart';
-import '../../library/presentation/widgets/hadith_translation.dart';
 import '../../hadeethenc/data/hadeethenc_providers.dart';
 import '../../hadeethenc/presentation/screens/hadeethenc_detail_screen.dart';
 import '../data/daily_hadith_provider.dart';
@@ -31,48 +25,12 @@ import '../data/daily_hadith_provider.dart';
 /// ornament, gold border, star accents), not its literal near-black-green
 /// palette — this uses the app's own navy/gold theme instead, same
 /// adaptation rule already applied to P3‑29's Shamela reference.
-class DailyHadithCard extends ConsumerStatefulWidget {
+class DailyHadithCard extends StatelessWidget {
   const DailyHadithCard({super.key});
 
   @override
-  ConsumerState<DailyHadithCard> createState() => _DailyHadithCardState();
-}
-
-class _DailyHadithCardState extends ConsumerState<DailyHadithCard> {
-  StreamSubscription<List<DownloadTask>>? _sub;
-
-  @override
-  void initState() {
-    super.initState();
-    _sub = DownloadManager.instance.stream.listen((_) {
-      final t = DownloadManager.instance.taskById(hadithDbDownloadId);
-      if (t != null && t.status == DownloadStatus.completed) {
-        ref.invalidate(hadithRepositoryProvider);
-      }
-      if (mounted) setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _sub?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final repoAsync = ref.watch(hadithRepositoryProvider);
-    final theme = Theme.of(context);
-
-    return _OrnateFrame(
-      child: repoAsync.when(
-        loading: () => const _Loading(),
-        error: (_, _) => _ErrorState(theme: theme),
-        data: (repo) =>
-            repo == null ? _DownloadPrompt(theme: theme) : const _PickedHadith(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      const _OrnateFrame(child: _PickedHadith());
 }
 
 /// The ornamental frame itself — a gold hairline border, a subtle navy→gold
@@ -198,80 +156,6 @@ class _ErrorState extends StatelessWidget {
       );
 }
 
-/// Reuses the exact same download (`hadithDbDownloadId`) `LibraryScreen`'s
-/// hadith tab already offers — tapping either one drives the same task, so
-/// starting it here and finishing the library later (or vice versa) just
-/// works, no separate "did I already start this?" state to track.
-class _DownloadPrompt extends StatefulWidget {
-  final ThemeData theme;
-  const _DownloadPrompt({required this.theme});
-
-  @override
-  State<_DownloadPrompt> createState() => _DownloadPromptState();
-}
-
-class _DownloadPromptState extends State<_DownloadPrompt> {
-  @override
-  Widget build(BuildContext context) {
-    final task = DownloadManager.instance.taskById(hadithDbDownloadId);
-    final downloading = task != null &&
-        (task.status == DownloadStatus.downloading ||
-            task.status == DownloadStatus.queued);
-    final scheme = widget.theme.colorScheme;
-
-    return Row(
-      children: [
-        Icon(Icons.menu_book_outlined, color: scheme.primary, size: 32),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const _TitleStar(),
-                  const SizedBox(width: 6),
-                  Text('hadith_daily.title'.tr(),
-                      style: widget.theme.textTheme.titleMedium),
-                  const SizedBox(width: 6),
-                  const _TitleStar(),
-                ],
-              ),
-              const SizedBox(height: 2),
-              Text(
-                downloading
-                    ? 'hadith_daily.downloading'.tr()
-                    : 'hadith_daily.download_prompt'.tr(),
-                style: widget.theme.textTheme.bodySmall
-                    ?.copyWith(color: scheme.onSurfaceVariant),
-              ),
-            ],
-          ),
-        ),
-        if (downloading)
-          const SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
-        else
-          FilledButton.tonal(
-            onPressed: () => DownloadManager.instance.enqueue(
-              id: hadithDbDownloadId,
-              url: AppConfig.hadithDbUrl,
-              category: 'hadith',
-              fileName: 'hadith.zip',
-              unzipToDatabases: true,
-              dbVersion: AppConfig.hadithDbVersion,
-            ),
-            child: Text('library.download'.tr()),
-          ),
-      ],
-    );
-  }
-}
-
 class _PickedHadith extends ConsumerStatefulWidget {
   const _PickedHadith();
 
@@ -280,63 +164,19 @@ class _PickedHadith extends ConsumerStatefulWidget {
 }
 
 class _PickedHadithState extends ConsumerState<_PickedHadith> {
-  /// Opens the day's hadith inside its own chapter rather than on its own.
-  ///
-  /// It used to be pushed as a one-item list, which meant the detail screen's
-  /// Prev/Next buttons had nowhere to go and its swipe `PageView` had a single
-  /// page — the navigation looked broken because there was genuinely nothing
-  /// to navigate to. Loading the chapter gives those controls real neighbours,
-  /// with the day's hadith as the starting page. If the chapter can't be read
-  /// for any reason we fall back to the single hadith, which is no worse than
-  /// the old behaviour.
+  /// Opens the Encyclopaedia's own screen — word meanings, hints, the full
+  /// explanation and the source link.
   Future<void> _openDetail(DailyHadith daily) async {
-    // A card drawn from the Encyclopaedia opens the Encyclopaedia's own
-    // screen — word meanings, hints, the full explanation and the source
-    // link. Sending it to the nine-books reader instead would look up a
-    // chapter it does not belong to.
-    final enc = daily.encyclopaedia;
-    if (enc != null) {
-      final catalog = ref.read(hadeethEncCatalogProvider).valueOrNull;
-      final pack = ref.read(hadeethEncPackProvider).valueOrNull;
-      if (!mounted) return;
-      await Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => HadeethEncDetailScreen(
-            item: enc,
-            sourceName: catalog?.nameFor(pack?.lang ?? 'ar') ?? '',
-            sourceUrl: catalog?.sourceUrl ?? '',
-            rtl: pack?.isRtl ?? true,
-          ),
-        ),
-      );
-      return;
-    }
-
-    var chapter = <HadithItem>[daily.item];
-    var index = 0;
-    try {
-      final repo = await ref.read(hadithRepositoryProvider.future);
-      if (repo != null) {
-        final all = await repo.hadithsOfChapter(
-          daily.item.bookId,
-          daily.item.chapterNo,
-        );
-        final at = all.indexWhere((h) => h.id == daily.item.id);
-        if (at >= 0) {
-          chapter = all;
-          index = at;
-        }
-      }
-    } catch (_) {
-      // keep the single-hadith fallback
-    }
+    final catalog = ref.read(hadeethEncCatalogProvider).valueOrNull;
+    final pack = ref.read(hadeethEncPackProvider).valueOrNull;
     if (!mounted) return;
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => HadithDetailScreen(
-          book: daily.book,
-          chapterHadiths: chapter,
-          initialIndex: index,
+        builder: (_) => HadeethEncDetailScreen(
+          item: daily.encyclopaedia,
+          sourceName: catalog?.nameFor(pack?.lang ?? 'ar') ?? '',
+          sourceUrl: catalog?.sourceUrl ?? '',
+          rtl: pack?.isRtl ?? true,
         ),
       ),
     );
@@ -371,12 +211,9 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
       error: (_, _) => _ErrorState(theme: theme),
       data: (daily) {
         if (daily == null) {
-          // repo resolved but the pool query returned nothing — shouldn't
-          // happen with real content, but honest-empty beats a fake card.
+          // The bundled pack would not open — a real failure, shown as one.
           return Text('errors.generic'.tr());
         }
-        final item = daily.item;
-        final book = daily.book;
 
         return GestureDetector(
           // Swipe to move between hadiths, which is what the owner asked for.
@@ -493,19 +330,15 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                   height: 1.9,
                 ),
               ),
-              // P3‑57: the owner asked for the hadith's translation under it
-              // wherever a hadith is shown — the card as well as the book.
-              if (daily.encyclopaedia == null)
-                HadithTranslation(item: item, maxLines: 4),
               const SizedBox(height: 10),
-              // Two bylines, because the two corpora say different things.
-              // The Encyclopaedia gives a takhrij and a grading with a named
-              // source; the nine books give the collection and the number.
-              if (daily.encyclopaedia case final enc?) ...[
+              // The Encyclopaedia's takhrij and grading, with its named source.
+              ...[
                 Text(
                   [
-                    if (enc.attributionAr.isNotEmpty) enc.attributionAr,
-                    if (enc.gradeAr.isNotEmpty) enc.gradeAr,
+                    if (daily.encyclopaedia.attributionAr.isNotEmpty)
+                      daily.encyclopaedia.attributionAr,
+                    if (daily.encyclopaedia.gradeAr.isNotEmpty)
+                      daily.encyclopaedia.gradeAr,
                   ].join(' · '),
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: scheme.onSurfaceVariant),
@@ -521,26 +354,13 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                 ),
                 const SizedBox(height: 4),
                 ArabicText(
-                  stripBidiControls(enc.explanation),
+                  stripBidiControls(daily.explanation),
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.start,
                   style: theme.textTheme.bodyMedium?.copyWith(height: 1.7),
                 ),
-              ] else
-                Text(
-                  '${book.nameAr} · ${'library.hadith_number'.tr()} ${item.numberInBook}',
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: scheme.onSurfaceVariant),
-                ),
-              // P3‑41: the owner's real-device feedback — no "Grade:"
-              // label, just the grade itself, localized where we honestly
-              // can (see hadith_grade_i18n.dart). For Bukhari/Muslim, the
-              // book name shown just above *is* the grade ("صحيح مسلم"
-              // literally reads "Sahih Muslim") — a separate badge
-              // repeating that was pure redundancy, so it's gone rather
-              // than shown twice.
-              // Note: Grade UI removed completely as per user request.
+              ],
             ],
           ),
           ),

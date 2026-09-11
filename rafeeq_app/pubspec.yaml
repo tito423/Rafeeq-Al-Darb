@@ -106,6 +106,8 @@ flutter:
     - assets/data/mushaf/
     - assets/mushaf_covers/
     - assets/data/catalogs/
+    # The Hadeeth Encyclopaedia, all seven language packs, bundled (3.17.0).
+    - assets/data/hadeethenc/
     - assets/audio/adhan/
     # P3‑49: the owner's AI-generated splash video (Gemini watermark removed)
     # + its badge-fallback art, put back at his request.

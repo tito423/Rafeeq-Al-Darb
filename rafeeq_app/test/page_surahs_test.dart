@@ -2,13 +2,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/core/db/models.dart';
 import 'package:rafeeq_app/features/quran/data/page_surahs.dart';
 
-/// The owner photographed the Qur'an screen showing the close of Surah Hud
-/// with «سورة يوسف» in the running header. This pins the rule that fixes it.
+/// The running header of the Qur'an screen, pinned on real Madinah page
+/// numbers read out of `quran_local.db` (MIN/MAX `page_number` per surah):
 ///
-/// The page numbers here are the Madinah mushaf's own: Hud opens on 221 and
-/// Yusuf on 235, so page 235 carries the end of one and the start of the
-/// other — exactly the case the old rule got wrong, and the case that occurs
-/// at most surah boundaries in the mushaf rather than rarely.
+///     10 يونس   208–221      11 هود    221–235
+///     12 يوسف   235–248      13 الرعد  249–255
+///     14 إبراهيم 255–261     112–114   604–604
+///
+/// Two photographs from the owner are behind it: «سورة يوسف» over the close of
+/// Hud on page 235, and «سورة الرعد سورة يوسف» on a page that is al-Ra'd alone.
 Surah _s(int id, String name) => Surah(
       id: id,
       nameAr: name,
@@ -23,15 +25,28 @@ void main() {
     _s(11, 'هُود'),
     _s(12, 'يُوسُف'),
     _s(13, 'الرَّعْد'),
+    _s(14, 'إِبْرَاهِيم'),
+    _s(112, 'الإِخْلَاص'),
+    _s(113, 'الفَلَق'),
+    _s(114, 'النَّاس'),
   ];
-  const starts = {10: 208, 11: 221, 12: 235, 13: 249};
+  const starts = {10: 208, 11: 221, 12: 235, 13: 249, 14: 255, 112: 604, 113: 604, 114: 604};
+  const ends = {10: 221, 11: 235, 12: 248, 13: 255, 14: 261, 112: 604, 113: 604, 114: 604};
 
-  List<String> at(int page) =>
-      surahNamesOnPage(surahs: surahs, startPages: starts, page: page);
+  List<String> at(int page) => surahNamesOnPage(
+      surahs: surahs, startPages: starts, endPages: ends, page: page);
 
   test('a page where one surah ends and another begins names both', () {
-    // This is the reported page. The old rule returned ['يُوسُف'] alone.
     expect(at(235), ['هُود', 'يُوسُف']);
+    expect(at(221), ['يُونُس', 'هُود']);
+    expect(at(255), ['الرَّعْد', 'إِبْرَاهِيم']);
+  });
+
+  test('a surah that opens a clean page does not drag the previous one in', () {
+    // The reported page: Yusuf's last verse is on 248, al-Ra'd opens 249.
+    // The previous rule returned ['يُوسُف', 'الرَّعْد'].
+    expect(at(249), ['الرَّعْد']);
+    expect(at(248), ['يُوسُف']);
   });
 
   test('a page inside one surah names only that surah', () {
@@ -39,27 +54,15 @@ void main() {
     expect(at(240), ['يُوسُف']);
   });
 
-  test('the opening page of a surah still carries the previous one', () {
-    // Written expecting ['هُود'] and corrected by the run: Hud opens on
-    // 221, which means 221 also holds the last verses of Yunus. Naming only
-    // Hud there would be the same defect as the reported one, mirrored.
-    expect(at(221), ['يُونُس', 'هُود']);
+  test('three surahs on one page are all named', () {
+    expect(at(604), ['الإِخْلَاص', 'الفَلَق', 'النَّاس']);
   });
 
-  test('the boundary belongs to both pages, not to the later one only', () {
-    // 249 is where ar-Ra'd opens, so Yusuf's last verses share it.
-    expect(at(249), ['يُوسُف', 'الرَّعْد']);
-    expect(at(248), ['يُوسُف']);
-  });
-
-  test('the last surah in the list has no successor to bound it', () {
-    expect(at(1000), ['الرَّعْد']);
-  });
-
-  test('a page before any recorded start still names something', () {
+  test('a page with no data still names something', () {
     expect(at(1), ['يُونُس']);
     expect(
-      surahNamesOnPage(surahs: const [], startPages: const {}, page: 5),
+      surahNamesOnPage(
+          surahs: const [], startPages: const {}, endPages: const {}, page: 5),
       isEmpty,
     );
   });

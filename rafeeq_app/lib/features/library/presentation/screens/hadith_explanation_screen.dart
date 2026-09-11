@@ -39,18 +39,9 @@ class HadithExplanationScreen extends ConsumerWidget {
         error: (_, _) => Center(child: Text('errors.generic'.tr())),
         data: (repo) {
           if (repo == null) {
-            // The pack for this language is not downloaded. Say so plainly
-            // and say where to get it, rather than showing an empty list that
-            // looks like "there is no explanation".
-            return Padding(
-              padding: const EdgeInsets.all(28),
-              child: Center(
-                child: Text(
-                  'hadith_daily.explain_needs_pack'.tr(),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
+            // Every pack ships inside the app, so this is only reachable if
+            // the bundled zip would not unpack — a real failure, said as one.
+            return Center(child: Text('errors.generic'.tr()));
           }
           return FutureBuilder<List<HadeethItem>>(
             // searchArabic, not search: the query is an Arabic matn and a

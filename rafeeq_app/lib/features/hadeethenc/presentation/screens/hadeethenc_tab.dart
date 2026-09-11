@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../core/config/app_config.dart';
 import '../../../../core/db/hadeethenc_repository.dart';
-import '../../../../core/services/download_manager.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../app/app_locale_provider.dart';
 import '../../data/hadeethenc_providers.dart';
@@ -24,11 +20,9 @@ import 'hadeethenc_category_screen.dart';
 /// the whole reason the owner asked for it: «اهم حاجة ترجمات المواد العلمية
 /// خاصة الحديث من مصادرها الموثوقة».
 ///
-/// One pack per language, downloaded on demand, so a Portuguese reader
-/// fetches 1.3 MB rather than the 60 MB the seven languages weigh together.
-/// The pack that matters is the one matching the app's language: switching
-/// the app to French switches this tab to the French pack, and if that pack
-/// is not on the device the tab honestly says so instead of showing Arabic.
+/// One pack per language, all seven bundled in the app; the one matching the
+/// app's language is unpacked the first time it is opened, so switching the
+/// app to French switches this tab to the French pack with no download.
 class HadeethEncTab extends ConsumerStatefulWidget {
   const HadeethEncTab({super.key});
 
@@ -38,27 +32,11 @@ class HadeethEncTab extends ConsumerStatefulWidget {
 
 class _HadeethEncTabState extends ConsumerState<HadeethEncTab> {
   final _searchCtrl = TextEditingController();
-  StreamSubscription<List<DownloadTask>>? _sub;
   Timer? _debounce;
   String _query = '';
 
   @override
-  void initState() {
-    super.initState();
-    _sub = DownloadManager.instance.stream.listen((_) {
-      final pack = ref.read(hadeethEncPackProvider).valueOrNull;
-      if (pack == null) return;
-      final t = DownloadManager.instance.taskById(pack.downloadId);
-      if (t != null && t.status == DownloadStatus.completed) {
-        ref.invalidate(hadeethEncRepositoryProvider);
-      }
-      if (mounted) setState(() {});
-    });
-  }
-
-  @override
   void dispose() {
-    _sub?.cancel();
     _debounce?.cancel();
     _searchCtrl.dispose();
     super.dispose();
@@ -68,19 +46,6 @@ class _HadeethEncTabState extends ConsumerState<HadeethEncTab> {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300),
         () => mounted ? setState(() => _query = v.trim()) : null);
-  }
-
-  Future<void> _download(HadeethEncPack pack) async {
-    await DownloadManager.instance.enqueue(
-      id: pack.downloadId,
-      url: pack.url,
-      category: 'hadeethenc',
-      // Not '<lang>.zip' — see `HadeethEncPack.zipFileName`.
-      fileName: pack.zipFileName,
-      unzipToDatabases: true,
-      dbVersion: AppConfig.hadeethEncVersion,
-      title: 'hadeethenc.pack_title'.tr(namedArgs: {'name': pack.name}),
-    );
   }
 
   @override
@@ -103,11 +68,7 @@ class _HadeethEncTabState extends ConsumerState<HadeethEncTab> {
               onRetry: () => ref.invalidate(hadeethEncRepositoryProvider)),
           data: (repo) {
             if (repo == null) {
-              return _DownloadGate(
-                pack: pack,
-                catalog: catalog,
-                onDownload: () => _download(pack),
-              );
+              return _Message(text: 'errors.generic'.tr());
             }
             return Column(
               children: [
@@ -231,90 +192,6 @@ class _Results extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-/// What the reader sees before the pack is on the device: what it is, how
-/// many records, and exactly what it costs — the byte count the bucket
-/// answered with, not a number typed into a widget.
-class _DownloadGate extends ConsumerWidget {
-  final HadeethEncPack pack;
-  final HadeethEncCatalog catalog;
-  final VoidCallback onDownload;
-
-  const _DownloadGate({
-    required this.pack,
-    required this.catalog,
-    required this.onDownload,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final task = DownloadManager.instance.taskById(pack.downloadId);
-    final busy = task != null &&
-        (task.status == DownloadStatus.downloading ||
-            task.status == DownloadStatus.queued);
-    final failed = task?.status == DownloadStatus.failed;
-
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-      children: [
-        Icon(Icons.auto_stories_outlined, size: 60, color: scheme.primary),
-        const SizedBox(height: 16),
-        Text('hadeethenc.title'.tr(),
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium),
-        const SizedBox(height: 8),
-        Text(
-          'hadeethenc.intro'.tr(),
-          textAlign: TextAlign.center,
-          style: TextStyle(color: scheme.onSurfaceVariant, height: 1.6),
-        ),
-        const SizedBox(height: 18),
-        Text(
-          'hadeethenc.pack_summary'.tr(namedArgs: {
-            'name': pack.name,
-            'count': 'library.hadiths_count'.plural(pack.hadeeths),
-            // `formatBytes`, not '${x} MB': trap #16 — a numeral beside a
-            // Latin unit reverses inside an Arabic paragraph, and this line
-            // is an Arabic paragraph on an Arabic UI.
-            'size': formatBytes(pack.bytes),
-          }),
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium,
-        ),
-        const SizedBox(height: 20),
-        if (busy) ...[
-          LinearProgressIndicator(
-            value: task.total == null ? null : task.progress,
-            color: AppColors.gold,
-          ),
-          const SizedBox(height: 8),
-          Center(
-            child: Text(task.total != null
-                ? ltr('${(task.progress * 100).round()}%')
-                : 'downloads.downloading'.tr()),
-          ),
-        ] else
-          Center(
-            child: FilledButton.icon(
-              onPressed: onDownload,
-              icon: const Icon(Icons.download_rounded),
-              label: Text('downloads.download'.tr()),
-            ),
-          ),
-        if (failed) ...[
-          const SizedBox(height: 8),
-          Text(task?.error ?? 'errors.generic'.tr(),
-              textAlign: TextAlign.center,
-              style: TextStyle(color: scheme.error)),
-        ],
-        const SizedBox(height: 28),
-        _Credit(catalog: catalog),
-      ],
     );
   }
 }

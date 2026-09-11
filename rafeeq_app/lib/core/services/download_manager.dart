@@ -412,6 +412,26 @@ class DownloadManager {
     _notify();
   }
 
+  /// Drops every registry entry of [category] **without touching the files**.
+  ///
+  /// For content that stopped being a download and became part of the app —
+  /// the Hadeeth Encyclopaedia packs, bundled since 3.17.0. `remove` would
+  /// delete the database the app now opens.
+  Future<void> forgetCategory(String category) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(registryKey);
+    if (raw == null) return;
+    try {
+      final list = jsonDecode(raw) as List<dynamic>;
+      final before = list.length;
+      list.removeWhere((e) => e is Map && e['category'] == category);
+      if (list.length != before) {
+        await prefs.setString(registryKey, jsonEncode(list));
+        _notify();
+      }
+    } catch (_) {}
+  }
+
   /// Bytes an already-downloaded artifact occupies on disk (0 if unknown).
   Future<int> artifactSize(String id) async {
     final path = await registeredPath(id);

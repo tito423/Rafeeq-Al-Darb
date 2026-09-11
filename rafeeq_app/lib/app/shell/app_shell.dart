@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
 import '../../core/services/alarm_permissions_service.dart';
-import '../../features/hadeethenc/data/hadeethenc_autofetch.dart';
+import '../../core/services/download_notifications.dart';
+import '../../core/services/mushaf_page_service.dart';
+import '../../features/quran/data/mushaf_edition.dart';
 import '../../core/services/prayer_status_notification.dart';
 import '../../features/adhan/data/prayer_status_enabled_provider.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
@@ -68,11 +72,16 @@ class _AppShellState extends ConsumerState<AppShell>
       Future<void>.delayed(const Duration(milliseconds: 900), () {
         AlarmPermissionsService.instance.requestStartupGrants();
       });
-      // «حمّل الموسوعة الحديثية دي جوّه التطبيق أوتوماتيك بعد أول مرة
-      // تشغيل». Later than the permission prompt on purpose — a download
-      // that starts while a dialog is up reads as the dialog causing it.
-      Future<void>.delayed(const Duration(seconds: 4), () {
-        if (mounted) HadeethEncAutoFetch.maybeFetch(ref);
+      // A process that has just started is downloading nothing, so any
+      // download notification in the shade belongs to one Android killed —
+      // and a mushaf download he asked for is picked up where it stopped.
+      unawaited(DownloadNotifications.instance.clearStale());
+      Future<void>.delayed(const Duration(seconds: 5), () async {
+        if (!mounted) return;
+        try {
+          final editions = await ref.read(mushafEditionsProvider.future);
+          await MushafPageService.instance.resumeWantedDownloads(editions);
+        } catch (_) {}
       });
     });
   }

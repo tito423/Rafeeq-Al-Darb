@@ -48,10 +48,15 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
   // Download state.
   int _cached = 0;
   int _bytes = 0;
-  bool _busy = false;
-  bool _paused = false;
-  int _done = 0;
-  PrefetchProgress? _progress;
+  // Read from the service's progress on every build. The tile used to keep
+  // its own copy and only subscribed to a download it had started itself, so
+  // one started by «إصلاح التحميلات», by the preview sheet, or resumed after a
+  // launch never moved on screen: «التحميلات حالتها مش بتتحدث».
+  bool get _busy => _progress.running;
+  bool get _paused => _progress.paused;
+  int get _done => _progress.done;
+  late final PrefetchProgress _progress =
+      _service.progressFor(widget.edition.id);
 
   @override
   void initState() {
@@ -61,12 +66,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
       _page2 = _loadSvg(2);
     }
     _refresh();
-
-    if (_service.isPrefetching(widget.edition.id)) {
-      _busy = true;
-      _bind();
-      _done = _progress!.done;
-    }
+    _progress.addListener(_onProgress);
   }
 
   Future<String?> _loadSvg(int page) async {
@@ -83,36 +83,20 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
 
   // ── Download state management (mirrors MushafDownloadTile) ────────────
 
-  void _bind() {
-    _progress = _service.progressFor(widget.edition.id);
-    _progress!.addListener(_onProgress);
-  }
-
-  void _unbind() {
-    _progress?.removeListener(_onProgress);
-    _progress = null;
-  }
+  bool _wasBusy = false;
 
   void _onProgress() {
     if (!mounted) return;
-    final p = _progress!;
-    setState(() {
-      _done = p.done;
-      _paused = p.paused;
-    });
-    if (!p.running) {
-      _unbind();
-      setState(() {
-        _busy = false;
-        _paused = false;
-      });
-      _refresh();
-    }
+    final finished = _wasBusy && !_progress.running;
+    _wasBusy = _progress.running;
+    setState(() {});
+    // The page count and size under the bar move with it, not only at the end.
+    if (finished || _progress.done % 10 == 0) _refresh();
   }
 
   @override
   void dispose() {
-    _unbind();
+    _progress.removeListener(_onProgress);
     super.dispose();
   }
 
@@ -129,11 +113,6 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
   }
 
   Future<void> _download() async {
-    setState(() {
-      _busy = true;
-      _done = 0;
-    });
-    _bind();
     unawaited(
       _service.prefetchEdition(
         editionId: widget.edition.id,

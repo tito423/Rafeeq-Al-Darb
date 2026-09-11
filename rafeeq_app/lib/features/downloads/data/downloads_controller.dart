@@ -38,7 +38,7 @@ extension DownloadCategoryX on DownloadCategory {
   List<String> get managerCategories => switch (this) {
         DownloadCategory.mushafs => const [],
         DownloadCategory.recitations => const ['ruqyah'],
-        DownloadCategory.hadith => const ['hadith', 'hadeethenc'],
+        DownloadCategory.hadith => const ['hadith'],
         DownloadCategory.books => const ['books', 'books_text'],
         DownloadCategory.adhan => const ['adhan', 'adhan_video'],
       };

@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/quran/data/mushaf_edition.dart';
 import '../config/app_config.dart';
@@ -34,10 +36,17 @@ class PrefetchProgress extends ChangeNotifier {
   bool running = false;
   bool paused = false;
 
+  /// When [done] last moved. Repair uses it to tell a slow download from one
+  /// that is not moving at all.
+  DateTime lastTick = DateTime.now();
+
   double get fraction => total == 0 ? 0 : done / total;
 
   void _set({int? done, int? total, bool? running, bool? paused}) {
-    if (done != null) this.done = done;
+    if (done != null) {
+      this.done = done;
+      lastTick = DateTime.now();
+    }
     if (total != null) this.total = total;
     if (running != null) this.running = running;
     if (paused != null) this.paused = paused;
@@ -185,49 +194,107 @@ class MushafPageService {
     return svg;
   }
 
-  /// Downloads a whole edition for offline reading.
-  ///
-  /// Pages already cached are skipped, so an interrupted download resumes
-  /// where it stopped rather than starting over. Failures on individual pages
-  /// are tolerated: the reader can still open everything that did arrive, and
-  /// a later run fills the gaps.
-  ///
-  /// The job lives on this singleton, not on any widget, and its progress is
-  /// published through [progressFor]. A Downloads tile that gets rebuilt
-  /// (tab switch, list recycle — the P2‑1.4 bug) can therefore re-attach to a
-  /// running download instead of losing it. P2‑5 folds this into a unified
-  /// download manager.
-  /// Resumes any edition whose page cache is partial — the mushaf half of the
-  /// Downloads screen's "repair" action.
-  ///
-  /// Like the recitation half, this was previously invisible to repair:
-  /// `DownloadManager.resumeAll()` only knows about its own tasks, while a
-  /// 604-page edition download runs here. An edition that was interrupted
-  /// stayed at, say, 431/604 until the user happened to reopen its tile.
-  ///
-  /// Only genuinely partial editions are resumed; untouched ones are left
-  /// alone so repair never starts a download nobody asked for.
+  // ── Downloads he asked for, remembered ──────────────────────────────────
+  //
+  // «لما بضغط على زر الإصلاح بيقوللي لا توجد تحميلات غير مكتملة وهو أصلا مش
+  // بيحمل ومعلق». Repair used to look only at the page cache: an edition with
+  // no page on disk yet was "not started", and one whose loop was alive but
+  // paused or stuck was "running" — so both answered «لا يوجد». What was asked
+  // for is now written down when a download starts and cleared only when every
+  // page is on disk or he cancels it, and that record is what repair and the
+  // next launch resume from.
+
+  static const _kWantedKey = 'mushaf.wanted_downloads_v1';
+
+  Future<Set<String>> wantedEditions() async {
+    final prefs = await SharedPreferences.getInstance();
+    return (prefs.getStringList(_kWantedKey) ?? const <String>[]).toSet();
+  }
+
+  Future<void> _setWanted(String editionId, bool wanted) async {
+    final prefs = await SharedPreferences.getInstance();
+    final set = (prefs.getStringList(_kWantedKey) ?? const <String>[]).toSet();
+    final changed = wanted ? set.add(editionId) : set.remove(editionId);
+    if (changed) await prefs.setStringList(_kWantedKey, set.toList());
+  }
+
+  Future<void> _start(MushafEdition e) => prefetchEdition(
+        editionId: e.id,
+        sourcePath: e.sourcePath,
+        imagePath: e.imagePath,
+        imageExt: e.imageExt,
+        toPage: e.pages,
+        title: e.nameAr,
+      );
+
+  /// A download with no page arriving for this long is stuck, not slow: one
+  /// page is at most a 20 s connect plus a 40 s receive timeout.
+  static const _stalledAfter = Duration(seconds: 90);
+
+  /// Repairs every edition download that is not finishing, and returns how
+  /// many it touched: a paused one is resumed, a stuck one is restarted, and
+  /// one that was asked for and is not on the device — including one with no
+  /// page downloaded yet — is started again.
   Future<int> repairPartialEditions(List<MushafEdition> editions) async {
+    final wanted = await wantedEditions();
     var repaired = 0;
     for (final e in editions) {
-      if (isPrefetching(e.id)) continue;
+      if (isPrefetching(e.id)) {
+        if (_paused.contains(e.id)) {
+          resumePrefetch(e.id);
+          repaired++;
+        } else if (DateTime.now().difference(progressFor(e.id).lastTick) >
+            _stalledAfter) {
+          _stopLoop(e.id);
+          unawaited(_start(e));
+          repaired++;
+        }
+        continue;
+      }
       final cached = await cachedPages(e.id, totalPages: e.pages);
-      if (cached.isEmpty || cached.length >= e.pages) continue;
-      unawaited(
-        prefetchEdition(
-          editionId: e.id,
-          sourcePath: e.sourcePath,
-          imagePath: e.imagePath,
-          imageExt: e.imageExt,
-          toPage: e.pages,
-          title: e.nameAr,
-        ),
-      );
+      if (cached.length >= e.pages) {
+        await _setWanted(e.id, false);
+        continue;
+      }
+      if (cached.isEmpty && !wanted.contains(e.id)) continue;
+      unawaited(_start(e));
       repaired++;
     }
     return repaired;
   }
 
+  /// Picks up, after a launch, every download that was asked for and never
+  /// finished — the process that was running it is gone.
+  Future<int> resumeWantedDownloads(List<MushafEdition> editions) async {
+    final wanted = await wantedEditions();
+    var resumed = 0;
+    for (final e in editions) {
+      if (!wanted.contains(e.id) || isPrefetching(e.id)) continue;
+      final cached = await cachedPages(e.id, totalPages: e.pages);
+      if (cached.length >= e.pages) {
+        await _setWanted(e.id, false);
+        continue;
+      }
+      unawaited(_start(e));
+      resumed++;
+    }
+    return resumed;
+  }
+
+  /// Each run of [prefetchEdition] owns a generation number, so a restarted
+  /// download and the loop it replaced can never both be writing pages.
+  final Map<String, int> _generation = {};
+
+  void _stopLoop(String editionId) {
+    _generation[editionId] = (_generation[editionId] ?? 0) + 1;
+    _prefetching.remove(editionId);
+    _paused.remove(editionId);
+  }
+
+  /// Downloads a whole edition for offline reading. Pages already cached are
+  /// skipped, so an interrupted download resumes where it stopped; a page that
+  /// fails is left for the next run, and three failures in a row stop this
+  /// one (no network, or the host refusing) while the download stays wanted.
   Future<void> prefetchEdition({
     required String editionId,
     required String sourcePath,
@@ -240,39 +307,44 @@ class MushafPageService {
   }) async {
     if (_prefetching.contains(editionId)) return;
     _prefetching.add(editionId);
+    _userCancelled.remove(editionId);
+    final gen = (_generation[editionId] ?? 0) + 1;
+    _generation[editionId] = gen;
+    bool mine() =>
+        _generation[editionId] == gen && _prefetching.contains(editionId);
+
+    await _setWanted(editionId, true);
     final total = toPage - fromPage + 1;
-    final progress = progressFor(editionId).._set(done: 0, total: total, running: true);
-    // P2‑5: every download posts a live status-bar progress notification.
-    final notifId = 'mushaf_$editionId';
+    final progress = progressFor(editionId)
+      .._set(done: 0, total: total, running: true, paused: false);
     final notifTitle = title ?? editionId;
     await DownloadNotifications.instance.ensureInitialized();
-    var cancelled = false;
-    // P3-46: see DownloadForegroundServiceBridge's own doc — protects this
-    // process from being frozen/killed by the OS while backgrounded during
-    // this download (604 sequential page fetches, the longest-running
-    // download in the app).
+    var stopped = false;
     await DownloadForegroundServiceBridge.acquire(title: notifTitle);
     try {
       var done = 0;
       var consecutiveErrors = 0;
       for (var page = fromPage; page <= toPage; page++) {
-        if (!_prefetching.contains(editionId)) {
-          cancelled = true;
+        if (!mine()) {
+          stopped = true;
           break;
         }
-        // Pause: idle here (job stays alive, progress frozen) until resumed
-        // or cancelled. Notification is cleared while paused, re-posted after.
-        while (_paused.contains(editionId) &&
-            _prefetching.contains(editionId)) {
+        while (_paused.contains(editionId) && mine()) {
           if (!progress.paused) {
             progress._set(paused: true);
-            await DownloadNotifications.instance.clear(notifId);
+            await DownloadForegroundServiceBridge.update(
+              title: notifTitle,
+              done: done,
+              total: total,
+              text: 'downloads.paused'.tr(),
+              force: true,
+            );
           }
           await Future<void>.delayed(const Duration(milliseconds: 400));
         }
         if (progress.paused) progress._set(paused: false);
-        if (!_prefetching.contains(editionId)) {
-          cancelled = true;
+        if (!mine()) {
+          stopped = true;
           break;
         }
         try {
@@ -289,38 +361,46 @@ class MushafPageService {
         } catch (_) {
           consecutiveErrors++;
           if (consecutiveErrors >= 3) {
-            // Abort the download if we hit 3 consecutive errors (e.g. 404 or no internet)
-            // This prevents "fake" progress reaching 100% when no files are saved.
-            cancelled = true;
+            stopped = true;
             break;
           }
+        }
+        if (!mine()) {
+          stopped = true;
+          break;
         }
         done++;
         progress._set(done: done);
         onProgress?.call(done, total);
-        if (done % 5 == 0) {
-          await DownloadNotifications.instance.showProgress(
-            id: notifId,
-            title: notifTitle,
-            done: done,
-            total: total,
-            detail: '$done / $total',
-          );
-        }
+        await DownloadForegroundServiceBridge.update(
+          title: notifTitle,
+          done: done,
+          total: total,
+        );
       }
     } finally {
-      _prefetching.remove(editionId);
-      _paused.remove(editionId);
-      progress._set(running: false, paused: false); // listeners settle here
-      if (cancelled) {
-        await DownloadNotifications.instance.clear(notifId);
-      } else {
-        await DownloadNotifications.instance
-            .showComplete(id: notifId, title: notifTitle);
+      final stillMine = _generation[editionId] == gen;
+      if (stillMine) {
+        _prefetching.remove(editionId);
+        _paused.remove(editionId);
+        progress._set(running: false, paused: false);
+      }
+      if (_userCancelled.remove(editionId)) {
+        await _setWanted(editionId, false);
+      } else if (stillMine && !stopped) {
+        final have = await cachedPages(editionId, totalPages: toPage);
+        if (have.length >= toPage) {
+          await _setWanted(editionId, false);
+          await DownloadNotifications.instance
+              .showComplete(id: 'mushaf_$editionId', title: notifTitle);
+        }
       }
       await DownloadForegroundServiceBridge.release();
     }
   }
+
+  /// Editions he stopped himself — the only stop that forgets the download.
+  final Set<String> _userCancelled = {};
 
   final Set<String> _prefetching = {};
   final Set<String> _paused = {};
@@ -338,7 +418,14 @@ class MushafPageService {
 
   bool isPrefetching(String editionId) => _prefetching.contains(editionId);
 
-  void cancelPrefetch(String editionId) => _prefetching.remove(editionId);
+  void cancelPrefetch(String editionId) {
+    if (!_prefetching.contains(editionId)) {
+      unawaited(_setWanted(editionId, false));
+      return;
+    }
+    _userCancelled.add(editionId);
+    _prefetching.remove(editionId);
+  }
 
   /// True when [page] of [editionId] is already readable with no network.
   Future<bool> isCached(String editionId, int page) async {
@@ -417,6 +504,8 @@ class MushafPageService {
   }
 
   Future<void> clearCache(String editionId) async {
+    cancelPrefetch(editionId);
+    await _setWanted(editionId, false);
     _memory.removeWhere((k, _) => k.startsWith('$editionId/'));
     final dir = await _pageDir(editionId);
     if (dir.existsSync()) await dir.delete(recursive: true);

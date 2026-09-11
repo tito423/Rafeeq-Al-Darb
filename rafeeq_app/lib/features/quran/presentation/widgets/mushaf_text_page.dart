@@ -380,6 +380,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
       _ayahKeys = List.generate(widget.ayahs.length, (_) => GlobalKey());
     }
 
+    final opensWithBanner = items.isNotEmpty && items.first.isBanner;
     final body = NotificationListener<ScrollNotification>(
       onNotification: _onScrollNotification,
       child: CustomScrollView(
@@ -399,7 +400,12 @@ class _MushafTextPageState extends State<MushafTextPage> {
             backgroundColor: paper,
             surfaceTintColor: Colors.transparent,
             toolbarHeight: isLandscape ? 40 : 52,
-            title: Text(
+            // Blank when the page opens on a surah banner: the banner is the
+            // name, right below, and printing it twice in a row was one of
+            // the three «سورة الرعد» on his page.
+            title: opensWithBanner
+                ? null
+                : Text(
               widget.surahNameOf(widget.ayahs.first.surahId),
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.center,
