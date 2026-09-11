@@ -1024,6 +1024,17 @@ class _PresentationCardState extends ConsumerState<_PresentationCard> {
                       ? null
                       : () => _showVideoPreview(_paths[v.id]!),
                 ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                value: state.playlist,
+                title: Text('prayer.video_playlist'.tr()),
+                subtitle: Text(
+                  'prayer.video_playlist_desc'.tr(),
+                  style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
+                ),
+                onChanged: (v) =>
+                    ref.read(adhanPresentationProvider.notifier).setPlaylist(v),
+              ),
               const SizedBox(height: 8),
               Text(adhanVideoSourceLabelKey.tr(),
                   style: TextStyle(

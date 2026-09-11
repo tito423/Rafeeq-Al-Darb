@@ -1,0 +1,219 @@
+{
+ "azan11.mp3": {
+  "total_ms": 142380,
+  "first_speech_ms": 0,
+  "last_speech_ms": 142380,
+  "threshold_db": -18,
+  "min_gap_s": 0.9,
+  "lines": [
+   0,
+   28382,
+   55611,
+   82712,
+   101760,
+   122160,
+   132600
+  ]
+ },
+ "azan12.mp3": {
+  "total_ms": 178329,
+  "first_speech_ms": 0,
+  "last_speech_ms": 178329,
+  "threshold_db": -18,
+  "min_gap_s": 0.9,
+  "rejected_lines": [
+   0,
+   15335,
+   63170,
+   95700,
+   122688,
+   153341,
+   177567
+  ]
+ },
+ "azan13.mp3": {
+  "total_ms": 138480,
+  "first_speech_ms": 0,
+  "last_speech_ms": 137004,
+  "threshold_db": -26,
+  "min_gap_s": 0.9,
+  "lines": [
+   0,
+   15566,
+   50641,
+   74533,
+   95389,
+   115721,
+   125789
+  ]
+ },
+ "azan1.mp3": {
+  "total_ms": 165960,
+  "first_speech_ms": 1112,
+  "last_speech_ms": 165960,
+  "threshold_db": -24,
+  "min_gap_s": 0.9,
+  "lines": [
+   1112,
+   24785,
+   53146,
+   81054,
+   110558,
+   144780,
+   156146
+  ]
+ },
+ "azan2.mp3": {
+  "total_ms": 188940,
+  "first_speech_ms": 1508,
+  "last_speech_ms": 183899,
+  "threshold_db": -32,
+  "min_gap_s": 0.9,
+  "lines": [
+   1508,
+   29358,
+   57463,
+   92150,
+   132125,
+   162166,
+   177407
+  ]
+ },
+ "azan3.mp3": {
+  "total_ms": 246940,
+  "first_speech_ms": 0,
+  "last_speech_ms": 246940,
+  "threshold_db": -30,
+  "min_gap_s": 0.7
+ },
+ "azan4.mp3": {
+  "total_ms": 264430,
+  "first_speech_ms": 0,
+  "last_speech_ms": 261610,
+  "threshold_db": -16,
+  "min_gap_s": 0.9,
+  "lines": [
+   0,
+   33412,
+   88968,
+   140476,
+   187526,
+   234559,
+   249445
+  ]
+ },
+ "azan5.mp3": {
+  "total_ms": 240750,
+  "first_speech_ms": 0,
+  "last_speech_ms": 234243,
+  "threshold_db": -36,
+  "min_gap_s": 0.9,
+  "lines": [
+   0,
+   38726,
+   80653,
+   125078,
+   162852,
+   195141,
+   216159
+  ]
+ },
+ "azan6.mp3": {
+  "total_ms": 244380,
+  "first_speech_ms": 0,
+  "last_speech_ms": 240651,
+  "threshold_db": -26,
+  "min_gap_s": 0.9,
+  "rejected_lines": [
+   0,
+   39283,
+   71137,
+   101887,
+   137067,
+   192184,
+   211127
+  ]
+ },
+ "azan8.mp3": {
+  "total_ms": 210520,
+  "first_speech_ms": 0,
+  "last_speech_ms": 206305,
+  "threshold_db": -30,
+  "min_gap_s": 0.9,
+  "lines": [
+   0,
+   37520,
+   74262,
+   106404,
+   141230,
+   176555,
+   191508
+  ]
+ },
+ "azan9.mp3": {
+  "total_ms": 184690,
+  "first_speech_ms": 0,
+  "last_speech_ms": 181882,
+  "threshold_db": -20,
+  "min_gap_s": 0.9,
+  "lines": [
+   0,
+   23544,
+   83671,
+   110002,
+   137247,
+   159066,
+   169264
+  ]
+ },
+ "azan15.mp3": {
+  "total_ms": 257170,
+  "first_speech_ms": 0,
+  "last_speech_ms": 251714,
+  "threshold_db": -34,
+  "min_gap_s": 0.9,
+  "lines_fajr": [
+   0,
+   40131,
+   81069,
+   123036,
+   161968,
+   197670,
+   235090,
+   247965
+  ]
+ },
+ "azan16.mp3": {
+  "total_ms": 187270,
+  "first_speech_ms": 0,
+  "last_speech_ms": 181242,
+  "threshold_db": -34,
+  "min_gap_s": 0.9,
+  "rejected_lines": [
+   0,
+   20280,
+   67110,
+   93561,
+   116189,
+   140623,
+   157032
+  ]
+ },
+ "azan17.mp3": {
+  "total_ms": 288490,
+  "first_speech_ms": 0,
+  "last_speech_ms": 283055,
+  "threshold_db": -36,
+  "min_gap_s": 0.9,
+  "rejected_lines": [
+   0,
+   40066,
+   81165,
+   123306,
+   162410,
+   198211,
+   232718,
+   266388
+  ]
+ }
+}

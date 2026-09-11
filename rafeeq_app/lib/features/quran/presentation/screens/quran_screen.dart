@@ -366,6 +366,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _applyOrientationLock();
     _persistMode();
     _setPageFillScreen(true, persist: false);
+    // On the dark theme the vector Hafs page and the text page look alike,
+    // and full screen hides the toolbar that was just pressed — so say what
+    // happened, and how to get the options back.
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text('quran.image_view_hint'.tr()),
+        duration: const Duration(seconds: 3),
+      ));
   }
 
   void _leaveImageView() {
@@ -914,11 +923,19 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   // Image mode only. The text page already carries its own
                   // pinned header and a banner for every surah it opens, so a
                   // third copy in the corner was «متكرر سورة الرعد ٣ مرات».
+                  // «في وضع المصحف شيل اسم السورة واسم الجزء واعتمد على اللي
+                  // موجودين في صفحة المصحف المصوّر». A printing whose page
+                  // prints them gets neither badge; one that does not (the
+                  // vector Hafs pages) keeps both. The text page has its own
+                  // header, so it keeps only the juz.
                   surahName: (edition?.hafsPagination ?? true) &&
-                          (_mode == MushafMode.image || isRaster)
+                          (_mode == MushafMode.image || isRaster) &&
+                          !(edition?.printedHeader ?? false)
                       ? _currentSurahName(data)
                       : null,
-                  juzNumber: (edition?.hafsPagination ?? true)
+                  juzNumber: (edition?.hafsPagination ?? true) &&
+                          !((_mode == MushafMode.image || isRaster) &&
+                              (edition?.printedHeader ?? false))
                       ? _currentJuzNumber(data)
                       : null,
                   // Landscape drops the page-number bar under the text, so

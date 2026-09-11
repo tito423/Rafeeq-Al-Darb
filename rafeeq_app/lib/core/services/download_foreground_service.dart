@@ -62,6 +62,46 @@ class DownloadForegroundServiceBridge {
     } catch (_) {}
   }
 
+  static final Map<String, DateTime> _lastItemUpdate = {};
+
+  /// One download's own notification, grouped under the service's. [key]
+  /// names the download (`mushaf_<edition>`); [title] is what the reader
+  /// recognises — the printing's name.
+  static Future<void> updateItem({
+    required String key,
+    required String title,
+    required int done,
+    required int total,
+    String? text,
+    bool force = false,
+  }) async {
+    if (_active == 0) return;
+    final now = DateTime.now();
+    final last = _lastItemUpdate[key];
+    if (!force &&
+        last != null &&
+        now.difference(last) < const Duration(milliseconds: 900)) {
+      return;
+    }
+    _lastItemUpdate[key] = now;
+    try {
+      await _channel.invokeMethod<void>('updateItem', {
+        'key': key,
+        'title': title,
+        'text': text ?? '$done / $total',
+        'done': done,
+        'total': total,
+      });
+    } catch (_) {}
+  }
+
+  static Future<void> finishItem(String key) async {
+    _lastItemUpdate.remove(key);
+    try {
+      await _channel.invokeMethod<void>('finishItem', {'key': key});
+    } catch (_) {}
+  }
+
   static Future<void> release() async {
     if (_active == 0) return; // defensive: an unmatched release is a no-op, not a crash
     _active--;

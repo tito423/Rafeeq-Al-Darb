@@ -183,7 +183,8 @@
     "search_surah_hint": "Search a surah or its number…",
     "search_juz_hint": "Search a juz number…",
     "recite_choose_reciter": "Choose reciter",
-    "recite_search_reciter": "Search reciters"
+    "recite_search_reciter": "Search reciters",
+    "image_view_hint": "Mushaf view — tap the page to show the options"
   },
   "library": {
     "title": "Library",
@@ -457,7 +458,9 @@
     },
     "alarm_volume": "Alarm volume",
     "alarm_volume_desc": "The adhan plays on the alarm stream so it is heard even on silent — which is why the volume keys do not change it.",
-    "alarm_volume_refused": "The system refused the change, most likely because of Do Not Disturb."
+    "alarm_volume_refused": "The system refused the change, most likely because of Do Not Disturb.",
+    "video_playlist": "Play all clips back to back",
+    "video_playlist_desc": "Every downloaded clip plays in turn as one film, with no gap, instead of the chosen clip looping."
   },
   "qibla": {
     "locating": "Locating you...",
@@ -1115,7 +1118,7 @@
     "import_files": "Add audio files",
     "local_artist": "File from this device",
     "play_all": "Play all",
-    "empty_device": "Add audio files from your phone to play them in the player.",
+    "empty_device": "Scan the phone to list all its audio by folder, album and artist, or add files yourself.",
     "delete_surah_confirm": "Delete this file from the device?",
     "delete_confirm": "Delete every downloaded surah of this recitation from the device?",
     "download_all": "Download full recitation",
@@ -1137,6 +1140,29 @@
     "sleep_at": "Playback stops at {}",
     "speed": "Playback speed",
     "sleep_minutes": "In {} minutes",
-    "sleep_off": "Cancel timer"
+    "sleep_off": "Cancel timer",
+    "scan_device": "Scan the phone for audio",
+    "scan_again": "Scan again",
+    "scan_permission": "Audio access is needed to scan the phone.",
+    "open_settings": "Settings",
+    "view_all": "All",
+    "view_folders": "Folders",
+    "view_albums": "Albums",
+    "view_artists": "Artists",
+    "unknown_artist": "Unknown",
+    "unknown_album": "Unknown album",
+    "imported_group": "Added files",
+    "files_count": "{} files",
+    "theme": "Themes",
+    "theme_night": "Haram night",
+    "theme_emerald": "Emerald",
+    "theme_dawn": "Dawn",
+    "theme_sand": "Desert",
+    "theme_sea": "Sea",
+    "theme_ruby": "Ruby",
+    "theme_violet": "Violet",
+    "theme_silver": "Silver",
+    "theme_cedar": "Cedar",
+    "theme_amber": "Amber"
   }
 }

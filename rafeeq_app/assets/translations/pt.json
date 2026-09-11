@@ -183,7 +183,8 @@
     "search_surah_hint": "Procurar uma sura ou o seu número…",
     "search_juz_hint": "Procurar um número de juz…",
     "recite_choose_reciter": "Escolher recitador",
-    "recite_search_reciter": "Buscar recitador"
+    "recite_search_reciter": "Buscar recitador",
+    "image_view_hint": "Visão de mushaf — toque na página para ver as opções"
   },
   "library": {
     "title": "Biblioteca",
@@ -457,7 +458,9 @@
     },
     "alarm_volume": "Volume do alarme",
     "alarm_volume_desc": "O adhan toca no canal de alarme para ser ouvido mesmo no silencioso — por isso as teclas de volume não o alteram.",
-    "alarm_volume_refused": "O sistema recusou a alteração, provavelmente por causa do modo Não incomodar."
+    "alarm_volume_refused": "O sistema recusou a alteração, provavelmente por causa do modo Não incomodar.",
+    "video_playlist": "Tocar todos os vídeos em sequência",
+    "video_playlist_desc": "Os vídeos baixados tocam um após o outro como um só, sem intervalo, em vez de repetir o escolhido."
   },
   "qibla": {
     "locating": "A localizar...",
@@ -1115,7 +1118,7 @@
     "import_files": "Adicionar arquivos de áudio",
     "local_artist": "Arquivo do aparelho",
     "play_all": "Tocar tudo",
-    "empty_device": "Adicione arquivos de áudio do seu celular para tocá-los no player.",
+    "empty_device": "Procure no celular para listar todo o áudio por pasta, álbum e artista, ou adicione arquivos você mesmo.",
     "delete_surah_confirm": "Excluir este arquivo do aparelho?",
     "delete_confirm": "Excluir do aparelho todas as suratas baixadas desta recitação?",
     "download_all": "Baixar a recitação completa",
@@ -1137,6 +1140,29 @@
     "sleep_at": "A reprodução para às {}",
     "speed": "Velocidade",
     "sleep_minutes": "Em {} minutos",
-    "sleep_off": "Cancelar temporizador"
+    "sleep_off": "Cancelar temporizador",
+    "scan_device": "Procurar áudio no celular",
+    "scan_again": "Procurar de novo",
+    "scan_permission": "É preciso acesso ao áudio para procurar no celular.",
+    "open_settings": "Configurações",
+    "view_all": "Tudo",
+    "view_folders": "Pastas",
+    "view_albums": "Álbuns",
+    "view_artists": "Artistas",
+    "unknown_artist": "Desconhecido",
+    "unknown_album": "Álbum desconhecido",
+    "imported_group": "Arquivos adicionados",
+    "files_count": "{} arquivos",
+    "theme": "Temas",
+    "theme_night": "Noite do Haram",
+    "theme_emerald": "Esmeralda",
+    "theme_dawn": "Aurora",
+    "theme_sand": "Deserto",
+    "theme_sea": "Mar",
+    "theme_ruby": "Rubi",
+    "theme_violet": "Violeta",
+    "theme_silver": "Prata",
+    "theme_cedar": "Cedro",
+    "theme_amber": "Âmbar"
   }
 }

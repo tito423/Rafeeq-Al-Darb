@@ -183,7 +183,8 @@
     "search_surah_hint": "Chercher une sourate ou son numéro…",
     "search_juz_hint": "Chercher un numéro de juz…",
     "recite_choose_reciter": "Choisir le récitateur",
-    "recite_search_reciter": "Rechercher un récitateur"
+    "recite_search_reciter": "Rechercher un récitateur",
+    "image_view_hint": "Vue mushaf — touchez la page pour afficher les options"
   },
   "library": {
     "title": "Bibliothèque",
@@ -457,7 +458,9 @@
     },
     "alarm_volume": "Volume de l'alarme",
     "alarm_volume_desc": "L'adhan passe sur le canal d'alarme pour être entendu même en silencieux — d'où le fait que les touches de volume n'y changent rien.",
-    "alarm_volume_refused": "Le système a refusé la modification, sans doute à cause du mode Ne pas déranger."
+    "alarm_volume_refused": "Le système a refusé la modification, sans doute à cause du mode Ne pas déranger.",
+    "video_playlist": "Enchaîner toutes les vidéos",
+    "video_playlist_desc": "Les vidéos téléchargées s’enchaînent comme un seul film, sans coupure, au lieu de répéter celle choisie."
   },
   "qibla": {
     "locating": "Localisation en cours...",
@@ -1115,7 +1118,7 @@
     "import_files": "Ajouter des fichiers audio",
     "local_artist": "Fichier de l’appareil",
     "play_all": "Tout lire",
-    "empty_device": "Ajoutez des fichiers audio de votre téléphone pour les lire dans le lecteur.",
+    "empty_device": "Analysez le téléphone pour lister tout son audio par dossier, album et artiste, ou ajoutez des fichiers vous-même.",
     "delete_surah_confirm": "Supprimer ce fichier de l’appareil ?",
     "delete_confirm": "Supprimer de l’appareil toutes les sourates téléchargées de cette récitation ?",
     "download_all": "Télécharger la récitation complète",
@@ -1137,6 +1140,29 @@
     "sleep_at": "La lecture s’arrête à {}",
     "speed": "Vitesse de lecture",
     "sleep_minutes": "Dans {} minutes",
-    "sleep_off": "Annuler la minuterie"
+    "sleep_off": "Annuler la minuterie",
+    "scan_device": "Rechercher l’audio du téléphone",
+    "scan_again": "Rechercher à nouveau",
+    "scan_permission": "L’accès à l’audio est nécessaire pour analyser le téléphone.",
+    "open_settings": "Paramètres",
+    "view_all": "Tout",
+    "view_folders": "Dossiers",
+    "view_albums": "Albums",
+    "view_artists": "Artistes",
+    "unknown_artist": "Inconnu",
+    "unknown_album": "Album inconnu",
+    "imported_group": "Fichiers ajoutés",
+    "files_count": "{} fichiers",
+    "theme": "Thèmes",
+    "theme_night": "Nuit du Haram",
+    "theme_emerald": "Émeraude",
+    "theme_dawn": "Aube",
+    "theme_sand": "Désert",
+    "theme_sea": "Mer",
+    "theme_ruby": "Rubis",
+    "theme_violet": "Violet",
+    "theme_silver": "Argent",
+    "theme_cedar": "Cèdre",
+    "theme_amber": "Ambre"
   }
 }

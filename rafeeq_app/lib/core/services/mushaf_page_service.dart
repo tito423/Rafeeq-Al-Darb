@@ -339,11 +339,12 @@ class MushafPageService {
         while (_paused.contains(editionId) && mine()) {
           if (!progress.paused) {
             progress._set(paused: true);
-            await DownloadForegroundServiceBridge.update(
+            await DownloadForegroundServiceBridge.updateItem(
+              key: 'mushaf_$editionId',
               title: notifTitle,
               done: done,
               total: total,
-              text: 'downloads.paused'.tr(),
+              text: '${'downloads.paused'.tr()} · $done / $total',
               force: true,
             );
           }
@@ -379,7 +380,8 @@ class MushafPageService {
         done++;
         progress._set(done: done);
         onProgress?.call(done, total);
-        await DownloadForegroundServiceBridge.update(
+        await DownloadForegroundServiceBridge.updateItem(
+          key: 'mushaf_$editionId',
           title: notifTitle,
           done: done,
           total: total,
@@ -402,6 +404,7 @@ class MushafPageService {
               .showComplete(id: 'mushaf_$editionId', title: notifTitle);
         }
       }
+      await DownloadForegroundServiceBridge.finishItem('mushaf_$editionId');
       await DownloadForegroundServiceBridge.release();
     }
   }

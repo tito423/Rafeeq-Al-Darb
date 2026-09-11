@@ -1193,9 +1193,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 16:05 — IN PROGRESS — resume here**
+**2026-09-11 18:04 — IN PROGRESS — resume here**
 
-3.17.1 device round 1 on emulator-5554: prayer card swiped away came back in 46 ms (event log cancel reason 2 -> enqueue), reciter switch playing again in 1.3 s at the same ayah, surah index jump while reciting 1.26 s, in-surah jump by seek with no player re-init. FOUND: Tajweed page 77 highlights 4:3 about a line low -> continuous recitation now text mushaf only (image page opens the text page and starts). Also fixed: reciter avatars all read «أ» (family-name letter on a per-reciter ground), recitations storage counted library.json as 2 B, azkar card errorWidget Positioned outside a Stack (pre-existing, threw in release log). Rebuilding to verify.
+3.18.0 in progress (not yet on a device): FOUND on a fresh install - mushaf download tile never listened (addListener glued into a comment by an earlier patch; service notification read 157/604 while the card sat on 0/604) - fixed + test proven to fail on the old source; printed-header printings hide the app's surah/juz badges (page 100 of all five scans read); sunan reminders take several days; adhan clips can play back to back with a cross-fade; adhan text follows ffmpeg-measured line starts where plausible, else the spoken span; per-download notifications grouped under the service; player: 10 themes + turning disc; device audio scan via MediaStore by folder/album/artist with permission; image-view hint. analyze clean, 182 tests.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

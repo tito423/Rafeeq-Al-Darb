@@ -183,7 +183,8 @@
     "search_surah_hint": "Buscar una sura o su número…",
     "search_juz_hint": "Buscar un número de yuz…",
     "recite_choose_reciter": "Elegir recitador",
-    "recite_search_reciter": "Buscar recitador"
+    "recite_search_reciter": "Buscar recitador",
+    "image_view_hint": "Vista de mushaf: toca la página para ver las opciones"
   },
   "library": {
     "title": "Biblioteca",
@@ -457,7 +458,9 @@
     },
     "alarm_volume": "Volumen de alarma",
     "alarm_volume_desc": "El adhan suena en el canal de alarma para oírse incluso en silencio, por eso las teclas de volumen no lo cambian.",
-    "alarm_volume_refused": "El sistema rechazó el cambio, probablemente por el modo No molestar."
+    "alarm_volume_refused": "El sistema rechazó el cambio, probablemente por el modo No molestar.",
+    "video_playlist": "Reproducir todos los clips seguidos",
+    "video_playlist_desc": "Los clips descargados se reproducen uno tras otro como un solo vídeo, sin cortes, en lugar de repetir el elegido."
   },
   "qibla": {
     "locating": "Localizándote...",
@@ -1115,7 +1118,7 @@
     "import_files": "Añadir archivos de audio",
     "local_artist": "Archivo del dispositivo",
     "play_all": "Reproducir todo",
-    "empty_device": "Añade archivos de audio de tu teléfono para reproducirlos en el reproductor.",
+    "empty_device": "Busca en el teléfono para ver todo su audio por carpeta, álbum y artista, o añade archivos tú mismo.",
     "delete_surah_confirm": "¿Eliminar este archivo del dispositivo?",
     "delete_confirm": "¿Eliminar del dispositivo todas las suras descargadas de esta recitación?",
     "download_all": "Descargar la recitación completa",
@@ -1137,6 +1140,29 @@
     "sleep_at": "La reproducción se detiene a las {}",
     "speed": "Velocidad",
     "sleep_minutes": "En {} minutos",
-    "sleep_off": "Cancelar temporizador"
+    "sleep_off": "Cancelar temporizador",
+    "scan_device": "Buscar audio en el teléfono",
+    "scan_again": "Buscar de nuevo",
+    "scan_permission": "Se necesita acceso al audio para buscar en el teléfono.",
+    "open_settings": "Ajustes",
+    "view_all": "Todo",
+    "view_folders": "Carpetas",
+    "view_albums": "Álbumes",
+    "view_artists": "Artistas",
+    "unknown_artist": "Desconocido",
+    "unknown_album": "Álbum desconocido",
+    "imported_group": "Archivos añadidos",
+    "files_count": "{} archivos",
+    "theme": "Temas",
+    "theme_night": "Noche del Haram",
+    "theme_emerald": "Esmeralda",
+    "theme_dawn": "Alba",
+    "theme_sand": "Desierto",
+    "theme_sea": "Mar",
+    "theme_ruby": "Rubí",
+    "theme_violet": "Violeta",
+    "theme_silver": "Plata",
+    "theme_cedar": "Cedro",
+    "theme_amber": "Ámbar"
   }
 }

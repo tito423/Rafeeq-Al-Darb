@@ -27,7 +27,8 @@
    "diverging_surahs": [],
    "is_default": true,
    "hafs_pagination": true,
-   "cover_asset": "assets/mushaf_covers/hafs_kfqc.jpg"
+   "cover_asset": "assets/mushaf_covers/hafs_kfqc.jpg",
+   "printed_header": false
   },
   {
    "id": "tajweed_color",
@@ -79,7 +80,8 @@
       "page_aspect": 0.61043
      }
     }
-   }
+   },
+   "printed_header": true
   },
   {
    "id": "madinah_gold",
@@ -4339,7 +4341,8 @@
       "page_aspect": 0.58366
      }
     }
-   }
+   },
+   "printed_header": true
   },
   {
    "id": "qatar",
@@ -8599,7 +8602,8 @@
       "page_aspect": 0.71082
      }
     }
-   }
+   },
+   "printed_header": true
   },
   {
    "id": "kuwait",
@@ -12859,7 +12863,8 @@
       "page_aspect": 0.71778
      }
     }
-   }
+   },
+   "printed_header": true
   },
   {
    "id": "madinah_night",
@@ -17119,7 +17124,8 @@
       "page_aspect": 0.70683
      }
     }
-   }
+   },
+   "printed_header": true
   }
  ]
 }

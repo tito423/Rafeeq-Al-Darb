@@ -49,6 +49,72 @@ class DownloadForegroundService : Service() {
          *  permanent phantom, the very thing this class exists to avoid. */
         @Volatile var running = false
 
+        private const val GROUP = "rafeeq_downloads_items"
+
+        /** Downloads with a notification of their own, by key. */
+        private val items = java.util.concurrent.ConcurrentHashMap<String, Int>()
+
+        private fun itemId(key: String): Int = 4900 + (key.hashCode() and 0x7fffffff) % 90
+
+        /**
+         * One notification per download — «يتم الآن تحميل مصحف كذا وتحتها مصحف
+         * وتحتها، ويتجمّعوا في جروب» — instead of one line rewritten by
+         * whichever download spoke last. The service's own notification becomes
+         * the group's summary, so Android folds the items under it.
+         *
+         * Not ongoing, and each carries a timeout that every update renews: if
+         * the process dies without a stop, an item clears itself instead of
+         * staying in the shade for ever, which is the defect the service's
+         * notification was introduced to end.
+         */
+        fun updateItem(
+            context: android.content.Context,
+            key: String,
+            title: String?,
+            text: String?,
+            done: Int,
+            total: Int,
+        ) {
+            if (!running) return
+            val nm = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val id = itemId(key)
+            items[key] = id
+            val builder = Notification.Builder(context, CHANNEL_ID)
+                .setContentTitle(title ?: NativeStrings.get(context, NativeStrings.DL_TITLE))
+                .setContentText(text ?: "")
+                .setSmallIcon(context.applicationInfo.icon)
+                .setOnlyAlertOnce(true)
+                .setGroup(GROUP)
+                .setTimeoutAfter(120_000)
+            if (total > 0) builder.setProgress(total, done.coerceIn(0, total), false)
+            nm.notify(id, builder.build())
+            nm.notify(NOTIFICATION_ID, summary(context))
+        }
+
+        fun finishItem(context: android.content.Context, key: String) {
+            val id = items.remove(key) ?: itemId(key)
+            val nm = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            nm.cancel(id)
+            if (running) nm.notify(NOTIFICATION_ID, summary(context))
+        }
+
+        private fun cancelItems(context: android.content.Context) {
+            val nm = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            for (id in items.values) nm.cancel(id)
+            items.clear()
+        }
+
+        private fun summary(context: android.content.Context): Notification {
+            val count = items.size
+            return build(
+                context,
+                NativeStrings.get(context, NativeStrings.DL_TITLE),
+                if (count > 0) "$count" else null,
+                0,
+                0,
+            )
+        }
+
         /** Rewrites the running service's notification with real progress. */
         fun update(context: android.content.Context, title: String?, text: String?, done: Int, total: Int) {
             if (!running) return
@@ -71,6 +137,8 @@ class DownloadForegroundService : Service() {
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pendingIntent)
+                .setGroup(GROUP)
+                .setGroupSummary(true)
             if (total > 0) builder.setProgress(total, done.coerceIn(0, total), false)
             return builder.build()
         }
@@ -99,6 +167,7 @@ class DownloadForegroundService : Service() {
         when (intent?.action) {
             ACTION_STOP -> {
                 running = false
+                cancelItems(this)
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
                 return START_NOT_STICKY
@@ -128,6 +197,7 @@ class DownloadForegroundService : Service() {
 
     override fun onDestroy() {
         running = false
+        cancelItems(this)
         super.onDestroy()
     }
 

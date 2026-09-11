@@ -12,6 +12,7 @@ import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/utils/byte_formatter.dart';
 import '../../../core/widgets/error_retry.dart';
 import '../../quran/data/mushaf_data_provider.dart';
+import '../data/device_audio_scanner.dart';
 import '../data/mp3quran_api.dart';
 import '../data/quran_audio_library.dart';
 import '../data/quran_audio_player.dart';
@@ -311,6 +312,8 @@ class _RecitationFolder extends ConsumerWidget {
 
 // ── Device files ───────────────────────────────────────────────────────────
 
+enum _DeviceView { all, folders, albums, artists }
+
 class _DeviceTab extends StatefulWidget {
   const _DeviceTab();
 
@@ -318,8 +321,19 @@ class _DeviceTab extends StatefulWidget {
   State<_DeviceTab> createState() => _DeviceTabState();
 }
 
-class _DeviceTabState extends State<_DeviceTab> {
+class _DeviceTabState extends State<_DeviceTab> with AutomaticKeepAliveClientMixin {
   final _lib = QuranAudioLibrary.instance;
+  final _scanner = DeviceAudioScanner.instance;
+  _DeviceView _view = _DeviceView.folders;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scanner.loadCached();
+  }
 
   Future<void> _import() async {
     final result = await FilePicker.pickFiles(type: FileType.audio, allowMultiple: true);
@@ -328,7 +342,15 @@ class _DeviceTabState extends State<_DeviceTab> {
     await _lib.importFiles(paths);
   }
 
-  List<PlayerTrack> _tracks(List<File> files) => [
+  PlayerTrack _track(DeviceAudio a) => PlayerTrack(
+        id: 'device-${a.id}',
+        title: a.title,
+        artist: a.artist ?? 'quran_audio.unknown_artist'.tr(),
+        album: a.album,
+        url: a.uri,
+      );
+
+  List<PlayerTrack> _importedTracks(List<File> files) => [
         for (final f in files)
           PlayerTrack(
             id: 'local-${p.basename(f.path)}',
@@ -338,75 +360,155 @@ class _DeviceTabState extends State<_DeviceTab> {
           ),
       ];
 
+  Map<String, List<DeviceAudio>> _groups(List<DeviceAudio> all) {
+    final out = <String, List<DeviceAudio>>{};
+    for (final a in all) {
+      final key = switch (_view) {
+        _DeviceView.folders => a.folder.isEmpty ? '/' : a.folder,
+        _DeviceView.albums => a.album ?? 'quran_audio.unknown_album'.tr(),
+        _DeviceView.artists => a.artist ?? 'quran_audio.unknown_artist'.tr(),
+        _DeviceView.all => '',
+      };
+      (out[key] ??= []).add(a);
+    }
+    return Map.fromEntries(out.entries.toList()..sort((x, y) => x.key.compareTo(y.key)));
+  }
+
+  Future<void> _play(List<PlayerTrack> tracks, [int start = 0]) async {
+    final ok = await QuranAudioPlayer.instance.playQueue(tracks, start: start);
+    if (!ok && mounted) showPlayFailed(context);
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListenableBuilder(
-      listenable: Listenable.merge([_lib, QuranAudioPlayer.instance]),
+      listenable: Listenable.merge([_lib, _scanner, QuranAudioPlayer.instance]),
       builder: (context, _) => FutureBuilder<List<File>>(
         future: _lib.localFiles(),
         builder: (context, snap) {
-          final files = snap.data ?? const <File>[];
+          final imported = snap.data ?? const <File>[];
+          final scanned = _scanner.items;
           final player = QuranAudioPlayer.instance;
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
                 child: Row(
                   children: [
                     Expanded(
-                      child: FilledButton.tonalIcon(
-                        onPressed: _import,
-                        icon: const Icon(Icons.add_rounded),
-                        label: Text('quran_audio.import_files'.tr()),
-                      ),
-                    ),
-                    if (files.isNotEmpty) ...[
-                      const SizedBox(width: 8),
-                      FilledButton.icon(
+                      child: FilledButton.icon(
                         style: FilledButton.styleFrom(
                           backgroundColor: AppColors.gold,
                           foregroundColor: AppColors.night,
                         ),
-                        onPressed: () => player.playQueue(_tracks(files)),
-                        icon: const Icon(Icons.play_arrow_rounded),
-                        label: Text('quran_audio.play_all'.tr()),
+                        onPressed: _scanner.scanning ? null : _scanner.scan,
+                        icon: _scanner.scanning
+                            ? const SizedBox(
+                                width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                            : const Icon(Icons.manage_search_rounded),
+                        label: Text(scanned.isEmpty
+                            ? 'quran_audio.scan_device'.tr()
+                            : 'quran_audio.scan_again'.tr()),
                       ),
-                    ],
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton.filledTonal(
+                      tooltip: 'quran_audio.import_files'.tr(),
+                      onPressed: _import,
+                      icon: const Icon(Icons.add_rounded),
+                    ),
                   ],
                 ),
               ),
+              if (_scanner.denied)
+                ListTile(
+                  leading: const Icon(Icons.lock_outline_rounded, color: AppColors.warning),
+                  title: Text('quran_audio.scan_permission'.tr(), style: const TextStyle(fontSize: 13)),
+                  trailing: TextButton(
+                    onPressed: _scanner.openSettings,
+                    child: Text('quran_audio.open_settings'.tr()),
+                  ),
+                ),
+              if (scanned.isNotEmpty)
+                SizedBox(
+                  height: 48,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    children: [
+                      for (final v in _DeviceView.values)
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 8),
+                          child: ChoiceChip(
+                            label: Text('quran_audio.view_${v.name}'.tr()),
+                            selected: _view == v,
+                            selectedColor: AppColors.gold.withValues(alpha: 0.85),
+                            onSelected: (_) => setState(() => _view = v),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               Expanded(
-                child: files.isEmpty
-                    ? _Empty(icon: Icons.audio_file_outlined, text: 'quran_audio.empty_device'.tr())
-                    : ListView.builder(
+                child: (scanned.isEmpty && imported.isEmpty)
+                    ? _Empty(icon: Icons.library_music_outlined, text: 'quran_audio.empty_device'.tr())
+                    : ListView(
                         padding: const EdgeInsets.fromLTRB(10, 4, 10, 16),
-                        itemCount: files.length,
-                        itemBuilder: (context, i) {
-                          final f = files[i];
-                          final playing = player.active && player.current?.id == 'local-${p.basename(f.path)}';
-                          return Card(
-                            margin: const EdgeInsets.only(bottom: 6),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                            child: ListTile(
-                              leading: Icon(
-                                playing ? Icons.graphic_eq_rounded : Icons.audio_file_rounded,
-                                color: AppColors.gold,
-                              ),
-                              title: Text(p.basenameWithoutExtension(f.path),
-                                  maxLines: 2, overflow: TextOverflow.ellipsis),
-                              subtitle: Text(formatBytes(f.lengthSync()), style: const TextStyle(fontSize: 12)),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete_outline_rounded, color: AppColors.error),
-                                onPressed: () async {
-                                  if (await confirmAction(context, 'quran_audio.delete_surah_confirm'.tr())) {
-                                    await _lib.deleteLocal(f);
-                                  }
-                                },
-                              ),
-                              onTap: () => player.playQueue(_tracks(files), start: i),
+                        children: [
+                          if (imported.isNotEmpty)
+                            _Group(
+                              icon: Icons.upload_file_rounded,
+                              title: 'quran_audio.imported_group'.tr(),
+                              count: imported.length,
+                              onPlayAll: () => _play(_importedTracks(imported)),
+                              children: [
+                                for (final (i, f) in imported.indexed)
+                                  ListTile(
+                                    dense: true,
+                                    leading: const Icon(Icons.audio_file_rounded, color: AppColors.gold),
+                                    title: Text(p.basenameWithoutExtension(f.path),
+                                        maxLines: 1, overflow: TextOverflow.ellipsis),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.delete_outline_rounded, color: AppColors.error),
+                                      onPressed: () async {
+                                        if (await confirmAction(context, 'quran_audio.delete_surah_confirm'.tr())) {
+                                          await _lib.deleteLocal(f);
+                                        }
+                                      },
+                                    ),
+                                    onTap: () => _play(_importedTracks(imported), i),
+                                  ),
+                              ],
                             ),
-                          );
-                        },
+                          if (_view == _DeviceView.all)
+                            for (final (i, a) in scanned.indexed)
+                              _DeviceRow(
+                                audio: a,
+                                playing: player.active && player.current?.id == 'device-${a.id}',
+                                onTap: () => _play([for (final x in scanned) _track(x)], i),
+                              )
+                          else
+                            for (final e in _groups(scanned).entries)
+                              _Group(
+                                icon: switch (_view) {
+                                  _DeviceView.folders => Icons.folder_rounded,
+                                  _DeviceView.albums => Icons.album_rounded,
+                                  _ => Icons.person_rounded,
+                                },
+                                title: e.key,
+                                count: e.value.length,
+                                onPlayAll: () => _play([for (final x in e.value) _track(x)]),
+                                children: [
+                                  for (final (i, a) in e.value.indexed)
+                                    _DeviceRow(
+                                      audio: a,
+                                      playing: player.active && player.current?.id == 'device-${a.id}',
+                                      onTap: () => _play([for (final x in e.value) _track(x)], i),
+                                    ),
+                                ],
+                              ),
+                        ],
                       ),
               ),
             ],
@@ -415,6 +517,66 @@ class _DeviceTabState extends State<_DeviceTab> {
       ),
     );
   }
+}
+
+class _Group extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final int count;
+  final VoidCallback onPlayAll;
+  final List<Widget> children;
+  const _Group({
+    required this.icon,
+    required this.title,
+    required this.count,
+    required this.onPlayAll,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) => Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        clipBehavior: Clip.antiAlias,
+        child: ExpansionTile(
+          leading: Icon(icon, color: AppColors.gold),
+          title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w700)),
+          subtitle: Text('quran_audio.files_count'.tr(args: [ltr('$count')]),
+              style: const TextStyle(fontSize: 12)),
+          trailing: IconButton(
+            color: AppColors.gold,
+            icon: const Icon(Icons.play_circle_fill_rounded),
+            onPressed: onPlayAll,
+          ),
+          children: children,
+        ),
+      );
+}
+
+class _DeviceRow extends StatelessWidget {
+  final DeviceAudio audio;
+  final bool playing;
+  final VoidCallback onTap;
+  const _DeviceRow({required this.audio, required this.playing, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        dense: true,
+        leading: Icon(playing ? Icons.graphic_eq_rounded : Icons.music_note_rounded, color: AppColors.gold),
+        title: Text(audio.title, maxLines: 1, overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: playing ? AppColors.gold : null, fontWeight: FontWeight.w600)),
+        subtitle: Text(
+          [
+            audio.artist ?? 'quran_audio.unknown_artist'.tr(),
+            formatClock(Duration(milliseconds: audio.durationMs)),
+          ].join(' · '),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 11),
+        ),
+        onTap: onTap,
+      );
 }
 
 class _Empty extends StatelessWidget {

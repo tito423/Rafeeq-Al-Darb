@@ -50,7 +50,8 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
     _refresh();
     // The download runs on MushafPageService, not on this widget. If one is
     // already in flight (e.g. this tile was rebuilt after a tab switch),
-    // re-attach to it instead of showing the Download button again.    _progress.addListener(_onProgress);
+    // re-attach to it instead of showing the Download button again.
+    _progress.addListener(_onProgress);
   }
 
   bool _wasBusy = false;

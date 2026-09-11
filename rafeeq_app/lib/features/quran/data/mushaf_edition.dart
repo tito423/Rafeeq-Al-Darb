@@ -182,6 +182,11 @@ class MushafEdition {
   /// running header is hidden rather than shown wrong.
   final bool hafsPagination;
 
+  /// The page image itself prints the surah name and the juz in its running
+  /// head, so the app must not lay a second copy over it. Read off page 100
+  /// of every scanned printing: all five do; the vector Hafs pages do not.
+  final bool printedHeader;
+
   const MushafEdition({
     required this.id,
     required this.sourcePath,
@@ -200,6 +205,7 @@ class MushafEdition {
     required this.divergingSurahs,
     required this.isDefault,
     this.hafsPagination = true,
+    this.printedHeader = false,
     this.imagePath,
     this.imageExt = 'jpg',
     this.coverAsset = '',
@@ -244,6 +250,7 @@ class MushafEdition {
         },
         isDefault: j['is_default'] as bool? ?? false,
         hafsPagination: j['hafs_pagination'] as bool? ?? true,
+        printedHeader: j['printed_header'] as bool? ?? false,
       );
   }
 

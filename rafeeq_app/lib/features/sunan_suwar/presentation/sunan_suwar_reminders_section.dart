@@ -44,7 +44,11 @@ class SunanSuwarRemindersSection extends ConsumerWidget {
                     reminder == null
                         ? 'sunan_suwar.reminder_off'.tr()
                         : 'sunan_suwar.reminder_on_at'.tr(namedArgs: {
-                            'day': _weekdayKeys[reminder.weekday]!.tr(),
+                            'day': [
+                              for (final d in sunanWeekOrder)
+                                if (reminder.weekdays.contains(d))
+                                  _weekdayKeys[d]!.tr(),
+                            ].join('، '),
                             'time':
                                 '${reminder.time.hour.toString().padLeft(2, '0')}:'
                                 '${reminder.time.minute.toString().padLeft(2, '0')}',

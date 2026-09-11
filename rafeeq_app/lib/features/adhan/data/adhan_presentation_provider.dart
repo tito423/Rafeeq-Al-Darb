@@ -10,18 +10,35 @@ import 'adhan_video_catalog.dart';
 /// mosque video ([video]). The Adhan **sound** is identical either way (P2‑7).
 enum AdhanPresentation { audioOnly, video }
 
+/// Read by the adhan screen itself, which runs in its own engine and reads
+/// SharedPreferences directly rather than through this provider.
+const adhanVideoPlaylistKey = 'adhan_video_playlist_v1';
+
 class AdhanPresentationState {
   final AdhanPresentation mode;
 
   /// Which [adhanVideoCatalog] clip is selected for [video] mode.
   final String videoId;
 
-  const AdhanPresentationState({required this.mode, required this.videoId});
+  /// Play every downloaded clip one after another, as one film, instead of
+  /// looping the chosen one — «الخمس فيديوهات يشتغلوا ورا بعض كأنهم مدمجين».
+  final bool playlist;
 
-  AdhanPresentationState copyWith({AdhanPresentation? mode, String? videoId}) =>
+  const AdhanPresentationState({
+    required this.mode,
+    required this.videoId,
+    this.playlist = false,
+  });
+
+  AdhanPresentationState copyWith({
+    AdhanPresentation? mode,
+    String? videoId,
+    bool? playlist,
+  }) =>
       AdhanPresentationState(
         mode: mode ?? this.mode,
         videoId: videoId ?? this.videoId,
+        playlist: playlist ?? this.playlist,
       );
 }
 
@@ -38,6 +55,7 @@ class AdhanPresentationNotifier extends StateNotifier<AdhanPresentationState> {
           // selected must land on a clip that exists, not on a blank
           // selection whose download button does nothing.
           videoId: _validId(_prefs.getString(_videoKey)),
+          playlist: _prefs.getBool(adhanVideoPlaylistKey) ?? false,
         ));
 
   static String _validId(String? saved) =>
@@ -51,6 +69,11 @@ class AdhanPresentationNotifier extends StateNotifier<AdhanPresentationState> {
     state = state.copyWith(mode: mode);
     await _prefs.setString(
         _modeKey, mode == AdhanPresentation.video ? 'video' : 'audio');
+  }
+
+  Future<void> setPlaylist(bool value) async {
+    state = state.copyWith(playlist: value);
+    await _prefs.setBool(adhanVideoPlaylistKey, value);
   }
 
   Future<void> setVideo(String videoId) async {

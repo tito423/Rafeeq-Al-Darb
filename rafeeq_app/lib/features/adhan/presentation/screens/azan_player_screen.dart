@@ -1,16 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+
+import 'package:flutter/services.dart' show rootBundle;
 
 // easy_localization re-exports package:intl, whose `TextDirection` collides
 // with dart:ui's (used here for the RTL adhan text) — hide it, same fix as
 // azkar_section_screen.dart / ayah_sciences_sheet.dart.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as p;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../data/adhan_presentation_provider.dart' show adhanVideoPlaylistKey;
+import '../../data/adhan_video_catalog.dart';
 import '../../data/azan_subtitle.dart';
 
 /// The prayer's name in the app's *current* language.
@@ -114,25 +121,124 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     _start();
   }
 
-  Future<void> _initVideo() async {
-    final path = widget.spec.videoPath;
-    if (path == null || !File(path).existsSync()) return;
+  /// The clips to show, in order. One clip loops, as before; with the
+  /// playlist switch on, every downloaded clip plays once and the list starts
+  /// over. They all sit in the downloads folder under their catalogue names,
+  /// so the adhan's own engine can find them without the download registry.
+  List<String> _clips = const [];
+  int _clipIndex = 0;
+
+  /// The clip fading in over the current one; see [_advanceClip].
+  VideoPlayerController? _incoming;
+  bool _switching = false;
+
+  Future<List<String>> _playlist(String first) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!(prefs.getBool(adhanVideoPlaylistKey) ?? false)) return [first];
+      final dir = File(first).parent.path;
+      final all = [
+        for (final v in adhanVideoCatalog)
+          if (File(p.join(dir, v.fileName)).existsSync()) p.join(dir, v.fileName),
+      ];
+      final at = all.indexOf(first);
+      if (all.length < 2 || at < 0) return [first];
+      return [...all.sublist(at), ...all.sublist(0, at)];
+    } catch (_) {
+      return [first];
+    }
+  }
+
+  Future<VideoPlayerController?> _open(String path) async {
     try {
       final c = VideoPlayerController.file(File(path));
       await c.initialize();
       await c.setVolume(0); // the adhan is the audio; the clip is scenery
-      await c.setLooping(true);
-      await c.play();
-      if (mounted) {
-        setState(() => _video = c);
-      } else {
-        await c.dispose();
-      }
+      return c;
     } catch (_) {
-      // Fall back to the animated gradient — an unplayable clip must never
-      // take the adhan itself down with it.
+      return null;
     }
   }
+
+  Future<void> _initVideo() async {
+    final path = widget.spec.videoPath;
+    if (path == null || !File(path).existsSync()) return;
+    _clips = await _playlist(path);
+    final c = await _open(_clips.first);
+    if (c == null) return; // gradient fallback — never take the adhan down
+    if (_clips.length == 1) {
+      await c.setLooping(true);
+    } else {
+      c.addListener(_watchClipEnd);
+    }
+    await c.play();
+    if (mounted) {
+      setState(() => _video = c);
+    } else {
+      await c.dispose();
+    }
+  }
+
+  /// A clip is about to end: start the next one underneath and fade it in
+  /// over the last ~400 ms, so there is no black frame and no visible cut.
+  void _watchClipEnd() {
+    final v = _video;
+    if (v == null || _switching || !mounted) return;
+    final value = v.value;
+    if (!value.isInitialized || value.duration == Duration.zero) return;
+    if (value.position < value.duration - const Duration(milliseconds: 450)) {
+      return;
+    }
+    _advanceClip();
+  }
+
+  Future<void> _advanceClip() async {
+    _switching = true;
+    final nextIndex = (_clipIndex + 1) % _clips.length;
+    final next = await _open(_clips[nextIndex]);
+    if (!mounted) {
+      await next?.dispose();
+      return;
+    }
+    if (next == null) {
+      // An unplayable clip: skip it rather than freezing on the last frame.
+      _clipIndex = nextIndex;
+      await _video?.seekTo(Duration.zero);
+      await _video?.play();
+      _switching = false;
+      return;
+    }
+    next.addListener(_watchClipEnd);
+    await next.play();
+    if (!mounted) {
+      await next.dispose();
+      return;
+    }
+    setState(() => _incoming = next);
+    _clipIndex = nextIndex;
+  }
+
+  void _finishSwitch() {
+    final old = _video;
+    final next = _incoming;
+    if (next == null) return;
+    old?.removeListener(_watchClipEnd);
+    setState(() {
+      _video = next;
+      _incoming = null;
+    });
+    _switching = false;
+    old?.dispose();
+  }
+
+  Widget _clipView(VideoPlayerController v) => FittedBox(
+        fit: BoxFit.cover,
+        child: SizedBox(
+          width: v.value.size.width,
+          height: v.value.size.height,
+          child: VideoPlayer(v),
+        ),
+      );
 
   Future<void> _start() async {
     var sounding = true;
@@ -141,11 +247,14 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
       // before this Activity was even created); only the preview starts it.
       sounding = await AdhanNative.preview(widget.spec);
     }
+    await _loadTimings();
     if (!mounted) return;
 
     // Lay the text out over a sensible estimate immediately, then re-lay it
     // the moment the native player reports its real duration.
-    _rebuildSubtitles(const Duration(minutes: 3));
+    _rebuildSubtitles(_timings == null
+        ? const Duration(minutes: 3)
+        : Duration(milliseconds: _timings!.totalMs));
     if (!sounding) _silentStart = DateTime.now();
 
     _poll = Timer.periodic(const Duration(milliseconds: 200), (_) => _tick());
@@ -188,12 +297,27 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     }
   }
 
+  /// This recording's measured speech, when it is one of the bundled ones.
+  AdhanTimings? _timings;
+
+  Future<void> _loadTimings() async {
+    final asset = widget.spec.assetPath;
+    if (asset == null) return;
+    try {
+      final raw = await rootBundle.loadString('assets/data/catalogs/adhan_phrase_timings.json');
+      final all = jsonDecode(raw) as Map<String, dynamic>;
+      final entry = all[p.basename(asset)] as Map<String, dynamic>?;
+      if (entry != null) _timings = AdhanTimings.fromJson(entry);
+    } catch (_) {}
+  }
+
   void _rebuildSubtitles(Duration total) {
+    final isFajr = widget.spec.prayerKey == 'fajr';
+    final timings = _timings;
     setState(() {
-      _subtitles = buildAzanSubtitles(
-        isFajr: widget.spec.prayerKey == 'fajr',
-        total: total,
-      );
+      _subtitles = timings == null
+          ? buildAzanSubtitles(isFajr: isFajr, total: total)
+          : buildAzanSubtitlesMeasured(isFajr: isFajr, total: total, timings: timings);
     });
   }
 
@@ -247,6 +371,7 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     WakelockPlus.disable();
     _bgController.dispose();
     _video?.dispose();
+    _incoming?.dispose();
     super.dispose();
   }
 
@@ -255,14 +380,23 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     if (v != null && v.value.isInitialized) {
       // RepaintBoundary isolates the decoding video surface from the rest of
       // the tree so nothing above it forces the frame to repaint.
+      final incoming = _incoming;
       return RepaintBoundary(
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: v.value.size.width,
-            height: v.value.size.height,
-            child: VideoPlayer(v),
-          ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            _clipView(v),
+            if (incoming != null)
+              TweenAnimationBuilder<double>(
+                key: ValueKey(incoming),
+                tween: Tween(begin: 0, end: 1),
+                duration: const Duration(milliseconds: 400),
+                onEnd: _finishSwitch,
+                builder: (context, t, child) =>
+                    Opacity(opacity: t, child: child),
+                child: _clipView(incoming),
+              ),
+          ],
         ),
       );
     }

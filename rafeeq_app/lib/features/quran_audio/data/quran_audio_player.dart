@@ -26,13 +26,15 @@ class PlayerTrack {
     this.filePath,
   });
 
-  bool get isLocal => filePath != null && File(filePath!).existsSync();
+  bool get isLocal =>
+      (filePath != null && File(filePath!).existsSync()) ||
+      (url?.startsWith('content://') ?? false);
 
   AudioSource toSource() {
     // Every source needs a MediaItem: `just_audio_background` throws on an
     // untagged one, and it is what the lock screen and the notification show.
     final tag = MediaItem(id: 'qa:$id', title: title, artist: artist, album: album);
-    return isLocal
+    return (filePath != null && File(filePath!).existsSync())
         ? AudioSource.file(filePath!, tag: tag)
         : AudioSource.uri(Uri.parse(url!), tag: tag);
   }

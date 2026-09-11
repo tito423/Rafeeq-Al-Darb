@@ -89,6 +89,25 @@ class MainActivity: AudioServiceActivity() {
                         result.success(false)
                     }
                 }
+                "updateItem" -> {
+                    try {
+                        DownloadForegroundService.updateItem(
+                            this,
+                            call.argument<String>("key") ?: "",
+                            call.argument<String>("title"),
+                            call.argument<String>("text"),
+                            call.argument<Int>("done") ?: 0,
+                            call.argument<Int>("total") ?: 0,
+                        )
+                    } catch (_: Exception) {}
+                    result.success(null)
+                }
+                "finishItem" -> {
+                    try {
+                        DownloadForegroundService.finishItem(this, call.argument<String>("key") ?: "")
+                    } catch (_: Exception) {}
+                    result.success(null)
+                }
                 "update" -> {
                     try {
                         DownloadForegroundService.update(
@@ -111,6 +130,62 @@ class MainActivity: AudioServiceActivity() {
                 }
                 else -> result.notImplemented()
             }
+        }
+
+        // Every audio file Android's media index knows about, for the Qur'an
+        // player's «ملفات الجهاز». Read off MediaStore rather than by walking
+        // the file system: it is the index the phone's own music apps use, it
+        // already carries title, artist and album, and on Android 11+ it is the
+        // only honest way to see other apps' files.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.tito.rafeeq_aldarb/media_audio").setMethodCallHandler { call, result ->
+            if (call.method != "scan") {
+                result.notImplemented()
+                return@setMethodCallHandler
+            }
+            Thread {
+                val out = ArrayList<Map<String, Any?>>()
+                try {
+                    val uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    val cols = mutableListOf(
+                        android.provider.MediaStore.Audio.Media._ID,
+                        android.provider.MediaStore.Audio.Media.TITLE,
+                        android.provider.MediaStore.Audio.Media.ARTIST,
+                        android.provider.MediaStore.Audio.Media.ALBUM,
+                        android.provider.MediaStore.Audio.Media.DURATION,
+                        android.provider.MediaStore.Audio.Media.SIZE,
+                        android.provider.MediaStore.Audio.Media.DISPLAY_NAME,
+                    )
+                    val modern = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
+                    @Suppress("DEPRECATION")
+                    cols.add(if (modern) android.provider.MediaStore.Audio.Media.RELATIVE_PATH else android.provider.MediaStore.Audio.Media.DATA)
+                    contentResolver.query(
+                        uri, cols.toTypedArray(),
+                        "${android.provider.MediaStore.Audio.Media.DURATION} >= ?", arrayOf("5000"),
+                        "${android.provider.MediaStore.Audio.Media.TITLE} COLLATE NOCASE ASC",
+                    )?.use { c ->
+                        while (c.moveToNext()) {
+                            val id = c.getLong(0)
+                            val where = c.getString(7) ?: ""
+                            val folder = where.trimEnd('/').let {
+                                if (modern) it.substringAfterLast('/') else it.substringBeforeLast('/').substringAfterLast('/')
+                            }
+                            out.add(mapOf(
+                                "id" to id,
+                                "uri" to android.content.ContentUris.withAppendedId(uri, id).toString(),
+                                "title" to (c.getString(1) ?: c.getString(6) ?: ""),
+                                "artist" to c.getString(2),
+                                "album" to c.getString(3),
+                                "duration" to c.getLong(4),
+                                "size" to c.getLong(5),
+                                "folder" to folder,
+                            ))
+                        }
+                    }
+                    runOnUiThread { result.success(out) }
+                } catch (e: Exception) {
+                    runOnUiThread { result.error("scan", e.message, null) }
+                }
+            }.start()
         }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.tito.rafeeq_aldarb/prayer_card").setMethodCallHandler { call, result ->

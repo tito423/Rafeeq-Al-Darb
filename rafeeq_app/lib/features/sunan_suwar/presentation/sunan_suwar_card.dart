@@ -138,7 +138,10 @@ class SunanReminderSheet extends ConsumerStatefulWidget {
 }
 
 class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
-  late int _weekday = widget.existing?.weekday ?? DateTime.friday;
+  late final Set<int> _weekdays = {
+    ...?widget.existing?.weekdays,
+    if (widget.existing == null) DateTime.friday,
+  };
   late TimeOfDay _time = widget.existing?.time ?? const TimeOfDay(hour: 20, minute: 0);
 
   @override
@@ -161,12 +164,14 @@ class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
             spacing: 6,
             runSpacing: 6,
             children: [
-              for (final e in _weekdayKeys.entries)
-                ChoiceChip(
-                  label: Text(e.value.tr()),
-                  selected: _weekday == e.key,
+              for (final day in sunanWeekOrder)
+                FilterChip(
+                  label: Text(_weekdayKeys[day]!.tr()),
+                  selected: _weekdays.contains(day),
                   selectedColor: gold.withValues(alpha: 0.25),
-                  onSelected: (_) => setState(() => _weekday = e.key),
+                  onSelected: (on) => setState(
+                    () => on ? _weekdays.add(day) : _weekdays.remove(day),
+                  ),
                 ),
             ],
           ),
@@ -198,11 +203,13 @@ class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
               if (widget.existing != null) const SizedBox(width: 10),
               Expanded(
                 child: FilledButton(
-                  onPressed: () async {
+                  onPressed: _weekdays.isEmpty
+                      ? null
+                      : () async {
                     await ref.read(sunanSuwarStoreProvider.notifier).setReminder(
                           widget.surahId,
                           widget.label,
-                          SunanReminder(weekday: _weekday, time: _time),
+                          SunanReminder(weekdays: {..._weekdays}, time: _time),
                         );
                     if (context.mounted) Navigator.of(context).pop();
                   },
