@@ -49,6 +49,25 @@ class AppShell extends ConsumerStatefulWidget {
   ConsumerState<AppShell> createState() => _AppShellState();
 }
 
+/// A nav icon that springs in when its tab becomes the selected one: it grows
+/// from a little smaller with an elastic overshoot and a quarter-swing.
+class _PopIcon extends StatelessWidget {
+  final IconData icon;
+  const _PopIcon(this.icon);
+
+  @override
+  Widget build(BuildContext context) => TweenAnimationBuilder<double>(
+        tween: Tween<double>(begin: 0, end: 1),
+        duration: const Duration(milliseconds: 620),
+        curve: Curves.elasticOut,
+        builder: (context, t, child) => Transform.rotate(
+          angle: (1 - t) * -0.5,
+          child: Transform.scale(scale: 0.55 + 0.45 * t, child: child),
+        ),
+        child: Icon(icon),
+      );
+}
+
 class _AppShellState extends ConsumerState<AppShell>
     with WidgetsBindingObserver {
   int _index = 0;
@@ -249,40 +268,43 @@ class _AppShellState extends ConsumerState<AppShell>
               child: NavigationBar(
               selectedIndex: _index,
               onDestinationSelected: _goTo,
+              // «اعملي أنيميشن جميل في شكل … أيقونات الشريط الرئيسي السفلي».
+              // The selected icon is built fresh whenever a tab becomes
+              // selected, so `_PopIcon` plays its entrance exactly then.
               destinations: [
                 NavigationDestination(
                   icon: const Icon(Icons.home_outlined),
-                  selectedIcon: const Icon(Icons.home),
+                  selectedIcon: const _PopIcon(Icons.home),
                   label: 'nav.home'.tr(),
                 ),
                 NavigationDestination(
                   icon: const Icon(Icons.menu_book_outlined),
-                  selectedIcon: const Icon(Icons.menu_book),
+                  selectedIcon: const _PopIcon(Icons.menu_book),
                   label: 'nav.quran'.tr(),
                 ),
                 NavigationDestination(
                   icon: const Icon(Icons.explore_outlined),
-                  selectedIcon: const Icon(Icons.explore),
+                  selectedIcon: const _PopIcon(Icons.explore),
                   label: 'nav.prayer'.tr(),
                 ),
                 NavigationDestination(
                   icon: const Icon(Icons.auto_awesome_outlined),
-                  selectedIcon: const Icon(Icons.auto_awesome),
+                  selectedIcon: const _PopIcon(Icons.auto_awesome),
                   label: 'nav.azkar'.tr(),
                 ),
                 NavigationDestination(
                   icon: const Icon(Icons.radio_button_checked_outlined),
-                  selectedIcon: const Icon(Icons.radio_button_checked),
+                  selectedIcon: const _PopIcon(Icons.radio_button_checked),
                   label: 'nav.tasbeeh'.tr(),
                 ),
                 NavigationDestination(
                   icon: const Icon(Icons.library_books_outlined),
-                  selectedIcon: const Icon(Icons.library_books),
+                  selectedIcon: const _PopIcon(Icons.library_books),
                   label: 'nav.library'.tr(),
                 ),
                 NavigationDestination(
                   icon: const Icon(Icons.menu),
-                  selectedIcon: const Icon(Icons.menu_open),
+                  selectedIcon: const _PopIcon(Icons.menu_open),
                   label: 'nav.more'.tr(),
                 ),
               ],

@@ -302,7 +302,8 @@
     "died_circa_ah": "توفي نحو {} هـ",
     "death_8th_century": "من علماء القرن الثامن الهجري",
     "book_desc_generated": "مصنَّف لـ {}، {} صفحة، ضمن باب {}.",
-    "tab_hadeethenc": "الموسوعة الحديثية"
+    "tab_hadeethenc": "الموسوعة الحديثية",
+    "download_author_all": "تحميل كل كتب المؤلف ({})"
   },
   "azkar": {
     "title": "الأذكار",
@@ -517,7 +518,8 @@
     "show_transliteration": "إظهار النطق (Show Transliteration)",
     "show_transliteration_desc": "عرض نطق الآيات بالحروف اللاتينية أسفل النص القرآني مباشرة",
     "live_preview": "معاينة حية للمظهر",
-    "transliteration_off_hint": "النطق اللاتيني متوقف (مخصص لتسهيل القراءة لغير العرب)"
+    "transliteration_off_hint": "النطق اللاتيني متوقف (مخصص لتسهيل القراءة لغير العرب)",
+    "splash_section": "شاشة البداية"
   },
   "downloads": {
     "title": "التنزيلات",
@@ -618,7 +620,13 @@
     "prophet_musa": "موسى عليه السلام",
     "prophet_yusuf": "يوسف عليه السلام",
     "play_topic": "تشغيل الكل",
-    "stop_playing": "إيقاف"
+    "stop_playing": "إيقاف",
+    "mode_derivatives": "كل المشتقات",
+    "mode_partial": "جزء من كلمة",
+    "mode_whole": "كلمة مطابقة",
+    "match_diacritics": "بالتشكيل",
+    "topic_selected": "آيات مختارة ({})",
+    "topic_all": "كل الآيات اللي فيها كلمات الموضوع ({})"
   },
   "errors": {
     "offline": "لا يوجد اتصال بالإنترنت",
@@ -1179,6 +1187,7 @@
     "auto_scan": "فحص تلقائي عند فتح المشغّل",
     "remove_folder": "إزالة المجلد من القائمة",
     "scan_none": "مالقيناش ملفات صوت في الجهاز.",
-    "scan_found": "عدد ملفات الصوت في الجهاز: {}"
+    "scan_found": "عدد ملفات الصوت في الجهاز: {}",
+    "now_downloading_list": "جارٍ تنزيل: {}"
   }
 }

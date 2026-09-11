@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
@@ -44,8 +46,23 @@ class ToolbarAction extends StatefulWidget {
   State<ToolbarAction> createState() => _ToolbarActionState();
 }
 
-class _ToolbarActionState extends State<ToolbarAction> {
+class _ToolbarActionState extends State<ToolbarAction>
+    with SingleTickerProviderStateMixin {
   bool _pressed = false;
+
+  /// «اعملي أنيميشن جميل في شكل أيقونات خيارات القرآن». A tap gives the icon
+  /// a short springy wiggle; a change of icon (play → stop, the layout that
+  /// comes next) turns the old one out and the new one in.
+  late final AnimationController _wiggle = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 520),
+  );
+
+  @override
+  void dispose() {
+    _wiggle.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +73,14 @@ class _ToolbarActionState extends State<ToolbarAction> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
-      onTap: widget.onPressed,
+      onTap: () {
+        _wiggle.forward(from: 0);
+        widget.onPressed();
+      },
       child: AnimatedScale(
         scale: _pressed ? 0.86 : 1.0,
-        duration: const Duration(milliseconds: 110),
-        curve: Curves.easeOut,
+        duration: Duration(milliseconds: _pressed ? 110 : 420),
+        curve: _pressed ? Curves.easeOut : Curves.elasticOut,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
@@ -76,7 +96,33 @@ class _ToolbarActionState extends State<ToolbarAction> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(widget.icon, size: widget.compact ? 24 : 22, color: color),
+              AnimatedBuilder(
+                animation: _wiggle,
+                builder: (context, icon) {
+                  final t = _wiggle.value;
+                  final decay = 1 - t;
+                  return Transform.rotate(
+                    angle: math.sin(t * math.pi * 3) * 0.28 * decay,
+                    child: Transform.scale(
+                      scale: 1 + 0.22 * math.sin(t * math.pi) * decay,
+                      child: icon,
+                    ),
+                  );
+                },
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 280),
+                  transitionBuilder: (child, anim) => RotationTransition(
+                    turns: Tween<double>(begin: -0.25, end: 0).animate(anim),
+                    child: ScaleTransition(scale: anim, child: child),
+                  ),
+                  child: Icon(
+                    widget.icon,
+                    key: ValueKey(widget.icon.codePoint),
+                    size: widget.compact ? 24 : 22,
+                    color: color,
+                  ),
+                ),
+              ),
               if (!widget.compact) ...[
                 const SizedBox(height: 3),
                 Text(

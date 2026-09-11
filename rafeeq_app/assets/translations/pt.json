@@ -302,7 +302,8 @@
     "died_circa_ah": "Faleceu por volta de {} AH",
     "death_8th_century": "Um sábio do século VIII da Hégira",
     "book_desc_generated": "Uma obra de {}, {} páginas, na secção de {}.",
-    "tab_hadeethenc": "Enciclopédia de hadiths"
+    "tab_hadeethenc": "Enciclopédia de hadiths",
+    "download_author_all": "Baixar todos os livros do autor ({})"
   },
   "azkar": {
     "title": "Adhkar",
@@ -517,7 +518,8 @@
     "show_transliteration": "Mostrar transliteração (Show Transliteration)",
     "show_transliteration_desc": "Exibir guia de pronúncia latina sob os versículos em árabe",
     "live_preview": "Pré-visualização ao vivo",
-    "transliteration_off_hint": "A transliteração latina está desativada"
+    "transliteration_off_hint": "A transliteração latina está desativada",
+    "splash_section": "Tela de abertura"
   },
   "downloads": {
     "title": "Transferências",
@@ -618,7 +620,13 @@
       "few": "{} resultados",
       "many": "{} resultados",
       "other": "{} resultados"
-    }
+    },
+    "mode_derivatives": "Todas as formas",
+    "mode_partial": "Parte de uma palavra",
+    "mode_whole": "Palavra exata",
+    "match_diacritics": "Com diacríticos",
+    "topic_selected": "Versículos selecionados ({})",
+    "topic_all": "Todos os versículos com as palavras do tema ({})"
   },
   "errors": {
     "offline": "Sem ligação à internet",
@@ -1179,6 +1187,7 @@
     "auto_scan": "Procurar automaticamente ao abrir o player",
     "remove_folder": "Remover esta pasta da lista",
     "scan_none": "Nenhum arquivo de áudio encontrado no dispositivo.",
-    "scan_found": "Arquivos de áudio no dispositivo: {}"
+    "scan_found": "Arquivos de áudio no dispositivo: {}",
+    "now_downloading_list": "Baixando: {}"
   }
 }

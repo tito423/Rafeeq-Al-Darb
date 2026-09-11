@@ -302,7 +302,8 @@
     "died_circa_ah": "وفات تقریباً {}ھ",
     "death_8th_century": "آٹھویں صدی ہجری کے علما میں سے",
     "book_desc_generated": "{} کی تصنیف، {} صفحات، باب {} میں۔",
-    "tab_hadeethenc": "موسوعۂ حدیث"
+    "tab_hadeethenc": "موسوعۂ حدیث",
+    "download_author_all": "مصنف کی تمام کتابیں ڈاؤن لوڈ کریں ({})"
   },
   "azkar": {
     "title": "اذکار",
@@ -517,7 +518,8 @@
     "show_transliteration": "لاطینی تلفظ دکھائیں",
     "show_transliteration_desc": "عربی آیات کے نیچے لاطینی حروف میں تلفظ دکھائیں",
     "live_preview": "ظاہری شکل کا فوری معائنہ",
-    "transliteration_off_hint": "لاطینی تلفظ بند ہے (غیر عرب قارئین کے لیے بنایا گیا ہے)"
+    "transliteration_off_hint": "لاطینی تلفظ بند ہے (غیر عرب قارئین کے لیے بنایا گیا ہے)",
+    "splash_section": "ابتدائی اسکرین"
   },
   "downloads": {
     "title": "ڈاؤن لوڈز",
@@ -618,7 +620,13 @@
     "prophet_musa": "موسیٰ علیہ السلام",
     "prophet_yusuf": "یوسف علیہ السلام",
     "play_topic": "سب چلائیں",
-    "stop_playing": "روکیں"
+    "stop_playing": "روکیں",
+    "mode_derivatives": "تمام صیغے",
+    "mode_partial": "لفظ کا حصہ",
+    "mode_whole": "مکمل لفظ",
+    "match_diacritics": "اعراب کے ساتھ",
+    "topic_selected": "منتخب آیات ({})",
+    "topic_all": "موضوع کے الفاظ والی تمام آیات ({})"
   },
   "errors": {
     "offline": "انٹرنیٹ کا رابطہ نہیں",
@@ -1179,6 +1187,7 @@
     "auto_scan": "پلیئر کھلنے پر خودکار تلاش",
     "remove_folder": "اس فولڈر کو فہرست سے ہٹائیں",
     "scan_none": "ڈیوائس پر کوئی آڈیو فائل نہیں ملی۔",
-    "scan_found": "ڈیوائس پر آڈیو فائلیں: {}"
+    "scan_found": "ڈیوائس پر آڈیو فائلیں: {}",
+    "now_downloading_list": "ڈاؤن لوڈ ہو رہا ہے: {}"
   }
 }

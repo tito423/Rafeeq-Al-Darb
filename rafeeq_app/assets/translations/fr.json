@@ -302,7 +302,8 @@
     "died_circa_ah": "Mort vers {} AH",
     "death_8th_century": "Un savant du VIIIe siècle de l’Hégire",
     "book_desc_generated": "Un ouvrage de {}, {} pages, dans la section {}.",
-    "tab_hadeethenc": "Encyclopédie des hadiths"
+    "tab_hadeethenc": "Encyclopédie des hadiths",
+    "download_author_all": "Télécharger tous les livres de l'auteur ({})"
   },
   "azkar": {
     "title": "Adhkar",
@@ -517,7 +518,8 @@
     "show_transliteration": "Afficher la translittération (Show Transliteration)",
     "show_transliteration_desc": "Afficher la prononciation en caractères latins sous les versets arabes",
     "live_preview": "Aperçu en direct",
-    "transliteration_off_hint": "La translittération latine est désactivée"
+    "transliteration_off_hint": "La translittération latine est désactivée",
+    "splash_section": "Écran de démarrage"
   },
   "downloads": {
     "title": "Téléchargements",
@@ -618,7 +620,13 @@
       "few": "{} résultats",
       "many": "{} résultats",
       "other": "{} résultats"
-    }
+    },
+    "mode_derivatives": "Toutes les formes",
+    "mode_partial": "Partie d'un mot",
+    "mode_whole": "Mot exact",
+    "match_diacritics": "Avec voyelles",
+    "topic_selected": "Versets choisis ({})",
+    "topic_all": "Tous les versets avec les mots du thème ({})"
   },
   "errors": {
     "offline": "Aucune connexion internet",
@@ -1179,6 +1187,7 @@
     "auto_scan": "Analyser automatiquement à l’ouverture du lecteur",
     "remove_folder": "Retirer ce dossier de la liste",
     "scan_none": "Aucun fichier audio trouvé sur l'appareil.",
-    "scan_found": "Fichiers audio sur l'appareil : {}"
+    "scan_found": "Fichiers audio sur l'appareil : {}",
+    "now_downloading_list": "Téléchargement : {}"
   }
 }

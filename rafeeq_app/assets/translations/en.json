@@ -302,7 +302,8 @@
     "died_circa_ah": "Died c. {} AH",
     "death_8th_century": "A scholar of the eighth Hijri century",
     "book_desc_generated": "A work by {}, {} pages, in the {} section.",
-    "tab_hadeethenc": "Hadith Encyclopedia"
+    "tab_hadeethenc": "Hadith Encyclopedia",
+    "download_author_all": "Download all of this author's books ({})"
   },
   "azkar": {
     "title": "Adhkar",
@@ -517,7 +518,8 @@
     "show_transliteration": "Show Transliteration",
     "show_transliteration_desc": "Display Latin pronunciation guide directly beneath Arabic verses",
     "live_preview": "Live Appearance Preview",
-    "transliteration_off_hint": "Latin transliteration is off (designed for non-Arabic readers)"
+    "transliteration_off_hint": "Latin transliteration is off (designed for non-Arabic readers)",
+    "splash_section": "Splash screen"
   },
   "downloads": {
     "title": "Downloads",
@@ -618,7 +620,13 @@
     "prophet_musa": "Musa (Moses), peace be upon him",
     "prophet_yusuf": "Yusuf (Joseph), peace be upon him",
     "play_topic": "Play all",
-    "stop_playing": "Stop"
+    "stop_playing": "Stop",
+    "mode_derivatives": "All forms",
+    "mode_partial": "Part of a word",
+    "mode_whole": "Exact word",
+    "match_diacritics": "Match diacritics",
+    "topic_selected": "Selected verses ({})",
+    "topic_all": "Every verse with the topic's words ({})"
   },
   "errors": {
     "offline": "No internet connection",
@@ -1179,6 +1187,7 @@
     "auto_scan": "Scan automatically when the player opens",
     "remove_folder": "Remove this folder from the list",
     "scan_none": "No audio files found on the device.",
-    "scan_found": "Audio files on the device: {}"
+    "scan_found": "Audio files on the device: {}",
+    "now_downloading_list": "Downloading: {}"
   }
 }

@@ -2,8 +2,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../utils/arabic_normalize.dart';
+import '../utils/quran_search_match.dart';
 import 'db_helper.dart';
 import 'models.dart';
+
+/// One ayah prepared for [QuranRepository.searchQuran].
+class _AyahWords {
+  final Ayah ayah;
+  final String strict;
+  final String loose;
+  final String harakat;
+  final List<QuranWord> words;
+
+  const _AyahWords({
+    required this.ayah,
+    required this.strict,
+    required this.loose,
+    required this.harakat,
+    required this.words,
+  });
+}
 
 /// Read access to the bundled Quran database
 /// (ayahs / surahs / keyword search — all real, verified text; search() is
@@ -161,6 +179,87 @@ class QuranRepository {
     }
     return matches;
   }
+
+  /// Every ayah as whole normalised texts plus its words, in the three forms a
+  /// search compares against — for [searchQuran] and [searchTopic].
+  List<_AyahWords>? _wordIndex;
+
+  Future<List<_AyahWords>> _words() async {
+    final cached = _wordIndex;
+    if (cached != null) return cached;
+    final rows = await _db.query('ayahs');
+    final built = <_AyahWords>[];
+    for (final r in rows) {
+      final text = r['text_uthmani'] as String;
+      built.add(_AyahWords(
+        ayah: Ayah.fromRow(r),
+        strict: normalizeArabic(text),
+        loose: normalizeArabicLoose(text),
+        harakat: normalizeKeepHarakat(text),
+        words: [
+          for (final raw in text.split(' '))
+            if (QuranWord.of(raw) case final w when !w.isEmpty) w,
+        ],
+      ));
+    }
+    _wordIndex = built;
+    return built;
+  }
+
+  /// «ادي خيار في البحث بالكلمة بحث بجزء من الكلمة أو كلمة متطابقة، بتشكيل
+  /// أو بغير تشكيل». The modes, and what each one was measured to find, are in
+  /// `quran_search_match.dart`. A query with a space in it is a phrase — «بجزء
+  /// من الآية» — and is matched against the whole ayah.
+  Future<List<Ayah>> searchQuran(
+    String query, {
+    QuranSearchMode mode = QuranSearchMode.derivatives,
+    bool matchDiacritics = false,
+    int limit = 2000,
+  }) async {
+    final q = query.trim();
+    if (q.isEmpty) return [];
+    final idx = await _words();
+    final out = <Ayah>[];
+    if (q.contains(' ')) {
+      final h = normalizeKeepHarakat(q);
+      final s = normalizeArabic(q);
+      final l = normalizeArabicLoose(q);
+      for (final e in idx) {
+        final hit = matchDiacritics
+            ? e.harakat.contains(h)
+            : (e.strict.contains(s) || e.loose.contains(l));
+        if (hit) {
+          out.add(e.ayah);
+          if (out.length >= limit) break;
+        }
+      }
+      return out;
+    }
+    final test =
+        quranWordTest(q, mode: mode, matchDiacritics: matchDiacritics);
+    if (test == null) return out;
+    for (final e in idx) {
+      if (e.words.any(test)) {
+        out.add(e.ayah);
+        if (out.length >= limit) break;
+      }
+    }
+    return out;
+  }
+
+  /// Every ayah a curated topic's own patterns find (`topic_tree.dart`).
+  Future<List<Ayah>> searchTopic(TopicPattern pattern) async {
+    final idx = await _words();
+    final test = pattern.wordTest;
+    return [
+      for (final e in idx)
+        if ((test != null && e.words.any(test)) ||
+            pattern.phrases
+                .any((p) => e.strict.contains(p) || e.loose.contains(p)))
+          e.ayah,
+    ];
+  }
+
 /// First actual page of each surah (real Madani page boundaries).
   Future<Map<int, int>> surahStartPages() async {
     final rows = await _db.rawQuery(

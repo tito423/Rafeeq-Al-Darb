@@ -109,7 +109,12 @@ class SettingsBody extends ConsumerWidget {
               ),
             ),
           ],
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
+          // «مش لاقي فعليًا خيار الاسبلاش سكرين بصوت أو بغير أو عرضها من
+          // الأساس». Both switches were here, but inside the appearance block
+          // with no heading of their own, so nothing on the screen said
+          // «شاشة البداية». They have a heading now.
+          SectionLabel('settings.splash_section'.tr()),
           // P3‑49: the AI-generated splash video is back on by default; keep
           // a toggle for anyone who prefers a faster cold start. P3‑57 adds
           // the owner's sound switch underneath it.

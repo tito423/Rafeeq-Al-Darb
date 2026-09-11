@@ -136,8 +136,55 @@ class _RgbPainter extends CustomPainter {
       );
     }
 
-    // A small, fixed set of twinkling star-dots — a seeded `Random` so the
-    // positions never jitter frame to frame, only their alpha does.
+    // «كتّر شوية بشكل جميل من تأثيراته، عاوزه روعة بصريًا». Three additions,
+    // all cheap to paint (no extra blur passes):
+    //
+    // 1. A slow colour-cycling aurora band across the upper third: a sweep of
+    //    teal → violet → gold that travels and breathes over the loop.
+    final band = Rect.fromLTWH(-w * 0.2, h * 0.08, w * 1.4, h * 0.34);
+    final shift = math.sin(t * tau) * w * 0.25;
+    canvas.save();
+    canvas.translate(shift, 0);
+    canvas.drawOval(
+      band,
+      Paint()
+        ..shader = LinearGradient(
+          colors: [
+            _teal.withValues(alpha: 0.0),
+            _teal.withValues(alpha: 0.10 + 0.05 * math.sin(t * tau * 2)),
+            _violet.withValues(alpha: 0.09),
+            _gold.withValues(alpha: 0.07 + 0.04 * math.cos(t * tau)),
+            _gold.withValues(alpha: 0.0),
+          ],
+        ).createShader(band),
+    );
+    canvas.restore();
+
+    // 2. A faint eight-pointed star (rub el hizb) turning very slowly behind
+    //    the content — the app's own motif rather than generic decoration.
+    final starCenter = Offset(w * 0.5, h * 0.62);
+    final starR = math.min(w, h) * 0.42;
+    canvas.save();
+    canvas.translate(starCenter.dx, starCenter.dy);
+    canvas.rotate(t * tau * 0.25);
+    final starPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2
+      ..color = _gold.withValues(alpha: 0.07);
+    for (var k = 0; k < 2; k++) {
+      canvas.save();
+      canvas.rotate(k * math.pi / 4);
+      canvas.drawRect(
+        Rect.fromCenter(center: Offset.zero, width: starR, height: starR),
+        starPaint,
+      );
+      canvas.restore();
+    }
+    canvas.drawCircle(Offset.zero, starR * 0.38, starPaint);
+    canvas.restore();
+
+    // 3. Motes rising slowly from the bottom and fading at the top, on top of
+    //    the fixed twinkling star-dots below.
     final rnd = math.Random(7);
     for (var i = 0; i < 18; i++) {
       final dx = rnd.nextDouble() * w;
@@ -147,6 +194,20 @@ class _RgbPainter extends CustomPainter {
         Offset(dx, dy),
         1.4,
         Paint()..color = Colors.white.withValues(alpha: 0.28 * twinkle),
+      );
+    }
+    final motes = math.Random(19);
+    for (var i = 0; i < 22; i++) {
+      final x = motes.nextDouble() * w;
+      final speed = 0.6 + motes.nextDouble();
+      final phase = motes.nextDouble();
+      final y = h * (1 - ((t * speed + phase) % 1.0));
+      final fade = (y / h).clamp(0.0, 1.0);
+      final color = _ringColors[i % _ringColors.length];
+      canvas.drawCircle(
+        Offset(x + math.sin(t * tau * speed + i) * 12, y),
+        1.6 + (i % 3) * 0.6,
+        Paint()..color = color.withValues(alpha: 0.35 * fade),
       );
     }
 

@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/hero_surface.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 
@@ -300,18 +301,26 @@ class _CompassDial extends StatelessWidget {
     // itself is currently facing.
     final needleAngle = (qiblaBearing - heading) * math.pi / 180;
 
+    // «خلي كارت القبلة مطابق لثيم التطبيق مع اختيار الألوان المناسبة». The
+    // card was a fixed near-black gradient on every theme, so on the light
+    // theme it sat as a dark slab on a pale page. It takes the app's hero
+    // surface now — the same ground the home cards and the card screens use —
+    // with the compass accent adjusted for it.
+    final surface = HeroSurface.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 28),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)],
+          colors: surface.gradient,
         ),
         border: Border.all(
-          color: (aligned ? AppColors.success : const Color(0xFF15C7B0))
-              .withValues(alpha: aligned ? 0.7 : 0.35),
+          color: (aligned
+                  ? AppColors.success
+                  : surface.accent(const Color(0xFF15C7B0)))
+              .withValues(alpha: aligned ? 0.7 : 0.45),
         ),
         boxShadow: [
           BoxShadow(

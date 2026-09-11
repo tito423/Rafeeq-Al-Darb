@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -53,13 +55,23 @@ class MiniPlayer extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(10, 8, 4, 8),
                       child: Row(
                         children: [
+                          // «خلي الرمز الأيقوني في كارت المشغل الصغير يبقى
+                          // انيمتد بصريًا». Bars that move while the audio
+                          // plays and settle when it pauses.
                           Hero(
                             tag: 'quran-audio-art',
-                            child: RecitationCover(
-                              title: track.title,
-                              artist: track.artist,
-                              size: 44,
-                              compact: true,
+                            child: Stack(
+                              children: [
+                                RecitationCover(
+                                  title: track.title,
+                                  artist: track.artist,
+                                  size: 44,
+                                  compact: true,
+                                ),
+                                Positioned.fill(
+                                  child: _EqualizerOverlay(playing: player.playing),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -129,4 +141,93 @@ class MiniPlayer extends StatelessWidget {
       },
     );
   }
+}
+
+/// Four gold bars over the cover's lower half, each rising and falling on its
+/// own phase while [playing]; they ease down to a low rest when paused, so
+/// the stopped state reads as stopped rather than frozen mid-motion.
+class _EqualizerOverlay extends StatefulWidget {
+  final bool playing;
+  const _EqualizerOverlay({required this.playing});
+
+  @override
+  State<_EqualizerOverlay> createState() => _EqualizerOverlayState();
+}
+
+class _EqualizerOverlayState extends State<_EqualizerOverlay>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1400),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.playing) _c.repeat();
+  }
+
+  @override
+  void didUpdateWidget(covariant _EqualizerOverlay old) {
+    super.didUpdateWidget(old);
+    if (widget.playing && !_c.isAnimating) {
+      _c.repeat();
+    } else if (!widget.playing && _c.isAnimating) {
+      _c.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+        child: AnimatedBuilder(
+          animation: _c,
+          builder: (context, _) => CustomPaint(
+            painter: _BarsPainter(t: _c.value, playing: widget.playing),
+          ),
+        ),
+      );
+}
+
+class _BarsPainter extends CustomPainter {
+  final double t;
+  final bool playing;
+  const _BarsPainter({required this.t, required this.playing});
+
+  static const _phases = [0.0, 0.35, 0.7, 0.15];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final barW = size.width * 0.1;
+    final gap = size.width * 0.06;
+    final total = _phases.length * barW + (_phases.length - 1) * gap;
+    var x = (size.width - total) / 2;
+    final base = size.height * 0.86;
+    final paint = Paint()..color = AppColors.gold.withValues(alpha: 0.92);
+    // A dark wash behind the bars so they read over any cover.
+    canvas.drawRRect(
+      RRect.fromLTRBR(x - gap, size.height * 0.38, x + total + gap,
+          size.height * 0.92, const Radius.circular(4)),
+      Paint()..color = Colors.black.withValues(alpha: 0.35),
+    );
+    for (final phase in _phases) {
+      final wave = playing
+          ? 0.5 + 0.5 * math.sin(2 * math.pi * (t + phase) * (1 + phase))
+          : 0.15;
+      final h = size.height * (0.12 + 0.34 * wave);
+      canvas.drawRRect(
+        RRect.fromLTRBR(x, base - h, x + barW, base, Radius.circular(barW / 2)),
+        paint,
+      );
+      x += barW + gap;
+    }
+  }
+
+  @override
+  bool shouldRepaint(_BarsPainter old) => old.t != t || old.playing != playing;
 }

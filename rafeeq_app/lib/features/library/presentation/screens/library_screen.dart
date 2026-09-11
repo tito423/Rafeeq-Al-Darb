@@ -348,6 +348,26 @@ class _AuthorExpansionTile extends StatelessWidget {
       collapsedShape: const Border(),
       childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
       children: [
+        // «حط خيار جديد في المكتبة في خانة المؤلفين لإمكانية تحميل كتب المؤلف
+        // كلها دفعة واحدة». Only books with a hosted text and not already on
+        // the device are counted, and the button goes once there are none.
+        if (_missing.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: FilledButton.tonalIcon(
+                onPressed: () {
+                  for (final b in _missing) {
+                    onDownload(b);
+                  }
+                },
+                icon: const Icon(Icons.download_for_offline_rounded),
+                label: Text('library.download_author_all'
+                    .tr(args: ['${_missing.length}'])),
+              ),
+            ),
+          ),
         for (final b in books) ...[
           _BookCard(
             book: b,
@@ -360,6 +380,15 @@ class _AuthorExpansionTile extends StatelessWidget {
       ],
     );
   }
+
+  List<LibraryBook> get _missing => [
+        for (final b in books)
+          if (b.textEdition != null &&
+              !paths.containsKey(b.id) &&
+              DownloadManager.instance.taskById(b.id)?.status !=
+                  DownloadStatus.downloading)
+            b,
+      ];
 }
 
 class _CategoriesView extends StatelessWidget {

@@ -63,15 +63,17 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
   }
 
   /// The surah transferring now (or next), with its progress.
-  (int, double)? _downloading(QuranAudioLibrary lib) {
-    (int, double)? queued;
-    for (final surah in _moshaf.surahs) {
-      final st = lib.statusOf(_moshaf.id, surah);
-      if (st.state == SurahAudioState.running) return (surah, st.progress);
-      if (st.state == SurahAudioState.queued) queued ??= (surah, 0);
-    }
-    return queued;
-  }
+  ///
+  /// Every surah transferring at once, in surah order — three run side by
+  /// side, and the card used to name only the first: «هو فعليًا بيحمل ٣ سور
+  /// مع بعض مع إنه عارض في الكارت اللي فوق إنه بيحمل سورة البقرة بس». Empty
+  /// when nothing is transferring.
+  List<(int, double)> _downloading(QuranAudioLibrary lib) => [
+        for (final surah in _moshaf.surahs)
+          if (lib.statusOf(_moshaf.id, surah) case final st
+              when st.state == SurahAudioState.running)
+            (surah, st.progress),
+      ];
 
   /// «لو ضغطت عليه ينقلني فورًا عند المكان اللي بتتحمّل منه السورة».
   void _jumpToSurah(int surah) {
@@ -208,22 +210,25 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                           height: 6,
                           color: done >= total ? AppColors.success : AppColors.gold,
                         ),
-                        if (now != null) ...[
+                        if (now.isNotEmpty) ...[
                           const SizedBox(height: 10),
                           InkWell(
-                            onTap: () => _jumpToSurah(now.$1),
+                            onTap: () => _jumpToSurah(now.first.$1),
                             borderRadius: BorderRadius.circular(12),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 6),
                               child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Icon(Icons.downloading_rounded, color: theme.accent, size: 20),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'quran_audio.now_downloading'.tr(args: [
-                                        surahTitle(data, now.$1, locale),
-                                        ltr('${(now.$2 * 100).round()}%'),
+                                      'quran_audio.now_downloading_list'.tr(args: [
+                                        [
+                                          for (final (surah, progress) in now)
+                                            '${surahTitle(data, surah, locale)} ${ltr('${(progress * 100).round()}%')}',
+                                        ].join('  ·  '),
                                       ]),
                                       style: TextStyle(color: theme.accentSoft, fontWeight: FontWeight.w700),
                                     ),

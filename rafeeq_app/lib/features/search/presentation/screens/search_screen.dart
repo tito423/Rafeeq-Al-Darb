@@ -11,11 +11,11 @@ import '../../../../core/db/quran_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/utils/quran_search_match.dart';
 import '../../data/topic_tree.dart';
 
-/// Thematic + keyword Quran search (WORK_QUEUE Stage 6). Returns the tapped
-/// ayah's page number via `Navigator.pop`, so the Quran screen can jump
-/// straight there.
+/// Thematic + keyword Quran search. Returns the tapped ayah's page number via
+/// `Navigator.pop`, so the Quran screen can jump straight there.
 class SearchScreen extends ConsumerStatefulWidget {
   final QuranRepository repo;
   const SearchScreen({super.key, required this.repo});
@@ -28,6 +28,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _controller = TextEditingController();
   List<Ayah>? _keywordResults;
   Timer? _debounce;
+
+  /// «ادي خيار في البحث بالكلمة بحث بجزء من الكلمة أو كلمة متطابقة، بتشكيل
+  /// أو بغير تشكيل». All derivatives by default — it is the one mode that
+  /// finds «الصلاة» at all (see `quran_search_match.dart`).
+  QuranSearchMode _mode = QuranSearchMode.derivatives;
+  bool _diacritics = false;
 
   @override
   void dispose() {
@@ -42,12 +48,33 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       setState(() => _keywordResults = null);
       return;
     }
-    _debounce = Timer(const Duration(milliseconds: 300), () => _runKeywordSearch(q));
+    _debounce = Timer(const Duration(milliseconds: 300), _runKeywordSearch);
   }
 
-  Future<void> _runKeywordSearch(String q) async {
-    final results = await widget.repo.search(q);
-    if (mounted) setState(() => _keywordResults = results);
+  Future<void> _runKeywordSearch() async {
+    final q = _controller.text;
+    if (q.trim().isEmpty) return;
+    final results = await widget.repo
+        .searchQuran(q, mode: _mode, matchDiacritics: _diacritics);
+    if (mounted && q == _controller.text) {
+      setState(() => _keywordResults = results);
+    }
+  }
+
+  void _setMode(QuranSearchMode m) {
+    setState(() => _mode = m);
+    _runKeywordSearch();
+  }
+
+  void _setDiacritics(bool on) {
+    setState(() {
+      _diacritics = on;
+      // A vowel-tolerant pattern and exact harakat contradict each other.
+      if (on && _mode == QuranSearchMode.derivatives) {
+        _mode = QuranSearchMode.partial;
+      }
+    });
+    _runKeywordSearch();
   }
 
   void _openAyah(Ayah ayah) => Navigator.of(context).pop(ayah.pageNumber);
@@ -74,7 +101,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             _KeywordTab(
               controller: _controller,
               results: _keywordResults,
+              mode: _mode,
+              diacritics: _diacritics,
               onChanged: _onKeywordChanged,
+              onMode: _setMode,
+              onDiacritics: _setDiacritics,
               onOpen: _openAyah,
             ),
           ],
@@ -84,22 +115,55 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 }
 
+/// A word test that also works for a phrase: any word of the phrase.
+bool Function(QuranWord)? _highlightTest(
+  String query,
+  QuranSearchMode mode,
+  bool diacritics,
+) {
+  final parts = query.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
+  final tests = [
+    for (final p in parts)
+      ?quranWordTest(p,
+          mode: parts.length > 1 ? QuranSearchMode.partial : mode,
+          matchDiacritics: diacritics),
+  ];
+  if (tests.isEmpty) return null;
+  return (w) => tests.any((t) => t(w));
+}
+
 class _KeywordTab extends StatelessWidget {
   final TextEditingController controller;
   final List<Ayah>? results;
+  final QuranSearchMode mode;
+  final bool diacritics;
   final ValueChanged<String> onChanged;
+  final ValueChanged<QuranSearchMode> onMode;
+  final ValueChanged<bool> onDiacritics;
   final ValueChanged<Ayah> onOpen;
 
   const _KeywordTab({
     required this.controller,
     required this.results,
+    required this.mode,
+    required this.diacritics,
     required this.onChanged,
+    required this.onMode,
+    required this.onDiacritics,
     required this.onOpen,
   });
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final test = _highlightTest(controller.text, mode, diacritics);
+    Widget modeChip(QuranSearchMode m, String key) => ChoiceChip(
+          label: Text(key.tr()),
+          selected: mode == m,
+          onSelected: (m == QuranSearchMode.derivatives && diacritics)
+              ? null
+              : (_) => onMode(m),
+        );
     return Column(
       children: [
         Padding(
@@ -127,7 +191,23 @@ class _KeywordTab extends StatelessWidget {
             onChanged: onChanged,
           ),
         ),
-        // Results count badge
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              modeChip(QuranSearchMode.derivatives, 'search.mode_derivatives'),
+              modeChip(QuranSearchMode.partial, 'search.mode_partial'),
+              modeChip(QuranSearchMode.wholeWord, 'search.mode_whole'),
+              FilterChip(
+                label: Text('search.match_diacritics'.tr()),
+                selected: diacritics,
+                onSelected: onDiacritics,
+              ),
+            ],
+          ),
+        ),
         if (results != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
@@ -165,7 +245,8 @@ class _KeywordTab extends StatelessWidget {
                         return ListTile(
                           title: _HighlightedAyahText(
                             text: a.textUthmani,
-                            query: controller.text.trim(),
+                            test: test,
+                            maxLines: 3,
                           ),
                           subtitle: Text(
                             '${a.surahId}:${a.ayahNumber}',
@@ -184,102 +265,57 @@ class _KeywordTab extends StatelessWidget {
   }
 }
 
-/// Highlights the matching portion of the ayah text using RichText.
-/// Uses the same normalization logic as the search itself so the highlight
-/// aligns with what actually matched.
+/// The ayah with every word the search matched set in gold. Word by word, so
+/// the highlight is the same test the search itself ran — a derivative, a
+/// part of a word or the whole word, with or without harakat.
 class _HighlightedAyahText extends StatelessWidget {
   final String text;
-  final String query;
-  const _HighlightedAyahText({required this.text, required this.query});
+  final bool Function(QuranWord)? test;
+  final int? maxLines;
+  const _HighlightedAyahText({required this.text, this.test, this.maxLines});
 
   @override
   Widget build(BuildContext context) {
-    if (query.isEmpty) {
+    const base = TextStyle(fontFamily: 'AmiriQuran', fontSize: 17, height: 1.6);
+    final t = test;
+    if (t == null) {
       // ArabicText / an RTL Directionality below: an ayah is Arabic, and the
       // search screen inherits the app's direction, which is LTR in six of
-      // the seven locales. See daily_hadith_card for the measured case.
+      // the seven locales.
       return ArabicText(
         text,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 16),
+        maxLines: maxLines,
+        overflow: maxLines == null ? null : TextOverflow.ellipsis,
+        style: base,
       );
     }
-
-    // Simple case-insensitive highlight (works well for Arabic since the
-    // visual rendering matches even if diacritics differ slightly).
-    // We search for the query characters in the original text, ignoring
-    // diacritics for the match position but highlighting the original text.
-    final spans = <TextSpan>[];
-    final lowerText = _stripDiacritics(text);
-    final lowerQuery = _stripDiacritics(query);
-
-    int start = 0;
-    int idx = lowerText.indexOf(lowerQuery);
-    while (idx != -1 && start < text.length) {
-      // Map positions from stripped text back to original text
-      final origStart = _mapToOriginal(text, lowerText, idx);
-      final origEnd = _mapToOriginal(text, lowerText, idx + lowerQuery.length);
-
-      if (origStart > start) {
-        spans.add(TextSpan(text: text.substring(start, origStart)));
-      }
-      spans.add(TextSpan(
-        text: text.substring(origStart, origEnd),
-        style: TextStyle(
-          backgroundColor: AppColors.gold.withValues(alpha: 0.3),
-          color: AppColors.gold,
-          fontWeight: FontWeight.w700,
+    final words = text.split(' ');
+    final spans = <TextSpan>[
+      for (var i = 0; i < words.length; i++) ...[
+        TextSpan(
+          text: words[i],
+          style: t(QuranWord.of(words[i]))
+              ? TextStyle(
+                  backgroundColor: AppColors.gold.withValues(alpha: 0.28),
+                  color: AppColors.gold,
+                  fontWeight: FontWeight.w700,
+                )
+              : null,
         ),
-      ));
-      start = origEnd;
-      idx = lowerText.indexOf(lowerQuery, idx + lowerQuery.length);
-    }
-    if (start < text.length) {
-      spans.add(TextSpan(text: text.substring(start)));
-    }
-
+        if (i < words.length - 1) const TextSpan(text: ' '),
+      ],
+    ];
     return Directionality(
       textDirection: TextDirection.rtl,
       child: RichText(
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
+        maxLines: maxLines,
+        overflow: maxLines == null ? TextOverflow.clip : TextOverflow.ellipsis,
         text: TextSpan(
-          style: TextStyle(
-            fontFamily: 'AmiriQuran',
-            fontSize: 16,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
+          style: base.copyWith(color: Theme.of(context).colorScheme.onSurface),
           children: spans,
         ),
       ),
     );
-  }
-
-  /// Strip Arabic diacritics for matching purposes.
-  static final _diacritics = RegExp('[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED\u0640]');
-  static final _alefs = RegExp('[\u0622\u0623\u0625\u0671\u0670]');
-
-  static String _stripDiacritics(String s) {
-    return s
-        .replaceAll(_diacritics, '')
-        .replaceAll(_alefs, '\u0627')
-        .replaceAll('\u0649', '\u064A');
-  }
-
-  /// Maps an index in the stripped string back to the original string.
-  static int _mapToOriginal(String original, String stripped, int strippedIdx) {
-    if (strippedIdx >= stripped.length) return original.length;
-    int si = 0;
-    for (int oi = 0; oi < original.length; oi++) {
-      if (si == strippedIdx) return oi;
-      // If this character in original maps to something in stripped, advance si
-      final strippedChar = _stripDiacritics(original[oi]);
-      if (strippedChar.isNotEmpty) {
-        si += strippedChar.length;
-      }
-    }
-    return original.length;
   }
 }
 
@@ -292,22 +328,34 @@ class _TopicsTab extends StatefulWidget {
   State<_TopicsTab> createState() => _TopicsTabState();
 }
 
+class _TopicResult {
+  final List<Ayah> curated;
+
+  /// Every verse the topic's own words find, minus the curated ones.
+  final List<Ayah> all;
+  const _TopicResult(this.curated, this.all);
+}
+
 class _TopicsTabState extends State<_TopicsTab> {
   Topic? _openTopic;
-  Future<List<Ayah>>? _future;
+  Future<_TopicResult>? _future;
 
-  /// P2‑8 #4 (Sakinah-style topical audio playlist) — true while this
-  /// topic's ayahs are being played back-to-back via `playQueue`. Reuses the
-  /// exact same curated `TopicRef`s the reading list already shows — no new
-  /// content, just a way to listen to them in order instead of reading.
+  /// True while this topic's ayahs are being played back-to-back via
+  /// `playQueue`.
   bool _playingAll = false;
 
-  Future<List<Ayah>> _loadTopic(Topic topic) async {
-    final all = <Ayah>[];
+  Future<_TopicResult> _loadTopic(Topic topic) async {
+    final curated = <Ayah>[];
     for (final ref in topic.refs) {
-      all.addAll(await widget.repo.ayahRange(ref.surah, ref.fromAyah, ref.toAyah));
+      curated.addAll(
+          await widget.repo.ayahRange(ref.surah, ref.fromAyah, ref.toAyah));
     }
-    return all;
+    final seen = {for (final a in curated) '${a.surahId}:${a.ayahNumber}'};
+    final found = await widget.repo.searchTopic(topic.pattern);
+    return _TopicResult(curated, [
+      for (final a in found)
+        if (!seen.contains('${a.surahId}:${a.ayahNumber}')) a,
+    ]);
   }
 
   void _selectTopic(Topic topic) {
@@ -335,10 +383,10 @@ class _TopicsTabState extends State<_TopicsTab> {
     final future = _future;
     if (future == null) return;
     setState(() => _playingAll = true);
-    final ayahs = await future;
+    final result = await future;
     if (!mounted) return;
     await AyahAudioService.instance.playQueue(
-      ayahs,
+      [...result.curated, ...result.all],
       widget.repo,
       titleFor: (a, i) => '$label • ${a.surahId}:${a.ayahNumber}',
     );
@@ -351,10 +399,37 @@ class _TopicsTabState extends State<_TopicsTab> {
     super.dispose();
   }
 
+  Widget _header(BuildContext context, String text) => Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+        child: Text(
+          text,
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
+        ),
+      );
+
+  Widget _tile(Ayah a, String label, bool Function(QuranWord)? test) => ListTile(
+        leading: IconButton(
+          icon: const Icon(Icons.play_circle_outline),
+          onPressed: () => AyahAudioService.instance.play(
+            a,
+            widget.repo,
+            title: '$label • ${a.surahId}:${a.ayahNumber}',
+          ),
+        ),
+        title: _HighlightedAyahText(text: a.textUthmani, test: test),
+        subtitle: Text('${a.surahId}:${a.ayahNumber}'),
+        onTap: () => widget.onOpen(a),
+      );
+
   @override
   Widget build(BuildContext context) {
     if (_openTopic != null) {
-      final label = _openTopic!.labelKey.tr();
+      final topic = _openTopic!;
+      final label = topic.labelKey.tr();
+      final test = topic.pattern.wordTest;
       return Column(
         children: [
           Padding(
@@ -386,7 +461,7 @@ class _TopicsTabState extends State<_TopicsTab> {
             ),
           ),
           Expanded(
-            child: FutureBuilder<List<Ayah>>(
+            child: FutureBuilder<_TopicResult>(
               future: _future,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -395,30 +470,22 @@ class _TopicsTabState extends State<_TopicsTab> {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                final ayahs = snapshot.data!;
-                return ListView.separated(
-                  itemCount: ayahs.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
-                  itemBuilder: (context, i) {
-                    final a = ayahs[i];
-                    return ListTile(
-                      leading: IconButton(
-                        icon: const Icon(Icons.play_circle_outline),
-                        onPressed: () => AyahAudioService.instance.play(
-                          a,
-                          widget.repo,
-                          title: '$label • ${a.surahId}:${a.ayahNumber}',
-                        ),
-                      ),
-                      title: ArabicText(
-                        a.textUthmani,
-                        style: const TextStyle(
-                            fontFamily: 'AmiriQuran', fontSize: 17, height: 1.6),
-                      ),
-                      subtitle: Text('${a.surahId}:${a.ayahNumber}'),
-                      onTap: () => widget.onOpen(a),
-                    );
-                  },
+                final r = snapshot.data!;
+                return ListView(
+                  children: [
+                    _header(context,
+                        'search.topic_selected'.tr(args: ['${r.curated.length}'])),
+                    for (final a in r.curated) ...[
+                      _tile(a, label, null),
+                      const Divider(height: 1),
+                    ],
+                    _header(context,
+                        'search.topic_all'.tr(args: ['${r.all.length}'])),
+                    for (final a in r.all) ...[
+                      _tile(a, label, test),
+                      const Divider(height: 1),
+                    ],
+                  ],
                 );
               },
             ),
