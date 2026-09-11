@@ -1146,9 +1146,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 11:32 — IN PROGRESS — resume here**
+**2026-09-11 11:40 — IN PROGRESS — resume here**
 
-two more from his list. Rotation is the text mode's only - a scan has one fixed shape and on a phone's side can only be drawn full-width and scrolled, while the text reflows into genuinely longer lines; the lock is released when the screen goes away so nothing else in the app inherits it. Turning the phone sideways now opens the page to full screen by itself and puts back what he had when he turns it upright again: deliberately not persisted, because that is how the phone is being held, not a preference. And the reciting ayah: centring a card is right only while it fits, so al-Baqarah 282 - a card several screens tall - had its middle centred and lost both its beginning and its end. A card taller than the viewport is now shown from the top, and the flowing layout puts the verse's start a third down instead of centred, since that layout knows where a verse begins but not how tall it is. 162 tests pass, analyze clean. Neither seen on a device yet.
+the third text layout, «زي بتاع ختمة بالظبط». QuranTextLayout.reading is the page layout with the ornament taken out: the illuminated surah banner drops to a plain centred name, the open rosette becomes a filled disc with the number in the paper colour, leading goes 2.1 to 1.85 and the side margins 18 to 8, which is most of why the reference page fits more of the surah on one screen. The toolbar control cycles now instead of flipping, and it is labelled with the layout it will GIVE you. Two things that break quietly when an enum like this grows are covered: isFlowing exists so nobody writes == page and sends reading down the cards branch, and the test walks one full lap to prove no value is unreachable. layout_reading is in all seven locales (trap 8). 166 tests pass, analyze clean. Nothing in this batch has been opened on a device yet - building next.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -3,15 +3,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// How the text mushaf sets its verses.
 ///
-/// Both are real reading modes people prefer for different reasons, so this is
-/// a choice rather than a redesign: [cards] keeps each verse in its own boxed
-/// row, which makes an individual verse easy to isolate, tap and study;
-/// [page] sets the whole run as one justified block with inline rosettes, the
-/// way a printed mushaf does, which is what someone reading continuously
-/// expects to see.
+/// All three are real reading modes people prefer for different reasons, so
+/// this is a choice rather than a redesign:
+///
+/// * [cards] keeps each verse in its own boxed row, which makes an individual
+///   verse easy to isolate, tap and study;
+/// * [page] sets the whole run as one justified block with inline rosettes and
+///   the surah's illuminated banner, the way a printed mushaf does;
+/// * [reading] is [page] with everything decorative taken out — filled
+///   markers instead of rosettes, tighter leading, no banner, and margins
+///   halved so the line runs to the edge of the screen. Added 2026-09-11 at
+///   the owner's request, after he sent screenshots of the app he reads in:
+///   «انت تضيف وضع نصي زي بتاع ختمة بالظبط يبقى المجموع نصي ٣».
 enum QuranTextLayout {
   cards,
-  page;
+  page,
+  reading;
+
+  /// True for the two layouts that set verses as running text; only [cards]
+  /// gives a verse a widget of its own.
+  bool get isFlowing => this != QuranTextLayout.cards;
 
   static QuranTextLayout fromName(String? name) =>
       QuranTextLayout.values.firstWhere(
@@ -39,11 +50,15 @@ class QuranTextLayoutNotifier extends StateNotifier<QuranTextLayout> {
     await prefs.setString(_kKey, layout.name);
   }
 
-  Future<void> toggle() => set(
-        state == QuranTextLayout.page
-            ? QuranTextLayout.cards
-            : QuranTextLayout.page,
-      );
+  /// The layout after this one. With three of them the control cycles rather
+  /// than flips, in the fixed order page → cards → reading → page.
+  QuranTextLayout get next => switch (state) {
+        QuranTextLayout.page => QuranTextLayout.cards,
+        QuranTextLayout.cards => QuranTextLayout.reading,
+        QuranTextLayout.reading => QuranTextLayout.page,
+      };
+
+  Future<void> toggle() => set(next);
 }
 
 final quranTextLayoutProvider =

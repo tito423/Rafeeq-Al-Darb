@@ -181,6 +181,7 @@
     "translation_not_downloaded": "The {} translation is not downloaded yet",
     "layout_page": "Page layout",
     "layout_cards": "Card layout",
+    "layout_reading": "Reading view",
     "search_surah_hint": "Search a surah or its number…",
     "search_juz_hint": "Search a juz number…"
   },

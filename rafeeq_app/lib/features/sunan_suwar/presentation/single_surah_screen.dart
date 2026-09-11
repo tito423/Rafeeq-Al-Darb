@@ -491,9 +491,11 @@ class _ReaderBar extends StatelessWidget {
                   IconButton(
                     tooltip: 'quran.layout_toggle'.tr(),
                     icon: Icon(
-                      layout == QuranTextLayout.page
-                          ? Icons.view_agenda_outlined
-                          : Icons.article_outlined,
+                      switch (layout) {
+                        QuranTextLayout.page => Icons.view_agenda_outlined,
+                        QuranTextLayout.cards => Icons.chrome_reader_mode_outlined,
+                        QuranTextLayout.reading => Icons.article_outlined,
+                      },
                     ),
                     onPressed: onLayout,
                   ),

@@ -608,16 +608,31 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           compact: _toolbarLandscape(context),
                           children: [
                             if (_mode == MushafMode.text && !isRaster) ...[
-                              // Both verse layouts are real reading
-                              // preferences, so this switches between them
-                              // rather than one replacing the other.
+                              // Three verse layouts now, all of them real
+                              // reading preferences, so this cycles rather
+                              // than flips — and it is labelled with the one
+                              // it will GIVE you, not the one you are in.
                               ToolbarAction(
-                                icon: textLayout == QuranTextLayout.page
-                                    ? Icons.view_agenda_rounded
-                                    : Icons.article_rounded,
-                                label: textLayout == QuranTextLayout.page
-                                    ? 'quran.layout_cards'.tr()
-                                    : 'quran.layout_page'.tr(),
+                                icon: switch (ref
+                                    .read(quranTextLayoutProvider.notifier)
+                                    .next) {
+                                  QuranTextLayout.page =>
+                                    Icons.article_rounded,
+                                  QuranTextLayout.cards =>
+                                    Icons.view_agenda_rounded,
+                                  QuranTextLayout.reading =>
+                                    Icons.chrome_reader_mode_rounded,
+                                },
+                                label: switch (ref
+                                    .read(quranTextLayoutProvider.notifier)
+                                    .next) {
+                                  QuranTextLayout.page =>
+                                    'quran.layout_page'.tr(),
+                                  QuranTextLayout.cards =>
+                                    'quran.layout_cards'.tr(),
+                                  QuranTextLayout.reading =>
+                                    'quran.layout_reading'.tr(),
+                                },
                                 onPressed: () => ref
                                     .read(quranTextLayoutProvider.notifier)
                                     .toggle(),

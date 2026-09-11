@@ -337,6 +337,10 @@ class _MushafTextPageState extends State<MushafTextPage> {
     final ink = mt.ink;
     final isLandscape =
         MediaQuery.orientationOf(context) == Orientation.landscape;
+    // The stripped reading layout: same justified block as `page`, with the
+    // ornament taken out. Everything it changes is gathered here so the two
+    // flowing layouts cannot drift apart by accident.
+    final bare = widget.layout == QuranTextLayout.reading;
     final baseFont = (isLandscape ? 20.0 : 24.0) * widget.fontScale;
     final fill = widget.pageFillScreen;
     final playingIndex = _playingIndex;
@@ -344,7 +348,9 @@ class _MushafTextPageState extends State<MushafTextPage> {
     final textStyle = TextStyle(
       fontFamily: 'AmiriQuran',
       fontSize: baseFont,
-      height: 2.1,
+      // Tighter leading in the reading layout, which is most of why the
+      // reference page fits noticeably more of the surah on one screen.
+      height: bare ? 1.85 : 2.1,
       color: ink,
     );
 
@@ -436,8 +442,10 @@ class _MushafTextPageState extends State<MushafTextPage> {
           // banner can sit between them.
           SliverPadding(
             padding: EdgeInsets.symmetric(
-              horizontal: fill ? 10.0 : (isLandscape ? 40.0 : 18.0),
-              vertical: 12.0,
+              horizontal: bare
+                  ? (isLandscape ? 18.0 : 8.0)
+                  : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0)),
+              vertical: bare ? 6.0 : 12.0,
             ),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -447,6 +455,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
                     return _SurahBanner(
                       name: widget.surahNameOf(item.surahId!),
                       mt: mt,
+                      bare: bare,
                     );
                   }
                   if (widget.layout == QuranTextLayout.cards) {
@@ -480,6 +489,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
                     onAyahTap: widget.onPlayTap,
                     onAyahLongPress: widget.onAyahTap,
                     onBackgroundTap: widget.onBackgroundTap,
+                    bare: bare,
                   );
                 },
                 childCount: items.length,
@@ -644,25 +654,40 @@ class _AyahRow extends StatelessWidget {
 class _SurahBanner extends StatelessWidget {
   final String name;
   final MushafTheme mt;
-  const _SurahBanner({required this.name, required this.mt});
+
+  /// The reading layout keeps the surah's name — you have to know which surah
+  /// you are in — but not its illuminated frame, which is the single biggest
+  /// block of ornament on the page.
+  final bool bare;
+
+  const _SurahBanner({
+    required this.name,
+    required this.mt,
+    this.bare = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final gold = mt.gold;
     return Container(
-      margin: const EdgeInsets.only(top: 10, bottom: 16),
+      margin: bare
+          ? const EdgeInsets.only(top: 6, bottom: 8)
+          : const EdgeInsets.only(top: 10, bottom: 16),
       padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: gold.withValues(alpha: 0.55), width: 1.4),
-        gradient: LinearGradient(
-          colors: [
-            gold.withValues(alpha: 0.16),
-            gold.withValues(alpha: 0.05),
-            gold.withValues(alpha: 0.16),
-          ],
-        ),
-      ),
+      decoration: bare
+          ? null
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border:
+                  Border.all(color: gold.withValues(alpha: 0.55), width: 1.4),
+              gradient: LinearGradient(
+                colors: [
+                  gold.withValues(alpha: 0.16),
+                  gold.withValues(alpha: 0.05),
+                  gold.withValues(alpha: 0.16),
+                ],
+              ),
+            ),
       alignment: Alignment.center,
       child: Text(
         name,
@@ -700,33 +725,54 @@ class _AyahMarker extends StatelessWidget {
   final bool playing;
   final MushafTheme mt;
 
+  /// Draw the marker as a filled disc instead of the open rosette — the
+  /// reading layout's one piece of ornament, kept because a verse still has
+  /// to end somewhere visible.
+  final bool bare;
+
   const _AyahMarker({
     required this.number,
     required this.mt,
     this.playing = false,
+    this.bare = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final gold = mt.gold;
-    const size = 32.0;
+    final size = bare ? 26.0 : 32.0;
     return SizedBox(
       width: size,
       height: size,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          CustomPaint(
-            size: const Size(size, size),
-            painter: _RosettePainter(
-              color: gold.withValues(alpha: playing ? 1.0 : 0.85),
+          if (bare)
+            // A filled disc rather than the open rosette: it reads as a full
+            // stop at a glance and takes less of the line, which is the
+            // difference the owner pointed at in the app he reads in.
+            DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: gold.withValues(alpha: playing ? 1.0 : 0.88),
+              ),
+              child: SizedBox(width: size, height: size),
+            )
+          else
+            CustomPaint(
+              size: Size(size, size),
+              painter: _RosettePainter(
+                color: gold.withValues(alpha: playing ? 1.0 : 0.85),
+              ),
             ),
-          ),
           Text(
             _arabicNumber(number),
             style: TextStyle(
-              fontSize: size * 0.38,
-              color: gold,
+              fontSize: size * (bare ? 0.42 : 0.38),
+              // On the disc the number sits ON the gold, so it takes the
+              // paper's colour; the rosette is an outline and the number
+              // stays gold inside it.
+              color: bare ? mt.paper : gold,
               fontWeight: FontWeight.w700,
               height: 1.0,
             ),
@@ -813,6 +859,9 @@ class _FlowingAyahs extends StatefulWidget {
   /// Tap outside any verse: toggle the reader's chrome.
   final VoidCallback? onBackgroundTap;
 
+  /// The stripped reading layout — see `QuranTextLayout.reading`.
+  final bool bare;
+
   const _FlowingAyahs({
     super.key,
     required this.ayahs,
@@ -824,6 +873,7 @@ class _FlowingAyahs extends StatefulWidget {
     required this.onAyahLongPress,
     this.onAyahTap,
     this.onBackgroundTap,
+    this.bare = false,
   });
 
   @override
@@ -907,6 +957,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
               number: ayah.ayahNumber,
               playing: isPlaying,
               mt: widget.mt,
+              bare: widget.bare,
             ),
           ),
         ),
