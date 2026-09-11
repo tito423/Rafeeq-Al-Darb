@@ -18,7 +18,8 @@ the device for ever with no button left that could free them.
 `purgeUnknownEditions` deletes a page directory whose edition is gone, and can
 only ever do that for an id the live catalogue does not contain.
 
-STATUS: FIXED, tests pass — **not yet opened on a device**
+STATUS: **DONE (seen)** — the mushaf list on emulator-5554 now shows six,
+with الشمرلي and the Indo-Pak one gone.
 
 ## C2 · The recitation stalls while other downloads run
 
@@ -88,7 +89,9 @@ STATUS: **open, and honestly open**
 The toolbar control cycles instead of flipping, and is labelled with the
 layout it will give you.
 
-STATUS: FIXED, 4 tests — **not yet opened on a device**
+STATUS: **DONE (seen)** — cycled to it on the device: tighter lines, filled
+gold discs, edge to edge, and more of the surah on one screen. The number
+inside the disc measures **6.7 : 1** against the gold.
 
 ## C4 · The reciting ayah must be fully visible
 
@@ -102,7 +105,9 @@ the verse's start a third of the way down rather than centred — they know
 where a verse begins but not how tall it is, so leaving twice as much room
 below it is the best available guess.
 
-STATUS: FIXED — **not yet opened on a device**
+STATUS: FIXED — **not yet opened on a device.** The card case needs a verse
+taller than the screen (al-Baqarah 282) with the recitation running, and that
+was not reached.
 
 ## C5 · Rotation belongs to the text mode, and opens the page
 
@@ -117,7 +122,9 @@ he turns back. Deliberately **not persisted** — it is how the phone is being
 held, not a preference, and persisting it would leave a reader who rotated
 once permanently immersed in portrait.
 
-STATUS: FIXED — **not yet opened on a device**
+STATUS: **DONE (seen)** — rotated on emulator-5554: the text mode went to
+full screen by itself and came back to exactly the toolbar it had; the image
+mode refused to rotate at all.
 
 ---
 
