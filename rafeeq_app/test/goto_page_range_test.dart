@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rafeeq_app/core/utils/byte_formatter.dart' show ltr;
 import 'package:rafeeq_app/features/quran/presentation/widgets/mushaf_nav_sheets.dart';
 
 /// «الانتقال إلى» used to accept any page from 1 to a hard-coded 604.
@@ -60,9 +61,14 @@ void main() {
     expect(picked, isNull);
   });
 
-  testWidgets('the range is written where the reader can see it',
-      (tester) async {
+  testWidgets('the range is written where the reader can see it, and it '
+      'reads left to right', (tester) async {
     await _open(tester, totalPages: 521, onSelect: (_) {});
-    expect(find.text('1 – 521'), findsOneWidget);
+
+    // Trap #16: «1 – 521» is bidi-weak and rendered «521 – 1» in the Arabic
+    // dialog on the emulator. It is wrapped in U+2066 … U+2069, so the plain
+    // string is deliberately NOT what is on screen.
+    expect(find.text('1 – 521'), findsNothing);
+    expect(find.text(ltr('1 – 521')), findsOneWidget);
   });
 }

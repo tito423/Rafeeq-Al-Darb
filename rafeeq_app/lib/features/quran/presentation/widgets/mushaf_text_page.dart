@@ -344,12 +344,18 @@ class _MushafTextPageState extends State<MushafTextPage> {
         slivers: [
           // ── Pinned surah header ──
           SliverAppBar(
-            pinned: true,
+            // Pinned in portrait, where 52 pixels is cheap and a running
+            // header earns them. NOT in landscape: the whole text area is
+            // about 200 logical pixels there, so pinning spends a quarter of
+            // the page repeating a surah name the corner badge is already
+            // showing — which is the two «سُورَةُ البَقَرَة» in the owner's
+            // landscape screenshot, one of them sitting on the first line.
+            pinned: !isLandscape,
             floating: false,
             automaticallyImplyLeading: false,
             backgroundColor: paper,
             surfaceTintColor: Colors.transparent,
-            toolbarHeight: 52,
+            toolbarHeight: isLandscape ? 40 : 52,
             title: Text(
               widget.surahNameOf(widget.ayahs.first.surahId),
               textDirection: TextDirection.rtl,

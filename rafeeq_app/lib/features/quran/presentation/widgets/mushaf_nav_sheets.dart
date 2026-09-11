@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/byte_formatter.dart' show ltr;
 import '../../../../core/utils/digits.dart';
 
 /// What is typed in each sheet's search box. File-level because the sheets
@@ -223,14 +224,28 @@ void showGotoPageSheet(
         if (n != null && n >= 1 && n <= totalPages) onSelect(n);
       }
 
+      // What is left of the screen once the number pad is up. In landscape
+      // that is about 380 of 1080 physical pixels, and the first fix — a
+      // smaller inset — got both buttons on screen but left the title
+      // clipped, seen on the emulator. Under that much pressure the title
+      // goes: the field's own label already says «صفحة».
+      final mq = MediaQuery.of(ctx);
+      final room = mq.size.height - mq.viewInsets.bottom;
+      final compact = room < 420;
+
       return AlertDialog(
-        // Landscape leaves about 200 logical pixels above the number pad, and
-        // the default 40-pixel inset spends 80 of them on air — which is why
-        // the owner's screenshot shows the keyboard sitting on top of «حفظ».
-        // Scrollable so a smaller screen still reaches both buttons.
-        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        // The default 40-pixel inset spends 80 of those pixels on air, which
+        // is why the owner's screenshot shows the keyboard sitting on top of
+        // «حفظ». Scrollable so a shorter screen still reaches both buttons.
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: compact ? 8 : 12,
+        ),
         scrollable: true,
-        title: Text('quran.jump_to'.tr()),
+        contentPadding: compact
+            ? const EdgeInsets.fromLTRB(24, 16, 24, 0)
+            : null,
+        title: compact ? null : Text('quran.jump_to'.tr()),
         content: TextField(
           controller: controller,
           autofocus: true,
@@ -239,7 +254,10 @@ void showGotoPageSheet(
           onSubmitted: (_) => submit(),
           decoration: InputDecoration(
             labelText: 'quran.page'.tr(),
-            helperText: '1 – $totalPages',
+            // Trap #16: a range of Latin numerals is bidi-weak, so in an
+            // Arabic dialog «1 – 604» renders as «604 – 1» — seen on the
+            // emulator before this line existed.
+            helperText: ltr('1 – $totalPages'),
             border: const OutlineInputBorder(),
           ),
         ),
