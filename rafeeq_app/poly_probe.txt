@@ -1,0 +1,12 @@
+page 6: rings=20  lines_detected=13  pitch=0.07411
+  ayah 2:32 rings=2
+    ring0 pts= 4  x 0.0000..0.2279  y 0.2664..0.3350  h=0.0686  h/pitch=0.93
+    ring1 pts= 4  x 0.1641..0.9899  y 0.3350..0.4032  h=0.0682  h/pitch=0.92
+page 3: rings=24  lines_detected=15  pitch=0.06586
+  ayah 2:12 rings=2
+    ring0 pts= 4  x 0.0000..0.1627  y 0.4736..0.5309  h=0.0573  h/pitch=0.87
+    ring1 pts= 4  x 0.2514..0.9790  y 0.5309..0.5964  h=0.0655  h/pitch=0.99
+page 254: rings=17  lines_detected=12  pitch=0.08077
+  ayah 13:38 rings=2
+    ring0 pts= 4  x 0.0000..0.1391  y 0.4009..0.4700  h=0.0691  h/pitch=0.86
+    ring1 pts= 4  x 0.0000..0.9899  y 0.4700..0.5968  h=0.1268  h/pitch=1.57

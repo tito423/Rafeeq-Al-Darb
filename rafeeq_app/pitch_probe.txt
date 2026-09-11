@@ -1,0 +1,12 @@
+pages=604  rings=11386
+pitch: median=0.06705  min=0.05220  max=0.99410
+rings taller than 1.4x pitch: 1054 (9.3%)
+worst 8 (h/pitch, page, surah, ayah):
+   8.59  p353  24:31
+   7.92  p16   2:102
+   7.72  p114  5:41
+   7.04  p78   4:11
+   6.95  p41   2:249
+   6.78  p424  33:50
+   6.76  p575  73:20
+   6.72  p93   4:92

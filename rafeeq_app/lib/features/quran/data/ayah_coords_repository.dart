@@ -3,6 +3,8 @@ import 'dart:ui' show Offset, Rect;
 
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'ayah_highlight_rects.dart';
+
 /// One ayah's tap/highlight region on a mushaf page.
 ///
 /// An ayah normally spans several lines, so its region is a *list of rings*
@@ -21,7 +23,28 @@ class AyahRegion {
   /// Axis-aligned bounds over every ring, used as a cheap pre-filter.
   final Rect bounds;
 
-  const AyahRegion._(this.surah, this.ayah, this.rings, this.bounds);
+  /// What the highlight is actually drawn from: one rectangle per printed
+  /// line, inset clear of the lines above and below. Empty until the page's
+  /// line grid is known, which is why [withGrid] exists — see
+  /// `ayah_highlight_rects.dart` for why the rings themselves cannot be used.
+  final List<Rect> highlightRects;
+
+  const AyahRegion._(
+    this.surah,
+    this.ayah,
+    this.rings,
+    this.bounds,
+    this.highlightRects,
+  );
+
+  /// The same ayah with its highlight rectangles resolved against [grid].
+  AyahRegion withGrid(PageLineGrid grid) => AyahRegion._(
+        surah,
+        ayah,
+        rings,
+        bounds,
+        highlightRectsFor(rings, grid),
+      );
 
   factory AyahRegion(int surah, int ayah, List<List<Offset>> rings) {
     var left = double.infinity;
@@ -41,6 +64,7 @@ class AyahRegion {
       ayah,
       rings,
       rings.isEmpty ? Rect.zero : Rect.fromLTRB(left, top, right, bottom),
+      const <Rect>[],
     );
   }
 
@@ -136,7 +160,13 @@ class AyahCoordsRepository {
           if (rings.isEmpty) continue;
           regions.add(AyahRegion(row[0] as int, row[1] as int, rings));
         }
-        parsed[page] = regions;
+        // The line grid is a property of the PAGE, so it can only be built
+        // once every ayah on it has been read — an ayah alone does not carry
+        // enough edges to say where the lines are.
+        final grid = PageLineGrid.fromRings(
+          regions.expand((r) => r.rings),
+        );
+        parsed[page] = [for (final r in regions) r.withGrid(grid)];
       }
       _byAsset[assetPath] = parsed;
     } finally {

@@ -200,23 +200,46 @@ void showJuzSheet(
   );
 }
 
+/// Ask for a page number.
+///
+/// [totalPages] is the CURRENT printing's page count, not 604. This used to be
+/// a hard-coded `n <= 604`, which silently refused pages 605–611 of the
+/// Nastaleeq mushaf and happily accepted page 600 of the Shamarly one, which
+/// ends at 521 — the same family of bug as a surah index that lands on the
+/// wrong surah.
 void showGotoPageSheet(
   BuildContext context, {
   required int current,
+  required int totalPages,
   required ValueChanged<int> onSelect,
 }) {
   showDialog<void>(
     context: context,
     builder: (ctx) {
       final controller = TextEditingController(text: '$current');
+      void submit() {
+        final n = int.tryParse(controller.text.trim());
+        Navigator.pop(ctx);
+        if (n != null && n >= 1 && n <= totalPages) onSelect(n);
+      }
+
       return AlertDialog(
+        // Landscape leaves about 200 logical pixels above the number pad, and
+        // the default 40-pixel inset spends 80 of them on air — which is why
+        // the owner's screenshot shows the keyboard sitting on top of «حفظ».
+        // Scrollable so a smaller screen still reaches both buttons.
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        scrollable: true,
         title: Text('quran.jump_to'.tr()),
         content: TextField(
           controller: controller,
           autofocus: true,
           keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.go,
+          onSubmitted: (_) => submit(),
           decoration: InputDecoration(
             labelText: 'quran.page'.tr(),
+            helperText: '1 – $totalPages',
             border: const OutlineInputBorder(),
           ),
         ),
@@ -226,11 +249,7 @@ void showGotoPageSheet(
             child: Text('common.cancel'.tr()),
           ),
           FilledButton(
-            onPressed: () {
-              final n = int.tryParse(controller.text.trim());
-              Navigator.pop(ctx);
-              if (n != null && n >= 1 && n <= 604) onSelect(n);
-            },
+            onPressed: submit,
             child: Text('common.save'.tr()),
           ),
         ],

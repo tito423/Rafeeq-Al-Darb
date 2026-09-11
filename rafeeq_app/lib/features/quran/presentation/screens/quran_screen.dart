@@ -627,6 +627,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                               onPressed: () => showGotoPageSheet(
                                 context,
                                 current: _current,
+                                totalPages: _totalPages,
                                 onSelect: _goToPage,
                               ),
                             ),

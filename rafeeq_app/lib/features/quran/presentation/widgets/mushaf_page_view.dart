@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -99,6 +100,56 @@ class _MushafPageViewState extends State<MushafPageView> {
     super.dispose();
   }
 
+  /// Lays one page out and calls [build] with the box it was drawn in, so the
+  /// overlay and the tap arithmetic always use the same numbers as the pixels.
+  ///
+  /// Portrait fits the whole page on screen and lets the reader pinch into it.
+  /// **Landscape does not, and must not.** A phone on its side leaves roughly
+  /// 200 logical pixels of height under the toolbar; fitting a 0.63-ratio page
+  /// into that draws it about 130 pixels wide in the middle of an empty
+  /// screen, which is the photograph the owner sent of pages 4 and 417. So
+  /// landscape lays the page out at the **full width** of the screen and
+  /// scrolls it vertically.
+  ///
+  /// The cost, stated rather than hidden: pinch-zoom is off in landscape. A
+  /// vertical scroll and an `InteractiveViewer` cannot both own the drag, and
+  /// full width is already the largest this page can be drawn — zooming past
+  /// it is what portrait is for.
+  Widget _stage({
+    required double aspect,
+    required Widget Function(double w, double h) build,
+  }) {
+    final landscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
+    if (landscape) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final w = constraints.maxWidth;
+          final h = w / aspect;
+          return SingleChildScrollView(
+            child: SizedBox(width: w, height: h, child: build(w, h)),
+          );
+        },
+      );
+    }
+    return ClipRect(
+      child: InteractiveViewer(
+        transformationController: _transform,
+        minScale: 1,
+        maxScale: 5,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: aspect,
+            child: LayoutBuilder(
+              builder: (context, constraints) =>
+                  build(constraints.maxWidth, constraints.maxHeight),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<String> _load() async {
     await _coords.ensureLoaded(widget.edition.polygonsAsset);
     return MushafPageService.instance.svgForPage(
@@ -167,44 +218,29 @@ class _MushafPageViewState extends State<MushafPageView> {
         }
 
         final svg = snapshot.data!;
-        return ClipRect(
-          child: InteractiveViewer(
-            transformationController: _transform,
-            minScale: 1,
-            maxScale: 5,
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: _pageAspect,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final w = constraints.maxWidth;
-                    final h = constraints.maxHeight;
-                    return GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTapUp: (d) => _handleTap(d.localPosition, w, h),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          SvgPicture.string(
-                            svg,
-                            fit: BoxFit.fill,
-                            colorFilter: ColorFilter.mode(ink, BlendMode.srcIn),
-                            placeholderBuilder: (_) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                          if (widget.highlight != null)
-                            CustomPaint(
-                              painter: _AyahHighlightPainter(
-                                region: widget.highlight!,
-                              ),
-                            ),
-                        ],
-                      ),
-                    );
-                  },
+        return _stage(
+          aspect: _pageAspect,
+          build: (w, h) => GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTapUp: (d) => _handleTap(d.localPosition, w, h),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                SvgPicture.string(
+                  svg,
+                  fit: BoxFit.fill,
+                  colorFilter: ColorFilter.mode(ink, BlendMode.srcIn),
+                  placeholderBuilder: (_) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
-              ),
+                if (widget.highlight != null)
+                  CustomPaint(
+                    painter: _AyahHighlightPainter(
+                      region: widget.highlight!,
+                    ),
+                  ),
+              ],
             ),
           ),
         );
@@ -279,47 +315,58 @@ class _MushafPageViewState extends State<MushafPageView> {
               );
 
         final fit = widget.edition.fitForPage(widget.page);
-        final Widget page = fit == null
-            ? GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => widget.onBackgroundTap?.call(),
-                child: Center(child: image),
-              )
-            : Center(
-                child: AspectRatio(
-                  aspectRatio: fit.pageAspect,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final w = constraints.maxWidth;
-                      final h = constraints.maxHeight;
-                      return GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTapUp: (d) => _handleTap(d.localPosition, w, h),
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            image,
-                            if (widget.highlight != null)
-                              CustomPaint(
-                                painter: _AyahHighlightPainter(
-                                  region: widget.highlight!,
-                                  fit: fit,
-                                ),
-                              ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              );
+        if (fit != null) {
+          return _stage(
+            aspect: fit.pageAspect,
+            build: (w, h) => GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTapUp: (d) => _handleTap(d.localPosition, w, h),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  image,
+                  if (widget.highlight != null)
+                    CustomPaint(
+                      painter: _AyahHighlightPainter(
+                        region: widget.highlight!,
+                        fit: fit,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          );
+        }
 
+        // A printing with no fitted layer — Shamarly, Indo-Pak, Nastaleeq —
+        // paginates its own way, so there is nothing to overlay and nothing
+        // whose aspect ratio we have measured. Landscape still has to fill the
+        // width rather than shrink the page into the leftover height: giving
+        // `Image` a width and no height makes it take its own picture's
+        // ratio, which is the one thing here that is always right.
+        final landscape =
+            MediaQuery.orientationOf(context) == Orientation.landscape;
+        final tappable = GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => widget.onBackgroundTap?.call(),
+          child: landscape
+              ? LayoutBuilder(
+                  builder: (context, constraints) => SingleChildScrollView(
+                    child: SizedBox(
+                      width: constraints.maxWidth,
+                      child: image,
+                    ),
+                  ),
+                )
+              : Center(child: image),
+        );
+        if (landscape) return tappable;
         return ClipRect(
           child: InteractiveViewer(
             transformationController: _transform,
             minScale: 1,
             maxScale: 5,
-            child: page,
+            child: tappable,
           ),
         );
       },
@@ -343,9 +390,13 @@ class _MushafPageViewState extends State<MushafPageView> {
   }
 }
 
-/// Fills every fragment of the selected ayah. An ayah that wraps across lines
-/// has one ring per line, so the highlight follows the text instead of
-/// blanketing the rectangle that encloses it.
+/// Marks the selected ayah one printed line at a time.
+///
+/// It draws [AyahRegion.highlightRects], not the tap rings. The rings are
+/// sized for a forgiving tap: each spans a whole line pitch, and 9.3% of them
+/// are a single rectangle covering several lines at once — filling those put a
+/// slab over half the page. `ayah_highlight_rects.dart` carries the
+/// measurement and the arithmetic that cuts them back to the lines.
 class _AyahHighlightPainter extends CustomPainter {
   final AyahRegion region;
 
@@ -368,19 +419,26 @@ class _AyahHighlightPainter extends CustomPainter {
     final f = fit;
     Offset at(Offset p) => f == null ? p : f.apply(p);
 
-    final path = Path();
-    for (final ring in region.rings) {
-      if (ring.length < 3) continue;
-      final first = at(ring.first);
-      path.moveTo(first.dx * size.width, first.dy * size.height);
-      for (var i = 1; i < ring.length; i++) {
-        final p = at(ring[i]);
-        path.lineTo(p.dx * size.width, p.dy * size.height);
-      }
-      path.close();
+    // Each line is its own rounded mark. Drawing them as one path would let
+    // two adjacent lines merge back into the slab this exists to avoid, and a
+    // rounded corner reads as a marker pen rather than a selection box.
+    for (final r in region.highlightRects) {
+      final tl = at(r.topLeft);
+      final br = at(r.bottomRight);
+      final px = Rect.fromLTRB(
+        tl.dx * size.width,
+        tl.dy * size.height,
+        br.dx * size.width,
+        br.dy * size.height,
+      );
+      if (px.width <= 0 || px.height <= 0) continue;
+      final rr = RRect.fromRectAndRadius(
+        px,
+        Radius.circular(math.min(4, px.height * 0.22)),
+      );
+      canvas.drawRRect(rr, fill);
+      canvas.drawRRect(rr, stroke);
     }
-    canvas.drawPath(path, fill);
-    canvas.drawPath(path, stroke);
   }
 
   @override
