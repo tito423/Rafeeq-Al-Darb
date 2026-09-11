@@ -107,7 +107,23 @@ class _ContinueReadingBodyState extends ConsumerState<_ContinueReadingBody> {
                             style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant)),
                         const SizedBox(height: 2),
-                        Text(surah.nameAr, style: theme.textTheme.titleMedium),
+                        // «في آخر سورة بص على كلمة سورة الرحمن مكتوبة غلط».
+                        // The name was not wrong — the font was. `name_ar`
+                        // holds the mushaf's own spelling, which for سُورَةُ
+                        // الرَّحۡمَٰن carries U+06E1 (small high dotless head of
+                        // khah, the Uthmani sukun) and U+0670 (dagger alef).
+                        // Cairo, the app's UI face, has no glyph for either,
+                        // so they landed on the baseline as stray marks and
+                        // the word read as nonsense — while every other place
+                        // that shows a surah name (the jump sheet, the khatma
+                        // picker, the mushaf header) already asks for
+                        // AmiriQuran and renders it correctly. This is the
+                        // one that had been missed.
+                        Text(
+                          surah.nameAr,
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(fontFamily: 'AmiriQuran'),
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           '${'quran.ayah'.tr()} ${first.ayahNumber} · '

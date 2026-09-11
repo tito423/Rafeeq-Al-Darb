@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-11 |
+| **Last updated** | 2026-09-12 |
 | **Released** | **v3.19.0** — tag on `master`, one release in the repo — **published without a device run** (owner's call, quota at 93%) |
 | **App version** | `pubspec.yaml` `3.19.0+18` |
 | **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
@@ -1201,9 +1201,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 22:37 — IN PROGRESS — resume here**
+**2026-09-12 03:45 — IN PROGRESS — resume here**
 
-3.19.0: clock faces in the gallery take the card's ink (white 9:50 on the light card in his photo), flip-clock colon and sun-moon minute hand likewise; version 3.19.0+18; WORK_QUEUE tenth batch J1-J26 written with code status, device results to follow. analyze clean, 197 tests.
+batch 11 stage 1 (code only, not yet on a device): hadith explanation search removed app-wide (button, screen, matn helper, its two tests, the key in all 7 locales); transliteration gated on a non-Arabic UI locale and its settings card hidden in Arabic - the owner saw Latin under every ayah with the switch off; library book downloads serialised through one queue with a counted friendly failure line, instead of 30 simultaneous R2 requests each dumping a raw DioException into a SnackBar; DownloadManager no longer puts e.toString() on a download card; the prayer status notification body now carries the city name; the continue-reading card renders the surah name in AmiriQuran - Cairo has no glyph for U+06E1 or U+0670, which is why سورة الرحمن read as nonsense there while every other surah-name site was already correct; the scrollbar rail is thinner (22px rail, 4px thumb) and fades out 1.4s after the list goes quiet. analyze clean, 190 tests pass.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

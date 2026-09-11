@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
@@ -48,10 +50,19 @@ class ArrowScrollbar extends StatefulWidget {
   State<ArrowScrollbar> createState() => _ArrowScrollbarState();
 }
 
-class _ArrowScrollbarState extends State<ArrowScrollbar> {
-  static const double _railWidth = 26;
-  static const double _arrowHeight = 30;
+class _ArrowScrollbarState extends State<ArrowScrollbar>
+    with SingleTickerProviderStateMixin {
+  /// «الاسكرول بار العمودي بيفضل ظاهر وبياكل شوية من الشاشة — خليه أرفع من
+  /// كده أو اخفيه، طالما هستخدمه في التطبيق، وخليه يظهر بس عند التعامل مع
+  /// الشاشة أو الصفحة». So: thinner, and gone unless the reader is actually
+  /// scrolling. It fades in on the first scroll notification (or on a touch
+  /// of the rail itself) and fades out again 1.4 s after the list goes quiet.
+  /// While hidden it is `IgnorePointer`-ed, so a mushaf page's own long-press
+  /// and tap gestures reach the page under it instead of the rail.
+  static const double _railWidth = 22;
+  static const double _arrowHeight = 26;
   static const double _minThumb = 44;
+  static const _idleBeforeHiding = Duration(milliseconds: 1400);
 
   /// Bumped when the list's extent changes. Pixel changes arrive through the
   /// controller itself.
@@ -59,8 +70,32 @@ class _ArrowScrollbarState extends State<ArrowScrollbar> {
   bool _bumpPending = false;
   bool _dragging = false;
 
+  late final AnimationController _fade = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 180),
+    reverseDuration: const Duration(milliseconds: 360),
+  );
+  Timer? _hideTimer;
+
+  /// Show the rail and restart the idle countdown. While a drag is in
+  /// progress the countdown is not armed at all — the rail stays up until the
+  /// finger leaves it.
+  void _wake() {
+    _hideTimer?.cancel();
+    if (_fade.status != AnimationStatus.forward && _fade.value != 1.0) {
+      _fade.forward();
+    }
+    if (!_dragging) {
+      _hideTimer = Timer(_idleBeforeHiding, () {
+        if (mounted && !_dragging) _fade.reverse();
+      });
+    }
+  }
+
   @override
   void dispose() {
+    _hideTimer?.cancel();
+    _fade.dispose();
     _extent.dispose();
     super.dispose();
   }
@@ -68,7 +103,16 @@ class _ArrowScrollbarState extends State<ArrowScrollbar> {
   /// Metrics notifications fire during layout, where nothing may be marked
   /// for rebuild; coalesce them into one bump after the frame.
   bool _onMetrics(ScrollNotification n) {
-    if (n.depth != 0 || _bumpPending) return false;
+    if (n.depth != 0) return false;
+    // A scroll of any kind is "the reader is dealing with the page".
+    if (n is ScrollUpdateNotification ||
+        n is ScrollStartNotification ||
+        n is OverscrollNotification) {
+      _wake();
+    } else if (n is ScrollEndNotification) {
+      _wake();
+    }
+    if (_bumpPending) return false;
     _bumpPending = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _bumpPending = false;
@@ -78,7 +122,8 @@ class _ArrowScrollbarState extends State<ArrowScrollbar> {
   }
 
   bool _onMetricsChanged(ScrollMetricsNotification n) {
-    if (n.depth != 0 || _bumpPending) return false;
+    if (n.depth != 0) return false;
+    if (_bumpPending) return false;
     _bumpPending = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _bumpPending = false;
@@ -139,8 +184,16 @@ class _ArrowScrollbarState extends State<ArrowScrollbar> {
               bottom: 0,
               width: _railWidth,
               child: AnimatedBuilder(
-                animation: Listenable.merge([widget.controller, _extent]),
-                builder: (context, _) => _rail(),
+                animation: _fade,
+                builder: (context, child) => _fade.value == 0
+                    // Fully faded out: not painted, and not in the hit-test
+                    // path either, so the page underneath owns every touch.
+                    ? const SizedBox.shrink()
+                    : Opacity(opacity: _fade.value, child: child),
+                child: AnimatedBuilder(
+                  animation: Listenable.merge([widget.controller, _extent]),
+                  builder: (context, _) => _rail(),
+                ),
               ),
             ),
           ],
@@ -177,16 +230,25 @@ class _ArrowScrollbarState extends State<ArrowScrollbar> {
               height: track,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTapUp: (d) =>
-                    _step(d.localPosition.dy < thumbTop ? -1 : 1),
+                onTapUp: (d) {
+                  _wake();
+                  _step(d.localPosition.dy < thumbTop ? -1 : 1);
+                },
                 onVerticalDragStart: (d) {
                   setState(() => _dragging = true);
+                  _wake();
                   _dragTo(d.localPosition.dy, track, thumb);
                 },
                 onVerticalDragUpdate: (d) =>
                     _dragTo(d.localPosition.dy, track, thumb),
-                onVerticalDragEnd: (_) => setState(() => _dragging = false),
-                onVerticalDragCancel: () => setState(() => _dragging = false),
+                onVerticalDragEnd: (_) {
+                  setState(() => _dragging = false);
+                  _wake();
+                },
+                onVerticalDragCancel: () {
+                  setState(() => _dragging = false);
+                  _wake();
+                },
                 child: Stack(
                   children: [
                     Center(
@@ -206,7 +268,7 @@ class _ArrowScrollbarState extends State<ArrowScrollbar> {
                       child: Center(
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 150),
-                          width: _dragging ? 9 : 6,
+                          width: _dragging ? 8 : 4,
                           decoration: BoxDecoration(
                             color: color,
                             borderRadius: BorderRadius.circular(5),
@@ -252,7 +314,7 @@ class _Arrow extends StatelessWidget {
         child: SizedBox(
           width: _ArrowScrollbarState._railWidth,
           height: _ArrowScrollbarState._arrowHeight,
-          child: Icon(icon, size: 24, color: color),
+          child: Icon(icon, size: 20, color: color),
         ),
       );
 }

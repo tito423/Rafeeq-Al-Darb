@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:archive/archive.dart';
+import 'package:flutter/foundation.dart';
 import 'package:background_downloader/background_downloader.dart' as bd;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -189,8 +190,13 @@ class DownloadManager {
       task.status = DownloadStatus.completed;
       await _registerCompleted(task, registered);
     } catch (e) {
+      // `task.error` is rendered verbatim on the download card, so it has to
+      // be a sentence the reader can act on. `e.toString()` here is what put
+      // «DioException [connection error] … errno = 104 … port = 50528» on
+      // screen; the exception is still logged, it just isn't the UI.
+      debugPrint('DownloadManager: ${task.id} failed: $e');
       task.status = DownloadStatus.failed;
-      task.error = e.toString();
+      task.error = 'notif.dl_failed'.tr();
     }
     _notify();
   }

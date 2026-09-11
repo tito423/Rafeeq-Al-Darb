@@ -237,6 +237,14 @@
       "many": "{} livres",
       "other": "{} livres"
     },
+    "download_failed": {
+      "zero": "Aucun téléchargement n’a échoué",
+      "one": "{} livre n’a pas fini de se télécharger — réessayez",
+      "two": "{} livres n’ont pas fini de se télécharger — réessayez",
+      "few": "{} livres n’ont pas fini de se télécharger — réessayez",
+      "many": "{} livres n’ont pas fini de se télécharger — réessayez",
+      "other": "{} livres n’ont pas fini de se télécharger — réessayez"
+    },
     "sub_all": "Tous les livres",
     "sub_categories": "Catégories",
     "sub_mine": "Ma bibliothèque",
@@ -713,7 +721,6 @@
     "title": "Hadith du jour",
     "another": "Autre hadith",
     "previous": "Précédent",
-    "explain_action": "Chercher son explication dans l’Encyclopédie",
     "explain_title": "Explication",
     "explain_candidates": "Voici les hadiths les plus proches dans l’Encyclopédie — choisissez celui que vous jugez identique. L’application ne décide pas.",
     "explain_none": "Rien de proche n’a été trouvé dans l’Encyclopédie."

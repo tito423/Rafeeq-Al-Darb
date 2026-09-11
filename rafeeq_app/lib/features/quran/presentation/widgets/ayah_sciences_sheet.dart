@@ -640,7 +640,16 @@ class _AyahPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final gold = AppColors.gold;
-    final showTransliteration = ref.watch(transliterationEnabledProvider);
+    // «ظاهر نطق الكلمات العربية بالإنجليزية مع إني مش مفعّل الخيار ده وكمان
+    // أنا مختار اللغة العربية للتطبيق». The switch is a reading aid for
+    // someone who cannot read the script — an Arabic-reading user has no use
+    // for it, and a stored `true` from an older build (or from a moment when
+    // the app was in another language) kept surfacing Latin text under every
+    // ayah with no way to see, in Arabic, that anything was switched on.
+    // The locale decides first; the switch only applies where it can help.
+    final isArabicUi = context.locale.languageCode == 'ar';
+    final showTransliteration =
+        !isArabicUi && ref.watch(transliterationEnabledProvider);
 
     return Container(
       width: double.infinity,

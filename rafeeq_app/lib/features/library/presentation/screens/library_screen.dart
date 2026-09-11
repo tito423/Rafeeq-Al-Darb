@@ -159,17 +159,55 @@ class _BooksTabState extends State<_BooksTab> {
     super.dispose();
   }
 
-  Future<void> _download(LibraryBook book) async {
+  /// Books download **one at a time**, and a failure never puts an exception
+  /// on screen.
+  ///
+  /// «لما ضغطت تحميل كل الكتب طلعت رسايل برمجية مصيبة مش عارف بتاعة إيه» —
+  /// the author card's "download all" fired this method once per book in a
+  /// plain `for` loop, so thirty requests opened against the same R2 host in
+  /// the same instant. The bucket reset most of them, and each failure
+  /// rendered its raw `DioException [connection error] … SocketException:
+  /// Connection reset by peer (errno = 104), address = pub-….r2.dev, port =
+  /// 50528` into a SnackBar on top of the card the owner was reading. Two
+  /// separate faults: the flood, and a programmer's exception used as a user
+  /// message.
+  ///
+  /// Chaining onto `_queue` keeps the concurrency at one whatever calls it
+  /// and however many times; the raw text goes to `debugPrint` where it
+  /// belongs, and the reader gets one counted sentence after the queue
+  /// drains rather than a SnackBar per book.
+  Future<void> _queue = Future<void>.value();
+  int _pending = 0;
+  int _failed = 0;
+
+  void _download(LibraryBook book) {
+    _pending++;
+    _queue = _queue.then((_) => _downloadOne(book));
+  }
+
+  Future<void> _downloadOne(LibraryBook book) async {
     try {
-      await LibraryApiService.instance.downloadBook(book.id, book.textEdition!.url);
+      await LibraryApiService.instance
+          .downloadBook(book.id, book.textEdition!.url);
       await _loadRegistry();
     } catch (e) {
-      debugPrint(e.toString());
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${'errors.offline'.tr()}\n$e')),
-      );
+      debugPrint('library: ${book.id} failed to download: $e');
+      _failed++;
+    } finally {
+      _pending--;
+      if (_pending == 0) _reportFailures();
     }
+  }
+
+  void _reportFailures() {
+    final failed = _failed;
+    _failed = 0;
+    if (failed == 0 || !mounted) return;
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(
+        content: Text('library.download_failed'.plural(failed)),
+      ));
   }
 
   void _open(LibraryBook book) {
@@ -959,9 +997,12 @@ class _BookListState extends State<_BookList> {
       await LibraryApiService.instance.downloadBook(book.id, edition.url);
       await _loadRegistry();
     } catch (e) {
+      // Same rule as the books tab: the exception goes to the log, the
+      // reader gets a sentence.
+      debugPrint('library(hadith texts): ${book.id} failed to download: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${'errors.offline'.tr()}\n$e')),
+        SnackBar(content: Text('errors.offline'.tr())),
       );
     }
   }

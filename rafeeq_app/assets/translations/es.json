@@ -237,6 +237,14 @@
       "many": "{} libros",
       "other": "{} libros"
     },
+    "download_failed": {
+      "zero": "Ninguna descarga falló",
+      "one": "{} libro no terminó de descargarse — inténtalo de nuevo",
+      "two": "{} libros no terminaron de descargarse — inténtalo de nuevo",
+      "few": "{} libros no terminaron de descargarse — inténtalo de nuevo",
+      "many": "{} libros no terminaron de descargarse — inténtalo de nuevo",
+      "other": "{} libros no terminaron de descargarse — inténtalo de nuevo"
+    },
     "sub_all": "Todos los libros",
     "sub_categories": "Categorías",
     "sub_mine": "Mi biblioteca",
@@ -713,7 +721,6 @@
     "title": "Hadiz del día",
     "another": "Otro hadiz",
     "previous": "Anterior",
-    "explain_action": "Buscar su explicación en la Enciclopedia",
     "explain_title": "Explicación",
     "explain_candidates": "Estos son los hadices más parecidos en la Enciclopedia; elige el que consideres el mismo. La aplicación no decide la coincidencia.",
     "explain_none": "No se encontró nada parecido en la Enciclopedia."

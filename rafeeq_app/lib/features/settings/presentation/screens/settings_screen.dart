@@ -232,10 +232,16 @@ class SettingsBody extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-          // Reading Options for Non-Arabs (Transliteration)
-          SectionLabel('settings.non_arabic_reading_title'.tr()),
-          const NonArabicReadingCard(),
-          const SizedBox(height: 24),
+          // Reading Options for Non-Arabs (Transliteration) — and only for
+          // them. In Arabic the whole section is gone, which is the same rule
+          // `_AyahPanel` applies when it decides whether to render the Latin
+          // line at all: a reader who is using the app in Arabic never sees
+          // transliteration and never has a switch for it to be stuck on.
+          if (context.locale.languageCode != 'ar') ...[
+            SectionLabel('settings.non_arabic_reading_title'.tr()),
+            const NonArabicReadingCard(),
+            const SizedBox(height: 24),
+          ],
 
           // P3‑41: one place for every permission the app actually needs,
           // each re-checked on resume (granted from a system settings

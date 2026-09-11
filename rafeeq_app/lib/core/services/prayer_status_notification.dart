@@ -112,7 +112,17 @@ class PrayerStatusNotification {
       }
 
       // AlAdhan's Umm al-Qura date first (matches Home, works offline).
-      final hijriToday = _hijriLine(times.hijriDate, now, localeCode);
+      // «الإشعار زوّد فيه اسم المدينة اللي احنا فيها» — the card said
+      // «الفجر · ٤:٤٤ / ٢٩ ربيع الأول ١٤٤٨ هـ» and nothing about where that
+      // time was computed for, which is the one fact that makes it checkable
+      // when the phone has travelled or the location fix is stale. The name
+      // is whatever `LocationService` reverse-geocoded — when there is none
+      // (permission refused, offline on a cold start) the line stays exactly
+      // as it was rather than claiming a city.
+      final hijriToday = _withCity(
+        _hijriLine(times.hijriDate, now, localeCode),
+        times.cityName,
+      );
       final after =
           _nextPrayer(svc, times, next.$2.add(const Duration(minutes: 1)));
       final crossesMidnight = after != null && after.$2.day != next.$2.day;
@@ -124,7 +134,8 @@ class PrayerStatusNotification {
         nextBody: after == null
             ? null
             : crossesMidnight
-                ? _hijriLine('', after.$2, localeCode)
+                ? _withCity(
+                    _hijriLine('', after.$2, localeCode), times.cityName)
                 : hijriToday,
         nextAt: after?.$2,
       );
@@ -179,6 +190,13 @@ class PrayerStatusNotification {
     final mm = at.minute.toString().padLeft(2, '0');
     final clock = localizeDigits('$hh:$mm', localeCode);
     return '$name · $clock';
+  }
+
+  /// «الجزء الثاني · المدينة» — appended only when there really is a city.
+  String _withCity(String line, String city) {
+    final name = city.trim();
+    if (name.isEmpty) return line;
+    return '$line · $name';
   }
 
   String _needLocationTitle(String l) => 'app.name'.tr();
