@@ -1197,9 +1197,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 22:35 — IN PROGRESS — resume here**
+**2026-09-11 22:37 — IN PROGRESS — resume here**
 
-3.19.0 batch 10 stages B and D (not yet on a device): Quran search gets three modes (all derivatives, part of a word, exact word) plus a diacritics switch, measured on quran_local.db first - the old matching found 0 verses for الصلاة (Uthmani الصلواة), derivatives find 63; topics now list their curated verses plus every verse their measured word patterns find (patience 6 -> 90) with false friends excluded on either normal form (per-form exclusion let الصدقات, المنافقين, العالمين back in - measured, fixed, tested with real Uthmani words); reciter card names every surah transferring; mini player cover animates; download-all per author in the library; qibla compass card takes the hero surface; splash switches get their own heading; toolbar icons wiggle on tap and swap animated; selected nav icon springs in; RGB backdrop gains an aurora band, a turning rub el hizb and rising motes. analyze clean, targeted tests pass.
+3.19.0: clock faces in the gallery take the card's ink (white 9:50 on the light card in his photo), flip-clock colon and sun-moon minute hand likewise; version 3.19.0+18; WORK_QUEUE tenth batch J1-J26 written with code status, device results to follow. analyze clean, 197 tests.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

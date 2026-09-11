@@ -2,7 +2,7 @@ name: rafeeq_app
 description: "Rafeeq Al-Darb â€” Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
 publish_to: 'none'
 
-version: 3.18.0+17
+version: 3.19.0+18
 
 environment:
   sdk: ^3.10.7

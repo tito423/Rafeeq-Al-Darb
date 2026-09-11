@@ -1,3 +1,35 @@
+# Work queue — the owner's tenth batch, 2026-09-11 (night) → v3.19.0
+
+Code status per item; the device results are added under each after the run on the signed build. He also sent eight photos from his phone (light theme): the clock gallery with white labels on mint, the notification shade («جار التنزيل — الملفات المكتملة 0 من 6» for the ruqyah, «تنزيل التلاوة 1 من 114»), a reciter card naming only al-Baqara while three surahs ran, the jump dialog over the image page, the repeat dialog with 3/5/10.
+
+* **J1 · One light tap anywhere on a page (text or image, on a verse or not) enters or leaves full screen; leaving brings the options back. Landscape: always full screen, no options.** `_onPageTap`; the double-tap wrapper is gone (it held every single tap back).
+* **J2 · The page behind «الانتقال إلى» flickered.** The shell resized the Qur'an tab for the keyboard and the image page read the whole `MediaQuery` (keyboard inset included), so every frame of the keyboard re-laid and re-decoded the page. `resizeToAvoidBottomInset` is off on the Qur'an tab and the page reads `sizeOf`.
+* **J3 · «الانتقال إلى» offers surah, page or juz directly.** A three-tab sheet; the page tab has a slider and ±1/±10, and does not open the keyboard by itself.
+* **J4 · The vertical scrollbar «مش شغال نهائيًا».** Seen before the fix on the emulator: a drag along it did not move the list, the arrows' touch area was 22×26. Rewritten as its own rail: the thumb follows the finger anywhere on the track, a tap on the track pages, arrows 26×30 (long press → top/bottom), and only the rail repaints.
+* **J5 · Long press on a verse = selection + its card.**
+* **J6 · «تلاوة الآية» turns back when the verse ends.** `isPlayingStream` treats a completed player as not playing.
+* **J7 · A button beside «تلاوة الآية» makes the card full screen.**
+* **J8 · «وضع المصاحف» still does not work at all.** Still not reproduced. The code path returns the picked id for every printing and enters the image view. The single-surah reader (سنن السور) has its own «وضع المصحف» button too; it now takes the same tap gesture. **Needs his screenshot or a short video.**
+* **J9 · Repeat dialog: a slider for the count and a box to type it; 3/5/10 removed.**
+* **J10 · Text-mushaf themes removed from the image mushaf's toolbar.**
+* **J11/J12 · Search.** Modes: all derivatives / part of a word / exact word, plus «بالتشكيل». Measured on `quran_local.db` first: «الصلاة» found **0** verses under the old matching (Uthmani «الصلواة»), 63 under derivatives. Topics list their curated verses and then every verse their word patterns find: patience 90, mercy 138, honesty 104, parents 27, forgiveness 202, knowledge 649, Nuh 43, Ibrahim 51, Musa 131, Yusuf 26, prayer 73, charity 102, paradise 143, hellfire 125, tawheed 46 — each list of matched words read, false friends excluded on either normal form (per-form exclusion let «الصدقات», «المنافقين», «العالمين» back in — measured, fixed, tested with real Uthmani words).
+* **J13 · Qibla compass card follows the app theme** (the hero surface) instead of a fixed near-black gradient.
+* **J14 · Adhans removed:** مشاري راشد العفاسي (٢) = azan15, مشاري راشد العفاسي — أذان الفجر (٢) = azan17, from the three catalogues, the assets and android raw (4,366,298 bytes × 2 copies). A stored choice of either now reads as the default.
+* **J15 · High-latitude option removed** from prayer adjustments (the calculation keeps its default).
+* **J16 · Library → authors: «تحميل كل كتب المؤلف (N)».**
+* **J17 · The scrollbar flickered in the reciters list** — see J4.
+* **J18 · The reciter card names every surah transferring** («جارٍ تنزيل: البقرة ٣٪ · آل عمران ٨٪ · النساء ٣٠٪»).
+* **J19 · The mini player's cover animates** (equaliser bars while playing).
+* **J20 · Ruqyah plays in the Qur'an player**, queued from the recording tapped.
+* **J21 · Ruqyah downloads: pause, resume, cancel** on each card.
+* **J22 · Ruqyah notification: «تحميل ملفات الرقية الصوتية»** (its own download group).
+* **J23 · Splash switches not found.** They were in More under «المظهر» with no heading; they have a «شاشة البداية» heading now. Seen on the emulator before: both switches present.
+* **J24 · Clock gallery text unreadable** (his photo, light theme): tab labels, face names, switch labels and the faces' own ink all took white; they take the card surface's colours now.
+* **J25 · Animated Qur'an toolbar icons and bottom-nav icons.**
+* **J26 · RGB theme everywhere, with more effects:** aurora band, a turning rub el hizb, rising motes.
+
+---
+
 # Work queue — the owner's eighth and ninth batches, 2026-09-11 → v3.18.0
 
 Run on emulator-5554 with the signed release build. "seen" means looked at on the device; anything else says what was not.

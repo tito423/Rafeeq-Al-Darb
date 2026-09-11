@@ -209,7 +209,8 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
               child: Text(
                 ':',
                 style: TextStyle(
-                  color: Colors.white54,
+                  // Between the plates, on the card itself — the card's ink.
+                  color: widget.ink.withValues(alpha: 0.54),
                   fontSize: h * 0.42,
                   fontWeight: FontWeight.w700,
                 ),

@@ -716,7 +716,7 @@ class _SunMoonPainter extends _FacePainter {
     }
 
     _drawHand(canvas, c, t.hour, r * 0.42, 4.5, ink);
-    _drawHand(canvas, c, t.minute, r * 0.60, 3, Colors.white70);
+    _drawHand(canvas, c, t.minute, r * 0.60, 3, ink.withValues(alpha: 0.7));
     _drawHand(canvas, c, t.second, r * 0.68, 1.4, const Color(0xFFFFD37A));
     canvas.drawCircle(c, 4, Paint()..color = ink);
   }

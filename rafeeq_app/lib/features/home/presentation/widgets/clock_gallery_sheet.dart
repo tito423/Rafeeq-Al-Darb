@@ -100,12 +100,16 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
                           arabicDigits: arabic,
                           meridiem: meridiem,
                           height: 92,
+                          // The faces default to white ink, which is what
+                          // drew «9:50» invisibly on the light card.
+                          ink: HeroSurface.of(context).onSurface,
                         )
                       : AnalogClockFaceView(
                           face: cs.analogFace,
                           size: 142,
                           meridiem: meridiem,
                           arabicDigits: arabic,
+                          ink: HeroSurface.of(context).onSurface,
                         ),
                 ),
               ),
@@ -148,6 +152,7 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
                       showSeconds: false,
                       arabicDigits: arabic,
                       height: 46,
+                      ink: HeroSurface.of(context).onSurface,
                     ),
                   ),
                   _FaceGrid(
@@ -163,6 +168,7 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
                       face: AnalogClockFace.values[i],
                       size: 84,
                       arabicDigits: arabic,
+                      ink: HeroSurface.of(context).onSurface,
                     ),
                   ),
                 ],
