@@ -15,7 +15,8 @@ import 'quran_book_cover_thumbnail.dart';
 class MushafEditionSheet extends ConsumerWidget {
   const MushafEditionSheet({super.key});
 
-  static Future<void> show(BuildContext context) => showModalBottomSheet<void>(
+  /// Returns the id of the printing picked, or null when dismissed.
+  static Future<String?> show(BuildContext context) => showModalBottomSheet<String>(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
@@ -75,7 +76,7 @@ class MushafEditionSheet extends ConsumerWidget {
                         ref
                             .read(selectedMushafEditionProvider.notifier)
                             .select(list[i].id);
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(list[i].id);
                       },
                     ),
                   ),

@@ -18,7 +18,15 @@ class ReciterScreen extends ConsumerStatefulWidget {
   final Mp3Reciter reciter;
   final int? initialMoshafId;
 
-  const ReciterScreen({super.key, required this.reciter, this.initialMoshafId});
+  /// His number in the reciters list, drawn on his badge.
+  final int? number;
+
+  const ReciterScreen({
+    super.key,
+    required this.reciter,
+    this.initialMoshafId,
+    this.number,
+  });
 
   @override
   ConsumerState<ReciterScreen> createState() => _ReciterScreenState();
@@ -101,7 +109,7 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                       children: [
                         Row(
                           children: [
-                            ReciterAvatar(name: widget.reciter.name, size: 56),
+                            ReciterAvatar(name: widget.reciter.name, number: widget.number, size: 56),
                             const SizedBox(width: 14),
                             Expanded(
                               child: Column(

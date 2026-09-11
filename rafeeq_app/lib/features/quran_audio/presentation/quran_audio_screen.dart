@@ -137,7 +137,7 @@ class _RecitersTabState extends ConsumerState<_RecitersTab>
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       child: ListTile(
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        leading: ReciterAvatar(name: r.name),
+                        leading: ReciterAvatar(name: r.name, number: all.indexOf(r) + 1),
                         title: Text(r.name, style: const TextStyle(fontWeight: FontWeight.w700)),
                         subtitle: Text(
                           r.moshafs.map((m) => m.name).join(' • '),
@@ -154,7 +154,9 @@ class _RecitersTabState extends ConsumerState<_RecitersTab>
                           ],
                         ),
                         onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(builder: (_) => ReciterScreen(reciter: r)),
+                          MaterialPageRoute<void>(
+                            builder: (_) => ReciterScreen(reciter: r, number: all.indexOf(r) + 1),
+                          ),
                         ),
                       ),
                     );

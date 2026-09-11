@@ -1,3 +1,14 @@
+# Work queue — the owner's seventh batch, 2026-09-11 (night) → v3.17.2
+
+Run on emulator-5554 with the signed release build before publishing.
+
+* **F1 · Reciter cards: numbers, centred, no Arabic letters.** The badge shows the reciter's position in the full list (stable under search); a recitation opened from the library shows a microphone. STATUS: **DONE (seen)** — 1, 2, 3 … centred in the list.
+* **F2 · No continuous recitation in the image mushaf at all.** The toolbar button exists only in the text mushaf; switching to an image page stops a running recitation. STATUS: **DONE (seen)** — the image-mode toolbar has no «التلاوة المستمرة».
+* **F3 · Choosing the image mushaf opens it full screen; a tap shows its options.** Both choosing paths (the mode button and the printings sheet) enter full screen; in full screen a tap anywhere on the page exits it instead of opening a verse; going back to text restores whatever full-screen state the reader had. STATUS: **DONE (seen)** — picked from «المصاحف»: full screen; one tap: toolbar back.
+* **F4 · «المصاحف» with مصحف المدينة — حفص "did nothing".** The mode button itself works (tried from text mode: it switched). Picking a printing from the sheet changed the printing and left the reader in text mode, so for the vector Hafs printing nothing visible happened — only the scanned printings, which have no text mode, ever opened as a mushaf. Picking any printing now opens it as the mushaf view. STATUS: **DONE (seen)** — text mode → «المصاحف» → Hafs: image page, full screen.
+
+---
+
 # Work queue — the owner's sixth batch, 2026-09-11 (night) → v3.17.1
 
 Everything below was run on emulator-5554 with the signed release build.

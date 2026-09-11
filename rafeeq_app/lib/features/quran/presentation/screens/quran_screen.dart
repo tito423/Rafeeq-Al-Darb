@@ -352,11 +352,39 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _goToPage(page);
   }
 
-  /// True while the page is drawn as an image — the image mode of any
-  /// printing, or a scanned printing, which has no text mode of its own.
-  bool get _isImageView =>
-      _mode == MushafMode.image ||
-      (ref.read(currentMushafEditionProvider).valueOrNull?.isRaster ?? false);
+  /// What full screen was before the image mushaf took it, so going back to
+  /// the text mushaf gives the reader the screen he had.
+  bool _fillBeforeImage = false;
+
+  /// «دايمًا أول لما أختار المصحف المصوّر خلّيه ملء الشاشة أوتوماتيك، إلا لو
+  /// ضغطت تاني اعرض خياراته». Called on every path that CHOOSES the image
+  /// mushaf — the mode button and the printings sheet — not on a restore, so
+  /// opening the app does not hide the toolbar by itself.
+  void _enterImageView() {
+    _fillBeforeImage = _pageFillScreen;
+    setState(() => _mode = MushafMode.image);
+    _applyOrientationLock();
+    _persistMode();
+    _setPageFillScreen(true, persist: false);
+  }
+
+  void _leaveImageView() {
+    setState(() => _mode = MushafMode.text);
+    _applyOrientationLock();
+    _persistMode();
+    _setPageFillScreen(_fillBeforeImage, persist: false);
+  }
+
+  /// The printings sheet. Picking a printing IS choosing the mushaf view:
+  /// picking «مصحف المدينة — حفص» used to change the printing and leave the
+  /// reader in the text mode he was in, so from his side the button did
+  /// nothing — only the scanned printings, which have no text mode, ever
+  /// opened as a mushaf.
+  Future<void> _pickEdition() async {
+    final id = await MushafEditionSheet.show(context);
+    if (id == null || !mounted) return;
+    _enterImageView();
+  }
 
   /// A jump from the surah, juz or page index. While the reciter is reading,
   /// the recitation goes with it — to the surah's first verse when a surah was
@@ -400,28 +428,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// the reader has selected, if any), and reads on through the mushaf.
   Future<void> _toggleContinuousRecitation(MushafData data) async {
     final audio = AyahAudioService.instance;
-    // Continuous recitation belongs to the TEXT mushaf, in every layout and
-    // theme. «اتأكد إن المصحف المصوّر آية بآية تشغيل التلاوة فيه والتظليل
-    // شغّالين صح. لو فيه مشكلة … خلّيها محصورة بس في المصحف النصي». There was:
-    // on emulator-5554 the Tajweed printing's page 77 highlighted 4:3 about a
-    // line too low — from «ما طاب لكم» into the start of 4:4 — because the
-    // printing's polygon fit does not hold on every page. So from an image
-    // page the button opens the text page of the same number and starts there.
-    if (!_recite.active && _isImageView) {
-      final edition = ref.read(currentMushafEditionProvider).valueOrNull;
-      if (edition?.isRaster ?? false) {
-        await ref
-            .read(selectedMushafEditionProvider.notifier)
-            .select(AppConfig.defaultMushafEdition);
-      }
-      if (!mounted) return;
-      setState(() => _mode = MushafMode.text);
-      _applyOrientationLock();
-      _persistMode();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('quran.recite_text_only'.tr())),
-      );
-    }
     if (_recite.active) {
       // A run Android has already torn down (see `ContinuousRecitation
       // .stalled`) must RESUME on this press, not stop. Treating it as
@@ -733,9 +739,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                 onPressed: _toggleAutoScroll,
                               ),
                             ],
-                            // Continuous recitation runs in the text mushaf only;
-                            // pressed on an image page it opens the text page
-                            // and starts there.
+                            // Continuous recitation lives in the text mushaf
+                            // only, in every layout and theme — «شيل التلاوة
+                            // المستمرة خالص من المصحف المصوّر». The Tajweed
+                            // printing highlighted 4:3 on page 77 a line low,
+                            // so the image page does not offer it at all.
+                            if (_mode == MushafMode.text && !isRaster)
                             ToolbarAction(
                               icon: _recite.active
                                   ? Icons.stop_circle_rounded
@@ -827,7 +836,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             ToolbarAction(
                               icon: Icons.auto_stories_rounded,
                               label: 'quran.editions'.tr(),
-                              onPressed: () => MushafEditionSheet.show(context),
+                              onPressed: _pickEdition,
                             ),
                             // A raster printing is a finished scan with no
                             // reflowable text of its own — but the button is
@@ -849,17 +858,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                                       .read(selectedMushafEditionProvider
                                           .notifier)
                                       .select(AppConfig.defaultMushafEdition);
-                                  setState(() => _mode = MushafMode.text);
-                                  _applyOrientationLock();
+                                  _leaveImageView();
+                                } else if (_mode == MushafMode.text) {
+                                  _enterImageView();
                                 } else {
-                                  setState(() {
-                                    _mode = _mode == MushafMode.text
-                                        ? MushafMode.image
-                                        : MushafMode.text;
-                                  });
-                                  _applyOrientationLock();
+                                  _leaveImageView();
                                 }
-                                _persistMode();
                               },
                             ),
                           ],
@@ -1050,8 +1054,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 edition: edition,
                 page: page,
                 highlight: _highlightRegion(edition, page),
-                onAyahTap: (region) =>
-                    _onImageAyahTap(region, ayahs, data, edition),
+                onAyahTap: (region) => _pageFillScreen
+                    ? _togglePageFillScreen()
+                    : _onImageAyahTap(region, ayahs, data, edition),
                 onLoadFailed: edition.isRaster
                     ? null
                     : () {

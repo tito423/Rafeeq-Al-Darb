@@ -183,8 +183,7 @@
     "search_surah_hint": "Chercher une sourate ou son numéro…",
     "search_juz_hint": "Chercher un numéro de juz…",
     "recite_choose_reciter": "Choisir le récitateur",
-    "recite_search_reciter": "Rechercher un récitateur",
-    "recite_text_only": "La récitation continue fonctionne dans le mushaf en texte — la même page a été ouverte en texte."
+    "recite_search_reciter": "Rechercher un récitateur"
   },
   "library": {
     "title": "Bibliothèque",

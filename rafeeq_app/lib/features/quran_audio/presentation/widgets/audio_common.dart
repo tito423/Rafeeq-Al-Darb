@@ -55,23 +55,22 @@ String formatClock(Duration d) {
   return ltr(h > 0 ? '$h:$m:$s' : '$m:$s');
 }
 
-/// A reciter's monogram on a gold disc — the one image every reciter has.
+/// A reciter's badge: his number in the list, centred, on a ground chosen
+/// from his name. «Delete the Arabic letters in reciter card, use numbers
+/// instead and aligned to the center». Letters could not be centred honestly
+/// — the Qur'an face's tall ascent sat every letter low in its box — and most
+/// names begin with the same word anyway. A badge with no number (a
+/// recitation opened from the library) shows a microphone.
 class ReciterAvatar extends StatelessWidget {
   final String name;
+  final int? number;
   final double size;
-  const ReciterAvatar({super.key, required this.name, this.size = 44});
-
-  /// The letter that tells reciters apart. Most names in the catalogue begin
-  /// with «أحمد», «محمد» or «عبد», so the first letter of the whole name drew
-  /// the same «أ» down the entire list; the family name's, without its «ال»,
-  /// does not.
-  static String letterFor(String name) {
-    final words = name.trim().split(RegExp(r'\s+'));
-    if (words.isEmpty || words.first.isEmpty) return '•';
-    var word = words.last;
-    if (word.startsWith('ال') && word.length > 2) word = word.substring(2);
-    return word.characters.first;
-  }
+  const ReciterAvatar({
+    super.key,
+    required this.name,
+    this.number,
+    this.size = 44,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +79,12 @@ class ReciterAvatar extends StatelessWidget {
       h = (h * 31 + c) & 0x7fffffff;
     }
     final ground = RecitationCover._grounds[h % RecitationCover._grounds.length];
+    final radius = BorderRadius.circular(size * 0.28);
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(size * 0.28),
+        borderRadius: radius,
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
@@ -93,27 +93,41 @@ class ReciterAvatar extends StatelessWidget {
         border: Border.all(color: AppColors.gold.withValues(alpha: 0.55)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(size * 0.28),
+        borderRadius: radius,
         child: Stack(
           fit: StackFit.expand,
+          alignment: Alignment.center,
           children: [
             CustomPaint(
               painter: IslamicPatternPainter(
                 tile: size / 2,
-                color: AppColors.gold.withValues(alpha: 0.14),
+                color: AppColors.gold.withValues(alpha: 0.12),
                 strokeWidth: 0.8,
               ),
             ),
             Center(
-              child: Text(
-                letterFor(name),
-                style: TextStyle(
-                  fontFamily: 'AmiriQuran',
-                  fontSize: size * 0.46,
-                  height: 1.3,
-                  color: AppColors.goldSoft,
-                ),
-              ),
+              child: number == null
+                  ? Icon(Icons.mic_rounded, size: size * 0.48, color: AppColors.goldSoft)
+                  : FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Padding(
+                        padding: EdgeInsets.all(size * 0.12),
+                        child: Text(
+                          ltr('$number'),
+                          textAlign: TextAlign.center,
+                          textHeightBehavior: const TextHeightBehavior(
+                            applyHeightToFirstAscent: false,
+                            applyHeightToLastDescent: false,
+                          ),
+                          style: TextStyle(
+                            fontSize: size * 0.4,
+                            height: 1.0,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.goldSoft,
+                          ),
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),

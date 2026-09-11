@@ -7,10 +7,14 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-11 |
-| **Released** | **v3.17.1** — tag on `master`, one release in the repo |
-| **App version** | `pubspec.yaml` `3.17.1+15` |
+| **Released** | **v3.17.2** — tag on `master`, one release in the repo |
+| **App version** | `pubspec.yaml` `3.17.2+16` |
 | **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
 | **Verified today** | `flutter analyze lib test` clean · `flutter test` **176 passed** · on emulator-5554 (signed release): prayer card re-posted 46 ms after being swiped away; reciter switch 1.3 s; surah index jump while reciting 1.26 s; in-surah jump by seek (no player re-init); image-page recitation button opens the text page; player cover and reciter avatars drawn; 0 Flutter errors in the log |
+
+## STATE AS OF 2026-09-11 (night, last) — v3.17.2
+
+Continuous recitation is offered only in the text mushaf (the button is gone from image pages). Choosing the image mushaf — by the mode button or from «المصاحف» — opens it full screen, and a tap shows its options. Picking a printing from «المصاحف» always opens it as the mushaf view (picking the vector Hafs used to leave the reader in text mode). Reciter badges show their list number, centred. See `WORK_QUEUE.md` F1–F4.
 
 ## STATE AS OF 2026-09-11 (night, later) — v3.17.1: the sixth batch
 
