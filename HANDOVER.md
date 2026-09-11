@@ -6,11 +6,30 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-11 |
-| **Released** | **v3.16.0** at `32bc414` — tag on `master`, tag SHA == HEAD, one release in the repo |
-| **App version** | `pubspec.yaml` `3.16.0+13` |
+| **Last updated** | 2026-09-11 (night) |
+| **Released** | **v3.17.0** — tag on `master`, one release in the repo (see NEXT_PROMPT for the verified SHA) |
+| **App version** | `pubspec.yaml` `3.17.0+14` |
 | **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
-| **Verified today** | `flutter analyze lib test` clean · `flutter test` **170 passed** · on emulator-5554: the per-line highlight, the third text layout, rotation opening the page by itself, the image mode refusing to rotate, the six-printing list, and «إصلاح التحميلات» reporting «تم استئناف 2 تحميل غير مكتمل» |
+| **Verified today** | `flutter analyze lib test` clean · `flutter test` **176 passed** · on emulator-5554 (release build, signed): header on page 249, hadith card with explanation, streaming single ayah and continuous recitation (`PLAYING`, `error=null`), the new recitations player (list, download, play, next), a mushaf download surviving `am force-stop` and resuming by itself |
+
+## STATE AS OF 2026-09-11 (night) — v3.17.0: the fifth batch
+
+Read **`WORK_QUEUE.md`** D1–D6 first; each item says what was seen and what was not.
+
+* **Per-ayah recitation downloads are gone.** The reader streams (everyayah, then islamic.network). Old files under `documents/recitations/` and their platform tasks are purged once at launch — 280.2 MB on the emulator.
+* **«تحميل تلاوات القرآن»** (More) — `lib/features/quran_audio/`: mp3quran API v3, whole-surah downloads on `DownloadEngine.quranAudioQueue` (3 wide, 2 per host), a library indexed as reciter → recitation folders in `documents/quran_audio/library.json`, device files, and a full player on the app's single `AudioPlayer` (`AyahAudioService.claimForMusic` / `musicOwnsPlayer`).
+* **The Hadeeth Encyclopaedia is bundled** — 7 zips in `assets/data/hadeethenc/`, 15.9 MB, unpacked per language on first open. The Home card draws only from it.
+* **Mushaf downloads are remembered** (`mushaf.wanted_downloads_v1`) and resumed at launch; progress lives in the foreground service's notification (`DownloadForegroundServiceBridge.update`), never in an `ongoing` one.
+* **Header rule** reads first AND last page per surah (`page_surahs.dart`).
+
+## MEASURED, 2026-09-11 (night) — v3.17.0
+
+| | |
+|---|---|
+| release APK | 347,173,170 bytes (was 330,194,494; +15.9 MB of encyclopaedia packs) |
+| tests | 176 |
+| mp3quran catalogue | 241 reciters · 287 recitations (ar), measured live |
+| history | 355 commits before the release commit |
 
 ## MEASURED, 2026-09-11 (not remembered)
 

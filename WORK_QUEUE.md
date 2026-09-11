@@ -1,3 +1,89 @@
+# Work queue — the owner's fifth batch, 2026-09-11 (night) → v3.17.0
+
+One long message, then a second one mid-work: «الكوته ١٥ … عايز البلاير يبقى
+روعة بصريًا واحترافي وفكّنا من تحميل تلاوات آية بآية على الجهاز».
+
+## D1 · The running header named a surah that is not on the page
+
+> «فيه سورة كاتب فيها في الهيدر سورة الرعد سورة يوسف وهي الرعد بس وكمان
+> متكرر كلمة سورة الرعد ٣ مرات»
+
+Two causes. The rule from v3.13 assumed a surah always ends on the page where
+the next begins; measured against `quran_local.db` that holds at **58 of 113**
+boundaries, and at the other 55 the header named the previous surah too
+(Yusuf ends on 248, al-Ra'd opens 249). Now read from MIN and MAX page per
+surah. And the text mode showed the name three times — corner badge, pinned
+header, banner — so the corner badge is image-mode only and the pinned header
+is blank on a page that opens with a banner.
+
+STATUS: **DONE (seen)** — page 249 on emulator-5554: image mode names «سورة الرعد» alone, text mode shows it once (banner only).
+
+## D2 · The Hadeeth Encyclopaedia, out of the box
+
+> «نزّل الموسوعة الحديثية وادمجها مع التطبيق out of box. خلّي كارت الحديث
+> بشروحه مرتبط بالموسوعة بس … ايه حزمة العربية دي»
+
+All seven packs bundled (`assets/data/hadeethenc/`, 15.9 MB), each checked
+byte-for-byte against the catalogue and row-for-row against its hadith count.
+The pack for the app's language unpacks on first open. The download gate,
+the auto-fetch and the «العربية» row under «العناصر المنزَّلة» are gone (the
+registry entry is dropped without deleting the database). The Home card draws
+only from the encyclopaedia. Source: HadeethEnc.com — read off its own page.
+
+STATUS: **DONE (seen)** — the Home card showed a Muslim hadith with «الشرح» under it on first launch; «الحديث» in «التنزيلات» no longer lists «العربية».
+
+## D3 · The Tajweed notification stuck for ever; repair said «لا يوجد»; the tiles did not move
+
+* The mushaf download posted an `ongoing` flutter_local_notifications progress
+  notification. When Android killed the process it stayed, unswipeable.
+  Progress now lives in the foreground service's own notification, which dies
+  with the service; leftovers are cancelled at launch.
+* Repair looked only at the page cache: an edition with 0 pages was "not
+  started", a paused or stuck loop was "running". Downloads asked for are now
+  remembered (`mushaf.wanted_downloads_v1`), resumed at launch, and repair
+  resumes paused ones and restarts one with no page for 90 s. Each loop owns a
+  generation number, so a restart cannot run beside the loop it replaced.
+* `MushafDownloadTile` only listened to a download it had started itself. It
+  now always listens.
+
+STATUS: **DONE (seen)** — Qatar download started, `am force-stop`: 0 notifications left from the package; relaunched: 30 s later the download had resumed by itself and the service notification read «مصحف قطر 30 / 604». NOT seen: the repair button pressed on a stuck download, and the tile re-attaching after a relaunch.
+
+## D4 · Per-ayah recitation downloads removed — the reader streams
+
+> «شيل خيار تحميل التلاوات على الجهاز ده خالص وخليه دايما من الـ API آية
+> بآية … واحذف خيار تلقائي ومحمّل ومن النت»
+
+The Recitations tab of «التنزيلات», the playback-source setting, the
+onboarding recitation download and all of `AyahAudioService`'s download code
+are gone. A recitation that fails to load retries on a new player, then on the
+reciter's other host. Files earlier builds downloaded under
+`documents/recitations/` and their platform tasks are purged once at launch.
+
+STATUS: **DONE (seen)** — single ayah and continuous recitation both reached `PLAYING` with `error=null` from the network; the recitations bucket fell from 280.2 MB to 628.5 KB after launch.
+
+## D5 · «تحميل تلاوات القرآن» — a new section in المزيد
+
+mp3quran.net API v3 (measured: 241 reciters, 287 recitations, unique ids,
+all https, surah lists consistent, files `206 audio/mpeg`). Whole-surah
+downloads on their own platform queue (3 at a time, 2 per host). The library
+is folders: reciter → recitation → surahs, indexed in
+`quran_audio/library.json` and re-read from disk. Device audio files can be
+added and played. The player: seek with elapsed/remaining, ±10 s, previous /
+next, shuffle, repeat list / one surah, speed 0.5–2×, sleep timer (minutes or
+end of surah), queue, mini player, lock-screen controls.
+
+STATUS: **DONE (seen)** — reciter list loaded, al-Fatiha (al-Hudhaifi) downloaded with live progress to «منزّلة على الجهاز», played from disk, mini player and full player drawn, next track streamed. NOT seen: a whole-recitation download to the end, pause/resume, sleep timer firing, device-file import.
+
+## D6 · His questions
+
+* **Do competing apps offer recitation downloads?** Answered in the reply,
+  with the recommendation he then chose himself.
+* **«وضع المصحف مش بيشغّل أول مصحف مصوّر»** — NOT reproduced: picking مصحف التجويد الملوّن on emulator-5554 opened page 249 as an image. Asked him for a screenshot.
+* **What is «حزمة العربية»?** The encyclopaedia's Arabic language pack, which
+  was downloaded separately. It is inside the app now (D2).
+
+---
+
 # Work queue — the owner's fourth batch, 2026-09-11 (late)
 
 Five decisions in one message, after reading the third batch's answers.
