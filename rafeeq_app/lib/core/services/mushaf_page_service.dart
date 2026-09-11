@@ -387,6 +387,35 @@ class MushafPageService {
     return total;
   }
 
+  /// Deletes the page cache of any printing that is no longer in the
+  /// catalogue, and returns the bytes recovered.
+  ///
+  /// Three printings were removed in v3.16.0 because they paginate their own
+  /// way and so can carry no ayah regions — the owner's «شيله من التطبيق كله».
+  /// Without this their downloaded pages would sit on the device for ever:
+  /// `storageSummaryProvider` walks the CATALOGUE, so a directory whose
+  /// edition is gone is invisible in «التنزيلات» and there is no button left
+  /// that could free it. Nothing here can touch a printing that still exists,
+  /// because the set of live ids is passed in rather than assumed.
+  Future<int> purgeUnknownEditions(Iterable<String> liveIds) async {
+    final live = liveIds.toSet()..addAll(_kBundledMushafEditions);
+    final base = await getApplicationDocumentsDirectory();
+    final root = Directory(p.join(base.path, 'mushaf'));
+    if (!root.existsSync()) return 0;
+    var freed = 0;
+    for (final entity in root.listSync()) {
+      if (entity is! Directory) continue;
+      final id = p.basename(entity.path);
+      if (live.contains(id)) continue;
+      for (final f in entity.listSync(recursive: true)) {
+        if (f is File) freed += f.lengthSync();
+      }
+      _memory.removeWhere((k, _) => k.startsWith('$id/'));
+      entity.deleteSync(recursive: true);
+    }
+    return freed;
+  }
+
   Future<void> clearCache(String editionId) async {
     _memory.removeWhere((k, _) => k.startsWith('$editionId/'));
     final dir = await _pageDir(editionId);

@@ -1146,9 +1146,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 11:12 — IN PROGRESS — resume here**
+**2026-09-11 11:23 — IN PROGRESS — resume here**
 
-seen on emulator-5554: the toolbar hides on a forward drag through the text and comes back on the pull up, the theme picker opens straight from the Quran toolbar with the charcoal paper selected, and the full-bleed black page came back by itself after the debug reinstall because full-screen is persisted. Side by side with the app he sent, the two pages are the same shape. What this cost was two small changes, not a rewrite - the 82 percent layout was already there and the measurement said so before I touched anything.
+the owner's ruling: a printing that cannot show you where the ayah is has no place in the app. Removed shamarly (521 pages), indopak_tajweed (564) and madinah_nastaleeq (611) - nine editions down to six, and every one of the six now carries an ayah layer, which the test asserts over the whole catalogue instead of over a hand-kept list of good ids. The consequence that would have bitten silently: storageSummaryProvider walks the catalogue, so those printings' downloaded pages would have sat on the device for ever with no button left that could free them. purgeUnknownEditions deletes a page directory whose edition is gone, and it can only ever do that for an id the live catalogue does not contain. 158 tests pass, analyze clean. NOT yet opened on a device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

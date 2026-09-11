@@ -42,28 +42,35 @@ void main() {
         ys.reduce((a, b) => a > b ? a : b).toDouble());
   }
 
-  test('only printings whose layout was verified carry an ayah layer', () {
-    expect(byId('hafs_kfqc').hasAyahLayer, isTrue);
-    expect(byId('tajweed_color').hasAyahLayer, isTrue);
-    for (final id in ['qatar', 'kuwait', 'madinah_night', 'madinah_gold']) {
-      expect(byId(id).hasAyahLayer, isTrue, reason: id);
-    }
-    // These ship without a highlight rather than with a wrong one: shamarly
-    // (521 pages), indopak_tajweed (564) and madinah_nastaleeq (611) paginate
-    // their own way, and no affine can map the Hafs polygons onto a different
-    // typesetting.
+  test('EVERY printing in the catalogue can highlight an ayah', () {
+    // The owner's ruling, 2026-09-11: «اي مصحف مصور مش محدد اجزاء الايات عشان
+    // التظليل شيله من التطبيق كله». A printing that cannot show you where the
+    // ayah is has no place in the list, so this is now an invariant over the
+    // whole catalogue rather than a list of known-good ids.
     //
-    // `madinah_gold` used to be in this list, on the claim that it "sets 6
-    // lines on its page 2 where the Madinah mushaf sets 15". That claim was a
-    // measurement of the wrong thing and is now known to be false — see the
-    // dedicated case below.
-    for (final id in [
+    // Removed in v3.16.0 for failing it: shamarly (521 pages),
+    // indopak_tajweed (564), madinah_nastaleeq (611). Each paginates its own
+    // way and no affine maps the Hafs polygons onto a different typesetting.
+    expect(editions, isNotEmpty);
+    for (final e in editions) {
+      expect(e.hasAyahLayer, isTrue,
+          reason: '${e.id} is in the catalogue with no ayah layer');
+    }
+    // And the layer has to be one that actually exists.
+    for (final e in editions) {
+      expect(File(e.polygonsAsset).existsSync(), isTrue,
+          reason: '${e.id} points at ${e.polygonsAsset}');
+    }
+  });
+
+  test('a printing that paginates its own way is not in the list', () {
+    final ids = [for (final e in editions) e.id];
+    for (final gone in [
       'shamarly',
       'indopak_tajweed',
       'madinah_nastaleeq',
     ]) {
-      expect(byId(id).hasAyahLayer, isFalse, reason: id);
-      expect(byId(id).fitForPage(1), isNull, reason: id);
+      expect(ids, isNot(contains(gone)), reason: gone);
     }
   });
 
@@ -272,17 +279,14 @@ void main() {
     }
   });
 
-  test('only a printing on the Madinah page claims the running header', () {
-    for (final id in ['hafs_kfqc', 'tajweed_color', 'qatar', 'kuwait',
-                      'madinah_night']) {
-      expect(byId(id).hafsPagination, isTrue, reason: id);
-      expect(byId(id).pages, 604, reason: id);
-    }
-    for (final row in [('shamarly', 521), ('indopak_tajweed', 564),
-                       ('madinah_nastaleeq', 611)]) {
-      final (id, pages) = row;
-      expect(byId(id).hafsPagination, isFalse, reason: id);
-      expect(byId(id).pages, pages, reason: id);
+  test('every remaining printing is on the Madinah page', () {
+    // Once the three own-pagination printings were removed, this stopped
+    // being a property of a hand-written list and became true of the whole
+    // catalogue: every edition left sets the 604-page Madinah layout, which
+    // is the layout the surah and juz indexes navigate by.
+    for (final e in editions) {
+      expect(e.hafsPagination, isTrue, reason: e.id);
+      expect(e.pages, 604, reason: e.id);
     }
   });
 

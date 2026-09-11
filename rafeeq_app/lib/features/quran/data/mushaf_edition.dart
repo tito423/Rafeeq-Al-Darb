@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui' show Offset;
 
@@ -6,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/config/app_config.dart';
+import '../../../core/services/mushaf_page_service.dart';
 
 /// Carries the Hafs/Madinah ayah polygons onto a printing that sets the *same*
 /// line grid at a different scale and offset.
@@ -277,10 +279,21 @@ final mushafEditionsProvider =
     FutureProvider<List<MushafEdition>>((ref) async {
   final raw = await rootBundle.loadString('assets/data/mushaf/editions.json');
   final doc = jsonDecode(raw) as Map<String, dynamic>;
-  return [
+  final editions = [
     for (final e in doc['editions'] as List<dynamic>)
       MushafEdition.fromJson(e as Map<String, dynamic>)
   ];
+  // A printing that has been removed from the catalogue leaves its downloaded
+  // pages behind, and «التنزيلات» walks this same list — so nothing would ever
+  // show them again, let alone free them. Done here rather than in `main()`
+  // because this is the one place that knows which ids are live; it is not
+  // awaited, so a reader never waits on a disk walk to open the mushaf.
+  unawaited(
+    MushafPageService.instance.purgeUnknownEditions([
+      for (final e in editions) e.id,
+    ]),
+  );
+  return editions;
 });
 
 const _kSelectedEditionKey = 'mushaf.selected_edition';

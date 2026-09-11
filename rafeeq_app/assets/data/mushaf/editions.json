@@ -1,6 +1,6 @@
 {
  "version": 2,
- "license": "quranpedia/quran-svg — polygon metadata CC0-1.0; KFQC glyphs free for digital use. Raster editions rehosted first-party on R2: Tajweed (Dar Al-Maarifa), Warsh + Qalun (Quran-for-Android page scans), Shamarly / Madinah illuminated / Indo-Pak colour-coded (archive.org public scans). Every edition listed here has its full page count verified present on R2 before shipping.",
+ "license": "quranpedia/quran-svg — polygon metadata CC0-1.0; KFQC glyphs free for digital use. Raster editions rehosted first-party on R2: Tajweed (Dar Al-Maarifa), Warsh + Qalun (Quran-for-Android page scans), Madinah illuminated (archive.org public scans). Every edition listed here has its full page count verified present on R2 before shipping.",
  "pin": "b91d39e1065b57bdda3e94aca8ecf3575e50e1e6",
  "editions": [
   {
@@ -80,32 +80,6 @@
      }
     }
    }
-  },
-  {
-   "id": "shamarly",
-   "image_path": "shamarly",
-   "image_ext": "png",
-   "name_ar": "مصحف الشمرلي",
-   "name_en": "Shamarly Mushaf",
-   "name_es": "Mushaf Shamarly",
-   "name_fr": "Mushaf Shamarly",
-   "name_pt": "Mushaf Shamarly",
-   "name_ru": "Мусхаф аш-Шамарли",
-   "name_ur": "مصحفِ شمرلی",
-   "riwayah_ar": "حفص عن عاصم",
-   "riwayah_en": "Hafs an Asim",
-   "riwayah_es": "Hafs de ‘Asim",
-   "riwayah_fr": "Hafs d’Assim",
-   "riwayah_pt": "Hafs de ‘Asim",
-   "riwayah_ru": "Хафс от ‘Асыма",
-   "riwayah_ur": "حفص عن عاصم",
-   "pages": 521,
-   "ayahs": 6236,
-   "sciences_aligned": true,
-   "diverging_surahs": [],
-   "is_default": false,
-   "hafs_pagination": false,
-   "cover_asset": "assets/mushaf_covers/shamarly.jpg"
   },
   {
    "id": "madinah_gold",
@@ -4366,32 +4340,6 @@
      }
     }
    }
-  },
-  {
-   "id": "indopak_tajweed",
-   "image_path": "indopak_tajweed",
-   "image_ext": "jpg",
-   "name_ar": "المصحف الهندي الملوّن (تجويدي)",
-   "name_en": "Indo-Pak Colour-Coded Tajweed",
-   "name_es": "Tajwid en color indopakistaní",
-   "name_fr": "Tajwid en couleurs indo-pakistanais",
-   "name_pt": "Tajwid colorido indo-paquistanês",
-   "name_ru": "Индо-пакистанский цветной таджвид",
-   "name_ur": "ہندوپاک رنگین تجویدی مصحف",
-   "riwayah_ar": "حفص عن عاصم — رسم هندي",
-   "riwayah_en": "Hafs — Indo-Pak Nastaliq",
-   "riwayah_es": "Hafs — grafía indopakistaní",
-   "riwayah_fr": "Hafs — graphie indo-pakistanaise",
-   "riwayah_pt": "Hafs — grafia indo-paquistanesa",
-   "riwayah_ru": "Хафс — индо-пакистанское письмо",
-   "riwayah_ur": "حفص عن عاصم — ہندوپاک رسم",
-   "pages": 564,
-   "ayahs": 6236,
-   "sciences_aligned": true,
-   "diverging_surahs": [],
-   "is_default": false,
-   "hafs_pagination": false,
-   "cover_asset": "assets/mushaf_covers/indopak_tajweed.jpg"
   },
   {
    "id": "qatar",
@@ -17172,32 +17120,6 @@
      }
     }
    }
-  },
-  {
-   "id": "madinah_nastaleeq",
-   "image_path": "madinah_nastaleeq",
-   "image_ext": "jpg",
-   "name_ar": "مصحف المدينة — الخط النستعليقي",
-   "name_en": "Madinah Mushaf — Nastaliq",
-   "name_es": "Mushaf de Medina — caligrafía nastaliq",
-   "name_fr": "Mushaf de Médine — calligraphie nastaliq",
-   "name_pt": "Mushaf de Medina — caligrafia nastaliq",
-   "name_ru": "Мединский мусхаф — почерк насталик",
-   "name_ur": "مصحفِ مدینہ — خطِ نستعلیق",
-   "riwayah_ar": "حفص عن عاصم",
-   "riwayah_en": "Hafs an Asim",
-   "riwayah_es": "Hafs de ‘Asim",
-   "riwayah_fr": "Hafs d’Assim",
-   "riwayah_pt": "Hafs de ‘Asim",
-   "riwayah_ru": "Хафс от ‘Асыма",
-   "riwayah_ur": "حفص عن عاصم",
-   "pages": 611,
-   "ayahs": 6236,
-   "sciences_aligned": true,
-   "diverging_surahs": [],
-   "is_default": false,
-   "hafs_pagination": false,
-   "cover_asset": "assets/mushaf_covers/madinah_nastaleeq.jpg"
   }
  ]
 }
