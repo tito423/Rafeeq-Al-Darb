@@ -1,3 +1,4 @@
+import '../core/widgets/arrow_scrollbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -104,6 +105,7 @@ class RafeeqApp extends ConsumerWidget {
       theme: light,
       darkTheme: dark,
       themeMode: mode,
+      scrollBehavior: const ArrowScrollBehavior(),
       builder: variant == ThemeVariant.rgb
           ? (context, child) => RgbScaffoldBackground(child: child!)
           : null,

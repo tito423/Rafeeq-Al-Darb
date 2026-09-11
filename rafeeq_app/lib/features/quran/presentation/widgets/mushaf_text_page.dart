@@ -185,6 +185,13 @@ class _MushafTextPageState extends State<MushafTextPage> {
         final box = ctx.findRenderObject();
         final fits = box is! RenderBox ||
             box.size.height <= _scroll.position.viewportDimension;
+        // Already on screen: leave the page where it is. Moving it on every
+        // start was «بيقوم مظلّلها وينزل بالشاشة لتحت على اللي بعدها».
+        final pageBox = context.findRenderObject();
+        if (box is RenderBox && pageBox is RenderBox && box.attached) {
+          final top = box.localToGlobal(Offset.zero, ancestor: pageBox).dy;
+          if (top >= 0 && top + box.size.height <= pageBox.size.height) return;
+        }
         Scrollable.ensureVisible(
           ctx,
           alignment: fits ? 0.5 : 0.0,
@@ -215,6 +222,12 @@ class _MushafTextPageState extends State<MushafTextPage> {
       // as much room in the direction the verse actually continues.
       final top = box.localToGlobal(Offset.zero).dy;
       final viewport = _scroll.position.viewportDimension;
+      // The verse's start already in the upper part of the screen: no scroll.
+      final pageBox = context.findRenderObject();
+      final pageTop =
+          pageBox is RenderBox ? pageBox.localToGlobal(Offset.zero).dy : 0.0;
+      final verseTop = top + dy - pageTop;
+      if (verseTop >= 0 && verseTop <= viewport * 0.8) return;
       final target = _scroll.offset + top + dy - viewport / 3;
       _scroll.animateTo(
         target.clamp(
@@ -492,7 +505,11 @@ class _MushafTextPageState extends State<MushafTextPage> {
                     to: item.runTo!,
                     playingIndex: playingIndex,
                     textStyle: textStyle,
-                    onAyahTap: widget.onPlayTap,
+                    // A tap selects the verse and opens its card. It used to
+                    // START THE RECITATION: «لما بضغط على آية في المصحف
+                    // النصي بيقوم مشغّل تلقائي التلاوة». Recitation is the
+                    // toolbar's, and one verse is the card's «تلاوة الآية».
+                    onAyahTap: widget.onAyahTap,
                     onAyahLongPress: widget.onAyahTap,
                     onBackgroundTap: widget.onBackgroundTap,
                     bare: bare,
@@ -617,7 +634,7 @@ class _AyahRow extends StatelessWidget {
                 // ── Ayah text ──
                 Expanded(
                   child: InkWell(
-                    onTap: onPlayTap,
+                    onTap: onLongPress,
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),

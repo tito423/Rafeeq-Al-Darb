@@ -10,6 +10,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/byte_formatter.dart';
 import '../../../core/widgets/islamic_pattern.dart';
 import '../data/player_theme.dart';
+import '../data/quran_audio_favorites.dart';
 import '../data/quran_audio_player.dart';
 import 'widgets/audio_common.dart';
 
@@ -64,6 +65,7 @@ class QuranAudioPlayerScreen extends ConsumerWidget {
                 children: [
                   _TopBar(
                     theme: t,
+                    track: track,
                     onQueue: track == null ? null : () => _showQueue(context, t),
                     onTheme: () => _pickTheme(context, ref),
                   ),
@@ -270,9 +272,15 @@ class QuranAudioPlayerScreen extends ConsumerWidget {
 
 class _TopBar extends StatelessWidget {
   final PlayerTheme theme;
+  final PlayerTrack? track;
   final VoidCallback? onQueue;
   final VoidCallback onTheme;
-  const _TopBar({required this.theme, required this.onQueue, required this.onTheme});
+  const _TopBar({
+    required this.theme,
+    required this.track,
+    required this.onQueue,
+    required this.onTheme,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -296,6 +304,19 @@ class _TopBar extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
+          ),
+          ListenableBuilder(
+            listenable: QuranAudioFavorites.instance..ensureLoaded(),
+            builder: (context, _) {
+              final t = track;
+              final fav = t != null && QuranAudioFavorites.instance.contains(t.id);
+              return IconButton(
+                tooltip: (fav ? 'quran_audio.favorite_remove' : 'quran_audio.favorite_add').tr(),
+                color: fav ? theme.accent : AppColors.textHigh,
+                icon: Icon(fav ? Icons.favorite_rounded : Icons.favorite_border_rounded),
+                onPressed: t == null ? null : () => QuranAudioFavorites.instance.toggle(t),
+              );
+            },
           ),
           IconButton(
             tooltip: 'quran_audio.theme'.tr(),

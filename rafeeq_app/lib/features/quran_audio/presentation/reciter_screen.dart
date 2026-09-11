@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,7 @@ import '../../../core/utils/byte_formatter.dart';
 import '../../../core/widgets/islamic_pattern.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../data/mp3quran_api.dart';
+import '../data/player_theme.dart';
 import '../data/quran_audio_library.dart';
 import '../data/quran_audio_player.dart';
 import 'widgets/audio_common.dart';
@@ -38,10 +41,56 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
     orElse: () => widget.reciter.moshafs.first,
   );
 
+  final _scroll = ScrollController();
+  final Map<int, GlobalKey> _rowKeys = {};
+  bool _showTop = false;
+
   @override
   void initState() {
     super.initState();
     QuranAudioLibrary.instance.ensureReady();
+    _scroll.addListener(() {
+      final show = _scroll.hasClients &&
+          _scroll.offset > _scroll.position.viewportDimension;
+      if (show != _showTop) setState(() => _showTop = show);
+    });
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  /// The surah transferring now (or next), with its progress.
+  (int, double)? _downloading(QuranAudioLibrary lib) {
+    (int, double)? queued;
+    for (final surah in _moshaf.surahs) {
+      final st = lib.statusOf(_moshaf.id, surah);
+      if (st.state == SurahAudioState.running) return (surah, st.progress);
+      if (st.state == SurahAudioState.queued) queued ??= (surah, 0);
+    }
+    return queued;
+  }
+
+  /// «لو ضغطت عليه ينقلني فورًا عند المكان اللي بتتحمّل منه السورة».
+  void _jumpToSurah(int surah) {
+    final i = _moshaf.surahs.indexOf(surah);
+    if (i < 0 || !_scroll.hasClients) return;
+    final ctx = _rowKeys[surah]?.currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(ctx, alignment: 0.3, duration: const Duration(milliseconds: 350));
+      return;
+    }
+    // Not built yet (the list builds as it scrolls): land near it by the
+    // rows' height, then settle exactly on it.
+    _scroll.jumpTo((300 + i * 64.0).clamp(0.0, _scroll.position.maxScrollExtent));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final c = _rowKeys[surah]?.currentContext;
+      if (c != null) {
+        Scrollable.ensureVisible(c, alignment: 0.3, duration: const Duration(milliseconds: 250));
+      }
+    });
   }
 
   Future<void> _play({int? fromSurah}) async {
@@ -67,6 +116,22 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.reciter.name)),
+      // «زرار شفاف أسفل يسار الشاشة لما أنزل بمقدار صفحة يرفعني لأول الصفحة».
+      floatingActionButtonLocation:
+          Directionality.of(context) == ui.TextDirection.rtl
+              ? FloatingActionButtonLocation.endFloat
+              : FloatingActionButtonLocation.startFloat,
+      floatingActionButton: _showTop
+          ? FloatingActionButton.small(
+              heroTag: 'reciter-top',
+              elevation: 0,
+              backgroundColor: Colors.black.withValues(alpha: 0.35),
+              foregroundColor: Colors.white,
+              onPressed: () => _scroll.animateTo(0,
+                  duration: const Duration(milliseconds: 400), curve: Curves.easeOutCubic),
+              child: const Icon(Icons.keyboard_double_arrow_up_rounded),
+            )
+          : null,
       bottomNavigationBar: const MiniPlayer(),
       body: ListenableBuilder(
         listenable: Listenable.merge([lib, player]),
@@ -76,7 +141,10 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
           final total = _moshaf.surahs.length;
           final pending = entry?.pending.isNotEmpty ?? false;
           final paused = pending && (entry?.paused ?? false);
+          final theme = ref.watch(playerThemeProvider);
+          final now = _downloading(lib);
           return CustomScrollView(
+            controller: _scroll,
             slivers: [
               if (widget.reciter.moshafs.length > 1)
                 SliverToBoxAdapter(
@@ -103,7 +171,8 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
-                  child: IslamicPatternPanel(
+                  child: _ThemedPanel(
+                    theme: theme,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -139,6 +208,32 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                           height: 6,
                           color: done >= total ? AppColors.success : AppColors.gold,
                         ),
+                        if (now != null) ...[
+                          const SizedBox(height: 10),
+                          InkWell(
+                            onTap: () => _jumpToSurah(now.$1),
+                            borderRadius: BorderRadius.circular(12),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.downloading_rounded, color: theme.accent, size: 20),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'quran_audio.now_downloading'.tr(args: [
+                                        surahTitle(data, now.$1, locale),
+                                        ltr('${(now.$2 * 100).round()}%'),
+                                      ]),
+                                      style: TextStyle(color: theme.accentSoft, fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                  Icon(Icons.my_location_rounded, color: theme.accentSoft, size: 18),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 14),
                         Wrap(
                           spacing: 8,
@@ -203,6 +298,7 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                     final s = _moshaf.surahs[i];
                     final playing = player.active && player.current?.id == trackIdFor(_moshaf.id, s);
                     return _SurahRow(
+                      key: _rowKeys.putIfAbsent(s, GlobalKey.new),
                       surah: s,
                       title: surahTitle(data, s, locale),
                       status: lib.statusOf(_moshaf.id, s),
@@ -238,6 +334,7 @@ class _SurahRow extends StatelessWidget {
   final VoidCallback onDelete;
 
   const _SurahRow({
+    super.key,
     required this.surah,
     required this.title,
     required this.status,
@@ -350,6 +447,50 @@ class _SurahRow extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/// The recitation card on the reciter's screen, in the player's theme: its
+/// ground, a lattice drawn over it, and a rim in its accent.
+class _ThemedPanel extends StatelessWidget {
+  final PlayerTheme theme;
+  final Widget child;
+  const _ThemedPanel({required this.theme, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: theme.ground,
+        ),
+        border: Border.all(color: theme.accent.withValues(alpha: 0.55)),
+        boxShadow: [
+          BoxShadow(color: theme.accent.withValues(alpha: 0.15), blurRadius: 18),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(22),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: CustomPaint(
+                painter: IslamicPatternPainter(
+                  tile: 54,
+                  color: theme.accent.withValues(alpha: 0.12),
+                ),
+              ),
+            ),
+            Padding(padding: const EdgeInsets.all(16), child: child),
+          ],
         ),
       ),
     );

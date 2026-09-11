@@ -73,7 +73,7 @@ class LibraryEntry {
 /// إندكسد وفولدرات».
 ///
 /// Whole-surah files from mp3quran.net, downloaded through the platform's own
-/// downloader (`DownloadEngine.quranAudioQueue`), so a transfer keeps going
+/// downloader (its native holding queue, as foreground work), so a transfer keeps going
 /// with the app in the background and a 255 MB surah is one task rather than
 /// 286 ayah files. Nothing here is tied to a mushaf.
 ///
@@ -238,7 +238,7 @@ class QuranAudioLibrary extends ChangeNotifier {
     final key = _key(e.moshafId, surah);
     if (_status[key]?.isActive ?? false) return;
     _status[key] = const SurahAudioStatus(SurahAudioState.queued);
-    DownloadEngine.quranAudioQueue.add(
+    unawaited(FileDownloader().enqueue(
       DownloadTask(
         taskId: taskIdFor(e.moshafId, surah),
         url: e.moshaf.urlFor(surah),
@@ -250,8 +250,9 @@ class QuranAudioLibrary extends ChangeNotifier {
         retries: 3,
         displayName: e.reciterName,
         metaData: '$surah',
+        allowPause: true,
       ),
-    );
+    ));
   }
 
   void _onUpdate(TaskUpdate u) {
@@ -296,7 +297,7 @@ class QuranAudioLibrary extends ChangeNotifier {
     if (e == null) return;
     e.paused = true;
     await _save();
-    await _stopTasks(moshafId, e.pending);
+    await _pauseTasks(moshafId, e.pending);
     _notifyNow();
   }
 
@@ -306,11 +307,80 @@ class QuranAudioLibrary extends ChangeNotifier {
     e.paused = false;
     e.pending.removeWhere((s) => isDownloaded(moshafId, s));
     await _save();
+    final records = await _records();
     for (final s in e.pending) {
+      if (await _resumeFromBytes(records[taskIdFor(moshafId, s)])) continue;
       _enqueue(e, s);
     }
     _notifyNow();
   }
+
+  /// The plugin's record of every whole-surah task, by id.
+  Future<Map<String, TaskRecord>> _records() async {
+    try {
+      return {
+        for (final r in await FileDownloader()
+            .database
+            .allRecords(group: DownloadEngine.groupQuranAudio))
+          r.taskId: r,
+      };
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  /// Continues a paused or interrupted transfer from the bytes it already has.
+  Future<bool> _resumeFromBytes(TaskRecord? record) async {
+    if (record == null) return false;
+    final task = record.task;
+    if (task is! DownloadTask) return false;
+    if (record.status != TaskStatus.paused && record.status != TaskStatus.failed) {
+      return false;
+    }
+    try {
+      return await FileDownloader().resume(task);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// A real pause: a transfer keeps its bytes and [resume] continues from
+  /// them. One still waiting in the native queue is simply taken out.
+  Future<void> _pauseTasks(int moshafId, Set<int> surahs) async {
+    final downloader = FileDownloader();
+    List<Task> live = const [];
+    try {
+      live = await downloader.allTasks(group: DownloadEngine.groupQuranAudio);
+    } catch (_) {}
+    for (final s in surahs) {
+      final id = taskIdFor(moshafId, s);
+      final task = live.where((t) => t.taskId == id).firstOrNull;
+      var paused = false;
+      if (task is DownloadTask) {
+        try {
+          paused = await downloader.pause(task);
+        } catch (_) {}
+      }
+      if (!paused) {
+        try {
+          await downloader.cancelTasksWithIds([id]);
+        } catch (_) {}
+      }
+      _status.remove(_key(moshafId, s));
+    }
+  }
+
+  /// What is transferring right now, for the downloads screen's summary card.
+  List<({LibraryEntry entry, int surah, double progress})> get activeDownloads => [
+        for (final e in _status.entries)
+          if (e.value.isActive)
+            if (_entries[int.parse(e.key.split('/').first)] case final entry?)
+              (
+                entry: entry,
+                surah: int.parse(e.key.split('/').last),
+                progress: e.value.progress,
+              ),
+      ];
 
   Future<void> cancel(int moshafId) async {
     final e = _entries[moshafId];
@@ -333,7 +403,6 @@ class QuranAudioLibrary extends ChangeNotifier {
 
   Future<void> _stopTasks(int moshafId, Set<int> surahs) async {
     final ids = [for (final s in surahs) taskIdFor(moshafId, s)];
-    DownloadEngine.quranAudioQueue.removeTasksWithIds(ids);
     try {
       await FileDownloader().cancelTasksWithIds(ids);
     } catch (_) {}
@@ -352,10 +421,7 @@ class QuranAudioLibrary extends ChangeNotifier {
               .allTasks(group: DownloadEngine.groupQuranAudio))
           .map((t) => t.taskId));
     } catch (_) {}
-    final queue = DownloadEngine.quranAudioQueue;
-    live
-      ..addAll(queue.enqueued.map((t) => t.taskId))
-      ..addAll(queue.waiting.unorderedElements.map((t) => t.taskId));
+    final records = await _records();
     var count = 0;
     for (final e in _entries.values) {
       if (e.paused) continue;
@@ -363,7 +429,10 @@ class QuranAudioLibrary extends ChangeNotifier {
       for (final s in e.pending) {
         if (live.contains(taskIdFor(e.moshafId, s))) continue;
         _status.remove(_key(e.moshafId, s));
-        _enqueue(e, s);
+        // Interrupted: carry on from the bytes on disk, not from zero.
+        if (!await _resumeFromBytes(records[taskIdFor(e.moshafId, s)])) {
+          _enqueue(e, s);
+        }
         count++;
       }
     }

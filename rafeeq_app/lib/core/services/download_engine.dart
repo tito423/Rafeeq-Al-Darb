@@ -67,14 +67,6 @@ class DownloadEngine {
     ..maxConcurrent = 8
     ..maxConcurrentByHost = 4;
 
-  /// Whole surahs are big — al-Baqarah alone is 255 MB in the Minshawi
-  /// mujawwad (`Content-Length` read off server10.mp3quran.net) — so the win
-  /// is not width. Three at a time, two per host, keeps each file moving
-  /// visibly instead of splitting the line between a dozen crawling ones.
-  static final MemoryTaskQueue quranAudioQueue = MemoryTaskQueue()
-    ..maxConcurrent = 3
-    ..maxConcurrentByHost = 2;
-
   /// How many times one task may be put back after the platform refused to
   /// accept it, before it is left for «إصلاح التحميلات».
   static const int _maxReEnqueue = 3;
@@ -141,8 +133,7 @@ class DownloadEngine {
         // place, which is the failure we are here to fix.
       }
     }
-    return releaseStuckTasks(fileQueue, live) +
-        releaseStuckTasks(quranAudioQueue, live);
+    return releaseStuckTasks(fileQueue, live);
   }
 
   /// When each task last said anything.
@@ -156,14 +147,13 @@ class DownloadEngine {
     Duration after = const Duration(minutes: 2),
   }) async {
     final now = DateTime.now();
-    final ids = [
-      for (final t in quranAudioQueue.enqueued)
-        if (_lastSeen[t.taskId] case final seen?)
-          if (now.difference(seen) > after) t.taskId,
-    ];
-    if (ids.isEmpty) return 0;
+    final ids = <String>[];
     try {
-      await FileDownloader().cancelTasksWithIds(ids);
+      for (final t in await FileDownloader().allTasks(group: groupQuranAudio)) {
+        final seen = _lastSeen[t.taskId];
+        if (seen != null && now.difference(seen) > after) ids.add(t.taskId);
+      }
+      if (ids.isNotEmpty) await FileDownloader().cancelTasksWithIds(ids);
     } catch (_) {}
     return ids.length;
   }
@@ -311,17 +301,32 @@ class DownloadEngine {
       groupNotificationId: _notifGroupQuranAudio,
     );
 
-    downloader
-      ..addTaskQueue(fileQueue)
-      ..addTaskQueue(quranAudioQueue);
+    downloader.addTaskQueue(fileQueue);
+
+    // «تنزيل التلاوة الكاملة لو حطّيت التطبيق في الخلفية التنزيل بيقف ويعلّق
+    // ويرجع يبتدي من الأول». Two causes, both fixed here:
+    //  * the whole-surah files waited in a Dart queue, and a Dart queue does
+    //    not advance while Android has the app's isolate paused in the
+    //    background — the three transfers in flight finished and nothing
+    //    followed. They are now handed to the plugin's NATIVE holding queue,
+    //    which starts the next one itself (at most 3 per group, 4 per host);
+    //  * the transfers ran as ordinary background work that Android is free to
+    //    stop. They run as foreground work now, with their notification.
+    // A transfer that is interrupted anyway resumes from its bytes rather than
+    // from zero: the tasks allow pause, and mp3quran answers range requests.
+    try {
+      await downloader.configure(
+        globalConfig: [(Config.holdingQueue, (null, 4, 3))],
+        androidConfig: [(Config.runInForeground, Config.always)],
+      );
+    } catch (_) {}
 
     // A refused enqueue is the one event that leaks a queue slot for ever —
     // see `releaseStuckTasks`. The plugin publishes it and then forgets it;
     // this is the only listener that can give the slot back.
     fileQueue.enqueueErrors
         .listen((task) => _onEnqueueRefused(fileQueue, task));
-    quranAudioQueue.enqueueErrors
-        .listen((task) => _onEnqueueRefused(quranAudioQueue, task));
+
 
     // Keeps task records in the plugin's own database so a transfer that
     // outlived the app can be reconciled on the next launch instead of

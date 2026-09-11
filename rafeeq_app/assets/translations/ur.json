@@ -105,9 +105,6 @@
     "mushaf_mode": "مصحف موڈ",
     "text_mode": "متن موڈ",
     "sciences": "علومِ آیت",
-    "gharib": "غریب القرآن (معانیِ الفاظ)",
-    "gharib_description": "الفاظ کے معانی مجمع الملک فہد لطباعۃ المصحف الشریف کے ڈیٹابیس سے ماخوذ ہیں۔",
-    "gharib_unavailable": "معذرت، اس سورت کے لیے الفاظ کے معانی دستیاب نہیں۔",
     "tafseer": "تفسیر",
     "irab": "اعراب",
     "meanings": "معانیِ الفاظ",
@@ -184,7 +181,8 @@
     "search_juz_hint": "پارہ نمبر تلاش کریں…",
     "recite_choose_reciter": "قاری منتخب کریں",
     "recite_search_reciter": "قاری تلاش کریں",
-    "image_view_hint": "مصحف منظر — اختیارات دکھانے کے لیے صفحے پر ٹیپ کریں"
+    "image_view_hint": "مصحف منظر — اختیارات دکھانے کے لیے صفحے پر ٹیپ کریں",
+    "recite_ayah": "آیت کی تلاوت"
   },
   "library": {
     "title": "کتب خانہ",
@@ -301,7 +299,7 @@
     "died_circa_ah": "وفات تقریباً {}ھ",
     "death_8th_century": "آٹھویں صدی ہجری کے علما میں سے",
     "book_desc_generated": "{} کی تصنیف، {} صفحات، باب {} میں۔",
-    "tab_hadeethenc": "موسوعہ"
+    "tab_hadeethenc": "موسوعۂ حدیث"
   },
   "azkar": {
     "title": "اذکار",
@@ -567,7 +565,8 @@
     },
     "repair_resumed": "{} نامکمل ڈاؤن لوڈ دوبارہ شروع کیے گئے",
     "repair_unjammed": "{} رکی ہوئی ڈاؤن لوڈ بحال",
-    "repair_nothing": "کوئی نامکمل ڈاؤن لوڈ نہیں"
+    "repair_nothing": "کوئی نامکمل ڈاؤن لوڈ نہیں",
+    "active_now": "ابھی ڈاؤن لوڈ ہو رہا ہے"
   },
   "new_muslim": {
     "title": "نئے مسلمان کی رہنمائی",
@@ -1163,6 +1162,15 @@
     "theme_violet": "بنفشی",
     "theme_silver": "چاندی",
     "theme_cedar": "دیودار",
-    "theme_amber": "کہربا"
+    "theme_amber": "کہربا",
+    "now_downloading": "{} ڈاؤن لوڈ ہو رہی ہے — {}",
+    "tab_favorites": "پسندیدہ",
+    "favorite_add": "پسندیدہ میں شامل کریں",
+    "favorite_remove": "پسندیدہ سے ہٹائیں",
+    "empty_favorites": "تلاوت کو پسندیدہ میں شامل کرنے کے لیے پلیئر میں دل پر ٹیپ کریں۔",
+    "add_files": "فائلیں شامل کریں",
+    "add_folder": "فولڈر شامل کریں",
+    "auto_scan": "پلیئر کھلنے پر خودکار تلاش",
+    "remove_folder": "اس فولڈر کو فہرست سے ہٹائیں"
   }
 }

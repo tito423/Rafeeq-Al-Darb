@@ -172,9 +172,6 @@
     "recite_previous": "Verset précédent",
     "recite_pause": "Pause / reprise",
     "recite_next": "Verset suivant",
-    "gharib": "Sens des mots (Gharib)",
-    "gharib_description": "Sens mot à mot extraits de la base de données du Complexe du Roi Fahd pour l’impression du Noble Coran.",
-    "gharib_unavailable": "Désolé, le sens des mots n’est pas disponible pour cette sourate.",
     "downloading_translation": "Téléchargement de la traduction en {}…",
     "translation_not_downloaded": "La traduction en {} n'est pas encore téléchargée",
     "layout_page": "Vue page",
@@ -184,7 +181,8 @@
     "search_juz_hint": "Chercher un numéro de juz…",
     "recite_choose_reciter": "Choisir le récitateur",
     "recite_search_reciter": "Rechercher un récitateur",
-    "image_view_hint": "Vue mushaf — touchez la page pour afficher les options"
+    "image_view_hint": "Vue mushaf — touchez la page pour afficher les options",
+    "recite_ayah": "Réciter le verset"
   },
   "library": {
     "title": "Bibliothèque",
@@ -301,7 +299,7 @@
     "died_circa_ah": "Mort vers {} AH",
     "death_8th_century": "Un savant du VIIIe siècle de l’Hégire",
     "book_desc_generated": "Un ouvrage de {}, {} pages, dans la section {}.",
-    "tab_hadeethenc": "Encyclopédie"
+    "tab_hadeethenc": "Encyclopédie des hadiths"
   },
   "azkar": {
     "title": "Adhkar",
@@ -567,7 +565,8 @@
     "repairing": "Reprise des téléchargements interrompus...",
     "repair_resumed": "{} téléchargement(s) inachevé(s) repris",
     "repair_unjammed": "{} tâche(s) bloquée(s) libérée(s)",
-    "repair_nothing": "Aucun téléchargement inachevé"
+    "repair_nothing": "Aucun téléchargement inachevé",
+    "active_now": "En cours de téléchargement"
   },
   "new_muslim": {
     "title": "Guide du nouveau musulman",
@@ -1163,6 +1162,15 @@
     "theme_violet": "Violet",
     "theme_silver": "Argent",
     "theme_cedar": "Cèdre",
-    "theme_amber": "Ambre"
+    "theme_amber": "Ambre",
+    "now_downloading": "Téléchargement de {} — {}",
+    "tab_favorites": "Favoris",
+    "favorite_add": "Ajouter aux favoris",
+    "favorite_remove": "Retirer des favoris",
+    "empty_favorites": "Touchez le cœur dans le lecteur pour ajouter une récitation aux favoris.",
+    "add_files": "Ajouter des fichiers",
+    "add_folder": "Ajouter un dossier",
+    "auto_scan": "Analyser automatiquement à l’ouverture du lecteur",
+    "remove_folder": "Retirer ce dossier de la liste"
   }
 }

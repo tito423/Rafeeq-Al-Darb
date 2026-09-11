@@ -79,6 +79,11 @@ class AlarmPermissionsService {
       // Best-effort: prayer times fall back to the cached fix without it.
     }
     await requestStartupPermissions();
+    // «أول ما ينزل التطبيق اطلب الإذن ده» — the phone's audio, for the
+    // Qur'an player's device files, asked right after the others.
+    try {
+      await [Permission.audio, Permission.storage].request();
+    } catch (_) {}
   }
 
   /// Notification + exact-alarm prompts. Safe to call more than once — each

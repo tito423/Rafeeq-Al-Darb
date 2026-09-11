@@ -165,6 +165,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// full-screen first rather than just toggling the (currently invisible
   /// anyway) toolbar row underneath it.
   void _onBackgroundTap() {
+    if (_highlightAyah != null && !_recite.active) {
+      setState(() {
+        _highlightSurah = null;
+        _highlightAyah = null;
+      });
+      return;
+    }
     if (_pageFillScreen) {
       // P3‑54: leaving immersive mode is now a double-tap or the translucent
       // floating button (see `_togglePageFillScreen` / the exit FAB), so a
@@ -516,12 +523,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       quranRepo: data.repo,
       sciencesAvailable: sciencesAvailable,
     );
-    if (mounted) {
-      setState(() {
-        _highlightSurah = null;
-        _highlightAyah = null;
-      });
-    }
+    // The verse STAYS selected after its card closes, so «التلاوة المستمرة»
+    // starts from it: «لما أكون فاتح صفحة وأضغط على آية وأضغط تلاوة تلقائية
+    // يبدأ من الآية اللي ضغطت عليها». A tap on the page, or turning it,
+    // clears the selection.
   }
 
   Future<List<Ayah>> _ayahsOfPage(int page, MushafData data) =>
@@ -1048,7 +1053,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return PageView.builder(
       controller: _pages,
       onPageChanged: (i) {
-        setState(() => _current = i + 1);
+        setState(() {
+          _current = i + 1;
+          if (!_recite.active) {
+            _highlightSurah = null;
+            _highlightAyah = null;
+          }
+        });
         _persistPage();
       },
       itemCount: _totalPages,
@@ -1110,14 +1121,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               // `stopContinuous()`, and picking a verse stopped the
               // recitation instead of moving it. That is the owner's
               // «واجي اختار آية … بتقف التلاوة مش بتشتغل».
-              onPlayTap: (a) {
-                AyahAudioService.instance.startContinuous(
-                  from: a,
-                  repo: data.repo,
-                  edition: ref.read(selectedReciterProvider),
-                  wholeMushaf: true,
-                );
-              },
+              // The verse's own marker plays that one verse — separate from the
+              // continuous recitation, which only the toolbar starts.
+              onPlayTap: (a) => AyahAudioService.instance.play(
+                a,
+                data.repo,
+                edition: ref.read(selectedReciterProvider),
+              ),
               fontScale: _fontScale,
               autoScroll: _autoScroll,
               autoScrollSpeed: _autoScrollSpeed,

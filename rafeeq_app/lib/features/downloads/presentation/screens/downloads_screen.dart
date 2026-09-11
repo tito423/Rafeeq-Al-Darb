@@ -14,6 +14,10 @@ import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/downloads_controller.dart';
+import '../../../quran_audio/presentation/widgets/audio_common.dart';
+import '../../../quran_audio/presentation/reciter_screen.dart';
+import '../../../quran_audio/data/mp3quran_api.dart';
+import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../widgets/mushaf_download_tile.dart';
@@ -192,6 +196,7 @@ class _OverviewTab extends ConsumerWidget {
                   ? () => _confirmFree(context, ref, null)
                   : null,
             ),
+            const _ActiveDownloadsPanel(),
             const SizedBox(height: 18),
             Padding(
               padding: const EdgeInsetsDirectional.only(start: 6, bottom: 8),
@@ -272,6 +277,124 @@ class _StorageAutoRefreshState extends ConsumerState<_StorageAutoRefresh> {
 
   @override
   Widget build(BuildContext context) => const SizedBox.shrink();
+}
+
+/// «كارت التحميل الرئيسي في التنزيلات … يتكتب فيه بيتم تحميل إيه وكام في
+/// المية». Every transfer in flight — a mushaf's pages, a surah of a
+/// recitation, a book or pack — with its own bar and percentage; a tap goes to
+/// where that download lives. Hidden when nothing is downloading.
+class _ActiveDownloadsPanel extends ConsumerStatefulWidget {
+  const _ActiveDownloadsPanel();
+
+  @override
+  ConsumerState<_ActiveDownloadsPanel> createState() => _ActiveDownloadsPanelState();
+}
+
+class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
+  Timer? _tick;
+
+  @override
+  void initState() {
+    super.initState();
+    // Page progress moves many times a second; once a second reads smoothly.
+    _tick = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _tick?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = context.locale.languageCode;
+    final editions = ref.watch(mushafEditionsProvider).valueOrNull ?? const [];
+    final data = ref.watch(mushafDataProvider).valueOrNull;
+    final service = MushafPageService.instance;
+    final items = <(String, double?, VoidCallback)>[
+      for (final e in editions)
+        if (service.activeEditions.contains(e.id))
+          (
+            e.localizedName(locale),
+            service.progressFor(e.id).fraction,
+            () => DefaultTabController.of(context).animateTo(1),
+          ),
+      for (final d in QuranAudioLibrary.instance.activeDownloads)
+        (
+          '${d.entry.reciterName} — ${surahTitle(data, d.surah, locale)}',
+          d.progress <= 0 ? null : d.progress,
+          () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => ReciterScreen(
+                  reciter: Mp3Reciter(
+                    id: d.entry.reciterId,
+                    name: d.entry.reciterName,
+                    moshafs: [d.entry.moshaf],
+                  ),
+                ),
+              )),
+        ),
+      for (final t in DownloadManager.instance.activeTasks)
+        (t.title.isEmpty ? t.fileName : t.title, t.total == null ? null : t.progress, () {}),
+    ];
+    if (items.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Material(
+        color: AppColors.gold.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(18),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.downloading_rounded, color: AppColors.gold, size: 20),
+                  const SizedBox(width: 8),
+                  Text('downloads.active_now'.tr(),
+                      style: const TextStyle(fontWeight: FontWeight.w800)),
+                ],
+              ),
+              const SizedBox(height: 6),
+              for (final (title, value, onTap) in items)
+                InkWell(
+                  onTap: onTap,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 13)),
+                            ),
+                            Text(
+                              value == null ? '…' : ltr('${(value * 100).round()}%'),
+                              style: const TextStyle(
+                                  fontSize: 12, color: AppColors.goldSoft, fontWeight: FontWeight.w700),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        GoldProgressBar(value: value, height: 4, color: AppColors.gold),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// The hero panel: total on-disk size over the lattice, with a stacked bar

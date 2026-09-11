@@ -196,6 +196,14 @@
              see DownloadForegroundService's own doc comment for why this
              exists (protecting the process from being frozen/killed by the
              OS while a real download is running in the background). -->
+        <!-- Whole-surah downloads run as WorkManager foreground work so they
+             keep going with the app in the background (DownloadEngine,
+             Config.runInForeground). Android 14 refuses to start that service
+             without its declared type. -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
         <service
             android:name=".DownloadForegroundService"
             android:exported="false"

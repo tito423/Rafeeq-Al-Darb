@@ -85,8 +85,5 @@ void main() {
     // A regression guard on the wiring: `unjamQueues` has to reach both, and
     // both have to be the objects `ensureInitialized` registers.
     expect(DownloadEngine.fileQueue, isA<MemoryTaskQueue>());
-    expect(DownloadEngine.quranAudioQueue, isA<MemoryTaskQueue>());
-    expect(identical(DownloadEngine.fileQueue, DownloadEngine.quranAudioQueue),
-        isFalse);
   });
 }

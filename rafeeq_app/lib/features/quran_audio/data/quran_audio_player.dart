@@ -26,6 +26,24 @@ class PlayerTrack {
     this.filePath,
   });
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'artist': artist,
+        'album': album,
+        'url': url,
+        'filePath': filePath,
+      };
+
+  factory PlayerTrack.fromJson(Map<String, dynamic> j) => PlayerTrack(
+        id: j['id'] as String,
+        title: j['title'] as String? ?? '',
+        artist: j['artist'] as String? ?? '',
+        album: j['album'] as String?,
+        url: j['url'] as String?,
+        filePath: j['filePath'] as String?,
+      );
+
   bool get isLocal =>
       (filePath != null && File(filePath!).existsSync()) ||
       (url?.startsWith('content://') ?? false);

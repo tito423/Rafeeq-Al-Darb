@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// One audio file Android's media index knows about.
 class DeviceAudio {
@@ -75,6 +77,77 @@ class DeviceAudioScanner extends ChangeNotifier {
   bool denied = false;
   bool _loaded = false;
 
+  static const _foldersKey = 'quran_audio.user_folders_v1';
+  static const _autoKey = 'quran_audio.auto_scan_v1';
+  static const audioExtensions = {'.mp3', '.m4a', '.aac', '.ogg', '.opus', '.wav', '.flac'};
+
+  /// Folders he added himself, each with the audio files under it.
+  /// «يقدر يضيف ملفات أو فولدرات كاملة من اختياري».
+  Map<String, List<String>> userFolders = const {};
+
+  /// «أول ما أفتح المشغّل يعمل اسكان أوتوماتيك أو مانيوال».
+  bool autoScan = true;
+
+  Future<void> _loadFolders() async {
+    final prefs = await SharedPreferences.getInstance();
+    autoScan = prefs.getBool(_autoKey) ?? true;
+    await _refreshFolders(prefs.getStringList(_foldersKey) ?? const []);
+  }
+
+  Future<void> _refreshFolders(List<String> paths) async {
+    final exts = audioExtensions;
+    final listed = await Isolate.run(() {
+      final out = <String, List<String>>{};
+      for (final path in paths) {
+        final dir = Directory(path);
+        if (!dir.existsSync()) continue;
+        try {
+          final files = [
+            for (final e in dir.listSync(recursive: true, followLinks: false))
+              if (e is File && exts.contains(p.extension(e.path).toLowerCase())) e.path,
+          ]..sort();
+          out[path] = files;
+        } catch (_) {
+          out[path] = const [];
+        }
+      }
+      return out;
+    });
+    userFolders = listed;
+    notifyListeners();
+  }
+
+  Future<void> addFolder(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = {...prefs.getStringList(_foldersKey) ?? const <String>[], path}.toList();
+    await prefs.setStringList(_foldersKey, list);
+    await _refreshFolders(list);
+  }
+
+  Future<void> removeFolder(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = [for (final x in prefs.getStringList(_foldersKey) ?? const <String>[]) if (x != path) x];
+    await prefs.setStringList(_foldersKey, list);
+    await _refreshFolders(list);
+  }
+
+  Future<void> setAutoScan(bool value) async {
+    autoScan = value;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_autoKey, value);
+  }
+
+  /// Runs a scan by itself when the player opens — only when automatic
+  /// scanning is on and the permission is already granted, so opening the
+  /// player never raises a dialog on its own.
+  Future<void> autoScanIfAllowed() async {
+    await loadCached();
+    if (!autoScan || scanning) return;
+    final granted = await Permission.audio.isGranted || await Permission.storage.isGranted;
+    if (granted) await scan();
+  }
+
   Future<File> _cache() async {
     final base = await getApplicationDocumentsDirectory();
     final dir = Directory(p.join(base.path, 'quran_audio', 'cache'));
@@ -85,6 +158,7 @@ class DeviceAudioScanner extends ChangeNotifier {
   Future<void> loadCached() async {
     if (_loaded) return;
     _loaded = true;
+    await _loadFolders();
     try {
       final f = await _cache();
       if (!f.existsSync()) return;

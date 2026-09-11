@@ -1193,9 +1193,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 18:04 — IN PROGRESS — resume here**
+**2026-09-11 19:52 — IN PROGRESS — resume here**
 
-3.18.0 in progress (not yet on a device): FOUND on a fresh install - mushaf download tile never listened (addListener glued into a comment by an earlier patch; service notification read 157/604 while the card sat on 0/604) - fixed + test proven to fail on the old source; printed-header printings hide the app's surah/juz badges (page 100 of all five scans read); sunan reminders take several days; adhan clips can play back to back with a cross-fade; adhan text follows ffmpeg-measured line starts where plausible, else the spoken span; per-download notifications grouped under the service; player: 10 themes + turning disc; device audio scan via MediaStore by folder/album/artist with permission; image-view hint. analyze clean, 182 tests.
+3.18.0 batch 9 (not yet on a device): whole-surah downloads handed to the plugin's native holding queue as foreground work with allowPause, resumed from bytes on repair/resume (the Dart queue did not advance with the app backgrounded); a tap on a verse selects it and opens its card (it started the recitation), the marker/card play one verse, continuous starts from the selected verse and does not scroll when the verse is visible; gharib tab removed; library tab renamed; reciter screen: themed lattice card, now-downloading line that jumps to the surah, back-to-top button; downloads overview lists every transfer with its percentage; player favourites tab, add folders, auto scan, audio permission after the splash; app-wide vertical scrollbar with arrows. analyze clean, 182 tests.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

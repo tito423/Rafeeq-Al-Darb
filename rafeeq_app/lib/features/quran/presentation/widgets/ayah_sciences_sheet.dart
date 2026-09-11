@@ -12,6 +12,7 @@ import '../../../../core/db/quran_repository.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/services/quran_api_service.dart';
+import '../../../downloads/data/reciters_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../settings/data/transliteration_settings_provider.dart';
 import '../../data/ayah_notes_store.dart';
@@ -72,12 +73,11 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   // 4 tabs: Tafseer, Translation, I'rab, Gharib al-Quran (word meanings).
   // The 4th tab (Gharib al-Quran) uses Quran.com API v4 word-by-word data
   // to show each word's Arabic meaning alongside the Uthmani script.
-  late final TabController _tabs = TabController(length: 4, vsync: this);
+  late final TabController _tabs = TabController(length: 3, vsync: this);
 
   late final Future<Map<String, String>> _tafseer;
   late final Future<Map<String, AyahTranslation>> _translations;
   late final Future<List<WordGrammar>> _grammar;
-  late final Future<List<QuranWordWbw>> _words;
 
   @override
   void initState() {
@@ -88,7 +88,6 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
     _tafseer = repo.then((r) => r.tafseerForAyah(s, a));
     _translations = repo.then((r) => r.translationsForAyah(s, a));
     _grammar = repo.then((r) => r.wordGrammar(s, a));
-    _words = QuranApiService.instance.getAyahWordsWbw(s, a);
   }
 
   @override
@@ -142,7 +141,6 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                     Tab(text: 'quran.tafseer'.tr()),
                     Tab(text: 'quran.translation'.tr()),
                     Tab(text: 'quran.irab'.tr()),
-                    Tab(text: 'quran.gharib'.tr()),
                   ],
                 ),
                 Expanded(
@@ -153,7 +151,6 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                       _TranslationTab(
                           ayah: widget.ayah, future: _translations),
                       _IrabTab(ayah: widget.ayah, future: _grammar),
-                      _GharibTab(future: _words),
                     ],
                   ),
                 ),
@@ -360,17 +357,20 @@ class _Header extends ConsumerWidget {
                 initialData: AyahAudioService.instance.isPlaying,
                 builder: (context, snapshot) {
                   final playing = snapshot.data ?? false;
-                  return IconButton(
-                    tooltip: (playing ? 'quran.stop' : 'quran.play').tr(),
+                  // «حُط خيار تلاوة الآية في كارت الآية» — one verse, in the
+                  // reader's chosen reciter, separate from the recitation.
+                  return TextButton.icon(
                     icon: Icon(playing
                         ? Icons.stop_circle_outlined
                         : Icons.play_circle_outline),
+                    label: Text((playing ? 'quran.stop' : 'quran.recite_ayah').tr()),
                     onPressed: playing
                         ? AyahAudioService.instance.stopQueue
                         : () => AyahAudioService.instance.play(
                               ayah,
                               quranRepo,
                               title: _reference,
+                              edition: ref.read(selectedReciterProvider),
                             ),
                   );
                 },
@@ -1398,151 +1398,3 @@ class _Chip extends StatelessWidget {
 /// غريب القرآن — word-by-word meanings for the ayah, fetched from the
 /// Quran.com API v4 `words` endpoint. Each word is displayed as a card with
 /// the Uthmani-script word above and its meaning (translation) below.
-class _GharibTab extends StatelessWidget {
-  final Future<List<QuranWordWbw>> future;
-  const _GharibTab({required this.future});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<QuranWordWbw>>(
-      future: future,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-          return _Notice(
-            icon: Icons.wifi_off_outlined,
-            message: 'quran.gharib_unavailable'.tr(),
-          );
-        }
-        final words = snapshot.data!;
-        final scheme = Theme.of(context).colorScheme;
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-          children: [
-            // Header description
-            Container(
-              padding: const EdgeInsets.all(14),
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: AppColors.gold.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                    color: AppColors.gold.withValues(alpha: 0.2)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.auto_stories_outlined,
-                      color: AppColors.gold, size: 22),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'quran.gharib_description'.tr(),
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: scheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Word grid
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              textDirection: TextDirection.rtl,
-              children: [
-                for (final w in words) _WordCard(word: w),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _WordCard extends StatelessWidget {
-  final QuranWordWbw word;
-  const _WordCard({required this.word});
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final translation = word.translationText ?? '';
-    final transliteration = word.transliterationText ?? '';
-
-    return Container(
-      constraints: const BoxConstraints(minWidth: 80, maxWidth: 160),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: AppColors.gold.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // The word in Uthmani script
-          Text(
-            word.textUthmani,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              height: 1.6,
-            ),
-            textAlign: TextAlign.center,
-            textDirection: TextDirection.rtl,
-          ),
-          if (transliteration.isNotEmpty) ...[
-            const SizedBox(height: 2),
-            Text(
-              transliteration,
-              style: TextStyle(
-                fontSize: 11,
-                color: scheme.onSurfaceVariant,
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-          if (translation.isNotEmpty) ...[
-            Divider(
-              height: 12,
-              color: AppColors.gold.withValues(alpha: 0.2),
-            ),
-            Text(
-              translation,
-              style: TextStyle(
-                fontSize: 13,
-                color: AppColors.gold,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-          // Position badge
-          const SizedBox(height: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: AppColors.gold.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              '${word.position}',
-              style: TextStyle(
-                fontSize: 10,
-                color: AppColors.gold.withValues(alpha: 0.7),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

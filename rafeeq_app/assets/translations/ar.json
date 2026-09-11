@@ -105,9 +105,6 @@
     "mushaf_mode": "وضع المصحف",
     "text_mode": "وضع النص",
     "sciences": "علوم الآية",
-    "gharib": "غريب القرآن",
-    "gharib_description": "معاني الكلمات مستخرجة من قاعدة بيانات مجمع الملك فهد لطباعة المصحف الشريف.",
-    "gharib_unavailable": "عذرًا، معاني الكلمات (الغريب) غير متوفرة لهذه السورة.",
     "tafseer": "التفسير",
     "irab": "الإعراب",
     "meanings": "معاني الكلمات",
@@ -184,7 +181,8 @@
     "search_juz_hint": "ابحث عن رقم الجزء…",
     "recite_choose_reciter": "اختر القارئ",
     "recite_search_reciter": "ابحث عن قارئ",
-    "image_view_hint": "وضع المصحف — اضغط على الصفحة لإظهار الخيارات"
+    "image_view_hint": "وضع المصحف — اضغط على الصفحة لإظهار الخيارات",
+    "recite_ayah": "تلاوة الآية"
   },
   "library": {
     "title": "المكتبة",
@@ -301,7 +299,7 @@
     "died_circa_ah": "توفي نحو {} هـ",
     "death_8th_century": "من علماء القرن الثامن الهجري",
     "book_desc_generated": "مصنَّف لـ {}، {} صفحة، ضمن باب {}.",
-    "tab_hadeethenc": "الموسوعة"
+    "tab_hadeethenc": "الموسوعة الحديثية"
   },
   "azkar": {
     "title": "الأذكار",
@@ -567,7 +565,8 @@
     },
     "repair_resumed": "تم استئناف {} تحميل غير مكتمل",
     "repair_unjammed": "حرّرت {} مهمة عالقة",
-    "repair_nothing": "لا توجد تحميلات غير مكتملة"
+    "repair_nothing": "لا توجد تحميلات غير مكتملة",
+    "active_now": "جارٍ تنزيله الآن"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",
@@ -1163,6 +1162,15 @@
     "theme_violet": "بنفسج",
     "theme_silver": "فضة",
     "theme_cedar": "أرز",
-    "theme_amber": "كهرمان"
+    "theme_amber": "كهرمان",
+    "now_downloading": "جارٍ تنزيل {} — {}",
+    "tab_favorites": "المفضلة",
+    "favorite_add": "إضافة للمفضلة",
+    "favorite_remove": "إزالة من المفضلة",
+    "empty_favorites": "اضغط على القلب في المشغّل عشان تضيف التلاوة للمفضلة.",
+    "add_files": "إضافة ملفات",
+    "add_folder": "إضافة مجلد",
+    "auto_scan": "فحص تلقائي عند فتح المشغّل",
+    "remove_folder": "إزالة المجلد من القائمة"
   }
 }

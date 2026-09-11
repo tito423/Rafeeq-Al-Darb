@@ -428,6 +428,8 @@ class MushafPageService {
 
   bool isPrefetching(String editionId) => _prefetching.contains(editionId);
 
+  Set<String> get activeEditions => {..._prefetching};
+
   void cancelPrefetch(String editionId) {
     if (!_prefetching.contains(editionId)) {
       unawaited(_setWanted(editionId, false));

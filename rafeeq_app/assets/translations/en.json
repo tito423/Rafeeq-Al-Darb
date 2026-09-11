@@ -105,9 +105,6 @@
     "mushaf_mode": "Mushaf mode",
     "text_mode": "Text mode",
     "sciences": "Ayah Sciences",
-    "gharib": "Word Meanings (Gharib)",
-    "gharib_description": "Word-by-word meanings extracted from the King Fahd Glorious Quran Printing Complex database.",
-    "gharib_unavailable": "Sorry, word meanings are not available for this Surah.",
     "tafseer": "Tafsir",
     "irab": "Grammar (I'rab)",
     "meanings": "Word Meanings",
@@ -184,7 +181,8 @@
     "search_juz_hint": "Search a juz number…",
     "recite_choose_reciter": "Choose reciter",
     "recite_search_reciter": "Search reciters",
-    "image_view_hint": "Mushaf view — tap the page to show the options"
+    "image_view_hint": "Mushaf view — tap the page to show the options",
+    "recite_ayah": "Recite verse"
   },
   "library": {
     "title": "Library",
@@ -301,7 +299,7 @@
     "died_circa_ah": "Died c. {} AH",
     "death_8th_century": "A scholar of the eighth Hijri century",
     "book_desc_generated": "A work by {}, {} pages, in the {} section.",
-    "tab_hadeethenc": "Encyclopedia"
+    "tab_hadeethenc": "Hadith Encyclopedia"
   },
   "azkar": {
     "title": "Adhkar",
@@ -567,7 +565,8 @@
     },
     "repair_resumed": "Resumed {} unfinished download(s)",
     "repair_unjammed": "Freed {} stuck task(s)",
-    "repair_nothing": "Nothing was left unfinished"
+    "repair_nothing": "Nothing was left unfinished",
+    "active_now": "Downloading now"
   },
   "new_muslim": {
     "title": "New Muslim Guide",
@@ -1163,6 +1162,15 @@
     "theme_violet": "Violet",
     "theme_silver": "Silver",
     "theme_cedar": "Cedar",
-    "theme_amber": "Amber"
+    "theme_amber": "Amber",
+    "now_downloading": "Downloading {} — {}",
+    "tab_favorites": "Favorites",
+    "favorite_add": "Add to favorites",
+    "favorite_remove": "Remove from favorites",
+    "empty_favorites": "Tap the heart in the player to add a recitation to your favorites.",
+    "add_files": "Add files",
+    "add_folder": "Add a folder",
+    "auto_scan": "Scan automatically when the player opens",
+    "remove_folder": "Remove this folder from the list"
   }
 }

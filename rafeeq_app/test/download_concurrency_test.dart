@@ -53,7 +53,7 @@ void main() {
     // surahs since 3.17.0 — files up to 255 MB — where a dozen at once only
     // splits the line; three is deliberate.
     final caps = fieldValues(r'\.\.maxConcurrent');
-    expect(caps, [8, 3]);
+    expect(caps, [8]);
   });
 
   test('per-host politeness is capped, and measured', () {
@@ -61,7 +61,7 @@ void main() {
     // refusal (probe, 2026-09-10), so 4 and 6 are well inside what they take.
     // This is the number that must stay modest: the global cap only ever hurt.
     final hostCaps = fieldValues('maxConcurrentByHost');
-    expect(hostCaps.length, 2);
+    expect(hostCaps.length, 1);
     for (final c in hostCaps) {
       expect(c, lessThanOrEqualTo(6));
       expect(c, greaterThanOrEqualTo(2));
@@ -73,8 +73,10 @@ void main() {
     // ayah files and a 604-page mushaf have nothing to gain from queueing
     // behind each other, and each queue counts its hosts separately.
     expect(engine, contains('MemoryTaskQueue fileQueue'));
-    expect(engine, contains('MemoryTaskQueue quranAudioQueue'));
+    // Whole surahs go to the plugin's native queue so they advance while the
+    // app's isolate is paused in the background.
+    expect(engine, contains('Config.holdingQueue'));
     expect(engine, contains('addTaskQueue(fileQueue)'));
-    expect(engine, contains('addTaskQueue(quranAudioQueue)'));
+    expect(engine, contains('Config.runInForeground'));
   });
 }

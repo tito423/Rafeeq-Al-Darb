@@ -172,9 +172,6 @@
     "recite_previous": "Versículo anterior",
     "recite_pause": "Pausar / reanudar",
     "recite_next": "Versículo siguiente",
-    "gharib": "Significado de las palabras (Garib)",
-    "gharib_description": "Significados palabra por palabra extraídos de la base de datos del Complejo Rey Fahd para la Impresión del Noble Corán.",
-    "gharib_unavailable": "Lo sentimos, el significado de las palabras no está disponible para esta sura.",
     "downloading_translation": "Descargando la traducción al {}…",
     "translation_not_downloaded": "La traducción al {} aún no está descargada",
     "layout_page": "Vista de página",
@@ -184,7 +181,8 @@
     "search_juz_hint": "Buscar un número de yuz…",
     "recite_choose_reciter": "Elegir recitador",
     "recite_search_reciter": "Buscar recitador",
-    "image_view_hint": "Vista de mushaf: toca la página para ver las opciones"
+    "image_view_hint": "Vista de mushaf: toca la página para ver las opciones",
+    "recite_ayah": "Recitar la aleya"
   },
   "library": {
     "title": "Biblioteca",
@@ -301,7 +299,7 @@
     "died_circa_ah": "Falleció hacia {} AH",
     "death_8th_century": "Un sabio del siglo VIII de la Hégira",
     "book_desc_generated": "Una obra de {}, {} páginas, en la sección de {}.",
-    "tab_hadeethenc": "Enciclopedia"
+    "tab_hadeethenc": "Enciclopedia de hadices"
   },
   "azkar": {
     "title": "Adhkar",
@@ -567,7 +565,8 @@
     "repairing": "Reanudando descargas detenidas...",
     "repair_resumed": "Se reanudaron {} descarga(s) incompleta(s)",
     "repair_unjammed": "Liberadas {} tareas bloqueadas",
-    "repair_nothing": "No hay descargas incompletas"
+    "repair_nothing": "No hay descargas incompletas",
+    "active_now": "Descargando ahora"
   },
   "new_muslim": {
     "title": "Guía del nuevo musulmán",
@@ -1163,6 +1162,15 @@
     "theme_violet": "Violeta",
     "theme_silver": "Plata",
     "theme_cedar": "Cedro",
-    "theme_amber": "Ámbar"
+    "theme_amber": "Ámbar",
+    "now_downloading": "Descargando {} — {}",
+    "tab_favorites": "Favoritos",
+    "favorite_add": "Añadir a favoritos",
+    "favorite_remove": "Quitar de favoritos",
+    "empty_favorites": "Toca el corazón en el reproductor para añadir una recitación a favoritos.",
+    "add_files": "Añadir archivos",
+    "add_folder": "Añadir una carpeta",
+    "auto_scan": "Buscar automáticamente al abrir el reproductor",
+    "remove_folder": "Quitar esta carpeta de la lista"
   }
 }

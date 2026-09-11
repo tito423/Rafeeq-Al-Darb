@@ -90,6 +90,14 @@ class DownloadManager {
   List<DownloadTask> get tasks => _tasks.values.toList();
   DownloadTask? taskById(String id) => _tasks[id];
 
+  /// Transfers queued or in flight, for the downloads screen's summary.
+  List<DownloadTask> get activeTasks => [
+        for (final t in _tasks.values)
+          if (t.status == DownloadStatus.downloading ||
+              t.status == DownloadStatus.queued)
+            t,
+      ];
+
   /// Subscribes to the platform's update stream once. Every status and
   /// progress event for our group lands here, including events for a
   /// transfer that completed while the app was not running.
