@@ -182,7 +182,10 @@
     "recite_choose_reciter": "Elegir recitador",
     "recite_search_reciter": "Buscar recitador",
     "image_view_hint": "Vista de mushaf: toca la página para ver las opciones",
-    "recite_ayah": "Recitar la aleya"
+    "recite_ayah": "Recitar la aleya",
+    "go": "Ir",
+    "card_expand": "Ampliar",
+    "card_collapse": "Reducir"
   },
   "library": {
     "title": "Biblioteca",

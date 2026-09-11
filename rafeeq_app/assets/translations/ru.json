@@ -182,7 +182,10 @@
     "recite_choose_reciter": "Выбрать чтеца",
     "recite_search_reciter": "Поиск чтеца",
     "image_view_hint": "Вид мусхафа — нажмите на страницу, чтобы показать настройки",
-    "recite_ayah": "Прочитать аят"
+    "recite_ayah": "Прочитать аят",
+    "go": "Перейти",
+    "card_expand": "Развернуть",
+    "card_collapse": "Свернуть"
   },
   "library": {
     "title": "Библиотека",

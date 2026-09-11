@@ -125,14 +125,6 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
     );
   }
 
-  void _onBackgroundTap() {
-    if (_fullScreen) {
-      _setAutoScroll(!_autoScroll);
-    } else {
-      setState(() => _toolbarVisible = !_toolbarVisible);
-    }
-  }
-
   void _setAutoScroll(bool on) => setState(() => _autoScroll = on);
 
   /// Auto-scroll reached the bottom of a page: turn to the next one, unless
@@ -272,8 +264,8 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                         edition: edition,
                         page: page,
                         highlight: null,
-                        onBackgroundTap: _onBackgroundTap,
-                        onAyahTap: (region) {
+                        onBackgroundTap: _toggleFullScreen,
+                        onAyahLongPress: (region) {
                           for (final a in ayahs) {
                             if (a.surahId == region.surah &&
                                 a.ayahNumber == region.ayah) {
@@ -296,7 +288,7 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                       frameColor: frame.accent.color ?? mushafTheme.gold,
                       ayahs: ayahs,
                       surahNameOf: data.surahNameAr,
-                      onAyahTap: (a) => _openSciences(a, data, edition),
+                      onAyahLongPress: (a) => _openSciences(a, data, edition),
                       onPlayTap: (a) => AyahAudioService.instance
                           .startContinuous(
                         from: a,
@@ -311,10 +303,10 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                       autoScrollSpeed: _autoScrollSpeed,
                       isActive: page == _current,
                       onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
-                      onBackgroundTap: _onBackgroundTap,
+                      // The same gesture as the Qur'an tab: a tap anywhere
+                      // enters or leaves full screen.
+                      onBackgroundTap: _toggleFullScreen,
                       pageFillScreen: _fullScreen,
-                      onExitFullScreen:
-                          _fullScreen ? _toggleFullScreen : null,
                     );
                   },
                 );

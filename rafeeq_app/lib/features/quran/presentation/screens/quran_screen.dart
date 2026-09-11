@@ -159,29 +159,20 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     );
   }
 
-  /// P3‑43 #6: while genuinely full-screen (AppBar and both bottom nav
-  /// bars hidden), the fullscreen toggle button itself is off-screen too
-  /// — a plain tap on the page is the only way back, so it exits
-  /// full-screen first rather than just toggling the (currently invisible
-  /// anyway) toolbar row underneath it.
-  void _onBackgroundTap() {
-    if (_highlightAyah != null && !_recite.active) {
-      setState(() {
-        _highlightSurah = null;
-        _highlightAyah = null;
-      });
-      return;
-    }
-    if (_pageFillScreen) {
-      // P3‑54: leaving immersive mode is now a double-tap or the translucent
-      // floating button (see `_togglePageFillScreen` / the exit FAB), so a
-      // single tap here instead toggles the hands-free auto-scroll — a
-      // tap-to-pause/resume, like a video, without dropping out of immersive
-      // reading.
-      _toggleAutoScroll();
-    } else {
-      setState(() => _toolbarVisible = !_toolbarVisible);
-    }
+  /// «من الآن فصاعدًا ضغطة واحدة خفيفة على الصفحة في أي مكان أو آية ملء
+  /// الشاشة أو خروج منه، نصي أو مصوّر، وضغطة تانية تظهر الأيقونات».
+  ///
+  /// One tap, anywhere on the page, in either mode. The verse card is a long
+  /// press. In landscape the page stays full screen — «الخيارات تظهر بس في
+  /// الوضع العمودي» — so a tap there does nothing.
+  ///
+  /// This replaces three older meanings of the same tap: clear the selection,
+  /// hide the toolbar, and in full screen pause the auto-scroll. The selection
+  /// now stays until the page turns, so the continuous recitation can still
+  /// start from it after going full screen.
+  void _onPageTap() {
+    if (MediaQuery.orientationOf(context) == Orientation.landscape) return;
+    _togglePageFillScreen();
   }
 
   /// The toolbar gets out of the way while the reader is reading.
@@ -235,7 +226,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     if (orientation == _lastOrientation) return;
     final previous = _lastOrientation;
     _lastOrientation = orientation;
-    if (previous == null) return; // first build — leave his stored choice
+    // First build: leave his stored choice — unless the phone is already on
+    // its side, where the text is always full screen.
+    if (previous == null && orientation != Orientation.landscape) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (orientation == Orientation.landscape) {
@@ -262,7 +255,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       // toolbar button, a double-tap, and the floating button) funnels through
       // here, so none of them can leave a hands-free scroll running behind the
       // normal reader.
-      if (!entering) _autoScroll = false;
+      if (!entering) {
+        _autoScroll = false;
+        // Leaving full screen is how the options come back — they must not
+        // stay hidden behind a scroll that tucked them away earlier.
+        _toolbarVisible = true;
+      }
     });
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
     _applyImmersive(_pageFillScreen);
@@ -773,6 +771,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             // reported the app had no black reading page while
                             // shipping five of them. Khatmah puts it behind a
                             // gear on the reading screen itself; so do we.
+                            // Text mushaf only: «شيل ثيمات المصحف النصي من
+                            // المصحف المصوّر» — it recolours a page the image
+                            // mode does not draw.
+                            if (_mode == MushafMode.text && !isRaster)
                             Builder(
                               builder: (tileContext) => ToolbarAction(
                                 icon: Icons.palette_outlined,
@@ -838,11 +840,24 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             ToolbarAction(
                               icon: Icons.numbers_rounded,
                               label: 'quran.jump_to'.tr(),
-                              onPressed: () => showGotoPageSheet(
+                              // «خلي زر الانتقال يديني خيارات إلى سورة أو
+                              // صفحة أو جزء مباشرة».
+                              onPressed: () => showJumpSheet(
                                 context,
+                                surahs: canIndexBySurah
+                                    ? mushaf.value!.surahs
+                                    : const [],
+                                surahStartPages: mushaf.value!.surahStartPages,
+                                juzStartPages: mushaf.value!.juzStartPages,
                                 current: _current,
                                 totalPages: _totalPages,
-                                onSelect: (page) => _navigateFromIndex(page, mushaf.value!),
+                                onSurahPage: (page) => _navigateFromIndex(
+                                  page,
+                                  mushaf.value!,
+                                  surahStart: true,
+                                ),
+                                onPage: (page) =>
+                                    _navigateFromIndex(page, mushaf.value!),
                               ),
                             ),
                             ToolbarAction(
@@ -951,7 +966,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // toggled the mode is itself off-screen. Only present while
                 // full-screen; a plain SafeArea-aligned button, not an
                 // `IgnorePointer` overlay, so it actually receives its own taps.
-                if (_pageFillScreen)
+                // Not in landscape: the options live in portrait only.
+                if (_pageFillScreen && !isLandscape)
                   SafeArea(
                     child: Align(
                       alignment: AlignmentDirectional.topStart,
@@ -1080,20 +1096,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 edition: edition,
                 page: page,
                 highlight: _highlightRegion(edition, page),
-                onAyahTap: (region) => _pageFillScreen
-                    ? _togglePageFillScreen()
-                    : _onImageAyahTap(region, ayahs, data, edition),
+                onAyahLongPress: (region) =>
+                    _onImageAyahTap(region, ayahs, data, edition),
                 onLoadFailed: edition.isRaster
                     ? null
                     : () {
                         setState(() => _mode = MushafMode.text);
                         _applyOrientationLock();
                       },
-                // Image mode never had a tap-to-hide-toolbar gesture (only
-                // text mode does, since P3‑42) — deliberately not adding
-                // one here. This only exists so a full-screen image-mode
-                // reader can be exited the same way the text-mode one can.
-                onBackgroundTap: _pageFillScreen ? _togglePageFillScreen : null,
+                onBackgroundTap: _onPageTap,
               );
             }
             final mushafTheme = resolveMushafTheme(
@@ -1113,7 +1124,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               // continuous recitation will start from.
               playingSurah: _recite.active ? _recite.surahId : _highlightSurah,
               playingAyah: _recite.active ? _recite.ayahNumber : _highlightAyah,
-              onAyahTap: (a) => _openSciences(a, data),
+              onAyahLongPress: (a) => _openSciences(a, data),
               // `edition:` here is the RECITER, not the mushaf. It used to
               // be handed `edition?.id ?? 'hafs_kfqc'` — a *mushaf* printing
               // id — so every verse resolved to
@@ -1134,12 +1145,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               autoScrollSpeed: _autoScrollSpeed,
               isActive: page == _current,
               onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
-              onBackgroundTap: _onBackgroundTap,
+              onBackgroundTap: _onPageTap,
               onReadingScroll: _onReadingScroll,
               pageFillScreen: _pageFillScreen,
-              // Only wired in full-screen, so a stray double-tap never exits a
-              // mode the reader isn't in.
-              onExitFullScreen: _pageFillScreen ? _togglePageFillScreen : null,
             );
           },
         );

@@ -23,14 +23,13 @@ class MushafPageView extends StatefulWidget {
   final MushafEdition edition;
   final int page;
   final AyahRegion? highlight;
-  final void Function(AyahRegion region) onAyahTap;
+  /// A long press on a verse: select it and open its card.
+  final void Function(AyahRegion region) onAyahLongPress;
   final VoidCallback? onLoadFailed;
 
-  /// P3‑43 #6: fires on a tap that didn't land on any real ayah polygon —
-  /// the closest honest equivalent this mode has to `MushafTextPage`'s
-  /// "background tap", since here every point on the page is a candidate
-  /// ayah hit-test rather than there being a separate non-text area.
-  /// Currently only used to exit full-screen mode.
+  /// A tap anywhere on the page, verse or not. «ضغطة واحدة خفيفة على الصفحة
+  /// في أي مكان أو آية = ملء الشاشة أو خروج منه» — the reader toggles full
+  /// screen with it; the verse card is the long press.
   final VoidCallback? onBackgroundTap;
 
   const MushafPageView({
@@ -38,7 +37,7 @@ class MushafPageView extends StatefulWidget {
     required this.edition,
     required this.page,
     required this.highlight,
-    required this.onAyahTap,
+    required this.onAyahLongPress,
     this.onLoadFailed,
     this.onBackgroundTap,
   });
@@ -228,7 +227,8 @@ class _MushafPageViewState extends State<MushafPageView> {
           aspect: _pageAspect,
           build: (w, h) => GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTapUp: (d) => _handleTap(d.localPosition, w, h),
+            onTap: () => widget.onBackgroundTap?.call(),
+            onLongPressStart: (d) => _handleLongPress(d.localPosition, w, h),
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -267,9 +267,13 @@ class _MushafPageViewState extends State<MushafPageView> {
   /// float free of the text. A printing with no layer keeps the plain centred
   /// image and a tap that only forwards to [onBackgroundTap].
   Widget _buildRaster(ThemeData theme) {
-    final dpr = MediaQuery.of(context).devicePixelRatio;
+    // `sizeOf`, not `MediaQuery.of`: the full query also carries the keyboard
+    // inset, so every frame of a keyboard sliding up (the «الانتقال إلى»
+    // field) rebuilt and re-decoded the page behind the dialog — the flicker
+    // the owner filmed.
+    final dpr = MediaQuery.devicePixelRatioOf(context);
     final memCacheWidth =
-        (MediaQuery.of(context).size.width * dpr).clamp(360, 1400).round();
+        (MediaQuery.sizeOf(context).width * dpr).clamp(360, 1400).round();
 
     return FutureBuilder<File?>(
       future: _rasterReady,
@@ -326,7 +330,8 @@ class _MushafPageViewState extends State<MushafPageView> {
             aspect: fit.pageAspect,
             build: (w, h) => GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTapUp: (d) => _handleTap(d.localPosition, w, h),
+              onTap: () => widget.onBackgroundTap?.call(),
+              onLongPressStart: (d) => _handleLongPress(d.localPosition, w, h),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -379,7 +384,7 @@ class _MushafPageViewState extends State<MushafPageView> {
     );
   }
 
-  void _handleTap(Offset local, double width, double height) {
+  void _handleLongPress(Offset local, double width, double height) {
     if (width <= 0 || height <= 0) return;
     final nx = local.dx / width;
     final ny = local.dy / height;
@@ -388,11 +393,7 @@ class _MushafPageViewState extends State<MushafPageView> {
     final p = fit == null ? Offset(nx, ny) : fit.invert(nx, ny);
     final hit = _coords.hitTest(
         widget.edition.polygonsAsset, widget.page, p.dx, p.dy);
-    if (hit != null) {
-      widget.onAyahTap(hit);
-    } else {
-      widget.onBackgroundTap?.call();
-    }
+    if (hit != null) widget.onAyahLongPress(hit);
   }
 }
 

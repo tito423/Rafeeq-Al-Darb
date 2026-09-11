@@ -182,7 +182,10 @@
     "recite_choose_reciter": "Choose reciter",
     "recite_search_reciter": "Search reciters",
     "image_view_hint": "Mushaf view — tap the page to show the options",
-    "recite_ayah": "Recite verse"
+    "recite_ayah": "Recite verse",
+    "go": "Go",
+    "card_expand": "Expand",
+    "card_collapse": "Collapse"
   },
   "library": {
     "title": "Library",

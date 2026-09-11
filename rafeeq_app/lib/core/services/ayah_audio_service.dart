@@ -169,8 +169,12 @@ class AyahAudioService {
   /// is playing right now (e.g. the ayah card's single play/stop toggle) —
   /// keeps `package:just_audio`'s `PlayerState` type out of widget files that
   /// don't otherwise need it.
-  Stream<bool> get isPlayingStream =>
-      playerState.map((s) => s.playing).distinct();
+  Stream<bool> get isPlayingStream => playerState
+      // just_audio keeps `playing` true once a source has played to its end,
+      // so «تلاوة الآية» stayed on «إيقاف» after the verse finished:
+      // «زرار تلاوة الآية يتبدل لما الآية تخلص تلاوة».
+      .map((s) => s.playing && s.processingState != ProcessingState.completed)
+      .distinct();
 
   /// True when the platform side has gone away under us: the player reports
   /// nothing loaded and nothing playing.

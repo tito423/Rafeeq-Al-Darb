@@ -182,7 +182,10 @@
     "recite_choose_reciter": "Escolher recitador",
     "recite_search_reciter": "Buscar recitador",
     "image_view_hint": "Visão de mushaf — toque na página para ver as opções",
-    "recite_ayah": "Recitar o versículo"
+    "recite_ayah": "Recitar o versículo",
+    "go": "Ir",
+    "card_expand": "Ampliar",
+    "card_collapse": "Reduzir"
   },
   "library": {
     "title": "Biblioteca",

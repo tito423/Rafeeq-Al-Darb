@@ -201,6 +201,271 @@ void showJuzSheet(
   );
 }
 
+/// «خلي زر الانتقال يديني خيارات إلى سورة أو صفحة أو جزء مباشرة».
+///
+/// One sheet, three tabs. The page tab does not raise the keyboard on its own:
+/// a slider and step buttons reach any page, and the number field is there for
+/// whoever wants to type. The old dialog opened straight onto the keyboard,
+/// and the keyboard sliding up over the mushaf was half of «الشاشة في الخلفية
+/// بتمش أو بتعمل فليكر جامد جدا».
+///
+/// An empty [surahs] — a printing that paginates its own way — leaves only the
+/// page tab, because a surah or juz picked there would land on the wrong page.
+void showJumpSheet(
+  BuildContext context, {
+  required List<Surah> surahs,
+  required Map<int, int> surahStartPages,
+  required Map<int, int> juzStartPages,
+  required int current,
+  required int totalPages,
+  required ValueChanged<int> onSurahPage,
+  required ValueChanged<int> onPage,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    builder: (_) => _JumpSheet(
+      surahs: surahs,
+      surahStartPages: surahStartPages,
+      juzStartPages: juzStartPages,
+      current: current,
+      totalPages: totalPages,
+      onSurahPage: onSurahPage,
+      onPage: onPage,
+    ),
+  );
+}
+
+class _JumpSheet extends StatefulWidget {
+  final List<Surah> surahs;
+  final Map<int, int> surahStartPages;
+  final Map<int, int> juzStartPages;
+  final int current;
+  final int totalPages;
+  final ValueChanged<int> onSurahPage;
+  final ValueChanged<int> onPage;
+
+  const _JumpSheet({
+    required this.surahs,
+    required this.surahStartPages,
+    required this.juzStartPages,
+    required this.current,
+    required this.totalPages,
+    required this.onSurahPage,
+    required this.onPage,
+  });
+
+  @override
+  State<_JumpSheet> createState() => _JumpSheetState();
+}
+
+class _JumpSheetState extends State<_JumpSheet> {
+  late int _page = widget.current.clamp(1, widget.totalPages);
+  late final TextEditingController _field =
+      TextEditingController(text: '$_page');
+  String _query = '';
+
+  bool get _indexed => widget.surahs.isNotEmpty;
+
+  @override
+  void dispose() {
+    _field.dispose();
+    super.dispose();
+  }
+
+  void _setPage(int p) {
+    final v = p.clamp(1, widget.totalPages);
+    setState(() => _page = v);
+    final t = '$v';
+    if (_field.text != t) {
+      _field.value = TextEditingValue(
+        text: t,
+        selection: TextSelection.collapsed(offset: t.length),
+      );
+    }
+  }
+
+  void _go(ValueChanged<int> target, int page) {
+    Navigator.of(context).pop();
+    target(page);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tabs = [
+      if (_indexed) Tab(text: 'quran.surah_list'.tr()),
+      Tab(text: 'quran.page'.tr()),
+      if (_indexed) Tab(text: 'quran.juz'.tr()),
+    ];
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: SizedBox(
+        height: MediaQuery.sizeOf(context).height * 0.72,
+        child: DefaultTabController(
+          length: tabs.length,
+          initialIndex: _indexed ? 1 : 0,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 2),
+                child: Text('quran.jump_to'.tr(),
+                    style: theme.textTheme.titleMedium),
+              ),
+              TabBar(tabs: tabs),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    if (_indexed) _surahTab(theme),
+                    _pageTab(theme),
+                    if (_indexed) _juzTab(theme),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _surahTab(ThemeData theme) {
+    final shown = [
+      for (final s in widget.surahs)
+        if (_rowMatches(_query, s.nameAr, s.id)) s,
+    ];
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        _SheetSearchField(
+          hint: 'quran.search_surah_hint'.tr(),
+          onChanged: (v) => setState(() => _query = v),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: shown.length,
+            itemBuilder: (context, i) {
+              final s = shown[i];
+              final start = widget.surahStartPages[s.id] ?? 1;
+              return ListTile(
+                dense: true,
+                leading: CircleAvatar(
+                  radius: 17,
+                  backgroundColor: theme.colorScheme.primaryContainer,
+                  child: Text('${s.id}', style: theme.textTheme.labelMedium),
+                ),
+                title: Text(s.nameAr,
+                    style: const TextStyle(fontFamily: 'AmiriQuran')),
+                trailing: Text('${'quran.page'.tr()} $start'),
+                onTap: () => _go(widget.onSurahPage, start),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _pageTab(ThemeData theme) {
+    final total = widget.totalPages;
+    Widget step(int by) => OutlinedButton(
+          onPressed: () => _setPage(_page + by),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(56, 44),
+            padding: EdgeInsets.zero,
+          ),
+          child: Text(ltr(by > 0 ? '+$by' : '−${-by}')),
+        );
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+      children: [
+        Center(
+          child: Text(
+            '$_page',
+            style: theme.textTheme.displaySmall
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
+        ),
+        Center(
+          // Trap #16: a Latin range is bidi-weak inside Arabic.
+          child: Text(ltr('1 – $total'),
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.outline)),
+        ),
+        const SizedBox(height: 8),
+        if (total > 1)
+          Slider(
+            value: _page.toDouble(),
+            min: 1,
+            max: total.toDouble(),
+            divisions: total - 1,
+            label: '$_page',
+            onChanged: (v) => _setPage(v.round()),
+          ),
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 10,
+          children: [step(-10), step(-1), step(1), step(10)],
+        ),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _field,
+          keyboardType: TextInputType.number,
+          textAlign: TextAlign.center,
+          textInputAction: TextInputAction.go,
+          decoration: InputDecoration(
+            labelText: 'quran.page'.tr(),
+            border: const OutlineInputBorder(),
+          ),
+          onChanged: (t) {
+            final n = int.tryParse(t.trim());
+            if (n != null && n >= 1 && n <= total) setState(() => _page = n);
+          },
+          onSubmitted: (_) => _go(widget.onPage, _page),
+        ),
+        const SizedBox(height: 16),
+        FilledButton.icon(
+          onPressed: () => _go(widget.onPage, _page),
+          icon: const Icon(Icons.check_rounded),
+          label: Text('quran.go'.tr()),
+        ),
+      ],
+    );
+  }
+
+  Widget _juzTab(ThemeData theme) => GridView.count(
+        padding: const EdgeInsets.all(14),
+        crossAxisCount: 5,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        children: [
+          for (var j = 1; j <= 30; j++)
+            Material(
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(14),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(14),
+                onTap: () => _go(widget.onPage, widget.juzStartPages[j] ?? 1),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('$j',
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w800)),
+                      Text('${widget.juzStartPages[j] ?? 1}',
+                          style: theme.textTheme.labelSmall
+                              ?.copyWith(color: theme.colorScheme.outline)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+}
+
 /// Ask for a page number.
 ///
 /// [totalPages] is the CURRENT printing's page count, not 604. This used to be

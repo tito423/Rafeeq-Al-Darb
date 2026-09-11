@@ -182,7 +182,10 @@
     "recite_choose_reciter": "اختر القارئ",
     "recite_search_reciter": "ابحث عن قارئ",
     "image_view_hint": "وضع المصحف — اضغط على الصفحة لإظهار الخيارات",
-    "recite_ayah": "تلاوة الآية"
+    "recite_ayah": "تلاوة الآية",
+    "go": "انتقال",
+    "card_expand": "تكبير الكارت",
+    "card_collapse": "تصغير الكارت"
   },
   "library": {
     "title": "المكتبة",

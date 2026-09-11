@@ -19,9 +19,8 @@ import '../../data/text_layout_provider.dart';
 /// giving readers a clear per-ayah reference point and enabling long-press
 /// interactions (sciences sheet) on individual verses.
 ///
-/// All existing callback contracts (`onAyahTap`, `onBackgroundTap`,
-/// `onAutoScrollReachedEnd`, `onExitFullScreen`, playing-verse highlighting)
-/// are preserved — the parent `QuranScreen` does not need to change.
+/// Gestures: a tap anywhere is the page's (`onBackgroundTap` — the screen
+/// toggles full screen with it); a long press on a verse is `onAyahLongPress`.
 class MushafTextPage extends StatefulWidget {
   final List<Ayah> ayahs;
 
@@ -31,16 +30,18 @@ class MushafTextPage extends StatefulWidget {
   /// share one physical page).
   final String Function(int surahId) surahNameOf;
 
-  /// Fires on a **long press** of an ayah — opens the sciences sheet.
-  final void Function(Ayah ayah) onAyahTap;
+  /// Fires on a **long press** of an ayah — selects it and opens its card.
+  final void Function(Ayah ayah) onAyahLongPress;
 
-  /// Fires on a **short tap** of the ayah text or number — starts recitation.
+  /// Fires on a tap of a verse's number marker (cards layout) — plays that
+  /// one verse.
   final void Function(Ayah ayah)? onPlayTap;
 
   final double fontScale;
 
-  /// A plain tap anywhere on the page (including on the ayah text itself)
-  /// — the toolbar-visibility toggle lives one level up in `QuranScreen`.
+  /// A plain tap anywhere on the page, verse text included. «ضغطة واحدة خفيفة
+  /// على الصفحة في أي مكان أو آية = ملء الشاشة أو خروج منه» — the screen
+  /// above decides what it does.
   final VoidCallback? onBackgroundTap;
 
   /// When true, margins shrink so the real content claims more screen space.
@@ -67,10 +68,6 @@ class MushafTextPage extends StatefulWidget {
   /// brings it straight down again, so nothing is buried behind a setting.
   final void Function(bool forward)? onReadingScroll;
 
-  /// In full-screen mode, a double-tap exits — non-null only when
-  /// `pageFillScreen` is true.
-  final VoidCallback? onExitFullScreen;
-
   /// The verse continuous recitation is sounding right now, if any.
   final int? playingSurah;
   final int? playingAyah;
@@ -96,7 +93,7 @@ class MushafTextPage extends StatefulWidget {
     super.key,
     required this.ayahs,
     required this.surahNameOf,
-    required this.onAyahTap,
+    required this.onAyahLongPress,
     this.onPlayTap,
     this.fontScale = 1.0,
     this.onBackgroundTap,
@@ -106,7 +103,6 @@ class MushafTextPage extends StatefulWidget {
     this.isActive = true,
     this.onAutoScrollReachedEnd,
     this.onReadingScroll,
-    this.onExitFullScreen,
     this.playingSurah,
     this.playingAyah,
     this.layout = QuranTextLayout.page,
@@ -488,7 +484,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
                             textStyle: textStyle,
                             mt: mt,
                             onLongPress: () =>
-                                widget.onAyahTap(widget.ayahs[i]),
+                                widget.onAyahLongPress(widget.ayahs[i]),
                             onTap: widget.onBackgroundTap,
                             onPlayTap: widget.onPlayTap != null
                                 ? () => widget.onPlayTap!(widget.ayahs[i])
@@ -505,12 +501,12 @@ class _MushafTextPageState extends State<MushafTextPage> {
                     to: item.runTo!,
                     playingIndex: playingIndex,
                     textStyle: textStyle,
-                    // A tap selects the verse and opens its card. It used to
-                    // START THE RECITATION: «لما بضغط على آية في المصحف
-                    // النصي بيقوم مشغّل تلقائي التلاوة». Recitation is the
-                    // toolbar's, and one verse is the card's «تلاوة الآية».
-                    onAyahTap: widget.onAyahTap,
-                    onAyahLongPress: widget.onAyahTap,
+                    // A long press selects the verse and opens its card; a
+                    // tap anywhere, verse or not, is the page's. A tap used
+                    // to START THE RECITATION («لما بضغط على آية في المصحف
+                    // النصي بيقوم مشغّل تلقائي التلاوة»), then to open the
+                    // card; «ضغطة مطولة على الآية تظليل وكارت الآية».
+                    onAyahLongPress: widget.onAyahLongPress,
                     onBackgroundTap: widget.onBackgroundTap,
                     bare: bare,
                   );
@@ -523,24 +519,15 @@ class _MushafTextPageState extends State<MushafTextPage> {
       ),
     );
 
-    // Wrap in double-tap exit gesture for full-screen mode.
-    final Widget content;
-    if (widget.onExitFullScreen != null) {
-      content = GestureDetector(
-        behavior: HitTestBehavior.deferToChild,
-        onDoubleTap: widget.onExitFullScreen,
-        child: body,
-      );
-    } else {
-      content = body;
-    }
-
+    // No double-tap wrapper any more: a double-tap recogniser holds every
+    // single tap back until its timeout, and a single tap is now what enters
+    // and leaves full screen.
     return Container(
       color: paper,
       child: MushafFrame(
         style: widget.frameStyle,
         color: widget.frameColor ?? mt.gold,
-        child: content,
+        child: body,
       ),
     );
   }
@@ -634,7 +621,8 @@ class _AyahRow extends StatelessWidget {
                 // ── Ayah text ──
                 Expanded(
                   child: InkWell(
-                    onTap: onLongPress,
+                    onTap: onTap,
+                    onLongPress: onLongPress,
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -873,13 +861,10 @@ class _FlowingAyahs extends StatefulWidget {
   /// The page's colour scheme, for the recited-verse wash and the markers.
   final MushafTheme mt;
 
-  /// Tap a verse: start (or jump) the recitation there.
-  final void Function(Ayah ayah)? onAyahTap;
-
-  /// Long-press a verse: open its sciences sheet.
+  /// Long-press a verse: select it and open its card.
   final void Function(Ayah ayah) onAyahLongPress;
 
-  /// Tap outside any verse: toggle the reader's chrome.
+  /// Any tap on the paragraph, on a verse or between them.
   final VoidCallback? onBackgroundTap;
 
   /// The stripped reading layout — see `QuranTextLayout.reading`.
@@ -894,7 +879,6 @@ class _FlowingAyahs extends StatefulWidget {
     required this.textStyle,
     required this.mt,
     required this.onAyahLongPress,
-    this.onAyahTap,
     this.onBackgroundTap,
     this.bare = false,
   });
@@ -991,14 +975,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTapUp: (d) {
-        final ayah = _ayahAt(d.localPosition);
-        if (ayah != null && widget.onAyahTap != null) {
-          widget.onAyahTap!(ayah);
-        } else {
-          widget.onBackgroundTap?.call();
-        }
-      },
+      onTap: () => widget.onBackgroundTap?.call(),
       onLongPressStart: (d) {
         final ayah = _ayahAt(d.localPosition);
         if (ayah != null) widget.onAyahLongPress(ayah);

@@ -182,7 +182,10 @@
     "recite_choose_reciter": "قاری منتخب کریں",
     "recite_search_reciter": "قاری تلاش کریں",
     "image_view_hint": "مصحف منظر — اختیارات دکھانے کے لیے صفحے پر ٹیپ کریں",
-    "recite_ayah": "آیت کی تلاوت"
+    "recite_ayah": "آیت کی تلاوت",
+    "go": "جائیں",
+    "card_expand": "بڑا کریں",
+    "card_collapse": "چھوٹا کریں"
   },
   "library": {
     "title": "کتب خانہ",

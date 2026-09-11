@@ -226,6 +226,12 @@ class _AppShellState extends ConsumerState<AppShell>
         }
       },
       child: Scaffold(
+        // The Qur'an tab lays a whole mushaf page out against the body's
+        // height; letting a keyboard shrink it re-laid the page on every frame
+        // of the keyboard's slide — «لما بضغط على زر الانتقال الشاشة في الخلفية
+        // بتمش أو بتعمل فليكر جامد جدا». Its dialogs float above the keyboard
+        // on their own.
+        resizeToAvoidBottomInset: _index != AppTab.quran,
         body: KeyedSubtree(
           key: ValueKey<String>(localeCode),
           child: IndexedStack(index: _index, children: screens),

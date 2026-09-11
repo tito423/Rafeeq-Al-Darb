@@ -79,6 +79,10 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   late final Future<Map<String, AyahTranslation>> _translations;
   late final Future<List<WordGrammar>> _grammar;
 
+  /// «حط جنب زر تلاوة الآية زر تكبير لخيارات الآية بحيث يملى الشاشة كلها لأن
+  /// التفسير بتبقى مساحة عرضه صغيرة».
+  bool _expanded = false;
+
   @override
   void initState() {
     super.initState();
@@ -102,24 +106,30 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
     final gold = AppColors.gold;
 
     return SafeArea(
-      top: false,
-      child: FractionallySizedBox(
-        heightFactor: 0.92,
+      top: _expanded,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween<double>(end: _expanded ? 1.0 : 0.92),
+        duration: const Duration(milliseconds: 260),
+        curve: Curves.easeOutCubic,
+        builder: (context, factor, child) =>
+            FractionallySizedBox(heightFactor: factor, child: child),
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(28)),
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(_expanded ? 0 : 28)),
             border: Border(top: BorderSide(color: gold.withValues(alpha: 0.45))),
           ),
           child: Column(
             children: [
-              const _DragHandle(),
+              if (!_expanded) const _DragHandle(),
               _Header(
                 surahNameAr: widget.surahNameAr,
                 ayah: widget.ayah,
                 quranRepo: widget.quranRepo,
                 translationsFuture: _translations,
+                expanded: _expanded,
+                onToggleExpand: () => setState(() => _expanded = !_expanded),
               ),
               _AyahPanel(ayah: widget.ayah),
               if (!widget.sciencesAvailable)
@@ -183,12 +193,16 @@ class _Header extends ConsumerWidget {
   final Ayah ayah;
   final QuranRepository quranRepo;
   final Future<Map<String, AyahTranslation>> translationsFuture;
+  final bool expanded;
+  final VoidCallback onToggleExpand;
 
   const _Header({
     required this.surahNameAr,
     required this.ayah,
     required this.quranRepo,
     required this.translationsFuture,
+    required this.expanded,
+    required this.onToggleExpand,
   });
 
   String get _reference => '$surahNameAr • ${ayah.surahId}:${ayah.ayahNumber}';
@@ -377,6 +391,13 @@ class _Header extends ConsumerWidget {
               );
             },
           ),
+          IconButton(
+            tooltip: (expanded ? 'quran.card_collapse' : 'quran.card_expand').tr(),
+            icon: Icon(expanded
+                ? Icons.close_fullscreen_rounded
+                : Icons.open_in_full_rounded),
+            onPressed: onToggleExpand,
+          ),
           PopupMenuButton<String>(
             tooltip: '',
             icon: Icon(Icons.more_vert, color: hasNote ? gold : null),
@@ -444,30 +465,69 @@ class _RepeatDialogState extends State<_RepeatDialog> {
   int _times = 3;
   int _gapSeconds = 1;
 
-  static const _timeOptions = [3, 5, 10];
+  /// «شيل ٣ و٥ و١٠ وخليه سكرول بار بعدد المرات اللي أنا عايزها وجنبه مربع لو
+  /// عايز أدخل التكرار يدوي». The slider covers the common range; the box
+  /// takes anything up to [_maxTyped].
+  static const _sliderMax = 50;
+  static const _maxTyped = 999;
   static const _gapOptions = [0, 1, 2, 3];
+
+  late final TextEditingController _timesField =
+      TextEditingController(text: '$_times');
+
+  @override
+  void dispose() {
+    _timesField.dispose();
+    super.dispose();
+  }
+
+  void _fromSlider(int n) {
+    setState(() => _times = n);
+    _timesField.text = '$n';
+  }
 
   @override
   Widget build(BuildContext context) {
     final gold = AppColors.gold;
     return AlertDialog(
       title: Text('quran.repeat_dialog_title'.tr()),
+      scrollable: true,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('quran.repeat_count'.tr()),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
+          const SizedBox(height: 4),
+          Row(
             children: [
-              for (final n in _timeOptions)
-                ChoiceChip(
-                  label: Text('$n'),
-                  selected: _times == n,
-                  selectedColor: gold.withValues(alpha: 0.25),
-                  onSelected: (_) => setState(() => _times = n),
+              Expanded(
+                child: Slider(
+                  value: _times.clamp(1, _sliderMax).toDouble(),
+                  min: 1,
+                  max: _sliderMax.toDouble(),
+                  divisions: _sliderMax - 1,
+                  label: '$_times',
+                  onChanged: (v) => _fromSlider(v.round()),
                 ),
+              ),
+              SizedBox(
+                width: 68,
+                child: TextField(
+                  controller: _timesField,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (t) {
+                    final n = int.tryParse(t.trim());
+                    if (n != null && n >= 1 && n <= _maxTyped) {
+                      setState(() => _times = n);
+                    }
+                  },
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
