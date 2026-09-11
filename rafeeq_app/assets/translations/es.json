@@ -572,6 +572,7 @@
     "repair": "Reparar descargas",
     "repairing": "Reanudando descargas detenidas...",
     "repair_resumed": "Se reanudaron {} descarga(s) incompleta(s)",
+    "repair_unjammed": "Liberadas {} tareas bloqueadas",
     "repair_nothing": "No hay descargas incompletas",
     "play_from": "Reproducir la recitación desde",
     "play_auto": "Automático",

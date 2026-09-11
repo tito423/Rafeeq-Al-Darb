@@ -1146,9 +1146,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 12:11 — IN PROGRESS — resume here**
+**2026-09-11 12:38 — IN PROGRESS — resume here**
 
-work queue: C1, C3 and C5 marked DONE (seen) with what was actually looked at - six mushafs in the list, the reading layout cycled to on the device with its disc measuring 6.7:1, and the text mode going full screen on rotation while the image mode refused to rotate at all. C4 stays unseen and says why: it needs a verse taller than the screen with the recitation running, which was not reached. C2 stays open.
+found the jam, and it is one bug behind both of his reports. MemoryTaskQueue.advanceQueue counts a task as active the moment it hands it to the platform; on a refused enqueue it logs 'did not enqueue successfully and will be ignored' and never removes it or decrements the counters - only taskFinished does that, and a task that never started never produces the status update that would call it. So every refusal burns one slot for the life of the process: eight kill the file queue, twelve kill the recitation queue, which is «لما تقف التلاوة بتهنج تماما», and «إصلاح التحميلات» then adds to a queue with no slots left, which is «ولا بيعمل اي حاجة نهائي». Two fixes, both in our code: the plugin publishes enqueueErrors and nobody was listening, so the slot is now given back and the task re-queued up to three times with a growing delay; and repair calls unjamQueues FIRST, which asks the platform which tasks are really in flight and frees every slot held by one it has never heard of. A live task keeps its slot - the live set decides, not a timeout. The button also says what it did instead of «لا يوجد ما يُصلَح» after freeing eleven slots. Proved against the real MemoryTaskQueue: a queue with two phantom entries returns null from getNextTask with work waiting, and returns the task after the release. 170 tests pass.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

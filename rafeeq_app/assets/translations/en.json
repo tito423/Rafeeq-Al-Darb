@@ -572,6 +572,7 @@
     "preparing": "Preparing…",
     "now_downloading": "Downloading {}",
     "repair_resumed": "Resumed {} unfinished download(s)",
+    "repair_unjammed": "Freed {} stuck task(s)",
     "repair_nothing": "Nothing was left unfinished",
     "play_from": "Play the recitation from",
     "play_auto": "Automatic",

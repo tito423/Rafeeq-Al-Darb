@@ -572,6 +572,7 @@
     "repair": "Réparer les téléchargements",
     "repairing": "Reprise des téléchargements interrompus...",
     "repair_resumed": "{} téléchargement(s) inachevé(s) repris",
+    "repair_unjammed": "{} tâche(s) bloquée(s) libérée(s)",
     "repair_nothing": "Aucun téléchargement inachevé",
     "play_from": "Lire la récitation depuis",
     "play_auto": "Automatique",

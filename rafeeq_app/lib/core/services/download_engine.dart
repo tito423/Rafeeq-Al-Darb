@@ -71,6 +71,93 @@ class DownloadEngine {
     ..maxConcurrent = 12
     ..maxConcurrentByHost = 6;
 
+  /// How many times one task may be put back after the platform refused to
+  /// accept it, before it is left for «إصلاح التحميلات».
+  static const int _maxReEnqueue = 3;
+
+  static final Map<String, int> _reEnqueueAttempts = {};
+
+  /// Tasks whose slot this engine had to free by hand, for the repair report.
+  static int _slotsRecovered = 0;
+
+  static int get slotsRecovered => _slotsRecovered;
+
+  /// Frees the queue slots of tasks the platform is not actually running.
+  ///
+  /// **This is the jam.** `MemoryTaskQueue.advanceQueue` counts a task as
+  /// active the moment it hands it to the platform:
+  ///
+  /// ```dart
+  /// enqueued.add(task);
+  /// _incrementCounts(task);
+  /// enqueue(task).then((success) async {
+  ///   if (!success) {
+  ///     _log.warning('TaskId ... did not enqueue successfully and will be ignored');
+  ///     ...
+  ///   }
+  /// ```
+  ///
+  /// On failure it logs, and **it never removes the task or decrements the
+  /// counters** — only `taskFinished` does that, and `taskFinished` is driven
+  /// by a status update that a task which never started will never produce.
+  /// So every refused enqueue burns one slot permanently. Eight of them kill
+  /// [fileQueue] and twelve kill [recitationQueue] for the life of the
+  /// process: «لما تقف التلاوة بتهنج تماما». And «إصلاح التحميلات» adds to
+  /// the same dead queue, which is why it «ولا بيعمل اي حاجة نهائي».
+  ///
+  /// [liveTaskIds] is what the platform says it is actually working on.
+  /// Anything the queue believes is active and the platform has never heard of
+  /// is a leaked slot, and gets it back. Pure so it can be tested without a
+  /// device.
+  static int releaseStuckTasks(
+    MemoryTaskQueue queue,
+    Set<String> liveTaskIds,
+  ) {
+    var freed = 0;
+    for (final task in queue.enqueued.toList(growable: false)) {
+      if (liveTaskIds.contains(task.taskId)) continue;
+      queue.taskFinished(task); // removes it and decrements the counters
+      freed++;
+    }
+    _slotsRecovered += freed;
+    return freed;
+  }
+
+  /// Asks the platform which tasks are really in flight and unjams both
+  /// queues against that answer. Returns the number of slots recovered.
+  static Future<int> unjamQueues() async {
+    final live = <String>{};
+    for (final group in [groupFiles, groupRecitations]) {
+      try {
+        final tasks = await FileDownloader().allTasks(group: group);
+        live.addAll(tasks.map((t) => t.taskId));
+      } catch (_) {
+        // If the platform cannot answer, treat nothing as live rather than
+        // everything: a wrong "everything is running" would leave the jam in
+        // place, which is the failure we are here to fix.
+      }
+    }
+    return releaseStuckTasks(fileQueue, live) +
+        releaseStuckTasks(recitationQueue, live);
+  }
+
+  /// Puts a refused task back, a bounded number of times.
+  ///
+  /// The slot is freed first — without that, a queue that has refused
+  /// [fileQueue.maxConcurrent] tasks can never enqueue anything again, so the
+  /// retry would sit in `waiting` for ever.
+  static void _onEnqueueRefused(MemoryTaskQueue queue, Task task) {
+    queue.taskFinished(task);
+    _slotsRecovered++;
+    final attempts = (_reEnqueueAttempts[task.taskId] ?? 0) + 1;
+    if (attempts > _maxReEnqueue) {
+      _reEnqueueAttempts.remove(task.taskId);
+      return; // left for «إصلاح التحميلات»; the file is still incomplete
+    }
+    _reEnqueueAttempts[task.taskId] = attempts;
+    Timer(Duration(seconds: attempts * 2), () => queue.add(task));
+  }
+
   static bool _ready = false;
 
   /// A broadcast fan-out of the plugin's own update stream.
@@ -200,6 +287,14 @@ class DownloadEngine {
     downloader
       ..addTaskQueue(fileQueue)
       ..addTaskQueue(recitationQueue);
+
+    // A refused enqueue is the one event that leaks a queue slot for ever —
+    // see `releaseStuckTasks`. The plugin publishes it and then forgets it;
+    // this is the only listener that can give the slot back.
+    fileQueue.enqueueErrors
+        .listen((task) => _onEnqueueRefused(fileQueue, task));
+    recitationQueue.enqueueErrors
+        .listen((task) => _onEnqueueRefused(recitationQueue, task));
 
     // Keeps task records in the plugin's own database so a transfer that
     // outlived the app can be reconciled on the next launch instead of

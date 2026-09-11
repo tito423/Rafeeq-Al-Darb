@@ -572,6 +572,7 @@
     "preparing": "تیاری جاری…",
     "now_downloading": "{} ڈاؤن لوڈ ہو رہا ہے",
     "repair_resumed": "{} نامکمل ڈاؤن لوڈ دوبارہ شروع کیے گئے",
+    "repair_unjammed": "{} رکی ہوئی ڈاؤن لوڈ بحال",
     "repair_nothing": "کوئی نامکمل ڈاؤن لوڈ نہیں",
     "play_from": "تلاوت چلائیں",
     "play_auto": "خودکار",

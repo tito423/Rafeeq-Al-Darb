@@ -572,6 +572,7 @@
     "repair": "Reparar transferências",
     "repairing": "A retomar transferências interrompidas...",
     "repair_resumed": "Retomada(s) {} transferência(s) incompleta(s)",
+    "repair_unjammed": "{} tarefa(s) presa(s) liberada(s)",
     "repair_nothing": "Não há transferências incompletas",
     "play_from": "Reproduzir a recitação a partir de",
     "play_auto": "Automático",

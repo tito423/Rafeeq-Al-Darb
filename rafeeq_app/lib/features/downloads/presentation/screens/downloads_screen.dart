@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/db/quran_repository.dart';
+import '../../../../core/services/download_engine.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/services/recitation_source.dart';
@@ -1004,7 +1005,14 @@ class _RepairButtonState extends ConsumerState<_RepairButton> {
     );
 
     var resumed = 0;
+    var freed = 0;
     try {
+      // 0. UNJAM FIRST. Everything below adds tasks to the two queues, and a
+      // queue whose slots have leaked accepts them and never enqueues one —
+      // which is exactly why the owner reported this button «ولا بيعمل اي
+      // حاجة نهائي». See `DownloadEngine.releaseStuckTasks` for the leak.
+      freed = await DownloadEngine.unjamQueues();
+
       // 1. Hadith / books / adhan — the platform downloader's own queue.
       await DownloadManager.instance.resumeAll();
 
@@ -1042,13 +1050,19 @@ class _RepairButtonState extends ConsumerState<_RepairButton> {
 
     if (!mounted) return;
     messenger.hideCurrentSnackBar();
+    // Say what happened, including the case that used to read as "nothing".
+    // «لا يوجد ما يُصلَح» after freeing eleven stuck slots is a lie the owner
+    // had every reason to read as the button doing nothing.
+    final parts = <String>[
+      if (freed > 0) 'downloads.repair_unjammed'.tr(args: ['$freed']),
+      if (resumed > 0) 'downloads.repair_resumed'.tr(args: ['$resumed']),
+    ];
     messenger.showSnackBar(
       SnackBar(
         content: Text(
-          resumed > 0
-              ? 'downloads.repair_resumed'.tr(args: ['$resumed'])
-              : 'downloads.repair_nothing'.tr(),
+          parts.isEmpty ? 'downloads.repair_nothing'.tr() : parts.join(' · '),
         ),
+        duration: const Duration(seconds: 5),
       ),
     );
   }

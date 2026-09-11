@@ -572,6 +572,7 @@
     "preparing": "جارٍ التحضير…",
     "now_downloading": "جارٍ تنزيل {}",
     "repair_resumed": "تم استئناف {} تحميل غير مكتمل",
+    "repair_unjammed": "حرّرت {} مهمة عالقة",
     "repair_nothing": "لا توجد تحميلات غير مكتملة",
     "play_from": "تشغيل التلاوة من",
     "play_auto": "تلقائي",
