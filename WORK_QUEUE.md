@@ -62,8 +62,9 @@ band by 9% of the pitch. Median pitch over all 604 pages is 0.06705 — the
 Madinah 15-line grid, measured rather than assumed — and is the fallback for a
 page with too few edges to derive its own.
 
-STATUS: FIXED, 7 tests (the first two re-measure the defect itself) — **not
-yet opened on a device**
+STATUS: **DONE (seen)** — al-Baqarah 2:17 on page 4, emulator-5554: two
+separate rounded marks with paper between them. 7 tests, the first two of
+which re-measure the defect itself.
 
 ## B2 · Landscape draws the page the size of a stamp
 
@@ -75,12 +76,13 @@ so it fits the *height*. A phone on its side leaves roughly 200 logical pixels
 under the toolbar; 200 × 0.63 is that stamp.
 
 Landscape now lays the page out at the **full width** and scrolls it
-vertically — what the reference app does on its side. Stated cost: pinch-zoom
-is off in landscape, because a vertical scroll and an `InteractiveViewer`
-cannot both own the drag, and full width is already the largest the page can
-be drawn.
+vertically. Stated cost: pinch-zoom is off in landscape, because a vertical
+scroll and an `InteractiveViewer` cannot both own the drag, and full width is
+already the largest the page can be drawn — and about three lines of the page
+are on screen at a time, which is the trade for legible text.
 
-STATUS: FIXED — **not yet opened on a device**
+STATUS: **DONE (seen)** — rotated on emulator-5554: the page spans the full
+2400 pixels.
 
 ## B3 · «الانتقال إلى» sat under the number pad — and had the wrong range
 
@@ -92,7 +94,10 @@ accepted page 600 of the 521-page Shamarly.
 Both fixed; the range is now the current printing's and is printed under the
 field. Proved on the old code — both new expectations fail there.
 
-STATUS: FIXED, 3 tests
+STATUS: **DONE (seen)** — both buttons clear the number pad in landscape. The
+first fix still clipped the title, so a screen with under 420 logical pixels
+left drops it; and the range read «604 – 1» (trap #16), so it is in an LTR
+isolate. 3 tests, one of which asserts the plain string is NOT on screen.
 
 ## B4 · «إصلاح التحميلات» sits on top of the list
 

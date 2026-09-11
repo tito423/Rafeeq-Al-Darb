@@ -1146,9 +1146,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-11 05:32 — IN PROGRESS — resume here**
+**2026-09-11 05:33 — IN PROGRESS — resume here**
 
-seen on the emulator, not just tested: al-Baqarah 2:17 on page 4 is now two separate rounded marks with paper between them, one per printed line, where the two rings used to share an edge and composite into a slab. Landscape draws the page at the full 2400-pixel width and scrolls it, against the ~130-pixel stamp in the owner's screenshot. The goto dialog's buttons are above the number pad now; the first fix still clipped the title, so a screen with under 420 logical pixels left drops the title and keeps the field's own label. And the range read backwards - 604 dash 1 - which is trap 16: it is in an LTR isolate now, and the test asserts the plain string is NOT what is on screen. Text mode unpins the surah header in landscape, where it repeated the corner badge over a quarter of the page - that one is NOT yet seen on a device. 157 tests pass.
+work queue: B1, B2 and B3 marked DONE (seen) with what was actually looked at on emulator-5554, not with the fact that their tests pass. B4 and B5 stay unseen and say so.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
