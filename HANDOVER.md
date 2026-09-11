@@ -7,10 +7,14 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-11 |
-| **Released** | **v3.18.0** — tag on `master`, one release in the repo |
-| **App version** | `pubspec.yaml` `3.18.0+17` |
+| **Released** | **v3.19.0** — tag on `master`, one release in the repo — **published without a device run** (owner's call, quota at 93%) |
+| **App version** | `pubspec.yaml` `3.19.0+18` |
 | **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
 | **Verified today** | `flutter analyze lib test` clean · `flutter test` **186 passed** · on emulator-5554 (signed release 3.18.0): verse tap opens the card with media NONE; continuous recitation from the selected 3:25 (media PLAYING «3:25», page unmoved); a 110-surah recitation kept downloading with the app at HOME (8 done in 90 s, 10 on return, nothing restarted); device scan found a pushed mp3 under its folder and played it; favourites, ten themes, disc; sunan reminder on two days; splash-sound switch present; library tab «الموسوعة الحديثية». Rebuilt APK after the fixes: tasks released 1, 2, 3, 4, 5 in order; downloads overview shows 3 running + «في الانتظار · 97»; reciter jump and back-to-top; finished track shows play and replays; scan reports its count; selected verse stays marked in the flowing layout |
+
+## STATE AS OF 2026-09-11 (night) — v3.19.0: the tenth batch, NOT yet seen on a device
+
+Read `WORK_QUEUE.md` J1–J26. Verified: `flutter analyze lib test` clean, `flutter test` 197 passed, and the Qur'an search modes and topic patterns measured over `quran_local.db` (scratchpad scripts `measure_search.py`, `measure_topics2.py`, `extract_words.py`; the numbers are in WORK_QUEUE J11/J12). **Not verified: everything on screen.** In short: a tap anywhere on a mushaf page toggles full screen, a long press opens the verse card, landscape stays full screen; «الانتقال إلى» is a surah/page/juz sheet; the scrollbar is a new rail (`arrow_scrollbar.dart`); search has derivatives/partial/exact + diacritics (`quran_search_match.dart`, `QuranRepository.searchQuran/searchTopic`) and topics list every verse their measured patterns find; ruqyah plays in the Qur'an player with its own download group; adhans azan15/azan17 removed; high-latitude option removed; clock gallery, qibla card and faces take the hero surface's colours; RGB backdrop, toolbar and nav icons animated.
 
 ## STATE AS OF 2026-09-11 — v3.18.0: the eighth and ninth batches
 
