@@ -32,6 +32,7 @@ import '../widgets/mushaf_nav_sheets.dart';
 import '../widgets/reciter_picker_sheet.dart';
 import '../widgets/mushaf_theme_picker.dart';
 import '../widgets/mushaf_text_page.dart';
+import '../../../../app/shell/tab_request_provider.dart';
 
 /// Quran tab — a real mushaf browser.
 ///  • Text mode: real Uthmani ayahs laid out by their real Madani page
@@ -147,7 +148,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       if (pageFillScreen != null) _pageFillScreen = pageFillScreen;
     });
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
-    if (_pageFillScreen) _applyImmersive(true);
+    // Only if this tab is the one on screen. On a cold start it is not —
+    // `IndexedStack` builds every tab, Home is showing, and applying the mode
+    // here is what put the whole app into `immersiveSticky` before the reader
+    // had even opened the mushaf.
+    if (_pageFillScreen && _isActiveTab) _applyImmersive(true);
     // The stored mode decides whether this screen may rotate at all.
     _applyOrientationLock();
   }
@@ -263,7 +268,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       }
     });
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
-    _applyImmersive(_pageFillScreen);
+    // Same rule as `_restoreState`: the mode is global, so it is only ever
+    // set while this tab is the one being looked at.
+    if (_isActiveTab) _applyImmersive(_pageFillScreen);
     if (!persist) return;
     SharedPreferences.getInstance().then(
       (p) => p.setBool(_kPageFillScreen, _pageFillScreen),
@@ -275,10 +282,42 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// everything" by hiding the system bars while full-screen, and restore
   /// them on exit. `immersiveSticky` lets a swipe from the edge peek them
   /// back temporarily without leaving the mode.
+  ///
+  /// THE APP-WIDE FLICKER THIS CAUSED, MEASURED ON emulator-5554.
+  /// «فيه مأثرة للوحة المفاتيح، لما بتظهر الشاشة بتعمل فليكر، حاصل في أي حتة
+  /// في التطبيق». `setEnabledSystemUIMode` is a **process-wide** setting, not
+  /// a per-screen one, and this screen is a kept-alive tab inside `AppShell`'s
+  /// `IndexedStack` — so it is built on the app's first frame and never
+  /// disposed. The moment `_restoreState` read a stored «ملء الشاشة» of true,
+  /// the whole app was in `immersiveSticky` for the rest of its life, and
+  /// `dispose`'s restore never ran.
+  ///
+  /// `immersiveSticky` is the worst mode to leave on: it hides the bars and
+  /// then *peeks them back* on any interaction before hiding them again, so
+  /// opening a keyboard resized the window twice in quick succession. Caught
+  /// by recording the library's search screen opening its keyboard —
+  /// `screenrecord` at 15 fps shows the keyboard bouncing up, part-way down
+  /// and up again, with the status bar appearing and vanishing with it — and
+  /// confirmed in `dumpsys window`, which on a screen that never asks for
+  /// anything of the sort reported `type=statusBars … visible=false`.
+  ///
+  /// So the mode now follows the tab: applied only while the Quran tab is the
+  /// one on screen, and lifted the moment the reader leaves it — the same
+  /// rule `activeTabProvider` already exists for (see its own comment, and
+  /// the Qibla compass that pauses its sensor by it).
   void _applyImmersive(bool on) {
     SystemChrome.setEnabledSystemUIMode(
       on ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
     );
+  }
+
+  /// True while this tab is the one being shown.
+  bool get _isActiveTab => ref.read(activeTabProvider) == AppTab.quran;
+
+  /// Re-applies (or lifts) the immersive mode for the tab that is now on
+  /// screen. Called from `build`'s `ref.listen`.
+  void _syncImmersiveToTab(int tab) {
+    _applyImmersive(tab == AppTab.quran && _pageFillScreen);
   }
 
   void _toggleAutoScroll() {
@@ -576,6 +615,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // The immersive mode is process-wide; it follows whichever tab is on
+    // screen so it can never leak into the rest of the app. See
+    // `_applyImmersive` for the flicker this was.
+    ref.listen<int>(activeTabProvider, (_, tab) => _syncImmersiveToTab(tab));
     final mushaf = ref.watch(mushafDataProvider);
     // P3‑53: a raster (image-scan) edition — e.g. the coloured Tajweed mushaf —
     // has no reflowable text form, so it's always shown as page images. This

@@ -89,12 +89,29 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen>
   int get _index => _page.round().clamp(0, _chapters.length - 1);
   bool get _isLast => _index == _chapters.length - 1;
 
+  /// Re-entrancy guard. `_finish` is reachable from three places at once —
+  /// the skip button, «ابدأ», and `PopScope`'s own callback — and the second
+  /// entry would pop a route that is already going.
+  bool _closing = false;
+
   Future<void> _finish() async {
     // Whatever the exit — «ابدأ», the skip button, or the back gesture — the
     // tour counts as seen, so it does not ambush the reader again tomorrow
     // unless they asked for it on every launch.
+    if (_closing) return;
+    _closing = true;
     await markTutorialSeen(ref.read(sharedPrefsProvider));
-    if (mounted) Navigator.of(context).maybePop();
+    if (!mounted) return;
+    // `pop`, NOT `maybePop`. MEASURED ON emulator-5554: with `maybePop` the
+    // skip button did nothing at all. `maybePop` consults the route's
+    // `PopScope` first, and this screen sets `canPop: false` so that the
+    // system back gesture is routed through here too — so `maybePop` handed
+    // the request straight back to `onPopInvokedWithResult`, which calls
+    // `_finish`, which called `maybePop`. The tour could only be left by
+    // finishing it, and «زرار اسكيب في أي وقت» was a button that looked
+    // right and did nothing. `flutter analyze` and 196 tests had no opinion
+    // about it; opening the screen and pressing the button did.
+    Navigator.of(context).pop();
   }
 
   void _next() {

@@ -80,136 +80,134 @@ class _RgbBackdropState extends State<_RgbBackdrop>
   }
 }
 
-/// P3‑3: restyled toward `design_refs/ref_tasbeeh.jpg`'s own look — the
-/// owner's exact words were "خلي ثيم التطبيق rgb قريب للثيم اللي انت شايف
-/// في صورة المسبحة" (make the RGB theme close to the tasbeeh reference's
-/// theme). That reference is near-black, dominated by one soft emerald/teal
-/// **glow ring** around the tasbeeh counter (not a filled wash), with a
-/// handful of small static star-dots — calmer and darker than this used to
-/// be. Kept the same `CustomPainter`/slow-`AnimationController` seam (per
-/// `HANDOVER.md` §5.6) but replaced the three large filled radial-gradient
-/// blobs with a few soft **ring** strokes (echoing the reference's actual
-/// glow-ring motif, not a solid disc), teal-weighted rather than an equal
-/// three-way rotation, and replaced the tiled rub-el-hizb star grid — which
-/// read as much busier than the reference's few scattered dots — with a
-/// small fixed set of twinkling star-dots.
+/// «غيّر فيها تأثير الـRGB لإسلامي في التطبيق كله».
+///
+/// WHAT THIS USED TO BE, AND WHY IT CHANGED.
+/// The backdrop was an *aurora*: three coloured glow rings drifting on
+/// sine paths, a teal→violet→gold band sweeping the upper third, and forty
+/// coloured motes rising through it. It was pretty, and it was the visual
+/// language of a gaming RGB strip — nothing in it said which app it belonged
+/// to. The owner asked for that replaced by something Islamic, everywhere the
+/// theme is on.
+///
+/// So the aurora is gone and what is left is the app's own geometry, drawn
+/// the way a tiled wall is drawn:
+///
+///   1. a **girih lattice** — the eight-point khātim tessellated across the
+///      whole screen with the interlacing diamond that joins the stars into
+///      a wall rather than a field of separate ornaments. It drifts by less
+///      than one tile over the loop, so it reads as depth, not motion.
+///   2. one large **rub el hizb** medallion turning very slowly behind the
+///      content, the same mark the app uses for a juz division.
+///   3. a **lamp sweep** — a single warm pass of light travelling across the
+///      lattice, which is what makes a still pattern feel lit rather than
+///      printed.
+///
+/// Everything is gold on deep navy, the app's own two colours, at alphas
+/// between 0.03 and 0.10: this sits *behind* every screen in the app, so it
+/// has to be legible-under rather than beautiful-alone. No blur mask filters
+/// any more either — the old ring glows needed three full-screen blur passes
+/// per frame, and the lattice needs none.
 class _RgbPainter extends CustomPainter {
   _RgbPainter(this.t);
 
   /// 0..1 phase of the loop.
   final double t;
 
-  static const _base = Color(0xFF05060B);
-  static const _teal = Color(0xFF15C7B0);
-  static const _violet = Color(0xFF7C4DFF);
+  /// The app's night navy, a shade deeper than `AppColors.night` so the
+  /// scaffolds sitting on it still read as raised.
+  static const _base = Color(0xFF04101C);
+  static const _deep = Color(0xFF071A2B);
   static const _gold = Color(0xFFD4AF37);
 
-  /// Teal-weighted so the dominant colour reads as the reference's emerald
-  /// glow, with violet/gold only as occasional accents.
-  static const _ringColors = [_teal, _teal, _violet, _gold];
+  /// Tile size of the lattice, in logical pixels.
+  static const _tile = 92.0;
 
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    canvas.drawRect(rect, Paint()..color = _base);
-
     final w = size.width, h = size.height;
     final tau = 2 * math.pi;
 
-    // A few soft glow RINGS drifting on slow, gentle paths — much slower
-    // and much fainter than the old filled blobs, so this reads as a calm
-    // ambient accent rather than a full-screen aurora wash.
-    for (var i = 0; i < 3; i++) {
-      final p = t * tau * 0.4 + i * (tau / 3);
-      final cx = w * (0.5 + 0.30 * math.sin(p * (0.6 + i * 0.1)));
-      final cy = h * (0.35 + 0.22 * math.cos(p * (0.5 + i * 0.15)));
-      final radius = math.min(w, h) * (0.20 + i * 0.06);
-      final color = _ringColors[i % _ringColors.length];
-      canvas.drawCircle(
-        Offset(cx, cy),
-        radius,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 18
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 26)
-          ..color = color.withValues(alpha: 0.11),
-      );
-    }
-
-    // «كتّر شوية بشكل جميل من تأثيراته، عاوزه روعة بصريًا». Three additions,
-    // all cheap to paint (no extra blur passes):
-    //
-    // 1. A slow colour-cycling aurora band across the upper third: a sweep of
-    //    teal → violet → gold that travels and breathes over the loop.
-    final band = Rect.fromLTWH(-w * 0.2, h * 0.08, w * 1.4, h * 0.34);
-    final shift = math.sin(t * tau) * w * 0.25;
-    canvas.save();
-    canvas.translate(shift, 0);
-    canvas.drawOval(
-      band,
+    // The ground: a vertical fall from navy to a deeper navy, so the screen
+    // has a horizon rather than one flat colour.
+    canvas.drawRect(
+      rect,
       Paint()
-        ..shader = LinearGradient(
-          colors: [
-            _teal.withValues(alpha: 0.0),
-            _teal.withValues(alpha: 0.10 + 0.05 * math.sin(t * tau * 2)),
-            _violet.withValues(alpha: 0.09),
-            _gold.withValues(alpha: 0.07 + 0.04 * math.cos(t * tau)),
-            _gold.withValues(alpha: 0.0),
-          ],
-        ).createShader(band),
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [_deep, _base],
+        ).createShader(rect),
+    );
+
+    // 1. The girih lattice. One Path, stroked once — a stroke per star would
+    // be several hundred draw calls on a tall screen — and the Path itself is
+    // built once per size and then only *translated*, because its shape never
+    // changes. This backdrop repaints on every frame for the whole life of
+    // the app while the theme is on, so re-tessellating ~320 sixteen-point
+    // stars sixty times a second is work worth not doing.
+    final drift = Offset(
+      math.sin(t * tau) * _tile * 0.35,
+      math.cos(t * tau) * _tile * 0.35,
+    );
+    canvas.save();
+    canvas.translate(drift.dx, drift.dy);
+    canvas.drawPath(
+      _latticeFor(size),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..isAntiAlias = true
+        ..color = _gold.withValues(alpha: 0.055),
     );
     canvas.restore();
 
-    // 2. A faint eight-pointed star (rub el hizb) turning very slowly behind
-    //    the content — the app's own motif rather than generic decoration.
-    final starCenter = Offset(w * 0.5, h * 0.62);
-    final starR = math.min(w, h) * 0.42;
+    // 2. The rub el hizb, low and centred, turning once every four loops.
+    final medallion = Offset(w * 0.5, h * 0.6);
+    final mr = math.min(w, h) * 0.44;
     canvas.save();
-    canvas.translate(starCenter.dx, starCenter.dy);
+    canvas.translate(medallion.dx, medallion.dy);
     canvas.rotate(t * tau * 0.25);
-    final starPaint = Paint()
+    final markPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2
-      ..color = _gold.withValues(alpha: 0.07);
+      ..strokeWidth = 1.3
+      ..color = _gold.withValues(alpha: 0.10);
     for (var k = 0; k < 2; k++) {
       canvas.save();
       canvas.rotate(k * math.pi / 4);
       canvas.drawRect(
-        Rect.fromCenter(center: Offset.zero, width: starR, height: starR),
-        starPaint,
+        Rect.fromCenter(center: Offset.zero, width: mr, height: mr),
+        markPaint,
       );
       canvas.restore();
     }
-    canvas.drawCircle(Offset.zero, starR * 0.38, starPaint);
+    canvas.drawCircle(Offset.zero, mr * 0.38, markPaint);
+    canvas.drawCircle(Offset.zero, mr * 0.70, markPaint);
     canvas.restore();
 
-    // 3. Motes rising slowly from the bottom and fading at the top, on top of
-    //    the fixed twinkling star-dots below.
-    final rnd = math.Random(7);
-    for (var i = 0; i < 18; i++) {
-      final dx = rnd.nextDouble() * w;
-      final dy = rnd.nextDouble() * h;
-      final twinkle = (0.4 + 0.4 * math.sin(t * tau + i)).clamp(0.0, 1.0);
-      canvas.drawCircle(
-        Offset(dx, dy),
-        1.4,
-        Paint()..color = Colors.white.withValues(alpha: 0.28 * twinkle),
-      );
-    }
-    final motes = math.Random(19);
-    for (var i = 0; i < 22; i++) {
-      final x = motes.nextDouble() * w;
-      final speed = 0.6 + motes.nextDouble();
-      final phase = motes.nextDouble();
-      final y = h * (1 - ((t * speed + phase) % 1.0));
-      final fade = (y / h).clamp(0.0, 1.0);
-      final color = _ringColors[i % _ringColors.length];
-      canvas.drawCircle(
-        Offset(x + math.sin(t * tau * speed + i) * 12, y),
-        1.6 + (i % 3) * 0.6,
-        Paint()..color = color.withValues(alpha: 0.35 * fade),
-      );
-    }
+    // 3. The lamp sweep: a soft diagonal band of gold that crosses the screen
+    // once per loop, brightening the lattice as it passes. A gradient fill,
+    // not a blur — same look, no second render pass.
+    final sweepCentre = -0.35 + 1.7 * t;
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            _gold.withValues(alpha: 0.0),
+            _gold.withValues(alpha: 0.085),
+            _gold.withValues(alpha: 0.0),
+          ],
+          stops: [
+            (sweepCentre - 0.30).clamp(0.0, 1.0),
+            sweepCentre.clamp(0.0, 1.0),
+            (sweepCentre + 0.30).clamp(0.0, 1.0),
+          ],
+        ).createShader(rect),
+    );
 
     // Gentle top-down vignette so status-bar / app-bar text stays legible.
     canvas.drawRect(
@@ -218,10 +216,65 @@ class _RgbPainter extends CustomPainter {
         ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0x66000000), Color(0x00000000), Color(0x4D000000)],
-          stops: [0.0, 0.35, 1.0],
+          colors: [Color(0x59000000), Color(0x00000000), Color(0x40000000)],
+          stops: [0.0, 0.38, 1.0],
         ).createShader(rect),
     );
+  }
+
+  /// The tessellation for a screen of [size], built once and kept. Static
+  /// because a new `_RgbPainter` is constructed on every frame (it carries
+  /// `t`), so an instance field would cache nothing.
+  ///
+  /// It is one entry, not a map: a running app has one window, and a rotation
+  /// simply replaces it. The lattice runs one tile past every edge so the
+  /// drift never exposes a cut first row.
+  static Size? _latticeSize;
+  static Path? _lattice;
+
+  static Path _latticeFor(Size size) {
+    final cached = _lattice;
+    if (cached != null && _latticeSize == size) return cached;
+    final path = Path();
+    final r = _tile * 0.42;
+    for (var y = -_tile * 2; y < size.height + _tile * 2; y += _tile) {
+      for (var x = -_tile * 2; x < size.width + _tile * 2; x += _tile) {
+        final c = Offset(x + _tile / 2, y + _tile / 2);
+        _addStar(path, c, r);
+        _addDiamond(path, c, r * 0.52);
+      }
+    }
+    _lattice = path;
+    _latticeSize = size;
+    return path;
+  }
+
+  /// One eight-point khātim, appended to [path].
+  static void _addStar(Path path, Offset centre, double radius) {
+    const points = 8;
+    final inner = radius * 0.52;
+    for (var i = 0; i < points * 2; i++) {
+      final rr = i.isEven ? radius : inner;
+      final a = (math.pi / points) * i - math.pi / 2;
+      final p = Offset(centre.dx + rr * math.cos(a), centre.dy + rr * math.sin(a));
+      if (i == 0) {
+        path.moveTo(p.dx, p.dy);
+      } else {
+        path.lineTo(p.dx, p.dy);
+      }
+    }
+    path.close();
+  }
+
+  /// The 45° square through the star's inner vertices — the interlace that
+  /// turns separate stars into one wall.
+  static void _addDiamond(Path path, Offset centre, double radius) {
+    path
+      ..moveTo(centre.dx, centre.dy - radius)
+      ..lineTo(centre.dx + radius, centre.dy)
+      ..lineTo(centre.dx, centre.dy + radius)
+      ..lineTo(centre.dx - radius, centre.dy)
+      ..close();
   }
 
   @override
