@@ -8,8 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/widgets/error_retry.dart';
-import '../../../../core/widgets/measure_size.dart';
-import '../../../../core/widgets/toolbar_action.dart';
+import '../widgets/mushaf/toolbar_bar.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../downloads/data/reciters_provider.dart';
@@ -96,10 +95,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// controls undiscoverable.
   bool _toolbarVisible = true;
 
-  /// The height the toolbar ACTUALLY laid out at, reported by
-  /// `MeasureSize`. The starting value is the old constant, so the
-  /// first frame looks exactly as it used to and the second frame
-  /// corrects it.
+  /// The height the toolbar actually laid out at. 116 is the old constant,
+  /// kept as the first-frame estimate only.
   double _toolbarHeight = 116;
 
   /// P3‑41: "give option so I can change page from small to full fit of
@@ -719,78 +716,37 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               // The height comes from `ToolbarAction`'s own constants rather
               // than from another guessed number.
               bottom: mushaf.hasValue && _toolbarVisible
-                  ? PreferredSize(
-                      // MEASURED, not guessed. This was the constant 116 -
-                      // two rows of ToolbarAction.captionedHeight plus
-                      // padding. On the owner's phone the twelve captioned
-                      // actions wrap into FOUR rows, so the last two were laid
-                      // out below the app bar's box; Flutter paints overflow
-                      // but hit-tests only inside the box, so «وضع المصحف» was
-                      // fully visible and completely untappable, and the taps
-                      // fell through to the page, which toggles full screen.
-                      // That is the «بيعلق، ساعة يشتغل وساعة لأ» he filmed.
-                      // How many rows it takes depends on the width, the
-                      // language and the reader's font scale, so no constant
-                      // can be right - see `MeasureSize`.
-                      preferredSize: Size.fromHeight(
-                        _toolbarLandscape(context)
-                            ? ToolbarAction.compactHeight + 8
-                            : _toolbarHeight,
-                      ),
-                      // The bar is toggled by tapping the page, and it used
-                      // to blink in and out between two frames. It fades and
-                      // lifts now — the owner asked for it to be animated and
-                      // to look like something.
-                      child: TweenAnimationBuilder<double>(
-                        key: ValueKey(_toolbarLandscape(context)),
-                        tween: Tween<double>(begin: 0, end: 1),
-                        duration: const Duration(milliseconds: 220),
-                        curve: Curves.easeOutCubic,
-                        builder: (context, t, child) => Opacity(
-                          opacity: t,
-                          child: Transform.translate(
-                            offset: Offset(0, (1 - t) * -8),
-                            child: child,
-                          ),
-                        ),
-                        child: MeasureSize(
-                          onChange: (size) {
-                            if (!mounted) return;
-                            final h = size.height;
-                            if ((h - _toolbarHeight).abs() < 0.5) return;
-                            setState(() => _toolbarHeight = h);
-                          },
-                          child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        child: MushafToolbar(
-                          compact: _toolbarLandscape(context),
-                          textMode: _mode == MushafMode.text,
-                          isRaster: isRaster,
-                          canIndexBySurah: canIndexBySurah,
-                          autoScroll: _autoScroll,
-                          reciteActive: _recite.active,
-                          pageFillScreen: _pageFillScreen,
-                          data: mushaf.value!,
-                          current: _current,
-                          totalPages: _totalPages,
-                          onFontScale: _changeFontScale,
-                          onToggleAutoScroll: _toggleAutoScroll,
-                          onToggleRecite: () =>
-                              _toggleContinuousRecitation(mushaf.value!),
-                          onTogglePageFill: _togglePageFillScreen,
-                          onGoToPage: _goToPage,
-                          onNavigateFromIndex: (page, {surahStart = false}) =>
-                              _navigateFromIndex(page, mushaf.value!,
-                                  surahStart: surahStart),
-                          onPickEdition: _pickEdition,
-                          onEnterImageView: _enterImageView,
-                          onLeaveImageView: _leaveImageView,
-                        ),
-                        ),
-                        ),
+                  ? mushafToolbarBar(
+                      compact: _toolbarLandscape(context),
+                      height: _toolbarHeight,
+                      onMeasured: (size) {
+                        if (!mounted) return;
+                        if ((size.height - _toolbarHeight).abs() < 0.5) return;
+                        setState(() => _toolbarHeight = size.height);
+                      },
+                      child: MushafToolbar(
+                        compact: _toolbarLandscape(context),
+                        textMode: _mode == MushafMode.text,
+                        isRaster: isRaster,
+                        canIndexBySurah: canIndexBySurah,
+                        autoScroll: _autoScroll,
+                        reciteActive: _recite.active,
+                        pageFillScreen: _pageFillScreen,
+                        data: mushaf.value!,
+                        current: _current,
+                        totalPages: _totalPages,
+                        onFontScale: _changeFontScale,
+                        onToggleAutoScroll: _toggleAutoScroll,
+                        onToggleRecite: () =>
+                            _toggleContinuousRecitation(mushaf.value!),
+                        onTogglePageFill: _togglePageFillScreen,
+                        onGoToPage: _goToPage,
+                        onNavigateFromIndex: (page, {surahStart = false}) =>
+                            _navigateFromIndex(page, mushaf.value!,
+                                surahStart: surahStart),
+                        onPickEdition: _pickEdition,
+                        onEnterImageView: _enterImageView,
+                        onLeaveImageView: _leaveImageView,
                       ),
                     )
                   : null,
