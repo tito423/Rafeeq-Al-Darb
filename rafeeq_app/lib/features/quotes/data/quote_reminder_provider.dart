@@ -47,3 +47,36 @@ final quoteReminderProvider =
     StateNotifierProvider<QuoteReminderSetting, int>((ref) {
   return QuoteReminderSetting();
 });
+
+/// Whether the Home screen carries the «مقولة اليوم» card.
+///
+/// Separate from [quoteReminderProvider] on purpose: one is "interrupt me
+/// every N minutes with a notification", the other is "keep a card on my Home
+/// screen". A reader may well want the second without the first, and the
+/// owner asked for the card to appear «لو متفعل من الإعدادات» — which means
+/// there has to be a setting of its own to be enabled.
+///
+/// Defaults to on: it is a card, not an interruption.
+class HomeQuoteCardSetting extends StateNotifier<bool> {
+  HomeQuoteCardSetting() : super(true) {
+    _restore();
+  }
+
+  static const _key = 'quotes.home_card_v1';
+
+  Future<void> _restore() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = prefs.getBool(_key) ?? true;
+  }
+
+  Future<void> set(bool on) async {
+    state = on;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_key, on);
+  }
+}
+
+final homeQuoteCardProvider =
+    StateNotifierProvider<HomeQuoteCardSetting, bool>((ref) {
+  return HomeQuoteCardSetting();
+});

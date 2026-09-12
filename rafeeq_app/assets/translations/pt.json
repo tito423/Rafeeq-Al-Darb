@@ -44,7 +44,9 @@
     "hadith_card_title": "Hadith do dia",
     "hadith_card_body": "Um hadith por dia com seu takhrij e seu grau. As setas passam de um para outro e a estrela guarda um.",
     "focus_title": "Modo foco",
-    "focus_body": "Somente o mushaf na tela, o resto do aplicativo fechado. Saia pelo botão ou pelo gesto de voltar."
+    "focus_body": "Somente o mushaf na tela, o resto do aplicativo fechado. Saia pelo botão ou pelo gesto de voltar.",
+    "quote_card_title": "Citação do dia",
+    "quote_card_body": "Uma citação dos livros dos sábios, com o livro e a página. Deslize ou use as setas para passar de uma para outra, e toque para abri-la em tela cheia."
   },
   "app": {
     "name": "Rafeeq Al-Darb",
@@ -1198,7 +1200,12 @@
       "few": "{} horas",
       "many": "{} horas",
       "other": "{} horas"
-    }
+    },
+    "home_title": "Citação do dia",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "home_card": "Cartão na tela inicial",
+    "home_card_desc": "Mostra uma citação acima do hadith do dia; deslize ou use as setas"
   },
   "quran_audio": {
     "title": "Player de recitação do Alcorão",

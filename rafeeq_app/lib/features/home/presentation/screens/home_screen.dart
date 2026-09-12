@@ -21,6 +21,7 @@ import '../../../../core/services/prayer_times_service.dart';
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
+import '../../../quotes/presentation/widgets/home_quote_card.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
@@ -117,6 +118,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 const SizedBox(height: 16),
                 const SunanSuwarCard(),
+                const SizedBox(height: 16),
+                // «حط كارت مقولة اليوم … في الشاشة الرئيسية فوق حديث
+                // اليوم». It draws nothing at all when the setting is off.
+                const TutorialAnchor(
+                  id: TourAnchor.quoteCard,
+                  child: HomeQuoteCard(),
+                ),
                 const SizedBox(height: 16),
                 const TutorialAnchor(
                   id: TourAnchor.hadithCard,

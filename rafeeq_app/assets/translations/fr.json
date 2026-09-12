@@ -44,7 +44,9 @@
     "hadith_card_title": "Hadith du jour",
     "hadith_card_body": "Un hadith par jour avec son takhrij et son degré. Les flèches passent de l’un à l’autre, l’étoile en garde un.",
     "focus_title": "Mode concentration",
-    "focus_body": "Le mushaf seul à l’écran, le reste de l’application fermé. On en sort par le bouton ou par le geste de retour."
+    "focus_body": "Le mushaf seul à l’écran, le reste de l’application fermé. On en sort par le bouton ou par le geste de retour.",
+    "quote_card_title": "Citation du jour",
+    "quote_card_body": "Une citation tirée des livres des savants, avec le livre et la page. Balayez ou utilisez les flèches pour passer de l’une à l’autre, et touchez pour l’ouvrir en plein écran."
   },
   "app": {
     "name": "Rafeeq Al-Darb",
@@ -1198,7 +1200,12 @@
       "few": "{} heures",
       "many": "{} heures",
       "other": "{} heures"
-    }
+    },
+    "home_title": "Citation du jour",
+    "previous": "Précédente",
+    "next": "Suivante",
+    "home_card": "Carte sur l’écran d’accueil",
+    "home_card_desc": "Affiche une citation au-dessus du hadith du jour ; balayez ou utilisez les flèches"
   },
   "quran_audio": {
     "title": "Lecteur de récitation du Coran",

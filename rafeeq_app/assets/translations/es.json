@@ -44,7 +44,9 @@
     "hadith_card_title": "Hadiz del día",
     "hadith_card_body": "Un hadiz al día con su tajrich y su grado. Las flechas pasan de uno a otro y la estrella lo guarda.",
     "focus_title": "Modo concentración",
-    "focus_body": "Solo el mushaf en pantalla, el resto de la aplicación cerrado. Se sale con el botón o con el gesto de volver."
+    "focus_body": "Solo el mushaf en pantalla, el resto de la aplicación cerrado. Se sale con el botón o con el gesto de volver.",
+    "quote_card_title": "Cita del día",
+    "quote_card_body": "Una cita de los libros de los sabios, con el libro y la página. Desliza o usa las flechas para pasar de una a otra, y tócala para abrirla a pantalla completa."
   },
   "app": {
     "name": "Rafeeq Al-Darb",
@@ -1198,7 +1200,12 @@
       "few": "{} horas",
       "many": "{} horas",
       "other": "{} horas"
-    }
+    },
+    "home_title": "Cita del día",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "home_card": "Tarjeta en la pantalla de inicio",
+    "home_card_desc": "Muestra una cita sobre el hadiz del día; desliza o usa las flechas"
   },
   "quran_audio": {
     "title": "Reproductor de recitación del Corán",

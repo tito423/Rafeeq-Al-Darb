@@ -44,7 +44,9 @@
     "hadith_card_title": "Hadith of the day",
     "hadith_card_body": "One hadith a day with its takhrij and its grading. The arrows move between them and the star saves one.",
     "focus_title": "Focus mode",
-    "focus_body": "The mushaf alone on screen with the rest of the app closed. Leave it with the button or the back gesture."
+    "focus_body": "The mushaf alone on screen with the rest of the app closed. Leave it with the button or the back gesture.",
+    "quote_card_title": "Quote of the day",
+    "quote_card_body": "A quote from the scholars’ own books, with the book and the page. Swipe or use the arrows to move between them, and tap to open it full screen."
   },
   "app": {
     "name": "Rafeeq Al-Darb",
@@ -1198,7 +1200,12 @@
       "few": "{} hours",
       "many": "{} hours",
       "other": "{} hours"
-    }
+    },
+    "home_title": "Quote of the day",
+    "previous": "Previous",
+    "next": "Next",
+    "home_card": "Card on the Home screen",
+    "home_card_desc": "Shows a quote above the hadith of the day; swipe or use the arrows"
   },
   "quran_audio": {
     "title": "Quran Recitation Player",

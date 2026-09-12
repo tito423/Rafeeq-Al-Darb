@@ -39,6 +39,25 @@ class QuoteReminderSection extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // The Home card is its own setting, above the reminder: one is a
+            // card you go and look at, the other interrupts you, and a reader
+            // may well want the first without the second.
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: ref.watch(homeQuoteCardProvider),
+              onChanged: (v) =>
+                  ref.read(homeQuoteCardProvider.notifier).set(v),
+              secondary: Icon(Icons.auto_awesome_rounded,
+                  size: 20, color: scheme.onSurfaceVariant),
+              title: Text('quotes.home_card'.tr(),
+                  style: theme.textTheme.bodyMedium),
+              subtitle: Text(
+                'quotes.home_card_desc'.tr(),
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: scheme.onSurfaceVariant),
+              ),
+            ),
+            const Divider(height: 8),
             Row(
               children: [
                 Icon(Icons.format_quote,
