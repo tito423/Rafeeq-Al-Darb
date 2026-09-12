@@ -6,13 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/config/app_config.dart';
 import '../../../../core/db/models.dart';
-import '../../../../core/utils/digits.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/toolbar_action.dart';
-import '../../../search/presentation/screens/search_screen.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../downloads/data/reciters_provider.dart';
@@ -28,9 +24,7 @@ import '../../data/quran_last_read.dart';
 import '../widgets/ayah_sciences_sheet.dart';
 import '../widgets/mushaf_edition_sheet.dart';
 import '../widgets/mushaf_page_view.dart';
-import '../widgets/mushaf_nav_sheets.dart';
 import '../widgets/reciter_picker_sheet.dart';
-import '../widgets/mushaf_theme_picker.dart';
 import '../widgets/mushaf_text_page.dart';
 import '../../../../app/shell/tab_request_provider.dart';
 
@@ -39,6 +33,12 @@ import '../../../../app/shell/tab_request_provider.dart';
 ///    boundaries from the bundled database (works fully offline).
 ///  • Image mode: the authentic KFQC mushaf pages as vector art, cached on
 ///    device, with the real ayah polygons layered on top for tap/highlight.
+import '../widgets/mushaf/auto_scroll_speed_bar.dart';
+import '../widgets/mushaf/fast_page_scroll_bar.dart';
+import '../widgets/mushaf/mushaf_toolbar.dart';
+import '../widgets/mushaf/page_overlay.dart';
+import '../widgets/mushaf/recite_bar.dart';
+
 enum MushafMode { text, image }
 
 class QuranScreen extends ConsumerStatefulWidget {
@@ -739,204 +739,29 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           horizontal: 8,
                           vertical: 4,
                         ),
-                        child: _ToolbarStrip(
+                        child: MushafToolbar(
                           compact: _toolbarLandscape(context),
-                          children: [
-                            if (_mode == MushafMode.text && !isRaster) ...[
-                              // Three verse layouts now, all of them real
-                              // reading preferences, so this cycles rather
-                              // than flips — and it is labelled with the one
-                              // it will GIVE you, not the one you are in.
-                              ToolbarAction(
-                                icon: switch (ref
-                                    .read(quranTextLayoutProvider.notifier)
-                                    .next) {
-                                  QuranTextLayout.page =>
-                                    Icons.article_rounded,
-                                  QuranTextLayout.cards =>
-                                    Icons.view_agenda_rounded,
-                                  QuranTextLayout.reading =>
-                                    Icons.chrome_reader_mode_rounded,
-                                },
-                                label: switch (ref
-                                    .read(quranTextLayoutProvider.notifier)
-                                    .next) {
-                                  QuranTextLayout.page =>
-                                    'quran.layout_page'.tr(),
-                                  QuranTextLayout.cards =>
-                                    'quran.layout_cards'.tr(),
-                                  QuranTextLayout.reading =>
-                                    'quran.layout_reading'.tr(),
-                                },
-                                onPressed: () => ref
-                                    .read(quranTextLayoutProvider.notifier)
-                                    .toggle(),
-                              ),
-                              ToolbarAction(
-                                icon: Icons.text_decrease_rounded,
-                                label: 'quran.font_smaller'.tr(),
-                                onPressed: () => _changeFontScale(-0.1),
-                              ),
-                              ToolbarAction(
-                                icon: Icons.text_increase_rounded,
-                                label: 'quran.font_larger'.tr(),
-                                onPressed: () => _changeFontScale(0.1),
-                              ),
-                              ToolbarAction(
-                                icon: _autoScroll
-                                    ? Icons.pause_circle_outline
-                                    : Icons.play_circle_outline,
-                                label: _autoScroll
-                                    ? 'quran.auto_scroll_stop'.tr()
-                                    : 'quran.auto_scroll'.tr(),
-                                onPressed: _toggleAutoScroll,
-                              ),
-                            ],
-                            // Continuous recitation lives in the text mushaf
-                            // only, in every layout and theme — «شيل التلاوة
-                            // المستمرة خالص من المصحف المصوّر». The Tajweed
-                            // printing highlighted 4:3 on page 77 a line low,
-                            // so the image page does not offer it at all.
-                            if (_mode == MushafMode.text && !isRaster)
-                            ToolbarAction(
-                              icon: _recite.active
-                                  ? Icons.stop_circle_rounded
-                                  : Icons.headphones_rounded,
-                              label: _recite.active
-                                  ? 'quran.recite_stop'.tr()
-                                  : 'quran.recite_continuous'.tr(),
-                              onPressed: () =>
-                                  _toggleContinuousRecitation(mushaf.value!),
-                            ),
-                            // The paper. It lived only in Settings, four taps
-                            // and a different tab away from the page whose
-                            // colour it changes — which is why the owner
-                            // reported the app had no black reading page while
-                            // shipping five of them. Khatmah puts it behind a
-                            // gear on the reading screen itself; so do we.
-                            // Text mushaf only: «شيل ثيمات المصحف النصي من
-                            // المصحف المصوّر» — it recolours a page the image
-                            // mode does not draw.
-                            if (_mode == MushafMode.text && !isRaster)
-                            Builder(
-                              builder: (tileContext) => ToolbarAction(
-                                icon: Icons.palette_outlined,
-                                label: 'mushaf_theme.title'.tr(),
-                                onPressed: () => MushafThemePicker.show(
-                                  context,
-                                  origin: tileContext,
-                                ),
-                              ),
-                            ),
-                            // P3‑43 #6: moved out of the text-only block above —
-                            // full-screen reading is a real, useful mode for the
-                            // image mushaf too, not just the text one.
-                            ToolbarAction(
-                              icon: _pageFillScreen
-                                  ? Icons.fullscreen_exit_rounded
-                                  : Icons.fullscreen_rounded,
-                              label: _pageFillScreen
-                                  ? 'quran.page_fit_small'.tr()
-                                  : 'quran.page_fit_full'.tr(),
-                              onPressed: _togglePageFillScreen,
-                            ),
-                            ToolbarAction(
-                              icon: Icons.travel_explore_rounded,
-                              label: 'search.title'.tr(),
-                              onPressed: () async {
-                                final page = await Navigator.of(context)
-                                    .push<int>(
-                                      MaterialPageRoute<int>(
-                                        builder: (_) => SearchScreen(
-                                          repo: mushaf.value!.repo,
-                                        ),
-                                      ),
-                                    );
-                                if (page != null) _goToPage(page);
-                              },
-                            ),
-                            if (canIndexBySurah)
-                            ToolbarAction(
-                              icon: Icons.format_list_bulleted_rounded,
-                              label: 'quran.surah_list'.tr(),
-                              onPressed: () => showSurahSheet(
-                                context,
-                                surahs: mushaf.value!.surahs,
-                                startPages: mushaf.value!.surahStartPages,
-                                onSelect: (page) => _navigateFromIndex(
-                                  page,
-                                  mushaf.value!,
-                                  surahStart: true,
-                                ),
-                              ),
-                            ),
-                            if (canIndexBySurah)
-                            ToolbarAction(
-                              icon: Icons.layers_rounded,
-                              label: 'quran.juz'.tr(),
-                              onPressed: () => showJuzSheet(
-                                context,
-                                juzStartPages: mushaf.value!.juzStartPages,
-                                onSelect: (page) => _navigateFromIndex(page, mushaf.value!),
-                              ),
-                            ),
-                            ToolbarAction(
-                              icon: Icons.numbers_rounded,
-                              label: 'quran.jump_to'.tr(),
-                              // «خلي زر الانتقال يديني خيارات إلى سورة أو
-                              // صفحة أو جزء مباشرة».
-                              onPressed: () => showJumpSheet(
-                                context,
-                                surahs: canIndexBySurah
-                                    ? mushaf.value!.surahs
-                                    : const [],
-                                surahStartPages: mushaf.value!.surahStartPages,
-                                juzStartPages: mushaf.value!.juzStartPages,
-                                current: _current,
-                                totalPages: _totalPages,
-                                onSurahPage: (page) => _navigateFromIndex(
-                                  page,
-                                  mushaf.value!,
-                                  surahStart: true,
-                                ),
-                                onPage: (page) =>
-                                    _navigateFromIndex(page, mushaf.value!),
-                              ),
-                            ),
-                            ToolbarAction(
-                              icon: Icons.auto_stories_rounded,
-                              label: 'quran.editions'.tr(),
-                              onPressed: _pickEdition,
-                            ),
-                            // A raster printing is a finished scan with no
-                            // reflowable text of its own — but the button is
-                            // still shown, because hiding it left a reader who
-                            // had picked one of those printings with no way
-                            // back to the text reader at all. On a raster
-                            // edition it switches back to the default text
-                            // edition as well as the mode.
-                            ToolbarAction(
-                              icon: (_mode == MushafMode.text && !isRaster)
-                                  ? Icons.image_rounded
-                                  : Icons.notes_rounded,
-                              label: (_mode == MushafMode.text && !isRaster)
-                                  ? 'quran.mushaf_mode'.tr()
-                                  : 'quran.text_mode'.tr(),
-                              onPressed: () {
-                                if (isRaster) {
-                                  ref
-                                      .read(selectedMushafEditionProvider
-                                          .notifier)
-                                      .select(AppConfig.defaultMushafEdition);
-                                  _leaveImageView();
-                                } else if (_mode == MushafMode.text) {
-                                  _enterImageView();
-                                } else {
-                                  _leaveImageView();
-                                }
-                              },
-                            ),
-                          ],
+                          textMode: _mode == MushafMode.text,
+                          isRaster: isRaster,
+                          canIndexBySurah: canIndexBySurah,
+                          autoScroll: _autoScroll,
+                          reciteActive: _recite.active,
+                          pageFillScreen: _pageFillScreen,
+                          data: mushaf.value!,
+                          current: _current,
+                          totalPages: _totalPages,
+                          onFontScale: _changeFontScale,
+                          onToggleAutoScroll: _toggleAutoScroll,
+                          onToggleRecite: () =>
+                              _toggleContinuousRecitation(mushaf.value!),
+                          onTogglePageFill: _togglePageFillScreen,
+                          onGoToPage: _goToPage,
+                          onNavigateFromIndex: (page, {surahStart = false}) =>
+                              _navigateFromIndex(page, mushaf.value!,
+                                  surahStart: surahStart),
+                          onPickEdition: _pickEdition,
+                          onEnterImageView: _enterImageView,
+                          onLeaveImageView: _leaveImageView,
                         ),
                         ),
                       ),
@@ -980,7 +805,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // Only label the page with a surah/juz when this printing
                 // actually shares the Hafs pagination those labels come from
                 // — otherwise they would name a surah this page doesn't hold.
-                _PersistentPageOverlay(
+                PersistentPageOverlay(
                   // Image mode only. The text page already carries its own
                   // pinned header and a banner for every surah it opens, so a
                   // third copy in the corner was «متكرر سورة الرعد ٣ مرات».
@@ -1059,7 +884,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     // running — skip back/forward a verse, pause, or stop
                     // without digging back into the toolbar.
                     if (_recite.active)
-                      _ReciteBar(
+                      ReciteBar(
                         state: _recite,
                         reciterName: _reciterName(),
                         onPickReciter: _pickReciter,
@@ -1068,7 +893,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     // occupying screen space with a speed control for a feature
                     // that isn't running.
                     if (_autoScroll && _mode == MushafMode.text)
-                      _AutoScrollSpeedBar(
+                      AutoScrollSpeedBar(
                         speed: _autoScrollSpeed,
                         onChanged: _changeAutoScrollSpeed,
                       ),
@@ -1080,7 +905,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     // already carries, and those pixels are the difference
                     // between a page of Qur'an and none.
                     if (!_toolbarLandscape(context)) ...[
-                      Center(child: _PageNumberBadge(page: _current)),
+                      Center(child: PageNumberBadge(page: _current)),
                       const SizedBox(height: 6),
                     ],
                     // (c) One real drag-to-scrub scrollbar (P3‑43 #4/#5: the
@@ -1088,7 +913,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     // owner's repeated ask).
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: _FastPageScrollBar(
+                      child: FastPageScrollBar(
                         currentPage: _current,
                         totalPages: _totalPages,
                         onChanged: (p) => _goToPage(p, animate: false),
@@ -1220,481 +1045,3 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 /// The compact transport shown under the page while continuous recitation is
 /// running: which verse is sounding, and the three controls a listener
 /// actually reaches for.
-class _ReciteBar extends StatelessWidget {
-  final ContinuousRecitation state;
-  final String reciterName;
-  final VoidCallback onPickReciter;
-  const _ReciteBar({
-    required this.state,
-    required this.reciterName,
-    required this.onPickReciter,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final audio = AyahAudioService.instance;
-    final scheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 0, 14, 6),
-      child: Material(
-        color: AppColors.gold.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.only(start: 12, end: 4),
-          child: Row(
-            children: [
-              Icon(
-                state.stalled
-                    ? Icons.play_circle_outline_rounded
-                    : state.buffering
-                        ? Icons.hourglass_top_rounded
-                        : Icons.graphic_eq_rounded,
-                size: 18,
-                color: AppColors.gold,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  state.stalled
-                      ? 'quran.recite_stalled'.tr()
-                      : state.buffering
-                      ? 'quran.recite_loading'.tr()
-                      : 'quran.recite_now'.tr(
-                          args: [
-                            '${state.surahId ?? ''}',
-                            '${state.ayahNumber ?? ''}',
-                          ],
-                        ) + (reciterName.isEmpty ? '' : '  ·  $reciterName'),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 12, color: scheme.onSurface),
-                ),
-              ),
-              IconButton(
-                visualDensity: VisualDensity.compact,
-                tooltip: 'quran.recite_choose_reciter'.tr(),
-                icon: const Icon(Icons.record_voice_over_rounded,
-                    color: AppColors.gold),
-                onPressed: onPickReciter,
-              ),
-              IconButton(
-                visualDensity: VisualDensity.compact,
-                tooltip: 'quran.recite_previous'.tr(),
-                icon: const Icon(Icons.skip_previous_rounded),
-                onPressed: audio.continuousPrevious,
-              ),
-              IconButton(
-                visualDensity: VisualDensity.compact,
-                tooltip: (state.stalled
-                        ? 'quran.recite_resume'
-                        : 'quran.recite_pause')
-                    .tr(),
-                icon: Icon(state.stalled
-                    ? Icons.play_circle_outline_rounded
-                    : Icons.pause_circle_outline_rounded),
-                onPressed: audio.continuousPauseResume,
-              ),
-              IconButton(
-                visualDensity: VisualDensity.compact,
-                tooltip: 'quran.recite_next'.tr(),
-                icon: const Icon(Icons.skip_next_rounded),
-                onPressed: audio.continuousNext,
-              ),
-              IconButton(
-                visualDensity: VisualDensity.compact,
-                tooltip: 'quran.recite_stop'.tr(),
-                icon: Icon(Icons.stop_circle_outlined, color: scheme.error),
-                onPressed: audio.stopContinuous,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// P3‑43 #7: a real printed mushaf's running header — page number bottom
-/// centre, surah name top-right, juz name top-left — kept on screen
-/// regardless of toolbar visibility or full-screen mode (it's reading
-/// context, not an "option"). Fixed physical corners, not RTL `start`/
-/// `end`: a real mushaf page's own running headers don't mirror with the
-/// *app's* locale, they're a property of the page itself. `IgnorePointer`
-/// throughout so it never steals the background tap that toggles the
-/// toolbar or exits full-screen.
-class _PersistentPageOverlay extends StatelessWidget {
-  /// Null when the open printing doesn't share the Hafs pagination these
-  /// labels are derived from — the header is simply omitted rather than
-  /// asserting a surah/juz that isn't on the page.
-  final String? surahName;
-  final int? juzNumber;
-
-  /// P3‑51: the page number itself no longer lives here. In normal mode it's
-  /// a real bar under the text (see the Scaffold's bottomNavigationBar), so
-  /// this overlay only paints the top running header (surah + juz). In
-  /// full-screen mode there's no bottom bar, so the page badge is shown here
-  /// at the bottom instead — the viewer already reserves 56px there, so it
-  /// never overlaps the last line.
-  final int? pageNumber;
-
-  const _PersistentPageOverlay({
-    this.surahName,
-    this.juzNumber,
-    this.pageNumber,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Stack(
-            children: [
-              if (surahName != null)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: _HeaderBadge(text: surahName!),
-                ),
-              if (juzNumber != null)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                // Same convention as the surah name above (and as
-                // `mushaf_nav_sheets.dart`'s own juz list): a real
-                // mushaf's own running header is always Arabic — it's
-                // part of the page's own printed identity, not app UI
-                // chrome that follows the interface locale.
-                  child:
-                      _HeaderBadge(
-                          text: '${'quran.juz'.tr()} ${_arabicNumber(juzNumber!)}'),
-                ),
-              if (pageNumber != null)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: _PageNumberBadge(page: pageNumber!),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// A mushaf page number, always in Arabic-Indic digits — every printing sets
-/// them that way, whatever language the app is in. The conversion itself
-/// comes from `core/utils/digits.dart`; this was the fifth copy of it.
-String _arabicNumber(int n) => localizeDigits('$n', 'ar');
-
-/// P3‑51: a uniform, perfectly-centred badge for the running header.
-///
-/// Arabic (esp. the AmiriQuran calligraphy face, with its large internal
-/// metrics and tashkeel marks that sit above/below the glyph body) does not
-/// vertically centre inside a box by default — the baseline drifts. The fix,
-/// applied here and in [_PageNumberBadge], is: `alignment: center` on the box,
-/// plus `StrutStyle(forceStrutHeight, height:1.0, leading:0)` and a
-/// `TextHeightBehavior` that trims the first-ascent/last-descent, so the line
-/// box collapses to the font size and the glyph lands in the geometric centre.
-class _HeaderBadge extends StatelessWidget {
-  final String text;
-  const _HeaderBadge({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    const fontSize = 13.0;
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.55),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
-      ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        strutStyle: const StrutStyle(
-          fontFamily: 'AmiriQuran',
-          fontSize: fontSize,
-          height: 1.0,
-          leading: 0,
-          forceStrutHeight: true,
-        ),
-        textHeightBehavior: const TextHeightBehavior(
-          applyHeightToFirstAscent: false,
-          applyHeightToLastDescent: false,
-        ),
-        style: const TextStyle(
-          fontFamily: 'AmiriQuran',
-          fontSize: fontSize,
-          height: 1.0,
-          fontWeight: FontWeight.w600,
-          color: AppColors.gold,
-        ),
-      ),
-    );
-  }
-}
-
-/// P3‑51: the page-number badge — a real circle with the Arabic-Indic page
-/// number geometrically centred (same centring recipe as [_HeaderBadge]).
-/// Used both in the normal-mode bottom info bar and, in full-screen, floated
-/// at the bottom of the reserved strip.
-class _PageNumberBadge extends StatelessWidget {
-  final int page;
-  const _PageNumberBadge({required this.page});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: 40,
-      height: 40,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.55),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
-      ),
-      child: Text(
-        _arabicNumber(page),
-        textAlign: TextAlign.center,
-        strutStyle: const StrutStyle(
-          fontFamily: 'AmiriQuran',
-          fontSize: 14,
-          height: 1.0,
-          leading: 0,
-          forceStrutHeight: true,
-        ),
-        textHeightBehavior: const TextHeightBehavior(
-          applyHeightToFirstAscent: false,
-          applyHeightToLastDescent: false,
-        ),
-        style: const TextStyle(
-          fontFamily: 'AmiriQuran',
-          fontSize: 14,
-          height: 1.0,
-          fontWeight: FontWeight.w700,
-          color: AppColors.gold,
-        ),
-      ),
-    );
-  }
-}
-
-/// P3‑39: the auto-scroll speed control — a plain labelled `Slider` over a
-/// real pixels/second range (15–120) rather than an opaque "slow/medium/
-/// fast" enum, so a reader can actually tune it to their own reading pace.
-/// Only ever built while auto-scroll is on (see the call site).
-class _AutoScrollSpeedBar extends StatelessWidget {
-  final double speed;
-  final ValueChanged<double> onChanged;
-  const _AutoScrollSpeedBar({required this.speed, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: [
-          const Icon(Icons.speed, size: 18),
-          Expanded(
-            child: Slider(
-              value: speed.clamp(15, 120),
-              min: 15,
-              max: 120,
-              onChanged: onChanged,
-            ),
-          ),
-          SizedBox(
-            width: 40,
-            child: Text(
-              '${speed.round()}',
-              textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// P3‑43 #4/#5: replaces the old surah-name strip (P3‑8) *and* the ‹ ›
-/// page-arrow buttons with one real drag-to-scrub scrollbar — the owner's
-/// actual, twice-repeated ask ("my request was only fast scroll bar not
-/// putting suras names", P3‑41; "delete the arrows, make scroll bar, when
-/// I move it scroll quickly", this round). Dragging anywhere jumps
-/// immediately (no animation — a scrub should feel instant, not
-/// throttled by a 320ms page-turn tween), and the thumb tracks the real
-/// current page live while dragging, not just on release.
-///
-/// **Direction: follows the app's own text direction.** P3‑43 originally
-/// shipped this as a plain always-left-to-right value (matching every
-/// other slider in the app) since there was no confirmed signal either
-/// way. P3‑44's real-device round gave a direct one: real feedback asked
-/// for RTL specifically "in arabic locale selection state" — so in an
-/// RTL locale, page 1 now sits at the physical right (like a printed
-/// Arabic mushaf's spine) and dragging left increases the page number;
-/// in an LTR locale it stays the original plain left-to-right mapping.
-class _FastPageScrollBar extends StatefulWidget {
-  final int currentPage;
-  final int totalPages;
-  final ValueChanged<int> onChanged;
-
-  const _FastPageScrollBar({
-    required this.currentPage,
-    required this.totalPages,
-    required this.onChanged,
-  });
-
-  @override
-  State<_FastPageScrollBar> createState() => _FastPageScrollBarState();
-}
-
-class _FastPageScrollBarState extends State<_FastPageScrollBar> {
-  /// 0 = page 1 (physical left), 1 = page [totalPages] (physical right).
-  /// Non-null only while a drag is actively in progress, so the thumb
-  /// reflects the real `currentPage` (from the parent, once it's actually
-  /// jumped) the rest of the time rather than a stale local guess.
-  double? _dragFraction;
-
-  /// `fraction` is always plain screen-space left(0)-to-right(1) — the RTL
-  /// flip lives entirely in these two conversions, so `thumbX`/`Positioned`
-  /// below never has to think about direction itself. Each must stay the
-  /// exact inverse of the other for a given `isRtl`.
-  double _fractionOf(int page, bool isRtl) {
-    if (widget.totalPages <= 1) return isRtl ? 1.0 : 0.0;
-    final t = (page - 1) / (widget.totalPages - 1);
-    return isRtl ? 1 - t : t;
-  }
-
-  int _pageOf(double fraction, bool isRtl) {
-    final t = isRtl ? 1 - fraction : fraction;
-    return 1 + (t * (widget.totalPages - 1)).round();
-  }
-
-  void _handleDragAt(double dx, double width, bool isRtl) {
-    final fraction = width <= 0 ? 0.0 : (dx / width).clamp(0.0, 1.0);
-    setState(() => _dragFraction = fraction);
-    widget.onChanged(_pageOf(fraction, isRtl));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final isRtl = context.locale.languageCode == 'ar';
-    final fraction = _dragFraction ?? _fractionOf(widget.currentPage, isRtl);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        const thumbSize = 26.0;
-        final thumbX = (fraction * width).clamp(
-          thumbSize / 2,
-          width - thumbSize / 2,
-        );
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTapDown: (d) => _handleDragAt(d.localPosition.dx, width, isRtl),
-          onHorizontalDragUpdate: (d) =>
-              _handleDragAt(d.localPosition.dx, width, isRtl),
-          onHorizontalDragEnd: (_) => setState(() => _dragFraction = null),
-          child: SizedBox(
-            height: 32,
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: scheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                Positioned(
-                  left: thumbX - thumbSize / 2,
-                  child: Container(
-                    width: thumbSize,
-                    height: thumbSize,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.gold,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.gold.withValues(alpha: 0.5),
-                          blurRadius: 6,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.drag_indicator,
-                      size: 16,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-// P3‑34's `_ToolbarAction` moved to `core/widgets/toolbar_action.dart`
-// (P3‑29) so `book_text_reader_screen.dart` can reuse the exact same
-// widget instead of a second copy — see `ToolbarAction` there.
-
-
-/// The Qur'an toolbar's two shapes.
-///
-/// Portrait keeps the captioned `Wrap` — every action visible at once, which
-/// is what P3‑41's device feedback asked for. Landscape cannot afford it (see
-/// the `bottom:` comment above), so the same actions become one compact,
-/// horizontally-scrolling row.
-///
-/// The children arrive as ordinary [ToolbarAction]s and are rebuilt compact
-/// here rather than each of the thirteen call sites having to pass a flag —
-/// a flag that would then be possible to forget on the fourteenth.
-class _ToolbarStrip extends StatelessWidget {
-  final bool compact;
-  final List<Widget> children;
-
-  const _ToolbarStrip({required this.compact, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    if (!compact) {
-      return Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 4,
-        runSpacing: 0,
-        children: children,
-      );
-    }
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final child in children)
-            if (child is ToolbarAction)
-              ToolbarAction(
-                icon: child.icon,
-                label: child.label,
-                onPressed: child.onPressed,
-                active: child.active,
-                compact: true,
-              )
-            else
-              child,
-        ],
-      ),
-    );
-  }
-}
