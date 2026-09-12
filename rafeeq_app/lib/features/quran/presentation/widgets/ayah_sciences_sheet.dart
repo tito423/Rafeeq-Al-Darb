@@ -327,6 +327,20 @@ class _Header extends ConsumerWidget {
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: theme.colorScheme.outline),
                 ),
+                // «حط في كارت الآية صوت القارئ وإمكانية اختيار قارئ آخر لأنه
+                // مش موجود فعلًا». The card was already reciting in the
+                // reader's chosen reciter — `selectedReciterProvider` — but
+                // never said who, and gave no way to change it without
+                // leaving the card for the page's own recitation bar.
+                //
+                // It sat in the header Row first, and on emulator-5554 the
+                // row was already carrying the ayah badge, the surah name,
+                // «تلاوة الآية», expand and the overflow menu: the chip's
+                // `Flexible` name collapsed to **nothing** and all that
+                // showed was a gold microphone and a chevron — an icon that
+                // does not say who, which is the thing the owner asked for.
+                // Under the title it has the width to be read.
+                const _ReciterChip(),
               ],
             ),
           ),
@@ -392,13 +406,6 @@ class _Header extends ConsumerWidget {
               );
             },
           ),
-          // «حط في كارت الآية صوت القارئ وإمكانية اختيار قارئ آخر لأنه مش
-          // موجود فعلًا». The card was already reciting in the reader's
-          // chosen reciter — `selectedReciterProvider`, just below — but it
-          // never said who that was and gave no way to change it without
-          // leaving the card for the page's own recitation bar. So: the name,
-          // and a tap on it opens the same picker that bar opens.
-          const _ReciterChip(),
           IconButton(
             tooltip: (expanded ? 'quran.card_collapse' : 'quran.card_expand').tr(),
             icon: Icon(expanded
@@ -659,7 +666,8 @@ class _ReciterChip extends ConsumerWidget {
     final name = reciter.displayName(context.locale.languageCode);
     if (name.isEmpty) return const SizedBox.shrink();
 
-    return Flexible(
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () async {
@@ -669,12 +677,12 @@ class _ReciterChip extends ConsumerWidget {
           await AyahAudioService.instance.switchReciter(chosen);
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.record_voice_over_outlined,
-                  size: 16, color: AppColors.gold),
+                  size: 15, color: AppColors.gold),
               const SizedBox(width: 5),
               Flexible(
                 child: Text(
