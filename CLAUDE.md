@@ -556,6 +556,61 @@ Do not rediscover these.
     however long it had been broken it looked like a slow load. An error that
     is invisible is an error nobody can report properly.
 
+43. **`SystemChrome.setEnabledSystemUIMode` is PROCESS-WIDE, and a kept-alive
+    tab is never disposed.** `QuranScreen` hid the system bars for its
+    full-screen mushaf and restored them in `dispose` — but it lives in
+    `AppShell`'s `IndexedStack`, so it is built on the app's first frame and
+    disposed never. One stored «ملء الشاشة» of true put the **whole app** into
+    `immersiveSticky` for the life of the process, and that mode peeks the
+    bars back on any interaction before hiding them again — so every keyboard
+    open resized the window twice. That was the owner's «الشاشة بتعمل فليكر …
+    في أي حتة في التطبيق», reported for months as a keyboard bug.
+
+    Anything global — system UI mode, orientation lock, audio focus, a
+    wakelock — set from a tab must follow `activeTabProvider`, the seam the
+    Qibla compass already uses to park its sensor. `test/immersive_mode_
+    scope_test.dart` holds it.
+
+    **How it was found is the point.** `flutter analyze` and 196 tests had no
+    opinion. `adb shell screenrecord`, 15 fps, ffmpeg to a contact sheet
+    showed the keyboard bouncing up/part-down/up with the status bar flashing;
+    `adb shell dumpsys window | grep statusBars` on a library search screen —
+    which asks for nothing of the kind — said `visible=false`. And
+    `dumpsys gfxinfo <pkg> reset` before the action and again after **counts
+    the frames the action cost**: 43 frames / 101 ms median before, 10 frames
+    / 32 ms after. Reset, act, read — and check the action really happened
+    (the first attempt measured «0 frames» because `keyevent 111` had not
+    closed the keyboard at all; `keyevent 4` does. Compare a screenshot's
+    bottom third before and after, or the number is fiction).
+
+44. **`Navigator.maybePop()` inside a `PopScope(canPop: false)` is a loop.**
+    `maybePop` consults the route's `PopScope` first, so it hands the request
+    straight back to `onPopInvokedWithResult`, which is usually the very
+    handler that called it. The tutorial's «تخطّي» button looked right, was
+    wired right, analyzed clean, and **did nothing at all** — the tour could
+    only be left by finishing it. A screen that sets `canPop: false` so the
+    back gesture routes through its own exit must call `pop()`, not
+    `maybePop()`, and wants a re-entrancy guard because three paths reach it.
+
+45. **`background_downloader`'s `registerCallbacks` diverts the updates
+    stream — but only for status and progress.** Its doc comment says "tasks
+    belonging to a group that has registered callbacks will not emit updates
+    to the `updates` stream", which reads as fatal here: `DownloadEngine` and
+    `DownloadManager` both live on that stream, so every progress bar and
+    completion registry in the app would go silently dead. Read the package's
+    own source before believing or dismissing it — in 9.5.9's
+    `base_downloader.dart`, `_emitStatusUpdate` checks `groupStatusCallbacks`
+    and `_emitProgressUpdate` checks `groupProgressCallbacks`, while
+    `groupNotificationTapCallbacks` is read in `processNotificationTap` and
+    nowhere else. So `taskNotificationTapCallback` **alone** is safe, and
+    `test/download_notification_routing_test.dart` pins "alone".
+
+46. **Git Bash rewrites an absolute path into a Windows one before `adb` sees
+    it.** `adb pull /sdcard/kb.mp4 .` fails with
+    «failed to stat remote object 'C:/Program Files/Git/sdcard/kb.mp4'». Set
+    `MSYS_NO_PATHCONV=1` for that command, or double the leading slash
+    (`//sdcard/...`). Same for `adb shell` arguments that start with `/`.
+
 ---
 
 ## 4. Where things live
