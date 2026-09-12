@@ -321,7 +321,7 @@ const List<LibraryBook> libraryBookCatalog = [
     id: 'riyad_as_salihin',
     titleAr: 'رياض الصالحين',
     titleEn: 'Riyad as-Salihin',
-    authorAr: 'الإمام أبو زكريا يحيى بن شرف النووي',
+    authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam Yahya ibn Sharaf an-Nawawi',
     deathYearAh: 676,
     descKey: 'book_desc.riyad_as_salihin',
@@ -3849,7 +3849,7 @@ const List<LibraryBook> libraryBookCatalog = [
     id: 'zad_al_maad',
     titleAr: 'زاد المعاد في هَدي خير العباد',
     titleEn: 'Zad al-Ma\'ad',
-    authorAr: 'شمس الدين، أبو عبد الله، محمد بن أبي بكر الزرعي الدمشقي، ابن قيم الجوزية (٦٩١ - ٧٥١ هـ)',
+    authorAr: 'الإمام ابن قيّم الجوزية',
     authorEn: 'Ibn Qayyim al-Jawziyyah',
     deathYearAh: 751,
     descKey: 'book_desc.zad_al_maad',
@@ -4043,6 +4043,77 @@ const List<LibraryBook> libraryBookCatalog = [
       sourceLabel:
           'المكتبة الشاملة — الخلاف أسبابه وآدابه، لعائض بن عبد الله القرني، '
           'منشور على موقع وزارة الأوقاف السعودية دون بيانات طبعة',
+    ),
+  ),
+  // Five more of al-Nawawi's best-known books (2026-09-12). «أشهر كتاب
+  // مش أقصر كتاب» - chosen by reading his title list, not by sorting it
+  // by page count, which had produced hadith fragments nobody asks for.
+  LibraryBook(
+    id: 'al_adhkar_nawawi',
+    titleAr: 'الأذكار',
+    titleEn: 'Al-Adhkar',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    deathYearAh: 676,
+    descKey: 'book_desc.al_adhkar_nawawi',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_adhkar_nawawi.json',
+      sizeBytes: 390635,
+      sourceLabel:
+          'المكتبة الشاملة — الأذكار، للإمام النووي، تحقيق شعيب الأرنؤوط، دار الفكر للطباعة والنشر والتوزيع، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'at_tibyan_hamalat_al_quran',
+    titleAr: 'التبيان في آداب حملة القرآن',
+    titleEn: 'At-Tibyan fi Adab Hamalat al-Quran',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    deathYearAh: 676,
+    descKey: 'book_desc.at_tibyan_hamalat_al_quran',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/at_tibyan_hamalat_al_quran.json',
+      sizeBytes: 64100,
+      sourceLabel:
+          'المكتبة الشاملة — التبيان في آداب حملة القرآن، للإمام النووي، دار ابن حزم، بيروت، الطبعة الثالثة مزيدة ومنقّحة، ١٤١٤هـ/١٩٩٤م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_arbaun_an_nawawiyyah',
+    titleAr: 'الأربعون النووية',
+    titleEn: 'The Forty Hadith of an-Nawawi',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    deathYearAh: 676,
+    descKey: 'book_desc.al_arbaun_an_nawawiyyah',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_arbaun_an_nawawiyyah.json',
+      sizeBytes: 10058,
+      sourceLabel:
+          'المكتبة الشاملة — الأربعون النووية، للإمام النووي، دار المنهاج للنشر والتوزيع، بيروت، الطبعة الأولى ١٤٣٠هـ/٢٠٠٩م',
+    ),
+  ),
+  LibraryBook(
+    id: 'at_taqrib_wat_taysir',
+    titleAr: 'التقريب والتيسير لمعرفة سنن البشير النذير',
+    titleEn: 'At-Taqrib wat-Taysir',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
+    deathYearAh: 676,
+    descKey: 'book_desc.at_taqrib_wat_taysir',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/at_taqrib_wat_taysir.json',
+      sizeBytes: 47579,
+      sourceLabel:
+          'المكتبة الشاملة — التقريب والتيسير لمعرفة سنن البشير النذير، للإمام النووي، دار الكتاب العربي، بيروت، الطبعة الأولى ١٤٠٥هـ/١٩٨٥م',
     ),
   ),
   LibraryBook(
