@@ -4116,6 +4116,161 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — التقريب والتيسير لمعرفة سنن البشير النذير، للإمام النووي، دار الكتاب العربي، بيروت، الطبعة الأولى ١٤٠٥هـ/١٩٨٥م',
     ),
   ),
+  // Nine of Ibn Kathir's, chosen for fame from his Shamela list
+  // (2026-09-12). His seerah was the Library's only book of his.
+  LibraryBook(
+    id: 'fadail_al_quran_ibn_kathir',
+    titleAr: 'فضائل القرآن',
+    titleEn: 'Fadail al-Quran',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.fadail_al_quran_ibn_kathir',
+    category: BookCategory.tafsir,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/fadail_al_quran_ibn_kathir.json',
+      sizeBytes: 166582,
+      sourceLabel:
+          'المكتبة الشاملة — فضائل القرآن لابن كثير، مكتبة ابن تيمية، الطبعة الأولى ١٤١٦هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_baith_al_hathith',
+    titleAr: 'الباعث الحثيث إلى اختصار علوم الحديث',
+    titleEn: 'Al-Baith al-Hathith',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.al_baith_al_hathith',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_baith_al_hathith.json',
+      sizeBytes: 62448,
+      sourceLabel:
+          'المكتبة الشاملة — الباعث الحثيث إلى اختصار علوم الحديث لابن كثير',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_fusul_fi_seerat_ar_rasul',
+    titleAr: 'الفصول في سيرة الرسول ﷺ',
+    titleEn: 'Al-Fusul fi Seerat ar-Rasul',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.al_fusul_fi_seerat_ar_rasul',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_fusul_fi_seerat_ar_rasul.json',
+      sizeBytes: 99705,
+      sourceLabel:
+          'المكتبة الشاملة — الفصول في سيرة الرسول ﷺ لابن كثير، مؤسسة علوم القرآن، دمشق - بيروت، الطبعة الثالثة ١٤٠٣هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'mujizat_an_nabi',
+    titleAr: 'معجزات النبي ﷺ من البداية والنهاية',
+    titleEn: 'Mujizat an-Nabi',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.mujizat_an_nabi',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/mujizat_an_nabi.json',
+      sizeBytes: 358168,
+      sourceLabel:
+          'المكتبة الشاملة — معجزات النبي ﷺ من البداية والنهاية لابن كثير، تحقيق السيد إبراهيم',
+    ),
+  ),
+  LibraryBook(
+    id: 'musnad_abi_bakr',
+    titleAr: 'مسند أبي بكر الصديق رضي الله عنه',
+    titleEn: 'Musnad Abi Bakr as-Siddiq',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.musnad_abi_bakr',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/musnad_abi_bakr.json',
+      sizeBytes: 479107,
+      sourceLabel:
+          'المكتبة الشاملة — مسند أبي بكر الصديق لابن كثير',
+    ),
+  ),
+  LibraryBook(
+    id: 'tuhfat_at_talib',
+    titleAr: 'تحفة الطالب بمعرفة أحاديث مختصر ابن الحاجب',
+    titleEn: 'Tuhfat at-Talib',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.tuhfat_at_talib',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tuhfat_at_talib.json',
+      sizeBytes: 305650,
+      sourceLabel:
+          'المكتبة الشاملة — تحفة الطالب بمعرفة أحاديث مختصر ابن الحاجب لابن كثير',
+    ),
+  ),
+  LibraryBook(
+    id: 'tabaqat_ash_shafiiyyin',
+    titleAr: 'طبقات الشافعيين',
+    titleEn: 'Tabaqat ash-Shafiiyyin',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.tabaqat_ash_shafiiyyin',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tabaqat_ash_shafiiyyin.json',
+      sizeBytes: 476131,
+      sourceLabel:
+          'المكتبة الشاملة — طبقات الشافعيين لابن كثير، مكتبة الثقافة الدينية',
+    ),
+  ),
+  LibraryBook(
+    id: 'adab_dukhul_al_hammam',
+    titleAr: 'الآداب والأحكام المتعلقة بدخول الحمّام',
+    titleEn: 'Adab Dukhul al-Hammam',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.adab_dukhul_al_hammam',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/adab_dukhul_al_hammam.json',
+      sizeBytes: 26633,
+      sourceLabel:
+          'المكتبة الشاملة — الآداب والأحكام المتعلقة بدخول الحمّام لابن كثير',
+    ),
+  ),
+  LibraryBook(
+    id: 'juz_bay_ummahat_al_awlad',
+    titleAr: 'جزء في بيع أمهات الأولاد',
+    titleEn: 'Juz fi Bay Ummahat al-Awlad',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.juz_bay_ummahat_al_awlad',
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/juz_bay_ummahat_al_awlad.json',
+      sizeBytes: 78958,
+      sourceLabel:
+          'المكتبة الشاملة — جزء في بيع أمهات الأولاد لابن كثير',
+    ),
+  ),
   LibraryBook(
     id: 'rawdat_al_uqala',
     titleAr: 'روضة العقلاء ونزهة الفضلاء',
