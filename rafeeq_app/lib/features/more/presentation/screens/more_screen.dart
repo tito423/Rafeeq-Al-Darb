@@ -8,6 +8,7 @@ import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
+import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 
 /// The "المزيد" tab.
 ///
@@ -32,6 +33,11 @@ class MoreScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
         children: [
           SectionLabel('more.section_more'.tr()),
+
+          // The guided tour, first in the section: it is the thing a reader
+          // who is lost comes here looking for, and it carries its own
+          // every-launch switch rather than sending them down to Settings.
+          const TutorialEntryCard(),
 
           // «انشئ في المزيد قسم جديد سميه تحميل تلاوات القرآن … عبارة عن
           // music player احترافي». First, because it is the one he asked for.

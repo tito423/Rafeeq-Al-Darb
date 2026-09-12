@@ -22,6 +22,8 @@ import '../../features/more/presentation/screens/more_screen.dart';
 import '../../features/qibla/presentation/screens/qibla_screen.dart';
 import '../../features/quran/data/quran_fullscreen_provider.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
+import '../../features/tutorial/data/tutorial_state.dart';
+import '../../features/tutorial/presentation/screens/tutorial_screen.dart';
 import 'tab_request_provider.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
@@ -85,6 +87,16 @@ class _AppShellState extends ConsumerState<AppShell>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _syncPrayerStatus();
+      // The guided tour, when it is due — the first time this build runs, or
+      // on every launch if the owner turned that on in «المزيد». Opened from
+      // here rather than from the splash so it lands on top of a settled
+      // Home screen and a swipe-back leaves the reader inside the app, not
+      // on a dead route. `AlarmPermissionsService` asks 900 ms from now, so
+      // the tour goes up first and the permission dialog lands on it, which
+      // is the same order a first run has always had.
+      if (mounted && shouldAutoShowTutorial(ref)) {
+        TutorialScreen.open(context);
+      }
       // The one point both first-run and returning users pass through, so
       // this is where the startup grants are asked for. Delayed past the
       // route transition so the dialog lands on a settled screen rather than
