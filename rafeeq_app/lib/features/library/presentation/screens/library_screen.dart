@@ -1572,6 +1572,33 @@ const _islamicWebsites = [
     icon: Icons.language,
     color: Color(0xFF311B92),
   ),
+  // «زيد في المواقع الإسلامية قصة الإسلام وموقع الشاملة وموقع المشكاة».
+  // Two of the three are here. Both were fetched before being written down:
+  // islamstory.com answered 200 with 183 KB and its own page says it runs
+  // «تحت إشراف المؤرخ الإسلامي د. راغب السرجاني»; shamela.ws answered 200
+  // with 47 KB, `<title>المكتبة الشاملة</title>`, describing itself as the
+  // project's official site.
+  //
+  // **المشكاة is deliberately absent.** `almeshkat.net` resolves — DNS gives
+  // 37.48.81.163 — but nothing answers on either port: four attempts over
+  // http and https, with and without `www`, all timed out at 90 s with zero
+  // bytes. A card that opens a page which never loads is exactly the kind of
+  // entry §1.1 forbids, so it is not added until there is an address that
+  // answers.
+  _WebsiteInfo(
+    name: 'قصة الإسلام',
+    descriptionKey: 'dawah.site_islamstory',
+    url: 'https://www.islamstory.com',
+    icon: Icons.auto_stories,
+    color: Color(0xFF6D4C41),
+  ),
+  _WebsiteInfo(
+    name: 'المكتبة الشاملة',
+    descriptionKey: 'dawah.site_shamela',
+    url: 'https://shamela.ws',
+    icon: Icons.local_library,
+    color: Color(0xFF00695C),
+  ),
 ];
 
 class _IslamicWebsitesTab extends StatelessWidget {

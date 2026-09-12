@@ -1,8 +1,17 @@
-===== https://www.youtube.com/@ftawamostafaaladwy =====
-          title: الشيخ مصطفى العدوي
-     channel_id: UCYW44APHfIo0GyAO9iosHjQ
-         vanity: http://www.youtube.com/@ftawamostafaaladwy
+===== https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw =====
+          title: عمر عبد الكافي
+     channel_id: UCKUOmGXE9Ytlc2EzpGqimtw
+         vanity: http://www.youtube.com/@abdelkafytube
     subscribers: None
     is_verified: False
-         avatar: https://yt3.googleusercontent.com/-eLizqc_bQxxWlqbLSCmXOS65zhK40eHZ0VR09QJgiVXdm8HtKGFOJoA7-RUYkSu8fHxlwh4=s68-c-k-c0x00ffffff-no-rj
+         avatar: https://yt3.googleusercontent.com/ytc/AIdro_mRVzYSL1K-8yvAmRow06evEOAbyCR-Uazaa_YRe-fNSvc=s68-c-k-c0x00ffffff-no-rj
+    description: None
+
+===== https://www.youtube.com/@dr.omarabdelkafi =====
+          title: Dr. Omar Abdelkafi
+     channel_id: UCr1fTtaAmQPrtl6sfrBO0ug
+         vanity: http://www.youtube.com/@dr.omarabdelkafi
+    subscribers: None
+    is_verified: False
+         avatar: https://yt3.googleusercontent.com/vAgYFtLGFW7EXBatFRKrSMfZhWhV6HMKxYm7JTpojgDagUeM2Ah7CuWDN_Hy9Vlnug4NNtkSBvo=s68-c-k-c0x00ffffff-no-rj
     description: None

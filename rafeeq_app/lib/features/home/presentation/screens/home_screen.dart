@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import '../../../../core/i18n/hijri_months.dart';
 
@@ -405,6 +406,13 @@ class _PrayerTimesTable extends ConsumerStatefulWidget {
 }
 
 class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
+  /// «عايز لما أضغط على عدّاد الصلاة القادمة التنازلي يغيّر ويعرض إيه على
+  /// الصلاة السابقة، أنيميتد برضه وبشكل روعة». One tap on the counter box
+  /// turns it over: the same box, the previous prayer's name and colour, and
+  /// the same three units counting **up** from when it came in. Tapping again
+  /// turns it back. Nothing else on the card moves.
+  bool _showPrevious = false;
+
   /// AM/PM in the app's own language — never shown in 24-hour mode.
   String? _meridiem(ClockSettings cs) {
     if (!cs.use12Hour) return null;
@@ -413,7 +421,15 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
 
   @override
   Widget build(BuildContext context) {
-    final next = PrayerTimesService().nextPrayer(widget.times, DateTime.now());
+    final service = PrayerTimesService();
+    final now = DateTime.now();
+    final next = service.nextPrayer(widget.times, now);
+    final previous = service.previousPrayer(widget.times, now);
+    // The flipped side needs a previous prayer to show. On a phone whose
+    // times have not arrived yet there is none, and the box stays on the
+    // countdown rather than offering a face with nothing on it.
+    final shown = _showPrevious && previous != null ? previous : next;
+    final showingPrevious = _showPrevious && previous != null;
     final clock = ref.watch(clockSettingsProvider);
     final arabic = context.locale.languageCode == 'ar';
     final location = [
@@ -504,42 +520,90 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
             ),
             ),
           ),
-          if (next != null) ...[
+          if (shown != null) ...[
             const SizedBox(height: 12),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 400),
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 7),
-              decoration: BoxDecoration(
-                color: hero.scrim,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: hero.hairline),
-              ),
-              child: Column(
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      text: '${'home.next_prayer'.tr()}: ',
-                      style: TextStyle(color: hero.onSurfaceMuted),
-                      children: [
-                        TextSpan(
-                          text: prayerSlideLabelKeys[next.$1]!.tr(),
-                          style: TextStyle(
-                            // Toned for this ground: the raw violet measured
-                            // 2.43 : 1 on the dark card (CLAUDE.md #15).
-                            color: hero.accent(prayerSlideColors[next.$1]!),
-                            fontWeight: FontWeight.bold,
+            GestureDetector(
+              onTap: previous == null
+                  ? null
+                  : () => setState(() => _showPrevious = !_showPrevious),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 400),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 7),
+                decoration: BoxDecoration(
+                  color: hero.scrim,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: showingPrevious
+                        ? hero.accent(prayerSlideColors[shown.$1]!)
+                            .withValues(alpha: 0.55)
+                        : hero.hairline,
+                  ),
+                ),
+                // The two faces swap on a half-turn about the vertical axis,
+                // so the box reads as one thing turning over rather than two
+                // things cross-fading. `AnimatedSwitcher` drives both halves
+                // of the turn; the outgoing face is held at the far side
+                // (`0.5 → 1`) while the incoming one comes back to flat.
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 420),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, animation) {
+                    final incoming =
+                        (child.key as ValueKey<bool>).value == showingPrevious;
+                    return AnimatedBuilder(
+                      animation: animation,
+                      builder: (context, _) {
+                        final t = incoming
+                            ? (1 - animation.value) * -0.5
+                            : (1 - animation.value) * 0.5;
+                        return Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.identity()
+                            ..setEntry(3, 2, 0.0012)
+                            ..rotateY(t * math.pi),
+                          child: Opacity(
+                            opacity: animation.value.clamp(0.0, 1.0),
+                            child: child,
                           ),
+                        );
+                      },
+                    );
+                  },
+                  child: Column(
+                    key: ValueKey<bool>(showingPrevious),
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          text: showingPrevious
+                              ? '${'home.previous_prayer'.tr()}: '
+                              : '${'home.next_prayer'.tr()}: ',
+                          style: TextStyle(color: hero.onSurfaceMuted),
+                          children: [
+                            TextSpan(
+                              text: prayerSlideLabelKeys[shown.$1]!.tr(),
+                              style: TextStyle(
+                                // Toned for this ground: the raw violet
+                                // measured 2.43 : 1 on the dark card
+                                // (CLAUDE.md #15).
+                                color:
+                                    hero.accent(prayerSlideColors[shown.$1]!),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 4),
+                      PrayerCountdown(
+                        target: shown.$2,
+                        accent: prayerSlideColors[shown.$1]!,
+                        arabicDigits: arabic,
+                        elapsed: showingPrevious,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  PrayerCountdown(
-                    target: next.$2,
-                    accent: prayerSlideColors[next.$1]!,
-                    arabicDigits: arabic,
-                  ),
-                ],
+                ),
               ),
             ),
           ],

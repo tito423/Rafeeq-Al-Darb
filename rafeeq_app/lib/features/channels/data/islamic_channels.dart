@@ -104,4 +104,38 @@ const islamicChannels = <IslamicChannel>[
     channelId: 'UCYW44APHfIo0GyAO9iosHjQ',
     handle: 'ftawamostafaaladwy',
   ),
+  // «وفي القنوات حط ... الشيخ سمير مصطفى وعمر عبد الكافي ... وصالح المغامسي
+  // وعثمان الخميس». Each of these four answered `verify_youtube_channels.py`
+  // with the id, title and handle written below — the titles are YouTube's
+  // own, untouched. He also asked for «ياسر الخزيمي لو مش موجود»: he is
+  // already here, as `yasser_alhazimi`, under the spelling his own channel
+  // uses (الحزيمي).
+  IslamicChannel(
+    id: 'samir_mostafa',
+    nameAr: 'قناة الشيخ سمير مصطفى الرسمية',
+    nameEn: 'Sheikh Samir Mostafa — Official',
+    channelId: 'UCch6Y4YgssEzMa4Q5zw4xjw',
+    handle: 'samirmoustafa',
+  ),
+  IslamicChannel(
+    id: 'omar_abdelkafi',
+    nameAr: 'عمر عبد الكافي',
+    nameEn: 'Omar Abd al-Kafi',
+    channelId: 'UCKUOmGXE9Ytlc2EzpGqimtw',
+    handle: 'abdelkafytube',
+  ),
+  IslamicChannel(
+    id: 'saleh_almaghamsi',
+    nameAr: 'الشيخ صالح المغامسي',
+    nameEn: 'Sheikh Saleh Al-Maghamsi',
+    channelId: 'UCfpli4VHoS12syPkPxHl7XA',
+    handle: 'Alrasekhoon',
+  ),
+  IslamicChannel(
+    id: 'othman_alkhamees',
+    nameAr: 'الشيخ الدكتور عثمان الخميس',
+    nameEn: 'Dr. Othman Alkamees',
+    channelId: 'UCWjCSGhmSGu0VLf2mPFS0Kg',
+    handle: 'othmanalkamees',
+  ),
 ];

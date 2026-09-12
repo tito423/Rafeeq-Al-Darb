@@ -35,11 +35,16 @@ class PrayerCountdown extends StatefulWidget {
   /// Arabic-Indic digits, matching the clock face above it.
   final bool arabicDigits;
 
+  /// Counts **up** from [target] instead of down to it — how long ago the
+  /// previous prayer was, for the flipped side of the Home card.
+  final bool elapsed;
+
   const PrayerCountdown({
     super.key,
     required this.target,
     required this.accent,
     required this.arabicDigits,
+    this.elapsed = false,
   });
 
   @override
@@ -63,7 +68,9 @@ class _PrayerCountdownState extends State<PrayerCountdown> {
   @override
   void didUpdateWidget(PrayerCountdown old) {
     super.didUpdateWidget(old);
-    if (widget.target != old.target) _left = _remaining();
+    if (widget.target != old.target || widget.elapsed != old.elapsed) {
+      _left = _remaining();
+    }
   }
 
   @override
@@ -73,7 +80,10 @@ class _PrayerCountdownState extends State<PrayerCountdown> {
   }
 
   Duration _remaining() {
-    final diff = widget.target.difference(DateTime.now());
+    final now = DateTime.now();
+    final diff = widget.elapsed
+        ? now.difference(widget.target)
+        : widget.target.difference(now);
     return diff.isNegative ? Duration.zero : diff;
   }
 

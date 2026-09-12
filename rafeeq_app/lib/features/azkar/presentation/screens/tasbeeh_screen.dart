@@ -1,9 +1,14 @@
-import 'package:easy_localization/easy_localization.dart';
+// easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
+// collides with the `dart:ui` enum (ltr/rtl) the long-dhikr cards need.
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/islamic_pattern.dart';
 
 /// One of the standard tasbeeh phrases + the pill/accent colour the owner's
 /// reference image (`design_refs/ref_tasbeeh.jpg`) used for it.
@@ -21,6 +26,27 @@ const _dhikrOptions = [
   _DhikrOption('azkar.tasbeeh_allahumma_salli', Color(0xFFD4785A)), // amber
   _DhikrOption('azkar.tasbeeh_lahawla', Color(0xFF5C8A6E)), // sage
   _DhikrOption('azkar.tasbeeh_astaghfirullah', Color(0xFF3F7A8C)), // teal
+];
+
+/// The five the owner asked for by name. They are kept apart from the seven
+/// above for a plain layout reason: each is a full sentence — «لا إله إلا الله
+/// وحده لا شريك له، له الملك وله الحمد يحيي ويميت وهو على كل شيء قدير» is 88
+/// characters — and none of them fits either a pill or the 250-pixel counting
+/// circle. «حطهم في كارت بحيث لما أضغط عليه يفتح كارت فيهم الذكر وأختار اللي
+/// عاوز أبدأ فيه، ويطلع لوحده المختار في شكل كارت جميل وعدّاد زي اللي موجود في
+/// الأذكار»: so a card opens a picker, and the one picked takes over the
+/// counting area as a card of its own.
+///
+/// No fadl / reward line is attached to any of them. Several do have one in
+/// the Sunna, but §1.2 of CLAUDE.md is that a claim about a text needs a named
+/// source in the app, and the tasbeeh screen has nowhere to show one — so the
+/// screen counts, and says nothing it cannot attribute.
+const _mathurOptions = [
+  _DhikrOption('azkar.tasbeeh_tawhid_full', Color(0xFFC9A227)), // gold
+  _DhikrOption('azkar.tasbeeh_baqiyat_full', Color(0xFF2E9D6F)), // green
+  _DhikrOption('azkar.tasbeeh_yunus', Color(0xFF2E9FE8)), // blue
+  _DhikrOption('azkar.tasbeeh_subhanallah_wabihamdih', Color(0xFF3F7A8C)), // teal
+  _DhikrOption('azkar.tasbeeh_astaghfirullah_full', Color(0xFF6C5FBC)), // purple
 ];
 
 /// The selectable per-round targets. `null` = no limit (count climbs freely,
@@ -44,6 +70,13 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     with SingleTickerProviderStateMixin {
   int? _target = 33;
   int _dhikrIndex = 0;
+
+  /// Index into [_mathurOptions] when one of the five long adhkar is the one
+  /// being counted; `null` when the seven short pills own the screen. The two
+  /// selections are exclusive — picking either clears the other — so there is
+  /// never a question of which phrase the number belongs to.
+  int? _mathurIndex;
+
   int _count = 0;
   int _rounds = 0;
   int _total = 0;
@@ -119,12 +152,35 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   }
 
   void _selectDhikr(int i) {
-    if (i == _dhikrIndex) return;
+    if (i == _dhikrIndex && _mathurIndex == null) return;
     setState(() {
       _dhikrIndex = i;
+      _mathurIndex = null;
       _count = 0;
       _rounds = 0;
     });
+  }
+
+  void _selectMathur(int i) {
+    setState(() {
+      _mathurIndex = i;
+      _count = 0;
+      _rounds = 0;
+    });
+  }
+
+  /// The phrase currently being counted, whichever of the two lists it is in.
+  _DhikrOption get _selected =>
+      _mathurIndex == null ? _dhikrOptions[_dhikrIndex] : _mathurOptions[_mathurIndex!];
+
+  Future<void> _openMathurPicker() async {
+    final chosen = await showModalBottomSheet<int>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (ctx) => _MathurPickerSheet(selected: _mathurIndex),
+    );
+    if (chosen != null && mounted) _selectMathur(chosen);
   }
 
   void _selectTarget(int? t) {
@@ -149,7 +205,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final selected = _dhikrOptions[_dhikrIndex];
+    final selected = _selected;
     return Scaffold(
       appBar: AppBar(title: Text('azkar.tab_tasbeeh'.tr())),
       body: SafeArea(
@@ -223,12 +279,35 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                       for (var i = 0; i < _dhikrOptions.length; i++)
                         _DhikrPill(
                           option: _dhikrOptions[i],
-                          selected: i == _dhikrIndex,
+                          selected: i == _dhikrIndex && _mathurIndex == null,
                           onTap: () => _selectDhikr(i),
                         ),
                     ],
                   ),
                 ),
+                // The gateway to the five long adhkar.
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 2, 14, 6),
+                  child: _MathurEntryCard(
+                    active: _mathurIndex != null,
+                    onTap: _openMathurPicker,
+                  ),
+                ),
+                if (_mathurIndex != null)
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                        child: _MathurCounterCard(
+                          option: selected,
+                          count: _count,
+                          target: _target,
+                          onTap: _tap,
+                        ),
+                      ),
+                    ),
+                  )
+                else
                 Expanded(
                   child: Center(
                     child: GestureDetector(
@@ -448,6 +527,253 @@ class _DhikrPill extends StatelessWidget {
             fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The card that opens the picker. Deliberately quiet when nothing is
+/// selected and gold-edged once one of the five is being counted, so the
+/// screen always says which list the number on it belongs to.
+class _MathurEntryCard extends StatelessWidget {
+  final bool active;
+  final VoidCallback onTap;
+  const _MathurEntryCard({required this.active, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: active
+              ? AppColors.gold.withValues(alpha: 0.10)
+              : scheme.surfaceContainerHighest.withValues(alpha: 0.45),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: active
+                ? AppColors.gold.withValues(alpha: 0.6)
+                : scheme.outlineVariant.withValues(alpha: 0.4),
+            width: active ? 1.5 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.auto_stories_outlined,
+                color: active ? AppColors.gold : scheme.onSurfaceVariant),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'azkar.tasbeeh_mathur_title'.tr(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'azkar.tasbeeh_mathur_desc'.tr(),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            // Trap #7: `chevron_left` auto-mirrors in RTL and `chevron_right`
+            // does not — a disclosure chevron has to point the same way in
+            // both directions.
+            Icon(Icons.chevron_right,
+                color: active ? AppColors.gold : scheme.onSurfaceVariant),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The picker: the five, each in full, each tappable.
+class _MathurPickerSheet extends StatelessWidget {
+  final int? selected;
+  const _MathurPickerSheet({required this.selected});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                'azkar.tasbeeh_mathur_pick'.tr(),
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w700),
+              ),
+            ),
+            Flexible(
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: _mathurOptions.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
+                itemBuilder: (context, i) {
+                  final option = _mathurOptions[i];
+                  final isSelected = selected == i;
+                  return InkWell(
+                    onTap: () => Navigator.of(context).pop(i),
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 14),
+                      decoration: BoxDecoration(
+                        color: Color.alphaBlend(
+                          option.color.withValues(alpha: 0.12),
+                          scheme.surfaceContainerHighest
+                              .withValues(alpha: 0.45),
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: option.color
+                              .withValues(alpha: isSelected ? 0.9 : 0.35),
+                          width: isSelected ? 2 : 1,
+                        ),
+                      ),
+                      child: Text(
+                        option.textKey.tr(),
+                        textAlign: TextAlign.center,
+                        textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                          fontFamily: 'AmiriQuran',
+                          fontSize: 17,
+                          height: 1.9,
+                          color: scheme.onSurface,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The selected long dhikr, counting. Same gesture as the circle — a tap
+/// anywhere on it is one count — with the Azkar screen's own counter shape
+/// underneath it: the number, its target, and a gold bar filling toward it.
+class _MathurCounterCard extends StatelessWidget {
+  final _DhikrOption option;
+  final int count;
+  final int? target;
+  final VoidCallback onTap;
+
+  const _MathurCounterCard({
+    required this.option,
+    required this.count,
+    required this.target,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = target;
+    return GestureDetector(
+      onTap: onTap,
+      child: IslamicPatternPanel(
+        padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
+        colors: [
+          Color.alphaBlend(
+            option.color.withValues(alpha: 0.28),
+            AppColors.primaryContainer,
+          ),
+          AppColors.nightSurface,
+        ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              option.textKey.tr(),
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl,
+              style: const TextStyle(
+                fontFamily: 'AmiriQuran',
+                fontSize: 19,
+                height: 2.0,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+            // Same rule as the circle above: the "how to say it" line is for
+            // a reader who cannot read the script, so it is absent in Arabic.
+            if (context.locale.languageCode != 'ar') ...[
+              const SizedBox(height: 8),
+              Text(
+                '${option.textKey}_ph'.tr(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontStyle: FontStyle.italic,
+                  height: 1.5,
+                  color: Colors.white.withValues(alpha: 0.72),
+                ),
+              ),
+            ],
+            const SizedBox(height: 14),
+            Container(
+              height: 1,
+              width: 90,
+              color: AppColors.gold.withValues(alpha: 0.45),
+            ),
+            const SizedBox(height: 14),
+            // The count springs on every tap, so the card visibly answers the
+            // finger rather than silently swapping a digit.
+            TweenAnimationBuilder<double>(
+              key: ValueKey<int>(count),
+              tween: Tween(begin: 0.82, end: 1.0),
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutBack,
+              builder: (context, scale, child) =>
+                  Transform.scale(scale: scale, child: child),
+              child: Text(
+                t == null ? '$count' : '$count / $t',
+                style: const TextStyle(
+                  fontSize: 44,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            if (t != null) ...[
+              const SizedBox(height: 12),
+              GoldProgressBar(value: (count / t).clamp(0.0, 1.0)),
+            ],
+            const SizedBox(height: 12),
+            Text(
+              'azkar.tap_to_count'.tr(),
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.7),
+                fontSize: 12,
+              ),
+            ),
+          ],
         ),
       ),
     );

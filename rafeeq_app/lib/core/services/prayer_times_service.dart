@@ -144,6 +144,31 @@ class PrayerTimesService {
     return ('fajr', fajr);
   }
 
+  /// (name, time) of the prayer that has most recently **passed** at [now] —
+  /// the mirror of [nextPrayer], and the other half of «عايز لما أضغط على
+  /// عدّاد الصلاة القادمة التنازلي يغيّر ويعرض إيه على الصلاة السابقة».
+  ///
+  /// Before today's fajr the answer is yesterday's isha, which is why this
+  /// cannot just be "the entry before the one nextPrayer returned": at
+  /// 03:00 that entry does not exist in today's list at all.
+  (String, DateTime)? previousPrayer(PrayerTimes pt, DateTime now) {
+    final entries = <(String, DateTime)>[
+      ('fajr', _todayAt(pt.fajr, now)),
+      ('sunrise', _todayAt(pt.sunrise, now)),
+      ('dhuhr', _todayAt(pt.dhuhr, now)),
+      ('asr', _todayAt(pt.asr, now)),
+      ('maghrib', _todayAt(pt.maghrib, now)),
+      ('isha', _todayAt(pt.isha, now)),
+    ];
+    (String, DateTime)? last;
+    for (final e in entries) {
+      if (!e.$2.isAfter(now)) last = e;
+    }
+    if (last != null) return last;
+    final isha = _todayAt(pt.isha, now).subtract(const Duration(days: 1));
+    return ('isha', isha);
+  }
+
   DateTime _todayAt(String hhmm, DateTime now) {
     final m = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(hhmm);
     if (m == null) return now.add(const Duration(days: 365));
