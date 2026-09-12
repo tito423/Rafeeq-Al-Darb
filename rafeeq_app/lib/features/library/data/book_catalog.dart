@@ -193,8 +193,8 @@ const List<LibraryBook> libraryBookCatalog = [
     id: 'bulugh_al_maram',
     titleAr: 'بلوغ المرام من أدلة الأحكام',
     titleEn: 'Bulugh al-Maram',
-    authorAr: 'الحافظ أحمد بن علي بن حجر العسقلاني',
-    authorEn: 'Al-Hafiz Ibn Hajar al-Asqalani',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
     deathYearAh: 852,
     descKey: 'book_desc.bulugh_al_maram',
     category: BookCategory.hadith,
@@ -3873,8 +3873,8 @@ const List<LibraryBook> libraryBookCatalog = [
     // book rather than wrote it — so the crawl's `meta.authorAr` came back
     // empty and this shipped as a blank author name in the "المؤلفون" list.
     // Taken from that line, not invented.
-    authorAr: 'محمد ناصر الدين الألباني',
-    authorEn: 'Abridged by Muhammad Nasir ad-Din al-Albani',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
     deathYearAh: 1420,
     descKey: 'book_desc.sahih_as_seerah_albani',
     category: BookCategory.seerah,
@@ -4381,8 +4381,8 @@ const List<LibraryBook> libraryBookCatalog = [
     id: 'hilyat_al_awliya',
     titleAr: 'حلية الأولياء وطبقات الأصفياء',
     titleEn: 'Hilyat al-Awliya wa Tabaqat al-Asfiya',
-    authorAr: 'أبو نعيم أحمد بن عبد الله الأصبهاني',
-    authorEn: 'Abu Nuaym al-Isbahani',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
     deathYearAh: 430,
     descKey: 'book_desc.hilyat_al_awliya',
     category: BookCategory.tazkiyah,
@@ -4394,6 +4394,508 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — حلية الأولياء وطبقات الأصفياء، لأبي نعيم '
           'الأصبهاني، مطبعة السعادة، مصر، الطبعة الأولى ١٣٩٤هـ/١٩٧٤م '
           '(١٠ أجزاء)',
+    ),
+  ),
+  LibraryBook(
+    id: 'taqrib_al_tahdhib',
+    titleAr: 'تقريب التهذيب',
+    titleEn: 'Taqrib al-Tahdhib',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 765,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/taqrib_al_tahdhib.json',
+      sizeBytes: 391881,
+      sourceLabel:
+          'المكتبة الشاملة — تقريب التهذيب، للحافظ ابن حجر العسقلاني، '
+          'محمد عوامة، دار الرشيد - سوريا، الأولى، ١٤٠٦ - ١٩٨٦',
+    ),
+  ),
+  LibraryBook(
+    id: 'nuzhat_al_nazar',
+    titleAr: 'نزهة النظر في توضيح نخبة الفكر',
+    titleEn: 'Nuzhat al-Nazar',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 175,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/nuzhat_al_nazar.json',
+      sizeBytes: 134214,
+      sourceLabel:
+          'المكتبة الشاملة — نزهة النظر في توضيح نخبة الفكر - ت عتر، '
+          'للحافظ ابن حجر العسقلاني، مطبعة الصباح، دمشق - سوريا، '
+          'الثالثة، ١٤٢١ هـ - ٢٠٠٠ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'hady_al_sari',
+    titleAr: 'هدي الساري مقدمة فتح الباري',
+    titleEn: 'Hady al-Sari',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 493,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/hady_al_sari.json',
+      sizeBytes: 590400,
+      sourceLabel:
+          'المكتبة الشاملة — هدي الساري مقدمة فتح الباري - ط السلفية، '
+          'للحافظ ابن حجر العسقلاني، المكتبة السلفية - مصر، «السلفية '
+          'الأولى» ١٣٨٠ هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_amali_al_mutlaqah',
+    titleAr: 'الأمالي المطلقة',
+    titleEn: 'Al-Amali al-Mutlaqah',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 258,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_amali_al_mutlaqah.json',
+      sizeBytes: 133961,
+      sourceLabel:
+          'المكتبة الشاملة — الأمالي المطلقة، للحافظ ابن حجر '
+          'العسقلاني، حمدي بن عبد المجيد بن إسماعيل السلفي [ت ١٤٣٣ '
+          'هـ]، المكتب الإسلامي - بيروت، الأولى، ١٤١٦ هـ -١٩٩٥ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_mujam_al_mufahras',
+    titleAr: 'المعجم المفهرس',
+    titleEn: 'Al-Mujam al-Mufahras',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 420,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_mujam_al_mufahras.json',
+      sizeBytes: 346686,
+      sourceLabel:
+          'المكتبة الشاملة — المعجم المفهرس = تجريد أسانيد الكتب '
+          'المشهورة والأجزاء المنثورة، للحافظ ابن حجر العسقلاني، محمد '
+          'شكور المياديني، مؤسسة الرسالة - بيروت، الأولى، '
+          '١٤١٨هـ-١٩٩٨م',
+    ),
+  ),
+  LibraryBook(
+    id: 'raf_al_isr_an_qudat_misr',
+    titleAr: 'رفع الإصر عن قضاة مصر',
+    titleEn: 'Raf al-Isr an Qudat Misr',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 487,
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/raf_al_isr_an_qudat_misr.json',
+      sizeBytes: 346282,
+      sourceLabel:
+          'المكتبة الشاملة — رفع الإصر عن قضاة مصر، للحافظ ابن حجر '
+          'العسقلاني، مكتبة الخانجي، القاهرة، الأولى، ١٤١٨ هـ - ١٩٩٨ '
+          'م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ithar_bi_marifat_ruwat_al_athar',
+    titleAr: 'الإيثار بمعرفة رواة الآثار',
+    titleEn: 'Al-Ithar bi Marifat Ruwat al-Athar',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 222,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_ithar_bi_marifat_ruwat_al_athar.json',
+      sizeBytes: 22431,
+      sourceLabel:
+          'المكتبة الشاملة — الإيثار بمعرفة رواة الآثار، للحافظ ابن '
+          'حجر العسقلاني، سيد كسروي حسن، دار الكتب العلمية - بيروت، '
+          'الأولى، ١٤١٣',
+    ),
+  ),
+  LibraryBook(
+    id: 'nataij_al_afkar',
+    titleAr: 'قطعة من نتائج الأفكار في تخريج أحاديث الأذكار',
+    titleEn: 'Nataij al-Afkar',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 362,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/nataij_al_afkar.json',
+      sizeBytes: 183742,
+      sourceLabel:
+          'المكتبة الشاملة — قطعة من نتائج الأفكار في تخريج أحاديث '
+          'الأذكار، للحافظ ابن حجر العسقلاني، وائل بكر زهران، الفاروق '
+          'الحديثة للطباعة والنشر، القاهرة - مصر، الأولى، ١٤٣٦ هـ - '
+          '٢٠١٥ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_wuquf_ala_al_mawquf',
+    titleAr: 'الوقوف على الموقوف',
+    titleEn: 'Al-Wuquf ala al-Mawquf',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 144,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_wuquf_ala_al_mawquf.json',
+      sizeBytes: 33350,
+      sourceLabel:
+          'المكتبة الشاملة — الوقوف على الموقوف، للحافظ ابن حجر '
+          'العسقلاني، عبد الله الليثي الأنصاري، مؤسسة الكتب الثقافية '
+          '- بيروت، الأولى، ١٤٠٦',
+    ),
+  ),
+  LibraryBook(
+    id: 'silsilat_al_dhahab',
+    titleAr: 'سلسلة الذهب',
+    titleEn: 'Silsilat al-Dhahab',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 102,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/silsilat_al_dhahab.json',
+      sizeBytes: 8493,
+      sourceLabel:
+          'المكتبة الشاملة — سلسلة الذهب، للحافظ ابن حجر العسقلاني، '
+          'د. عبد المعطي أمين قلعه جي',
+    ),
+  ),
+  LibraryBook(
+    id: 'dalail_al_nubuwwah_abu_nuaym',
+    titleAr: 'دلائل النبوة',
+    titleEn: 'Dalail al-Nubuwwah',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 640,
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/dalail_al_nubuwwah_abu_nuaym.json',
+      sizeBytes: 373423,
+      sourceLabel:
+          'المكتبة الشاملة — دلائل النبوة - أبو نعيم الأصبهاني، '
+          'للحافظ أبو نعيم الأصبهاني، دار النفائس، بيروت، الثانية، '
+          '١٤٠٦ هـ - ١٩٨٦ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_imamah_wal_radd_ala_al_rafidah',
+    titleAr: 'الإمامة والرد على الرافضة',
+    titleEn: 'Al-Imamah wal-Radd ala al-Rafidah',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 382,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_imamah_wal_radd_ala_al_rafidah.json',
+      sizeBytes: 77381,
+      sourceLabel:
+          'المكتبة الشاملة — الإمامة والرد على الرافضة، للحافظ أبو '
+          'نعيم الأصبهاني، د. علي بن محمد بن ناصر الفقيهي [ت ١٤٤٦ '
+          'هـ]، مكتبة العلوم والحكم - المدينة المنورة / السعودية، '
+          'الثالثة، ١٤١٥ هـ - ١٩٩٤ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'musnad_abi_hanifah_abu_nuaym',
+    titleAr: 'مسند أبي حنيفة رواية أبي نعيم',
+    titleEn: 'Musnad Abi Hanifah',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 278,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/musnad_abi_hanifah_abu_nuaym.json',
+      sizeBytes: 108427,
+      sourceLabel:
+          'المكتبة الشاملة — مسند أبي حنيفة رواية أبي نعيم، للحافظ '
+          'أبو نعيم الأصبهاني، نظر محمد الفاريابي، مكتبة الكوثر - '
+          'الرياض، الأولى، ١٤١٥ هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'sifat_al_nifaq',
+    titleAr: 'صفة النفاق ونعت المنافقين',
+    titleEn: 'Sifat al-Nifaq',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 191,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/sifat_al_nifaq.json',
+      sizeBytes: 44829,
+      sourceLabel:
+          'المكتبة الشاملة — صفة النفاق ونعت المنافقين لأبي نعيم، '
+          'للحافظ أبو نعيم الأصبهاني، البشائر الإسلامية، بيروت - '
+          'لبنان، الأولى، ١٤٢٢ هـ - ٢٠٠١ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'fadail_al_khulafa_al_rashidin',
+    titleAr: 'فضائل الخلفاء الراشدين',
+    titleEn: 'Fadail al-Khulafa al-Rashidin',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 184,
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/fadail_al_khulafa_al_rashidin.json',
+      sizeBytes: 60646,
+      sourceLabel:
+          'المكتبة الشاملة — فضائل الخلفاء الراشدين لأبي نعيم '
+          'الأصبهاني، للحافظ أبو نعيم الأصبهاني، دار البخاري للنشر '
+          'والتوزيع، المدينة المنورة، الأولى، ١٤١٧ هـ - ١٩٩٧ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'riyadat_al_abdan',
+    titleAr: 'رياضة الأبدان',
+    titleEn: 'Riyadat al-Abdan',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 67,
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/riyadat_al_abdan.json',
+      sizeBytes: 6696,
+      sourceLabel:
+          'المكتبة الشاملة — رياضة الأبدان لأبي نعيم الأصبهاني، '
+          'للحافظ أبو نعيم الأصبهاني، دار العاصمة - الرياض، الأولى، '
+          '١٤٠٨ هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_arbaun_ala_madhhab_al_mutahaqqiqin',
+    titleAr: 'الأربعون على مذهب المتحققين من الصوفية',
+    titleEn: 'Al-Arbaun ala Madhhab al-Mutahaqqiqin',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 112,
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_arbaun_ala_madhhab_al_mutahaqqiqin.json',
+      sizeBytes: 18380,
+      sourceLabel:
+          'المكتبة الشاملة — الأربعون على مذهب المتحققين من الصوفية '
+          'لأبي نعيم الأصبهاني، للحافظ أبو نعيم الأصبهاني، دار ابن '
+          'حزم، بيروت - لبنان، الأولى، ١٤١٤ هـ - ١٩٩٣ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'hadith_asma_allah_al_husna',
+    titleAr: 'حديث إن لله تسعة وتسعين اسمًا',
+    titleEn: 'Hadith Asma Allah al-Husna',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 170,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/hadith_asma_allah_al_husna.json',
+      sizeBytes: 11928,
+      sourceLabel:
+          'المكتبة الشاملة — حديث إن لله تسعة وتسعين اسما لأبي نعيم '
+          'الأصبهاني، للحافظ أبو نعيم الأصبهاني، مكتبة الغرباء '
+          'الأثرية - المدينة المنورة، الأولى، ١٤١٣',
+    ),
+  ),
+  LibraryBook(
+    id: 'fadilat_al_adilin_min_al_wulat',
+    titleAr: 'فضيلة العادلين من الولاة',
+    titleEn: 'Fadilat al-Adilin min al-Wulat',
+    authorAr: 'الحافظ أبو نعيم الأصبهاني',
+    authorEn: 'Abu Nuaym al-Asbahani',
+    deathYearAh: 430,
+    pages: 172,
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/fadilat_al_adilin_min_al_wulat.json',
+      sizeBytes: 14881,
+      sourceLabel:
+          'المكتبة الشاملة — فضيلة العادلين من الولاة لأبي نعيم، '
+          'للحافظ أبو نعيم الأصبهاني، دار الوطن - الرياض، الأولى، '
+          '١٤١٨ هـ - ١٩٩٧ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'daif_al_jami_al_saghir',
+    titleAr: 'ضعيف الجامع الصغير وزيادته',
+    titleEn: 'Daif al-Jami al-Saghir',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 939,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/daif_al_jami_al_saghir.json',
+      sizeBytes: 370916,
+      sourceLabel:
+          'المكتبة الشاملة — ضعيف الجامع الصغير وزيادته، للشيخ محمد '
+          'ناصر الدين الألباني، المكتب الإسلامي، المجددة والمزيدة '
+          'والمنقحة',
+    ),
+  ),
+  LibraryBook(
+    id: 'daif_sunan_al_tirmidhi',
+    titleAr: 'ضعيف سنن الترمذي',
+    titleEn: 'Daif Sunan al-Tirmidhi',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 575,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/daif_sunan_al_tirmidhi.json',
+      sizeBytes: 239193,
+      sourceLabel:
+          'المكتبة الشاملة — ضعيف سنن الترمذي، للشيخ محمد ناصر الدين '
+          'الألباني، المكتب الاسلامي - بيروت، الأولى، ١٤١١ هـ - ١٩٩١ '
+          'م',
+    ),
+  ),
+  LibraryBook(
+    id: 'tamam_al_minnah',
+    titleAr: 'تمام المنة في التعليق على فقه السنة',
+    titleEn: 'Tamam al-Minnah',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 428,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/tamam_al_minnah.json',
+      sizeBytes: 223064,
+      sourceLabel:
+          'المكتبة الشاملة — تمام المنة في التعليق على فقه السنة، '
+          'للشيخ محمد ناصر الدين الألباني، دار الراية، الخامسة',
+    ),
+  ),
+  LibraryBook(
+    id: 'adab_al_zifaf',
+    titleAr: 'آداب الزفاف في السنة المطهرة',
+    titleEn: 'Adab al-Zifaf',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 292,
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/adab_al_zifaf.json',
+      sizeBytes: 81450,
+      sourceLabel:
+          'المكتبة الشاملة — آداب الزفاف في السنة المطهرة، للشيخ محمد '
+          'ناصر الدين الألباني، دار السلام، الطبعة الشرعية الوحيدة '
+          '١٤٢٣هـ/٢٠٠٢مـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'ahkam_al_janaiz',
+    titleAr: 'أحكام الجنائز',
+    titleEn: 'Ahkam al-Janaiz',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 268,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/ahkam_al_janaiz.json',
+      sizeBytes: 188947,
+      sourceLabel:
+          'المكتبة الشاملة — أحكام الجنائز، للشيخ محمد ناصر الدين '
+          'الألباني، المكتب الإسلامي، الرابعة، ١٤٠٦ هـ - ١٩٨٦ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'jilbab_al_marah_al_muslimah',
+    titleAr: 'جلباب المرأة المسلمة في الكتاب والسنة',
+    titleEn: 'Jilbab al-Marah al-Muslimah',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 260,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/jilbab_al_marah_al_muslimah.json',
+      sizeBytes: 140763,
+      sourceLabel:
+          'المكتبة الشاملة — جلباب المرأة المسلمة في الكتاب والسنة، '
+          'للشيخ محمد ناصر الدين الألباني، دار السلام للنشر والتوزيع، '
+          'الثالثة، ١٤٢٣هـ -٢٠٠٢ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_tawassul_anwauhu_wa_ahkamuhu',
+    titleAr: 'التوسل أنواعه وأحكامه',
+    titleEn: 'Al-Tawassul Anwauhu wa Ahkamuhu',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 154,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/al_tawassul_anwauhu_wa_ahkamuhu.json',
+      sizeBytes: 87662,
+      sourceLabel:
+          'المكتبة الشاملة — التوسل أنواعه وأحكامه، للشيخ محمد ناصر '
+          'الدين الألباني، محمد عيد العباسي، مكتبة المعارف للنشر '
+          'والتوزيع - الرياض، الطبعة الأولى ١٤٢١ هـ - ٢٠٠١ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'hajjat_al_nabi',
+    titleAr: 'حجة النبي',
+    titleEn: 'Hajjat al-Nabi',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 148,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/hajjat_al_nabi.json',
+      sizeBytes: 69300,
+      sourceLabel:
+          'المكتبة الشاملة — حجة النبي، للشيخ محمد ناصر الدين '
+          'الألباني، المكتب الإسلامي - بيروت، الخامسة - ١٣٩٩',
+    ),
+  ),
+  LibraryBook(
+    id: 'tahdhir_al_sajid',
+    titleAr: 'تحذير الساجد من اتخاذ القبور مساجد',
+    titleEn: 'Tahdhir al-Sajid',
+    authorAr: 'الشيخ محمد ناصر الدين الألباني',
+    authorEn: 'Muhammad Nasir al-Din al-Albani',
+    deathYearAh: 1420,
+    pages: 132,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/tahdhir_al_sajid.json',
+      sizeBytes: 68925,
+      sourceLabel:
+          'المكتبة الشاملة — تحذير الساجد من اتخاذ القبور مساجد، '
+          'للشيخ محمد ناصر الدين الألباني، المكتب الإسلامي - بيروت، '
+          'الرابعة',
     ),
   ),
 ];

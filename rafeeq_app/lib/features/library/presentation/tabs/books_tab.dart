@@ -447,22 +447,24 @@ class _MyLibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // One entry per (book, edition) actually on disk, grouped into two
-    // sections — مصوّر then نصي — instead of one flat list interleaving
-    // both editions of the same book (P3‑15: the owner found that
-    // confusing, "بدل ما يبقى مكررين الاسمين تحت بعض").
+    // One entry per book actually on disk.
+    //
+    // This used to be split into «مصوّر» and «نصّي» sections, from when the
+    // library also carried scanned PDF editions. Those are gone —
+    // `LibraryBook` has nothing but a `textEdition` now — and the split had
+    // quietly become wrong: `paths` is filled above keyed by `book.id`, while
+    // the text section tested for `book.textDownloadId` (`<id>_text`), which
+    // nothing ever writes. So «نصّي» could never render and every downloaded
+    // book, all of them text, was listed under a heading that said it was a
+    // scan. Found by downloading أحكام الجنائز and reading the screen.
     final sorted = [...libraryBookCatalog]
       ..sort((a, b) => a.sortKey.compareTo(b.sortKey));
-    final imageRows = <LibraryBook>[
+    final rows = <LibraryBook>[
       for (final b in sorted)
         if (paths.containsKey(b.id)) b,
     ];
-    final textRows = <LibraryBook>[
-      for (final b in sorted)
-        if (b.hasText && paths.containsKey(b.textDownloadId)) b,
-    ];
 
-    if (imageRows.isEmpty && textRows.isEmpty) {
+    if (rows.isEmpty) {
       final scheme = Theme.of(context).colorScheme;
       return Center(
         child: Padding(
@@ -482,20 +484,9 @@ class _MyLibraryView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(14),
       children: [
-        if (imageRows.isNotEmpty) ...[
-          _SectionHeader('library.edition_image'.tr()),
-          for (final b in imageRows) ...[
-            _row(context, b),
-            const SizedBox(height: 8),
-          ],
-        ],
-        if (textRows.isNotEmpty) ...[
-          if (imageRows.isNotEmpty) const SizedBox(height: 8),
-          _SectionHeader('library.edition_text'.tr()),
-          for (final b in textRows) ...[
-            _row(context, b),
-            const SizedBox(height: 8),
-          ],
+        for (final b in rows) ...[
+          _row(context, b),
+          const SizedBox(height: 8),
         ],
       ],
     );
@@ -543,25 +534,6 @@ class _MyLibraryView extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String label;
-  const _SectionHeader(this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
-      child: Text(
-        label,
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall
-            ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
       ),
     );
   }
