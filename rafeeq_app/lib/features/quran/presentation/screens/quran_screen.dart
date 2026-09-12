@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/widgets/error_retry.dart';
+import '../../../../core/widgets/measure_size.dart';
 import '../../../../core/widgets/toolbar_action.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
@@ -94,6 +95,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// — hiding it by default on first open would make the reader's own
   /// controls undiscoverable.
   bool _toolbarVisible = true;
+
+  /// The height the toolbar ACTUALLY laid out at, reported by
+  /// `MeasureSize`. The starting value is the old constant, so the
+  /// first frame looks exactly as it used to and the second frame
+  /// corrects it.
+  double _toolbarHeight = 116;
 
   /// P3‑41: "give option so I can change page from small to full fit of
   /// screen" — a persisted, explicit reader preference, independent of
@@ -713,10 +720,22 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               // than from another guessed number.
               bottom: mushaf.hasValue && _toolbarVisible
                   ? PreferredSize(
+                      // MEASURED, not guessed. This was the constant 116 -
+                      // two rows of ToolbarAction.captionedHeight plus
+                      // padding. On the owner's phone the twelve captioned
+                      // actions wrap into FOUR rows, so the last two were laid
+                      // out below the app bar's box; Flutter paints overflow
+                      // but hit-tests only inside the box, so «وضع المصحف» was
+                      // fully visible and completely untappable, and the taps
+                      // fell through to the page, which toggles full screen.
+                      // That is the «بيعلق، ساعة يشتغل وساعة لأ» he filmed.
+                      // How many rows it takes depends on the width, the
+                      // language and the reader's font scale, so no constant
+                      // can be right - see `MeasureSize`.
                       preferredSize: Size.fromHeight(
                         _toolbarLandscape(context)
                             ? ToolbarAction.compactHeight + 8
-                            : 116,
+                            : _toolbarHeight,
                       ),
                       // The bar is toggled by tapping the page, and it used
                       // to blink in and out between two frames. It fades and
@@ -734,7 +753,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             child: child,
                           ),
                         ),
-                        child: Padding(
+                        child: MeasureSize(
+                          onChange: (size) {
+                            if (!mounted) return;
+                            final h = size.height;
+                            if ((h - _toolbarHeight).abs() < 0.5) return;
+                            setState(() => _toolbarHeight = h);
+                          },
+                          child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 4,
@@ -762,6 +788,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                           onPickEdition: _pickEdition,
                           onEnterImageView: _enterImageView,
                           onLeaveImageView: _leaveImageView,
+                        ),
                         ),
                         ),
                       ),
