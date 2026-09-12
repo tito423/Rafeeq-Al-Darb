@@ -93,10 +93,28 @@
                 tools:node="remove" />
         </provider>
 
+        <!--
+            singleTask, not singleTop.
+
+            `background_downloader`'s own docs say it plainly: "For
+            notification callbacks, make sure your AndroidManifest includes
+            android:launchMode="singleTask" to ensure proper behavior when a
+            notification is tapped." It shipped as singleTop, and MEASURED on
+            emulator-5554 the consequence was exactly that — a real ruqyah
+            download was started, the app was left on Home, the shade was
+            pulled down and its «تحميل ملفات الرقية الصوتية» notification was
+            tapped, and the app came forward **on Home**. The tap callback was
+            registered, the payload was right, `flutter analyze` was clean and
+            197 tests passed; the routing simply never ran.
+
+            This is trap #27 in one line: a green test run is not the feature
+            working, and the only proof for a notification is tapping a real
+            one.
+        -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:taskAffinity=""
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

@@ -43,6 +43,8 @@ class DownloadForegroundService : Service() {
         const val ACTION_START = "start"
         const val ACTION_STOP = "stop"
         const val EXTRA_TITLE = "title"
+        /** Where a tap should land — read by MainActivity. */
+        const val EXTRA_ROUTE = "rafeeq.download.route"
 
         /** True between a start and a stop, so an update never posts a
          *  notification for a service that is not running — that would be a
@@ -85,6 +87,7 @@ class DownloadForegroundService : Service() {
                 .setSmallIcon(context.applicationInfo.icon)
                 .setOnlyAlertOnce(true)
                 .setGroup(GROUP)
+                .setContentIntent(routeIntent(context, "mushaf"))
                 .setTimeoutAfter(120_000)
             if (total > 0) builder.setProgress(total, done.coerceIn(0, total), false)
             nm.notify(id, builder.build())
@@ -122,14 +125,36 @@ class DownloadForegroundService : Service() {
             nm.notify(NOTIFICATION_ID, build(context, title, text, done, total))
         }
 
-        fun build(context: android.content.Context, title: String?, text: String?, done: Int, total: Int): Notification {
+        /**
+         * A tap on one of this service's notifications, routed.
+         *
+         * «عايز لما أضغط على إشعار حاجة من التطبيق يروح للحاجة المتعلقة
+         * بالإشعار … تحميل مصحف يروح مباشر لتحميل المصحف». These are the
+         * app's own notifications, so unlike the downloader plugin's grouped
+         * ones they can carry whatever we want — and the plugin's cannot: a
+         * group notification's tap intent is built with an empty task string
+         * and its handler skips it, which is why tapping one only ever
+         * brought the app forward on whatever screen it was already on
+         * (measured on emulator-5554, twice).
+         *
+         * The destination rides as an extra on the launcher intent;
+         * `MainActivity.captureDownloadTap` reads it back. A distinct
+         * requestCode per destination matters: `PendingIntent` equality
+         * ignores extras, so two destinations sharing a code would collapse
+         * into whichever was created first.
+         */
+        private fun routeIntent(context: android.content.Context, route: String): PendingIntent? {
             val openApp = context.packageManager.getLaunchIntentForPackage(context.packageName)
-            val pendingIntent = openApp?.let {
-                PendingIntent.getActivity(
-                    context, 0, it,
-                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
-                )
-            }
+                ?: return null
+            openApp.putExtra(EXTRA_ROUTE, route)
+            return PendingIntent.getActivity(
+                context, route.hashCode() and 0xffff, openApp,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+            )
+        }
+
+        fun build(context: android.content.Context, title: String?, text: String?, done: Int, total: Int): Notification {
+            val pendingIntent = routeIntent(context, "mushaf")
             val builder = Notification.Builder(context, CHANNEL_ID)
                 .setContentTitle(title ?: NativeStrings.get(context, NativeStrings.DL_TITLE))
                 .setContentText(text ?: NativeStrings.get(context, NativeStrings.DL_BODY))

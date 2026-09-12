@@ -69,4 +69,43 @@ void main() {
         .readAsStringSync();
     expect(mushaf.contains('downloadPrefix}mushaf'), isTrue);
   });
+
+  test('the grouped notification is routed natively, because the plugin cannot',
+      () {
+    // MEASURED on emulator-5554: a real 90 MB ruqyah download, the app left
+    // on Home, its notification tapped — and the app came forward on Home.
+    // `singleTask`, which the plugin's docs ask for, changed nothing. The
+    // plugin's own source says why: a GROUP notification's tap intent is
+    // built with an empty task string (`addTapIntent(taskWorker, "", …)`) and
+    // `BDPlugin.handleIntent` skips it (`if (taskJsonMapString.isNotEmpty())`).
+    // This app groups all three download kinds on purpose, so none of them
+    // could ever route through the callback.
+    final activity = File(
+      'android/app/src/main/kotlin/com/tito/rafeeq_aldarb/MainActivity.kt',
+    ).readAsStringSync();
+    expect(activity.contains('com.bbflight.background_downloader.tap'), isTrue,
+        reason: 'nothing reads the tap intent');
+    expect(activity.contains('override fun onNewIntent'), isTrue,
+        reason: 'a tap while the app runs would be dropped');
+    expect(activity.contains('takePending'), isTrue,
+        reason: 'a tap that launches the app cold would be dropped');
+    // The ids Kotlin matches on must be the ids Dart actually sets.
+    final engine =
+        File('lib/core/services/download_engine.dart').readAsStringSync();
+    for (final groupId in const [
+      'rafeeq_files_group',
+      'rafeeq_quran_audio_group',
+      'rafeeq_ruqyah_group',
+    ]) {
+      expect(engine.contains("'$groupId'"), isTrue,
+          reason: 'Dart no longer uses $groupId');
+      expect(activity.contains('"$groupId"'), isTrue,
+          reason: 'Kotlin does not match $groupId — that queue stops routing '
+              'and nothing fails until someone taps it');
+    }
+
+    final manifest =
+        File('android/app/src/main/AndroidManifest.xml').readAsStringSync();
+    expect(manifest.contains('android:launchMode="singleTask"'), isTrue);
+  });
 }

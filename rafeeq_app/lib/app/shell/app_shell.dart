@@ -8,6 +8,7 @@ import '../../core/models/prayer_times.dart';
 import '../../core/services/alarm_permissions_service.dart';
 import '../../core/services/ayah_audio_service.dart';
 import '../../core/services/download_manager.dart';
+import '../../features/downloads/data/download_tap_channel.dart';
 import '../../core/services/download_notifications.dart';
 import '../../features/quran_audio/data/quran_audio_library.dart';
 import '../../core/services/mushaf_page_service.dart';
@@ -95,6 +96,12 @@ class _AppShellState extends ConsumerState<AppShell>
       // on a dead route. `AlarmPermissionsService` asks 900 ms from now, so
       // the tour goes up first and the permission dialog lands on it, which
       // is the same order a first run has always had.
+      // A download notification that launched the app, or one tapped while
+      // it runs. Wired from here rather than `main()` because both paths end
+      // in a `Navigator.push`, and there is no navigator until the shell is
+      // on screen. See `DownloadTapChannel` for why the plugin's own callback
+      // cannot do this.
+      unawaited(DownloadTapChannel.instance.start());
       if (mounted && shouldAutoShowTutorial(ref)) {
         TutorialScreen.open(context);
       }
