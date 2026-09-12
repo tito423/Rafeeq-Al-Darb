@@ -466,11 +466,6 @@
     "status_notification": "Tarjeta de oración fija",
     "status_notification_desc": "Una tarjeta fija en la barra de estado con la próxima oración, la fecha híjri y una cuenta atrás — funciona sin conexión",
     "adhan_limit_reached": "Has alcanzado el límite (30 adhanes)",
-    "presentation": "Presentación",
-    "presentation_audio": "Audio",
-    "presentation_video": "Vídeo",
-    "adhan_video": "Vídeo del adhán",
-    "video_preview": "Vista previa",
     "per_prayer_desc": "Un modo y almuédano por oración",
     "azan_of": "Adhan — oración del {}",
     "exact_alarm": "El adhán funciona igual que una alarma, por lo que necesita el permiso de \"alarmas exactas\" para sonar a su hora y abrirse sobre la pantalla de bloqueo",
@@ -517,9 +512,7 @@
     },
     "alarm_volume": "Volumen de alarma",
     "alarm_volume_desc": "El adhan suena en el canal de alarma para oírse incluso en silencio, por eso las teclas de volumen no lo cambian.",
-    "alarm_volume_refused": "El sistema rechazó el cambio, probablemente por el modo No molestar.",
-    "video_playlist": "Reproducir todos los clips seguidos",
-    "video_playlist_desc": "Los clips descargados se reproducen uno tras otro como un solo vídeo, sin cortes, en lugar de repetir el elegido."
+    "alarm_volume_refused": "El sistema rechazó el cambio, probablemente por el modo No molestar."
   },
   "qibla": {
     "locating": "Localizándote...",

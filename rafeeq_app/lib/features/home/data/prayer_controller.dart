@@ -8,7 +8,6 @@ import '../../../core/services/location_service.dart';
 import '../../../core/services/prayer_reminder_service.dart';
 import '../../../core/services/prayer_times_service.dart';
 import '../../adhan/data/adhan_catalog_provider.dart';
-import '../../adhan/data/adhan_presentation_provider.dart';
 import '../../adhan/data/adhan_scheduler.dart';
 import '../../adhan/data/adhan_settings_provider.dart';
 import '../../adhan/data/prayer_adjustments_provider.dart';
@@ -112,10 +111,7 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       localeCode: ref.read(appLocaleProvider),
     );
     final catalog = await ref.read(adhanCatalogProvider.future);
-    final videoPath =
-        await resolveAdhanVideoPath(ref.read(adhanPresentationProvider));
-    await rescheduleAdhans(times, settings, catalog,
-        adhanVideoPath: videoPath);
+    await rescheduleAdhans(times, settings, catalog);
   }
 
   Future<PrayerTimesResult> _load() async {

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -10,14 +9,10 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../data/adhan_presentation_provider.dart' show adhanVideoPlaylistKey;
-import '../../data/adhan_video_catalog.dart';
 import '../../data/azan_subtitle.dart';
 import '../widgets/adhan_scene.dart';
 
@@ -53,8 +48,16 @@ enum AzanPlayerMode {
   preview,
 }
 
-/// The full-screen Azan player: a silent looping video, the adhan audio, and
-/// the adhan text as subtitles synced to the audio's real position.
+/// The full-screen Azan player: the painted [AdhanScene], the adhan audio,
+/// and the adhan text as subtitles synced to the audio's real position.
+///
+/// It used to play a silent looping clip behind the text. «احذف الكليبات» —
+/// the ten background clips are gone (their quality, their visible loop
+/// points and the six that were not the scene they were named after: see
+/// `AdhanScene` and trap #36), and with them the whole `video_player`
+/// pipeline this screen carried: a playlist, a second controller to
+/// cross-fade the next clip in, and a listener watching for the last 450 ms
+/// of each one.
 ///
 /// The audio is played **natively** ([AdhanNative]) in both modes. See that
 /// class for why it is not `just_audio`; the short version is that
@@ -82,8 +85,6 @@ const int _silentPollLimit = 15;
 
 class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     with SingleTickerProviderStateMixin {
-  VideoPlayerController? _video;
-
   late final AnimationController _bgController = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 6),
@@ -118,128 +119,8 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
   void initState() {
     super.initState();
     WakelockPlus.enable();
-    _initVideo();
     _start();
   }
-
-  /// The clips to show, in order. One clip loops, as before; with the
-  /// playlist switch on, every downloaded clip plays once and the list starts
-  /// over. They all sit in the downloads folder under their catalogue names,
-  /// so the adhan's own engine can find them without the download registry.
-  List<String> _clips = const [];
-  int _clipIndex = 0;
-
-  /// The clip fading in over the current one; see [_advanceClip].
-  VideoPlayerController? _incoming;
-  bool _switching = false;
-
-  Future<List<String>> _playlist(String first) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      if (!(prefs.getBool(adhanVideoPlaylistKey) ?? false)) return [first];
-      final dir = File(first).parent.path;
-      final all = [
-        for (final v in adhanVideoCatalog)
-          if (File(p.join(dir, v.fileName)).existsSync()) p.join(dir, v.fileName),
-      ];
-      final at = all.indexOf(first);
-      if (all.length < 2 || at < 0) return [first];
-      return [...all.sublist(at), ...all.sublist(0, at)];
-    } catch (_) {
-      return [first];
-    }
-  }
-
-  Future<VideoPlayerController?> _open(String path) async {
-    try {
-      final c = VideoPlayerController.file(File(path));
-      await c.initialize();
-      await c.setVolume(0); // the adhan is the audio; the clip is scenery
-      return c;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  Future<void> _initVideo() async {
-    final path = widget.spec.videoPath;
-    if (path == null || !File(path).existsSync()) return;
-    _clips = await _playlist(path);
-    final c = await _open(_clips.first);
-    if (c == null) return; // gradient fallback — never take the adhan down
-    if (_clips.length == 1) {
-      await c.setLooping(true);
-    } else {
-      c.addListener(_watchClipEnd);
-    }
-    await c.play();
-    if (mounted) {
-      setState(() => _video = c);
-    } else {
-      await c.dispose();
-    }
-  }
-
-  /// A clip is about to end: start the next one underneath and fade it in
-  /// over the last ~400 ms, so there is no black frame and no visible cut.
-  void _watchClipEnd() {
-    final v = _video;
-    if (v == null || _switching || !mounted) return;
-    final value = v.value;
-    if (!value.isInitialized || value.duration == Duration.zero) return;
-    if (value.position < value.duration - const Duration(milliseconds: 450)) {
-      return;
-    }
-    _advanceClip();
-  }
-
-  Future<void> _advanceClip() async {
-    _switching = true;
-    final nextIndex = (_clipIndex + 1) % _clips.length;
-    final next = await _open(_clips[nextIndex]);
-    if (!mounted) {
-      await next?.dispose();
-      return;
-    }
-    if (next == null) {
-      // An unplayable clip: skip it rather than freezing on the last frame.
-      _clipIndex = nextIndex;
-      await _video?.seekTo(Duration.zero);
-      await _video?.play();
-      _switching = false;
-      return;
-    }
-    next.addListener(_watchClipEnd);
-    await next.play();
-    if (!mounted) {
-      await next.dispose();
-      return;
-    }
-    setState(() => _incoming = next);
-    _clipIndex = nextIndex;
-  }
-
-  void _finishSwitch() {
-    final old = _video;
-    final next = _incoming;
-    if (next == null) return;
-    old?.removeListener(_watchClipEnd);
-    setState(() {
-      _video = next;
-      _incoming = null;
-    });
-    _switching = false;
-    old?.dispose();
-  }
-
-  Widget _clipView(VideoPlayerController v) => FittedBox(
-        fit: BoxFit.cover,
-        child: SizedBox(
-          width: v.value.size.width,
-          height: v.value.size.height,
-          child: VideoPlayer(v),
-        ),
-      );
 
   Future<void> _start() async {
     var sounding = true;
@@ -371,39 +252,14 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     _poll?.cancel();
     WakelockPlus.disable();
     _bgController.dispose();
-    _video?.dispose();
-    _incoming?.dispose();
     super.dispose();
   }
 
   Widget _background() {
-    final v = _video;
-    if (v != null && v.value.isInitialized) {
-      // RepaintBoundary isolates the decoding video surface from the rest of
-      // the tree so nothing above it forces the frame to repaint.
-      final incoming = _incoming;
-      return RepaintBoundary(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            _clipView(v),
-            if (incoming != null)
-              TweenAnimationBuilder<double>(
-                key: ValueKey(incoming),
-                tween: Tween(begin: 0, end: 1),
-                duration: const Duration(milliseconds: 400),
-                onEnd: _finishSwitch,
-                builder: (context, t, child) =>
-                    Opacity(opacity: t, child: child),
-                child: _clipView(incoming),
-              ),
-          ],
-        ),
-      );
-    }
-    // No clip — which is every audio-only adhan, and every full-screen one
-    // whose clip has not been downloaded yet. This used to be a two-colour
-    // radial gradient breathing in and out; it is now the painted scene.
+    // «يبقى أذان بخلفية إسلامية متحركة وجميلة، حاجة كده كرييتيف من عندك».
+    // Once a two-colour radial gradient breathing in and out behind a
+    // clip that may or may not have downloaded; now the only background
+    // there is.
     //
     // «يبقى أذان بخلفية إسلامية متحركة وجميلة، حاجة كده كرييتيف من عندك».
     // See `AdhanScene` for why a painted scene and not a clip. `_activeIndex`

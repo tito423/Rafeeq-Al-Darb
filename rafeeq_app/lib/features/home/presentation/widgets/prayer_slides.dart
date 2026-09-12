@@ -13,9 +13,7 @@ import '../../../../core/services/adhan_native.dart';
 import '../../../../core/utils/time_formatter.dart';
 import '../../../../core/widgets/card_route.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
-import '../../../adhan/data/adhan_presentation_provider.dart';
 import '../../../adhan/data/adhan_settings_provider.dart';
-import '../../../adhan/data/adhan_video_catalog.dart';
 import '../../../adhan/data/prayer_adjustments_provider.dart';
 import '../../data/prayer_controller.dart';
 
@@ -461,7 +459,6 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
     final color = prayerSlideColors[widget.prayerKey]!;
     final settings = ref.watch(adhanSettingsProvider);
     final catalog = ref.watch(adhanCatalogProvider).valueOrNull ?? const [];
-    final presentation = ref.watch(adhanPresentationProvider);
     final offset = ref.watch(prayerAdjustmentsProvider).offsetFor(
           widget.prayerKey,
         );
@@ -471,7 +468,6 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
     final option = catalog.where((o) => o.id == adhanId).firstOrNull;
     final usesDefault =
         settings.adhanIdByPrayer[widget.prayerKey] == null;
-    final video = adhanVideoById(presentation.videoId);
 
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -572,17 +568,6 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
                     ),
             ),
 
-            // ── Background clip (only meaningful in video presentation) ──
-            _DetailRow(
-              icon: presentation.mode == AdhanPresentation.video
-                  ? Icons.movie_outlined
-                  : Icons.graphic_eq_rounded,
-              label: 'prayer.adhan_video'.tr(),
-              value: presentation.mode == AdhanPresentation.video
-                  ? (video == null ? '—' : video.labelKey.tr())
-                  : 'prayer.presentation_audio'.tr(),
-              onTap: () => _pickVideo(presentation),
-            ),
           ],
         ],
     );
@@ -640,70 +625,6 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
     await _setAdhan(chosen == '__default__' ? null : chosen as String);
   }
 
-  Future<void> _pickVideo(AdhanPresentationState presentation) async {
-    final chosen = await showModalBottomSheet<String>(
-      context: context,
-      backgroundColor: HeroSurface.of(context).sheetBackground,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            ListTile(
-              leading: Icon(
-                presentation.mode == AdhanPresentation.audioOnly
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_off,
-                color: const Color(0xFF15C7B0),
-              ),
-              title: Text(
-                'prayer.presentation_audio'.tr(),
-                style: TextStyle(color: HeroSurface.of(context).onSurface),
-              ),
-              onTap: () => Navigator.of(ctx).pop('__audio__'),
-            ),
-            Divider(height: 1, color: HeroSurface.of(context).hairline),
-            for (final v in adhanVideoCatalog)
-              ListTile(
-                leading: Icon(
-                  presentation.mode == AdhanPresentation.video &&
-                          presentation.videoId == v.id
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_off,
-                  color: const Color(0xFF15C7B0),
-                ),
-                title: Text(
-                  v.labelKey.tr(),
-                  style:
-                      TextStyle(color: HeroSurface.of(context).onSurface),
-                ),
-                onTap: () => Navigator.of(ctx).pop(v.id),
-              ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-              child: Text(
-                adhanVideoSourceLabelKey.tr(),
-                style: TextStyle(
-                    color: HeroSurface.of(context).onSurfaceFaint,
-                    fontSize: 11),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (chosen == null) return;
-    final notifier = ref.read(adhanPresentationProvider.notifier);
-    if (chosen == '__audio__') {
-      await notifier.setMode(AdhanPresentation.audioOnly);
-    } else {
-      await notifier.setVideo(chosen);
-      await notifier.setMode(AdhanPresentation.video);
-    }
-    await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
-  }
 }
 
 class _DetailRow extends StatelessWidget {

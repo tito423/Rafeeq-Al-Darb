@@ -27,7 +27,6 @@ AdhanSpec _specFor({
   required List<AdhanOption> catalog,
   required int hour,
   required int minute,
-  String? adhanVideoPath,
 }) {
   final mode = settings.modeFor(prayerKey);
   return AdhanNative.specFor(
@@ -41,7 +40,6 @@ AdhanSpec _specFor({
     option: _resolveOption(catalog, settings, prayerKey),
     // Only the full-screen mode ever shows a clip; carrying a video path for
     // the other modes would be a promise the alert never keeps.
-    videoPath: mode == AdhanMode.full ? adhanVideoPath : null,
     hour: hour,
     minute: minute,
   );
@@ -64,9 +62,8 @@ AdhanSpec _specFor({
 Future<bool> rescheduleAdhans(
   PrayerTimes times,
   AdhanSettings settings,
-  List<AdhanOption> catalog, {
-  String? adhanVideoPath,
-}) async {
+  List<AdhanOption> catalog,
+) async {
   if (times.isEmpty || catalog.isEmpty) return true;
 
   final specs = <AdhanSpec>[];
@@ -81,7 +78,6 @@ Future<bool> rescheduleAdhans(
         catalog: catalog,
         hour: hour,
         minute: minute,
-        adhanVideoPath: adhanVideoPath,
       ),
     );
   }
@@ -98,7 +94,6 @@ Future<void> fireAdhanTest({
   required AdhanSettings settings,
   required List<AdhanOption> catalog,
   Duration from = const Duration(seconds: 8),
-  String? adhanVideoPath,
 }) async {
   if (catalog.isEmpty) return;
   await AdhanNative.scheduleTest(
@@ -108,7 +103,6 @@ Future<void> fireAdhanTest({
       catalog: catalog,
       hour: 0,
       minute: 0,
-      adhanVideoPath: adhanVideoPath,
     ),
     delay: from,
   );
@@ -120,7 +114,6 @@ Future<void> fireAdhanTest({
 AdhanSpec previewSpec({
   required AdhanSettings settings,
   required List<AdhanOption> catalog,
-  String? adhanVideoPath,
   String prayerKey = 'dhuhr',
   required String prayerLabel,
 }) {
@@ -133,6 +126,5 @@ AdhanSpec previewSpec({
     prayerLabel: prayerLabel,
     mode: AdhanMode.full,
     option: option,
-    videoPath: adhanVideoPath,
   );
 }

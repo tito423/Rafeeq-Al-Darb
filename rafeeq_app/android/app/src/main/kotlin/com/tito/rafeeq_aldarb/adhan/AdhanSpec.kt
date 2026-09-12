@@ -32,8 +32,6 @@ data class AdhanSpec(
      * until `res/raw/keep.xml` was added. Null for a custom or silent adhan.
      */
     val assetPath: String?,
-    /** Downloaded background clip for the full-screen view, or null. */
-    val videoPath: String?,
     val hour: Int,
     val minute: Int,
     /** False for a one-shot "تجربة" firing, which must not re-arm for tomorrow. */
@@ -63,7 +61,6 @@ data class AdhanSpec(
         put("soundType", soundType)
         put("soundValue", soundValue ?: JSONObject.NULL)
         put("assetPath", assetPath ?: JSONObject.NULL)
-        put("videoPath", videoPath ?: JSONObject.NULL)
         put("hour", hour)
         put("minute", minute)
         put("daily", daily)
@@ -76,7 +73,6 @@ data class AdhanSpec(
         putExtra(EXTRA_SOUND_TYPE, soundType)
         putExtra(EXTRA_SOUND_VALUE, soundValue)
         putExtra(EXTRA_ASSET_PATH, assetPath)
-        putExtra(EXTRA_VIDEO_PATH, videoPath)
         putExtra(EXTRA_HOUR, hour)
         putExtra(EXTRA_MINUTE, minute)
         putExtra(EXTRA_DAILY, daily)
@@ -99,7 +95,6 @@ data class AdhanSpec(
         const val EXTRA_SOUND_TYPE = "rafeeq.adhan.soundType"
         const val EXTRA_SOUND_VALUE = "rafeeq.adhan.soundValue"
         const val EXTRA_ASSET_PATH = "rafeeq.adhan.assetPath"
-        const val EXTRA_VIDEO_PATH = "rafeeq.adhan.videoPath"
         const val EXTRA_HOUR = "rafeeq.adhan.hour"
         const val EXTRA_MINUTE = "rafeeq.adhan.minute"
         const val EXTRA_DAILY = "rafeeq.adhan.daily"
@@ -113,7 +108,6 @@ data class AdhanSpec(
                 soundType = intent.getStringExtra(EXTRA_SOUND_TYPE) ?: SOUND_NONE,
                 soundValue = intent.getStringExtra(EXTRA_SOUND_VALUE),
                 assetPath = intent.getStringExtra(EXTRA_ASSET_PATH),
-                videoPath = intent.getStringExtra(EXTRA_VIDEO_PATH),
                 hour = intent.getIntExtra(EXTRA_HOUR, 0),
                 minute = intent.getIntExtra(EXTRA_MINUTE, 0),
                 daily = intent.getBooleanExtra(EXTRA_DAILY, true),
@@ -127,7 +121,6 @@ data class AdhanSpec(
             soundType = o.optString("soundType", SOUND_NONE),
             soundValue = if (o.isNull("soundValue")) null else o.optString("soundValue"),
             assetPath = if (o.isNull("assetPath")) null else o.optString("assetPath"),
-            videoPath = if (o.isNull("videoPath")) null else o.optString("videoPath"),
             hour = o.optInt("hour"),
             minute = o.optInt("minute"),
             daily = o.optBoolean("daily", true),
@@ -141,7 +134,6 @@ data class AdhanSpec(
             soundType = map["soundType"] as? String ?: SOUND_NONE,
             soundValue = map["soundValue"] as? String,
             assetPath = map["assetPath"] as? String,
-            videoPath = map["videoPath"] as? String,
             hour = (map["hour"] as? Number)?.toInt() ?: 0,
             minute = (map["minute"] as? Number)?.toInt() ?: 0,
             daily = map["daily"] as? Boolean ?: true,

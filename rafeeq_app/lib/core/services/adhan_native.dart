@@ -37,7 +37,6 @@ class AdhanSpec {
   /// `res/raw/azan*` (see `android/app/src/main/res/raw/keep.xml`).
   final String? assetPath;
 
-  final String? videoPath;
   final int hour;
   final int minute;
 
@@ -48,7 +47,6 @@ class AdhanSpec {
     required this.soundType,
     required this.soundValue,
     this.assetPath,
-    this.videoPath,
     this.hour = 0,
     this.minute = 0,
   });
@@ -60,7 +58,6 @@ class AdhanSpec {
     'soundType': soundType.name,
     'soundValue': soundValue,
     'assetPath': assetPath,
-    'videoPath': videoPath,
     'hour': hour,
     'minute': minute,
     'daily': true,
@@ -77,7 +74,6 @@ class AdhanSpec {
     ),
     soundValue: m['soundValue'] as String?,
     assetPath: m['assetPath'] as String?,
-    videoPath: m['videoPath'] as String?,
     hour: (m['hour'] as num?)?.toInt() ?? 0,
     minute: (m['minute'] as num?)?.toInt() ?? 0,
   );
@@ -155,7 +151,6 @@ class AdhanNative {
     required String prayerLabel,
     required AdhanMode mode,
     required AdhanOption option,
-    String? videoPath,
     int hour = 0,
     int minute = 0,
   }) {
@@ -184,7 +179,6 @@ class AdhanNative {
       soundType: type,
       soundValue: value,
       assetPath: asset,
-      videoPath: videoPath,
       hour: hour,
       minute: minute,
     );

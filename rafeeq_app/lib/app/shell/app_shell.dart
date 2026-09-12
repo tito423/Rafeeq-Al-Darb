@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/models/prayer_times.dart';
 import '../../core/services/alarm_permissions_service.dart';
 import '../../core/services/ayah_audio_service.dart';
+import '../../core/services/download_manager.dart';
 import '../../core/services/download_notifications.dart';
 import '../../features/quran_audio/data/quran_audio_library.dart';
 import '../../core/services/mushaf_page_service.dart';
@@ -119,6 +120,10 @@ class _AppShellState extends ConsumerState<AppShell>
         // free what earlier builds left, once. Then pick up any whole-surah
         // download that was on its way.
         unawaited(AyahAudioService.instance.purgeLegacyAyahFiles());
+        // «احذف الكليبات» — the adhan background clips are gone from the
+        // app, so a phone that downloaded some is holding bytes nothing
+        // would ever offer to free again. Once per install.
+        unawaited(DownloadManager.instance.purgeAdhanVideos());
         unawaited(QuranAudioLibrary.instance.ensureReady());
       });
     });

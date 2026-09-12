@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
-import 'package:video_player/video_player.dart';
 
 import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
@@ -14,19 +12,15 @@ import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/services/adhan_catalog_service.dart';
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/services/adhan_uri_bridge.dart';
-import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_catalog_provider.dart';
-import '../../data/adhan_presentation_provider.dart';
 import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
 import '../widgets/alarm_volume_tile.dart';
-import '../../data/adhan_video_catalog.dart';
 import '../../data/prayer_status_enabled_provider.dart';
 import 'azan_player_screen.dart';
-import '../../../../core/utils/byte_formatter.dart';
 
 const _prayerLabels = {
   'fajr': 'prayer.fajr',
@@ -213,8 +207,6 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     final settings = ref.read(adhanSettingsProvider);
     final catalog = ref.read(adhanCatalogProvider).value ?? const [];
     if (catalog.isEmpty) return;
-    final videoPath =
-        await resolveAdhanVideoPath(ref.read(adhanPresentationProvider));
     if (!mounted) return;
 
     // Stop any row preview first, so two adhans can never overlap.
@@ -226,7 +218,6 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     final spec = previewSpec(
       settings: settings,
       catalog: catalog,
-      adhanVideoPath: videoPath,
       // Dhuhr = a neutral (non-Fajr) adhan, so the synced text uses the
       // standard wording rather than the Fajr-only sunrise line.
       prayerLabel: _prayerLabels['dhuhr']!.tr(),
@@ -252,13 +243,10 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     final messenger = ScaffoldMessenger.of(context);
     final settings = ref.read(adhanSettingsProvider);
     final catalog = ref.read(adhanCatalogProvider).value ?? const [];
-    final videoPath =
-        await resolveAdhanVideoPath(ref.read(adhanPresentationProvider));
     await fireAdhanTest(
       prayerKey: prayerKey,
       settings: settings,
       catalog: catalog,
-      adhanVideoPath: videoPath,
     );
     if (mounted) {
       messenger.showSnackBar(SnackBar(content: Text('prayer.test_scheduled'.tr())));
@@ -412,7 +400,6 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
               ),
             ),
             const SizedBox(height: 20),
-            const _PresentationCard(),
             const SizedBox(height: 20),
             // The alarm-stream volume, right where the adhans are chosen: the
             // adhan plays on STREAM_ALARM by design, so the volume rocker
@@ -860,285 +847,6 @@ class _PrayerModeCard extends StatelessWidget {
                 onChanged: onAdhanChanged,
               ),
             ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── P2‑7: صوت | فيديو presentation + the background-clip picker ──────────────
-
-class _PresentationCard extends ConsumerStatefulWidget {
-  const _PresentationCard();
-
-  @override
-  ConsumerState<_PresentationCard> createState() => _PresentationCardState();
-}
-
-class _PresentationCardState extends ConsumerState<_PresentationCard> {
-  StreamSubscription<List<DownloadTask>>? _sub;
-
-  /// video id -> local file path (once downloaded).
-  final Map<String, String> _paths = {};
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPaths();
-    _sub = DownloadManager.instance.stream.listen((_) => _loadPaths());
-  }
-
-  @override
-  void dispose() {
-    _sub?.cancel();
-    super.dispose();
-  }
-
-  // P3‑44: real-device feedback — there was no way to actually see a video
-  // clip before selecting it, only a name and a download button. Plays it
-  // exactly as it'll really appear in the full-screen Adhan (muted,
-  // looped, behind a dark scrim) so the preview is honest about what
-  // picking it actually does, not a different, sound-on experience.
-  Future<void> _showVideoPreview(String path) async {
-    final controller = VideoPlayerController.file(File(path));
-    try {
-      await controller.initialize();
-      await controller.setVolume(0);
-      await controller.setLooping(true);
-      await controller.play();
-    } catch (_) {
-      await controller.dispose();
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('errors.generic'.tr())));
-      }
-      return;
-    }
-    if (!mounted) {
-      await controller.dispose();
-      return;
-    }
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) => Dialog(
-        insetPadding: const EdgeInsets.all(16),
-        backgroundColor: Colors.black,
-        child: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            AspectRatio(
-              aspectRatio: controller.value.aspectRatio == 0
-                  ? 16 / 9
-                  : controller.value.aspectRatio,
-              child: VideoPlayer(controller),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
-              onPressed: () => Navigator.of(dialogContext).pop(),
-            ),
-          ],
-        ),
-      ),
-    );
-    await controller.dispose();
-  }
-
-  Future<void> _loadPaths() async {
-    final paths = <String, String>{};
-    for (final v in adhanVideoCatalog) {
-      final p = await DownloadManager.instance.registeredPath(v.downloadId);
-      if (p != null) paths[v.id] = p;
-    }
-    if (mounted) {
-      setState(() => _paths
-        ..clear()
-        ..addAll(paths));
-    }
-  }
-
-  Future<void> _download(AdhanVideoOption v) => DownloadManager.instance.enqueue(
-        id: v.downloadId,
-        url: v.url,
-        category: 'adhan_video',
-        fileName: v.fileName,
-        title: 'prayer.adhan_video'.tr(),
-      );
-
-  Future<void> _reschedule() =>
-      ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final state = ref.watch(adhanPresentationProvider);
-    final isVideo = state.mode == AdhanPresentation.video;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('prayer.presentation'.tr(),
-                style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 8),
-            SegmentedButton<AdhanPresentation>(
-              showSelectedIcon: false,
-              segments: [
-                ButtonSegment(
-                  value: AdhanPresentation.audioOnly,
-                  icon: const Icon(Icons.graphic_eq, size: 16),
-                  label: Text('prayer.presentation_audio'.tr()),
-                ),
-                ButtonSegment(
-                  value: AdhanPresentation.video,
-                  icon: const Icon(Icons.movie_outlined, size: 16),
-                  label: Text('prayer.presentation_video'.tr()),
-                ),
-              ],
-              selected: {state.mode},
-              onSelectionChanged: (s) async {
-                await ref
-                    .read(adhanPresentationProvider.notifier)
-                    .setMode(s.first);
-                await _reschedule();
-              },
-            ),
-            if (isVideo) ...[
-              const SizedBox(height: 12),
-              for (final v in adhanVideoCatalog)
-                _VideoRow(
-                  option: v,
-                  selected: state.videoId == v.id,
-                  downloadedPath: _paths[v.id],
-                  task: DownloadManager.instance.taskById(v.downloadId),
-                  onSelect: () async {
-                    await ref
-                        .read(adhanPresentationProvider.notifier)
-                        .setVideo(v.id);
-                    await _reschedule();
-                  },
-                  onDownload: () => _download(v),
-                  onPreview: _paths[v.id] == null
-                      ? null
-                      : () => _showVideoPreview(_paths[v.id]!),
-                ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                value: state.playlist,
-                title: Text('prayer.video_playlist'.tr()),
-                subtitle: Text(
-                  'prayer.video_playlist_desc'.tr(),
-                  style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
-                ),
-                onChanged: (v) =>
-                    ref.read(adhanPresentationProvider.notifier).setPlaylist(v),
-              ),
-              const SizedBox(height: 8),
-              Text(adhanVideoSourceLabelKey.tr(),
-                  style: TextStyle(
-                      color: scheme.onSurfaceVariant, fontSize: 11)),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _VideoRow extends StatelessWidget {
-  final AdhanVideoOption option;
-  final bool selected;
-  final String? downloadedPath;
-  final DownloadTask? task;
-  final VoidCallback onSelect;
-  final VoidCallback onDownload;
-  final VoidCallback? onPreview;
-
-  const _VideoRow({
-    required this.option,
-    required this.selected,
-    required this.downloadedPath,
-    required this.task,
-    required this.onSelect,
-    required this.onDownload,
-    required this.onPreview,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final busy = task != null &&
-        (task!.status == DownloadStatus.downloading ||
-            task!.status == DownloadStatus.queued);
-    final downloaded = downloadedPath != null;
-
-    // Selecting a clip is a tap on the row, not a button labelled
-    // «اختر»/«مختار» beside it. The owner asked for that word gone: the
-    // radio glyph already says which one is chosen, and a word that changes
-    // between "select" and "selected" made the row read like a form field
-    // rather than a list you pick from.
-    return InkWell(
-      onTap: downloaded ? onSelect : null,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-        child: Row(
-          children: [
-            Icon(
-              downloaded
-                  ? (selected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked)
-                  : Icons.movie_outlined,
-              size: 20,
-              color: selected ? AppColors.gold : scheme.onSurfaceVariant,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(option.labelKey.tr(),
-                      style: TextStyle(
-                          fontWeight:
-                              selected ? FontWeight.w700 : FontWeight.w400)),
-                  // The measured pixel size and the download size, so a clip
-                  // is chosen knowingly. `ltr()` around each because a
-                  // numeral beside a Latin unit reverses inside an Arabic
-                  // line (trap #16) — «1080×1920» and «12.6 MB» are both
-                  // that shape.
-                  Text(
-                    '${ltr(option.sizeLabel)} · '
-                    '${formatBytes(option.approxSizeBytes)}',
-                    style: TextStyle(
-                        fontSize: 11, color: scheme.onSurfaceVariant),
-                  ),
-                ],
-              ),
-            ),
-            if (busy)
-              SizedBox(
-                width: 90,
-                child: LinearProgressIndicator(
-                  value: task!.total == null ? null : task!.progress,
-                  color: AppColors.gold,
-                ),
-              )
-            else if (downloaded)
-              IconButton(
-                tooltip: 'prayer.video_preview'.tr(),
-                icon: const Icon(Icons.play_circle_outline),
-                onPressed: onPreview,
-              )
-            else
-              OutlinedButton.icon(
-                onPressed: onDownload,
-                icon: const Icon(Icons.download_rounded, size: 16),
-                label: Text(formatBytes(option.approxSizeBytes)),
-              ),
           ],
         ),
       ),

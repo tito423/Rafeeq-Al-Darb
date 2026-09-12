@@ -453,6 +453,46 @@ class DownloadManager {
     } catch (_) {}
   }
 
+  /// Deletes every adhan background clip this device downloaded, once.
+  ///
+  /// «احذف الكليبات». The ten clips are gone from the app — see `AdhanScene`
+  /// for what replaced them — but a phone that downloaded some is still
+  /// holding the bytes, and nothing in the app would ever offer to free them
+  /// again now that the screen that listed them is deleted. So this runs once
+  /// per install, from `AppShell`'s first frame, exactly like
+  /// `purgeLegacyAyahFiles`.
+  ///
+  /// The registry entry is dropped **after** the file, and only when the file
+  /// is really gone: an entry with no file is a row the storage hub counts and
+  /// cannot free, which is the defect `forgetCategory`'s own comment is about.
+  /// If a delete throws, the entry stays and the next launch tries again.
+  static const _kAdhanVideoPurgedKey = 'adhan_videos_purged_v1';
+
+  Future<int> purgeAdhanVideos() async {
+    var freed = 0;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool(_kAdhanVideoPurgedKey) ?? false) return 0;
+      for (final a in await registeredArtifacts()) {
+        if (a['category'] != 'adhan_video') continue;
+        final path = a['path'] as String?;
+        if (path == null) continue;
+        final f = File(path);
+        if (!f.existsSync()) continue;
+        freed += f.lengthSync();
+        await f.delete();
+      }
+      await forgetCategory('adhan_video');
+      await prefs.setBool(_kAdhanVideoPurgedKey, true);
+      if (freed > 0) {
+        debugPrint('DownloadManager: freed $freed bytes of adhan clips');
+      }
+    } catch (_) {
+      // Tried again on the next launch.
+    }
+    return freed;
+  }
+
   /// Bytes an already-downloaded artifact occupies on disk (0 if unknown).
   Future<int> artifactSize(String id) async {
     final path = await registeredPath(id);

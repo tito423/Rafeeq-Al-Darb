@@ -466,11 +466,6 @@
     "status_notification": "Cartão de oração fixo",
     "status_notification_desc": "Um cartão fixo na barra de status com a próxima oração, a data híjri e uma contagem regressiva — funciona offline",
     "adhan_limit_reached": "Você atingiu o limite (30 adhans)",
-    "presentation": "Apresentação",
-    "presentation_audio": "Áudio",
-    "presentation_video": "Vídeo",
-    "adhan_video": "Vídeo do adhan",
-    "video_preview": "Pré-visualizar",
     "per_prayer_desc": "Um modo e muezim por oração",
     "azan_of": "Adhan — oração do {}",
     "exact_alarm": "O adhan funciona tal como um alarme, por isso precisa da permissão de \"alarmes exatos\" para tocar à hora certa e abrir sobre o ecrã de bloqueio",
@@ -517,9 +512,7 @@
     },
     "alarm_volume": "Volume do alarme",
     "alarm_volume_desc": "O adhan toca no canal de alarme para ser ouvido mesmo no silencioso — por isso as teclas de volume não o alteram.",
-    "alarm_volume_refused": "O sistema recusou a alteração, provavelmente por causa do modo Não incomodar.",
-    "video_playlist": "Tocar todos os vídeos em sequência",
-    "video_playlist_desc": "Os vídeos baixados tocam um após o outro como um só, sem intervalo, em vez de repetir o escolhido."
+    "alarm_volume_refused": "O sistema recusou a alteração, provavelmente por causa do modo Não incomodar."
   },
   "qibla": {
     "locating": "A localizar...",

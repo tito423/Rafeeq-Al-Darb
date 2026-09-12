@@ -39,6 +39,11 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.recitations => const ['ruqyah'],
         DownloadCategory.hadith => const ['hadith'],
         DownloadCategory.books => const ['books', 'books_text'],
+        // `adhan_video` is kept on purpose even though the clips are gone
+        // from the app: a phone that downloaded some still has the files
+        // until `DownloadManager.purgeAdhanVideos` has run, and an
+        // unclaimed category is bytes the hub neither counts nor can free
+        // — which is exactly what this comment block is warning about.
         DownloadCategory.adhan => const ['adhan', 'adhan_video'],
       };
 }

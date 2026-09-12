@@ -466,11 +466,6 @@
     "status_notification": "Carte de prière persistante",
     "status_notification_desc": "Une carte permanente dans la barre d'état avec la prochaine prière, la date hégirienne et un compte à rebours en direct — fonctionne hors ligne",
     "adhan_limit_reached": "Vous avez atteint la limite (30 adhans)",
-    "presentation": "Présentation",
-    "presentation_audio": "Audio",
-    "presentation_video": "Vidéo",
-    "adhan_video": "Vidéo de l'adhan",
-    "video_preview": "Aperçu",
     "per_prayer_desc": "Un mode et un muezzin par prière",
     "azan_of": "Adhan — prière du {}",
     "exact_alarm": "L'adhan se comporte exactement comme un réveil : il lui faut l'autorisation « alarmes exactes » pour sonner à l'heure et s'ouvrir sur l'écran verrouillé",
@@ -517,9 +512,7 @@
     },
     "alarm_volume": "Volume de l'alarme",
     "alarm_volume_desc": "L'adhan passe sur le canal d'alarme pour être entendu même en silencieux — d'où le fait que les touches de volume n'y changent rien.",
-    "alarm_volume_refused": "Le système a refusé la modification, sans doute à cause du mode Ne pas déranger.",
-    "video_playlist": "Enchaîner toutes les vidéos",
-    "video_playlist_desc": "Les vidéos téléchargées s’enchaînent comme un seul film, sans coupure, au lieu de répéter celle choisie."
+    "alarm_volume_refused": "Le système a refusé la modification, sans doute à cause du mode Ne pas déranger."
   },
   "qibla": {
     "locating": "Localisation en cours...",

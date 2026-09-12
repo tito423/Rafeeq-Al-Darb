@@ -467,11 +467,6 @@
     "status_notification": "Persistent prayer card",
     "status_notification_desc": "An ongoing status-bar card with the next prayer, the Hijri date and a live countdown — works offline",
     "adhan_limit_reached": "You've reached the limit (30 adhans)",
-    "presentation": "Presentation",
-    "presentation_audio": "Audio",
-    "presentation_video": "Video",
-    "adhan_video": "Adhan video",
-    "video_preview": "Preview",
     "per_prayer_desc": "A separate mode and muezzin per prayer",
     "azan_of": "Adhan — {} prayer",
     "exact_alarm": "The Adhan behaves exactly like an alarm, so it needs the \"exact alarms\" permission to fire on time and open over the lock screen",
@@ -517,9 +512,7 @@
     },
     "alarm_volume": "Alarm volume",
     "alarm_volume_desc": "The adhan plays on the alarm stream so it is heard even on silent — which is why the volume keys do not change it.",
-    "alarm_volume_refused": "The system refused the change, most likely because of Do Not Disturb.",
-    "video_playlist": "Play all clips back to back",
-    "video_playlist_desc": "Every downloaded clip plays in turn as one film, with no gap, instead of the chosen clip looping."
+    "alarm_volume_refused": "The system refused the change, most likely because of Do Not Disturb."
   },
   "qibla": {
     "locating": "Locating you...",

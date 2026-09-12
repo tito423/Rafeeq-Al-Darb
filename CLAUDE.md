@@ -461,11 +461,17 @@ Do not rediscover these.
     adhan background clips were not the scene the app named them — a flag of
     Pakistan was «رحاب مسجد», gold calligraphy was «الكعبة المشرّفة عن قرب», a
     cartoon was «ساحات الحرم المكي», a Turkish city was «رحاب المسجد النبوي».
-    ffmpeg reads four frames from across a clip in seconds
-    (`contact_sheet_adhan_videos.py`); the resolution was checked first and
-    was the *smaller* problem. **Look at the frames of anything you catalogue,
-    and record what you saw** — `adhan_video_content.json` is that record and
-    a test checks the catalogue against it.
+    ffmpeg reads four frames from across a clip in seconds; the resolution
+    was checked first and was the *smaller* problem. **Look at the frames of
+    anything you catalogue, and record what you saw.**
+
+    The clips themselves are gone — the owner said «احذف الكليبات» once
+    `AdhanScene` existed, so the catalogue, the settings toggle, the
+    `video_player` pipeline in the adhan screen, the four pipeline scripts and
+    the `adhan_video_content.json` record all went with them (the eleven
+    objects still sit under `adhan/video/` on R2, ~74 MB, untouched). The
+    lesson stays, because it is about catalogues, not about video: **a
+    catalogue nobody opened is a catalogue of claims.**
 
 37. **`BoxFit.cover` on a portrait screen is a magnifying glass.** A 640×360
     landscape clip drawn full-screen on a 1080×2400 phone is scaled 6.7× and
