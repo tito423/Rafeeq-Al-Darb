@@ -179,6 +179,21 @@ class HadithRepository {
     return rows.map(HadithBook.fromRow).toList();
   }
 
+  /// (collections, hadiths, hadiths carrying a grade) — read from the database
+  /// that is actually open, so the About screen states today's numbers rather
+  /// than numbers somebody typed once. Three `COUNT(*)`s, no rows loaded
+  /// (trap #4: never pull the corpus to count it).
+  Future<(int, int, int)> counts() async {
+    Future<int> one(String sql) async =>
+        Sqflite.firstIntValue(await _db.rawQuery(sql)) ?? 0;
+    return (
+      await one('SELECT COUNT(*) FROM books'),
+      await one('SELECT COUNT(*) FROM hadiths'),
+      await one("SELECT COUNT(*) FROM hadiths "
+          "WHERE grade IS NOT NULL AND TRIM(grade) <> ''"),
+    );
+  }
+
   Future<List<HadithChapter>> chaptersOfBook(int bookId) async {
     final rows = await _db.query(
       'chapters',

@@ -138,4 +138,27 @@ const islamicChannels = <IslamicChannel>[
     channelId: 'UCWjCSGhmSGu0VLf2mPFS0Kg',
     handle: 'othmanalkamees',
   ),
+  // «وضيف قناة مبروك زيد الخير ومحمد راتب النابلسي».
+  //
+  // For مبروك زيد الخير, YouTube has two: `@dr_zidelkhir_mebrouk`, whose own
+  // title is his name, and `@mabrouk_zidelkhir` («روائع د. مبروك زيد الخير»),
+  // which is a clips channel. The first is the one here.
+  //
+  // For النابلسي, the one taken is the channel of his own encyclopaedia —
+  // «القناة الرسمية لموسوعة النابلسي للعلوم الإسلامية» — rather than either
+  // of the two «نفحات/روائع النابلسي» channels, which republish him.
+  IslamicChannel(
+    id: 'mabrouk_zidelkhir',
+    nameAr: 'الدكتور مبروك زيدالخير',
+    nameEn: 'Dr. Mebrouk Zidelkhir',
+    channelId: 'UCCLucFt_j51ToCFyiE8qMVA',
+    handle: 'dr_zidelkhir_mebrouk',
+  ),
+  IslamicChannel(
+    id: 'rateb_alnabulsi',
+    nameAr: 'القناة الرسمية لموسوعة النابلسي للعلوم الإسلامية',
+    nameEn: 'Al-Nabulsi Encyclopaedia of Islamic Sciences — Official',
+    channelId: 'UC7naRnmAOTwDPu738W2SljQ',
+    handle: 'nabulsiencyclopedia',
+  ),
 ];

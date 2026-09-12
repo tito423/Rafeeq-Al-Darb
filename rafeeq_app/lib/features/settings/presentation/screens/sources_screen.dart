@@ -79,6 +79,39 @@ final _groups = <(String, List<_Source>)>[
       _Source('archive.org', 'https://archive.org', 'about.src_archive'),
     ]
   ),
+  // Each scanned printing, named with the item it came from and the rights
+  // position that item actually states — not "archive.org" as a single line
+  // covering five different books with five different licences.
+  //
+  // The licences are the ones recorded when each printing was built
+  // (`scripts/build_mushaf_from_pdf.py`, `r2_upload_mushaf_printings.py`),
+  // each read off the item or the volume's own back matter. Trap #18 is why
+  // they are read rather than assumed: a free scan is not automatically free
+  // to rehost, and one candidate printing was dropped for exactly that.
+  //
+  // Only the five printings that actually ship appear here. `editions.json`
+  // is the list; a printing built in `scripts/` but not shipped (the Nastaliq
+  // setting) is not credited, because the app does not carry it.
+  (
+    'about.src_mushaf_printings',
+    [
+      _Source('مصحف التجويد الملوّن',
+          'https://github.com/Imomzoda8/tajweed-quran-images',
+          'about.src_ed_tajweed'),
+      _Source('المصحف المذهّب (Smart Mushaf)',
+          'https://archive.org/details/smartmushaf', 'about.src_ed_gold'),
+      _Source('مصحف قطر', 'https://archive.org/details/QuranMushafQatar',
+          'about.src_ed_qatar'),
+      _Source(
+          'مصحف دولة الكويت',
+          'https://archive.org/details/'
+              'HQ23AlQuranAlKareemMushafDolatUlKuwaitWww.Quranpdf.blogspot.in',
+          'about.src_ed_kuwait'),
+      _Source('مصحف المدينة — الطبعة الليلية',
+          'https://archive.org/details/QuranMadina35685363568hNight',
+          'about.src_ed_madinah_night'),
+    ]
+  ),
   (
     'about.src_audio',
     [
@@ -123,6 +156,16 @@ final _groups = <(String, List<_Source>)>[
     'about.src_prayer',
     [
       _Source('api.aladhan.com', 'https://aladhan.com', 'about.src_aladhan'),
+    ]
+  ),
+  // The channel list is a list of links, and a link needs no permission. The
+  // avatars are a different matter: they are mirrored onto this project's own
+  // bucket so the grid is not a page of grey squares offline, and a mirrored
+  // image is a copy of someone else's file. Credited here for that reason.
+  (
+    'channels.title',
+    [
+      _Source('YouTube', 'https://www.youtube.com', 'about.src_youtube'),
     ]
   ),
   (
