@@ -66,6 +66,26 @@ class PrayerTimes {
     );
   }
 
+  /// The same times with the place named in another language.
+  ///
+  /// The city is reverse-geocoded once, when the times are fetched, and then
+  /// travels inside this object for as long as the times are cached - which
+  /// is how the prayer notification came to read «المغرب ٢٠:٠٤ · Dubai» after
+  /// the reader switched the app to Arabic. Renaming beats re-fetching: the
+  /// coordinates did not change, only the question did.
+  PrayerTimes withPlace(String city, String country) => PrayerTimes(
+        fajr: fajr,
+        sunrise: sunrise,
+        dhuhr: dhuhr,
+        asr: asr,
+        maghrib: maghrib,
+        isha: isha,
+        cityName: city,
+        countryName: country,
+        hijriDate: hijriDate,
+        gregorianDate: gregorianDate,
+      );
+
   String byName(String name) {
     switch (name) {
       case 'fajr':

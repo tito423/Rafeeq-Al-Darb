@@ -96,6 +96,36 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
     await _reschedule(current.times);
   }
 
+  /// Re-read the place name in the language the app is in NOW.
+  ///
+  /// The city travels inside the cached `PrayerTimes`, so switching the app
+  /// from English to Arabic left the ongoing prayer notification reading
+  /// «المغرب ٢٠:٠٤ · Dubai» - the owner's «لغة الجهاز انجليزي وانا مختار عربي
+  /// في التطبيق فالاشعار طلع مكس مابينهم». This asks the geocoder again for
+  /// the coordinates already on file: no GPS fix, no times fetch, and the
+  /// answer is discarded rather than guessed at if it comes back empty.
+  Future<void> refreshPlaceName() async {
+    final current = state.valueOrNull;
+    if (current == null || current.times.isEmpty) return;
+    final pos = await LocationService.instance.getCurrentPosition(
+      localeCode: ref.read(appLocaleProvider),
+    );
+    final city = pos?.locality ?? '';
+    final country = pos?.country ?? '';
+    if (city.isEmpty && country.isEmpty) return;
+    if (city == current.times.cityName &&
+        country == current.times.countryName) {
+      return;
+    }
+    state = AsyncData(PrayerTimesResult(
+      times: current.times.withPlace(city, country),
+      locationDenied: current.locationDenied,
+    ));
+    // The ongoing card carries the city in its body, and its text is frozen
+    // when it is posted - so it has to be re-posted, not merely left.
+    await _reschedule(current.times.withPlace(city, country));
+  }
+
   Future<void> _reschedule(PrayerTimes times) async {
     final settings = ref.read(adhanSettingsProvider);
     // The three "before / after / iqama" nudges ride on the same trigger as

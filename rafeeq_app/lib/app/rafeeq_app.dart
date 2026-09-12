@@ -69,6 +69,11 @@ class RafeeqApp extends ConsumerWidget {
         // arm them itself.
         if (!first) {
           ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
+          // And the CITY inside those reminders, which is reverse-geocoded
+          // once per times fetch and otherwise never asked again. Without
+          // this the notification keeps the place name in whatever language
+          // the app happened to be in when the times were last fetched.
+          ref.read(prayerControllerProvider.notifier).refreshPlaceName();
         }
       }
       // The quote window carries its title as literal text too, for the same
