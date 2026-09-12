@@ -1337,5 +1337,29 @@
     "bg_crescents": "Crescents",
     "bg_ribbons": "Ribbons",
     "bg_domes": "Domes"
+  },
+  "tajweed": {
+    "title": "Learn Tajweed",
+    "card_subtitle": "Graded lessons — and every rule heard in a real ayah",
+    "subtitle": "Lessons in order, from the beginning. Read the lesson, then hear the rule recited where it actually occurs in the Quran.",
+    "progress": "{done} of {total} completed",
+    "source": "Lesson text from Taysir Ahkam at-Tajwid (level one), via al-Maktaba al-Shamela. Recitation in the riwayah of Hafs from Asim, by Muhammad Siddiq al-Minshawi (mujawwad).",
+    "needs_download": "The lesson text needs downloading once. Check your connection and try again.",
+    "listen": "Listen",
+    "mark_done": "Mark complete",
+    "mark_undone": "Mark incomplete",
+    "listen_izhar": "The nun is sounded clearly, with no drawn-out ghunnah",
+    "listen_idgham": "The nun merges into the waw, with ghunnah",
+    "listen_iqlab": "The nun turns into a hidden meem before the ba",
+    "listen_ikhfa": "The nun is hidden between clarity and merging, with ghunnah",
+    "listen_meem": "The silent meem is hidden at the lips before the ba",
+    "listen_madd_tabii": "The natural madd: two counts, no more and no less",
+    "listen_muttasil": "A hamza follows the madd letter in one word, so it is drawn",
+    "listen_munfasil": "The madd letter ends one word and the hamza opens the next",
+    "listen_lazim": "The longest madd: an obligatory sukun after the madd letter",
+    "listen_qalqalah": "The articulation bounces on the silent qalqalah letter",
+    "listen_ra_tafkhim": "An open ra, so it is pronounced heavy",
+    "listen_ra_tarqiq": "A silent ra after a kasrah, so it is pronounced light",
+    "stop": "Stop"
   }
 }

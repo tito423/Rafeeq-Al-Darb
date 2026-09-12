@@ -10,6 +10,7 @@ import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../settings/presentation/widgets/focus_mode_picker.dart';
+import '../../../tajweed/presentation/screens/tajweed_course_screen.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 
 /// The "المزيد" tab.
@@ -62,6 +63,21 @@ class MoreScreen extends ConsumerWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const QuranAudioScreen(),
+              ),
+            ),
+          ),
+
+          // «تعليم التجويد» — the lessons come verbatim from a real graded
+          // course on Shamela, and every rule that can be pointed at is heard
+          // in an ayah rather than described, which is what he asked for.
+          IslamicActionCard(
+            icon: Icons.record_voice_over_outlined,
+            accent: AppColors.gold,
+            title: 'tajweed.title'.tr(),
+            subtitle: 'tajweed.card_subtitle'.tr(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const TajweedCourseScreen(),
               ),
             ),
           ),
