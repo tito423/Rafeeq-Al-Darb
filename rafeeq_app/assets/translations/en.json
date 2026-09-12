@@ -1260,5 +1260,10 @@
     "scan_none": "No audio files found on the device.",
     "scan_found": "Audio files on the device: {}",
     "now_downloading_list": "Downloading: {}"
+  },
+  "focus": {
+    "title": "Focus mode",
+    "subtitle": "The mushaf alone on screen — the rest of the app is closed until you leave",
+    "exit": "Leave focus mode"
   }
 }

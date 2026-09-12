@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
@@ -7,6 +8,7 @@ import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
+import '../../../settings/data/focus_mode_provider.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 
@@ -22,11 +24,11 @@ import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 /// The whole tab is one scroll view: [SettingsBody] contributes a `Column`
 /// rather than a `ListView` of its own, because a list inside a list scrolls
 /// against itself and there is no reason for two of them here.
-class MoreScreen extends StatelessWidget {
+class MoreScreen extends ConsumerWidget {
   const MoreScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: Text('nav.more'.tr())),
       body: ListView(
@@ -38,6 +40,17 @@ class MoreScreen extends StatelessWidget {
           // who is lost comes here looking for, and it carries its own
           // every-launch switch rather than sending them down to Settings.
           const TutorialEntryCard(),
+
+          // «وضع التركيز» - turning it on leaves the Qur'an tab and nothing
+          // else. It is entered from here and left from the bar that replaces
+          // the navigation bar, or with the back gesture; see `AppShell`.
+          IslamicActionCard(
+            icon: Icons.center_focus_strong_outlined,
+            accent: AppColors.primarySoft,
+            title: 'focus.title'.tr(),
+            subtitle: 'focus.subtitle'.tr(),
+            onTap: () => ref.read(focusModeProvider.notifier).set(true),
+          ),
 
           // «انشئ في المزيد قسم جديد سميه تحميل تلاوات القرآن … عبارة عن
           // music player احترافي». First, because it is the one he asked for.

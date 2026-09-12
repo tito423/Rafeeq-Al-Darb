@@ -115,7 +115,9 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
   }
 
   Future<PrayerTimesResult> _load() async {
-    final pos = await LocationService.instance.getCurrentPosition();
+    final pos = await LocationService.instance.getCurrentPosition(
+      localeCode: ref.read(appLocaleProvider),
+    );
     if (pos == null) {
       return PrayerTimesResult(times: PrayerTimes.empty(), locationDenied: true);
     }

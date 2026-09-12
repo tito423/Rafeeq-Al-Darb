@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
+import '../../core/theme/app_colors.dart';
 import '../../core/services/alarm_permissions_service.dart';
 import '../../core/services/ayah_audio_service.dart';
 import '../../core/services/download_manager.dart';
@@ -22,6 +23,7 @@ import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/more/presentation/screens/more_screen.dart';
 import '../../features/qibla/presentation/screens/qibla_screen.dart';
+import '../../features/settings/data/focus_mode_provider.dart';
 import '../../features/quran/data/quran_fullscreen_provider.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/tutorial/data/tutorial_state.dart';
@@ -252,6 +254,17 @@ class _AppShellState extends ConsumerState<AppShell>
     final fullScreen =
         ref.watch(quranFullScreenProvider) && _index == AppTab.quran;
 
+    // «وضع التركيز». The nav bar is not merely hidden - the index is
+    // pinned, so a `requestedTabProvider` set by a pushed screen, or a
+    // stale `_index` from before the mode was turned on, cannot land the
+    // reader on another tab behind a missing bar.
+    final focus = ref.watch(focusModeProvider);
+    if (focus && _index != AppTab.quran) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _goTo(AppTab.quran);
+      });
+    }
+
     // P3‑44: real-device feedback — pressing the system back button/gesture
     // on any non-Home tab exited the app outright (Android's own default
     // for a root route with nothing beneath it in the Navigator stack).
@@ -261,12 +274,19 @@ class _AppShellState extends ConsumerState<AppShell>
     // rather than a literal AppBar arrow that wouldn't make sense on a
     // root bottom-nav screen.
     return PopScope(
-      canPop: _index == AppTab.home,
+      canPop: !focus && _index == AppTab.home,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) {
-          setState(() => _index = AppTab.home);
-          ref.read(activeTabProvider.notifier).state = AppTab.home;
+        if (didPop) return;
+        // In focus mode the back gesture IS the way out - the owner asked
+        // for «جيستشر عادي او زر الخروج» and this is the gesture half. No
+        // `maybePop` anywhere near it: that would hand the request back to
+        // this very handler (trap #44).
+        if (focus) {
+          ref.read(focusModeProvider.notifier).set(false);
+          return;
         }
+        setState(() => _index = AppTab.home);
+        ref.read(activeTabProvider.notifier).state = AppTab.home;
       },
       child: Scaffold(
         // The Qur'an tab lays a whole mushaf page out against the body's
@@ -288,7 +308,9 @@ class _AppShellState extends ConsumerState<AppShell>
       // user setting could otherwise break.
       bottomNavigationBar: fullScreen
           ? null
-          : MediaQuery.withNoTextScaling(
+          : focus
+              ? const _FocusModeBar()
+              : MediaQuery.withNoTextScaling(
               child: NavigationBar(
               selectedIndex: _index,
               onDestinationSelected: _goTo,
@@ -334,6 +356,57 @@ class _AppShellState extends ConsumerState<AppShell>
               ],
             ),
           ),
+      ),
+    );
+  }
+}
+
+
+/// The only way out of «وضع التركيز» that is visible on screen.
+///
+/// It sits exactly where the navigation bar was, so the reader's thumb finds
+/// it where it expects something to be, and it says what it does rather than
+/// being a bare icon - a mode that traps you is only acceptable when the exit
+/// is unmistakable. The back gesture does the same thing; see `AppShell`'s
+/// `PopScope`.
+class _FocusModeBar extends ConsumerWidget {
+  const _FocusModeBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scheme = Theme.of(context).colorScheme;
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
+        child: Material(
+          color: scheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(14),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: () => ref.read(focusModeProvider.notifier).set(false),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.logout_rounded, size: 20, color: AppColors.gold),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      'focus.exit'.tr(),
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: AppColors.gold,
+                            fontWeight: FontWeight.w600,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

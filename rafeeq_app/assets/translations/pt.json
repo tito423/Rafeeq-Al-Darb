@@ -1260,5 +1260,10 @@
     "scan_none": "Nenhum arquivo de áudio encontrado no dispositivo.",
     "scan_found": "Arquivos de áudio no dispositivo: {}",
     "now_downloading_list": "Baixando: {}"
+  },
+  "focus": {
+    "title": "Modo foco",
+    "subtitle": "Somente o mushaf na tela — o resto do aplicativo fica fechado até você sair",
+    "exit": "Sair do modo foco"
   }
 }

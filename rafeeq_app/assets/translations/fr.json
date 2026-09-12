@@ -1249,7 +1249,7 @@
     "theme_cedar": "Cèdre",
     "theme_amber": "Ambre",
     "now_downloading": "Téléchargement de {} — {}",
-    "tab_favorites": "Favoris",
+    "tab_favorites": "Mes favoris",
     "favorite_add": "Ajouter aux favoris",
     "favorite_remove": "Retirer des favoris",
     "empty_favorites": "Touchez le cœur dans le lecteur pour ajouter une récitation aux favoris.",
@@ -1260,5 +1260,10 @@
     "scan_none": "Aucun fichier audio trouvé sur l'appareil.",
     "scan_found": "Fichiers audio sur l'appareil : {}",
     "now_downloading_list": "Téléchargement : {}"
+  },
+  "focus": {
+    "title": "Mode concentration",
+    "subtitle": "Le mushaf seul à l’écran — le reste de l’application est fermé jusqu’à ce que vous en sortiez",
+    "exit": "Quitter le mode concentration"
   }
 }

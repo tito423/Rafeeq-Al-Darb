@@ -11,11 +11,15 @@ class AppPosition {
   final String? locality;
   final String? country;
 
+  /// Which language [locality] and [country] were read back in.
+  final String localeCode;
+
   const AppPosition({
     required this.latitude,
     required this.longitude,
     this.locality,
     this.country,
+    this.localeCode = 'ar',
   });
 }
 
@@ -63,11 +67,22 @@ class LocationService {
   static const _cacheLocalityKey = 'location_cache_locality_v1';
   static const _cacheCountryKey = 'location_cache_country_v1';
   static const _cacheTimeKey = 'location_cache_time_v1';
+  // The language the cached city name was READ BACK IN. Without it the
+  // notification keeps saying «Dubai» after the reader switches the app
+  // to Arabic, because the cache has no idea the question changed — the
+  // same shape as trap #29, where already-armed alarms kept yesterday's
+  // language.
+  static const _cacheLocaleKey = 'location_cache_locale_v1';
   static const _maxCacheAge = Duration(days: 7);
 
-  Future<AppPosition?> getCurrentPosition() async {
+  /// [localeCode] is the app's current UI language, and it is what the
+  /// platform Geocoder is asked to answer in — so the city on the prayer
+  /// notification reads «دبي» in Arabic and «Dubai» in English, instead of
+  /// whatever the device's own language happens to be.
+  Future<AppPosition?> getCurrentPosition({String localeCode = 'ar'}) async {
     try {
-      final fresh = await _fetchPosition().timeout(const Duration(seconds: 15));
+      final fresh =
+          await _fetchPosition(localeCode).timeout(const Duration(seconds: 15));
       if (fresh != null) {
         unawaited(_persist(fresh));
         return fresh;
@@ -80,22 +95,23 @@ class LocationService {
       final last = await Geolocator.getLastKnownPosition();
       if (last != null) {
         final (locality, country) =
-            await _reverseGeocode(last.latitude, last.longitude);
+            await _reverseGeocode(last.latitude, last.longitude, localeCode);
         return AppPosition(
           latitude: last.latitude,
           longitude: last.longitude,
           locality: locality,
           country: country,
+          localeCode: localeCode,
         );
       }
     } catch (_) {
       // fall through to this service's own cache
     }
 
-    return _readCached();
+    return _readCached(localeCode);
   }
 
-  Future<AppPosition?> _fetchPosition() async {
+  Future<AppPosition?> _fetchPosition(String localeCode) async {
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -110,12 +126,14 @@ class LocationService {
         timeLimit: Duration(seconds: 12),
       ),
     );
-    final (locality, country) = await _reverseGeocode(pos.latitude, pos.longitude);
+    final (locality, country) =
+        await _reverseGeocode(pos.latitude, pos.longitude, localeCode);
     return AppPosition(
       latitude: pos.latitude,
       longitude: pos.longitude,
       locality: locality,
       country: country,
+      localeCode: localeCode,
     );
   }
 
@@ -126,9 +144,10 @@ class LocationService {
     await prefs.setString(_cacheLocalityKey, pos.locality ?? '');
     await prefs.setString(_cacheCountryKey, pos.country ?? '');
     await prefs.setString(_cacheTimeKey, DateTime.now().toIso8601String());
+    await prefs.setString(_cacheLocaleKey, pos.localeCode);
   }
 
-  Future<AppPosition?> _readCached() async {
+  Future<AppPosition?> _readCached(String localeCode) async {
     final prefs = await SharedPreferences.getInstance();
     final lat = prefs.getDouble(_cacheLatKey);
     final lon = prefs.getDouble(_cacheLonKey);
@@ -136,13 +155,30 @@ class LocationService {
     if (lat == null || lon == null || timeStr == null) return null;
     final age = DateTime.now().difference(DateTime.tryParse(timeStr) ?? DateTime(0));
     if (age > _maxCacheAge) return null;
-    final locality = prefs.getString(_cacheLocalityKey);
-    final country = prefs.getString(_cacheCountryKey);
+    var locality = prefs.getString(_cacheLocalityKey);
+    var country = prefs.getString(_cacheCountryKey);
+    // The coordinates are language-independent; the two NAMES are not.
+    // If they were read back in another language, ask the Geocoder again
+    // for the same point rather than showing the reader a city in a
+    // script they did not choose. A failure here leaves them empty, and
+    // `_withCity` simply omits the line — never a guess (§1.1).
+    if (prefs.getString(_cacheLocaleKey) != localeCode) {
+      final (freshLocality, freshCountry) =
+          await _reverseGeocode(lat, lon, localeCode);
+      locality = freshLocality ?? '';
+      country = freshCountry ?? '';
+      if (freshLocality != null) {
+        await prefs.setString(_cacheLocalityKey, freshLocality);
+        await prefs.setString(_cacheCountryKey, freshCountry ?? '');
+        await prefs.setString(_cacheLocaleKey, localeCode);
+      }
+    }
     return AppPosition(
       latitude: lat,
       longitude: lon,
       locality: (locality?.isNotEmpty ?? false) ? locality : null,
       country: (country?.isNotEmpty ?? false) ? country : null,
+      localeCode: localeCode,
     );
   }
 
@@ -152,8 +188,12 @@ class LocationService {
   /// with no Geocoder backend (rare, mostly older/custom ROMs) or no
   /// network for it just gets no city/country, never a fake one — the
   /// prayer times themselves (lat/lon-based) are unaffected either way.
-  Future<(String?, String?)> _reverseGeocode(double lat, double lon) async {
+  Future<(String?, String?)> _reverseGeocode(
+      double lat, double lon, String localeCode) async {
     try {
+      // geocoding 3.0.0 has no per-call locale argument: the language is
+      // set on the platform side first and applies to the calls after it.
+      await setLocaleIdentifier(localeCode);
       final marks = await placemarkFromCoordinates(lat, lon);
       if (marks.isEmpty) return (null, null);
       final m = marks.first;

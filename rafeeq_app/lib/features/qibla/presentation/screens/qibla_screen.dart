@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
+import '../../../../app/app_locale_provider.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/hero_surface.dart';
@@ -77,7 +78,12 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
 
   Future<void> _resolveLocation() async {
     setState(() => _locationState = _LocationState.loading);
-    final pos = await LocationService.instance.getCurrentPosition();
+    // The Qibla shows no city name, but it shares the location cache with
+    // the prayer card - so it must ask in the same language, or it
+    // rewrites the cached city in a language nobody picked.
+    final pos = await LocationService.instance.getCurrentPosition(
+      localeCode: ref.read(appLocaleProvider),
+    );
     if (!mounted) return;
     if (pos == null) {
       setState(() => _locationState = _LocationState.denied);
