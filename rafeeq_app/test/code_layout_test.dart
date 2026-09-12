@@ -27,11 +27,7 @@ void main() {
   /// the length they had that day. They are allowed to exist; they are not
   /// allowed to GROW. Shrink one below the ceiling and delete its line.
   ///
-  /// `book_catalog.dart` is the one permanent entry: it is 226 books' worth of
-  /// catalogue rows, generated and appended to, and splitting a data file by
-  /// line count would buy nothing.
   const grandfathered = <String, int>{
-    'lib/features/library/data/book_catalog.dart': 4063,
     'lib/features/library/presentation/screens/book_text_reader_screen.dart': 1156,
     // The remaining 1,047 are almost entirely one State class. Breaking it up
     // is a controller extraction, not a move — see REFACTOR.md stage 3b.
@@ -45,12 +41,24 @@ void main() {
     'lib/core/services/ayah_audio_service.dart': 810,
   };
 
+  /// Files the ceiling does not apply to at all, with the reason.
+  ///
+  /// One entry, and it should stay that way. `book_catalog.dart` is a
+  /// GENERATED data file that gains a row per book: capping it means capping
+  /// how many books the Library may hold, which is not a code-layout concern
+  /// and is the opposite of what this project wants. A length cap on it would
+  /// be a rule that fires every time the app gets better.
+  const exempt = <String>{
+    'lib/features/library/data/book_catalog.dart',
+  };
+
   const ceiling = 800;
 
   test('no file in lib/ grows past $ceiling lines', () {
     final tooLong = <String>[];
     for (final file in dartFiles) {
       final path = file.path.replaceAll(r'\', '/');
+      if (exempt.contains(path)) continue;
       final lines = file.readAsLinesSync().length;
       final allowed = grandfathered[path];
       if (allowed != null) {

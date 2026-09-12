@@ -4022,6 +4022,29 @@ const List<LibraryBook> libraryBookCatalog = [
   // Shamela text editions built by `build_book_text.py` from a local crawl
   // and uploaded by `r2_upload_book_text.py`; `sizeBytes` is the byte count
   // the bucket answered with, not an estimate.
+  // «حطلي لكل واحد فيهم ١٠ كتب … من الشاملة». The first of that batch: its
+  // author id came from the book this Library already ships of his, not from
+  // Shamela's search (trap #17). Its own card says the numbering is مرقم آليًا
+  // and NOT موافق للمطبوع, so the reader is told that rather than the opposite
+  // - a plain «"موافق للمطبوع" in card» test had been reading «غير موافق
+  // للمطبوع» as a match.
+  LibraryBook(
+    id: 'al_khilaf_asbabuh',
+    titleAr: 'الخلاف أسبابه وآدابه',
+    titleEn: 'Al-Khilaf: Asbabuhu wa Adabuhu',
+    authorAr: 'عائض بن عبد الله القرني',
+    authorEn: 'Aid al-Qarni',
+    descKey: 'book_desc.al_khilaf_asbabuh',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_khilaf_asbabuh.json',
+      sizeBytes: 24495,
+      sourceLabel:
+          'المكتبة الشاملة — الخلاف أسبابه وآدابه، لعائض بن عبد الله القرني، '
+          'منشور على موقع وزارة الأوقاف السعودية دون بيانات طبعة',
+    ),
+  ),
   LibraryBook(
     id: 'rawdat_al_uqala',
     titleAr: 'روضة العقلاء ونزهة الفضلاء',

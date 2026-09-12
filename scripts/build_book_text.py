@@ -78,6 +78,22 @@ from datetime import datetime, timezone
 # id  -> must match LibraryBook.id in book_catalog.dart
 # See PHASE2.md stage P2-4b "Sourcing decisions" for the reasoning.
 BOOKS = {
+    # Added 2026-09-12. «في بعض المؤلفين ليهم كتاب واحد بس، لا، حطلي لكل واحد
+    # فيهم ١٠ كتب … من الشاملة». The author ids come from
+    # `scripts/shamela_author_plan.json`, which reads each author record off a
+    # book this Library already ships rather than out of Shamela's search
+    # (trap #17).
+    "al_khilaf_asbabuh": {
+        "shamela_id": 2028,
+        # Shamela's own card says the file is published by the Saudi Ministry
+        # of Awqaf «بدون بيانات» — no publisher, no edition, no year. That is
+        # what the label says, because inventing a printing is exactly what
+        # §1.2 forbids. Its numbering is مرقم آليًا, not موافق للمطبوع, and
+        # the build reports that on the card the reader sees.
+        "source_label": "المكتبة الشاملة — الخلاف أسبابه وآدابه، لعائض بن "
+        "عبد الله القرني، منشور على موقع وزارة الأوقاف السعودية دون بيانات "
+        "طبعة",
+    },
     # Added 2026-09-10 for the Islamic-quote notifications: the owner named
     # these two by title and they were not in the catalogue. Their Shamela
     # ids were looked up in the local index (`shamela_index.py find`) rather
@@ -369,7 +385,15 @@ def fetch_meta_card(shamela_id):
     am = re.search(r"المؤلف\s*:\s*(.+)", card)
     if am:
         author = am.group(1).strip()
-    print_matches = "موافق للمطبوع" in card
+    # «غير موافق للمطبوع» CONTAINS «موافق للمطبوع». A plain substring test
+    # therefore reads a copy that says its numbering does NOT match the print
+    # as one that says it does - and the app shows the reader «الترقيم موافق
+    # للمطبوع» on that basis. Caught on الخلاف أسبابه وآدابه, whose card says
+    # «[الكتاب مرقم آليا غير موافق للمطبوع]» and which was being recorded as
+    # matching. The negation has to be looked for first.
+    print_matches = ("موافق للمطبوع" in card
+                     and "غير موافق للمطبوع" not in card
+                     and "مرقم آليا" not in card)
     return {
         "card": card,
         "title": title,
