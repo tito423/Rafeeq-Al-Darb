@@ -23,6 +23,7 @@ library;
 
 import 'dart:convert';
 import 'dart:io' show gzip;
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,7 +60,7 @@ final onThisDayProvider =
       // Stored gzipped with no Content-Encoding, exactly like the books —
       // sniffed by its magic bytes rather than trusted from the name.
       if (bytes.length > 2 && bytes[0] == 0x1f && bytes[1] == 0x8b) {
-        bytes = gzip.decode(bytes) as dynamic;
+        bytes = Uint8List.fromList(gzip.decode(bytes));
       }
       final doc = jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
       final days = (doc['days'] as Map<String, dynamic>?) ?? const {};

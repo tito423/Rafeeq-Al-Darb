@@ -102,6 +102,11 @@ flutter:
     - assets/data/hadith.db
     - assets/data/quotes.json
     - assets/data/quote_backgrounds.json
+    # «في مثل هذا اليوم» — 366 days x 12 events, built by
+    # scripts/fetch_on_this_day.py from Wikimedia's onthisday feed (CC BY-SA)
+    # and stored gzipped, so the card works with no network at all.
+    - assets/data/on_this_day_ar.json
+    - assets/data/on_this_day_en.json
     - assets/quote_backgrounds/
     - assets/data/mushaf/
     - assets/mushaf_covers/
