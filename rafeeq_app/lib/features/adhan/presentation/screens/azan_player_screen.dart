@@ -19,6 +19,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/adhan_presentation_provider.dart' show adhanVideoPlaylistKey;
 import '../../data/adhan_video_catalog.dart';
 import '../../data/azan_subtitle.dart';
+import '../widgets/adhan_scene.dart';
 
 /// The prayer's name in the app's *current* language.
 ///
@@ -400,27 +401,18 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
         ),
       );
     }
-    return AnimatedBuilder(
-      animation: _bgController,
-      builder: (context, _) {
-        final t = _bgController.value;
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment(0, -0.3 + 0.15 * t),
-              radius: 1.3,
-              colors: [
-                Color.lerp(
-                  AppColors.primaryContainer,
-                  AppColors.nightSurface,
-                  t,
-                )!,
-                AppColors.night,
-              ],
-            ),
-          ),
-        );
-      },
+    // No clip — which is every audio-only adhan, and every full-screen one
+    // whose clip has not been downloaded yet. This used to be a two-colour
+    // radial gradient breathing in and out; it is now the painted scene.
+    //
+    // «يبقى أذان بخلفية إسلامية متحركة وجميلة، حاجة كده كرييتيف من عندك».
+    // See `AdhanScene` for why a painted scene and not a clip. `_activeIndex`
+    // is the phrase the muezzin is on *right now*, taken from the recording's
+    // own measured onsets — the same number the subtitle line uses — so the
+    // ring of sound leaves the minaret exactly when he begins the line.
+    return AdhanScene(
+      prayerKey: widget.spec.prayerKey,
+      phraseIndex: _activeIndex,
     );
   }
 
@@ -447,15 +439,25 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
             const Positioned.fill(
               child: DecoratedBox(
                 decoration: BoxDecoration(
+                  // Lightened once the background became a painted scene
+                  // rather than someone's 640×360 clip. The old scrim was
+                  // built to make white text survive *any* footage — 0xCC at
+                  // the top — and on `AdhanScene` it crushed the sky flat and
+                  // turned the sun into a brown smear behind the title. Seen
+                  // on emulator-5554; the scene is drawn dark enough at the
+                  // top to carry the text on its own, so the scrim only has
+                  // to protect the two rows that actually sit on the bright
+                  // part: the header and the buttons.
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
+                      Color(0x8A000000),
+                      Color(0x1F000000),
+                      Color(0x00000000),
                       Color(0xCC000000),
-                      Color(0x55000000),
-                      Color(0xE6000000),
                     ],
-                    stops: [0.0, 0.45, 1.0],
+                    stops: [0.0, 0.22, 0.55, 1.0],
                   ),
                 ),
               ),
