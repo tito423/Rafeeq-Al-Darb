@@ -528,7 +528,8 @@
     },
     "alarm_volume": "Volume do alarme",
     "alarm_volume_desc": "O adhan toca no canal de alarme para ser ouvido mesmo no silencioso — por isso as teclas de volume não o alteram.",
-    "alarm_volume_refused": "O sistema recusou a alteração, provavelmente por causa do modo Não incomodar."
+    "alarm_volume_refused": "O sistema recusou a alteração, provavelmente por causa do modo Não incomodar.",
+    "since_adhan": "Desde o adhan do {prayer}"
   },
   "qibla": {
     "locating": "A localizar...",

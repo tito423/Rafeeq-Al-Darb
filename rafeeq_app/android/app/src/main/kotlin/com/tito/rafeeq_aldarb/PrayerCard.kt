@@ -37,11 +37,16 @@ object PrayerCard {
 
     private fun prefs(ctx: Context) = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
+    /** How long the card stays on the prayer that has just come in. */
+    private const val ELAPSED_WINDOW_MS = 60 * 60 * 1000L
+
     fun show(
         ctx: Context,
         title: String,
         body: String,
         whenMs: Long,
+        countDown: Boolean,
+        elapsedTitle: String?,
         nextTitle: String?,
         nextBody: String?,
         nextWhen: Long,
@@ -51,12 +56,16 @@ object PrayerCard {
             .putString("title", title)
             .putString("body", body)
             .putLong("when", whenMs)
+            .putBoolean("count_down", countDown)
+            .putString("elapsed_title", elapsedTitle)
             .putString("next_title", nextTitle)
             .putString("next_body", nextBody)
             .putLong("next_when", nextWhen)
             .apply()
         post(ctx)
-        scheduleRollover(ctx, whenMs)
+        // Counting down: wake at the prayer, to turn the card into a count-up.
+        // Counting up: wake an hour after it, to move to the next prayer.
+        scheduleRollover(ctx, if (countDown) whenMs else whenMs + ELAPSED_WINDOW_MS)
     }
 
     fun hide(ctx: Context) {
@@ -95,9 +104,23 @@ object PrayerCard {
                 )
             )
         }
-        if (whenMs > System.currentTimeMillis()) {
+        // Counting DOWN to a prayer that has not come in yet, or UP from one
+        // that has. Android's chronometer is driven by elapsedRealtime while
+        // `when` is wall-clock, so the platform converts once at post time -
+        // which is why a card left up across a clock correction drifts and
+        // «بيقفز ثواني أو بياخر ثواني». Re-posting rebases it, and the card is
+        // re-posted at every rollover and whenever the app runs.
+        val countDown = p.getBoolean("count_down", true)
+        if (!countDown && whenMs in 1..System.currentTimeMillis()) {
             builder.setWhen(whenMs).setShowWhen(true).setUsesChronometer(true)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) builder.setChronometerCountDown(true)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                builder.setChronometerCountDown(false)
+            }
+        } else if (whenMs > System.currentTimeMillis()) {
+            builder.setWhen(whenMs).setShowWhen(true).setUsesChronometer(true)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                builder.setChronometerCountDown(true)
+            }
         } else {
             builder.setShowWhen(false)
         }
@@ -108,18 +131,44 @@ object PrayerCard {
         }
     }
 
-    /** At the prayer's time the card moves on to the one after it. */
+    /**
+     * Two steps, not one.
+     *
+     * At the prayer's own time the card does NOT jump to the next prayer: it
+     * turns into «مرّ على أذان العشاء ٠٠:١٢» and counts UP, because for the
+     * hour after the adhan that is the number a reader actually wants. An
+     * hour later it moves on to the next prayer and counts down again.
+     */
     fun rollover(ctx: Context) {
         val p = prefs(ctx)
+        val countingDown = p.getBoolean("count_down", true)
+        val elapsedTitle = p.getString("elapsed_title", null)
+        val whenMs = p.getLong("when", 0L)
+
+        if (countingDown && elapsedTitle != null && whenMs > 0) {
+            // Step one: the prayer has come in. Keep `when` - it is the base
+            // the count-up runs from.
+            p.edit().putBoolean("count_down", false)
+                .putString("title", elapsedTitle)
+                .remove("elapsed_title")
+                .apply()
+            post(ctx)
+            scheduleRollover(ctx, whenMs + ELAPSED_WINDOW_MS)
+            return
+        }
+
+        // Step two: the hour is up, move to the prayer after it.
         val nextWhen = p.getLong("next_when", 0L)
         val nextTitle = p.getString("next_title", null)
-        if (nextWhen > p.getLong("when", 0L) && nextTitle != null) {
+        if (nextWhen > 0 && nextTitle != null) {
             p.edit()
                 .putString("title", nextTitle)
                 .putString("body", p.getString("next_body", "") ?: "")
                 .putLong("when", nextWhen)
+                .putBoolean("count_down", true)
                 .remove("next_title").remove("next_body").putLong("next_when", 0L)
                 .apply()
+            scheduleRollover(ctx, nextWhen)
         }
         post(ctx)
     }

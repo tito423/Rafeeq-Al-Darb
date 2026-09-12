@@ -29,6 +29,8 @@ fun MainActivity.registerPrayerCardChannel(flutterEngine: FlutterEngine) {
                         call.argument<String>("title") ?: "",
                         call.argument<String>("body") ?: "",
                         (call.argument<Number>("when") ?: 0).toLong(),
+                        call.argument<Boolean>("countDown") ?: true,
+                        call.argument<String>("elapsedTitle"),
                         call.argument<String>("nextTitle"),
                         call.argument<String>("nextBody"),
                         (call.argument<Number>("nextWhen") ?: 0).toLong(),

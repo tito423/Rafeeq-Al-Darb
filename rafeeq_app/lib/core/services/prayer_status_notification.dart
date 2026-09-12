@@ -102,7 +102,17 @@ class PrayerStatusNotification {
 
     final svc = PrayerTimesService();
     final now = DateTime.now();
-    final next = times.isEmpty ? null : _nextPrayer(svc, times, now);
+
+    // THE HOUR AFTER THE ADHAN BELONGS TO THE PRAYER THAT CAME IN.
+    // «لما يحين وقت الصلاة يبدأ يعد عدّاد تصاعدي … لحد ساعة، وبعد الساعة يبدأ
+    // يغيّر الإشعار: باقي على صلاة الفجر». Deciding that here rather than in
+    // Kotlin is the whole point: when both sides decided, a refresh during
+    // the count-up re-armed the rollover for a moment already past and the
+    // card never moved on - seen on the device by jumping the clock.
+    final justPassed = times.isEmpty ? null : _recentPrayer(svc, times, now);
+    final next = times.isEmpty
+        ? null
+        : (justPassed ?? _nextPrayer(svc, times, now));
 
     try {
       if (next == null) {
@@ -125,11 +135,17 @@ class PrayerStatusNotification {
       );
       final after =
           _nextPrayer(svc, times, next.$2.add(const Duration(minutes: 1)));
+      final counting = justPassed == null;
       final crossesMidnight = after != null && after.$2.day != next.$2.day;
       await _show(
-        _titleFor(next.$1, next.$2, localeCode),
+        counting
+            ? _titleFor(next.$1, next.$2, localeCode)
+            : _sinceTitle(next.$1),
         hijriToday,
         at: next.$2,
+        countDown: counting,
+        // What the card becomes the moment this prayer comes in.
+        elapsedTitle: counting ? _sinceTitle(next.$1) : null,
         nextTitle: after == null ? null : _titleFor(after.$1, after.$2, localeCode),
         nextBody: after == null
             ? null
@@ -148,6 +164,8 @@ class PrayerStatusNotification {
     String title,
     String body, {
     DateTime? at,
+    bool countDown = true,
+    String? elapsedTitle,
     String? nextTitle,
     String? nextBody,
     DateTime? nextAt,
@@ -156,6 +174,8 @@ class PrayerStatusNotification {
       'title': title,
       'body': body,
       'when': at?.millisecondsSinceEpoch ?? 0,
+      'countDown': countDown,
+      'elapsedTitle': elapsedTitle,
       'nextTitle': nextTitle,
       'nextBody': nextBody,
       'nextWhen': nextAt?.millisecondsSinceEpoch ?? 0,
@@ -183,6 +203,21 @@ class PrayerStatusNotification {
     if (raw.$1 != 'sunrise') return raw;
     return svc.nextPrayer(t, raw.$2.add(const Duration(minutes: 1)));
   }
+
+  /// How long the card stays on the prayer that has just come in.
+  static const elapsedWindow = Duration(hours: 1);
+
+  /// The prayer whose adhan was less than [elapsedWindow] ago, if any. Never
+  /// sunrise: it is not a prayer and the card never counts from it.
+  (String, DateTime)? _recentPrayer(
+      PrayerTimesService svc, PrayerTimes t, DateTime now) {
+    final prev = svc.previousPrayer(t, now);
+    if (prev == null || prev.$1 == 'sunrise') return null;
+    return now.difference(prev.$2) <= elapsedWindow ? prev : null;
+  }
+
+  String _sinceTitle(String key) => 'prayer.since_adhan'
+      .tr(namedArgs: {'prayer': 'prayer.$key'.tr()});
 
   String _titleFor(String key, DateTime at, String localeCode) {
     final name = 'prayer.$key'.tr();
