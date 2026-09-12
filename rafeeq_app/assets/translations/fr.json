@@ -1285,6 +1285,14 @@
   "focus": {
     "title": "Mode concentration",
     "subtitle": "Le mushaf seul à l’écran — le reste de l’application est fermé jusqu’à ce que vous en sortiez",
-    "exit": "Quitter le mode concentration"
+    "exit": "Quitter le mode concentration",
+    "pick_title": "Choisissez votre point de concentration",
+    "pick_body": "Ce que vous choisissez s’ouvre seul, et tout le reste est fermé jusqu’à votre sortie.",
+    "target_quran": "Le mushaf",
+    "target_quran_desc": "La lecture seule, sans passer d’un écran à l’autre",
+    "target_azkar": "Les adhkar",
+    "target_azkar_desc": "Les adhkar du jour et de la nuit, avec leurs cartes et leur compteur",
+    "target_tasbeeh": "Le tasbih",
+    "target_tasbeeh_desc": "Le comptage, et les longs adhkar rapportés"
   }
 }

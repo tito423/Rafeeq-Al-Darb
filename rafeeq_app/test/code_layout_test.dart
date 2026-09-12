@@ -81,12 +81,45 @@ void main() {
       r'^(?:const|final)\s+[A-Za-z_][A-Za-z0-9_<>,?\s]*\s*=\s*(?:const\s*)?<',
       multiLine: true,
     );
+    // STYLING IS NOT CONTENT. A `const <Color>[...]`, or a map from an enum
+    // to an (IconData, Color) pair, is how ONE widget looks; pushing that into
+    // data/ to satisfy a rule about catalogues would be worse architecture,
+    // not better. The rule exists to stop URLs, titles, ids and model lists
+    // hiding inside a screen, so the exemption is by TYPE and it is narrow:
+    // Color, IconData, Widget, and the enums those maps are keyed by. Anything
+    // holding a String still fails, which is every catalogue this was written
+    // for.
+    bool isStyling(String source, int start) {
+      final open = source.indexOf('<', start);
+      if (open < 0) return false;
+      var depth = 0;
+      var i = open;
+      for (; i < source.length; i++) {
+        if (source[i] == '<') depth++;
+        if (source[i] == '>') {
+          depth--;
+          if (depth == 0) break;
+        }
+      }
+      final args = source.substring(open + 1, i);
+      final names = args
+          .split(RegExp(r'[,<>()\s]+'))
+          .where((t) => t.isNotEmpty)
+          .toSet();
+      const allowed = {'Color', 'IconData', 'Widget'};
+      return names.isNotEmpty &&
+          names.every((n) => allowed.contains(n) || n.endsWith('Target'));
+    }
+
     final offenders = <String>[];
     for (final file in dartFiles) {
       final path = file.path.replaceAll(r'\', '/');
       if (!path.contains('/presentation/')) continue;
       final source = file.readAsStringSync();
       for (final m in declaration.allMatches(source)) {
+        // From the matched `<` itself, not from the declaration's start:
+        // a type annotation can carry its own angle brackets.
+        if (isStyling(source, m.end - 1)) continue;
         final line = '\n'.allMatches(source.substring(0, m.start)).length + 1;
         offenders.add('$path:$line  ${m.group(0)!.trim()}');
       }

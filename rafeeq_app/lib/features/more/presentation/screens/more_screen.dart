@@ -8,8 +8,8 @@ import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
-import '../../../settings/data/focus_mode_provider.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
+import '../../../settings/presentation/widgets/focus_mode_picker.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 
 /// The "المزيد" tab.
@@ -49,7 +49,7 @@ class MoreScreen extends ConsumerWidget {
             accent: AppColors.primarySoft,
             title: 'focus.title'.tr(),
             subtitle: 'focus.subtitle'.tr(),
-            onTap: () => ref.read(focusModeProvider.notifier).set(true),
+            onTap: () => showFocusModePicker(context),
           ),
 
           // «انشئ في المزيد قسم جديد سميه تحميل تلاوات القرآن … عبارة عن

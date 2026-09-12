@@ -261,9 +261,9 @@ class _AppShellState extends ConsumerState<AppShell>
     // reader on another tab behind a missing bar.
     final tour = ref.watch(tutorialRunningProvider);
     final focus = ref.watch(focusModeProvider);
-    if (focus && _index != AppTab.quran) {
+    if (focus != null && _index != focus.tab) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _goTo(AppTab.quran);
+        if (mounted) _goTo(focus.tab);
       });
     }
 
@@ -276,7 +276,7 @@ class _AppShellState extends ConsumerState<AppShell>
     // rather than a literal AppBar arrow that wouldn't make sense on a
     // root bottom-nav screen.
     return PopScope(
-      canPop: !tour && !focus && _index == AppTab.home,
+      canPop: !tour && focus == null && _index == AppTab.home,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
         // In focus mode the back gesture IS the way out - the owner asked
@@ -288,8 +288,8 @@ class _AppShellState extends ConsumerState<AppShell>
           endTutorial(ref);
           return;
         }
-        if (focus) {
-          ref.read(focusModeProvider.notifier).set(false);
+        if (focus != null) {
+          ref.read(focusModeProvider.notifier).leave();
           return;
         }
         setState(() => _index = AppTab.home);
@@ -327,7 +327,7 @@ class _AppShellState extends ConsumerState<AppShell>
       // user setting could otherwise break.
       bottomNavigationBar: fullScreen
           ? null
-          : focus
+          : focus != null
               ? const _FocusModeBar()
               : MediaQuery.withNoTextScaling(
               child: NavigationBar(
@@ -406,7 +406,7 @@ class _FocusModeBar extends ConsumerWidget {
           borderRadius: BorderRadius.circular(14),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: () => ref.read(focusModeProvider.notifier).set(false),
+            onTap: () => ref.read(focusModeProvider.notifier).leave(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Row(

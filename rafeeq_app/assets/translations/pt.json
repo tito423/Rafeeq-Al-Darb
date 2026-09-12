@@ -1285,6 +1285,14 @@
   "focus": {
     "title": "Modo foco",
     "subtitle": "Somente o mushaf na tela — o resto do aplicativo fica fechado até você sair",
-    "exit": "Sair do modo foco"
+    "exit": "Sair do modo foco",
+    "pick_title": "Escolha o seu foco",
+    "pick_body": "O que você escolher abre sozinho, e todo o resto fica fechado até você sair.",
+    "target_quran": "O mushaf",
+    "target_quran_desc": "Somente a leitura, sem alternar entre telas",
+    "target_azkar": "Os adhkar",
+    "target_azkar_desc": "Os adhkar do dia e da noite, com seus cartões e contador",
+    "target_tasbeeh": "O tasbih",
+    "target_tasbeeh_desc": "A contagem e os longos adhkar transmitidos"
   }
 }

@@ -1285,6 +1285,14 @@
   "focus": {
     "title": "Focus mode",
     "subtitle": "The mushaf alone on screen — the rest of the app is closed until you leave",
-    "exit": "Leave focus mode"
+    "exit": "Leave focus mode",
+    "pick_title": "Choose what to focus on",
+    "pick_body": "What you pick opens alone, and everything else is closed until you leave.",
+    "target_quran": "The mushaf",
+    "target_quran_desc": "Reading alone, with no moving between screens",
+    "target_azkar": "Adhkar",
+    "target_azkar_desc": "The day and night adhkar with their cards and counter",
+    "target_tasbeeh": "Tasbeeh",
+    "target_tasbeeh_desc": "Counting, and the long ma’thur adhkar"
   }
 }
