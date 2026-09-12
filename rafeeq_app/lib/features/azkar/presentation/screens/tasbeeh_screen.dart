@@ -8,56 +8,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../data/tasbeeh_catalog.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 
-/// One of the standard tasbeeh phrases + the pill/accent colour the owner's
-/// reference image (`design_refs/ref_tasbeeh.jpg`) used for it.
-class _DhikrOption {
-  final String textKey;
-  final Color color;
-  const _DhikrOption(this.textKey, this.color);
-}
-
-const _dhikrOptions = [
-  _DhikrOption('azkar.tasbeeh_subhanallah', Color(0xFF2E9FE8)), // blue
-  _DhikrOption('azkar.tasbeeh_alhamdulillah', Color(0xFF2E9D6F)), // green
-  _DhikrOption('azkar.tasbeeh_allahuakbar', Color(0xFF6C5FBC)), // purple
-  _DhikrOption('azkar.tasbeeh_lailahaillallah', Color(0xFFC9A227)), // gold
-  _DhikrOption('azkar.tasbeeh_allahumma_salli', Color(0xFFD4785A)), // amber
-  _DhikrOption('azkar.tasbeeh_lahawla', Color(0xFF5C8A6E)), // sage
-  _DhikrOption('azkar.tasbeeh_astaghfirullah', Color(0xFF3F7A8C)), // teal
-];
-
-/// The five the owner asked for by name. They are kept apart from the seven
-/// above for a plain layout reason: each is a full sentence — «لا إله إلا الله
-/// وحده لا شريك له، له الملك وله الحمد يحيي ويميت وهو على كل شيء قدير» is 88
-/// characters — and none of them fits either a pill or the 250-pixel counting
-/// circle. «حطهم في كارت بحيث لما أضغط عليه يفتح كارت فيهم الذكر وأختار اللي
-/// عاوز أبدأ فيه، ويطلع لوحده المختار في شكل كارت جميل وعدّاد زي اللي موجود في
-/// الأذكار»: so a card opens a picker, and the one picked takes over the
-/// counting area as a card of its own.
-///
-/// No fadl / reward line is attached to any of them. Several do have one in
-/// the Sunna, but §1.2 of CLAUDE.md is that a claim about a text needs a named
-/// source in the app, and the tasbeeh screen has nowhere to show one — so the
-/// screen counts, and says nothing it cannot attribute.
-const _mathurOptions = [
-  _DhikrOption('azkar.tasbeeh_tawhid_full', Color(0xFFC9A227)), // gold
-  _DhikrOption('azkar.tasbeeh_baqiyat_full', Color(0xFF2E9D6F)), // green
-  _DhikrOption('azkar.tasbeeh_yunus', Color(0xFF2E9FE8)), // blue
-  _DhikrOption('azkar.tasbeeh_subhanallah_wabihamdih', Color(0xFF3F7A8C)), // teal
-  _DhikrOption('azkar.tasbeeh_astaghfirullah_full', Color(0xFF6C5FBC)), // purple
-];
-
-/// The selectable per-round targets. `null` = no limit (count climbs freely,
-/// celebrating every 1000). P3‑47: real-device feedback — the fixed 33 was
-/// the only option and the counter visibly stopped at 32 (it reset the
-/// instant it hit the target, so the target number itself was never shown).
-const List<int?> _targets = [33, 100, 1000, null];
-
-/// Milestone every N counts triggers the full-screen celebration — the
-/// owner asked specifically for 1000 / 1000n.
-const _celebrateEvery = 1000;
 
 class TasbeehScreen extends ConsumerStatefulWidget {
   const TasbeehScreen({super.key});
@@ -71,7 +24,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   int? _target = 33;
   int _dhikrIndex = 0;
 
-  /// Index into [_mathurOptions] when one of the five long adhkar is the one
+  /// Index into [tasbeehLongAdhkar] when one of the five long adhkar is the one
   /// being counted; `null` when the seven short pills own the screen. The two
   /// selections are exclusive — picking either clears the other — so there is
   /// never a question of which phrase the number belongs to.
@@ -133,8 +86,8 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     // Celebrate on a completed finite target of 1000, or every 1000 counts
     // in no-limit mode.
     final hitMilestone = _target == null
-        ? _count > 0 && _count % _celebrateEvery == 0
-        : (_target! % _celebrateEvery == 0 && _count == _target);
+        ? _count > 0 && _count % tasbeehCelebrateEvery == 0
+        : (_target! % tasbeehCelebrateEvery == 0 && _count == _target);
     if (_hapticEnabled) {
       if (hitMilestone) {
         _celebrate
@@ -170,8 +123,8 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   }
 
   /// The phrase currently being counted, whichever of the two lists it is in.
-  _DhikrOption get _selected =>
-      _mathurIndex == null ? _dhikrOptions[_dhikrIndex] : _mathurOptions[_mathurIndex!];
+  DhikrOption get _selected =>
+      _mathurIndex == null ? tasbeehShortAdhkar[_dhikrIndex] : tasbeehLongAdhkar[_mathurIndex!];
 
   Future<void> _openMathurPicker() async {
     final chosen = await showModalBottomSheet<int>(
@@ -259,7 +212,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                     alignment: WrapAlignment.center,
                     spacing: 8,
                     children: [
-                      for (final t in _targets)
+                      for (final t in tasbeehTargets)
                         ChoiceChip(
                           label: Text(_targetLabel(t)),
                           selected: _target == t,
@@ -276,9 +229,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      for (var i = 0; i < _dhikrOptions.length; i++)
+                      for (var i = 0; i < tasbeehShortAdhkar.length; i++)
                         _DhikrPill(
-                          option: _dhikrOptions[i],
+                          option: tasbeehShortAdhkar[i],
                           selected: i == _dhikrIndex && _mathurIndex == null,
                           onTap: () => _selectDhikr(i),
                         ),
@@ -403,7 +356,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                   child: _CelebrationOverlay(
                     animation: _celebrate,
                     color: selected.color,
-                    milestone: _target ?? _celebrateEvery,
+                    milestone: _target ?? tasbeehCelebrateEvery,
                   ),
                 ),
               ),
@@ -490,7 +443,7 @@ class _CelebrationOverlay extends StatelessWidget {
 }
 
 class _DhikrPill extends StatelessWidget {
-  final _DhikrOption option;
+  final DhikrOption option;
   final bool selected;
   final VoidCallback onTap;
   const _DhikrPill(
@@ -629,10 +582,10 @@ class _MathurPickerSheet extends StatelessWidget {
             Flexible(
               child: ListView.separated(
                 shrinkWrap: true,
-                itemCount: _mathurOptions.length,
+                itemCount: tasbeehLongAdhkar.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (context, i) {
-                  final option = _mathurOptions[i];
+                  final option = tasbeehLongAdhkar[i];
                   final isSelected = selected == i;
                   return InkWell(
                     onTap: () => Navigator.of(context).pop(i),
@@ -680,7 +633,7 @@ class _MathurPickerSheet extends StatelessWidget {
 /// anywhere on it is one count — with the Azkar screen's own counter shape
 /// underneath it: the number, its target, and a gold bar filling toward it.
 class _MathurCounterCard extends StatelessWidget {
-  final _DhikrOption option;
+  final DhikrOption option;
   final int count;
   final int? target;
   final VoidCallback onTap;

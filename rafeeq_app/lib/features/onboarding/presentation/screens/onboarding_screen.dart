@@ -4,25 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/rafeeq_app.dart' show sharedPrefsProvider;
 import '../../../../app/shell/app_shell.dart';
+import '../../../../core/i18n/supported_locales.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../downloads/presentation/widgets/mushaf_download_tile.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/onboarding_state.dart';
 
-/// Every locale the app ships, labelled in its own script — same map
-/// `settings_screen.dart` uses, duplicated rather than imported across
-/// features to keep onboarding self-contained (this project's existing
-/// convention, see `mushaf_download_tile.dart`'s own `formatBytes` doc).
-const _onboardingLanguageNames = <String, String>{
-  'ar': 'العربية',
-  'en': 'English',
-  'es': 'Español',
-  'ru': 'Русский',
-  'pt': 'Português',
-  'fr': 'Français',
-  'ur': 'اردو',
-};
 
 /// P3‑21: first-run onboarding — structured like the reference video's own
 /// mushaf-choice screen (a heading, a description, a prominent download
@@ -149,7 +137,7 @@ class OnboardingScreen extends ConsumerWidget {
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            for (final e in _onboardingLanguageNames.entries)
+                            for (final e in kLanguageNames.entries)
                               ChoiceChip(
                                 label: Text(e.value),
                                 selected: context.locale.languageCode == e.key,

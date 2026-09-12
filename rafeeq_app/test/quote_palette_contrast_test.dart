@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rafeeq_app/features/quotes/presentation/quote_card_screen.dart';
+import 'package:rafeeq_app/features/quotes/data/quote_palettes.dart';
 
 /// CLAUDE.md trap #15: «a translucent highlight over a dark ground composites
 /// dark, however bright the colour looks on its own. Compute the composite

@@ -6,32 +6,18 @@ import '../../../../core/theme/app_colors.dart';
 
 import '../../data/guide_content.dart';
 import 'new_muslim_section_screen.dart';
+import '../../data/new_muslim_backgrounds.dart';
 
 const _icons = {
   'pillars': Icons.mosque_outlined,
   'faith': Icons.favorite_outline,
   'wudu': Icons.water_drop_outlined,
   // 'prayer' is drawn from assets/icons/praying_person.svg instead — see
-  // _sectionBackgrounds' neighbour below. Material has no praying glyph and
+  // newMuslimSectionBackgrounds' neighbour below. Material has no praying glyph and
   // the meditation one that was here read as yoga, not salah.
   'quran': Icons.menu_book_outlined,
 };
 
-/// A real Islamic photograph behind each card, each one checked by eye before
-/// being used — several plausible-looking Unsplash ids turned out to be
-/// autumn leaves, a fashion illustration and a climbing gym.
-const _sectionBackgrounds = <String, String>{
-  'pillars':
-      'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=640&q=70&fit=crop',
-  'faith':
-      'https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=640&q=70&fit=crop',
-  'wudu':
-      'https://images.unsplash.com/photo-1548013146-72479768bada?w=640&q=70&fit=crop',
-  'prayer':
-      'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=640&q=70&fit=crop',
-  'quran':
-      'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=640&q=70&fit=crop',
-};
 
 /// New Muslim Guide (WORK_QUEUE Stage 5) — pillars of Islam, articles of
 /// faith, wudu, prayer steps, and a Quran introduction. Content is written
@@ -58,7 +44,7 @@ class NewMuslimGuideScreen extends StatelessWidget {
         itemCount: newMuslimGuideSections.length,
         itemBuilder: (context, i) {
           final section = newMuslimGuideSections[i];
-          final bg = _sectionBackgrounds[section.icon];
+          final bg = newMuslimSectionBackgrounds[section.icon];
           return Card(
             clipBehavior: Clip.antiAlias,
             elevation: 0,

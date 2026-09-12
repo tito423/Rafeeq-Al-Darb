@@ -10,6 +10,7 @@ import '../../../ruqyah/presentation/screens/ruqyah_screen.dart';
 import '../../data/azkar_categories.dart';
 import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
+import '../../data/azkar_backgrounds.dart';
 
 /// Azkar tab — real sections from Hisn al-Muslim (134 real sections, no
 /// duplicates within a section — verified against the bundled DB).
@@ -84,29 +85,6 @@ const _categoryOrder = [
   AzkarCategory.narrated,
 ];
 
-/// Beautiful Islamic background image URLs per category (royalty-free from
-/// Unsplash, small 640px crops to minimize bandwidth). Cached locally by
-/// CachedNetworkImage so they load once and work offline after that.
-const _categoryBackgroundUrls = <AzkarCategory, String>{
-  AzkarCategory.waking:
-      'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=640&q=70&fit=crop',
-  // A mosque under dawn light — the morning adhkar are read at first light,
-  // so the card now actually looks like when they belong.
-  AzkarCategory.morning:
-      'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=640&q=70&fit=crop',
-  AzkarCategory.mosque:
-      'https://images.unsplash.com/photo-1591604129939-f1efa4d99f7e?w=640&q=70&fit=crop',
-  AzkarCategory.afterPrayer:
-      'https://images.unsplash.com/photo-1564769625905-50e93615e769?w=640&q=70&fit=crop',
-  AzkarCategory.evening:
-      'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=640&q=70&fit=crop',
-  AzkarCategory.sleep:
-      'https://images.unsplash.com/photo-1532978379173-523e16f371f2?w=640&q=70&fit=crop',
-  AzkarCategory.travel:
-      'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=640&q=70&fit=crop',
-  AzkarCategory.narrated:
-      'https://images.unsplash.com/photo-1585036156171-384164a8c956?w=640&q=70&fit=crop',
-};
 
 class _SectionsTab extends ConsumerWidget {
   const _SectionsTab();
@@ -125,7 +103,7 @@ class _SectionsTab extends ConsumerWidget {
       itemBuilder: (context, i) {
         final category = _categoryOrder[i];
         final info = azkarCategoryInfo[category]!;
-        final bgUrl = _categoryBackgroundUrls[category];
+        final bgUrl = azkarCategoryBackgrounds[category];
         
         return _CategoryCard(
           category: category,
