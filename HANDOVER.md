@@ -1201,9 +1201,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-12 13:48 — IN PROGRESS — resume here**
+**2026-09-12 13:52 — IN PROGRESS — resume here**
 
-refactor stage 1: library_screen.dart was a 1,625-line file with 25 classes and five tabs in it; it is a 99-line shell now. Each tab is its own file (books_tab 572, hadith_tab 568, channels_tab 127, websites_tab 99), the websites catalogue moved out of presentation into library/data/islamic_websites.dart, and the split surfaced something the single file had been hiding: _BookCard was drawn by TWO tabs - the books catalogue and the hadith tab's نصوص الحديث section - so it is now a public BookCard in presentation/widgets/book_card.dart, with formatBookSize beside it. 86 unused imports were stripped in the process. test/channels_reachable_test.dart read library_screen.dart by path and would have gone green on a file that no longer renders anything; it now checks both halves - the tab renders the shared list, and the shell still mounts the tab. Also deleted lib/features/quran/presentation/widgets/mushaf_page_thumbnail.dart, which nothing in lib or test referenced. analyze clean, 199 tests pass. NOT YET OPENED ON A DEVICE - a debug build is running for exactly that.
+refactor stage 1 VERIFIED on emulator-5554. Debug APK built and installed, and all five library tabs opened and photographed after the split: الكتب المتوفرة renders the author list with «تحميل كل كتب المؤلف (1)» expanded and a book card showing its real measured size (419.4 KB, not the old fixed 1.0 MB); الحديث renders موطأ مالك and سنن الدارمي with their real counts and, below them, «كتب ومتون الحديث» drawing أحاديث القصاص at 12.4 KB through the SAME shared BookCard the books tab uses - which is the one thing the split could have broken and the reason that widget was extracted rather than duplicated; قنوات دعوية renders the verified channel list with its mirrored avatars; and مواقع إسلامية renders the catalogue from its new home in library/data. Nothing regressed and no tab lost its route.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
