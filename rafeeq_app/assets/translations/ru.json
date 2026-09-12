@@ -1294,5 +1294,19 @@
     "target_azkar_desc": "Утренние и вечерние азкары с карточками и счётчиком",
     "target_tasbeeh": "Тасбих",
     "target_tasbeeh_desc": "Счёт и длинные переданные азкары"
+  },
+  "adhan": {
+    "backgrounds_title": "Фоны экрана азана",
+    "backgrounds_desc": "Десять анимированных фонов — выберите один",
+    "bg_horizon": "Горизонт",
+    "bg_girih": "Решётка гирих",
+    "bg_medallions": "Руб‘ аль-хизб",
+    "bg_arabesque": "Арабеска",
+    "bg_muqarnas": "Мукарнас",
+    "bg_lanterns": "Фонари",
+    "bg_khatim": "Звёзды хатим",
+    "bg_crescents": "Полумесяцы",
+    "bg_ribbons": "Ленты",
+    "bg_domes": "Купола"
   }
 }

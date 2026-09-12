@@ -1294,5 +1294,19 @@
     "target_azkar_desc": "صبح و شام کے اذکار، کارڈوں اور شمار کے ساتھ",
     "target_tasbeeh": "تسبیح",
     "target_tasbeeh_desc": "گنتی، اور طویل مأثور اذکار"
+  },
+  "adhan": {
+    "backgrounds_title": "اذان اسکرین کے پس منظر",
+    "backgrounds_desc": "دس متحرک پس منظر — ایک منتخب کریں",
+    "bg_horizon": "اُفق",
+    "bg_girih": "گرہ جالی",
+    "bg_medallions": "ربع الحزب",
+    "bg_arabesque": "عربی بیل بوٹے",
+    "bg_muqarnas": "مقرنص",
+    "bg_lanterns": "فانوس",
+    "bg_khatim": "خاتم ستارے",
+    "bg_crescents": "ہلال",
+    "bg_ribbons": "پٹیاں",
+    "bg_domes": "گنبد"
   }
 }

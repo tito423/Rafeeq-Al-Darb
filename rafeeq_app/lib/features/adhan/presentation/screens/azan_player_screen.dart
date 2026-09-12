@@ -14,6 +14,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/azan_subtitle.dart';
+import '../../data/adhan_background.dart';
 import '../widgets/adhan_scene.dart';
 
 /// The prayer's name in the app's *current* language.
@@ -115,10 +116,18 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
 
   Timer? _poll;
 
+  /// The ground the reader chose in «خلفيات شاشة الأذان». Read from prefs
+  /// rather than a provider: this screen also runs inside the adhan alert's
+  /// own Flutter engine, which has no ProviderScope.
+  AdhanBackground _sceneStyle = AdhanBackground.horizon;
+
   @override
   void initState() {
     super.initState();
     WakelockPlus.enable();
+    AdhanBackgroundSetting.read().then((b) {
+      if (mounted) setState(() => _sceneStyle = b);
+    });
     _start();
   }
 
@@ -269,6 +278,7 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     return AdhanScene(
       prayerKey: widget.spec.prayerKey,
       phraseIndex: _activeIndex,
+      background: _sceneStyle,
     );
   }
 

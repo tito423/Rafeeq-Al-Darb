@@ -2,6 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../data/adhan_background.dart';
+import 'adhan_background_painter.dart';
+
 /// The animated Islamic scene behind the adhan — painted, not filmed.
 ///
 /// «الدمج الحالي سيئ جدًا والفيديوهات نفسها جودتها ضعيفة جدًا ورديئة
@@ -50,11 +53,17 @@ class AdhanScene extends StatefulWidget {
   /// scene costs nothing while the screen is not really showing.
   final bool animate;
 
+  /// Which of the ten painted grounds to stand the mosque on. The mosque and
+  /// the phrase-synced rings are the same on all ten: the background is what
+  /// the reader chose, the synchronisation is what the screen is FOR.
+  final AdhanBackground background;
+
   const AdhanScene({
     super.key,
     required this.prayerKey,
     required this.phraseIndex,
     this.animate = true,
+    this.background = AdhanBackground.horizon,
   });
 
   @override
@@ -124,6 +133,7 @@ class _AdhanSceneState extends State<AdhanScene>
           size: Size.infinite,
           painter: _AdhanScenePainter(
             palette: palette,
+            background: widget.background,
             seconds: widget.animate ? _now : 12.0,
             rings: List<double>.unmodifiable(_rings),
             ringLife: _ringLife,
@@ -222,6 +232,7 @@ class _AdhanPalette {
 
 class _AdhanScenePainter extends CustomPainter {
   final _AdhanPalette palette;
+  final AdhanBackground background;
 
   /// Seconds since the scene started. Everything that moves is a slow
   /// function of this, not of a 0..1 loop.
@@ -233,6 +244,7 @@ class _AdhanScenePainter extends CustomPainter {
 
   const _AdhanScenePainter({
     required this.palette,
+    required this.background,
     required this.seconds,
     required this.rings,
     required this.ringLife,
@@ -250,43 +262,26 @@ class _AdhanScenePainter extends CustomPainter {
     // belongs.
     final horizonY = h * 0.80;
 
-    _sky(canvas, rect, horizonY);
-    if (palette.starAlpha > 0) _stars(canvas, size, horizonY);
+    // The chosen ground, which always paints its own sky first so the text
+    // laid over it sits on a known gradient. `horizon` is the original look:
+    // the same graded sky with the same stars.
+    paintAdhanBackground(
+      canvas,
+      rect,
+      background,
+      palette.zenith,
+      palette.horizon,
+      palette.light,
+      seconds,
+    );
+    if (background == AdhanBackground.horizon && palette.starAlpha > 0) {
+      _stars(canvas, size, horizonY);
+    }
     final body = _celestialBody(canvas, size, horizonY);
     _hills(canvas, size, horizonY);
     final minaretTop = _mosque(canvas, size, horizonY, body);
     _soundRings(canvas, size, minaretTop);
     _ground(canvas, size, horizonY);
-  }
-
-  // ── sky ──────────────────────────────────────────────────────────────────
-
-  void _sky(Canvas canvas, Rect rect, double horizonY) {
-    canvas.drawRect(
-      rect,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [palette.zenith, palette.zenith, palette.horizon],
-          stops: const [0.0, 0.42, 1.0],
-        ).createShader(Rect.fromLTRB(0, 0, rect.width, horizonY)),
-    );
-    // The glow sitting on the horizon, in the prayer's own light.
-    canvas.drawRect(
-      Rect.fromLTRB(0, horizonY - rect.height * 0.28, rect.width, horizonY),
-      Paint()
-        ..shader = RadialGradient(
-          center: Alignment(palette.bodyAcross * 2 - 1, 1.0),
-          radius: 1.1,
-          colors: [
-            palette.light.withValues(alpha: 0.30),
-            palette.light.withValues(alpha: 0.0),
-          ],
-        ).createShader(
-          Rect.fromLTRB(0, horizonY - rect.height * 0.28, rect.width, horizonY),
-        ),
-    );
   }
 
   void _stars(Canvas canvas, Size size, double horizonY) {

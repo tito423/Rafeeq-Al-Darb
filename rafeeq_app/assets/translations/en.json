@@ -1294,5 +1294,19 @@
     "target_azkar_desc": "The day and night adhkar with their cards and counter",
     "target_tasbeeh": "Tasbeeh",
     "target_tasbeeh_desc": "Counting, and the long ma’thur adhkar"
+  },
+  "adhan": {
+    "backgrounds_title": "Adhan screen backgrounds",
+    "backgrounds_desc": "Ten animated grounds — pick one",
+    "bg_horizon": "Horizon",
+    "bg_girih": "Girih lattice",
+    "bg_medallions": "Rub‘ al-hizb",
+    "bg_arabesque": "Arabesque",
+    "bg_muqarnas": "Muqarnas",
+    "bg_lanterns": "Lanterns",
+    "bg_khatim": "Khatim stars",
+    "bg_crescents": "Crescents",
+    "bg_ribbons": "Ribbons",
+    "bg_domes": "Domes"
   }
 }

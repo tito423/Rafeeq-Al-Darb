@@ -18,6 +18,8 @@ import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_catalog_provider.dart';
 import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
+import '../widgets/adhan_backgrounds_card.dart';
+import '../widgets/adhan_preview_card.dart';
 import '../widgets/alarm_volume_tile.dart';
 import '../../data/prayer_status_enabled_provider.dart';
 import 'azan_player_screen.dart';
@@ -408,27 +410,9 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
             // Preview the full Azan experience on demand — opens the real
             // full-screen player right now (video + audio + synced text) so
             // the owner can test it without waiting for an actual prayer.
-            Card(
-              color: scheme.primaryContainer,
-              child: ListTile(
-                leading: Icon(Icons.play_circle_fill,
-                    color: scheme.onPrimaryContainer, size: 32),
-                title: Text(
-                  'prayer.preview_azan'.tr(),
-                  style: TextStyle(
-                    color: scheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                subtitle: Text(
-                  'prayer.preview_azan_desc'.tr(),
-                  style: TextStyle(color: scheme.onPrimaryContainer),
-                ),
-                trailing:
-                    Icon(Icons.chevron_right, color: scheme.onPrimaryContainer),
-                onTap: _previewAzan,
-              ),
-            ),
+            const AdhanBackgroundsCard(),
+            const SizedBox(height: 12),
+            AdhanPreviewCard(onTap: _previewAzan),
             const SizedBox(height: 20),
             // P3‑46: this screen used to have every section (the ~10-item
             // adhan list AND five per-prayer cards) expanded at once, an

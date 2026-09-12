@@ -1294,5 +1294,19 @@
     "target_azkar_desc": "Os adhkar do dia e da noite, com seus cartões e contador",
     "target_tasbeeh": "O tasbih",
     "target_tasbeeh_desc": "A contagem e os longos adhkar transmitidos"
+  },
+  "adhan": {
+    "backgrounds_title": "Fundos da tela do adhan",
+    "backgrounds_desc": "Dez fundos animados — escolha um",
+    "bg_horizon": "Horizonte",
+    "bg_girih": "Treliça girih",
+    "bg_medallions": "Rub‘ al-hizb",
+    "bg_arabesque": "Arabesco",
+    "bg_muqarnas": "Muqarnas",
+    "bg_lanterns": "Lanternas",
+    "bg_khatim": "Estrelas khatim",
+    "bg_crescents": "Crescentes",
+    "bg_ribbons": "Fitas",
+    "bg_domes": "Cúpulas"
   }
 }

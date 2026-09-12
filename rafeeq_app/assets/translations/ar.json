@@ -1294,5 +1294,19 @@
     "target_azkar_desc": "أذكار اليوم والليلة ببطاقاتها وعدّادها",
     "target_tasbeeh": "المسبحة",
     "target_tasbeeh_desc": "التسبيح والعدّ، والأذكار المأثورة"
+  },
+  "adhan": {
+    "backgrounds_title": "خلفيات شاشة الأذان",
+    "backgrounds_desc": "عشر خلفيات متحركة، اختر واحدة",
+    "bg_horizon": "الأفق",
+    "bg_girih": "شبكة الگره",
+    "bg_medallions": "أرباع الحزب",
+    "bg_arabesque": "الأرابيسك",
+    "bg_muqarnas": "المقرنص",
+    "bg_lanterns": "الفوانيس",
+    "bg_khatim": "الخاتم النجمي",
+    "bg_crescents": "الأهلّة",
+    "bg_ribbons": "الأشرطة",
+    "bg_domes": "القباب"
   }
 }
