@@ -20,18 +20,33 @@ import 'package:flutter_test/flutter_test.dart';
 /// Opening the tab is what found it. This is the cheap guard that keeps it
 /// found: the list the app ships must be the list the tab renders.
 void main() {
-  final library = File(
+  // The tab moved out of `library_screen.dart` when that 1,625-line file was
+  // split one tab per file; the screen is now the shell that mounts it, so
+  // both halves are checked — the tab still renders the shared list, and the
+  // shell still mounts the tab.
+  final tab = File(
+    'lib/features/library/presentation/tabs/channels_tab.dart',
+  ).readAsStringSync();
+  final shell = File(
     'lib/features/library/presentation/screens/library_screen.dart',
   ).readAsStringSync();
 
   test('the channels tab renders the verified list, not a private copy', () {
-    expect(library.contains('islamicChannels.length'), isTrue,
+    expect(tab.contains('islamicChannels.length'), isTrue,
         reason: 'the tab is not rendering islamic_channels.dart');
-    expect(library.contains("import '../../../channels/data/islamic_channels.dart';"),
+    expect(
+        tab.contains(
+            "import '../../../channels/data/islamic_channels.dart';"),
         isTrue);
-    expect(library.contains('const _islamicChannels'), isFalse,
+    expect(tab.contains('const _islamicChannels'), isFalse,
         reason: 'a second, private channel list is back — that is the bug');
-    expect(library.contains('class _ChannelInfo'), isFalse);
+    expect(tab.contains('class _ChannelInfo'), isFalse);
+  });
+
+  test('and the library screen still mounts that tab', () {
+    expect(shell.contains('ChannelsTab()'), isTrue,
+        reason: 'the tab exists but nothing opens it — the original defect');
+    expect(shell.contains("import '../tabs/channels_tab.dart';"), isTrue);
   });
 
   test('every channel has a description key in all seven locales', () {
