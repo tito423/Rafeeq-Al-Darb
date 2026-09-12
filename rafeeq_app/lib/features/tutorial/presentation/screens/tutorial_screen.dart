@@ -33,22 +33,22 @@ class TutorialScreen extends ConsumerStatefulWidget {
 
   /// Opens the tour over whatever is on screen.
   static Future<void> open(BuildContext context) => Navigator.of(context).push(
-        PageRouteBuilder<void>(
-          opaque: false,
-          barrierColor: Colors.black54,
-          transitionDuration: const Duration(milliseconds: 420),
-          pageBuilder: (_, _, _) => const TutorialScreen(),
-          transitionsBuilder: (_, animation, _, child) => FadeTransition(
-            opacity: animation,
-            child: ScaleTransition(
-              scale: Tween<double>(begin: 0.94, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
-              ),
-              child: child,
-            ),
+    PageRouteBuilder<void>(
+      opaque: false,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 420),
+      pageBuilder: (_, _, _) => const TutorialScreen(),
+      transitionsBuilder: (_, animation, _, child) => FadeTransition(
+        opacity: animation,
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.94, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
           ),
+          child: child,
         ),
-      );
+      ),
+    ),
+  );
 
   @override
   ConsumerState<TutorialScreen> createState() => _TutorialScreenState();
@@ -109,9 +109,9 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen>
   }
 
   void _back() => _controller.previousPage(
-        duration: const Duration(milliseconds: 360),
-        curve: Curves.easeOutCubic,
-      );
+    duration: const Duration(milliseconds: 360),
+    curve: Curves.easeOutCubic,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +201,9 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen>
             onPressed: _finish,
             icon: const Icon(Icons.close_rounded, size: 18),
             label: Text('tutorial.skip'.tr()),
-            style: TextButton.styleFrom(foregroundColor: scheme.onSurfaceVariant),
+            style: TextButton.styleFrom(
+              foregroundColor: scheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -263,14 +265,16 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen>
                       : Icons.arrow_forward_rounded,
                   size: 18,
                 ),
-                label: Text(_isLast
-                    ? 'tutorial.start'.tr()
-                    : 'tutorial.next'.tr()),
+                label: Text(
+                  _isLast ? 'tutorial.start'.tr() : 'tutorial.next'.tr(),
+                ),
                 style: FilledButton.styleFrom(
                   backgroundColor: accent,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 22, vertical: 13),
+                    horizontal: 22,
+                    vertical: 13,
+                  ),
                 ),
               ),
             ],
@@ -336,65 +340,77 @@ class _Page extends StatelessWidget {
     final t = offset.abs().clamp(0.0, 1.0);
     final fade = 1 - t;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(26, 6, 26, 6),
-      child: Column(
-        children: [
-          Transform.translate(
-            // The medallion drifts against the swipe: a parallax, not a slide.
-            offset: Offset(offset * -46, 0),
-            child: Opacity(
-              opacity: (0.35 + 0.65 * fade).clamp(0.0, 1.0),
-              child: _Medallion(
-                icon: chapter.icon,
-                accent: chapter.accent,
-                spin: spin,
-              ),
-            ),
-          ),
-          const SizedBox(height: 30),
-          Opacity(
-            opacity: fade,
-            child: Transform.translate(
-              offset: Offset(0, 18 * t),
-              child: Column(
-                children: [
-                  Text(
-                    'tutorial.${chapter.key}_title'.tr(),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: scheme.onSurface,
-                    ),
+    // Centred in the viewport, and only scrollable when the text is longer
+    // than it — seen on emulator-5554: top-aligned, every page hung from the
+    // top with a third of the screen empty under it, which reads as a page
+    // that has not finished loading.
+    return LayoutBuilder(
+      builder: (context, box) => SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(26, 6, 26, 6),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: box.maxHeight - 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Transform.translate(
+                // The medallion drifts against the swipe: a parallax, not a slide.
+                offset: Offset(offset * -46, 0),
+                child: Opacity(
+                  opacity: (0.35 + 0.65 * fade).clamp(0.0, 1.0),
+                  child: _Medallion(
+                    icon: chapter.icon,
+                    accent: chapter.accent,
+                    spin: spin,
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 64,
-                    height: 2,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          chapter.accent.withValues(alpha: 0),
-                          chapter.accent,
-                          chapter.accent.withValues(alpha: 0),
-                        ]),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Opacity(
+                opacity: fade,
+                child: Transform.translate(
+                  offset: Offset(0, 18 * t),
+                  child: Column(
+                    children: [
+                      Text(
+                        'tutorial.${chapter.key}_title'.tr(),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: scheme.onSurface,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: 64,
+                        height: 2,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                chapter.accent.withValues(alpha: 0),
+                                chapter.accent,
+                                chapter.accent.withValues(alpha: 0),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'tutorial.${chapter.key}_body'.tr(),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          height: 1.95,
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'tutorial.${chapter.key}_body'.tr(),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      height: 1.95,
-                      color: scheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -426,9 +442,7 @@ class _Medallion extends StatelessWidget {
           painter: _MedallionPainter(t: spin.value, accent: accent),
           child: child,
         ),
-        child: Center(
-          child: Icon(icon, size: 62, color: accent),
-        ),
+        child: Center(child: Icon(icon, size: 62, color: accent)),
       ),
     );
   }

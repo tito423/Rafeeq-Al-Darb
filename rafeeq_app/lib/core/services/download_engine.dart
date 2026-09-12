@@ -3,6 +3,8 @@ import '../i18n/isolate_strings.dart';
 
 import 'package:background_downloader/background_downloader.dart';
 
+import 'notification_router.dart';
+
 /// The one place `background_downloader` is configured for the whole app.
 ///
 /// Everything that downloads a file — offline packs, books, the hadith
@@ -323,6 +325,38 @@ class DownloadEngine {
           t['notif.dl_paused_body']!),
       progressBar: true,
       groupNotificationId: _notifGroupRuqyah,
+    );
+
+    // «لما أضغط على إشعار حاجة من التطبيق يروح للحاجة المتعلقة بالإشعار».
+    // A tap on one of the three grouped download notifications lands on the
+    // screen that owns that queue.
+    //
+    // ONLY the tap callback is registered, deliberately. `registerCallbacks`
+    // also takes a status and a progress callback, and its doc comment warns
+    // that "tasks belonging to a group that has registered callbacks will not
+    // emit updates to the [updates] stream" — which would be fatal here,
+    // because `DownloadEngine` and `DownloadManager` both live on that
+    // stream and every progress bar and completion registry in the app would
+    // go silently dead (the shape of trap #27). Read in the package's own
+    // source (`base_downloader.dart` 9.5.9): `_emitStatusUpdate` and
+    // `_emitProgressUpdate` consult `groupStatusCallbacks` and
+    // `groupProgressCallbacks` only, while `groupNotificationTapCallbacks` is
+    // read in `processNotificationTap` and nowhere else. So a tap callback
+    // alone diverts nothing.
+    void routeTap(String what) => NotificationRouter.route(
+          '${NotificationRouter.downloadPrefix}$what',
+        );
+    downloader.registerCallbacks(
+      group: groupFiles,
+      taskNotificationTapCallback: (_, _) => routeTap('files'),
+    );
+    downloader.registerCallbacks(
+      group: groupQuranAudio,
+      taskNotificationTapCallback: (_, _) => routeTap('recitations'),
+    );
+    downloader.registerCallbacks(
+      group: groupRuqyah,
+      taskNotificationTapCallback: (_, _) => routeTap('ruqyah'),
     );
 
     downloader.addTaskQueue(fileQueue);

@@ -34,11 +34,22 @@ class NotificationRouter {
 
   static const quotePrefix = 'quote:';
 
-  /// Set by `main()`. Both are nullable because a notification can be tapped
+  /// «عايز لما أضغط على إشعار حاجة من التطبيق يروح للحاجة المتعلقة بالإشعار:
+  /// تحميل تلاوة يروح لتنزيل التلاوات، تحميل رقية يروح لتحميل الرقية، تحميل
+  /// مصحف يروح مباشرة لتحميل المصحف، وهكذا».
+  ///
+  /// `dl:<what>` — `dl:recitations`, `dl:ruqyah`, `dl:mushaf`, `dl:files`.
+  /// The argument after the prefix names the destination, not the item: a
+  /// download notification is about a queue, and the screen that owns the
+  /// queue is where the reader wants to land.
+  static const downloadPrefix = 'dl:';
+
+  /// Set by `main()`. All nullable because a notification can be tapped
   /// before the app has finished wiring itself up, and dropping the tap is
   /// better than crashing on it.
   static void Function(String payload)? onQuote;
   static void Function(String payload)? onSurah;
+  static void Function(String what)? onDownload;
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -50,6 +61,10 @@ class NotificationRouter {
     if (payload == null || payload.isEmpty) return;
     if (payload.startsWith(quotePrefix)) {
       onQuote?.call(payload.substring(quotePrefix.length));
+      return;
+    }
+    if (payload.startsWith(downloadPrefix)) {
+      onDownload?.call(payload.substring(downloadPrefix.length));
       return;
     }
     if (int.tryParse(payload) != null) {

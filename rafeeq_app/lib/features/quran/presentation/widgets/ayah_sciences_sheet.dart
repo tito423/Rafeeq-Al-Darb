@@ -22,6 +22,7 @@ import '../../../../core/services/quran_translation_store.dart';
 import '../../data/quran_translation_catalog.dart';
 import '../../data/translation_lang_provider.dart';
 import 'ayah_share_card.dart';
+import 'reciter_picker_sheet.dart';
 
 /// "علوم الآية" — tafsir, translation, i'rab and word meanings for one ayah,
 /// served straight from the bundled quran_sciences.db so the whole card works
@@ -391,6 +392,13 @@ class _Header extends ConsumerWidget {
               );
             },
           ),
+          // «حط في كارت الآية صوت القارئ وإمكانية اختيار قارئ آخر لأنه مش
+          // موجود فعلًا». The card was already reciting in the reader's
+          // chosen reciter — `selectedReciterProvider`, just below — but it
+          // never said who that was and gave no way to change it without
+          // leaving the card for the page's own recitation bar. So: the name,
+          // and a tap on it opens the same picker that bar opens.
+          const _ReciterChip(),
           IconButton(
             tooltip: (expanded ? 'quran.card_collapse' : 'quran.card_expand').tr(),
             icon: Icon(expanded
@@ -626,6 +634,65 @@ class _NoteDialogState extends ConsumerState<_NoteDialog> {
           child: Text('common.save'.tr()),
         ),
       ],
+    );
+  }
+}
+
+/// The reciter the card will recite in, and a way to change them.
+///
+/// Deliberately the *same* provider and the *same* picker the page's
+/// recitation bar uses, and it calls `AyahAudioService.switchReciter` exactly
+/// as that bar does — two places that chose a reciter independently would be
+/// two reciters, and the reader would have no way to tell which one a given
+/// button was about to use.
+class _ReciterChip extends ConsumerWidget {
+  const _ReciterChip();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final id = ref.watch(selectedReciterProvider);
+    final list = ref.watch(recitersProvider).valueOrNull;
+    final reciter = list?.where((r) => r.identifier == id).firstOrNull;
+    // While the catalogue loads there is a name to show but nothing to show
+    // it from; an empty chip is worse than none.
+    if (reciter == null) return const SizedBox.shrink();
+    final name = reciter.displayName(context.locale.languageCode);
+    if (name.isEmpty) return const SizedBox.shrink();
+
+    return Flexible(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () async {
+          final chosen = await showReciterPickerSheet(context);
+          if (chosen == null) return;
+          await ref.read(selectedReciterProvider.notifier).select(chosen);
+          await AyahAudioService.instance.switchReciter(chosen);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.record_voice_over_outlined,
+                  size: 16, color: AppColors.gold),
+              const SizedBox(width: 5),
+              Flexible(
+                child: Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppColors.gold,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ),
+              Icon(Icons.expand_more_rounded,
+                  size: 16, color: AppColors.gold.withValues(alpha: 0.8)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

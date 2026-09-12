@@ -67,6 +67,10 @@ class DownloadNotifications {
     required int total,
     String? detail,
     bool force = false,
+    /// `NotificationRouter` payload — `dl:mushaf`, `dl:files`… — so a tap
+    /// lands on the screen that owns this queue instead of just bringing the
+    /// app forward wherever it was.
+    String? payload,
   }) async {
     if (!_ready || !Platform.isAndroid) return;
     final now = DateTime.now();
@@ -109,13 +113,18 @@ class DownloadNotifications {
         title,
         detail ?? (hasSize ? '$pct%' : '$done'),
         NotificationDetails(android: android),
+        payload: payload,
       );
     } catch (_) {}
   }
 
   /// Replace the ongoing notification for [id] with a short auto-dismissing
   /// "downloaded" one.
-  Future<void> showComplete({required String id, required String title}) async {
+  Future<void> showComplete({
+    required String id,
+    required String title,
+    String? payload,
+  }) async {
     if (!_ready || !Platform.isAndroid) return;
     _lastPost.remove(id);
     try {
@@ -134,6 +143,7 @@ class DownloadNotifications {
         title,
         'notif.dl_done'.tr(),
         NotificationDetails(android: android),
+        payload: payload,
       );
     } catch (_) {}
   }

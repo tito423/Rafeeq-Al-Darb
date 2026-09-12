@@ -13,6 +13,7 @@ import '../../features/quran/data/mushaf_edition.dart';
 import '../config/app_config.dart';
 import 'download_foreground_service.dart';
 import 'download_notifications.dart';
+import 'notification_router.dart';
 
 /// P3‑41: the owner asked directly for the default mushaf to be "built
 /// in" — bundled inside the APK, not fetched over the network at all, the
@@ -400,8 +401,14 @@ class MushafPageService {
         final have = await cachedPages(editionId, totalPages: toPage);
         if (have.length >= toPage) {
           await _setWanted(editionId, false);
-          await DownloadNotifications.instance
-              .showComplete(id: 'mushaf_$editionId', title: notifTitle);
+          await DownloadNotifications.instance.showComplete(
+            id: 'mushaf_$editionId',
+            title: notifTitle,
+            // A tap lands on the Downloads hub, where this edition's pages
+            // are listed with their size — not on whatever screen the app
+            // happened to be showing.
+            payload: '${NotificationRouter.downloadPrefix}mushaf',
+          );
         }
       }
       await DownloadForegroundServiceBridge.finishItem('mushaf_$editionId');

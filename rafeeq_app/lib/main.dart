@@ -23,6 +23,7 @@ import 'core/services/sunan_suwar_reminder_service.dart';
 import 'core/services/notification_router.dart';
 import 'core/utils/startup_trace.dart';
 import 'core/services/quote_reminder_service.dart';
+import 'features/downloads/presentation/download_navigation.dart';
 import 'features/quotes/presentation/quote_navigation.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 
@@ -136,6 +137,7 @@ Future<void> main() async {
   // reader is actually using.
   await QuoteReminderService.instance.initialize();
   NotificationRouter.onQuote = openQuoteFromPayload;
+  NotificationRouter.onDownload = openDownloadFromPayload;
   StartupTrace.step('QuoteReminderService.initialize');
   StartupTrace.report();
 
