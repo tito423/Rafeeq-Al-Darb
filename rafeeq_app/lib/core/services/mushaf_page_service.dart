@@ -15,16 +15,26 @@ import 'download_foreground_service.dart';
 import 'download_notifications.dart';
 import 'notification_router.dart';
 
-/// P3‑41: the owner asked directly for the default mushaf to be "built
-/// in" — bundled inside the APK, not fetched over the network at all, the
-/// same way `assets/data/hadith.db` now is. All 604 real pages for the
-/// default edition ship as `assets/mushaf/<id>/NNN.svg`; other editions
-/// (Shubah, Duri, Qalun, Warsh) are deliberately **not** bundled — the
-/// owner only asked for "hafs madina", and bundling all five would be
-/// ~5× the app size for editions most readers never switch to. Keying
-/// this by edition id (not a single `bool`) means bundling a second
-/// edition later is just adding its id here, no other code changes.
-const _kBundledMushafEditions = {'hafs_kfqc'};
+/// **Nothing is bundled any more, on purpose.**
+///
+/// P3‑41 shipped all 604 pages of the default edition inside the APK, so the
+/// mushaf was readable the moment the app installed. It also made the APK
+/// **350 MB** — the SVGs were essentially the whole download — and the owner
+/// asked for them out: «احذف المصحف المصور اللي بيتحمل وينزل مع التطبيق out
+/// of box».
+///
+/// Every page now takes the same path every other edition already took:
+/// memory, then the device's own cache, then the network, written to disk as
+/// it is read. `svgForPage` below already fell through to exactly that when
+/// an asset was missing, which is why removing the bundle needed no new
+/// download code.
+///
+/// The set is kept (empty) rather than deleted because bundling an edition
+/// again is one id here and no other change — and because everything that
+/// special-cases a bundled edition, in this file and in «التنزيلات», reads
+/// it. An empty set makes all of that behave as it always did for the four
+/// editions that were never bundled.
+const _kBundledMushafEditions = <String>{};
 
 /// Live state of a whole-edition download. Lives on [MushafPageService] (not
 /// on any widget) so a Downloads tile that is rebuilt — a tab switch, a list
@@ -475,11 +485,14 @@ class MushafPageService {
     return pages;
   }
 
-  /// Bytes the cached copy of [editionId] currently occupies. For a bundled
-  /// edition this is a fixed, measured constant (the real total of its 604
-  /// bundled SVGs) rather than a disk scan — there's no per-device
-  /// variance to measure, it's exactly what shipped in the APK.
-  static const _bundledSizeBytes = <String, int>{'hafs_kfqc': 365010757};
+  /// Bytes the cached copy of [editionId] currently occupies. A bundled
+  /// edition would answer with a fixed measured constant rather than a disk
+  /// scan, since what shipped in the APK is the same on every device; with
+  /// nothing bundled this is empty and every edition is measured off the disk
+  /// it actually occupies. Leaving `hafs_kfqc: 365010757` here after its
+  /// pages left the APK would have made «التنزيلات» report 348 MB of storage
+  /// that is not there.
+  static const _bundledSizeBytes = <String, int>{};
 
   Future<int> cacheSizeBytes(String editionId) async {
     final bundled = _bundledSizeBytes[editionId];

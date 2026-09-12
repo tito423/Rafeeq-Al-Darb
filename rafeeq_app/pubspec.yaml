@@ -117,10 +117,9 @@ flutter:
     # P3â€‘49: the owner's AI-generated splash video (Gemini watermark removed)
     # + its badge-fallback art, put back at his request.
     - assets/branding/
-    # P3â€‘41: the default mushaf edition (Hafs/KFQC), all 604 pages, bundled
-    # so it's usable fully offline the moment the app installs â€” see
-    # the cache/network fallback.
-    - assets/mushaf/hafs_kfqc/
+    # The default mushaf's 604 pages used to be bundled here (P3-41). They were
+    # 350 MB - almost the whole APK - and the owner asked for them out; they
+    # now download and cache as they are read, like every other edition.
     - assets/icons/
     # assets/icon/ is intentionally NOT bundled â€” the PNGs there are consumed
     # by flutter_launcher_icons at build time only, never at runtime. Bundling
