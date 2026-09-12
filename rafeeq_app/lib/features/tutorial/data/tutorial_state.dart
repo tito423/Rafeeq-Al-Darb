@@ -53,3 +53,16 @@ Future<void> markTutorialSeen(SharedPreferences prefs) =>
 /// Whether the tour should open by itself right now.
 bool shouldAutoShowTutorial(WidgetRef ref) =>
     ref.read(tutorialOnEveryLaunchProvider) || !ref.read(tutorialSeenProvider);
+
+/// Is the tour playing right now? `AppShell` mounts the overlay on this, and
+/// every way in sets it — the automatic first run, «تشغيل الآن» in المزيد.
+final tutorialRunningProvider = StateProvider<bool>((ref) => false);
+
+/// The single way out, wherever it is triggered from: the last chapter,
+/// «تخطّي», or the system back gesture that `AppShell` routes in. "Seen" is
+/// recorded however the reader leaves, because the question is "has this ever
+/// been on screen", not "did you read it".
+void endTutorial(WidgetRef ref) {
+  markTutorialSeen(ref.read(sharedPrefsProvider));
+  ref.read(tutorialRunningProvider.notifier).state = false;
+}

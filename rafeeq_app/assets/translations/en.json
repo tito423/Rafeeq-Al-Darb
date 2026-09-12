@@ -32,7 +32,10 @@
     "offline_title": "It works offline",
     "offline_body": "The Quran, the adhkar and the prayer times work with no connection. Anything you download — mushaf pages, a recitation, a book, a translation — stays on your device, and you can see its size and delete it from the Downloads page.",
     "sources_title": "The sources",
-    "sources_body": "Every piece of content in the app has a source, named with a link you can check yourself, and every hadith grading is attributed to a scholar by name. The full list is in More › Sources."
+    "sources_body": "Every piece of content in the app has a source, named with a link you can check yourself, and every hadith grading is attributed to a scholar by name. The full list is in More › Sources.",
+    "paused": "Paused — tap to continue",
+    "done": "Done",
+    "language": "App language"
   },
   "app": {
     "name": "Rafeeq Al-Darb",

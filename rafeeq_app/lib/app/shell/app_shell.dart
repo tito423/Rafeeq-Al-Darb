@@ -27,7 +27,7 @@ import '../../features/settings/data/focus_mode_provider.dart';
 import '../../features/quran/data/quran_fullscreen_provider.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/tutorial/data/tutorial_state.dart';
-import '../../features/tutorial/presentation/screens/tutorial_screen.dart';
+import '../../features/tutorial/presentation/widgets/tutorial_overlay.dart';
 import 'tab_request_provider.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
@@ -91,29 +91,30 @@ class _AppShellState extends ConsumerState<AppShell>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _syncPrayerStatus();
-      // The guided tour, when it is due — the first time this build runs, or
-      // on every launch if the owner turned that on in «المزيد». Opened from
-      // here rather than from the splash so it lands on top of a settled
-      // Home screen and a swipe-back leaves the reader inside the app, not
-      // on a dead route. `AlarmPermissionsService` asks 900 ms from now, so
-      // the tour goes up first and the permission dialog lands on it, which
-      // is the same order a first run has always had.
       // A download notification that launched the app, or one tapped while
       // it runs. Wired from here rather than `main()` because both paths end
       // in a `Navigator.push`, and there is no navigator until the shell is
       // on screen. See `DownloadTapChannel` for why the plugin's own callback
       // cannot do this.
       unawaited(DownloadTapChannel.instance.start());
-      if (mounted && shouldAutoShowTutorial(ref)) {
-        TutorialScreen.open(context);
-      }
       // The one point both first-run and returning users pass through, so
       // this is where the startup grants are asked for. Delayed past the
       // route transition so the dialog lands on a settled screen rather than
       // on one that is still animating in; the service itself only ever asks
       // once per launch.
-      Future<void>.delayed(const Duration(milliseconds: 900), () {
-        AlarmPermissionsService.instance.requestStartupGrants();
+      //
+      // THE TOUR WAITS FOR THEM. It used to go up first, and the three
+      // system permission dialogs then landed on top of it - seen on
+      // emulator-5554, the tour advancing from chapter 4 to chapter 10
+      // behind the notification and audio prompts, narrating screens nobody
+      // could look at. The owner asked for it «بعد الاسبلاش اسكرين
+      // والاذونات», so it starts when the grants are actually finished,
+      // not on a guessed delay.
+      Future<void>.delayed(const Duration(milliseconds: 900), () async {
+        await AlarmPermissionsService.instance.requestStartupGrants();
+        if (mounted && shouldAutoShowTutorial(ref)) {
+          ref.read(tutorialRunningProvider.notifier).state = true;
+        }
       });
       // A process that has just started is downloading nothing, so any
       // download notification in the shade belongs to one Android killed —
@@ -258,6 +259,7 @@ class _AppShellState extends ConsumerState<AppShell>
     // pinned, so a `requestedTabProvider` set by a pushed screen, or a
     // stale `_index` from before the mode was turned on, cannot land the
     // reader on another tab behind a missing bar.
+    final tour = ref.watch(tutorialRunningProvider);
     final focus = ref.watch(focusModeProvider);
     if (focus && _index != AppTab.quran) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -274,13 +276,18 @@ class _AppShellState extends ConsumerState<AppShell>
     // rather than a literal AppBar arrow that wouldn't make sense on a
     // root bottom-nav screen.
     return PopScope(
-      canPop: !focus && _index == AppTab.home,
+      canPop: !tour && !focus && _index == AppTab.home,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
         // In focus mode the back gesture IS the way out - the owner asked
         // for «جيستشر عادي او زر الخروج» and this is the gesture half. No
         // `maybePop` anywhere near it: that would hand the request back to
         // this very handler (trap #44).
+        // The tour first: while it plays, back means "leave the tour".
+        if (tour) {
+          endTutorial(ref);
+          return;
+        }
         if (focus) {
           ref.read(focusModeProvider.notifier).set(false);
           return;
@@ -295,9 +302,18 @@ class _AppShellState extends ConsumerState<AppShell>
         // بتمش أو بتعمل فليكر جامد جدا». Its dialogs float above the keyboard
         // on their own.
         resizeToAvoidBottomInset: _index != AppTab.quran,
-        body: KeyedSubtree(
-          key: ValueKey<String>(localeCode),
-          child: IndexedStack(index: _index, children: screens),
+        body: Stack(
+          children: [
+            KeyedSubtree(
+              key: ValueKey<String>(localeCode),
+              child: IndexedStack(index: _index, children: screens),
+            ),
+            // The tour plays ON the app, not instead of it: it sits over
+            // the real tab it is describing and switches that tab itself.
+            // Inside the body rather than over the whole Scaffold so the
+            // navigation bar - which chapter one is about - stays visible.
+            if (tour) TutorialOverlay(onGoToTab: _goTo),
+          ],
         ),
       // P3‑57: seven destinations is more than Material's bar is designed
       // for (the spec says three to five), so the longest translated label

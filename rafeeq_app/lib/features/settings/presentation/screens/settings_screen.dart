@@ -11,20 +11,10 @@ import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
 import '../widgets/non_arabic_reading_card.dart';
+import '../../../../core/i18n/supported_locales.dart';
 import 'about_screen.dart';
 import 'sources_screen.dart';
 import '../widgets/permissions_section.dart';
-
-/// Every locale the app ships, labelled in its own script.
-const _languageNames = <String, String>{
-  'ar': 'العربية',
-  'en': 'English',
-  'es': 'Español',
-  'ru': 'Русский',
-  'pt': 'Português',
-  'fr': 'Français',
-  'ur': 'اردو',
-};
 
 /// Every actual setting, as a `Column` with no scroll view and no `Scaffold`
 /// of its own.
@@ -57,7 +47,7 @@ class SettingsBody extends ConsumerWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              for (final e in _languageNames.entries)
+              for (final e in kLanguageNames.entries)
                 ChoiceChip(
                   label: Text(e.value),
                   selected: context.locale.languageCode == e.key,

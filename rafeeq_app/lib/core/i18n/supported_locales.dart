@@ -20,3 +20,21 @@ const kSupportedLocales = <Locale>[
   // Arabic locale already does - nothing special-cased for it.
   Locale('ur'),
 ];
+
+/// Each shipped locale labelled in its OWN script, independent of the language
+/// currently selected — a reader who opened the app in a language they cannot
+/// read has to be able to find their own.
+///
+/// This was a private `_languageNames` map inside `settings_screen.dart`. The
+/// guided tour needs the same list, and a second copy of it is exactly how the
+/// adhan alert ended up shipping six locales while the rest of the app had
+/// seven (see the note above).
+const kLanguageNames = <String, String>{
+  'ar': 'العربية',
+  'en': 'English',
+  'es': 'Español',
+  'ru': 'Русский',
+  'pt': 'Português',
+  'fr': 'Français',
+  'ur': 'اردو',
+};

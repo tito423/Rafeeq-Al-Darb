@@ -32,7 +32,10 @@
     "offline_title": "Il fonctionne hors ligne",
     "offline_body": "Le Coran, les adhkar et les horaires fonctionnent sans connexion. Tout ce que vous téléchargez — pages du mushaf, récitation, livre, traduction — reste sur votre appareil, et vous pouvez en voir la taille et le supprimer depuis la page Téléchargements.",
     "sources_title": "Les sources",
-    "sources_body": "Chaque contenu de l’application a une source, nommée avec un lien que vous pouvez vérifier, et chaque jugement sur un hadith est attribué à un savant nommé. La liste complète est dans « Plus › Sources »."
+    "sources_body": "Chaque contenu de l’application a une source, nommée avec un lien que vous pouvez vérifier, et chaque jugement sur un hadith est attribué à un savant nommé. La liste complète est dans « Plus › Sources ».",
+    "paused": "En pause — touchez pour continuer",
+    "done": "Terminé",
+    "language": "Langue de l’application"
   },
   "app": {
     "name": "Rafeeq Al-Darb",

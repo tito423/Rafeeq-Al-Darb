@@ -32,7 +32,10 @@
     "offline_title": "Funciona sin conexión",
     "offline_body": "El Corán, los adhkar y los horarios funcionan sin conexión. Todo lo que descargues — páginas del mushaf, una recitación, un libro, una traducción — se queda en tu dispositivo, y puedes ver su tamaño y borrarlo desde la página de Descargas.",
     "sources_title": "Las fuentes",
-    "sources_body": "Todo el contenido de la aplicación tiene una fuente, nombrada con un enlace que puedes comprobar, y cada calificación de hadiz se atribuye a un erudito por su nombre. La lista completa está en «Más › Fuentes»."
+    "sources_body": "Todo el contenido de la aplicación tiene una fuente, nombrada con un enlace que puedes comprobar, y cada calificación de hadiz se atribuye a un erudito por su nombre. La lista completa está en «Más › Fuentes».",
+    "paused": "En pausa: toca para continuar",
+    "done": "Listo",
+    "language": "Idioma de la aplicación"
   },
   "app": {
     "name": "Rafeeq Al-Darb",

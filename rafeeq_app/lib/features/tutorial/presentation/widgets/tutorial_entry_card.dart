@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/tutorial_state.dart';
-import '../screens/tutorial_screen.dart';
 
 /// The tour's entry in «المزيد»: one card that plays it now, with the
 /// every-launch switch tucked under the same border rather than loose in the
@@ -52,7 +51,8 @@ class TutorialEntryCard extends ConsumerWidget {
                   ?.copyWith(color: scheme.onSurfaceVariant),
             ),
             trailing: FilledButton.tonalIcon(
-              onPressed: () => TutorialScreen.open(context),
+              onPressed: () =>
+                  ref.read(tutorialRunningProvider.notifier).state = true,
               icon: const Icon(Icons.play_arrow_rounded, size: 18),
               label: Text('tutorial.play_now'.tr()),
             ),
