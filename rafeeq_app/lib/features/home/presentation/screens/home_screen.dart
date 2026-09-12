@@ -21,6 +21,7 @@ import '../../../../core/services/prayer_times_service.dart';
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
@@ -90,20 +91,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 const SizedBox(height: 4),
                 const _HeaderCard(),
                 const SizedBox(height: 16),
-                _PrayerCard(state: prayerState),
+                // The four cards the guided tour stops on, each wrapped so it
+                // can say where it is rather than describing it from a
+                // distance. TutorialAnchor costs one GlobalKey and nothing
+                // else - it does not rebuild and does not know the tour is
+                // running.
+                TutorialAnchor(
+                  id: TourAnchor.prayerCard,
+                  child: _PrayerCard(state: prayerState),
+                ),
                 const SizedBox(height: 16),
                 // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
                 // the reference shows a "متابعة القراءة" bookmark-style card
                 // ("where you left off") as its own thing, separate from the
                 // khatma daily-goal card below it. Renders nothing when
                 // there's no real last-read page yet (see its own doc).
-                const ContinueReadingCard(),
+                const TutorialAnchor(
+                  id: TourAnchor.continueReading,
+                  child: ContinueReadingCard(),
+                ),
                 const SizedBox(height: 16),
-                const KhatmaCard(),
+                const TutorialAnchor(
+                  id: TourAnchor.khatmaCard,
+                  child: KhatmaCard(),
+                ),
                 const SizedBox(height: 16),
                 const SunanSuwarCard(),
                 const SizedBox(height: 16),
-                const DailyHadithCard(),
+                const TutorialAnchor(
+                  id: TourAnchor.hadithCard,
+                  child: DailyHadithCard(),
+                ),
                 const SizedBox(height: 12),
               ],
             ),

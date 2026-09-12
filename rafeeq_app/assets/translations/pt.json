@@ -33,9 +33,18 @@
     "offline_body": "O Alcorão, os adhkar e os horários funcionam sem ligação. Tudo o que transferir — páginas do mushaf, uma recitação, um livro, uma tradução — fica no seu dispositivo, e pode ver o tamanho e apagar na página de Transferências.",
     "sources_title": "As fontes",
     "sources_body": "Todo o conteúdo da aplicação tem uma fonte, nomeada com uma ligação que pode verificar, e cada classificação de hadiz é atribuída a um estudioso pelo nome. A lista completa está em «Mais › Fontes».",
-    "paused": "Pausado — toque para continuar",
     "done": "Pronto",
-    "language": "Idioma do aplicativo"
+    "language": "Idioma do aplicativo",
+    "prayer_card_title": "O cartão de oração",
+    "prayer_card_body": "Os horários de hoje para onde você está e a contagem regressiva para a próxima oração. Toque para ver a anterior.",
+    "continue_reading_title": "Continuar a leitura",
+    "continue_reading_body": "Leva você de volta ao último versículo onde parou. Aparece assim que você tiver lido algo.",
+    "khatma_title": "Khatma do Alcorão",
+    "khatma_body": "Comece uma khatma, defina sua porção diária e acompanhe seu progresso dia a dia.",
+    "hadith_card_title": "Hadith do dia",
+    "hadith_card_body": "Um hadith por dia com seu takhrij e seu grau. As setas passam de um para outro e a estrela guarda um.",
+    "focus_title": "Modo foco",
+    "focus_body": "Somente o mushaf na tela, o resto do aplicativo fechado. Saia pelo botão ou pelo gesto de voltar."
   },
   "app": {
     "name": "Rafeeq Al-Darb",

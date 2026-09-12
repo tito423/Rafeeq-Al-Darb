@@ -33,9 +33,18 @@
     "offline_body": "The Quran, the adhkar and the prayer times work with no connection. Anything you download — mushaf pages, a recitation, a book, a translation — stays on your device, and you can see its size and delete it from the Downloads page.",
     "sources_title": "The sources",
     "sources_body": "Every piece of content in the app has a source, named with a link you can check yourself, and every hadith grading is attributed to a scholar by name. The full list is in More › Sources.",
-    "paused": "Paused — tap to continue",
     "done": "Done",
-    "language": "App language"
+    "language": "App language",
+    "prayer_card_title": "The prayer card",
+    "prayer_card_body": "Today's times for where you are, and the countdown to the next prayer. Tap the countdown to flip it to the previous one.",
+    "continue_reading_title": "Continue reading",
+    "continue_reading_body": "Takes you back to the last verse you stopped at. It appears once you have read something.",
+    "khatma_title": "Quran khatma",
+    "khatma_body": "Start a khatma, set your daily portion, and follow your progress day by day.",
+    "hadith_card_title": "Hadith of the day",
+    "hadith_card_body": "One hadith a day with its takhrij and its grading. The arrows move between them and the star saves one.",
+    "focus_title": "Focus mode",
+    "focus_body": "The mushaf alone on screen with the rest of the app closed. Leave it with the button or the back gesture."
   },
   "app": {
     "name": "Rafeeq Al-Darb",

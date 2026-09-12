@@ -295,25 +295,28 @@ class _AppShellState extends ConsumerState<AppShell>
         setState(() => _index = AppTab.home);
         ref.read(activeTabProvider.notifier).state = AppTab.home;
       },
-      child: Scaffold(
+      // THE TOUR SITS OVER THE WHOLE SCAFFOLD, not inside its body.
+      //
+      // It used to be one layer of the body's Stack, and on the device that
+      // showed: the tour's dim stopped at the top of the navigation bar, so
+      // the bar stayed at full brightness and the spotlight that was supposed
+      // to ring one tab could not be seen at all. Worse, the body's local
+      // coordinates are not the window's, and the tour measures its targets
+      // with `localToGlobal` - so every rectangle was offset by the bar's own
+      // height. Wrapping the Scaffold puts the overlay in the same coordinate
+      // space it measures in, and lets it light a navigation button.
+      child: Stack(
+        children: [
+          Scaffold(
         // The Qur'an tab lays a whole mushaf page out against the body's
         // height; letting a keyboard shrink it re-laid the page on every frame
         // of the keyboard's slide — «لما بضغط على زر الانتقال الشاشة في الخلفية
         // بتمش أو بتعمل فليكر جامد جدا». Its dialogs float above the keyboard
         // on their own.
         resizeToAvoidBottomInset: _index != AppTab.quran,
-        body: Stack(
-          children: [
-            KeyedSubtree(
-              key: ValueKey<String>(localeCode),
-              child: IndexedStack(index: _index, children: screens),
-            ),
-            // The tour plays ON the app, not instead of it: it sits over
-            // the real tab it is describing and switches that tab itself.
-            // Inside the body rather than over the whole Scaffold so the
-            // navigation bar - which chapter one is about - stays visible.
-            if (tour) TutorialOverlay(onGoToTab: _goTo),
-          ],
+        body: KeyedSubtree(
+          key: ValueKey<String>(localeCode),
+          child: IndexedStack(index: _index, children: screens),
         ),
       // P3‑57: seven destinations is more than Material's bar is designed
       // for (the spec says three to five), so the longest translated label
@@ -372,6 +375,9 @@ class _AppShellState extends ConsumerState<AppShell>
               ],
             ),
           ),
+          ),
+          if (tour) TutorialOverlay(onGoToTab: _goTo),
+        ],
       ),
     );
   }

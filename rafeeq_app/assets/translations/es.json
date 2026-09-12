@@ -33,9 +33,18 @@
     "offline_body": "El Corán, los adhkar y los horarios funcionan sin conexión. Todo lo que descargues — páginas del mushaf, una recitación, un libro, una traducción — se queda en tu dispositivo, y puedes ver su tamaño y borrarlo desde la página de Descargas.",
     "sources_title": "Las fuentes",
     "sources_body": "Todo el contenido de la aplicación tiene una fuente, nombrada con un enlace que puedes comprobar, y cada calificación de hadiz se atribuye a un erudito por su nombre. La lista completa está en «Más › Fuentes».",
-    "paused": "En pausa: toca para continuar",
     "done": "Listo",
-    "language": "Idioma de la aplicación"
+    "language": "Idioma de la aplicación",
+    "prayer_card_title": "La tarjeta de oración",
+    "prayer_card_body": "Los horarios de hoy para tu ubicación y la cuenta atrás hasta la próxima oración. Tócala para ver la anterior.",
+    "continue_reading_title": "Continuar la lectura",
+    "continue_reading_body": "Te devuelve al último versículo donde lo dejaste. Aparece en cuanto hayas leído algo.",
+    "khatma_title": "Jatma del Corán",
+    "khatma_body": "Empieza una jatma, fija tu porción diaria y sigue tu progreso día a día.",
+    "hadith_card_title": "Hadiz del día",
+    "hadith_card_body": "Un hadiz al día con su tajrich y su grado. Las flechas pasan de uno a otro y la estrella lo guarda.",
+    "focus_title": "Modo concentración",
+    "focus_body": "Solo el mushaf en pantalla, el resto de la aplicación cerrado. Se sale con el botón o con el gesto de volver."
   },
   "app": {
     "name": "Rafeeq Al-Darb",
