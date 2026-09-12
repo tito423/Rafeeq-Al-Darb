@@ -4271,6 +4271,93 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — جزء في بيع أمهات الأولاد لابن كثير',
     ),
   ),
+  // Al-Nadwi's five — everything Shamela holds of his besides the
+  // seerah already here, so this author is complete at what exists.
+  LibraryBook(
+    id: 'madha_khasira_al_alam',
+    titleAr: 'ماذا خسر العالم بانحطاط المسلمين',
+    titleEn: 'What the World Lost with the Decline of the Muslims',
+    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
+    authorEn: 'Abul Hasan Ali an-Nadwi',
+    deathYearAh: 1420,
+    descKey: 'book_desc.madha_khasira_al_alam',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/madha_khasira_al_alam.json',
+      sizeBytes: 215278,
+      sourceLabel:
+          'المكتبة الشاملة — ماذا خسر العالم بانحطاط المسلمين، لأبي الحسن الندوي',
+    ),
+  ),
+  LibraryBook(
+    id: 'ila_al_islam_min_jadid',
+    titleAr: 'إلى الإسلام من جديد',
+    titleEn: 'Back to Islam Anew',
+    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
+    authorEn: 'Abul Hasan Ali an-Nadwi',
+    deathYearAh: 1420,
+    descKey: 'book_desc.ila_al_islam_min_jadid',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ila_al_islam_min_jadid.json',
+      sizeBytes: 97710,
+      sourceLabel:
+          'المكتبة الشاملة — إلى الإسلام من جديد، لأبي الحسن الندوي',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_islam_wal_hukm',
+    titleAr: 'الإسلام والحكم',
+    titleEn: 'Islam and Governance',
+    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
+    authorEn: 'Abul Hasan Ali an-Nadwi',
+    deathYearAh: 1420,
+    descKey: 'book_desc.al_islam_wal_hukm',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_islam_wal_hukm.json',
+      sizeBytes: 12144,
+      sourceLabel:
+          'المكتبة الشاملة — الإسلام والحكم، لأبي الحسن الندوي',
+    ),
+  ),
+  LibraryBook(
+    id: 'riddah_wala_aba_bakr_laha',
+    titleAr: 'ردّة ولا أبا بكر لها',
+    titleEn: 'An Apostasy with No Abu Bakr',
+    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
+    authorEn: 'Abul Hasan Ali an-Nadwi',
+    deathYearAh: 1420,
+    descKey: 'book_desc.riddah_wala_aba_bakr_laha',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/riddah_wala_aba_bakr_laha.json',
+      sizeBytes: 13962,
+      sourceLabel:
+          'المكتبة الشاملة — ردّة ولا أبا بكر لها، لأبي الحسن الندوي',
+    ),
+  ),
+  LibraryBook(
+    id: 'urid_an_atahaddath',
+    titleAr: 'أريد أن أتحدث إلى الإخوان',
+    titleEn: 'I Wish to Speak to the Brothers',
+    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
+    authorEn: 'Abul Hasan Ali an-Nadwi',
+    deathYearAh: 1420,
+    descKey: 'book_desc.urid_an_atahaddath',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/urid_an_atahaddath.json',
+      sizeBytes: 17501,
+      sourceLabel:
+          'المكتبة الشاملة — أريد أن أتحدث إلى الإخوان، لأبي الحسن الندوي، دون بيانات طبعة',
+    ),
+  ),
   LibraryBook(
     id: 'rawdat_al_uqala',
     titleAr: 'روضة العقلاء ونزهة الفضلاء',
