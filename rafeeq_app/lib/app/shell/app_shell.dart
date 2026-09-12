@@ -24,6 +24,8 @@ import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/more/presentation/screens/more_screen.dart';
 import '../../features/qibla/presentation/screens/qibla_screen.dart';
 import '../../features/settings/data/focus_mode_provider.dart';
+import '../../features/settings/data/reader_name_provider.dart';
+import '../../features/settings/presentation/widgets/reader_name_sheet.dart';
 import '../../features/quran/data/quran_fullscreen_provider.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/tutorial/data/tutorial_state.dart';
@@ -112,8 +114,17 @@ class _AppShellState extends ConsumerState<AppShell>
       // not on a guessed delay.
       Future<void>.delayed(const Duration(milliseconds: 900), () async {
         await AlarmPermissionsService.instance.requestStartupGrants();
-        if (mounted && shouldAutoShowTutorial(ref)) {
+        if (!mounted) return;
+        if (shouldAutoShowTutorial(ref)) {
           ref.read(tutorialRunningProvider.notifier).state = true;
+          return;
+        }
+        // «التطبيق يسأل المستخدم عن اسمه المفضّل». Asked once, and only after
+        // the tour has had its turn - a first run that opens on a form is a
+        // first run people leave. Skipping is a real answer and is never
+        // asked again.
+        if (ref.read(readerNameProvider.notifier).shouldAsk) {
+          await showReaderNameSheet(context);
         }
       });
       // A process that has just started is downloading nothing, so any
@@ -260,6 +271,19 @@ class _AppShellState extends ConsumerState<AppShell>
     // stale `_index` from before the mode was turned on, cannot land the
     // reader on another tab behind a missing bar.
     final tour = ref.watch(tutorialRunningProvider);
+    // On a true first run the tour has the screen, so the name is asked when
+    // the tour ends rather than never.
+    ref.listen<bool>(tutorialRunningProvider, (was, isRunning) {
+      if (was != true || isRunning) return;
+      // The context is captured before the await, and re-checked through the
+      // State's own `mounted` after it: `context` from a State that is still
+      // mounted is the same element.
+      // Read from the provider, which restored the flag at startup, so there
+      // is no await between deciding and using `context`.
+      if (ref.read(readerNameProvider.notifier).shouldAsk) {
+        showReaderNameSheet(context);
+      }
+    });
     final focus = ref.watch(focusModeProvider);
     if (focus != null && _index != focus.tab) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

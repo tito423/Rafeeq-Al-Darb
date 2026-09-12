@@ -132,7 +132,12 @@
     "clock_gallery_subtitle": "Chaque cadran affiche l'heure réelle, en direct",
     "hours_short": "h",
     "minutes_short": "min",
-    "seconds_short": "s"
+    "seconds_short": "s",
+    "name_ask_title": "Comment vous appeler ?",
+    "name_ask_body": "Un nom qui apparaîtra dans le message d’accueil. Vous pouvez passer.",
+    "name_hint": "Écrivez votre nom",
+    "name_skip": "Passer",
+    "name_save": "Enregistrer"
   },
   "quran": {
     "surah_list": "Sourates",

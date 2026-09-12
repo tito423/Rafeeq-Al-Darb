@@ -132,7 +132,12 @@
     "clock_gallery_subtitle": "Cada esfera muestra la hora real, en vivo",
     "hours_short": "h",
     "minutes_short": "min",
-    "seconds_short": "s"
+    "seconds_short": "s",
+    "name_ask_title": "¿Cómo te llamamos?",
+    "name_ask_body": "Un nombre para el saludo de la pantalla de inicio. Puedes omitirlo.",
+    "name_hint": "Escribe tu nombre",
+    "name_skip": "Omitir",
+    "name_save": "Guardar"
   },
   "quran": {
     "surah_list": "Suras",

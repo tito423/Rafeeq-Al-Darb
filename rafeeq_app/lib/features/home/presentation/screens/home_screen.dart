@@ -22,6 +22,8 @@ import '../../../../core/models/prayer_times.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../quotes/presentation/widgets/home_quote_card.dart';
+import '../../../settings/data/reader_name_provider.dart';
+import '../../../settings/presentation/widgets/reader_name_sheet.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
@@ -202,6 +204,7 @@ class _HeaderCard extends ConsumerWidget {
         : const [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)];
     final hijriColor = isLight ? const Color(0xFF0E7C6B) : const Color(0xFF7DEBDA);
     final welcomeColor = isLight ? const Color(0xFF1D2C26) : Colors.white;
+    final readerName = ref.watch(readerNameProvider);
     final gregorianColor = isLight ? const Color(0xFF9A7A15) : const Color(0xFFD4AF37);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -265,7 +268,10 @@ class _HeaderCard extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               alignment: Alignment.center,
-              child: Text(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
                 'home.welcome_guest'.tr(),
                 textAlign: TextAlign.center,
                 maxLines: 1,
@@ -282,6 +288,17 @@ class _HeaderCard extends ConsumerWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
+              ),
+                  // «ويتكتب الاسم ده بزخرفة جميلة جدًا جنب أو تحت مرحبًا بك».
+                  // Nothing is drawn for a reader who has not given one - the
+                  // greeting stays exactly as it always was rather than
+                  // inventing a name, which is what the comment above this
+                  // card warned against for as long as it has existed.
+                  if (readerName.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    ReaderNameFlourish(name: readerName, fontSize: 19),
+                  ],
+                ],
               ),
             ),
           ),

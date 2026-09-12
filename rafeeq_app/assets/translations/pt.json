@@ -132,7 +132,12 @@
     "clock_gallery_subtitle": "Cada mostrador exibe a hora real, ao vivo",
     "hours_short": "h",
     "minutes_short": "min",
-    "seconds_short": "s"
+    "seconds_short": "s",
+    "name_ask_title": "Como devemos chamá-lo?",
+    "name_ask_body": "Um nome para aparecer na saudação da tela inicial. Você pode pular.",
+    "name_hint": "Escreva seu nome",
+    "name_skip": "Pular",
+    "name_save": "Salvar"
   },
   "quran": {
     "surah_list": "Suratas",

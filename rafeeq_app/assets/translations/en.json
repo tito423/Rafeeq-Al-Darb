@@ -132,7 +132,12 @@
     "clock_gallery_subtitle": "Every face shows the real time, live",
     "hours_short": "h",
     "minutes_short": "m",
-    "seconds_short": "s"
+    "seconds_short": "s",
+    "name_ask_title": "What shall we call you?",
+    "name_ask_body": "A name to appear in the greeting on your Home screen. You can skip this.",
+    "name_hint": "Type your name",
+    "name_skip": "Skip",
+    "name_save": "Save"
   },
   "quran": {
     "surah_list": "Surahs",

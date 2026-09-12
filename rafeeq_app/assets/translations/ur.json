@@ -132,7 +132,12 @@
     "clock_gallery_subtitle": "ہر ڈائل اصل وقت زندہ دکھاتا ہے",
     "hours_short": "گھ",
     "minutes_short": "م",
-    "seconds_short": "س"
+    "seconds_short": "س",
+    "name_ask_title": "ہم آپ کو کیا کہہ کر پکاریں؟",
+    "name_ask_body": "ایک نام جو ہوم اسکرین کے سلام میں دکھائی دے گا۔ آپ اسے چھوڑ سکتے ہیں۔",
+    "name_hint": "اپنا نام لکھیں",
+    "name_skip": "چھوڑیں",
+    "name_save": "محفوظ کریں"
   },
   "quran": {
     "surah_list": "سورتیں",

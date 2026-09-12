@@ -132,7 +132,12 @@
     "clock_gallery_subtitle": "Каждый циферблат показывает реальное время",
     "hours_short": "ч",
     "minutes_short": "м",
-    "seconds_short": "с"
+    "seconds_short": "с",
+    "name_ask_title": "Как к вам обращаться?",
+    "name_ask_body": "Имя для приветствия на главном экране. Это можно пропустить.",
+    "name_hint": "Введите имя",
+    "name_skip": "Пропустить",
+    "name_save": "Сохранить"
   },
   "quran": {
     "surah_list": "Суры",

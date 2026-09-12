@@ -132,7 +132,12 @@
     "clock_gallery_subtitle": "كل شكل يعرض الوقت الحقيقي الآن",
     "hours_short": "س",
     "minutes_short": "د",
-    "seconds_short": "ث"
+    "seconds_short": "ث",
+    "name_ask_title": "بمَ نناديك؟",
+    "name_ask_body": "اسم يظهر في ترحيب الصفحة الرئيسية. يمكنك تخطّيه.",
+    "name_hint": "اكتب اسمك",
+    "name_skip": "تخطّي",
+    "name_save": "حفظ"
   },
   "quran": {
     "surah_list": "السور",
