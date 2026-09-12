@@ -1,26 +1,8 @@
-===== https://www.youtube.com/@dr_zidelkhir_mebrouk =====
-          title: الدكتور مبروك زيدالخير Dr. Mebrouk Zidelkhir
-     channel_id: UCCLucFt_j51ToCFyiE8qMVA
-         vanity: http://www.youtube.com/@dr_zidelkhir_mebrouk
+===== https://www.youtube.com/@waey_official =====
+          title: وعي - Waey
+     channel_id: UCpfmtMWOk6ajbRsy18fgPsA
+         vanity: http://www.youtube.com/@waey_official
     subscribers: None
     is_verified: False
-         avatar: https://yt3.googleusercontent.com/AgoL_5y5jIdgxae_Hcoy_oCp4iAE8v7uJ2ZbgoVVvFWSvWF2kFFh1vyyDMkj5j11vNgk1gho=s68-c-k-c0x00ffffff-no-rj
-    description: None
-
-===== https://www.youtube.com/@mabrouk_zidelkhir =====
-          title: روائع د. مبروك زيد الخير
-     channel_id: UCIaIbcAXwje282jns5SAqyQ
-         vanity: http://www.youtube.com/@mabrouk_zidelkhir
-    subscribers: None
-    is_verified: False
-         avatar: https://yt3.googleusercontent.com/ytc/AIdro_lcepcyeWxjiZZ8ks1oUjgJ2oH-Rf8dWf3-1EONbS-rVQ=s68-c-k-c0x00ffffff-no-rj
-    description: None
-
-===== https://www.youtube.com/@nabulsiencyclopedia =====
-          title: القناة الرسمية لموسوعة النابلسي للعلوم الإسلامية
-     channel_id: UC7naRnmAOTwDPu738W2SljQ
-         vanity: http://www.youtube.com/@nabulsiencyclopedia
-    subscribers: None
-    is_verified: False
-         avatar: https://yt3.googleusercontent.com/ytc/AIdro_na1zVnILY_Ciz5_UsKZHfk8HENu8T7VX9R42ZXpMSG70U=s72-c-k-c0x00ffffff-no-rj
+         avatar: https://yt3.googleusercontent.com/l0Y-d4ueTRJk0MVIj_Hs7JKfI963wNA4_0usIpOrAs_27kEl_kliqULJzG6q5YtUrKy5qb1QPxE=s68-c-k-c0x00ffffff-no-rj
     description: None

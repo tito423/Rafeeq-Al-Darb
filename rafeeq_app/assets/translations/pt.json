@@ -869,7 +869,16 @@
     "desc_rateb_alnabulsi": "Lições e palestras da enciclopédia Al-Nabulsi",
     "desc_mohamed_hassan": "Lições, conferências e séries de ensino",
     "desc_abu_ishaq_alheweny": "Lições de hadith e das suas ciências",
-    "desc_mostafa_aladwy": "Fatwas e lições de tafsir e hadith"
+    "desc_mostafa_aladwy": "Fatwas e lições de tafsir e hadith",
+    "desc_ragheb_elsergany": "História islâmica, biografia do Profeta e civilização",
+    "desc_hassan_elhusseiny": "Religião comparada, credo e dawah",
+    "desc_amgad_samir": "Fiqh, ciências islâmicas e purificação espiritual",
+    "desc_ahmed_alarabi": "Reflexão sobre o Alcorão e as suas ciências",
+    "desc_haytham_talaat": "Respostas científicas e intelectuais ao ateísmo e às objeções",
+    "desc_fahem": "Pensamento islâmico num estilo visual moderno",
+    "desc_eyad_qunaibi": "Pensamento islâmico e respostas às objeções contemporâneas",
+    "desc_ayman_abdelraheem": "Conteúdo variado de fé e dawah",
+    "desc_waey": "Consciência intelectual islâmica contemporânea"
   },
   "mushaf_theme": {
     "title": "Temas do mushaf de texto",
@@ -988,16 +997,6 @@
     "suffix": " AH"
   },
   "dawah": {
-    "ch_sergany": "História islâmica, biografia do Profeta e civilização",
-    "ch_husseiny": "Religião comparada, credo e dawah",
-    "ch_amgad": "Fiqh, ciências islâmicas e purificação espiritual",
-    "ch_arabi": "Reflexão sobre o Alcorão e as suas ciências",
-    "ch_haytham": "Respostas científicas e intelectuais ao ateísmo e às objeções",
-    "ch_fahem": "Pensamento islâmico num estilo visual moderno",
-    "ch_qunaibi": "Pensamento islâmico e respostas às objeções contemporâneas",
-    "ch_makany": "Conteúdo de dawah e educativo com propósito",
-    "ch_ayman": "Conteúdo variado de fé e dawah",
-    "ch_waei": "Consciência intelectual islâmica contemporânea",
     "site_islamqa": "O maior site islâmico de fatwas e perguntas, supervisionado pelo xeque Muhammad Salih al-Munajjid",
     "site_dorar": "Uma enciclopédia completa de hadith, credo, fiqh e autenticação de hadiths",
     "site_islamway": "Lições, conferências e artigos islâmicos de grandes sábios e pregadores",

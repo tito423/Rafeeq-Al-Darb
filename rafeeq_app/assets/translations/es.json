@@ -869,7 +869,16 @@
     "desc_rateb_alnabulsi": "Lecciones y conferencias de la enciclopedia Al-Nabulsi",
     "desc_mohamed_hassan": "Lecciones, conferencias y series formativas",
     "desc_abu_ishaq_alheweny": "Lecciones de hadiz y sus ciencias",
-    "desc_mostafa_aladwy": "Fatwas y lecciones de tafsir y hadiz"
+    "desc_mostafa_aladwy": "Fatwas y lecciones de tafsir y hadiz",
+    "desc_ragheb_elsergany": "Historia islámica, biografía del Profeta y civilización",
+    "desc_hassan_elhusseiny": "Religión comparada, credo y dawah",
+    "desc_amgad_samir": "Fiqh, ciencias islámicas y purificación espiritual",
+    "desc_ahmed_alarabi": "Reflexión sobre el Corán y sus ciencias",
+    "desc_haytham_talaat": "Respuestas científicas e intelectuales al ateísmo y a las objeciones",
+    "desc_fahem": "Pensamiento islámico con un estilo visual moderno",
+    "desc_eyad_qunaibi": "Pensamiento islámico y respuestas a las objeciones contemporáneas",
+    "desc_ayman_abdelraheem": "Contenido variado de fe y dawah",
+    "desc_waey": "Conciencia intelectual islámica contemporánea"
   },
   "mushaf_theme": {
     "title": "Temas del mushaf de texto",
@@ -988,16 +997,6 @@
     "suffix": " AH"
   },
   "dawah": {
-    "ch_sergany": "Historia islámica, biografía del Profeta y civilización",
-    "ch_husseiny": "Religión comparada, credo y dawah",
-    "ch_amgad": "Fiqh, ciencias islámicas y purificación espiritual",
-    "ch_arabi": "Reflexión sobre el Corán y sus ciencias",
-    "ch_haytham": "Respuestas científicas e intelectuales al ateísmo y a las objeciones",
-    "ch_fahem": "Pensamiento islámico con un estilo visual moderno",
-    "ch_qunaibi": "Pensamiento islámico y respuestas a las objeciones contemporáneas",
-    "ch_makany": "Contenido de dawah y educativo con propósito",
-    "ch_ayman": "Contenido variado de fe y dawah",
-    "ch_waei": "Conciencia intelectual islámica contemporánea",
     "site_islamqa": "El mayor sitio islámico de fatuas y preguntas, supervisado por el jeque Muhammad Salih al-Munajjid",
     "site_dorar": "Enciclopedia completa de hadiz, credo, fiqh y verificación de hadices",
     "site_islamway": "Lecciones, conferencias y artículos islámicos de grandes sabios y predicadores",

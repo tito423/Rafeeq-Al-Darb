@@ -869,7 +869,16 @@
     "desc_rateb_alnabulsi": "Lessons and lectures from the Al-Nabulsi encyclopaedia",
     "desc_mohamed_hassan": "Lessons, lectures and teaching series",
     "desc_abu_ishaq_alheweny": "Lessons in hadith and its sciences",
-    "desc_mostafa_aladwy": "Fatwas and lessons in tafsir and hadith"
+    "desc_mostafa_aladwy": "Fatwas and lessons in tafsir and hadith",
+    "desc_ragheb_elsergany": "Islamic history, the Prophet's biography and civilisation",
+    "desc_hassan_elhusseiny": "Comparative religion, creed and dawah",
+    "desc_amgad_samir": "Fiqh, the sharia sciences and spiritual purification",
+    "desc_ahmed_alarabi": "Reflecting on the Qur'an and its sciences",
+    "desc_haytham_talaat": "Scientific and intellectual answers to atheism and objections",
+    "desc_fahem": "Islamic thought in a modern visual style",
+    "desc_eyad_qunaibi": "Islamic thought and answers to contemporary objections",
+    "desc_ayman_abdelraheem": "Varied faith-building and dawah content",
+    "desc_waey": "Contemporary Islamic intellectual awareness"
   },
   "mushaf_theme": {
     "title": "Text mushaf themes",
@@ -988,16 +997,6 @@
     "suffix": " AH"
   },
   "dawah": {
-    "ch_sergany": "Islamic history, the Prophet's biography and civilisation",
-    "ch_husseiny": "Comparative religion, creed and dawah",
-    "ch_amgad": "Fiqh, the sharia sciences and spiritual purification",
-    "ch_arabi": "Reflecting on the Qur'an and its sciences",
-    "ch_haytham": "Scientific and intellectual answers to atheism and objections",
-    "ch_fahem": "Islamic thought in a modern visual style",
-    "ch_qunaibi": "Islamic thought and answers to contemporary objections",
-    "ch_makany": "Purposeful dawah and educational content",
-    "ch_ayman": "Varied faith-building and dawah content",
-    "ch_waei": "Contemporary Islamic intellectual awareness",
     "site_islamqa": "The largest Islamic fatwa and questions site, supervised by Shaykh Muhammad Salih al-Munajjid",
     "site_dorar": "A comprehensive encyclopedia of hadith, creed, fiqh and hadith authentication",
     "site_islamway": "Islamic lessons, lectures and articles from leading scholars and preachers",

@@ -4,6 +4,7 @@ import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/future_view.dart';
 import '../../../../core/utils/arabic_normalize.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,7 @@ import '../../../../core/services/download_manager.dart';
 import '../../data/library_api_service.dart';
 import '../../../../core/i18n/proper_name.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../channels/data/islamic_channels.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../data/book_catalog.dart';
 import '../../data/hadith_imam_bios.dart';
@@ -1336,98 +1338,39 @@ class _SearchResultsState extends State<_SearchResults> {
 
 // ── Islamic Channels ──────────────────────────────────────────────────────
 
-class _ChannelInfo {
-  final String name;
-  /// A translation KEY, not the text: the description is what a non-Arabic
-  /// reader needs in order to know what the channel or site is. The `name`
-  /// beside it stays Arabic because it is the real, proper name of an
-  /// Arabic-language channel, and a proper noun is not translated - it is
-  /// rendered with `ArabicText` so it reads in its own direction.
-  final String descriptionKey;
-  final String url;
-  final IconData icon;
-  final Color color;
-  const _ChannelInfo({
-    required this.name,
-    required this.descriptionKey,
-    required this.url,
-    required this.icon,
-    required this.color,
-  });
-}
+/// The channel's picture, or its mark when YouTube has only a letter tile
+/// for it. `CachedNetworkImage` keeps the mirrored avatar on the device, so
+/// the grid is not a page of grey circles with the network off — and its
+/// placeholder and error states both fall back to the same mark, so a slow or
+/// failed fetch looks deliberate rather than broken.
+class _ChannelAvatar extends StatelessWidget {
+  final IslamicChannel channel;
+  const _ChannelAvatar({required this.channel});
 
-const _islamicChannels = [
-  _ChannelInfo(
-    name: 'د. راغب السرجاني',
-    descriptionKey: 'dawah.ch_sergany',
-    url: 'https://www.youtube.com/@RaghebElsergany',
-    icon: Icons.history_edu,
-    color: Color(0xFF1565C0),
-  ),
-  _ChannelInfo(
-    name: 'د. حسن الحسيني',
-    descriptionKey: 'dawah.ch_husseiny',
-    url: 'https://www.youtube.com/@HassanElhusseiny',
-    icon: Icons.menu_book,
-    color: Color(0xFF2E7D32),
-  ),
-  _ChannelInfo(
-    name: 'الشيخ أمجد سمير',
-    descriptionKey: 'dawah.ch_amgad',
-    url: 'https://www.youtube.com/@AmgadSamir',
-    icon: Icons.school,
-    color: Color(0xFF6A1B9A),
-  ),
-  _ChannelInfo(
-    name: 'د. أحمد العربي',
-    descriptionKey: 'dawah.ch_arabi',
-    url: 'https://www.youtube.com/@Dr.AhmedAlarabi',
-    icon: Icons.auto_stories,
-    color: Color(0xFFC62828),
-  ),
-  _ChannelInfo(
-    name: 'د. هيثم طلعت',
-    descriptionKey: 'dawah.ch_haytham',
-    url: 'https://www.youtube.com/@HaythamTalaat',
-    icon: Icons.lightbulb,
-    color: Color(0xFFEF6C00),
-  ),
-  _ChannelInfo(
-    name: 'قناة فاهم',
-    descriptionKey: 'dawah.ch_fahem',
-    url: 'https://www.youtube.com/@fahem',
-    icon: Icons.smart_display,
-    color: Color(0xFF00838F),
-  ),
-  _ChannelInfo(
-    name: 'د. إياد قنيبي',
-    descriptionKey: 'dawah.ch_qunaibi',
-    url: 'https://www.youtube.com/@EyadQunaibi',
-    icon: Icons.psychology,
-    color: Color(0xFF4527A0),
-  ),
-  _ChannelInfo(
-    name: 'قناة مكاني',
-    descriptionKey: 'dawah.ch_makany',
-    url: 'https://www.youtube.com/@MakanyChannel',
-    icon: Icons.mosque,
-    color: Color(0xFF00695C),
-  ),
-  _ChannelInfo(
-    name: 'م. أيمن عبدالرحيم',
-    descriptionKey: 'dawah.ch_ayman',
-    url: 'https://www.youtube.com/@AymanAbdelRaheem',
-    icon: Icons.volunteer_activism,
-    color: Color(0xFF283593),
-  ),
-  _ChannelInfo(
-    name: 'قناة وعي',
-    descriptionKey: 'dawah.ch_waei',
-    url: 'https://www.youtube.com/@waikishow',
-    icon: Icons.visibility,
-    color: Color(0xFF37474F),
-  ),
-];
+  @override
+  Widget build(BuildContext context) {
+    final mark = Container(
+      width: 52,
+      height: 52,
+      decoration: BoxDecoration(
+        color: channel.color.withValues(alpha: 0.15),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(channel.icon, color: channel.color, size: 28),
+    );
+    if (!channel.hasPhoto) return mark;
+    return ClipOval(
+      child: CachedNetworkImage(
+        imageUrl: channel.avatarUrl,
+        width: 52,
+        height: 52,
+        fit: BoxFit.cover,
+        placeholder: (_, _) => mark,
+        errorWidget: (_, _, _) => mark,
+      ),
+    );
+  }
+}
 
 class _IslamicChannelsTab extends StatelessWidget {
   const _IslamicChannelsTab();
@@ -1437,9 +1380,9 @@ class _IslamicChannelsTab extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _islamicChannels.length,
+      itemCount: islamicChannels.length,
       itemBuilder: (context, i) {
-        final ch = _islamicChannels[i];
+        final ch = islamicChannels[i];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           clipBehavior: Clip.antiAlias,
@@ -1465,22 +1408,14 @@ class _IslamicChannelsTab extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        color: ch.color.withValues(alpha: 0.15),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(ch.icon, color: ch.color, size: 28),
-                    ),
+                    _ChannelAvatar(channel: ch),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ArabicText(
-                            ch.name,
+                            properName(ch.nameAr, ch.nameEn),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
