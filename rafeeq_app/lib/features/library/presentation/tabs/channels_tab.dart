@@ -8,10 +8,10 @@ import '../../../../core/widgets/arabic_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/i18n/proper_name.dart';
 import '../../../channels/data/islamic_channels.dart';
+import '../../../../core/utils/external_link.dart';
 
 // ── Islamic Channels ──────────────────────────────────────────────────────
 
@@ -66,10 +66,7 @@ class ChannelsTab extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: InkWell(
-            onTap: () => launchUrl(
-              Uri.parse(ch.url),
-              mode: LaunchMode.externalApplication,
-            ),
+            onTap: () => openExternalLink(ch.url),
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(

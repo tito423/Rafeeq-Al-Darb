@@ -6,9 +6,9 @@ import '../../../../core/widgets/arabic_text.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/islamic_websites.dart';
+import '../../../../core/utils/external_link.dart';
 
 class WebsitesTab extends StatelessWidget {
   const WebsitesTab({super.key});
@@ -27,10 +27,7 @@ class WebsitesTab extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: InkWell(
-            onTap: () => launchUrl(
-              Uri.parse(site.url),
-              mode: LaunchMode.externalApplication,
-            ),
+            onTap: () => openExternalLink(site.url),
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(

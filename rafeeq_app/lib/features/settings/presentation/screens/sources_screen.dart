@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../data/sources_catalog.dart';
+import '../../../../core/utils/external_link.dart';
 
 /// Where every piece of content in the app actually comes from.
 ///
@@ -71,10 +71,7 @@ class _SourceRow extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
-          onTap: () => launchUrl(
-            Uri.parse(source.url),
-            mode: LaunchMode.externalApplication,
-          ),
+          onTap: () => openExternalLink(source.url),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(

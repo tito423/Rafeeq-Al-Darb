@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart';
@@ -20,6 +19,7 @@ import '../data/quran_audio_player.dart';
 import 'reciter_screen.dart';
 import 'widgets/audio_common.dart';
 import 'widgets/mini_player.dart';
+import '../../../core/utils/external_link.dart';
 
 /// «تحميل تلاوات القرآن» — the reciters of mp3quran.net, what is on the
 /// device (a folder per reciter, a sub-folder per recitation), and audio files
@@ -189,7 +189,7 @@ class _SourceCredit extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(16),
         child: InkWell(
-          onTap: () => launchUrl(Uri.parse('https://mp3quran.net'), mode: LaunchMode.externalApplication),
+          onTap: () => openExternalLink('https://mp3quran.net'),
           child: Text(
             'quran_audio.source_note'.tr(),
             textAlign: TextAlign.center,

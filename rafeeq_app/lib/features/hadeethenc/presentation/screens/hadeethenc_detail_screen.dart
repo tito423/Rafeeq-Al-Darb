@@ -3,12 +3,12 @@
 import 'package:easy_localization/easy_localization.dart'
     hide TextDirection;
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/db/hadeethenc_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/utils/external_link.dart';
 
 /// One record of موسوعة الأحاديث النبوية, in full.
 ///
@@ -179,8 +179,7 @@ class HadeethEncDetailScreen extends StatelessWidget {
           // Condition 2 of the publisher's terms: clear credit to the
           // publisher and the source, on the content itself.
           InkWell(
-            onTap: () => launchUrl(Uri.parse(sourceUrl),
-                mode: LaunchMode.externalApplication),
+            onTap: () => openExternalLink(sourceUrl),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(

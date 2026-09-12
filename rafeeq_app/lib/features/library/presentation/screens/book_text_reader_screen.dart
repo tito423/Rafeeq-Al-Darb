@@ -4,7 +4,6 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/i18n/proper_name.dart';
 import '../../../../core/widgets/arabic_text.dart';
@@ -13,6 +12,7 @@ import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/widgets/toolbar_action.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_text.dart';
+import '../../../../core/utils/external_link.dart';
 
 /// P3‑29 visual redesign: a small closed set of reading-ink choices offered
 /// by the "لون الخط" toolbar action. Each entry carries both a light- and a
@@ -409,8 +409,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                 onPressed: () {
                   final url = _doc?.meta.shamelaUrl ?? '';
                   if (url.isNotEmpty) {
-                    launchUrl(Uri.parse(url),
-                        mode: LaunchMode.externalApplication);
+                    openExternalLink(url);
                   }
                 },
                 icon: const Icon(Icons.open_in_new, size: 18),

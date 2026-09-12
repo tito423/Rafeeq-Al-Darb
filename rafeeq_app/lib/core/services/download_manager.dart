@@ -555,7 +555,17 @@ class DownloadManager {
     if (!outDir.existsSync()) outDir.createSync(recursive: true);
     for (final entry in archive) {
       if (!entry.isFile) continue;
-      final f = File(p.join(outDir.path, entry.name));
+      // ZIP SLIP. `entry.name` is whatever the archive says, and `p.join`
+      // happily resolves '../../..' — an entry named
+      // `../../databases/hadith.db` would overwrite a bundled database, and
+      // one named `../../../shared_prefs/...` the app's own settings. These
+      // archives come from this project's own bucket over HTTPS, so nobody
+      // is putting one there today; it is one line to make that not matter,
+      // and §1.1's rule about not trusting content applies to the shape of
+      // a file just as much as to what a catalogue claims about it.
+      final target = p.normalize(p.join(outDir.path, entry.name));
+      if (!p.isWithin(outDir.path, target)) continue;
+      final f = File(target);
       await f.parent.create(recursive: true);
       await f.writeAsBytes(entry.content as List<int>, flush: true);
     }

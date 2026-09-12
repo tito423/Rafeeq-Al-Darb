@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/db/hadeethenc_repository.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../app/app_locale_provider.dart';
 import '../../data/hadeethenc_providers.dart';
 import 'hadeethenc_category_screen.dart';
+import '../../../../core/utils/external_link.dart';
 
 /// موسوعة الأحاديث النبوية — a collection **beside** the nine books, not
 /// inside them.
@@ -209,8 +209,7 @@ class _Credit extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
       child: InkWell(
-        onTap: () => launchUrl(Uri.parse(catalog.sourceUrl),
-            mode: LaunchMode.externalApplication),
+        onTap: () => openExternalLink(catalog.sourceUrl),
         child: Text(
           'hadeethenc.credit'
               .tr(namedArgs: {'source': catalog.nameFor(locale)}),
