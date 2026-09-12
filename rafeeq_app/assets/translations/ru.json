@@ -224,7 +224,9 @@
     "recite_ayah": "Прочитать аят",
     "go": "Перейти",
     "card_expand": "Развернуть",
-    "card_collapse": "Свернуть"
+    "card_collapse": "Свернуть",
+    "reciter_legend_fast": "Проверенная копия — быстрое воспроизведение",
+    "reciter_legend_stream": "Потоком из сети"
   },
   "library": {
     "title": "Библиотека",

@@ -11,7 +11,6 @@ import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
-import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/downloads_controller.dart';
 import '../../../quran_audio/presentation/widgets/audio_common.dart';
@@ -33,7 +32,6 @@ IconData _iconFor(DownloadCategory c) => switch (c) {
   DownloadCategory.recitations => Icons.headphones_rounded,
   DownloadCategory.hadith => Icons.format_quote_rounded,
   DownloadCategory.books => Icons.auto_stories_rounded,
-  DownloadCategory.adhan => Icons.campaign_rounded,
 };
 
 Color _colorFor(DownloadCategory c) => switch (c) {
@@ -41,7 +39,6 @@ Color _colorFor(DownloadCategory c) => switch (c) {
   DownloadCategory.recitations => AppColors.primarySoft,
   DownloadCategory.hadith => AppColors.info,
   DownloadCategory.books => AppColors.goldSoft,
-  DownloadCategory.adhan => AppColors.success,
 };
 
 /// How much empty space every list in this screen keeps at its foot.
@@ -135,8 +132,7 @@ class _OverviewTab extends ConsumerWidget {
   /// local `TabController` switch. Hadith/books are managed on a completely
   /// different screen (`LibraryScreen`, its own bottom-nav tab), so pop back
   /// out to `AppShell` and request both the bottom-nav tab and
-  /// `LibraryScreen`'s own inner tab. Adhan clips are managed on the Adhan
-  /// settings screen.
+  /// `LibraryScreen`'s own inner tab.
   VoidCallback? _goToCategory(
     BuildContext context,
     WidgetRef ref,
@@ -167,12 +163,6 @@ class _OverviewTab extends ConsumerWidget {
           ref.read(requestedTabProvider.notifier).state = AppTab.library;
           ref.read(requestedLibraryTabProvider.notifier).state = 0;
         };
-      case DownloadCategory.adhan:
-        return () => Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => const AdhanSettingsScreen(),
-          ),
-        );
     }
   }
 
@@ -421,6 +411,13 @@ class _StorageHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final total = summary.totalBytes;
+    // The panel behind this is theme-aware now, so the text on it has to be
+    // too: AppColors.textHigh/Medium/Low are the dark theme's greys and were
+    // unreadable the moment the panel stopped being dark.
+    final scheme = Theme.of(context).colorScheme;
+    final high = scheme.onSurface;
+    final medium = scheme.onSurfaceVariant;
+    final low = scheme.onSurfaceVariant.withValues(alpha: 0.75);
     return IslamicPatternPanel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,8 +432,8 @@ class _StorageHero extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'downloads.storage_used'.tr(),
-                style: const TextStyle(
-                  color: AppColors.textMedium,
+                style: TextStyle(
+                  color: medium,
                   fontSize: 12,
                   letterSpacing: 0.3,
                 ),
@@ -446,17 +443,17 @@ class _StorageHero extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             _fmtSize(total),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 34,
               fontWeight: FontWeight.w800,
-              color: AppColors.textHigh,
+              color: high,
               height: 1.1,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             'downloads.items'.plural(summary.totalItems),
-            style: const TextStyle(color: AppColors.textLow, fontSize: 12),
+            style: TextStyle(color: low, fontSize: 12),
           ),
           if (total > 0) ...[
             const SizedBox(height: 16),
@@ -500,8 +497,8 @@ class _StorageHero extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           c.labelKey.tr(),
-                          style: const TextStyle(
-                            color: AppColors.textMedium,
+                          style: TextStyle(
+                            color: medium,
                             fontSize: 11,
                           ),
                         ),

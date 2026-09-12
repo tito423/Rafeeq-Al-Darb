@@ -71,6 +71,35 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
               ),
             ),
           ),
+          // WHAT THE TWO ICONS MEAN. They were a gold bolt and a grey cloud
+          // with nothing saying which was which — «الأيقونات مختلفة بتاعة
+          // القارئ مش فاهم دلالتها». The distinction is real and worth
+          // keeping (a verified everyayah mirror plays ayah by ayah without
+          // stalling; the CDN fallback does not always), so it is labelled
+          // rather than removed.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 2, 16, 8),
+            child: Row(
+              children: [
+                const Icon(Icons.bolt_rounded, size: 16, color: AppColors.gold),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: Text('quran.reciter_legend_fast'.tr(),
+                      style: const TextStyle(
+                          fontSize: 11.5, color: AppColors.textLow)),
+                ),
+                const SizedBox(width: 12),
+                const Icon(Icons.cloud_outlined,
+                    size: 16, color: AppColors.textLow),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: Text('quran.reciter_legend_stream'.tr(),
+                      style: const TextStyle(
+                          fontSize: 11.5, color: AppColors.textLow)),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: list.length,

@@ -224,7 +224,9 @@
     "recite_ayah": "تلاوة الآية",
     "go": "انتقال",
     "card_expand": "تكبير الكارت",
-    "card_collapse": "تصغير الكارت"
+    "card_collapse": "تصغير الكارت",
+    "reciter_legend_fast": "تلاوة محقّقة — تشغيل سريع",
+    "reciter_legend_stream": "بث من الإنترنت"
   },
   "library": {
     "title": "المكتبة",

@@ -224,7 +224,9 @@
     "recite_ayah": "Réciter le verset",
     "go": "Aller",
     "card_expand": "Agrandir",
-    "card_collapse": "Réduire"
+    "card_collapse": "Réduire",
+    "reciter_legend_fast": "Copie vérifiée — lecture rapide",
+    "reciter_legend_stream": "Diffusé depuis le CDN"
   },
   "library": {
     "title": "Bibliothèque",

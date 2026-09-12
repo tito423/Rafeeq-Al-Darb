@@ -224,7 +224,9 @@
     "recite_ayah": "آیت کی تلاوت",
     "go": "جائیں",
     "card_expand": "بڑا کریں",
-    "card_collapse": "چھوٹا کریں"
+    "card_collapse": "چھوٹا کریں",
+    "reciter_legend_fast": "تصدیق شدہ کاپی — تیز چلتی ہے",
+    "reciter_legend_stream": "انٹرنیٹ سے اسٹریم"
   },
   "library": {
     "title": "کتب خانہ",

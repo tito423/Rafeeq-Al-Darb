@@ -50,10 +50,20 @@ final recitersProvider = FutureProvider<List<Reciter>>((ref) async {
   for (final e in list) {
     final m = e as Map<String, dynamic>;
     if (m['language'] != 'ar' || m['format'] != 'audio') continue;
+    // An entry whose "name" is its own identifier has no name at all: the
+    // upstream editions API returned the id in every field. One of the 176
+    // is like that, and it listed «ar.oimaoqataris» in the reciter picker as
+    // though it were a shaykh - which is what the owner photographed, asking
+    // «فيه اسم غريب مش اسم شيخ … إيه الحوار ده». §1.1: an entry the app
+    // cannot honestly label is not an entry.
+    final id = m['identifier'] as String;
+    final nameAr = (m['name'] as String?) ?? '';
+    final nameEn = (m['englishName'] as String?) ?? '';
+    if (nameAr == id || nameEn == id) continue;
     out.add(Reciter(
-      identifier: m['identifier'] as String,
-      nameAr: (m['name'] as String?) ?? '',
-      nameEn: (m['englishName'] as String?) ?? '',
+      identifier: id,
+      nameAr: nameAr,
+      nameEn: nameEn,
     ));
   }
   // Sorted by the Latin form: it is the only field every entry really has,

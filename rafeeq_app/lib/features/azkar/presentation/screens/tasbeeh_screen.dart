@@ -648,10 +648,20 @@ class _MathurCounterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = target;
+    // SIZED TO THE SCREEN, not to a number somebody typed. «لما بختار ذكر
+    // طويل في المسبحة صغّر شكل الكارت لأنه لازم أحرّك الشاشة لتحت عشان أوصل
+    // لآخره» - the longest of the five is 88 characters, and at a fixed 19pt
+    // over a 2.0 line height plus a 44pt counter the card ran past the bottom
+    // of a phone, so the count you are tapping for was off screen. Both type
+    // sizes now come from the viewport, with floors so a small phone still
+    // gets something readable rather than something tiny.
+    final h = MediaQuery.sizeOf(context).height;
+    final dhikrSize = (h * 0.0195).clamp(14.0, 19.0);
+    final countSize = (h * 0.032).clamp(26.0, 44.0);
     return GestureDetector(
       onTap: onTap,
       child: IslamicPatternPanel(
-        padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
+        padding: EdgeInsets.fromLTRB(18, h * 0.012, 18, h * 0.010),
         colors: [
           Color.alphaBlend(
             option.color.withValues(alpha: 0.28),
@@ -666,10 +676,10 @@ class _MathurCounterCard extends StatelessWidget {
               option.textKey.tr(),
               textAlign: TextAlign.center,
               textDirection: TextDirection.rtl,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'AmiriQuran',
-                fontSize: 19,
-                height: 2.0,
+                fontSize: dhikrSize,
+                height: 1.75,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
               ),
@@ -689,13 +699,13 @@ class _MathurCounterCard extends StatelessWidget {
                 ),
               ),
             ],
-            const SizedBox(height: 14),
+            SizedBox(height: h * 0.010),
             Container(
               height: 1,
               width: 90,
               color: AppColors.gold.withValues(alpha: 0.45),
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: h * 0.010),
             // The count springs on every tap, so the card visibly answers the
             // finger rather than silently swapping a digit.
             TweenAnimationBuilder<double>(
@@ -707,15 +717,15 @@ class _MathurCounterCard extends StatelessWidget {
                   Transform.scale(scale: scale, child: child),
               child: Text(
                 t == null ? '$count' : '$count / $t',
-                style: const TextStyle(
-                  fontSize: 44,
+                style: TextStyle(
+                  fontSize: countSize,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
             ),
             if (t != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: h * 0.009),
               GoldProgressBar(value: (count / t).clamp(0.0, 1.0)),
             ],
             const SizedBox(height: 12),

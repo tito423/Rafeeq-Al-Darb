@@ -100,9 +100,26 @@ class IslamicPatternPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gradient =
-        colors ??
-        const [AppColors.primaryContainer, AppColors.nightSurface];
+    // THEME-AWARE, because it was not. The gradient was a fixed navy->teal
+    // and the text on it a fixed light grey, whatever theme the reader had
+    // chosen — so on the light themes the Downloads storage card sat there
+    // as a dark green slab with nothing around it that colour. That is the
+    // owner's «خلي كارت التنزيلات اللي بلون مختلف للون الثيم بلون متناسق مع
+    // لون الثيم المختار». The panel now takes its two stops and its border
+    // from the live ColorScheme, so it belongs to whichever theme is on.
+    final scheme = Theme.of(context).colorScheme;
+    final gradient = colors ??
+        [
+          Color.alphaBlend(
+            scheme.primary.withValues(alpha: 0.22),
+            scheme.surfaceContainerHighest,
+          ),
+          scheme.surfaceContainerHigh,
+        ];
+    final accent = Color.alphaBlend(
+      AppColors.gold.withValues(alpha: 0.55),
+      scheme.onSurface,
+    );
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: DecoratedBox(
@@ -112,7 +129,7 @@ class IslamicPatternPanel extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: gradient,
           ),
-          border: Border.all(color: AppColors.gold.withValues(alpha: 0.28)),
+          border: Border.all(color: accent.withValues(alpha: 0.30)),
           borderRadius: BorderRadius.circular(radius),
         ),
         child: Stack(
@@ -121,7 +138,7 @@ class IslamicPatternPanel extends StatelessWidget {
               child: CustomPaint(
                 painter: IslamicPatternPainter(
                   tile: 54,
-                  color: AppColors.gold.withValues(alpha: 0.10),
+                  color: accent.withValues(alpha: 0.12),
                 ),
               ),
             ),

@@ -224,7 +224,9 @@
     "recite_ayah": "Recitar la aleya",
     "go": "Ir",
     "card_expand": "Ampliar",
-    "card_collapse": "Reducir"
+    "card_collapse": "Reducir",
+    "reciter_legend_fast": "Copia verificada: reproducción rápida",
+    "reciter_legend_stream": "Transmisión desde el CDN"
   },
   "library": {
     "title": "Biblioteca",

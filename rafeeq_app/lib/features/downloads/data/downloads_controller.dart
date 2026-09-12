@@ -10,7 +10,15 @@ import '../../quran/data/mushaf_edition.dart';
 /// per category. It does **not** own the downloads: each service keeps its own
 /// engine (`MushafPageService`, `AyahAudioService`, `DownloadManager`); this
 /// only observes them and delegates "free space" back to the owner.
-enum DownloadCategory { mushafs, recitations, hadith, books, adhan }
+/// The buckets the Downloads hub counts and can free.
+///
+/// There used to be a sixth, `adhan`. The clips it counted were deleted from
+/// the app in 3.19 and `DownloadManager.purgeAdhanVideos()` frees whatever a
+/// phone still held, once, on the first launch after that - so the row had
+/// nothing left to show and nothing left to do. The owner put it plainly:
+/// «شيل الاذان من التنزيلات مالوش لازمة». Its two manager categories are
+/// swept by `freeAllStorage` below so no orphaned bytes are left uncounted.
+enum DownloadCategory { mushafs, recitations, hadith, books }
 
 extension DownloadCategoryX on DownloadCategory {
   String get labelKey => switch (this) {
@@ -18,7 +26,6 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.recitations => 'downloads.cat_recitations',
         DownloadCategory.hadith => 'downloads.cat_hadith',
         DownloadCategory.books => 'downloads.cat_books',
-        DownloadCategory.adhan => 'downloads.cat_adhan',
       };
 
   /// [DownloadManager] `category` string(s) that map to this bucket.
@@ -39,12 +46,6 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.recitations => const ['ruqyah'],
         DownloadCategory.hadith => const ['hadith'],
         DownloadCategory.books => const ['books', 'books_text'],
-        // `adhan_video` is kept on purpose even though the clips are gone
-        // from the app: a phone that downloaded some still has the files
-        // until `DownloadManager.purgeAdhanVideos` has run, and an
-        // unclaimed category is bytes the hub neither counts nor can free
-        // — which is exactly what this comment block is warning about.
-        DownloadCategory.adhan => const ['adhan', 'adhan_video'],
       };
 }
 
@@ -138,7 +139,6 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
       await QuranAudioLibrary.instance.freeAll();
     case DownloadCategory.hadith:
     case DownloadCategory.books:
-    case DownloadCategory.adhan:
       break;
   }
   // Whatever the bucket also owns in DownloadManager goes with it — for
