@@ -137,7 +137,10 @@
     "name_ask_body": "Un nombre para el saludo de la pantalla de inicio. Puedes omitirlo.",
     "name_hint": "Escribe tu nombre",
     "name_skip": "Omitir",
-    "name_save": "Guardar"
+    "name_save": "Guardar",
+    "on_this_day": "Un día como hoy",
+    "on_this_day_none": "No hay eventos registrados para este día.",
+    "on_this_day_source": "Fuente: Wikipedia — Creative Commons (CC BY-SA)"
   },
   "quran": {
     "surah_list": "Suras",

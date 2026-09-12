@@ -78,6 +78,30 @@ from datetime import datetime, timezone
 # id  -> must match LibraryBook.id in book_catalog.dart
 # See PHASE2.md stage P2-4b "Sourcing decisions" for the reasoning.
 BOOKS = {
+    "qawaid_at_tajwid_hafs": {
+        "shamela_id": 11301,
+        "source_label": "المكتبة الشاملة — قواعد التجويد على رواية حفص عن عاصم بن أبي النجود",
+    },
+    "taysir_ahkam_at_tajwid": {
+        "shamela_id": 688,
+        "source_label": "المكتبة الشاملة — تيسير أحكام التجويد، المستوى الأول",
+    },
+    "al_muqaddimah_al_jazariyyah": {
+        "shamela_id": 581,
+        "source_label": "المكتبة الشاملة — المقدمة الجزرية، لابن الجزري، تحقيق أيمن رشدي سويد",
+    },
+    "tmam_almnh_fy_altalyq_ala_fqh_alsnh": {
+        "shamela_id": 11122,
+        "source_label": "المكتبة الشاملة — تمام المنة في التعليق على فقه السنة، لـالإمام البخاري — بأحكام الألباني، دار الراية، الخامسة",
+    },
+    "tuhfat_al_atfal": {
+        "shamela_id": 9632,
+        "source_label": "المكتبة الشاملة — تحفة الأطفال والغلمان في تجويد القرآن، لسليمان الجمزوري",
+    },
+    "dayf_snn_altrmdhy": {
+        "shamela_id": 1216,
+        "source_label": "المكتبة الشاملة — ضعيف سنن الترمذي، لـالإمام البخاري — بأحكام الألباني، المكتب الاسلامي - بيروت، الأولى، ١٤١١ هـ - ١٩٩١ م",
+    },
     "dayf_aljama_alsghyr_wzyadth": {
         "shamela_id": 1663,
         "source_label": "المكتبة الشاملة — ضعيف الجامع الصغير وزيادته، لـالإمام البخاري — بأحكام الألباني، المكتب الإسلامي، المجددة والمزيدة والمنقحة",

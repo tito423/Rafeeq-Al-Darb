@@ -137,7 +137,10 @@
     "name_ask_body": "Имя для приветствия на главном экране. Это можно пропустить.",
     "name_hint": "Введите имя",
     "name_skip": "Пропустить",
-    "name_save": "Сохранить"
+    "name_save": "Сохранить",
+    "on_this_day": "В этот день",
+    "on_this_day_none": "Для этого дня событий не записано.",
+    "on_this_day_source": "Источник: Википедия — Creative Commons (CC BY-SA)"
   },
   "quran": {
     "surah_list": "Суры",

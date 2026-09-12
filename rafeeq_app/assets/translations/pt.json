@@ -137,7 +137,10 @@
     "name_ask_body": "Um nome para aparecer na saudação da tela inicial. Você pode pular.",
     "name_hint": "Escreva seu nome",
     "name_skip": "Pular",
-    "name_save": "Salvar"
+    "name_save": "Salvar",
+    "on_this_day": "Num dia como hoje",
+    "on_this_day_none": "Nenhum evento registrado para este dia.",
+    "on_this_day_source": "Fonte: Wikipédia — Creative Commons (CC BY-SA)"
   },
   "quran": {
     "surah_list": "Suratas",

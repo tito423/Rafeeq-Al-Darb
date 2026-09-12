@@ -137,7 +137,10 @@
     "name_ask_body": "A name to appear in the greeting on your Home screen. You can skip this.",
     "name_hint": "Type your name",
     "name_skip": "Skip",
-    "name_save": "Save"
+    "name_save": "Save",
+    "on_this_day": "On this day",
+    "on_this_day_none": "No events recorded for this day.",
+    "on_this_day_source": "Source: Wikipedia — Creative Commons (CC BY-SA)"
   },
   "quran": {
     "surah_list": "Surahs",

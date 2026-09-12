@@ -23,6 +23,7 @@ import '../../../../core/theme/hero_surface.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../quotes/presentation/widgets/home_quote_card.dart';
 import '../../../settings/data/reader_name_provider.dart';
+import '../widgets/on_this_day_sheet.dart';
 import '../../../settings/presentation/widgets/reader_name_sheet.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../khatma/presentation/khatma_card.dart';
@@ -237,7 +238,17 @@ class _HeaderCard extends ConsumerWidget {
       // month name only ever shrinks to fit — it can never wrap mid-word or
       // trip a `RenderFlex overflowed` and break the card's shape. The side
       // cells share the same flex so the welcome stays optically centred.
-      child: Row(
+      child: InkWell(
+        // «لما أضغط على التاريخ الهجري تجيب ما يوافقه … وكذلك في التاريخ
+        // الميلادي». Both halves of the header open the same sheet, because
+        // the sheet shows both dates: two sheets would be two screens saying
+        // almost the same thing.
+        onTap: () => showOnThisDaySheet(
+          context,
+          hijriOffset: ref.read(prayerAdjustmentsProvider).hijriOffsetDays,
+        ),
+        borderRadius: BorderRadius.circular(18),
+        child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
@@ -341,6 +352,7 @@ class _HeaderCard extends ConsumerWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }

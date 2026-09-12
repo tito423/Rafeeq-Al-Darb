@@ -137,7 +137,10 @@
     "name_ask_body": "Un nom qui apparaîtra dans le message d’accueil. Vous pouvez passer.",
     "name_hint": "Écrivez votre nom",
     "name_skip": "Passer",
-    "name_save": "Enregistrer"
+    "name_save": "Enregistrer",
+    "on_this_day": "Un jour comme aujourd’hui",
+    "on_this_day_none": "Aucun événement enregistré pour ce jour.",
+    "on_this_day_source": "Source : Wikipédia — Creative Commons (CC BY-SA)"
   },
   "quran": {
     "surah_list": "Sourates",
