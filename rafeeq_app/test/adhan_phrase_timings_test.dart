@@ -41,8 +41,28 @@ void main() {
       total: Duration(milliseconds: t.totalMs),
       timings: t,
     );
-    expect(subs.first.startTime.inMilliseconds, greaterThanOrEqualTo(t.firstSpeechMs - 1));
-    expect(subs.length, 7);
+    expect(subs.first.startTime.inMilliseconds,
+        greaterThanOrEqualTo(t.firstSpeechMs - 1));
+    // TWELVE, not seven. The recording is measured breath by breath and the
+    // screen changes on every one of them; seven was the line count, and
+    // holding one line across two breaths is exactly why the text sat still
+    // while the muezzin recited it again.
+    expect(subs.length, 12);
+    // And the twelve carry the adhan in the order it is recited, with each
+    // line repeated for as many breaths as it takes.
+    expect(subs.map((s) => s.text).toList(), [
+      'الله أكبر', 'الله أكبر',
+      'أشهد أن لا إله إلا الله', 'أشهد أن لا إله إلا الله',
+      'أشهد أن محمداً رسول الله', 'أشهد أن محمداً رسول الله',
+      'حيّ على الصلاة', 'حيّ على الصلاة',
+      'حيّ على الفلاح', 'حيّ على الفلاح',
+      'الله أكبر',
+      'لا إله إلا الله',
+    ]);
+    for (var i = 1; i < subs.length; i++) {
+      expect(subs[i].startTime, greaterThan(subs[i - 1].startTime),
+          reason: 'breath $i does not start after the one before it');
+    }
   });
 
   test('a Fajr text over a non-Fajr recording falls back to the spoken span', () {

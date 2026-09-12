@@ -109,6 +109,18 @@ def main():
             tail_ok = all(x <= 0.8 * head for x in durs[-2:])
             if all(x >= 3000 for x in durs) and max(durs) <= 3 * med and tail_ok:
                 rec['lines_fajr' if best['fajr'] else 'lines'] = starts
+                # AND the breath groups themselves, which is what the screen
+                # actually needs. Collapsing twelve measured onsets into seven
+                # line starts is why the text sat still while the muezzin
+                # repeated: «الله أكبر» is recited four times in two breaths
+                # and the screen only changed once. Twelve (or fourteen) is as
+                # fine as this audio goes - the two takbirs inside one breath
+                # have no silence between them to measure, and splitting them
+                # would be inventing a boundary, which is the one thing this
+                # script exists not to do.
+                rec['breaths_fajr' if best['fajr'] else 'breaths'] = [
+                    int(s0 * 1000) for s0, _ in best['speech']
+                ]
             else:
                 rec['rejected_lines'] = starts
         result[os.path.basename(asset)] = rec

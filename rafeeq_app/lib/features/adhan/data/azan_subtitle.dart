@@ -62,22 +62,41 @@ class AdhanTimings {
   final List<int>? lines;
   final bool linesAreFajr;
 
+  /// Start of every BREATH the muezzin takes — twelve of them, fourteen with
+  /// «الصلاة خير من النوم». This is the granularity the screen wants:
+  /// collapsing them into the seven line starts above is why the text sat
+  /// still while the muezzin repeated «الله أكبر» four times and the screen
+  /// changed once. Null when the recording's breaths did not match.
+  final List<int>? breaths;
+
   const AdhanTimings({
     required this.totalMs,
     required this.firstSpeechMs,
     required this.lastSpeechMs,
     this.lines,
+    this.breaths,
     this.linesAreFajr = false,
   });
+
+  /// How many breaths each line of [adhanLines] is recited in, in these
+  /// recordings. «الله أكبر ×٤» is two breaths of two takbirs; each shahada
+  /// and each hay'ala is said twice, one breath apiece; the closing «الله
+  /// أكبر ×٢» and «لا إله إلا الله» are one breath each.
+  static const breathsPerLine = [2, 2, 2, 2, 2, 1, 1];
+  static const breathsPerLineFajr = [2, 2, 2, 2, 2, 2, 1, 1];
 
   factory AdhanTimings.fromJson(Map<String, dynamic> j) {
     final fajr = j['lines_fajr'] as List<dynamic>?;
     final plain = j['lines'] as List<dynamic>?;
+    final bFajr = j['breaths_fajr'] as List<dynamic>?;
+    final bPlain = j['breaths'] as List<dynamic>?;
+    final b = bFajr ?? bPlain;
     return AdhanTimings(
       totalMs: (j['total_ms'] as num).toInt(),
       firstSpeechMs: (j['first_speech_ms'] as num).toInt(),
       lastSpeechMs: (j['last_speech_ms'] as num).toInt(),
       lines: [for (final v in fajr ?? plain ?? const []) (v as num).toInt()],
+      breaths: b == null ? null : [for (final v in b) (v as num).toInt()],
       linesAreFajr: fajr != null,
     );
   }
@@ -102,6 +121,42 @@ List<AzanSubtitle> buildAzanSubtitlesMeasured({
 }) {
   final lines = adhanLines(isFajr: isFajr);
   final scale = timings.totalMs <= 0 ? 1.0 : total.inMilliseconds / timings.totalMs;
+
+  // BREATH BY BREATH, when the recording gave us that. The owner's own idea:
+  // «تعرف صوت كل مؤذن إمتى بيقول مثلاً الله أكبر وتكتبها ع الشاشة». Twelve
+  // onsets were already being measured per recording and then thrown away in
+  // favour of seven line starts, so the line stayed up while he recited it
+  // again. It changes on every breath now. Finer than a breath is not
+  // measurable: the two takbirs inside one breath have no silence between
+  // them, and inventing a boundary is the one thing the measuring script
+  // exists not to do.
+  final breaths = timings.breaths;
+  final perLine = isFajr
+      ? AdhanTimings.breathsPerLineFajr
+      : AdhanTimings.breathsPerLine;
+  if (breaths != null &&
+      breaths.length == perLine.fold<int>(0, (a, b) => a + b) &&
+      timings.linesAreFajr == isFajr) {
+    final texts = <String>[
+      for (var i = 0; i < lines.length; i++)
+        for (var n = 0; n < perLine[i]; n++) lines[i].text,
+    ];
+    return [
+      for (var i = 0; i < breaths.length; i++)
+        AzanSubtitle(
+          text: texts[i],
+          startTime: Duration(milliseconds: (breaths[i] * scale).round()),
+          endTime: Duration(
+            milliseconds: ((i + 1 < breaths.length
+                        ? breaths[i + 1]
+                        : timings.lastSpeechMs + 1500) *
+                    scale)
+                .round(),
+          ),
+        ),
+    ];
+  }
+
   final measured = timings.lines;
   if (measured != null &&
       measured.length == lines.length &&
