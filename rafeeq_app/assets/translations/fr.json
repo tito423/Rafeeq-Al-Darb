@@ -1374,5 +1374,12 @@
     "started": "Started downloading {} ayahs",
     "error": "Error fetching reciters",
     "no_reciters": "No reciters support direct download"
+  },
+  "sync": {
+    "sign_in_title": "Se connecter",
+    "sign_in_subtitle": "Synchronisez votre khatma, votre progression et vos compteurs sur tous vos appareils",
+    "hide": "Masquer",
+    "sign_out": "Se déconnecter",
+    "sign_in_failed": "Échec de la connexion : {error}"
   }
 }

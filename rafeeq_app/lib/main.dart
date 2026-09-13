@@ -16,6 +16,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'adhan_entry.dart';
 import 'app/rafeeq_app.dart';
 import 'core/i18n/supported_locales.dart';
+import 'core/services/sync_service.dart';
 import 'core/services/syncable_shared_preferences.dart';
 import 'core/services/alarm_permissions_service.dart';
 import 'core/services/quran_translation_store.dart';
@@ -168,7 +169,11 @@ Future<void> main() async {
       ignorePluralRules: false,
       child: ProviderScope(
         overrides: [
-          sharedPrefsProvider.overrideWith((ref) => SyncableSharedPreferences(sharedPreferences, ref)),
+          sharedPrefsProvider.overrideWith(
+              (ref) => SyncableSharedPreferences(sharedPreferences, ref)),
+          // Without this the provider's default THREW on every read,
+          // and it is read on every settings write during start-up.
+          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
         ],
         child: const RafeeqApp(),
       ),

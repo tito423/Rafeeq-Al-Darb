@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
@@ -56,8 +57,8 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
       return IslamicActionCard(
         icon: Icons.sync,
         accent: AppColors.info,
-        title: 'تسجيل الدخول',
-        subtitle: 'المزامنة السحابية للختمة والعدادات',
+        title: 'sync.sign_in_title'.tr(),
+        subtitle: 'sync.sign_in_subtitle'.tr(),
         // Awaited, and its failure said out loud. The first cut called
         // `signIn()` and dropped the future on the floor, so a sign-in that
         // threw looked identical to a button that was not wired to anything
@@ -70,7 +71,10 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
             if (account == null) return; // the reader closed Google's sheet
           } catch (e) {
             messenger.showSnackBar(
-              SnackBar(content: Text('تعذّر تسجيل الدخول: $e')),
+              SnackBar(
+                content: Text('sync.sign_in_failed'
+                    .tr(namedArgs: {'error': '$e'})),
+              ),
             );
           }
         },
@@ -139,7 +143,7 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
                               TextButton.icon(
                                 onPressed: _toggleCard,
                                 icon: const Icon(Icons.arrow_upward),
-                                label: const Text('إخفاء'),
+                                label: Text('sync.hide'.tr()),
                               ),
                               FilledButton.icon(
                                 style: FilledButton.styleFrom(backgroundColor: AppColors.error),
@@ -148,7 +152,7 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
                                   _toggleCard();
                                 },
                                 icon: const Icon(Icons.logout),
-                                label: const Text('تسجيل خروج'),
+                                label: Text('sync.sign_out'.tr()),
                               ),
                             ],
                           )

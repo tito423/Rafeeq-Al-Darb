@@ -28,7 +28,21 @@ final syncServiceProvider = Provider<SyncService>((ref) {
   return service;
 });
 
-final sharedPreferencesProvider = Provider<SharedPreferences>((ref) => throw UnimplementedError());
+/// Overridden in `main()` with the real instance.
+///
+/// It used to be declared as a provider that THREW on every read. Anything
+/// that touched it - and `SyncableSharedPreferences` touches it on every
+/// single settings write, through `syncServiceProvider` - got an exception
+/// instead of a value, during app start-up, before the first frame. An
+/// uncaught error there means `runApp` never paints, and the OS-drawn splash
+/// is never lifted: the app looks frozen on a blank screen, which is exactly
+/// what the owner saw on first launch. A throwing default is a trap; this one
+/// simply refuses to be read before it is overridden, and `main` overrides it.
+final sharedPreferencesProvider = Provider<SharedPreferences>(
+  (ref) => throw StateError(
+    'sharedPreferencesProvider was read before main() overrode it',
+  ),
+);
 
 class SyncService {
   final GoogleSignIn _googleSignIn;
@@ -42,6 +56,16 @@ class SyncService {
   bool _isSyncing = false;
 
   SyncService(this._googleSignIn, this._prefs, this._ref);
+
+
+  /// Every call to the sync backend is bounded.
+  ///
+  /// `http` has no default timeout: a request to a Worker that is not
+  /// deployed, or a network that accepts the connection and then says
+  /// nothing, hangs for as long as the OS allows. Sync runs on the app's own
+  /// start-up path, so an unbounded wait there is an app that never opens.
+  static Future<http.Response> _withTimeout(Future<http.Response> call) =>
+      call.timeout(const Duration(seconds: 20));
 
   Future<void> init() async {
     final dbPath = p.join(await getDatabasesPath(), 'sync_queue.db');
@@ -197,14 +221,14 @@ class SyncService {
         'counters': counterUpdates,
       };
 
-      final response = await http.post(
+      final response = await _withTimeout(http.post(
         Uri.parse(_syncApiUrl),
         headers: {
           'Authorization': 'Bearer $idToken',
           'Content-Type': 'application/json',
         },
         body: jsonEncode(body),
-      );
+      ));
 
       if (response.statusCode == 200) {
         for (final id in processedIds) {
@@ -231,12 +255,12 @@ class SyncService {
       final idToken = auth.idToken;
       if (idToken == null) return;
 
-      final response = await http.get(
+      final response = await _withTimeout(http.get(
         Uri.parse(_syncApiUrl),
         headers: {
           'Authorization': 'Bearer $idToken',
         },
-      );
+      ));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

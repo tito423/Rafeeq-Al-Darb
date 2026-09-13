@@ -1374,5 +1374,12 @@
     "started": "Started downloading {} ayahs",
     "error": "Error fetching reciters",
     "no_reciters": "No reciters support direct download"
+  },
+  "sync": {
+    "sign_in_title": "سائن اِن کریں",
+    "sign_in_subtitle": "اپنی ختم، پیش رفت اور شمار کو اپنے تمام آلات پر ہم آہنگ کریں",
+    "hide": "چھپائیں",
+    "sign_out": "سائن آؤٹ",
+    "sign_in_failed": "سائن اِن نہ ہو سکا: {error}"
   }
 }
