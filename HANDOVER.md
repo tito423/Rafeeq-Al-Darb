@@ -1201,9 +1201,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-13 14:28 — IN PROGRESS — resume here**
+**2026-09-13 14:55 — IN PROGRESS — resume here**
 
-the owner asked which account R2 actually sits on before we build on it - «اتاكد احنا بنرفع على r2 حساب اسمه ايه لاحسن شكلنا هنلبس في حيطه» - and he was right to ask. MEASURED against the Cloudflare API with the token already in scripts/.env, never printing it: the account holding every book, mushaf and adhan the app serves is «Int.vip00@gmail.com's Account», id starting 33946f20 - NOT his main email. So the Workers token has to be created while signed in as that account, or the sync service would be born in a different account from all the content it sits beside. Second finding from the same probe: the existing CF_API_TOKEN is R2-only - HTTP 403 listing Workers scripts and 401 on D1 - so a new token really is needed, or that one edited to add Workers Scripts: Edit and D1: Edit. Both written into NEXT_PROMPT so the next session does not rediscover them. Nothing about the Google side has to match: Google Cloud identifies the app, Cloudflare hosts the data, and they are unrelated services.
+the Cloudflare Workers token exists - its summary page was checked by eye before he created it: the right account (Int.vip00@gmail.com's), Workers Scripts:Edit, and D1:Edit, which the template had left out and would have cost a second round trip. He made it on his phone, so the remaining step is pasting it into scripts/.env as CF_WORKERS_TOKEN when he is back at the laptop; NEXT_PROMPT now says to ASK him whether that happened rather than assume it. He offered to paste the token into the chat and delete the chat afterwards - declined, and told him why: deleting a message does not unsend it, and that key opens the account holding every book and mushaf the app serves.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
