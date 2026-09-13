@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import '../../features/quran_audio/data/ayah_recitation_library.dart';
 import '../config/app_config.dart';
 
 /// Where one ayah's recitation audio actually comes from.
@@ -75,6 +78,13 @@ class RecitationSource {
     required int ayah,
     required int globalAyah,
   }) {
+    final localPath = AyahRecitationLibrary.instance
+        .fileFor(edition, surah, ayah)
+        .path;
+    if (File(localPath).existsSync() && File(localPath).lengthSync() > 0) {
+      return [Uri.file(localPath).toString()];
+    }
+
     final urls = <String>[];
     final folder = _everyAyahFolders[edition];
     if (folder != null) {

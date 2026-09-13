@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../quran_audio/data/quran_audio_library.dart';
+import '../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../core/services/download_manager.dart';
 import '../../../core/services/mushaf_page_service.dart';
 import '../../quran/data/mushaf_edition.dart';
@@ -18,12 +19,13 @@ import '../../quran/data/mushaf_edition.dart';
 /// nothing left to show and nothing left to do. The owner put it plainly:
 /// «شيل الاذان من التنزيلات مالوش لازمة». Its two manager categories are
 /// swept by `freeAllStorage` below so no orphaned bytes are left uncounted.
-enum DownloadCategory { mushafs, recitations, hadith, books }
+enum DownloadCategory { mushafs, recitations, ayahRecitations, hadith, books }
 
 extension DownloadCategoryX on DownloadCategory {
   String get labelKey => switch (this) {
         DownloadCategory.mushafs => 'downloads.cat_mushafs',
         DownloadCategory.recitations => 'downloads.cat_recitations',
+        DownloadCategory.ayahRecitations => 'downloads.cat_ayah_recitations',
         DownloadCategory.hadith => 'downloads.cat_hadith',
         DownloadCategory.books => 'downloads.cat_books',
       };
@@ -44,6 +46,7 @@ extension DownloadCategoryX on DownloadCategory {
   List<String> get managerCategories => switch (this) {
         DownloadCategory.mushafs => const [],
         DownloadCategory.recitations => const ['ruqyah'],
+        DownloadCategory.ayahRecitations => const [],
         DownloadCategory.hadith => const ['hadith'],
         DownloadCategory.books => const ['books', 'books_text'],
       };
@@ -101,6 +104,10 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
   final library = QuranAudioLibrary.instance;
   await library.ensureReady();
   final (reciteBytes, reciteItems) = await library.usage();
+  // ── Per-ayah recitations (per-ayah files from everyayah.com) ──
+  final ayahLib = AyahRecitationLibrary.instance;
+  await ayahLib.ensureReady();
+  final (ayahBytes, ayahItems) = await ayahLib.usage();
   // ── DownloadManager artifacts, folded into whichever bucket claims them ──
   // Ruqyah audio lands in `recitations` on top of the per-reciter caches, so
   // the loop covers every bucket rather than only the three that have no
@@ -119,6 +126,8 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       out.add(CategoryUsage(cat, mushafBytes + bytes, mushafItems + ids.length));
     } else if (cat == DownloadCategory.recitations) {
       out.add(CategoryUsage(cat, reciteBytes + bytes, reciteItems + ids.length));
+    } else if (cat == DownloadCategory.ayahRecitations) {
+      out.add(CategoryUsage(cat, ayahBytes, ayahItems));
     } else {
       out.add(CategoryUsage(cat, bytes, ids.length));
     }
@@ -137,6 +146,8 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
       }
     case DownloadCategory.recitations:
       await QuranAudioLibrary.instance.freeAll();
+    case DownloadCategory.ayahRecitations:
+      await AyahRecitationLibrary.instance.freeAll();
     case DownloadCategory.hadith:
     case DownloadCategory.books:
       break;

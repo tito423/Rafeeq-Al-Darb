@@ -21,6 +21,7 @@ import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../widgets/mushaf_download_tile.dart';
 import '../../../../core/utils/byte_formatter.dart';
+import '../../../quran_audio/presentation/ayah_download_screen.dart';
 
 String _fmtSize(int bytes) {
   // Binary units, matching what Android's own storage screen reports.
@@ -30,6 +31,7 @@ String _fmtSize(int bytes) {
 IconData _iconFor(DownloadCategory c) => switch (c) {
   DownloadCategory.mushafs => Icons.menu_book_rounded,
   DownloadCategory.recitations => Icons.headphones_rounded,
+  DownloadCategory.ayahRecitations => Icons.record_voice_over_outlined,
   DownloadCategory.hadith => Icons.format_quote_rounded,
   DownloadCategory.books => Icons.auto_stories_rounded,
 };
@@ -37,6 +39,7 @@ IconData _iconFor(DownloadCategory c) => switch (c) {
 Color _colorFor(DownloadCategory c) => switch (c) {
   DownloadCategory.mushafs => AppColors.gold,
   DownloadCategory.recitations => AppColors.primarySoft,
+  DownloadCategory.ayahRecitations => AppColors.success,
   DownloadCategory.hadith => AppColors.info,
   DownloadCategory.books => AppColors.goldSoft,
 };
@@ -144,9 +147,9 @@ class _OverviewTab extends ConsumerWidget {
       case DownloadCategory.recitations:
         // Whole-surah recitations and their player live in their own section
         // since 3.17.0 — not tied to a mushaf, not in this screen.
-        return () => Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const QuranAudioScreen()),
-        );
+        return () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const QuranAudioScreen()));
+      case DownloadCategory.ayahRecitations:
+        return () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const AyahDownloadScreen()));
       case DownloadCategory.hadith:
         return () {
           // `popUntil(isFirst)` rather than a single `pop()`: this screen is
