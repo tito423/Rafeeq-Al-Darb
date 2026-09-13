@@ -22,8 +22,7 @@ abstract final class AppConfig {
 
   static const String mushafBase = String.fromEnvironment(
     'RAFEEQ_MUSHAF_BASE',
-    defaultValue: 'https://raw.githubusercontent.com/quranpedia/quran-svg/'
-        'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6/mushafs',
+    defaultValue: '$contentBaseUrl/mushaf',
   );
 
   /// [sourcePath] is the edition's upstream folder, e.g. 'hafs/kfqc'.
