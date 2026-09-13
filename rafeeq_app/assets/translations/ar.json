@@ -620,7 +620,6 @@
     "cat_recitations": "التلاوات",
     "cat_hadith": "الحديث",
     "cat_books": "الكتب",
-    "cat_adhan": "الأذان",
     "free": "تفريغ",
     "free_all": "تفريغ كل المساحة",
     "repair": "إصلاح التحميلات",
@@ -646,7 +645,8 @@
     "repair_resumed": "تم استئناف {} تحميل غير مكتمل",
     "repair_unjammed": "حرّرت {} مهمة عالقة",
     "repair_nothing": "لا توجد تحميلات غير مكتملة",
-    "active_now": "جارٍ تنزيله الآن"
+    "active_now": "جارٍ تنزيله الآن",
+    "cat_ayah_recitations": "تلاوات الآيات"
   },
   "new_muslim": {
     "title": "دليل المسلم الجديد",

@@ -620,7 +620,6 @@
     "cat_recitations": "Recitaciones",
     "cat_hadith": "Hadiz",
     "cat_books": "Libros",
-    "cat_adhan": "Adhán",
     "free": "Liberar",
     "free_all": "Liberar todo",
     "free_confirm": "¿Eliminar del dispositivo los archivos descargados de esta categoría?",
@@ -646,7 +645,8 @@
     "repair_resumed": "Se reanudaron {} descarga(s) incompleta(s)",
     "repair_unjammed": "Liberadas {} tareas bloqueadas",
     "repair_nothing": "No hay descargas incompletas",
-    "active_now": "Descargando ahora"
+    "active_now": "Descargando ahora",
+    "cat_ayah_recitations": "Recitaciones por Aleya"
   },
   "new_muslim": {
     "title": "Guía del nuevo musulmán",

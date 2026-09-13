@@ -675,6 +675,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       }
     });
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // P3‑43 #6: "ملء الشاشة" now hides the AppBar entirely (not just its
       // own toolbar row) plus this screen's own bottom bar below, and
       // (via `quranFullScreenProvider`) `AppShell`'s bottom nav bar too —

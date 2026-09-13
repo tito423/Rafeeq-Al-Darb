@@ -620,7 +620,6 @@
     "cat_recitations": "Recitations",
     "cat_hadith": "Hadith",
     "cat_books": "Books",
-    "cat_adhan": "Adhan",
     "free": "Free up",
     "free_all": "Free all",
     "repair": "Repair Downloads",
@@ -646,7 +645,8 @@
     "repair_resumed": "Resumed {} unfinished download(s)",
     "repair_unjammed": "Freed {} stuck task(s)",
     "repair_nothing": "Nothing was left unfinished",
-    "active_now": "Downloading now"
+    "active_now": "Downloading now",
+    "cat_ayah_recitations": "Per-Ayah Recitations"
   },
   "new_muslim": {
     "title": "New Muslim Guide",

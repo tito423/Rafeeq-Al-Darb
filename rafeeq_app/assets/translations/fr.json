@@ -620,7 +620,6 @@
     "cat_recitations": "Récitations",
     "cat_hadith": "Hadith",
     "cat_books": "Livres",
-    "cat_adhan": "Adhan",
     "free": "Libérer",
     "free_all": "Tout libérer",
     "free_confirm": "Supprimer les fichiers téléchargés de cette catégorie de l'appareil ?",
@@ -646,7 +645,8 @@
     "repair_resumed": "{} téléchargement(s) inachevé(s) repris",
     "repair_unjammed": "{} tâche(s) bloquée(s) libérée(s)",
     "repair_nothing": "Aucun téléchargement inachevé",
-    "active_now": "En cours de téléchargement"
+    "active_now": "En cours de téléchargement",
+    "cat_ayah_recitations": "Récitations par Verset"
   },
   "new_muslim": {
     "title": "Guide du nouveau musulman",

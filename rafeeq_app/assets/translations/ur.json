@@ -620,7 +620,6 @@
     "cat_recitations": "تلاوتیں",
     "cat_hadith": "حدیث",
     "cat_books": "کتب",
-    "cat_adhan": "اذان",
     "free": "جگہ خالی کریں",
     "free_all": "سب خالی کریں",
     "repair": "ڈاؤن لوڈز کی مرمت",
@@ -646,7 +645,8 @@
     "repair_resumed": "{} نامکمل ڈاؤن لوڈ دوبارہ شروع کیے گئے",
     "repair_unjammed": "{} رکی ہوئی ڈاؤن لوڈ بحال",
     "repair_nothing": "کوئی نامکمل ڈاؤن لوڈ نہیں",
-    "active_now": "ابھی ڈاؤن لوڈ ہو رہا ہے"
+    "active_now": "ابھی ڈاؤن لوڈ ہو رہا ہے",
+    "cat_ayah_recitations": "آیت کے لحاظ سے تلاوت"
   },
   "new_muslim": {
     "title": "نئے مسلمان کی رہنمائی",
