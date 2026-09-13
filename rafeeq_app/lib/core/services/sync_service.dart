@@ -8,9 +8,7 @@ import 'package:uuid/uuid.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
-import 'syncable_shared_preferences.dart';
 import '../config/app_config.dart';
-import '../../core/config/app_config.dart';
 
 final googleSignInProvider = Provider((ref) => GoogleSignIn(
       serverClientId: AppConfig.googleServerClientId,
@@ -79,13 +77,21 @@ class SyncService {
     } catch (_) {}
   }
 
+  /// Signs in, and - the part that was missing - **publishes the result**.
+  ///
+  /// The first cut returned the account and never wrote it to
+  /// `authStateProvider`, so the card that watches that provider stayed on
+  /// its signed-out face however well the sign-in went. And every failure
+  /// was swallowed into `return null`, so a misconfigured client looked
+  /// exactly like a successful sign-in that did nothing. That is what the
+  /// owner saw: «عمل كارت تسجيل الدخول بس بضغط عليه مش بيعمل حاجة».
+  ///
+  /// Cancelling the Google sheet is not an error - it returns null with
+  /// nothing thrown. A real failure is rethrown so the caller can say so.
   Future<GoogleSignInAccount?> signIn() async {
-    try {
-      final account = await _googleSignIn.signIn();
-      return account;
-    } catch (e) {
-      return null;
-    }
+    final account = await _googleSignIn.signIn();
+    _ref.read(authStateProvider.notifier).state = account;
+    return account;
   }
 
   Future<void> signOut() async {
@@ -241,11 +247,17 @@ class SyncService {
           final key = item['key'];
           final value = jsonDecode(item['value']);
           
-          if (value is String) await rawPrefs.setString(key, value);
-          else if (value is int) await rawPrefs.setInt(key, value);
-          else if (value is double) await rawPrefs.setDouble(key, value);
-          else if (value is bool) await rawPrefs.setBool(key, value);
-          else if (value is List) await rawPrefs.setStringList(key, List<String>.from(value));
+          if (value is String) {
+            await rawPrefs.setString(key, value);
+          } else if (value is int) {
+            await rawPrefs.setInt(key, value);
+          } else if (value is double) {
+            await rawPrefs.setDouble(key, value);
+          } else if (value is bool) {
+            await rawPrefs.setBool(key, value);
+          } else if (value is List) {
+            await rawPrefs.setStringList(key, List<String>.from(value));
+          }
         }
         
         // Handling downloaded counters

@@ -309,10 +309,22 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// one on screen, and lifted the moment the reader leaves it — the same
   /// rule `activeTabProvider` already exists for (see its own comment, and
   /// the Qibla compass that pauses its sensor by it).
+  /// The mode currently applied, so the same one is never applied twice.
+  ///
+  /// THE SECOND FLICKER. Re-applying `immersiveSticky` does not no-op: it
+  /// re-hides the bars, the window's metrics change, Flutter rebuilds,
+  /// `build` runs its `ref.listen` and asks for the mode again — a loop.
+  /// Thirty frames pulled at 3 fps from the owner's recording show the
+  /// navigation and status bars alternating frame by frame with the page
+  /// sliding as the window resizes. Three call sites reach here, so the
+  /// guard belongs here rather than at any one of them.
+  SystemUiMode? _appliedUiMode;
+
   void _applyImmersive(bool on) {
-    SystemChrome.setEnabledSystemUIMode(
-      on ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
-    );
+    final mode = on ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge;
+    if (_appliedUiMode == mode) return;
+    _appliedUiMode = mode;
+    SystemChrome.setEnabledSystemUIMode(mode);
   }
 
   /// True while this tab is the one being shown.
@@ -518,6 +530,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // Make sure the system bars are never left hidden if this screen goes
     // away while full-screen, and that the rest of the app is not left locked
     // to portrait by the image mushaf's lock.
+    _appliedUiMode = null;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     super.dispose();

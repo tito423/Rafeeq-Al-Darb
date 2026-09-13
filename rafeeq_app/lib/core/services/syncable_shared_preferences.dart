@@ -67,6 +67,7 @@ class SyncableSharedPreferences implements SharedPreferences {
   }
 
   @override
+  // ignore: deprecated_member_use
   Future<bool> commit() => _delegate.commit();
 
   @override
