@@ -66,8 +66,10 @@
    `BE:6D:45:79:0B:95:BA:8F:5E:03:B2:4F:DA:30:03:EC:85:D0:8A:40`، و**Android**
    ببصمة الإصدار `1B:6B:6C:67:D2:5B:6E:93:8B:3E:F8:93:F4:D2:94:A2:87:5A:2D:B3`
    (الاتنين بـ`com.tito.rafeeq_aldarb`)، و**Web application** عشان
-   الـ`serverClientId` اللي بيدّي `idToken` يتحقق منه الـWorker. **محتاج منه
-   الـClient ID بتاع الويب** — ده مش سرّ.
+   الـ`serverClientId` اللي بيدّي `idToken` يتحقق منه الـWorker.
+   **✅ الـClient ID بتاع الويب وصل واتحفظ** في
+   `AppConfig.googleServerClientId` (مش سرّ). **لسه محتاج تتأكد منه إن عميلَي
+   الأندرويد الاتنين اتعملوا فعلًا** — من غيرهم تسجيل الدخول نفسه مش هيشتغل.
 2. توكن كلاودفلير بقالب **Edit Cloudflare Workers** + الـAccount ID، يحطّهم
    **بنفسه** في `scripts/.env` (`CLOUDFLARE_API_TOKEN`،
    `CLOUDFLARE_ACCOUNT_ID`) — ممنوع يتبعتوا في الشات وممنوع يتكوميتوا.

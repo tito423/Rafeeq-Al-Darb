@@ -17,6 +17,27 @@ abstract final class AppConfig {
   ///   `--dart-define=RAFEEQ_MUSHAF_BASE=https://<bucket>/mushafs`
   static const String mushafPin = 'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6';
 
+  /// The **Web** OAuth client of the owner's Google Cloud project.
+  ///
+  /// `google_sign_in` needs this as its `serverClientId` on Android: without
+  /// it the sign-in returns an access token and no **idToken**, and the
+  /// idToken is the whole point — it is the signed statement of who the
+  /// reader is that the sync service verifies before it hands back that
+  /// person's khatma and counters. The two Android clients (debug and release
+  /// fingerprints, package `com.tito.rafeeq_aldarb`) are what let the sign-in
+  /// happen at all; this one is what makes it provable on the other side.
+  ///
+  /// **Not a secret.** A Web client *secret* would be — this is the public
+  /// half, the same value that ships inside every Android app's
+  /// `google-services.json`. The client secret was deliberately not taken.
+  ///
+  /// The scopes stay `email`/`profile` only. `drive.appdata` is a *sensitive*
+  /// scope and an unverified app re-prompts roughly every seven days, which
+  /// is incompatible with «يبقى دائمًا فيه مزامنة».
+  static const String googleServerClientId =
+      '227986327850-ha6gea87kueaeg2a3582ecpu3s0nbnh1'
+      '.apps.googleusercontent.com';
+
   /// Edition used until the reader picks another one.
   static const String defaultMushafEdition = 'hafs_kfqc';
 
