@@ -16,6 +16,7 @@ import '../features/quran/data/translation_lang_provider.dart';
 import '../features/splash/presentation/screens/splash_screen.dart';
 import 'app_locale_provider.dart';
 import 'navigation.dart';
+import '../core/services/sync_service.dart';
 
 /// Injected from main() so sync reads are possible anywhere.
 final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
@@ -41,6 +42,7 @@ class RafeeqApp extends ConsumerWidget {
     // state and touches SharedPreferences.
     final localeCode = context.locale.languageCode;
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(syncServiceProvider).init();
       ref.read(selectedTranslationLangProvider.notifier)
           .followAppLocale(localeCode);
       // The strings Android renders itself — the three adhan notification

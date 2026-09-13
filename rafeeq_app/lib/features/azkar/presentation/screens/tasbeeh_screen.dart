@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/services/sync_service.dart';
 import '../../data/tasbeeh_catalog.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 
@@ -54,6 +55,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       if (mounted) {
         setState(() {
           _hapticEnabled = prefs.getBool(_kHapticPref) ?? true;
+          _total = prefs.getInt('tasbeeh_total') ?? 0;
         });
       }
     });
@@ -83,6 +85,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       _total++;
       if (t != null && _count == t) _rounds++;
     });
+    
+    SharedPreferences.getInstance().then((p) => p.setInt('tasbeeh_total', _total));
+    ref.read(syncServiceProvider).incrementCounter('tasbeeh_total', 1);
     // Celebrate on a completed finite target of 1000, or every 1000 counts
     // in no-limit mode.
     final hitMilestone = _target == null
@@ -148,7 +153,6 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     setState(() {
       _count = 0;
       _rounds = 0;
-      _total = 0;
     });
   }
 

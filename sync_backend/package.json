@@ -1,0 +1,14 @@
+{
+  "name": "rafeeq-sync-backend",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for Rafeeq Al-Darb Sync",
+  "main": "src/index.ts",
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240909.0",
+    "typescript": "^5.5.4",
+    "wrangler": "^3.74.0"
+  }
+}

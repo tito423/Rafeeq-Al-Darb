@@ -41,6 +41,9 @@ abstract final class AppConfig {
   /// Edition used until the reader picks another one.
   static const String defaultMushafEdition = 'hafs_kfqc';
 
+  /// URL for the Cloudflare Worker Sync Backend.
+  static const String syncBackendUrl = 'https://rafeeq-sync-backend.int-vip00.workers.dev';
+
   static const String mushafBase = String.fromEnvironment(
     'RAFEEQ_MUSHAF_BASE',
     defaultValue: '$contentBaseUrl/mushaf',

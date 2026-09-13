@@ -12,6 +12,7 @@ import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../settings/presentation/widgets/focus_mode_picker.dart';
 import '../../../tajweed/presentation/screens/tajweed_course_screen.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
+import '../widgets/sync_account_card.dart';
 
 /// The "المزيد" tab.
 ///
@@ -35,6 +36,8 @@ class MoreScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
         children: [
+          const SyncAccountCard(),
+          const SizedBox(height: 16),
           SectionLabel('more.section_more'.tr()),
 
           // The guided tour, first in the section: it is the thing a reader

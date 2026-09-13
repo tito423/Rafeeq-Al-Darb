@@ -6,6 +6,8 @@ import '../../../../core/db/models.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/services/sync_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/azkar_repeat.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
@@ -80,6 +82,13 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
     final current = _counts[_index] ?? 0;
     if (current >= target) return; // already complete — swipe to advance
     setState(() => _counts[_index] = current + 1);
+    
+    SharedPreferences.getInstance().then((prefs) {
+      final total = prefs.getInt('azkar_total') ?? 0;
+      prefs.setInt('azkar_total', total + 1);
+    });
+    ref.read(syncServiceProvider).incrementCounter('azkar_total', 1);
+
     // Auto-advance once this dhikr's real repeat count is reached.
     if ((_counts[_index] ?? 0) >= target) {
       Future.delayed(const Duration(milliseconds: 400), () {
