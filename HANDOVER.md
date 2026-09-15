@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 18:42 — IN PROGRESS — resume here**
+**2026-09-15 18:47 — IN PROGRESS — resume here**
 
-verified on owner's Honor: quote reminder race fix - ScheduledNotificationReceiver alarms 10 off / 34 at 15min (+24) / 34 after change to 60 / 10 after off / 10 after 15min->off immediately; setting restored to off. Latest build (counter reset + ayah redesign) installed on Honor
+ayah downloads verified on owner's Honor: Fares Abbad al-Fatiha downloaded 7/7 (ring complete), listen played it (media_session PLAYING). Fixed from what the screen showed: invisible play icon (explicit gold), invisible empty ring track, pause button left after download finished. analyze clean, 221 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

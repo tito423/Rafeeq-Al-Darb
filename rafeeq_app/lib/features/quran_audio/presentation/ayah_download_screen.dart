@@ -134,8 +134,9 @@ class _Ring extends StatelessWidget {
             CircularProgressIndicator(
               value: v,
               strokeWidth: size * 0.09,
-              backgroundColor:
-                  Theme.of(context).colorScheme.surfaceContainerHighest,
+              // outlineVariant, not a surface tone: on the owner's Honor the
+              // empty ring was invisible and only «٠٪» showed.
+              backgroundColor: Theme.of(context).colorScheme.outlineVariant,
               valueColor: AlwaysStoppedAnimation<Color>(
                   complete ? AppColors.success : AppColors.gold),
             ),
@@ -381,9 +382,12 @@ class _SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final lib = AyahRecitationLibrary.instance;
     final scheme = Theme.of(context).colorScheme;
+    // Only while something is actually queued. Seen on the owner's Honor: with
+    // al-Fatiha finished and nothing else asked for, a pause button stayed.
     final downloading = !progress.isComplete &&
         !progress.paused &&
-        progress.downloaded > 0;
+        [for (var s = 1; s <= 114; s++) s]
+            .any((s) => lib.isSurahPending(edition, s));
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
@@ -556,8 +560,14 @@ class _SurahTile extends StatelessWidget {
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
               ),
-            IconButton.filledTonal(
+            // Explicit colours: the tonal style drew a dark icon on a dark
+            // disc on the owner's Honor — the play button could not be seen.
+            IconButton.filled(
               tooltip: playing ? 'ayah_dl.stop'.tr() : 'ayah_dl.listen'.tr(),
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.gold,
+                foregroundColor: Colors.black,
+              ),
               icon: Icon(playing ? Icons.stop_rounded : Icons.play_arrow_rounded),
               onPressed: onPlay,
             ),
