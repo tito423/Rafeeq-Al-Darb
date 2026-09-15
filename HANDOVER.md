@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 18:23 — IN PROGRESS — resume here**
+**2026-09-15 18:26 — IN PROGRESS — resume here**
 
-hajj: HajjScreen - Hajj/Umrah tracks, animated route map, tawaf/sai/jamarat interactive counters, each step shows Ibn Baz's text verbatim by range; More card; credited on Sources. Tour frame verified on owner's Honor: gold double frame with corner ornaments around the clock itself, bubble explains only the clock (2/31). analyze clean, 221 pass. Xiaomi disconnected mid-session
+tajweed: listen card animates while its recitation plays (dancing bars, glowing rule phrase, gold border), lessons rise in staggered; analyze clean, 221 pass; not yet seen on a phone
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

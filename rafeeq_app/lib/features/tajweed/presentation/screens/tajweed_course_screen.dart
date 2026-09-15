@@ -131,11 +131,22 @@ class TajweedCourseScreen extends ConsumerWidget {
               );
             }
             final index = i - 1;
-            return _LessonTile(
-              index: index,
-              lesson: tajweedLessons[index],
-              done: done.contains(tajweedLessons[index].sectionTitle),
-              book: text,
+            // Each lesson rises into place a moment after the one above it.
+            return TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: 1),
+              duration: Duration(milliseconds: 350 + index.clamp(0, 10) * 55),
+              curve: Curves.easeOutCubic,
+              builder: (context, v, child) => Opacity(
+                opacity: v,
+                child: Transform.translate(
+                    offset: Offset(0, (1 - v) * 22), child: child),
+              ),
+              child: _LessonTile(
+                index: index,
+                lesson: tajweedLessons[index],
+                done: done.contains(tajweedLessons[index].sectionTitle),
+                book: text,
+              ),
             );
           },
         ),
@@ -296,6 +307,44 @@ class _LessonBody extends StatelessWidget {
 }
 
 /// The ayah the rule is heard in.
+/// Five bars that dance with [beat] while [active], and rest as a still
+/// "sound" mark when not.
+class _EqualizerBars extends StatelessWidget {
+  final Animation<double> beat;
+  final bool active;
+
+  const _EqualizerBars({required this.beat, required this.active});
+
+  @override
+  Widget build(BuildContext context) {
+    const phases = [0.0, 0.55, 0.2, 0.8, 0.35];
+    return SizedBox(
+      width: 22,
+      height: 18,
+      child: AnimatedBuilder(
+        animation: beat,
+        builder: (context, _) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            for (final p in phases)
+              Container(
+                width: 3,
+                height: active
+                    ? 4 + 14 * (((beat.value + p) % 1.0 - 0.5).abs() * 2)
+                    : 6 + 6 * p,
+                decoration: BoxDecoration(
+                  color: AppColors.gold,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _ListenCard extends ConsumerStatefulWidget {
   final TajweedExample example;
 
@@ -305,7 +354,16 @@ class _ListenCard extends ConsumerStatefulWidget {
   ConsumerState<_ListenCard> createState() => _ListenCardState();
 }
 
-class _ListenCardState extends ConsumerState<_ListenCard> {
+class _ListenCardState extends ConsumerState<_ListenCard>
+    with SingleTickerProviderStateMixin {
+  /// «قسم التجويد خليه تفاعلي وانيمشن». While this card's recitation plays,
+  /// the bars move and the words the rule lives in glow — the eye is on the
+  /// place in the ayah while the ear hears it.
+  late final AnimationController _beat = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
+
   Ayah? _ayah;
 
   /// Whether the player is running *for this card*. The service is a
@@ -332,7 +390,17 @@ class _ListenCardState extends ConsumerState<_ListenCard> {
   @override
   void dispose() {
     _sub?.cancel();
+    _beat.dispose();
     super.dispose();
+  }
+
+  /// Runs the beat only while this card is the one playing.
+  void _syncBeat() {
+    if (_playing && !_beat.isAnimating) {
+      _beat.repeat(reverse: true);
+    } else if (!_playing && _beat.isAnimating) {
+      _beat.animateTo(0, duration: const Duration(milliseconds: 200));
+    }
   }
 
   Future<void> _load() async {
@@ -365,23 +433,34 @@ class _ListenCardState extends ConsumerState<_ListenCard> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final ayah = _ayah;
-    return Container(
+    _syncBeat();
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 350),
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
       decoration: BoxDecoration(
         color: Color.alphaBlend(
-          AppColors.gold.withValues(alpha: 0.10),
+          AppColors.gold.withValues(alpha: _playing ? 0.18 : 0.10),
           scheme.surfaceContainerHighest,
         ),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
+        border: Border.all(
+            color: AppColors.gold.withValues(alpha: _playing ? 0.8 : 0.35),
+            width: _playing ? 1.6 : 1),
+        boxShadow: _playing
+            ? [
+                BoxShadow(
+                  color: AppColors.gold.withValues(alpha: 0.25),
+                  blurRadius: 16,
+                ),
+              ]
+            : const [],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.graphic_eq_rounded,
-                  size: 17, color: AppColors.gold),
+              _EqualizerBars(beat: _beat, active: _playing),
               const SizedBox(width: 7),
               Expanded(
                 child: Text(
@@ -405,13 +484,39 @@ class _ListenCardState extends ConsumerState<_ListenCard> {
           const SizedBox(height: 6),
           Row(
             children: [
-              Text(
-                '﴿${widget.example.phrase}﴾',
-                style: const TextStyle(
-                  fontFamily: 'AmiriQuran',
-                  fontSize: 15,
-                  color: AppColors.gold,
-                  fontWeight: FontWeight.w700,
+              // The words the rule happens in, glowing in time while heard.
+              AnimatedBuilder(
+                animation: _beat,
+                builder: (context, child) => Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.gold
+                        .withValues(alpha: _playing ? 0.08 + 0.14 * _beat.value : 0),
+                    boxShadow: _playing
+                        ? [
+                            BoxShadow(
+                              color: AppColors.gold
+                                  .withValues(alpha: 0.35 * _beat.value),
+                              blurRadius: 12,
+                            ),
+                          ]
+                        : const [],
+                  ),
+                  child: Transform.scale(
+                    scale: _playing ? 1 + 0.06 * _beat.value : 1,
+                    child: child,
+                  ),
+                ),
+                child: Text(
+                  '﴿${widget.example.phrase}﴾',
+                  style: const TextStyle(
+                    fontFamily: 'AmiriQuran',
+                    fontSize: 15,
+                    color: AppColors.gold,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               const Spacer(),
