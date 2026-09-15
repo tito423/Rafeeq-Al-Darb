@@ -146,6 +146,32 @@ So:
 Never answer "how much quota is left" from memory or from an earlier reading in
 the same session. It is a live number; read it live.
 
+### 2.0b Remote Control — check it in the first reply
+
+The owner steers sessions from his phone, so **in the same first reply as the
+quota question**, check whether Remote Control is on and say so.
+
+`ListAgents` is the check: with Remote Control connected it lists the account's
+other sessions, including Remote Control ones on other machines. None listed
+means it is not connected.
+
+**It is switched on when the session STARTS, and only then.**
+
+    claude rc            # or: claude --remote-control [name]
+
+That is `claude remote-control`, «Control local sessions from claude.ai/code or
+the Claude mobile app», and it **starts a new interactive session** with Remote
+Control enabled — it cannot be added to a session that is already running.
+So an agent inside a running session cannot turn it on for that session, and
+running `claude rc` from a tool call only spawns a process the owner is not
+sitting in front of. (Checked: `claude rc --help` prints exactly that usage,
+and a bare `claude rc` blocks waiting for a terminal.)
+
+So the useful thing to do is tell him **early**, while restarting is still
+cheap: if it is off and the session is going to be long, say so in that first
+reply and let him decide whether to restart with `claude rc`. Never claim to
+have opened it, and never say it is on unless a `ListAgents` result showed it.
+
 ### 2.1 Checkpoint constantly
 
 Sessions here die from quota exhaustion, usually mid-task. Do not save the

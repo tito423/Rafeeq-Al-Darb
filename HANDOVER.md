@@ -1373,9 +1373,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 01:33 — IN PROGRESS — resume here**
+**2026-09-16 01:41 — IN PROGRESS — resume here**
 
-CLAUDE.md: the handover ends by handing him the prompt, not by saving it.
+CLAUDE.md 2.0b: Remote Control, corrected after the owner put me right.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
