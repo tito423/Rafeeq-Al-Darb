@@ -10,9 +10,75 @@ Cline, or any other).
 | **Released** | **v3.24.2** — tag on `master` at `d7bba88`, the only release in the repo; asset `rafeeq-aldarb-3.24.2.apk`, 238,344,416 bytes |
 | **App version** | `pubspec.yaml` `3.24.2+25`; `AboutScreen.appVersion` `3.24.2` |
 | **Signing** | `scripts/sign_release.py` printed `OK: rotated` for the published APK — new key from Android 9 up, debug certificate kept below it, so every install path is an update. **Gradle signs debug on purpose — run it after every release build (trap #41).** |
-| **Verified 2026-09-15** | `flutter analyze lib test` clean · `flutter test` **212 passed** · range requests: `hadith/hadith.zip`, two books, page 3 of all five raster printings → all 206 · default Hafs SVGs now on R2: **604 objects, none under 4 KB**, pages 001/302/604 → 200 `image/svg+xml` · sync Worker `GET /sync` with no token → **401** · a first launch after `pm clear` reaches onboarding (3.24.2 debug build, emulator-5554) |
+| **Verified 2026-09-16** | `flutter analyze lib test` clean · `flutter test` **238 passed** · range requests all 206 with a real content type: `hadith/hadith.zip`, four books (`tuhfat_al_atfal`, `ghayat_al_murid`, `hidayat_al_qari`, `ibn_baz_tahqiq_wal_idah`), page 3 of **all six** printings (`hafs/kfqc` SVG `image/svg+xml`; tajweed, madinah_gold, qatar, kuwait, madinah_night `image/jpeg`), two translations (`en`, `ur`) |
+| **Measured 2026-09-16** | 7 locales × **1,394** keys each (identical) · **276** books in the catalogue · **6** mushaf printings, 604 pages each · **45** Quran translation languages · `hadith.db` 109,731,840 bytes, **67,153** hadiths, **45,219** graded · release APK 239,938,275 bytes |
 
-## STATE AS OF 2026-09-15 — evening (unreleased, on `master`)
+## STATE AS OF 2026-09-16 — night (unreleased, on `master`)
+
+Everything below is committed and **not released**; v3.24.2 is still the
+published build. Tested on the owner's Honor BRP-NX1 (Android 16, 1224×2700)
+with release builds signed by `scripts/sign_release.py` and installed with
+`adb install -r`. The Xiaomi was connected but was **not** updated this
+session — it still holds the 18:02 build of 2026-09-15.
+
+**Seen working on the owner's phone**
+* **Splash**: the grey square is gone. `app_mark.png` is the emblem on a light
+  grey plate and the OS drew it raw while Flutter clipped the same file to an
+  oval at 148 dp — three different marks in a row. Both now draw
+  `app_mark_circle.png`; the native image carries the one-third transparent
+  safe border Android 12+ expects (1152 canvas, mark at 768) after the first
+  attempt was zoomed and clipped **square**. Measured from a screen recording:
+  OS circle 248×248 at (310,670), Flutter circle 248×240 at (306,670).
+* **Splash audio**: the 10-second intro played with the app invisible — the
+  owner heard it start behind a stopped adhan with nothing able to stop it.
+  Reproduced with the display off (`state:started` for 12 s while
+  `mWakefulness=Dozing`); now it refuses to play unless the app is resumed and
+  ends outright on leaving the foreground.
+* **Adhan preview outliving the screen**: `AdhanNative.preview` runs with no
+  alarm, notification or service, so the only control is the screen that
+  started it — and the Home prayer-slide preview was still `state:started` on
+  `USAGE_ALARM` six seconds after HOME. Guarded inside `AdhanNative.preview`
+  itself; it asks the native player whether this is a real firing before
+  stopping anything, so a real adhan is untouched (**verified** by firing Fajr
+  with a clock jump: it kept playing through HOME and stopped from its
+  notification).
+* **Guided tour**: walked to **31/31**; 5 stops skipped because their features
+  are switched off, which is the designed behaviour. Flicker measured down
+  from **5** anomalous frames per 20 s to **1**.
+* **Hajj**: tawaf 7/7 → اكتمل with the marker returning to the Black Stone;
+  sa'i alternating Safa↔Marwa correctly; jamarat 7+7+7 with each pillar
+  turning green; the Umrah tab switches art and step list.
+* **Ayah recitations**: play glyph visible, empty rings have a track, a
+  finished surah shows a check rather than a stranded pause.
+* **Tajweed «استمع»**: works from a cold start without opening downloads
+  first — twice, logged.
+* **مخارج الحروف (new)**: real CC0 sagittal section, seventeen points on it,
+  the tongue rotating into position, the lips closing, the air streaming and
+  stopping at a closure, and the letters in one strip directly under the
+  drawing.
+
+**Built and tested, NOT yet on a phone**
+* **Tajweed level one** — `tuhfa_course.dart`: ten lessons from تحفة الأطفال
+  with multi-range support and `tuhfa_course_test.dart` (7 tests) grading them
+  against `test/fixtures/tuhfat_al_atfal.json`. **There is no screen for it
+  yet.**
+
+**Content added this session**
+* `ghayat_al_murid` (غاية المريد في علم التجويد، عطية قابل نصر) — 374 pages,
+  177 sections, 3,358 paragraphs, **zero empty pages**. This is the tajweed
+  spine.
+* `hidayat_al_qari` (هداية القاري، المرصفي) — 749 pages, **but 203 of them
+  carry a title and no text at all**, including the whole of مخارج الحروف،
+  صفات الحروف and التفخيم والترقيق. Confirmed at the source
+  (`ajax/pageContent/22869/50` returns an anchor and nothing else). It is on
+  R2 but **not catalogued and must not be built on**.
+* `assets/diagrams/vocal_tract*.svg` — CC0, Richard Wright & Dan McCloy.
+
+**Decisions**: min Android **7 (API 24)**. Tajweed audio stays **Qur'anic
+ayahs**, not recorded letters (owner's choice). The tajweed ladder is
+تحفة الأطفال (children) → the existing 23 تيسير lessons → غاية المريد.
+
+## STATE AS OF 2026-09-15 — evening (superseded)
 
 Everything below is committed and **not released**; v3.24.2 is still the
 published build. Tested on the owner's own phones (Honor BRP-NX1 Android 16,
@@ -1307,9 +1373,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 01:21 — IN PROGRESS — resume here**
+**2026-09-16 01:28 — IN PROGRESS — resume here**
 
-tajweed level one: the Tuhfa lessons as data, graded against the real book.
+docs: handover. HANDOVER state block, NEXT_PROMPT and NEXT_SESSION_PROMPT rewritten for 2026-09-16.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

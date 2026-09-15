@@ -1,13 +1,27 @@
 # Rafiq Al-Darb — next session brief
 
-**Last written:** 2026-09-15, at a handover on a clean tree:
-`flutter analyze lib test` clean, `flutter test` **212 passed**, hosted content
-range-requested with no failures (see `HANDOVER.md` → "Verified 2026-09-15").
+**Last written:** 2026-09-16, at a handover on a clean tree:
+`flutter analyze lib test` clean, `flutter test` **238 passed**, hosted content
+range-requested with no failures (see `HANDOVER.md` → "Verified 2026-09-16").
 
 **`v3.24.2` is released** at `d7bba88`, the only release in the repo, signed by
-`scripts/sign_release.py` (`OK: rotated`). Commits after it are documentation
-and repository cleanup only — no app code changed — so the release still is
-the app.
+`scripts/sign_release.py` (`OK: rotated`). **It is now well behind `master`.**
+Everything listed in `HANDOVER.md` → "STATE AS OF 2026-09-16" is committed,
+pushed and unreleased, and the owner decides whether it ships.
+
+**What the 2026-09-16 session did, in one paragraph.** Fixed three things the
+owner hit in use — the splash intro playing its ten-second soundtrack with the
+app invisible, an adhan *preview* that kept sounding on the alarm stream after
+he left the app, and the guided tour flickering on every stop — each reproduced
+on his Honor before being touched and measured after. Rebuilt the splash marks
+so the boot shows one circle instead of a grey square then a smaller circle.
+Verified the whole `NEXT_PROMPT` backlog on the phone (tour 31/31, hajj
+counters, ayah downloads, tajweed listen). Then built **مخارج الحروف**: the
+seventeen articulation points as data graded against «غاية المريد»'s own
+printed tally, on a **CC0** anatomical section, with the tongue rotating into
+position and the air streaming and stopping at a closure. Finally turned
+«تحفة الأطفال» into the first course level as verified data — **with no screen
+yet**, which is where the next session starts.
 
 `NEXT_PROMPT.md` is the paste-ready message; this file is the longer brief it
 points at.
