@@ -38,7 +38,8 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with WidgetsBindingObserver {
   bool _navigated = false;
   VideoPlayerController? _video;
 
@@ -57,6 +58,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkNotificationLaunch();
     final firstRun = !ref.read(splashFirstRunProvider);
     final shouldPlayVideo = firstRun ||
@@ -115,6 +117,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
       c.addListener(_onVideoTick);
       setState(() => _video = c);
+      // The intro is a *foreground* moment. Started while the app is not in
+      // front of the reader — a cold start behind the lock screen, or behind
+      // the adhan alert, which runs in its own task — it played its ten-second
+      // soundtrack with no screen to show for it and nothing to stop it:
+      // «اشتغل صوت الاسبلاش في الخلفية ومش عرفت اوقفه». Reproduced on the
+      // owner's Honor with the display off: `dumpsys audio` reported this
+      // player's own track `state:started` for twelve consecutive seconds
+      // while `mWakefulness=Dozing`.
+      if (!_isForeground) {
+        await _abandonIntro(c);
+        return;
+      }
       await c.play();
       // Lift the native splash only once the video's FIRST frame has actually
       // been painted (post-frame), so the OS icon hands straight over to the
@@ -132,6 +146,40 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       _removeNativeSplash();
       Future<void>.delayed(const Duration(milliseconds: 1500), _proceed);
     }
+  }
+
+  /// Whether the app is actually in front of the reader right now.
+  ///
+  /// Null before the first lifecycle message counts as "not yet": a missed
+  /// brand moment costs nothing, and a wrong guess plays music over a prayer.
+  bool get _isForeground =>
+      WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+
+  /// End the intro without letting another frame of it be heard, and hand off.
+  Future<void> _abandonIntro(VideoPlayerController c) async {
+    c.removeListener(_onVideoTick);
+    try {
+      await c.setVolume(0);
+      await c.pause();
+    } catch (_) {
+      // A controller disposed from under us (a racing lifecycle change) has
+      // already stopped, which is all this was for.
+    }
+    if (mounted && identical(_video, c)) setState(() => _video = null);
+    await c.dispose();
+    _removeNativeSplash();
+    _proceed();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) return;
+    final c = _video;
+    if (c == null) return;
+    // Leaving the foreground ends the intro outright rather than pausing it:
+    // a ten-second jingle that resumes when the reader comes back is the same
+    // surprise, just later.
+    _abandonIntro(c);
   }
 
   void _onVideoTick() {
@@ -182,6 +230,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _video?.removeListener(_onVideoTick);
     _video?.dispose();
     super.dispose();

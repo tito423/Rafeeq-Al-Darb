@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 18:47 — IN PROGRESS — resume here**
+**2026-09-15 20:01 — IN PROGRESS — resume here**
 
-ayah downloads verified on owner's Honor: Fares Abbad al-Fatiha downloaded 7/7 (ring complete), listen played it (media_session PLAYING). Fixed from what the screen showed: invisible play icon (explicit gold), invisible empty ring track, pause button left after download finished. analyze clean, 221 pass
+fix: the splash intro played its 10s soundtrack with the app invisible - the owner heard it start behind a stopped adhan with nothing able to stop it. Reproduced on his Honor: cold start with the display off, dumpsys audio reported the intro's own track state:started for 12 consecutive seconds while mWakefulness=Dozing. splash_screen now observes the lifecycle - it does not play unless the app is resumed, and leaving the foreground ends the intro outright instead of pausing it. Verified on the Honor, three cases: screen off -> no audio at all (was 12s); normal launch -> intro plays with sound, video on screen; HOME mid-intro -> audio gone within 1s (was ~3s). analyze clean, 221 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
