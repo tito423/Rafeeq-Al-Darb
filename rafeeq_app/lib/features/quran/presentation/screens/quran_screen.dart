@@ -623,23 +623,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return juz;
   }
 
-  /// True when the toolbar has to earn its vertical space.
-  ///
-  /// `MediaQuery.orientationOf` rather than the body's `OrientationBuilder`:
-  /// the bar is built in the `appBar` slot, above and outside that builder.
-  ///
-  /// And on a SHORT portrait screen, for the same reason. At a large display
-  /// size (emulator-5554 at `wm density 600`, 640 logical pixels tall) the
-  /// captioned toolbar took five rows and left the Qur'an text a strip of
-  /// about 60 pixels. Below 700 logical pixels the one-row form is used.
+  /// True in landscape or under 700 logical pixels tall, where the captioned
+  /// bar took five rows at `wm density 600` and left the text ~60 pixels.
   bool _toolbarLandscape(BuildContext context) =>
       MediaQuery.orientationOf(context) == Orientation.landscape ||
       MediaQuery.sizeOf(context).height < 700;
 
   @override
   Widget build(BuildContext context) {
-    // The immersive mode is process-wide; it follows whichever tab is on
-    // screen so it can never leak into the rest of the app. See
+    // The immersive mode is process-wide and follows the tab on screen. See
     // `_applyImmersive` for the flicker this was.
     ref.listen<int>(activeTabProvider, (_, tab) => _syncImmersiveToTab(tab));
     final mushaf = ref.watch(mushafDataProvider);
@@ -773,17 +765,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
             ),
       body: Builder(
         builder: (context) {
-          // The WINDOW's orientation, never the body's. `OrientationBuilder`
-          // compares the width and height of the space this body is given,
-          // and that space is exactly what full screen changes: leaving it
-          // brings back the title, the toolbar, the page bar and AppShell's
-          // nav bar. On a phone with a large display size the body left over
-          // is wider than it is tall, so it read as "landscape", which turned
-          // full screen ON, which made the body tall again — "portrait" —
-          // which turned it OFF. That loop, several times a second, is the
-          // flicker the owner reported on five phones; emulator-5554 at its
-          // default density leaves a tall enough body and never showed it.
-          // Reproduced there at `wm density 600`.
+          // The WINDOW's orientation, never the body's (`OrientationBuilder`):
+          // leaving full screen shrinks the body, a short body read as
+          // landscape and re-entered full screen — the flicker on five
+          // phones. Reproduced on emulator-5554 at `wm density 600`.
           final orientation = MediaQuery.orientationOf(context);
           final isLandscape = orientation == Orientation.landscape;
           _syncOrientationFullScreen(orientation);

@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 17:12 — IN PROGRESS — resume here**
+**2026-09-15 17:19 — IN PROGRESS — resume here**
 
-splash: intro plays only after 30 min away (owner's rule; measured on his phone that Back/kill replayed it and Home did not). tajweed: log the course download failure and add a retry button. Analyze clean; not yet seen on device
+trim quran_screen back to its 1047-line cap; analyze clean, flutter test 212 passed. Emulator HTTPS fails because Avast re-signs R2 (issuer: Avast Web/Mail Shield Root) - tajweed download/audio must be verified on a real phone
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
