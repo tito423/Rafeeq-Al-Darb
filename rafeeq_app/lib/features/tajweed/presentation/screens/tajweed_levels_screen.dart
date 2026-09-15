@@ -146,6 +146,9 @@ class _LevelCard extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(width: 6),
+                  // chevron_right, not chevron_left: the left one auto-mirrors
+                  // in RTL and would point the wrong way (trap #7).
                   Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
                 ],
               ),

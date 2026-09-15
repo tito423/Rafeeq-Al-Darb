@@ -33,6 +33,7 @@ import '../../../../core/widgets/arabic_text.dart';
 import '../../../library/data/book_text.dart';
 import '../../../library/data/library_api_service.dart';
 import '../../data/tuhfa_course.dart';
+import '../../data/tuhfa_lesson_text.dart';
 
 /// Lessons the reader has marked done, kept by TITLE for the same reason
 /// level two keeps its own that way: a boundary that is corrected later must
@@ -253,57 +254,16 @@ class _LessonTile extends ConsumerWidget {
   }
 }
 
-/// One paragraph as it will be drawn: the book's text, and whether it is
-/// الضباع's note rather than the Jamzuri's verse.
-class _Para {
-  final String text;
-  final bool commentary;
-
-  const _Para(this.text, this.commentary);
-}
-
 class _LessonBody extends StatelessWidget {
   final TuhfaLesson lesson;
   final BookText? book;
 
   const _LessonBody({required this.lesson, required this.book});
 
-  /// The same normalisation `tuhfa_course_test.dart` compares headings with:
-  /// the headings are fully vowelled, and «أَحْكَامُ َالمِيمِ» carries a stray
-  /// fatha that is the source's own and stays in the text.
-  static String _bare(String s) => s
-      .replaceAll(RegExp('[ً-ْٰـ]'), '')
-      .replaceAll(RegExp(r'\s*\([٠-٩]+\)\s*$'), '')
-      .trim();
-
-  List<_Para> _collect() {
-    final out = <_Para>[];
-    final pages = book?.pages ?? const <BookPage>[];
-    for (final r in lesson.ranges) {
-      for (final p in pages) {
-        if (p.printedPage < r.fromPage || p.printedPage > r.toPage) continue;
-        final first = p.printedPage == r.fromPage ? r.fromPara : 0;
-        final last =
-            p.printedPage == r.toPage ? r.toPara : p.paras.length - 1;
-        for (var i = first; i <= last && i < p.paras.length; i++) {
-          final t = p.paras[i].text;
-          if (t.trim().isEmpty) continue;
-          out.add(_Para(t, r.commentary));
-        }
-      }
-    }
-    // The first paragraph of a lesson is its heading, and the heading is
-    // already the title of this card.
-    if (out.isNotEmpty && _bare(out.first.text) == _bare(lesson.title)) {
-      out.removeAt(0);
-    }
-    return out;
-  }
-
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final paras = _collect();
+    final paras = tuhfaLessonParas(lesson, book);
     if (paras.isEmpty) {
       return Text('tajweed.needs_download'.tr(),
           style: TextStyle(color: scheme.onSurfaceVariant));
