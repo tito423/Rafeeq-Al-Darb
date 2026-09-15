@@ -293,6 +293,32 @@ Do not rediscover these.
     for every R2 script. **Never `verify=False`:** those requests carry the
     bucket's access key and secret.
 
+    **And it reaches the EMULATOR, where it looks exactly like an app bug.**
+    Every hosted download inside the app fails on `emulator-5554` with
+    `HandshakeException … CERTIFICATE_VERIFY_FAILED: unable to get local
+    issuer certificate`, and the screen shows «يلزم تنزيل نصّ الدروس» as
+    though the feature were broken. Proven, not assumed: a handshake to
+    `pub-…r2.dev` from this machine is answered with a leaf whose
+    **`Issuer: CN=Avast Web/Mail Shield Root`** — Avast re-signs it, and that
+    root is in the Windows store, never in the emulator's. Dart does not read
+    the Windows store.
+
+    Two things follow. **Prove it is the environment before touching code**:
+    open a feature that already works on the owner's phone (the level-two
+    tajweed course) and watch it fail identically — that took one minute and
+    settled it. **Then see the screen anyway**, by putting the real hosted
+    file where a successful download would have put it, which needs a
+    `--debug` build because `run-as` refuses a release one:
+
+        adb -s emulator-5554 shell "cat /data/local/tmp/x.b64 |           run-as com.tito.rafeeq_aldarb sh -c 'base64 -d > app_flutter/books/text/<id>.json'"
+
+    Push the bytes the bucket serves **verbatim** — they are gzip and the app
+    sniffs the magic itself (trap #6) — and remember `isBookDownloaded` wants
+    a `book_meta` row too, so pull `databases/library_books.db` out with
+    `run-as … base64`, insert the row with `py -3`, and push it back. Base64
+    both ways; a raw binary through `adb shell` is not safe. And `adb root`
+    is refused on this AVD, which is why all of it goes through `run-as`.
+
 14. **`ffmpeg` is already on this machine**, bundled with ShareX at
     `C:\Program Files\ShareX\ffmpeg.exe`. Nothing needs downloading to
     transcode audio the owner supplies.

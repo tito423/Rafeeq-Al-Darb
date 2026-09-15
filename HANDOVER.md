@@ -1373,9 +1373,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 02:11 — IN PROGRESS — resume here**
+**2026-09-16 02:14 — IN PROGRESS — resume here**
 
-tajweed level one: seen working on a device. Ten lessons from the Tuhfa, al-Dabba's notes in smaller type under the matn, per-level progress. Lesson-body selection moved to tuhfa_lesson_text.dart with 5 tests over the hosted text; 243 pass. Version 3.25.0+26.
+CLAUDE.md trap 13: Avast's interception reaches the emulator too - proven by the leaf certificate it serves for *.r2.dev (Issuer: CN=Avast Web/Mail Shield Root). How to prove it is the environment, and how to seed the real file through run-as so the screen can still be seen.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
