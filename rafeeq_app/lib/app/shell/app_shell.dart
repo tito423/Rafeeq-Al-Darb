@@ -357,6 +357,13 @@ class _AppShellState extends ConsumerState<AppShell>
               child: NavigationBar(
               selectedIndex: _index,
               onDestinationSelected: _goTo,
+              // Seven tiles on a narrow window leave each about 41 logical
+              // pixels — «المسبحة» broke into «المسبد / ة» on emulator-5554
+              // at `wm density 600`. Below 380 wide only the selected tab
+              // carries its label; the icons still identify the rest.
+              labelBehavior: MediaQuery.sizeOf(context).width < 380
+                  ? NavigationDestinationLabelBehavior.onlyShowSelected
+                  : NavigationDestinationLabelBehavior.alwaysShow,
               // «اعملي أنيميشن جميل في شكل … أيقونات الشريط الرئيسي السفلي».
               // The selected icon is built fresh whenever a tab becomes
               // selected, so `_PopIcon` plays its entrance exactly then.

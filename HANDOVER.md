@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 16:16 — IN PROGRESS — resume here**
+**2026-09-15 16:18 — IN PROGRESS — resume here**
 
-fix: quran flicker loop (body-constraint orientation), quote reminder race, tajweed listen dead until downloads screen opened. Flicker reproduced at wm density 600 and gone after; tajweed and quote not yet seen on device
+layout: qibla dial and tasbeeh circle scale down, nav labels only-selected under 380dp, compact quran toolbar under 700dp tall - analyze clean, not yet seen on device
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

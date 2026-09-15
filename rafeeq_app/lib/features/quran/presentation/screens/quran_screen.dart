@@ -627,8 +627,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   ///
   /// `MediaQuery.orientationOf` rather than the body's `OrientationBuilder`:
   /// the bar is built in the `appBar` slot, above and outside that builder.
+  ///
+  /// And on a SHORT portrait screen, for the same reason. At a large display
+  /// size (emulator-5554 at `wm density 600`, 640 logical pixels tall) the
+  /// captioned toolbar took five rows and left the Qur'an text a strip of
+  /// about 60 pixels. Below 700 logical pixels the one-row form is used.
   bool _toolbarLandscape(BuildContext context) =>
-      MediaQuery.orientationOf(context) == Orientation.landscape;
+      MediaQuery.orientationOf(context) == Orientation.landscape ||
+      MediaQuery.sizeOf(context).height < 700;
 
   @override
   Widget build(BuildContext context) {

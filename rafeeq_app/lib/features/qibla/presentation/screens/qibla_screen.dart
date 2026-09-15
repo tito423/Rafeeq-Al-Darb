@@ -339,7 +339,12 @@ class _CompassDial extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(
+          // Scaled down, never clipped: the dial is drawn for 280 and a
+          // narrow phone at a large display size has less than that inside
+          // this card.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: SizedBox(
             width: 280,
             height: 280,
             child: Stack(
@@ -392,6 +397,7 @@ class _CompassDial extends StatelessWidget {
                 ),
               ],
             ),
+          ),
           ),
           const SizedBox(height: 20),
           AnimatedOpacity(

@@ -267,6 +267,10 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 else
                 Expanded(
                   child: Center(
+                    // A short or narrow screen gets a smaller circle rather
+                    // than an overflow stripe.
+                    child: FittedBox(
+                    fit: BoxFit.scaleDown,
                     child: GestureDetector(
                       onTap: _tap,
                       child: Container(
@@ -334,6 +338,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                           ],
                         ),
                       ),
+                    ),
                     ),
                   ),
                 ),
