@@ -12,6 +12,47 @@ Cline, or any other).
 | **Signing** | `scripts/sign_release.py` printed `OK: rotated` for the published APK — new key from Android 9 up, debug certificate kept below it, so every install path is an update. **Gradle signs debug on purpose — run it after every release build (trap #41).** |
 | **Verified 2026-09-15** | `flutter analyze lib test` clean · `flutter test` **212 passed** · range requests: `hadith/hadith.zip`, two books, page 3 of all five raster printings → all 206 · default Hafs SVGs now on R2: **604 objects, none under 4 KB**, pages 001/302/604 → 200 `image/svg+xml` · sync Worker `GET /sync` with no token → **401** · a first launch after `pm clear` reaches onboarding (3.24.2 debug build, emulator-5554) |
 
+## STATE AS OF 2026-09-15 — evening (unreleased, on `master`)
+
+Everything below is committed and **not released**; v3.24.2 is still the
+published build. Tested on the owner's own phones (Honor BRP-NX1 Android 16,
+1224×2700; Xiaomi 23078PND5G Android 16 — disconnected mid-session) with
+release builds signed by `scripts/sign_release.py` and installed with
+`adb install -r`. `flutter analyze lib test` clean · `flutter test` **221 passed**.
+
+**Fixed and seen on a phone**
+* **Quran-tab flicker** (owner: five phones). `OrientationBuilder` read the
+  BODY's constraints; leaving full screen shrank the body, a short body read as
+  landscape, which re-entered full screen — a loop. Reproduced on emulator-5554
+  at `wm density 600`, gone after; stable on the Honor (34 frames) and Xiaomi.
+  Orientation now from `MediaQuery.orientationOf`.
+* **Channels & websites**: reorder, hide, edit, delete, restore; open links in
+  a Custom Tab or externally (`link_list_customization.dart`). Custom Tab seen
+  as `topResumedActivity`. Owner's list restored after the test.
+* **Guided tour**: 31 stops, one feature each, a gold frame that draws itself
+  around the widget (owner rejected pointing at nav buttons). Stops 1–3 seen.
+* **Hajj & Umrah section** (More): Ibn Baz «التحقيق والإيضاح» built from
+  Shamela 31235 (106 pages, 395 paragraphs), on R2 (206), in the catalogue and
+  credited. 19 steps by paragraph range (`hajj_guide.dart`, tested against the
+  built book), route map, tawaf/sa'i/jamarat counters. Map, tracks and step 1
+  text seen; the counters are not yet tapped on a phone.
+
+**Fixed, not yet seen on a phone**
+* Countdown «٨٧٥٩» hours to Fajr (a friend's phone): `DateFormat('HH:mm')` wrote
+  Arabic-Indic digits under `ar_EG`; parse fell back to a year. Format with
+  `'en'`, parse via `asciiDigits`; 4 tests.
+* Quote reminder kept firing after «إيقاف»/interval change: reschedules
+  serialised with a generation token; re-armed only on launch/locale change.
+* Tajweed «استمع» dead until the downloads screen had been opened (`late
+  _root`); listen card now animates.
+* Splash intro only after 30 min away (owner's rule); seen on the emulator.
+* Ayah-by-ayah downloads redesigned (per-reciter → 114 surahs, rings,
+  per-surah download, offline listen). Built, not installed yet.
+* Small screens: qibla dial/tasbeeh circle scale down, nav labels
+  only-selected under 380dp, compact Quran toolbar under 700dp.
+
+**Decisions**: min Android **7 (API 24)** — Flutter 3.38 cannot target 5.
+
 ## STATE AS OF 2026-09-15 — v3.24.2
 
 **Two agents worked this stretch.** This session (Claude) and, at the owner's
@@ -1266,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 18:33 — IN PROGRESS — resume here**
+**2026-09-15 18:35 — IN PROGRESS — resume here**
 
-ayah-by-ayah downloads redesigned: reciters with progress rings and completed-surah counts; per-reciter page of 114 surahs each with its own ring, download, pending state and offline listen (playQueue prefers local files); search, pause/resume/delete. Hajj step numbers localized. Hajj screen verified on owner's Honor: route map, tracks, step 1 shows Ibn Baz text verbatim. analyze clean, 221 pass
+docs: HANDOVER state for the evening (what was seen on the owner's phones vs built only), NEXT_PROMPT rewritten to resume from phone verification of ayah downloads, hajj counters, full tour, quote reminder, tajweed listen
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
