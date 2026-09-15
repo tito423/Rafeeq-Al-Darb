@@ -1373,9 +1373,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 01:28 — IN PROGRESS — resume here**
+**2026-09-16 01:33 — IN PROGRESS — resume here**
 
-docs: handover. HANDOVER state block, NEXT_PROMPT and NEXT_SESSION_PROMPT rewritten for 2026-09-16.
+CLAUDE.md: the handover ends by handing him the prompt, not by saving it.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

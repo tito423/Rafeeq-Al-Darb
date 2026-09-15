@@ -670,6 +670,15 @@ This is a standing, mandatory routine. Do all of it:
 5. **Back up** — commit everything, push `master`, confirm the release and tag
    point at `HEAD`.
 6. **Report** what you verified and anything that did not check out.
+7. **Hand him the next prompt in the reply itself**, as the last thing you do.
+   «اول ما تخلص وتحفظ كل حاجة تجهز برومبت يكمل بالظبط من عند ما حنا وقفنا
+   وتديهوني مباشر في بلوك md قابل للنسخ». Writing it to `NEXT_PROMPT.md` is
+   not enough on its own: the owner starts the next session by pasting, and a
+   file he has to go and open first is one step he should not have to take.
+   So after everything is committed and pushed, print the prompt **in the
+   chat, inside a fenced markdown block, whole and ready to copy**. It is the
+   same text as `NEXT_PROMPT.md` — the file is the record, the block is the
+   thing he actually uses — and §7 governs what is in it.
 
 Never hand over a state you have not just verified.
 
@@ -694,7 +703,9 @@ handover or when the quota is closing — all three of these hold:
    those is a *first* item for the next session, not a footnote. If you cannot
    say whether something works, say that, and say to do it again.
 
-3. **It is written to `NEXT_PROMPT.md` in the repo root, ready to copy whole.**
+3. **It is written to `NEXT_PROMPT.md` in the repo root, ready to copy whole,
+   and printed in the reply in a fenced markdown block.** Both, every time —
+   see §6.7. The file survives the session; the block is what he pastes.
    A prompt buried in a chat reply is lost when the session is. `NEXT_PROMPT.md`
    is the thing the owner pastes; it is rewritten every time, and it is
    committed with everything else.
