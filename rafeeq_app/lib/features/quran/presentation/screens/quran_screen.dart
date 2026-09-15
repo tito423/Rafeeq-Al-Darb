@@ -765,8 +765,20 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     )
                   : null,
             ),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
+      body: Builder(
+        builder: (context) {
+          // The WINDOW's orientation, never the body's. `OrientationBuilder`
+          // compares the width and height of the space this body is given,
+          // and that space is exactly what full screen changes: leaving it
+          // brings back the title, the toolbar, the page bar and AppShell's
+          // nav bar. On a phone with a large display size the body left over
+          // is wider than it is tall, so it read as "landscape", which turned
+          // full screen ON, which made the body tall again — "portrait" —
+          // which turned it OFF. That loop, several times a second, is the
+          // flicker the owner reported on five phones; emulator-5554 at its
+          // default density leaves a tall enough body and never showed it.
+          // Reproduced there at `wm density 600`.
+          final orientation = MediaQuery.orientationOf(context);
           final isLandscape = orientation == Orientation.landscape;
           _syncOrientationFullScreen(orientation);
           return mushaf.when(

@@ -20,15 +20,19 @@ const int kQuoteIntervalDefault = 0;
 
 class QuoteReminderSetting extends StateNotifier<int> {
   QuoteReminderSetting() : super(kQuoteIntervalDefault) {
-    _restore();
+    loaded = _restore();
   }
 
-  Future<void> _restore() async {
+  /// Completes with the stored interval once it has been read.
+  late final Future<int> loaded;
+
+  Future<int> _restore() async {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getInt(_kEveryMinutesKey);
     if (saved != null && (saved == 0 || kQuoteIntervals.contains(saved))) {
-      state = saved;
+      if (mounted) state = saved;
     }
+    return mounted ? state : kQuoteIntervalDefault;
   }
 
   Future<void> set(int everyMinutes) async {

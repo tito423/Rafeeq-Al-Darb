@@ -29,6 +29,9 @@ final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
 /// is the callback below.
 String? _lastLocale;
 
+/// The locale the quote window was last armed in; see the callback below.
+String? _lastQuoteLocale;
+
 class RafeeqApp extends ConsumerWidget {
   const RafeeqApp({super.key});
 
@@ -83,11 +86,22 @@ class RafeeqApp extends ConsumerWidget {
       // armed in the language the reader is actually using — and re-armed on
       // every launch, which is what keeps the rolling window topped up (see
       // `QuoteReminderService`'s doc on how long it lasts without the app).
-      final every = ref.read(quoteReminderProvider);
-      if (every > 0) {
-        ref.read(quoteLibraryProvider.future).then((library) {
-          QuoteReminderService.instance
-              .reschedule(library: library, everyMinutes: every);
+      //
+      // Only on launch and on a language change — this callback runs on
+      // EVERY rebuild of the app (a theme switch is one), and each re-arm
+      // used to race the settings chips. And the interval is read from the
+      // setting once it has actually loaded: on the first frame the provider
+      // still holds its default of 0.
+      if (localeCode != _lastQuoteLocale) {
+        _lastQuoteLocale = localeCode;
+        ref.read(quoteReminderProvider.notifier).loaded.then((every) async {
+          if (every <= 0) return;
+          final library = await ref.read(quoteLibraryProvider.future);
+          // The owner may have changed it while the corpus loaded.
+          final now = ref.read(quoteReminderProvider);
+          if (now <= 0) return;
+          await QuoteReminderService.instance
+              .reschedule(library: library, everyMinutes: now);
         });
       }
     });

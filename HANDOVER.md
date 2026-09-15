@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-13 14:55 — IN PROGRESS — resume here**
+**2026-09-15 16:16 — IN PROGRESS — resume here**
 
-the Cloudflare Workers token exists - its summary page was checked by eye before he created it: the right account (Int.vip00@gmail.com's), Workers Scripts:Edit, and D1:Edit, which the template had left out and would have cost a second round trip. He made it on his phone, so the remaining step is pasting it into scripts/.env as CF_WORKERS_TOKEN when he is back at the laptop; NEXT_PROMPT now says to ASK him whether that happened rather than assume it. He offered to paste the token into the chat and delete the chat afterwards - declined, and told him why: deleting a message does not unsend it, and that key opens the account holding every book and mushaf the app serves.
+fix: quran flicker loop (body-constraint orientation), quote reminder race, tajweed listen dead until downloads screen opened. Flicker reproduced at wm density 600 and gone after; tajweed and quote not yet seen on device
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

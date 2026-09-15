@@ -119,6 +119,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
     final base = await getApplicationDocumentsDirectory();
     _root = Directory(p.join(base.path, _dirName));
     if (!_root.existsSync()) await _root.create(recursive: true);
+    _rootSet = true;
     final index = File(p.join(_root.path, 'library.json'));
     if (index.existsSync()) {
       try {
@@ -178,6 +179,25 @@ class AyahRecitationLibrary extends ChangeNotifier {
     final f = fileFor(edition, surah, ayah);
     return f.existsSync() && f.lengthSync() > 0;
   }
+
+  /// The downloaded file for one ayah, or null when it is not on disk — or
+  /// when the library has not loaded yet.
+  ///
+  /// That second case is why this exists. [RecitationSource.urlsFor] asked
+  /// [fileFor] on every single-ayah play, and [fileFor] reads the `late`
+  /// [_root], which is set only by [ensureReady] — called by the downloads
+  /// screens and nothing else. So until the reader had opened «تلاوات الآيات»
+  /// in that process, every `AyahAudioService.play` threw a
+  /// LateInitializationError that `play` swallowed, and the button did
+  /// nothing: the Tajweed lessons' «استمع» was dead that way.
+  File? localFile(String edition, int surah, int ayah) {
+    if (_ready == null) unawaited(ensureReady());
+    if (!_rootSet) return null;
+    final f = fileFor(edition, surah, ayah);
+    return f.existsSync() && f.lengthSync() > 0 ? f : null;
+  }
+
+  bool _rootSet = false;
 
   File fileFor(String edition, int surah, int ayah) => File(p.join(
         _root.path,

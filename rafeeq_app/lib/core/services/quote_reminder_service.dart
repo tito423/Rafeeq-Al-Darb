@@ -74,11 +74,35 @@ class QuoteReminderService {
   /// Re-arms the whole window. [everyMinutes] of 0 means the feature is off
   /// and everything is cancelled — the same "zero is how you turn it off"
   /// contract the three prayer reminders use.
+  ///
+  /// Calls are SERIALISED, and a newer call supersedes an older one mid-loop.
+  /// Arming 24 exact alarms is 24 platform round trips, and two callers reach
+  /// here — the settings chips and `RafeeqApp`'s post-frame re-arm. Before
+  /// this, choosing «إيقاف» while an earlier window was still being armed ran
+  /// its `cancelAll` first and then watched the older loop carry on arming the
+  /// rest, so the reminder kept firing after it was turned off; changing the
+  /// interval left slots of the old interval mixed into the new window.
   Future<void> reschedule({
     required QuoteLibrary library,
     required int everyMinutes,
     Random? rng,
-  }) async {
+  }) {
+    final gen = ++_generation;
+    return _chain = _chain
+        .then((_) => _reschedule(gen, library, everyMinutes, rng))
+        .catchError((Object _) {});
+  }
+
+  int _generation = 0;
+  Future<void> _chain = Future<void>.value();
+
+  Future<void> _reschedule(
+    int gen,
+    QuoteLibrary library,
+    int everyMinutes,
+    Random? rng,
+  ) async {
+    if (gen != _generation) return; // a newer request will run after this
     await cancelAll();
     if (everyMinutes <= 0 || library.total == 0) return;
     await _ensureChannel();
@@ -106,6 +130,7 @@ class QuoteReminderService {
 
       final quote = library.at(pick.$1, pick.$2);
       if (quote == null) continue;
+      if (gen != _generation) return; // superseded; the next call cancels
 
       await _plugin.zonedSchedule(
         _baseId + i,
