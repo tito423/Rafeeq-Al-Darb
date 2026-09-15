@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/rafeeq_app.dart';
+import '../../../core/utils/digits.dart';
 
 /// Manual corrections a user applies on top of the calculated values.
 ///
@@ -106,7 +107,9 @@ final prayerAdjustmentsProvider =
 /// a confidently wrong one.
 String applyMinuteOffset(String hhmm, int minutes) {
   if (minutes == 0) return hhmm;
-  final parts = hhmm.split(':');
+  // Accept «٠٤:٤٤» as well: a cache written under an Arabic-Indic locale
+  // must not pass through unshifted and unreadable.
+  final parts = asciiDigits(hhmm).split(':');
   if (parts.length != 2) return hhmm;
   final h = int.tryParse(parts[0]);
   final m = int.tryParse(parts[1]);

@@ -41,6 +41,24 @@ library;
 
 const String _latin = '0123456789';
 const String _arabicIndic = '٠١٢٣٤٥٦٧٨٩';
+const String _extendedArabicIndic = '۰۱۲۳۴۵۶۷۸۹';
+
+/// [text] with Arabic-Indic (٠١٢…) and extended Arabic-Indic (۰۱۲…) digits
+/// turned into ASCII — for PARSING, the inverse of [localizeDigits].
+///
+/// A stored «٠٤:٤٤» is what `DateFormat('HH:mm')` writes under `ar_EG` or
+/// `fa`, and a `\d` pattern or `int.tryParse` reads nothing in it. That turned
+/// a Fajr four hours away into «٨٧٥٩» hours on a real phone.
+String asciiDigits(String text) {
+  final out = StringBuffer();
+  for (final ch in text.runes) {
+    final c = String.fromCharCode(ch);
+    var i = _arabicIndic.indexOf(c);
+    if (i < 0) i = _extendedArabicIndic.indexOf(c);
+    out.write(i < 0 ? c : _latin[i]);
+  }
+  return out.toString();
+}
 
 /// [text] with its Latin digits replaced by the digits [localeCode] writes,
 /// or unchanged when that language writes Latin digits.

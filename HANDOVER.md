@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 17:19 — IN PROGRESS — resume here**
+**2026-09-15 17:37 — IN PROGRESS — resume here**
 
-trim quran_screen back to its 1047-line cap; analyze clean, flutter test 212 passed. Emulator HTTPS fails because Avast re-signs R2 (issuer: Avast Web/Mail Shield Root) - tajweed download/audio must be verified on a real phone
+fix: countdown showed 8759 hours to Fajr on a real phone. DateFormat('HH:mm') writes Arabic-Indic digits under ar_EG/fa (probed: ar_EG -> ٠٤:٤٤, regex no match), _todayAt fell back to now+365d. Format with 'en', parse through asciiDigits, never a year away. 4 new tests, 216 pass. Also: flicker verified gone on owner's phone (34 stable frames leaving full screen)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

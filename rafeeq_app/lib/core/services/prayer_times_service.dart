@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/adhan/data/prayer_calculation_methods.dart';
 import '../models/prayer_times.dart';
+import '../utils/digits.dart';
 
 /// Real prayer times calculated offline using the 'adhan' package.
 class PrayerTimesService {
@@ -103,8 +104,12 @@ class PrayerTimesService {
         highLatitudeRule: highLatitudeRule,
       );
 
+  /// Always ASCII digits. Without a locale, `DateFormat` follows the phone's
+  /// and `ar_EG` / `fa` write «٠٤:٤٤» — which `_todayAt` could not read, so
+  /// it fell back to a year from now and a phone in the UAE showed «٨٧٥٩»
+  /// hours to Fajr. Proven by formatting 04:44 under seven locales.
   String _formatTime(DateTime time) {
-    return DateFormat('HH:mm').format(time);
+    return DateFormat('HH:mm', 'en').format(time);
   }
 
   PrayerTimes? _decode(String raw, String cityName, String countryName) {
@@ -169,18 +174,21 @@ class PrayerTimesService {
     return ('isha', isha);
   }
 
+  /// Today at [hhmm]. An unreadable time used to become "a year from now",
+  /// which the Home countdown then showed as «٨٧٥٩» hours; it is now read
+  /// through [parseHM] (which accepts Arabic-Indic digits), and a time that
+  /// still cannot be read is left for tomorrow's fetch, never a year away.
   DateTime _todayAt(String hhmm, DateTime now) {
-    final m = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(hhmm);
-    if (m == null) return now.add(const Duration(days: 365));
-    return DateTime(now.year, now.month, now.day, int.parse(m.group(1)!),
-        int.parse(m.group(2)!));
+    final hm = parseHM(hhmm);
+    if (hm == null) return now.add(const Duration(days: 1));
+    return DateTime(now.year, now.month, now.day, hm.$1, hm.$2);
   }
 
   /// Parses "HH:mm" (as returned in [PrayerTimes]) into (hour, minute), or
   /// null if the string isn't a valid time — e.g. the "--:--" placeholder
   /// used when no real reading is available yet.
   static (int, int)? parseHM(String hhmm) {
-    final m = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(hhmm);
+    final m = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(asciiDigits(hhmm));
     if (m == null) return null;
     return (int.parse(m.group(1)!), int.parse(m.group(2)!));
   }
