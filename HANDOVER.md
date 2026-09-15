@@ -6,11 +6,76 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-13 |
-| **Released** | **v3.19.0** — tag on `master`, one release in the repo — **published without a device run** (owner's call, quota at 93%) |
-| **App version** | `pubspec.yaml` `3.19.0+18` |
-| **Signing** | the published APK was downloaded back from GitHub and checked: `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG` on Android 9+, and the old debug certificate still below it, so every install path is an update. **Gradle signs debug on purpose — run `py -3 scripts/sign_release.py` after every release build (trap #41).** |
-| **Verified today** | `flutter analyze lib test` clean · `flutter test` **186 passed** · on emulator-5554 (signed release 3.18.0): verse tap opens the card with media NONE; continuous recitation from the selected 3:25 (media PLAYING «3:25», page unmoved); a 110-surah recitation kept downloading with the app at HOME (8 done in 90 s, 10 on return, nothing restarted); device scan found a pushed mp3 under its folder and played it; favourites, ten themes, disc; sunan reminder on two days; splash-sound switch present; library tab «الموسوعة الحديثية». Rebuilt APK after the fixes: tasks released 1, 2, 3, 4, 5 in order; downloads overview shows 3 running + «في الانتظار · 97»; reciter jump and back-to-top; finished track shows play and replays; scan reports its count; selected verse stays marked in the flowing layout |
+| **Last updated** | 2026-09-15 |
+| **Released** | **v3.24.2** — tag on `master` at `d7bba88`, the only release in the repo; asset `rafeeq-aldarb-3.24.2.apk`, 238,344,416 bytes |
+| **App version** | `pubspec.yaml` `3.24.2+25`; `AboutScreen.appVersion` `3.24.2` |
+| **Signing** | `scripts/sign_release.py` printed `OK: rotated` for the published APK — new key from Android 9 up, debug certificate kept below it, so every install path is an update. **Gradle signs debug on purpose — run it after every release build (trap #41).** |
+| **Verified 2026-09-15** | `flutter analyze lib test` clean · `flutter test` **212 passed** · range requests: `hadith/hadith.zip`, two books, page 3 of all five raster printings → all 206 · default Hafs SVGs now on R2: **604 objects, none under 4 KB**, pages 001/302/604 → 200 `image/svg+xml` · sync Worker `GET /sync` with no token → **401** · a first launch after `pm clear` reaches onboarding (3.24.2 debug build, emulator-5554) |
+
+## STATE AS OF 2026-09-15 — v3.24.2
+
+**Two agents worked this stretch.** This session (Claude) and, at the owner's
+direction, a second agent in Antigravity (Gemini). Commits by the second agent
+are `02f74c6`, `b81e8ed`, `5fe06fe`, `8d57287`, `a8e0ff6`, `98f9cb4`; every
+other commit is this session's. The brief handed to it is `AGENT_TASK_PROMPT.md`.
+
+**Shipped and seen on emulator-5554**
+* **تعليم التجويد** (More): 23 lessons read verbatim from «تيسير أحكام التجويد»
+  by explicit page:paragraph ranges (`lib/features/tajweed/data/tajweed_course.dart`,
+  guarded by `test/tajweed_course_test.dart`), 12 ayah examples matched against
+  `quran_local.db`, «استمع» plays mujawwad and «إيقاف» stops it; progress kept
+  by lesson title (`tajweed.done_v2`).
+* **«في مثل هذا اليوم»**: tap either date on Home. 366 days per language, 0 empty,
+  4,388 ar / 4,392 en events, bundled gzipped in `assets/data/on_this_day_*.json`.
+* **Bundled default mushaf removed** at the owner's request: release APK
+  324.6 → 227.3 MB. Its pages now load from R2 like every other printing.
+* **28 Shamela books catalogued** (247 → 275): readable slugs, authors from the
+  printed card, three split authors unified, one duplicate dropped, source labels
+  corrected. «أحكام الجنائز» downloaded and opened.
+* **Design lock**: `test/design_lock_test.dart` pins all 26 `AppColors` values.
+
+**Shipped by the second agent, NOT verified by anyone on a device**
+* **Per-ayah recitation downloads** — `lib/features/quran_audio/data/ayah_recitation_library.dart`
+  and `ayah_download_screen.dart`, reached from the «تلاوات الآيات» row in
+  Downloads. Never downloaded-then-played-offline by anyone.
+* **Google sign-in + continuous sync** — Google for identity only
+  (`email`/`profile`, `AppConfig.googleServerClientId`), data in a Cloudflare
+  Worker + D1 in `sync_backend/`, deployed at
+  `https://rafeeq-sync-backend.int-vip00.workers.dev`. The Worker verifies the
+  idToken via `tokeninfo` and checks `iss`, `aud` and `exp`, keys every query by
+  the verified `sub`, and sums counters (`SUM(increment_value)`), which is the
+  owner's rule. **Measured: no-token request → 401. Not measured: a forged token,
+  a cross-user read, or duplicate-batch idempotency.** No sign-in offer at first
+  launch exists; only the More card.
+
+**Fixed by this session after v3.24.0, not seen on a device except the first**
+* **App did not start on a fresh install** (seen fixed): `sharedPreferencesProvider`
+  defaulted to a provider that threw and `main()` never overrode it; it is read on
+  every settings write during start-up, so `runApp` never painted and the native
+  splash never lifted. `main()` overrides it now. Sync HTTP calls got a 20 s timeout.
+* **Flicker in the Quran tab** (owner's recording, 30 frames: nav and status bars
+  alternating frame by frame): `_applyImmersive` re-applied `immersiveSticky` in a
+  rebuild loop; it now returns early when the mode has not changed.
+* **Sign-in card did nothing**: `signIn()` never wrote `authStateProvider` and
+  swallowed every error. It publishes the account and the card shows failures.
+* Sync card strings moved to `sync.*` in all seven locales.
+
+**Repository hygiene done at this handover**: the second agent had committed
+`sync_backend/node_modules` and `.wrangler/` (1,655 files) — untracked, with
+`sync_backend/.gitignore`; its scratch `notes.md`, `implementation_plan.md` and
+the one-off `scripts/fix_translations.py` removed; merged branch
+`agent/ayah-recitation-download` deleted locally and on GitHub.
+
+## MEASURED, 2026-09-15
+
+| | |
+|---|---|
+| locales × keys | 7 × 1,271 (identical sets) |
+| mushaf editions | 6 (Hafs SVG + five raster) |
+| library books | 275 |
+| `hadith.db` | 104.6 MB · 67,153 hadiths · 45,219 graded |
+| release APK | 227.3 MB built; 238,344,416 bytes as published |
+| tests | 212 |
 
 ## STATE AS OF 2026-09-11 (night) — v3.19.0: the tenth batch, NOT yet seen on a device
 
