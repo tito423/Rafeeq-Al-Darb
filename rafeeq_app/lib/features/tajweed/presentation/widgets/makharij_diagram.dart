@@ -97,41 +97,115 @@ class MakharijDiagram extends StatelessWidget {
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTapUp: (d) => _pickNearest(d.localPosition, size),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // The section itself, mirrored so the lips are at the left,
-                // which is the direction the reader's own mouth faces on the
-                // page beside an Arabic column.
-                Transform.scale(
-                  scaleX: -1,
-                  child: SvgPicture.asset(
-                    'assets/diagrams/vocal_tract.svg',
-                    fit: BoxFit.contain,
-                    colorFilter: isDark
-                        ? const ColorFilter.mode(
-                            Color(0xFF8FA3B8), BlendMode.srcIn)
-                        : null,
-                  ),
-                ),
-                AnimatedBuilder(
-                  animation: Listenable.merge([articulation, flow]),
-                  builder: (context, _) => CustomPaint(
-                    size: size,
-                    painter: _ArticulationPainter(
-                      selected: selected,
-                      articulation: articulation.value,
-                      flow: flow.value,
-                      isDark: isDark,
+            child: AnimatedBuilder(
+              animation: Listenable.merge([articulation, flow]),
+              builder: (context, _) {
+                final t = articulation.value;
+                return ClipRect(
+                  child: Transform(
+                    // A gentle push in towards whatever was picked, so the
+                    // detail is bigger without the rest leaving the frame.
+                    transform: _zoom(size, t),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        _svg('assets/diagrams/vocal_tract_base.svg', isDark),
+                        // The tongue is its own path in the drawing, so it is
+                        // its own layer here: it really rotates into the
+                        // position, rather than a marker appearing on a
+                        // tongue that never moved.
+                        Transform(
+                          transform: _tongue(size, t),
+                          child: _svg(
+                            'assets/diagrams/vocal_tract_tongue.svg',
+                            isDark,
+                          ),
+                        ),
+                        CustomPaint(
+                          size: size,
+                          painter: _ArticulationPainter(
+                            selected: selected,
+                            articulation: t,
+                            flow: flow.value,
+                            isDark: isDark,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
           );
         },
       ),
     );
+  }
+
+
+  /// Both layers are mirrored the same way, so they stay registered.
+  Widget _svg(String asset, bool isDark) => Transform.scale(
+        scaleX: -1,
+        child: SvgPicture.asset(
+          asset,
+          fit: BoxFit.contain,
+          colorFilter: isDark
+              ? const ColorFilter.mode(Color(0xFF8FA3B8), BlendMode.srcIn)
+              : null,
+        ),
+      );
+
+  /// How the tongue moves for the chosen makhraj.
+  ///
+  /// A rigid rotation about a pivot, not a bulge: the drawing's tongue is one
+  /// path and rotating it is honest about that. Which way it turns comes from
+  /// **where along the tongue the book puts the contact** — a front makhraj
+  /// lifts the tip, a back one lifts the root — so the parameters are derived
+  /// from `contactX` rather than typed in per letter, and a new makhraj cannot
+  /// be added with a movement that contradicts its own description.
+  Matrix4 _tongue(Size size, double t) {
+    final spec =
+        selected == null ? null : articulationByMakhraj[selected!.id];
+    if (spec == null ||
+        spec.articulator != Articulator.tongue ||
+        spec.contactX == null) {
+      return Matrix4.identity();
+    }
+    final cx = spec.contactX!;
+    final double angle;
+    final Offset pivot;
+    if (cx < 0.35) {
+      // tip to the ridge or the teeth
+      pivot = const Offset(0.62, 0.66);
+      angle = -0.105;
+    } else if (cx < 0.55) {
+      pivot = const Offset(0.62, 0.68);
+      angle = -0.055;
+    } else {
+      // the root climbs to the soft palate
+      pivot = const Offset(0.26, 0.66);
+      angle = 0.080;
+    }
+    final px = pivot.dx * size.width;
+    final py = pivot.dy * size.height;
+    return Matrix4.identity()
+      ..translateByDouble(px, py, 0, 1)
+      ..rotateZ(angle * spec.closure * t)
+      ..translateByDouble(-px, -py, 0, 1);
+  }
+
+  /// A small zoom towards the chosen point.
+  Matrix4 _zoom(Size size, double t) {
+    final n = selected == null ? null : points[selected!.id];
+    if (n == null) return Matrix4.identity();
+    const maxScale = 1.16;
+    final s = 1 + (maxScale - 1) * t;
+    final cx = n.dx * size.width;
+    final cy = n.dy * size.height;
+    return Matrix4.identity()
+      ..translateByDouble(cx, cy, 0, 1)
+      ..scaleByDouble(s, s, 1, 1)
+      ..translateByDouble(-cx, -cy, 0, 1);
   }
 
   void _pickNearest(Offset tap, Size size) {
