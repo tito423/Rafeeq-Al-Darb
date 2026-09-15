@@ -1407,6 +1407,13 @@
     "stop": "Stop"
   },
   "ayah_dl": {
+    "surahs_done": "{} of 114 surahs complete",
+    "ayahs_progress": "{} / {} ayahs",
+    "search_hint": "Search for a surah",
+    "listen": "Listen",
+    "stop": "Stop",
+    "choose_reciter": "Choose a reciter to see and download his surahs",
+    "offline_hint": "Complete surahs play without an internet connection.",
     "title": "Download Recitations Per Ayah",
     "download_reciter": "Download Full Recitation",
     "download_surah": "Download Surah",

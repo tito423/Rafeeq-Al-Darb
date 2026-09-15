@@ -1407,6 +1407,13 @@
     "stop": "روکیں"
   },
   "ayah_dl": {
+    "surahs_done": "۱۱۴ میں سے {} سورتیں مکمل",
+    "ayahs_progress": "{} / {} آیات",
+    "search_hint": "سورت تلاش کریں",
+    "listen": "سنیں",
+    "stop": "روکیں",
+    "choose_reciter": "قاری منتخب کریں تاکہ اس کی سورتیں دیکھیں اور ڈاؤن لوڈ کریں",
+    "offline_hint": "مکمل سورتیں انٹرنیٹ کے بغیر سنی جا سکتی ہیں۔",
     "title": "Download Recitations Per Ayah",
     "download_reciter": "Download Full Recitation",
     "download_surah": "Download Surah",

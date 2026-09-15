@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 18:26 — IN PROGRESS — resume here**
+**2026-09-15 18:33 — IN PROGRESS — resume here**
 
-tajweed: listen card animates while its recitation plays (dancing bars, glowing rule phrase, gold border), lessons rise in staggered; analyze clean, 221 pass; not yet seen on a phone
+ayah-by-ayah downloads redesigned: reciters with progress rings and completed-surah counts; per-reciter page of 114 surahs each with its own ring, download, pending state and offline listen (playQueue prefers local files); search, pause/resume/delete. Hajj step numbers localized. Hajj screen verified on owner's Honor: route map, tracks, step 1 shows Ibn Baz text verbatim. analyze clean, 221 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

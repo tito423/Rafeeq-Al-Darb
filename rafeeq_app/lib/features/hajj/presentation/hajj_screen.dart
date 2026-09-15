@@ -15,6 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../library/data/book_text.dart';
 import '../../library/data/library_api_service.dart';
@@ -216,7 +217,9 @@ class _StepCard extends StatelessWidget {
             ],
           ),
           child: Text(
-            '$number',
+            // The app's own digits for its language, as everywhere else —
+            // the first build on the owner's phone showed «1 2 3» in Arabic.
+            localizeDigits('$number', context.locale.languageCode),
             style: const TextStyle(
                 color: Colors.black, fontWeight: FontWeight.w800),
           ),

@@ -166,6 +166,25 @@ class AyahRecitationLibrary extends ChangeNotifier {
 
   int downloadedCount(String edition) => _downloadedCounts[edition] ?? 0;
 
+  /// Ayahs in [surah] in the Hafs count (1-based), or 0 out of range.
+  static int ayahCount(int surah) =>
+      surah >= 1 && surah <= 114 ? _ayahCounts[surah] : 0;
+
+  /// How many of [surah]'s ayahs are on disk for [edition]. Read from the
+  /// folder, so it is true after a restart and after a partial download.
+  int surahDownloadedCount(String edition, int surah) {
+    if (!_rootSet) return 0;
+    var n = 0;
+    for (var a = 1; a <= ayahCount(surah); a++) {
+      if (isDownloaded(edition, surah, a)) n++;
+    }
+    return n;
+  }
+
+  /// Whether [surah] is queued (asked for and not finished) for [edition].
+  bool isSurahPending(String edition, int surah) =>
+      _entries[edition]?.pendingSurahs.contains(surah) ?? false;
+
   AyahDlProgress progressOf(String edition) {
     final entry = _entries[edition];
     return AyahDlProgress(
