@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 22:26 — IN PROGRESS — resume here**
+**2026-09-15 23:14 — IN PROGRESS — resume here**
 
-splash verified on the Honor after the 184dp match: recorded one boot and measured every frame. The OS circle is 248x248 centred at (310,670) and the Flutter circle that replaces it is 248x240 centred at (306,670) - same circle, same size, same place, with one soft crossfade frame between them. The grey square is gone, the circle is continuous from the first frame to the intro, and the intro is untouched. That closes the owner's three instructions.
+tajweed: bring in the two comprehensive references the course needs, and correct a wrong editor credit. The owner asked for a course covering all of tajweed; the existing one is built from a 29-page booklet (تيسير أحكام التجويد المستوى الأول) and there is no level two of it on Shamela, which is why it is thin. Built and uploaded: هداية القاري إلى تجويد كلام الباري للمرصفي (shamela 22869) - 749 pages, 275 sections, printReliable, مكتبة طيبة المدينة المنورة الطبعة الثانية - whose chapters ARE the syllabus (مخارج الحروف باب 1 ص61 with تفصيل المخارج ص65, صفات الحروف ص77, التفخيم والترقيق ص103, النون الساكنة, الغنة, الميم الساكنة, اللامات, الإدغام, المد والقصر, الوقف والابتداء); and غاية المريد في علم التجويد لعطية قابل نصر (7311) - 374 pages, 177 sections, 3358 paragraphs, zero empty pages, الطبعة السابعة. Both verified on R2 by range request. ALSO: al_muqaddimah_al_jazariyyah was registered as «تحقيق أيمن رشدي سويد» while the edition Shamela actually serves says «المحقق: د عبد المحسن بن محمد القاسم، الطبعة الثانية ١٤٤١هـ» on its own card - the label now matches the card; the hosted JSON still carries the old label and must be rebuilt. Trap #10 bit again: verify_and_print died on UnicodeEncodeError (cp1256) AFTER writing the first book, which aborted the loop and silently skipped the second - run this script with PYTHONIOENCODING=utf-8.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
