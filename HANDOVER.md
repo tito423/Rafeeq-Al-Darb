@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 22:21 — IN PROGRESS — resume here**
+**2026-09-15 22:26 — IN PROGRESS — resume here**
 
-splash: the owner's call - the grey square goes, the circle stays, the intro stays. The boot showed three marks: app_mark.png is the emblem on a light grey SQUARE plate and the OS drew it raw, then Flutter drew the same file through ClipOval+cover at 148dp, so the hand-off jumped shape, size and place. Now both draw a pre-masked circle. Two rounds on the device, because the first was wrong: handing Android 12 a circle that runs to its own edges made it zoom and clip the result SQUARE (recorded - the crescent ran off all four sides), so the native image is now 1152 with the mark at 768, the one-third transparent safe border the platform expects. Measured from screen recordings on the Honor: native mark 310px cropped-square -> 248px whole circle; Flutter 384px -> matched at 184dp; both centred within 3px (0.499 vs 0.497 of the height). analyze clean, 221 pass. Flutter side not yet re-measured after the 184dp change - next session must record one boot and confirm.
+splash verified on the Honor after the 184dp match: recorded one boot and measured every frame. The OS circle is 248x248 centred at (310,670) and the Flutter circle that replaces it is 248x240 centred at (306,670) - same circle, same size, same place, with one soft crossfade frame between them. The grey square is gone, the circle is continuous from the first frame to the intro, and the intro is untouched. That closes the owner's three instructions.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
