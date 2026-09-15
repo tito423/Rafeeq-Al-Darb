@@ -14,6 +14,29 @@ import '../../../app/rafeeq_app.dart';
 /// happened" (write-once, never shown to the user as a toggle);
 /// [SplashVideoEnabledNotifier] is "should the video play on *this* run"
 /// (the actual Settings toggle, default off).
+/// When the reader last had the app in front of him, for [splashAwayLongEnough].
+///
+/// «بتشتغل لوحدها ساعات ومش تشتغل ساعات». Measured on the owner's phone
+/// (3.24.2): the video played on every cold start and after leaving with
+/// Back, and not after leaving with Home — because Back and a background kill
+/// end the process and Home does not. To him that was random. His rule now:
+/// the intro plays only when the app has been away for [splashAwayThreshold],
+/// however it was left.
+const _kLastActiveMs = 'app_last_active_ms_v1';
+const splashAwayThreshold = Duration(minutes: 30);
+
+Future<void> markAppActiveNow(SharedPreferences prefs) =>
+    prefs.setInt(_kLastActiveMs, DateTime.now().millisecondsSinceEpoch);
+
+bool splashAwayLongEnough(SharedPreferences prefs) {
+  final last = prefs.getInt(_kLastActiveMs);
+  if (last == null) return true;
+  final away = DateTime.now().millisecondsSinceEpoch - last;
+  // A clock set backwards reads as "away" rather than suppressing the intro
+  // for good.
+  return away < 0 || away >= splashAwayThreshold.inMilliseconds;
+}
+
 class SplashFirstRunNotifier extends StateNotifier<bool> {
   SplashFirstRunNotifier(this._prefs) : super(_prefs.getBool(_key) ?? false);
 

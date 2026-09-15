@@ -7,6 +7,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../app/rafeeq_app.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
@@ -58,7 +59,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
     _checkNotificationLaunch();
     final firstRun = !ref.read(splashFirstRunProvider);
-    final shouldPlayVideo = firstRun || ref.read(splashVideoEnabledProvider);
+    final shouldPlayVideo = firstRun ||
+        (ref.read(splashVideoEnabledProvider) &&
+            splashAwayLongEnough(ref.read(sharedPrefsProvider)));
     final reduceMotion = WidgetsBinding
         .instance.platformDispatcher.accessibilityFeatures.disableAnimations;
     final motionOn = ref.read(motionEffectsProvider) && !reduceMotion;
@@ -149,6 +152,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     _removeNativeSplash();
     _navigated = true;
     ref.read(splashFirstRunProvider.notifier).markDone();
+    markAppActiveNow(ref.read(sharedPrefsProvider));
     final done = ref.read(onboardingCompletedProvider);
     final localeCode = context.locale.languageCode;
     Navigator.of(context).pushReplacement(

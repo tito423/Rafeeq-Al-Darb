@@ -30,6 +30,8 @@ import '../../features/quran/data/quran_fullscreen_provider.dart';
 import '../../features/quran/presentation/screens/quran_screen.dart';
 import '../../features/tutorial/data/tutorial_state.dart';
 import '../../features/tutorial/presentation/widgets/tutorial_overlay.dart';
+import '../../features/splash/data/splash_video_provider.dart';
+import '../rafeeq_app.dart';
 import 'tab_request_provider.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
@@ -158,6 +160,11 @@ class _AppShellState extends ConsumerState<AppShell>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    // The splash intro's clock: it plays again only after the app has been
+    // away `splashAwayThreshold`, so the moment of leaving is what counts.
+    if (state != AppLifecycleState.detached) {
+      markAppActiveNow(ref.read(sharedPrefsProvider));
+    }
     if (state == AppLifecycleState.resumed) {
       _syncPrayerStatus();
       _recheckLocationIfDenied();

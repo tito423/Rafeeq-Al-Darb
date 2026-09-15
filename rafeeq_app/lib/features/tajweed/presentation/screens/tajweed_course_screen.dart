@@ -63,15 +63,25 @@ final tajweedProgressProvider =
         (ref) => TajweedProgress());
 
 /// The course text, downloaded on first use and then read from disk.
+///
+/// The failure is logged, not only turned into «يلزم تنزيل نص الدروس»: on a
+/// fresh install on emulator-5554 the course showed that line while the book
+/// answered 206 on the host and the emulator reached it over TCP, and with
+/// the error discarded there was nothing to say why.
 final tajweedBookProvider = FutureProvider<BookText?>((ref) async {
-  final api = LibraryApiService.instance;
-  if (!await api.isBookDownloaded(tajweedCourseBook)) {
-    await api.downloadBook(
-      tajweedCourseBook,
-      '${AppConfig.contentBaseUrl}/books/text/$tajweedCourseBook.json',
-    );
+  try {
+    final api = LibraryApiService.instance;
+    if (!await api.isBookDownloaded(tajweedCourseBook)) {
+      await api.downloadBook(
+        tajweedCourseBook,
+        '${AppConfig.contentBaseUrl}/books/text/$tajweedCourseBook.json',
+      );
+    }
+    return BookText.fromFile(await api.bookFilePath(tajweedCourseBook));
+  } catch (e, st) {
+    debugPrint('tajweedBookProvider failed: $e\n$st');
+    rethrow;
   }
-  return BookText.fromFile(await api.bookFilePath(tajweedCourseBook));
 });
 
 class TajweedCourseScreen extends ConsumerWidget {
@@ -90,8 +100,19 @@ class TajweedCourseScreen extends ConsumerWidget {
         error: (_, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
-            child: Text('tajweed.needs_download'.tr(),
-                textAlign: TextAlign.center),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('tajweed.needs_download'.tr(),
+                    textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                FilledButton.icon(
+                  onPressed: () => ref.invalidate(tajweedBookProvider),
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: Text('common.retry'.tr()),
+                ),
+              ],
+            ),
           ),
         ),
         data: (text) => ListView.builder(
