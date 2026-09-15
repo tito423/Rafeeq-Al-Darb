@@ -247,6 +247,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       // splash (held until the video's first frame is painted), so this either
       // shows the video directly or, as a fallback, the same app mark the
       // native splash showed — a clean cut, not a second animated hand-off.
+      //
+      // «the same app mark» is now true. It used to clip `app_mark.png` — the
+      // emblem on a light grey square plate — with `ClipOval` and `BoxFit
+      // .cover`, while the OS drew that same file unmasked. Recorded on the
+      // owner's Honor, the boot read as a grey SQUARE, then a smaller circle
+      // lower down with a grey rim (the plate surviving at the oval's
+      // tangents), then the intro. Both now draw `app_mark_circle.png`, which
+      // is already cut to the emblem's own circle on transparency.
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: videoReady ? _proceed : null,
@@ -262,15 +270,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 ),
               )
             : Center(
-                child: SizedBox(
-                  width: 148,
-                  height: 148,
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/branding/app_mark.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                child: Image.asset(
+                  'assets/branding/app_mark_circle.png',
+                  // Sized to the circle the OS actually draws, measured from
+                  // a screen recording on the owner's Honor rather than
+                  // reasoned about: the native mark lands 248 px wide in a
+                  // 612-wide capture and this one landed 324 at 240 dp, both
+                  // centred to within 3 px, so 240 x 248/324 is 184.
+                  width: 184,
+                  height: 184,
                 ),
               ),
       ),
