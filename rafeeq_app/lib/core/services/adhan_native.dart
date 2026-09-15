@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import '../models/adhan_mode.dart';
 import '../models/adhan_option.dart';
@@ -192,7 +193,10 @@ class AdhanNative {
   /// caller can tell the user instead of showing a mute screen.
   static Future<bool> preview(AdhanSpec spec) async {
     try {
-      return await _player.invokeMethod<bool>('preview', spec.toMap()) ?? false;
+      final started =
+          await _player.invokeMethod<bool>('preview', spec.toMap()) ?? false;
+      if (started) _PreviewGuard.instance.arm();
+      return started;
     } on PlatformException {
       return false;
     } on MissingPluginException {
@@ -203,6 +207,7 @@ class AdhanNative {
   /// Stops everything: the preview player *and* a real firing (whose service
   /// also drops its notification and wake lock). Safe when nothing is running.
   static Future<void> stop() async {
+    _PreviewGuard.instance.disarm();
     try {
       await _player.invokeMethod<void>('stop');
     } catch (_) {
@@ -321,5 +326,67 @@ class AdhanNative {
     try {
       await _alarm.invokeMethod<void>('openExactAlarmSettings');
     } catch (_) {}
+  }
+}
+
+/// Keeps a **preview** from outliving the app being in front of the reader.
+///
+/// A real firing is an alarm: [AdhanService] owns it, it posts an ongoing
+/// notification with Stop and Mute, and it is *supposed* to sound while the
+/// phone is locked and the app is nowhere. A preview is the opposite — by
+/// [AdhanNative.preview]'s own description it runs "without an alarm, a
+/// notification or a foreground service", so the only way to stop one is the
+/// screen that started it. Leave that screen's app and the sound has no
+/// controls anywhere on the phone.
+///
+/// Measured on the owner's Honor: the Home prayer-slide preview was still
+/// `state:started` on `USAGE_ALARM` six seconds after HOME, with nothing in
+/// the notification shade — and a full adhan runs two to three minutes. This
+/// is the same defect as the splash intro's soundtrack, in a louder place.
+/// «اي ملف ميديا لازم يكون فيه بلاير يتحكم فيه».
+///
+/// The guard lives here rather than in each screen because every preview in
+/// the app goes through [AdhanNative.preview] — the Home slide sheet, the
+/// adhan settings rows and the full-screen preview all did, and two of the
+/// three had no lifecycle handling at all.
+///
+/// It asks the native player what is actually sounding before stopping
+/// anything: [AdhanPlaybackState.firing] is false only for a preview, so a
+/// real adhan can never be silenced by this, however stale the arming is.
+class _PreviewGuard with WidgetsBindingObserver {
+  _PreviewGuard._();
+
+  static final _PreviewGuard instance = _PreviewGuard._();
+
+  bool _armed = false;
+
+  void arm() {
+    if (_armed) return;
+    _armed = true;
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  void disarm() {
+    if (!_armed) return;
+    _armed = false;
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) return;
+    _stopIfPreview();
+  }
+
+  Future<void> _stopIfPreview() async {
+    final now = await AdhanNative.state();
+    // A real firing keeps going: it has a notification, and the reader
+    // leaving the app is exactly when an adhan is meant to be heard.
+    if (now.firing) return;
+    if (!now.playing) {
+      disarm();
+      return;
+    }
+    await AdhanNative.stop();
   }
 }

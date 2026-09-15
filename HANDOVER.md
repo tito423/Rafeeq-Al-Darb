@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 20:01 — IN PROGRESS — resume here**
+**2026-09-15 20:31 — IN PROGRESS — resume here**
 
-fix: the splash intro played its 10s soundtrack with the app invisible - the owner heard it start behind a stopped adhan with nothing able to stop it. Reproduced on his Honor: cold start with the display off, dumpsys audio reported the intro's own track state:started for 12 consecutive seconds while mWakefulness=Dozing. splash_screen now observes the lifecycle - it does not play unless the app is resumed, and leaving the foreground ends the intro outright instead of pausing it. Verified on the Honor, three cases: screen off -> no audio at all (was 12s); normal launch -> intro plays with sound, video on screen; HOME mid-intro -> audio gone within 1s (was ~3s). analyze clean, 221 pass
+fix: an adhan PREVIEW outlived the app being on screen - owner's rule, every media file needs a player you can reach. AdhanNative.preview by its own doc runs with no alarm, no notification and no service, so the only control is the screen that started it; prayer_slides had no lifecycle handling at all and adhan_settings_screen observed the lifecycle without stopping the sound. Measured on the owner's Honor: the Home prayer-slide preview was still state:started on USAGE_ALARM six seconds after HOME, nothing in the shade, and a full adhan runs 2-3 minutes. Guard now lives in AdhanNative.preview itself so every caller is covered, and it asks the native player whether this is a real firing (AdhanPlaybackState.firing) before stopping anything. Verified on the Honor: preview stops within 1s of HOME (was still playing at 6s); a REAL Fajr adhan fired by jumping the clock kept playing through HOME for 8s and was then stopped from its notification, with total silence after - which is the owner's original report end to end. analyze clean, 221 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
