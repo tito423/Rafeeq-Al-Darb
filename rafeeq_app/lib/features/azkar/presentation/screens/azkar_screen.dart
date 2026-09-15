@@ -11,6 +11,7 @@ import '../../data/azkar_categories.dart';
 import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
 import '../../data/azkar_backgrounds.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 
 /// Azkar tab — real sections from Hisn al-Muslim (134 real sections, no
 /// duplicates within a section — verified against the bundled DB).
@@ -105,11 +106,15 @@ class _SectionsTab extends ConsumerWidget {
         final info = azkarCategoryInfo[category]!;
         final bgUrl = azkarCategoryBackgrounds[category];
         
-        return _CategoryCard(
+        final card = _CategoryCard(
           category: category,
           info: info,
           bgUrl: bgUrl,
         );
+        // The tour explains the grid through its first card.
+        return i == 0
+            ? TutorialAnchor(id: TourAnchor.azkarCategory, child: card)
+            : card;
       },
     );
   }

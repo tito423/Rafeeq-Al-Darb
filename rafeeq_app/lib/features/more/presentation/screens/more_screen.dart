@@ -11,6 +11,7 @@ import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../settings/presentation/widgets/focus_mode_picker.dart';
 import '../../../tajweed/presentation/screens/tajweed_course_screen.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 import '../widgets/sync_account_card.dart';
 
@@ -48,24 +49,30 @@ class MoreScreen extends ConsumerWidget {
           // «وضع التركيز» - turning it on leaves the Qur'an tab and nothing
           // else. It is entered from here and left from the bar that replaces
           // the navigation bar, or with the back gesture; see `AppShell`.
-          IslamicActionCard(
-            icon: Icons.center_focus_strong_outlined,
-            accent: AppColors.primarySoft,
-            title: 'focus.title'.tr(),
-            subtitle: 'focus.subtitle'.tr(),
-            onTap: () => showFocusModePicker(context),
+          TutorialAnchor(
+            id: TourAnchor.moreFocus,
+            child: IslamicActionCard(
+              icon: Icons.center_focus_strong_outlined,
+              accent: AppColors.primarySoft,
+              title: 'focus.title'.tr(),
+              subtitle: 'focus.subtitle'.tr(),
+              onTap: () => showFocusModePicker(context),
+            ),
           ),
 
           // «انشئ في المزيد قسم جديد سميه تحميل تلاوات القرآن … عبارة عن
           // music player احترافي». First, because it is the one he asked for.
-          IslamicActionCard(
-            icon: Icons.library_music_outlined,
-            accent: AppColors.gold,
-            title: 'quran_audio.title'.tr(),
-            subtitle: 'quran_audio.subtitle'.tr(),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const QuranAudioScreen(),
+          TutorialAnchor(
+            id: TourAnchor.moreQuranAudio,
+            child: IslamicActionCard(
+              icon: Icons.library_music_outlined,
+              accent: AppColors.gold,
+              title: 'quran_audio.title'.tr(),
+              subtitle: 'quran_audio.subtitle'.tr(),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const QuranAudioScreen(),
+                ),
               ),
             ),
           ),
@@ -73,14 +80,17 @@ class MoreScreen extends ConsumerWidget {
           // «تعليم التجويد» — the lessons come verbatim from a real graded
           // course on Shamela, and every rule that can be pointed at is heard
           // in an ayah rather than described, which is what he asked for.
-          IslamicActionCard(
-            icon: Icons.record_voice_over_outlined,
-            accent: AppColors.gold,
-            title: 'tajweed.title'.tr(),
-            subtitle: 'tajweed.card_subtitle'.tr(),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const TajweedCourseScreen(),
+          TutorialAnchor(
+            id: TourAnchor.moreTajweed,
+            child: IslamicActionCard(
+              icon: Icons.record_voice_over_outlined,
+              accent: AppColors.gold,
+              title: 'tajweed.title'.tr(),
+              subtitle: 'tajweed.card_subtitle'.tr(),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const TajweedCourseScreen(),
+                ),
               ),
             ),
           ),
@@ -114,14 +124,17 @@ class MoreScreen extends ConsumerWidget {
             ),
           ),
 
-          IslamicActionCard(
-            icon: Icons.download_for_offline_outlined,
-            accent: AppColors.info,
-            title: 'downloads.title'.tr(),
-            subtitle: 'downloads.offline_ready'.tr(),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const DownloadsScreen(),
+          TutorialAnchor(
+            id: TourAnchor.moreDownloads,
+            child: IslamicActionCard(
+              icon: Icons.download_for_offline_outlined,
+              accent: AppColors.info,
+              title: 'downloads.title'.tr(),
+              subtitle: 'downloads.offline_ready'.tr(),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const DownloadsScreen(),
+                ),
               ),
             ),
           ),

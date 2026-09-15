@@ -21,6 +21,28 @@ abstract final class TourAnchor {
   static const prayerCard = 'prayer_card';
   static const khatmaCard = 'khatma_card';
   static const continueReading = 'continue_reading';
+
+  // «يشرح امكانيات التطبيق حتة حتة في كل شاشة». One id per part a stop
+  // explains, registered where that part is built.
+  static const quranLayout = 'quran_layout';
+  static const quranFont = 'quran_font';
+  static const quranRecite = 'quran_recite';
+  static const quranTheme = 'quran_theme';
+  static const quranFullScreen = 'quran_full_screen';
+  static const quranSearch = 'quran_search';
+  static const quranJump = 'quran_jump';
+  static const quranEditions = 'quran_editions';
+  static const qiblaCompass = 'qibla_compass';
+  static const adhanSettings = 'adhan_settings';
+  static const prayerAdjustments = 'prayer_adjustments';
+  static const azkarCategory = 'azkar_category';
+  static const tasbeehTargets = 'tasbeeh_targets';
+  static const tasbeehMathur = 'tasbeeh_mathur';
+  static const libraryTabs = 'library_tabs';
+  static const moreQuranAudio = 'more_quran_audio';
+  static const moreTajweed = 'more_tajweed';
+  static const moreDownloads = 'more_downloads';
+  static const moreFocus = 'more_focus';
 }
 
 final Map<String, GlobalKey> _anchors = <String, GlobalKey>{};
@@ -40,6 +62,21 @@ class TutorialAnchor extends StatelessWidget {
     final key = _anchors.putIfAbsent(id, GlobalKey.new);
     return KeyedSubtree(key: key, child: child);
   }
+}
+
+/// Scrolls [id] into view when it sits inside a scrolling list, so a stop
+/// about the fifth card on a screen points at it instead of at the tab's
+/// button. Completes at once when the widget is not mounted or not scrollable.
+Future<void> revealAnchor(String id) async {
+  final context = _anchors[id]?.currentContext;
+  if (context == null || !context.mounted) return;
+  if (Scrollable.maybeOf(context) == null) return;
+  await Scrollable.ensureVisible(
+    context,
+    alignment: 0.35,
+    duration: const Duration(milliseconds: 380),
+    curve: Curves.easeInOutCubic,
+  );
 }
 
 /// The rectangle [id] currently occupies on screen, or null when it is not

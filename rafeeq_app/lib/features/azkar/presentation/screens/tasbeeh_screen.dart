@@ -11,6 +11,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/sync_service.dart';
 import '../../data/tasbeeh_catalog.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 
 
 class TasbeehScreen extends ConsumerStatefulWidget {
@@ -212,17 +213,20 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 // Target selector (P3‑47).
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    children: [
-                      for (final t in tasbeehTargets)
-                        ChoiceChip(
-                          label: Text(_targetLabel(t)),
-                          selected: _target == t,
-                          onSelected: (_) => _selectTarget(t),
-                        ),
-                    ],
+                  child: TutorialAnchor(
+                    id: TourAnchor.tasbeehTargets,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 8,
+                      children: [
+                        for (final t in tasbeehTargets)
+                          ChoiceChip(
+                            label: Text(_targetLabel(t)),
+                            selected: _target == t,
+                            onSelected: (_) => _selectTarget(t),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
@@ -245,9 +249,12 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 // The gateway to the five long adhkar.
                 Padding(
                   padding: const EdgeInsets.fromLTRB(14, 2, 14, 6),
-                  child: _MathurEntryCard(
-                    active: _mathurIndex != null,
-                    onTap: _openMathurPicker,
+                  child: TutorialAnchor(
+                    id: TourAnchor.tasbeehMathur,
+                    child: _MathurEntryCard(
+                      active: _mathurIndex != null,
+                      onTap: _openMathurPicker,
+                    ),
                   ),
                 ),
                 if (_mathurIndex != null)

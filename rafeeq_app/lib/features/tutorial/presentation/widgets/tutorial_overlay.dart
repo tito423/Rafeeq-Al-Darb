@@ -86,8 +86,13 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
   /// frame to lay itself out.
   void _enter(int i) {
     widget.onGoToTab(tutorialChapters[i].tab);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
+      // A part further down a scrolling screen is brought into view first,
+      // then measured where it has come to rest.
+      final anchor = tutorialChapters[i].anchor;
+      if (anchor != null) await revealAnchor(anchor);
+      if (!mounted || _index != i) return;
       final next = _targetOf(tutorialChapters[i]);
       setState(() {
         _from = _spot;
@@ -185,6 +190,38 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
                   ),
                 ),
               ),
+              // «حوط عليها»: besides the ring, an animated hand taps the lit
+              // part, so the stop says "this" even to a reader who has not
+              // read the bubble yet.
+              if (spot != null && t > 0.6)
+                Positioned(
+                  left: spot.center.dx - 20,
+                  top: spot.center.dy - 8 + (1 - _pulse.value) * 10,
+                  child: IgnorePointer(
+                    child: Opacity(
+                      opacity: ((t - 0.6) / 0.4).clamp(0.0, 1.0),
+                      child: Transform.scale(
+                        scale: 0.92 + _pulse.value * 0.12,
+                        child: Icon(
+                          Icons.touch_app_rounded,
+                          size: 40,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: chapter.accent,
+                              blurRadius: 14,
+                            ),
+                            const Shadow(
+                              color: Colors.black54,
+                              blurRadius: 6,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               _bubble(context, chapter, spot, media, locale),
             ],
           );
@@ -204,18 +241,21 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     const gap = 14.0;
 
     final below = spot == null || spot.center.dy < h * 0.45;
-    final card = _ChapterBubble(
-      chapter: chapter,
-      index: _index,
-      total: tutorialChapters.length,
-      locale: locale,
-      isFirst: _index == 0,
-      isLast: _index == tutorialChapters.length - 1,
-      onPrev: _index == 0 ? null : _prev,
-      onNext: _next,
-      onSkip: _finish,
-      pointerX: spot?.center.dx,
-      pointerBelow: !below,
+    // Each stop's bubble arrives: it rises a little, grows into place and
+    // fades in, keyed by the stop so it replays on every «التالي».
+    final card = TweenAnimationBuilder<double>(
+      key: ValueKey<int>(_index),
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 460),
+      curve: Curves.easeOutBack,
+      builder: (context, v, child) => Opacity(
+        opacity: v.clamp(0.0, 1.0),
+        child: Transform.translate(
+          offset: Offset(0, (1 - v) * (below ? 28 : -28)),
+          child: Transform.scale(scale: 0.9 + 0.1 * v, child: child),
+        ),
+      ),
+      child: _bubbleCard(chapter, spot, below, locale),
     );
 
     if (spot == null) {
@@ -232,6 +272,23 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       top: below ? math.max(safeTop, spot.bottom + gap) : null,
       bottom: below ? null : math.max(safeBottom, h - spot.top + gap),
       child: card,
+    );
+  }
+
+  Widget _bubbleCard(
+      TutorialChapter chapter, Rect? spot, bool below, String locale) {
+    return _ChapterBubble(
+      chapter: chapter,
+      index: _index,
+      total: tutorialChapters.length,
+      locale: locale,
+      isFirst: _index == 0,
+      isLast: _index == tutorialChapters.length - 1,
+      onPrev: _index == 0 ? null : _prev,
+      onNext: _next,
+      onSkip: _finish,
+      pointerX: spot?.center.dx,
+      pointerBelow: !below,
     );
   }
 }
@@ -251,7 +308,9 @@ class _SpotlightPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final full = Offset.zero & size;
-    final dim = Paint()..color = Colors.black.withValues(alpha: 0.72);
+    // «خفي اللي وراها»: dark enough that the lit part is the only thing the
+    // eye lands on.
+    final dim = Paint()..color = Colors.black.withValues(alpha: 0.84);
     if (spot == null) {
       canvas.drawRect(full, dim);
       return;
@@ -364,6 +423,22 @@ class _ChapterBubble extends StatelessWidget {
                       ?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ],
+            ),
+            const SizedBox(height: 8),
+            // Progress, animated from the previous stop's width to this one.
+            TweenAnimationBuilder<double>(
+              tween: Tween(end: (index + 1) / total),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOutCubic,
+              builder: (context, v, _) => ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: v,
+                  minHeight: 4,
+                  color: chapter.accent,
+                  backgroundColor: chapter.accent.withValues(alpha: 0.15),
+                ),
+              ),
             ),
             const SizedBox(height: 8),
             Text(

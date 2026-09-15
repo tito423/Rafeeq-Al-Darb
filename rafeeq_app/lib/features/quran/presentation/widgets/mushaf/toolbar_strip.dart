@@ -7,6 +7,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../../../../../core/widgets/toolbar_action.dart';
+import '../../../../tutorial/data/tutorial_anchors.dart';
 
 /// Quran tab — a real mushaf browser.
 ///  • Text mode: real Uthmani ayahs laid out by their real Madani page
@@ -46,19 +47,28 @@ class ToolbarStrip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          for (final child in children)
-            if (child is ToolbarAction)
-              ToolbarAction(
-                icon: child.icon,
-                label: child.label,
-                onPressed: child.onPressed,
-                active: child.active,
-                compact: true,
-              )
-            else
-              child,
+          for (final child in children) _compact(child),
         ],
       ),
     );
+  }
+
+  /// The compact form of [child]. A tour target (`TutorialAnchor`) keeps its
+  /// anchor and has the action inside it made compact, so registering a
+  /// button with the guided tour cannot quietly cost it its landscape form.
+  static Widget _compact(Widget child) {
+    if (child is TutorialAnchor) {
+      return TutorialAnchor(id: child.id, child: _compact(child.child));
+    }
+    if (child is ToolbarAction) {
+      return ToolbarAction(
+        icon: child.icon,
+        label: child.label,
+        onPressed: child.onPressed,
+        active: child.active,
+        compact: true,
+      );
+    }
+    return child;
   }
 }

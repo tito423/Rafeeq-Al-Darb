@@ -12,6 +12,7 @@ import '../tabs/books_tab.dart';
 import '../tabs/channels_tab.dart';
 import '../tabs/hadith_tab.dart';
 import '../tabs/websites_tab.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 
 
 /// Library — two top tabs:
@@ -58,19 +59,25 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
         // abbreviated to fit seven tiles (see test/nav_label_width_test.dart),
         // and an AppBar has room for the whole word.
         title: Text('library.title'.tr()),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          indicatorColor: AppColors.gold,
-          labelColor: AppColors.gold,
-          tabAlignment: TabAlignment.start,
-          tabs: [
-            Tab(text: 'library.tab_books'.tr()),
-            Tab(text: 'library.tab_hadith'.tr()),
-            Tab(text: 'library.tab_hadeethenc'.tr()),
-            Tab(text: 'library.tab_channels'.tr()),
-            Tab(text: 'library.tab_websites'.tr()),
-          ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kTextTabBarHeight),
+          child: TutorialAnchor(
+            id: TourAnchor.libraryTabs,
+            child: TabBar(
+              controller: _tabController,
+              isScrollable: true,
+              indicatorColor: AppColors.gold,
+              labelColor: AppColors.gold,
+              tabAlignment: TabAlignment.start,
+              tabs: [
+                Tab(text: 'library.tab_books'.tr()),
+                Tab(text: 'library.tab_hadith'.tr()),
+                Tab(text: 'library.tab_hadeethenc'.tr()),
+                Tab(text: 'library.tab_channels'.tr()),
+                Tab(text: 'library.tab_websites'.tr()),
+              ],
+            ),
+          ),
         ),
         actions: [
           IconButton(

@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 17:44 — IN PROGRESS — resume here**
+**2026-09-15 17:55 — IN PROGRESS — resume here**
 
-feat: channels & websites lists - reorder, hide, edit, delete, restore defaults, and open links inside the app (Custom Tab) or in an external app. Customisation stored per list on top of the verified catalogues; 18 keys in all 7 locales (inserted, no file re-serialised: +20 lines each). analyze clean, 216 tests pass; not yet seen on a phone
+tour: a stop per part of every screen (35 stops: quran toolbar x8, qibla/adhan/adjustments, azkar grid, tasbeeh targets/mathur, library tabs, more cards), parts scrolled into view before the spotlight lands, animated bubble entrance, tapping-hand over the lit part, progress bar, darker dim. 34 texts in 7 locales. analyze clean, 216 pass; not yet seen on a phone. Build with countdown+links fixes installed on Honor and Xiaomi 17:53
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

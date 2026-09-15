@@ -15,6 +15,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 
 /// P3‑16 — a real Qibla compass, the star feature of the new "الصلاة" tab.
 /// "روعه بصريا... باحترافية شديدة جدا" (owner: should look genuinely
@@ -178,11 +179,20 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
           children: [
-            _buildCompassCard(context),
+            TutorialAnchor(
+              id: TourAnchor.qiblaCompass,
+              child: _buildCompassCard(context),
+            ),
             const SizedBox(height: 16),
-            _AdhanSettingsLink(),
+            TutorialAnchor(
+              id: TourAnchor.adhanSettings,
+              child: _AdhanSettingsLink(),
+            ),
             const SizedBox(height: 12),
-            const _PrayerAdjustmentsLink(),
+            const TutorialAnchor(
+              id: TourAnchor.prayerAdjustments,
+              child: _PrayerAdjustmentsLink(),
+            ),
           ],
         ),
       ),
