@@ -120,6 +120,7 @@ flutter:
     # P3â€‘49: the owner's AI-generated splash video (Gemini watermark removed)
     # + its badge-fallback art, put back at his request.
     - assets/branding/
+    - assets/diagrams/
     # The default mushaf's 604 pages used to be bundled here (P3-41). They were
     # 350 MB - almost the whole APK - and the owner asked for them out; they
     # now download and cache as they are read, like every other edition.

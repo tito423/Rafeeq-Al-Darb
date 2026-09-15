@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 00:16 — IN PROGRESS — resume here**
+**2026-09-16 00:45 — IN PROGRESS — resume here**
 
-makharij: the mouth now MOVES the way the letter is made. «التصميم بعيد كل البعد عن الحقيقي ومفيش فيه حركة توضح ازاي بتخرج الحروف» - a pulsing dot says «here» and nothing about how, and the owner was right. articulation.dart turns the book's own sentence for each makhraj into a movement: the tongue's upper edge is sampled as a contour and a narrow bump is raised at the contact point until it meets the palate, the lips shut for «ما بين الشفتين معًا مع انطباق», the lower lip rises to the upper teeth for «بطن الشفة السفلى مع أطراف الثنايا العليا», and a stream of dashes runs from where the sound starts out through the mouth, or out through the nose for الغنة and النون المظهرة, or stops dead at a closure. حروف المد close nothing and the stream runs the whole length. SEEN on the owner's Honor: picking وسط اللسان raised the tongue to the roof exactly at the lit point with the air flowing past it; picking الجوف ran the stream from the throat out through an open mouth with {قَالَ} {يَقُولُ} {قِيلَ} on the card. Two more tests: every makhraj must have an articulation (a tongue one must name its contact point), and no articulation may name a makhraj that does not exist. analyze clean, 231 pass. STILL NOT RIGHT: the lips read as two blobs outside the face and the teeth as a grid - a fix was written and the owner stopped it to ask about licensed illustration sets instead.
+makharij: real anatomy under the movement.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

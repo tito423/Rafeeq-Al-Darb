@@ -122,6 +122,19 @@ class _MakharijScreenState extends State<MakharijScreen>
               color: scheme.onSurfaceVariant,
             ),
           ),
+          const SizedBox(height: 6),
+          // CC0 requires no attribution at all. It is here because crediting
+          // the people whose drawing this is costs nothing and is right.
+          Text(
+            'الرسم التشريحي: مقطع جانبي للجهاز النطقي بريشة '
+            'Richard Wright و Dan McCloy (جامعة واشنطن) — '
+            'منشور في الملك العام تحت ترخيص CC0 عبر ويكيميديا كومنز',
+            style: TextStyle(
+              fontSize: 12,
+              height: 1.7,
+              color: scheme.onSurfaceVariant,
+            ),
+          ),
         ],
       ),
     );
