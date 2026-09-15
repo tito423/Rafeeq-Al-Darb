@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 18:39 — IN PROGRESS — resume here**
+**2026-09-15 18:42 — IN PROGRESS — resume here**
 
-hajj counters: reset the animation with the count - seen on the owner's Honor that sa'i drew the marker back at as-Safa after pass 1 (value left at 1.0 = end of the NEXT pass); same flaw drew tawaf's full trail on the next ring and left the jamarat pebble on the pillar. Tawaf seen correct otherwise (anticlockwise from the Black Stone, 1/7 -> 2/7). analyze clean, 221 pass
+verified on owner's Honor: quote reminder race fix - ScheduledNotificationReceiver alarms 10 off / 34 at 15min (+24) / 34 after change to 60 / 10 after off / 10 after 15min->off immediately; setting restored to off. Latest build (counter reset + ayah redesign) installed on Honor
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
