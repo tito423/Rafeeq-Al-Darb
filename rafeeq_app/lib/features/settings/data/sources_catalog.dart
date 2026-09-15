@@ -96,6 +96,16 @@ final sourceGroups = <(String, List<SourceEntry>)>[
           'about.src_hadeethenc'),
     ]
   ),
+  // «مناسك الحج والعمرة»: every word of the guide is read from this book, so
+  // it is credited by name and edition, not folded into the Shamela row.
+  (
+    'hajj.title',
+    [
+      SourceEntry(
+          'التحقيق والإيضاح — ابن باز', 'https://shamela.ws/book/31235',
+          'hajj.source'),
+    ]
+  ),
   (
     'about.src_quotes',
     [

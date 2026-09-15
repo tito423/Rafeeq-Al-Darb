@@ -60,6 +60,17 @@ class HajjStep {
   });
 }
 
+/// The route of Hajj in the order the manual walks it (p50–75), as
+/// translation keys. Mina appears twice because the pilgrim returns to it.
+const journeyPlaces = <String>[
+  'hajj.place_makkah',
+  'hajj.place_mina',
+  'hajj.place_arafat',
+  'hajj.place_muzdalifah',
+  'hajj.place_mina',
+  'hajj.place_makkah',
+];
+
 /// The source book, by its Library id.
 const hajjGuideBook = 'ibn_baz_tahqiq_wal_idah';
 const hajjGuideShamelaUrl = 'https://shamela.ws/book/31235';

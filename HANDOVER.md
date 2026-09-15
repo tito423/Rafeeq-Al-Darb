@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 18:15 — IN PROGRESS — resume here**
+**2026-09-15 18:23 — IN PROGRESS — resume here**
 
-tour: one stop per feature, framed where it is - no stop points at a nav button (owner: frame the clock itself, explain one feature at a time). Home split into clock/countdown/location/slides/sunan; themes and sources anchored in Settings; missing features skipped; gold frame that draws itself with corner ornaments. Hajj: Ibn Baz book built (106 pages, 395 paras, printReliable) and on R2 (206), catalogued; hajj_guide.dart step ranges + test; 47 hajj keys x7
+hajj: HajjScreen - Hajj/Umrah tracks, animated route map, tawaf/sai/jamarat interactive counters, each step shows Ibn Baz's text verbatim by range; More card; credited on Sources. Tour frame verified on owner's Honor: gold double frame with corner ornaments around the clock itself, bubble explains only the clock (2/31). analyze clean, 221 pass. Xiaomi disconnected mid-session
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

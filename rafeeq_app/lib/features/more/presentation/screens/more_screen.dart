@@ -10,6 +10,7 @@ import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../settings/presentation/widgets/focus_mode_picker.dart';
+import '../../../hajj/presentation/hajj_screen.dart';
 import '../../../tajweed/presentation/screens/tajweed_course_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
@@ -92,6 +93,18 @@ class MoreScreen extends ConsumerWidget {
                   builder: (_) => const TajweedCourseScreen(),
                 ),
               ),
+            ),
+          ),
+
+          // «اعمل قسم جديد في المزيد باسم مناسك الحج والعمرة». Its text is
+          // Ibn Baz's manual, verbatim; see `hajj_guide.dart`.
+          IslamicActionCard(
+            icon: Icons.mosque_outlined,
+            accent: AppColors.gold,
+            title: 'hajj.title'.tr(),
+            subtitle: 'hajj.card_subtitle'.tr(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const HajjScreen()),
             ),
           ),
 
