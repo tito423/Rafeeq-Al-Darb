@@ -120,7 +120,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: KhatmaCard(),
                 ),
                 const SizedBox(height: 16),
-                const SunanSuwarCard(),
+                const TutorialAnchor(
+                  id: TourAnchor.sunanCard,
+                  child: SunanSuwarCard(),
+                ),
                 const SizedBox(height: 16),
                 // «حط كارت مقولة اليوم … في الشاشة الرئيسية فوق حديث
                 // اليوم». It draws nothing at all when the setting is off.
@@ -529,7 +532,9 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
           // Tapping the clock opens the face gallery. `AnimatedSwitcher`
           // means swapping between the digital and analogue families is a
           // cross-fade in place rather than a hard cut.
-          Builder(
+          TutorialAnchor(
+            id: TourAnchor.homeClock,
+            child: Builder(
             builder: (clockContext) => InkWell(
             borderRadius: BorderRadius.circular(20),
             // `clockContext` is the tap target, so the gallery grows out of
@@ -575,9 +580,12 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
             ),
             ),
           ),
+          ),
           if (shown != null) ...[
             const SizedBox(height: 12),
-            GestureDetector(
+            TutorialAnchor(
+              id: TourAnchor.homeCountdown,
+              child: GestureDetector(
               onTap: previous == null
                   ? null
                   : () => setState(() => _showPrevious = !_showPrevious),
@@ -661,24 +669,32 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
                 ),
               ),
             ),
+            ),
           ],
           if (location.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.location_on,
-                    size: 14, color: hero.onSurfaceFaint),
-                const SizedBox(width: 4),
-                Text(
-                  location,
-                  style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
-                ),
-              ],
+            TutorialAnchor(
+              id: TourAnchor.homeLocation,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.location_on,
+                      size: 14, color: hero.onSurfaceFaint),
+                  const SizedBox(width: 4),
+                  Text(
+                    location,
+                    style:
+                        TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
+                  ),
+                ],
+              ),
             ),
           ],
           const SizedBox(height: 12),
-          PrayerSlides(times: widget.times, nextKey: next?.$1),
+          TutorialAnchor(
+            id: TourAnchor.homeSlides,
+            child: PrayerSlides(times: widget.times, nextKey: next?.$1),
+          ),
         ],
       ),
     );

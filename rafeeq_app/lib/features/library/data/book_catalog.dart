@@ -3660,6 +3660,27 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية، بيروت - المكتبة الأمدادية، مكة المكرمة',
     ),
   ),
+  // The source of «مناسك الحج والعمرة». Built from Shamela 31235 by
+  // scripts/build_ibn_baz_hajj_book.py (106 pages, 17 sections, 395
+  // paragraphs, ترقيم موافق للمطبوع) and range-checked on the bucket before
+  // this entry was written: 206 application/json.
+  LibraryBook(
+    id: 'ibn_baz_tahqiq_wal_idah',
+    titleAr: 'التحقيق والإيضاح لكثير من مسائل الحج والعمرة والزيارة',
+    titleEn: 'At-Tahqiq wal-Idah on Hajj, Umrah and Visitation',
+    authorAr: 'الشيخ عبد العزيز بن باز',
+    authorEn: 'Shaykh Abd al-Aziz ibn Baz',
+    deathYearAh: 1420,
+    pages: 106,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ibn_baz_tahqiq_wal_idah.json',
+      sizeBytes: 34727,
+      sourceLabel:
+          'المكتبة الشاملة — التحقيق والإيضاح لكثير من مسائل الحج والعمرة والزيارة، عبد العزيز بن عبد الله بن باز (ت ١٤٢٠هـ)، وزارة الشئون الإسلامية والأوقاف والدعوة والإرشاد - وكالة المطبوعات والبحث العلمي',
+    ),
+  ),
   LibraryBook(
     id: 'al_tibyan_fi_adab_hamalat_al_quran',
     titleAr: 'التبيان في آداب حملة القرآن',

@@ -21,6 +21,13 @@ abstract final class TourAnchor {
   static const prayerCard = 'prayer_card';
   static const khatmaCard = 'khatma_card';
   static const continueReading = 'continue_reading';
+  static const homeClock = 'home_clock';
+  static const homeCountdown = 'home_countdown';
+  static const homeLocation = 'home_location';
+  static const homeSlides = 'home_slides';
+  static const sunanCard = 'sunan_card';
+  static const settingsTheme = 'settings_theme';
+  static const settingsSources = 'settings_sources';
 
   // «يشرح امكانيات التطبيق حتة حتة في كل شاشة». One id per part a stop
   // explains, registered where that part is built.

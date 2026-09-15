@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 17:55 — IN PROGRESS — resume here**
+**2026-09-15 18:15 — IN PROGRESS — resume here**
 
-tour: a stop per part of every screen (35 stops: quran toolbar x8, qibla/adhan/adjustments, azkar grid, tasbeeh targets/mathur, library tabs, more cards), parts scrolled into view before the spotlight lands, animated bubble entrance, tapping-hand over the lit part, progress bar, darker dim. 34 texts in 7 locales. analyze clean, 216 pass; not yet seen on a phone. Build with countdown+links fixes installed on Honor and Xiaomi 17:53
+tour: one stop per feature, framed where it is - no stop points at a nav button (owner: frame the clock itself, explain one feature at a time). Home split into clock/countdown/location/slides/sunan; themes and sources anchored in Settings; missing features skipped; gold frame that draws itself with corner ornaments. Hajj: Ibn Baz book built (106 pages, 395 paras, printReliable) and on R2 (206), catalogued; hajj_guide.dart step ranges + test; 47 hajj keys x7
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

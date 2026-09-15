@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/i18n/supported_locales.dart';
 import '../../../../core/utils/digits.dart';
 import '../../data/tutorial_anchors.dart';
@@ -58,7 +59,8 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
   /// led rather than teleported.
   late final AnimationController _move = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 420),
+    // Long enough for the frame to be seen drawing itself round the feature.
+    duration: const Duration(milliseconds: 900),
   );
   Rect? _from;
 
@@ -94,6 +96,23 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       if (anchor != null) await revealAnchor(anchor);
       if (!mounted || _index != i) return;
       final next = _targetOf(tutorialChapters[i]);
+      // A feature that is not on screen — a Home card switched off in
+      // Settings — is skipped in the direction the reader was going, never
+      // stood in for by a navigation button.
+      if (anchor != null && next == null) {
+        final step = i >= _lastIndex ? 1 : -1;
+        _lastIndex = i;
+        final to = i + step;
+        if (to < 0) return;
+        if (to >= tutorialChapters.length) {
+          _finish();
+          return;
+        }
+        setState(() => _index = to);
+        _enter(to);
+        return;
+      }
+      _lastIndex = i;
       setState(() {
         _from = _spot;
         _spot = next;
@@ -104,35 +123,21 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     });
   }
 
-  /// A chapter points at its own card when that card is on screen, and
-  /// otherwise at the navigation button that leads to it. The welcome stop
-  /// points at nothing, on purpose.
-  Rect? _targetOf(TutorialChapter chapter) {
-    if (chapter.key == 'welcome') return null;
-    final anchor = chapter.anchor;
-    if (anchor != null) {
-      final rect = anchorRect(anchor);
-      if (rect != null) return rect.inflate(6);
-    }
-    return _navItemRect(chapter.tab);
-  }
+  /// The last stop entered, so a skipped feature is skipped in the direction
+  /// the reader was moving.
+  int _lastIndex = 0;
 
-  /// The navigation bar is seven equal cells across the bottom of the window.
-  /// Measuring it through a key would mean reaching into `AppShell`'s private
-  /// tree; its geometry is fixed and known, so it is computed.
-  Rect? _navItemRect(int tab) {
-    final media = MediaQuery.of(context);
-    final width = media.size.width;
-    final bottomInset = media.padding.bottom;
-    const barHeight = 68.0;
-    final cell = width / 7;
-    // The bar lays its destinations out in reading order, so under RTL the
-    // first tab sits on the RIGHT. Getting this wrong points confidently at
-    // the wrong button, which is worse than not pointing at all.
-    final rtl = Directionality.of(context) == TextDirection.rtl;
-    final slot = rtl ? 6 - tab : tab;
-    final top = media.size.height - bottomInset - barHeight;
-    return Rect.fromLTWH(slot * cell + 6, top + 2, cell - 12, barHeight - 4);
+  /// The frame goes around the feature itself, with room for the ornament.
+  /// Only the welcome has no target. There is deliberately no fallback to a
+  /// navigation button (see `tutorial_chapters.dart`).
+  Rect? _targetOf(TutorialChapter chapter) {
+    final anchor = chapter.anchor;
+    if (anchor == null) return null;
+    final rect = anchorRect(anchor);
+    if (rect == null) return null;
+    final screen = Offset.zero & MediaQuery.sizeOf(context);
+    final framed = rect.inflate(10).intersect(screen.deflate(4));
+    return framed.isEmpty ? null : framed;
   }
 
   void _next() {
@@ -186,6 +191,9 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
                       spot: spot,
                       accent: chapter.accent,
                       pulse: _pulse.value,
+                      // The border starts drawing as the frame settles.
+                      draw: Curves.easeInOutCubic
+                          .transform(((t - 0.35) / 0.65).clamp(0.0, 1.0)),
                     ),
                   ),
                 ),
@@ -299,10 +307,14 @@ class _SpotlightPainter extends CustomPainter {
   final Color accent;
   final double pulse;
 
+  /// 0 → 1 as the frame's border draws itself around the feature.
+  final double draw;
+
   const _SpotlightPainter({
     required this.spot,
     required this.accent,
     required this.pulse,
+    required this.draw,
   });
 
   @override
@@ -315,7 +327,8 @@ class _SpotlightPainter extends CustomPainter {
       canvas.drawRect(full, dim);
       return;
     }
-    final hole = RRect.fromRectAndRadius(spot!, const Radius.circular(16));
+    final r = spot!;
+    final hole = RRect.fromRectAndRadius(r, const Radius.circular(18));
     // saveLayer + BlendMode.clear is the only way to punch a real hole: a
     // second rectangle in "the background colour" would be wrong on every
     // theme, and there are four.
@@ -324,28 +337,70 @@ class _SpotlightPainter extends CustomPainter {
     canvas.drawRRect(hole, Paint()..blendMode = BlendMode.clear);
     canvas.restore();
 
-    canvas.drawRRect(
-      hole,
-      Paint()
+    // THE FRAME. «يحاوط … بفريم شكله جميل». A soft halo of the stop's own
+    // colour, then a gold-to-accent border that DRAWS ITSELF around the
+    // feature as the spotlight arrives, then a diamond ornament at each
+    // corner once the border has closed.
+    final halo = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 10
+      ..color = accent.withValues(alpha: 0.18 + 0.12 * pulse)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
+    canvas.drawRRect(hole.inflate(3), halo);
+
+    final border = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round
+      ..shader = LinearGradient(
+        colors: [AppColors.gold, accent, AppColors.gold],
+      ).createShader(r);
+    final outline = Path()..addRRect(hole);
+    for (final metric in outline.computeMetrics()) {
+      canvas.drawPath(
+        metric.extractPath(0, metric.length * draw.clamp(0.0, 1.0)),
+        border,
+      );
+    }
+    // A thin inner line a few pixels in, for the double-rule look of an
+    // illuminated frame.
+    if (draw >= 1) {
+      canvas.drawRRect(
+        hole.deflate(5),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1
+          ..color = AppColors.gold.withValues(alpha: 0.55),
+      );
+    }
+
+    final ornament = ((draw - 0.75) / 0.25).clamp(0.0, 1.0);
+    if (ornament > 0) {
+      final s = 7.0 * ornament * (1 + 0.12 * pulse);
+      final fill = Paint()..color = AppColors.gold;
+      final edge = Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.4
-        ..color = accent.withValues(alpha: 0.95),
-    );
-    // The breath: a second ring stepping outwards and fading as it goes.
-    final grow = 4 + pulse * 10;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-          spot!.inflate(grow), Radius.circular(16 + grow * 0.6)),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
-        ..color = accent.withValues(alpha: 0.45 * (1 - pulse)),
-    );
+        ..strokeWidth = 1.2
+        ..color = accent;
+      for (final c in [r.topLeft, r.topRight, r.bottomLeft, r.bottomRight]) {
+        final diamond = Path()
+          ..moveTo(c.dx, c.dy - s)
+          ..lineTo(c.dx + s, c.dy)
+          ..lineTo(c.dx, c.dy + s)
+          ..lineTo(c.dx - s, c.dy)
+          ..close();
+        canvas.drawPath(diamond, fill);
+        canvas.drawPath(diamond, edge);
+      }
+    }
   }
 
   @override
   bool shouldRepaint(_SpotlightPainter old) =>
-      old.spot != spot || old.pulse != pulse || old.accent != accent;
+      old.spot != spot ||
+      old.pulse != pulse ||
+      old.accent != accent ||
+      old.draw != draw;
 }
 
 /// The explanation itself: a small card with a pointer on the edge facing

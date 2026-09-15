@@ -14,6 +14,7 @@ import '../widgets/non_arabic_reading_card.dart';
 import '../../../../core/i18n/supported_locales.dart';
 import 'about_screen.dart';
 import 'sources_screen.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 import '../widgets/permissions_section.dart';
 
 /// Every actual setting, as a `Column` with no scroll view and no `Scaffold`
@@ -65,25 +66,28 @@ class SettingsBody extends ConsumerWidget {
           SectionLabel('settings.theme'.tr()),
           // A Wrap (not SegmentedButton) so longer translated labels never
           // clip — matches the language selector above.
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final v in ThemeVariant.values)
-                ChoiceChip(
-                  avatar: Icon(
-                    v.icon,
-                    size: 18,
-                    color: themeVariant == v
-                        ? scheme.onSecondaryContainer
-                        : scheme.onSurfaceVariant,
+          TutorialAnchor(
+            id: TourAnchor.settingsTheme,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final v in ThemeVariant.values)
+                  ChoiceChip(
+                    avatar: Icon(
+                      v.icon,
+                      size: 18,
+                      color: themeVariant == v
+                          ? scheme.onSecondaryContainer
+                          : scheme.onSurfaceVariant,
+                    ),
+                    label: Text(v.labelKey.tr()),
+                    selected: themeVariant == v,
+                    onSelected: (_) =>
+                        ref.read(themeControllerProvider.notifier).set(v),
                   ),
-                  label: Text(v.labelKey.tr()),
-                  selected: themeVariant == v,
-                  onSelected: (_) =>
-                      ref.read(themeControllerProvider.notifier).set(v),
-                ),
-            ],
+              ],
+            ),
           ),
           if (themeVariant == ThemeVariant.rgb) ...[
             const SizedBox(height: 8),
@@ -287,15 +291,19 @@ class SettingsBody extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Card(
-            child: ListTile(
-              leading:
-                  Icon(Icons.verified_user_outlined, color: scheme.primary),
-              title: Text('settings.credits'.tr()),
-              subtitle: Text('about.sources_hint'.tr()),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const SourcesScreen()),
+          TutorialAnchor(
+            id: TourAnchor.settingsSources,
+            child: Card(
+              child: ListTile(
+                leading:
+                    Icon(Icons.verified_user_outlined, color: scheme.primary),
+                title: Text('settings.credits'.tr()),
+                subtitle: Text('about.sources_hint'.tr()),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                      builder: (_) => const SourcesScreen()),
+                ),
               ),
             ),
           ),
