@@ -19,21 +19,34 @@ class MakharijScreen extends StatefulWidget {
 }
 
 class _MakharijScreenState extends State<MakharijScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulse = AnimationController(
+    with TickerProviderStateMixin {
+  /// The mouth taking up the position: it plays once per pick and holds.
+  late final AnimationController _articulation = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1600),
-  )..repeat(reverse: true);
+    duration: const Duration(milliseconds: 620),
+  );
+
+  /// The air, which keeps moving after the mouth has arrived.
+  late final AnimationController _flow = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1500),
+  )..repeat();
 
   Makhraj? _selected;
 
   @override
   void dispose() {
-    _pulse.dispose();
+    _articulation.dispose();
+    _flow.dispose();
     super.dispose();
   }
 
-  void _pick(Makhraj m) => setState(() => _selected = m);
+  void _pick(Makhraj m) {
+    setState(() => _selected = m);
+    // From zero every time, so picking the same one again replays the
+    // movement rather than doing nothing.
+    _articulation.forward(from: 0);
+  }
 
   MakhrajRegionInfo _infoFor(MakhrajRegion r) =>
       makhrajRegions.firstWhere((i) => i.region == r);
@@ -66,7 +79,11 @@ class _MakharijScreenState extends State<MakharijScreen>
               child: MakharijDiagram(
                 selected: selected,
                 onPick: _pick,
-                pulse: _pulse,
+                articulation: CurvedAnimation(
+                  parent: _articulation,
+                  curve: Curves.easeOutCubic,
+                ),
+                flow: _flow,
               ),
             ),
           ),

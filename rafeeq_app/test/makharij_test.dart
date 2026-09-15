@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rafeeq_app/features/tajweed/data/articulation.dart';
 import 'package:rafeeq_app/features/tajweed/data/makharij.dart';
 
 /// The makharij data is a claim about a book, and this is what checks it.
@@ -89,5 +90,44 @@ void main() {
     expect(makharijSourceLabel, contains('غاية المريد'));
     expect(makharijSourceLabel, contains('عطية قابل نصر'));
     expect(makharijSourceLabel, contains('١٢٦'));
+  });
+
+  test('every makhraj has a movement, and a tongue one has a contact point',
+      () {
+    // The diagram shows articulation, not a dot. A makhraj with no spec would
+    // silently render as a mouth that does nothing — which is precisely the
+    // complaint the movement was built to answer.
+    for (final m in makharij) {
+      final spec = articulationByMakhraj[m.id];
+      expect(spec, isNotNull, reason: '${m.id} has no articulation');
+      if (spec!.articulator == Articulator.tongue) {
+        expect(spec.contactX, isNotNull,
+            reason: '${m.id} moves the tongue but names no contact point');
+        expect(spec.contactX, inInclusiveRange(0.0, 1.0), reason: m.id);
+      }
+      expect(spec.closure, inInclusiveRange(0.0, 1.0), reason: m.id);
+    }
+  });
+
+  test('no articulation is described for a makhraj that does not exist', () {
+    final ids = makharij.map((m) => m.id).toSet();
+    for (final key in articulationByMakhraj.keys) {
+      expect(ids, contains(key), reason: '$key is not a makhraj');
+    }
+  });
+
+  test('the ghunnah letters send their air out through the nose', () {
+    // الخيشوم is where الغنة leaves, and النون المظهرة carries one.
+    expect(articulationByMakhraj['khayshum']!.air, AirPath.outNose);
+    expect(articulationByMakhraj['lisan_taraf_nun']!.air, AirPath.outNose);
+    // حروف المد close nothing at all.
+    expect(articulationByMakhraj['jawf']!.articulator, Articulator.open);
+    expect(articulationByMakhraj['jawf']!.air, AirPath.outMouth);
+    // «ما بين الشفتين معًا، مع انطباق» — the lips shut.
+    expect(articulationByMakhraj['shafa_bmw']!.articulator, Articulator.lips);
+    expect(articulationByMakhraj['shafa_bmw']!.air, AirPath.blocked);
+    // «بطن الشَّفة السفلى مع أطراف الثنايا العليا».
+    expect(articulationByMakhraj['shafa_fa']!.articulator,
+        Articulator.lipToTeeth);
   });
 }

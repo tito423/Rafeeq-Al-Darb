@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-15 |
+| **Last updated** | 2026-09-16 |
 | **Released** | **v3.24.2** — tag on `master` at `d7bba88`, the only release in the repo; asset `rafeeq-aldarb-3.24.2.apk`, 238,344,416 bytes |
 | **App version** | `pubspec.yaml` `3.24.2+25`; `AboutScreen.appVersion` `3.24.2` |
 | **Signing** | `scripts/sign_release.py` printed `OK: rotated` for the published APK — new key from Android 9 up, debug certificate kept below it, so every install path is an update. **Gradle signs debug on purpose — run it after every release build (trap #41).** |
@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 23:51 — IN PROGRESS — resume here**
+**2026-09-16 00:16 — IN PROGRESS — resume here**
 
-makharij: the interactive screen - a drawn sagittal section, the seventeen points on it, and the book's own words for whichever one you touch. Seen working on the owner's Honor: tapping the tongue's edge lit that point with a breathing halo and the card came up «اللسان / إحدى حافتي اللسان مما يلي الأضراس العليا اليسرى أو اليمنى / الحروف: ض» - the right makhraj for that place. Everything is a Path in normalised coordinates, so there is no image to license and nothing to 404; the letters and wording all come from makharij.dart, which quotes غاية المريد ص126-131, and each card prints the page it was read from. UI chrome added to all seven locales (translation parity passes). analyze clean, 228 pass. THE DRAWING IS NOT FINISHED: the nasal cavity reads as a blade, the teeth are floating blocks, the chin is a stray line and several points sit off the anatomy. The owner asked for «تحفة بصريا» and this is a working prototype, not that - the painter is being reworked next.
+makharij: the mouth now MOVES the way the letter is made. «التصميم بعيد كل البعد عن الحقيقي ومفيش فيه حركة توضح ازاي بتخرج الحروف» - a pulsing dot says «here» and nothing about how, and the owner was right. articulation.dart turns the book's own sentence for each makhraj into a movement: the tongue's upper edge is sampled as a contour and a narrow bump is raised at the contact point until it meets the palate, the lips shut for «ما بين الشفتين معًا مع انطباق», the lower lip rises to the upper teeth for «بطن الشفة السفلى مع أطراف الثنايا العليا», and a stream of dashes runs from where the sound starts out through the mouth, or out through the nose for الغنة and النون المظهرة, or stops dead at a closure. حروف المد close nothing and the stream runs the whole length. SEEN on the owner's Honor: picking وسط اللسان raised the tongue to the roof exactly at the lit point with the air flowing past it; picking الجوف ran the stream from the throat out through an open mouth with {قَالَ} {يَقُولُ} {قِيلَ} on the card. Two more tests: every makhraj must have an articulation (a tongue one must name its contact point), and no articulation may name a makhraj that does not exist. analyze clean, 231 pass. STILL NOT RIGHT: the lips read as two blobs outside the face and the teeth as a grid - a fix was written and the owner stopped it to ask about licensed illustration sets instead.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
