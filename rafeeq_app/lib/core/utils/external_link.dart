@@ -23,12 +23,30 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// Opens [url] in the phone's browser. Returns false — without throwing, and
 /// without launching anything — if it is not a well-formed http(s) URL.
-Future<bool> openExternalLink(String url) async {
+Future<bool> openExternalLink(String url) => openLink(url, inApp: false);
+
+/// Whether [url] is a link [openLink] will open: http(s) with a host.
+bool isOpenableLink(String url) {
   final uri = Uri.tryParse(url.trim());
-  if (uri == null) return false;
-  if (uri.scheme != 'http' && uri.scheme != 'https') return false;
-  if (uri.host.isEmpty) return false;
+  return uri != null &&
+      (uri.scheme == 'http' || uri.scheme == 'https') &&
+      uri.host.isNotEmpty;
+}
+
+/// Opens [url] inside the app (a Custom Tab over the app, which keeps the
+/// reader's place and needs no web view of our own) or in an external app —
+/// the YouTube app for a channel, the browser for a site.
+///
+/// If the in-app view cannot be shown on this phone (no Custom Tabs provider
+/// installed), it falls back to the external app rather than doing nothing.
+Future<bool> openLink(String url, {required bool inApp}) async {
+  if (!isOpenableLink(url)) return false;
+  final uri = Uri.parse(url.trim());
   try {
+    if (inApp &&
+        await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
+      return true;
+    }
     return await launchUrl(uri, mode: LaunchMode.externalApplication);
   } catch (_) {
     // No browser installed, or the OS refused. A dead link must not take the

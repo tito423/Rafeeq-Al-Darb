@@ -1266,9 +1266,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 17:37 — IN PROGRESS — resume here**
+**2026-09-15 17:44 — IN PROGRESS — resume here**
 
-fix: countdown showed 8759 hours to Fajr on a real phone. DateFormat('HH:mm') writes Arabic-Indic digits under ar_EG/fa (probed: ar_EG -> ٠٤:٤٤, regex no match), _todayAt fell back to now+365d. Format with 'en', parse through asciiDigits, never a year away. 4 new tests, 216 pass. Also: flicker verified gone on owner's phone (34 stable frames leaving full screen)
+feat: channels & websites lists - reorder, hide, edit, delete, restore defaults, and open links inside the app (Custom Tab) or in an external app. Customisation stored per list on top of the verified catalogues; 18 keys in all 7 locales (inserted, no file re-serialised: +20 lines each). analyze clean, 216 tests pass; not yet seen on a phone
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

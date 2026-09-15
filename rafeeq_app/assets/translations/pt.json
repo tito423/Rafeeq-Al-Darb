@@ -1381,5 +1381,25 @@
     "hide": "Ocultar",
     "sign_out": "Sair",
     "sign_in_failed": "Falha ao entrar: {error}"
+  },
+  "links": {
+    "manage": "Personalizar a lista",
+    "done": "Concluído",
+    "hide": "Ocultar",
+    "show": "Mostrar",
+    "hidden_badge": "Oculto",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "delete_confirm": "Remover este item da lista?",
+    "restore": "Restaurar a lista original",
+    "restore_confirm": "Os itens excluídos e ocultos e a ordem original voltarão. Continuar?",
+    "name": "Nome",
+    "url": "Link",
+    "invalid_url": "Digite um link válido que comece com https://",
+    "open_mode": "Como os links abrem",
+    "open_in_app": "Dentro do aplicativo",
+    "open_external": "Em um aplicativo externo",
+    "drag_hint": "Arraste a alça para reordenar",
+    "open_failed": "Não foi possível abrir o link"
   }
 }

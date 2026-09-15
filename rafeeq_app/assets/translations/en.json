@@ -1381,5 +1381,25 @@
     "hide": "Hide",
     "sign_out": "Sign out",
     "sign_in_failed": "Sign-in failed: {error}"
+  },
+  "links": {
+    "manage": "Customize list",
+    "done": "Done",
+    "hide": "Hide",
+    "show": "Show",
+    "hidden_badge": "Hidden",
+    "edit": "Edit",
+    "delete": "Delete",
+    "delete_confirm": "Remove this item from the list?",
+    "restore": "Restore the original list",
+    "restore_confirm": "Deleted and hidden items and the original order will come back. Continue?",
+    "name": "Name",
+    "url": "Link",
+    "invalid_url": "Enter a valid link starting with https://",
+    "open_mode": "How links open",
+    "open_in_app": "Inside the app",
+    "open_external": "In an external app",
+    "drag_hint": "Drag the handle to reorder",
+    "open_failed": "Could not open the link"
   }
 }

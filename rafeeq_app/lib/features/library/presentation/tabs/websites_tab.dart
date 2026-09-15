@@ -1,33 +1,88 @@
 /// «مواقع إسلامية» — the link list. The catalogue itself lives in
-/// `data/islamic_websites.dart`; a screen file is no place for content.
+/// `data/islamic_websites.dart`; a screen file is no place for content. The
+/// reader can reorder, hide, edit and delete entries and choose where they
+/// open (`link_list_manage_screen.dart`).
 library;
 
 import '../../../../core/widgets/arabic_text.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/islamic_websites.dart';
-import '../../../../core/utils/external_link.dart';
+import '../../data/link_list_customization.dart';
+import '../widgets/link_list_manage_screen.dart';
 
-class WebsitesTab extends StatelessWidget {
+const _listId = 'websites';
+
+Widget _siteIcon(WebsiteInfo site, double size) => Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: site.color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(size * 0.27),
+      ),
+      child: Icon(site.icon, color: site.color, size: size * 0.54),
+    );
+
+/// A site has no id field; its description key is unique and never edited,
+/// so it identifies the entry even after the reader changes its name or link.
+List<(WebsiteInfo, ManagedLink)> _siteLinks(LinkListState state,
+    {double icon = 40}) {
+  return [
+    for (final site in islamicWebsites)
+      (
+        site,
+        ManagedLink(
+          id: site.descriptionKey,
+          name: state.edits[site.descriptionKey]?.$1 ?? site.name,
+          subtitle: site.descriptionKey.tr(),
+          url: state.edits[site.descriptionKey]?.$2 ?? site.url,
+          leading: _siteIcon(site, icon),
+        ),
+      ),
+  ];
+}
+
+class WebsitesTab extends ConsumerWidget {
   const WebsitesTab({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
+    final state = ref.watch(linkListProvider(_listId));
+    final entries = {for (final e in _siteLinks(state)) e.$2.id: e};
+    final visible = [
+      for (final id in state.arrange(entries.keys.toList()))
+        if (!state.hidden.contains(id)) entries[id]!,
+    ];
+
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: islamicWebsites.length,
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+      itemCount: visible.length + 1,
       itemBuilder: (context, i) {
-        final site = islamicWebsites[i];
+        if (i == 0) {
+          return ManageLinksButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => LinkListManageScreen(
+                  listId: _listId,
+                  title: 'library.tab_websites'.tr(),
+                  catalogue: (s) => [for (final e in _siteLinks(s)) e.$2],
+                ),
+              ),
+            ),
+          );
+        }
+        final (site, link) = visible[i - 1];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           clipBehavior: Clip.antiAlias,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: InkWell(
-            onTap: () => openExternalLink(site.url),
+            onTap: () => openManagedLink(context, ref, link.url),
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -43,22 +98,14 @@ class WebsitesTab extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        color: site.color.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Icon(site.icon, color: site.color, size: 28),
-                    ),
+                    _siteIcon(site, 52),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ArabicText(
-                            site.name,
+                            link.name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -67,7 +114,7 @@ class WebsitesTab extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            site.descriptionKey.tr(),
+                            link.subtitle,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

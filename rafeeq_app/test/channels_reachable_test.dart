@@ -32,7 +32,9 @@ void main() {
   ).readAsStringSync();
 
   test('the channels tab renders the verified list, not a private copy', () {
-    expect(tab.contains('islamicChannels.length'), isTrue,
+    // The tab iterates the shared catalogue (the reader's order, hidden and
+    // edited entries are applied on top of it by `link_list_customization`).
+    expect(tab.contains('in islamicChannels'), isTrue,
         reason: 'the tab is not rendering islamic_channels.dart');
     expect(
         tab.contains(

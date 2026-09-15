@@ -1,6 +1,7 @@
 /// «قنوات دعوية» — the verified channel list, with each channel's mirrored
 /// avatar or, where YouTube has only a generated letter tile for it, the
-/// app's own mark.
+/// app's own mark. The reader can reorder, hide, edit and delete entries and
+/// choose where they open (`link_list_manage_screen.dart`).
 library;
 
 import '../../../../core/widgets/arabic_text.dart';
@@ -8,10 +9,12 @@ import '../../../../core/widgets/arabic_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/i18n/proper_name.dart';
 import '../../../channels/data/islamic_channels.dart';
-import '../../../../core/utils/external_link.dart';
+import '../../data/link_list_customization.dart';
+import '../widgets/link_list_manage_screen.dart';
 
 // ── Islamic Channels ──────────────────────────────────────────────────────
 
@@ -22,25 +25,26 @@ import '../../../../core/utils/external_link.dart';
 /// failed fetch looks deliberate rather than broken.
 class _ChannelAvatar extends StatelessWidget {
   final IslamicChannel channel;
-  const _ChannelAvatar({required this.channel});
+  final double size;
+  const _ChannelAvatar({required this.channel, this.size = 52});
 
   @override
   Widget build(BuildContext context) {
     final mark = Container(
-      width: 52,
-      height: 52,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         color: channel.color.withValues(alpha: 0.15),
         shape: BoxShape.circle,
       ),
-      child: Icon(channel.icon, color: channel.color, size: 28),
+      child: Icon(channel.icon, color: channel.color, size: size * 0.54),
     );
     if (!channel.hasPhoto) return mark;
     return ClipOval(
       child: CachedNetworkImage(
         imageUrl: channel.avatarUrl,
-        width: 52,
-        height: 52,
+        width: size,
+        height: size,
         fit: BoxFit.cover,
         placeholder: (_, _) => mark,
         errorWidget: (_, _, _) => mark,
@@ -49,24 +53,69 @@ class _ChannelAvatar extends StatelessWidget {
   }
 }
 
-class ChannelsTab extends StatelessWidget {
+const _listId = 'channels';
+
+/// The catalogue as the reader has edited it, in catalogue order.
+List<(IslamicChannel, ManagedLink)> _channelLinks(
+    BuildContext context, LinkListState state,
+    {double avatar = 40}) {
+  return [
+    for (final ch in islamicChannels)
+      (
+        ch,
+        ManagedLink(
+          id: ch.id,
+          name: state.edits[ch.id]?.$1 ?? properName(ch.nameAr, ch.nameEn),
+          subtitle: ch.descriptionKey.tr(),
+          url: state.edits[ch.id]?.$2 ?? ch.url,
+          leading: _ChannelAvatar(channel: ch, size: avatar),
+        ),
+      ),
+  ];
+}
+
+class ChannelsTab extends ConsumerWidget {
   const ChannelsTab({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
+    final state = ref.watch(linkListProvider(_listId));
+    final entries = {
+      for (final e in _channelLinks(context, state)) e.$2.id: e,
+    };
+    final visible = [
+      for (final id in state.arrange(entries.keys.toList()))
+        if (!state.hidden.contains(id)) entries[id]!,
+    ];
+
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: islamicChannels.length,
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+      itemCount: visible.length + 1,
       itemBuilder: (context, i) {
-        final ch = islamicChannels[i];
+        if (i == 0) {
+          return ManageLinksButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => LinkListManageScreen(
+                  listId: _listId,
+                  title: 'library.tab_channels'.tr(),
+                  catalogue: (s) => [
+                    for (final e in _channelLinks(context, s)) e.$2,
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        final (ch, link) = visible[i - 1];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           clipBehavior: Clip.antiAlias,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: InkWell(
-            onTap: () => openExternalLink(ch.url),
+            onTap: () => openManagedLink(context, ref, link.url),
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -89,7 +138,7 @@ class ChannelsTab extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ArabicText(
-                            properName(ch.nameAr, ch.nameEn),
+                            link.name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -98,7 +147,7 @@ class ChannelsTab extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            ch.descriptionKey.tr(),
+                            link.subtitle,
                             style: TextStyle(
                               fontSize: 13,
                               color: scheme.onSurfaceVariant,
