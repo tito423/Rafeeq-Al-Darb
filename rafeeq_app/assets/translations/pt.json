@@ -1501,5 +1501,14 @@
     "jamrah_small": "Pequena",
     "jamrah_middle": "Do meio",
     "jamrah_aqabah": "Al-Aqabah"
+  },
+  "makharij": {
+    "title": "Pontos de articulação",
+    "subtitle": "Toque num ponto do diagrama para ver o que sai dele",
+    "general": "Pontos gerais",
+    "specific": "Pontos específicos",
+    "letters": "Letras",
+    "source": "Fonte",
+    "entry_sub": "Descubra onde cada letra é pronunciada"
   }
 }

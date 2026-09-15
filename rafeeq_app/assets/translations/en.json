@@ -1501,5 +1501,14 @@
     "jamrah_small": "Small",
     "jamrah_middle": "Middle",
     "jamrah_aqabah": "Aqabah"
+  },
+  "makharij": {
+    "title": "Articulation points",
+    "subtitle": "Tap a place on the diagram to see what comes out of it",
+    "general": "General points",
+    "specific": "Specific points",
+    "letters": "Letters",
+    "source": "Source",
+    "entry_sub": "Explore where each letter is pronounced"
   }
 }
