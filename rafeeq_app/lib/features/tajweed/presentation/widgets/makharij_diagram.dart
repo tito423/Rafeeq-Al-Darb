@@ -53,9 +53,9 @@ class MakharijDiagram extends StatelessWidget {
   /// Read off the rendered section, lips at the left. The SVG is mirrored on
   /// screen, so these are in the mirrored (reading) frame.
   static const points = <String, Offset>{
-    'shafa_bmw': Offset(0.055, 0.500),
-    'shafa_fa': Offset(0.120, 0.470),
-    'lisan_asaliyya': Offset(0.190, 0.512),
+    'shafa_bmw': Offset(0.105, 0.500),
+    'shafa_fa': Offset(0.160, 0.487),
+    'lisan_asaliyya': Offset(0.200, 0.505),
     'lisan_lithawiyya': Offset(0.200, 0.440),
     'lisan_nitiyya': Offset(0.243, 0.420),
     'lisan_taraf_ra': Offset(0.275, 0.455),
@@ -66,10 +66,21 @@ class MakharijDiagram extends StatelessWidget {
     'lisan_wasat': Offset(0.510, 0.385),
     'lisan_aqsa_kaf': Offset(0.630, 0.370),
     'lisan_aqsa_qaf': Offset(0.720, 0.385),
-    'halq_adna': Offset(0.825, 0.560),
-    'halq_wasat': Offset(0.850, 0.700),
-    'halq_aqsa': Offset(0.860, 0.850),
+    'halq_adna': Offset(0.780, 0.570),
+    'halq_wasat': Offset(0.792, 0.720),
+    'halq_aqsa': Offset(0.785, 0.855),
     'khayshum': Offset(0.350, 0.260),
+  };
+
+  /// The five region names, placed **inside** the anatomy they name. Read off
+  /// the same gridded render as the points: the first set put الشفتان out in
+  /// the white margin beside the face and الجوف on top of the letter cluster.
+  static const regionLabels = <MakhrajRegion, Offset>{
+    MakhrajRegion.khayshum: Offset(0.520, 0.270),
+    MakhrajRegion.jawf: Offset(0.400, 0.478),
+    MakhrajRegion.shafatan: Offset(0.200, 0.630),
+    MakhrajRegion.lisan: Offset(0.470, 0.630),
+    MakhrajRegion.halq: Offset(0.720, 0.680),
   };
 
   /// The SVG's own aspect after cropping to the tract (90 × 136 units).
@@ -184,6 +195,11 @@ class _ArticulationPainter extends CustomPainter {
           _drawOpenGlow(canvas, size, at);
       }
       _drawAirstream(canvas, size, spec, at);
+    }
+
+    // ── the five region names ─────────────────────────────────────────────
+    for (final entry in MakharijDiagram.regionLabels.entries) {
+      _label(canvas, size, entry.key, entry.value);
     }
 
     // ── the seventeen points ──────────────────────────────────────────────
@@ -323,6 +339,39 @@ class _ArticulationPainter extends CustomPainter {
           ..color = AppColors.gold.withValues(alpha: 0.6 * fade * articulation),
       );
     }
+  }
+
+  /// A region's name, lit while one of its makharij is the chosen one.
+  void _label(Canvas canvas, Size size, MakhrajRegion region, Offset at) {
+    final on = selected?.region == region;
+    final info = makhrajRegions.firstWhere((i) => i.region == region);
+    final tp = TextPainter(
+      text: TextSpan(
+        text: info.name,
+        style: TextStyle(
+          fontSize: math.max(10.0, size.width * 0.040),
+          fontWeight: on ? FontWeight.bold : FontWeight.w600,
+          color: on
+              ? AppColors.gold
+              : (isDark ? Colors.white : const Color(0xFF44535F))
+                  .withValues(alpha: 0.75),
+        ),
+      ),
+      textDirection: TextDirection.rtl,
+    )..layout();
+    final o = Offset(at.dx * size.width, at.dy * size.height) -
+        Offset(tp.width / 2, tp.height / 2);
+    // A soft plate behind the word, so it stays legible over the grey fill.
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(o.dx - 5, o.dy - 2, tp.width + 10, tp.height + 4),
+        Radius.circular(size.width * 0.012),
+      ),
+      Paint()
+        ..color = (isDark ? Colors.black : Colors.white)
+            .withValues(alpha: on ? 0.82 : 0.62),
+    );
+    tp.paint(canvas, o);
   }
 
   @override
