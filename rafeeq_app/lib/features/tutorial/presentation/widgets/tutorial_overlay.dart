@@ -50,6 +50,25 @@ class TutorialOverlay extends ConsumerStatefulWidget {
 class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     with TickerProviderStateMixin {
   int _index = 0;
+
+  /// The stop currently **on screen**, which is not the same thing as
+  /// [_index], the stop being moved to.
+  ///
+  /// «في فليكر في التوتوريال في كل شاشة». Advancing used to rebuild the bubble
+  /// with the new chapter immediately, while the new target had not been
+  /// measured yet — so the reader got a frame with the old bubble gone and the
+  /// new one not yet placed, then the entrance animation, and then the *same*
+  /// entrance animation again once the measurement landed and the bubble moved
+  /// from the centred branch to the positioned one (a different parent
+  /// re-creates the `TweenAnimationBuilder`, key or no key). Recorded at 30 fps
+  /// on the owner's Honor: mean frame brightness sat at 97, dropped to 59 in a
+  /// single frame, climbed back over seven frames, and then did the whole thing
+  /// a second time.
+  ///
+  /// So the stop on screen changes **once**, in the same `setState` that plants
+  /// the measured spotlight. Until then the previous stop simply stays up.
+  int _shown = 0;
+
   bool _closing = false;
 
   /// Where the spotlight is now. Null on stops that have nothing to point at.
@@ -108,7 +127,9 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
           _finish();
           return;
         }
-        setState(() => _index = to);
+        // No `setState`: a skipped stop must not repaint anything. The bubble
+        // on screen stays where it is until the next *shown* stop is measured.
+        _index = to;
         _enter(to);
         return;
       }
@@ -116,6 +137,8 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       setState(() {
         _from = _spot;
         _spot = next;
+        // The one place the visible stop changes — see [_shown].
+        _shown = i;
       });
       _move
         ..reset()
@@ -145,13 +168,14 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       _finish();
       return;
     }
-    setState(() => _index++);
+    // No `setState`: the stop on screen changes when the new one is measured.
+    _index++;
     _enter(_index);
   }
 
   void _prev() {
     if (_index == 0) return;
-    setState(() => _index--);
+    _index--;
     _enter(_index);
   }
 
@@ -167,7 +191,7 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final chapter = tutorialChapters[_index];
+    final chapter = tutorialChapters[_shown];
     final locale = context.locale.languageCode;
     final media = MediaQuery.of(context);
 
@@ -230,7 +254,7 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
                     ),
                   ),
                 ),
-              _bubble(context, chapter, spot, media, locale),
+              _bubble(context, chapter, spot, media, locale, _move.value),
             ],
           );
         },
@@ -242,7 +266,7 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
   /// part of the screen and above it otherwise, and its pointer follows — so
   /// it never covers the thing it is explaining.
   Widget _bubble(BuildContext context, TutorialChapter chapter, Rect? spot,
-      MediaQueryData media, String locale) {
+      MediaQueryData media, String locale, double entrance) {
     final h = media.size.height;
     final safeTop = media.padding.top + 8;
     final safeBottom = media.padding.bottom + 8;
@@ -251,35 +275,56 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     final below = spot == null || spot.center.dy < h * 0.45;
     // Each stop's bubble arrives: it rises a little, grows into place and
     // fades in, keyed by the stop so it replays on every «التالي».
-    final card = TweenAnimationBuilder<double>(
-      key: ValueKey<int>(_index),
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 460),
-      curve: Curves.easeOutBack,
-      builder: (context, v, child) => Opacity(
-        opacity: v.clamp(0.0, 1.0),
-        child: Transform.translate(
-          offset: Offset(0, (1 - v) * (below ? 28 : -28)),
-          child: Transform.scale(scale: 0.9 + 0.1 * v, child: child),
+    // The entrance rides [_move] — the controller that is reset exactly once
+    // per stop, in the same `setState` that plants the measured spotlight —
+    // rather than a keyed `TweenAnimationBuilder`.
+    //
+    // «في فليكر في التوتوريال في كل شاشة». A `TweenAnimationBuilder` replays
+    // from zero whenever its element is rebuilt from scratch, and every stop
+    // calls `onGoToTab`, which rebuilds the shell this overlay sits in. So the
+    // bubble faded in, snapped back to nothing and faded in again, twice per
+    // stop. Logging `_enter` on the owner's Honor proved the tour itself was
+    // innocent: it ran once per stop, measured once. Reading the animation out
+    // of a controller makes a rebuild recompute the same value instead of
+    // starting over.
+    final v = Curves.easeOutBack.transform((entrance / 0.5).clamp(0.0, 1.0));
+    // The bubble never reaches zero opacity. Swapping one stop's card for the
+    // next takes a single frame, and a card that starts that frame invisible
+    // reads as a blink — measured at 30 fps, mean frame brightness fell from
+    // 98 to 59 for exactly one frame on every stop. Rising from 0.62 keeps the
+    // movement (it still lifts and grows into place) without the gap.
+    final card = Opacity(
+      opacity: (0.62 + 0.38 * v).clamp(0.0, 1.0),
+      child: Transform.translate(
+        offset: Offset(0, (1 - v) * (below ? 28 : -28)),
+        child: Transform.scale(
+          scale: 0.9 + 0.1 * v,
+          child: _bubbleCard(chapter, spot, below, locale),
         ),
       ),
-      child: _bubbleCard(chapter, spot, below, locale),
     );
 
-    if (spot == null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: card,
+    // ONE tree, whatever the stop. The welcome used to be `Center(Padding(…))`
+    // and every other stop `Positioned(…)`, so the first measured stop moved
+    // the card to a different parent — and a widget that changes parent is a
+    // new element, which restarts the entrance animation however stable its
+    // key is. That second entrance is half of the flicker; the insets change,
+    // the shape does not.
+    final double topInset =
+        spot == null || !below ? 0 : math.max(safeTop, spot.bottom + gap);
+    final double bottomInset =
+        spot == null || below ? 0 : math.max(safeBottom, h - spot.top + gap);
+    final double side = spot == null ? 18 : 12;
+    return Positioned.fill(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(side, topInset, side, bottomInset),
+        child: Align(
+          alignment: spot == null
+              ? Alignment.center
+              : (below ? Alignment.topCenter : Alignment.bottomCenter),
+          child: SizedBox(width: double.infinity, child: card),
         ),
-      );
-    }
-    return Positioned(
-      left: 12,
-      right: 12,
-      top: below ? math.max(safeTop, spot.bottom + gap) : null,
-      bottom: below ? null : math.max(safeBottom, h - spot.top + gap),
-      child: card,
+      ),
     );
   }
 
@@ -287,12 +332,12 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       TutorialChapter chapter, Rect? spot, bool below, String locale) {
     return _ChapterBubble(
       chapter: chapter,
-      index: _index,
+      index: _shown,
       total: tutorialChapters.length,
       locale: locale,
-      isFirst: _index == 0,
-      isLast: _index == tutorialChapters.length - 1,
-      onPrev: _index == 0 ? null : _prev,
+      isFirst: _shown == 0,
+      isLast: _shown == tutorialChapters.length - 1,
+      onPrev: _shown == 0 ? null : _prev,
       onNext: _next,
       onSkip: _finish,
       pointerX: spot?.center.dx,
