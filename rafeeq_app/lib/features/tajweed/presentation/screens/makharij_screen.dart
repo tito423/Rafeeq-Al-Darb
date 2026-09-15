@@ -68,26 +68,39 @@ class _MakharijScreenState extends State<MakharijScreen>
             ),
           ),
           const SizedBox(height: 10),
-          Card(
-            elevation: 0,
-            color: scheme.surfaceContainerHighest.withValues(alpha: 0.45),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+          // «الحروف بعيدة عن الرسم يعني اضغط على الحرف تحت وفين وفين على ما
+          // اطلع فوق واضغط على الحرف» — so the drawing is capped at two fifths
+          // of the screen and the letters sit **directly under it**. Tapping a
+          // letter has to move something you can already see, or the diagram
+          // is just decoration you scroll past.
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.sizeOf(context).height * 0.40,
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: MakharijDiagram(
-                selected: selected,
-                onPick: _pick,
-                articulation: CurvedAnimation(
-                  parent: _articulation,
-                  curve: Curves.easeOutCubic,
+            child: Card(
+              elevation: 0,
+              color: scheme.surfaceContainerHighest.withValues(alpha: 0.45),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: MakharijDiagram(
+                  selected: selected,
+                  onPick: _pick,
+                  articulation: CurvedAnimation(
+                    parent: _articulation,
+                    curve: Curves.easeOutCubic,
+                  ),
+                  flow: _flow,
                 ),
-                flow: _flow,
               ),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 10),
+          // Every letter, in the book's order, within a thumb of the drawing.
+          _LetterStrip(selected: selected, onPick: _pick),
+          const SizedBox(height: 12),
           // The detail card grows into place rather than appearing, so the
           // list does not jump under the finger that just picked a point.
           AnimatedSize(
@@ -108,11 +121,10 @@ class _MakharijScreenState extends State<MakharijScreen>
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 8),
-          for (final info in makhrajRegions) _RegionBlock(
-            info: info,
-            selected: selected,
-            onPick: _pick,
-          ),
+          // The definitions, read out of the book. The letters themselves are
+          // up beside the drawing now, so these rows are for reading, not for
+          // reaching.
+          for (final info in makhrajRegions) _RegionDefinition(info: info),
           const SizedBox(height: 16),
           Text(
             '${'makharij.source'.tr()}: $makharijSourceLabel',
@@ -141,24 +153,18 @@ class _MakharijScreenState extends State<MakharijScreen>
   }
 }
 
-/// One general region and the specific makharij inside it.
-class _RegionBlock extends StatelessWidget {
+/// A region's name and what the book says it is. No chips: the letters live
+/// beside the drawing.
+class _RegionDefinition extends StatelessWidget {
   final MakhrajRegionInfo info;
-  final Makhraj? selected;
-  final ValueChanged<Makhraj> onPick;
 
-  const _RegionBlock({
-    required this.info,
-    required this.selected,
-    required this.onPick,
-  });
+  const _RegionDefinition({required this.info});
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final inside = makharij.where((m) => m.region == info.region).toList();
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -180,9 +186,17 @@ class _RegionBlock extends StatelessWidget {
                   fontSize: 15,
                 ),
               ),
+              const SizedBox(width: 8),
+              Text(
+                'ص${info.page}',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Text(
             info.definition,
             style: TextStyle(
@@ -191,20 +205,56 @@ class _RegionBlock extends StatelessWidget {
               color: scheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final m in inside)
-                _LetterChip(
-                  makhraj: m,
-                  on: selected?.id == m.id,
-                  onTap: () => onPick(m),
-                ),
-            ],
-          ),
         ],
+      ),
+    );
+  }
+}
+
+/// All seventeen, in the book's order, in one strip under the drawing.
+///
+/// Grouped by region with a thin gold rule between groups rather than a
+/// heading each, because a heading per group is what pushed the letters a
+/// screen away from the thing they move.
+class _LetterStrip extends StatelessWidget {
+  final Makhraj? selected;
+  final ValueChanged<Makhraj> onPick;
+
+  const _LetterStrip({required this.selected, required this.onPick});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final children = <Widget>[];
+    MakhrajRegion? last;
+    for (final m in makharij) {
+      if (last != null && m.region != last) {
+        children.add(Container(
+          width: 1.5,
+          height: 26,
+          margin: const EdgeInsets.symmetric(horizontal: 2),
+          color: AppColors.gold.withValues(alpha: 0.45),
+        ));
+      }
+      last = m.region;
+      children.add(_LetterChip(
+        makhraj: m,
+        on: selected?.id == m.id,
+        onTap: () => onPick(m),
+      ));
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Wrap(
+        spacing: 6,
+        runSpacing: 6,
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: children,
       ),
     );
   }
