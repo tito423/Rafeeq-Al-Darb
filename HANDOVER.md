@@ -7,16 +7,80 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-16 |
-| **Released** | **v3.24.2** — tag on `master` at `d7bba88`, the only release in the repo; asset `rafeeq-aldarb-3.24.2.apk`, 238,344,416 bytes |
-| **App version** | `pubspec.yaml` `3.24.2+25`; `AboutScreen.appVersion` `3.24.2` |
+| **Released** | **v3.25.0** — tag on `master` at `abd74b5`, the only release in the repo; asset `rafeeq-aldarb-3.25.0.apk`, 240,040,675 bytes. v3.24.2 and its tag were deleted, as the owner's one-release rule requires |
+| **App version** | `pubspec.yaml` `3.25.0+26`; `AboutScreen.appVersion` `3.25.0` (`about_version_test` holds the two equal) |
 | **Signing** | `scripts/sign_release.py` printed `OK: rotated` for the published APK — new key from Android 9 up, debug certificate kept below it, so every install path is an update. **Gradle signs debug on purpose — run it after every release build (trap #41).** |
-| **Verified 2026-09-16** | `flutter analyze lib test` clean · `flutter test` **238 passed** · range requests all 206 with a real content type: `hadith/hadith.zip`, four books (`tuhfat_al_atfal`, `ghayat_al_murid`, `hidayat_al_qari`, `ibn_baz_tahqiq_wal_idah`), page 3 of **all six** printings (`hafs/kfqc` SVG `image/svg+xml`; tajweed, madinah_gold, qatar, kuwait, madinah_night `image/jpeg`), two translations (`en`, `ur`) |
-| **Measured 2026-09-16** | 7 locales × **1,394** keys each (identical) · **276** books in the catalogue · **6** mushaf printings, 604 pages each · **45** Quran translation languages · `hadith.db` 109,731,840 bytes, **67,153** hadiths, **45,219** graded · release APK 239,938,275 bytes |
+| **Verified 2026-09-16 (night)** | `flutter analyze lib test` clean · `flutter test` **243 passed** · signed APK installed on `emulator-5554` and opened (`versionName=3.25.0`, `versionCode=26`, `minSdk=24`) · range requests all **206** with a real content type: `hadith/hadith.zip`, three books (`tuhfat_al_atfal`, `taysir_ahkam_at_tajwid`, `ghayat_al_murid`), page 3 of **all six** printings (`mushaf/hafs/kfqc/svg/003.svg` `image/svg+xml`; tajweed, madinah_gold, qatar, kuwait, madinah_night `image/jpeg`), two translations (`quran/translations/en.json.gz`, `ur.json.gz`) |
+| **Measured 2026-09-16 (night)** | 7 locales × **1,406** keys each (identical) · **276** books in the catalogue · **6** mushaf printings, 604 pages each · `hadith.db` 109,731,840 bytes, **67,153** hadiths, **45,219** graded · release APK 240,040,675 bytes |
 
-## STATE AS OF 2026-09-16 — night (unreleased, on `master`)
+## STATE AS OF 2026-09-16 — after midnight (v3.25.0, released)
 
-Everything below is committed and **not released**; v3.24.2 is still the
-published build. Tested on the owner's Honor BRP-NX1 (Android 16, 1224×2700)
+**Everything below is released as v3.25.0.** The tag's SHA equals `HEAD`
+(`abd74b5`), checked with `gh release view` after publishing.
+
+### What this late session did
+
+**تعليم التجويد is two levels now.** The Tuhfa lessons had existed as verified
+data since the previous session **with no screen at all**; they have one.
+
+* `tajweed_levels_screen.dart` — the way in from المزيد. مخارج الحروف at the
+  top (moved out of the level-two screen into `widgets/makharij_entry.dart`),
+  then **المستوى الأول — تحفة الأطفال** (10 lessons) and **المستوى الثاني —
+  تيسير أحكام التجويد** (23). Each card carries its own progress, read from
+  its own store, so the two counters cannot drift into each other.
+* `tuhfa_level_screen.dart` — the level itself. A Tuhfa lesson is a **list of
+  ranges**, so the body walks them in reading order and a `commentary` range
+  is set smaller and quieter under a «شرح الضبّاع» rule. The heading paragraph
+  is not repeated inside the card.
+* `data/tuhfa_lesson_text.dart` — the paragraph selection, lifted out of the
+  screen so it can be tested. `test/tuhfa_lesson_text_test.dart` (5 tests)
+  runs it over `test/fixtures/tuhfat_al_atfal.json`, which was checked this
+  session to be **byte-for-byte the text the bucket serves** (same 8 pages,
+  every paragraph identical).
+* 6 new keys + one plural block in all **7** locales (1,394 → 1,406).
+* غاية المريد has **no card**. It is the third rung of the ladder and is
+  hosted, but nothing is arranged out of it yet, and a card that opens onto
+  nothing is what §1.1 forbids.
+
+**SEEN WORKING.** On the owner's **Honor** (before he unplugged it for the
+night): the levels screen itself — مخارج الحروف, level 1 «10 دروس», level 2
+«23 درسًا». Then, on `emulator-5554`: the ten lessons with the book's own
+vowelled headings, the source line, lesson 3 opened showing the Jamzuri's
+verse with الضباع's note under it in smaller type, lesson 5 showing the same
+where the note sits below المثلين's verses in the book, «إتمام الدرس» ticking
+the lesson gold and the header moving to «أنجزت 1 من 10», and the levels
+screen then reading 1/10 against 0/23.
+
+### The one thing that is NOT verified
+
+**The Tuhfa book has never been downloaded by the app on a real phone.** The
+emulator cannot download anything hosted — see the addition to trap #13: the
+certificate this machine is served for `*.r2.dev` is issued by
+**`CN=Avast Web/Mail Shield Root`**, so Dart's TLS on the emulator cannot
+build a chain, and **level two fails identically**, which is how it was
+established to be the environment and not the new code. The lesson text was
+therefore seen by seeding the real hosted bytes into
+`app_flutter/books/text/tuhfat_al_atfal.json` through `run-as` on a **debug**
+build, with the `book_meta` row inserted by hand.
+
+The download path in `tuhfaBookProvider` is a verbatim copy of
+`tajweedBookProvider`, which has worked on the owner's phones for releases —
+but that is an argument, not a verification. **First job next session: open
+المستوى الأول on the Honor with the network on and watch it download.**
+
+### Also this session
+
+* `CLAUDE.md` trap #13 extended with the emulator finding and the exact
+  `run-as` recipe, so nobody re-derives it.
+* The Xiaomi (`BYKRKJPRC6O7FMHU`) was never connected tonight — it still holds
+  the **2026-09-15 18:02** build.
+
+
+## STATE AS OF 2026-09-16 — night (the work that went into v3.25.0)
+
+Everything below **shipped in v3.25.0**; this block was written the evening
+before, when it was still unreleased. Tested on the owner's Honor BRP-NX1
+(Android 16, 1224×2700)
 with release builds signed by `scripts/sign_release.py` and installed with
 `adb install -r`. The Xiaomi was connected but was **not** updated this
 session — it still holds the 18:02 build of 2026-09-15.
@@ -1373,9 +1437,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 02:14 — IN PROGRESS — resume here**
+**2026-09-16 02:19 — IN PROGRESS — resume here**
 
-CLAUDE.md trap 13: Avast's interception reaches the emulator too - proven by the leaf certificate it serves for *.r2.dev (Issuer: CN=Avast Web/Mail Shield Root). How to prove it is the environment, and how to seed the real file through run-as so the screen can still be seen.
+docs: handover after publishing v3.25.0. HANDOVER state block measured tonight (243 tests, 1406 keys x7, every hosted path 206, APK 240,040,675); the previous session's record kept below it rather than overwritten. NEXT_PROMPT and NEXT_SESSION_PROMPT both start from the one unverified thing: the Tuhfa download has never run on a phone.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
