@@ -331,12 +331,12 @@ class AyahAudioService {
           );
           unawaited(_player.play());
           return;
-        } catch (_) {
-          // try the next source
-        }
+        } catch (_) {} // try the next source
       }
-    } catch (_) {
-      // caller surfaces failure; never crash playback
+      // No caller shows an error, so without this a dead «استمع» is silent.
+      debugPrint('AyahAudioService: nothing played, $edition ${ayah.surahId}:${ayah.ayahNumber}');
+    } catch (e) {
+      debugPrint('AyahAudioService.play failed: $e');
     }
   }
 
