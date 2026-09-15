@@ -1385,6 +1385,20 @@
   "tajweed": {
     "title": "Aprender tajwid",
     "subtitle": "Lições em ordem, desde o início. Leia a lição e depois ouça a regra recitada onde ela realmente ocorre no Alcorão.",
+    "level_one": "Nível 1 — Tuhfat al-Atfal",
+    "level_one_sub": "O poema para iniciantes de al-Jamzuri, com um breve comentário de al-Dabba'",
+    "level_two": "Nível 2 — Taysir Ahkam at-Tajwid",
+    "level_two_sub": "Lições mais completas, e cada regra ouvida num versículo real",
+    "lessons_count": {
+      "zero": "{} lições",
+      "one": "{} lição",
+      "two": "{} lições",
+      "few": "{} lições",
+      "many": "{} lições",
+      "other": "{} lições"
+    },
+    "source_label": "Fonte",
+    "commentary": "Comentário de al-Dabba'",
     "card_subtitle": "Lições graduadas — cada regra ouvida num versículo",
     "progress": "{done} de {total} concluídas",
     "source": "Texto das lições: Taysir Ahkam at-Tajwid (nível um), via al-Maktaba al-Shamela. Recitação na riwayah de Hafs de Asim, por Muhammad Siddiq al-Minshawi (mujawwad).",

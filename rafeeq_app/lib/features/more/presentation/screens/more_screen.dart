@@ -11,7 +11,7 @@ import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../settings/presentation/widgets/focus_mode_picker.dart';
 import '../../../hajj/presentation/hajj_screen.dart';
-import '../../../tajweed/presentation/screens/tajweed_course_screen.dart';
+import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 import '../widgets/sync_account_card.dart';
@@ -90,7 +90,7 @@ class MoreScreen extends ConsumerWidget {
               subtitle: 'tajweed.card_subtitle'.tr(),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) => const TajweedCourseScreen(),
+                  builder: (_) => const TajweedLevelsScreen(),
                 ),
               ),
             ),

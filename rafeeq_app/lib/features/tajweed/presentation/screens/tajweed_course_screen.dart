@@ -29,7 +29,6 @@ import '../../../../core/widgets/arabic_text.dart';
 import '../../../library/data/book_text.dart';
 import '../../../library/data/library_api_service.dart';
 import '../../data/tajweed_course.dart';
-import 'makharij_screen.dart';
 
 /// Lessons the reader has marked done. Persisted, because a course you lose
 /// your place in is a course you stop.
@@ -170,7 +169,7 @@ class _Header extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('tajweed.subtitle'.tr(),
+          Text('tajweed.level_two_sub'.tr(),
               style: theme.textTheme.bodyMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
           const SizedBox(height: 12),
@@ -189,11 +188,6 @@ class _Header extends StatelessWidget {
             style: theme.textTheme.labelSmall
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
-          const SizedBox(height: 14),
-          // مخارج الحروف sits above the lessons on purpose: it is where the
-          // mouth is learnt, and every rule below it is about what that mouth
-          // then does. Its own source is named on its own screen.
-          _MakharijEntry(),
           const SizedBox(height: 14),
           // Where every word of the lesson comes from. §1.2: the source is
           // named where the content is read, not buried on another screen.
@@ -543,59 +537,6 @@ class _ListenCardState extends ConsumerState<_ListenCard>
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// The way into «مخارج الحروف» from the course.
-class _MakharijEntry extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const MakharijScreen()),
-      ),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.gold.withValues(alpha: 0.55)),
-          color: AppColors.gold.withValues(alpha: 0.08),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.record_voice_over_rounded,
-                color: AppColors.gold, size: 26),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'makharij.title'.tr(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'makharij.entry_sub'.tr(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      height: 1.6,
-                      color: scheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
-          ],
-        ),
       ),
     );
   }
