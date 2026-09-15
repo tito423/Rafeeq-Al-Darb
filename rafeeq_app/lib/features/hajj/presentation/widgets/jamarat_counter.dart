@@ -60,7 +60,13 @@ class _JamaratCounterState extends State<JamaratCounter>
       return;
     }
     _throw.forward(from: 0).whenComplete(() {
-      if (mounted) setState(() => _thrown[i]++);
+      // Reset with the count, or the pebble stays drawn on the pillar.
+      if (mounted) {
+        setState(() {
+          _thrown[i]++;
+          _throw.reset();
+        });
+      }
     });
   }
 

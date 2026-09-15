@@ -1307,9 +1307,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-15 18:35 — IN PROGRESS — resume here**
+**2026-09-15 18:39 — IN PROGRESS — resume here**
 
-docs: HANDOVER state for the evening (what was seen on the owner's phones vs built only), NEXT_PROMPT rewritten to resume from phone verification of ayah downloads, hajj counters, full tour, quote reminder, tajweed listen
+hajj counters: reset the animation with the count - seen on the owner's Honor that sa'i drew the marker back at as-Safa after pass 1 (value left at 1.0 = end of the NEXT pass); same flaw drew tawaf's full trail on the next ring and left the jamarat pebble on the pillar. Tawaf seen correct otherwise (anticlockwise from the Black Stone, 1/7 -> 2/7). analyze clean, 221 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

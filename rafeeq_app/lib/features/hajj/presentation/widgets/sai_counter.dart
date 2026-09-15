@@ -42,7 +42,15 @@ class _SaiCounterState extends State<SaiCounter>
       return;
     }
     _walk.forward(from: 0).whenComplete(() {
-      if (mounted) setState(() => _done++);
+      // Reset with the count. Seen on the owner's Honor: left at 1.0, the
+      // marker was drawn at the END of the next pass — back at as-Safa after
+      // the first pass had ended at al-Marwah.
+      if (mounted) {
+        setState(() {
+          _done++;
+          _walk.reset();
+        });
+      }
     });
   }
 

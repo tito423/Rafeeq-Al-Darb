@@ -45,7 +45,14 @@ class _TawafCounterState extends State<TawafCounter>
       return;
     }
     _walk.forward(from: 0).whenComplete(() {
-      if (mounted) setState(() => _done++);
+      // Reset with the count: left at 1.0, the next frame drew the finished
+      // circuit's full trail on the NEXT ring, as if it too were walked.
+      if (mounted) {
+        setState(() {
+          _done++;
+          _walk.reset();
+        });
+      }
     });
   }
 
