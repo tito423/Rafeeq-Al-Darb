@@ -73,15 +73,17 @@ void main() {
   test('a channel with no mirrored photo says so, and none is invented', () {
     final data =
         File('lib/features/channels/data/islamic_channels.dart').readAsStringSync();
-    // The five whose avatar is YouTube's generated letter tile. They must
+    // The four whose avatar is YouTube's generated letter tile. They must
     // stay marked, or the grid fetches a mirror that was never uploaded and
     // falls back to an error widget instead of the channel's own mark.
+    //
+    // There were five: «م. أيمن عبد الرحيم» was removed at the owner's
+    // request («امسح قناة ايمن عبدالرحيم»).
     for (final id in const [
       'hassan_elhusseiny',
       'amgad_samir',
       'haytham_talaat',
       'fahem',
-      'ayman_abdelraheem',
     ]) {
       final from = data.indexOf("id: '$id'");
       expect(from, greaterThan(0), reason: '$id is no longer in the list');

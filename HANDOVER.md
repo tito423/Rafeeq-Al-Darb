@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 15:02 — IN PROGRESS — resume here**
+**2026-09-16 15:33 — IN PROGRESS — resume here**
 
-level three seen on a device: the ladder shows it as 30 lessons, the screen lists them with the book's own page spans, and lesson 5 opens on Attiyah Qabil Nasr's own definition of the isti'adha. The heading no longer stutters under the card title - the emulator showed «مدخل / الاستعاذة» under a card called الاستعاذة
+Ayman Abdel Raheem's channel removed as asked, and the app RUNS ON ANDROID 7.0 - the signed release APK installed on an api24 AVD (so the old key's v1/v2 path works), onboarding, home, Quran and the Library all render, and logcat shows no E/flutter and no FATAL. Screen sizes swept 320dp to 800dp: the seven nav labels fit at 320. COMPATIBILITY.md records what was run and what was not
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

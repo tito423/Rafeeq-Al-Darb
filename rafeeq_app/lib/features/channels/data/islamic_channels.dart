@@ -319,16 +319,6 @@ const islamicChannels = <IslamicChannel>[
     icon: Icons.psychology,
     color: Color(0xFF4527A0),
   ),
-  IslamicChannel(
-    id: 'ayman_abdelraheem',
-    nameAr: 'م. أيمن عبد الرحيم',
-    nameEn: 'Ayman Abd El Raheem',
-    channelId: 'UCCIBiaKWLOhqqycYoJiOa_Q',
-    handle: 'AymanAbdelRaheem',
-    icon: Icons.volunteer_activism,
-    color: Color(0xFF283593),
-    hasPhoto: false,
-  ),
   // Shipped as `@waikishow`, a 404. `@waei` resolves but to a channel called
   // "Will" — a different channel entirely, which is why a handle that merely
   // *loads* is not evidence. This is the one whose own title is «وعي».
