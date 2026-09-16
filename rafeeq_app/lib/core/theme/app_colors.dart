@@ -46,3 +46,34 @@ abstract final class AppColors {
   static const Color ayahHighlight = Color(0x5D16A085);
   static const Color ayahHighlightPlaying = Color(0x5DD4AF37);
 }
+
+/// Gold that keeps its contrast on whatever theme is on.
+///
+/// [AppColors.gold] is a night-mode colour. Used as TEXT or an icon over a
+/// light theme it measures **2.10 : 1** against white and **1.90 : 1** against
+/// the About hero's pale ground, where the floor is 4.5 : 1 — which is the
+/// owner's «الوان الكتابة والخطوط مش بتبقى واضحة في الثيم النهاري», as a
+/// number. [AppColors.goldSoft] is worse: 1.62 : 1.
+///
+/// Blending the gold halfway into the scheme's own `onSurface` gives a colour
+/// that is still read as gold and is legible on both:
+///
+/// | ground                    | result   | contrast |
+/// |---------------------------|----------|----------|
+/// | light, white surface      | #736A2A  | 5.49 : 1 |
+/// | light, scaffold #F6F8F7   | #736A2A  | 5.15 : 1 |
+/// | light, About hero pale    | #736A2A  | 4.91 : 1 |
+/// | dark, nightSurface        | #E3D296  | 9.87 : 1 |
+/// | rgb, #0A0E1A              | #E3D296  | 12.6 : 1 |
+///
+/// Measured, not judged by eye — trap #15 in `CLAUDE.md` is exactly this
+/// mistake made once already.
+///
+/// Use it for gold **text, icons and hairlines drawn on a theme surface**.
+/// Do NOT use it on a surface that is dark in every theme (the mushaf's own
+/// night pages, the splash, a hero panel with its own fixed dark gradient):
+/// there the flat [AppColors.gold] is correct and this would dull it.
+Color goldOn(ColorScheme scheme) => Color.alphaBlend(
+      AppColors.gold.withValues(alpha: 0.50),
+      scheme.onSurface,
+    );

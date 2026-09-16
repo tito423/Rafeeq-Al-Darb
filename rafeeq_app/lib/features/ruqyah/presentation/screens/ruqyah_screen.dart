@@ -9,22 +9,11 @@ import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../downloads/data/reciters_provider.dart';
 import '../../../quran/presentation/widgets/ayah_sciences/sciences_header.dart';
 import '../../data/ruqyah_catalog.dart';
 import 'ruqyah_audio_screen.dart';
 
-/// Gold that belongs to whichever theme is on.
-///
-/// A fixed `AppColors.goldSoft` is a bright cream: it reads on the navy
-/// themes and all but disappears on the light ones, which is what the owner
-/// saw - «ثيم الرقية الشرعية في الثيم النهاري مش متوافق». Blending the gold
-/// toward the scheme's own `onSurface` keeps it recognisably gold in the dark
-/// and pulls it to a readable bronze in the light - the same formula
-/// `IslamicPatternPanel` already uses for exactly this reason.
-Color ruqyahAccent(ColorScheme scheme) => Color.alphaBlend(
-      AppColors.gold.withValues(alpha: 0.55),
-      scheme.onSurface,
-    );
 
 /// Everything the ruqyah is made of, assembled from sources already in the app.
 ///
@@ -71,6 +60,10 @@ class _RuqyahScreenState extends ConsumerState<RuqyahScreen> {
     await audio.playQueue(
       ayahs,
       repo,
+      // The reciter the chip beside the button shows. Without this the queue
+      // ran on playQueue's default whatever the chip said, which would make
+      // the chooser a label rather than a control.
+      edition: ref.read(selectedReciterProvider),
       titleFor: (a, i) => 'ruqyah.title'.tr(),
       onIndex: (i) {
         if (mounted) setState(() => _playingIndex = i);
@@ -87,7 +80,7 @@ class _RuqyahScreenState extends ConsumerState<RuqyahScreen> {
   Widget build(BuildContext context) {
     final data = ref.watch(_ruqyahContentProvider);
     final scheme = Theme.of(context).colorScheme;
-    final accent = ruqyahAccent(scheme);
+    final accent = goldOn(scheme);
 
     return Scaffold(
       // No headphones action here: it opened exactly the screen the
@@ -213,7 +206,7 @@ class _GroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final accent = ruqyahAccent(scheme);
+    final accent = goldOn(scheme);
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
       child: DecoratedBox(
@@ -313,7 +306,7 @@ class _AyahLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final accent = ruqyahAccent(scheme);
+    final accent = goldOn(scheme);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 260),
       margin: const EdgeInsets.only(bottom: 8),
@@ -411,7 +404,7 @@ class _SectionTitle extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            color: ruqyahAccent(Theme.of(context).colorScheme),
+            color: goldOn(Theme.of(context).colorScheme),
             fontSize: 17,
             fontWeight: FontWeight.w800,
           ),

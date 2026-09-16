@@ -630,8 +630,6 @@
     "perm_autostart_desc": "Some phone makers (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) run their own background-app manager beyond battery settings — allow this app there so the Adhan doesn't get killed",
     "splash_video": "Splash video",
     "splash_video_desc": "Play the intro video when the app opens",
-    "splash_video_sound": "Splash video sound",
-    "splash_video_sound_desc": "Play the intro video with sound or muted",
     "non_arabic_reading_title": "Reading Options for Non-Arabs",
     "non_arabic_reading_desc": "Assistance tools to facilitate correct pronunciation and reading",
     "show_transliteration": "Show Transliteration",

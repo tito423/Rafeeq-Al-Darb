@@ -1,4 +1,7 @@
 import 'dart:async';
+// easy_localization re-exports package:intl, whose TextDirection collides
+// with the dart:ui enum the caption below needs.
+import 'dart:ui' as ui;
 import '../../../../core/services/notification_router.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -25,8 +28,8 @@ import '../../data/splash_video_provider.dart';
 /// seamless continuation of the native launch icon rather than a second,
 /// different branded screen. The video itself (`assets/branding/
 /// splash_intro.mp4`, the owner's AI-generated intro with the Gemini
-/// watermark removed) plays once, and a tap skips it. Whether it plays with
-/// sound is a Settings switch (`splashVideoSoundProvider`, default on).
+/// watermark removed) plays once, and a tap skips it. It is SILENT - see
+/// [_Wordmark] for why the clip was cut and re-captioned.
 ///
 /// P3‑50: the notification/location permission prompts are requested **after**
 /// this splash finishes (see [_proceed]), not from `main()` — so they no
@@ -42,11 +45,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     with WidgetsBindingObserver {
   bool _navigated = false;
   VideoPlayerController? _video;
-
-  /// Read once in [initState] rather than watched: the splash lasts one
-  /// playthrough, and re-reading it mid-play would let a Settings change from
-  /// another isolate mute a video that is already running.
-  bool _videoSound = true;
 
   /// Set when the app was cold-started by tapping a notification. The splash
   /// is then skipped outright — the owner asked for exactly that: «خلي أول
@@ -67,7 +65,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final reduceMotion = WidgetsBinding
         .instance.platformDispatcher.accessibilityFeatures.disableAnimations;
     final motionOn = ref.read(motionEffectsProvider) && !reduceMotion;
-    _videoSound = ref.read(splashVideoSoundProvider);
     if (motionOn && shouldPlayVideo) {
       _initVideo();
     } else {
@@ -107,9 +104,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     try {
       final c = VideoPlayerController.asset('assets/branding/splash_intro.mp4');
       await c.initialize();
-      // P3-57: the owner's setting — the intro can play silently without
-      // losing the visual. Volume, not a skipped video.
-      await c.setVolume(_videoSound ? 1.0 : 0.0);
+      // The intro is SILENT: its own soundtrack said «قرآني» wrongly and
+      // the owner's instruction was «خليه يقرا قراني صح او سيل الصوت خالص» —
+      // a voice cannot be re-recorded here, so the track was removed from the
+      // asset itself. Muted here as well, belt and braces, so a clip with a
+      // track could never start speaking unnoticed.
+      await c.setVolume(0);
       await c.setLooping(false);
       if (!mounted) {
         await c.dispose();
@@ -236,6 +236,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     super.dispose();
   }
 
+  /// How far into its fade the wordmark is, 0 → 1.
+  ///
+  /// The source clip faded its own text in over its last ~1.5 s and this
+  /// reproduces that, driven by the video's real position rather than a timer
+  /// that could drift away from it.
+  double get _captionT {
+    final v = _video;
+    if (v == null || !v.value.isInitialized) return 0;
+    final total = v.value.duration.inMilliseconds;
+    if (total <= 0) return 0;
+    final pos = v.value.position.inMilliseconds;
+    const fade = 1500;
+    final start = total - fade;
+    if (pos <= start) return 0;
+    return ((pos - start) / fade).clamp(0.0, 1.0);
+  }
+
   @override
   Widget build(BuildContext context) {
     final video = _video;
@@ -262,10 +279,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             ? SizedBox.expand(
                 child: FittedBox(
                   fit: BoxFit.cover,
+                  // The wordmark sits INSIDE the video's own coordinate space,
+                  // not on the screen: the video is drawn with BoxFit.cover, so
+                  // a caption positioned against the screen would drift away
+                  // from the icon on every other aspect ratio. In here it is
+                  // scaled and cropped with the artwork, exactly as the burnt-in
+                  // text was.
                   child: SizedBox(
                     width: video.value.size.width,
                     height: video.value.size.height,
-                    child: VideoPlayer(video),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        VideoPlayer(video),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          top: video.value.size.height * 0.60,
+                          child: _Wordmark(progress: _captionT),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -281,6 +315,71 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   height: 184,
                 ),
               ),
+      ),
+    );
+  }
+}
+
+/// «قُرْآنِي رَفِيقُ دَرْبِي» — the wordmark the intro ends on.
+///
+/// The clip the owner supplied burned these two lines in itself, with the
+/// tashkeel wrong on both words of the name («قَرْأَنْي … دُرَبِّي») and «الى»
+/// for «إلى» underneath. Pixels cannot be re-pointed: `delogo` over the band
+/// left a smeared rectangle where the clouds lost their detail, which is worse
+/// than the mistake. So the clip is cut at 7 s — the icon is settled and the
+/// band below it is clean sky — and the app draws the line itself, in
+/// AmiriQuran, which sets Arabic vowel marks properly.
+///
+/// Sizes and positions were measured off the original frames: the title band
+/// sat at y 787-903 of 1280 and the subtitle at y 930-975, both centred.
+class _Wordmark extends StatelessWidget {
+  /// 0 → 1 across the fade.
+  final double progress;
+
+  const _Wordmark({required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    if (progress <= 0) return const SizedBox.shrink();
+    return Opacity(
+      opacity: progress.clamp(0.0, 1.0),
+      child: Transform.translate(
+        offset: Offset(0, 14 * (1 - progress)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'قُرْآنِي رَفِيقُ دَرْبِي',
+              textAlign: TextAlign.center,
+              textDirection: ui.TextDirection.rtl,
+              style: TextStyle(
+                fontFamily: 'AmiriQuran',
+                fontSize: 74,
+                height: 1.5,
+                color: AppColors.goldSoft,
+                shadows: [
+                  Shadow(
+                    color: AppColors.gold.withValues(alpha: 0.55),
+                    blurRadius: 26,
+                  ),
+                  const Shadow(color: Colors.black54, blurRadius: 10),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'رفيق المسلم في رحلته إلى الجنة',
+              textAlign: TextAlign.center,
+              textDirection: ui.TextDirection.rtl,
+              style: const TextStyle(
+                fontSize: 30,
+                height: 1.5,
+                color: Colors.white,
+                shadows: [Shadow(color: Colors.black54, blurRadius: 8)],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -630,8 +630,6 @@
     "perm_autostart_desc": "Некоторые производители (Xiaomi, Honor, Huawei, Oppo, Vivo, OnePlus) отдельно управляют фоновыми приложениями помимо настроек батареи — разрешите это приложение там, чтобы азан не отключался",
     "splash_video": "Заставка-видео",
     "splash_video_desc": "Показывать вступительное видео при запуске",
-    "splash_video_sound": "Звук заставки",
-    "splash_video_sound_desc": "Воспроизводить вступительное видео со звуком или без",
     "non_arabic_reading_title": "Параметры чтения для неарабоязычных",
     "non_arabic_reading_desc": "Инструменты для облегчения правильного чтения и произношения",
     "show_transliteration": "Показывать транслитерацию (Show Transliteration)",

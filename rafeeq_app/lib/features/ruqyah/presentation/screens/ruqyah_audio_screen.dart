@@ -12,7 +12,6 @@ import '../../../quran_audio/data/quran_audio_player.dart';
 import '../../../quran_audio/presentation/player_screen.dart';
 import '../../../quran_audio/presentation/widgets/mini_player.dart';
 import '../../data/ruqyah_catalog.dart';
-import 'ruqyah_screen.dart';
 
 /// Five recorded ruqyahs, listenable and downloadable.
 ///
@@ -123,7 +122,7 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
                 child: Row(
                   children: [
                     Icon(Icons.healing_outlined,
-                        color: ruqyahAccent(Theme.of(context).colorScheme),
+                        color: goldOn(Theme.of(context).colorScheme),
                         size: 30),
                     const SizedBox(width: 12),
                     Expanded(
@@ -214,7 +213,7 @@ class _RecordingCard extends StatelessWidget {
     final offline = downloadedPath != null;
 
     final scheme = Theme.of(context).colorScheme;
-    final accent = ruqyahAccent(scheme);
+    final accent = goldOn(scheme);
     // The playing card is tinted with the theme's own primary rather than a
     // fixed bottle green, and the resting one with its surfaces - on a light
     // theme the old pair was two dark slabs with light text on them.

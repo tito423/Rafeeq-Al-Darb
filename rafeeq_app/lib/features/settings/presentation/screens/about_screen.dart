@@ -212,7 +212,12 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
     ];
   }
 
-  Widget _hero(ThemeData theme, ColorScheme scheme) => Container(
+  Widget _hero(ThemeData theme, ColorScheme scheme) {
+    // Measured, not judged: flat gold on this card's pale ground is 1.90 : 1.
+    // `goldOn` blends it into the scheme's own ink and lands at 4.91 : 1 here
+    // while staying 9.87 : 1 on the night themes.
+    final accent = goldOn(scheme);
+    return Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         decoration: BoxDecoration(
@@ -224,7 +229,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
                 ? [const Color(0xFF0B2A26), const Color(0xFF071625)]
                 : [const Color(0xFFE8F5F1), const Color(0xFFF7F3E8)],
           ),
-          border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
+          border: Border.all(color: accent.withValues(alpha: 0.45)),
         ),
         child: Column(
           children: [
@@ -238,12 +243,10 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
                 height: 84,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.gold.withValues(alpha: 0.12),
-                  border:
-                      Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
+                  color: accent.withValues(alpha: 0.12),
+                  border: Border.all(color: accent.withValues(alpha: 0.55)),
                 ),
-                child: const Icon(Icons.mosque_rounded,
-                    size: 42, color: AppColors.gold),
+                child: Icon(Icons.mosque_rounded, size: 42, color: accent),
               ),
             ),
             const SizedBox(height: 16),
@@ -257,13 +260,13 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
               padding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.gold.withValues(alpha: 0.14),
+                color: accent.withValues(alpha: 0.14),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 'v${AboutScreen.appVersion}',
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: AppColors.gold,
+                  color: accent,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -284,10 +287,10 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
                   shaderCallback: (rect) => LinearGradient(
                     begin: Alignment(-1 + 3 * t, 0),
                     end: Alignment(-0.4 + 3 * t, 0),
-                    colors: const [
-                      AppColors.gold,
-                      Color(0xFFFFF3C4),
-                      AppColors.gold,
+                    colors: [
+                      accent,
+                      Color.lerp(accent, scheme.onSurface, 0.35)!,
+                      accent,
                     ],
                   ).createShader(rect),
                   child: Text(
@@ -308,9 +311,9 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
-                    AppColors.gold.withValues(alpha: 0),
-                    AppColors.gold,
-                    AppColors.gold.withValues(alpha: 0),
+                    accent.withValues(alpha: 0),
+                    accent,
+                    accent.withValues(alpha: 0),
                   ]),
                 ),
               ),
@@ -318,6 +321,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
           ],
         ),
       );
+  }
 
   Widget _card(ColorScheme scheme, {required Widget child}) => Container(
         width: double.infinity,
@@ -325,7 +329,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
         decoration: BoxDecoration(
           color: scheme.surfaceContainerHighest.withValues(alpha: 0.35),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.gold.withValues(alpha: 0.18)),
+          border: Border.all(color: goldOn(scheme).withValues(alpha: 0.28)),
         ),
         child: child,
       );
@@ -375,11 +379,11 @@ class _DuaCardState extends State<_DuaCard>
               height: 54,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.gold
+                color: goldOn(theme.colorScheme)
                     .withValues(alpha: 0.10 + 0.10 * _glow.value),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.gold
+                    color: goldOn(theme.colorScheme)
                         .withValues(alpha: 0.14 + 0.18 * _glow.value),
                     blurRadius: 20 + 12 * _glow.value,
                     spreadRadius: 1,
@@ -388,8 +392,8 @@ class _DuaCardState extends State<_DuaCard>
               ),
               child: child,
             ),
-            child: const Icon(Icons.volunteer_activism_rounded,
-                size: 26, color: AppColors.gold),
+            child: Icon(Icons.volunteer_activism_rounded,
+                size: 26, color: goldOn(theme.colorScheme)),
           ),
           const SizedBox(height: 14),
           _rule(),
@@ -401,7 +405,9 @@ class _DuaCardState extends State<_DuaCard>
               fontFamily: 'AmiriQuran',
               height: 2.1,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              // Was Colors.white — invisible on the light theme, because
+              // IslamicPatternPanel follows the scheme and the text did not.
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 14),
@@ -485,9 +491,9 @@ class _FeatureRow extends StatelessWidget {
             height: 38,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(11),
-              color: AppColors.gold.withValues(alpha: 0.12),
+              color: goldOn(scheme).withValues(alpha: 0.12),
             ),
-            child: Icon(icon, size: 20, color: AppColors.gold),
+            child: Icon(icon, size: 20, color: goldOn(scheme)),
           ),
           const SizedBox(width: 12),
           Expanded(

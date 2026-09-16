@@ -35,7 +35,6 @@ class SettingsBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeVariant = ref.watch(themeControllerProvider);
     final splashVideo = ref.watch(splashVideoEnabledProvider);
-    final splashSound = ref.watch(splashVideoSoundProvider);
     final scheme = Theme.of(context).colorScheme;
 
     return Column(
@@ -116,8 +115,7 @@ class SettingsBody extends ConsumerWidget {
             title: 'settings.splash_section'.tr(),
             children: [
             // P3‑49: the AI-generated splash video is back on by default; keep
-            // a toggle for anyone who prefers a faster cold start. P3‑57 adds
-            // the owner's sound switch underneath it.
+            // a toggle for anyone who prefers a faster cold start.
             Card(
               child: Column(
                 children: [
@@ -130,22 +128,11 @@ class SettingsBody extends ConsumerWidget {
                     onChanged: (v) =>
                         ref.read(splashVideoEnabledProvider.notifier).set(v),
                   ),
-                  // Only offered while the video itself is on — a sound switch
-                  // for a video that never plays would be a dead control.
-                  if (splashVideo)
-                    SwitchListTile(
-                      secondary: Icon(
-                        splashSound
-                            ? Icons.volume_up_outlined
-                            : Icons.volume_off_outlined,
-                        color: scheme.primary,
-                      ),
-                      title: Text('settings.splash_video_sound'.tr()),
-                      subtitle: Text('settings.splash_video_sound_desc'.tr()),
-                      value: splashSound,
-                      onChanged: (v) =>
-                          ref.read(splashVideoSoundProvider.notifier).set(v),
-                    ),
+                  // The sound switch that used to sit here is gone with the
+                  // intro's soundtrack: the clip is silent now (its voice
+                  // mispronounced «قرآني» and the owner said fix it or drop
+                  // it), and a switch for a sound that cannot play is a dead
+                  // control.
                 ],
               ),
             ),
