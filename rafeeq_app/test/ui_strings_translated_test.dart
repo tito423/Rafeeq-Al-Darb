@@ -35,6 +35,10 @@ void main() {
         'the ayah drawn in the theme preview',
     'lib/features/settings/presentation/widgets/non_arabic_reading_card.dart':
         'the ayah shown in the transliteration preview',
+    'lib/features/tajweed/presentation/screens/ghayat_level_screen.dart':
+        'the two bare section anchors Shamela puts in غاية المريد, «مدخل» and '
+            '«تمهيد», matched against the book\'s own text so a lesson does '
+            'not open on them',
     'lib/features/new_muslim/presentation/screens/new_muslim_guide_screen.dart':
         'an Arabic-only plural in a locale-aware branch',
     'lib/features/home/presentation/screens/home_screen.dart':

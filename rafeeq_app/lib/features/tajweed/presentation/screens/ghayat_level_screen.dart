@@ -204,13 +204,23 @@ class _LessonTile extends ConsumerWidget {
         ? const <GhayatPara>[]
         : ghayatLessonParas(lesson, text);
 
-    // The heading is the card's title; printing it again as the body's first
-    // line would read as a stutter. Dropped only when it really is the same
-    // heading — a near miss leaves it in rather than eating a line of the book.
-    final body = paras.isNotEmpty &&
-            ghayatBare(paras.first.text) == ghayatBare(lesson.title)
-        ? paras.sublist(1)
-        : paras;
+    // The card already carries the heading; printing it again as the body's
+    // first line reads as a stutter. Seen on the emulator: lesson 5 opened
+    // «مدخل» / «الاستعاذة» under a card titled «الاستعاذة».
+    //
+    // Only the leading run is dropped, and only paragraphs that are the title
+    // itself or one of Shamela's bare section anchors. A near miss keeps the
+    // line rather than eating a sentence of the book.
+    var skip = 0;
+    while (skip < paras.length) {
+      final b = ghayatBare(paras[skip].text);
+      if (b == ghayatBare(lesson.title) || b == 'مدخل' || b == 'تمهيد') {
+        skip++;
+      } else {
+        break;
+      }
+    }
+    final body = paras.sublist(skip);
 
     final pages = lesson.printedFrom == lesson.printedTo
         ? 'makharij.page'.tr(

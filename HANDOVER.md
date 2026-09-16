@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 14:50 — IN PROGRESS — resume here**
+**2026-09-16 15:02 — IN PROGRESS — resume here**
 
-the third level exists: 30 lessons out of غاية المريد, 3102 paragraphs, pages 9-295, cut along the author's own أسئلة blocks by a script that reads the book rather than by hand. The ranges are counted through the app's own parser - the first cut was 34 paragraphs out because BookText drops Shamela's noise lines, and the test catches exactly that drift
+level three seen on a device: the ladder shows it as 30 lessons, the screen lists them with the book's own page spans, and lesson 5 opens on Attiyah Qabil Nasr's own definition of the isti'adha. The heading no longer stutters under the card title - the emulator showed «مدخل / الاستعاذة» under a card called الاستعاذة
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
