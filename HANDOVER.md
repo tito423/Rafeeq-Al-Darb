@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 22:51 — IN PROGRESS — resume here**
+**2026-09-16 23:14 — IN PROGRESS — resume here**
 
-the support screen, written the way he asked: it says WHY - the ads were refused on purpose and that refusal costs hosting - it promises what stays free forever, and it asks once. The sheet fires from the More tab's first frame and marks itself seen before it is even shown, so a crash cannot make it ask twice; the card in More is the only way back. The donate button HIDES while AppConfig.donationUrl is empty, because a support button that opens nothing is the dead control trap 27 is about
+the tajweed ladder is all public domain now: al-Jamzuri and Ibn al-Jazari, twice. Level two is the Jazariyyah (18 chapters), level three is his own at-Tamhid (13 abwab, 1054 paragraphs, pages 39-209) - and the two modern books are gone from the app AND deleted off the bucket, both 404 now. The listen-to-the-rule card was lifted out of the retired screen first so the feature survived the removal
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

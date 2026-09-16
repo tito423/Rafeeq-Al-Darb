@@ -1389,15 +1389,16 @@
     "bg_domes": "Cúpulas"
   },
   "tajweed": {
-    "level_three": "Nivel tres — Gayat al-Murid",
-    "level_three_sub": "El libro completo: treinta lecciones, cada una cerrada con las preguntas del autor",
-    "level_three_source": "Fuente: Gāyat al-Murīd fī ʿIlm at-Taywīd, de ʿAtiyya Qābil Naṣr — al-Maktaba al-Shamela",
+    "level_three": "Nivel 3 — at-Tamhid fi ʿIlm at-Taywid",
+    "level_three_sub": "Ibn al-Yazarī explicando su propia ciencia: trece de sus capítulos",
+    "level_three_source": "Fuente: at-Tamhīd fī ʿIlm at-Taywīd, de Ibn al-Yazarī (m. 833 H) — al-Maktaba al-Shamela",
     "title": "Aprender taywid",
     "subtitle": "Lecciones en orden, desde el principio. Lee la lección y luego escucha la regla recitada donde realmente ocurre en el Corán.",
     "level_one": "Nivel 1 — Tuhfat al-Atfal",
     "level_one_sub": "El poema para principiantes de al-Yamzuri, con un breve comentario de al-Dabba'",
-    "level_two": "Nivel 2 — Taysir Ahkam at-Tayuid",
-    "level_two_sub": "Lecciones más amplias, y cada regla se escucha en una aleya real",
+    "level_two": "Nivel 2 — al-Muqaddima al-Yazariyya",
+    "level_two_source": "Fuente: al-Muqaddima al-Yazariyya, de Ibn al-Yazarī (m. 833 H) — al-Maktaba al-Shamela",
+    "level_two_sub": "El matn de Ibn al-Yazarī: dieciocho capítulos, en el orden del autor",
     "lessons_count": {
       "zero": "{} lecciones",
       "one": "{} lección",

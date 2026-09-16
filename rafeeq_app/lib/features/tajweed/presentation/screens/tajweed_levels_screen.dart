@@ -18,12 +18,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../data/ghayat_course.dart';
-import '../../data/tajweed_course.dart';
+import '../../data/jazariyyah_course.dart';
+import '../../data/tamhid_course.dart';
 import '../../data/tuhfa_course.dart';
 import '../widgets/makharij_entry.dart';
-import 'ghayat_level_screen.dart';
-import 'tajweed_course_screen.dart';
+import 'jazariyyah_level_screen.dart';
+import 'tamhid_level_screen.dart';
 import 'tuhfa_level_screen.dart';
 
 class TajweedLevelsScreen extends ConsumerWidget {
@@ -33,8 +33,8 @@ class TajweedLevelsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final tuhfaDone = ref.watch(tuhfaProgressProvider);
-    final taysirDone = ref.watch(tajweedProgressProvider);
-    final ghayatDone = ref.watch(ghayatProgressProvider);
+    final jazariyyahDone = ref.watch(jazariyyahProgressProvider);
+    final tamhidDone = ref.watch(tamhidProgressProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text('tajweed.title'.tr())),
@@ -65,31 +65,32 @@ class TajweedLevelsScreen extends ConsumerWidget {
             number: 2,
             title: 'tajweed.level_two'.tr(),
             subtitle: 'tajweed.level_two_sub'.tr(),
-            total: tajweedLessons.length,
-            done: tajweedLessons
-                .where((l) => taysirDone.contains(l.sectionTitle))
+            total: jazariyyahLessons.length,
+            done: jazariyyahLessons
+                .where((l) => jazariyyahDone.contains(l.title))
                 .length,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                  builder: (_) => const TajweedCourseScreen()),
+                  builder: (_) => const JazariyyahLevelScreen()),
             ),
           ),
           const SizedBox(height: 12),
-          // «علم التجويد كامل في المستويين دول بس ولا في اكتر انا قلتلك قبل
-          // كدة اني عاوزه كامل» — it was not. The ladder always named a third
-          // level and had nothing behind it; it has thirty lessons now, cut
-          // along the author's own «أسئلة» blocks.
+          // «علم التجويد كامل في المستويين دول بس ولا في اكتر» — it was not,
+          // and when it finally was, it stood on two books still in copyright.
+          // The ladder is all Ibn al-Jazari and al-Jamzuri now: matn, matn,
+          // then the author's own commentary. Nothing in it is anyone's
+          // property.
           _LevelCard(
             number: 3,
             title: 'tajweed.level_three'.tr(),
             subtitle: 'tajweed.level_three_sub'.tr(),
-            total: ghayatLessons.length,
-            done: ghayatLessons
-                .where((l) => ghayatDone.contains(l.title))
+            total: tamhidLessons.length,
+            done: tamhidLessons
+                .where((l) => tamhidDone.contains(l.title))
                 .length,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                  builder: (_) => const GhayatLevelScreen()),
+                  builder: (_) => const TamhidLevelScreen()),
             ),
           ),
         ],

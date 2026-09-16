@@ -1,8 +1,8 @@
 /// Where a tajweed rule can actually be heard in the Qur'an.
 ///
-/// Lifted out of `tajweed_course.dart` so it can outlive it. That file carries
-/// the lesson ranges of «تيسير أحكام التجويد» — a book by a living author
-/// published by a commercial house — and it is being retired for that reason.
+/// Lifted out of the retired `tajweed_course.dart` so it could outlive it.
+/// That file carried the lesson ranges of «تيسير أحكام التجويد» — a book by a
+/// living author from a commercial house — and it went for that reason.
 /// These twelve pointers are not from it and never were: a surah and an ayah
 /// number are facts, the phrase is the Qur'an, and the one-line «what to listen
 /// for» is the app's own wording. Nothing here belongs to anyone but the

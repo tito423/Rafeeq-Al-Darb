@@ -1,6 +1,7 @@
 /// مخارج الحروف — the seventeen articulation points, read out of a book.
 ///
-/// WHAT IS MINE HERE AND WHAT IS NOT, exactly as in `tajweed_course.dart`:
+/// WHAT IS MINE HERE AND WHAT IS NOT — the same rule the whole tajweed
+/// feature is built on:
 /// none of the science is written by me. Every definition below is quoted
 /// **verbatim** from «غاية المريد في علم التجويد» لعطية قابل نصر (ت ١٤٢٤هـ),
 /// الطبعة السابعة مزيدة ومنقحة, from the pages named on each entry — the book

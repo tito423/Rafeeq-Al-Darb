@@ -16,8 +16,8 @@
 /// السَّاكِنَةِ», «في المِثْلَيْنِ وَالمُتَقَارِبَيْنِ وَالمُتَجَانِسَيْنِ»
 /// and «أقْسَامُ المَدِّ الَّلازِمِ» appear as ordinary paragraphs. Building
 /// the lessons from the toc would have produced seven lessons with wrong
-/// boundaries, which is exactly the mistake `tajweed_course.dart` records
-/// having made once already. These ranges were read off the paragraphs.
+/// boundaries — the mistake the retired Taysir course recorded having made
+/// once already. These ranges were read off the paragraphs.
 ///
 /// **Its commentary does not follow its own verses.** الضباع's notes sit at
 /// the FOOT of each page, so «حكم لام أل»'s explanation is the last paragraph

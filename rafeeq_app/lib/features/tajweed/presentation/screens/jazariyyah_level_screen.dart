@@ -7,26 +7,27 @@ import '../../../../core/config/app_config.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../library/data/book_text.dart';
 import '../../../library/data/library_api_service.dart';
-import '../../data/ghayat_course.dart';
-import '../../data/ghayat_lesson_text.dart';
+import '../../data/jazariyyah_course.dart';
+import '../../data/jazariyyah_examples.dart';
+import '../../data/jazariyyah_lesson_text.dart';
+import '../widgets/listen_card.dart';
 
-/// المستوى الثالث — «غاية المريد في علم التجويد» لعطية قابل نصر.
+/// المستوى الثاني — «المقدمة الجزرية» لابن الجزري (ت ٨٣٣ هـ).
 ///
-/// «اعمل المستوى التالت باحترافية». The level had been listed as a plan for
-/// months with no lessons behind it, because the book is 374 pages against
-/// تحفة الأطفال's eight and nobody had cut it into anything.
+/// The level this replaced read «تيسير أحكام التجويد», a 2006 book by a living
+/// author from a commercial house. «انا مش عاوز في التطبيق اي مشكلة لحقوق
+/// الملكية نهائيا» — so the ladder climbs the classical way now: التحفة, then
+/// الجزرية, then التمهيد. Six hundred years is a comfortable margin.
 ///
-/// It is cut now, by `scripts/build_ghayat_course.py`, and the cut is the
-/// author's own: the book's table of contents has 177 entries and every topic
-/// block in it closes with his «أسئلة». A lesson here is one of those blocks —
-/// thirty of them, 3,102 paragraphs, pages 9 to 295. Not one word is written
-/// by this app.
-class GhayatProgress extends StateNotifier<Set<String>> {
-  GhayatProgress() : super({}) {
+/// The lessons are `jazariyyah_course.dart`, generated from the book; the
+/// editor's apparatus is excluded there and his footnotes are dropped again at
+/// render time by `jazariyyahLessonParas`.
+class JazariyyahProgress extends StateNotifier<Set<String>> {
+  JazariyyahProgress() : super({}) {
     _load();
   }
 
-  static const _key = 'ghayat_done_v1';
+  static const _key = 'jazariyyah_done_v1';
 
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -42,40 +43,40 @@ class GhayatProgress extends StateNotifier<Set<String>> {
   }
 }
 
-final ghayatProgressProvider =
-    StateNotifierProvider<GhayatProgress, Set<String>>((ref) => GhayatProgress());
+final jazariyyahProgressProvider =
+    StateNotifierProvider<JazariyyahProgress, Set<String>>((ref) => JazariyyahProgress());
 
 /// The book, downloaded on first use and then read from disk — the same
 /// contract `tuhfaBookProvider` has, including why the error is logged rather
 /// than only turned into «يلزم تنزيل نصّ الدروس».
-final ghayatBookProvider = FutureProvider<BookText?>((ref) async {
+final jazariyyahBookProvider = FutureProvider<BookText?>((ref) async {
   try {
     final api = LibraryApiService.instance;
-    if (!await api.isBookDownloaded(ghayatBook)) {
+    if (!await api.isBookDownloaded(jazariyyahBook)) {
       await api.downloadBook(
-        ghayatBook,
-        '${AppConfig.contentBaseUrl}/books/text/$ghayatBook.json',
+        jazariyyahBook,
+        '${AppConfig.contentBaseUrl}/books/text/$jazariyyahBook.json',
       );
     }
-    return BookText.fromFile(await api.bookFilePath(ghayatBook));
+    return BookText.fromFile(await api.bookFilePath(jazariyyahBook));
   } catch (e, st) {
-    debugPrint('ghayatBookProvider failed: $e\n$st');
+    debugPrint('jazariyyahBookProvider failed: $e\n$st');
     rethrow;
   }
 });
 
-class GhayatLevelScreen extends ConsumerWidget {
-  const GhayatLevelScreen({super.key});
+class JazariyyahLevelScreen extends ConsumerWidget {
+  const JazariyyahLevelScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final book = ref.watch(ghayatBookProvider);
-    final done = ref.watch(ghayatProgressProvider);
+    final book = ref.watch(jazariyyahBookProvider);
+    final done = ref.watch(jazariyyahProgressProvider);
     final theme = Theme.of(context);
     final locale = context.locale.languageCode;
 
     return Scaffold(
-      appBar: AppBar(title: Text('tajweed.level_three'.tr())),
+      appBar: AppBar(title: Text('tajweed.level_two'.tr())),
       body: book.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, _) => Center(
@@ -88,7 +89,7 @@ class GhayatLevelScreen extends ConsumerWidget {
                     textAlign: TextAlign.center),
                 const SizedBox(height: 12),
                 FilledButton.icon(
-                  onPressed: () => ref.invalidate(ghayatBookProvider),
+                  onPressed: () => ref.invalidate(jazariyyahBookProvider),
                   icon: const Icon(Icons.refresh_rounded),
                   label: Text('common.retry'.tr()),
                 ),
@@ -98,20 +99,20 @@ class GhayatLevelScreen extends ConsumerWidget {
         ),
         data: (text) => ListView.builder(
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 24),
-          itemCount: ghayatLessons.length + 1,
+          itemCount: jazariyyahLessons.length + 1,
           itemBuilder: (context, i) {
             if (i == 0) {
               return _Header(
                 // Only ticks that still belong to a lesson, so a renamed
                 // section can never make this read «31 من 30».
-                done: ghayatLessons.where((l) => done.contains(l.title)).length,
-                total: ghayatLessons.length,
+                done: jazariyyahLessons.where((l) => done.contains(l.title)).length,
+                total: jazariyyahLessons.length,
                 theme: theme,
                 locale: locale,
               );
             }
             final index = i - 1;
-            final lesson = ghayatLessons[index];
+            final lesson = jazariyyahLessons[index];
             return _LessonTile(
               index: index,
               lesson: lesson,
@@ -146,11 +147,11 @@ class _Header extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('tajweed.level_three_sub'.tr(),
+          Text('tajweed.level_two_sub'.tr(),
               style: theme.textTheme.bodyMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
           const SizedBox(height: 10),
-          Text('tajweed.level_three_source'.tr(),
+          Text('tajweed.level_two_source'.tr(),
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
           const SizedBox(height: 12),
@@ -182,7 +183,7 @@ class _Header extends StatelessWidget {
 /// to open folded.
 class _LessonTile extends ConsumerWidget {
   final int index;
-  final GhayatLesson lesson;
+  final JazariyyahLesson lesson;
   final bool done;
   final BookText? book;
   final String locale;
@@ -201,8 +202,8 @@ class _LessonTile extends ConsumerWidget {
     final scheme = theme.colorScheme;
     final text = book;
     final paras = text == null
-        ? const <GhayatPara>[]
-        : ghayatLessonParas(lesson, text);
+        ? const <JazariyyahPara>[]
+        : jazariyyahLessonParas(lesson, text);
 
     // The card already carries the heading; printing it again as the body's
     // first line reads as a stutter. Seen on the emulator: lesson 5 opened
@@ -213,8 +214,8 @@ class _LessonTile extends ConsumerWidget {
     // line rather than eating a sentence of the book.
     var skip = 0;
     while (skip < paras.length) {
-      final b = ghayatBare(paras[skip].text);
-      if (b == ghayatBare(lesson.title) || b == 'مدخل' || b == 'تمهيد') {
+      final b = jazariyyahBare(paras[skip].text);
+      if (b == jazariyyahBare(lesson.title) || b == 'مدخل' || b == 'تمهيد') {
         skip++;
       } else {
         break;
@@ -266,11 +267,19 @@ class _LessonTile extends ConsumerWidget {
                 },
               ),
             ),
+          // «اسمع الحكم في آية». One chapter can hold several rules here —
+          // الجزرية puts izhar, idgham, iqlab, ikhfa and the sakin mim in a
+          // single باب — so this is a list, not one card.
+          for (final e in jazariyyahExamples[lesson.title] ?? const [])
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: ListenCard(example: e),
+            ),
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: TextButton.icon(
               onPressed: () =>
-                  ref.read(ghayatProgressProvider.notifier).toggle(lesson.title),
+                  ref.read(jazariyyahProgressProvider.notifier).toggle(lesson.title),
               icon: Icon(
                 done ? Icons.check_circle : Icons.circle_outlined,
                 color: scheme.primary,

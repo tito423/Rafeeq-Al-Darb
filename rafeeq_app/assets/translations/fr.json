@@ -1389,15 +1389,16 @@
     "bg_domes": "Coupoles"
   },
   "tajweed": {
-    "level_three": "Niveau trois — Ghayat al-Murid",
-    "level_three_sub": "Le livre entier : trente leçons, chacune close par les questions de l'auteur",
-    "level_three_source": "Source : Ghāyat al-Murīd fī ʿIlm at-Tajwīd, de ʿAtiyya Qābil Naṣr — al-Maktaba al-Shamela",
+    "level_three": "Niveau 3 — at-Tamhīd fī ʿIlm at-Tajwīd",
+    "level_three_sub": "Ibn al-Jazarī expliquant sa propre science : treize de ses chapitres",
+    "level_three_source": "Source : at-Tamhīd fī ʿIlm at-Tajwīd, d'Ibn al-Jazarī (m. 833 H) — al-Maktaba al-Shamela",
     "title": "Apprendre le tajwid",
     "subtitle": "Des leçons dans l’ordre, depuis le début. Lisez la leçon, puis écoutez la règle récitée là où elle se produit réellement dans le Coran.",
     "level_one": "Niveau 1 — Tuhfat al-Atfal",
     "level_one_sub": "Le poème pour débutants d'al-Jamzuri, avec un bref commentaire d'al-Dabba'",
-    "level_two": "Niveau 2 — Taysir Ahkam at-Tajwid",
-    "level_two_sub": "Des leçons plus détaillées, et chaque règle entendue dans un vrai verset",
+    "level_two": "Niveau 2 — al-Muqaddima al-Jazariyya",
+    "level_two_source": "Source : al-Muqaddima al-Jazariyya, d'Ibn al-Jazarī (m. 833 H) — al-Maktaba al-Shamela",
+    "level_two_sub": "Le matn d'Ibn al-Jazarī : dix-huit chapitres, dans l'ordre de l'auteur",
     "lessons_count": {
       "zero": "{} leçons",
       "one": "{} leçon",

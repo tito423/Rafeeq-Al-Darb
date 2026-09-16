@@ -1389,16 +1389,17 @@
     "bg_domes": "Domes"
   },
   "tajweed": {
-    "level_three": "Level three — Ghayat al-Murid",
-    "level_three_sub": "The whole book: thirty lessons, each closing with the author's own questions",
-    "level_three_source": "Source: Ghāyat al-Murīd fī ʿIlm at-Tajwīd, by ʿAtiyyah Qābil Naṣr — al-Maktaba al-Shamela",
+    "level_three": "Level 3 — at-Tamhid fi ʿIlm at-Tajwid",
+    "level_three_sub": "Ibn al-Jazarī explaining his own science: thirteen of his chapters",
+    "level_three_source": "Source: at-Tamhīd fī ʿIlm at-Tajwīd, by Ibn al-Jazarī (d. 833 AH) — al-Maktaba al-Shamela",
     "title": "Learn Tajweed",
     "card_subtitle": "Graded lessons — and every rule heard in a real ayah",
     "subtitle": "Lessons in order, from the beginning. Read the lesson, then hear the rule recited where it actually occurs in the Quran.",
     "level_one": "Level 1 — Tuhfat al-Atfal",
     "level_one_sub": "Al-Jamzuri's poem for beginners, with a short commentary by al-Dabba'",
-    "level_two": "Level 2 — Taysir Ahkam at-Tajwid",
-    "level_two_sub": "Fuller lessons — and every rule heard in a real ayah",
+    "level_two": "Level 2 — al-Muqaddimah al-Jazariyyah",
+    "level_two_source": "Source: al-Muqaddimah fīmā ʿalā Qāriʾ al-Qurʾān an Yaʿlamahu (al-Jazariyyah), by Ibn al-Jazarī (d. 833 AH) — al-Maktaba al-Shamela",
+    "level_two_sub": "Ibn al-Jazari's matn: eighteen chapters, in the author's own order",
     "lessons_count": {
       "zero": "{} lessons",
       "one": "{} lesson",
