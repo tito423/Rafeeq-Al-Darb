@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 19:56 — IN PROGRESS — resume here**
+**2026-09-16 19:57 — IN PROGRESS — resume here**
 
-the free-licence tajweed spine is built and hosted: المقدمة الجزرية (100pp), التمهيد لابن الجزري (174pp) and التحديد للداني (112pp) - authors dead 600 and 970 years, so no copyright exists to violate. All three range-checked on the bucket. Next: cut them into lessons, write our own explanation per rule with every claim cited to these texts, and retire تيسير أحكام التجويد and غاية المريد, whose authors are modern and whose publisher is a live commercial house
+the plan of record for the free tajweed curriculum, written down before the cutting starts: which entries of the Jazariyyah are the nazim's and which are the editor's (18-35, p53 to p97), the 18 lessons they make, and the rule that every line of our own explanation carries a citation to a free text
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
