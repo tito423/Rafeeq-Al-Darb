@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 23:44 — IN PROGRESS — resume here**
+**2026-09-16 23:50 — IN PROGRESS — resume here**
 
-levels two and three were showing NO TEXT AT ALL, and I only saw it because I opened level three on the emulator. The normaliser that decides whether a paragraph is the lesson's own heading ended with RegExp(r'[^\w\s]', unicode: true) - and Dart's \w is [A-Za-z0-9_], which unicode:true does not widen - so it deleted every Arabic LETTER and returned the empty string for every input. The screens drop leading paragraphs that equal the title, every comparison was '' == '', and the whole lesson body was eaten: one 'complete the lesson' button and nothing above it. The two course tests that compare headings were passing VACUOUSLY for the same reason. Fixed both copies, added lesson_heading_bare_test.dart so a normaliser that returns nothing fails the build, and rewrote the tamhid heading test to compare for real - the book's headings are longer than our short card titles, so it asks that the lesson opens on a head paragraph of the same bab. Also gated the support sheet on the More tab actually being on screen: AppShell's IndexedStack builds every tab on the first frame, so it was opening over Home stacked on top of the welcome tour. Both fixes watched on the emulator: level three now opens on Ibn al-Jazari's own muqaddima, level two on the poem, and the sheet waits for the More tab. 272 tests pass
+v3.27.0: version bumped to 3.27.0+28 and trap 47 written down - Dart's \w is ASCII and unicode:true does not widen it, which is what emptied both heading normalisers and ate every lesson body. Release APK built and signed: sign_release.py printed OK: rotated, new key from Android 9 up and the old debug key kept below it, and it installed over the debug build with adb install -r (which is the lineage doing its job). 211 MB, down from 236 because hadith.db is no longer bundled - the hadith tab now offers the one-time 16 MB download, seen on the emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

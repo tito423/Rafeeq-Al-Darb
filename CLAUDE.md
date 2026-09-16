@@ -669,6 +669,31 @@ Do not rediscover these.
     `MSYS_NO_PATHCONV=1` for that command, or double the leading slash
     (`//sdcard/...`). Same for `adb shell` arguments that start with `/`.
 
+47. **Dart's `\w` is `[A-Za-z0-9_]`, and `unicode: true` does NOT widen it.**
+    `RegExp(r'[^\w\s]', unicode: true)` was written in two places to mean
+    "drop the punctuation". It matches **every Arabic letter**, so the two
+    heading normalisers — `jazariyyahBare` and `tamhidBare` — returned the
+    empty string for every Arabic input they were ever given.
+
+    What that cost: both level screens drop the leading paragraphs that equal
+    the lesson's own title, so a card does not print its heading twice. With
+    every comparison `'' == ''`, that loop ate **the entire lesson**. Levels
+    two and three opened onto a single «إتمام الدرس» button with no text above
+    it, on every lesson, in a build where `flutter analyze` was clean and 271
+    tests passed.
+
+    And the tests could not have caught it, because **they were the same
+    comparison**: `expect(bare(first.text), bare(lesson.title))` passes
+    perfectly when both sides are `''`. A test that compares two normalised
+    strings must first assert the normaliser returns something —
+    `test/lesson_heading_bare_test.dart` does exactly that, with real headings
+    from each book, and it is what stands behind the two course tests now.
+
+    Use an explicit class that names what to keep:
+    `[^ء-ي٠-٩a-zA-Z0-9\s]`. And when a screen's job is
+    to *hide* something, open it and check something is still there: this was
+    found in one tap on the emulator, and by nothing else.
+
 ---
 
 ## 4. Where things live
