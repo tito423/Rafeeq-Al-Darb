@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 20:55 — IN PROGRESS — resume here**
+**2026-09-16 21:08 — IN PROGRESS — resume here**
 
-the listen-to-the-rule pointers survive the move off the copyrighted course: TajweedExample lifted into its own file (a surah number is a fact, the phrase is the Quran, the one-liner is ours - none of it was ever the other author's), and the twelve re-mapped onto Ibn al-Jazari's own chapters. His book folds izhar, idgham, iqlab, ikhfa AND the sakin mim into one baab where the other gave each a lesson, so a lesson carries a list now. Five tests hold the map to real titles, real ayat and seven locales
+the splash wears the app's own icon now: the medallion is tracked as a circle with Hough across all 240 frames, the track cleaned of the frames where it preferred a cloud and smoothed over seven so the icon does not pulse, and the tile composited at 1.04x its diameter with the brightness matched to what it replaced - so his fade-in and his lightning still play across it. Storm, sparks, rays and wordmark untouched. Both scripts kept as scripts/splash_badge_track.py and splash_badge_swap.py
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
