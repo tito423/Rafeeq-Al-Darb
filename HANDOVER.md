@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 14:41 — IN PROGRESS — resume here**
+**2026-09-16 14:50 — IN PROGRESS — resume here**
 
-the signing decision, written down with what I could and could not verify: upload the existing release key to Play rather than let Google generate one, and know that Android 7-8 is the group the lineage cannot follow. Plus the APK measured from the inside - the adhan audio is in it TWICE, 34.9MB byte-identical between res/ and flutter_assets
+the third level exists: 30 lessons out of غاية المريد, 3102 paragraphs, pages 9-295, cut along the author's own أسئلة blocks by a script that reads the book rather than by hand. The ranges are counted through the app's own parser - the first cut was 34 paragraphs out because BookText drops Shamela's noise lines, and the test catches exactly that drift
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

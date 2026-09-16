@@ -18,9 +18,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../data/ghayat_course.dart';
 import '../../data/tajweed_course.dart';
 import '../../data/tuhfa_course.dart';
 import '../widgets/makharij_entry.dart';
+import 'ghayat_level_screen.dart';
 import 'tajweed_course_screen.dart';
 import 'tuhfa_level_screen.dart';
 
@@ -32,6 +34,7 @@ class TajweedLevelsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final tuhfaDone = ref.watch(tuhfaProgressProvider);
     final taysirDone = ref.watch(tajweedProgressProvider);
+    final ghayatDone = ref.watch(ghayatProgressProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text('tajweed.title'.tr())),
@@ -69,6 +72,24 @@ class TajweedLevelsScreen extends ConsumerWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                   builder: (_) => const TajweedCourseScreen()),
+            ),
+          ),
+          const SizedBox(height: 12),
+          // «علم التجويد كامل في المستويين دول بس ولا في اكتر انا قلتلك قبل
+          // كدة اني عاوزه كامل» — it was not. The ladder always named a third
+          // level and had nothing behind it; it has thirty lessons now, cut
+          // along the author's own «أسئلة» blocks.
+          _LevelCard(
+            number: 3,
+            title: 'tajweed.level_three'.tr(),
+            subtitle: 'tajweed.level_three_sub'.tr(),
+            total: ghayatLessons.length,
+            done: ghayatLessons
+                .where((l) => ghayatDone.contains(l.title))
+                .length,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                  builder: (_) => const GhayatLevelScreen()),
             ),
           ),
         ],

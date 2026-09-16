@@ -1390,6 +1390,9 @@
     "bg_domes": "Domes"
   },
   "tajweed": {
+    "level_three": "Level three — Ghayat al-Murid",
+    "level_three_sub": "The whole book: thirty lessons, each closing with the author's own questions",
+    "level_three_source": "Source: Ghāyat al-Murīd fī ʿIlm at-Tajwīd, by ʿAtiyyah Qābil Naṣr — al-Maktaba al-Shamela",
     "title": "Learn Tajweed",
     "card_subtitle": "Graded lessons — and every rule heard in a real ayah",
     "subtitle": "Lessons in order, from the beginning. Read the lesson, then hear the rule recited where it actually occurs in the Quran.",

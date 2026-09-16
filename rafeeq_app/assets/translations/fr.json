@@ -1390,6 +1390,9 @@
     "bg_domes": "Coupoles"
   },
   "tajweed": {
+    "level_three": "Niveau trois — Ghayat al-Murid",
+    "level_three_sub": "Le livre entier : trente leçons, chacune close par les questions de l'auteur",
+    "level_three_source": "Source : Ghāyat al-Murīd fī ʿIlm at-Tajwīd, de ʿAtiyya Qābil Naṣr — al-Maktaba al-Shamela",
     "title": "Apprendre le tajwid",
     "subtitle": "Des leçons dans l’ordre, depuis le début. Lisez la leçon, puis écoutez la règle récitée là où elle se produit réellement dans le Coran.",
     "level_one": "Niveau 1 — Tuhfat al-Atfal",
