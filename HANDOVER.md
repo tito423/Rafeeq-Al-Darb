@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 18:54 — IN PROGRESS — resume here**
+**2026-09-16 19:56 — IN PROGRESS — resume here**
 
-Android 12 and 14 installed and run: twenty cells now - 7.0, 9, 12, 14, 16 by four widths, 140 screenshots, every one passes. Two more harness mistakes fixed on the way: it was sweeping tabs on an onboarding screen that has no tab bar, and it blamed the app for a FATAL EXCEPTION that belonged to Android 12's own SystemUI (pid 730, never reproducible). A crash counts only when the block names our package now
+the free-licence tajweed spine is built and hosted: المقدمة الجزرية (100pp), التمهيد لابن الجزري (174pp) and التحديد للداني (112pp) - authors dead 600 and 970 years, so no copyright exists to violate. All three range-checked on the bucket. Next: cut them into lessons, write our own explanation per rule with every claim cited to these texts, and retire تيسير أحكام التجويد and غاية المريد, whose authors are modern and whose publisher is a live commercial house
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

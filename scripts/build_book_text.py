@@ -78,6 +78,24 @@ from datetime import datetime, timezone
 # id  -> must match LibraryBook.id in book_catalog.dart
 # See PHASE2.md stage P2-4b "Sourcing decisions" for the reasoning.
 BOOKS = {
+    # THE FREE-LICENCE TAJWEED SPINE. «انا مش عاوز في التطبيق اي مشكلة لحقوق
+    # الملكية نهائيا» — so the curriculum moved off two modern in-copyright
+    # books (تيسير أحكام التجويد, دار الغوثاني 2006, living author; and غاية
+    # المريد, عطية قابل نصر d. 1424 AH) onto texts whose authors died six and
+    # nine centuries ago. The editors' apparatus in these printings is still
+    # theirs, so only the author's own text is shown.
+    "al_muqaddimah_al_jazariyyah_matn": {
+        "shamela_id": 581,
+        "source_label": "المكتبة الشاملة — المقدمة فيما على قارئ القرآن أن يعلمه (الجزرية)، لابن الجزري (ت ٨٣٣ هـ)",
+    },
+    "at_tamhid_fi_ilm_at_tajwid": {
+        "shamela_id": 8194,
+        "source_label": "المكتبة الشاملة — التمهيد في علم التجويد، لابن الجزري (ت ٨٣٣ هـ)",
+    },
+    "at_tahdid_fi_al_itqan": {
+        "shamela_id": 26458,
+        "source_label": "المكتبة الشاملة — التحديد في الإتقان والتجويد، لأبي عمرو الداني (ت ٤٤٤ هـ)",
+    },
     # The tajweed curriculum's prose spine. «هداية القاري» is the standard
     # comprehensive reference - sixteen chapters that run from مخارج الحروف to
     # الوقف على أواخر الكلم, which is the whole syllabus in one book, by a named
