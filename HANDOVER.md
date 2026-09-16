@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 19:57 — IN PROGRESS — resume here**
+**2026-09-16 20:34 — IN PROGRESS — resume here**
 
-the plan of record for the free tajweed curriculum, written down before the cutting starts: which entries of the Jazariyyah are the nazim's and which are the editor's (18-35, p53 to p97), the 18 lessons they make, and the rule that every line of our own explanation carries a citation to a free text
+the Jazariyyah is cut: 18 lessons, 175 paragraphs, the nazim's own chapters from مقدمة الناظم to خاتمة - and NOT one line of the 2020 editor's apparatus, which is 18 TOC entries of it before the poem even starts. Two things the text itself taught: «مقدمة الناظم» is the editor's label and not a heading in the poem, so that lesson starts at the top of its page; and every page carries his footnotes marked (1), which the screen will drop
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
