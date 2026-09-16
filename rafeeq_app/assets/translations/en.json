@@ -1445,6 +1445,11 @@
     "no_reciters": "No reciters support direct download"
   },
   "sync": {
+    "status_idle": "Not synced yet",
+    "status_syncing": "Syncing…",
+    "status_done": "Synced",
+    "status_error": "Sync error",
+    "status_failed": "Sync failed",
     "sign_in_title": "Sign in",
     "sign_in_subtitle": "Sync your khatma, progress and counters across your devices",
     "hide": "Hide",
@@ -1472,6 +1477,8 @@
     "open_failed": "Could not open the link"
   },
   "hajj": {
+    "safa": "as-Safa",
+    "marwah": "al-Marwah",
     "title": "Hajj and Umrah rites",
     "card_subtitle": "Step by step from Shaykh Ibn Baz's book, with interactive illustrations",
     "track_hajj": "Hajj",
@@ -1521,6 +1528,8 @@
     "jamrah_aqabah": "Aqabah"
   },
   "makharij": {
+    "page": "p. {page}",
+    "drawing_credit": "Anatomical drawing: a sagittal section of the vocal tract by Richard Wright and Dan McCloy (University of Washington) — public domain under CC0 via Wikimedia Commons",
     "title": "Articulation points",
     "subtitle": "Tap a place on the diagram to see what comes out of it",
     "general": "General points",

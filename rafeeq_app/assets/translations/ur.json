@@ -1445,6 +1445,11 @@
     "no_reciters": "No reciters support direct download"
   },
   "sync": {
+    "status_idle": "ابھی ہم آہنگ نہیں ہوا",
+    "status_syncing": "ہم آہنگی جاری ہے…",
+    "status_done": "ہم آہنگ ہو گیا",
+    "status_error": "ہم آہنگی میں خرابی",
+    "status_failed": "ہم آہنگی ناکام",
     "sign_in_title": "سائن اِن کریں",
     "sign_in_subtitle": "اپنی ختم، پیش رفت اور شمار کو اپنے تمام آلات پر ہم آہنگ کریں",
     "hide": "چھپائیں",
@@ -1472,6 +1477,8 @@
     "open_failed": "لنک نہیں کھل سکا"
   },
   "hajj": {
+    "safa": "الصفا",
+    "marwah": "المروہ",
     "title": "حج اور عمرہ کے مناسک",
     "card_subtitle": "شیخ ابن باز کی کتاب سے قدم بہ قدم، تعاملی تصاویر کے ساتھ",
     "track_hajj": "حج",
@@ -1521,6 +1528,8 @@
     "jamrah_aqabah": "عقبہ"
   },
   "makharij": {
+    "page": "ص {page}",
+    "drawing_credit": "تشریحی خاکہ: نطقی نالی کا طولی مقطع، بنانے والے Richard Wright اور Dan McCloy (یونیورسٹی آف واشنگٹن) — ویکیمیڈیا کامنز پر CC0 کے تحت پبلک ڈومین",
     "title": "مخارجِ حروف",
     "subtitle": "خاکے میں کسی جگہ کو چھوئیں تاکہ دیکھیں اس سے کیا نکلتا ہے",
     "general": "عام مخارج",

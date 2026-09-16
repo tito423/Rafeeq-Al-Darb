@@ -1445,6 +1445,11 @@
     "no_reciters": "No reciters support direct download"
   },
   "sync": {
+    "status_idle": "Sin sincronizar",
+    "status_syncing": "Sincronizando…",
+    "status_done": "Sincronizado",
+    "status_error": "Error de sincronización",
+    "status_failed": "Falló la sincronización",
     "sign_in_title": "Iniciar sesión",
     "sign_in_subtitle": "Sincroniza tu jatma, tu progreso y tus contadores en todos tus dispositivos",
     "hide": "Ocultar",
@@ -1472,6 +1477,8 @@
     "open_failed": "No se pudo abrir el enlace"
   },
   "hajj": {
+    "safa": "as-Safa",
+    "marwah": "al-Marwah",
     "title": "Ritos del Hayy y la Umra",
     "card_subtitle": "Paso a paso según el libro del jeque Ibn Baz, con ilustraciones interactivas",
     "track_hajj": "Hayy",
@@ -1521,6 +1528,8 @@
     "jamrah_aqabah": "Al-Aqaba"
   },
   "makharij": {
+    "page": "p. {page}",
+    "drawing_credit": "Dibujo anatómico: sección sagital del tracto vocal por Richard Wright y Dan McCloy (Universidad de Washington) — dominio público bajo CC0 vía Wikimedia Commons",
     "title": "Puntos de articulación",
     "subtitle": "Toca un lugar del diagrama para ver qué sale de él",
     "general": "Puntos generales",

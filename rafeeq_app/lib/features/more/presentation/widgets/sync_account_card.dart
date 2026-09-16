@@ -50,7 +50,7 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
   @override
   Widget build(BuildContext context) {
     final account = ref.watch(authStateProvider);
-    final status = ref.watch(syncStatusProvider);
+    final status = 'sync.status_${ref.watch(syncStatusProvider).name}'.tr();
 
     // If not logged in, just show the normal card
     if (account == null) {

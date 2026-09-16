@@ -16,7 +16,17 @@ final googleSignInProvider = Provider((ref) => GoogleSignIn(
     ));
 
 final authStateProvider = StateProvider<GoogleSignInAccount?>((ref) => null);
-final syncStatusProvider = StateProvider<String>((ref) => 'لم تتم المزامنة');
+/// What the sync card says, as a STATE rather than as a sentence.
+///
+/// It used to be a `String` holding Arabic — «لم تتم المزامنة», «جاري
+/// المزامنة...» — set from this service and rendered raw, so the one line on
+/// the More tab that reports on the reader's own account was in Arabic in all
+/// seven languages. It is also the shape trap #29 warns about: a sentence
+/// frozen when it is set does not follow a language the reader changes
+/// afterwards. The card translates the state at build time now.
+enum SyncStatus { idle, syncing, done, error, failed }
+
+final syncStatusProvider = StateProvider<SyncStatus>((ref) => SyncStatus.idle);
 final lastSyncTimeProvider = StateProvider<DateTime?>((ref) => null);
 
 final syncServiceProvider = Provider<SyncService>((ref) {
@@ -188,7 +198,7 @@ class SyncService {
     if (connectivity.contains(ConnectivityResult.none)) return;
 
     _isSyncing = true;
-    _ref.read(syncStatusProvider.notifier).state = 'جاري المزامنة...';
+    _ref.read(syncStatusProvider.notifier).state = SyncStatus.syncing;
 
     try {
       final auth = await account.authentication;
@@ -198,7 +208,7 @@ class SyncService {
       final queuedItems = await _localQueueDb.query('queue', orderBy: 'id ASC');
       if (queuedItems.isEmpty) {
         _isSyncing = false;
-        _ref.read(syncStatusProvider.notifier).state = 'تمت المزامنة';
+        _ref.read(syncStatusProvider.notifier).state = SyncStatus.done;
         return;
       }
 
@@ -235,12 +245,12 @@ class SyncService {
           await _localQueueDb.delete('queue', where: 'id = ?', whereArgs: [id]);
         }
         _ref.read(lastSyncTimeProvider.notifier).state = DateTime.now();
-        _ref.read(syncStatusProvider.notifier).state = 'تمت المزامنة';
+        _ref.read(syncStatusProvider.notifier).state = SyncStatus.done;
       } else {
-        _ref.read(syncStatusProvider.notifier).state = 'خطأ في المزامنة';
+        _ref.read(syncStatusProvider.notifier).state = SyncStatus.error;
       }
     } catch (e) {
-      _ref.read(syncStatusProvider.notifier).state = 'فشلت المزامنة';
+      _ref.read(syncStatusProvider.notifier).state = SyncStatus.failed;
     } finally {
       _isSyncing = false;
     }

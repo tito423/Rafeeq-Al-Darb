@@ -5,7 +5,7 @@ Cline, or any other).
 **Read `CLAUDE.md` first — it is the mandatory working method — then this file.**
 | | |
 |---|---|
-| **Last updated** | 2026-09-16 (midday) |
+| **Last updated** | 2026-09-16 |
 | **Released** | **v3.26.0** — tag on `master` at `120968f`, the only release in the repo; asset `rafeeq-aldarb-3.26.0.apk`, 236,567,267 bytes. Verified after publishing: `gh release view` reports target `master`, not a draft, asset `uploaded`, and the tag's SHA equals `git rev-parse HEAD` |
 | **App version** | `pubspec.yaml` `3.26.0+27`; `AboutScreen.appVersion` `3.26.0`; `aapt` reads the published APK as `versionCode=27 versionName=3.26.0 minSdk=24` |
 | **On the owner's Honor** | the signed 3.25.0 build — he took the phone to work before the 3.26.0 APK could be installed on it. **3.26.0 has never run on his phone**, only on `emulator-5554` |
@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 11:47 — IN PROGRESS — resume here**
+**2026-09-16 13:28 — IN PROGRESS — resume here**
 
-the prayer card the way he asked: hijri date and city on top, «الشروق، 6:02 ص» under it, sunrise included. And it cannot go stale any more - the whole schedule goes native and the card is re-derived from the clock on every post, with an EXACT rollover alarm
+the first splash is back exactly as it was - lattice, glowing badge, name, tagline - held 1.7s before the video; and the UI strings that were Arabic in every language (sync status, the makharij credit and page reference, as-Safa/al-Marwah) go through keys now, with a test that finds the next one
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

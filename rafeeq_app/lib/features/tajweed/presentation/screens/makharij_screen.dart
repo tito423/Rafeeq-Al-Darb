@@ -138,9 +138,7 @@ class _MakharijScreenState extends State<MakharijScreen>
           // CC0 requires no attribution at all. It is here because crediting
           // the people whose drawing this is costs nothing and is right.
           Text(
-            'الرسم التشريحي: مقطع جانبي للجهاز النطقي بريشة '
-            'Richard Wright و Dan McCloy (جامعة واشنطن) — '
-            'منشور في الملك العام تحت ترخيص CC0 عبر ويكيميديا كومنز',
+            'makharij.drawing_credit'.tr(),
             style: TextStyle(
               fontSize: 12,
               height: 1.7,
@@ -188,7 +186,7 @@ class _RegionDefinition extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'ص${info.page}',
+                'makharij.page'.tr(namedArgs: {'page': '${info.page}'}),
                 style: TextStyle(
                   fontSize: 11,
                   color: scheme.onSurfaceVariant,
@@ -365,7 +363,7 @@ class _Detail extends StatelessWidget {
           ],
           const SizedBox(height: 10),
           Text(
-            'ص${makhraj.page}',
+            'makharij.page'.tr(namedArgs: {'page': '${makhraj.page}'}),
             style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
           ),
         ],

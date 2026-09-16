@@ -1445,6 +1445,11 @@
     "no_reciters": "No reciters support direct download"
   },
   "sync": {
+    "status_idle": "Ainda não sincronizado",
+    "status_syncing": "A sincronizar…",
+    "status_done": "Sincronizado",
+    "status_error": "Erro de sincronização",
+    "status_failed": "Falha na sincronização",
     "sign_in_title": "Entrar",
     "sign_in_subtitle": "Sincronize sua khatma, seu progresso e seus contadores em todos os seus aparelhos",
     "hide": "Ocultar",
@@ -1472,6 +1477,8 @@
     "open_failed": "Não foi possível abrir o link"
   },
   "hajj": {
+    "safa": "as-Safa",
+    "marwah": "al-Marwah",
     "title": "Ritos do Hajj e da Umrah",
     "card_subtitle": "Passo a passo segundo o livro do xeque Ibn Baz, com ilustrações interativas",
     "track_hajj": "Hajj",
@@ -1521,6 +1528,8 @@
     "jamrah_aqabah": "Al-Aqabah"
   },
   "makharij": {
+    "page": "p. {page}",
+    "drawing_credit": "Desenho anatómico: corte sagital do trato vocal por Richard Wright e Dan McCloy (Universidade de Washington) — domínio público sob CC0 via Wikimedia Commons",
     "title": "Pontos de articulação",
     "subtitle": "Toque num ponto do diagrama para ver o que sai dele",
     "general": "Pontos gerais",

@@ -75,8 +75,11 @@ class _SaiCounterState extends State<SaiCounter>
                   track: scheme.outlineVariant,
                   label: scheme.onSurface,
                   rtl: Directionality.of(context) == TextDirection.rtl,
-                  safa: locale == 'ar' ? 'الصفا' : 'as-Safa',
-                  marwah: locale == 'ar' ? 'المروة' : 'al-Marwah',
+                  // Both places are named in every locale file now: an
+                  // English transliteration was standing in for Spanish,
+                  // French, Portuguese, Russian AND Urdu.
+                  safa: 'hajj.safa'.tr(),
+                  marwah: 'hajj.marwah'.tr(),
                 ),
               ),
             ),

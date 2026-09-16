@@ -1445,6 +1445,11 @@
     "no_reciters": "No reciters support direct download"
   },
   "sync": {
+    "status_idle": "Pas encore synchronisé",
+    "status_syncing": "Synchronisation…",
+    "status_done": "Synchronisé",
+    "status_error": "Erreur de synchronisation",
+    "status_failed": "Échec de la synchronisation",
     "sign_in_title": "Se connecter",
     "sign_in_subtitle": "Synchronisez votre khatma, votre progression et vos compteurs sur tous vos appareils",
     "hide": "Masquer",
@@ -1472,6 +1477,8 @@
     "open_failed": "Impossible d'ouvrir le lien"
   },
   "hajj": {
+    "safa": "as-Safa",
+    "marwah": "al-Marwah",
     "title": "Rites du Hajj et de la Omra",
     "card_subtitle": "Étape par étape d'après le livre du cheikh Ibn Baz, avec des illustrations interactives",
     "track_hajj": "Hajj",
@@ -1521,6 +1528,8 @@
     "jamrah_aqabah": "Al-Aqaba"
   },
   "makharij": {
+    "page": "p. {page}",
+    "drawing_credit": "Dessin anatomique : coupe sagittale du conduit vocal par Richard Wright et Dan McCloy (université de Washington) — domaine public sous CC0 via Wikimedia Commons",
     "title": "Points d'articulation",
     "subtitle": "Touchez un endroit du schéma pour voir ce qui en sort",
     "general": "Points généraux",
