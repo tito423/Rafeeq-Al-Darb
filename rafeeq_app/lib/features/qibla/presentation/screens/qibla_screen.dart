@@ -267,7 +267,7 @@ class _StatusCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         color: scheme.surfaceContainerHighest,
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
+        border: Border.all(color: goldOn(scheme).withValues(alpha: 0.35)),
       ),
       child: Column(
         children: [
@@ -362,7 +362,7 @@ class _CompassDial extends StatelessWidget {
               children: [
                 CustomPaint(
                   size: const Size(280, 280),
-                  painter: _DialPainter(),
+                  painter: _DialPainter(goldOn(scheme)),
                 ),
                 for (final e in const [
                   (0.0, 'qibla.north'),
@@ -379,7 +379,7 @@ class _CompassDial extends StatelessWidget {
                       e.$2.tr(),
                       style: TextStyle(
                         color: e.$1 == 0
-                            ? AppColors.gold
+                            ? goldOn(scheme)
                             : scheme.onSurfaceVariant,
                         fontSize: 13,
                         fontWeight: e.$1 == 0 ? FontWeight.w700 : FontWeight.w500,
@@ -397,10 +397,10 @@ class _CompassDial extends StatelessWidget {
                   height: 14,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.gold,
+                    color: goldOn(scheme),
                     boxShadow: [
                       BoxShadow(
-                          color: AppColors.gold.withValues(alpha: 0.6),
+                          color: goldOn(scheme).withValues(alpha: 0.6),
                           blurRadius: 8),
                     ],
                   ),
@@ -511,6 +511,12 @@ class _NeedleShaftPainter extends CustomPainter {
 /// Tick marks every 15°, a heavier mark every 90° — the dial face itself,
 /// fixed in place (only the needle rotates).
 class _DialPainter extends CustomPainter {
+  /// The dial is drawn on a card that follows the theme, so its gold has to
+  /// as well — flat gold measures ~2 : 1 on the light ground.
+  final Color accent;
+
+  const _DialPainter(this.accent);
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
@@ -519,7 +525,7 @@ class _DialPainter extends CustomPainter {
     final ring = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.4
-      ..color = AppColors.gold.withValues(alpha: 0.3);
+      ..color = accent.withValues(alpha: 0.45);
     canvas.drawCircle(center, radius - 4, ring);
 
     for (var deg = 0; deg < 360; deg += 15) {
@@ -533,13 +539,14 @@ class _DialPainter extends CustomPainter {
           center.dy - inner * math.cos(rad));
       final tick = Paint()
         ..strokeWidth = major ? 2 : 1
-        ..color = AppColors.gold.withValues(alpha: major ? 0.7 : 0.35);
+        ..color = accent.withValues(alpha: major ? 0.85 : 0.45);
       canvas.drawLine(p1, p2, tick);
     }
   }
 
   @override
-  bool shouldRepaint(covariant _DialPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _DialPainter oldDelegate) =>
+      oldDelegate.accent != accent;
 }
 
 /// Sits directly under the Adhan-settings card: everything that decides *when*

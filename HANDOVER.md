@@ -1437,9 +1437,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 05:21 — IN PROGRESS — resume here**
+**2026-09-16 05:26 — IN PROGRESS — resume here**
 
-splash wordmark, seen and corrected twice on a device. First: _onVideoTick never called setState, so the caption was computed once at zero and the clip played to the end with nothing on it. Second: AmiriQuran is a Quranic face - it drew the final yaa dotless and floated the marks high, so «قرآني» read as «قرآنی»; the app's own UI face sets it properly. Verified on the emulator with pm clear before each run: the line fades in over the last 1.5s of the clip, correctly pointed, with «إلى» right underneath. Ruqyah verified on the owner's Honor: the duplicate headphones action is gone, the reciter chip opens the picker, picking Saud ash-Shuraim changed the chip AND the queue actually recited in his voice with ayah 1:2 highlighted. Library authors and both hadith sections open collapsed; the six settings sections likewise; About is readable in the light theme.
+the wordmark reads right on a device: the app's own face sets «قُرْآنِي رَفِيقُ دَرْبِي» with its dots and its marks where they belong. Qibla dial follows the theme too - ring, ticks, the four letters and the hub were flat gold on a card that goes pale.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
