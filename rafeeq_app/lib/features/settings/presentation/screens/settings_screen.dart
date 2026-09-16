@@ -9,6 +9,7 @@ import '../../../quran/data/mushaf_theme.dart';
 import '../../../quran/presentation/widgets/mushaf_theme_picker.dart';
 import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../../splash/data/splash_video_provider.dart';
+import '../../../splash/presentation/screens/splash_preview_screen.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
 import '../widgets/non_arabic_reading_card.dart';
 import '../../../../core/i18n/supported_locales.dart';
@@ -35,6 +36,7 @@ class SettingsBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeVariant = ref.watch(themeControllerProvider);
     final splashVideo = ref.watch(splashVideoEnabledProvider);
+    final splashSound = ref.watch(splashVideoSoundProvider);
     final scheme = Theme.of(context).colorScheme;
 
     return Column(
@@ -128,11 +130,43 @@ class SettingsBody extends ConsumerWidget {
                     onChanged: (v) =>
                         ref.read(splashVideoEnabledProvider.notifier).set(v),
                   ),
-                  // The sound switch that used to sit here is gone with the
-                  // intro's soundtrack: the clip is silent now (its voice
-                  // mispronounced «قرآني» and the owner said fix it or drop
-                  // it), and a switch for a sound that cannot play is a dead
-                  // control.
+                  // The soundtrack is back in the asset and the choice is his:
+                  // «اديني امكانية طبعا يشتغل لو انا فعلت انه يشتغل … او لو
+                  // طفيته من الاعدادات مش يشتغل». It defaults OFF, because
+                  // the voice in the clip mispronounces «قرآني» and an app
+                  // should not say that unless its owner asked for it.
+                  // Only offered while the video itself is on — a sound switch
+                  // for a video that never plays would be a dead control.
+                  if (splashVideo)
+                    SwitchListTile(
+                      secondary: Icon(
+                        splashSound
+                            ? Icons.volume_up_outlined
+                            : Icons.volume_off_outlined,
+                        color: scheme.primary,
+                      ),
+                      title: Text('settings.splash_video_sound'.tr()),
+                      subtitle: Text('settings.splash_video_sound_desc'.tr()),
+                      value: splashSound,
+                      onChanged: (v) =>
+                          ref.read(splashVideoSoundProvider.notifier).set(v),
+                    ),
+                  // «هل فيه امكانية preview للفيديو من جوه التطبيق» — yes, and
+                  // it is the only way to see the intro on demand: it other-
+                  // wise plays on a cold start after half an hour away, which
+                  // is not something you can wait for while judging it.
+                  ListTile(
+                    leading:
+                        Icon(Icons.play_circle_outline, color: scheme.primary),
+                    title: Text('settings.splash_preview'.tr()),
+                    subtitle: Text('settings.splash_preview_desc'.tr()),
+                    trailing: Icon(Icons.chevron_right, color: scheme.primary),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const SplashPreviewScreen(),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

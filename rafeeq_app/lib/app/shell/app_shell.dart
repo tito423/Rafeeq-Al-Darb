@@ -361,16 +361,41 @@ class _AppShellState extends ConsumerState<AppShell>
           : focus != null
               ? const _FocusModeBar()
               : MediaQuery.withNoTextScaling(
+              child: NavigationBarTheme(
+              // «اكتب اسماء الايقونات دايما تحت الايقونات اللي في البوتوم
+              // نافيجيشن» — every tab carries its name now, on every width.
+              //
+              // The width rule this replaces was not wrong about the problem,
+              // only about the fix: seven tiles on a narrow window leave each
+              // about 41 dp, and «المسبحة» broke into «المسبد / ة» on
+              // emulator-5554 at `wm density 600`. Hiding six of the seven
+              // labels was what his own phone got — the Honor measures
+              // 1224 px at density 520, which is 376.6 dp, four short of the
+              // 380 threshold.
+              //
+              // So the label shrinks to fit instead of disappearing.
+              // `nav_label_width_test` budgets each label against **56 dp per
+              // tile at 11 px**, the theme's size; scaling the size by the
+              // real tile's share of that 56 dp keeps every one of those
+              // budgets true at any width, which a fixed smaller size would
+              // not. Floored at 0.72 so it stays legible rather than chasing
+              // an absurd window.
+              data: NavigationBarThemeData(
+                labelTextStyle: WidgetStatePropertyAll(
+                  (Theme.of(context).navigationBarTheme.labelTextStyle
+                              ?.resolve(<WidgetState>{}) ??
+                          const TextStyle(fontSize: 11))
+                      .copyWith(
+                    fontSize: 11 *
+                        ((MediaQuery.sizeOf(context).width / 7) / 56)
+                            .clamp(0.72, 1.0),
+                  ),
+                ),
+              ),
               child: NavigationBar(
               selectedIndex: _index,
               onDestinationSelected: _goTo,
-              // Seven tiles on a narrow window leave each about 41 logical
-              // pixels — «المسبحة» broke into «المسبد / ة» on emulator-5554
-              // at `wm density 600`. Below 380 wide only the selected tab
-              // carries its label; the icons still identify the rest.
-              labelBehavior: MediaQuery.sizeOf(context).width < 380
-                  ? NavigationDestinationLabelBehavior.onlyShowSelected
-                  : NavigationDestinationLabelBehavior.alwaysShow,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
               // «اعملي أنيميشن جميل في شكل … أيقونات الشريط الرئيسي السفلي».
               // The selected icon is built fresh whenever a tab becomes
               // selected, so `_PopIcon` plays its entrance exactly then.
@@ -412,6 +437,7 @@ class _AppShellState extends ConsumerState<AppShell>
                 ),
               ],
             ),
+          ),
           ),
           ),
           if (tour) TutorialOverlay(onGoToTab: _goTo),

@@ -90,3 +90,7 @@ KEYSTORE-PASSWORD.txt
 db_type_audit.txt
 
 content_verification.txt
+
+# Release APKs are attached to a GitHub release, never committed:
+# one of them is 236 MB, which is over GitHub's 100 MB file limit.
+dist/*.apk

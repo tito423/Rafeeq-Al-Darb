@@ -80,12 +80,18 @@ final splashVideoEnabledProvider =
 ///
 /// The owner asked for the choice to be his rather than baked in
 /// («حط خيار في الاسبلاش اسكرين في اعداداتها لو المستخدم يحبها بصوت او بدون
-/// صوت»). Default ON, because that is exactly how the video has behaved since
-/// P3-49 — turning the setting on for the first time must not silently change
-/// what an existing install already does. Muting sets the player's volume to
-/// zero rather than skipping the video, so the visual intro is unaffected.
+/// صوت»), and asked for it again after a session stripped the track outright:
+/// «اديني امكانية طبعا يشتغل لو انا فعلت انه يشتغل … او لو طفيته من الاعدادات
+/// مش يشتغل».
+///
+/// Default **OFF**, and that is a deliberate reversal of the P3-57 default.
+/// The voice in the clip mispronounces «قرآني», which is why the track was
+/// removed in the first place; it is back in the asset so the choice can
+/// exist, but an app does not say that out loud until its owner switches it
+/// on. Muting sets the player's volume to zero rather than skipping the
+/// video, so the visual intro is unaffected either way.
 class SplashVideoSoundNotifier extends StateNotifier<bool> {
-  SplashVideoSoundNotifier(this._prefs) : super(_prefs.getBool(_key) ?? true);
+  SplashVideoSoundNotifier(this._prefs) : super(_prefs.getBool(_key) ?? false);
 
   final SharedPreferences _prefs;
   static const _key = 'splash_video_sound_v1';

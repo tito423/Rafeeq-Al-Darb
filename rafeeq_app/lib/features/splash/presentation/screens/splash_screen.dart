@@ -28,8 +28,10 @@ import '../../data/splash_video_provider.dart';
 /// seamless continuation of the native launch icon rather than a second,
 /// different branded screen. The video itself (`assets/branding/
 /// splash_intro.mp4`, the owner's AI-generated intro with the Gemini
-/// watermark removed) plays once, and a tap skips it. It is SILENT - see
-/// [_Wordmark] for why the clip was cut and re-captioned.
+/// watermark removed, and its soundtrack back in) plays once, and a tap skips
+/// it. Whether its sound is heard is [splashVideoSoundProvider], off until the
+/// owner asks for it — see [SplashWordmark] for why the clip was cut and
+/// re-captioned.
 ///
 /// P3‑50: the notification/location permission prompts are requested **after**
 /// this splash finishes (see [_proceed]), not from `main()` — so they no
@@ -104,12 +106,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     try {
       final c = VideoPlayerController.asset('assets/branding/splash_intro.mp4');
       await c.initialize();
-      // The intro is SILENT: its own soundtrack said «قرآني» wrongly and
-      // the owner's instruction was «خليه يقرا قراني صح او سيل الصوت خالص» —
-      // a voice cannot be re-recorded here, so the track was removed from the
-      // asset itself. Muted here as well, belt and braces, so a clip with a
-      // track could never start speaking unnoticed.
-      await c.setVolume(0);
+      // The clip carries its soundtrack again, and whether it is heard is the
+      // owner's switch, off by default — see [splashVideoSoundProvider]. Read
+      // once, here, rather than watched: a toggle flipped mid-intro must not
+      // make the voice start halfway through a sentence.
+      await c.setVolume(ref.read(splashVideoSoundProvider) ? 1 : 0);
       await c.setLooping(false);
       if (!mounted) {
         await c.dispose();
@@ -307,7 +308,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           left: 0,
                           right: 0,
                           top: video.value.size.height * 0.60,
-                          child: _Wordmark(progress: _caption),
+                          child: SplashWordmark(progress: _caption),
                         ),
                       ],
                     ),
@@ -317,13 +318,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             : Center(
                 child: Image.asset(
                   'assets/branding/app_mark_circle.png',
-                  // Sized to the circle the OS actually draws, measured from
-                  // a screen recording on the owner's Honor rather than
-                  // reasoned about: the native mark lands 248 px wide in a
-                  // 612-wide capture and this one landed 324 at 240 dp, both
-                  // centred to within 3 px, so 240 x 248/324 is 184.
-                  width: 184,
-                  height: 184,
+                  // Sized to the mark the OS actually draws, measured on the
+                  // owner's Honor (1224 px at density 520, so 3.25 px per dp)
+                  // rather than reasoned about. Two cold-start captures, the
+                  // tile's bounding box found by differencing each frame
+                  // against its own background:
+                  //
+                  //   native splash   442 px wide → 136.0 dp
+                  //   this image @184 282 px wide →  86.8 dp
+                  //
+                  // Both centred on y = 1349 of 2700, so the ONLY thing that
+                  // jumped was the size — «كالعادة الاسبلاش وحدة مربعه ووحدة
+                  // دائرية»: a big tile, then a small one. The artwork fills
+                  // 47.7 % of this PNG's box (alpha bounding box 427 of 896),
+                  // so 136 / 0.477 = 285 makes the two marks the same size and
+                  // the hand-off invisible.
+                  width: 285,
+                  height: 285,
                 ),
               ),
       ),
@@ -343,11 +354,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 ///
 /// Sizes and positions were measured off the original frames: the title band
 /// sat at y 787-903 of 1280 and the subtitle at y 930-975, both centred.
-class _Wordmark extends StatelessWidget {
+class SplashWordmark extends StatelessWidget {
   /// 0 → 1 across the fade.
   final double progress;
 
-  const _Wordmark({required this.progress});
+  const SplashWordmark({super.key, required this.progress});
 
   @override
   Widget build(BuildContext context) {

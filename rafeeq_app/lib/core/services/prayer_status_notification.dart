@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hijri/hijri_calendar.dart';
@@ -6,6 +7,7 @@ import 'package:hijri/hijri_calendar.dart';
 import '../i18n/hijri_months.dart';
 import '../models/prayer_times.dart';
 import '../utils/digits.dart';
+import '../utils/time_formatter.dart';
 import 'notification_router.dart';
 import 'prayer_times_service.dart';
 
@@ -100,86 +102,102 @@ class PrayerStatusNotification {
       return;
     }
 
-    final svc = PrayerTimesService();
     final now = DateTime.now();
 
     // THE HOUR AFTER THE ADHAN BELONGS TO THE PRAYER THAT CAME IN.
     // «لما يحين وقت الصلاة يبدأ يعد عدّاد تصاعدي … لحد ساعة، وبعد الساعة يبدأ
-    // يغيّر الإشعار: باقي على صلاة الفجر». Deciding that here rather than in
-    // Kotlin is the whole point: when both sides decided, a refresh during
-    // the count-up re-armed the rollover for a moment already past and the
-    // card never moved on - seen on the device by jumping the clock.
-    final justPassed = times.isEmpty ? null : _recentPrayer(svc, times, now);
-    final next = times.isEmpty
-        ? null
-        : (justPassed ?? _nextPrayer(svc, times, now));
-
+    // يغيّر الإشعار: باقي على صلاة الفجر». [elapsedWindow] is that hour, and
+    // it is sent to the native side rather than decided here, for the reason
+    // written on [_schedule].
     try {
-      if (next == null) {
+      if (times.isEmpty) {
         // Enabled but no real times yet — be honest, don't invent them.
-        await _show(_needLocationTitle(localeCode), _needLocationBody(localeCode));
+        await _native.invokeMethod<void>('show', {
+          'events': <Map<String, Object>>[],
+          'title': _needLocationTitle(localeCode),
+          'body': _needLocationBody(localeCode),
+          'elapsedMs': elapsedWindow.inMilliseconds,
+        });
         return;
       }
-
-      // AlAdhan's Umm al-Qura date first (matches Home, works offline).
-      // «الإشعار زوّد فيه اسم المدينة اللي احنا فيها» — the card said
-      // «الفجر · ٤:٤٤ / ٢٩ ربيع الأول ١٤٤٨ هـ» and nothing about where that
-      // time was computed for, which is the one fact that makes it checkable
-      // when the phone has travelled or the location fix is stale. The name
-      // is whatever `LocationService` reverse-geocoded — when there is none
-      // (permission refused, offline on a cold start) the line stays exactly
-      // as it was rather than claiming a city.
-      final hijriToday = _withCity(
-        _hijriLine(times.hijriDate, now, localeCode),
-        times.cityName,
-      );
-      final after =
-          _nextPrayer(svc, times, next.$2.add(const Duration(minutes: 1)));
-      final counting = justPassed == null;
-      final crossesMidnight = after != null && after.$2.day != next.$2.day;
-      await _show(
-        counting
-            ? _titleFor(next.$1, next.$2, localeCode)
-            : _sinceTitle(next.$1),
-        hijriToday,
-        at: next.$2,
-        countDown: counting,
-        // What the card becomes the moment this prayer comes in.
-        elapsedTitle: counting ? _sinceTitle(next.$1) : null,
-        nextTitle: after == null ? null : _titleFor(after.$1, after.$2, localeCode),
-        nextBody: after == null
-            ? null
-            : crossesMidnight
-                ? _withCity(
-                    _hijriLine('', after.$2, localeCode), times.cityName)
-                : hijriToday,
-        nextAt: after?.$2,
-      );
+      // THE CARD IS BUILT FROM A WHOLE SCHEDULE, NOT FROM ONE PRAYER.
+      // It used to send the current card and the one after it, and the native
+      // side swapped them on an alarm. That chain is two links long: once both
+      // had been used the card froze until the app was opened again —
+      // photographed on the owner's Honor at 06:06, still reading «العشاء ·
+      // ١٩:٤١» under «٤ ربيع الآخر», a whole Hijri day out of date. Sending
+      // every event of today and tomorrow lets the native side work out what
+      // to show from the clock alone, so a missed alarm costs nothing: the
+      // next repost is already right.
+      await _native.invokeMethod<void>('show', {
+        'events': schedule(times, now, localeCode),
+        'elapsedMs': elapsedWindow.inMilliseconds,
+      });
     } catch (_) {
       // Notifications are optional; the app is fine without this card.
     }
   }
 
-  Future<void> _show(
-    String title,
-    String body, {
-    DateTime? at,
-    bool countDown = true,
-    String? elapsedTitle,
-    String? nextTitle,
-    String? nextBody,
-    DateTime? nextAt,
-  }) async {
-    await _native.invokeMethod<void>('show', {
-      'title': title,
-      'body': body,
-      'when': at?.millisecondsSinceEpoch ?? 0,
-      'countDown': countDown,
-      'elapsedTitle': elapsedTitle,
-      'nextTitle': nextTitle,
-      'nextBody': nextBody,
-      'nextWhen': nextAt?.millisecondsSinceEpoch ?? 0,
-    });
+  /// Every prayer of today and tomorrow, each already written the way the card
+  /// shows it: the Hijri date and city on one line, «الفجر، ٤:٤٧ ص» on the
+  /// other. That order is the owner's — «انا عايز شكل الاشعار … تيبيكال
+  /// صلاتك» — and it is the reverse of what this card used to say.
+  ///
+  /// SUNRISE IS IN THE LIST. The card skipped it because sunrise is not a
+  /// prayer, but it is the event a reader watches between Fajr and Dhuhr, and
+  /// the screenshot he sent reads «الشروق، 06:02 ص  +04:15».
+  ///
+  /// Tomorrow's entries repeat today's clock times a day later. That is the
+  /// same approximation `nextPrayer` has always made for tomorrow's Fajr — the
+  /// real times move a minute or two — and it only ever covers the gap until
+  /// the app next runs and sends the day it actually fetched.
+  @visibleForTesting
+  List<Map<String, Object>> schedule(
+    PrayerTimes times,
+    DateTime now,
+    String localeCode,
+  ) {
+    final entries = <(String, DateTime)>[];
+    for (final day in [now, now.add(const Duration(days: 1))]) {
+      for (final e in [
+        ('fajr', times.fajr),
+        ('sunrise', times.sunrise),
+        ('dhuhr', times.dhuhr),
+        ('asr', times.asr),
+        ('maghrib', times.maghrib),
+        ('isha', times.isha),
+      ]) {
+        final at = _at(e.$2, day);
+        if (at != null) entries.add((e.$1, at));
+      }
+    }
+    entries.sort((a, b) => a.$2.compareTo(b.$2));
+
+    // Only AlAdhan's Umm al-Qura date belongs to today; every other day's
+    // line is computed by `_hijriLine` from the date it is handed.
+    final today = DateTime(now.year, now.month, now.day);
+    final out = <Map<String, Object>>[];
+    for (final e in entries) {
+      if (!e.$2.isAfter(now.subtract(elapsedWindow))) continue;
+      final day = DateTime(e.$2.year, e.$2.month, e.$2.day);
+      out.add({
+        'label': _eventLine(e.$1, e.$2, localeCode),
+        'body': _withCity(
+          _hijriLine(day == today ? times.hijriDate : '', e.$2, localeCode),
+          times.cityName,
+        ),
+        'when': e.$2.millisecondsSinceEpoch,
+      });
+    }
+    return out;
+  }
+
+  /// [hhmm] on [day], or null when the string cannot be read — an unreadable
+  /// time is left out of the schedule rather than invented.
+  DateTime? _at(String hhmm, DateTime day) {
+    final hm = PrayerTimesService.parseHM(hhmm);
+    if (hm == null) return null;
+    return DateTime(day.year, day.month, day.day, hm.$1, hm.$2);
   }
 
   Future<void> hide() async {
@@ -194,44 +212,28 @@ class PrayerStatusNotification {
 
   // ── content helpers ──────────────────────────────────────────────────────
 
-  /// Next of the five prayers after [from] (never `sunrise`); rolls to
-  /// tomorrow's Fajr after Isha. Returns `(key, dateTime)`.
-  (String, DateTime)? _nextPrayer(
-      PrayerTimesService svc, PrayerTimes t, DateTime from) {
-    final raw = svc.nextPrayer(t, from);
-    if (raw == null) return null;
-    if (raw.$1 != 'sunrise') return raw;
-    return svc.nextPrayer(t, raw.$2.add(const Duration(minutes: 1)));
-  }
-
-  /// How long the card stays on the prayer that has just come in.
+  /// How long the card stays on the event that has just come in, counting up
+  /// from it before it moves on to the next one.
   static const elapsedWindow = Duration(hours: 1);
 
-  /// The prayer whose adhan was less than [elapsedWindow] ago, if any. Never
-  /// sunrise: it is not a prayer and the card never counts from it.
-  (String, DateTime)? _recentPrayer(
-      PrayerTimesService svc, PrayerTimes t, DateTime now) {
-    final prev = svc.previousPrayer(t, now);
-    if (prev == null || prev.$1 == 'sunrise') return null;
-    return now.difference(prev.$2) <= elapsedWindow ? prev : null;
-  }
-
-  String _sinceTitle(String key) => 'prayer.since_adhan'
-      .tr(namedArgs: {'prayer': 'prayer.$key'.tr()});
-
-  String _titleFor(String key, DateTime at, String localeCode) {
-    final name = 'prayer.$key'.tr();
+  /// «الفجر، ٤:٤٧ ص» — the event line, in the shape the owner's reference
+  /// screenshot uses. The clock is [formatTime12h], which is already wrapped
+  /// in a left-to-right isolate: «٦:٠٢ ص» is a bidi-weak numeral beside a
+  /// marker and the two swap without one (trap #16).
+  String _eventLine(String key, DateTime at, String localeCode) {
     final hh = at.hour.toString().padLeft(2, '0');
     final mm = at.minute.toString().padLeft(2, '0');
-    final clock = localizeDigits('$hh:$mm', localeCode);
-    return '$name · $clock';
+    final clock = localizeDigits(formatTime12h('$hh:$mm'), localeCode);
+    return 'notif.prayer_event'
+        .tr(namedArgs: {'prayer': 'prayer.$key'.tr(), 'time': clock});
   }
 
-  /// «الجزء الثاني · المدينة» — appended only when there really is a city.
+  /// «٥ ربيع الآخر ١٤٤٨ هـ | دبي» — the city is appended only when there
+  /// really is one; the separator is the one «صلاتك» uses.
   String _withCity(String line, String city) {
     final name = city.trim();
     if (name.isEmpty) return line;
-    return '$line · $name';
+    return '$line | $name';
   }
 
   String _needLocationTitle(String l) => 'app.name'.tr();

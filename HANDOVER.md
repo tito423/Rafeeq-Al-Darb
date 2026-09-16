@@ -1545,9 +1545,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 05:53 — IN PROGRESS — resume here**
+**2026-09-16 11:47 — IN PROGRESS — resume here**
 
-docs: handover at dawn. HANDOVER state block for the owner's icon/splash/theme batch, measured tonight (243 tests, 1404 keys x7, every hosted path 206, signed APK 236,870,371). NEXT_PROMPT and NEXT_SESSION_PROMPT both open on the one decision left: six verified commits sit unreleased because the word never came.
+the prayer card the way he asked: hijri date and city on top, «الشروق، 6:02 ص» under it, sunrise included. And it cannot go stale any more - the whole schedule goes native and the card is re-derived from the clock on every post, with an EXACT rollover alarm
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import org.json.JSONArray
 
 /**
  * The next-prayer card with its live countdown, posted natively so it can
@@ -23,10 +24,11 @@ import android.os.Build
  * what was stored. The countdown is the notification's own chronometer, so it
  * keeps ticking with the app closed.
  *
- * Dart stays the source of the content (`PrayerStatusNotification`): it
- * sends the current card and the one after it; the rollover alarm swaps them
- * at the prayer's time, and the app refreshes both whenever it runs. The only
- * way to remove the card is turning it off in the app's settings.
+ * Dart stays the source of the content (`PrayerStatusNotification`): it sends
+ * the whole schedule — every event of today and tomorrow, each already
+ * written in the reader's language — and [post] decides from the clock which
+ * one the card is on. The only way to remove the card is turning it off in
+ * the app's settings.
  */
 object PrayerCard {
     const val ID = 6100
@@ -37,35 +39,30 @@ object PrayerCard {
 
     private fun prefs(ctx: Context) = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-    /** How long the card stays on the prayer that has just come in. */
+    /** Fallback for the window Dart sends with every schedule. */
     private const val ELAPSED_WINDOW_MS = 60 * 60 * 1000L
 
-    fun show(
-        ctx: Context,
-        title: String,
-        body: String,
-        whenMs: Long,
-        countDown: Boolean,
-        elapsedTitle: String?,
-        nextTitle: String?,
-        nextBody: String?,
-        nextWhen: Long,
-    ) {
+    /**
+     * Dart sends the WHOLE schedule — every prayer of today and tomorrow,
+     * each with the two lines the card shows — and this works out from the
+     * clock which one is current. It used to be sent one card plus its
+     * successor, swapped by an alarm; that chain is two links long, and when
+     * an alarm was batched away by Doze (`setAndAllowWhileIdle` is not exact)
+     * the card simply froze. The owner photographed it at 06:06 still reading
+     * «العشاء · ١٩:٤١» under the previous day's Hijri date.
+     *
+     * Recomputing on every post makes a missed alarm harmless, and the alarm
+     * is exact now besides.
+     */
+    fun show(ctx: Context, eventsJson: String, elapsedMs: Long, title: String, body: String) {
         prefs(ctx).edit()
             .putBoolean("enabled", true)
-            .putString("title", title)
-            .putString("body", body)
-            .putLong("when", whenMs)
-            .putBoolean("count_down", countDown)
-            .putString("elapsed_title", elapsedTitle)
-            .putString("next_title", nextTitle)
-            .putString("next_body", nextBody)
-            .putLong("next_when", nextWhen)
+            .putString("events", eventsJson)
+            .putLong("elapsed_ms", if (elapsedMs > 0) elapsedMs else ELAPSED_WINDOW_MS)
+            .putString("fallback_title", title)
+            .putString("fallback_body", body)
             .apply()
         post(ctx)
-        // Counting down: wake at the prayer, to turn the card into a count-up.
-        // Counting up: wake an hour after it, to move to the next prayer.
-        scheduleRollover(ctx, if (countDown) whenMs else whenMs + ELAPSED_WINDOW_MS)
     }
 
     fun hide(ctx: Context) {
@@ -75,13 +72,52 @@ object PrayerCard {
         (ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(ID)
     }
 
+    /** One event of the schedule: the two lines and the moment it happens. */
+    private data class Event(val label: String, val body: String, val whenMs: Long)
+
+    private fun events(ctx: Context): List<Event> {
+        val raw = prefs(ctx).getString("events", null) ?: return emptyList()
+        return try {
+            val arr = JSONArray(raw)
+            (0 until arr.length()).map { i ->
+                val o = arr.getJSONObject(i)
+                Event(o.optString("label"), o.optString("body"), o.optLong("when"))
+            }.sortedBy { it.whenMs }
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
+
     /** Posts the stored card, if the card is switched on. */
     fun post(ctx: Context) {
         val p = prefs(ctx)
         if (!p.getBoolean("enabled", false)) return
         val nm = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         ensureChannel(ctx, nm)
-        val whenMs = p.getLong("when", 0L)
+
+        val now = System.currentTimeMillis()
+        val window = p.getLong("elapsed_ms", ELAPSED_WINDOW_MS)
+        val all = events(ctx)
+        // The event that has come in within the last hour wins: that hour
+        // belongs to it and the card counts UP from it. Otherwise the next
+        // one, counted DOWN to.
+        val elapsed = all.lastOrNull { it.whenMs in (now - window)..now }
+        val upcoming = all.firstOrNull { it.whenMs > now }
+        val current = elapsed ?: upcoming
+        val countDown = elapsed == null
+
+        val title: String
+        val text: String
+        if (current != null) {
+            title = current.body
+            text = current.label
+        } else {
+            // No schedule yet (or it has run out): say so rather than show a
+            // stale prayer.
+            title = p.getString("fallback_title", "") ?: ""
+            text = p.getString("fallback_body", "") ?: ""
+        }
+
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(ctx, CHANNEL_ID)
         } else {
@@ -90,8 +126,8 @@ object PrayerCard {
         }
         builder
             .setSmallIcon(ctx.applicationInfo.icon)
-            .setContentTitle(p.getString("title", "") ?: "")
-            .setContentText(p.getString("body", "") ?: "")
+            .setContentTitle(title)
+            .setContentText(text)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setCategory(Notification.CATEGORY_STATUS)
@@ -104,22 +140,15 @@ object PrayerCard {
                 )
             )
         }
-        // Counting DOWN to a prayer that has not come in yet, or UP from one
-        // that has. Android's chronometer is driven by elapsedRealtime while
-        // `when` is wall-clock, so the platform converts once at post time -
-        // which is why a card left up across a clock correction drifts and
-        // «بيقفز ثواني أو بياخر ثواني». Re-posting rebases it, and the card is
-        // re-posted at every rollover and whenever the app runs.
-        val countDown = p.getBoolean("count_down", true)
-        if (!countDown && whenMs in 1..System.currentTimeMillis()) {
+        // Android's chronometer is driven by elapsedRealtime while `when` is
+        // wall-clock, so the platform converts once at post time - which is why
+        // a card left up across a clock correction drifts and «بيقفز ثواني أو
+        // بياخر ثواني». Every repost rebases it.
+        val whenMs = current?.whenMs ?: 0L
+        if (whenMs > 0) {
             builder.setWhen(whenMs).setShowWhen(true).setUsesChronometer(true)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                builder.setChronometerCountDown(false)
-            }
-        } else if (whenMs > System.currentTimeMillis()) {
-            builder.setWhen(whenMs).setShowWhen(true).setUsesChronometer(true)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                builder.setChronometerCountDown(true)
+                builder.setChronometerCountDown(countDown)
             }
         } else {
             builder.setShowWhen(false)
@@ -129,49 +158,19 @@ object PrayerCard {
         } catch (_: Exception) {
             // No notification permission: nothing to show, nothing to crash over.
         }
+
+        // Wake exactly when this card stops being true: when the event comes
+        // in, or when its hour is up and the next one takes over.
+        val nextChange = when {
+            current == null -> 0L
+            countDown -> current.whenMs
+            else -> current.whenMs + window
+        }
+        scheduleRollover(ctx, nextChange)
     }
 
-    /**
-     * Two steps, not one.
-     *
-     * At the prayer's own time the card does NOT jump to the next prayer: it
-     * turns into «مرّ على أذان العشاء ٠٠:١٢» and counts UP, because for the
-     * hour after the adhan that is the number a reader actually wants. An
-     * hour later it moves on to the next prayer and counts down again.
-     */
-    fun rollover(ctx: Context) {
-        val p = prefs(ctx)
-        val countingDown = p.getBoolean("count_down", true)
-        val elapsedTitle = p.getString("elapsed_title", null)
-        val whenMs = p.getLong("when", 0L)
-
-        if (countingDown && elapsedTitle != null && whenMs > 0) {
-            // Step one: the prayer has come in. Keep `when` - it is the base
-            // the count-up runs from.
-            p.edit().putBoolean("count_down", false)
-                .putString("title", elapsedTitle)
-                .remove("elapsed_title")
-                .apply()
-            post(ctx)
-            scheduleRollover(ctx, whenMs + ELAPSED_WINDOW_MS)
-            return
-        }
-
-        // Step two: the hour is up, move to the prayer after it.
-        val nextWhen = p.getLong("next_when", 0L)
-        val nextTitle = p.getString("next_title", null)
-        if (nextWhen > 0 && nextTitle != null) {
-            p.edit()
-                .putString("title", nextTitle)
-                .putString("body", p.getString("next_body", "") ?: "")
-                .putLong("when", nextWhen)
-                .putBoolean("count_down", true)
-                .remove("next_title").remove("next_body").putLong("next_when", 0L)
-                .apply()
-            scheduleRollover(ctx, nextWhen)
-        }
-        post(ctx)
-    }
+    /** A rollover is just a repost: [post] works out what is current. */
+    fun rollover(ctx: Context) = post(ctx)
 
     private fun scheduleRollover(ctx: Context, whenMs: Long) {
         val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -179,10 +178,19 @@ object PrayerCard {
         am.cancel(pi)
         if (whenMs <= System.currentTimeMillis()) return
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                am.setAndAllowWhileIdle(AlarmManager.RTC, whenMs, pi)
-            } else {
-                am.set(AlarmManager.RTC, whenMs, pi)
+            // EXACT, not `setAndAllowWhileIdle`: Doze batches an inexact alarm
+            // (trap #32) and the card then tells the wrong time for as long as
+            // the phone is idle, which is exactly when nobody is opening the
+            // app to fix it. The app already holds SCHEDULE_EXACT_ALARM for the
+            // adhan; where it has been refused, an inexact alarm is still
+            // better than none because `post` re-derives everything anyway.
+            val exact = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+                am.canScheduleExactAlarms()
+            when {
+                exact -> am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, whenMs, pi)
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
+                    am.setAndAllowWhileIdle(AlarmManager.RTC, whenMs, pi)
+                else -> am.set(AlarmManager.RTC, whenMs, pi)
             }
         } catch (_: Exception) {
             // The app refreshes the card whenever it runs.

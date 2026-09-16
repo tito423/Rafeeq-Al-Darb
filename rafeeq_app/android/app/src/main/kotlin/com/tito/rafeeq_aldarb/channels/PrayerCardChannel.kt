@@ -10,6 +10,8 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import org.json.JSONArray
+import org.json.JSONObject
 import com.tito.rafeeq_aldarb.adhan.AdhanNotifications
 
 /**
@@ -24,16 +26,25 @@ fun MainActivity.registerPrayerCardChannel(flutterEngine: FlutterEngine) {
         try {
             when (call.method) {
                 "show" -> {
+                    // The schedule crosses the channel as a list of maps;
+                    // JSON is what PrayerCard stores, so it is built here
+                    // rather than parsed twice.
+                    val events = JSONArray()
+                    @Suppress("UNCHECKED_CAST")
+                    (call.argument<List<Map<String, Any?>>>("events") ?: emptyList()).forEach { e ->
+                        events.put(
+                            JSONObject()
+                                .put("label", e["label"] as? String ?: "")
+                                .put("body", e["body"] as? String ?: "")
+                                .put("when", (e["when"] as? Number)?.toLong() ?: 0L)
+                        )
+                    }
                     PrayerCard.show(
                         this,
+                        events.toString(),
+                        (call.argument<Number>("elapsedMs") ?: 0).toLong(),
                         call.argument<String>("title") ?: "",
                         call.argument<String>("body") ?: "",
-                        (call.argument<Number>("when") ?: 0).toLong(),
-                        call.argument<Boolean>("countDown") ?: true,
-                        call.argument<String>("elapsedTitle"),
-                        call.argument<String>("nextTitle"),
-                        call.argument<String>("nextBody"),
-                        (call.argument<Number>("nextWhen") ?: 0).toLong(),
                     )
                     result.success(null)
                 }
