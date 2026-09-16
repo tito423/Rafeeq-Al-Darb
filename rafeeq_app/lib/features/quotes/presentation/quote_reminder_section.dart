@@ -28,6 +28,10 @@ class QuoteReminderSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // The quotes are Arabic and untranslated, so the Home card is hidden
+    // outside Arabic — and a settings row that schedules notifications of a
+    // card the reader will never see is worse than no row at all.
+    if (context.locale.languageCode != 'ar') return const SizedBox.shrink();
     final minutes = ref.watch(quoteReminderProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;

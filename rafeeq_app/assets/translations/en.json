@@ -1555,5 +1555,31 @@
     "later": "Not now",
     "read_more": "Read more",
     "no_obligation": "Nothing in the app changes either way: no feature unlocks, no advert is removed, no reminder comes back."
+  },
+  "hijri_day": {
+    "hijra": "The Prophet ﷺ emigrates from Mecca to Medina — the event the Hijri calendar counts from.",
+    "karbala": "The battle of Karbala, in which al-Husayn ibn Ali, his household and his companions were killed.",
+    "granada": "The fall of Granada, the last Muslim stronghold in al-Andalus, after eight centuries.",
+    "khaybar": "The expedition to Khaybar and the taking of its fortresses, north-east of Medina.",
+    "baghdad": "Hulagu puts al-Musta'sim, the last Abbasid caliph in Baghdad, to death.",
+    "arrival_madinah": "The Prophet ﷺ reaches Medina, having emigrated from Mecca.",
+    "abu_bakr": "Abu Bakr as-Siddiq is given the pledge as caliph, immediately after the Prophet ﷺ died.",
+    "hattin": "Saladin defeats the Crusaders at Hattin, opening the road to Jerusalem.",
+    "constantinople_siege": "Sultan Mehmed II lays siege to Constantinople.",
+    "mutah": "The battle of Mu'tah, between the Muslims and the Byzantines with their Ghassanid allies.",
+    "constantinople": "Mehmed the Conqueror takes Constantinople, after attempts that began in Mu'awiya's time.",
+    "azhar": "Work begins on the al-Azhar mosque in Cairo.",
+    "jamal": "The battle of the Camel, between Ali ibn Abi Talib and those who rose demanding justice for Uthman.",
+    "yarmouk": "The battle of Yarmouk under Khalid ibn al-Walid, which ended Byzantine rule in Syria.",
+    "zallaqa": "The battle of Zallaqa in al-Andalus, won by the Muslims.",
+    "qadisiyyah": "The battle of Qadisiyyah under Sa'd ibn Abi Waqqas, which ended the Sasanian empire.",
+    "badr": "The great battle of Badr, the first decisive encounter between the Muslims and Quraysh.",
+    "amorium": "Caliph al-Mu'tasim takes Amorium, after a Muslim woman's call for help.",
+    "ain_jalut": "The battle of Ain Jalut, the Mongols' first great defeat, at the hands of the Mamluks.",
+    "guadalete": "The battle of Guadalete under Tariq ibn Ziyad, and the start of the conquest of al-Andalus.",
+    "hunayn": "The Prophet ﷺ sets out for Hunayn, fifteen days after the conquest of Mecca.",
+    "khandaq": "The battle of the Trench (al-Ahzab), and the siege of Medina.",
+    "hudaybiyyah": "The treaty of Hudaybiyyah between the Prophet ﷺ and Quraysh, by which Quraysh recognised the Muslim state.",
+    "farewell_hajj": "The Prophet ﷺ reaches Mecca for the Farewell Pilgrimage, with thousands of Muslims."
   }
 }

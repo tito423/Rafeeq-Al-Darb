@@ -1555,5 +1555,31 @@
     "later": "Pas maintenant",
     "read_more": "En savoir plus",
     "no_obligation": "Rien ne change dans l’application : aucune fonction déverrouillée, aucune publicité retirée, aucun rappel qui revient."
+  },
+  "hijri_day": {
+    "hijra": "Le Prophète ﷺ émigre de La Mecque à Médine — l'événement à partir duquel compte le calendrier hégirien.",
+    "karbala": "La bataille de Kerbala, où al-Husayn ibn Ali, sa famille et ses compagnons furent tués.",
+    "granada": "La chute de Grenade, dernier bastion musulman d'al-Andalus, après huit siècles.",
+    "khaybar": "L'expédition de Khaybar et la prise de ses forteresses, au nord-est de Médine.",
+    "baghdad": "Hulagu met à mort al-Musta'sim, le dernier calife abbasside de Bagdad.",
+    "arrival_madinah": "Le Prophète ﷺ arrive à Médine après avoir émigré de La Mecque.",
+    "abu_bakr": "Abou Bakr as-Siddiq reçoit l'allégeance comme calife, aussitôt après la mort du Prophète ﷺ.",
+    "hattin": "Saladin défait les croisés à Hattin, ouvrant la route de Jérusalem.",
+    "constantinople_siege": "Le sultan Mehmed II met le siège devant Constantinople.",
+    "mutah": "La bataille de Mu'ta, entre les musulmans et les Byzantins avec leurs alliés ghassanides.",
+    "constantinople": "Mehmed le Conquérant prend Constantinople, après des tentatives commencées du temps de Mu'awiya.",
+    "azhar": "Début des travaux de la mosquée al-Azhar, au Caire.",
+    "jamal": "La bataille du Chameau, entre Ali ibn Abi Talib et ceux qui réclamaient justice pour Uthman.",
+    "yarmouk": "La bataille du Yarmouk, menée par Khalid ibn al-Walid, qui mit fin à la domination byzantine en Syrie.",
+    "zallaqa": "La bataille de Zallaqa en al-Andalus, remportée par les musulmans.",
+    "qadisiyyah": "La bataille de Qadisiyya, menée par Sa'd ibn Abi Waqqas, qui mit fin à l'empire sassanide.",
+    "badr": "La grande bataille de Badr, première rencontre décisive entre les musulmans et Quraysh.",
+    "amorium": "Le calife al-Mu'tasim prend Amorium, après l'appel au secours d'une femme musulmane.",
+    "ain_jalut": "La bataille d'Aïn Djalout, première grande défaite des Mongols, face aux Mamelouks.",
+    "guadalete": "La bataille du Guadalete, menée par Tariq ibn Ziyad, et le début de la conquête d'al-Andalus.",
+    "hunayn": "Le Prophète ﷺ part pour Hunayn, quinze jours après la conquête de La Mecque.",
+    "khandaq": "La bataille du Fossé (al-Ahzab) et le siège de Médine.",
+    "hudaybiyyah": "Le traité de Houdaybiya entre le Prophète ﷺ et Quraysh, par lequel Quraysh reconnut l'État musulman.",
+    "farewell_hajj": "Le Prophète ﷺ arrive à La Mecque pour le Pèlerinage d'Adieu, avec des milliers de musulmans."
   }
 }

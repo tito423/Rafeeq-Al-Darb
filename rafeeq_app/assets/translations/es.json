@@ -1555,5 +1555,31 @@
     "later": "Ahora no",
     "read_more": "Saber más",
     "no_obligation": "Nada cambia en la aplicación: no se desbloquea ninguna función, no se quita ningún anuncio, no vuelve ningún recordatorio."
+  },
+  "hijri_day": {
+    "hijra": "El Profeta ﷺ emigra de La Meca a Medina: el acontecimiento desde el que cuenta el calendario hiyrí.",
+    "karbala": "La batalla de Kerbala, en la que fueron muertos al-Husayn ibn Ali, su familia y sus compañeros.",
+    "granada": "La caída de Granada, último bastión musulmán de al-Ándalus, tras ocho siglos.",
+    "khaybar": "La expedición a Jaybar y la toma de sus fortalezas, al nordeste de Medina.",
+    "baghdad": "Hulagu da muerte a al-Musta'sim, el último califa abasí de Bagdad.",
+    "arrival_madinah": "El Profeta ﷺ llega a Medina tras emigrar de La Meca.",
+    "abu_bakr": "Abu Bakr as-Siddiq recibe el juramento como califa, justo después de la muerte del Profeta ﷺ.",
+    "hattin": "Saladino derrota a los cruzados en Hattin y abre el camino a Jerusalén.",
+    "constantinople_siege": "El sultán Mehmed II pone sitio a Constantinopla.",
+    "mutah": "La batalla de Mu'ta, entre los musulmanes y los bizantinos con sus aliados gasánidas.",
+    "constantinople": "Mehmed el Conquistador toma Constantinopla, tras intentos que comenzaron en tiempos de Mu'awiya.",
+    "azhar": "Comienzan las obras de la mezquita de al-Azhar, en El Cairo.",
+    "jamal": "La batalla del Camello, entre Ali ibn Abi Talib y quienes se alzaron reclamando por la sangre de Uzman.",
+    "yarmouk": "La batalla del Yarmuk, dirigida por Jalid ibn al-Walid, que puso fin al dominio bizantino en Siria.",
+    "zallaqa": "La batalla de Sagrajas (Zallaqa) en al-Ándalus, ganada por los musulmanes.",
+    "qadisiyyah": "La batalla de Qadisiya, dirigida por Sa'd ibn Abi Waqqas, que acabó con el imperio sasánida.",
+    "badr": "La gran batalla de Badr, primer encuentro decisivo entre los musulmanes y Quraysh.",
+    "amorium": "El califa al-Mu'tasim toma Amorio, tras la llamada de auxilio de una mujer musulmana.",
+    "ain_jalut": "La batalla de Ain Yalut, la primera gran derrota de los mongoles, a manos de los mamelucos.",
+    "guadalete": "La batalla de Guadalete, dirigida por Táriq ibn Ziyad, e inicio de la conquista de al-Ándalus.",
+    "hunayn": "El Profeta ﷺ parte hacia Hunayn, quince días después de la conquista de La Meca.",
+    "khandaq": "La batalla del Foso (al-Ahzab) y el asedio de Medina.",
+    "hudaybiyyah": "El tratado de Hudaybiya entre el Profeta ﷺ y Quraysh, por el que Quraysh reconoció al Estado musulmán.",
+    "farewell_hajj": "El Profeta ﷺ llega a La Meca para la Peregrinación de Despedida, con miles de musulmanes."
   }
 }

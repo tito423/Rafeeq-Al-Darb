@@ -1555,5 +1555,31 @@
     "later": "Agora não",
     "read_more": "Saber mais",
     "no_obligation": "Nada muda na aplicação: nenhuma função é desbloqueada, nenhum anúncio é removido, nenhum lembrete volta."
+  },
+  "hijri_day": {
+    "hijra": "O Profeta ﷺ emigra de Meca para Medina — o acontecimento a partir do qual conta o calendário hijri.",
+    "karbala": "A batalha de Karbala, na qual foram mortos al-Husayn ibn Ali, a sua família e os seus companheiros.",
+    "granada": "A queda de Granada, último bastião muçulmano de al-Andalus, após oito séculos.",
+    "khaybar": "A expedição a Khaybar e a tomada das suas fortalezas, a nordeste de Medina.",
+    "baghdad": "Hulagu manda matar al-Musta'sim, o último califa abássida de Bagdade.",
+    "arrival_madinah": "O Profeta ﷺ chega a Medina, tendo emigrado de Meca.",
+    "abu_bakr": "Abu Bakr as-Siddiq recebe o juramento como califa, logo após a morte do Profeta ﷺ.",
+    "hattin": "Saladino derrota os cruzados em Hattin, abrindo o caminho para Jerusalém.",
+    "constantinople_siege": "O sultão Mehmed II põe cerco a Constantinopla.",
+    "mutah": "A batalha de Mu'tah, entre os muçulmanos e os bizantinos com os seus aliados gassânidas.",
+    "constantinople": "Mehmed, o Conquistador, toma Constantinopla, após tentativas iniciadas no tempo de Mu'awiya.",
+    "azhar": "Começam as obras da mesquita de al-Azhar, no Cairo.",
+    "jamal": "A batalha do Camelo, entre Ali ibn Abi Talib e os que se ergueram reclamando pelo sangue de Uthman.",
+    "yarmouk": "A batalha de Yarmouk, sob Khalid ibn al-Walid, que pôs fim ao domínio bizantino na Síria.",
+    "zallaqa": "A batalha de Zallaqa, em al-Andalus, vencida pelos muçulmanos.",
+    "qadisiyyah": "A batalha de Qadisiyyah, sob Sa'd ibn Abi Waqqas, que pôs fim ao império sassânida.",
+    "badr": "A grande batalha de Badr, primeiro confronto decisivo entre os muçulmanos e Quraysh.",
+    "amorium": "O califa al-Mu'tasim toma Amório, após o apelo de socorro de uma mulher muçulmana.",
+    "ain_jalut": "A batalha de Ain Jalut, a primeira grande derrota dos mongóis, às mãos dos mamelucos.",
+    "guadalete": "A batalha de Guadalete, sob Tariq ibn Ziyad, e o início da conquista de al-Andalus.",
+    "hunayn": "O Profeta ﷺ parte para Hunayn, quinze dias após a conquista de Meca.",
+    "khandaq": "A batalha do Fosso (al-Ahzab) e o cerco de Medina.",
+    "hudaybiyyah": "O tratado de Hudaybiyyah entre o Profeta ﷺ e Quraysh, pelo qual Quraysh reconheceu o Estado muçulmano.",
+    "farewell_hajj": "O Profeta ﷺ chega a Meca para a Peregrinação de Despedida, com milhares de muçulmanos."
   }
 }

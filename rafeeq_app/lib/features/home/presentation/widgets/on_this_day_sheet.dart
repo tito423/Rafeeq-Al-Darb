@@ -35,6 +35,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/external_link.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../data/hijri_landmarks.dart';
 import '../../data/islamic_event_keywords.dart';
 import '../../data/on_this_day_repository.dart';
 
@@ -153,18 +154,31 @@ class _DaySheet extends ConsumerWidget {
               final rows = isHijri
                   ? data.forMonthDay(h.hMonth, h.hDay)
                   : data.forDate(now);
-              if (rows.isEmpty) {
+              // What a non-Arabic reader is actually shown on the Hijri sheet:
+              // the landmark events of this Hijri day, written in their own
+              // language (`hijri_landmarks.dart`).
+              final landmarks = isHijri && locale != 'ar'
+                  ? hijriLandmarksFor(h.hMonth, h.hDay)
+                  : const <HistoricalEvent>[];
+              if (rows.isEmpty && landmarks.isEmpty) {
                 return _Note(text: 'home.on_this_day_none'.tr());
               }
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // The Hijri list is Arabic because its only source is; say so
-                  // to a reader who does not read Arabic instead of letting the
-                  // rows look like a failed translation.
-                  if (isHijri && locale != 'ar')
+                  // «مش ينفع تعرض احداث بالعربي واللغه المختارة انجليزي».
+                  //
+                  // The day-by-day Hijri record exists only in Arabic, and a
+                  // reader who chose French is not served by a wall of Arabic
+                  // with an apology over it — which is exactly what this sheet
+                  // did when it shipped. So the Arabic rows are NOT rendered
+                  // outside Arabic: what a non-Arabic reader gets is the
+                  // curated landmarks, translated, and a line saying where the
+                  // rest of the record lives.
+                  if (isHijri && locale != 'ar') ...[
+                    ..._rows(landmarks, locale, hijriYears: true),
                     _Note(text: 'home.on_this_day_hijri_ar_only'.tr()),
-                  if (isHijri)
+                  ] else if (isHijri)
                     ..._rows(rows, data.lang, hijriYears: true)
                   else
                     ..._grouped(context, rows, data.lang),

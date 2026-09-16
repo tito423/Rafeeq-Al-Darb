@@ -108,6 +108,16 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
   @override
   Widget build(BuildContext context) {
     if (!ref.watch(homeQuoteCardProvider)) return const SizedBox.shrink();
+    // «مش ينفع تعرض ... واللغه المختارة انجليزي ووحد ده في التطبيق كله».
+    //
+    // All 359 quotes are classical Arabic prose — مختصر منهاج القاصدين,
+    // الوابل الصيب, صيد الخاطر, روضة العقلاء — and there is no translated
+    // edition of any of them in the app. A reader who chose Russian was being
+    // shown Arabic he cannot read, every launch, in a card that claims to be
+    // for him. Until the corpus is translated the card belongs to the Arabic
+    // UI only; the Hadith of the Day below it IS translated (HadeethEnc ships
+    // seven language packs) and stays for everyone.
+    if (context.locale.languageCode != 'ar') return const SizedBox.shrink();
     final library = ref.watch(quoteLibraryProvider).valueOrNull;
     if (library == null || library.total == 0) return const SizedBox.shrink();
 
