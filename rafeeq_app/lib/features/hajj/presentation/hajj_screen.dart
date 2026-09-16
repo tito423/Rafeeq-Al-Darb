@@ -287,6 +287,41 @@ class _StepText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // «مش ينفع تعرض ... واللغه المختارة انجليزي».
+    //
+    // The chapter is al-Nawawi's Arabic, and translating a 522-page manual is
+    // not this feature's job. A reader on another language gets the step said
+    // plainly in his own — what the chapter is about, carrying no ruling —
+    // beside the illustration, and is told where the full text lives. The
+    // Arabic reader gets the book itself, unchanged.
+    if (context.locale.languageCode != 'ar') {
+      final scheme = Theme.of(context).colorScheme;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'hajj.desc_${step.key}'.tr(),
+            style: const TextStyle(height: 1.9),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'hajj.arabic_only'.tr(),
+            style: TextStyle(
+              fontSize: 11.5,
+              height: 1.7,
+              color: scheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'p. ${step.fromPage}–${step.toPage}',
+            textDirection: TextDirection.ltr,
+            style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
+          ),
+        ],
+      );
+    }
+
     final paras = <BookPara>[];
     for (final p in book?.pages ?? const <BookPage>[]) {
       if (p.printedPage < step.fromPage || p.printedPage > step.toPage) {
