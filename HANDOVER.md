@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 13:28 — IN PROGRESS — resume here**
+**2026-09-16 13:35 — IN PROGRESS — resume here**
 
-the first splash is back exactly as it was - lattice, glowing badge, name, tagline - held 1.7s before the video; and the UI strings that were Arabic in every language (sync status, the makharij credit and page reference, as-Safa/al-Marwah) go through keys now, with a test that finds the next one
+Dr Ayman Swaid's own channel is in the app - verified id UCKtLDrh3IgxwcZtxiTvOQAA, real photo avatar mirrored to R2 and range-checked (200, image/jpeg, 58937). Linked, not re-hosted: al-Itqan is his work
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

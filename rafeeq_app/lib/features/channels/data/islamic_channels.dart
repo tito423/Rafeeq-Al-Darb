@@ -83,6 +83,24 @@ class IslamicChannel {
 /// This is a **link list**, not a feed: the app opens the channel in YouTube
 /// and does not scrape, re-host or embed anyone's video content.
 const islamicChannels = <IslamicChannel>[
+  // «فيه حاجات تبع مخارج الحروف للدكتور ايمن سويد نزلها واستخدمها» — his
+  // «الإتقان لتلاوة القرآن» is the reference course on exactly what مخارج
+  // الحروف teaches, and it is his. It is LINKED, not copied: those episodes
+  // are his work and Iqraa's broadcast, and nothing in this app re-hosts
+  // them. Verified with `verify_youtube_channels.py`: the title comes back
+  // «د. أيمن سويد Dr. Ayman Swaid», the id `UCKtLDrh3IgxwcZtxiTvOQAA`, and
+  // the avatar is a real photograph rather than YouTube's letter tile —
+  // three other handles were tried first and two answered 404 while
+  // `@Aymanswaid` came back empty («لا تتضمن هذه القناة أي محتوى»).
+  IslamicChannel(
+    id: 'ayman_swaid',
+    nameAr: 'د. أيمن سويد',
+    nameEn: 'Dr. Ayman Swaid',
+    channelId: 'UCKtLDrh3IgxwcZtxiTvOQAA',
+    icon: Icons.record_voice_over,
+    color: Color(0xFF00695C),
+    handle: 'Dr.AymanSwaid',
+  ),
   IslamicChannel(
     id: 'mostafa_mahmoud',
     nameAr: 'القناة الرسمية للدكتور مصطفى محمود',

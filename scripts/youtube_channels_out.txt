@@ -1,8 +1,8 @@
-===== https://www.youtube.com/@waey_official =====
-          title: وعي - Waey
-     channel_id: UCpfmtMWOk6ajbRsy18fgPsA
-         vanity: http://www.youtube.com/@waey_official
+===== https://www.youtube.com/@Dr.AymanSwaid =====
+          title: د. أيمن سويد Dr. Ayman Swaid
+     channel_id: UCKtLDrh3IgxwcZtxiTvOQAA
+         vanity: http://www.youtube.com/@Dr.AymanSwaid
     subscribers: None
     is_verified: False
-         avatar: https://yt3.googleusercontent.com/l0Y-d4ueTRJk0MVIj_Hs7JKfI963wNA4_0usIpOrAs_27kEl_kliqULJzG6q5YtUrKy5qb1QPxE=s68-c-k-c0x00ffffff-no-rj
+         avatar: https://yt3.googleusercontent.com/HuVt0Ct6PNzVtB71DbwWpDYEqbjYA9nqRajwOalxQ8s5An15npkvc3ECmC79JEjKVVPjL_5YCA=s68-c-k-c0x00ffffff-no-rj
     description: None
