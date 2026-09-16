@@ -297,6 +297,9 @@ class _StepText extends StatelessWidget {
           p.printedPage == step.toPage ? step.toPara : p.paras.length - 1;
       for (var i = first; i <= last && i < p.paras.length; i++) {
         if (p.paras[i].text.trim().isEmpty) continue;
+        // الإفصاح's notes, not al-Nawawi's text — thirty per cent of this
+        // printing's body paragraphs, and a modern commentator's words.
+        if (isHajjGuideNote(p.paras[i].text)) continue;
         paras.add(p.paras[i]);
       }
     }

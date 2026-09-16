@@ -1,0 +1,30 @@
+day_8                  اليوم الثامن من ذي الحجة
+day_9                  اليوم التاسع من ذي الحجة
+night_10               ليلة العاشر من ذي الحجة
+day_10                 يوم النحر — العاشر من ذي الحجة
+days_11_13             أيام التشريق — ١١ و١٢ و١٣ من ذي الحجة
+step_obligation        وجوب الحج والعمرة
+step_preparation       قبل السفر
+step_ihram             الإحرام من الميقات
+step_mawaqit           المواقيت
+step_nusuk             أنواع النسك والاشتراط
+step_prohibitions      محظورات الإحرام
+step_tawaf             دخول مكة والطواف
+step_sai               السعي والحلق أو التقصير
+step_tarwiyah          يوم التروية
+step_arafah            الوقوف بعرفة
+step_muzdalifah        المبيت بمزدلفة
+step_nahr              أعمال يوم النحر
+step_tashreeq          رمي الجمرات في أيام التشريق
+step_hady              الهدي
+step_counsel           وصايا للحاج
+step_farewell          طواف الوداع
+step_child             حج الصبي
+step_visitation        زيارة المسجد النبوي
+step_quba              مسجد قباء والبقيع
+place_makkah           مكة
+place_mina             منى
+place_arafat           عرفات
+place_muzdalifah       مزدلفة
+
+source key: 'النص من كتاب «التحقيق والإيضاح لكثير من مسائل الحج والعمرة والزيارة» للشيخ عبد العزيز بن باز — المكتبة الشاملة.'

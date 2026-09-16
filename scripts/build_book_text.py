@@ -146,6 +146,17 @@ BOOKS = {
     # with NO modern muhaqqiq at all — the two current editions are ت التركي
     # (دار هجر 1996) and ط دار ابن كثير (2013), whose apparatus belongs to
     # living editors. Read off its own بطاقة الكتاب, not assumed.
+    # الإيضاح للنووي (ت ٦٧٦هـ) — the classical pilgrim's manual, and the
+    # replacement for التحقيق والإيضاح لابن باز that the Hajj guide used to
+    # read verbatim. The printing carries الإفصاح, a modern commentary, but
+    # Shamela puts every word of it in `div.hamesh` — checked on page 206 — and
+    # this build drops that div, so what is parsed is al-Nawawi's own vowelled
+    # matn. The editor's front matter runs to printed p.44; the Hajj steps
+    # start at الباب الأول on p.45.
+    "al_idah_fi_manasik_al_hajj_wal_umrah": {
+        "shamela_id": 96232,
+        "source_label": "المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، للإمام النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية والمكتبة الإمدادية، الثانية ١٤١٤هـ - ١٩٩٤م",
+    },
     "al_bidaya_wan_nihaya": {
         "shamela_id": 23708,
         "source_label": "المكتبة الشاملة — البداية والنهاية، لابن كثير (ت ٧٧٤ هـ)، مطبعة السعادة - القاهرة، الطبعة الأولى ١٣٤٨ - ١٣٥٨ هـ، ١٤ جزءًا",

@@ -1,12 +1,16 @@
-/// «مناسك الحج والعمرة» — the guide's shape.
+/// مناسك الحج والعمرة, step by step.
 ///
 /// WHAT IS MINE HERE AND WHAT IS NOT.
 /// The rulings of Hajj are not mine to write, so none are written here. Every
-/// step's text is read, verbatim, from «التحقيق والإيضاح لكثير من مسائل الحج
-/// والعمرة والزيارة على ضوء الكتاب والسنة» by الشيخ عبد العزيز بن باز — a short
-/// manual written for pilgrims, published by the Saudi Ministry of Islamic
-/// Affairs (22nd printing, 1425هـ), with its evidence cited inline. It is in
-/// the Library as `ibn_baz_tahqiq_wal_idah`, built from Shamela 31235.
+/// step's text is read, verbatim, from «الإيضاح في مناسك الحج والعمرة»
+/// للإمام النووي (ت ٦٧٦هـ) — the classical pilgrim's manual, in the Library
+/// as `al_idah_fi_manasik_al_hajj_wal_umrah`, built from Shamela 96232.
+///
+/// IT USED TO READ التحقيق والإيضاح للشيخ ابن باز, and that is why it
+/// changed: «اي كتاب له حقوق ملكية احذفه واستبدل بدل منه المنقول عنه». A
+/// screen that prints a living-memory scholar's book page by page is
+/// reproducing it, whatever the citation under it says. النووي died in 1277,
+/// and his manual is the book Ibn Baz's own was written in the tradition of.
 ///
 /// What this file holds is the ARRANGEMENT, exactly as the Tajweed course
 /// does: where each step starts and ends in that book, which day it falls on,
@@ -16,12 +20,15 @@
 /// beginning at الصفا, seven pebbles at each of three جمرات in order); they add
 /// no ruling of their own.
 ///
-/// THE BOUNDARIES were read off the parsed book paragraph by paragraph
-/// (`scripts/book_text_build/ibn_baz_tahqiq_wal_idah.para_index.txt`), not
-/// off the raw crawl and not guessed from page numbers: «عرفة» ends mid-page
-/// 61 where the text says «فإذا غربت انصرفوا إلى مزدلفة», and the heading of
-/// the Makkah chapter arrives as a body paragraph (p39:3) because Shamela sets
-/// it inline.
+/// THE BOUNDARIES are this printing's own chapter openings, read page by page
+/// off the built text (`scripts/_idah_bounds.txt`): الباب الأول opens p.45,
+/// الميقات p.113, الطواف p.206, السعي p.251, عرفات p.263, المزدلفة p.295,
+/// يوم النحر p.309, أيام التشريق p.357. Nothing starts before p.45: the
+/// pages under it are the modern edition's own front matter.
+///
+/// مسجد قباء HAD A STEP AND NO LONGER DOES. It was a heading in Ibn Baz's
+/// manual; al-Nawawi's باب الزيارة does not set one, and a card pointing at a
+/// section of a book that has none is §1.1's first rule broken.
 library;
 
 /// The interactive piece shown beside a step.
@@ -60,7 +67,7 @@ class HajjStep {
   });
 }
 
-/// The route of Hajj in the order the manual walks it (p50–75), as
+/// The route of Hajj in the order the manual walks it (p263–378), as
 /// translation keys. Mina appears twice because the pilgrim returns to it.
 const journeyPlaces = <String>[
   'hajj.place_makkah',
@@ -72,65 +79,78 @@ const journeyPlaces = <String>[
 ];
 
 /// The source book, by its Library id.
-const hajjGuideBook = 'ibn_baz_tahqiq_wal_idah';
-const hajjGuideShamelaUrl = 'https://shamela.ws/book/31235';
+const hajjGuideBook = 'al_idah_fi_manasik_al_hajj_wal_umrah';
+const hajjGuideShamelaUrl = 'https://shamela.ws/book/96232';
+
+/// الإفصاح, the modern commentary this printing carries under al-Nawawi's
+/// text, and which is NOT his and not ours to show.
+///
+/// Shamela puts most of it in `div.hamesh`, which the build already drops —
+/// but not all of it: 472 of the 1,576 paragraphs from p.45 on are apparatus
+/// that arrived in the ordinary body flow, thirty per cent of the book.
+/// They are recognisable the way the Musnad's were (trap #34): a paragraph
+/// that opens on a bracketed note number, or on the «=» that continues one
+/// from the page before.
+bool isHajjGuideNote(String text) => _hajjNote.hasMatch(text);
+
+final _hajjNote = RegExp(r'^\s*(\(\s*[\d٠-٩]+\s*\)|=)');
 
 const _both = {HajjTrack.hajj, HajjTrack.umrah};
 
 const hajjSteps = <HajjStep>[
   HajjStep(
-      key: 'obligation', fromPage: 6, fromPara: 2, toPage: 9, toPara: 3),
-  HajjStep(
-      key: 'preparation', fromPage: 10, fromPara: 0, toPage: 14, toPara: 2,
+      key: 'preparation', fromPage: 45, fromPara: 0, toPage: 92, toPara: 0,
       tracks: _both),
   HajjStep(
-      key: 'ihram', fromPage: 15, fromPara: 0, toPage: 20, toPara: 1,
-      tracks: _both),
+      key: 'obligation', fromPage: 92, fromPara: 1, toPage: 112, toPara: 1),
   HajjStep(
-      key: 'mawaqit', fromPage: 20, fromPara: 2, toPage: 26, toPara: 0,
+      key: 'mawaqit', fromPage: 113, fromPara: 0, toPage: 123, toPara: 1,
       rite: HajjRite.journey, tracks: _both),
   HajjStep(
-      key: 'nusuk', fromPage: 26, fromPara: 1, toPage: 29, toPara: 2,
+      key: 'ihram', fromPage: 124, fromPara: 0, toPage: 131, toPara: 1,
       tracks: _both),
   HajjStep(
-      key: 'prohibitions', fromPage: 32, fromPara: 2, toPage: 39, toPara: 2,
+      key: 'nusuk', fromPage: 132, fromPara: 0, toPage: 145, toPara: 1,
       tracks: _both),
   HajjStep(
-      key: 'tawaf', fromPage: 39, fromPara: 3, toPage: 45, toPara: 2,
+      key: 'prohibitions', fromPage: 146, fromPara: 0, toPage: 191, toPara: 2,
+      tracks: _both),
+  HajjStep(
+      key: 'tawaf', fromPage: 192, fromPara: 0, toPage: 250, toPara: 1,
       rite: HajjRite.tawaf, tracks: _both),
   HajjStep(
-      key: 'sai', fromPage: 45, fromPara: 3, toPage: 50, toPara: 0,
+      key: 'sai', fromPage: 251, fromPara: 0, toPage: 262, toPara: 1,
       rite: HajjRite.sai, tracks: _both),
   HajjStep(
-      key: 'tarwiyah', fromPage: 50, fromPara: 1, toPage: 51, toPara: 2,
+      key: 'tarwiyah', fromPage: 263, fromPara: 0, toPage: 269, toPara: 1,
       dayKey: 'hajj.day_8', rite: HajjRite.journey),
   HajjStep(
-      key: 'arafah', fromPage: 52, fromPara: 0, toPage: 61, toPara: 0,
+      key: 'arafah', fromPage: 270, fromPara: 0, toPage: 294, toPara: 3,
       dayKey: 'hajj.day_9', rite: HajjRite.journey),
   HajjStep(
-      key: 'muzdalifah', fromPage: 61, fromPara: 1, toPage: 63, toPara: 1,
+      key: 'muzdalifah', fromPage: 295, fromPara: 0, toPage: 308, toPara: 1,
       dayKey: 'hajj.night_10', rite: HajjRite.journey),
   HajjStep(
-      key: 'nahr', fromPage: 63, fromPara: 2, toPage: 71, toPara: 1,
+      key: 'nahr', fromPage: 309, fromPara: 0, toPage: 329, toPara: 2,
       dayKey: 'hajj.day_10', rite: HajjRite.jamarat),
   HajjStep(
-      key: 'tashreeq', fromPage: 71, fromPara: 2, toPage: 75, toPara: 0,
+      key: 'hady', fromPage: 330, fromPara: 0, toPage: 356, toPara: 2),
+  HajjStep(
+      key: 'tashreeq', fromPage: 357, fromPara: 0, toPage: 377, toPara: 3,
       dayKey: 'hajj.days_11_13', rite: HajjRite.jamarat),
   HajjStep(
-      key: 'hady', fromPage: 75, fromPara: 1, toPage: 78, toPara: 0),
-  HajjStep(
-      key: 'counsel', fromPage: 78, fromPara: 1, toPage: 86, toPara: 1,
+      key: 'umrah', fromPage: 378, fromPara: 0, toPage: 387, toPara: 2,
       tracks: _both),
   HajjStep(
-      key: 'farewell', fromPage: 86, fromPara: 2, toPage: 87, toPara: 3,
+      key: 'farewell', fromPage: 388, fromPara: 0, toPage: 445, toPara: 2,
       rite: HajjRite.tawaf),
   HajjStep(
-      key: 'child', fromPage: 29, fromPara: 3, toPage: 32, toPara: 1,
+      key: 'visitation', fromPage: 446, fromPara: 0, toPage: 468, toPara: 2,
       tracks: _both),
   HajjStep(
-      key: 'visitation', fromPage: 88, fromPara: 0, toPage: 105, toPara: 0,
+      key: 'child', fromPage: 505, fromPara: 0, toPage: 512, toPara: 1,
       tracks: _both),
   HajjStep(
-      key: 'quba', fromPage: 105, fromPara: 1, toPage: 107, toPara: 3,
+      key: 'counsel', fromPage: 513, fromPara: 0, toPage: 522, toPara: 1,
       tracks: _both),
 ];

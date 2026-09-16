@@ -4,10 +4,15 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/features/hajj/data/hajj_guide.dart';
 
-/// «مناسك الحج والعمرة» reads every step out of Ibn Baz's manual by paragraph
-/// range, exactly as the Tajweed course reads its lessons. A wrong range puts
-/// the tail of one rite under the next rite's title — on a subject where that
-/// is not a cosmetic mistake.
+/// «مناسك الحج والعمرة» reads every step out of al-Nawawi's الإيضاح by
+/// paragraph range, exactly as the Tajweed course reads its lessons. A wrong
+/// range puts the tail of one rite under the next rite's title — on a subject
+/// where that is not a cosmetic mistake.
+///
+/// It read Ibn Baz's التحقيق والإيضاح until this session, and every range in
+/// the file changed when the book did. That is why the last test here matters:
+/// a page number that means one chapter in one printing means another in the
+/// next, and nothing in Dart would notice.
 ///
 /// The steps are deliberately NOT all in book order (the chapter on a child's
 /// Hajj and the visitation chapters are moved to the end of the guide), so the
@@ -82,8 +87,9 @@ void main() {
   });
 
   // Against the real book, when it has been built on this machine
-  // (`py -3 scripts/build_ibn_baz_hajj_book.py`). The build output is not in
-  // the repository, so on a clean checkout this is skipped rather than failed.
+  // (`py -3 scripts/build_book_text.py al_idah_fi_manasik_al_hajj_wal_umrah`).
+  // The build output is not in the repository, so on a clean checkout this is
+  // skipped rather than failed.
   final built = File('../scripts/book_text_build/$hajjGuideBook.json');
   test('every range lands on real paragraphs of the built book', () {
     final doc = jsonDecode(utf8.decode(gzip.decode(built.readAsBytesSync())))
