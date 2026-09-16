@@ -189,7 +189,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (value.duration > Duration.zero &&
         value.position >= value.duration - const Duration(milliseconds: 150)) {
       _proceed();
+      return;
     }
+    // Repaint ONLY while the wordmark is fading in. This listener fires on
+    // every position update; rebuilding the whole splash on each of them for
+    // seven seconds would be a waste, and rebuilding on none of them is why
+    // the caption never appeared at all the first time.
+    final t = _captionT;
+    if (t != _caption && mounted) setState(() => _caption = t);
   }
 
   void _proceed() {
@@ -235,6 +242,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _video?.dispose();
     super.dispose();
   }
+
+  /// The wordmark's fade as the last frame painted it. Updated from the
+  /// video's own position by [_onVideoTick].
+  double _caption = 0;
 
   /// How far into its fade the wordmark is, 0 → 1.
   ///
@@ -296,7 +307,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           left: 0,
                           right: 0,
                           top: video.value.size.height * 0.60,
-                          child: _Wordmark(progress: _captionT),
+                          child: _Wordmark(progress: _caption),
                         ),
                       ],
                     ),
@@ -348,14 +359,26 @@ class _Wordmark extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            // scaleDown, not a fixed size: the line must never be clipped by
+            // a narrower frame, and Amiri's advance width is not something to
+            // guess at.
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
               'قُرْآنِي رَفِيقُ دَرْبِي',
               textAlign: TextAlign.center,
               textDirection: ui.TextDirection.rtl,
+              // NOT AmiriQuran, though it is bundled and sets vowel marks
+              // beautifully: it is a QURANIC face, so it draws the final yaa
+              // without its dots and floats the marks high above the line —
+              // seen on the emulator, «قرآني» came out as «قرآنی» with the
+              // damma adrift. The app's own UI face sets modern Arabic.
               style: TextStyle(
-                fontFamily: 'AmiriQuran',
-                fontSize: 74,
-                height: 1.5,
+                fontSize: 66,
+                fontWeight: FontWeight.w700,
+                height: 1.45,
                 color: AppColors.goldSoft,
                 shadows: [
                   Shadow(
@@ -364,6 +387,8 @@ class _Wordmark extends StatelessWidget {
                   ),
                   const Shadow(color: Colors.black54, blurRadius: 10),
                 ],
+              ),
+                ),
               ),
             ),
             const SizedBox(height: 10),

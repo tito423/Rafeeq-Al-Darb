@@ -304,6 +304,7 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
   @override
   Widget build(BuildContext context) {
     final locale = context.locale.languageCode;
+    final scheme = Theme.of(context).colorScheme;
     final editions = ref.watch(mushafEditionsProvider).valueOrNull ?? const [];
     final data = ref.watch(mushafDataProvider).valueOrNull;
     final service = MushafPageService.instance;
@@ -376,8 +377,7 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
                             ),
                             Text(
                               value == null ? '…' : ltr('${(value * 100).round()}%'),
-                              style: const TextStyle(
-                                  fontSize: 12, color: AppColors.goldSoft, fontWeight: FontWeight.w700),
+                              style: TextStyle(fontSize: 12, color: goldOn(scheme), fontWeight: FontWeight.w700),
                             ),
                           ],
                         ),
@@ -390,12 +390,8 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
               if (waiting > 0)
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    '${'quran_audio.queued'.tr()} · ${ltr('$waiting')}',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  ),
+                  child: Text('${'quran_audio.queued'.tr()} · ${ltr('$waiting')}',
+                      style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
                 ),
             ],
           ),
