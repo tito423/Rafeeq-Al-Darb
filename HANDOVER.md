@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 20:48 — IN PROGRESS — resume here**
+**2026-09-16 20:55 — IN PROGRESS — resume here**
 
-the Jazariyyah's text function and its guard: seven tests that ask the question this level exists for - is anything in it not the nazim's? None of the editor's footnotes reaches a reader, no lesson strays outside pages 53-99, and the filter drops «(1) في ج زيادة» while keeping the verse whose own line cites a marker. The book corrected me once: في اللامات really is a heading and one couplet
+the listen-to-the-rule pointers survive the move off the copyrighted course: TajweedExample lifted into its own file (a surah number is a fact, the phrase is the Quran, the one-liner is ours - none of it was ever the other author's), and the twelve re-mapped onto Ibn al-Jazari's own chapters. His book folds izhar, idgham, iqlab, ikhfa AND the sakin mim into one baab where the other gave each a lesson, so a lesson carries a list now. Five tests hold the map to real titles, real ayat and seven locales
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
