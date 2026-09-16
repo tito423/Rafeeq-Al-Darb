@@ -303,7 +303,7 @@
     "size": "Tamaño",
     "pdf_viewer": "Lector de libros",
     "hadith_hub": "Los nueve libros de hadiz",
-    "hadith_download_hint": "Descarga la base de datos de hadices para consultarla sin conexión",
+    "hadith_download_hint": "Una descarga única de ~16 MB. Después, los nueve libros funcionan sin conexión.",
     "hadith_db": "Base de datos de hadices",
     "books_count": "libros",
     "hadiths_count": {

@@ -102,7 +102,6 @@ flutter:
     - assets/translations/
     - assets/data/quran_local.db
     - assets/data/quran_sciences.db
-    - assets/data/hadith.db
     - assets/data/quotes.json
     - assets/data/quote_backgrounds.json
     # «في مثل هذا اليوم» — 366 days x 12 events, built by

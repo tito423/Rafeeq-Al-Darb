@@ -331,24 +331,28 @@ class HadithRepository {
   }
 }
 
-/// P3‑41: the owner asked directly for the hadith library "built in" —
-/// bundled inside the APK, not fetched over the network at all. `hadith.db`
-/// (77MB, the same real 9-book database `build_hadith_db.py` already
-/// produced) now ships as `assets/data/hadith.db` and opens through
-/// `DbHelper.openBundled`, the exact mechanism `quran_local.db`/
-/// `quran_sciences.db` already use — materialised into app storage once,
-/// then opened read-only, never re-downloaded. This provider therefore
-/// never actually returns null on a real install any more; the nullable
-/// return type and the `_DownloadPrompt` UI it used to drive
-/// (`daily_hadith_card.dart`) are kept rather than torn out, since a
-/// bundled asset failing to materialise (corrupt install, out of disk) is
-/// still a real failure mode worth an honest "not available" state
-/// instead of a crash.
+/// The nine books, from the copy on the device — downloaded, not bundled.
+///
+/// P3‑41 had it the other way: «الحديث يبقى مبني جوه التطبيق» put the whole
+/// 109,731,840-byte `hadith.db` inside the APK. That is most of the 236 MB
+/// the APK weighs, and it is what puts it over Google Play's ceiling, so the
+/// owner asked for it back out: «شيل hadith من التضمين وخليها تنزل اول مرة
+/// وعرف المستخدم بده».
+///
+/// Nothing else had to be built for that. The download has existed all along
+/// (`hadithDbDownloadId`, `AppConfig.hadithDbUrl`, and `_DownloadGate` in
+/// `hadith_tab.dart`, kept rather than torn out precisely because a missing
+/// database was always a real state). Null means «not on this device yet»,
+/// and every screen that reads this already draws the gate for it.
 final hadithRepositoryProvider = FutureProvider<HadithRepository?>((ref) async {
   try {
+    // `expectedVersion`, not a plain existence check: `openDownloaded`
+    // deletes a copy whose `.version` stamp no longer matches
+    // `AppConfig.hadithDbVersion` and reports it as missing, so a device
+    // holding a pre-grading `hadith.db` re-fetches instead of opening it.
     final db = await DbHelper.instance
-        .openBundled('data/hadith.db', stamp: AppConfig.hadithDbVersion);
-    return HadithRepository(db);
+        .openDownloaded('hadith.db', expectedVersion: AppConfig.hadithDbVersion);
+    return db == null ? null : HadithRepository(db);
   } catch (_) {
     return null;
   }

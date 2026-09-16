@@ -303,7 +303,7 @@
     "size": "Taille",
     "pdf_viewer": "Lecteur de livre",
     "hadith_hub": "Les Neuf Livres de Hadith",
-    "hadith_download_hint": "Téléchargez la base de hadiths pour la consulter entièrement hors ligne",
+    "hadith_download_hint": "Un téléchargement unique d’environ 16 Mo. Ensuite, les neuf recueils fonctionnent hors ligne.",
     "hadith_db": "Base de hadiths",
     "books_count": "livres",
     "hadiths_count": {
