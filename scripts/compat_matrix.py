@@ -135,6 +135,17 @@ def run_one(serial, apk, width, results, version):
         "android.intent.category.LAUNCHER", "1", timeout=120)
     time.sleep(25)
 
+    # GET PAST ONBOARDING. A freshly imaged emulator opens on «اختر مصحفك»,
+    # which has no bottom bar at all — so the sweep below taps empty space and
+    # photographs the same onboarding screen seven times. The api31 run caught
+    # exactly that on one cell and missed it on three, because a ticking clock
+    # made the screenshots differ by a pixel. The CTA sits at the bottom
+    # centre, above the system bar.
+    px0 = [int(v) for v in spec.split("x")]
+    cta_y = px0[1] - int((48 + 30) * density / 160)
+    adb(serial, "shell", "input", "tap", str(px0[0] // 2), str(cta_y))
+    time.sleep(6)
+
     alive = bool(adb(serial, "shell", "pidof", PKG).stdout.strip())
     log = adb(serial, "logcat", "-d", timeout=120).stdout
     crashes = [l for l in log.splitlines()
@@ -149,7 +160,6 @@ def run_one(serial, apk, width, results, version):
     # its middle is 48 + 34 dp up from the bottom.
     bar_y = px[1] - int((48 + 34) * density / 160)
     blanks = []
-    shot_bytes = []
     for name, frac in TABS:
         adb(serial, "shell", "input", "tap", str(int(px[0] * frac)), str(bar_y))
         time.sleep(3)
@@ -160,11 +170,23 @@ def run_one(serial, apk, width, results, version):
                                    capture_output=True, timeout=120).stdout)
         if blank(shot):
             blanks.append(name)
-        shot_bytes.append(open(shot, "rb").read())
 
-    # A sweep where every screenshot is identical did not sweep anything —
-    # that is what a dialog over the bar looks like from here.
-    stuck = len(set(shot_bytes)) <= 1 and len(shot_bytes) > 1
+
+    # A sweep where every screenshot is the same did not sweep anything — a
+    # dialog over the bar, or an onboarding screen with no bar. Compared on
+    # the TOP 60 % only: a clock in the corner ticking between shots made
+    # three such cells look like they had moved when they had not.
+    def top(png):
+        try:
+            from PIL import Image
+        except ImportError:
+            return png
+        im = Image.open(png).convert("RGB")
+        w, h = im.size
+        return im.crop((0, int(h * 0.08), w, int(h * 0.6))).resize((24, 40)).tobytes()
+
+    tops = [top(os.path.join(shots, "%s.png" % n)) for n, _ in TABS]
+    stuck = len(set(tops)) <= 1 and len(tops) > 1
 
     results.append({
         "version": version, "width": width, "alive": alive,

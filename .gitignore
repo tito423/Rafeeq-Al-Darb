@@ -99,3 +99,4 @@ dist/*.apk
 # useful history, the 84 screenshots are not.
 scripts/compat_out/*/
 scripts/compat_out/run.log
+scripts/compat_out/run*.log

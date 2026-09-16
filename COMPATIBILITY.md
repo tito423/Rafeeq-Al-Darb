@@ -22,14 +22,16 @@ widths each — twelve cells, 84 screenshots, all of them written to
 |---|---|---|---|---|---|
 | **7.0 Nougat** | 24 | pass | pass | pass | pass |
 | **9 Pie** | 28 | pass | pass | pass | pass |
+| **12** | 31 | pass | pass | pass | pass |
+| **14** | 34 | pass | pass | pass | pass |
 | **16** | 36 | pass | pass | pass | pass |
-| 12 | 31 | — | — | — | — |
-| 14 | 34 | — | — | — | — |
+
+Twenty cells, five Android versions, 140 screenshots.
 
 «pass» here means: the signed APK installed, the process was still alive 25 s
 after launch, `logcat` had no `FATAL EXCEPTION` and no `E/flutter`, and all
-seven tabs opened onto a drawn screen. Android 12 and 14 need their system
-images fetched (1.4 GB each) and are the next two to run.
+seven tabs opened onto a drawn screen. All five images were fetched by hand (the SDK
+manager cannot reach Google from this machine — see the end of this file).
 
 ### Android 7.0 — 2026-09-16, in detail
 
@@ -111,6 +113,20 @@ colour by nature. A check that cries wolf three times in twelve is worse than
 no check, so it shrinks the screenshot to a 16×28 grid now, drops the system
 bars, and needs 97 % of one colour. Re-run over all 84 saved screenshots:
 **none blank**.
+
+And a fourth, on the Android 12 run: a `FATAL EXCEPTION` at 320 dp that the
+matrix attributed to the app. It was **not ours** — pid 730, a system process,
+and it never reproduced on a clean boot; Android 12's own SystemUI falls over
+when `wm size` changes under it. The check reads the six lines under the
+exception now and counts it only when they name `com.tito.rafeeq_aldarb`,
+because a matrix that cries crash is a matrix nobody reads.
+
+The same run also taught it to **get past onboarding**: a freshly imaged
+emulator opens on «اختر مصحفك», which has no bottom bar at all, so the sweep
+was tapping empty space and photographing the same screen seven times. Three
+of those four cells slipped through because a ticking clock made the
+screenshots differ by a pixel — the comparison uses the top 60 % of the screen
+now.
 
 ## How to repeat this
 

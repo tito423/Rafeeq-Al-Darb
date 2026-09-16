@@ -1,17 +1,14 @@
 apk: rafeeq_app/build/app/outputs/flutter-apk/app-release.apk
 
 android                width   installs  alive    problems
-android16(api36)       320     yes       yes      blank: home,quran
-android16(api36)       360     yes       yes      -
-android16(api36)       411     yes       yes      -
-android16(api36)       800     yes       yes      -
-android7.0(api24)      320     yes       yes      blank: home,quran
-android7.0(api24)      360     yes       yes      -
-android7.0(api24)      411     yes       yes      -
-android7.0(api24)      800     yes       yes      blank: quran
-android9(api28)        320     yes       yes      -
-android9(api28)        360     yes       yes      -
-android9(api28)        411     yes       yes      -
-android9(api28)        800     yes       yes      -
+android12(api31)       320     yes       yes      CRASH: 09-16 18:35:11.009   730   730 E AndroidRuntime: FATAL EXCEPTION: main; tabs never changed (dialog over the bar?)
+android12(api31)       360     yes       yes      -
+android12(api31)       411     yes       yes      -
+android12(api31)       800     yes       yes      -
+android14(api34)       320     yes       yes      -
+android14(api34)       360     yes       yes      -
+android14(api34)       411     yes       yes      -
+android14(api34)       800     yes       yes      -
 
 screenshots under E:\My Projects\Rafiq-Al-Darb\scripts\compat_out
+
