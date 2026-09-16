@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 20:34 — IN PROGRESS — resume here**
+**2026-09-16 20:48 — IN PROGRESS — resume here**
 
-the Jazariyyah is cut: 18 lessons, 175 paragraphs, the nazim's own chapters from مقدمة الناظم to خاتمة - and NOT one line of the 2020 editor's apparatus, which is 18 TOC entries of it before the poem even starts. Two things the text itself taught: «مقدمة الناظم» is the editor's label and not a heading in the poem, so that lesson starts at the top of its page; and every page carries his footnotes marked (1), which the screen will drop
+the Jazariyyah's text function and its guard: seven tests that ask the question this level exists for - is anything in it not the nazim's? None of the editor's footnotes reaches a reader, no lesson strays outside pages 53-99, and the filter drops «(1) في ج زيادة» while keeping the verse whose own line cites a marker. The book corrected me once: في اللامات really is a heading and one couplet
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
