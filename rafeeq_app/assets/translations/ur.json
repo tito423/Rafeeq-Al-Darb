@@ -184,7 +184,14 @@
     "name_save": "محفوظ کریں",
     "on_this_day": "آج کے دن",
     "on_this_day_none": "اس دن کے لیے کوئی واقعہ درج نہیں۔",
-    "on_this_day_source": "ماخذ: ویکیپیڈیا — کریئیٹو کامنز (CC BY-SA)"
+    "on_this_day_source": "ماخذ: ویکیپیڈیا — کریئیٹو کامنز (CC BY-SA)",
+    "on_this_day_hijri": "اسی ہجری دن",
+    "on_this_day_gregorian": "اسی عیسوی دن",
+    "on_this_day_islamic": "اسلام اور مسلمانوں سے متعلق",
+    "on_this_day_world": "دیگر واقعات",
+    "on_this_day_hijri_ar_only": "ہجری تقویم کا یہ روزانہ ریکارڈ عربی ویکیپیڈیا سے لیا گیا ہے، جس کا کسی اور زبان میں متبادل نہیں؛ اس لیے یہ اندراجات عربی میں ہیں۔",
+    "on_this_day_source_ar_wiki": "ماخذ: عربی ویکیپیڈیا — ہجری ایام کے صفحات (CC BY-SA)",
+    "hijri_before_hijra": "ق ہ"
   },
   "quran": {
     "surah_list": "سورتیں",

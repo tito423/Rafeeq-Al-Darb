@@ -1,13 +1,29 @@
-/// The sheet the Home header's dates open: both calendars, and what happened
-/// on this day.
+/// The two sheets the Home header's dates open — one per calendar.
 ///
-/// «لما أضغط على التاريخ الهجري تجيب ما يوافقه في كارت جميل جدًا بصريًا مزخرف
-/// إسلاميًا، ويعرض الأحداث التاريخية … وكذلك في التاريخ الميلادي».
+/// «انا عايز لما اضغط ع التاريخ الهجري يعرض تاريخ اليوم واهم الاحداث اللي حصلت
+/// فيه قبل كدة بشكل جميل وبالنسبة للتاريخ الميلادي عايز لما اضغط عليه يعرض
+/// تاريخ اليوم الميلادي ويعرض اهم الاحداث … خاصة اللي يخص الاسلام والمسلمين».
 ///
-/// Both halves of the date are one control: tapping either side opens this,
-/// and this shows both. Splitting them into two different sheets would be two
-/// screens saying almost the same thing.
+/// They used to be ONE sheet: both halves of the header opened it and it showed
+/// both dates over Wikimedia's `onthisday` feed. The trouble is that the feed is
+/// keyed by the **Gregorian** month and day, so tapping «١٧ رمضان» and tapping
+/// «8 March» gave the same list — the Hijri date had nothing of its own to say.
+///
+/// Now each date opens its own sheet:
+///
+///   * the Hijri one leads on the Hijri date and lists events dated by Hijri
+///     year, from Arabic Wikipedia's per-Hijri-day pages;
+///   * the Gregorian one leads on the Gregorian date and puts what concerns
+///     Islam and the Muslims first, then everything else.
+///
+/// Both still show the other calendar's date underneath, because that
+/// conversion is the first thing the header was ever asked for.
 library;
+
+// `intl`, which easy_localization re-exports, has a `TextDirection` of its own
+// (`TextDirection.RTL`), and it shadows the widget one in this file. The
+// paragraph direction below wants Flutter's, so it is named explicitly.
+import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -19,21 +35,38 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/external_link.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../data/islamic_event_keywords.dart';
 import '../../data/on_this_day_repository.dart';
 
-Future<void> showOnThisDaySheet(BuildContext context, {int hijriOffset = 0}) {
+/// Which calendar a sheet is about.
+enum DayCalendar { hijri, gregorian }
+
+Future<void> showHijriDaySheet(BuildContext context, {int hijriOffset = 0}) =>
+    _show(context, DayCalendar.hijri, hijriOffset);
+
+Future<void> showGregorianDaySheet(BuildContext context,
+        {int hijriOffset = 0}) =>
+    _show(context, DayCalendar.gregorian, hijriOffset);
+
+/// Kept so older call sites (and anything that just wants "the day sheet")
+/// still compile; the Gregorian sheet is the one that covers both dates.
+Future<void> showOnThisDaySheet(BuildContext context, {int hijriOffset = 0}) =>
+    showGregorianDaySheet(context, hijriOffset: hijriOffset);
+
+Future<void> _show(BuildContext context, DayCalendar calendar, int offset) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (_) => _OnThisDaySheet(hijriOffset: hijriOffset),
+    builder: (_) => _DaySheet(calendar: calendar, hijriOffset: offset),
   );
 }
 
-class _OnThisDaySheet extends ConsumerWidget {
+class _DaySheet extends ConsumerWidget {
+  final DayCalendar calendar;
   final int hijriOffset;
 
-  const _OnThisDaySheet({required this.hijriOffset});
+  const _DaySheet({required this.calendar, required this.hijriOffset});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +83,10 @@ class _OnThisDaySheet extends ConsumerWidget {
         '${'hijri.suffix'.tr()}';
     final gregorian = DateFormat.yMMMMEEEEd(locale).format(now);
 
-    final events = ref.watch(onThisDayProvider(locale));
+    final isHijri = calendar == DayCalendar.hijri;
+    final events = isHijri
+        ? ref.watch(onThisDayHijriProvider)
+        : ref.watch(onThisDayProvider(locale));
 
     return DraggableScrollableSheet(
       expand: false,
@@ -61,17 +97,19 @@ class _OnThisDaySheet extends ConsumerWidget {
         controller: controller,
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
         children: [
-          // The two dates on one ornamented panel: this IS the conversion the
-          // owner asked for, so it is the thing the sheet opens on.
+          // The date this sheet is ABOUT leads, in the big face; the other
+          // calendar stays underneath because the conversion is still the
+          // first thing the header was asked for.
           IslamicPatternPanel(
             padding: const EdgeInsets.fromLTRB(18, 20, 18, 18),
             child: Column(
               children: [
                 Text(
-                  hijri,
+                  isHijri ? hijri : gregorian,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: locale == 'ar' ? 'AmiriQuran' : null,
+                    fontFamily:
+                        isHijri && locale == 'ar' ? 'AmiriQuran' : null,
                     fontSize: 20,
                     height: 1.7,
                     fontWeight: FontWeight.w700,
@@ -86,7 +124,7 @@ class _OnThisDaySheet extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  gregorian,
+                  isHijri ? gregorian : hijri,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -97,19 +135,12 @@ class _OnThisDaySheet extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 18),
-          Row(
-            children: [
-              const Icon(Icons.history_edu_rounded,
-                  size: 19, color: AppColors.gold),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'home.on_this_day'.tr(),
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.w800),
-                ),
-              ),
-            ],
+          _SectionTitle(
+            icon: Icons.history_edu_rounded,
+            text: (isHijri
+                    ? 'home.on_this_day_hijri'
+                    : 'home.on_this_day_gregorian')
+                .tr(),
           ),
           const SizedBox(height: 10),
           events.when(
@@ -119,26 +150,43 @@ class _OnThisDaySheet extends ConsumerWidget {
             ),
             error: (_, _) => _Note(text: 'home.on_this_day_none'.tr()),
             data: (data) {
-              final rows = data.forDate(now);
+              final rows = isHijri
+                  ? data.forMonthDay(h.hMonth, h.hDay)
+                  : data.forDate(now);
               if (rows.isEmpty) {
                 return _Note(text: 'home.on_this_day_none'.tr());
               }
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final e in rows) _EventRow(event: e, locale: locale),
+                  // The Hijri list is Arabic because its only source is; say so
+                  // to a reader who does not read Arabic instead of letting the
+                  // rows look like a failed translation.
+                  if (isHijri && locale != 'ar')
+                    _Note(text: 'home.on_this_day_hijri_ar_only'.tr()),
+                  if (isHijri)
+                    ..._rows(rows, data.lang, hijriYears: true)
+                  else
+                    ..._grouped(context, rows, data.lang),
                   const SizedBox(height: 14),
                   // CC BY-SA asks for attribution, and §1.2 asks for a link to
-                  // every source. Same sentence does both.
+                  // every source. The same sentence does both.
                   InkWell(
                     onTap: () => openExternalLink(
-                      'https://${locale == 'ar' ? 'ar' : 'en'}.wikipedia.org/'
-                      'wiki/Special:Search?search='
-                      '${Uri.encodeComponent(DateFormat.MMMMd(locale).format(now))}',
+                      isHijri
+                          ? 'https://ar.wikipedia.org/wiki/'
+                              '${Uri.encodeComponent('${h.hDay} ${hijriMonthNameAr(h.hMonth)}')}'
+                          : 'https://${locale == 'ar' ? 'ar' : 'en'}.wikipedia.org/'
+                              'wiki/Special:Search?search='
+                              '${Uri.encodeComponent(DateFormat.MMMMd(locale).format(now))}',
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       child: Text(
-                        'home.on_this_day_source'.tr(),
+                        (isHijri
+                                ? 'home.on_this_day_source_ar_wiki'
+                                : 'home.on_this_day_source')
+                            .tr(),
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: scheme.onSurfaceVariant,
@@ -155,17 +203,132 @@ class _OnThisDaySheet extends ConsumerWidget {
       ),
     );
   }
+
+  List<Widget> _rows(List<HistoricalEvent> rows, String lang,
+      {bool hijriYears = false}) {
+    // Wikipedia's own page order is not chronological — «٦ ربيع الآخر»
+    // opens 365, 541, 1398, 1397, 1327 — and a column of years the eye cannot
+    // run down is not «بشكل جميل». Sorting is a presentation choice over
+    // sourced rows: nothing is added, removed or rewritten.
+    final sorted = [...rows]..sort((a, b) {
+        if (a.year == null) return b.year == null ? 0 : 1;
+        if (b.year == null) return -1;
+        return a.year!.compareTo(b.year!);
+      });
+    return [
+      for (final e in sorted)
+        _EventRow(event: e, hijriYear: hijriYears, arabicText: lang == 'ar'),
+    ];
+  }
+
+  /// The Gregorian sheet, in two blocks: what concerns Islam and the Muslims,
+  /// then the rest. Nothing is hidden — «خاصة اللي يخص الاسلام والمسلمين» is
+  /// about what comes first, not about what is allowed through.
+  List<Widget> _grouped(
+      BuildContext context, List<HistoricalEvent> rows, String lang) {
+    final islamic = <HistoricalEvent>[];
+    final rest = <HistoricalEvent>[];
+    for (final e in rows) {
+      (concernsIslam(e.text, lang) ? islamic : rest).add(e);
+    }
+    if (islamic.isEmpty || rest.isEmpty) {
+      return _rows(rows, lang);
+    }
+    return [
+      _SubTitle(text: 'home.on_this_day_islamic'.tr()),
+      const SizedBox(height: 8),
+      ..._rows(islamic, lang),
+      const SizedBox(height: 6),
+      _SubTitle(text: 'home.on_this_day_world'.tr()),
+      const SizedBox(height: 8),
+      ..._rows(rest, lang),
+    ];
+  }
 }
 
-class _EventRow extends StatelessWidget {
-  final HistoricalEvent event;
-  final String locale;
+class _SectionTitle extends StatelessWidget {
+  final IconData icon;
+  final String text;
 
-  const _EventRow({required this.event, required this.locale});
+  const _SectionTitle({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) => Row(
+        children: [
+          Icon(icon, size: 19, color: AppColors.gold),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w800),
+            ),
+          ),
+        ],
+      );
+}
+
+class _SubTitle extends StatelessWidget {
+  final String text;
+  const _SubTitle({required this.text});
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, bottom: 2),
+      child: Row(
+        children: [
+          Container(width: 3, height: 15, color: AppColors.gold),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+              color: scheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EventRow extends StatelessWidget {
+  final HistoricalEvent event;
+
+  /// Hijri years get «هـ» after them, and a year before the Hijra is stored
+  /// negative and printed «ق.هـ» — which is how the source writes it.
+  final bool hijriYear;
+
+  /// The SENTENCE is Arabic even when the app is not. The Hijri list has only
+  /// an Arabic source, and on the English UI its rows were laid out
+  /// left-to-right: every full stop jumped to the head of the line and the
+  /// wrapping broke mid-phrase. Seen on the emulator. The row keeps the app's
+  /// direction; the paragraph gets its own.
+  final bool arabicText;
+
+  const _EventRow({
+    required this.event,
+    this.hijriYear = false,
+    this.arabicText = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final locale = context.locale.languageCode;
+    final y = event.year;
+    final label = y == null
+        ? '—'
+        : hijriYear
+            ? '${localizeDigits('${y.abs()}', locale)}'
+                '${y < 0 ? ' ${'home.hijri_before_hijra'.tr()}' : 'hijri.suffix'.tr()}'
+            : localizeDigits('$y', locale);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -174,17 +337,17 @@ class _EventRow extends StatelessWidget {
           // The year in its own well, so the column of years reads down the
           // card and the eye can find a period without reading every line.
           Container(
-            width: 58,
-            padding: const EdgeInsets.symmetric(vertical: 5),
+            width: 64,
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
             decoration: BoxDecoration(
               color: AppColors.gold.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(9),
             ),
             child: Text(
-              event.year == null
-                  ? '—'
-                  : localizeDigits('${event.year}', locale),
+              label,
               textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w800,
@@ -194,12 +357,17 @@ class _EventRow extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              event.text,
-              style: TextStyle(
-                fontSize: 13.5,
-                height: 1.65,
-                color: scheme.onSurface,
+            child: Directionality(
+              textDirection:
+                  arabicText ? ui.TextDirection.rtl : Directionality.of(context),
+              child: Text(
+                event.text,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 13.5,
+                  height: 1.65,
+                  color: scheme.onSurface,
+                ),
               ),
             ),
           ),
@@ -215,11 +383,12 @@ class _Note extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 22),
+        padding: const EdgeInsets.symmetric(vertical: 14),
         child: Text(
           text,
           textAlign: TextAlign.center,
           style: TextStyle(
+            height: 1.7,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),

@@ -184,7 +184,14 @@
     "name_save": "Salvar",
     "on_this_day": "Num dia como hoje",
     "on_this_day_none": "Nenhum evento registrado para este dia.",
-    "on_this_day_source": "Fonte: Wikipédia — Creative Commons (CC BY-SA)"
+    "on_this_day_source": "Fonte: Wikipédia — Creative Commons (CC BY-SA)",
+    "on_this_day_hijri": "Neste dia do calendário hijri",
+    "on_this_day_gregorian": "Neste dia do calendário gregoriano",
+    "on_this_day_islamic": "Relativo ao islão e aos muçulmanos",
+    "on_this_day_world": "Outros acontecimentos",
+    "on_this_day_hijri_ar_only": "O registo dia a dia do calendário hijri vem da Wikipédia em árabe, que não tem equivalente noutra língua, pelo que estas entradas estão em árabe.",
+    "on_this_day_source_ar_wiki": "Fonte: Wikipédia em árabe — páginas dos dias hijri (CC BY-SA)",
+    "hijri_before_hijra": "a. H."
   },
   "quran": {
     "surah_list": "Suratas",

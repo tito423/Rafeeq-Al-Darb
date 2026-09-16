@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import '../../../../core/i18n/hijri_months.dart';
+import '../../../../core/utils/digits.dart' as digits;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
@@ -182,7 +183,13 @@ class _HeaderCard extends ConsumerWidget {
     // `hijriMonthName`. The two tables that used to sit here (and a second
     // copy in the prayer notification) covered Arabic and English only, so a
     // French or Urdu reader was shown the English transliteration.
-    return '${h.hDay} ${hijriMonthName(h.hMonth)} ${h.hYear}'
+    // The digits follow the language too. The header used to print «6 ربيع
+    // الآخر 1448 هـ» in Latin figures while the sheet it opens printed
+    // «٦ ربيع الآخر ١٤٤٨ هـ» — the same date, twice, in two scripts, one
+    // above the other on screen.
+    return '${digits.localizeDigits('${h.hDay}', localeCode)} '
+        '${hijriMonthName(h.hMonth)} '
+        '${digits.localizeDigits('${h.hYear}', localeCode)}'
         '${'hijri.suffix'.tr()}';
   }
 
@@ -206,10 +213,14 @@ class _HeaderCard extends ConsumerWidget {
     final gradient = isLight
         ? const [Color(0xFFFBF6E9), Color(0xFFF3ECD8), Color(0xFFEFE6D2)]
         : const [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)];
-    final hijriColor = isLight ? const Color(0xFF0E7C6B) : const Color(0xFF7DEBDA);
+    final hijriColor = isLight
+        ? const Color(0xFF0E7C6B)
+        : const Color(0xFF7DEBDA);
     final welcomeColor = isLight ? const Color(0xFF1D2C26) : Colors.white;
     final readerName = ref.watch(readerNameProvider);
-    final gregorianColor = isLight ? const Color(0xFF9A7A15) : const Color(0xFFD4AF37);
+    final gregorianColor = isLight
+        ? const Color(0xFF9A7A15)
+        : const Color(0xFFD4AF37);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
@@ -241,32 +252,38 @@ class _HeaderCard extends ConsumerWidget {
       // month name only ever shrinks to fit — it can never wrap mid-word or
       // trip a `RenderFlex overflowed` and break the card's shape. The side
       // cells share the same flex so the welcome stays optically centred.
-      child: InkWell(
-        // «لما أضغط على التاريخ الهجري تجيب ما يوافقه … وكذلك في التاريخ
-        // الميلادي». Both halves of the header open the same sheet, because
-        // the sheet shows both dates: two sheets would be two screens saying
-        // almost the same thing.
-        onTap: () => showOnThisDaySheet(
-          context,
-          hijriOffset: ref.read(prayerAdjustmentsProvider).hijriOffsetDays,
-        ),
-        borderRadius: BorderRadius.circular(18),
-        child: Row(
+      // «لما اضغط ع التاريخ الهجري يعرض تاريخ اليوم واهم الاحداث اللي
+      // حصلت فيه … وبالنسبة للتاريخ الميلادي عايز لما اضغط عليه يعرض
+      // تاريخ اليوم الميلادي» — so the two dates are two controls now. They
+      // used to share one InkWell over the whole card and open one sheet,
+      // which meant tapping «١٧ رمضان» showed events keyed to 8 March.
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             flex: 3,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                _hijriLine(context.locale.languageCode,
-                    ref.watch(prayerAdjustmentsProvider).hijriOffsetDays),
-                maxLines: 1,
-                style: TextStyle(
-                  color: hijriColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+            child: InkWell(
+              onTap: () => showHijriDaySheet(
+                context,
+                hijriOffset: ref
+                    .read(prayerAdjustmentsProvider)
+                    .hijriOffsetDays,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  _hijriLine(
+                    context.locale.languageCode,
+                    ref.watch(prayerAdjustmentsProvider).hijriOffsetDays,
+                  ),
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: hijriColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -286,23 +303,23 @@ class _HeaderCard extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                'home.welcome_guest'.tr(),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                style: TextStyle(
-                  color: welcomeColor,
-                  // The AmiriQuran calligraphy face is only right for the
-                  // Arabic "مرحبًا بك"; Latin locales use the app's normal
-                  // (narrower, Latin-tuned) font. FittedBox now guarantees no
-                  // overflow either way, but keeping the right face per script
-                  // still reads better than scaling a mismatched one down.
-                  fontFamily: context.locale.languageCode == 'ar'
-                      ? 'AmiriQuran'
-                      : null,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+                    'home.welcome_guest'.tr(),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: welcomeColor,
+                      // The AmiriQuran calligraphy face is only right for the
+                      // Arabic "مرحبًا بك"; Latin locales use the app's normal
+                      // (narrower, Latin-tuned) font. FittedBox now guarantees no
+                      // overflow either way, but keeping the right face per script
+                      // still reads better than scaling a mismatched one down.
+                      fontFamily: context.locale.languageCode == 'ar'
+                          ? 'AmiriQuran'
+                          : null,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   // «ويتكتب الاسم ده بزخرفة جميلة جدًا جنب أو تحت مرحبًا بك».
                   // Nothing is drawn for a reader who has not given one - the
                   // greeting stays exactly as it always was rather than
@@ -319,43 +336,51 @@ class _HeaderCard extends ConsumerWidget {
           const SizedBox(width: 8),
           Expanded(
             flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Text(
-                    _weekdayLine(context),
-                    maxLines: 1,
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                      color: gregorianColor,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
+            child: InkWell(
+              onTap: () => showGregorianDaySheet(
+                context,
+                hijriOffset: ref
+                    .read(prayerAdjustmentsProvider)
+                    .hijriOffsetDays,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Text(
+                      _weekdayLine(context),
+                      maxLines: 1,
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        color: gregorianColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
-                ),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Text(
-                    _gregorianLine(context),
-                    maxLines: 1,
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                      color: gregorianColor.withValues(alpha: 0.9),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Text(
+                      _gregorianLine(context),
+                      maxLines: 1,
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        color: gregorianColor.withValues(alpha: 0.9),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
-        ),
       ),
     );
   }
@@ -535,140 +560,144 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
           TutorialAnchor(
             id: TourAnchor.homeClock,
             child: Builder(
-            builder: (clockContext) => InkWell(
-            borderRadius: BorderRadius.circular(20),
-            // `clockContext` is the tap target, so the gallery grows out of
-            // the clock itself rather than out of nowhere.
-            onTap: () => ClockGallerySheet.show(context, origin: clockContext),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 420),
-                switchInCurve: Curves.easeOutBack,
-                switchOutCurve: Curves.easeIn,
-                transitionBuilder: (child, anim) => FadeTransition(
-                  opacity: anim,
-                  child: ScaleTransition(scale: anim, child: child),
-                ),
-                child: KeyedSubtree(
-                  key: ValueKey(
-                    '${clock.style}-${clock.digitalFace}-${clock.analogFace}-'
-                    '${clock.use12Hour}-${clock.showSeconds}',
+              builder: (clockContext) => InkWell(
+                borderRadius: BorderRadius.circular(20),
+                // `clockContext` is the tap target, so the gallery grows out of
+                // the clock itself rather than out of nowhere.
+                onTap: () =>
+                    ClockGallerySheet.show(context, origin: clockContext),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 420),
+                    switchInCurve: Curves.easeOutBack,
+                    switchOutCurve: Curves.easeIn,
+                    transitionBuilder: (child, anim) => FadeTransition(
+                      opacity: anim,
+                      child: ScaleTransition(scale: anim, child: child),
+                    ),
+                    child: KeyedSubtree(
+                      key: ValueKey(
+                        '${clock.style}-${clock.digitalFace}-${clock.analogFace}-'
+                        '${clock.use12Hour}-${clock.showSeconds}',
+                      ),
+                      child: clock.style == ClockStyle.digital
+                          ? DigitalClockFaceView(
+                              face: clock.digitalFace,
+                              use12Hour: clock.use12Hour,
+                              showSeconds: clock.showSeconds,
+                              arabicDigits: arabic,
+                              meridiem: _meridiem(clock),
+                              height: 78,
+                              // The face is drawn ON this card, so it takes the
+                              // card own ink — white numerals were invisible on
+                              // the light theme.
+                              ink: hero.onSurface,
+                            )
+                          : AnalogClockFaceView(
+                              face: clock.analogFace,
+                              size: 176,
+                              meridiem: _meridiem(clock),
+                              arabicDigits: arabic,
+                              ink: hero.onSurface,
+                            ),
+                    ),
                   ),
-                  child: clock.style == ClockStyle.digital
-                      ? DigitalClockFaceView(
-                          face: clock.digitalFace,
-                          use12Hour: clock.use12Hour,
-                          showSeconds: clock.showSeconds,
-                          arabicDigits: arabic,
-                          meridiem: _meridiem(clock),
-                          height: 78,
-                          // The face is drawn ON this card, so it takes the
-                          // card own ink — white numerals were invisible on
-                          // the light theme.
-                          ink: hero.onSurface,
-                        )
-                      : AnalogClockFaceView(
-                          face: clock.analogFace,
-                          size: 176,
-                          meridiem: _meridiem(clock),
-                          arabicDigits: arabic,
-                          ink: hero.onSurface,
-                        ),
                 ),
               ),
             ),
-            ),
-          ),
           ),
           if (shown != null) ...[
             const SizedBox(height: 12),
             TutorialAnchor(
               id: TourAnchor.homeCountdown,
               child: GestureDetector(
-              onTap: previous == null
-                  ? null
-                  : () => setState(() => _showPrevious = !_showPrevious),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 400),
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 7),
-                decoration: BoxDecoration(
-                  color: hero.scrim,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: showingPrevious
-                        ? hero.accent(prayerSlideColors[shown.$1]!)
-                            .withValues(alpha: 0.55)
-                        : hero.hairline,
+                onTap: previous == null
+                    ? null
+                    : () => setState(() => _showPrevious = !_showPrevious),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 7),
+                  decoration: BoxDecoration(
+                    color: hero.scrim,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: showingPrevious
+                          ? hero
+                                .accent(prayerSlideColors[shown.$1]!)
+                                .withValues(alpha: 0.55)
+                          : hero.hairline,
+                    ),
                   ),
-                ),
-                // The two faces swap on a half-turn about the vertical axis,
-                // so the box reads as one thing turning over rather than two
-                // things cross-fading. `AnimatedSwitcher` drives both halves
-                // of the turn; the outgoing face is held at the far side
-                // (`0.5 → 1`) while the incoming one comes back to flat.
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 420),
-                  switchInCurve: Curves.easeOutCubic,
-                  switchOutCurve: Curves.easeInCubic,
-                  transitionBuilder: (child, animation) {
-                    final incoming =
-                        (child.key as ValueKey<bool>).value == showingPrevious;
-                    return AnimatedBuilder(
-                      animation: animation,
-                      builder: (context, _) {
-                        final t = incoming
-                            ? (1 - animation.value) * -0.5
-                            : (1 - animation.value) * 0.5;
-                        return Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.identity()
-                            ..setEntry(3, 2, 0.0012)
-                            ..rotateY(t * math.pi),
-                          child: Opacity(
-                            opacity: animation.value.clamp(0.0, 1.0),
-                            child: child,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Column(
-                    key: ValueKey<bool>(showingPrevious),
-                    children: [
-                      Text.rich(
-                        TextSpan(
-                          text: showingPrevious
-                              ? '${'home.previous_prayer'.tr()}: '
-                              : '${'home.next_prayer'.tr()}: ',
-                          style: TextStyle(color: hero.onSurfaceMuted),
-                          children: [
-                            TextSpan(
-                              text: prayerSlideLabelKeys[shown.$1]!.tr(),
-                              style: TextStyle(
-                                // Toned for this ground: the raw violet
-                                // measured 2.43 : 1 on the dark card
-                                // (CLAUDE.md #15).
-                                color:
-                                    hero.accent(prayerSlideColors[shown.$1]!),
-                                fontWeight: FontWeight.bold,
-                              ),
+                  // The two faces swap on a half-turn about the vertical axis,
+                  // so the box reads as one thing turning over rather than two
+                  // things cross-fading. `AnimatedSwitcher` drives both halves
+                  // of the turn; the outgoing face is held at the far side
+                  // (`0.5 → 1`) while the incoming one comes back to flat.
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 420),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeInCubic,
+                    transitionBuilder: (child, animation) {
+                      final incoming =
+                          (child.key as ValueKey<bool>).value ==
+                          showingPrevious;
+                      return AnimatedBuilder(
+                        animation: animation,
+                        builder: (context, _) {
+                          final t = incoming
+                              ? (1 - animation.value) * -0.5
+                              : (1 - animation.value) * 0.5;
+                          return Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.identity()
+                              ..setEntry(3, 2, 0.0012)
+                              ..rotateY(t * math.pi),
+                            child: Opacity(
+                              opacity: animation.value.clamp(0.0, 1.0),
+                              child: child,
                             ),
-                          ],
+                          );
+                        },
+                      );
+                    },
+                    child: Column(
+                      key: ValueKey<bool>(showingPrevious),
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            text: showingPrevious
+                                ? '${'home.previous_prayer'.tr()}: '
+                                : '${'home.next_prayer'.tr()}: ',
+                            style: TextStyle(color: hero.onSurfaceMuted),
+                            children: [
+                              TextSpan(
+                                text: prayerSlideLabelKeys[shown.$1]!.tr(),
+                                style: TextStyle(
+                                  // Toned for this ground: the raw violet
+                                  // measured 2.43 : 1 on the dark card
+                                  // (CLAUDE.md #15).
+                                  color: hero.accent(
+                                    prayerSlideColors[shown.$1]!,
+                                  ),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      PrayerCountdown(
-                        target: shown.$2,
-                        accent: prayerSlideColors[shown.$1]!,
-                        arabicDigits: arabic,
-                        elapsed: showingPrevious,
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        PrayerCountdown(
+                          target: shown.$2,
+                          accent: prayerSlideColors[shown.$1]!,
+                          arabicDigits: arabic,
+                          elapsed: showingPrevious,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
             ),
           ],
           if (location.isNotEmpty) ...[
@@ -678,13 +707,11 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.location_on,
-                      size: 14, color: hero.onSurfaceFaint),
+                  Icon(Icons.location_on, size: 14, color: hero.onSurfaceFaint),
                   const SizedBox(width: 4),
                   Text(
                     location,
-                    style:
-                        TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
+                    style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
                   ),
                 ],
               ),
@@ -699,5 +726,4 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
       ),
     );
   }
-
 }

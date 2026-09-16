@@ -38,13 +38,30 @@ class HistoricalEvent {
 
 class OnThisDay {
   final Map<String, List<HistoricalEvent>> _byDay;
-  const OnThisDay(this._byDay);
+
+  /// The language the rows are actually IN — not the language that was
+  /// asked for. The Gregorian feed exists in ar and en, so a French reader is
+  /// served the English rows, and the Hijri set exists only in Arabic. A sheet
+  /// that wants to say «these are in Arabic» has to be told, and a keyword
+  /// match over the text has to know which language it is matching.
+  final String lang;
+
+  const OnThisDay(this._byDay, {this.lang = ''});
 
   static const empty = OnThisDay({});
 
-  List<HistoricalEvent> forDate(DateTime date) {
-    final key = '${date.month.toString().padLeft(2, '0')}-'
-        '${date.day.toString().padLeft(2, '0')}';
+  bool get isEmpty => _byDay.isEmpty;
+
+  /// Events for a Gregorian date.
+  List<HistoricalEvent> forDate(DateTime date) => forMonthDay(
+        date.month,
+        date.day,
+      );
+
+  /// Events for a month/day pair in whichever calendar this set is keyed by.
+  List<HistoricalEvent> forMonthDay(int month, int day) {
+    final key = '${month.toString().padLeft(2, '0')}-'
+        '${day.toString().padLeft(2, '0')}';
     return _byDay[key] ?? const [];
   }
 }
@@ -73,10 +90,45 @@ final onThisDayProvider =
                 text: (r['t'] as String?) ?? '',
               ),
           ],
-      });
+      }, lang: lang);
     } catch (_) {
       // Try the fallback language, then give up quietly.
     }
   }
   return OnThisDay.empty;
+});
+
+/// «في مثل هذا اليوم الهجري» — the same idea, keyed by the HIJRI month and day.
+///
+/// Built by `scripts/fetch_on_this_day_hijri.py` from Arabic Wikipedia's own
+/// per-Hijri-day pages, whose «أحداث» sections are dated by Hijri year. The
+/// Gregorian feed could never answer for «١٧ رمضان», because it is keyed by a
+/// different calendar entirely — which is why the two dates on the Home header
+/// now open two different sheets instead of one.
+///
+/// Arabic only, and not by choice: English Wikipedia has no Hijri day pages at
+/// all (`17_Ramadan` → 404). The sheet says so in the reader's language rather
+/// than passing Arabic prose off as a localised list.
+final onThisDayHijriProvider = FutureProvider<OnThisDay>((ref) async {
+  try {
+    final raw = await rootBundle.load('assets/data/on_this_day_hijri_ar.json');
+    var bytes = raw.buffer.asUint8List(raw.offsetInBytes, raw.lengthInBytes);
+    if (bytes.length > 2 && bytes[0] == 0x1f && bytes[1] == 0x8b) {
+      bytes = Uint8List.fromList(gzip.decode(bytes));
+    }
+    final doc = jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
+    final days = (doc['days'] as Map<String, dynamic>?) ?? const {};
+    return OnThisDay({
+      for (final e in days.entries)
+        e.key: [
+          for (final r in (e.value as List<dynamic>))
+            HistoricalEvent(
+              year: (r as Map<String, dynamic>)['y'] as int?,
+              text: (r['t'] as String?) ?? '',
+            ),
+        ],
+    }, lang: 'ar');
+  } catch (_) {
+    return OnThisDay.empty;
+  }
 });

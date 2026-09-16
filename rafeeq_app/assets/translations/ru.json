@@ -184,7 +184,14 @@
     "name_save": "Сохранить",
     "on_this_day": "В этот день",
     "on_this_day_none": "Для этого дня событий не записано.",
-    "on_this_day_source": "Источник: Википедия — Creative Commons (CC BY-SA)"
+    "on_this_day_source": "Источник: Википедия — Creative Commons (CC BY-SA)",
+    "on_this_day_hijri": "В этот день по хиджре",
+    "on_this_day_gregorian": "В этот день по григорианскому календарю",
+    "on_this_day_islamic": "Об исламе и мусульманах",
+    "on_this_day_world": "Другие события",
+    "on_this_day_hijri_ar_only": "Подневный свод по хиджре взят из арабской Википедии, у которой нет аналога на других языках, поэтому эти записи — на арабском.",
+    "on_this_day_source_ar_wiki": "Источник: арабская Википедия — страницы дней по хиджре (CC BY-SA)",
+    "hijri_before_hijra": "до х."
   },
   "quran": {
     "surah_list": "Суры",

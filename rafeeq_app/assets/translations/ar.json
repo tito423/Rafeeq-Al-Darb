@@ -184,7 +184,14 @@
     "name_save": "حفظ",
     "on_this_day": "في مثل هذا اليوم",
     "on_this_day_none": "لا توجد أحداث مسجّلة لهذا اليوم.",
-    "on_this_day_source": "المصدر: ويكيبيديا — رخصة المشاع الإبداعي (CC BY-SA)"
+    "on_this_day_source": "المصدر: ويكيبيديا — رخصة المشاع الإبداعي (CC BY-SA)",
+    "on_this_day_hijri": "في مثل هذا اليوم الهجري",
+    "on_this_day_gregorian": "في مثل هذا اليوم الميلادي",
+    "on_this_day_islamic": "ما يخصّ الإسلام والمسلمين",
+    "on_this_day_world": "أحداث أخرى",
+    "on_this_day_hijri_ar_only": "سجلّ الأيام الهجرية مصدره ويكيبيديا العربية، ولا يوجد له مقابل بلغة أخرى.",
+    "on_this_day_source_ar_wiki": "المصدر: ويكيبيديا العربية — صفحات الأيام الهجرية (CC BY-SA)",
+    "hijri_before_hijra": "ق.هـ"
   },
   "quran": {
     "surah_list": "السور",

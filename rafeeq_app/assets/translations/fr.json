@@ -184,7 +184,14 @@
     "name_save": "Enregistrer",
     "on_this_day": "Un jour comme aujourd’hui",
     "on_this_day_none": "Aucun événement enregistré pour ce jour.",
-    "on_this_day_source": "Source : Wikipédia — Creative Commons (CC BY-SA)"
+    "on_this_day_source": "Source : Wikipédia — Creative Commons (CC BY-SA)",
+    "on_this_day_hijri": "Un tel jour de l'hégire",
+    "on_this_day_gregorian": "Un tel jour du calendrier grégorien",
+    "on_this_day_islamic": "Concernant l'islam et les musulmans",
+    "on_this_day_world": "Autres événements",
+    "on_this_day_hijri_ar_only": "Le relevé jour par jour du calendrier hégirien provient de la Wikipédia arabe, qui n'a pas d'équivalent dans une autre langue : ces entrées sont donc en arabe.",
+    "on_this_day_source_ar_wiki": "Source : Wikipédia arabe — pages des jours hégiriens (CC BY-SA)",
+    "hijri_before_hijra": "av. H."
   },
   "quran": {
     "surah_list": "Sourates",

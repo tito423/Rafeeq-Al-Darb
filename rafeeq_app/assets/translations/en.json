@@ -184,7 +184,14 @@
     "name_save": "Save",
     "on_this_day": "On this day",
     "on_this_day_none": "No events recorded for this day.",
-    "on_this_day_source": "Source: Wikipedia — Creative Commons (CC BY-SA)"
+    "on_this_day_source": "Source: Wikipedia — Creative Commons (CC BY-SA)",
+    "on_this_day_hijri": "On this Hijri day",
+    "on_this_day_gregorian": "On this Gregorian day",
+    "on_this_day_islamic": "Concerning Islam and the Muslims",
+    "on_this_day_world": "Other events",
+    "on_this_day_hijri_ar_only": "The Hijri day-by-day record comes from Arabic Wikipedia, which has no counterpart in another language, so these entries are in Arabic.",
+    "on_this_day_source_ar_wiki": "Source: Arabic Wikipedia — the Hijri day pages (CC BY-SA)",
+    "hijri_before_hijra": "BH"
   },
   "quran": {
     "surah_list": "Surahs",

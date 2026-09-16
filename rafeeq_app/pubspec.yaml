@@ -109,6 +109,10 @@ flutter:
     # and stored gzipped, so the card works with no network at all.
     - assets/data/on_this_day_ar.json
     - assets/data/on_this_day_en.json
+    # The same idea keyed by the HIJRI day, built by
+    # scripts/fetch_on_this_day_hijri.py from Arabic Wikipedia's own per-Hijri-
+    # day pages. Arabic only: English Wikipedia has no such pages at all.
+    - assets/data/on_this_day_hijri_ar.json
     - assets/quote_backgrounds/
     - assets/data/mushaf/
     - assets/mushaf_covers/
