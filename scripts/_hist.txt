@@ -1,0 +1,9 @@
+tarikh_bayt_al_maqdis                      | seerah      | تاريخ بيت المقدس                              | الإمام أبو الفرج ابن الجوزي
+talqih_fuhum_ahl_al_athar                  | seerah      | تلقيح فهوم أهل الأثر في عيون التاريخ والسير   | الإمام أبو الفرج ابن الجوزي
+fasl_fi_tazkiyat_al_nafs                   | tazkiyah    | فصل في تزكية النفس [الطبعة الكاملة للرسالة]   | شيخ الإسلام ابن تيمية
+sahih_as_seerah_albani                     | seerah      | صحيح السيرة النبوية [من «البداية والنهاية» لابن كثير] | الشيخ محمد ناصر الدين الألباني
+mujizat_an_nabi                            | seerah      | معجزات النبي ﷺ من البداية والنهاية            | أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)
+al_mujam_al_mufahras                       | hadith      | المعجم المفهرس                                | الحافظ ابن حجر العسقلاني
+fadail_al_khulafa_al_rashidin              | seerah      | فضائل الخلفاء الراشدين                        | الحافظ أبو نعيم الأصبهاني
+
+total entries parsed: 267

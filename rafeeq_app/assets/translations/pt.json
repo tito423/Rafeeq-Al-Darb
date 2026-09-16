@@ -359,6 +359,7 @@
     "cat_aqidah": "Credo",
     "cat_tafsir": "Tafsir",
     "cat_seerah": "Sira",
+    "cat_tarikh": "História",
     "cat_tazkiyah": "Purificação espiritual",
     "cat_adab": "Boas maneiras",
     "edition_image": "Digitalizado",
@@ -1221,7 +1222,11 @@
     "ila_al_islam_min_jadid": "Um chamado para devolver ao islã o seu lugar na vida do muçulmano — não como herança, mas como escolha.",
     "al_islam_wal_hukm": "Um breve tratado sobre o lugar do governo dentro da religião e entre os objetivos da charia.",
     "riddah_wala_aba_bakr_laha": "Um ensaio sobre o afastamento moderno da religião e a ausência de alguém que lhe faça frente como fez Abu Bakr.",
-    "urid_an_atahaddath": "Uma palavra dirigida aos que trabalham pelo islã, sobre corrigir a intenção e endireitar o caminho."
+    "urid_an_atahaddath": "Uma palavra dirigida aos que trabalham pelo islã, sobre corrigir a intenção e endireitar o caminho.",
+    "al_bidaya_wan_nihaya": "A história do mundo desde o início da criação até a época do autor, e depois os sinais da Hora e o que vem a seguir. Catorze volumes em que Ibn Kathir transmite os relatos com as suas cadeias e os avalia.",
+    "qisas_al_anbiya_ibn_kathir": "As histórias dos profetas, de Adão a Jesus, a paz esteja com eles, extraídas de al-Bidaya wa al-Nihaya: Ibn Kathir narra-as a partir do Alcorão e da Sunna e rejeita as lendas israelitas que se infiltraram.",
+    "futuh_al_buldan": "Como as terras entraram no islão, região a região, da Arábia até al-Andalus e Sind — um dos mais antigos e fiáveis registos das conquistas.",
+    "tarikh_al_khulafa_suyuti": "Vidas dos califas, de Abu Bakr as-Siddiq até aos califas do tempo do autor, cada um com a sua história e os principais acontecimentos do seu reinado."
   },
   "hadeethenc": {
     "title": "Enciclopédia do Hadith",

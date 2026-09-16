@@ -1,0 +1,15 @@
+book_desc keys: 51
+
+as_seerah_ibn_kathir:
+  السيرة النبوية مستلّة من «البداية والنهاية»، جمع فيها ابن كثير الروايات وتكلّم على أسانيدها.
+
+rijal_hawl_ar_rasul:
+  ستون ترجمة لصحابة رسول الله ﷺ بأسلوب أدبي، من أوسع الكتب انتشارًا في التعريف بجيل الصحابة.
+
+tarikh_bayt_al_maqdis:
+  None
+
+EN as_seerah_ibn_kathir:
+  The prophetic biography drawn out of al-Bidaya wa al-Nihaya, in which Ibn Kathir gathered the reports and discussed their chains.
+
+generated blurb ar: مصنَّف لـ {}، {} صفحة، ضمن باب {}.

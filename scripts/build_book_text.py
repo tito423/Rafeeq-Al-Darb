@@ -142,6 +142,26 @@ BOOKS = {
         "shamela_id": 11301,
         "source_label": "المكتبة الشاملة — قواعد التجويد على رواية حفص عن عاصم بن أبي النجود",
     },
+    # التاريخ. ط السعادة القاهرة ١٣٤٨–١٣٥٨ هـ (1929–39) is the printing
+    # with NO modern muhaqqiq at all — the two current editions are ت التركي
+    # (دار هجر 1996) and ط دار ابن كثير (2013), whose apparatus belongs to
+    # living editors. Read off its own بطاقة الكتاب, not assumed.
+    "al_bidaya_wan_nihaya": {
+        "shamela_id": 23708,
+        "source_label": "المكتبة الشاملة — البداية والنهاية، لابن كثير (ت ٧٧٤ هـ)، مطبعة السعادة - القاهرة، الطبعة الأولى ١٣٤٨ - ١٣٥٨ هـ، ١٤ جزءًا",
+    },
+    "qisas_al_anbiya_ibn_kathir": {
+        "shamela_id": 932,
+        "source_label": "المكتبة الشاملة — قصص الأنبياء، لابن كثير (ت ٧٧٤ هـ)، مُستلًا من البداية والنهاية، تحقيق د. مصطفى عبد الواحد، مطبعة دار التأليف - القاهرة، الأولى ١٣٨٨ هـ - ١٩٦٨ م",
+    },
+    "futuh_al_buldan": {
+        "shamela_id": 12221,
+        "source_label": "المكتبة الشاملة — فتوح البلدان، لأحمد بن يحيى البَلاذُري (ت ٢٧٩هـ)، دار ومكتبة الهلال - بيروت، ١٩٨٨ م",
+    },
+    "tarikh_al_khulafa_suyuti": {
+        "shamela_id": 11995,
+        "source_label": "المكتبة الشاملة — تاريخ الخلفاء، لجلال الدين السيوطي (ت ٩١١ هـ)، اعتنى به مركز دار المنهاج، دار المنهاج - جدة، الثانية ١٤٣٤ هـ - ٢٠١٣ م",
+    },
     "taysir_ahkam_at_tajwid": {
         "shamela_id": 688,
         "source_label": "المكتبة الشاملة — تيسير أحكام التجويد، المستوى الأول",
@@ -584,6 +604,15 @@ UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 )
+# The Windows console is cp1256 and cannot encode a Shamela edition card
+# (CLAUDE.md trap #10). Printing one used to kill the run AFTER the JSON had
+# already been written - al-Bidaya wa an-Nihaya built its 4,918 pages, wrote
+# 5 MB, and then died on `print`, taking the three books queued behind it with
+# it. The output is a progress report; it is not worth a crash.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 REQUEST_DELAY_S = 0.15  # be polite to shamela.ws (~1.5 req/s incl. latency)
 HOST = "shamela.ws"
 

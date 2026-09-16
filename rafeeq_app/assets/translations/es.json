@@ -359,6 +359,7 @@
     "cat_aqidah": "Credo",
     "cat_tafsir": "Tafsir",
     "cat_seerah": "Sira",
+    "cat_tarikh": "Historia",
     "cat_tazkiyah": "Purificación espiritual",
     "cat_adab": "Modales",
     "edition_image": "Escaneado",
@@ -1221,7 +1222,11 @@
     "ila_al_islam_min_jadid": "Un llamado a devolver al islam su lugar en la vida del musulmán: no como herencia sino como elección.",
     "al_islam_wal_hukm": "Un breve tratado sobre el lugar del gobierno dentro de la religión y entre los fines de la sharía.",
     "riddah_wala_aba_bakr_laha": "Un ensayo sobre el alejamiento moderno de la religión y la ausencia de alguien que le haga frente como lo hizo Abu Bakr.",
-    "urid_an_atahaddath": "Una palabra dirigida a quienes trabajan por el islam, sobre corregir la intención y enderezar el camino."
+    "urid_an_atahaddath": "Una palabra dirigida a quienes trabajan por el islam, sobre corregir la intención y enderezar el camino.",
+    "al_bidaya_wan_nihaya": "La historia del mundo desde el inicio de la creación hasta la época del autor, y después las señales de la Hora y lo que viene tras ella. Catorce volúmenes en los que Ibn Kazir transmite los relatos con sus cadenas y los examina.",
+    "qisas_al_anbiya_ibn_kathir": "Las historias de los profetas, de Adán a Jesús, la paz sea con ellos, extraídas de al-Bidaya wa al-Nihaya: Ibn Kazir las relata desde el Corán y la Sunna y rechaza las leyendas israelitas que se habían infiltrado.",
+    "futuh_al_buldan": "Cómo entraron las tierras en el islam, región por región, desde Arabia hasta al-Ándalus y Sind: uno de los registros más antiguos y fiables de las conquistas.",
+    "tarikh_al_khulafa_suyuti": "Vidas de los califas, desde Abu Bakr as-Siddiq hasta los califas de la época del autor, cada uno con su historia y los hechos más importantes de su mandato."
   },
   "hadeethenc": {
     "title": "Enciclopedia del Hadiz",

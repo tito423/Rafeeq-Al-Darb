@@ -1,0 +1,8 @@
+al_bidaya_wan_nihaya           pages=4918  toc=2565 paras=37661  printed 1..324
+   البداية والنهاية | عماد الدين أبو الفداء إسماعيل بن عمر القرشي الدمشقي المعروف بـ (ابن كثير) (ت ٧٧٤ هـ)
+qisas_al_anbiya_ibn_kathir     pages=888   toc=49   paras=7697   printed 1..473
+   قصص الأنبياء | أبو الفداء، إسماعيل بن بن كثير (٧٠١ - ٧٧٤ هـ)
+futuh_al_buldan                pages=453   toc=96   paras=2007   printed 0..456
+   فتوح البلدان | أحمد بن يحيى بن جابر بن داود البَلَاذُري (ت ٢٧٩هـ)
+tarikh_al_khulafa_suyuti       pages=783   toc=535  paras=6809   printed 6..810
+   تاريخ الخلفاء | جلال الدين عبد الرحمن بن أبي بكر السيوطي [ت ٩١١ هـ]

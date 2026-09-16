@@ -359,6 +359,7 @@
     "cat_aqidah": "Croyance",
     "cat_tafsir": "Tafsir",
     "cat_seerah": "Sira",
+    "cat_tarikh": "Histoire",
     "cat_tazkiyah": "Purification spirituelle",
     "cat_adab": "Bonnes manières",
     "edition_image": "Numérisé",
@@ -1221,7 +1222,11 @@
     "ila_al_islam_min_jadid": "Un appel à rendre à l’islam sa place dans la vie du musulman — non comme un héritage mais comme un choix.",
     "al_islam_wal_hukm": "Un bref traité sur la place du pouvoir dans la religion et parmi les finalités de la charia.",
     "riddah_wala_aba_bakr_laha": "Un essai sur le détournement moderne de la religion et l’absence de quiconque pour y faire face comme le fit Abu Bakr.",
-    "urid_an_atahaddath": "Une parole adressée à ceux qui œuvrent pour l’islam, sur la correction de l’intention et le redressement du chemin."
+    "urid_an_atahaddath": "Une parole adressée à ceux qui œuvrent pour l’islam, sur la correction de l’intention et le redressement du chemin.",
+    "al_bidaya_wan_nihaya": "L'histoire du monde depuis le début de la création jusqu'à l'époque de l'auteur, puis les signes de l'Heure et ce qui suit. Quatorze volumes où Ibn Kathir rapporte les récits avec leurs chaînes et les examine.",
+    "qisas_al_anbiya_ibn_kathir": "Les récits des prophètes, d'Adam à Jésus, paix sur eux, extraits d'al-Bidaya wa al-Nihaya : Ibn Kathir les rapporte du Coran et de la Sunna et écarte les légendes israélites qui s'y étaient glissées.",
+    "futuh_al_buldan": "Comment les pays sont entrés en islam, région par région, de l'Arabie à al-Andalus et au Sind — l'un des plus anciens et des plus sûrs récits des conquêtes.",
+    "tarikh_al_khulafa_suyuti": "Vies des califes, d'Abou Bakr as-Siddiq jusqu'aux califes du temps de l'auteur, chacun avec son histoire et les principaux événements de son règne."
   },
   "hadeethenc": {
     "title": "Encyclopédie du hadith",

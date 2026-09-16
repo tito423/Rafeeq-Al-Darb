@@ -1789,7 +1789,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Imam Ibn al-Jawzi',
     deathYearAh: 597,
     pages: 191,
-    category: BookCategory.seerah,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/amar_al_ayan.json',
       sizeBytes: 142955,
@@ -2415,7 +2415,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Imam Ibn al-Jawzi',
     deathYearAh: 597,
     pages: 40,
-    category: BookCategory.seerah,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/tarikh_bayt_al_maqdis.json',
       sizeBytes: 15476,
@@ -2712,7 +2712,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Imam Ibn al-Jawzi',
     deathYearAh: 597,
     pages: 521,
-    category: BookCategory.seerah,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/talqih_fuhum_ahl_al_athar.json',
@@ -2828,7 +2828,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Imam Ibn al-Jawzi',
     deathYearAh: 597,
     pages: 119,
-    category: BookCategory.seerah,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/fadail_bayt_al_maqdis.json',
       sizeBytes: 62170,
@@ -3080,7 +3080,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Imam Ibn al-Jawzi',
     deathYearAh: 597,
     pages: 150,
-    category: BookCategory.seerah,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/mashyakhat_ibn_al_jawzi.json',
@@ -4012,7 +4012,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Khalid Muhammad Khalid',
     deathYearAh: 1416,
     descKey: 'book_desc.rijal_hawl_ar_rasul',
-    category: BookCategory.seerah,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/rijal_hawl_ar_rasul.json',
@@ -4249,7 +4249,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Ibn Kathir',
     deathYearAh: 774,
     descKey: 'book_desc.tabaqat_ash_shafiiyyin',
-    category: BookCategory.fiqh,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/tabaqat_ash_shafiiyyin.json',
@@ -4515,7 +4515,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Ibn Hajar al-Asqalani',
     deathYearAh: 852,
     pages: 487,
-    category: BookCategory.seerah,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/raf_al_isr_an_qudat_misr.json',
       sizeBytes: 346282,
@@ -4678,7 +4678,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorEn: 'Abu Nuaym al-Asbahani',
     deathYearAh: 430,
     pages: 184,
-    category: BookCategory.seerah,
+    category: BookCategory.tarikh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/fadail_al_khulafa_al_rashidin.json',
       sizeBytes: 60646,
@@ -4917,6 +4917,86 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — تحذير الساجد من اتخاذ القبور مساجد، '
           'للشيخ محمد ناصر الدين الألباني، المكتب الإسلامي - بيروت، '
           'الرابعة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_bidaya_wan_nihaya',
+    titleAr: 'البداية والنهاية',
+    titleEn: 'The Beginning and the End',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.al_bidaya_wan_nihaya',
+    category: BookCategory.tarikh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_bidaya_wan_nihaya.json',
+      sizeBytes: 5191034,
+      // The 1348–1358 AH Cairo printing, which has NO modern muhaqqiq: the
+      // two editions in print today (دار هجر 1996, دار ابن كثير 2013) carry
+      // apparatus that belongs to living editors, and this one carries the
+      // publisher's own تنبيه about the manuscripts instead.
+      sourceLabel:
+          'المكتبة الشاملة — البداية والنهاية، لابن كثير (ت ٧٧٤ هـ)، '
+          'مطبعة السعادة - القاهرة، الطبعة الأولى ١٣٤٨ - ١٣٥٨ هـ، '
+          '١٤ جزءًا',
+    ),
+  ),
+  LibraryBook(
+    id: 'qisas_al_anbiya_ibn_kathir',
+    titleAr: 'قصص الأنبياء',
+    titleEn: 'Stories of the Prophets',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.qisas_al_anbiya_ibn_kathir',
+    category: BookCategory.tarikh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qisas_al_anbiya_ibn_kathir.json',
+      sizeBytes: 627240,
+      sourceLabel:
+          'المكتبة الشاملة — قصص الأنبياء، لابن كثير (ت ٧٧٤ هـ)، '
+          'مستلًّا من البداية والنهاية، تحقيق د. مصطفى عبد الواحد، '
+          'مطبعة دار التأليف - القاهرة، الأولى ١٣٨٨هـ - ١٩٦٨م',
+    ),
+  ),
+  LibraryBook(
+    id: 'futuh_al_buldan',
+    titleAr: 'فتوح البلدان',
+    titleEn: 'The Conquests of the Lands',
+    authorAr: 'أحمد بن يحيى بن جابر البَلَاذُري (ت ٢٧٩ هـ)',
+    authorEn: 'al-Baladhuri',
+    deathYearAh: 279,
+    pages: 456,
+    descKey: 'book_desc.futuh_al_buldan',
+    category: BookCategory.tarikh,
+    textEdition: TextEdition(
+      url: '${AppConfig.contentBaseUrl}/books/text/futuh_al_buldan.json',
+      sizeBytes: 319705,
+      sourceLabel:
+          'المكتبة الشاملة — فتوح البلدان، لأحمد بن يحيى البَلاذُري '
+          '(ت ٢٧٩هـ)، دار ومكتبة الهلال - بيروت، ١٩٨٨م',
+    ),
+  ),
+  LibraryBook(
+    id: 'tarikh_al_khulafa_suyuti',
+    titleAr: 'تاريخ الخلفاء',
+    titleEn: 'History of the Caliphs',
+    authorAr: 'جلال الدين عبد الرحمن السيوطي (ت ٩١١ هـ)',
+    authorEn: 'Jalal al-Din al-Suyuti',
+    deathYearAh: 911,
+    pages: 810,
+    descKey: 'book_desc.tarikh_al_khulafa_suyuti',
+    category: BookCategory.tarikh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tarikh_al_khulafa_suyuti.json',
+      sizeBytes: 458192,
+      sourceLabel:
+          'المكتبة الشاملة — تاريخ الخلفاء، لجلال الدين السيوطي (ت ٩١١ هـ)، '
+          'اعتنى به مركز دار المنهاج، دار المنهاج - جدة، '
+          'الثانية ١٤٣٤هـ - ٢٠١٣م',
     ),
   ),
 ];

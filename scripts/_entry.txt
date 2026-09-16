@@ -1,0 +1,42 @@
+LibraryBook(
+    id: 'as_seerah_ibn_kathir',
+    titleAr: 'السيرة النبوية',
+    titleEn: 'The Prophetic Biography of Ibn Kathir',
+    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
+    authorEn: 'Ibn Kathir',
+    deathYearAh: 774,
+    descKey: 'book_desc.as_seerah_ibn_kathir',
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/as_seerah_ibn_kathir.json',
+      sizeBytes: 1880427,
+      sourceLabel:
+          'المكتبة الشاملة — السيرة النبوية، ابن كثير (ت ٧٧٤هـ)، مستلًّا من '
+          'البداية والنهاية، تحقيق د. مصطفى عبد الواحد، عيسى البابي الحلبي - '
+          'القاهرة، ١٣٩٥هـ/١٩٧٦م',
+    ),
+  ),
+  LibraryBook(
+    id: 'rijal_hawl_ar_rasul',
+    titleAr: 'رجال حول الرسول',
+    titleEn: 'Men Around the Messenger',
+    authorAr: 'خالد محمد خالد ثابت (ت ١٤١٦هـ)',
+    authorEn: 'Khalid Muhammad Khalid',
+    deathYearAh: 1416,
+    descKey: 'book_desc.rijal_hawl_ar_rasul',
+    category: BookCategory.tarikh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/rijal_hawl_ar_rasul.json',
+      sizeBytes: 293158,
+      sourceLabel:
+          'المكتبة الشاملة — رجال حول الرسول، خالد محمد خالد ثابت (ت ١٤١٦هـ)، '
+          'دار الفكر - بيروت، الطبعة الأولى ١٤٢١هـ/٢٠٠٠م',
+    ),
+  ),
+  LibraryBook(
+    id: 'la_tahzan',
+    titleAr: 'لا تحزن',
+    titleEn: 'Don\'t Be Sad',
+    authorAr:

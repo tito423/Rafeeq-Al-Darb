@@ -360,6 +360,7 @@
     "cat_aqidah": "Creed",
     "cat_tafsir": "Tafsir",
     "cat_seerah": "Seerah",
+    "cat_tarikh": "History",
     "cat_tazkiyah": "Spiritual purification",
     "cat_adab": "Manners",
     "edition_image": "Scanned",
@@ -1221,7 +1222,11 @@
     "ila_al_islam_min_jadid": "A call to return Islam to its place in a Muslim’s life — not as an inheritance but as a choice.",
     "al_islam_wal_hukm": "A brief treatise on where governance sits within the religion and among the aims of the Sharia.",
     "riddah_wala_aba_bakr_laha": "An essay on the modern turning away from the religion, and the absence of anyone to stand against it as Abu Bakr once stood.",
-    "urid_an_atahaddath": "A word addressed to those working for Islam, on correcting the intention and straightening the path."
+    "urid_an_atahaddath": "A word addressed to those working for Islam, on correcting the intention and straightening the path.",
+    "al_bidaya_wan_nihaya": "The history of the world from the beginning of creation to the author's own age, then the signs of the Hour and what follows. Fourteen volumes in which Ibn Kathir gives the reports with their chains and appraises them.",
+    "qisas_al_anbiya_ibn_kathir": "The stories of the prophets from Adam to Jesus, peace be upon them, drawn out of al-Bidaya wa al-Nihaya: Ibn Kathir tells them from the Qur'an and the Sunnah and rejects the Israelite lore that crept in.",
+    "futuh_al_buldan": "How the lands entered Islam, region by region, from Arabia to al-Andalus and Sind — among the earliest and soundest records of the conquests.",
+    "tarikh_al_khulafa_suyuti": "Lives of the caliphs from Abu Bakr as-Siddiq to the caliphs of the author's own day, each with his history and the chief events of his reign."
   },
   "hadeethenc": {
     "title": "Hadeeth Encyclopedia",

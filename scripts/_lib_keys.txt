@@ -1,0 +1,7 @@
+ar: {'cat_hadith': 'الحديث', 'cat_fiqh': 'الفقه', 'cat_aqidah': 'العقيدة', 'cat_tafsir': 'التفسير', 'cat_seerah': 'السيرة', 'cat_tazkiyah': 'التزكية والرقائق', 'cat_adab': 'الآداب'}
+en: {'cat_hadith': 'Hadith', 'cat_fiqh': 'Fiqh', 'cat_aqidah': 'Creed', 'cat_tafsir': 'Tafsir', 'cat_seerah': 'Seerah', 'cat_tazkiyah': 'Spiritual purification', 'cat_adab': 'Manners'}
+es: {'cat_hadith': 'Hadiz', 'cat_fiqh': 'Fiqh', 'cat_aqidah': 'Credo', 'cat_tafsir': 'Tafsir', 'cat_seerah': 'Sira', 'cat_tazkiyah': 'Purificación espiritual', 'cat_adab': 'Modales'}
+fr: {'cat_hadith': 'Hadith', 'cat_fiqh': 'Fiqh', 'cat_aqidah': 'Croyance', 'cat_tafsir': 'Tafsir', 'cat_seerah': 'Sira', 'cat_tazkiyah': 'Purification spirituelle', 'cat_adab': 'Bonnes manières'}
+pt: {'cat_hadith': 'Hadith', 'cat_fiqh': 'Fiqh', 'cat_aqidah': 'Credo', 'cat_tafsir': 'Tafsir', 'cat_seerah': 'Sira', 'cat_tazkiyah': 'Purificação espiritual', 'cat_adab': 'Boas maneiras'}
+ru: {'cat_hadith': 'Хадисы', 'cat_fiqh': 'Фикх', 'cat_aqidah': 'Вероубеждение', 'cat_tafsir': 'Тафсир', 'cat_seerah': 'Жизнеописание Пророка', 'cat_tazkiyah': 'Очищение души', 'cat_adab': 'Нравственность'}
+ur: {'cat_hadith': 'حدیث', 'cat_fiqh': 'فقہ', 'cat_aqidah': 'عقیدہ', 'cat_tafsir': 'تفسیر', 'cat_seerah': 'سیرت', 'cat_tazkiyah': 'تزکیۂ نفس', 'cat_adab': 'آداب'}

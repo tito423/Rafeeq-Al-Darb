@@ -1,0 +1,6 @@
+al-Bidaya (Saada 1348-58)          id=23708  pages=4918
+Qisas al-Anbiya                    id=932    pages=888
+Tarikh at-Tabari                   id=9783   pages=6431
+Futuh al-Buldan                    id=12221  pages=453
+Mujam al-Buldan                    id=23735  pages=3522
+Tarikh al-Khulafa                  id=11995  pages=783

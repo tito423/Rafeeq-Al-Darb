@@ -5,7 +5,7 @@ Cline, or any other).
 **Read `CLAUDE.md` first — it is the mandatory working method — then this file.**
 | | |
 |---|---|
-| **Last updated** | 2026-09-16 |
+| **Last updated** | 2026-09-17 |
 | **Released** | **v3.26.0** — tag on `master` at `120968f`, the only release in the repo; asset `rafeeq-aldarb-3.26.0.apk`, 236,567,267 bytes. Verified after publishing: `gh release view` reports target `master`, not a draft, asset `uploaded`, and the tag's SHA equals `git rev-parse HEAD` |
 | **App version** | `pubspec.yaml` `3.26.0+27`; `AboutScreen.appVersion` `3.26.0`; `aapt` reads the published APK as `versionCode=27 versionName=3.26.0 minSdk=24` |
 | **On the owner's Honor** | the signed 3.25.0 build — he took the phone to work before the 3.26.0 APK could be installed on it. **3.26.0 has never run on his phone**, only on `emulator-5554` |
@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 23:50 — IN PROGRESS — resume here**
+**2026-09-17 00:39 — IN PROGRESS — resume here**
 
-v3.27.0: version bumped to 3.27.0+28 and trap 47 written down - Dart's \w is ASCII and unicode:true does not widen it, which is what emptied both heading normalisers and ate every lesson body. Release APK built and signed: sign_release.py printed OK: rotated, new key from Android 9 up and the old debug key kept below it, and it installed over the debug build with adb install -r (which is the lineage doing its job). 211 MB, down from 236 because hadith.db is no longer bundled - the hadith tab now offers the one-time 16 MB download, seen on the emulator
+the library has a history section now, and four books in it that were not there at all. al-Bidaya wa an-Nihaya is the headline - 4,918 pages, 2,565 sections, 37,661 paragraphs, 5.0 MB gzipped - and I took the 1348-1358 AH Cairo printing on purpose: it is the one with NO modern muhaqqiq, where the two editions in print today (Dar Hajar 1996, Dar Ibn Kathir 2013) carry apparatus belonging to living editors. With it: Qisas al-Anbiya, Futuh al-Buldan (al-Baladhuri, no editor named), and Tarikh al-Khulafa. Every sizeBytes is what the bucket reported on read-back, not a guess. Nine books that were filed under seerah or fiqh but are really tarikh moved across. Category label and four blurbs written in all seven locales, not Arabic with an English fallback. Also made build_book_text.py print through a UTF-8 stdout: al-Bidaya built its 4,918 pages, wrote 5 MB, and then died printing its edition card to a cp1256 console, taking the three books queued behind it with it
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
