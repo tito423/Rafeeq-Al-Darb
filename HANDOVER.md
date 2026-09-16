@@ -5,15 +5,59 @@ Cline, or any other).
 **Read `CLAUDE.md` first — it is the mandatory working method — then this file.**
 | | |
 |---|---|
-| **Last updated** | 2026-09-16 |
-| **Released** | **v3.25.0** — tag on `master` at `abd74b5`, the only release in the repo; asset `rafeeq-aldarb-3.25.0.apk`, 240,040,675 bytes. **`master` is now 6 commits ahead of it** and that batch is NOT released — the owner had not given the word when this was written |
-| **App version** | `pubspec.yaml` `3.25.0+26`; `AboutScreen.appVersion` `3.25.0`. **Deliberately not bumped**: the number moves when a release is published, and the next one is 3.26.0 |
-| **On the owner's Honor** | the signed build of `2c87df8` — everything below, installed and walked through with him connected |
-| **Signing** | `scripts/sign_release.py` printed `OK: rotated` on every build this session. **Gradle signs debug on purpose — run it after every release build (trap #41).** |
-| **Verified 2026-09-16 dawn** | `flutter analyze lib test` clean · `flutter test` **243 passed** · every hosted path range-requested, all **206** with a real content type: `hadith/hadith.zip`, three books, page 3 of all **6** printings, two translations |
-| **Measured 2026-09-16 dawn** | 7 locales × **1,404** keys each (identical) · **276** books · **6** mushaf printings · `hadith.db` 109,731,840 bytes, **67,153** hadiths, **45,219** graded · signed APK 236,870,371 bytes · splash clip 1,917,727 bytes |
+| **Last updated** | 2026-09-16 (midday) |
+| **Released** | **v3.26.0** — tag on `master` at `120968f`, the only release in the repo; asset `rafeeq-aldarb-3.26.0.apk`, 236,567,267 bytes. Verified after publishing: `gh release view` reports target `master`, not a draft, asset `uploaded`, and the tag's SHA equals `git rev-parse HEAD` |
+| **App version** | `pubspec.yaml` `3.26.0+27`; `AboutScreen.appVersion` `3.26.0`; `aapt` reads the published APK as `versionCode=27 versionName=3.26.0 minSdk=24` |
+| **On the owner's Honor** | the signed 3.25.0 build — he took the phone to work before the 3.26.0 APK could be installed on it. **3.26.0 has never run on his phone**, only on `emulator-5554` |
+| **Signing** | `scripts/sign_release.py` printed `OK: rotated`; `apksigner verify` shows `CN=Rafeeq Al-Darb` from Android 9 up and `CN=Android Debug` for 7–8, so the update installs over 3.25.0 without an uninstall (trap #41) |
+| **Verified 2026-09-16 midday** | `flutter analyze lib test` clean · `flutter test` **250 passed** · the Tuhfa level-one screen opened on the owner's Honor with all ten lessons and the Jamzuri matn · a hosted book («روضة العقلاء», 173.8 KB) downloaded live on that same phone · the rebuilt prayer card seen on `emulator-5554`, including its own rollover from الظهر to العصر with no app process running |
+| **Measured 2026-09-16 midday** | 7 locales × **1,410** keys each (identical) · **276** books · **6** mushaf printings · `hadith.db` 109,731,840 bytes, **67,153** hadiths, **45,219** graded · signed APK 236,567,267 bytes · splash clip 1,533,982 bytes (rebuilt with audio, watermark removed) |
 
-## STATE AS OF 2026-09-16 — dawn (the owner's batch, unreleased)
+## STATE AS OF 2026-09-16 — midday (v3.26.0 published)
+
+### What went out
+
+`v3.26.0` is live and is the only release in the repo; `v3.25.0` and its tag
+were deleted first, as the standing policy says.
+
+**The Gemini watermark was still in the splash and is now out.** The owner
+asked directly («بالله اتاكد انت شيلت العلامة المائية بتاعه جيميناي ولا لاء»)
+and the answer was no: an earlier session removed the OLD clip's watermark,
+and the clip he sent this week carried its own — a four-pointed sparkle at a
+fixed 575-627 × 1132-1188 of 720×1280, in every frame from the first. It
+shipped in 3.25.0. `delogo` over that box clears it; checked at 0.2 s, 3.0 s
+and 6.9 s.
+
+**The splash soundtrack is back, behind its switch, default OFF**, rebuilt
+from his original file. **The intro has a preview** (Settings → شاشة البداية),
+because it otherwise only plays on a cold start after half an hour away.
+**Every bottom tab carries its label** at any width — his Honor measures
+376.6 dp and the old rule hid them below 380. **The two splash marks are one
+size**: 442 px native vs 282 px Flutter, measured off cold-start frames.
+
+**The prayer card was rebuilt.** Layout as he asked («تيبيكال صلاتك»): Hijri
+date and city on top, «الظهر، ١٢:١٤ م» under it, sunrise included. And the
+staleness behind his screenshot is fixed — Dart now sends the whole schedule
+for today and tomorrow and `PrayerCard.post` derives the current event from
+the clock, re-arming an **exact** alarm; it used to send one event plus its
+successor, swapped by an inexact alarm that Doze could defer for ever.
+
+### What is NOT verified
+
+* **3.26.0 has not run on the owner's phone.** He unplugged it mid-session.
+  Everything above was seen either on 3.25.0 (the Tuhfa and library checks,
+  which those commits did not touch) or on `emulator-5554`.
+* **The prayer card was verified with seeded data, not real times.** This
+  emulator image never delivers a GPS fix, so the app cannot compute prayer
+  times on it; the native prefs were written the way Dart writes them and the
+  card was then driven through its whole cycle. The Dart half has seven tests,
+  each proven to fail on the old shape.
+* The splash **sound** has never been heard on a device — the switch is off by
+  default and nobody has turned it on yet.
+
+### The older record
+
+## STATE AS OF 2026-09-16 — dawn (the batch that became v3.26.0)
 
 ### His new icon and his new splash
 
