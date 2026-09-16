@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 13:35 — IN PROGRESS — resume here**
+**2026-09-16 14:28 — IN PROGRESS — resume here**
 
-Dr Ayman Swaid's own channel is in the app - verified id UCKtLDrh3IgxwcZtxiTvOQAA, real photo avatar mirrored to R2 and range-checked (200, image/jpeg, 58937). Linked, not re-hosted: al-Itqan is his work
+the splash is HIS first clip after all - storm, badge rising, and its own correctly-set wordmark - with the Gemini sparkle delogo'd out. The app-drawn caption and the lattice screen both go: the caption existed only because the second clip's tashkeel was wrong, and the lattice was my misreading of which splash he meant
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

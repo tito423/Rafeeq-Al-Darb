@@ -5,7 +5,6 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/splash_video_provider.dart';
-import 'splash_screen.dart';
 
 /// The intro, on demand.
 ///
@@ -15,12 +14,12 @@ import 'splash_screen.dart';
 /// for a launch animation and useless for judging one, which is why this
 /// screen exists.
 ///
-/// It draws exactly what the splash draws — the same clip inside its own
-/// coordinate space with [SplashWordmark] over it — so what is seen here is
-/// what a real cold start shows, not an approximation of it. The only thing
-/// added is a mute button, because the sound is the thing most likely to be
-/// under judgement; it starts from [splashVideoSoundProvider] and does not
-/// write back to it, so listening once is not the same as switching it on.
+/// It draws exactly what the splash draws — the same clip, nothing over it —
+/// so what is seen here is what a real cold start shows, not an approximation
+/// of it. The only thing added is a mute button, because the sound is the
+/// thing most likely to be under judgement; it starts from
+/// [splashVideoSoundProvider] and does not write back to it, so listening once
+/// is not the same as switching it on.
 class SplashPreviewScreen extends ConsumerStatefulWidget {
   const SplashPreviewScreen({super.key});
 
@@ -53,27 +52,11 @@ class _SplashPreviewScreenState extends ConsumerState<SplashPreviewScreen>
         await c.dispose();
         return;
       }
-      c.addListener(_onTick);
       setState(() => _video = c);
       await c.play();
     } catch (_) {
       if (mounted) setState(() => _failed = true);
     }
-  }
-
-  /// Same fade the splash runs, driven by the clip's own position.
-  double _caption = 0;
-
-  void _onTick() {
-    final v = _video;
-    if (v == null || !v.value.isInitialized) return;
-    final total = v.value.duration.inMilliseconds;
-    if (total <= 0) return;
-    const fade = 1500;
-    final pos = v.value.position.inMilliseconds;
-    final start = total - fade;
-    final t = pos <= start ? 0.0 : ((pos - start) / fade).clamp(0.0, 1.0);
-    if (t != _caption && mounted) setState(() => _caption = t);
   }
 
   /// A preview is a foreground thing: leaving the screen with the app must
@@ -100,7 +83,6 @@ class _SplashPreviewScreenState extends ConsumerState<SplashPreviewScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _video?.removeListener(_onTick);
     _video?.dispose();
     super.dispose();
   }
@@ -148,24 +130,10 @@ class _SplashPreviewScreenState extends ConsumerState<SplashPreviewScreen>
               : SizedBox.expand(
                   child: FittedBox(
                     fit: BoxFit.cover,
-                    // Inside the clip's own coordinate space, exactly as the
-                    // splash does it, so the wordmark sits where it really
-                    // sits rather than where this screen's box would put it.
                     child: SizedBox(
                       width: v.value.size.width,
                       height: v.value.size.height,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          VideoPlayer(v),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            top: v.value.size.height * 0.60,
-                            child: SplashWordmark(progress: _caption),
-                          ),
-                        ],
-                      ),
+                      child: VideoPlayer(v),
                     ),
                   ),
                 ),

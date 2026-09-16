@@ -35,8 +35,6 @@ void main() {
         'the ayah drawn in the theme preview',
     'lib/features/settings/presentation/widgets/non_arabic_reading_card.dart':
         'the ayah shown in the transliteration preview',
-    'lib/features/splash/presentation/screens/splash_screen.dart':
-        'the app\'s own wordmark, which is its name',
     'lib/features/new_muslim/presentation/screens/new_muslim_guide_screen.dart':
         'an Arabic-only plural in a locale-aware branch',
     'lib/features/home/presentation/screens/home_screen.dart':
