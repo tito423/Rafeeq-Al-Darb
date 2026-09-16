@@ -123,6 +123,17 @@ abstract final class AppConfig {
   /// unpacks it to `hadith.db` on-device) — not `hadith.db` itself, which
   /// this constant pointed at for a while (a 404: only the zip was ever
   /// pushed to the repo) until a real download attempt caught it.
+  /// Where «ساهم في التكلفة» goes, and **empty until the owner has a rail**.
+  ///
+  /// The support screen hides its button entirely while this is empty rather
+  /// than showing one that opens nothing — this project has shipped a dead
+  /// control before (trap #27) and the lesson stuck. Set it to the donation
+  /// page's URL and the button appears; nothing else has to change.
+  static const String donationUrl = String.fromEnvironment(
+    'RAFEEQ_DONATION_URL',
+    defaultValue: '',
+  );
+
   /// The privacy policy, hosted on the same bucket as the content.
   ///
   /// Google Play asks for a URL it can open on its own, and this is also the

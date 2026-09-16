@@ -1542,5 +1542,18 @@
     "letters": "Letras",
     "source": "Fonte",
     "entry_sub": "Descubra onde cada letra é pronunciada"
+  },
+  "support": {
+    "title": "Apoiar a aplicação",
+    "entry_sub": "A aplicação é totalmente gratuita — este é o seu custo",
+    "headline": "Rafeeq Al-Darb é gratuita, sem anúncios e sem rastreio.",
+    "intro_short": "É a única vez que o mencionaremos. A aplicação é totalmente gratuita e não mostra um único anúncio, e não lhe será pedido mais nada.",
+    "why": "Os anúncios foram recusados de propósito: uma rede de anúncios mostra o que quiser, e um anúncio impróprio ao lado de um versículo não é algo que aceitemos. O rastreio também foi recusado — nada é recolhido sobre si.\n\nResta um custo real: alojar os mushafs, as recitações e os livros, e manter a sincronização. Quem quiser participar pode; quem não quiser tem a aplicação inteira tal como está.",
+    "free_forever_title": "Gratuito para sempre",
+    "free_forever": "O mushaf e as suas traduções · os horários de oração e o adhan · os adhkar · os livros de hadith · as lições de tajwid · a biblioteca. Nada disto está atrás de um pagamento, nem estará.",
+    "donate": "Participar no custo",
+    "later": "Agora não",
+    "read_more": "Saber mais",
+    "no_obligation": "Nada muda na aplicação: nenhuma função é desbloqueada, nenhum anúncio é removido, nenhum lembrete volta."
   }
 }

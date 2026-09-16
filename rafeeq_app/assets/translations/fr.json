@@ -1542,5 +1542,18 @@
     "letters": "Lettres",
     "source": "Source",
     "entry_sub": "Découvrez où chaque lettre se prononce"
+  },
+  "support": {
+    "title": "Soutenir l’application",
+    "entry_sub": "L’application est entièrement gratuite — voici ce qu’elle coûte",
+    "headline": "Rafeeq Al-Darb est gratuite, sans publicité et sans pistage.",
+    "intro_short": "C’est la seule fois que nous en parlerons. L’application est entièrement gratuite et n’affiche aucune publicité, et il ne vous sera plus rien demandé.",
+    "why": "La publicité a été refusée volontairement : une régie affiche ce qu’elle veut, et une publicité déplacée à côté d’un verset n’est pas acceptable. Le pistage a été refusé aussi — rien n’est collecté sur vous.\n\nIl reste un coût réel : héberger les moushafs, les récitations et les livres, et faire tourner la synchronisation. Qui souhaite y participer le peut ; qui ne le souhaite pas garde l’application entière, telle quelle.",
+    "free_forever_title": "Gratuit pour toujours",
+    "free_forever": "Le moushaf et ses traductions · les horaires de prière et l’adhan · les adhkar · les recueils de hadiths · les leçons de tajwid · la bibliothèque. Rien de tout cela n’est payant, et rien ne le sera.",
+    "donate": "Participer au coût",
+    "later": "Pas maintenant",
+    "read_more": "En savoir plus",
+    "no_obligation": "Rien ne change dans l’application : aucune fonction déverrouillée, aucune publicité retirée, aucun rappel qui revient."
   }
 }

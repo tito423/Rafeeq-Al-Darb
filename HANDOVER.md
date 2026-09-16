@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 22:05 — IN PROGRESS — resume here**
+**2026-09-16 22:51 — IN PROGRESS — resume here**
 
-the circular icon at launch is gone. Android 12 and up ALWAYS draw a splash icon, so the only way to be rid of it was to hand the platform a fully transparent one - and the window colour is now the clip's own median pixel, #2B516B, so the OS window and the video are the same colour. The app mark that used to fill the decode gap is gone too (that was the second badge, at a different size); the clip's own first frame fills it instead, so the intro does not start, it moves. Recorded on a signed release build: launcher, colour, storm, icon - no badge anywhere
+the support screen, written the way he asked: it says WHY - the ads were refused on purpose and that refusal costs hosting - it promises what stays free forever, and it asks once. The sheet fires from the More tab's first frame and marks itself seen before it is even shown, so a crash cannot make it ask twice; the card in More is the only way back. The donate button HIDES while AppConfig.donationUrl is empty, because a support button that opens nothing is the dead control trap 27 is about
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

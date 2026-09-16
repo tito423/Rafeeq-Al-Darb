@@ -1542,5 +1542,18 @@
     "letters": "Letters",
     "source": "Source",
     "entry_sub": "Explore where each letter is pronounced"
+  },
+  "support": {
+    "title": "Support the app",
+    "entry_sub": "The app is entirely free — this is what it costs",
+    "headline": "Rafeeq Al-Darb is free, with no ads and no tracking.",
+    "intro_short": "This is the only time we will mention it. The app is entirely free and shows not one advert, and you will not be asked again.",
+    "why": "The ads were refused on purpose: an ad network shows whatever it likes, and an unfitting advert beside an ayah is not something we will accept. Tracking was refused too — nothing is collected about you.\n\nWhat remains is a real cost: hosting the mushafs, the recitations and the books, and running the sync. Whoever wishes to share in it may; whoever does not has the whole app exactly as it is.",
+    "free_forever_title": "Free forever",
+    "free_forever": "The mushaf and its translations · prayer times and the adhan · the adhkar · the hadith books · the tajweed lessons · the library. None of it is behind anything, and none of it will be.",
+    "donate": "Share in the cost",
+    "later": "Not now",
+    "read_more": "Read more",
+    "no_obligation": "Nothing in the app changes either way: no feature unlocks, no advert is removed, no reminder comes back."
   }
 }

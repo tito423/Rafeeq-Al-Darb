@@ -15,6 +15,7 @@ import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 import '../widgets/sync_account_card.dart';
+import '../../../support/presentation/screens/support_screen.dart';
 
 /// The "المزيد" tab.
 ///
@@ -33,6 +34,15 @@ class MoreScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // The one-time support sheet, asked for here and nowhere else: «تظهر مرة
+    // واحدة في الأول». Not on Home, not over the mushaf, not during the adhan
+    // — the More tab is where the reader is already looking at the app rather
+    // than using it. `showSupportIntro` returns immediately once it has been
+    // seen, so this costs one boolean read per build.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) showSupportIntro(context, ref);
+    });
+
     return Scaffold(
       appBar: AppBar(title: Text('nav.more'.tr())),
       body: ListView(
@@ -149,6 +159,18 @@ class MoreScreen extends ConsumerWidget {
                   builder: (_) => const DownloadsScreen(),
                 ),
               ),
+            ),
+          ),
+
+          // «خلي مكانها في المزيد» — the permanent way back to it, after the
+          // one-time sheet has been seen and dismissed.
+          IslamicActionCard(
+            icon: Icons.volunteer_activism_outlined,
+            accent: AppColors.gold,
+            title: 'support.title'.tr(),
+            subtitle: 'support.entry_sub'.tr(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const SupportScreen()),
             ),
           ),
 
