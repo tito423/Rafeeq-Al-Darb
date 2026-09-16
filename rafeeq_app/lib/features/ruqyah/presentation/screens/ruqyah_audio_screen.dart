@@ -12,6 +12,7 @@ import '../../../quran_audio/data/quran_audio_player.dart';
 import '../../../quran_audio/presentation/player_screen.dart';
 import '../../../quran_audio/presentation/widgets/mini_player.dart';
 import '../../data/ruqyah_catalog.dart';
+import 'ruqyah_screen.dart';
 
 /// Five recorded ruqyahs, listenable and downloadable.
 ///
@@ -121,14 +122,17 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
               IslamicPatternPanel(
                 child: Row(
                   children: [
-                    const Icon(Icons.healing_outlined,
-                        color: AppColors.goldSoft, size: 30),
+                    Icon(Icons.healing_outlined,
+                        color: ruqyahAccent(Theme.of(context).colorScheme),
+                        size: 30),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'ruqyah.audio_intro'.tr(),
-                        style: const TextStyle(
-                            color: AppColors.textHigh, fontSize: 13, height: 1.5),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: 13,
+                            height: 1.5),
                       ),
                     ),
                   ],
@@ -155,7 +159,9 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
               Text(
                 ruqyahAudioSourceLabelKey.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.textLow, fontSize: 11),
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 11),
               ),
             ],
           );
@@ -207,6 +213,15 @@ class _RecordingCard extends StatelessWidget {
     final paused = status == DownloadStatus.paused;
     final offline = downloadedPath != null;
 
+    final scheme = Theme.of(context).colorScheme;
+    final accent = ruqyahAccent(scheme);
+    // The playing card is tinted with the theme's own primary rather than a
+    // fixed bottle green, and the resting one with its surfaces - on a light
+    // theme the old pair was two dark slabs with light text on them.
+    final top = Color.alphaBlend(
+      scheme.primary.withValues(alpha: isCurrent ? 0.26 : 0.10),
+      scheme.surfaceContainerHighest,
+    );
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: DecoratedBox(
@@ -215,14 +230,12 @@ class _RecordingCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: isCurrent
-                ? const [Color(0xFF12513F), AppColors.nightElevated]
-                : const [AppColors.nightSurface, AppColors.nightElevated],
+            colors: [top, scheme.surfaceContainerHigh],
           ),
           border: Border.all(
             color: isCurrent
-                ? AppColors.primarySoft
-                : AppColors.gold.withValues(alpha: 0.22),
+                ? scheme.primary
+                : accent.withValues(alpha: 0.32),
             width: isCurrent ? 1.6 : 1,
           ),
         ),
@@ -233,7 +246,7 @@ class _RecordingCard extends StatelessWidget {
                 child: CustomPaint(
                   painter: IslamicPatternPainter(
                     tile: 48,
-                    color: AppColors.gold.withValues(alpha: 0.07),
+                    color: accent.withValues(alpha: 0.07),
                   ),
                 ),
               ),
@@ -249,9 +262,7 @@ class _RecordingCard extends StatelessWidget {
                       isPlaying
                           ? Icons.pause_circle_filled_rounded
                           : Icons.play_circle_fill_rounded,
-                      color: isCurrent
-                          ? AppColors.goldSoft
-                          : AppColors.primarySoft,
+                      color: isCurrent ? accent : scheme.primary,
                     ),
                   ),
                   const SizedBox(width: 4),
@@ -262,8 +273,8 @@ class _RecordingCard extends StatelessWidget {
                       children: [
                         Text(
                           recording.heading(),
-                          style: const TextStyle(
-                            color: AppColors.textHigh,
+                          style: TextStyle(
+                            color: scheme.onSurface,
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                           ),
@@ -285,8 +296,8 @@ class _RecordingCard extends StatelessWidget {
                               'ruqyah.reciter_unnamed'.tr(),
                           ].join(' · '),
                           maxLines: 2,
-                          style: const TextStyle(
-                              color: AppColors.textLow, fontSize: 12),
+                          style: TextStyle(
+                              color: scheme.onSurfaceVariant, fontSize: 12),
                         ),
                         if (busy || paused)
                           Padding(
@@ -310,34 +321,33 @@ class _RecordingCard extends StatelessWidget {
                     IconButton(
                       tooltip: 'downloads.pause'.tr(),
                       onPressed: onPause,
-                      icon: const Icon(Icons.pause_rounded,
-                          color: AppColors.textMedium),
+                      icon: Icon(Icons.pause_rounded,
+                          color: scheme.onSurfaceVariant),
                     ),
                     IconButton(
                       tooltip: 'downloads.cancel'.tr(),
                       onPressed: onCancel,
-                      icon: const Icon(Icons.close_rounded,
-                          color: AppColors.textMedium),
+                      icon: Icon(Icons.close_rounded,
+                          color: scheme.onSurfaceVariant),
                     ),
                   ] else if (paused) ...[
                     IconButton(
                       tooltip: 'downloads.resume'.tr(),
                       onPressed: onResume,
-                      icon: const Icon(Icons.play_arrow_rounded,
-                          color: AppColors.goldSoft),
+                      icon: Icon(Icons.play_arrow_rounded, color: accent),
                     ),
                     IconButton(
                       tooltip: 'downloads.cancel'.tr(),
                       onPressed: onCancel,
-                      icon: const Icon(Icons.close_rounded,
-                          color: AppColors.textMedium),
+                      icon: Icon(Icons.close_rounded,
+                          color: scheme.onSurfaceVariant),
                     ),
                   ] else
                     IconButton(
                       tooltip: 'downloads.title'.tr(),
                       onPressed: onDownload,
-                      icon: const Icon(Icons.download_rounded,
-                          color: AppColors.textMedium),
+                      icon: Icon(Icons.download_rounded,
+                          color: scheme.onSurfaceVariant),
                     ),
                 ],
               ),

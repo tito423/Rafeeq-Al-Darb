@@ -254,6 +254,11 @@ class _BookListState extends State<_BookList> {
   /// resolves. Hoisting it means one query per visit.
   late Future<List<HadithBook>> _booksFuture = widget.repo.books();
 
+  /// Both closed on entry, by the owner's instruction. Local state, not
+  /// persisted: «افتراضيًا» means every visit starts closed.
+  bool _nineOpen = false;
+  bool _textsOpen = false;
+
   void _retryBooks() =>
       setState(() => _booksFuture = widget.repo.books());
 
@@ -272,8 +277,11 @@ class _BookListState extends State<_BookList> {
               title: 'library.section_nine'.tr(),
               subtitle: 'library.section_nine_desc'.tr(),
               icon: Icons.auto_stories_rounded,
+              open: _nineOpen,
+              onTap: () => setState(() => _nineOpen = !_nineOpen),
             ),
-            for (final b in books) ...[
+            if (_nineOpen)
+              for (final b in books) ...[
               _HadithBookTile(
                 book: b,
                 onTap: () => Navigator.of(context).push(
@@ -290,8 +298,11 @@ class _BookListState extends State<_BookList> {
                 title: 'library.section_texts'.tr(),
                 subtitle: 'library.section_texts_desc'.tr(),
                 icon: Icons.menu_book_rounded,
+                open: _textsOpen,
+                onTap: () => setState(() => _textsOpen = !_textsOpen),
               ),
-              for (final b in _hadithTexts) ...[
+              if (_textsOpen)
+                for (final b in _hadithTexts) ...[
                 BookCard(
                   book: b,
                   paths: _paths,
@@ -309,22 +320,32 @@ class _BookListState extends State<_BookList> {
   }
 }
 
-/// A labelled divider between the two kinds of hadith content.
+/// A labelled divider between the two kinds of hadith content — and the
+/// control that opens or closes it. The owner asked for both sections closed
+/// when the tab opens: nine collections and the mutun together are a long
+/// scroll before you have chosen anything.
 class _HadithSectionHeader extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+  final bool open;
+  final VoidCallback onTap;
 
   const _HadithSectionHeader({
     required this.title,
     required this.subtitle,
     required this.icon,
+    required this.open,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
+    return InkWell(
+      borderRadius: BorderRadius.circular(10),
+      onTap: onTap,
+      child: Padding(
       padding: const EdgeInsets.only(bottom: 12, top: 2),
       child: Row(
         children: [
@@ -349,7 +370,15 @@ class _HadithSectionHeader extends StatelessWidget {
               ],
             ),
           ),
+          AnimatedRotation(
+            turns: open ? 0.25 : 0,
+            duration: const Duration(milliseconds: 180),
+            // chevron_right, not chevron_left: the left one auto-mirrors in
+            // RTL and would point the wrong way (trap #7).
+            child: const Icon(Icons.chevron_right, color: AppColors.gold),
+          ),
         ],
+      ),
       ),
     );
   }

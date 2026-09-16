@@ -229,7 +229,10 @@ class _AuthorsView extends StatelessWidget {
                 authors[i], byAuthor[authors[i]]!.first.authorEn),
             deathDate: byAuthor[authors[i]]!.first.deathLabel(),
             books: byAuthor[authors[i]]!,
-            initiallyExpanded: i == 0,
+            // Closed on entry, by the owner's instruction — the authors view
+            // is a long list and opening the first one is an arbitrary
+            // choice on a screen where nothing has been picked yet.
+            initiallyExpanded: false,
             paths: paths,
             onDownload: onDownload,
             onOpen: onOpen,

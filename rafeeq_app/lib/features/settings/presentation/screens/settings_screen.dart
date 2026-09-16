@@ -43,21 +43,25 @@ class SettingsBody extends ConsumerWidget {
         children: [
           // Language — each shown in its own script, independent of the
           // current locale (P2‑3 added es / ru / pt).
-          SectionLabel('settings.language'.tr()),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+          CollapsibleSection(
+            title: 'settings.language'.tr(),
             children: [
-              for (final e in kLanguageNames.entries)
-                ChoiceChip(
-                  label: Text(e.value),
-                  selected: context.locale.languageCode == e.key,
-                  onSelected: (_) {
-                    if (context.locale.languageCode != e.key) {
-                      context.setLocale(Locale(e.key));
-                    }
-                  },
-                ),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final e in kLanguageNames.entries)
+                  ChoiceChip(
+                    label: Text(e.value),
+                    selected: context.locale.languageCode == e.key,
+                    onSelected: (_) {
+                      if (context.locale.languageCode != e.key) {
+                        context.setLocale(Locale(e.key));
+                      }
+                    },
+                  ),
+              ],
+            ),
             ],
           ),
           const SizedBox(height: 24),
@@ -108,101 +112,109 @@ class SettingsBody extends ConsumerWidget {
           // الأساس». Both switches were here, but inside the appearance block
           // with no heading of their own, so nothing on the screen said
           // «شاشة البداية». They have a heading now.
-          SectionLabel('settings.splash_section'.tr()),
-          // P3‑49: the AI-generated splash video is back on by default; keep
-          // a toggle for anyone who prefers a faster cold start. P3‑57 adds
-          // the owner's sound switch underneath it.
-          Card(
-            child: Column(
-              children: [
-                SwitchListTile(
-                  secondary:
-                      Icon(Icons.smart_display_outlined, color: scheme.primary),
-                  title: Text('settings.splash_video'.tr()),
-                  subtitle: Text('settings.splash_video_desc'.tr()),
-                  value: splashVideo,
-                  onChanged: (v) =>
-                      ref.read(splashVideoEnabledProvider.notifier).set(v),
-                ),
-                // Only offered while the video itself is on — a sound switch
-                // for a video that never plays would be a dead control.
-                if (splashVideo)
+          CollapsibleSection(
+            title: 'settings.splash_section'.tr(),
+            children: [
+            // P3‑49: the AI-generated splash video is back on by default; keep
+            // a toggle for anyone who prefers a faster cold start. P3‑57 adds
+            // the owner's sound switch underneath it.
+            Card(
+              child: Column(
+                children: [
                   SwitchListTile(
-                    secondary: Icon(
-                      splashSound
-                          ? Icons.volume_up_outlined
-                          : Icons.volume_off_outlined,
-                      color: scheme.primary,
-                    ),
-                    title: Text('settings.splash_video_sound'.tr()),
-                    subtitle: Text('settings.splash_video_sound_desc'.tr()),
-                    value: splashSound,
+                    secondary:
+                        Icon(Icons.smart_display_outlined, color: scheme.primary),
+                    title: Text('settings.splash_video'.tr()),
+                    subtitle: Text('settings.splash_video_desc'.tr()),
+                    value: splashVideo,
                     onChanged: (v) =>
-                        ref.read(splashVideoSoundProvider.notifier).set(v),
+                        ref.read(splashVideoEnabledProvider.notifier).set(v),
                   ),
-              ],
+                  // Only offered while the video itself is on — a sound switch
+                  // for a video that never plays would be a dead control.
+                  if (splashVideo)
+                    SwitchListTile(
+                      secondary: Icon(
+                        splashSound
+                            ? Icons.volume_up_outlined
+                            : Icons.volume_off_outlined,
+                        color: scheme.primary,
+                      ),
+                      title: Text('settings.splash_video_sound'.tr()),
+                      subtitle: Text('settings.splash_video_sound_desc'.tr()),
+                      value: splashSound,
+                      onChanged: (v) =>
+                          ref.read(splashVideoSoundProvider.notifier).set(v),
+                    ),
+                ],
+              ),
             ),
+            ],
           ),
           const SizedBox(height: 24),
 
           // ── Home clock ──
-          SectionLabel('home.clock_section'.tr()),
-          Card(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
-                  child: Row(
-                    children: [
-                      Icon(Icons.schedule_outlined, color: scheme.primary),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text('home.clock_style'.tr(),
-                            style: Theme.of(context).textTheme.titleSmall),
-                      ),
-                    ],
+          CollapsibleSection(
+            title: 'home.clock_section'.tr(),
+            children: [
+            Card(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+                    child: Row(
+                      children: [
+                        Icon(Icons.schedule_outlined, color: scheme.primary),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text('home.clock_style'.tr(),
+                              style: Theme.of(context).textTheme.titleSmall),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                // The twenty faces live in one gallery, opened from here and
-                // from the Home clock itself — one picker, not two lists that
-                // can drift apart.
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: FilledButton.tonalIcon(
-                      onPressed: () => ClockGallerySheet.show(context),
-                      icon: const Icon(Icons.palette_outlined, size: 18),
-                      label: Text(
-                        '${'home.clock_gallery_title'.tr()} — '
-                        '${_currentFaceLabel(ref)}',
+                  // The twenty faces live in one gallery, opened from here and
+                  // from the Home clock itself — one picker, not two lists that
+                  // can drift apart.
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: FilledButton.tonalIcon(
+                        onPressed: () => ClockGallerySheet.show(context),
+                        icon: const Icon(Icons.palette_outlined, size: 18),
+                        label: Text(
+                          '${'home.clock_gallery_title'.tr()} — '
+                          '${_currentFaceLabel(ref)}',
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const Divider(height: 1),
-                SwitchListTile(
-                  secondary: const Icon(Icons.access_time),
-                  title: Text('home.clock_12h'.tr()),
-                  subtitle: Text('home.clock_12h_desc'.tr()),
-                  value: ref.watch(clockSettingsProvider).use12Hour,
-                  onChanged: (v) =>
-                      ref.read(clockSettingsProvider.notifier).set12Hour(v),
-                ),
-                // Seconds only exist on the digital face; the analogue one
-                // always sweeps them.
-                if (ref.watch(clockSettingsProvider).style ==
-                    ClockStyle.digital)
+                  const Divider(height: 1),
                   SwitchListTile(
-                    secondary: const Icon(Icons.timer_outlined),
-                    title: Text('home.clock_seconds'.tr()),
-                    value: ref.watch(clockSettingsProvider).showSeconds,
-                    onChanged: (v) => ref
-                        .read(clockSettingsProvider.notifier)
-                        .setShowSeconds(v),
+                    secondary: const Icon(Icons.access_time),
+                    title: Text('home.clock_12h'.tr()),
+                    subtitle: Text('home.clock_12h_desc'.tr()),
+                    value: ref.watch(clockSettingsProvider).use12Hour,
+                    onChanged: (v) =>
+                        ref.read(clockSettingsProvider.notifier).set12Hour(v),
                   ),
-              ],
+                  // Seconds only exist on the digital face; the analogue one
+                  // always sweeps them.
+                  if (ref.watch(clockSettingsProvider).style ==
+                      ClockStyle.digital)
+                    SwitchListTile(
+                      secondary: const Icon(Icons.timer_outlined),
+                      title: Text('home.clock_seconds'.tr()),
+                      value: ref.watch(clockSettingsProvider).showSeconds,
+                      onChanged: (v) => ref
+                          .read(clockSettingsProvider.notifier)
+                          .setShowSeconds(v),
+                    ),
+                ],
+              ),
             ),
+            ],
           ),
           const SizedBox(height: 24),
 
@@ -255,21 +267,33 @@ class SettingsBody extends ConsumerWidget {
           // parent now constructs a genuinely new, non-identical widget
           // every rebuild, so Flutter takes the normal update path and
           // calls `build()` again with fresh translations.
-          SectionLabel('settings.permissions'.tr()),
-          PermissionsSection(),
+          CollapsibleSection(
+            title: 'settings.permissions'.tr(),
+            children: [
+            PermissionsSection(),
+            ],
+          ),
           const SizedBox(height: 24),
 
           // P3‑44: per-surah reminder toggles moved here wholesale from
           // the Home "سنن السور" card — see that card's own doc comment.
-          SectionLabel('sunan_suwar.reminders_section_title'.tr()),
-          SunanSuwarRemindersSection(),
+          CollapsibleSection(
+            title: 'sunan_suwar.reminders_section_title'.tr(),
+            children: [
+            SunanSuwarRemindersSection(),
+            ],
+          ),
           const SizedBox(height: 24),
 
           // The Islamic-quote notification, beside the other reminders
           // rather than on a screen of its own: it is one interval and a
           // preview.
-          SectionLabel('quotes.section_title'.tr()),
-          QuoteReminderSection(),
+          CollapsibleSection(
+            title: 'quotes.section_title'.tr(),
+            children: [
+            QuoteReminderSection(),
+            ],
+          ),
           const SizedBox(height: 24),
 
           // P3‑41: the Adhan settings entry that used to live here is
@@ -328,6 +352,83 @@ String _currentFaceLabel(WidgetRef ref) {
   return cs.style == ClockStyle.digital
       ? cs.digitalFace.labelKey.tr()
       : cs.analogFace.labelKey.tr();
+}
+
+/// A section that starts CLOSED.
+///
+/// The owner asked for the long ones — الأذونات، تذكيرات السنن، المقولات،
+/// ساعة الشاشة الرئيسية، اللغة، شاشة البداية — to be collapsed by default:
+/// each is a screenful on its own, and six of them stacked meant the settings
+/// screen opened on a wall of switches. The heading reads exactly as
+/// [SectionLabel] does, so a closed section and an open one look like the same
+/// screen.
+///
+/// The state is deliberately local and not persisted: «افتراضيًا» means every
+/// visit starts closed, not that the app remembers a previous visit.
+class CollapsibleSection extends StatefulWidget {
+  final String title;
+  final List<Widget> children;
+
+  const CollapsibleSection({
+    super.key,
+    required this.title,
+    required this.children,
+  });
+
+  @override
+  State<CollapsibleSection> createState() => _CollapsibleSectionState();
+}
+
+class _CollapsibleSectionState extends State<CollapsibleSection>
+    with SingleTickerProviderStateMixin {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: () => setState(() => _open = !_open),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8, top: 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(color: theme.colorScheme.primary),
+                  ),
+                ),
+                AnimatedRotation(
+                  turns: _open ? 0.25 : 0,
+                  duration: const Duration(milliseconds: 180),
+                  // chevron_right, not chevron_left: the left one auto-mirrors
+                  // in RTL and would point the wrong way (trap #7).
+                  child: Icon(Icons.chevron_right,
+                      color: theme.colorScheme.primary),
+                ),
+              ],
+            ),
+          ),
+        ),
+        AnimatedCrossFade(
+          firstChild: const SizedBox(width: double.infinity, height: 0),
+          secondChild: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: widget.children,
+          ),
+          crossFadeState:
+              _open ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          duration: const Duration(milliseconds: 200),
+          sizeCurve: Curves.easeOutCubic,
+        ),
+      ],
+    );
+  }
 }
 
 /// The heading above a group of options. Public so `MoreScreen` heads its

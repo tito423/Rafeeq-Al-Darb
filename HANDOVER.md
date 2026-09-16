@@ -1437,9 +1437,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 02:19 — IN PROGRESS — resume here**
+**2026-09-16 04:53 — IN PROGRESS — resume here**
 
-docs: handover after publishing v3.25.0. HANDOVER state block measured tonight (243 tests, 1406 keys x7, every hosted path 206, APK 240,040,675); the previous session's record kept below it rather than overwritten. NEXT_PROMPT and NEXT_SESSION_PROMPT both start from the one unverified thing: the Tuhfa download has never run on a phone.
+the owner's batch, part one: new app icon from his artwork; settings sections (language, splash, home clock, permissions, sunan reminders, quotes) and the library's authors + hadith sections collapsed by default; ruqyah made theme-aware, its duplicated headphones action removed, and the tafsir card's own ReciterChip put beside each group's play button. CLAUDE.md 6/7: the next-session prompt is written only on «جهز الدنيا».
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

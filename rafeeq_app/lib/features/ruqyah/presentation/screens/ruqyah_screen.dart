@@ -9,8 +9,22 @@ import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../quran/presentation/widgets/ayah_sciences/sciences_header.dart';
 import '../../data/ruqyah_catalog.dart';
 import 'ruqyah_audio_screen.dart';
+
+/// Gold that belongs to whichever theme is on.
+///
+/// A fixed `AppColors.goldSoft` is a bright cream: it reads on the navy
+/// themes and all but disappears on the light ones, which is what the owner
+/// saw - «ثيم الرقية الشرعية في الثيم النهاري مش متوافق». Blending the gold
+/// toward the scheme's own `onSurface` keeps it recognisably gold in the dark
+/// and pulls it to a readable bronze in the light - the same formula
+/// `IslamicPatternPanel` already uses for exactly this reason.
+Color ruqyahAccent(ColorScheme scheme) => Color.alphaBlend(
+      AppColors.gold.withValues(alpha: 0.55),
+      scheme.onSurface,
+    );
 
 /// Everything the ruqyah is made of, assembled from sources already in the app.
 ///
@@ -72,22 +86,14 @@ class _RuqyahScreenState extends ConsumerState<RuqyahScreen> {
   @override
   Widget build(BuildContext context) {
     final data = ref.watch(_ruqyahContentProvider);
+    final scheme = Theme.of(context).colorScheme;
+    final accent = ruqyahAccent(scheme);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('ruqyah.title'.tr()),
-        actions: [
-          IconButton(
-            tooltip: 'ruqyah.audio_title'.tr(),
-            icon: const Icon(Icons.headphones_rounded),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const RuqyahAudioScreen(),
-              ),
-            ),
-          ),
-        ],
-      ),
+      // No headphones action here: it opened exactly the screen the
+      // «استمع إلى تلاوات الرقية» button below opens, and the owner asked for
+      // the duplicate to go. The button stays because it says what it does.
+      appBar: AppBar(title: Text('ruqyah.title'.tr())),
       body: data.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => ErrorRetry(
@@ -103,14 +109,13 @@ class _RuqyahScreenState extends ConsumerState<RuqyahScreen> {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.healing_outlined,
-                          color: AppColors.goldSoft, size: 26),
+                      Icon(Icons.healing_outlined, color: accent, size: 26),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           'ruqyah.intro'.tr(),
-                          style: const TextStyle(
-                            color: AppColors.textHigh,
+                          style: TextStyle(
+                            color: scheme.onSurface,
                             fontSize: 13,
                             height: 1.55,
                           ),
@@ -154,7 +159,7 @@ class _RuqyahScreenState extends ConsumerState<RuqyahScreen> {
               child: Text(
                 'ruqyah.group_duas_note'.tr(),
                 style:
-                    const TextStyle(color: AppColors.textLow, fontSize: 12),
+                    TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
               ),
             ),
             for (final d in content.duas) _DuaCard(item: d),
@@ -207,18 +212,25 @@ class _GroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final accent = ruqyahAccent(scheme);
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: [AppColors.nightSurface, AppColors.nightElevated],
+            colors: [
+              Color.alphaBlend(
+                scheme.primary.withValues(alpha: 0.10),
+                scheme.surfaceContainerHighest,
+              ),
+              scheme.surfaceContainerHigh,
+            ],
           ),
-          border:
-              Border.all(color: AppColors.gold.withValues(alpha: 0.26)),
+          border: Border.all(color: accent.withValues(alpha: 0.38)),
         ),
         child: Stack(
           children: [
@@ -227,7 +239,7 @@ class _GroupCard extends StatelessWidget {
                 child: CustomPaint(
                   painter: IslamicPatternPainter(
                     tile: 52,
-                    color: AppColors.gold.withValues(alpha: 0.07),
+                    color: accent.withValues(alpha: 0.07),
                   ),
                 ),
               ),
@@ -242,13 +254,20 @@ class _GroupCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           group.titleKey.tr(),
-                          style: const TextStyle(
-                            color: AppColors.goldSoft,
+                          style: TextStyle(
+                            color: accent,
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
                       ),
+                      // «ضيف جنبه اختيار لاختيار القارئ اللي يقراها
+                      // بالترتيب». Deliberately the SAME widget the tafsir
+                      // card uses, so it is the same provider, the same
+                      // picker and the same highlight - two reciter choices
+                      // in one app would be two reciters.
+                      const Flexible(child: ReciterChip()),
+                      const SizedBox(width: 6),
                       IconButton.filledTonal(
                         onPressed: onPlay,
                         tooltip: 'ruqyah.play_group'.tr(),
@@ -263,8 +282,8 @@ class _GroupCard extends StatelessWidget {
                   // The honest note about what puts this group in the ruqyah.
                   Text(
                     group.noteKey.tr(),
-                    style: const TextStyle(
-                      color: AppColors.textLow,
+                    style: TextStyle(
+                      color: scheme.onSurfaceVariant,
                       fontSize: 12,
                       height: 1.5,
                     ),
@@ -293,15 +312,20 @@ class _AyahLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final accent = ruqyahAccent(scheme);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 260),
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
+        // A white wash is invisible on a light theme, and a fixed translucent
+        // gold composites differently on each ground (trap #15) - both now
+        // come from the live scheme.
         color: highlighted
-            ? AppColors.ayahHighlightPlaying
-            : Colors.white.withValues(alpha: 0.03),
+            ? accent.withValues(alpha: 0.20)
+            : scheme.onSurface.withValues(alpha: 0.04),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,8 +334,8 @@ class _AyahLine extends StatelessWidget {
             ayah.textUthmani,
             textAlign: TextAlign.right,
             textDirection: TextDirection.rtl,
-            style: const TextStyle(
-              color: AppColors.textHigh,
+            style: TextStyle(
+              color: scheme.onSurface,
               fontSize: 19,
               height: 1.95,
               fontFamily: 'AmiriQuran',
@@ -320,7 +344,7 @@ class _AyahLine extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             '${ayah.surahId}:${ayah.ayahNumber}',
-            style: const TextStyle(color: AppColors.textLow, fontSize: 11),
+            style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 11),
           ),
         ],
       ),
@@ -334,13 +358,14 @@ class _DuaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        color: AppColors.nightSurface,
-        border: Border.all(color: AppColors.primarySoft.withValues(alpha: 0.3)),
+        color: scheme.surfaceContainerHighest,
+        border: Border.all(color: scheme.primary.withValues(alpha: 0.35)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,8 +374,8 @@ class _DuaCard extends StatelessWidget {
             item.body,
             textAlign: TextAlign.right,
             textDirection: TextDirection.rtl,
-            style: const TextStyle(
-              color: AppColors.textHigh,
+            style: TextStyle(
+              color: scheme.onSurface,
               fontSize: 16,
               height: 1.9,
             ),
@@ -363,8 +388,8 @@ class _DuaCard extends StatelessWidget {
               item.footnote,
               textAlign: TextAlign.right,
               textDirection: TextDirection.rtl,
-              style: const TextStyle(
-                color: AppColors.textLow,
+              style: TextStyle(
+                color: scheme.onSurfaceVariant,
                 fontSize: 11,
                 height: 1.6,
               ),
@@ -385,8 +410,8 @@ class _SectionTitle extends StatelessWidget {
         padding: const EdgeInsets.only(top: 6, bottom: 6),
         child: Text(
           text,
-          style: const TextStyle(
-            color: AppColors.goldSoft,
+          style: TextStyle(
+            color: ruqyahAccent(Theme.of(context).colorScheme),
             fontSize: 17,
             fontWeight: FontWeight.w800,
           ),

@@ -708,7 +708,9 @@ download will open a stale file.
 
 ## 6. When the owner says «جهّز الدنيا» / asks for a handover
 
-This is a standing, mandatory routine. Do all of it:
+This is a standing, mandatory routine — and it is the **only** thing that
+starts it. Until he says it, finish the work and report it; do not write the
+next-session prompt (§7). Do all of it:
 
 1. **Verify.** `flutter analyze lib test`, `flutter test`, and a range request
    against every hosted content path (`hadith/hadith.zip`, a book, one page of
@@ -741,8 +743,14 @@ Never hand over a state you have not just verified.
 > «لما تكتب برومبت للسيشن الجاية يكمل من عند ما انت وقفت، ولو وقفت في حاجة
 > خليه يرجع يعملها تاني، ودايما تصدّر البرومبت في ملف .md جاهز للنسخ.»
 
-Every time you write a prompt for the next session — asked for it or not, at a
-handover or when the quota is closing — all three of these hold:
+**Write one only when he asks.** «مش تعمل البرومبت الا لما اقولك جهز الدنيا»
+(2026-09-16). Ending a reply with an unasked-for next-session prompt reads as
+"I am finishing now" while he is still handing out work, and it costs tokens he
+is paying for. So: no `NEXT_PROMPT.md`, no printed block, until he says
+«جهّز الدنيا» or asks for a handover. Then §6 runs in full.
+
+When you do write one — at a handover, or because he asked — all three of these
+hold:
 
 1. **It resumes exactly where you stopped.** Not a summary of the project: the
    next instruction, in order, starting from the thing your hands were on. Name
