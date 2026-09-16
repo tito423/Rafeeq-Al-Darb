@@ -1,29 +1,38 @@
 # Rafiq Al-Darb — next session brief
 
-**Last written:** 2026-09-16, after midnight, on a clean tree with **v3.25.0
-published**: `flutter analyze lib test` clean, `flutter test` **243 passed**,
-every hosted path range-requested and answering 206 (see `HANDOVER.md` →
-"Verified 2026-09-16 (night)").
+**Last written:** 2026-09-16 at dawn, on a clean tree: `flutter analyze lib
+test` clean, `flutter test` **243 passed**, every hosted path range-requested
+and answering 206 (see `HANDOVER.md` → "Verified 2026-09-16 dawn").
 
-**`v3.25.0` is released** at `abd74b5`, the only release in the repo, signed by
-`scripts/sign_release.py` (`OK: rotated`). `v3.24.2` and its tag were deleted.
-`master` and the tag are the same commit. **Nothing is unreleased.**
+**`v3.25.0` is the published release**, tag at `abd74b5`. **`master` is six
+commits ahead of it and that work is not released** — it is verified and
+installed on the owner's Honor, but the word to publish never came. That is
+the first question to ask him.
 
-**What the late 2026-09-16 session did, in one paragraph.** Gave تحفة الأطفال
-a screen. The lessons had been verified data since the evening before with
-nothing to display them; now المزيد ← تعليم التجويد opens a **levels** screen —
-مخارج الحروف, then المستوى الأول (10 lessons) and المستوى الثاني (23), each
-with its own progress — and the level-one screen walks a lesson's several
-ranges in reading order, setting الضباع's note smaller than the Jamzuri's
-matn. The paragraph selection was lifted into `tuhfa_lesson_text.dart` and
-pinned by five tests over the fixture, which was checked to be byte-for-byte
-the text the bucket serves. Then the emulator refused to download anything at
-all, which turned out to be Avast re-signing TLS on this machine (the leaf for
-`*.r2.dev` is issued by `CN=Avast Web/Mail Shield Root`) — established as
-environment, not code, by watching the level-two course fail identically — so
-the screen was seen by seeding the real bytes through `run-as` on a debug
-build. **That is the one gap: the download has never run on a phone.**
-Finally: built, signed, published v3.25.0 and deleted the old release.
+**A rule was added to `CLAUDE.md` this session (§6, §7): the next-session
+prompt is written ONLY when he says «جهّز الدنيا».** Not at the end of a
+batch, not to round off a reply. Finish the work and report it.
+
+**What the dawn session did, in one paragraph.** His batch: a new app icon
+cropped from his own artwork with nothing else touched; his new splash clip,
+cut at 7 s and **silenced** because its voice mispronounced «قرآني» and a
+voice cannot be re-recorded here; the wordmark it used to burn in — whose
+tashkeel was wrong on both words — now drawn by the app, correctly pointed,
+inside the video's own coordinate space. Then the light theme, which he said
+was unreadable «خاصة في قسم عن التطبيق»: the cause was one colour used in many
+places, and it was measured rather than judged — gold as text is **2.10 : 1**
+on white, and `goldOn(scheme)` takes it to 5.49 while keeping 9.87 on the
+night themes. About's own dua turned out to be `Colors.white` on a panel that
+follows the theme. Then his list: six settings sections and the library's
+authors and hadith sections collapsed by default; the ruqyah's duplicated
+headphones action removed, its theme fixed, and the tafsir card's own reciter
+chip put beside the play button — wired to the queue, so choosing سعود الشريم
+really does recite in his voice, which was watched happening on his phone.
+
+**Two bugs in that work were found only by looking at a device**, and both are
+worth remembering: a listener that never called `setState`, so the caption was
+computed once at zero and never drawn; and AmiriQuran being a *Quranic* face,
+which drew «قرآني» as «قرآنی» with its marks adrift.
 
 `NEXT_PROMPT.md` is the paste-ready message; this file is the longer brief it
 points at.
@@ -57,7 +66,17 @@ points at.
 
 ## Open work, in order
 
-### 1. The Tuhfa download, on a real phone (first job)
+### 1. Ask about the release (first job)
+
+Six commits of verified, phone-tested work sit unreleased on `master`. He was
+asked and had not answered. If he says yes: bump `pubspec.yaml` to `3.26.0+27`
+and `AboutScreen.appVersion` to match (a test holds them equal), build, run
+`scripts/sign_release.py` until it prints `OK: rotated`, delete `v3.25.0` and
+its tag, publish `v3.26.0` from `master`, and check the tag's SHA equals
+`HEAD`. Release notes in Arabic, and honest about the splash being silent and
+why.
+
+### 2. The Tuhfa download, on a real phone
 
 The level-one screen works — ten lessons, the book's own vowelled headings,
 الضباع's note under the matn in smaller type, «إتمام الدرس» moving the header
@@ -71,7 +90,7 @@ with the network on, and watch it fetch `tuhfat_al_atfal`. If it shows «يلز�
 تنزيل نصّ الدروس», `adb logcat | grep tuhfaBookProvider` prints the reason.
 Then update the Xiaomi, which is two releases behind.
 
-### 2. Sync — finish proving it (owner's current priority)
+### 3. Sync — finish proving it (owner's current priority)
 
 Built by the second agent, repaired by this session, **never seen working
 between two devices**. What is known:
@@ -98,26 +117,26 @@ whether a re-sent counter batch double-counts (the owner's rule is SUM, so an
 unguarded retry inflates tasbeeh). Also: the owner wanted sign-in offered once
 at first launch with a working «تخطّي»; only the More card exists.
 
-### 3. Per-ayah recitation downloads — verify from zero
+### 4. Per-ayah recitation downloads — verify from zero
 
 Built by the second agent, **never run by anyone**. The owner's words about the
 last attempt: «فشل فشل ذريع». Entry: Downloads → «تلاوات الآيات». Download a
 whole surah, `adb shell cmd connectivity airplane-mode enable`, play it ayah by
 ayah, look at the screen. Read trap #45 before touching download callbacks.
 
-### 4. The two fixes in 3.24.1/3.24.2 that were not seen on a device
+### 5. The two fixes in 3.24.1/3.24.2 that were not seen on a device
 
 * The Quran-tab flicker (`_appliedUiMode` guard in `quran_screen.dart`). Measure
   it the way trap #43 says: `dumpsys window | grep statusBars`, and
   `dumpsys gfxinfo … reset` / act / read.
 * The sign-in card now surfacing its result.
 
-### 5. Still not proven
+### 6. Still not proven
 
 * The prayer-notification countdown jumping seconds — the rebase happens twice
   per prayer now, but the jump never reproduced on the emulator.
 
-### 6. Waiting on the owner
+### 7. Waiting on the owner
 
 * 11 clips under `adhan/video/` on R2 (~74 MB) — delete or keep.
 * A working address for Mishkat.

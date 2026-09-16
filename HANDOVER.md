@@ -3,15 +3,123 @@
 **For:** the next AI agent picking up this project (Claude Code, Antigravity,
 Cline, or any other).
 **Read `CLAUDE.md` first — it is the mandatory working method — then this file.**
-
 | | |
 |---|---|
 | **Last updated** | 2026-09-16 |
-| **Released** | **v3.25.0** — tag on `master` at `abd74b5`, the only release in the repo; asset `rafeeq-aldarb-3.25.0.apk`, 240,040,675 bytes. v3.24.2 and its tag were deleted, as the owner's one-release rule requires |
-| **App version** | `pubspec.yaml` `3.25.0+26`; `AboutScreen.appVersion` `3.25.0` (`about_version_test` holds the two equal) |
-| **Signing** | `scripts/sign_release.py` printed `OK: rotated` for the published APK — new key from Android 9 up, debug certificate kept below it, so every install path is an update. **Gradle signs debug on purpose — run it after every release build (trap #41).** |
-| **Verified 2026-09-16 (night)** | `flutter analyze lib test` clean · `flutter test` **243 passed** · signed APK installed on `emulator-5554` and opened (`versionName=3.25.0`, `versionCode=26`, `minSdk=24`) · range requests all **206** with a real content type: `hadith/hadith.zip`, three books (`tuhfat_al_atfal`, `taysir_ahkam_at_tajwid`, `ghayat_al_murid`), page 3 of **all six** printings (`mushaf/hafs/kfqc/svg/003.svg` `image/svg+xml`; tajweed, madinah_gold, qatar, kuwait, madinah_night `image/jpeg`), two translations (`quran/translations/en.json.gz`, `ur.json.gz`) |
-| **Measured 2026-09-16 (night)** | 7 locales × **1,406** keys each (identical) · **276** books in the catalogue · **6** mushaf printings, 604 pages each · `hadith.db` 109,731,840 bytes, **67,153** hadiths, **45,219** graded · release APK 240,040,675 bytes |
+| **Released** | **v3.25.0** — tag on `master` at `abd74b5`, the only release in the repo; asset `rafeeq-aldarb-3.25.0.apk`, 240,040,675 bytes. **`master` is now 6 commits ahead of it** and that batch is NOT released — the owner had not given the word when this was written |
+| **App version** | `pubspec.yaml` `3.25.0+26`; `AboutScreen.appVersion` `3.25.0`. **Deliberately not bumped**: the number moves when a release is published, and the next one is 3.26.0 |
+| **On the owner's Honor** | the signed build of `2c87df8` — everything below, installed and walked through with him connected |
+| **Signing** | `scripts/sign_release.py` printed `OK: rotated` on every build this session. **Gradle signs debug on purpose — run it after every release build (trap #41).** |
+| **Verified 2026-09-16 dawn** | `flutter analyze lib test` clean · `flutter test` **243 passed** · every hosted path range-requested, all **206** with a real content type: `hadith/hadith.zip`, three books, page 3 of all **6** printings, two translations |
+| **Measured 2026-09-16 dawn** | 7 locales × **1,404** keys each (identical) · **276** books · **6** mushaf printings · `hadith.db` 109,731,840 bytes, **67,153** hadiths, **45,219** graded · signed APK 236,870,371 bytes · splash clip 1,917,727 bytes |
+
+## STATE AS OF 2026-09-16 — dawn (the owner's batch, unreleased)
+
+### His new icon and his new splash
+
+**Icon.** `Gemini_Generated_Image_atstmwatstmwatst.jpg` is a landscape
+presentation image with the tile in the middle of it; the tile was located by
+its own gold rim (centre 1407,776, side 1201) and cropped at 1024 with nothing
+else touched — no recolour, no reproportioning. `assets/icon/app_icon.png` and
+`app_icon_foreground.png` are that crop, the adaptive background is the tile's
+own blue `#081F4F`, and `ic_launcher.xml` keeps its **16 % inset**.
+
+That inset was checked, not assumed: composed against a circle mask (which is
+what his Honor draws) at 16 / 22 / 27 %, rendered and looked at. At 16 % the
+arch, the shelves and the Quran fill the circle and only the rim's corners are
+lost; at 27 % the tile floats small in a blue field. 16 % is the best of the
+three and is what ships.
+
+**Splash.** His clip is 10.01 s, 720×1280, with a voice track. Two things were
+wrong with it and he said so: the voice mispronounces «قرآني», and the wordmark
+burnt into its last three seconds reads «قَرْأَنْي رَفِيقُ دُرَبِّي» with
+«الى» for «إلى» underneath.
+
+* **The audio is gone.** «خليه يقرا قراني صح او سيل الصوت خالص» — a voice
+  cannot be re-recorded here, so the track was stripped from the asset and
+  `setVolume(0)` belt-and-braces. The Settings switch «صوت شاشة البداية» went
+  with it, and its two keys out of all seven locales: a switch for a sound
+  that cannot play is a dead control.
+* **The clip is cut at 7.0 s**, where the icon is settled and the band under
+  it is clean sky. `delogo` over the wordmark band was tried first and left a
+  smeared rectangle where the clouds lost their detail — worse than the
+  mistake it removed. The screenshots are in the scratchpad.
+* **The app draws the line itself** (`_Wordmark`), inside the video's own
+  coordinate space so it scales and crops with the artwork rather than
+  drifting from it on another aspect ratio.
+
+**Two things about that caption were wrong before a device showed them:**
+
+1. `_onVideoTick` never called `setState`, so the caption was computed once,
+   at zero, and the clip played to the end with nothing on it. It repaints
+   now, but only while the fade is running.
+2. **AmiriQuran is a QURANIC face.** It drew the final yaa without its dots
+   and floated the marks high above the line, so «قرآني» came out «قرآنی».
+   The app's own UI face sets it properly. Both were caught by looking at
+   full-resolution screenshots, not the 540-wide screen recording, where the
+   marks were too thin to judge.
+
+### The light theme, measured
+
+«الوان الكتابة والخطوط مش بتبقى واضحة… خاصة في قسم عن التطبيق». The cause was
+one thing used in many places: **`AppColors.gold` as a text colour**. Measured:
+
+| | contrast |
+|---|---|
+| gold text on white | **2.10 : 1** |
+| goldSoft text on white | **1.62 : 1** |
+| gold text on the About hero's pale ground | **1.90 : 1** |
+| floor | 4.5 : 1 |
+
+`goldOn(scheme)` in `app_colors.dart` blends the gold half-way into the
+scheme's own `onSurface`: **5.49 : 1** on white, 5.15 on the scaffold, 4.91 on
+the About hero, and **9.87 : 1** on the night themes, where it still reads as
+gold. The alpha was tuned until the worst ground cleared the floor.
+
+Fixed with it: About (whose dua was `Colors.white` on a panel that follows the
+theme — white on white), the mini player (a fixed night bar under a pale app),
+the reciter screen and its picker, the audio list, the downloads size line,
+the tafsir card's reciter chip, and the qibla dial (ring, ticks, the four
+letters, the hub). **Left alone on purpose**: the onboarding screen, the adhan
+player, the audio player and the mushaf theme picker paint their own night
+ground, and the ayah share card is an exported image.
+
+### The rest of his list
+
+* **Settings**: اللغة، شاشة البداية، ساعة الشاشة الرئيسية، الأذونات،
+  تذكيرات سنن السور، المقولات all open **collapsed** now
+  (`CollapsibleSection`, local state — «افتراضيًا» means every visit).
+* **Library**: the authors list and both hadith sections (الكتب التسعة،
+  كتب ومتون الحديث) open collapsed.
+* **Ruqyah**: the headphones action in the app bar is gone — it opened the
+  exact screen the «استمع إلى تلاوات الرقية» button opens. The tafsir card's
+  own `ReciterChip` sits beside each group's play button, and `playQueue` is
+  wired to `selectedReciterProvider`, so the chooser is a control and not a
+  label. Both ruqyah screens follow the theme.
+
+**SEEN ON HIS HONOR** (he connected it and said to use it): the new icon in
+the launcher and on the native splash; About readable; the six settings
+sections collapsed; the library's authors and hadith collapsed, and expanding
+one; the ruqyah screen with no duplicate button, the chip opening the picker,
+**سعود الشريم picked and actually reciting**, ayah 1:2 highlighted as the
+queue moved.
+
+**SEEN ON THE EMULATOR** (his phone could not show it — the intro only plays
+after 30 minutes away, and jumping a real phone's clock fires its pending
+alarms, trap #28): the whole boot — launcher icon → native splash → the clip,
+silent → the wordmark «قُرْآنِي رَفِيقُ دَرْبِي» with «رفيق المسلم في رحلته
+إلى الجنة» under it.
+
+### Not done, and why
+
+* **No release.** v3.26.0 is one command away and everything for it is
+  verified, but he had not answered «أطلّع ريليز؟» when this was written.
+  Releases are his call (§2.3).
+* **The Xiaomi** (`BYKRKJPRC6O7FMHU`) was never connected — still on the
+  2026-09-15 18:02 build, now two batches behind.
+* **The Tuhfa download on a phone** is still unproven — see the previous
+  block. It was not re-tried this session.
+
 
 ## STATE AS OF 2026-09-16 — after midnight (v3.25.0, released)
 
@@ -1437,9 +1545,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 05:26 — IN PROGRESS — resume here**
+**2026-09-16 05:53 — IN PROGRESS — resume here**
 
-the wordmark reads right on a device: the app's own face sets «قُرْآنِي رَفِيقُ دَرْبِي» with its dots and its marks where they belong. Qibla dial follows the theme too - ring, ticks, the four letters and the hub were flat gold on a card that goes pale.
+docs: handover at dawn. HANDOVER state block for the owner's icon/splash/theme batch, measured tonight (243 tests, 1404 keys x7, every hosted path 206, signed APK 236,870,371). NEXT_PROMPT and NEXT_SESSION_PROMPT both open on the one decision left: six verified commits sit unreleased because the word never came.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
