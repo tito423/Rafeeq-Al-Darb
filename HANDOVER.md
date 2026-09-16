@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 01:59 — IN PROGRESS — resume here**
+**2026-09-17 02:10 — IN PROGRESS — resume here**
 
-no Arabic reaches a reader who did not choose Arabic. Three places did it. The Hijri day sheet printed 5,747 lines of Arabic Wikipedia with an apology over them - it now shows 24 landmark days written as translation keys, so they arrive in whatever language is on: Badr, the Hijra, Karbala, Yarmouk, Qadisiyyah, Hattin, Ain Jalut, Constantinople, the fall of Granada, the Farewell Hajj and the rest, one in every Hijri month. Every date is checked by a test against the bundled Arabic record itself - a landmark that names a day its own source does not know fails the build, because a date recalled rather than read is invented content. The quote of the day is 359 pieces of classical Arabic prose with no translated edition anywhere in the app, so the card and its notification setting are Arabic-only until that corpus is translated; the Hadith of the Day underneath it stays for everyone because HadeethEnc really does ship seven language packs. 280 tests pass
+v3.29.0: the copyright purge, the Hajj guide on an-Nawawi, and no Arabic for a reader who chose another language. Built and signed - OK: rotated, 211.6 MB
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
