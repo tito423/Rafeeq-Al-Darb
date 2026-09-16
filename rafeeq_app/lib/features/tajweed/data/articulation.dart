@@ -7,11 +7,11 @@
 /// or passing, and where the sound leaves from.
 ///
 /// None of this is a ruling and none of it is invented science: it is the
-/// mechanics of the place «غاية المريد» already describes in words. The book
-/// says الباء والميم are «ما بين الشفتين معًا، مع انطباق» — the lips shut; it
-/// says الفاء is «بطن الشَّفة السفلى مع أطراف الثنايا العليا» — the lower lip
-/// meets the upper teeth; it says الخيشوم is where الغنة leaves. Each entry
-/// below is that sentence turned into a movement.
+/// mechanics of the places ابن الجزري already names. His matn says
+/// «لِلشَّفَتَيْنِ: الوَاوُ بَاءٌ مِيمُ» — the lips meet; it says «فَالْفَا مَعَ
+/// اطرَافِ الثَّنَايَا المُشْرِفَهْ» — the lower lip rises to the upper teeth;
+/// it says «وَغُنَّةٌ: مَخْرَجُهَا الخَيْشُومُ». Each entry below is one of
+/// those lines turned into a movement.
 library;
 
 /// What the mouth does for a makhraj.

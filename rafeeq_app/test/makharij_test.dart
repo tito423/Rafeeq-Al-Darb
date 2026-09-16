@@ -2,14 +2,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/features/tajweed/data/articulation.dart';
 import 'package:rafeeq_app/features/tajweed/data/makharij.dart';
 
-/// The makharij data is a claim about a book, and this is what checks it.
+/// The makharij data is a claim about a matn, and this is what checks it.
 ///
-/// «غاية المريد» states its own arithmetic on p.131: «أما عند مخارج الحروف
-/// فيكون عددها واحدًا وثلاثين حرفًا. فالجوف يخرج منه ثلاثة أحرف، والحلق ستة،
-/// واللسان ثمانية عشر، والشفتان أربعة» — and on p.127 it settles the count of
-/// makharij at seventeen. So the data is not graded against my reading of it;
-/// it is graded against numbers the book prints, which is the only kind of
-/// check worth having here.
+/// The matn states its own count in its first line on the subject: «مَخَارِجُ
+/// الحُرُوفِ سَبْعَةَ عَشَرْ» (البيت ٩، ص٥٦), and the eleven lines after it
+/// enumerate every letter of every one of them — ٣ للجوف، ٦ للحلق، ١٨
+/// للسان، ٤ للشفتين. So the data is not graded against my reading of
+/// it; it is graded against what ابن الجزري versified, which is the only
+/// kind of check worth having here.
+///
+/// It used to be graded against «غاية المريد», a book by a modern author,
+/// which the app quoted verbatim and no longer ships at all.
 void main() {
   test('seventeen makharij, which is the number the book settles on', () {
     expect(makharij.length, 17);
@@ -24,8 +27,8 @@ void main() {
   });
 
   test('each region holds the number of makharij the book gives it', () {
-    // p.127-130: الجوف واحد، الحلق ثلاثة، اللسان عشرة، الشفتان مخرجان،
-    // الخيشوم واحد.
+    // الأبيات ١٠–١٩: الجوف واحد، الحلق ثلاثة، اللسان عشرة، الشفتان
+    // مخرجان، الخيشوم واحد — والمجموع سبعة عشر.
     const expected = {
       MakhrajRegion.jawf: 1,
       MakhrajRegion.halq: 3,
@@ -39,7 +42,7 @@ void main() {
     }
   });
 
-  test('the letters come to the tally printed on p.131', () {
+  test('the letters come to the tally the matn enumerates', () {
     for (final entry in makharijLetterCountByRegion.entries) {
       final letters = makharij
           .where((m) => m.region == entry.key)
@@ -50,7 +53,7 @@ void main() {
     }
     // 3 + 6 + 18 + 4 = 31. الخيشوم is deliberately outside the tally: what
     // leaves it is الغنة, which is a sound, not one of the hija' letters —
-    // the book counts it that way too.
+    // and the matn names it that way, «وَغُنَّةٌ: مَخْرَجُهَا الخَيْشُومُ».
     final tallied = makharijLetterCountByRegion.values.reduce((a, b) => a + b);
     expect(tallied, 31);
   });
@@ -61,19 +64,23 @@ void main() {
       expect(m.id.trim(), isNotEmpty);
       expect(ids.add(m.id), isTrue, reason: 'duplicate id ${m.id}');
       expect(m.place.trim(), isNotEmpty, reason: m.id);
+      // The quotation is the whole point of the entry: without it the place
+      // is the app's own wording with nothing behind it.
+      expect(m.matn.trim(), isNotEmpty, reason: m.id);
       expect(m.letters, isNotEmpty, reason: m.id);
       for (final l in m.letters) {
         expect(l.trim(), isNotEmpty, reason: m.id);
       }
-      // The pages the chapter actually occupies in that printing.
-      expect(m.page, inInclusiveRange(126, 131), reason: m.id);
+      // في معرفة مخارج الحروف runs from printed 56 to 58 in the printing
+      // this app hosts, and the whole chapter is on those three pages.
+      expect(m.page, inInclusiveRange(56, 58), reason: m.id);
     }
   });
 
   test('the makharij are walked in the book’s order, region by region', () {
-    // الجوف ثم الحلق ثم اللسان ثم الشفتان ثم الخيشوم — the arrangement the
-    // book attributes to الخليل بن أحمد and ابن الجزري. A shuffled list would
-    // teach the mouth in the wrong direction.
+    // الجوف ثم الحلق ثم اللسان ثم الشفتان ثم الخيشوم — the order the matn
+    // itself walks, مذهب الخليل بن أحمد واختيار الناظم. A shuffled list
+    // would teach the mouth in the wrong direction.
     final order = makharij.map((m) => m.region).toList();
     final seen = <MakhrajRegion>[];
     for (final r in order) {
@@ -87,9 +94,14 @@ void main() {
   });
 
   test('the source is named, with the edition and the pages', () {
-    expect(makharijSourceLabel, contains('غاية المريد'));
-    expect(makharijSourceLabel, contains('عطية قابل نصر'));
-    expect(makharijSourceLabel, contains('١٢٦'));
+    expect(makharijSourceLabel, contains('المقدمة الجزرية'));
+    expect(makharijSourceLabel, contains('ابن الجزري'));
+    expect(makharijSourceLabel, contains('٥٦'));
+    // And nothing of the book that was taken out for copyright reasons.
+    expect(makharijSourceLabel, isNot(contains('غاية المريد')));
+    for (final m in makharij) {
+      expect(m.place, isNot(contains('غاية')), reason: m.id);
+    }
   });
 
   test('every makhraj has a movement, and a tongue one has a contact point',

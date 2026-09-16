@@ -336,6 +336,19 @@ class _Detail extends StatelessWidget {
             makhraj.place,
             style: const TextStyle(fontSize: 15, height: 1.9),
           ),
+          const SizedBox(height: 10),
+          // The nazim's own line for this makhraj. It is set apart and in the
+          // Qur'an face because it is a quotation, not the app talking: the
+          // line above says the place in prose, this says it as he wrote it.
+          Text(
+            makhraj.matn,
+            style: TextStyle(
+              fontFamily: 'AmiriQuran',
+              fontSize: 16,
+              height: 2.0,
+              color: AppColors.gold.withValues(alpha: 0.9),
+            ),
+          ),
           const SizedBox(height: 12),
           Text(
             'makharij.letters'.tr(),

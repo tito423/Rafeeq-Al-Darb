@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 23:14 — IN PROGRESS — resume here**
+**2026-09-16 23:22 — IN PROGRESS — resume here**
 
-the tajweed ladder is all public domain now: al-Jamzuri and Ibn al-Jazari, twice. Level two is the Jazariyyah (18 chapters), level three is his own at-Tamhid (13 abwab, 1054 paragraphs, pages 39-209) - and the two modern books are gone from the app AND deleted off the bucket, both 404 now. The listen-to-the-rule card was lifted out of the retired screen first so the feature survived the removal
+makharij was still quoting the book we deleted. Every place description in makharij.dart was lifted verbatim from ghayat al-murid - a modern author, a commercial house - so the whole file was re-read onto Ibn al-Jazari's own two books: the matn's verses 9-19 (pages 56-58) for the letters and the arrangement, and his at-Tamhid pages 105-106 for the prose. Each entry now carries his line verbatim in a new matn field, the screen shows it under the place, and the place wording is ours and says so. Added the level-three test (6 cases; the 1054-paragraph count proves the ranges cover the book with no gap and no overlap) and killed three false claims the tamhid generator header had inherited from the ghayat script. 265 tests pass, analyze clean, all three course books answer a range request and the two deleted ones 404
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

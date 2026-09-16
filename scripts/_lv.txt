@@ -1,0 +1,30 @@
+/// «تعليم التجويد» — the two levels.
+///
+/// The ladder the owner asked for is «ابدأه بالسهل اللي يناسب الاطفال
+/// وبالتدرج»: تحفة الأطفال first, then تيسير أحكام التجويد. Both are real
+/// books read verbatim at runtime, and each level names its own source on its
+/// own screen.
+///
+/// Only levels that HAVE lessons are listed. غاية المريد is the third rung of
+/// the ladder and is already hosted, but nothing has been arranged out of it
+/// yet, and a card that opens onto nothing is the kind of claim §1.1 forbids.
+///
+/// Each card's progress is read from that level's own store, so the two
+/// counters cannot drift into each other.
+library;
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/theme/app_colors.dart';
+import '../../data/jazariyyah_course.dart';
+import '../../data/tamhid_course.dart';
+import '../../data/tuhfa_course.dart';
+import '../widgets/makharij_entry.dart';
+import 'jazariyyah_level_screen.dart';
+import 'tamhid_level_screen.dart';
+import 'tuhfa_level_screen.dart';
+
+class TajweedLevelsScreen extends ConsumerWidget {
+  const TajweedLevelsScreen({super.key});

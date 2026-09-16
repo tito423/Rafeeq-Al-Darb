@@ -1,15 +1,22 @@
-/// «تعليم التجويد» — the two levels.
+/// «تعليم التجويد» — the three levels.
 ///
 /// The ladder the owner asked for is «ابدأه بالسهل اللي يناسب الاطفال
-/// وبالتدرج»: تحفة الأطفال first, then تيسير أحكام التجويد. Both are real
-/// books read verbatim at runtime, and each level names its own source on its
-/// own screen.
+/// وبالتدرج»: تحفة الأطفال للجمزوري first, then المقدمة الجزرية, then
+/// التمهيد في علم التجويد — the last two by ابن الجزري himself, his
+/// matn and then his own prose on the same science. All three are real books
+/// read verbatim at runtime, and each level names its own source on its own
+/// screen.
 ///
-/// Only levels that HAVE lessons are listed. غاية المريد is the third rung of
-/// the ladder and is already hosted, but nothing has been arranged out of it
-/// yet, and a card that opens onto nothing is the kind of claim §1.1 forbids.
+/// **Every rung is public domain.** The ladder used to end on two books by
+/// modern authors from commercial houses; they were taken out of the app and
+/// deleted off the bucket, because «انا مش عاوز في التطبيق اي مشكلة
+/// لحقوق الملكية نهائيا». الجمزوري died after 1198 AH and ابن الجزري in
+/// 833 AH; nothing on this ladder belongs to anyone living.
 ///
-/// Each card's progress is read from that level's own store, so the two
+/// Only levels that HAVE lessons are listed — a card that opens onto nothing
+/// is the kind of claim §1.1 forbids.
+///
+/// Each card's progress is read from that level's own store, so the three
 /// counters cannot drift into each other.
 library;
 
