@@ -226,25 +226,6 @@ const List<LibraryBook> libraryBookCatalog = [
     ),
   ),
   LibraryBook(
-    id: 'sahih_al_adab_al_mufrad',
-    titleAr: 'صحيح الأدب المفرد',
-    titleEn: 'Sahih al-Adab al-Mufrad',
-    authorAr: 'الإمام البخاري — بأحكام الألباني',
-    authorEn: 'Al-Bukhari, graded by al-Albani',
-    deathYearAh: 256,
-    descKey: 'book_desc.sahih_al_adab_al_mufrad',
-    category: BookCategory.hadith,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/sahih_al_adab_al_mufrad.json',
-      sizeBytes: 224236,
-      sourceLabel:
-          'المكتبة الشاملة — صحيح الأدب المفرد للإمام البخاري، بأحكام محمد '
-          'ناصر الدين الألباني، دار الصديق للنشر والتوزيع، الطبعة الرابعة '
-          '١٤١٨هـ/١٩٩٧م',
-    ),
-  ),
-  LibraryBook(
     id: 'al_shamail_al_muhammadiyyah',
     titleAr: 'الشمائل المحمدية',
     titleEn: 'Al-Shamail al-Muhammadiyyah',
@@ -3665,23 +3646,6 @@ const List<LibraryBook> libraryBookCatalog = [
   // paragraphs, ترقيم موافق للمطبوع) and range-checked on the bucket before
   // this entry was written: 206 application/json.
   LibraryBook(
-    id: 'ibn_baz_tahqiq_wal_idah',
-    titleAr: 'التحقيق والإيضاح لكثير من مسائل الحج والعمرة والزيارة',
-    titleEn: 'At-Tahqiq wal-Idah on Hajj, Umrah and Visitation',
-    authorAr: 'الشيخ عبد العزيز بن باز',
-    authorEn: 'Shaykh Abd al-Aziz ibn Baz',
-    deathYearAh: 1420,
-    pages: 106,
-    category: BookCategory.fiqh,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/ibn_baz_tahqiq_wal_idah.json',
-      sizeBytes: 34727,
-      sourceLabel:
-          'المكتبة الشاملة — التحقيق والإيضاح لكثير من مسائل الحج والعمرة والزيارة، عبد العزيز بن عبد الله بن باز (ت ١٤٢٠هـ)، وزارة الشئون الإسلامية والأوقاف والدعوة والإرشاد - وكالة المطبوعات والبحث العلمي',
-    ),
-  ),
-  LibraryBook(
     id: 'al_tibyan_fi_adab_hamalat_al_quran',
     titleAr: 'التبيان في آداب حملة القرآن',
     titleEn: 'Al Tibyan Fi Adab Hamalat Al Quran',
@@ -3830,24 +3794,6 @@ const List<LibraryBook> libraryBookCatalog = [
     ),
   ),
   LibraryBook(
-    id: 'ar_raheeq_al_makhtum',
-    titleAr: 'الرحيق المختوم',
-    titleEn: 'Ar-Raheeq Al-Makhtum (The Sealed Nectar)',
-    authorAr: 'صفي الرحمن المباركفوري',
-    authorEn: 'Safi-ur-Rahman al-Mubarakpuri',
-    deathYearAh: 1427,
-    descKey: 'book_desc.ar_raheeq_al_makhtum',
-    category: BookCategory.seerah,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/ar_raheeq_al_makhtum.json',
-      sizeBytes: 386968,
-      sourceLabel:
-          'المكتبة الشاملة — الرحيق المختوم، صفي الرحمن المباركفوري (ت ١٤٢٧هـ)، '
-          'دار الفكر (طبعة خاصة بدار ومكتبة الهلال) - بيروت، ٢٠٠٢م',
-    ),
-  ),
-  LibraryBook(
     id: 'seerat_ibn_hisham',
     titleAr: 'السيرة النبوية لابن هشام',
     titleEn: 'The Prophetic Biography of Ibn Hisham',
@@ -3883,30 +3829,6 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — زاد المعاد في هدي خير العباد، ابن قيم الجوزية (ت '
           '٧٥١هـ)، تحقيق شعيب الأرنؤوط وعبد القادر الأرنؤوط، مؤسسة الرسالة - '
           'بيروت، الإصدار الثاني المنقّح المزيد، الطبعة الأولى ١٤١٧هـ/١٩٩٦م',
-    ),
-  ),
-  LibraryBook(
-    id: 'sahih_as_seerah_albani',
-    titleAr: 'صحيح السيرة النبوية [من «البداية والنهاية» لابن كثير]',
-    titleEn: 'Sahih as-Seerah an-Nabawiyyah',
-    // Shamela's بطاقة الكتاب for book 592 carries no «المؤلف:» line — it names
-    // him on a «لَخّصه ... وعَلّق عليه:» line instead, because he abridged the
-    // book rather than wrote it — so the crawl's `meta.authorAr` came back
-    // empty and this shipped as a blank author name in the "المؤلفون" list.
-    // Taken from that line, not invented.
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    descKey: 'book_desc.sahih_as_seerah_albani',
-    category: BookCategory.seerah,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/sahih_as_seerah_albani.json',
-      sizeBytes: 124141,
-      sourceLabel:
-          'المكتبة الشاملة — صحيح السيرة النبوية (من البداية والنهاية لابن '
-          'كثير)، لخّصه وعلّق عليه محمد ناصر الدين الألباني (ت ١٤٢٠هـ)، المكتبة '
-          'الإسلامية - عمّان، الطبعة الأولى ١٤٢١هـ — توفي الشيخ قبل إتمامه',
     ),
   ),
   LibraryBook(
@@ -3948,44 +3870,6 @@ const List<LibraryBook> libraryBookCatalog = [
     ),
   ),
   LibraryBook(
-    id: 'as_seerah_nadwi',
-    titleAr: 'السيرة النبوية لأبي الحسن الندوي',
-    titleEn: 'The Prophetic Biography',
-    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
-    authorEn: 'Abul Hasan Ali an-Nadwi',
-    deathYearAh: 1420,
-    descKey: 'book_desc.as_seerah_nadwi',
-    category: BookCategory.seerah,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/as_seerah_nadwi.json',
-      sizeBytes: 429415,
-      sourceLabel:
-          'المكتبة الشاملة — السيرة النبوية، أبو الحسن علي الحسني الندوي (ت '
-          '١٤٢٠هـ)، تحقيق وتعليق سيد عبد الماجد الغوري، دار ابن كثير - دمشق '
-          'وبيروت، الطبعة الثانية عشرة ١٤٢٥هـ/٢٠٠٤م',
-    ),
-  ),
-  LibraryBook(
-    id: 'fiqh_as_seerah_ghazali',
-    titleAr: 'فقه السيرة',
-    titleEn: 'Fiqh as-Seerah',
-    authorAr: 'محمد الغزالي السقا (ت ١٤١٦هـ)',
-    authorEn: 'Muhammad al-Ghazali',
-    deathYearAh: 1416,
-    descKey: 'book_desc.fiqh_as_seerah_ghazali',
-    category: BookCategory.seerah,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/fiqh_as_seerah_ghazali.json',
-      sizeBytes: 379706,
-      sourceLabel:
-          'المكتبة الشاملة — فقه السيرة، محمد الغزالي السقا (ت ١٤١٦هـ)، تخريج '
-          'الأحاديث محمد ناصر الدين الألباني، دار القلم - دمشق، الطبعة الأولى '
-          '١٤٢٧هـ',
-    ),
-  ),
-  LibraryBook(
     id: 'as_seerah_ibn_kathir',
     titleAr: 'السيرة النبوية',
     titleEn: 'The Prophetic Biography of Ibn Kathir',
@@ -4004,40 +3888,6 @@ const List<LibraryBook> libraryBookCatalog = [
           'القاهرة، ١٣٩٥هـ/١٩٧٦م',
     ),
   ),
-  LibraryBook(
-    id: 'rijal_hawl_ar_rasul',
-    titleAr: 'رجال حول الرسول',
-    titleEn: 'Men Around the Messenger',
-    authorAr: 'خالد محمد خالد ثابت (ت ١٤١٦هـ)',
-    authorEn: 'Khalid Muhammad Khalid',
-    deathYearAh: 1416,
-    descKey: 'book_desc.rijal_hawl_ar_rasul',
-    category: BookCategory.tarikh,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/rijal_hawl_ar_rasul.json',
-      sizeBytes: 293158,
-      sourceLabel:
-          'المكتبة الشاملة — رجال حول الرسول، خالد محمد خالد ثابت (ت ١٤١٦هـ)، '
-          'دار الفكر - بيروت، الطبعة الأولى ١٤٢١هـ/٢٠٠٠م',
-    ),
-  ),
-  LibraryBook(
-    id: 'la_tahzan',
-    titleAr: 'لا تحزن',
-    titleEn: 'Don\'t Be Sad',
-    authorAr: 'عائض بن عبد الله القرني',
-    authorEn: 'Aid al-Qarni',
-    descKey: 'book_desc.la_tahzan',
-    category: BookCategory.tazkiyah,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/la_tahzan.json',
-      sizeBytes: 344210,
-      sourceLabel:
-          'المكتبة الشاملة — لا تحزن، عائض بن عبد الله القرني، مكتبة العبيكان',
-    ),
-  ),
   // Added 2026-09-10 because the owner named them as the sources for the
   // Islamic-quote notifications and neither was in the catalogue. Both are
   // Shamela text editions built by `build_book_text.py` from a local crawl
@@ -4049,23 +3899,6 @@ const List<LibraryBook> libraryBookCatalog = [
   // and NOT موافق للمطبوع, so the reader is told that rather than the opposite
   // - a plain «"موافق للمطبوع" in card» test had been reading «غير موافق
   // للمطبوع» as a match.
-  LibraryBook(
-    id: 'al_khilaf_asbabuh',
-    titleAr: 'الخلاف أسبابه وآدابه',
-    titleEn: 'Al-Khilaf: Asbabuhu wa Adabuhu',
-    authorAr: 'عائض بن عبد الله القرني',
-    authorEn: 'Aid al-Qarni',
-    descKey: 'book_desc.al_khilaf_asbabuh',
-    category: BookCategory.adab,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/al_khilaf_asbabuh.json',
-      sizeBytes: 24495,
-      sourceLabel:
-          'المكتبة الشاملة — الخلاف أسبابه وآدابه، لعائض بن عبد الله القرني، '
-          'منشور على موقع وزارة الأوقاف السعودية دون بيانات طبعة',
-    ),
-  ),
   // Five more of al-Nawawi's best-known books (2026-09-12). «أشهر كتاب
   // مش أقصر كتاب» - chosen by reading his title list, not by sorting it
   // by page count, which had produced hadith fragments nobody asks for.
@@ -4294,91 +4127,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   // Al-Nadwi's five — everything Shamela holds of his besides the
   // seerah already here, so this author is complete at what exists.
-  LibraryBook(
-    id: 'madha_khasira_al_alam',
-    titleAr: 'ماذا خسر العالم بانحطاط المسلمين',
-    titleEn: 'What the World Lost with the Decline of the Muslims',
-    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
-    authorEn: 'Abul Hasan Ali an-Nadwi',
-    deathYearAh: 1420,
-    descKey: 'book_desc.madha_khasira_al_alam',
-    category: BookCategory.adab,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/madha_khasira_al_alam.json',
-      sizeBytes: 215278,
-      sourceLabel:
-          'المكتبة الشاملة — ماذا خسر العالم بانحطاط المسلمين، لأبي الحسن الندوي',
-    ),
-  ),
-  LibraryBook(
-    id: 'ila_al_islam_min_jadid',
-    titleAr: 'إلى الإسلام من جديد',
-    titleEn: 'Back to Islam Anew',
-    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
-    authorEn: 'Abul Hasan Ali an-Nadwi',
-    deathYearAh: 1420,
-    descKey: 'book_desc.ila_al_islam_min_jadid',
-    category: BookCategory.adab,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/ila_al_islam_min_jadid.json',
-      sizeBytes: 97710,
-      sourceLabel:
-          'المكتبة الشاملة — إلى الإسلام من جديد، لأبي الحسن الندوي',
-    ),
-  ),
-  LibraryBook(
-    id: 'al_islam_wal_hukm',
-    titleAr: 'الإسلام والحكم',
-    titleEn: 'Islam and Governance',
-    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
-    authorEn: 'Abul Hasan Ali an-Nadwi',
-    deathYearAh: 1420,
-    descKey: 'book_desc.al_islam_wal_hukm',
-    category: BookCategory.adab,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/al_islam_wal_hukm.json',
-      sizeBytes: 12144,
-      sourceLabel:
-          'المكتبة الشاملة — الإسلام والحكم، لأبي الحسن الندوي',
-    ),
-  ),
-  LibraryBook(
-    id: 'riddah_wala_aba_bakr_laha',
-    titleAr: 'ردّة ولا أبا بكر لها',
-    titleEn: 'An Apostasy with No Abu Bakr',
-    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
-    authorEn: 'Abul Hasan Ali an-Nadwi',
-    deathYearAh: 1420,
-    descKey: 'book_desc.riddah_wala_aba_bakr_laha',
-    category: BookCategory.adab,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/riddah_wala_aba_bakr_laha.json',
-      sizeBytes: 13962,
-      sourceLabel:
-          'المكتبة الشاملة — ردّة ولا أبا بكر لها، لأبي الحسن الندوي',
-    ),
-  ),
-  LibraryBook(
-    id: 'urid_an_atahaddath',
-    titleAr: 'أريد أن أتحدث إلى الإخوان',
-    titleEn: 'I Wish to Speak to the Brothers',
-    authorAr: 'أبو الحسن علي الحسني الندوي (١٣٣٣ - ١٤٢٠ هـ)',
-    authorEn: 'Abul Hasan Ali an-Nadwi',
-    deathYearAh: 1420,
-    descKey: 'book_desc.urid_an_atahaddath',
-    category: BookCategory.adab,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/urid_an_atahaddath.json',
-      sizeBytes: 17501,
-      sourceLabel:
-          'المكتبة الشاملة — أريد أن أتحدث إلى الإخوان، لأبي الحسن الندوي، دون بيانات طبعة',
-    ),
-  ),
   LibraryBook(
     id: 'rawdat_al_uqala',
     titleAr: 'روضة العقلاء ونزهة الفضلاء',
@@ -4758,165 +4506,6 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — فضيلة العادلين من الولاة لأبي نعيم، '
           'للحافظ أبو نعيم الأصبهاني، دار الوطن - الرياض، الأولى، '
           '١٤١٨ هـ - ١٩٩٧ م',
-    ),
-  ),
-  LibraryBook(
-    id: 'daif_al_jami_al_saghir',
-    titleAr: 'ضعيف الجامع الصغير وزيادته',
-    titleEn: 'Daif al-Jami al-Saghir',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 939,
-    category: BookCategory.hadith,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/daif_al_jami_al_saghir.json',
-      sizeBytes: 370916,
-      sourceLabel:
-          'المكتبة الشاملة — ضعيف الجامع الصغير وزيادته، للشيخ محمد '
-          'ناصر الدين الألباني، المكتب الإسلامي، المجددة والمزيدة '
-          'والمنقحة',
-    ),
-  ),
-  LibraryBook(
-    id: 'daif_sunan_al_tirmidhi',
-    titleAr: 'ضعيف سنن الترمذي',
-    titleEn: 'Daif Sunan al-Tirmidhi',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 575,
-    category: BookCategory.hadith,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/daif_sunan_al_tirmidhi.json',
-      sizeBytes: 239193,
-      sourceLabel:
-          'المكتبة الشاملة — ضعيف سنن الترمذي، للشيخ محمد ناصر الدين '
-          'الألباني، المكتب الاسلامي - بيروت، الأولى، ١٤١١ هـ - ١٩٩١ '
-          'م',
-    ),
-  ),
-  LibraryBook(
-    id: 'tamam_al_minnah',
-    titleAr: 'تمام المنة في التعليق على فقه السنة',
-    titleEn: 'Tamam al-Minnah',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 428,
-    category: BookCategory.fiqh,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/tamam_al_minnah.json',
-      sizeBytes: 223064,
-      sourceLabel:
-          'المكتبة الشاملة — تمام المنة في التعليق على فقه السنة، '
-          'للشيخ محمد ناصر الدين الألباني، دار الراية، الخامسة',
-    ),
-  ),
-  LibraryBook(
-    id: 'adab_al_zifaf',
-    titleAr: 'آداب الزفاف في السنة المطهرة',
-    titleEn: 'Adab al-Zifaf',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 292,
-    category: BookCategory.adab,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/adab_al_zifaf.json',
-      sizeBytes: 81450,
-      sourceLabel:
-          'المكتبة الشاملة — آداب الزفاف في السنة المطهرة، للشيخ محمد '
-          'ناصر الدين الألباني، دار السلام، الطبعة الشرعية الوحيدة '
-          '١٤٢٣هـ/٢٠٠٢مـ',
-    ),
-  ),
-  LibraryBook(
-    id: 'ahkam_al_janaiz',
-    titleAr: 'أحكام الجنائز',
-    titleEn: 'Ahkam al-Janaiz',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 268,
-    category: BookCategory.fiqh,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/ahkam_al_janaiz.json',
-      sizeBytes: 188947,
-      sourceLabel:
-          'المكتبة الشاملة — أحكام الجنائز، للشيخ محمد ناصر الدين '
-          'الألباني، المكتب الإسلامي، الرابعة، ١٤٠٦ هـ - ١٩٨٦ م',
-    ),
-  ),
-  LibraryBook(
-    id: 'jilbab_al_marah_al_muslimah',
-    titleAr: 'جلباب المرأة المسلمة في الكتاب والسنة',
-    titleEn: 'Jilbab al-Marah al-Muslimah',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 260,
-    category: BookCategory.fiqh,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/jilbab_al_marah_al_muslimah.json',
-      sizeBytes: 140763,
-      sourceLabel:
-          'المكتبة الشاملة — جلباب المرأة المسلمة في الكتاب والسنة، '
-          'للشيخ محمد ناصر الدين الألباني، دار السلام للنشر والتوزيع، '
-          'الثالثة، ١٤٢٣هـ -٢٠٠٢ م',
-    ),
-  ),
-  LibraryBook(
-    id: 'al_tawassul_anwauhu_wa_ahkamuhu',
-    titleAr: 'التوسل أنواعه وأحكامه',
-    titleEn: 'Al-Tawassul Anwauhu wa Ahkamuhu',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 154,
-    category: BookCategory.aqidah,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/al_tawassul_anwauhu_wa_ahkamuhu.json',
-      sizeBytes: 87662,
-      sourceLabel:
-          'المكتبة الشاملة — التوسل أنواعه وأحكامه، للشيخ محمد ناصر '
-          'الدين الألباني، محمد عيد العباسي، مكتبة المعارف للنشر '
-          'والتوزيع - الرياض، الطبعة الأولى ١٤٢١ هـ - ٢٠٠١ م',
-    ),
-  ),
-  LibraryBook(
-    id: 'hajjat_al_nabi',
-    titleAr: 'حجة النبي',
-    titleEn: 'Hajjat al-Nabi',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 148,
-    category: BookCategory.fiqh,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/hajjat_al_nabi.json',
-      sizeBytes: 69300,
-      sourceLabel:
-          'المكتبة الشاملة — حجة النبي، للشيخ محمد ناصر الدين '
-          'الألباني، المكتب الإسلامي - بيروت، الخامسة - ١٣٩٩',
-    ),
-  ),
-  LibraryBook(
-    id: 'tahdhir_al_sajid',
-    titleAr: 'تحذير الساجد من اتخاذ القبور مساجد',
-    titleEn: 'Tahdhir al-Sajid',
-    authorAr: 'الشيخ محمد ناصر الدين الألباني',
-    authorEn: 'Muhammad Nasir al-Din al-Albani',
-    deathYearAh: 1420,
-    pages: 132,
-    category: BookCategory.aqidah,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/tahdhir_al_sajid.json',
-      sizeBytes: 68925,
-      sourceLabel:
-          'المكتبة الشاملة — تحذير الساجد من اتخاذ القبور مساجد، '
-          'للشيخ محمد ناصر الدين الألباني، المكتب الإسلامي - بيروت، '
-          'الرابعة',
     ),
   ),
   LibraryBook(

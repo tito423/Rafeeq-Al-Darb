@@ -3,9 +3,22 @@
 book it came from.
 
 WHAT THE OWNER ASKED FOR
-«المقولات: من كتب المكتبة نفسها» — «لا تحزن», «صيد الخاطر», «حلية الأولياء»
-and «روضة العقلاء ونزهة الفضلاء». And: «كل مقولة لازم تحمل اسم كتابها» —
-§1.1 and §1.2, nothing attributed to a scholar without a source.
+«المقولات: من كتب المكتبة نفسها», and «كل مقولة لازم تحمل اسم كتابها» — §1.1
+and §1.2, nothing attributed to a scholar without a source.
+
+«لا تحزن» WAS THE BIGGEST SOURCE HERE, AND IT IS GONE. 284 of the 352
+quotes this file used to produce came out of it — a book by عائض القرني,
+who is alive. «اي كتاب له حقوق ملكية احذفه», so it went, and the
+shortfall was made up from books whose authors died centuries ago:
+مختصر منهاج القاصدين (ابن قدامة, ت ٦٨٩هـ) and الوابل الصيب (ابن القيم,
+ت ٧٥١هـ), beside the two that were always here.
+
+THREE OTHER BOOKS WERE TRIED AND DROPPED, by reading what they produced:
+الفوائد and الجواب الكافي are dense argument rather than maxims, so the
+filter returned mid-sentence fragments, list items («أحدها…», «السابع…») and
+one passage of حدود no card should carry; أدب النفس yielded two lines, both
+halves of a dialogue. A book only belongs here if its author wrote in
+finished thoughts.
 
 WHAT IS DELIBERATELY THROWN AWAY, AND WHY
 This picks the **author's own prose**, never a narration. A paragraph is

@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 01:22 — IN PROGRESS — resume here**
+**2026-09-17 01:41 — IN PROGRESS — resume here**
 
-v3.28.0: the history section and the two date sheets, version bumped in both places this time. Release built and signed - sign_release.py printed OK: rotated. 211.6 MB
+every book by a living or recent author is out of the library - 23 entries, and the files are off the bucket too, 4.0 MB of them. Albani, Ibn Baz, an-Nadwi, al-Ghazali, al-Mubarakfuri, Khalid Muhammad Khalid, and both books of al-Qarni who is alive. What they were transmitting stays where the app already carries it: al-Bidaya wa an-Nihaya for Sahih as-Seerah, al-Adab al-Mufrad for the Sahih selection of it, the Sunan themselves in hadith.db for the two Daif volumes. Gradings are untouched - saying «صححه الألباني» is a fact about a hadith and is what 1.2 requires, not a reproduction of his book. The bigger find: 284 of the app's 352 quotes came from La Tahzan, so the quote of the day and every quote notification were his text. Rebuilt from four books whose authors died centuries ago - Mukhtasar Minhaj al-Qasidin, al-Wabil as-Sayyib, Sayd al-Khatir, Rawdat al-Uqala - 359 quotes now. Three more books were tried and dropped by READING what they produced: al-Fawaid and al-Jawab al-Kafi are dense argument, not maxims, and returned fragments and list items. Not yet done and known: the Hajj guide still reads Ibn Baz's book verbatim at runtime, so his file is the one object deliberately left on the bucket until that feature is re-sourced onto an-Nawawi's al-Idah, which is crawled and waiting
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
