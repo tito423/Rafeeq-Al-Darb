@@ -9,11 +9,16 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../app/rafeeq_app.dart';
 import '../../../../app/shell/app_shell.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../onboarding/data/onboarding_state.dart';
 import '../../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../data/splash_video_provider.dart';
+
+/// The colour the OS paints at launch, and the colour of the intro's first
+/// frame — `#2B516B`, the clip's own median pixel. Kept beside the native
+/// splash configuration in `pubspec.yaml`; change one and change the other.
+const splashGround = Color(0xFF2B516B);
+
 
 /// The splash beat shown right after the native launch screen hands off to
 /// Flutter.
@@ -247,7 +252,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final videoReady = video != null && video.value.isInitialized;
 
     return Scaffold(
-      backgroundColor: AppColors.night,
+      // The same colour the OS just painted — see the native splash block in
+      // `pubspec.yaml`. The window, this screen and the clip's first frame are
+      // one colour, so nothing flashes between them.
+      backgroundColor: splashGround,
       // No AnimatedSwitcher any more: the icon beat is owned by the native
       // splash (held until the video's first frame is painted), so this either
       // shows the video directly or, as a fallback, the same app mark the
@@ -279,26 +287,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   ),
                 ),
               )
-            : Center(
-                child: Image.asset(
-                  'assets/branding/app_mark_circle.png',
-                  // Sized to the mark the OS actually draws, measured on the
-                  // owner's Honor (1224 px at density 520, so 3.25 px per dp)
-                  // rather than reasoned about. Two cold-start captures, the
-                  // tile's bounding box found by differencing each frame
-                  // against its own background:
-                  //
-                  //   native splash   442 px wide → 136.0 dp
-                  //   this image @184 282 px wide →  86.8 dp
-                  //
-                  // Both centred on y = 1349 of 2700, so the ONLY thing that
-                  // jumped was the size — «كالعادة الاسبلاش وحدة مربعه ووحدة
-                  // دائرية»: a big tile, then a small one. The artwork fills
-                  // 47.7 % of this PNG's box (alpha bounding box 427 of 896),
-                  // so 136 / 0.477 = 285 makes the two marks the same size and
-                  // the hand-off invisible.
-                  width: 285,
-                  height: 285,
+            // THE CLIP'S OWN FIRST FRAME while it decodes — not the app mark,
+            // and not a flat colour either.
+            //
+            // The mark is gone because the boot used to show a badge twice at
+            // two different sizes: the OS's and then the app's. Measured on a
+            // release build here, what replaced it was about three seconds of
+            // flat colour before the video appeared — honest, but empty. A
+            // still of frame one fills that with the storm the clip opens on,
+            // so the video does not start: it *moves*.
+            : const SizedBox.expand(
+                child: Image(
+                  image: AssetImage('assets/branding/splash_first_frame.jpg'),
+                  fit: BoxFit.cover,
+                  gaplessPlayback: true,
                 ),
               ),
       ),

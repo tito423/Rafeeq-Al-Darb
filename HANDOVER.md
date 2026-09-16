@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 21:44 — IN PROGRESS — resume here**
+**2026-09-16 22:05 — IN PROGRESS — resume here**
 
-his new clip is the splash: it already carries the app's own icon, so no compositing was needed this time - only the Gemini sparkle removed (same place as the other two, 576-624 x 1135-1184) and the voice replaced. The voice is new: edge-tts speaks the wordmark as it is written, and reaching that service needed the project's own CA bundle because Avast breaks every Python HTTPS client on this machine (trap 13) - the bundle, not a disabled check
+the circular icon at launch is gone. Android 12 and up ALWAYS draw a splash icon, so the only way to be rid of it was to hand the platform a fully transparent one - and the window colour is now the clip's own median pixel, #2B516B, so the OS window and the video are the same colour. The app mark that used to fill the decode gap is gone too (that was the second badge, at a different size); the clip's own first frame fills it instead, so the intro does not start, it moves. Recorded on a signed release build: launcher, colour, storm, icon - no badge anywhere
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

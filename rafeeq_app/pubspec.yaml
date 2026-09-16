@@ -165,11 +165,21 @@ flutter_launcher_icons:
 # Regenerate the native drawables after any change here with:
 #   dart run flutter_native_splash:create
 flutter_native_splash:
-  color: "#071625"
-  image: assets/branding/app_mark_splash.png
+  # NO ICON HERE ANY MORE, ON PURPOSE. «اول ما التطبيق يفتح يجيب ايقونة
+  # التطبيق الدائرية وبعدها الاسبلاش اسكرين» — the OS drew the icon, then the
+  # app drew its own beat, and the boot read as two separate openings.
+  #
+  # Android 12 and up ALWAYS draw a splash icon; the only way to be rid of it
+  # is to hand the platform a fully transparent one, which is what
+  # `splash_blank.png` is. What is left is a flat colour — and the colour is
+  # the intro clip's own opening frame (its median pixel, #2B516B), so the
+  # window the OS paints and the first frame of the video are the same
+  # colour and the hand-off has nothing to see.
+  color: "#2B516B"
+  image: assets/branding/splash_blank.png
   android_12:
-    color: "#071625"
-    image: assets/branding/app_mark_splash.png
+    color: "#2B516B"
+    image: assets/branding/splash_blank.png
   android: true
   ios: true
   web: false
