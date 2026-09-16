@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سياسة الخصوصية — رفيق الدرب</title>
+<style>
+  :root { color-scheme: light dark; --ink:#0d1b2a; --bg:#fbfaf7; --muted:#4a5a6a;
+          --rule:#d9d2c5; --gold:#8a6d20; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#eae6de; --bg:#0a1622; --muted:#9fb0c0; --rule:#25384a; --gold:#d3b158; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font-family: "Segoe UI", Tahoma, system-ui, sans-serif; line-height:1.9; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 18px 70px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  h2 { font-size: 1.12rem; margin: 30px 0 8px; color: var(--gold); }
+  .sub { color: var(--muted); margin: 0 0 22px; font-size: .95rem; }
+  table { width:100%; border-collapse: collapse; margin: 10px 0 4px; font-size: .95rem; }
+  th, td { border:1px solid var(--rule); padding: 8px 10px; text-align: start; vertical-align: top; }
+  th { background: color-mix(in srgb, var(--gold) 12%, transparent); font-weight:600; }
+  code { background: color-mix(in srgb, var(--ink) 8%, transparent); padding: 1px 5px;
+         border-radius: 4px; font-size: .88em; direction: ltr; display: inline-block; }
+  .en { direction: ltr; text-align: left; border-top: 1px solid var(--rule);
+        margin-top: 46px; padding-top: 26px; }
+  .en h2 { color: var(--gold); }
+  footer { color: var(--muted); font-size: .86rem; margin-top: 34px; }
+  a { color: var(--gold); }
+</style>
+</head>
+<body>
+<main>
+
+<h1>سياسة الخصوصية — رفيق الدرب</h1>
+<p class="sub">آخر تحديث: ١٦ سبتمبر ٢٠٢٦ · يسري على تطبيق أندرويد «رفيق الدرب» (<code>com.tito.rafeeq_aldarb</code>)</p>
+
+<p><strong>الخلاصة:</strong> التطبيق لا يطلب حسابًا، ولا يعرض إعلانات، ولا يحتوي على أي أداة تتبّع أو تحليلات.
+لا يُجمع أي شيء عنك إلا إذا فعّلت المزامنة بنفسك.</p>
+
+<h2>١. ما لا يحدث</h2>
+<ul>
+  <li>لا إعلانات، ولا شبكات إعلانية.</li>
+  <li>لا تحليلات ولا تتبّع سلوك (لا Firebase Analytics ولا Crashlytics ولا أي بديل — ولا حتى مكتبة واحدة من هذا النوع داخل التطبيق).</li>
+  <li>لا بيع ولا مشاركة لأي بيانات مع أي طرف ثالث لأغراض تسويقية.</li>
+  <li>لا يُطلب إنشاء حساب لاستخدام أي ميزة عدا المزامنة الاختيارية.</li>
+</ul>
+
+<h2>٢. الموقع الجغرافي</h2>
+<p>يُستخدم الموقع لحساب <strong>مواقيت الصلاة واتجاه القبلة</strong>، والحساب نفسه يتم <strong>داخل جهازك</strong>
+(مكتبة <code>adhan</code>) ولا يحتاج إنترنت. ويُمرَّر الإحداثي إلى خدمة تحويل العناوين في نظام أندرويد نفسه
+لعرض اسم مدينتك على الشاشة. <strong>إحداثياتك لا تُرسَل إلى خوادم التطبيق ولا تُخزَّن خارج جهازك.</strong>
+ويمكنك رفض إذن الموقع: التطبيق يعمل ويخبرك أن المواقيت تحتاج الموقع، ولا يخمّنها.</p>
+
+<h2>٣. المزامنة الاختيارية (تسجيل الدخول بجوجل)</h2>
+<p>إن اخترت تسجيل الدخول لمزامنة تقدّمك بين أجهزتك، يحدث ما يلي وفقط ما يلي:</p>
+<table>
+  <tr><th>ما يُرسَل</th><th>إلى أين</th><th>لماذا</th></tr>
+  <tr><td>رمز هوية جوجل (ID token) ويتضمن بريدك واسمك المعروض</td><td><code>rafeeq-sync-backend.int-vip00.workers.dev</code> (Cloudflare Workers)</td><td>للتعرّف على حسابك وربط بياناتك به</td></tr>
+  <tr><td>بيانات استخدامك للتطبيق: العلامات المرجعية، مواضع القراءة، عدّادات التسبيح، تقدّم الختمة والدروس</td><td>نفس الخادم</td><td>لتظهر كما هي على جهازك الآخر</td></tr>
+</table>
+<p>لا يُرسَل محتوى تكتبه أنت، ولا جهات اتصال، ولا ملفات، ولا موقع جغرافي.
+تسجيل الخروج من الإعدادات يوقف المزامنة فورًا. ولطلب حذف بياناتك من الخادم، افتح طلبًا على
+<a href="https://github.com/tito423/Rafeeq-Al-Darb/issues">صفحة المشروع على GitHub</a> وتُحذف خلال ٣٠ يومًا.</p>
+
+<h2>٤. تنزيل المحتوى</h2>
+<p>المصاحف المصوّرة والتلاوات وكتب المكتبة وقاعدة بيانات الحديث تُنزَّل عند طلبك من:</p>
+<ul>
+  <li><code>pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev</code> — تخزين Cloudflare R2 الخاص بالتطبيق</li>
+  <li><code>cdn.islamic.network</code> و<code>everyayah.com</code> — تلاوات الآيات</li>
+</ul>
+<p>هذه الطلبات عادية عبر HTTPS، والخوادم تسجّل ما يسجّله أي خادم ويب: عنوان IP ووقت الطلب واسم الملف.
+لا يُرسَل معها أي معرّف خاص بك، ولا تُربط بشخصك.</p>
+
+<h2>٥. ما يبقى على جهازك وحده</h2>
+<p>قراءاتك وعلاماتك وأذكارك وعدّاداتك وإعداداتك والملفات التي نزّلتها كلها مخزَّنة داخل مساحة التطبيق
+على جهازك. حذف التطبيق يحذفها كلها.</p>
+
+<h2>٦. الإشعارات والمنبّهات</h2>
+<p>إشعارات الأذان والتذكيرات تُجدوَل <strong>محليًا</strong> على جهازك بواسطة نظام أندرويد. لا يمرّ شيء منها بأي خادم،
+ولا يوجد في التطبيق إشعارات دفع (push).</p>
+
+<h2>٧. الأطفال</h2>
+<p>التطبيق لا يجمع بيانات شخصية من أي أحد، أطفالًا كانوا أو بالغين، ولا يحتوي محتوى غير مناسب.</p>
+
+<h2>٨. التغييرات والتواصل</h2>
+<p>أي تعديل على هذه السياسة يظهر على هذه الصفحة مع تاريخه.
+للأسئلة أو طلبات الحذف: <a href="https://github.com/tito423/Rafeeq-Al-Darb/issues">github.com/tito423/Rafeeq-Al-Darb/issues</a>.</p>
+
+<div class="en" lang="en">
+<h1>Privacy Policy — Rafeeq Al-Darb</h1>
+<p class="sub">Last updated: 16 September 2026 · Applies to the Android app <code>com.tito.rafeeq_aldarb</code></p>
+
+<p><strong>In short:</strong> the app needs no account, shows no ads, and contains no analytics or tracking
+library of any kind. Nothing is collected about you unless you turn sync on yourself.</p>
+
+<h2>1. What does not happen</h2>
+<ul>
+  <li>No ads and no ad networks.</li>
+  <li>No analytics and no behavioural tracking — no Firebase Analytics, no Crashlytics, no equivalent; not one such library is in the app.</li>
+  <li>No selling or sharing of data with third parties for marketing.</li>
+  <li>No account is required for any feature except the optional sync.</li>
+</ul>
+
+<h2>2. Location</h2>
+<p>Location is used to compute <strong>prayer times and the qibla direction</strong>. The computation happens
+<strong>on your device</strong> (the <code>adhan</code> library) and needs no internet. The coordinate is passed to
+Android's own geocoder so the app can show your city's name. <strong>Your coordinates are never sent to the
+app's servers and are not stored off your device.</strong> You may refuse the permission: the app then says
+prayer times need a location rather than guessing them.</p>
+
+<h2>3. Optional sync (Google Sign-In)</h2>
+<p>If you choose to sign in so your progress follows you between devices, this happens and only this:</p>
+<table>
+  <tr><th>What is sent</th><th>Where</th><th>Why</th></tr>
+  <tr><td>A Google ID token, which carries your email address and display name</td><td><code>rafeeq-sync-backend.int-vip00.workers.dev</code> (Cloudflare Workers)</td><td>To identify your account and attach your data to it</td></tr>
+  <tr><td>Your own app data: bookmarks, reading positions, tasbeeh counters, khatma and lesson progress</td><td>The same server</td><td>So it appears on your other device</td></tr>
+</table>
+<p>No content you write, no contacts, no files and no location are sent. Signing out in Settings stops sync
+immediately. To have your data deleted from the server, open an issue on the
+<a href="https://github.com/tito423/Rafeeq-Al-Darb/issues">project's GitHub page</a>; it is deleted within 30 days.</p>
+
+<h2>4. Content downloads</h2>
+<p>Scanned mushafs, recitations, library books and the hadith database are downloaded on request from
+<code>pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev</code> (the app's own Cloudflare R2 storage),
+<code>cdn.islamic.network</code> and <code>everyayah.com</code>. These are ordinary HTTPS requests; those servers
+log what any web server logs — IP address, time, file name. No identifier of yours is sent with them.</p>
+
+<h2>5. What stays on your device only</h2>
+<p>Your reading, bookmarks, adhkar, counters, settings and every file you downloaded live inside the app's
+own storage. Uninstalling the app deletes all of it.</p>
+
+<h2>6. Notifications and alarms</h2>
+<p>Adhan notifications and reminders are scheduled <strong>locally</strong> by Android on your device. None of it
+passes through any server, and the app has no push notifications.</p>
+
+<h2>7. Children</h2>
+<p>The app collects no personal data from anyone, child or adult, and contains no unsuitable content.</p>
+
+<h2>8. Changes and contact</h2>
+<p>Any change to this policy appears on this page with its date. Questions or deletion requests:
+<a href="https://github.com/tito423/Rafeeq-Al-Darb/issues">github.com/tito423/Rafeeq-Al-Darb/issues</a>.</p>
+</div>
+
+<footer>رفيق الدرب — تطبيق شخصي غير ربحي. Rafeeq Al-Darb — a personal, non-commercial app.</footer>
+</main>
+</body>
+</html>

@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 14:37 — IN PROGRESS — resume here**
+**2026-09-16 14:40 — IN PROGRESS — resume here**
 
-hadith.db is out of the APK: it downloads once (~16MB zip) through the gate that was always there, and the hint now says so before it starts. Measured, not assumed - the APK went 225.6MB to 205.4MB, because a 109MB SQLite file compresses to ~20MB inside a zip
+privacy policy written from what the code actually does, hosted at legal/privacy.html on R2 (200, 10269 bytes) and linked from Settings; plus legal/data_safety.md answering Play's form line by line with the evidence for each answer
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -599,6 +599,8 @@
     "adhan_settings_hint": "Adhan sound, display mode, and alerts"
   },
   "settings": {
+    "privacy_policy": "Privacy policy",
+    "privacy_policy_desc": "What is and is not collected — and nothing is, unless you turn sync on",
     "title": "Settings",
     "language": "Language",
     "arabic": "العربية",

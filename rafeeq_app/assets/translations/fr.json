@@ -599,6 +599,8 @@
     "adhan_settings_hint": "Son de l'adhan, mode d'affichage et alertes"
   },
   "settings": {
+    "privacy_policy": "Politique de confidentialité",
+    "privacy_policy_desc": "Ce qui est collecté ou non — rien, sauf si vous activez la synchronisation",
     "title": "Paramètres",
     "language": "Langue",
     "arabic": "العربية",

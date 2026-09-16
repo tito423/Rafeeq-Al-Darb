@@ -2,7 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/theme_controller.dart';
+import '../../../../core/utils/external_link.dart';
 import '../../../home/data/clock_settings_provider.dart';
 import '../../../quotes/presentation/quote_reminder_section.dart';
 import '../../../quran/data/mushaf_theme.dart';
@@ -350,6 +352,20 @@ class SettingsBody extends ConsumerWidget {
                       builder: (_) => const SourcesScreen()),
                 ),
               ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // The policy lives on the app's own bucket rather than in a screen,
+          // because Play wants a URL it can open without installing anything
+          // — and because a policy nobody outside the app can read is not a
+          // policy. Opened in a Custom Tab over the app.
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.privacy_tip_outlined, color: scheme.primary),
+              title: Text('settings.privacy_policy'.tr()),
+              subtitle: Text('settings.privacy_policy_desc'.tr()),
+              trailing: Icon(Icons.chevron_right, color: scheme.primary),
+              onTap: () => openLink(AppConfig.privacyPolicyUrl, inApp: true),
             ),
           ),
         ],

@@ -599,6 +599,8 @@
     "adhan_settings_hint": "Sonido del adhán, modo de visualización y alertas"
   },
   "settings": {
+    "privacy_policy": "Política de privacidad",
+    "privacy_policy_desc": "Qué se recoge y qué no: nada, salvo que actives la sincronización",
     "title": "Ajustes",
     "language": "Idioma",
     "arabic": "العربية",

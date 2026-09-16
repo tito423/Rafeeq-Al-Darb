@@ -123,6 +123,14 @@ abstract final class AppConfig {
   /// unpacks it to `hadith.db` on-device) — not `hadith.db` itself, which
   /// this constant pointed at for a while (a 404: only the zip was ever
   /// pushed to the repo) until a real download attempt caught it.
+  /// The privacy policy, hosted on the same bucket as the content.
+  ///
+  /// Google Play asks for a URL it can open on its own, and this is also the
+  /// address written into `legal/data_safety.md` for the Data safety form.
+  /// The page's source is `legal/privacy.html` in this repository — edit it
+  /// there and re-upload, so the two can never drift.
+  static const String privacyPolicyUrl = '$contentBaseUrl/legal/privacy.html';
+
   static const String hadithDbUrl = '$contentBaseUrl/hadith/hadith.zip';
 
   /// Bump this whenever `hadith.db`'s schema or content changes so devices

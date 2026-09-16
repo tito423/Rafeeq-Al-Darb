@@ -599,6 +599,8 @@
     "adhan_settings_hint": "Som do adhan, modo de exibição e alertas"
   },
   "settings": {
+    "privacy_policy": "Política de privacidade",
+    "privacy_policy_desc": "O que é e não é recolhido — nada, a menos que ative a sincronização",
     "title": "Definições",
     "language": "Idioma",
     "arabic": "العربية",
