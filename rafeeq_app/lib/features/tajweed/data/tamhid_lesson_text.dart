@@ -57,6 +57,12 @@ String tamhidBare(String s) => s
     .replaceAll(RegExp('[آأإٱ]'), 'ا')
     .replaceAll('ى', 'ي')
     .replaceAll('ة', 'ه')
-    .replaceAll(RegExp(r'[^\w\s]', unicode: true), ' ')
+    // NOT `[^\w\s]`: Dart's `\w` is [A-Za-z0-9_] and `unicode: true` does not
+    // widen it, so that class deleted every Arabic LETTER and this function
+    // returned the empty string for every Arabic input. Two headings then
+    // compared equal because both were '' — which made the level screens drop
+    // their whole lesson body as "the heading repeated", and made the tests
+    // that compare headings pass without comparing anything.
+    .replaceAll(RegExp(r'[^ء-ي٠-٩a-zA-Z0-9\s]'), ' ')
     .replaceAll(RegExp(r'\s+'), ' ')
     .trim();

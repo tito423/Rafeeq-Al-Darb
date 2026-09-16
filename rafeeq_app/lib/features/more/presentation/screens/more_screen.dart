@@ -12,7 +12,9 @@ import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../settings/presentation/widgets/focus_mode_picker.dart';
 import '../../../hajj/presentation/hajj_screen.dart';
 import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
+import '../../../../app/shell/tab_request_provider.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
+import '../../../tutorial/data/tutorial_state.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 import '../widgets/sync_account_card.dart';
 import '../../../support/presentation/screens/support_screen.dart';
@@ -37,11 +39,26 @@ class MoreScreen extends ConsumerWidget {
     // The one-time support sheet, asked for here and nowhere else: «تظهر مرة
     // واحدة في الأول». Not on Home, not over the mushaf, not during the adhan
     // — the More tab is where the reader is already looking at the app rather
-    // than using it. `showSupportIntro` returns immediately once it has been
-    // seen, so this costs one boolean read per build.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (context.mounted) showSupportIntro(context, ref);
-    });
+    // than using it.
+    //
+    // **Which is not the same as building this screen.** `AppShell` keeps every
+    // tab alive in an `IndexedStack`, so `MoreScreen` is built on the app's
+    // very first frame whatever tab is showing — the same property trap #43 is
+    // about. Posting the sheet from that first build put it on top of Home, and
+    // on a fresh install on top of the welcome tour as well: two sheets stacked
+    // over each other before the reader had touched anything. Seen on the
+    // emulator, not reasoned about.
+    //
+    // So it waits for the tab to actually be on screen, and for the tour to be
+    // over. `showSupportIntro` returns immediately once it has been seen, so
+    // this costs one boolean read per build after that.
+    final onThisTab = ref.watch(activeTabProvider) == AppTab.more;
+    final tourRunning = ref.watch(tutorialRunningProvider);
+    if (onThisTab && !tourRunning) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) showSupportIntro(context, ref);
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text('nav.more'.tr())),

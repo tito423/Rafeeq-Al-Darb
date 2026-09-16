@@ -1,0 +1,79 @@
+===== jazariyyah_lesson_text
+dex ? lesson.fromPara : 0;
+    final to = i == lesson.toIndex ? lesson.toPara : paras.length - 1;
+    for (var j = from; j <= to && j < paras.length; j++) {
+      if (j < 0) continue;
+      final p = paras[j];
+      if (isJazariyyahEditorNote(p.text)) continue;
+      out.add(JazariyyahPara(p.text, p.kind));
+    }
+  }
+  return out;
+}
+
+/// The comparison form for checking a lesson opens on its own heading: the
+/// matn is fully vowelled and its headings carry the editor's marker.
+String jazariyyahBare(String s) => s
+    .replaceAll(RegExp(r'\s*\(\s*[\d٠-٩]+\s*\)\s*$'), '')
+    .replaceAll(
+        RegExp('[ؐ-ًؚ-ٰٟۖ-ۭـ]'), '')
+    .replaceAll(RegExp('[آأإٱ]'), 'ا')
+    .replaceAll('ى', 'ي')
+    .replaceAll('ة', 'ه')
+    .replaceAll(RegExp(r'[^\w\s]', unicode: true), ' ')
+    .replaceAll(RegExp(r'\s+'), ' ')
+    .trim();
+
+===== tamhid_lesson_text
+Index ? lesson.fromPara : 0;
+    final to = i == lesson.toIndex ? lesson.toPara : paras.length - 1;
+    for (var j = from; j <= to && j < paras.length; j++) {
+      if (j < 0) continue;
+      out.add(TamhidPara(paras[j].text, paras[j].kind));
+    }
+  }
+  return out;
+}
+
+/// The comparison form used when checking that a lesson really opens on its
+/// own heading: the book is fully vowelled and its headings carry their own
+/// numbering («٣- أهميةُ تعلُّمِ…») which the title does not.
+String tamhidBare(String s) => s
+    .replaceAll(RegExp(r'^\s*[\d٠-٩]+\s*[-–—.)]\s*'), '')
+    .replaceAll(RegExp('[ؐ-ًؚ-ٰٟۖ-ۭـ]'), '')
+    .replaceAll(RegExp('[آأإٱ]'), 'ا')
+    .replaceAll('ى', 'ي')
+    .replaceAll('ة', 'ه')
+    .replaceAll(RegExp(r'[^\w\s]', unicode: true), ' ')
+    .replaceAll(RegExp(r'\s+'), ' ')
+    .trim();
+
+===== tuhfa_lesson_text
+ourse.dart';
+
+/// One paragraph as it will be drawn: the book's own text, and whether it is
+/// الضباع's note rather than the Jamzuri's verse.
+class TuhfaPara {
+  final String text;
+  final bool commentary;
+
+  const TuhfaPara(this.text, this.commentary);
+}
+
+/// The same normalisation `tuhfa_course_test.dart` compares headings with: the
+/// headings are fully vowelled, and «أَحْكَامُ َالمِيمِ» carries a stray fatha
+/// that is the source's own and stays in the text that is displayed.
+String tuhfaBare(String s) => s
+    .replaceAll(RegExp('[ً-ْٰـ]'), '')
+    .replaceAll(RegExp(r'\s*\([٠-٩]+\)\s*$'), '')
+    .trim();
+
+/// The lesson's paragraphs, in reading order, across all of its ranges.
+///
+/// The first paragraph is dropped only when it really is this lesson's
+/// heading — the card already carries that as its title. A near miss shows the
+/// paragraph rather than swallowing it.
+List<TuhfaPara> tuhfaLessonParas(TuhfaLesson lesson, BookText? book) {
+  final out = <TuhfaPara>[];
+  final pages = book?.pages ?? const <BookPage>[];
+  for (final r i

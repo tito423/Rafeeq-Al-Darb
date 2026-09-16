@@ -85,6 +85,18 @@ void main() {
   });
 
   test('every lesson opens on its own heading', () {
+    // The card's title is the app's SHORT name for the باب; the book's own
+    // heading is longer and is printed under it — «الباب الأول: قراءة
+    // القراء في هذا الزمان» over «الباب الأول في ذكر قراءة هؤلاء القراء في
+    // هذا الزمان». So this does not ask for equality; it asks that the
+    // lesson opens on a HEADING that is recognisably the same باب — either the
+    // short title appears inside the book's heading, or the two start on the
+    // same two words.
+    //
+    // The first cut of this test compared the two normalised strings and
+    // passed on all thirteen while the app was showing NOTHING, because
+    // `tamhidBare` was returning '' for every Arabic input and '' == ''.
+    // `lesson_heading_bare_test.dart` now stands behind this one.
     final wrong = <String>[];
     for (final l in tamhidLessons.skip(1)) {
       final paras = tamhidLessonParas(l, book);
@@ -94,12 +106,14 @@ void main() {
       }
       final opening = tamhidBare(paras.first.text);
       final title = tamhidBare(l.title);
-      // The title is the app's short name for his own long heading — «الباب
-      // الأول: قراءة القراء في هذا الزمان» for «الباب الأول في ذكر قراءة هؤلاء
-      // القراء في هذا الزمان» — so the test asks that the heading opens with
-      // the same باب, not that the two strings are equal.
-      final head = title.split(':').first.trim();
-      if (!opening.startsWith(head)) {
+      expect(title, isNotEmpty, reason: l.title);
+      expect(opening, isNotEmpty, reason: l.title);
+      expect(paras.first.kind, 'head',
+          reason: '${l.title} opens on a body paragraph, not a heading');
+
+      final sameOpening =
+          opening.split(' ').take(2).join(' ') == title.split(' ').take(2).join(' ');
+      if (!opening.contains(title) && !sameOpening) {
         wrong.add('${l.title}: opens on "${paras.first.text}"');
       }
     }
