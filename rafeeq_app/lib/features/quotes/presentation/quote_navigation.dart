@@ -25,22 +25,7 @@ Future<void> openQuoteFromPayload(String rawPayload) async {
   try {
     final raw = await rootBundle.loadString('assets/data/quotes.json');
     final doc = jsonDecode(raw) as Map<String, dynamic>;
-    final library = QuoteLibrary([
-      for (final b in doc['books'] as List<dynamic>)
-        QuoteBook(
-          id: (b as Map<String, dynamic>)['id'] as String,
-          titleAr: b['titleAr'] as String? ?? '',
-          authorAr: b['authorAr'] as String? ?? '',
-          sourceLabel: b['sourceLabel'] as String? ?? '',
-          quotes: [
-            for (final q in b['quotes'] as List<dynamic>)
-              (
-                text: (q as Map<String, dynamic>)['t'] as String,
-                page: q['p'] as int? ?? 0,
-              )
-          ],
-        )
-    ]);
+    final library = parseQuoteLibrary(doc);
     final quote = library.byKey(rawPayload);
     if (quote == null) return;
 

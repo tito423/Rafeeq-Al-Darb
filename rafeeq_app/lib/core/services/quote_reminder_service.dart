@@ -82,14 +82,19 @@ class QuoteReminderService {
   /// its `cancelAll` first and then watched the older loop carry on arming the
   /// rest, so the reminder kept firing after it was turned off; changing the
   /// interval left slots of the old interval mixed into the new window.
+  /// [locale] is the language the armed notifications will speak in. Trap #29:
+  /// a notification's text is frozen when the alarm is ARMED, not when it
+  /// fires, so a language change has to re-arm — which `RafeeqApp` already
+  /// does on every locale change.
   Future<void> reschedule({
     required QuoteLibrary library,
     required int everyMinutes,
+    String locale = 'ar',
     Random? rng,
   }) {
     final gen = ++_generation;
     return _chain = _chain
-        .then((_) => _reschedule(gen, library, everyMinutes, rng))
+        .then((_) => _reschedule(gen, library, everyMinutes, locale, rng))
         .catchError((Object _) {});
   }
 
@@ -100,6 +105,7 @@ class QuoteReminderService {
     int gen,
     QuoteLibrary library,
     int everyMinutes,
+    String locale,
     Random? rng,
   ) async {
     if (gen != _generation) return; // a newer request will run after this
@@ -128,7 +134,7 @@ class QuoteReminderService {
       pick ??= library.randomIndex(random);
       if (pick == null) return;
 
-      final quote = library.at(pick.$1, pick.$2);
+      final quote = library.at(pick.$1, pick.$2, locale: locale);
       if (quote == null) continue;
       if (gen != _generation) return; // superseded; the next call cancels
 

@@ -1,0 +1,44 @@
+curated quotes: 58 in 4 books
+
+al_wabil_al_sayyib                   6
+mukhtasar_minhaj_al_qasidin         34
+rawdat_al_uqala                     10
+sayd_al_khatir                       8
+
+first of each book, in every language:
+
+=== الوابل الصيب من الكلم الطيب ص7
+  [ar] قال شيخ الإسلام: العارف يسير إلى الله بين مشاهدة المنة ومطالعة عيب النفس والعمل.
+  [en] Shaykh al-Islam said: the one who knows God walks to Him between beholding His favour and examining the faults of his own soul and work.
+  [es] Dijo el Sheyj al-Islam: el conocedor de Dios camina hacia Él entre la contemplación de Su favor y el examen de los defectos de su alma y de su obra.
+  [fr] Le Cheikh al-Islam a dit : celui qui connaît Dieu marche vers Lui entre la contemplation de Sa faveur et l'examen des défauts de son âme et de son œuvre.
+  [pt] Disse o Xeique al-Islão: o conhecedor de Deus caminha para Ele entre a contemplação do Seu favor e o exame dos defeitos da sua alma e da sua obra.
+  [ru] Шейх аль-Ислам сказал: познавший Бога идёт к Нему между созерцанием Его милости и разбором пороков своей души и своих дел.
+  [ur] شیخ الاسلام نے فرمایا: عارف اللہ کی طرف اس حال میں چلتا ہے کہ ایک طرف اس کی نعمت کو دیکھتا ہے اور دوسری طرف اپنے نفس اور عمل کے عیب کو۔
+
+=== مُخْتََصَرُ مِنْهَاجِ القَاصِدِينْ ص19
+  [ar] قال ابن قتيبة رحمة الله: لا يكون الرجل حكيما حتى يجمع العلم والعمل. وقد صار هذا الاسم يطلق فى هذا الزمان على الطبيب والُمنِّجم.
+  [en] Ibn Qutaybah said: a man is not wise until he joins knowledge to action. Yet in our day the name is given to the physician and the astrologer.
+  [es] Dijo Ibn Qutayba: el hombre no es sabio hasta que une el saber a la obra. Y sin embargo hoy se da ese nombre al médico y al astrólogo.
+  [fr] Ibn Qutayba a dit : l'homme n'est pas sage tant qu'il ne joint pas la science à l'action. Or, de nos jours, on donne ce nom au médecin et à l'astrologue.
+  [pt] Disse Ibn Qutayba: o homem não é sábio enquanto não unir o saber à obra. E, contudo, hoje dá-se esse nome ao médico e ao astrólogo.
+  [ru] Ибн Кутайба сказал: человек не станет мудрым, пока не соединит знание с делом. А ныне так называют врача и звездочёта.
+  [ur] ابن قتیبہ نے کہا: آدمی اُس وقت تک حکیم نہیں جب تک علم اور عمل دونوں جمع نہ کر لے۔ حالانکہ آج یہ نام طبیب اور نجومی کو دیا جاتا ہے۔
+
+=== روضة العقلاء ونزهة الفضلاء ص17
+  [ar] قال أَبُو حاتم العقل نوعان مطبوع ومسموع فالمطبوع منهما كالأرض والمسموع كالبذر والماء ولا سبيل للعقل المطبوع أن يخلص له عمل محصول دون أن يرد عَلَيْهِ العقل المسموع فينبهه من رقدته ويطلقه من مكامنه يستخرج البذر والماء مَا في قعور الأرض من كثرة الربع
+  [en] Abu Hatim said: intellect is of two kinds, the innate and the learned. The innate is like the soil and the learned like the seed and the water; the innate can yield nothing until the learned comes upon it, wakes it from its sleep and draws out what lies in the depths of the earth.
+  [es] Dijo Abu Hátim: el entendimiento es de dos clases, el innato y el aprendido. El innato es como la tierra y el aprendido como la semilla y el agua; el innato nada produce hasta que el aprendido lo alcanza, lo despierta de su sueño y extrae lo que yace en el fondo de la tierra.
+  [fr] Abou Hatim a dit : l'intelligence est de deux sortes, l'innée et l'acquise. L'innée est comme la terre et l'acquise comme la semence et l'eau ; l'innée ne produit rien tant que l'acquise ne vient pas la réveiller de son sommeil et tirer ce qui gît au fond du sol.
+  [pt] Disse Abu Hátim: o entendimento é de duas espécies, o inato e o aprendido. O inato é como a terra e o aprendido como a semente e a água; o inato nada produz até que o aprendido o alcance, o desperte do seu sono e extraia o que jaz no fundo da terra.
+  [ru] Абу Хатим сказал: разум двух родов — врождённый и приобретённый. Врождённый — как почва, приобретённый — как семя и вода; врождённый ничего не даст, пока приобретённый не придёт, не пробудит его ото сна и не извлечёт то, что лежит в глубине земли.
+  [ur] ابو حاتم نے کہا: عقل دو قسم کی ہے، مطبوع اور مسموع۔ مطبوع زمین کی طرح ہے اور مسموع بیج اور پانی کی طرح؛ مطبوع عقل اس وقت تک کچھ نہیں دیتی جب تک مسموع آ کر اسے نیند سے نہ جگائے اور زمین کی گہرائی میں جو ہے اسے نہ نکالے۔
+
+=== صيد الخاطر ص48
+  [ar] نعوذ بالله من الجهل وتعظيم الأسلاف تقليدًا لهم بغير دليل، فإن من ورد المشرب الأول، رأى سائر المشارب كدرة.
+  [en] We seek refuge in God from ignorance, and from revering our predecessors by imitation without proof; for whoever has come to the first spring sees every other spring as muddied.
+  [es] Nos refugiamos en Dios de la ignorancia y de venerar a los antepasados por mera imitación sin prueba; pues quien ha llegado al primer manantial ve turbios todos los demás.
+  [fr] Nous cherchons refuge auprès de Dieu contre l'ignorance et contre la vénération des devanciers par pure imitation sans preuve ; car celui qui est venu à la première source voit toutes les autres troubles.
+  [pt] Refugiamo-nos em Deus da ignorância e de venerar os antepassados por mera imitação sem prova; pois quem chegou à primeira fonte vê turvas todas as outras.
+  [ru] Прибегаем к Богу от невежества и от почитания предшественников слепым подражанием без довода; ибо тот, кто пришёл к первому источнику, видит все прочие источники мутными.
+  [ur] ہم اللہ کی پناہ مانگتے ہیں جہالت سے، اور اسلاف کی بغیر دلیل کے محض تقلیدی تعظیم سے؛ کیونکہ جو پہلے چشمے پر پہنچ گیا وہ باقی سب چشموں کو گدلا دیکھتا ہے۔

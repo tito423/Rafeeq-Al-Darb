@@ -1,0 +1,1 @@
+quran_sciences: ['tafseer_texts', 'sqlite_sequence', 'word_meanings', 'word_grammar', 'azkar_sections', 'azkar_items', 'translations', 'translation_editions']

@@ -101,7 +101,8 @@ class RafeeqApp extends ConsumerWidget {
           final now = ref.read(quoteReminderProvider);
           if (now <= 0) return;
           await QuoteReminderService.instance
-              .reschedule(library: library, everyMinutes: now);
+              .reschedule(
+                  library: library, everyMinutes: now, locale: localeCode);
         });
       }
     });

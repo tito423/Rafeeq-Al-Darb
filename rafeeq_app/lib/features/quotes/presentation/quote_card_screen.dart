@@ -138,12 +138,12 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // The saying is Arabic whatever the app's own
-                            // language is, so it is laid out right-to-left
-                            // whatever the chrome around it does — the defect
+                            // The saying in the reader's language — and only
+                            // an Arabic one needs the right-to-left paragraph
                             // `arabic_direction_test` measures.
-                            ArabicText(
+                            ScriptText(
                               stripBidiControls(q.text),
+                              arabic: context.locale.languageCode == 'ar',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: _palette.ink,
@@ -152,6 +152,22 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+                            // … and under it, always, the words the author
+                            // wrote. A translated maxim without its original
+                            // is a claim about a book, not a quotation from
+                            // it — the same rule the ayah cards follow.
+                            if (context.locale.languageCode != 'ar') ...[
+                              const SizedBox(height: 18),
+                              ArabicText(
+                                stripBidiControls(q.arabic),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: _palette.ink.withValues(alpha: 0.72),
+                                  fontSize: 16,
+                                  height: 1.95,
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: 26),
                             Container(
                               width: 54,

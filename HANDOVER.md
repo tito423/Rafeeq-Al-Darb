@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 02:10 — IN PROGRESS — resume here**
+**2026-09-17 03:05 — IN PROGRESS — resume here**
 
-v3.29.0: the copyright purge, the Hajj guide on an-Nawawi, and no Arabic for a reader who chose another language. Built and signed - OK: rotated, 211.6 MB
+the quote of the day speaks all seven languages now. It was Arabic-only, and the corpus behind it was 260 extracted paragraphs of which a large minority were not maxims at all but item N of a list that began on the page before - «الفائدة الأولى», «الدرجة السادسة», «أنه يورث حياة القلب» - so I read all 260 and kept the 58 that stand as a finished thought, then translated each into English, Spanish, French, Portuguese, Russian and Urdu. The Arabic is never retyped: a curated entry is a pointer at the extractor's own output and the Arabic is copied from there at build time, so no diacritic can be lost in transcription. The full-screen card now shows the translation with the author's own Arabic under it, because a translated maxim without its original is a claim about a book rather than a quotation from it. Also collapsed a second copy of the corpus parser that quote_navigation.dart carried - the schema change broke it, which is the lucky outcome; the five byte formatters this project once had drifted silently instead
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

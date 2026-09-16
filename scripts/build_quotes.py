@@ -51,7 +51,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "dist", "quotes_src")
-OUT = os.path.join(ROOT, "rafeeq_app", "assets", "data", "quotes.json")
+OUT = os.path.join(ROOT, "scripts", "quotes_built.json")
 REPORT = os.path.join(ROOT, "quotes_report.txt")
 
 # A quote has to read as one finished thought on a card, not as a paragraph
@@ -71,6 +71,14 @@ REJECT = [
     "رضي الله عنه", "رضي الله عنها", "رضي الله عنهم",
     "سورة", "الآية", "روى", "روي", "يروى", "يروي", "رواه",
     "أخرجه", "في الصحيح", "متفق عليه",
+    # A SUPPLICATION IS NOT A QUOTE. الوابل الصيب is a book about ذكر, so
+    # its pages carry the du'as themselves — «اللهم صل على محمد», «اللهم
+    # إني أعوذ بك من العجز والكسل» — and eight of them shipped as «مقولات» of
+    # Ibn al-Qayyim. A du'a belongs in الأذكار, with its takhrij, not on a
+    # quote card with a book name under it.
+    "اللهم", "أعوذ بالله", "أسألك", "سبحان الله",
+    # Half of a reported dialogue: «قال فيقول: كيف لو رأوني؟».
+    "فيقول", "فيقولون", "قال فيقول", "يقولون:",
 ]
 
 # A paragraph that opens on one of these is the tail of the sentence before
@@ -81,7 +89,16 @@ BAD_START = ["و", "ف", "ثم ", "أي ", "لأن", "بل ", "أو ", "لكن",
              # line above: «أحدهما: أن المواعظ كالسياط...» reads as a maxim
              # and is not one.
              "أحدهما", "والثاني", "الثاني", "الثالث", "ومنها",
-             "منها ", "غير أن", "فإن ", "فلما", "قلت:", "قال:"]
+             "منها ", "غير أن", "فإن ", "فلما", "قلت:", "قال:",
+             # Every remaining shape of "this is item N of a list that began
+             # on the page before", read off the 359 quotes the first clean
+             # pass produced: الوابل الصيب enumerates a hundred benefits of
+             # ذكر and each one opens «أنه...», which is not a sentence.
+             "أحدها", "الأول", "الرابع", "الخامس", "السادس",
+             "السابع", "الثامن", "التاسع", "العاشر", "النوع",
+             "اللفظ", "الوظيفة", "المرتبة", "الطبقة", "القلب ال",
+             "أنه ", "أن ال", "مثال", "مثاله", "قيل ", "فائدة", "فصل",
+             "فرع", "تنبيه", "هو ", "توفي ", "ولد "]
 
 END_OK = tuple(".؟!؟")
 

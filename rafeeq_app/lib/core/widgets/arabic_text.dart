@@ -45,3 +45,46 @@ class ArabicText extends StatelessWidget {
     );
   }
 }
+
+/// The same widget for text that MAY be Arabic and may be a translation of it.
+///
+/// A quote card shows the saying in the reader's language, and under it the
+/// author's own Arabic. The first must follow the app's direction and the
+/// second must be right-to-left, and they are two different widgets only
+/// because that distinction is real — wrapping an English sentence in
+/// `ArabicText` puts its full stop at the head of the line, which is exactly
+/// the defect the Hijri day sheet shipped with.
+class ScriptText extends StatelessWidget {
+  final String data;
+
+  /// True when [data] is Arabic, whatever the UI language is.
+  final bool arabic;
+
+  final TextStyle? style;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextAlign textAlign;
+
+  const ScriptText(
+    this.data, {
+    super.key,
+    required this.arabic,
+    this.style,
+    this.maxLines,
+    this.overflow,
+    this.textAlign = TextAlign.start,
+  });
+
+  @override
+  Widget build(BuildContext context) => arabic
+      ? ArabicText(data,
+          style: style,
+          maxLines: maxLines,
+          overflow: overflow,
+          textAlign: textAlign)
+      : Text(data,
+          style: style,
+          maxLines: maxLines,
+          overflow: overflow,
+          textAlign: textAlign);
+}

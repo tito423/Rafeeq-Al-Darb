@@ -19,19 +19,15 @@ import 'quote_card_screen.dart';
 class QuoteReminderSection extends ConsumerWidget {
   const QuoteReminderSection({super.key});
 
-  Future<void> _apply(WidgetRef ref, int minutes) async {
+  Future<void> _apply(WidgetRef ref, int minutes, String locale) async {
     await ref.read(quoteReminderProvider.notifier).set(minutes);
     final library = await ref.read(quoteLibraryProvider.future);
-    await QuoteReminderService.instance
-        .reschedule(library: library, everyMinutes: minutes);
+    await QuoteReminderService.instance.reschedule(
+        library: library, everyMinutes: minutes, locale: locale);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // The quotes are Arabic and untranslated, so the Home card is hidden
-    // outside Arabic — and a settings row that schedules notifications of a
-    // card the reader will never see is worse than no row at all.
-    if (context.locale.languageCode != 'ar') return const SizedBox.shrink();
     final minutes = ref.watch(quoteReminderProvider);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -97,13 +93,14 @@ class QuoteReminderSection extends ConsumerWidget {
                 ChoiceChip(
                   label: Text('quotes.off'.tr()),
                   selected: minutes == 0,
-                  onSelected: (_) => _apply(ref, 0),
+                  onSelected: (_) => _apply(ref, 0, context.locale.languageCode),
                 ),
                 for (final m in kQuoteIntervals)
                   ChoiceChip(
                     label: Text(_label(m)),
                     selected: minutes == m,
-                    onSelected: (_) => _apply(ref, m),
+                    onSelected: (_) =>
+                        _apply(ref, m, context.locale.languageCode),
                   ),
               ],
             ),
@@ -124,10 +121,13 @@ class QuoteReminderSection extends ConsumerWidget {
                 style: TextButton.styleFrom(foregroundColor: AppColors.gold),
                 label: Text('quotes.preview'.tr()),
                 onPressed: () async {
+                  // Read before the await: reaching for the context's locale
+                  // after one is the async-gap the analyzer is right about.
+                  final locale = context.locale.languageCode;
                   final lib = await ref.read(quoteLibraryProvider.future);
                   final pick = lib.randomIndex(Random());
                   if (pick == null) return;
-                  final quote = lib.at(pick.$1, pick.$2);
+                  final quote = lib.at(pick.$1, pick.$2, locale: locale);
                   if (quote == null || !context.mounted) return;
                   final photos =
                       await ref.read(quoteBackgroundsProvider.future);
