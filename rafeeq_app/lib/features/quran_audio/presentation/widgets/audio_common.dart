@@ -280,7 +280,7 @@ class RecitationCover extends StatelessWidget {
                       style: TextStyle(
                         fontSize: size * 0.062,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textHigh,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     if ((album ?? '').isNotEmpty) ...[
@@ -292,7 +292,8 @@ class RecitationCover extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: size * 0.044,
-                          color: AppColors.textMedium,
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],

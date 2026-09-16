@@ -25,7 +25,10 @@ class MiniPlayer extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
             child: Material(
-              color: AppColors.nightSurface,
+              // Was a fixed night card, so on the light themes a dark bar sat
+              // under a pale app. The owner: «اتاكد ان كل الوان الكروت
+              // متناسقة مع الثيم المختار».
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               elevation: 8,
               shadowColor: Colors.black54,
               borderRadius: BorderRadius.circular(18),
@@ -45,8 +48,9 @@ class MiniPlayer extends StatelessWidget {
                           return LinearProgressIndicator(
                             minHeight: 3,
                             value: total <= 0 ? 0 : (at / total).clamp(0.0, 1.0),
-                            color: AppColors.gold,
-                            backgroundColor: AppColors.nightBorder,
+                            color: goldOn(Theme.of(context).colorScheme),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.outlineVariant,
                           );
                         },
                       ),
@@ -83,18 +87,22 @@ class MiniPlayer extends StatelessWidget {
                                   track.title,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    color: AppColors.textHigh,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface,
                                   ),
                                 ),
                                 Text(
                                   track.artist,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
-                                    color: AppColors.textMedium,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
                                   ),
                                 ),
                               ],
@@ -125,7 +133,8 @@ class MiniPlayer extends StatelessWidget {
                             },
                           ),
                           IconButton(
-                            color: AppColors.textMedium,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                             onPressed: player.stop,
                             icon: const Icon(Icons.close_rounded),
                           ),

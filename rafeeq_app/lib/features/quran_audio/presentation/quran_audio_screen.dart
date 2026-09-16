@@ -193,7 +193,9 @@ class _SourceCredit extends StatelessWidget {
           child: Text(
             'quran_audio.source_note'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.textLow, fontSize: 12),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 12),
           ),
         ),
       );
@@ -281,8 +283,10 @@ class _RecitationFolder extends ConsumerWidget {
             LinearProgressIndicator(
               value: total == 0 ? 0 : done / total,
               minHeight: 4,
-              color: entry.paused ? AppColors.textLow : AppColors.gold,
-              backgroundColor: AppColors.nightBorder,
+              color: entry.paused
+                  ? Theme.of(context).colorScheme.onSurfaceVariant
+                  : goldOn(Theme.of(context).colorScheme),
+              backgroundColor: Theme.of(context).colorScheme.outlineVariant,
             ),
           ],
         ],
@@ -726,7 +730,11 @@ class _Empty extends StatelessWidget {
             children: [
               Icon(icon, size: 64, color: AppColors.gold.withValues(alpha: 0.6)),
               const SizedBox(height: 14),
-              Text(text, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textMedium, height: 1.6)),
+              Text(text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      height: 1.6)),
             ],
           ),
         ),

@@ -347,7 +347,7 @@ class ReciterChip extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.record_voice_over_outlined,
-                  size: 15, color: AppColors.gold),
+                  size: 15, color: goldOn(Theme.of(context).colorScheme)),
               const SizedBox(width: 5),
               Flexible(
                 child: Text(
@@ -355,7 +355,7 @@ class ReciterChip extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: AppColors.gold,
+                        color: goldOn(Theme.of(context).colorScheme),
                         fontWeight: FontWeight.w600,
                       ),
                 ),

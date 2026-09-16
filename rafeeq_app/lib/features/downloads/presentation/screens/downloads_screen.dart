@@ -392,7 +392,9 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     '${'quran_audio.queued'.tr()} · ${ltr('$waiting')}',
-                    style: const TextStyle(fontSize: 12, color: AppColors.textLow),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                 ),
             ],

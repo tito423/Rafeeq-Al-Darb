@@ -1437,9 +1437,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 05:03 — IN PROGRESS — resume here**
+**2026-09-16 05:06 — IN PROGRESS — resume here**
 
-the owner's new icon and splash. Icon: his tile, cropped to its own gold rim (centre 1407,776, 1201px) at 1024 and nothing else touched; the adaptive background takes the tile's own blue #081F4F and the 16% inset keeps every corner of the artwork inside the mask. Splash: his clip cut at 7.0s - the icon is settled and the band below it is clean sky - with the AUDIO STRIPPED, because its voice said «قراني» wrongly and it cannot be re-recorded («خليه يقرا قراني صح او سيل الصوت خالص»). The burnt-in wordmark had the tashkeel wrong on both words and «الى» for «إلى»; delogo over that band left a smeared rectangle, so the app draws the line itself now in AmiriQuran, inside the video's own coordinate space so it scales and crops with the artwork. The splash-sound switch and its 14 keys went with the soundtrack. Native splash mark rebuilt from the new tile, inscribed in the Android 12 circle rather than filled. goldOn(scheme): gold as text measures 2.10:1 on the light theme and 4.91-5.49:1 blended; About was the worst case and its dua was Colors.white on a theme-aware panel. 243 tests pass.
+theme sweep: the mini player, the reciter screen and picker, the audio list, the downloads size line and the tafsir card's reciter chip all followed the night palette whatever theme was chosen. They read the live scheme now, and gold as text goes through goldOn(). The screens that paint their OWN night ground on purpose - onboarding, the adhan player, the audio player, the mushaf theme picker, the ayah share card - are untouched.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

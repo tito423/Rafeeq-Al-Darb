@@ -188,16 +188,22 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                                 children: [
                                   Text(
                                     _moshaf.name,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 16,
-                                      color: AppColors.textHigh,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     'quran_audio.downloaded_of'.tr(args: [ltr('$done'), ltr('$total')]),
-                                    style: const TextStyle(color: AppColors.textMedium, fontSize: 12.5),
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                        fontSize: 12.5),
                                   ),
                                 ],
                               ),
@@ -368,18 +374,23 @@ class _SurahRow extends StatelessWidget {
                   minHeight: 5,
                   value: status.progress <= 0 ? null : status.progress,
                   color: AppColors.gold,
-                  backgroundColor: AppColors.nightBorder,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.outlineVariant,
                 ),
               ),
             ),
             const SizedBox(width: 8),
             Text(ltr('${(status.progress * 100).round()}%'),
-                style: const TextStyle(fontSize: 11, color: AppColors.textMedium)),
+                style: TextStyle(
+                    fontSize: 11,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ],
         );
       case SurahAudioState.queued:
         sub = Text('quran_audio.queued'.tr(),
-            style: const TextStyle(color: AppColors.textLow, fontSize: 12));
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 12));
       case SurahAudioState.failed:
         sub = Text('quran_audio.failed_retry'.tr(),
             style: const TextStyle(color: AppColors.error, fontSize: 12));

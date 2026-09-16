@@ -81,21 +81,25 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
             padding: const EdgeInsets.fromLTRB(16, 2, 16, 8),
             child: Row(
               children: [
-                const Icon(Icons.bolt_rounded, size: 16, color: AppColors.gold),
+                Icon(Icons.bolt_rounded,
+                    size: 16, color: goldOn(Theme.of(context).colorScheme)),
                 const SizedBox(width: 4),
                 Flexible(
                   child: Text('quran.reciter_legend_fast'.tr(),
-                      style: const TextStyle(
-                          fontSize: 11.5, color: AppColors.textLow)),
+                      style: TextStyle(
+                          fontSize: 11.5,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ),
                 const SizedBox(width: 12),
-                const Icon(Icons.cloud_outlined,
-                    size: 16, color: AppColors.textLow),
+                Icon(Icons.cloud_outlined,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
                 const SizedBox(width: 4),
                 Flexible(
                   child: Text('quran.reciter_legend_stream'.tr(),
-                      style: const TextStyle(
-                          fontSize: 11.5, color: AppColors.textLow)),
+                      style: TextStyle(
+                          fontSize: 11.5,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ),
               ],
             ),
@@ -110,17 +114,22 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
                 return ListTile(
                   leading: Icon(
                     fast ? Icons.bolt_rounded : Icons.cloud_outlined,
-                    color: fast ? AppColors.gold : AppColors.textLow,
+                    color: fast
+                        ? goldOn(Theme.of(context).colorScheme)
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   title: Text(
                     r.displayName(locale),
                     style: TextStyle(
                       fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
-                      color: isSelected ? AppColors.gold : null,
+                      color: isSelected
+                          ? goldOn(Theme.of(context).colorScheme)
+                          : null,
                     ),
                   ),
                   trailing: isSelected
-                      ? const Icon(Icons.check_circle_rounded, color: AppColors.gold)
+                      ? Icon(Icons.check_circle_rounded,
+                          color: goldOn(Theme.of(context).colorScheme))
                       : null,
                   onTap: () => Navigator.of(context).pop(r.identifier),
                 );
