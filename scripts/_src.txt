@@ -1,2 +1,0 @@
-54:           'https://github.com/Imomzoda8/tajweed-quran-images',
-55:           'about.src_ed_tajweed'),

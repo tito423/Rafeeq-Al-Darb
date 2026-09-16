@@ -1,3 +1,0 @@
-kinds: Counter({'body': 986, 'head': 42, 'aya': 26})
-footnote-shaped paragraphs: 0
-
