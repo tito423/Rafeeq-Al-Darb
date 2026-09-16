@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-16 15:33 — IN PROGRESS — resume here**
+**2026-09-16 16:43 — IN PROGRESS — resume here**
 
-Ayman Abdel Raheem's channel removed as asked, and the app RUNS ON ANDROID 7.0 - the signed release APK installed on an api24 AVD (so the old key's v1/v2 path works), onboarding, home, Quran and the Library all render, and logcat shows no E/flutter and no FATAL. Screen sizes swept 320dp to 800dp: the seven nav labels fit at 320. COMPATIBILITY.md records what was run and what was not
+a compatibility matrix that runs itself: 12 cells - Android 7.0, 9 and 16 by four screen widths - against the signed APK, 84 screenshots, all pass. It caught its own three mistakes on the way: taps landing on Android 7's nav bar, permission dialogs eating every tap while the run still reported green, and a blank-screen detector that cried wolf on a white card
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

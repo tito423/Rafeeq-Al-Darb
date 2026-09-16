@@ -14,15 +14,24 @@ was looked at.
 
 ## Android versions
 
-| Version | API | How | Result |
-|---|---|---|---|
-| **7.0 Nougat** | 24 | `api24` AVD (google_apis x86_64), signed release APK | **passes** — see below |
-| 9 Pie | 28 | image downloading | not yet run |
-| 12 | 31 | — | not yet run |
-| 14 | 34 | — | not yet run |
-| **16** | 36 | `Medium_Phone_API_36.1`, and the owner's Honor | passes (the daily driver) |
+Run by `scripts/compat_matrix.py` against the **signed release APK**, four
+widths each — twelve cells, 84 screenshots, all of them written to
+`scripts/compat_out/`.
 
-### Android 7.0 — 2026-09-16
+| Version | API | 320 dp | 360 dp | 411 dp | 800 dp |
+|---|---|---|---|---|---|
+| **7.0 Nougat** | 24 | pass | pass | pass | pass |
+| **9 Pie** | 28 | pass | pass | pass | pass |
+| **16** | 36 | pass | pass | pass | pass |
+| 12 | 31 | — | — | — | — |
+| 14 | 34 | — | — | — | — |
+
+«pass» here means: the signed APK installed, the process was still alive 25 s
+after launch, `logcat` had no `FATAL EXCEPTION` and no `E/flutter`, and all
+seven tabs opened onto a drawn screen. Android 12 and 14 need their system
+images fetched (1.4 GB each) and are the next two to run.
+
+### Android 7.0 — 2026-09-16, in detail
 
 The one that mattered most, because it is the floor and because the signing
 lineage puts Android 7–8 on the **old key** (trap #41).
@@ -48,8 +57,9 @@ time.
 | Width | Size / density | Result |
 |---|---|---|
 | **320 dp** | 480×854 @ 240 | **passes** — and this is the case the nav labels were changed for: all seven («الرئيسية القرآن الصلاة الأذكار المسبحة المكتبة المزيد») fit on one line each, none clipped |
+| 360 dp | 720×1280 @ 320 | passes |
 | 376.6 dp | the owner's Honor, 1224×2700 @ 520 | passes |
-| 393 dp | 1080×2400 @ 420 | passes |
+| 411 dp | 1080×2400 @ 420 | passes |
 | **800 dp** | 1600×2560 @ 320 (tablet) | renders, nothing clipped — but the layout is a stretched phone: lines of Arabic run the full 800 dp, which is a long measure to read. Worth a max-width, not a bug |
 
 ## Brands
@@ -66,6 +76,41 @@ or what Honor's power manager kills overnight. What can be said:
   since 2026-09-15.
 * Everything else is untested. The honest statement for a release note is
   «مُختبَر على Honor وعلى محاكيات أندرويد ٧ و١٦», not «متوافق مع كل الأجهزة».
+
+## The harness
+
+`scripts/compat_matrix.py` is the answer to «اخترع طريقة تختبره بيها». Point it
+at an APK and it boots each AVD in turn, installs, grants the runtime
+permissions, and at each screen width launches the app, waits, sweeps all seven
+tabs, screenshots every one and reads `logcat`:
+
+```
+py -3 scripts/compat_matrix.py rafeeq_app/build/app/outputs/flutter-apk/app-release.apk
+py -3 scripts/compat_matrix.py <apk> --avd api24 --size 320
+```
+
+It writes `scripts/compat_out/report.txt` plus a folder of screenshots per
+combination, and exits non-zero if any cell failed.
+
+**It caught itself twice, which is the point.** The first run tapped at 96.5 %
+of the screen height and hit Android 7's on-screen navigation bar — every tap
+opened RECENTS and two cells were reported "blank" because the screenshot was
+the recents screen. The second run still had the runtime permission dialogs up,
+so every tap landed on «ALLOW» and the sweep photographed the same home screen
+seven times **while reporting a pass**. Both are now handled: the bar's real
+position is computed from the density, the permissions are granted with
+`pm grant` before the sweep, and a sweep whose screenshots are all identical is
+failed as «tabs never changed».
+
+A third self-catch, and the most instructive: the first full matrix reported
+three cells «blank» — home and Qur'an at 320 dp, Qur'an at 800 dp. All three
+were **false alarms**. The detector sampled nine points and called a screen
+blank when they agreed, and at 320 dp those nine landed on white card while
+the home screen was drawing perfectly; a page of the Qur'an is mostly one
+colour by nature. A check that cries wolf three times in twelve is worse than
+no check, so it shrinks the screenshot to a 16×28 grid now, drops the system
+bars, and needs 97 % of one colour. Re-run over all 84 saved screenshots:
+**none blank**.
 
 ## How to repeat this
 
