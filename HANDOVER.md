@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 01:17 — IN PROGRESS — resume here**
+**2026-09-17 01:22 — IN PROGRESS — resume here**
 
-the two dates on the Home header open two different sheets now. They shared one, and it showed Wikimedia's onthisday feed - which is keyed by the GREGORIAN month and day, so tapping «17 Ramadan» gave you the events of 8 March. The Hijri sheet now reads a dataset of its own: 5,747 events across 358 Hijri days, built from Arabic Wikipedia's per-Hijri-day pages, which are the only source that exists - English Wikipedia has no such pages at all (17_Ramadan is a 404, checked). The Gregorian sheet leads with what concerns Islam and the Muslims (20.5 percent of the Arabic feed, 339 of 366 days have at least one) and puts the rest under it. Three defects found by reading the real pages and the real output, not by reasoning: the year link is piped on some lines and plain on others, so twelve of eighteen lines on one page lost their year; a citation template can be left open at the end of a line; and a line that is ONLY a year heads a group of sub-bullets, which the first parser emitted as an event and then dropped the two real events under it. Both sheets seen on the emulator in English and Arabic, and the rows are sorted by year and given their own paragraph direction - the Arabic text was laid out left-to-right on the English UI with every full stop at the head of the line. Also caught by a test I should have run sooner: AboutScreen still said 3.26.0 while pubspec said 3.27.0, so the release published an hour ago shows the wrong version on its About card
+v3.28.0: the history section and the two date sheets, version bumped in both places this time. Release built and signed - sign_release.py printed OK: rotated. 211.6 MB
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
