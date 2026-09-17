@@ -952,7 +952,7 @@
     "group_duas_note": "De al-Adhkar do imã an-Nawawi, cada súplica com a sua referência exatamente como a fonte a dá.",
     "play_group": "Reproduzir este grupo",
     "audio_title": "Ouvir a Ruqyah",
-    "audio_intro": "Cinco ruqyahs completas gravadas. Toque para ouvir, ou baixe uma para usar offline.",
+    "audio_intro": "{}. Toque para ouvir, ou baixe uma para usar offline.",
     "listen_recordings": "Ouvir ruqyahs gravadas",
     "minutes": "{n} min",
     "reciter_unnamed": "O recitador não é nomeado na fonte",
@@ -962,7 +962,15 @@
     "pause": "Pausar",
     "stop": "Parar",
     "back_10": "Voltar 10 segundos",
-    "forward_10": "Avançar 10 segundos"
+    "forward_10": "Avançar 10 segundos",
+    "recordings_count": {
+      "zero": "{} ruqyahs completas gravadas",
+      "one": "{} ruqyah completa gravada",
+      "two": "{} ruqyahs completas gravadas",
+      "few": "{} ruqyahs completas gravadas",
+      "many": "{} ruqyahs completas gravadas",
+      "other": "{} ruqyahs completas gravadas"
+    }
   },
   "more": {
     "section_more": "Mais",

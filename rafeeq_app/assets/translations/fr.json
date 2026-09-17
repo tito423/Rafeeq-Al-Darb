@@ -952,7 +952,7 @@
     "group_duas_note": "D'al-Adhkar de l'imam an-Nawawi, chaque invocation avec sa référence exactement telle que la source la donne.",
     "play_group": "Lire ce groupe",
     "audio_title": "Écouter la roqya",
-    "audio_intro": "Cinq roqyas complètes enregistrées. Touchez pour écouter, ou téléchargez-en une pour l'utiliser hors ligne.",
+    "audio_intro": "{}. Touchez pour écouter, ou téléchargez-en une pour l'utiliser hors ligne.",
     "listen_recordings": "Écouter les roqyas enregistrées",
     "minutes": "{n} min",
     "reciter_unnamed": "Le récitant n'est pas nommé dans la source",
@@ -962,7 +962,15 @@
     "pause": "Pause",
     "stop": "Arrêter",
     "back_10": "Reculer de 10 secondes",
-    "forward_10": "Avancer de 10 secondes"
+    "forward_10": "Avancer de 10 secondes",
+    "recordings_count": {
+      "zero": "{} roqyas complètes enregistrées",
+      "one": "{} roqya complète enregistrée",
+      "two": "{} roqyas complètes enregistrées",
+      "few": "{} roqyas complètes enregistrées",
+      "many": "{} roqyas complètes enregistrées",
+      "other": "{} roqyas complètes enregistrées"
+    }
   },
   "more": {
     "section_more": "Plus",

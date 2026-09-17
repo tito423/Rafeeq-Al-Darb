@@ -114,7 +114,7 @@ class ReciterAvatar extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(size * 0.12),
                         child: Text(
-                          ltr('$number'),
+                          ltr(localizeDigits('$number', uiLanguageCode)),
                           textAlign: TextAlign.center,
                           textHeightBehavior: const TextHeightBehavior(
                             applyHeightToFirstAscent: false,

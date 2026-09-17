@@ -17,6 +17,8 @@
 /// of it — which is exactly what an embedding would risk.
 library;
 
+import 'digits.dart' show localizeDigits, uiLanguageCode;
+
 /// Wraps [text] so it always reads left-to-right, whatever the surrounding
 /// paragraph direction is. Use for anything that mixes digits with Latin
 /// units or punctuation: sizes, versions, `12:30`, `604 pages`.
@@ -45,29 +47,47 @@ String rtl(String text) =>
 /// Uses decimal MB (10⁶), which is what the catalogues in this project
 /// measure and what the file sizes were recorded in — not 1024², so the number
 /// shown matches the number that was verified against the bucket.
+/// A size in the reader's own numerals, still pinned left-to-right.
+///
+/// Two separate problems, and both fixes have to hold at once:
+///
+///  * Trap #16 - «60.5 MB» reversed to «MB 60.5» in an Arabic paragraph,
+///    because a numeral is bidi-weak and took its direction from the Arabic
+///    around it. `ltr()` pins the whole fragment. That stays.
+///  * The digits were Latin while the rest of the app was Arabic-Indic. The
+///    Downloads screen read «0 B» under «المساحة المستخدمة», and a library
+///    card printed a Latin size directly under «توفي ٧٧٤ هـ».
+///
+/// Safe together: Arabic-Indic digits are class AN, and an AN run inside an
+/// LTR isolate is laid out left-to-right as a unit, so «٦٠.٥ MB» keeps its
+/// order. The UNIT stays Latin - «MB» is what the unit is called in Arabic
+/// software too - and the decimal point stays a point for the same reason.
+String _size(String value, String unit) =>
+    ltr('${localizeDigits(value, uiLanguageCode)} $unit');
+
 String formatBytes(int bytes, {int decimals = 1}) {
-  if (bytes < 1000) return ltr('$bytes B');
+  if (bytes < 1000) return _size(bytes.toString(), 'B');
   if (bytes < 1000 * 1000) {
-    return ltr('${(bytes / 1000).toStringAsFixed(decimals)} KB');
+    return _size((bytes / 1000).toStringAsFixed(decimals), 'KB');
   }
   if (bytes < 1000 * 1000 * 1000) {
-    return ltr('${(bytes / 1000000).toStringAsFixed(decimals)} MB');
+    return _size((bytes / 1000000).toStringAsFixed(decimals), 'MB');
   }
-  return ltr('${(bytes / 1000000000).toStringAsFixed(decimals)} GB');
+  return _size((bytes / 1000000000).toStringAsFixed(decimals), 'GB');
 }
 
 /// A size in binary units (1024²), for the on-device storage readouts that
 /// were already reporting that way — changing those numbers would make the
 /// Downloads screen disagree with Android's own storage figures.
 String formatBytesBinary(int bytes, {int decimals = 1}) {
-  if (bytes < 1024) return ltr('$bytes B');
+  if (bytes < 1024) return _size(bytes.toString(), 'B');
   if (bytes < 1024 * 1024) {
-    return ltr('${(bytes / 1024).toStringAsFixed(decimals)} KB');
+    return _size((bytes / 1024).toStringAsFixed(decimals), 'KB');
   }
   if (bytes < 1024 * 1024 * 1024) {
-    return ltr('${(bytes / (1024 * 1024)).toStringAsFixed(decimals)} MB');
+    return _size((bytes / (1024 * 1024)).toStringAsFixed(decimals), 'MB');
   }
-  return ltr('${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(decimals)} GB');
+  return _size((bytes / (1024 * 1024 * 1024)).toStringAsFixed(decimals), 'GB');
 }
 
 /// «٠ / ٣٣», never «٣٣ / ٠» — two numbers with a separator between them.

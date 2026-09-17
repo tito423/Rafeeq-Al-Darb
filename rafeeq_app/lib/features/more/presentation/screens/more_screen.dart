@@ -1,4 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../ruqyah/data/ruqyah_catalog.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -139,7 +141,9 @@ class MoreScreen extends ConsumerWidget {
             icon: Icons.healing_outlined,
             accent: AppColors.goldSoft,
             title: 'ruqyah.audio_title'.tr(),
-            subtitle: 'ruqyah.audio_intro'.tr(),
+            subtitle: trn('ruqyah.audio_intro', args: [
+              pluralN('ruqyah.recordings_count', ruqyahRecordings.length)
+            ]),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const RuqyahAudioScreen(),

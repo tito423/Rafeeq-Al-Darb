@@ -224,7 +224,7 @@ class _LessonTile extends ConsumerWidget {
               : scheme.surfaceContainerHighest,
           child: done
               ? const Icon(Icons.check, size: 17, color: Colors.black)
-              : Text('${index + 1}',
+              : Text(localizeDigits('${index + 1}', uiLanguageCode),
                   style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,

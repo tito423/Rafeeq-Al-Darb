@@ -952,7 +952,7 @@
     "group_duas_note": "From Imam an-Nawawi's al-Adhkar, each supplication with its reference exactly as the source gives it.",
     "play_group": "Play this group",
     "audio_title": "Listen to the Ruqyah",
-    "audio_intro": "Five complete recorded ruqyahs. Tap to listen now, or download one to work offline.",
+    "audio_intro": "{}. Tap to listen now, or download one to work offline.",
     "listen_recordings": "Listen to recorded ruqyahs",
     "minutes": "{n} min",
     "reciter_unnamed": "Reciter not named in the source",
@@ -962,7 +962,15 @@
     "pause": "Pause",
     "stop": "Stop",
     "back_10": "Back 10 seconds",
-    "forward_10": "Forward 10 seconds"
+    "forward_10": "Forward 10 seconds",
+    "recordings_count": {
+      "zero": "{} complete recorded ruqyahs",
+      "one": "{} complete recorded ruqyah",
+      "two": "{} complete recorded ruqyahs",
+      "few": "{} complete recorded ruqyahs",
+      "many": "{} complete recorded ruqyahs",
+      "other": "{} complete recorded ruqyahs"
+    }
   },
   "more": {
     "section_more": "More",

@@ -2,6 +2,7 @@
 library;
 
 import 'dart:async';
+import '../../../../../core/utils/digits.dart';
 
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (rtl/ltr) used throughout this file.
@@ -105,7 +106,7 @@ class _GrammarCard extends StatelessWidget {
                   border: Border.all(color: gold.withValues(alpha: 0.4)),
                 ),
                 child: Text(
-                  '${item.position}',
+                  localizeDigits('${item.position}', uiLanguageCode),
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: gold,
                     fontWeight: FontWeight.w700,

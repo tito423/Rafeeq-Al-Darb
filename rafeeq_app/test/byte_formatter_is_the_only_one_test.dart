@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/core/utils/byte_formatter.dart';
+import 'package:rafeeq_app/core/utils/digits.dart';
 
 /// CLAUDE.md trap #16, pinned.
 ///
@@ -53,7 +54,33 @@ void main() {
     // 1,048,576 bytes is «1.0 MB» binary and «1.0 MB» decimal only by
     // coincidence of rounding; 1,500,000 separates them, and the Downloads
     // screen must keep agreeing with Android's own storage figures.
+    //
+    // Asserted in ENGLISH, because what this test is about is the NUMBER -
+    // 1.5 against 1.4 - and not which digits draw it. The Arabic shaping is
+    // pinned separately below.
+    uiLanguageCode = 'en';
     expect(formatBytes(1500000), contains('1.5 MB'));
     expect(formatBytesBinary(1500000), contains('1.4 MB'));
+  });
+
+  test('a size is written in the reader own numerals', () {
+    // The Downloads screen read «0 B» under «المساحة المستخدمة», and a
+    // library card printed a Latin size directly beneath «توفي ٧٧٤ هـ» -
+    // two numbering systems, one card. Seen on emulator-5554.
+    uiLanguageCode = 'ar';
+    expect(formatBytes(1500000), contains('١.٥ MB'));
+    expect(formatBytes(512), contains('٥١٢ B'));
+
+    // The UNIT stays Latin, and the isolate that trap #16 is about survives.
+    final s = formatBytes(1500000);
+    expect(s, contains('MB'));
+    expect(s.codeUnitAt(0), 0x2066);
+    expect(s.codeUnitAt(s.length - 1), 0x2069);
+
+    // A language that writes Latin digits is untouched.
+    uiLanguageCode = 'ru';
+    expect(formatBytes(1500000), contains('1.5 MB'));
+
+    uiLanguageCode = 'ar';
   });
 }

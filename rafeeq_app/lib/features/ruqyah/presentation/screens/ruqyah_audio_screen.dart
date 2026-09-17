@@ -128,7 +128,10 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'ruqyah.audio_intro'.tr(),
+                        trn('ruqyah.audio_intro', args: [
+                          pluralN('ruqyah.recordings_count',
+                              ruqyahRecordings.length)
+                        ]),
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 13,
