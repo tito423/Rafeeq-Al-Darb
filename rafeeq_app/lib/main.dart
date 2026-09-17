@@ -96,7 +96,15 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   StartupTrace.step('EasyLocalization.ensureInitialized');
   try {
-    await initializeDateFormatting('ar');
+    // EVERY language the app speaks, not just Arabic.
+    //
+    // It loaded 'ar' alone, and `formatTime12h` asked `intl` for a locale it
+    // had never been given — so the clock fell back to en_US and wrote AM/PM
+    // in all seven. The owner caught it on his phone: «المغرب، ٦:٢١ PM».
+    // Loading a locale's symbols is cheap; asking for unloaded ones throws.
+    for (final l in kSupportedLocales) {
+      await initializeDateFormatting(l.languageCode);
+    }
     tz.initializeTimeZones();
     final name = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(name));

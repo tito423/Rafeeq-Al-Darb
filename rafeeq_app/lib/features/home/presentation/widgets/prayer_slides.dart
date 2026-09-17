@@ -181,7 +181,8 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
                   widget.times;
           return CardScreen(
             title: prayerSlideLabelKeys[key]!.tr(),
-            subtitle: formatTime12h(times.byName(key)),
+            subtitle: formatTime12h(
+                times.byName(key), context.locale.languageCode),
             icon: _prayerSlideIcons[key],
             accent: prayerSlideColors[key]!,
             child: PrayerSlideDetails(prayerKey: key),
@@ -221,7 +222,9 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
                       opacity: opacity,
                       child: _PrayerSlide(
                         label: prayerSlideLabelKeys[key]!.tr(),
-                        time: formatTime12h(widget.times.byName(key)),
+                        time: formatTime12h(
+                            widget.times.byName(key),
+                            context.locale.languageCode),
                         color: prayerSlideColors[key]!,
                         icon: _prayerSlideIcons[key]!,
                         isNext: widget.nextKey == key,

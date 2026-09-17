@@ -225,7 +225,8 @@ class PrayerStatusNotification {
   String _eventLine(String key, DateTime at, String localeCode) {
     final hh = at.hour.toString().padLeft(2, '0');
     final mm = at.minute.toString().padLeft(2, '0');
-    final clock = localizeDigits(formatTime12h('$hh:$mm'), localeCode);
+    final clock =
+        localizeDigits(formatTime12h('$hh:$mm', localeCode), localeCode);
     return 'notif.prayer_event'
         .tr(namedArgs: {'prayer': 'prayer.$key'.tr(), 'time': clock});
   }
