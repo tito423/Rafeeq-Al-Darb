@@ -1,0 +1,2924 @@
+[
+ {
+  "id": "bulugh_al_maram",
+  "editor_lines": [
+   "تحقيق وتخريج وتعليق: سمير بن أمين الزهري"
+  ],
+  "editor_year": null,
+  "paras": 3569,
+  "app_paras": 0,
+  "chars": 732378,
+  "app_chars": 0,
+  "samples": [],
+  "title": "بلوغ المرام من أدلة الأحكام",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_adab_al_mufrad",
+  "editor_lines": [
+   "المحقق: محمد فؤاد عبد الباقي [ت ١٣٨٨ هـ]"
+  ],
+  "editor_year": 1388,
+  "paras": 3414,
+  "app_paras": 0,
+  "chars": 662548,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأدب المفرد",
+  "verdict": "EDITOR_LONG_DEAD"
+ },
+ {
+  "id": "al_shamail_al_muhammadiyyah",
+  "editor_lines": [
+   "إخراج وتعليق: محمد أحمد حلاق"
+  ],
+  "editor_year": null,
+  "paras": 1875,
+  "app_paras": 0,
+  "chars": 331145,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الشمائل المحمدية",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "mishkat_al_masabih",
+  "editor_lines": [
+   "المحقق: محمد ناصر الدين الألباني"
+  ],
+  "editor_year": null,
+  "paras": 15399,
+  "app_paras": 0,
+  "chars": 2463584,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مشكاة المصابيح",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_targhib_wal_tarhib",
+  "editor_lines": [
+   "المحقق: إبراهيم شمس الدين"
+  ],
+  "editor_year": null,
+  "paras": 17122,
+  "app_paras": 0,
+  "chars": 2603897,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الترغيب والترهيب من الحديث الشريف",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "umdat_al_ahkam",
+  "editor_lines": [
+   "المحقق: عبد المحسن بن محمد القاسم"
+  ],
+  "editor_year": null,
+  "paras": 1921,
+  "app_paras": 0,
+  "chars": 493309,
+  "app_chars": 0,
+  "samples": [],
+  "title": "العمدة في الأحكام",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "riyad_as_salihin",
+  "editor_lines": [
+   "المحقق: شعيب الأرنؤوط [ت ١٤٣٨ هـ]"
+  ],
+  "editor_year": 1438,
+  "paras": 3575,
+  "app_paras": 0,
+  "chars": 914933,
+  "app_chars": 0,
+  "samples": [],
+  "title": "رياض الصالحين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "mukhtasar_minhaj_al_qasidin",
+  "editor_lines": [
+   "قدم له: الأستاذ محمد أحمد دهمان"
+  ],
+  "editor_year": null,
+  "paras": 3636,
+  "app_paras": 0,
+  "chars": 606160,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مُخْتََصَرُ مِنْهَاجِ القَاصِدِينْ",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_fawaid",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 725,
+  "app_paras": 0,
+  "chars": 378778,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الفوائد",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "sayd_al_khatir",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 6063,
+  "app_paras": 0,
+  "chars": 764515,
+  "app_chars": 0,
+  "samples": [],
+  "title": "صيد الخاطر",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "nawadir_al_usul",
+  "editor_lines": [
+   "المحقق: عبد الرحمن عميرة"
+  ],
+  "editor_year": null,
+  "paras": 5200,
+  "app_paras": 0,
+  "chars": 1403515,
+  "app_chars": 0,
+  "samples": [],
+  "title": "نوادر الأصول في أحاديث الرسول صلى الله عليه وسلم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_samt_wa_adab_al_lisan",
+  "editor_lines": [
+   "حققه وخرج أحاديثه: أبو إسحاق الحويني الأثري"
+  ],
+  "editor_year": null,
+  "paras": 850,
+  "app_paras": 0,
+  "chars": 282323,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الصمت وآداب اللسان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "qasr_al_amal",
+  "editor_lines": [
+   "المحقق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 550,
+  "app_paras": 0,
+  "chars": 175880,
+  "app_chars": 0,
+  "samples": [],
+  "title": "قصر الأمل",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "adab_al_nafs",
+  "editor_lines": [
+   "تحقيق وتعليق: الدكتور أحمد عبد الرحيم السَّايح"
+  ],
+  "editor_year": null,
+  "paras": 215,
+  "app_paras": 0,
+  "chars": 77895,
+  "app_chars": 0,
+  "samples": [],
+  "title": "أدب النفس",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "islah_al_mal",
+  "editor_lines": [
+   "المحقق: محمد عبد القادر عطا"
+  ],
+  "editor_year": null,
+  "paras": 668,
+  "app_paras": 0,
+  "chars": 193276,
+  "app_chars": 0,
+  "samples": [],
+  "title": "إصلاح المال",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "istina_al_maruf",
+  "editor_lines": [
+   "المحقق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 352,
+  "app_paras": 0,
+  "chars": 87307,
+  "app_chars": 0,
+  "samples": [],
+  "title": "اصطناع المعروف",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_amr_bil_maruf_ibn_abi_al_dunya",
+  "editor_lines": [
+   "تحقيق: صلاح بن عايض الشلاحي"
+  ],
+  "editor_year": null,
+  "paras": 126,
+  "app_paras": 0,
+  "chars": 72332,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأمر بالمعروف والنهي عن المنكر",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "ighathat_al_lahfan_fi_hukm_talaq_al_ghadban",
+  "editor_lines": [
+   "حققه وخرج أحاديثه: عمر سليمان الحفيان"
+  ],
+  "editor_year": null,
+  "paras": 543,
+  "app_paras": 0,
+  "chars": 104450,
+  "app_chars": 0,
+  "samples": [],
+  "title": "إغاثة اللهفان في حكم طلاق الغضبان - ت الحفيان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_amthal_fil_quran_ibn_al_qayyim",
+  "editor_lines": [
+   "المحقق: أبو حذيفة إبراهيم بن محمد"
+  ],
+  "editor_year": null,
+  "paras": 266,
+  "app_paras": 0,
+  "chars": 65621,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأمثال في القرآن [من «اعلام الموقعين»]",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_ahwal",
+  "editor_lines": [
+   "المحقق: مجدي فتحي السيد [ت ١٤٤٨ هـ]"
+  ],
+  "editor_year": 1448,
+  "paras": 289,
+  "app_paras": 0,
+  "chars": 145797,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأهوال.",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_awliya_ibn_abi_al_dunya",
+  "editor_lines": [
+   "المحقق: محمد السعيد بن بسيوني زغلول"
+  ],
+  "editor_year": null,
+  "paras": 158,
+  "app_paras": 0,
+  "chars": 99124,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأولياء",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_ikhlas_wal_niyyah",
+  "editor_lines": [
+   "حققه وعلق عليه: إياد خالد الطباع"
+  ],
+  "editor_year": null,
+  "paras": 54,
+  "app_paras": 0,
+  "chars": 18656,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الإخلاص والنية",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_tibyan_fi_aqsam_al_quran",
+  "editor_lines": [
+   "المحقق: محمد حامد الفقي [ت ١٣٧٨ هـ]"
+  ],
+  "editor_year": 1378,
+  "paras": 1459,
+  "app_paras": 0,
+  "chars": 427438,
+  "app_chars": 0,
+  "samples": [],
+  "title": "التبيان في أقسام القرآن",
+  "verdict": "EDITOR_LONG_DEAD"
+ },
+ {
+  "id": "al_ikhwan",
+  "editor_lines": [
+   "المحقق: مصطفى عبد القادر عطا"
+  ],
+  "editor_year": null,
+  "paras": 295,
+  "app_paras": 0,
+  "chars": 83302,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الإخوان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_jami_fi_amthal_al_quran",
+  "editor_lines": [
+   "جمعه ورتبه ووثق نصوصه وحققه: أبو أويس الكردي",
+   "راجعه وقدم له: الشيخ مصطفى العدوي"
+  ],
+  "editor_year": null,
+  "paras": 1253,
+  "app_paras": 0,
+  "chars": 282211,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الجامع في أمثال القرآن، للعلامة ابن القيم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_daa_wal_dawa",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 2512,
+  "app_paras": 0,
+  "chars": 637115,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الجواب الكافي لمن سأل عن الدواء الشافي أو الداء والدواء",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_risalah_al_tabukiyyah",
+  "editor_lines": [
+   "المحقق: محمد عزير شمس",
+   "راجعه: سليمان بن عبد الله العمير - جديع بن جديع الجديع"
+  ],
+  "editor_year": null,
+  "paras": 584,
+  "app_paras": 0,
+  "chars": 92132,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الرسالة التبوكية (ضمن مجموع الرسائل)",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_ishraf_fi_manazil_al_ashraf",
+  "editor_lines": [
+   "المحقق: د نجم عبد الرحمن خلف"
+  ],
+  "editor_year": null,
+  "paras": 1206,
+  "app_paras": 0,
+  "chars": 257718,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الإشراف في منازل الأشراف",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_itibar_wa_aqab_al_surur",
+  "editor_lines": [
+   "المحقق: د. نجم عبد الرحمن خلف"
+  ],
+  "editor_year": null,
+  "paras": 188,
+  "app_paras": 0,
+  "chars": 71119,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الاعتبار وأعقاب السرور والأحزان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_tawadu_wal_khumul",
+  "editor_lines": [
+   "المحقق: محمد عبد القادر أحمد عطا"
+  ],
+  "editor_year": null,
+  "paras": 269,
+  "app_paras": 0,
+  "chars": 97342,
+  "app_chars": 0,
+  "samples": [],
+  "title": "التواضع والخمول",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_ruh_ibn_al_qayyim",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1763,
+  "app_paras": 0,
+  "chars": 620210,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الروح في الكلام على أرواح الأموات والأحياء بالدلائل من الكتاب والسنة",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_tawbah_ibn_abi_al_dunya",
+  "editor_lines": [
+   "تحقيق وتعليق: مجدي السيد إبراهيم [ت ١٤٤٨ هـ]"
+  ],
+  "editor_year": 1448,
+  "paras": 455,
+  "app_paras": 0,
+  "chars": 89523,
+  "app_chars": 0,
+  "samples": [],
+  "title": "كتاب التوبة.",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_tawakkul_ala_allah",
+  "editor_lines": [
+   "دراسة وتحقيق: مصطفى عبد القادر عطا"
+  ],
+  "editor_year": null,
+  "paras": 68,
+  "app_paras": 0,
+  "chars": 31384,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مجموعة رسائل بان أبي الدنيا كتاب التوكل على الله",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_tibb_al_nabawi",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 2431,
+  "app_paras": 0,
+  "chars": 708876,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الطب النبوي (جزء من كتاب زاد المعاد لابن القيم)",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_turuq_al_hukmiyyah",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 2250,
+  "app_paras": 0,
+  "chars": 743683,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الطرق الحكمية",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_ju",
+  "editor_lines": [
+   "تحقيق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 576,
+  "app_paras": 0,
+  "chars": 136359,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الجوع",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_hilm",
+  "editor_lines": [
+   "المحقق: محمد عبد القادر أحمد عطا"
+  ],
+  "editor_year": null,
+  "paras": 312,
+  "app_paras": 0,
+  "chars": 50312,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الحلم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_rida_an_allah_biqadaihi",
+  "editor_lines": [
+   "المحقق: ضياء الحسن السلفي"
+  ],
+  "editor_year": null,
+  "paras": 153,
+  "app_paras": 0,
+  "chars": 59257,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الرضا عن الله بقضائه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_furusiyyah_al_muhammadiyyah",
+  "editor_lines": [
+   "المحقق: زائد بن أحمد النشيري",
+   "راجعه: سليمان بن عبد الله العمير - علي بن محمد العمران"
+  ],
+  "editor_year": null,
+  "paras": 3566,
+  "app_paras": 0,
+  "chars": 458697,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الفروسية المحمدية",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_riqqah_wal_buka",
+  "editor_lines": [
+   "تحقيق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 480,
+  "app_paras": 0,
+  "chars": 202193,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الرقة والبكاء",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_kalam_ala_masalat_al_sama",
+  "editor_lines": [
+   "المحقق: محمد عزير شمس",
+   "راجعه: محمد أجمل الإصلاحي، عبد الرحمن بن حسن بن قائد"
+  ],
+  "editor_year": null,
+  "paras": 2524,
+  "app_paras": 0,
+  "chars": 496558,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الكلام على مسألة السماع",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_zuhd_ibn_abi_al_dunya",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1051,
+  "app_paras": 0,
+  "chars": 317081,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الزهد لابن أبي الدنيا",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_manar_al_munif",
+  "editor_lines": [
+   "المحقق: عبد الفتاح أبو غدة"
+  ],
+  "editor_year": null,
+  "paras": 622,
+  "app_paras": 0,
+  "chars": 121335,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المنار المنيف في الصحيح والضعيف",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_wabil_al_sayyib",
+  "editor_lines": [
+   "تحقيق: سيد إبراهيم"
+  ],
+  "editor_year": null,
+  "paras": 1472,
+  "app_paras": 0,
+  "chars": 234423,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الوابل الصيب من الكلم الطيب",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_shukr",
+  "editor_lines": [
+   "المحقق: بدر البدر"
+  ],
+  "editor_year": null,
+  "paras": 218,
+  "app_paras": 0,
+  "chars": 91087,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الشكر",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_sabr_wal_thawab_alayh",
+  "editor_lines": [
+   "تحقيق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 228,
+  "app_paras": 0,
+  "chars": 108820,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الصبر والثواب عليه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "tuhfat_al_mawdud_bi_ahkam_al_mawlud",
+  "editor_lines": [
+   "المحقق: عبد القادر الأرناؤوط [ت ١٤٢٥ هـ]"
+  ],
+  "editor_year": 1425,
+  "paras": 1081,
+  "app_paras": 0,
+  "chars": 331702,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تحفة المودود بأحكام المولود",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_uzlah_wal_infirad",
+  "editor_lines": [
+   "المحقق : مسعد عبد الحميد محمد السعدني"
+  ],
+  "editor_year": null,
+  "paras": 699,
+  "app_paras": 0,
+  "chars": 159924,
+  "app_chars": 0,
+  "samples": [],
+  "title": "العزلة والانفراد",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_aql_wa_fadluh",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 200,
+  "app_paras": 0,
+  "chars": 46590,
+  "app_chars": 0,
+  "samples": [],
+  "title": "العقل وفضله",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "jala_al_afham",
+  "editor_lines": [
+   "المحقق: شعيب الأرناؤوط [ت ١٤٣٨ هـ]- عبد القادر الأرناؤوط [ت ١٤٢٥ هـ]"
+  ],
+  "editor_year": 1438,
+  "paras": 2126,
+  "app_paras": 0,
+  "chars": 494697,
+  "app_chars": 0,
+  "samples": [],
+  "title": "جلاء الأفهام في فضل الصلاة على محمد خير الأنام",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_uqubat",
+  "editor_lines": [
+   "تحقيق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 435,
+  "app_paras": 0,
+  "chars": 235295,
+  "app_chars": 0,
+  "samples": [],
+  "title": "العقوبات",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_umr_wal_shayb",
+  "editor_lines": [
+   "المحقق: د. نجم عبد الله خلف"
+  ],
+  "editor_year": null,
+  "paras": 208,
+  "app_paras": 0,
+  "chars": 37713,
+  "app_chars": 0,
+  "samples": [],
+  "title": "العمر والشيب",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_faraj_bad_al_shiddah",
+  "editor_lines": [
+   "خرجه وعلق عليه: أبو حذيفة عبيد الله بن عالية"
+  ],
+  "editor_year": null,
+  "paras": 221,
+  "app_paras": 0,
+  "chars": 78791,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الفرج بعد الشدة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "hadi_al_arwah_ila_bilad_al_afrah",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1483,
+  "app_paras": 0,
+  "chars": 546803,
+  "app_chars": 0,
+  "samples": [],
+  "title": "حادي الأرواح إلى بلاد الأفراح",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "risalat_ibn_al_qayyim_ila_ahad_ikhwanih",
+  "editor_lines": [
+   "المحقق: عبد الله بن محمد المديفر",
+   "راجعه: سليمان بن عبد الله العمير - جديع بن جديع الجديع"
+  ],
+  "editor_year": null,
+  "paras": 425,
+  "app_paras": 0,
+  "chars": 74722,
+  "app_chars": 0,
+  "samples": [],
+  "title": "رسالة ابن القيم إلى أحد إخوانه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_qubur_ibn_abi_al_dunya",
+  "editor_lines": [
+   "المحقق: طارق محمد سكلوع العمود"
+  ],
+  "editor_year": null,
+  "paras": 639,
+  "app_paras": 0,
+  "chars": 87638,
+  "app_chars": 0,
+  "samples": [],
+  "title": "القبور لابن أبي الدنيا",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_qanaah_wal_taaffuf",
+  "editor_lines": [
+   "دراسة وتحقيق: مصطفى عبد القادر عطا"
+  ],
+  "editor_year": null,
+  "paras": 551,
+  "app_paras": 0,
+  "chars": 80283,
+  "app_chars": 0,
+  "samples": [],
+  "title": "القناعة والتعفف",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "raf_al_yadayn_fil_salah",
+  "editor_lines": [
+   "المحقق: علي بن محمد العمران",
+   "راجعه: سليمان بن عبد الله العمير - محمد أجمل الإصلاحي"
+  ],
+  "editor_year": null,
+  "paras": 1954,
+  "app_paras": 0,
+  "chars": 343438,
+  "app_chars": 0,
+  "samples": [],
+  "title": "رفع اليدين في الصلاة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_mutamannin",
+  "editor_lines": [
+   "المحقق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 203,
+  "app_paras": 0,
+  "chars": 67285,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المتمنين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_muhtadirin",
+  "editor_lines": [
+   "المحقق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 602,
+  "app_paras": 0,
+  "chars": 194725,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المحتضرين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "rawdat_al_muhibbin",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 2780,
+  "app_paras": 0,
+  "chars": 485235,
+  "app_chars": 0,
+  "samples": [],
+  "title": "روضة المحبين ونزهة المشتاقين",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_marad_wal_kaffarat",
+  "editor_lines": [
+   "المحقق: عبد الوكيل الندوي"
+  ],
+  "editor_year": null,
+  "paras": 283,
+  "app_paras": 0,
+  "chars": 124216,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المرض والكفارات",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "shifa_al_alil",
+  "editor_lines": [
+   "المحقق: -"
+  ],
+  "editor_year": null,
+  "paras": 650,
+  "app_paras": 0,
+  "chars": 905033,
+  "app_chars": 0,
+  "samples": [],
+  "title": "شفاء العليل في مسائل القضاء والقدر والحكمة والتعليل",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "sifat_al_munafiqin",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 34,
+  "app_paras": 0,
+  "chars": 20821,
+  "app_chars": 0,
+  "samples": [],
+  "title": "صفات المنافقين",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "sigh_al_hamd",
+  "editor_lines": [
+   "المحقق: محمد بن إبراهيم السعران"
+  ],
+  "editor_year": null,
+  "paras": 128,
+  "app_paras": 0,
+  "chars": 27835,
+  "app_chars": 0,
+  "samples": [],
+  "title": "جواب في صيغ الحمد",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_matar_wal_rad_wal_barq",
+  "editor_lines": [
+   "تحقيق وتخريج: طارق محمد سكلوع العمودي"
+  ],
+  "editor_year": null,
+  "paras": 246,
+  "app_paras": 0,
+  "chars": 80913,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المطر والرعد والبرق",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_manamat",
+  "editor_lines": [
+   "المحقق: عبد القادر أحمد عطا [ت ١٤٠٣ هـ]"
+  ],
+  "editor_year": 1403,
+  "paras": 565,
+  "app_paras": 0,
+  "chars": 205793,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المنامات",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "tariq_al_hijratayn",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 2403,
+  "app_paras": 0,
+  "chars": 807386,
+  "app_chars": 0,
+  "samples": [],
+  "title": "طريق الهجرتين وباب السعادتين",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "uddat_al_sabirin",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1276,
+  "app_paras": 0,
+  "chars": 396282,
+  "app_chars": 0,
+  "samples": [],
+  "title": "عدة الصابرين وذخيرة الشاكرين",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "faidah_jalilah_fi_qawaid_al_asma_al_husna",
+  "editor_lines": [
+   "المحقق: عبد الرزاق بن عبد المحسن البدر"
+  ],
+  "editor_year": null,
+  "paras": 228,
+  "app_paras": 0,
+  "chars": 34300,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فائدة جليلة في قواعد الأسماء الحسنى",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "fatya_fi_sighat_al_hamd",
+  "editor_lines": [
+   "تحقيق: عبد الله بن سالم البطاطي",
+   "راجعه: سليمان بن عبد الله العمير - جديع بن جديع الجديع"
+  ],
+  "editor_year": null,
+  "paras": 369,
+  "app_paras": 0,
+  "chars": 54434,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فتيا في صيغة الحمد «الحمد لله حمدا يوافي نعمه ويكافئ مزيده»",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_nafaqah_ala_al_iyal",
+  "editor_lines": [
+   "المحقق: د نجم عبد الرحمن خلف"
+  ],
+  "editor_year": null,
+  "paras": 903,
+  "app_paras": 0,
+  "chars": 279156,
+  "app_chars": 0,
+  "samples": [],
+  "title": "العيال ويقع في مجلدين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_hamm_wal_huzn",
+  "editor_lines": [
+   "المحقق: مجدي فتحي السيد [ت ١٤٤٨ هـ]"
+  ],
+  "editor_year": 1448,
+  "paras": 269,
+  "app_paras": 0,
+  "chars": 72887,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الهم والحزن",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "nuniyyat_ibn_al_qayyim",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 6032,
+  "app_paras": 0,
+  "chars": 315574,
+  "app_chars": 0,
+  "samples": [],
+  "title": "متن القصيدة النونية",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_hawatif",
+  "editor_lines": [
+   "المحقق: محمد الزغلي"
+  ],
+  "editor_year": null,
+  "paras": 513,
+  "app_paras": 0,
+  "chars": 158006,
+  "app_chars": 0,
+  "samples": [],
+  "title": "هواتف الجنان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_wajal_wal_tawthuq_bil_amal",
+  "editor_lines": [
+   "المحقق: مشهور حسن آل سلمان"
+  ],
+  "editor_year": null,
+  "paras": 53,
+  "app_paras": 0,
+  "chars": 40597,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الوجل والتوثق بالعمل",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_wara",
+  "editor_lines": [
+   "المحقق: أبي عبد الله محمد بن حمد الحمود"
+  ],
+  "editor_year": null,
+  "paras": 251,
+  "app_paras": 0,
+  "chars": 94875,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الورع",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_yaqin_ibn_abi_al_dunya",
+  "editor_lines": [
+   "حققه وعلق عليه: ياسين محمد السورس"
+  ],
+  "editor_year": null,
+  "paras": 47,
+  "app_paras": 0,
+  "chars": 22567,
+  "app_chars": 0,
+  "samples": [],
+  "title": "اليقين لابن أبي الدنيا",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "hidayat_al_hayara",
+  "editor_lines": [
+   "حققه: عثمان جمعة ضميرية",
+   "راجعه: محمد أجمل الإصلاحي - سعود بن عبد العزيز العريفي - عبد الله بن محمد القرني"
+  ],
+  "editor_year": null,
+  "paras": 2847,
+  "app_paras": 0,
+  "chars": 573815,
+  "app_chars": 0,
+  "samples": [],
+  "title": "هداية الحيارى في أجوبة اليهود والنصارى",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "husn_al_zann_billah",
+  "editor_lines": [
+   "المحقق: مخلص محمد"
+  ],
+  "editor_year": null,
+  "paras": 171,
+  "app_paras": 0,
+  "chars": 81523,
+  "app_chars": 0,
+  "samples": [],
+  "title": "حسن الظن بالله",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "hilm_muawiyah",
+  "editor_lines": [
+   "تحقيق: إبراهيم صالح [ت ١٤٤٣ هـ]"
+  ],
+  "editor_year": 1443,
+  "paras": 75,
+  "app_paras": 0,
+  "chars": 15898,
+  "app_chars": 0,
+  "samples": [],
+  "title": "حلم معاوية لابن أبي الدنيا",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "dhamm_al_baghy",
+  "editor_lines": [
+   "قدم له وحققه وعلق عليه: الدكتور نجم عبد الرحمن خلف الأستاذ المساعد بالجامعة الإسلامية بالمدينة المنورة"
+  ],
+  "editor_year": null,
+  "paras": 103,
+  "app_paras": 0,
+  "chars": 29920,
+  "app_chars": 0,
+  "samples": [],
+  "title": "ذم البغى لابن أبي الدنيا",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "akhbar_al_humqa_wal_mughaffalin",
+  "editor_lines": [
+   "شرحه: عبد الأمير مهنا"
+  ],
+  "editor_year": null,
+  "paras": 1552,
+  "app_paras": 0,
+  "chars": 189073,
+  "app_chars": 0,
+  "samples": [],
+  "title": "أخبار الحمقى والمغفلين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "akhbar_al_zuraf_wal_mutamajinin",
+  "editor_lines": [
+   "المحقق: بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]"
+  ],
+  "editor_year": 1438,
+  "paras": 614,
+  "app_paras": 0,
+  "chars": 99838,
+  "app_chars": 0,
+  "samples": [],
+  "title": "أخبار الظراف والمتماجنين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "akhbar_al_nisa_ibn_al_jawzi",
+  "editor_lines": [
+   "شرح وتحقيق: الدكتور نزار رضا"
+  ],
+  "editor_year": null,
+  "paras": 1676,
+  "app_paras": 0,
+  "chars": 231369,
+  "app_chars": 0,
+  "samples": [],
+  "title": "أخبار النساء",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "dhamm_al_dunya",
+  "editor_lines": [
+   "دراسة وتحقيق: محمد عبد القادر أحمد عطا"
+  ],
+  "editor_year": null,
+  "paras": 1077,
+  "app_paras": 0,
+  "chars": 151257,
+  "app_chars": 0,
+  "samples": [],
+  "title": "ذم الدنيا",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "amar_al_ayan",
+  "editor_lines": [
+   "المحقق: د محمود محمد الطناحي"
+  ],
+  "editor_year": null,
+  "paras": 1117,
+  "app_paras": 0,
+  "chars": 249281,
+  "app_chars": 0,
+  "samples": [],
+  "title": "أعمار الأعيان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "ikhbar_ahl_al_rusukh_fil_fiqh",
+  "editor_lines": [
+   "قدم له: الشيخ محمد الغزالي",
+   "تحقيق: أبي عبد الرحمن محمود الجزائري"
+  ],
+  "editor_year": null,
+  "paras": 143,
+  "app_paras": 0,
+  "chars": 16781,
+  "app_chars": 0,
+  "samples": [],
+  "title": "إخبار أهل الرسوخ في الفقه والتحديث بمقدار المنسوخ من الحديث",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "dhamm_al_ghibah_wal_namimah",
+  "editor_lines": [
+   "حققه وخرج أحاديثه وعلق عليه: بشير محمد عيون [ت ١٤٣١ هـ]"
+  ],
+  "editor_year": 1431,
+  "paras": 173,
+  "app_paras": 0,
+  "chars": 67569,
+  "app_chars": 0,
+  "samples": [],
+  "title": "ذم الغيبة والنميمة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "dhamm_al_muskir",
+  "editor_lines": [
+   "المحقق: د. نجم عبد الرحمن خلف"
+  ],
+  "editor_year": null,
+  "paras": 299,
+  "app_paras": 0,
+  "chars": 38861,
+  "app_chars": 0,
+  "samples": [],
+  "title": "كتاب ذم المسكر",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "dhamm_al_malahi",
+  "editor_lines": [
+   "تحقيق ودراسة: عمرو عبد المنعم سليم"
+  ],
+  "editor_year": null,
+  "paras": 186,
+  "app_paras": 0,
+  "chars": 91100,
+  "app_chars": 0,
+  "samples": [],
+  "title": "ذم الملاهي لابن أبي الدنيا",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "ilam_al_alim_bi_naskh_al_hadith",
+  "editor_lines": [
+   "تحقيق: أحمد بن عبد الله العماري الزهراني"
+  ],
+  "editor_year": null,
+  "paras": 1259,
+  "app_paras": 0,
+  "chars": 207744,
+  "app_chars": 0,
+  "samples": [],
+  "title": "إعلام العالم بعد رسوخه بناسخ الحديث ومنسوخه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "sifat_al_jannah_ibn_abi_al_dunya",
+  "editor_lines": [
+   "المحقق: عبد الرحيم أحمد عبد الرحيم العساسلة",
+   "راجعه: الدكتور نجم عبد الرحمن خلف"
+  ],
+  "editor_year": null,
+  "paras": 446,
+  "app_paras": 0,
+  "chars": 177757,
+  "app_chars": 0,
+  "samples": [],
+  "title": "صفة الجنة وما أعد الله لأهلها من النعيم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_adhkiya",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 901,
+  "app_paras": 0,
+  "chars": 416951,
+  "app_chars": 0,
+  "samples": [],
+  "title": "كتاب الأذكياء",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "sifat_al_nar",
+  "editor_lines": [
+   "المحقق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 282,
+  "app_paras": 0,
+  "chars": 126853,
+  "app_chars": 0,
+  "samples": [],
+  "title": "صفة النار",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "fadail_ramadan_ibn_abi_al_dunya",
+  "editor_lines": [
+   "حققه وخرج أحاديثه: عبد الله بن حمد المنصور"
+  ],
+  "editor_year": null,
+  "paras": 66,
+  "app_paras": 0,
+  "chars": 32959,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فضائل رمضان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_birr_wal_silah_ibn_al_jawzi",
+  "editor_lines": [
+   "تحقيق وتعليق وتقديم: عادل عبد الموجود، علي معوض"
+  ],
+  "editor_year": null,
+  "paras": 1011,
+  "app_paras": 0,
+  "chars": 353464,
+  "app_chars": 0,
+  "samples": [],
+  "title": "البر والصلة لابن الجوزي",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "qira_al_dayf",
+  "editor_lines": [
+   "حققه وأخرج أحاديثه: عبد الله بن حمد المنصور"
+  ],
+  "editor_year": null,
+  "paras": 133,
+  "app_paras": 0,
+  "chars": 45046,
+  "app_chars": 0,
+  "samples": [],
+  "title": "قرى الضيف",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "qada_al_hawaij",
+  "editor_lines": [
+   "المحقق: مجدي السيد إبراهيم [ت ١٤٤٨ هـ]"
+  ],
+  "editor_year": 1448,
+  "paras": 240,
+  "app_paras": 0,
+  "chars": 69805,
+  "app_chars": 0,
+  "samples": [],
+  "title": "قضاء الحوائج",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "kalam_al_layali_wal_ayyam",
+  "editor_lines": [
+   "تحقيق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 136,
+  "app_paras": 0,
+  "chars": 31252,
+  "app_chars": 0,
+  "samples": [],
+  "title": "كلام الليالي والأيام",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_tadhkirah_fil_waz",
+  "editor_lines": [
+   "المحقق: أحمد عبد الوهاب فتيح"
+  ],
+  "editor_year": null,
+  "paras": 337,
+  "app_paras": 0,
+  "chars": 221438,
+  "app_chars": 0,
+  "samples": [],
+  "title": "التذكرة في الوعظ",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "mujabu_al_dawah",
+  "editor_lines": [
+   "دراسة وتحقيق: المهندس الشيخ زياد حمدان"
+  ],
+  "editor_year": null,
+  "paras": 243,
+  "app_paras": 0,
+  "chars": 103035,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مجابو الدعوة (مطبوع ضمن مجموعة رسائل ابن أبي الدنيا)",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_thabat_ind_al_mamat",
+  "editor_lines": [
+   "المحقق: عبد الله الليثي الأنصاري"
+  ],
+  "editor_year": null,
+  "paras": 740,
+  "app_paras": 0,
+  "chars": 169452,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الثبات عند الممات",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_hathth_ala_hifz_al_ilm",
+  "editor_lines": [
+   "حققه وعلق عليه: المستشار الدكتور فؤاد عبد المنعم"
+  ],
+  "editor_year": null,
+  "paras": 413,
+  "app_paras": 0,
+  "chars": 71640,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الحث على حفظ العلم وذكر كبار الحفاظ",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "muhasabat_al_nafs",
+  "editor_lines": [
+   "تحقيق: المسعتصم بالله أبي هريرة مصطفى بن علي بن عوض"
+  ],
+  "editor_year": null,
+  "paras": 213,
+  "app_paras": 0,
+  "chars": 78177,
+  "app_chars": 0,
+  "samples": [],
+  "title": "محاسبة النفس لابن أبي الدنيا",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "mudarat_al_nas",
+  "editor_lines": [
+   "المحقق: محمد خير رمضان يوسف"
+  ],
+  "editor_year": null,
+  "paras": 201,
+  "app_paras": 0,
+  "chars": 72789,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مداراة الناس",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_qussas_wal_mudhakkirin",
+  "editor_lines": [
+   "المحقق: د. محمد لطفي الصباغ"
+  ],
+  "editor_year": null,
+  "paras": 744,
+  "app_paras": 0,
+  "chars": 215870,
+  "app_chars": 0,
+  "samples": [],
+  "title": "القصاص والمذكرين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "maqtal_ali",
+  "editor_lines": [
+   "المحقق: إبراهيم صالح [ت ١٤٤٣ هـ]"
+  ],
+  "editor_year": 1443,
+  "paras": 226,
+  "app_paras": 0,
+  "chars": 57310,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مقتل أمير المؤمنين علي بن أبي طالب عليه السلام",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_mujtaba_min_al_mujtana",
+  "editor_lines": [
+   "المحقق: أيمن عبد الجابر البحيري"
+  ],
+  "editor_year": null,
+  "paras": 1192,
+  "app_paras": 0,
+  "chars": 130295,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المجتبى من المجتنى",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "makaid_al_shaytan",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 352,
+  "app_paras": 0,
+  "chars": 52610,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مكائد الشيطان",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "makarim_al_akhlaq_ibn_abi_al_dunya",
+  "editor_lines": [
+   "المحقق: مجدي السيد إبراهيم [ت ١٤٤٨ هـ]"
+  ],
+  "editor_year": 1448,
+  "paras": 861,
+  "app_paras": 0,
+  "chars": 260924,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مكارم الأخلاق",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "man_asha_bad_al_mawt",
+  "editor_lines": [
+   "المحقق: محمد حسام بيضون"
+  ],
+  "editor_year": null,
+  "paras": 77,
+  "app_paras": 0,
+  "chars": 69669,
+  "app_chars": 0,
+  "samples": [],
+  "title": "كتاب من عاش بعد الموت",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "riyadat_al_nafs",
+  "editor_lines": [
+   "قدم له وعلق عليه: إبراهيم شمس الدين"
+  ],
+  "editor_year": null,
+  "paras": 120,
+  "app_paras": 0,
+  "chars": 57125,
+  "app_chars": 0,
+  "samples": [],
+  "title": "رياضة النفس",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_mudhish",
+  "editor_lines": [
+   "المحقق: الدكتور مروان قباني"
+  ],
+  "editor_year": null,
+  "paras": 5360,
+  "app_paras": 0,
+  "chars": 621003,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المدهش",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_musaffa_bi_akuff_ahl_al_rusukh",
+  "editor_lines": [
+   "المحقق: حاتم صالح الضامن [ت ١٤٣٤ هـ]"
+  ],
+  "editor_year": 1434,
+  "paras": 279,
+  "app_paras": 0,
+  "chars": 53919,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المصفى بأكف أهل الرسوخ من علم الناسخ والمنسوخ",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_manahi",
+  "editor_lines": [
+   "المحقق: محمد عثمان الخشت"
+  ],
+  "editor_year": null,
+  "paras": 1047,
+  "app_paras": 0,
+  "chars": 167959,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المنهيات",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_muqliq_ibn_al_jawzi",
+  "editor_lines": [
+   "المحقق: مجدي فتحي السيد [ت ١٤٤٨ هـ]"
+  ],
+  "editor_year": 1448,
+  "paras": 205,
+  "app_paras": 0,
+  "chars": 53816,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المقلق",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "bahr_al_dumu",
+  "editor_lines": [
+   "المحقق: جمال محمود مصطفى"
+  ],
+  "editor_year": null,
+  "paras": 1392,
+  "app_paras": 0,
+  "chars": 170418,
+  "app_chars": 0,
+  "samples": [],
+  "title": "بحر الدموع",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_amthal_min_al_kitab_wal_sunnah",
+  "editor_lines": [
+   "المحقق: د. السيد الجميلي"
+  ],
+  "editor_year": null,
+  "paras": 1361,
+  "app_paras": 0,
+  "chars": 311500,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأمثال من الكتاب والسنة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "bustan_al_waizin",
+  "editor_lines": [
+   "المحقق: أيمن البحيري"
+  ],
+  "editor_year": null,
+  "paras": 3605,
+  "app_paras": 0,
+  "chars": 560915,
+  "app_chars": 0,
+  "samples": [],
+  "title": "بستان الواعظين ورياض السامعين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "tarikh_bayt_al_maqdis",
+  "editor_lines": [
+   "المحقق: محمد زينهم محمد عزب"
+  ],
+  "editor_year": null,
+  "paras": 140,
+  "app_paras": 0,
+  "chars": 31925,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تاريخ بيت المقدس",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "tadhkirat_al_arib_fi_tafsir_al_gharib",
+  "editor_lines": [
+   "تحقيق: طارق فتحي السيد"
+  ],
+  "editor_year": null,
+  "paras": 5159,
+  "app_paras": 0,
+  "chars": 262518,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تذكرة الأريب في تفسير الغريب (غريب القرآن الكريم)",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "tazim_al_fatya",
+  "editor_lines": [
+   "المحقق: أبو عبيدة مشهور بن حسن آل سلمان"
+  ],
+  "editor_year": null,
+  "paras": 113,
+  "app_paras": 0,
+  "chars": 24563,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تعظيم الفتيا",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "taqwim_al_lisan",
+  "editor_lines": [
+   "المحقق: د. عبد العزيز مطر (أستاذ علم اللغة بجامعتي عين شمس وقطر)"
+  ],
+  "editor_year": null,
+  "paras": 1440,
+  "app_paras": 0,
+  "chars": 72635,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تقويم اللسان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "talbis_iblis",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1492,
+  "app_paras": 0,
+  "chars": 657272,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تلبيس إبليس",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "talqih_fuhum_ahl_al_athar",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 3497,
+  "app_paras": 0,
+  "chars": 1022244,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تلقيح فهوم أهل الأثر في عيون التاريخ والسير",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "tanbih_al_naim_al_ghamr",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 168,
+  "app_paras": 0,
+  "chars": 13591,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تنبيه النائم الغمر على مواسم العمر",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "tanwir_al_ghabash",
+  "editor_lines": [
+   "المحقق: مرزوق علي إبراهيم"
+  ],
+  "editor_year": null,
+  "paras": 993,
+  "app_paras": 0,
+  "chars": 208422,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تنوير الغبش في فضل السودان والحبش",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "hifz_al_umr",
+  "editor_lines": [
+   "المحقق: محمد بن ناصر العجمي"
+  ],
+  "editor_year": null,
+  "paras": 210,
+  "app_paras": 0,
+  "chars": 44220,
+  "app_chars": 0,
+  "samples": [],
+  "title": "حفظ العمر",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "fadail_bayt_al_maqdis",
+  "editor_lines": [
+   "تحقيق وتخريج: أبي المنذر الحويني عمرو بن عبد العظيم بن نيازي شريف"
+  ],
+  "editor_year": null,
+  "paras": 678,
+  "app_paras": 0,
+  "chars": 117199,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فضائل بيت المقدس",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "funun_al_afnan_fi_uyun_ulum_al_quran",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 3347,
+  "app_paras": 0,
+  "chars": 145940,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فنون الأفنان في عيون علوم القرآن",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "muthir_al_gharam_al_sakin",
+  "editor_lines": [
+   "قدم له وحققه وفهرسه: د/ مصطفى محمد حسين الذهبي"
+  ],
+  "editor_year": null,
+  "paras": 3857,
+  "app_paras": 0,
+  "chars": 658710,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مثير الغرام الساكن إلى أشرف الأماكن لابن الجوزي",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "mashyakhat_ibn_al_jawzi",
+  "editor_lines": [
+   "تقديم وتحقيق: محمد محفوظ [ت ١٤٠٨ هـ]"
+  ],
+  "editor_year": 1408,
+  "paras": 754,
+  "app_paras": 0,
+  "chars": 144226,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مشيخة ابن الجوزي",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "mawaiz_ibn_al_jawzi_al_yaqutah",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 365,
+  "app_paras": 0,
+  "chars": 50930,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الياقوتة - مواعظ ابن الجوزي",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "nawasikh_al_quran",
+  "editor_lines": [
+   "المحقق: أبو عبد الله العاملي السّلفي الداني بن منير آل زهوي"
+  ],
+  "editor_year": null,
+  "paras": 2351,
+  "app_paras": 0,
+  "chars": 356942,
+  "app_chars": 0,
+  "samples": [],
+  "title": "نواسخ القرآن = ناسخ القرآن ومنسوخه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "adab_al_fatwa_wal_mufti",
+  "editor_lines": [
+   "المحقق: بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]"
+  ],
+  "editor_year": 1438,
+  "paras": 308,
+  "app_paras": 0,
+  "chars": 55008,
+  "app_chars": 0,
+  "samples": [],
+  "title": "آداب الفتوى والمفتي والمستفتي",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_usul_wal_dawabit",
+  "editor_lines": [
+   "حققه وعلق عليه: د. محمد حسن هيتو [ت ١٤٤٧ هـ]"
+  ],
+  "editor_year": 1447,
+  "paras": 150,
+  "app_paras": 0,
+  "chars": 10613,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأصول والضوابط",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_idah_fi_manasik_al_hajj_wal_umrah",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1454,
+  "app_paras": 0,
+  "chars": 525151,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الإيضاح في مناسك الحج والعمرة",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "bustan_al_arifin",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 215,
+  "app_paras": 0,
+  "chars": 90661,
+  "app_chars": 0,
+  "samples": [],
+  "title": "بستان العارفين",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "tahrir_alfaz_al_tanbih",
+  "editor_lines": [
+   "المحقق: عبد الغني الدقر"
+  ],
+  "editor_year": null,
+  "paras": 1802,
+  "app_paras": 0,
+  "chars": 288308,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تحرير ألفاظ التنبيه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat",
+  "editor_lines": [
+   "المحقق: أحمد بن على الدمياطي"
+  ],
+  "editor_year": null,
+  "paras": 525,
+  "app_paras": 0,
+  "chars": 89555,
+  "app_chars": 0,
+  "samples": [],
+  "title": "جزء فيه ذكر اعتقاد السلف في الحروف والأصوات",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "daqaiq_al_minhaj",
+  "editor_lines": [
+   "المحقق: إياد أحمد الغوج"
+  ],
+  "editor_year": null,
+  "paras": 334,
+  "app_paras": 0,
+  "chars": 45601,
+  "app_chars": 0,
+  "samples": [],
+  "title": "دقائق المنهاج",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "fatawa_al_nawawi",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1512,
+  "app_paras": 0,
+  "chars": 257636,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: \"بالمَسَائِل المنْثورَةِ\"",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "minhaj_al_talibin",
+  "editor_lines": [
+   "المحقق: عوض قاسم أحمد عوض"
+  ],
+  "editor_year": null,
+  "paras": 1255,
+  "app_paras": 0,
+  "chars": 391026,
+  "app_chars": 0,
+  "samples": [],
+  "title": "منهاج الطالبين وعمدة المفتين في الفقه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "seerat_ibn_hisham",
+  "editor_lines": [
+   "قدم لها وعلق عليها وضبَطها: طه عبد الرؤوف سعد"
+  ],
+  "editor_year": null,
+  "paras": 5350,
+  "app_paras": 0,
+  "chars": 1309383,
+  "app_chars": 0,
+  "samples": [],
+  "title": "السيرة النبوية لابن هشام",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "zad_al_maad",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 14312,
+  "app_paras": 0,
+  "chars": 4902669,
+  "app_chars": 0,
+  "samples": [],
+  "title": "زاد المعاد في هَدي خير العباد",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "uyun_al_athar",
+  "editor_lines": [
+   "تعليق: إبراهيم محمد رمضان"
+  ],
+  "editor_year": null,
+  "paras": 4969,
+  "app_paras": 0,
+  "chars": 1833384,
+  "app_chars": 0,
+  "samples": [],
+  "title": "عيون الأثر في فنون المغازي والشمائل والسير",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "nur_al_yaqin",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1609,
+  "app_paras": 0,
+  "chars": 513440,
+  "app_chars": 0,
+  "samples": [],
+  "title": "نور اليقين في سيرة سيد المرسلين",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "as_seerah_ibn_kathir",
+  "editor_lines": [
+   "تحقيق: د. مصطفى عبد الواحد"
+  ],
+  "editor_year": null,
+  "paras": 23900,
+  "app_paras": 0,
+  "chars": 4619295,
+  "app_chars": 0,
+  "samples": [],
+  "title": "السيرة النبوية",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_adhkar_nawawi",
+  "editor_lines": [
+   "تحقيق: عبد القادر الأرنؤوط [ت ١٤٢٥ هـ]"
+  ],
+  "editor_year": 1425,
+  "paras": 4074,
+  "app_paras": 0,
+  "chars": 683920,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأذكار",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "at_tibyan_hamalat_al_quran",
+  "editor_lines": [
+   "حققه وعلق عليه: محمد الحجار"
+  ],
+  "editor_year": null,
+  "paras": 645,
+  "app_paras": 0,
+  "chars": 125057,
+  "app_chars": 0,
+  "samples": [],
+  "title": "التبيان في آداب حملة القرآن",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_arbaun_an_nawawiyyah",
+  "editor_lines": [
+   "عُنِيَ بِهِ: قصي محمد نورس الحلاق، أنور بن أبي بكر الشيخي"
+  ],
+  "editor_year": null,
+  "paras": 181,
+  "app_paras": 0,
+  "chars": 18394,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأربعون النووية",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "at_taqrib_wat_taysir",
+  "editor_lines": [
+   "تقديم وتحقيق وتعليق: محمد عثمان الخشت"
+  ],
+  "editor_year": null,
+  "paras": 476,
+  "app_paras": 0,
+  "chars": 95332,
+  "app_chars": 0,
+  "samples": [],
+  "title": "التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "fadail_al_quran_ibn_kathir",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 1486,
+  "app_paras": 0,
+  "chars": 307206,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فضائل القرآن",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_baith_al_hathith",
+  "editor_lines": [
+   "المحقق: أحمد محمد شاكر"
+  ],
+  "editor_year": null,
+  "paras": 953,
+  "app_paras": 0,
+  "chars": 123912,
+  "app_chars": 0,
+  "samples": [],
+  "title": "اختصار علوم الحديث",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_fusul_fi_seerat_ar_rasul",
+  "editor_lines": [
+   "تحقيق وتعليق: محمد العيد الخطراوي [ت ١٤٣٣ هـ]، محيي الدين مستو [ت ١٤٤٢ هـ]"
+  ],
+  "editor_year": 1442,
+  "paras": 1517,
+  "app_paras": 0,
+  "chars": 203251,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الفصول في سيرة الرسول -صلى الله عليه وسلم-",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "mujizat_an_nabi",
+  "editor_lines": [
+   "تحقيق وتعليق: السيد إبراهيم أمين محمد."
+  ],
+  "editor_year": null,
+  "paras": 2590,
+  "app_paras": 0,
+  "chars": 872251,
+  "app_chars": 0,
+  "samples": [],
+  "title": "معجزات النبي صلى الله عليه وسلم (من كتاب البداية والنهاية)",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "musnad_abi_bakr",
+  "editor_lines": [
+   "دراسة وتحقيق: غالية بنت سالم بن علي آل سعيد",
+   "أصل التحقيق: رسالة ماجستير للمحققة"
+  ],
+  "editor_year": null,
+  "paras": 2830,
+  "app_paras": 0,
+  "chars": 1049507,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مسند الإمام أبي بكر الصديق وأيامه وأحكامه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "tabaqat_ash_shafiiyyin",
+  "editor_lines": [
+   "تحقيق: د أحمد عمر هاشم [ت ١٤٤٧ هـ]، د محمد زينهم محمد عزب"
+  ],
+  "editor_year": 1447,
+  "paras": 4897,
+  "app_paras": 0,
+  "chars": 1005221,
+  "app_chars": 0,
+  "samples": [],
+  "title": "طبقات الشافعيين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "adab_dukhul_al_hammam",
+  "editor_lines": [
+   "المحقق: سامي بن محمد بن جاد الله"
+  ],
+  "editor_year": null,
+  "paras": 340,
+  "app_paras": 0,
+  "chars": 60604,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الآداب والأحكام المتعلقة بدخول الحمام",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "juz_bay_ummahat_al_awlad",
+  "editor_lines": [
+   "المحقق: عمر بن سليمان الحفيان"
+  ],
+  "editor_year": null,
+  "paras": 761,
+  "app_paras": 0,
+  "chars": 132867,
+  "app_chars": 0,
+  "samples": [],
+  "title": "جزء في بيع أمهات الأولاد",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "rawdat_al_uqala",
+  "editor_lines": [
+   "المحقق: محمد محي الدين عبد الحميد [ت ١٣٩٢ هـ]"
+  ],
+  "editor_year": 1392,
+  "paras": 2366,
+  "app_paras": 0,
+  "chars": 363278,
+  "app_chars": 0,
+  "samples": [],
+  "title": "روضة العقلاء ونزهة الفضلاء",
+  "verdict": "EDITOR_LONG_DEAD"
+ },
+ {
+  "id": "hilyat_al_awliya",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 28004,
+  "app_paras": 0,
+  "chars": 5848418,
+  "app_chars": 0,
+  "samples": [],
+  "title": "حلية الأولياء وطبقات الأصفياء",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "taqrib_al_tahdhib",
+  "editor_lines": [
+   "المحقق: محمد عوامة"
+  ],
+  "editor_year": null,
+  "paras": 12286,
+  "app_paras": 0,
+  "chars": 1065088,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تقريب التهذيب",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "nuzhat_al_nazar",
+  "editor_lines": [
+   "حققه وعلق عليه: نور الدين عتر (على نسخه مقروءة على المؤلف)"
+  ],
+  "editor_year": null,
+  "paras": 1010,
+  "app_paras": 0,
+  "chars": 219434,
+  "app_chars": 0,
+  "samples": [],
+  "title": "نزهة النظر في توضيح نخبة الفكر في مصطلح أهل الأثر",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "hady_al_sari",
+  "editor_lines": [
+   "قام بإخراجه وتصحيح تجاربه: محب الدين الخطيب [ت ١٣٨٩ هـ]"
+  ],
+  "editor_year": 1389,
+  "paras": 8600,
+  "app_paras": 0,
+  "chars": 1333339,
+  "app_chars": 0,
+  "samples": [],
+  "title": "هدي الساري مقدمة فتح الباري",
+  "verdict": "EDITOR_LONG_DEAD"
+ },
+ {
+  "id": "al_amali_al_mutlaqah",
+  "editor_lines": [
+   "المحقق: حمدي بن عبد المجيد بن إسماعيل السلفي [ت ١٤٣٣ هـ]"
+  ],
+  "editor_year": 1433,
+  "paras": 2058,
+  "app_paras": 0,
+  "chars": 432925,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأمالي المطلقة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_mujam_al_mufahras",
+  "editor_lines": [
+   "المحقق: محمد شكور المياديني"
+  ],
+  "editor_year": null,
+  "paras": 5942,
+  "app_paras": 0,
+  "chars": 1217863,
+  "app_chars": 0,
+  "samples": [],
+  "title": "المعجم المفهرس أو تجريد أسانيد الكتب المشهورة والأجزاء المنثورة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "raf_al_isr_an_qudat_misr",
+  "editor_lines": [
+   "تحقيق: الدكتور علي محمد عمر"
+  ],
+  "editor_year": null,
+  "paras": 3536,
+  "app_paras": 0,
+  "chars": 677092,
+  "app_chars": 0,
+  "samples": [],
+  "title": "رفع الإصر عن قضاة مصر",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_ithar_bi_marifat_ruwat_al_athar",
+  "editor_lines": [
+   "المحقق: سيد كسروي حسن"
+  ],
+  "editor_year": null,
+  "paras": 426,
+  "app_paras": 0,
+  "chars": 54887,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الإيثار بمعرفة رواة الآثار",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "nataij_al_afkar",
+  "editor_lines": [
+   "المحقق: وائل بكر زهران"
+  ],
+  "editor_year": null,
+  "paras": 2810,
+  "app_paras": 0,
+  "chars": 481703,
+  "app_chars": 0,
+  "samples": [],
+  "title": "نتائج الأفكار في تخريج أحاديث الأذكار",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_wuquf_ala_al_mawquf",
+  "editor_lines": [
+   "المحقق: عبد الله الليثي الأنصاري"
+  ],
+  "editor_year": null,
+  "paras": 448,
+  "app_paras": 0,
+  "chars": 73829,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الوقوف على الموقوف على صحيح مسلم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "silsilat_al_dhahab",
+  "editor_lines": [
+   "المحقق: د. عبد المعطي أمين قلعه جي"
+  ],
+  "editor_year": null,
+  "paras": 125,
+  "app_paras": 0,
+  "chars": 18240,
+  "app_chars": 0,
+  "samples": [],
+  "title": "سلسلة الذهب فيما رواه الشافعي عن مالك عن نافع عن ابن عمر",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "dalail_al_nubuwwah_abu_nuaym",
+  "editor_lines": [
+   "حققه: الدكتور محمد رواس قلعه جي، عبد البر عباس"
+  ],
+  "editor_year": null,
+  "paras": 1211,
+  "app_paras": 0,
+  "chars": 1007194,
+  "app_chars": 0,
+  "samples": [],
+  "title": "دلائل النبوة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_imamah_wal_radd_ala_al_rafidah",
+  "editor_lines": [
+   "المحقق: د. علي بن محمد بن ناصر الفقيهي [ت ١٤٤٦ هـ]"
+  ],
+  "editor_year": 1446,
+  "paras": 703,
+  "app_paras": 0,
+  "chars": 170310,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الإمامة والرد على الرافضة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "musnad_abi_hanifah_abu_nuaym",
+  "editor_lines": [
+   "المحقق: نظر محمد الفاريابي"
+  ],
+  "editor_year": null,
+  "paras": 702,
+  "app_paras": 0,
+  "chars": 360752,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مسند الإمام أبي حنيفة رواية أبي نعيم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "sifat_al_nifaq",
+  "editor_lines": [
+   "تقديم وتحقيق: الدكتور عامر حسن صبري"
+  ],
+  "editor_year": null,
+  "paras": 528,
+  "app_paras": 0,
+  "chars": 128020,
+  "app_chars": 0,
+  "samples": [],
+  "title": "صفة النفاق ونعت المنافقين لأبي نعيم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "fadail_al_khulafa_al_rashidin",
+  "editor_lines": [
+   "تحقيق: صالح بن محمد العقيل"
+  ],
+  "editor_year": null,
+  "paras": 366,
+  "app_paras": 0,
+  "chars": 185564,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فضائل الخلفاء الأربعة وغيرهم لأبي نعيم الأصبهاني",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "riyadat_al_abdan",
+  "editor_lines": [
+   "تحقيق: محمود محمد الحداد"
+  ],
+  "editor_year": null,
+  "paras": 24,
+  "app_paras": 0,
+  "chars": 11621,
+  "app_chars": 0,
+  "samples": [],
+  "title": "رياضة الأبدان",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_arbaun_ala_madhhab_al_mutahaqqiqin",
+  "editor_lines": [
+   "حققه وخرج أحاديثه: بدر بن عبد الله البدر"
+  ],
+  "editor_year": null,
+  "paras": 107,
+  "app_paras": 0,
+  "chars": 43168,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأربعون على مذهب المتحققين من الصوفية",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "hadith_asma_allah_al_husna",
+  "editor_lines": [
+   "تحقيق: مشهور بن حسن بن سلمان"
+  ],
+  "editor_year": null,
+  "paras": 116,
+  "app_paras": 0,
+  "chars": 39902,
+  "app_chars": 0,
+  "samples": [],
+  "title": "طرق حديث إن لله تسعة وتسعين اسما",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "fadilat_al_adilin_min_al_wulat",
+  "editor_lines": [
+   "تحقيق: مشهور حسن محمود سلمان"
+  ],
+  "editor_year": null,
+  "paras": 48,
+  "app_paras": 0,
+  "chars": 31434,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فضيلة العادلين من الولاة لأبي نعيم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_bidaya_wan_nihaya",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 37640,
+  "app_paras": 0,
+  "chars": 10581347,
+  "app_chars": 0,
+  "samples": [],
+  "title": "البداية والنهاية",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "qisas_al_anbiya_ibn_kathir",
+  "editor_lines": [
+   "تحقيق: د. مصطفى عبد الواحد"
+  ],
+  "editor_year": null,
+  "paras": 6962,
+  "app_paras": 0,
+  "chars": 1439652,
+  "app_chars": 0,
+  "samples": [],
+  "title": "قصص الأنبياء",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "futuh_al_buldan",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 2007,
+  "app_paras": 0,
+  "chars": 697380,
+  "app_chars": 0,
+  "samples": [],
+  "title": "فتوح البلدان",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "tarikh_al_khulafa_suyuti",
+  "editor_lines": [
+   "اعتنى به: اللجنة العلمية بمركز دار المنهاج"
+  ],
+  "editor_year": null,
+  "paras": 6799,
+  "app_paras": 0,
+  "chars": 894668,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تاريخ الخلفاء",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "ihya_ulum_al_din",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 17204,
+  "app_paras": 0,
+  "chars": 5469769,
+  "app_chars": 0,
+  "samples": [],
+  "title": "إحياء علوم الدين",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "madarij_al_salikin",
+  "editor_lines": [
+   "المحقق: محمد المعتصم بالله البغدادي"
+  ],
+  "editor_year": null,
+  "paras": 12127,
+  "app_paras": 0,
+  "chars": 3427627,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مدارج السالكين بين منازل إياك نعبد وإياك نستعين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "jami_al_ulum_wal_hikam",
+  "editor_lines": [
+   "تعليق وتحقيق: الدكتور ماهر ياسين الفحل"
+  ],
+  "editor_year": null,
+  "paras": 7315,
+  "app_paras": 0,
+  "chars": 1482882,
+  "app_chars": 0,
+  "samples": [],
+  "title": "جامع العلوم والحكم في شرح خمسين حديثاً من جوامع الكلم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "adab_al_dunya_wal_din",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 3314,
+  "app_paras": 0,
+  "chars": 783094,
+  "app_chars": 0,
+  "samples": [],
+  "title": "أدب الدنيا والدين",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_akhlaq_wal_siyar",
+  "editor_lines": [
+   "المحقق: بلا"
+  ],
+  "editor_year": null,
+  "paras": 90,
+  "app_paras": 0,
+  "chars": 100998,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الأخلاق والسير في مداواة النفوس",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "bidayat_al_hidayah",
+  "editor_lines": [
+   "تقديم وتحقيق وتعليق: الدكتور محمد زينهم محمد عزب"
+  ],
+  "editor_year": null,
+  "paras": 391,
+  "app_paras": 0,
+  "chars": 77942,
+  "app_chars": 0,
+  "samples": [],
+  "title": "بداية الهداية",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "lataif_al_maarif",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 2388,
+  "app_paras": 0,
+  "chars": 618605,
+  "app_chars": 0,
+  "samples": [],
+  "title": "لطائف المعارف فيما لمواسم العام من الوظائف",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "risalat_al_mustarshidin",
+  "editor_lines": [
+   "المحقق: عبد الفتاح أبو غدة"
+  ],
+  "editor_year": null,
+  "paras": 282,
+  "app_paras": 0,
+  "chars": 32077,
+  "app_chars": 0,
+  "samples": [],
+  "title": "رسالة المسترشدين",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "maqasid_al_riayah",
+  "editor_lines": [
+   "المحقق: إياد خالد الطباع"
+  ],
+  "editor_year": null,
+  "paras": 856,
+  "app_paras": 0,
+  "chars": 152756,
+  "app_chars": 0,
+  "samples": [],
+  "title": "مقاصد الرعاية لحقوق الله عز وجل أو مختصر رعاية المحاسبي",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "tahdhib_al_akhlaq",
+  "editor_lines": [
+   "حققه وشرح غريبه: ابن الخطيب"
+  ],
+  "editor_year": null,
+  "paras": 551,
+  "app_paras": 0,
+  "chars": 230560,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تهذيب الأخلاق وتطهير الأعراق",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "jami_bayan_al_ilm",
+  "editor_lines": [
+   "المحقق: أبو الأشبال الزهيري"
+  ],
+  "editor_year": null,
+  "paras": 3629,
+  "app_paras": 0,
+  "chars": 1140038,
+  "app_chars": 0,
+  "samples": [],
+  "title": "جامع بيان العلم وفضله",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "tadhkirat_al_sami_wal_mutakallim",
+  "editor_lines": [
+   "تحقيق: محمد هاشم الندوي"
+  ],
+  "editor_year": null,
+  "paras": 758,
+  "app_paras": 0,
+  "chars": 103011,
+  "app_chars": 0,
+  "samples": [],
+  "title": "تذكرة السامعِ والمتكلم في أَدب العالم والمتعلم",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "adab_al_imla_wal_istimla",
+  "editor_lines": [
+   "المحقق: ماكس فايسفايلر"
+  ],
+  "editor_year": null,
+  "paras": 777,
+  "app_paras": 0,
+  "chars": 377321,
+  "app_chars": 0,
+  "samples": [],
+  "title": "أدب الاملاء والاستملاء",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_waraqat",
+  "editor_lines": [
+   "المحقق: د. عبد اللطيف محمد العبد"
+  ],
+  "editor_year": null,
+  "paras": 108,
+  "app_paras": 0,
+  "chars": 11659,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الورقات",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_ajurrumiyyah",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 143,
+  "app_paras": 0,
+  "chars": 12236,
+  "app_chars": 0,
+  "samples": [],
+  "title": "متن الآجرومية",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_luma_fi_usul_al_fiqh",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 947,
+  "app_paras": 0,
+  "chars": 169053,
+  "app_chars": 0,
+  "samples": [],
+  "title": "اللمع في أصول الفقه",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_faqih_wal_mutafaqqih",
+  "editor_lines": [
+   "المحقق: أبو عبد الرحمن عادل بن يوسف الغرازي"
+  ],
+  "editor_year": null,
+  "paras": 1567,
+  "app_paras": 0,
+  "chars": 1094878,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الفقيه و المتفقه",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "qawaid_al_ahkam",
+  "editor_lines": [
+   "راجعه وعلق عليه: طه عبد الرؤوف سعد"
+  ],
+  "editor_year": null,
+  "paras": 2843,
+  "app_paras": 0,
+  "chars": 1039949,
+  "app_chars": 0,
+  "samples": [],
+  "title": "قواعد الأحكام في مصالح الأنام",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "qut_al_qulub",
+  "editor_lines": [
+   "المحقق: د. عاصم إبراهيم الكيالي"
+  ],
+  "editor_year": null,
+  "paras": 2794,
+  "app_paras": 0,
+  "chars": 2106844,
+  "app_chars": 0,
+  "samples": [],
+  "title": "قوت القلوب في معاملة المحبوب ووصف طريق المريد إلى مقام التوحيد",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_adab_al_shariyyah",
+  "editor_lines": [],
+  "editor_year": null,
+  "paras": 8806,
+  "app_paras": 0,
+  "chars": 2949600,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الآداب الشرعية والمنح المرعية",
+  "verdict": "NO_EDITOR_NAMED"
+ },
+ {
+  "id": "al_jami_li_akhlaq_al_rawi",
+  "editor_lines": [
+   "المحقق: د. محمود الطحان [ت ١٤٤٤ هـ]"
+  ],
+  "editor_year": 1444,
+  "paras": 2595,
+  "app_paras": 0,
+  "chars": 1157711,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الجامع لأخلاق الراوي وآداب السامع",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "muqaddimat_ibn_al_salah",
+  "editor_lines": [
+   "المحقق: نور الدين عتر"
+  ],
+  "editor_year": null,
+  "paras": 2186,
+  "app_paras": 0,
+  "chars": 505933,
+  "app_chars": 0,
+  "samples": [],
+  "title": "معرفة أنواع علوم الحديث، ويُعرف بمقدمة ابن الصلاح",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_risalah_lil_shafii",
+  "editor_lines": [
+   "تحقيق وشرح: أحمد محمد شاكر"
+  ],
+  "editor_year": null,
+  "paras": 3148,
+  "app_paras": 0,
+  "chars": 870219,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الرسالة",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_risalah_al_qushayriyyah",
+  "editor_lines": [
+   "تحقيق: الإمام الدكتور عبد الحليم محمود، الدكتور محمود بن الشريف"
+  ],
+  "editor_year": null,
+  "paras": 3057,
+  "app_paras": 0,
+  "chars": 716743,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الرسالة القشيرية",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_burhan_fi_ulum_al_quran",
+  "editor_lines": [
+   "المحقق: محمد أبو الفضل إبراهيم [ت ١٤٠١ هـ]"
+  ],
+  "editor_year": 1401,
+  "paras": 12562,
+  "app_paras": 0,
+  "chars": 2662890,
+  "app_chars": 0,
+  "samples": [],
+  "title": "البرهان في علوم القرآن",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_itqan_fi_ulum_al_quran",
+  "editor_lines": [
+   "المحقق: محمد أبو الفضل إبراهيم [ت ١٤٠١ هـ]"
+  ],
+  "editor_year": 1401,
+  "paras": 10554,
+  "app_paras": 0,
+  "chars": 2086206,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الإتقان في علوم القرآن",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ },
+ {
+  "id": "al_muwafaqat",
+  "editor_lines": [
+   "المحقق: أبو عبيدة مشهور بن حسن آل سلمان",
+   "تقديم: بكر بن عبد الله أبو زيد"
+  ],
+  "editor_year": null,
+  "paras": 25402,
+  "app_paras": 0,
+  "chars": 4701208,
+  "app_chars": 0,
+  "samples": [],
+  "title": "الموافقات",
+  "verdict": "MODERN_EDITOR_NO_APPARATUS"
+ }
+]

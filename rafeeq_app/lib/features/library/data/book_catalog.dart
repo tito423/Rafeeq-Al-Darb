@@ -3955,7 +3955,8 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/muqaddimat_ibn_al_salah.json',
-      sizeBytes: 188664,
+      sizeBytes: 188725,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — معرفة أنواع علوم الحديث (مقدمة ابن '
               'الصلاح)، لابن الصلاح (ت ٦٤٣ هـ)، تحقيق نور الدين عتر',
@@ -3976,9 +3977,107 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_risalah_lil_shafii.json',
-      sizeBytes: 433383,
+      sizeBytes: 399713,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — الرسالة، للإمام الشافعي (ت ٢٠٤ هـ)',
+    ),
+  ),
+  // ══════════════════════════════════════════════════════════════════════
+  // 2026-09-17 — «اشهر وافضل الكتب في تنمية الذات واداب النفس» و«قسم
+  // وتسميه طالب العلم … الكتب المتدرجة … المنهج الوسطي المعتدل بتدرج».
+  //
+  // The library held 99 tazkiyah books and not one by الغزالي، ابن رجب،
+  // الشاطبي، الماوردي، ابن حزم، المحاسبي، الخطيب البغدادي or ابن عبد البر —
+  // measured by grepping each name over this file and getting zero. It was
+  // almost entirely ابن أبي الدنيا and ابن الجوزي.
+  //
+  // Every id came from the LOCAL Shamela title index, never from Shamela's
+  // own search, which searches inside books and returns a commentary above
+  // the book it comments on (trap #17). Every `sizeBytes` is what R2
+  // answered on a HEAD after the upload, not what the local file measured.
+  //
+  // الاعتصام للشاطبي is deliberately absent while الموافقات is here: he asked
+  // to stay far from تشدد, and الموافقات is the مقاصد book.
+  // ══════════════════════════════════════════════════════════════════════
+  LibraryBook(
+    id: 'al_risalah_al_qushayriyyah',
+    titleAr: 'الرسالة القشيرية',
+    titleEn: 'Al-Risalah al-Qushayriyyah',
+    authorAr: 'الإمام أبو القاسم القشيري',
+    authorEn: 'Imam Abu al-Qasim al-Qushayri',
+    deathYearAh: 465,
+    pages: 585,
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_risalah_al_qushayriyyah.json',
+      sizeBytes: 317802,
+      sourceLabel:
+          'المكتبة الشاملة — الرسالة القشيرية، لأبي القاسم القشيري (ت '
+              '٤٦٥ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
+  LibraryBook(
+    id: 'al_burhan_fi_ulum_al_quran',
+    titleAr: 'البرهان في علوم القرآن',
+    titleEn: 'Al-Burhan fi Ulum al-Quran',
+    authorAr: 'الإمام بدر الدين الزركشي',
+    authorEn: 'Imam Badr al-Din al-Zarkashi',
+    deathYearAh: 794,
+    pages: 516,
+    category: BookCategory.talibIlm,
+    shelfOrder: 3,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_burhan_fi_ulum_al_quran.json',
+      sizeBytes: 1170450,
+      sourceLabel:
+          'المكتبة الشاملة — البرهان في علوم القرآن، لبدر الدين الزركشي '
+              '(ت ٧٩٤ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
+  LibraryBook(
+    id: 'al_itqan_fi_ulum_al_quran',
+    titleAr: 'الإتقان في علوم القرآن',
+    titleEn: 'Al-Itqan fi Ulum al-Quran',
+    authorAr: 'الحافظ جلال الدين السيوطي',
+    authorEn: 'al-Hafiz Jalal al-Din al-Suyuti',
+    deathYearAh: 911,
+    pages: 396,
+    descKey: 'book_desc.al_itqan_fi_ulum_al_quran',
+    category: BookCategory.talibIlm,
+    shelfOrder: 3,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_itqan_fi_ulum_al_quran.json',
+      sizeBytes: 852806,
+      sourceLabel:
+          'المكتبة الشاملة — الإتقان في علوم القرآن، لجلال الدين '
+              'السيوطي (ت ٩١١ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 4 — المقاصد — لماذا شُرع الحكم
+  LibraryBook(
+    id: 'al_muwafaqat',
+    titleAr: 'الموافقات',
+    titleEn: 'Al-Muwafaqat',
+    authorAr: 'الإمام أبو إسحاق الشاطبي',
+    authorEn: 'Imam Abu Ishaq al-Shatibi',
+    deathYearAh: 790,
+    pages: 606,
+    descKey: 'book_desc.al_muwafaqat',
+    category: BookCategory.talibIlm,
+    shelfOrder: 4,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_muwafaqat.json',
+      sizeBytes: 2280034,
+      editorNotesRemoved: true,
+      sourceLabel:
+          'المكتبة الشاملة — الموافقات، لأبي إسحاق الشاطبي (ت ٧٩٠ هـ)',
     ),
   ),
 ];

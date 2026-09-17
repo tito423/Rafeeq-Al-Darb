@@ -32,17 +32,13 @@ CAT = os.path.join(HERE, "..", "rafeeq_app", "lib", "features", "library",
                    "data", "book_catalog.dart")
 
 PUBLISH = [
-    "al_idah_fi_manasik_al_hajj_wal_umrah",
-    "jami_al_ulum_wal_hikam",
-    "fatawa_al_nawawi",
-    "fadail_al_quran_ibn_kathir",
-    "musnad_abi_bakr",
-    "bulugh_al_maram",
-    "sayd_al_khatir",
-    "talbis_iblis",
-    "fadail_bayt_al_maqdis",
-    "al_fusul_fi_seerat_ar_rasul",
-    "al_bidaya_wan_nihaya",
+    # The third round, 2026-09-17 evening: the four books added last were
+    # audited like every other, and three carried their editor's apparatus.
+    # al_muwafaqat keeps 89% of its text with the longest gap 7 pages in
+    # 3,211 — a book, unlike tuhfat_at_talib's 32-page hole in 486.
+    "muqaddimat_ibn_al_salah",
+    "al_risalah_lil_shafii",
+    "al_muwafaqat",
 ]
 
 

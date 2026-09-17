@@ -10,11 +10,18 @@ abstract final class AppConfig {
   /// for digital use), pinned to a commit so page geometry can never drift
   /// away from the bundled polygon assets.
   ///
-  /// TODO(release): this default points at GitHub raw, which is fine for
-  /// development but is not a CDN and will rate-limit under real traffic.
-  /// Mirror `scripts/mushaf_build/<edition>/svg` to our own bucket and ship
-  /// production builds with:
-  ///   `--dart-define=RAFEEQ_MUSHAF_BASE=https://<bucket>/mushafs`
+  /// THAT MIRROR IS DONE; the TODO that used to sit here was stale.
+  ///
+  /// It warned that the default pointed at GitHub raw, which is not a CDN and
+  /// would rate-limit — but [mushafBase] defaults to `$contentBaseUrl/mushaf`,
+  /// which is the R2 bucket, and the pages have been served from there for
+  /// some time. Verified on 2026-09-17 during the full audit: a range request
+  /// for `mushaf/hafs/kfqc/svg/001.svg` (and pages 302 and 604) answered
+  /// **HTTP 206, `image/svg+xml`** from `pub-…r2.dev`.
+  ///
+  /// It is recorded rather than deleted because a stale TODO is worse than
+  /// none: the next session would have spent its time doing a migration that
+  /// had already happened.
   static const String mushafPin = 'b91d39e1065b57bdda3e94aca8ecf3575e50e1e6';
 
   /// The **Web** OAuth client of the owner's Google Cloud project.

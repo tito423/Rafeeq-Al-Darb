@@ -34,7 +34,7 @@ void main() {
     // re-run found TWELVE more books carrying apparatus that the first pass
     // had reported as clean. Eleven were filtered and flagged; tuhfat_at_talib
     // was removed, because filtering left a 32-page hole in it.
-    expect(flagged.length, 40,
+    expect(flagged.length, 43,
         reason: 'scripts/mark_editor_notes_removed.py flags exactly the set '
             'of files that scripts/upload_stripped_books.py published. If this '
             'number moved, say why in CONTENT-LICENSES.md.');
@@ -86,13 +86,13 @@ void main() {
     //
     // This test holds the half that IS checkable from inside the app: the
     // catalogue and the bucket agree on how many were touched.
-    expect(libraryBookCatalog.length, 209,
+    expect(libraryBookCatalog.length, 213,
         reason: 'the library was 257 entries on the morning of 2026-09-17: 7 '
             'duplicates and mislabelled takhrij volumes went, then '
             'al_ijaz_fi_sharh_sunan_abi_dawud on the rights audit (248), then '
             "Ibn Taymiyyah's 60 books and Ibn al-Qayyim's index of them at the "
             'owner\'s instruction (187), then the books he asked for on '
             'self-development and the new طالب العلم shelf. This number is '
-            'still moving — the last of that batch is being built.');
+            'complete: 27 added, 26 kept (iqtida dropped on its edition).');
   });
 }
