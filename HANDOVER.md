@@ -1751,9 +1751,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 15:08 — IN PROGRESS — resume here**
+**2026-09-17 15:10 — COMPLETE**
 
-v3.32.0 built and signed - sign_release.py printed OK: rotated. This is the release that carries the staleness fix, without which none of v3.31.0's cleaning would ever have reached a phone. Version bumped in both places, HANDOVER state updated. Cut as a new version rather than replacing v3.31.0's asset on purpose: a tag that says one thing while the APK inside it says another is exactly the drift this project has been burned by. Creating the new release BEFORE deleting the old one, so there is never a moment with no release in the repo if this session runs out of quota mid-upload
+v3.32.0 published and verified. Created BEFORE deleting v3.31.0, so the repo never held zero releases; v3.31.0 and its tag are gone now and one release remains, as the standing policy says. Tag cut from master, gh release view reports target master, and the tag's SHA equals git rev-parse HEAD (1b58f1e) exactly. The PUBLISHED bytes were downloaded back from GitHub and checked rather than the local build: Android 9+ gives CN=Rafeeq Al-Darb with SHA-256 a505464d..., the same digest as every release since the rotation, and Android 7-8 still gives the old debug key, so the lineage holds and this installs over 3.25.0 as an update. Asset 212,450,637 bytes. Also recorded today from the owner's question: the law he sent is Federal Law 11/2021 on INDUSTRIAL property - patents and designs, nothing to do with books. The one that governs this app is Federal Decree-Law 38/2021 on copyright, whose term is life plus 50 years from the first of January after the author's death - the same rule this project already works to, so the Egyptian basis in CONTENT-LICENSES.md is matched by the law where he actually lives. The article on whether a muhaqqiq of a public-domain text is protected as an independent author was NOT read: the official site refuses the PDF with a 403 and WIPO serves a shell page, and articles that have not been read are not quoted
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
