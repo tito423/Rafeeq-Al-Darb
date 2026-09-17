@@ -58,7 +58,12 @@ void main() {
         .allMatches(data)
         .map((m) => m.group(1)!)
         .toList();
-    expect(ids.length, greaterThanOrEqualTo(20));
+    // The list was cut to nine on 2026-09-17 at the owner's instruction —
+    // «اخذف من المكتبة كل القنوات في القنوات الدعوية الا …» — so the old
+    // floor of 20 is gone. The floor that still means something is «the
+    // parser found the list at all»: a regex that stops matching would make
+    // every assertion below vacuous, which is trap #47's shape.
+    expect(ids.length, greaterThanOrEqualTo(9));
     for (final locale in const ['ar', 'en', 'fr', 'es', 'pt', 'ru', 'ur']) {
       final json =
           File('assets/translations/$locale.json').readAsStringSync();
@@ -78,12 +83,12 @@ void main() {
     // falls back to an error widget instead of the channel's own mark.
     //
     // There were five: «م. أيمن عبد الرحيم» was removed at the owner's
-    // request («امسح قناة ايمن عبدالرحيم»).
+    // request («امسح قناة ايمن عبدالرحيم»). Two more of the four went with
+    // the 2026-09-17 cut — `hassan_elhusseiny` and `fahem` — so the pair
+    // below is what is left of that group, not a shortened list.
     for (final id in const [
-      'hassan_elhusseiny',
       'amgad_samir',
       'haytham_talaat',
-      'fahem',
     ]) {
       final from = data.indexOf("id: '$id'");
       expect(from, greaterThan(0), reason: '$id is no longer in the list');

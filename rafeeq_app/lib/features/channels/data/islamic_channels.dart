@@ -83,24 +83,6 @@ class IslamicChannel {
 /// This is a **link list**, not a feed: the app opens the channel in YouTube
 /// and does not scrape, re-host or embed anyone's video content.
 const islamicChannels = <IslamicChannel>[
-  // «فيه حاجات تبع مخارج الحروف للدكتور ايمن سويد نزلها واستخدمها» — his
-  // «الإتقان لتلاوة القرآن» is the reference course on exactly what مخارج
-  // الحروف teaches, and it is his. It is LINKED, not copied: those episodes
-  // are his work and Iqraa's broadcast, and nothing in this app re-hosts
-  // them. Verified with `verify_youtube_channels.py`: the title comes back
-  // «د. أيمن سويد Dr. Ayman Swaid», the id `UCKtLDrh3IgxwcZtxiTvOQAA`, and
-  // the avatar is a real photograph rather than YouTube's letter tile —
-  // three other handles were tried first and two answered 404 while
-  // `@Aymanswaid` came back empty («لا تتضمن هذه القناة أي محتوى»).
-  IslamicChannel(
-    id: 'ayman_swaid',
-    nameAr: 'د. أيمن سويد',
-    nameEn: 'Dr. Ayman Swaid',
-    channelId: 'UCKtLDrh3IgxwcZtxiTvOQAA',
-    icon: Icons.record_voice_over,
-    color: Color(0xFF00695C),
-    handle: 'Dr.AymanSwaid',
-  ),
   IslamicChannel(
     id: 'mostafa_mahmoud',
     nameAr: 'القناة الرسمية للدكتور مصطفى محمود',
@@ -109,24 +91,6 @@ const islamicChannels = <IslamicChannel>[
     icon: Icons.science,
     color: Color(0xFF00695C),
     handle: 'DRMoustafaMahmoud',
-  ),
-  IslamicChannel(
-    id: 'ayman_abdelgelil',
-    nameAr: 'الشيخ أيمن عبد الجليل',
-    nameEn: 'Sheikh Ayman Abdel Gelil',
-    channelId: 'UC-hKhCAfM5HXbqqfKvcviEA',
-    icon: Icons.record_voice_over,
-    color: Color(0xFF4E342E),
-    handle: 'ayman_abdelgelil',
-  ),
-  IslamicChannel(
-    id: 'abdullah_rushdy',
-    nameAr: 'الشيخ عبد الله رشدي',
-    nameEn: 'Sheikh Abdullah Rushdy',
-    channelId: 'UCUZOB_l7pZZd0ZjuAbl-tGg',
-    icon: Icons.forum,
-    color: Color(0xFF37474F),
-    handle: 'abdullah.rushdy',
   ),
   IslamicChannel(
     id: 'yasser_alhazimi',
@@ -138,47 +102,6 @@ const islamicChannels = <IslamicChannel>[
     handle: 'ybh_1000',
   ),
   IslamicChannel(
-    id: 'mohamed_hassan',
-    nameAr: 'الشيخ الدكتور محمد حسان',
-    nameEn: 'Sheikh Dr. Mohamed Hassan',
-    channelId: 'UCr4Kz8-cozLWzGYa1WICePw',
-    icon: Icons.mosque,
-    color: Color(0xFF1B5E20),
-  ),
-  IslamicChannel(
-    id: 'abu_ishaq_alheweny',
-    nameAr: 'الشيخ أبو إسحاق الحويني',
-    nameEn: 'Sheikh Abu Ishaq al-Huwayni',
-    channelId: 'UCbUeVRqAdyTSFGh2WzmVUoA',
-    icon: Icons.auto_stories,
-    color: Color(0xFF3E2723),
-    handle: 'aboishaqalheweny',
-  ),
-  IslamicChannel(
-    id: 'mostafa_aladwy',
-    nameAr: 'الشيخ مصطفى العدوي',
-    nameEn: 'Sheikh Mostafa Al-Adawy',
-    channelId: 'UCYW44APHfIo0GyAO9iosHjQ',
-    icon: Icons.menu_book,
-    color: Color(0xFF33691E),
-    handle: 'ftawamostafaaladwy',
-  ),
-  // «وفي القنوات حط ... الشيخ سمير مصطفى وعمر عبد الكافي ... وصالح المغامسي
-  // وعثمان الخميس». Each of these four answered `verify_youtube_channels.py`
-  // with the id, title and handle written below — the titles are YouTube's
-  // own, untouched. He also asked for «ياسر الخزيمي لو مش موجود»: he is
-  // already here, as `yasser_alhazimi`, under the spelling his own channel
-  // uses (الحزيمي).
-  IslamicChannel(
-    id: 'samir_mostafa',
-    nameAr: 'قناة الشيخ سمير مصطفى الرسمية',
-    nameEn: 'Sheikh Samir Mostafa — Official',
-    channelId: 'UCch6Y4YgssEzMa4Q5zw4xjw',
-    icon: Icons.record_voice_over,
-    color: Color(0xFF6D4C41),
-    handle: 'samirmoustafa',
-  ),
-  IslamicChannel(
     id: 'omar_abdelkafi',
     nameAr: 'عمر عبد الكافي',
     nameEn: 'Omar Abd al-Kafi',
@@ -186,24 +109,6 @@ const islamicChannels = <IslamicChannel>[
     icon: Icons.live_tv,
     color: Color(0xFF01579B),
     handle: 'abdelkafytube',
-  ),
-  IslamicChannel(
-    id: 'saleh_almaghamsi',
-    nameAr: 'الشيخ صالح المغامسي',
-    nameEn: 'Sheikh Saleh Al-Maghamsi',
-    channelId: 'UCfpli4VHoS12syPkPxHl7XA',
-    icon: Icons.school,
-    color: Color(0xFF004D40),
-    handle: 'Alrasekhoon',
-  ),
-  IslamicChannel(
-    id: 'othman_alkhamees',
-    nameAr: 'الشيخ الدكتور عثمان الخميس',
-    nameEn: 'Dr. Othman Alkamees',
-    channelId: 'UCWjCSGhmSGu0VLf2mPFS0Kg',
-    icon: Icons.help_center,
-    color: Color(0xFF263238),
-    handle: 'othmanalkamees',
   ),
   // «وضيف قناة مبروك زيد الخير ومحمد راتب النابلسي».
   //
@@ -260,16 +165,6 @@ const islamicChannels = <IslamicChannel>[
     color: Color(0xFF1565C0),
   ),
   IslamicChannel(
-    id: 'hassan_elhusseiny',
-    nameAr: 'د. حسن الحسيني',
-    nameEn: 'Hassan Elhusseiny',
-    channelId: 'UCvqfP1TIzsOnYD9_0b2G4xQ',
-    handle: 'HassanElhusseiny',
-    icon: Icons.menu_book,
-    color: Color(0xFF2E7D32),
-    hasPhoto: false,
-  ),
-  IslamicChannel(
     id: 'amgad_samir',
     nameAr: 'الشيخ أمجد سمير',
     nameEn: 'Amgad Samir',
@@ -299,36 +194,5 @@ const islamicChannels = <IslamicChannel>[
     icon: Icons.lightbulb,
     color: Color(0xFFEF6C00),
     hasPhoto: false,
-  ),
-  IslamicChannel(
-    id: 'fahem',
-    nameAr: 'قناة فاهم',
-    nameEn: 'fahem',
-    channelId: 'UCCVhXAOYR6E9khyRbmGG7LQ',
-    handle: 'fahem',
-    icon: Icons.smart_display,
-    color: Color(0xFF00838F),
-    hasPhoto: false,
-  ),
-  IslamicChannel(
-    id: 'eyad_qunaibi',
-    nameAr: 'د. إياد قنيبي',
-    nameEn: 'Dr. Eyad Qunaibi — Official',
-    channelId: 'UCahYlNszeMy_PHffYvgAOHg',
-    handle: 'EyadQunaibi',
-    icon: Icons.psychology,
-    color: Color(0xFF4527A0),
-  ),
-  // Shipped as `@waikishow`, a 404. `@waei` resolves but to a channel called
-  // "Will" — a different channel entirely, which is why a handle that merely
-  // *loads* is not evidence. This is the one whose own title is «وعي».
-  IslamicChannel(
-    id: 'waey',
-    nameAr: 'قناة وعي',
-    nameEn: 'Waey',
-    channelId: 'UCpfmtMWOk6ajbRsy18fgPsA',
-    handle: 'waey_official',
-    icon: Icons.visibility,
-    color: Color(0xFF37474F),
   ),
 ];

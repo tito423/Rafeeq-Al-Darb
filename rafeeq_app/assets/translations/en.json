@@ -959,32 +959,19 @@
     "section_settings": "Settings"
   },
   "channels": {
-    "desc_ayman_swaid": "A scholar of qira’at from Damascus, and the presenter of the tajweed series «al-Itqan li-Tilawat al-Qur’an».",
     "title": "Islamic channels",
     "intro": "A selection of YouTube channels. Tapping opens the channel in YouTube — the app hosts no video.",
     "view_grid": "Grid view",
     "view_list": "List view",
     "desc_mostafa_mahmoud": "Science and Faith, and Dr. Mostafa Mahmoud's episodes",
-    "desc_ayman_abdelgelil": "Lessons, sermons and interviews",
-    "desc_abdullah_rushdy": "Lessons, responses and clarifications",
     "desc_yasser_alhazimi": "Talks on self-development and spiritual growth",
-    "desc_samir_mostafa": "Recorded sermons, lessons and lectures",
     "desc_omar_abdelkafi": "Television programmes, sermons and lessons",
-    "desc_saleh_almaghamsi": "Lectures, lessons and study courses",
-    "desc_othman_alkhamees": "Lessons, lectures and answers to questions",
     "desc_mabrouk_zidelkhir": "Lessons in Quranic rhetoric and the language sciences",
     "desc_rateb_alnabulsi": "Lessons and lectures from the Al-Nabulsi encyclopaedia",
-    "desc_mohamed_hassan": "Lessons, lectures and teaching series",
-    "desc_abu_ishaq_alheweny": "Lessons in hadith and its sciences",
-    "desc_mostafa_aladwy": "Fatwas and lessons in tafsir and hadith",
     "desc_ragheb_elsergany": "Islamic history, the Prophet's biography and civilisation",
-    "desc_hassan_elhusseiny": "Comparative religion, creed and dawah",
     "desc_amgad_samir": "Fiqh, the sharia sciences and spiritual purification",
     "desc_ahmed_alarabi": "Reflecting on the Qur'an and its sciences",
-    "desc_haytham_talaat": "Scientific and intellectual answers to atheism and objections",
-    "desc_fahem": "Islamic thought in a modern visual style",
-    "desc_eyad_qunaibi": "Islamic thought and answers to contemporary objections",
-    "desc_waey": "Contemporary Islamic intellectual awareness"
+    "desc_haytham_talaat": "Scientific and intellectual answers to atheism and objections"
   },
   "mushaf_theme": {
     "title": "Text mushaf themes",
@@ -1108,10 +1095,6 @@
   "dawah": {
     "site_islamqa": "The largest Islamic fatwa and questions site, supervised by Shaykh Muhammad Salih al-Munajjid",
     "site_dorar": "A comprehensive encyclopedia of hadith, creed, fiqh and hadith authentication",
-    "site_islamway": "Islamic lessons, lectures and articles from leading scholars and preachers",
-    "site_saaid": "A broad Islamic library of articles, books and lectures",
-    "site_alukah": "A scholarly and cultural network of Islamic academic research and articles",
-    "site_islamstory": "Islamic history: articles, studies, books and audio",
     "site_shamela": "The official site of the Shamela library project"
   },
   "adhan_video": {

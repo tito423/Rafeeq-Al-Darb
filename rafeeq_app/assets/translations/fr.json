@@ -959,32 +959,19 @@
     "section_settings": "Paramètres"
   },
   "channels": {
-    "desc_ayman_swaid": "Savant des qirā’āt de Damas, présentateur de la série de tajwîd « al-Itqān li-Tilāwat al-Qur’ān ».",
     "title": "Chaînes islamiques",
     "intro": "Une sélection de chaînes YouTube. Toucher ouvre la chaîne dans YouTube ; l'application n'héberge aucune vidéo.",
     "view_grid": "Vue en grille",
     "view_list": "Vue en liste",
     "desc_mostafa_mahmoud": "Science et Foi, et les émissions du Dr Mostafa Mahmoud",
-    "desc_ayman_abdelgelil": "Cours, sermons et entretiens",
-    "desc_abdullah_rushdy": "Cours, réponses et clarifications",
     "desc_yasser_alhazimi": "Conférences sur le développement de soi et la purification spirituelle",
-    "desc_samir_mostafa": "Sermons, leçons et conférences enregistrés",
     "desc_omar_abdelkafi": "Émissions de télévision, sermons et leçons",
-    "desc_saleh_almaghamsi": "Conférences, leçons et cours",
-    "desc_othman_alkhamees": "Leçons, conférences et réponses aux questions",
     "desc_mabrouk_zidelkhir": "Leçons de rhétorique coranique et de sciences de la langue",
     "desc_rateb_alnabulsi": "Leçons et conférences de l’encyclopédie Al-Nabulsi",
-    "desc_mohamed_hassan": "Cours, conférences et séries d’enseignement",
-    "desc_abu_ishaq_alheweny": "Cours de hadith et de ses sciences",
-    "desc_mostafa_aladwy": "Fatwas et cours de tafsir et de hadith",
     "desc_ragheb_elsergany": "Histoire islamique, biographie du Prophète et civilisation",
-    "desc_hassan_elhusseiny": "Religions comparées, credo et dawa",
     "desc_amgad_samir": "Fiqh, sciences islamiques et purification spirituelle",
     "desc_ahmed_alarabi": "Méditation du Coran et de ses sciences",
-    "desc_haytham_talaat": "Réponses scientifiques et intellectuelles à l’athéisme et aux objections",
-    "desc_fahem": "Pensée islamique dans un style visuel moderne",
-    "desc_eyad_qunaibi": "Pensée islamique et réponses aux objections contemporaines",
-    "desc_waey": "Conscience intellectuelle islamique contemporaine"
+    "desc_haytham_talaat": "Réponses scientifiques et intellectuelles à l’athéisme et aux objections"
   },
   "mushaf_theme": {
     "title": "Thèmes du mushaf texte",
@@ -1108,10 +1095,6 @@
   "dawah": {
     "site_islamqa": "Le plus grand site islamique de fatwas et de questions, supervisé par le cheikh Muhammad Salih al-Munajjid",
     "site_dorar": "Une encyclopédie complète du hadith, du credo, du fiqh et de l’authentification des hadiths",
-    "site_islamway": "Cours, conférences et articles islamiques de grands savants et prédicateurs",
-    "site_saaid": "Une vaste bibliothèque islamique d’articles, de livres et de conférences",
-    "site_alukah": "Un réseau scientifique et culturel de recherches et d’articles académiques islamiques",
-    "site_islamstory": "Histoire islamique : articles, études, livres et audio",
     "site_shamela": "Le site officiel du projet de bibliothèque Shamela"
   },
   "adhan_video": {

@@ -109,11 +109,13 @@ class AdhanSettings {
 /// the scheduler already falls back to the first adhan, but the settings
 /// dropdown asserts on a value that is not among its items, so a stale id is
 /// read as "no choice" instead.
-/// `azan13` (الشيخ ربيع القاضي) joined them on 2026-09-17, **temporarily**:
-/// «شيل اذان الشيخ ربيع القاضي مؤقتا». Its mp3, its measured loudness and its
-/// phrase timings are all left in place, so putting it back is one line in
-/// `adhans.json` and one id out of this set — nothing has to be re-measured.
-const Set<String> removedAdhanIds = {'azan15', 'azan17', 'azan13'};
+/// `azan13` joined them on 2026-09-17 and left again the same day: the owner
+/// said «رجع اذان الشيخ ربيع القاضي … انا استئذنته خلاص». Leaving the mp3, the
+/// measured loudness and the phrase timings in place is what made putting it
+/// back one line in `adhans.json` and one id out of this set, with nothing
+/// re-measured — which is the whole reason a removal goes through this set
+/// rather than deleting the asset.
+const Set<String> removedAdhanIds = {'azan15', 'azan17'};
 
 String? _liveAdhanId(String? id) => removedAdhanIds.contains(id) ? null : id;
 

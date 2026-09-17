@@ -14,10 +14,14 @@ import 'package:rafeeq_app/features/adhan/data/adhan_settings_provider.dart';
 /// is what turns a stale id into «no choice» instead — so the two files have
 /// to agree, and nothing checked that they did.
 ///
-/// `azan13` (الشيخ ربيع القاضي) was removed on 2026-09-17 **temporarily**. Its
-/// mp3, measured loudness and phrase timings are deliberately left in place so
-/// restoring it needs no re-measuring — which is exactly why a test is needed
-/// to prove it is actually out of the picker.
+/// `azan13` was removed on 2026-09-17 and restored the same day — «رجع اذان
+/// الشيخ ربيع القاضي … انا استئذنته خلاص» — which is the round trip this file
+/// now pins from the other side: it is back in the catalogue AND out of the
+/// removed set, because being in both is the state that crashes the sheet.
+///
+/// The three adhans the owner supplied himself are labelled «أذان ١/٢/٣» at
+/// his request. That is a display choice, not a provenance one: each entry's
+/// `source` still records where the file came from.
 void main() {
   List<Map<String, dynamic>> catalogue() {
     final raw = jsonDecode(
@@ -34,11 +38,33 @@ void main() {
             'picker offers them: $stillListed');
   });
 
-  test('azan13 is out of the picker', () {
-    expect(catalogue().any((r) => r['id'] == 'azan13'), isFalse);
-    expect(removedAdhanIds.contains('azan13'), isTrue,
-        reason: 'it is out of the catalogue but a saved choice could still '
-            'point at it');
+  test('azan13 is back in the picker and no longer declared removed', () {
+    expect(catalogue().any((r) => r['id'] == 'azan13'), isTrue,
+        reason: 'it was restored on 2026-09-17');
+    expect(removedAdhanIds.contains('azan13'), isFalse,
+        reason: 'listed as removed while it is in the catalogue: a saved '
+            'choice for it would be silently read as «no choice»');
+  });
+
+  test("the owner's three adhans carry the neutral labels he asked for", () {
+    final byId = {for (final r in catalogue()) r['id'] as String: r};
+    const want = {'azan11': 'أذان ١', 'azan12': 'أذان ٢', 'azan13': 'أذان ٣'};
+    want.forEach((id, label) {
+      expect(byId[id], isNotNull, reason: '$id is missing from the catalogue');
+      expect(byId[id]!['name'], label);
+    });
+  });
+
+  test('no adhan entry names a person the owner asked to keep unnamed', () {
+    // He asked for these two names off the picker on 2026-09-17. A rename
+    // that leaves the old name in a neighbouring field is the same defect as
+    // «Крепости мусульманина» — the string survives where nobody looks.
+    const gone = ['تامر شعبان', 'ربيع القاضي'];
+    final blob = File('assets/data/catalogs/adhans.json').readAsStringSync();
+    for (final name in gone) {
+      expect(blob.contains(name), isFalse,
+          reason: 'adhans.json still contains «$name»');
+    }
   });
 
   test('every adhan still on offer has a file behind it', () {

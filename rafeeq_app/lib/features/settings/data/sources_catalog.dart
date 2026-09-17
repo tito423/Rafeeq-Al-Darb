@@ -101,8 +101,15 @@ final sourceGroups = <(String, List<SourceEntry>)>[
   (
     'hajj.title',
     [
+      // This row was STALE. The guide moved off «التحقيق والإيضاح» لابن باز
+      // onto النووي's «الإيضاح» when the rights question was settled, and
+      // `hajj.source` was rewritten in all seven locales at the time — but
+      // the Sources screen kept crediting the old book, so the app named a
+      // source it no longer reads a word from. Corrected on 2026-09-17, in
+      // the same pass that took the remaining Ibn Baz mentions out.
       SourceEntry(
-          'التحقيق والإيضاح — ابن باز', 'https://shamela.ws/book/31235',
+          'الإيضاح في مناسك الحج والعمرة — النووي',
+          'https://shamela.ws/book/96232',
           'hajj.source'),
     ]
   ),
