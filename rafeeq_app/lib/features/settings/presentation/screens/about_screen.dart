@@ -294,7 +294,10 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
                     ],
                   ).createShader(rect),
                   child: Text(
-                    'Tito Abo Malak',
+                    // A person's own name, written the way he writes it, in
+                    // every language — `properName`'s rule. It is not a UI
+                    // string and has no locale key.
+                    'Tamer Abdelhakim',
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
