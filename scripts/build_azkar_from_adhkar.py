@@ -62,9 +62,17 @@ UA = "RafeeqAlDarb/3.30 (https://github.com/tito423/Rafeeq-Al-Darb) curl/8"
 
 AR = "٠١٢٣٤٥٦٧٨٩"
 # A chapter opening, alone on its line: «(باب …)» / «(بابٌ …)» / «(فصل …)».
-BAB_ALONE = re.compile(r"^\(\s*(?:باب|بابٌ|بابُ|فصل|فصلٌ)\b[^)]*\)$")
-# The same heading followed by an-Nawawi's own opening sentence.
-BAB_LEADS = re.compile(r"^\(\s*(?:باب|بابٌ|بابُ|فصل|فصلٌ)\b([^)]*)\)\s*(.+)$")
+# Longest alternative first, and NO «\b»: «باب» would otherwise win against
+# «بابُ» and the damma would be left behind as the first character of the
+# title — five chapters came out as «ُ تكبيرةِ الإِحْرام», «ُ الدُّعَاء بعدَ
+# التشهّدِ الأخير». Arabic word boundaries are not what «\b» means anyway; it
+# is the same family of mistake as trap #47.
+_BAB = r"(?:بابٌ|بابُ|باب|فصلٌ|فصل)"
+BAB_ALONE = re.compile(r"^\(\s*" + _BAB + r"[^)]*\)$")
+# The same heading followed by an-Nawawi's own opening sentence. The title is
+# the WHOLE parenthesised text, exactly as in BAB_ALONE, so the two paths
+# cannot disagree about what a chapter is called.
+BAB_LEADS = re.compile(r"^\((\s*" + _BAB + r"[^)]*)\)\s*(.+)$")
 ENTRY = re.compile(r"^[" + AR + r"]+\s*-\s*\S")
 # al-Arna'ut's footnote: opens with a bracketed number, and 295 of the 309
 # close with «(*)». Both signatures are required to open one so that an

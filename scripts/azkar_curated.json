@@ -1,0 +1,203 @@
+{
+ "_why": "Hand-picked adhkar from an-Nawawi's al-Adhkar. The owner asked for this on 2026-09-17 («انتقي أنا بالإيد») after an automatic dua extractor was built and rejected: al-Adhkar's quotation marks are not a boundary, because «٣٧ - وروينا في ' صحيح البخاري ' عن حذيفةَ …» puts the BOOK's name in quotes and the supplication outside them, so a machine would have shipped a book title as a dua.",
+ "_how": "NO ARABIC IS TYPED HERE. Each entry is a POINTER: a section index and an item index into the extractor's output, plus two short phrases that locate where the supplication starts and ends. The text that reaches the database is sliced out of that output at build time, exactly as the quotes corpus does it, so no diacritic can be lost in transcription. The phrases are a reading aid and never ship; one that stops matching fails the build loudly instead of half-matching and shipping a clipped supplication. `sha` is frozen on the first successful build and checked on every one after.",
+ "_source": "scripts/build_azkar_from_adhkar.py output, from Shamela 1956 — an-Nawawi (d. 676 AH), عبد القادر الأرنؤوط's printing, whose apparatus is filtered out and never reaches the app.",
+ "entries": [
+  {
+   "section": 1,
+   "item": 1,
+   "from": "الحَمْدُ لِلَّهِ الَّذي أحْيانا",
+   "to": "النشور",
+   "ref_from": "صحيح البخاري",
+   "ref_to": "صحيح البخاري",
+   "sha": "fd5064106e5c"
+  },
+  {
+   "section": 1,
+   "item": 2,
+   "from": "الحَمْدُ لِلَّهِ الَّذي رَدََّ",
+   "to": "بذكره",
+   "ref_from": "وروينا في كتاب ابن السني",
+   "ref_to": "بإسناد صحيح",
+   "sha": "3ec424dbe3eb"
+  },
+  {
+   "section": 1,
+   "item": 6,
+   "from": "لا إلهَ إِلاَّ أنْتَ سُبْحانَكَ",
+   "to": "أنت الوهاب",
+   "ref_from": "سنن أبي داود",
+   "ref_to": "سنن أبي داود",
+   "sha": "cfb1c11b1c53"
+  },
+  {
+   "section": 2,
+   "item": 1,
+   "from": "اللَّهُمَّ إني أسألُكَ منْ خَيْرِهِ",
+   "to": "وَشَرّ ما هُوَ لَه",
+   "ref_from": "كتاب ابن السني",
+   "ref_to": "كتاب ابن السني",
+   "sha": "8d8ff4be25e6"
+  },
+  {
+   "section": 2,
+   "item": 2,
+   "from": "الحَمْدُ لِلَّهِ الذي كساني هذا",
+   "to": "وَلاَ قُوَّة",
+   "ref_from": "عن معاذ بن أنس",
+   "ref_to": "رضي الله عنه",
+   "sha": "083c1ff4e771"
+  },
+  {
+   "section": 3,
+   "item": 1,
+   "from": "اللَّهُمَّ لَكَ الحَمْدُ أنْتَ كَسَوْتِنِيهِ",
+   "to": "وَشَرّ ما صُنِعَ لَهُ",
+   "ref_from": "حديث صحيح، رواه أبو داود",
+   "ref_to": "هذا حديث حسن.",
+   "sha": "14f063621d46"
+  },
+  {
+   "section": 3,
+   "item": 2,
+   "from": "الحَمْدُ لِلَّهِ الَّذِي كَساني ما أُوَاري",
+   "to": "في حياتي",
+   "ref_from": "كتاب الترمذي",
+   "ref_to": "كتاب الترمذي",
+   "sha": "da71ff787f6d"
+  },
+  {
+   "section": 4,
+   "item": 0,
+   "from": "أبْلِي",
+   "to": "وأخْلِقِي",
+   "ref_from": "صحيح البخاري",
+   "ref_to": "صحيح البخاري",
+   "sha": "f10e046b0531"
+  },
+  {
+   "section": 4,
+   "item": 1,
+   "from": "الْبَسْ جَدِيداً",
+   "to": "ومت شهيدا",
+   "ref_from": "ابن ماجه، وابن السني",
+   "ref_to": "ابن ماجه، وابن السني",
+   "sha": "a8cbe9b3ac32"
+  },
+  {
+   "section": 7,
+   "item": 0,
+   "from": "بسم اللَّهِ تَوَكَّلْتُ على اللَّهِ",
+   "to": "أوْ أجْهَلَ أَوْ يُجْهَلَ عليَّ",
+   "ref_from": "حديث صحيح، رواه أبو داود",
+   "ref_to": "حديث صحيح.",
+   "sha": "88700516642b"
+  },
+  {
+   "section": 7,
+   "item": 1,
+   "from": "باسْمِ اللَّهِ، تَوَكَّلْتُ على اللَّهِ، وَلاَ حَوْلَ",
+   "to": "وتَنَحَّى عَنْهُ الشَّيْطانُ",
+   "ref_from": "قال الترمذي: حديث حسن",
+   "ref_to": "قال الترمذي: حديث حسن",
+   "sha": "0f383bd2a754"
+  },
+  {
+   "section": 7,
+   "item": 2,
+   "from": "بِسْمِ الله، التُّكْلانُ على الله",
+   "to": "إِلاَّ باللَّهِ",
+   "ref_from": "ابن ماجه، وابن السني",
+   "ref_to": "ابن ماجه، وابن السني",
+   "sha": "d3019072475a"
+  },
+  {
+   "section": 8,
+   "item": 2,
+   "from": "اللَّهُمَّ إِنِّي أسألُكَ خَيْرَ المَوْلِجِ",
+   "to": "تَوََكَّلْنا",
+   "ref_from": "سنن أبي داود",
+   "ref_to": "سنن أبي داود",
+   "sha": "b86a2e83d6f7"
+  },
+  {
+   "section": 10,
+   "item": 0,
+   "from": "اللَّهُمَّ إني أعُوذُ بِكَ مِنَ الخُبْثِ",
+   "to": "وَالخَبَائث",
+   "ref_from": "الصحيحين",
+   "ref_to": "الصحيحين",
+   "sha": "44b8da9c3854"
+  },
+  {
+   "section": 10,
+   "item": 3,
+   "from": "اللَّهُمَّ إني أعُوذُ بِكَ مِنَ الرِّجس",
+   "to": "الشَّيْطانِ الرجِيمِ",
+   "ref_from": "رواه ابن السني",
+   "ref_to": "كتاب الدعاء",
+   "sha": "d9b19c25b3f7"
+  },
+  {
+   "section": 13,
+   "item": 0,
+   "from": "غُفْرَانَكَ، الحَمْدُ لِلَّهِ",
+   "to": "وَعافانِي",
+   "sha": "7d3311f2ec87"
+  },
+  {
+   "section": 13,
+   "item": 2,
+   "from": "الحَمْدُ لِلَّه الَّذي أذَاقَنِي لَذَّتَهُ",
+   "to": "وَدَفَعَ عَنِّي أَذَاهُ",
+   "ref_from": "رواه ابن السني",
+   "ref_to": "والطبراني",
+   "sha": "6067f58d3a40"
+  },
+  {
+   "section": 15,
+   "item": 2,
+   "from": "أشْهَدُ أَنْ لا إلهَ إِلاَّ اللَّه وحدَه",
+   "to": "عَبْدُهُ وَرَسُولُهُ",
+   "ref_from": "رواه مسلم",
+   "ref_to": "رواه مسلم",
+   "sha": "9371c5e44da5"
+  },
+  {
+   "section": 18,
+   "item": 0,
+   "from": "اللَّهُمَّ اجْعَلْ في قَلْبِي نُوراً",
+   "to": "اللَّهُمَّ أعْطِني نُوراً",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "صحيح مسلم",
+   "sha": "85d99140de46"
+  },
+  {
+   "section": 19,
+   "item": 1,
+   "from": "اللَّهُمَّ افْتَحْ لي أبْوَابَ رَحْمَتِكَ",
+   "to": "أبْوَابَ رَحْمَتِكَ",
+   "ref_from": "رواه مسلم في",
+   "ref_to": "بأسانيد صحيحة",
+   "sha": "80b2d041c8d4"
+  },
+  {
+   "section": 19,
+   "item": 1,
+   "from": "اللَّهُمَّ إِني أسألُكَ مِنْ فَضْلِكَ",
+   "to": "مِنْ فَضْلِكَ",
+   "ref_from": "رواه مسلم في",
+   "ref_to": "بأسانيد صحيحة",
+   "sha": "ec5125787f3b"
+  },
+  {
+   "section": 19,
+   "item": 2,
+   "from": "أعُوذُ بالله العَظِيم وبوجهه الكريم",
+   "to": "الشِّيْطانِ الرَّجِيم",
+   "ref_from": "حديث حسن، رواه أبو داود",
+   "ref_to": "بإسناد جيد",
+   "sha": "46d5523e2c6e"
+  }
+ ]
+}
