@@ -24,13 +24,46 @@ void main() {
     expect(image, contains('onLongPressStart'));
   });
 
-  test('the page tap toggles full screen in both modes', () {
+  test('the page tap is still one gesture with two jobs, in both modes', () {
+    // Both the text page and the image page route their tap to the same
+    // handler — that has not changed.
     expect(RegExp('onBackgroundTap: _onPageTap').allMatches(screen).length, 2);
     final at = screen.indexOf('void _onPageTap()');
     expect(at, greaterThan(0));
-    final body = screen.substring(at, screen.indexOf('}', at));
-    expect(body, contains('Orientation.landscape'));
-    expect(body, contains('_togglePageFillScreen()'));
+    // To the end of the method, not to the first `}` — the handler now has
+    // an `if` block inside it, and stopping at the first brace would read
+    // half the body and silently assert against a fragment.
+    final body = screen.substring(at, screen.indexOf('\n  }', at));
+    expect(body, contains('Orientation.landscape'),
+        reason: 'landscape has no options, so the tap does nothing there');
+
+    // WHAT CHANGED ON 2026-09-17. Full screen became the default and
+    // permanent state — «خلي دايما الصفحة في وضع ملء الشاشة» — so the tap's
+    // old meaning («enter or leave full screen») was free, and it now shows
+    // and hides `MushafChrome`, the controls that float over the page. No
+    // new gesture was invented: the page already owns a long-press, a
+    // horizontal swipe and a vertical scroll, and a fifth would have had to
+    // fight one of them.
+    expect(body, contains('_chromeVisible = !_chromeVisible'),
+        reason: 'in full screen the tap must toggle the floating controls');
+    expect(body, contains('_togglePageFillScreen()'),
+        reason: 'from normal mode the tap still enters full screen, so a '
+            'reader who turned full screen off can get back in');
+  });
+
+  test('the floating controls cannot be left with no way out', () {
+    // Full screen hides AppShell's navigation bar, so if the panel were the
+    // only thing that could restore it AND the panel could not be summoned,
+    // the reader would be stuck in the Qur'an tab. Two independent things
+    // prevent that and both are asserted: the tap always toggles the panel
+    // (above), and the panel carries the Display sheet, whose «full screen»
+    // switch turns the mode off.
+    final sheet = File(
+      'lib/features/quran/presentation/widgets/mushaf/quran_display_sheet.dart',
+    ).readAsStringSync();
+    expect(sheet, contains('onTogglePageFill'),
+        reason: 'the Display sheet is the way back out of full screen');
+    expect(sheet, contains("'quran.page_fit_full'.tr()"));
   });
 
   test('the reader marker plays one verse, not the continuous recitation', () {

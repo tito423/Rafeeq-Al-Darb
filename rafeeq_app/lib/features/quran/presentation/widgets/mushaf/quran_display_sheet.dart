@@ -129,9 +129,9 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
               padding: const EdgeInsets.only(bottom: 4),
               child: Text(
                 'quran.display_title'.tr(),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
             ),
             if (_textOnly) ...[
@@ -203,10 +203,7 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
             Text(
               'quran.display_hint'.tr(),
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11,
-                color: scheme.onSurfaceVariant,
-              ),
+              style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -221,16 +218,16 @@ class _Group extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
+    child: Text(
+      label,
+      style: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    ),
+  );
 }
 
 /// The three layouts as three cards, with the one in use filled gold.
@@ -249,7 +246,7 @@ class _LayoutChoice extends StatelessWidget {
     (
       QuranTextLayout.reading,
       Icons.chrome_reader_mode_rounded,
-      'quran.layout_reading'
+      'quran.layout_reading',
     ),
   ];
 
@@ -272,8 +269,7 @@ class _LayoutChoice extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                     color: layout == value
                         ? AppColors.gold.withValues(alpha: 0.16)
-                        : scheme.surfaceContainerHighest
-                            .withValues(alpha: 0.5),
+                        : scheme.surfaceContainerHighest.withValues(alpha: 0.5),
                     border: Border.all(
                       color: layout == value
                           ? AppColors.gold
@@ -283,11 +279,13 @@ class _LayoutChoice extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(icon,
-                          size: 22,
-                          color: layout == value
-                              ? AppColors.gold
-                              : scheme.onSurfaceVariant),
+                      Icon(
+                        icon,
+                        size: 22,
+                        color: layout == value
+                            ? AppColors.gold
+                            : scheme.onSurfaceVariant,
+                      ),
                       const SizedBox(height: 6),
                       Text(
                         key.tr(),
@@ -384,14 +382,14 @@ class _Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-        leading: Icon(icon, color: AppColors.gold),
-        title: Text(title),
-        // `chevron_right`, not `chevron_left`: the left one auto-mirrors in
-        // RTL and ten of them pointed the wrong way once (trap #7).
-        trailing: const Icon(Icons.chevron_right, size: 20),
-        onTap: onTap,
-      );
+    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+    leading: Icon(icon, color: AppColors.gold),
+    title: Text(title),
+    // `chevron_right`, not `chevron_left`: the left one auto-mirrors in
+    // RTL and ten of them pointed the wrong way once (trap #7).
+    trailing: const Icon(Icons.chevron_right, size: 20),
+    onTap: onTap,
+  );
 }
 
 class _SwitchTile extends StatelessWidget {
@@ -408,10 +406,10 @@ class _SwitchTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SwitchListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-        secondary: Icon(icon, color: AppColors.gold),
-        title: Text(title),
-        value: value,
-        onChanged: onChanged,
-      );
+    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+    secondary: Icon(icon, color: AppColors.gold),
+    title: Text(title),
+    value: value,
+    onChanged: onChanged,
+  );
 }

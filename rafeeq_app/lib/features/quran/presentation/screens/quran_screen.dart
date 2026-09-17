@@ -35,6 +35,7 @@ import '../../../../app/shell/tab_request_provider.dart';
 ///    device, with the real ayah polygons layered on top for tap/highlight.
 import '../widgets/mushaf/auto_scroll_speed_bar.dart';
 import '../widgets/mushaf/fast_page_scroll_bar.dart';
+import '../widgets/mushaf/mushaf_chrome.dart';
 import '../widgets/mushaf/mushaf_toolbar.dart';
 import '../widgets/mushaf/page_overlay.dart';
 import '../widgets/mushaf/recite_bar.dart';
@@ -88,22 +89,24 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   double _autoScrollSpeed = 40; // pixels/second
   static const _kAutoScrollSpeed = 'quran_text_autoscroll_speed_v1';
 
-  /// P3‑41: real-device feedback — the toolbar "is taking place from the
-  /// screen"; tapping the page should hide it (and give the page the
-  /// freed space) and tapping again should bring it back. Starts visible
-  /// — hiding it by default on first open would make the reader's own
-  /// controls undiscoverable.
+  /// P3‑41: the toolbar hides on a downward read and returns on a pull up.
+  /// Normal mode only — full screen has no bar to move.
   bool _toolbarVisible = true;
 
   /// First-frame estimate only; the bar reports its real height on layout.
   double _toolbarHeight = 116;
+
+  /// The floating controls (`MushafChrome`), toggled by the page tap.
+  bool _chromeVisible = false;
 
   /// P3‑41: "give option so I can change page from small to full fit of
   /// screen" — a persisted, explicit reader preference, independent of
   /// the toolbar-hide above (that just reclaims the toolbar's own strip;
   /// this changes how much of *that* remaining space the page itself
   /// fills).
-  bool _pageFillScreen = false;
+  /// Default since 2026-09-17 («تفتح بملئ الشاشة»); `_restoreState`
+  /// overwrites it, so a reader who turned it off keeps it off.
+  bool _pageFillScreen = true;
   static const _kPageFillScreen = 'quran_text_page_fill_v1';
 
   /// Live state of continuous (ayah-by-ayah, auto-advancing) recitation.
@@ -180,8 +183,41 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// start from it after going full screen.
   void _onPageTap() {
     if (MediaQuery.orientationOf(context) == Orientation.landscape) return;
+    // In full screen the tap shows/hides the floating controls instead of
+    // leaving the mode — the same gesture, deliberately; see MushafChrome.
+    if (_pageFillScreen) {
+      setState(() => _chromeVisible = !_chromeVisible);
+      return;
+    }
     _togglePageFillScreen();
   }
+
+  /// One toolbar for both the app bar and [MushafChrome] — a second copy
+  /// is a second copy to forget to update.
+  Widget _toolbarFor(MushafData d, bool isRaster, bool canIndexBySurah) =>
+      MushafToolbar(
+        compact: _toolbarLandscape(context),
+        textMode: _mode == MushafMode.text,
+        isRaster: isRaster,
+        canIndexBySurah: canIndexBySurah,
+        autoScroll: _autoScroll,
+        reciteActive: _recite.active,
+        pageFillScreen: _pageFillScreen,
+        fontScale: _fontScale,
+        data: d,
+        current: _current,
+        totalPages: _totalPages,
+        onFontScale: _changeFontScale,
+        onToggleAutoScroll: _toggleAutoScroll,
+        onToggleRecite: () => _toggleContinuousRecitation(d),
+        onTogglePageFill: _togglePageFillScreen,
+        onGoToPage: _goToPage,
+        onNavigateFromIndex: (page, {surahStart = false}) =>
+            _navigateFromIndex(page, d, surahStart: surahStart),
+        onPickEdition: _pickEdition,
+        onEnterImageView: _enterImageView,
+        onLeaveImageView: _leaveImageView,
+      );
 
   /// The toolbar gets out of the way while the reader is reading.
   ///
@@ -735,31 +771,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                         if ((size.height - _toolbarHeight).abs() < 0.5) return;
                         setState(() => _toolbarHeight = size.height);
                       },
-                      child: MushafToolbar(
-                        compact: _toolbarLandscape(context),
-                        textMode: _mode == MushafMode.text,
-                        isRaster: isRaster,
-                        canIndexBySurah: canIndexBySurah,
-                        autoScroll: _autoScroll,
-                        reciteActive: _recite.active,
-                        pageFillScreen: _pageFillScreen,
-                        fontScale: _fontScale,
-                        data: mushaf.value!,
-                        current: _current,
-                        totalPages: _totalPages,
-                        onFontScale: _changeFontScale,
-                        onToggleAutoScroll: _toggleAutoScroll,
-                        onToggleRecite: () =>
-                            _toggleContinuousRecitation(mushaf.value!),
-                        onTogglePageFill: _togglePageFillScreen,
-                        onGoToPage: _goToPage,
-                        onNavigateFromIndex: (page, {surahStart = false}) =>
-                            _navigateFromIndex(page, mushaf.value!,
-                                surahStart: surahStart),
-                        onPickEdition: _pickEdition,
-                        onEnterImageView: _enterImageView,
-                        onLeaveImageView: _leaveImageView,
-                      ),
+                      child: _toolbarFor(
+                          mushaf.value!, isRaster, canIndexBySurah),
                     )
                   : null,
             ),
@@ -796,16 +809,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   ),
                   child: _buildViewer(data, edition, textLayout),
                 ),
-                // P3‑43 #7 / P3‑51: the surah name (top-right) and juz (top-left)
-                // running header stays on screen regardless of toolbar/full-screen
-                // — reading context, not an "option". The page number is only
-                // floated here in full-screen mode (where there's no bottom bar);
-                // in normal mode it lives in its own bar under the text so it can
-                // never overlap the last line.
+                // NORMAL MODE ONLY: in full screen `MushafChrome` carries
+                // surah + juz + page with the controls, and leaving these
+                // here too would show the juz twice when the panel opened.
                 // Only label the page with a surah/juz when this printing
                 // actually shares the Hafs pagination those labels come from
                 // — otherwise they would name a surah this page doesn't hold.
-                PersistentPageOverlay(
+                if (!_pageFillScreen || isLandscape)
+                  PersistentPageOverlay(
                   // Image mode only. The text page already carries its own
                   // pinned header and a banner for every surah it opens, so a
                   // third copy in the corner was «متكرر سورة الرعد ٣ مرات».
@@ -828,37 +839,23 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   // the number has to live here instead of nowhere.
                   pageNumber: (_pageFillScreen || isLandscape) ? _current : null,
                 ),
-                // P3‑54: a translucent floating "exit immersive" button — the
-                // always-visible, discoverable way back out (alongside the
-                // double-tap gesture), since in full-screen the toolbar that
-                // toggled the mode is itself off-screen. Only present while
-                // full-screen; a plain SafeArea-aligned button, not an
-                // `IgnorePointer` overlay, so it actually receives its own taps.
-                // Not in landscape: the options live in portrait only.
+                // THE FLOATING CONTROLS, replacing a black-and-white «exit
+                // immersive» circle. They take no layout space, so the
+                // mushaf keeps the whole screen — «مش تاكل اي حاجة من الشاشة».
                 if (_pageFillScreen && !isLandscape)
-                  SafeArea(
-                    child: Align(
-                      alignment: AlignmentDirectional.topStart,
-                      // Sits below the running-header badges (surah/juz occupy the
-                      // top corners) so it never overlaps them.
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.only(
-                          start: 8,
-                          top: isLandscape ? 40 : 56,
-                        ),
-                        child: Material(
-                          color: Colors.black.withValues(alpha: 0.35),
-                          shape: const CircleBorder(),
-                          clipBehavior: Clip.antiAlias,
-                          child: IconButton(
-                            tooltip: 'quran.page_fit_small'.tr(),
-                            icon: const Icon(Icons.fullscreen_exit,
-                                color: Colors.white),
-                            onPressed: _togglePageFillScreen,
-                          ),
-                        ),
-                      ),
-                    ),
+                  MushafChrome(
+                    visible: _chromeVisible,
+                    mt: resolveMushafTheme(ref.watch(mushafThemeProvider),
+                        Theme.of(context).brightness),
+                    surahName: (edition?.hafsPagination ?? true)
+                        ? _currentSurahName(data)
+                        : null,
+                    juzNumber: (edition?.hafsPagination ?? true)
+                        ? _currentJuzNumber(data)
+                        : null,
+                    pageNumber: _current,
+                    totalPages: _totalPages,
+                    actions: _toolbarFor(data, isRaster, canIndexBySurah),
                   ),
               ],
             ),
