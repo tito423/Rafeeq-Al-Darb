@@ -2,6 +2,7 @@
 // shadows the dart:ui one (ltr/rtl) this file uses — hide it (same fix as
 // ayah_sciences_sheet.dart, see HANDOVER §7).
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -739,7 +740,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                     child: Text(
                       doc.meta.printReliable
                           ? '${'library.text_page'.tr()} ${page.printedPage}'
-                          : '${_pageIndex + 1} / ${doc.pages.length}',
+                          : ratio(_pageIndex + 1, doc.pages.length),
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),

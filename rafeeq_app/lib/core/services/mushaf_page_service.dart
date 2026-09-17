@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../utils/byte_formatter.dart' show ratio;
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -355,7 +356,7 @@ class MushafPageService {
               title: notifTitle,
               done: done,
               total: total,
-              text: '${'downloads.paused'.tr()} · $done / $total',
+              text: '${'downloads.paused'.tr()} · ${ratio(done, total)}',
               force: true,
             );
           }

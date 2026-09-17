@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -353,7 +354,7 @@ class _BottomControls extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             target > 1
-                ? '${'azkar.repeat'.tr()}: $count / $target'
+                ? '${'azkar.repeat'.tr()}: ${ratio(count, target)}'
                 : 'azkar.tap_to_count'.tr(),
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.85),
@@ -384,7 +385,7 @@ class _PageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = Text(
-      '${index + 1} / $total',
+      ratio(index + 1, total),
       style: TextStyle(
         color: Colors.white.withValues(alpha: 0.7),
         fontSize: 12,

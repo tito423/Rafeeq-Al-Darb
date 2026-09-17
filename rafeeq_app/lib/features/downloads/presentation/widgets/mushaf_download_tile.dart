@@ -170,8 +170,8 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                     const SizedBox(height: 6),
                     Text(
                       _paused
-                          ? '${'downloads.paused'.tr()}  $_done / $total'
-                          : '${'downloads.downloading'.tr()}  $_done / $total',
+                          ? '${'downloads.paused'.tr()}  ${ratio(_done, total)}'
+                          : '${'downloads.downloading'.tr()}  ${ratio(_done, total)}',
                       style: theme.textTheme.labelSmall,
                     ),
                   ],
