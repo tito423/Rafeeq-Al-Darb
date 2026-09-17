@@ -109,6 +109,12 @@ flutter:
     # and stored gzipped, so the card works with no network at all.
     - assets/data/on_this_day_ar.json
     - assets/data/on_this_day_en.json
+    # Six of the seven: Wikimedia's onthisday feed exists in these languages
+    # and answers 404 for Urdu, which falls back to English.
+    - assets/data/on_this_day_es.json
+    - assets/data/on_this_day_fr.json
+    - assets/data/on_this_day_pt.json
+    - assets/data/on_this_day_ru.json
     # The same idea keyed by the HIJRI day, built by
     # scripts/fetch_on_this_day_hijri.py from Arabic Wikipedia's own per-Hijri-
     # day pages. Arabic only: English Wikipedia has no such pages at all.

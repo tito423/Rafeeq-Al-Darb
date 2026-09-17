@@ -40,10 +40,11 @@ class OnThisDay {
   final Map<String, List<HistoricalEvent>> _byDay;
 
   /// The language the rows are actually IN — not the language that was
-  /// asked for. The Gregorian feed exists in ar and en, so a French reader is
-  /// served the English rows, and the Hijri set exists only in Arabic. A sheet
-  /// that wants to say «these are in Arabic» has to be told, and a keyword
-  /// match over the text has to know which language it is matching.
+  /// asked for. The Gregorian feed now ships in six languages, and Urdu falls
+  /// back to English because Wikimedia has no Urdu feed (404, checked); the
+  /// Hijri set exists only in Arabic. A sheet that wants to say where its rows
+  /// come from has to be told, and a keyword match over the text has to know
+  /// which language it is matching.
   final String lang;
 
   const OnThisDay(this._byDay, {this.lang = ''});

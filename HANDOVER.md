@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 03:15 — IN PROGRESS — resume here**
+**2026-09-17 04:43 — IN PROGRESS — resume here**
 
-the Hajj guide speaks the reader's language too. The steps read an-Nawawi's al-Idah verbatim, and that book is Arabic, so a French reader was getting a chapter of classical Arabic prose under an English title. Translating a 522-page manual is a different job; what a non-Arabic reader gets is the step said plainly in his own language beside the interactive illustration - what the chapter is about, carrying no ruling - and a line saying the full text is al-Nawawi's own Arabic. Nineteen of those, seven languages each. Also fixed the entry card in More, which still read «Step by step from Shaykh Ibn Baz's book» three commits after his book was removed - the kind of string that outlives the thing it describes. And verified on the emulator: the Hajj screen opens on al-Idah with the miqat chapter under «The miqats» and no trace of al-Ifsah's footnotes, which is the filter doing its job
+the Gregorian on-this-day feed now ships in six languages instead of two. It had ar and en, so a Spanish, French, Portuguese or Russian reader was served the English rows - not Arabic, but not his language either. Fetched all four from Wikimedia's own feed: 366 days each, 4,380 to 4,392 events each, one empty day in Spanish and none anywhere else. Urdu is not there because Wikimedia has no Urdu feed at all (404 on every date, checked) and falls back to English
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
