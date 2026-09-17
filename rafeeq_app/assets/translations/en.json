@@ -424,7 +424,8 @@
     "book_desc_generated": "A work by {}, {} pages, in the {} section.",
     "tab_hadeethenc": "Hadith Encyclopedia",
     "download_author_all": "Download all of this author's books ({})",
-    "editor_notes_removed": "The author's text from this printing; the editor's notes are not included"
+    "editor_notes_removed": "The author's text from this printing; the editor's notes are not included",
+    "cat_talibIlm": "The student of knowledge"
   },
   "azkar": {
     "title": "Adhkar",
@@ -1093,9 +1094,10 @@
     "suffix": " AH"
   },
   "dawah": {
-    "site_islamqa": "The largest Islamic fatwa and questions site, supervised by Shaykh Muhammad Salih al-Munajjid",
-    "site_dorar": "A comprehensive encyclopedia of hadith, creed, fiqh and hadith authentication",
-    "site_shamela": "The official site of the Shamela library project"
+    "site_shamela": "The official site of the Shamela library project",
+    "site_daralifta": "Egypt's official fatwa authority — rulings, statements and answers to public questions",
+    "site_azhar": "The official portal of al-Azhar al-Sharif — its statements, articles and journals",
+    "site_nabulsi": "Dr. Muhammad Ratib al-Nabulsi's encyclopedia — his lessons, sermons and articles"
   },
   "adhan_video": {
     "source": "Source: Pixabay — Pixabay licence (free use, no attribution required)",

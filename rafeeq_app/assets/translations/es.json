@@ -424,7 +424,8 @@
     "book_desc_generated": "Una obra de {}, {} páginas, en la sección de {}.",
     "tab_hadeethenc": "Enciclopedia de hadices",
     "download_author_all": "Descargar todos los libros del autor ({})",
-    "editor_notes_removed": "El texto del autor de esta edición; las notas del editor no están incluidas"
+    "editor_notes_removed": "El texto del autor de esta edición; las notas del editor no están incluidas",
+    "cat_talibIlm": "El estudiante del saber"
   },
   "azkar": {
     "title": "Adhkar",
@@ -1093,9 +1094,10 @@
     "suffix": " AH"
   },
   "dawah": {
-    "site_islamqa": "El mayor sitio islámico de fatuas y preguntas, supervisado por el jeque Muhammad Salih al-Munajjid",
-    "site_dorar": "Enciclopedia completa de hadiz, credo, fiqh y verificación de hadices",
-    "site_shamela": "El sitio oficial del proyecto de biblioteca Shamela"
+    "site_shamela": "El sitio oficial del proyecto de biblioteca Shamela",
+    "site_daralifta": "La autoridad oficial de fatuas de Egipto: dictámenes, comunicados y respuestas",
+    "site_azhar": "El portal oficial de al-Azhar: comunicados, artículos y revistas",
+    "site_nabulsi": "La enciclopedia del Dr. Muhammad Ratib al-Nabulsi: lecciones, sermones y artículos"
   },
   "adhan_video": {
     "source": "Fuente: Pixabay — licencia Pixabay (uso libre, sin atribución)",

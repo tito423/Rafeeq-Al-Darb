@@ -16,7 +16,18 @@ enum BookCategory {
   tarikh,
 
   tazkiyah,
-  adab;
+  adab,
+
+  /// طالب العلم — the graduated shelf: how to study, then the tools to study
+  /// WITH (مصطلح الحديث، أصول الفقه، علوم القرآن، النحو), in the order they
+  /// are traditionally taken.
+  ///
+  /// Asked for on 2026-09-17: «تزودلي في المكتبة قسم وتسميه طالب العلم …
+  /// الكتب المتدرجة اللي تعلم طالب العلم الشرعي المنهج الوسطي المعتدل بتدرج».
+  /// Every book on it is a classical one whose author died centuries ago —
+  /// deliberately, because the modern manuals of «طلب العلم» are exactly the
+  /// literature he asked to keep away from.
+  talibIlm;
 
   String get labelKey => 'library.cat_$name';
 
@@ -29,5 +40,6 @@ enum BookCategory {
         BookCategory.tarikh => Icons.account_balance_outlined,
         BookCategory.tazkiyah => Icons.spa_outlined,
         BookCategory.adab => Icons.favorite_outline,
+        BookCategory.talibIlm => Icons.school_outlined,
       };
 }

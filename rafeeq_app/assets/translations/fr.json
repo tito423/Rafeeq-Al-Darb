@@ -424,7 +424,8 @@
     "book_desc_generated": "Un ouvrage de {}, {} pages, dans la section {}.",
     "tab_hadeethenc": "Encyclopédie des hadiths",
     "download_author_all": "Télécharger tous les livres de l'auteur ({})",
-    "editor_notes_removed": "Le texte de l'auteur d'après cette édition ; les notes de l'éditeur ne sont pas incluses"
+    "editor_notes_removed": "Le texte de l'auteur d'après cette édition ; les notes de l'éditeur ne sont pas incluses",
+    "cat_talibIlm": "L'étudiant en sciences religieuses"
   },
   "azkar": {
     "title": "Adhkar",
@@ -1093,9 +1094,10 @@
     "suffix": " AH"
   },
   "dawah": {
-    "site_islamqa": "Le plus grand site islamique de fatwas et de questions, supervisé par le cheikh Muhammad Salih al-Munajjid",
-    "site_dorar": "Une encyclopédie complète du hadith, du credo, du fiqh et de l’authentification des hadiths",
-    "site_shamela": "Le site officiel du projet de bibliothèque Shamela"
+    "site_shamela": "Le site officiel du projet de bibliothèque Shamela",
+    "site_daralifta": "L'autorité officielle égyptienne de la fatwa : avis, communiqués et réponses",
+    "site_azhar": "Le portail officiel d'al-Azhar : communiqués, articles et revues",
+    "site_nabulsi": "L'encyclopédie du Dr Muhammad Ratib al-Nabulsi : leçons, sermons et articles"
   },
   "adhan_video": {
     "source": "Source : Pixabay — licence Pixabay (usage libre, sans attribution)",

@@ -78,6 +78,123 @@ from datetime import datetime, timezone
 # id  -> must match LibraryBook.id in book_catalog.dart
 # See PHASE2.md stage P2-4b "Sourcing decisions" for the reasoning.
 BOOKS = {
+    # ─────────────────────────────────────────────────────────────────────
+    # 2026-09-17 — «اشهر وافضل الكتب في تنمية الذات واداب النفس» and a new
+    # «طالب العلم» shelf. See this file's header note and CONTENT-LICENSES.md.
+    # ─────────────────────────────────────────────────────────────────────
+    "ihya_ulum_al_din": {
+        "shamela_id": 9472,
+        "source_label": "المكتبة الشاملة — إحياء علوم الدين، لأبي حامد الغزالي (ت ٥٠٥ هـ)، دار المعرفة، بيروت",
+    },
+    "bidayat_al_hidayah": {
+        "shamela_id": 12718,
+        "source_label": "المكتبة الشاملة — بداية الهداية، لأبي حامد الغزالي (ت ٥٠٥ هـ)",
+    },
+    "al_akhlaq_wal_siyar": {
+        "shamela_id": 6874,
+        "source_label": "المكتبة الشاملة — الأخلاق والسير في مداواة النفوس، لابن حزم الأندلسي (ت ٤٥٦ هـ)",
+    },
+    "adab_al_dunya_wal_din": {
+        "shamela_id": 765,
+        "source_label": "المكتبة الشاملة — أدب الدنيا والدين، للماوردي (ت ٤٥٠ هـ)",
+    },
+    "jami_al_ulum_wal_hikam": {
+        "shamela_id": 949,
+        "source_label": "المكتبة الشاملة — جامع العلوم والحكم، لابن رجب الحنبلي (ت ٧٩٥ هـ)، تحقيق ماهر ياسين الفحل",
+    },
+    "lataif_al_maarif": {
+        "shamela_id": 11363,
+        "source_label": "المكتبة الشاملة — لطائف المعارف فيما لمواسم العام من الوظائف، لابن رجب الحنبلي (ت ٧٩٥ هـ)، دار ابن حزم",
+    },
+    "madarij_al_salikin": {
+        "shamela_id": 8370,
+        "source_label": "المكتبة الشاملة — مدارج السالكين بين منازل إياك نعبد وإياك نستعين، لابن قيم الجوزية (ت ٧٥١ هـ)، دار الكتاب العربي",
+    },
+    "risalat_al_mustarshidin": {
+        "shamela_id": 6871,
+        "source_label": "المكتبة الشاملة — رسالة المسترشدين، للحارث المحاسبي (ت ٢٤٣ هـ)",
+    },
+    "maqasid_al_riayah": {
+        "shamela_id": 6875,
+        "source_label": "المكتبة الشاملة — مقاصد الرعاية لحقوق الله عز وجل، للحارث المحاسبي (ت ٢٤٣ هـ)",
+    },
+    "al_risalah_al_qushayriyyah": {
+        "shamela_id": 9953,
+        "source_label": "المكتبة الشاملة — الرسالة القشيرية، لأبي القاسم القشيري (ت ٤٦٥ هـ)",
+    },
+    "qut_al_qulub": {
+        "shamela_id": 482,
+        "source_label": "المكتبة الشاملة — قوت القلوب في معاملة المحبوب، لأبي طالب المكي (ت ٣٨٦ هـ)",
+    },
+    "tahdhib_al_akhlaq": {
+        "shamela_id": 12720,
+        "source_label": "المكتبة الشاملة — تهذيب الأخلاق وتطهير الأعراق، لابن مسكويه (ت ٤٢١ هـ)",
+    },
+    "al_adab_al_shariyyah": {
+        "shamela_id": 21582,
+        "source_label": "المكتبة الشاملة — الآداب الشرعية والمنح المرعية، لابن مفلح المقدسي (ت ٧٦٣ هـ)",
+    },
+    # ── طالب العلم ───────────────────────────────────────────────────────
+    "jami_bayan_al_ilm": {
+        "shamela_id": 22367,
+        "source_label": "المكتبة الشاملة — جامع بيان العلم وفضله، لابن عبد البر (ت ٤٦٣ هـ)",
+    },
+    "tadhkirat_al_sami_wal_mutakallim": {
+        "shamela_id": 151180,
+        "source_label": "المكتبة الشاملة — تذكرة السامع والمتكلم في أدب العالم والمتعلم، لابن جماعة (ت ٧٣٣ هـ)",
+    },
+    "iqtida_al_ilm_al_amal": {
+        "shamela_id": 12985,
+        "source_label": "المكتبة الشاملة — اقتضاء العلم العمل، للخطيب البغدادي (ت ٤٦٣ هـ)",
+    },
+    "al_faqih_wal_mutafaqqih": {
+        "shamela_id": 13048,
+        "source_label": "المكتبة الشاملة — الفقيه والمتفقه، للخطيب البغدادي (ت ٤٦٣ هـ)",
+    },
+    "al_jami_li_akhlaq_al_rawi": {
+        "shamela_id": 13012,
+        "source_label": "المكتبة الشاملة — الجامع لأخلاق الراوي وآداب السامع، للخطيب البغدادي (ت ٤٦٣ هـ)",
+    },
+    "adab_al_imla_wal_istimla": {
+        "shamela_id": 6018,
+        "source_label": "المكتبة الشاملة — أدب الإملاء والاستملاء، لأبي سعد السمعاني (ت ٥٦٢ هـ)",
+    },
+    "muqaddimat_ibn_al_salah": {
+        "shamela_id": 22870,
+        "source_label": "المكتبة الشاملة — معرفة أنواع علوم الحديث (مقدمة ابن الصلاح)، لابن الصلاح (ت ٦٤٣ هـ)، تحقيق نور الدين عتر",
+    },
+    "al_waraqat": {
+        "shamela_id": 6297,
+        "source_label": "المكتبة الشاملة — الورقات في أصول الفقه، لإمام الحرمين الجويني (ت ٤٧٨ هـ)",
+    },
+    "al_luma_fi_usul_al_fiqh": {
+        "shamela_id": 8536,
+        "source_label": "المكتبة الشاملة — اللمع في أصول الفقه، لأبي إسحاق الشيرازي (ت ٤٧٦ هـ)",
+    },
+    "al_risalah_lil_shafii": {
+        "shamela_id": 8180,
+        "source_label": "المكتبة الشاملة — الرسالة، للإمام الشافعي (ت ٢٠٤ هـ)",
+    },
+    "al_ajurrumiyyah": {
+        "shamela_id": 11371,
+        "source_label": "المكتبة الشاملة — الآجرومية، لابن آجروم الصنهاجي (ت ٧٢٣ هـ)",
+    },
+    "al_itqan_fi_ulum_al_quran": {
+        "shamela_id": 11728,
+        "source_label": "المكتبة الشاملة — الإتقان في علوم القرآن، لجلال الدين السيوطي (ت ٩١١ هـ)",
+    },
+    "al_burhan_fi_ulum_al_quran": {
+        "shamela_id": 11436,
+        "source_label": "المكتبة الشاملة — البرهان في علوم القرآن، لبدر الدين الزركشي (ت ٧٩٤ هـ)",
+    },
+    "al_muwafaqat": {
+        "shamela_id": 11435,
+        "source_label": "المكتبة الشاملة — الموافقات، لأبي إسحاق الشاطبي (ت ٧٩٠ هـ)",
+    },
+    "qawaid_al_ahkam": {
+        "shamela_id": 8608,
+        "source_label": "المكتبة الشاملة — قواعد الأحكام في مصالح الأنام، للعز بن عبد السلام (ت ٦٦٠ هـ)",
+    },
     # THE FREE-LICENCE TAJWEED SPINE. «انا مش عاوز في التطبيق اي مشكلة لحقوق
     # الملكية نهائيا» — so the curriculum moved off two modern in-copyright
     # books (تيسير أحكام التجويد, دار الغوثاني 2006, living author; and غاية

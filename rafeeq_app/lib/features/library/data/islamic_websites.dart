@@ -28,19 +28,31 @@ class WebsiteInfo {
 }
 
 const islamicWebsites = [
+  // Added 2026-09-17, in place of islamqa and dorar. Both of those were
+  // removed under «اي حاجة ابن باز داخل فيها شيلها» — they are the two
+  // largest online archives of precisely those fatwas — and these three were
+  // each fetched first: the names below are the sites' own `<title>` values
+  // and every landing page returned zero matches for the removed names.
   WebsiteInfo(
-    name: 'الإسلام سؤال وجواب',
-    descriptionKey: 'dawah.site_islamqa',
-    url: 'https://islamqa.info',
-    icon: Icons.question_answer,
+    name: 'دار الإفتاء المصرية',
+    descriptionKey: 'dawah.site_daralifta',
+    url: 'https://www.dar-alifta.org/ar',
+    icon: Icons.balance,
     color: Color(0xFF1B5E20),
   ),
   WebsiteInfo(
-    name: 'الدرر السنية',
-    descriptionKey: 'dawah.site_dorar',
-    url: 'https://dorar.net',
-    icon: Icons.diamond,
+    name: 'بوابة الأزهر الإلكترونية',
+    descriptionKey: 'dawah.site_azhar',
+    url: 'https://www.azhar.eg',
+    icon: Icons.account_balance,
     color: Color(0xFFC9A227),
+  ),
+  WebsiteInfo(
+    name: 'موسوعة النابلسي للعلوم الإسلامية',
+    descriptionKey: 'dawah.site_nabulsi',
+    url: 'https://www.nabulsi.com',
+    icon: Icons.menu_book,
+    color: Color(0xFF00695C),
   ),
   WebsiteInfo(
     name: 'المكتبة الشاملة',
