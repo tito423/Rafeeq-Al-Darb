@@ -1589,9 +1589,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 04:43 — IN PROGRESS — resume here**
+**2026-09-17 04:48 — IN PROGRESS — resume here**
 
-the Gregorian on-this-day feed now ships in six languages instead of two. It had ar and en, so a Spanish, French, Portuguese or Russian reader was served the English rows - not Arabic, but not his language either. Fetched all four from Wikimedia's own feed: 366 days each, 4,380 to 4,392 events each, one empty day in Spanish and none anywhere else. Urdu is not there because Wikimedia has no Urdu feed at all (404 on every date, checked) and falls back to English
+v3.30.0: the translation release - 58 quotes in seven languages, nineteen Hajj steps in seven, the on-this-day feed in six. Built and signed, OK: rotated, 212.5 MB
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
