@@ -3509,6 +3509,369 @@ const List<LibraryBook> libraryBookCatalog = [
           'الثانية ١٤٣٤هـ - ٢٠١٣م',
     ),
   ),
+  // ══════════════════════════════════════════════════════════════════════
+  // 2026-09-17 — «اشهر وافضل الكتب في تنمية الذات واداب النفس» و«قسم
+  // وتسميه طالب العلم … الكتب المتدرجة … المنهج الوسطي المعتدل بتدرج».
+  //
+  // The library held 99 tazkiyah books and not one by الغزالي، ابن رجب،
+  // الشاطبي، الماوردي، ابن حزم، المحاسبي، الخطيب البغدادي or ابن عبد البر —
+  // measured by grepping each name over this file and getting zero. It was
+  // almost entirely ابن أبي الدنيا and ابن الجوزي.
+  //
+  // Every id came from the LOCAL Shamela title index, never from Shamela's
+  // own search, which searches inside books and returns a commentary above
+  // the book it comments on (trap #17). Every `sizeBytes` is what R2
+  // answered on a HEAD after the upload, not what the local file measured.
+  //
+  // الاعتصام للشاطبي is deliberately absent while الموافقات is here: he asked
+  // to stay far from تشدد, and الموافقات is the مقاصد book.
+  // ══════════════════════════════════════════════════════════════════════
+  LibraryBook(
+    id: 'ihya_ulum_al_din',
+    titleAr: 'إحياء علوم الدين',
+    titleEn: 'Ihya Ulum al-Din',
+    authorAr: 'الإمام أبو حامد الغزالي',
+    authorEn: 'Imam Abu Hamid al-Ghazali',
+    deathYearAh: 505,
+    pages: 547,
+    descKey: 'book_desc.ihya_ulum_al_din',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ihya_ulum_al_din.json',
+      sizeBytes: 2616190,
+      sourceLabel:
+          'المكتبة الشاملة — إحياء علوم الدين، لأبي حامد الغزالي (ت ٥٠٥ '
+              'هـ)، دار المعرفة، بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'madarij_al_salikin',
+    titleAr: 'مدارج السالكين بين منازل إياك نعبد وإياك نستعين',
+    titleEn: 'Madarij al-Salikin',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Imam Ibn Qayyim al-Jawziyyah',
+    deathYearAh: 751,
+    pages: 526,
+    descKey: 'book_desc.madarij_al_salikin',
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/madarij_al_salikin.json',
+      sizeBytes: 1372508,
+      sourceLabel:
+          'المكتبة الشاملة — مدارج السالكين بين منازل إياك نعبد وإياك '
+              'نستعين، لابن قيم الجوزية (ت ٧٥١ هـ)، دار الكتاب العربي',
+    ),
+  ),
+  LibraryBook(
+    id: 'jami_al_ulum_wal_hikam',
+    titleAr: 'جامع العلوم والحكم في شرح خمسين حديثاً من جوامع الكلم',
+    titleEn: 'Jami al-Ulum wal-Hikam',
+    authorAr: 'الحافظ ابن رجب الحنبلي',
+    authorEn: 'al-Hafiz Ibn Rajab al-Hanbali',
+    deathYearAh: 795,
+    pages: 950,
+    descKey: 'book_desc.jami_al_ulum_wal_hikam',
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/jami_al_ulum_wal_hikam.json',
+      sizeBytes: 778272,
+      sourceLabel:
+          'المكتبة الشاملة — جامع العلوم والحكم، لابن رجب الحنبلي (ت '
+              '٧٩٥ هـ)، تحقيق ماهر ياسين الفحل',
+    ),
+  ),
+  LibraryBook(
+    id: 'adab_al_dunya_wal_din',
+    titleAr: 'أدب الدنيا والدين',
+    titleEn: 'Adab al-Dunya wal-Din',
+    authorAr: 'الإمام أبو الحسن الماوردي',
+    authorEn: 'Imam Abu al-Hasan al-Mawardi',
+    deathYearAh: 450,
+    pages: 358,
+    descKey: 'book_desc.adab_al_dunya_wal_din',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/adab_al_dunya_wal_din.json',
+      sizeBytes: 327167,
+      sourceLabel:
+          'المكتبة الشاملة — أدب الدنيا والدين، للماوردي (ت ٤٥٠ هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_akhlaq_wal_siyar',
+    titleAr: 'الأخلاق والسير في مداواة النفوس',
+    titleEn: 'Al-Akhlaq wal-Siyar',
+    authorAr: 'الإمام ابن حزم الأندلسي',
+    authorEn: 'Imam Ibn Hazm al-Andalusi',
+    deathYearAh: 456,
+    pages: 95,
+    descKey: 'book_desc.al_akhlaq_wal_siyar',
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_akhlaq_wal_siyar.json',
+      sizeBytes: 52464,
+      sourceLabel:
+          'المكتبة الشاملة — الأخلاق والسير في مداواة النفوس، لابن حزم '
+              'الأندلسي (ت ٤٥٦ هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'bidayat_al_hidayah',
+    titleAr: 'بداية الهداية',
+    titleEn: 'Bidayat al-Hidayah',
+    authorAr: 'الإمام أبو حامد الغزالي',
+    authorEn: 'Imam Abu Hamid al-Ghazali',
+    deathYearAh: 505,
+    pages: 70,
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/bidayat_al_hidayah.json',
+      sizeBytes: 42066,
+      sourceLabel:
+          'المكتبة الشاملة — بداية الهداية، لأبي حامد الغزالي (ت ٥٠٥ هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'lataif_al_maarif',
+    titleAr: 'لطائف المعارف فيما لمواسم العام من الوظائف',
+    titleEn: 'Lataif al-Maarif',
+    authorAr: 'الحافظ ابن رجب الحنبلي',
+    authorEn: 'al-Hafiz Ibn Rajab al-Hanbali',
+    deathYearAh: 795,
+    pages: 348,
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/lataif_al_maarif.json',
+      sizeBytes: 301296,
+      sourceLabel:
+          'المكتبة الشاملة — لطائف المعارف فيما لمواسم العام من '
+              'الوظائف، لابن رجب الحنبلي (ت ٧٩٥ هـ)، دار ابن حزم',
+    ),
+  ),
+  LibraryBook(
+    id: 'risalat_al_mustarshidin',
+    titleAr: 'رسالة المسترشدين',
+    titleEn: 'Risalat al-Mustarshidin',
+    authorAr: 'الإمام الحارث المحاسبي',
+    authorEn: 'Imam al-Harith al-Muhasibi',
+    deathYearAh: 243,
+    pages: 183,
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/risalat_al_mustarshidin.json',
+      sizeBytes: 17849,
+      sourceLabel:
+          'المكتبة الشاملة — رسالة المسترشدين، للحارث المحاسبي (ت ٢٤٣ هـ)',
+    ),
+  ),
+  LibraryBook(
+    id: 'maqasid_al_riayah',
+    titleAr: 'مقاصد الرعاية لحقوق الله عز وجل أو مختصر رعاية المحاسبي',
+    titleEn: 'Maqasid al-Riayah',
+    authorAr: 'العز بن عبد السلام',
+    authorEn: 'al-Izz ibn Abd al-Salam',
+    deathYearAh: 660,
+    pages: 175,
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/maqasid_al_riayah.json',
+      sizeBytes: 73215,
+      sourceLabel:
+          'المكتبة الشاملة — مقاصد الرعاية لحقوق الله عز وجل، للعز بن '
+              'عبد السلام (ت ٦٦٠ هـ)، وهو اختصاره لكتاب «الرعاية» للحارث '
+              'المحاسبي، تحقيق إياد خالد الطباع',
+    ),
+  ),
+  LibraryBook(
+    id: 'tahdhib_al_akhlaq',
+    titleAr: 'تهذيب الأخلاق وتطهير الأعراق',
+    titleEn: 'Tahdhib al-Akhlaq',
+    authorAr: 'ابن مسكويه',
+    authorEn: 'Ibn Miskawayh',
+    deathYearAh: 421,
+    pages: 228,
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tahdhib_al_akhlaq.json',
+      sizeBytes: 116940,
+      sourceLabel:
+          'المكتبة الشاملة — تهذيب الأخلاق وتطهير الأعراق، لابن مسكويه '
+              '(ت ٤٢١ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 1 — آداب الطلب — ما يُقرأ قبل أي متن
+  LibraryBook(
+    id: 'jami_bayan_al_ilm',
+    titleAr: 'جامع بيان العلم وفضله',
+    titleEn: 'Jami Bayan al-Ilm wa Fadlih',
+    authorAr: 'الحافظ ابن عبد البر',
+    authorEn: 'al-Hafiz Ibn Abd al-Barr',
+    deathYearAh: 463,
+    pages: 1227,
+    descKey: 'book_desc.jami_bayan_al_ilm',
+    category: BookCategory.talibIlm,
+    shelfOrder: 1,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/jami_bayan_al_ilm.json',
+      sizeBytes: 409010,
+      sourceLabel:
+          'المكتبة الشاملة — جامع بيان العلم وفضله، لابن عبد البر (ت '
+              '٤٦٣ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 1 — آداب الطلب — ما يُقرأ قبل أي متن
+  LibraryBook(
+    id: 'tadhkirat_al_sami_wal_mutakallim',
+    titleAr: 'تذكرة السامعِ والمتكلم في أَدب العالم والمتعلم',
+    titleEn: 'Tadhkirat al-Sami wal-Mutakallim',
+    authorAr: 'بدر الدين ابن جماعة',
+    authorEn: 'Badr al-Din Ibn Jamaah',
+    deathYearAh: 733,
+    pages: 236,
+    descKey: 'book_desc.tadhkirat_al_sami_wal_mutakallim',
+    category: BookCategory.talibIlm,
+    shelfOrder: 1,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tadhkirat_al_sami_wal_mutakallim.json',
+      sizeBytes: 57173,
+      sourceLabel:
+          'المكتبة الشاملة — تذكرة السامع والمتكلم في أدب العالم '
+              'والمتعلم، لابن جماعة (ت ٧٣٣ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 1 — آداب الطلب — ما يُقرأ قبل أي متن
+  LibraryBook(
+    id: 'adab_al_imla_wal_istimla',
+    titleAr: 'أدب الاملاء والاستملاء',
+    titleEn: 'Adab al-Imla wal-Istimla',
+    authorAr: 'الإمام أبو سعد السمعاني',
+    authorEn: 'Imam Abu Sad al-Samani',
+    deathYearAh: 562,
+    pages: 180,
+    category: BookCategory.talibIlm,
+    shelfOrder: 1,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/adab_al_imla_wal_istimla.json',
+      sizeBytes: 123373,
+      sourceLabel:
+          'المكتبة الشاملة — أدب الإملاء والاستملاء، لأبي سعد السمعاني '
+              '(ت ٥٦٢ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 2 — المتون الأولى — الآلة التي يُقرأ بها
+  LibraryBook(
+    id: 'al_waraqat',
+    titleAr: 'الورقات',
+    titleEn: 'Al-Waraqat',
+    authorAr: 'إمام الحرمين الجويني',
+    authorEn: 'Imam al-Haramayn al-Juwayni',
+    deathYearAh: 478,
+    pages: 31,
+    descKey: 'book_desc.al_waraqat',
+    category: BookCategory.talibIlm,
+    shelfOrder: 2,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_waraqat.json',
+      sizeBytes: 6768,
+      sourceLabel:
+          'المكتبة الشاملة — الورقات في أصول الفقه، لإمام الحرمين '
+              'الجويني (ت ٤٧٨ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 2 — المتون الأولى — الآلة التي يُقرأ بها
+  LibraryBook(
+    id: 'al_ajurrumiyyah',
+    titleAr: 'متن الآجرومية',
+    titleEn: 'Al-Ajurrumiyyah',
+    authorAr: 'ابن آجُرُّوم الصنهاجي',
+    authorEn: 'Ibn Ajurrum al-Sanhaji',
+    deathYearAh: 723,
+    pages: 23,
+    descKey: 'book_desc.al_ajurrumiyyah',
+    category: BookCategory.talibIlm,
+    shelfOrder: 2,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_ajurrumiyyah.json',
+      sizeBytes: 7150,
+      sourceLabel:
+          'المكتبة الشاملة — الآجرومية، لابن آجروم الصنهاجي (ت ٧٢٣ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
+  LibraryBook(
+    id: 'al_luma_fi_usul_al_fiqh',
+    titleAr: 'اللمع في أصول الفقه',
+    titleEn: 'Al-Luma fi Usul al-Fiqh',
+    authorAr: 'الإمام أبو إسحاق الشيرازي',
+    authorEn: 'Imam Abu Ishaq al-Shirazi',
+    deathYearAh: 476,
+    pages: 134,
+    category: BookCategory.talibIlm,
+    shelfOrder: 3,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_luma_fi_usul_al_fiqh.json',
+      sizeBytes: 73953,
+      sourceLabel:
+          'المكتبة الشاملة — اللمع في أصول الفقه، لأبي إسحاق الشيرازي '
+              '(ت ٤٧٦ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
+  LibraryBook(
+    id: 'al_faqih_wal_mutafaqqih',
+    titleAr: 'الفقيه و المتفقه',
+    titleEn: 'Al-Faqih wal-Mutafaqqih',
+    authorAr: 'الخطيب البغدادي',
+    authorEn: 'al-Khatib al-Baghdadi',
+    deathYearAh: 463,
+    pages: 562,
+    category: BookCategory.talibIlm,
+    shelfOrder: 3,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_faqih_wal_mutafaqqih.json',
+      sizeBytes: 389556,
+      sourceLabel:
+          'المكتبة الشاملة — الفقيه والمتفقه، للخطيب البغدادي (ت ٤٦٣ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 4 — المقاصد — لماذا شُرع الحكم
+  LibraryBook(
+    id: 'qawaid_al_ahkam',
+    titleAr: 'قواعد الأحكام في مصالح الأنام',
+    titleEn: 'Qawaid al-Ahkam fi Masalih al-Anam',
+    authorAr: 'العز بن عبد السلام',
+    authorEn: 'al-Izz ibn Abd al-Salam',
+    deathYearAh: 660,
+    pages: 255,
+    descKey: 'book_desc.qawaid_al_ahkam',
+    category: BookCategory.talibIlm,
+    shelfOrder: 4,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qawaid_al_ahkam.json',
+      sizeBytes: 398215,
+      sourceLabel:
+          'المكتبة الشاملة — قواعد الأحكام في مصالح الأنام، للعز بن عبد '
+              'السلام (ت ٦٦٠ هـ)',
+    ),
+  ),
 ];
 
 /// One book by its id, or null.

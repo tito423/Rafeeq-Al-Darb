@@ -75,11 +75,13 @@ void main() {
     // returned 0 books with apparatus over all 248 on 2026-09-17. This test
     // holds the half that IS checkable: the catalogue and the bucket agree on
     // how many were touched.
-    expect(libraryBookCatalog.length, 187,
+    expect(libraryBookCatalog.length, 205,
         reason: 'the library was 257 entries on the morning of 2026-09-17: 7 '
             'duplicates and mislabelled takhrij volumes went, then '
             'al_ijaz_fi_sharh_sunan_abi_dawud on the rights audit (248), then '
-            "Ibn Taymiyyah's 60 books and Ibn al-Qayyim's index of them, at "
-            'the owner\'s instruction.');
+            "Ibn Taymiyyah's 60 books and Ibn al-Qayyim's index of them at the "
+            'owner\'s instruction (187), then the books he asked for on '
+            'self-development and the new طالب العلم shelf. This number is '
+            'still moving — the last of that batch is being built.');
   });
 }
