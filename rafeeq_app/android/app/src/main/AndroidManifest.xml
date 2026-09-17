@@ -35,20 +35,32 @@
     <!-- Full Screen Intent (Adhan) -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
-    <!-- Draw-over-other-apps: a fallback path for the Adhan alert to surface
-         over the lock screen on Android 14+/16 OEM skins that throttle a
-         background full-screen-intent launch. The primary path is the
-         fullScreenIntent notification (category=alarm, max importance) that
-         launches **AdhanActivity** — which is the alert screen, declares
-         showWhenLocked + turnScreenOn, and lives in its own task.
+    <!-- SYSTEM_ALERT_WINDOW (draw over other apps) WAS DECLARED HERE AND IS
+         GONE, 2026-09-17, on the full audit. Do not put it back without
+         writing the code first.
 
-         This note used to say the intent launched MainActivity, and
-         MainActivity carried those two flags to match. That was the bug the
-         owner hit twice: the whole app opening over the lock screen, and the
-         adhan "opening on the settings screen instead of the video". Only
-         AdhanActivity bypasses the keyguard now. -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    
+         Its comment said it was "a fallback path for the Adhan alert on
+         Android 14+/16 OEM skins that throttle a background full-screen-intent
+         launch". There was no such fallback: the repo contains no
+         `canDrawOverlays`, no `TYPE_APPLICATION_OVERLAY`, no
+         `ACTION_MANAGE_OVERLAY_PERMISSION` — nothing that the permission
+         gates. It was declared for code that was never written, and it is the
+         single most abusable permission on Android, on an app distributed as
+         a sideloaded APK.
+
+         What actually surfaces the adhan over the lock screen is unchanged and
+         does not need it: a `fullScreenIntent` notification (category=alarm,
+         max importance) launching **AdhanActivity**, which sets
+         FLAG_SHOW_WHEN_LOCKED / FLAG_TURN_SCREEN_ON / FLAG_DISMISS_KEYGUARD on
+         its OWN window. Those flags are gated by USE_FULL_SCREEN_INTENT,
+         TURN_SCREEN_ON and DISABLE_KEYGUARD, all still declared below.
+
+         (That note also used to say the intent launched MainActivity, and
+         MainActivity carried those flags to match. That was the bug the owner
+         hit twice — the whole app opening over the lock screen, and the adhan
+         "opening on the settings screen instead of the video". Only
+         AdhanActivity bypasses the keyguard.) -->
+
     <!-- The rebuilt Adhan fires as a real alarm: AdhanScheduler arms it with
          AlarmManager.setAlarmClock (SCHEDULE_EXACT_ALARM / USE_EXACT_ALARM,
          declared above), AdhanAlarmReceiver wakes on it, and AdhanService
