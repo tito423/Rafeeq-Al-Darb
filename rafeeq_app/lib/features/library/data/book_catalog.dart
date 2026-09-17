@@ -2784,23 +2784,13 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — حفظ العمر، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)، دار البشائر الإسلامية، تحقيق محمد بن ناصر العجمي',
     ),
   ),
-  LibraryBook(
-    id: 'takhrij_al_kalim_al_tayyib',
-    titleAr: 'الكلم الطيب',
-    titleEn: 'Takhrij Al Kalim Al Tayyib',
-    authorAr: 'شيخ الإسلام ابن تيمية',
-    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    deathYearAh: 728,
-    pages: 311,
-    category: BookCategory.tazkiyah,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/takhrij_al_kalim_al_tayyib.json',
-      sizeBytes: 28670,
-      sourceLabel:
-          'المكتبة الشاملة — الكلم الطيب، تقي الدين أبو العباس أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم بن محمد ابن تيمية الحراني الحنبلي الدمشقي (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
-    ),
-  ),
+  // `takhrij_al_kalim_al_tayyib` (Shamela 327) removed: it is al-Albani's
+  // edition of al-Kalim at-Tayyib — every entry is numbered and prefixed with
+  // HIS grading, «٢٥٤ - (ضعيف جدا) …» — catalogued under Ibn Taymiyyah's name
+  // with no mention of him. al-Albani died 1999, so the v3.29.0 purge took
+  // every other book of his; this one survived only because the card said
+  // «ابن تيمية». Ibn Taymiyyah's own text stays in the library as
+  // `al_kalim_al_tayyib` (Shamela 21578, دار الفكر اللبناني).
   LibraryBook(
     id: 'fadail_bayt_al_maqdis',
     titleAr: 'فضائل بيت المقدس',
@@ -2886,22 +2876,11 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — فنون الأفنان في عيون علوم القرآن، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)',
     ),
   ),
-  LibraryBook(
-    id: 'tahqiq_al_iman',
-    titleAr: 'الإيمان',
-    titleEn: 'Tahqiq Al Iman',
-    authorAr: 'شيخ الإسلام ابن تيمية',
-    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    deathYearAh: 728,
-    pages: 167,
-    category: BookCategory.aqidah,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_iman.json',
-      sizeBytes: 10488,
-      sourceLabel:
-          'المكتبة الشاملة — الإيمان، تقي الدين أبو العباس أحمد بن عبد الحليم بن تيمية (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
-    ),
-  ),
+  // `tahqiq_al_iman` (Shamela 264) removed: it contains NONE of Ibn
+  // Taymiyyah's al-Iman. All 167 pages are the bare hadith texts of the book
+  // under al-Albani's grading label — its own first page reads «خرج أحاديثه:
+  // محمد ناصر الدين الألباني». Catalogued as Ibn Taymiyyah's «الإيمان», which
+  // it is not. His book itself stays as `al_iman_ibn_taymiyyah` (357 pages).
   LibraryBook(
     id: 'tahqiq_al_ihtijaj_bil_qadar',
     titleAr: 'الاحتجاج بالقدر',
@@ -3558,39 +3537,11 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — آداب الفتوى والمفتي والمستفتي، أبو زكريا يحيى بن شرف النووي (٦٣١ - ٦٧٦ هـ)، دار الفكر، دمشق - سوريا، تحقيق بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]',
     ),
   ),
-  LibraryBook(
-    id: 'al_adhkar_lil_nawawi',
-    titleAr: 'الأذكار',
-    titleEn: 'Al Adhkar Lil Nawawi',
-    authorAr: 'الإمام محيي الدين النووي',
-    authorEn: 'Imam al-Nawawi',
-    deathYearAh: 676,
-    pages: 411,
-    category: BookCategory.tazkiyah,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/al_adhkar_lil_nawawi.json',
-      sizeBytes: 390619,
-      sourceLabel:
-          'المكتبة الشاملة — الأذكار، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦ هـ)، دار الفكر للطباعة والنشر والتوزيع، بيروت - لبنان',
-    ),
-  ),
-  LibraryBook(
-    id: 'al_arbaun_al_nawawiyyah',
-    titleAr: 'الأربعون النووية',
-    titleEn: 'Al Arbaun Al Nawawiyyah',
-    authorAr: 'الإمام محيي الدين النووي',
-    authorEn: 'Imam al-Nawawi',
-    deathYearAh: 676,
-    pages: 81,
-    category: BookCategory.hadith,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/al_arbaun_al_nawawiyyah.json',
-      sizeBytes: 10048,
-      sourceLabel:
-          'المكتبة الشاملة — الأربعون النووية، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار المنهاج للنشر والتوزيع، لبنان - بيروت',
-    ),
-  ),
+  // «الأذكار» and «الأربعون النووية» were each catalogued twice, under two
+  // ids pointing at two uploads of the SAME Shamela book (1956 and 12836).
+  // Both copies were fetched and compared page by page — 411/411 and 81/81
+  // byte-identical, TOC included — so these two entries were removed and the
+  // ones carrying a translated descKey kept. See the duplicate test.
   LibraryBook(
     id: 'al_usul_wal_dawabit',
     titleAr: 'الأصول والضوابط',
@@ -3641,23 +3592,9 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية، بيروت - المكتبة الأمدادية، مكة المكرمة',
     ),
   ),
-  LibraryBook(
-    id: 'al_tibyan_fi_adab_hamalat_al_quran',
-    titleAr: 'التبيان في آداب حملة القرآن',
-    titleEn: 'Al Tibyan Fi Adab Hamalat Al Quran',
-    authorAr: 'الإمام محيي الدين النووي',
-    authorEn: 'Imam al-Nawawi',
-    deathYearAh: 676,
-    pages: 224,
-    category: BookCategory.tazkiyah,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/al_tibyan_fi_adab_hamalat_al_quran.json',
-      sizeBytes: 64098,
-      sourceLabel:
-          'المكتبة الشاملة — التبيان في آداب حملة القرآن، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار ابن حزم للطباعة والنشر والتوزيع - بيروت - لبنان - ص ب: ٦٣٦٦ / ١٤ - تلفون: ٨٣١٣٣١',
-    ),
-  ),
+  // «التبيان في آداب حملة القرآن» was the third book catalogued twice
+  // (Shamela 1969, 224/224 identical pages). The surviving entry is
+  // `at_tibyan_hamalat_al_quran`, filed under adab.
   LibraryBook(
     id: 'al_taqrib_wal_taysir',
     titleAr: 'التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث',
@@ -3706,23 +3643,12 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — تحرير ألفاظ التنبيه، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار القلم - دمشق، تحقيق عبد الغني الدقر',
     ),
   ),
-  LibraryBook(
-    id: 'tahqiq_riyad_al_salihin_lil_albani',
-    titleAr: 'رياض الصالحين',
-    titleEn: 'Tahqiq Riyad Al Salihin Lil Albani',
-    authorAr: 'الإمام محيي الدين النووي',
-    authorEn: 'Imam al-Nawawi',
-    deathYearAh: 676,
-    pages: 98,
-    category: BookCategory.hadith,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/tahqiq_riyad_al_salihin_lil_albani.json',
-      sizeBytes: 17337,
-      sourceLabel:
-          'المكتبة الشاملة — رياض الصالحين، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، المكتب الإسلامي - بيروت',
-    ),
-  ),
+  // `tahqiq_riyad_al_salihin_lil_albani` (Shamela 512) removed, and it was the
+  // worst of the three: 98 pages scattered across a 639-page printing — only
+  // the pages that carry al-Albani's own comment — every one a grading plus
+  // «قلت: … كما بينته في (الضعيفة)». So it was neither Riyad as-Salihin nor a
+  // complete book, catalogued as «رياض الصالحين» by an-Nawawi with `pages: 98`.
+  // The real book is `riyad_as_salihin` (810 pages, ت شعيب الأرنؤوط).
   LibraryBook(
     id: 'juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat',
     titleAr: 'جزء فيه ذكر اعتقاد السلف في الحروف والأصوات',
@@ -3905,14 +3831,21 @@ const List<LibraryBook> libraryBookCatalog = [
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
     deathYearAh: 676,
+    pages: 411,
     descKey: 'book_desc.al_adhkar_nawawi',
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_adhkar_nawawi.json',
       sizeBytes: 390635,
+      // The muhaqqiq was WRONG here: this label named شعيب الأرنؤوط. Shamela
+      // 1956's own book card — and the editionCard inside the hosted file —
+      // says عبد القادر الأرنؤوط [ت ١٤٢٥ هـ]. Two different scholars.
       sourceLabel:
-          'المكتبة الشاملة — الأذكار، للإمام النووي، تحقيق شعيب الأرنؤوط، دار الفكر للطباعة والنشر والتوزيع، بيروت',
+          'المكتبة الشاملة — الأذكار، أبو زكريا محيي الدين يحيى بن شرف '
+          'النووي (ت ٦٧٦هـ)، تحقيق عبد القادر الأرنؤوط (ت ١٤٢٥هـ)، دار '
+          'الفكر للطباعة والنشر والتوزيع، بيروت - لبنان، طبعة جديدة منقحة '
+          '١٤١٤هـ/١٩٩٤م',
     ),
   ),
   LibraryBook(
@@ -3922,6 +3855,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
     deathYearAh: 676,
+    pages: 224,
     descKey: 'book_desc.at_tibyan_hamalat_al_quran',
     category: BookCategory.adab,
     textEdition: TextEdition(
@@ -3929,7 +3863,9 @@ const List<LibraryBook> libraryBookCatalog = [
           '${AppConfig.contentBaseUrl}/books/text/at_tibyan_hamalat_al_quran.json',
       sizeBytes: 64100,
       sourceLabel:
-          'المكتبة الشاملة — التبيان في آداب حملة القرآن، للإمام النووي، دار ابن حزم، بيروت، الطبعة الثالثة مزيدة ومنقّحة، ١٤١٤هـ/١٩٩٤م',
+          'المكتبة الشاملة — التبيان في آداب حملة القرآن، أبو زكريا محيي '
+          'الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، حققه وعلق عليه محمد الحجار، '
+          'دار ابن حزم، بيروت، الطبعة الثالثة مزيدة ومنقحة، ١٤١٤هـ/١٩٩٤م',
     ),
   ),
   LibraryBook(
@@ -3939,6 +3875,7 @@ const List<LibraryBook> libraryBookCatalog = [
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
     deathYearAh: 676,
+    pages: 81,
     descKey: 'book_desc.al_arbaun_an_nawawiyyah',
     category: BookCategory.hadith,
     textEdition: TextEdition(
@@ -3946,7 +3883,10 @@ const List<LibraryBook> libraryBookCatalog = [
           '${AppConfig.contentBaseUrl}/books/text/al_arbaun_an_nawawiyyah.json',
       sizeBytes: 10058,
       sourceLabel:
-          'المكتبة الشاملة — الأربعون النووية، للإمام النووي، دار المنهاج للنشر والتوزيع، بيروت، الطبعة الأولى ١٤٣٠هـ/٢٠٠٩م',
+          'المكتبة الشاملة — الأربعون النووية، أبو زكريا محيي الدين يحيى بن '
+          'شرف النووي (ت ٦٧٦هـ)، عُني به قصي محمد نورس الحلاق وأنور بن أبي '
+          'بكر الشيخي، دار المنهاج للنشر والتوزيع، لبنان - بيروت، الطبعة '
+          'الأولى ١٤٣٠هـ/٢٠٠٩م',
     ),
   ),
   LibraryBook(

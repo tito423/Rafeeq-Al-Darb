@@ -1748,9 +1748,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 04:48 — IN PROGRESS — resume here**
+**2026-09-17 11:24 — IN PROGRESS — resume here**
 
-v3.30.0: the translation release - 58 quotes in seven languages, nineteen Hajj steps in seven, the on-this-day feed in six. Built and signed, OK: rotated, 212.5 MB
+six library entries were one book each, twice. Three were the SAME Shamela upload under two ids - al-Adhkar (1956), al-Arbaun an-Nawawiyyah (12836), at-Tibyan (1969) - proven by fetching both copies and diffing: 411/411, 81/81 and 224/224 pages byte-identical, TOC included. The other three were al-Albani's takhrij volumes filed under the classical author, which is the only reason the v3.29.0 purge did not take them with the other 23: tahqiq_riyad_al_salihin_lil_albani is 98 pages scattered across a 639-page printing - only the pages carrying HIS comment, every one a grading plus «قلت: كما بينته في (الضعيفة)» - catalogued as «رياض الصالحين» by an-Nawawi; tahqiq_al_iman contains NONE of Ibn Taymiyyah's al-Iman, only its hadiths under al-Albani's grading label, its own first page reading «خرج أحاديثه محمد ناصر الدين الألباني»; takhrij_al_kalim_al_tayyib is Ibn Taymiyyah's matn renumbered under his gradings. All four books were READ before anything was deleted, not inferred from titles. And the muhaqqiq on the surviving al-Adhkar entry was WRONG: the card said شعيب الأرنؤوط, while Shamela 1956's own book card and the editionCard inside the hosted file both say عبد القادر الأرنؤوط (d. 1425 AH) - two different scholars. So 257 entries / 251 books becomes 251 / 251. book_catalog_no_duplicates_test.dart holds it, and was proven to fail on the old catalogue - naming all six pairs in one run - before it was trusted. analyze clean, 286 tests pass. R2 objects not deleted yet
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
