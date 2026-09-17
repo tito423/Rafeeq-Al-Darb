@@ -39,6 +39,7 @@ import '../widgets/mushaf/fast_page_scroll_bar.dart';
 import '../widgets/mushaf/mushaf_chrome.dart';
 import '../widgets/mushaf/mushaf_toolbar.dart';
 import '../widgets/mushaf/page_overlay.dart';
+import '../widgets/mushaf/page_turn.dart';
 import '../widgets/mushaf/recite_bar.dart';
 
 enum MushafMode { text, image }
@@ -232,25 +233,30 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   /// Rotation belongs to the text mode.
   ///
-  /// The owner's call: «خلي الاورينتيشن بس على النص لو ده أفضل». It is. A
-  /// scanned page has one fixed shape, and on a phone's side it can only be
-  /// drawn full-width and scrolled — readable, but never the page the printer
-  /// set. The text reflows, so landscape genuinely gives it longer lines.
-  /// Reverting this is one list.
+  /// BOTH MODES ROTATE, since 2026-09-17.
+  ///
+  /// It used to be text-only, on the owner's own call — «خلي الاورينتيشن بس
+  /// على النص لو ده أفضل» — because a scanned page has one fixed shape and
+  /// on a phone's side it can only be drawn full-width and scrolled, never
+  /// the page the printer set. He asked for it back: «هو مينفعش المصحف
+  /// الورقي يتعمله اورينتيشن».
+  ///
+  /// The image page has been ready for this the whole time: `_stage()` in
+  /// `mushaf_page_view.dart` carries a landscape branch that lays the scan
+  /// out at the full width of the screen and scrolls it vertically, written
+  /// and then left unreachable by this lock. Nothing else had to change.
+  ///
+  /// The trade it makes, stated rather than hidden: sideways you see a band
+  /// of the page at a time and scroll, instead of the whole leaf at once.
+  /// That is the honest best a fixed-shape scan can do on a phone's side,
+  /// and it is why the lock existed.
   void _applyOrientationLock() {
-    SystemChrome.setPreferredOrientations(
-      _mode == MushafMode.text
-          ? const [
-              DeviceOrientation.portraitUp,
-              DeviceOrientation.portraitDown,
-              DeviceOrientation.landscapeLeft,
-              DeviceOrientation.landscapeRight,
-            ]
-          : const [
-              DeviceOrientation.portraitUp,
-              DeviceOrientation.portraitDown,
-            ],
-    );
+    SystemChrome.setPreferredOrientations(const [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
   }
 
   /// Turning the phone sideways opens the page up, «زي ختمة».
@@ -946,7 +952,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       itemCount: _totalPages,
       itemBuilder: (context, index) {
         final page = index + 1;
-        return FutureBuilder<List<Ayah>>(
+        return TurningPage(
+          controller: _pages!,
+          index: index,
+          child: FutureBuilder<List<Ayah>>(
           future: _ayahsOfPage(page, data),
           builder: (context, snap) {
             if (!snap.hasData) {
@@ -1017,10 +1026,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               pageFillScreen: _pageFillScreen,
             );
           },
-        );
+        ));
       },
     );
   }
+
 
   void _onImageAyahTap(
     AyahRegion region,

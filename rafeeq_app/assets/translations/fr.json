@@ -303,7 +303,9 @@
     "display_page": "La page",
     "display_reading": "Pendant la lecture",
     "display_edition": "Le mushaf",
-    "display_hint": "Pour aller à une sourate, un juz ou une page, utilisez « Aller à »."
+    "display_hint": "Pour aller à une sourate, un juz ou une page, utilisez « Aller à ».",
+    "display_turn": "Tourner la page",
+    "display_turn_book": "Tourner comme un mushaf papier"
   },
   "library": {
     "title": "Bibliothèque",

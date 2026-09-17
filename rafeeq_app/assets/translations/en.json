@@ -303,7 +303,9 @@
     "display_page": "The page",
     "display_reading": "While reading",
     "display_edition": "The mushaf",
-    "display_hint": "To jump to a surah, juz or page, use the «Go to» button."
+    "display_hint": "To jump to a surah, juz or page, use the «Go to» button.",
+    "display_turn": "Page turn",
+    "display_turn_book": "Turn like a real mushaf"
   },
   "library": {
     "title": "Library",

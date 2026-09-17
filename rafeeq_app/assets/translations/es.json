@@ -303,7 +303,9 @@
     "display_page": "La página",
     "display_reading": "Durante la lectura",
     "display_edition": "El mushaf",
-    "display_hint": "Para ir a una sura, yuz o página, usa el botón «Ir a»."
+    "display_hint": "Para ir a una sura, yuz o página, usa el botón «Ir a».",
+    "display_turn": "Paso de página",
+    "display_turn_book": "Pasar como un mushaf de papel"
   },
   "library": {
     "title": "Biblioteca",

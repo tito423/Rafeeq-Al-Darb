@@ -303,7 +303,9 @@
     "display_page": "A página",
     "display_reading": "Durante a leitura",
     "display_edition": "O mushaf",
-    "display_hint": "Para ir a uma sura, juz ou página, use o botão «Ir para»."
+    "display_hint": "Para ir a uma sura, juz ou página, use o botão «Ir para».",
+    "display_turn": "Virar a página",
+    "display_turn_book": "Virar como um mushaf de papel"
   },
   "library": {
     "title": "Biblioteca",

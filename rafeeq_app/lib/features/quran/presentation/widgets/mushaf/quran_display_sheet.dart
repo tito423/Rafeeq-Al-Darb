@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/theme/app_colors.dart';
+import '../../../data/page_turn_provider.dart';
 import '../../../data/text_layout_provider.dart';
 import '../mushaf_theme_picker.dart';
 
@@ -154,6 +155,15 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                 onTap: () => MushafThemePicker.show(context),
               ),
             ],
+            _Group(label: 'quran.display_turn'.tr()),
+            _SwitchTile(
+              icon: Icons.auto_stories_outlined,
+              title: 'quran.display_turn_book'.tr(),
+              value: ref.watch(pageTurnProvider) == PageTurnStyle.book,
+              onChanged: (on) => ref
+                  .read(pageTurnProvider.notifier)
+                  .set(on ? PageTurnStyle.book : PageTurnStyle.slide),
+            ),
             _Group(label: 'quran.display_reading'.tr()),
             _SwitchTile(
               icon: _fill
