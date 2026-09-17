@@ -1751,9 +1751,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 16:32 — IN PROGRESS — resume here**
+**2026-09-17 16:38 — IN PROGRESS — resume here**
 
-checkpoint(wip): v3.33.0 bump, and the emulator confirmed the three things this release exists for. The sleep reminder: the pencil opens the time picker, 10:30 PM saves, the row changes from Off to 10:30 PM and grows an X to clear it, and dumpsys alarm shows the exact RTC_WAKEUP armed for 2026-09-17 22:30 under the flutter_local_notifications receiver. Jumping the clock (trap 28) fired it: notification id 6003 on channel rafeeq_azkar_reminder, Sleep adhkar / It is time for the sleep adhkar - the id and the channel this session built, not an inherited one. After force-stop and relaunch the row still reads 10:30 PM and the alarm is re-armed, so the re-arm on construction works. The adhan picker now lists ELEVEN muezzins and Sheikh Rabee al-Qadi is not among them, with no crash from the dropdown - which was the whole reason azan13 went into removedAdhanIds rather than just out of adhans.json. analyze clean, 317 tests
+release v3.33.0 published, and the published bytes were verified - not the build directory's. sign_release.py printed OK: rotated; the APK downloaded back from GitHub has the same sha256 as the local file (70ae0229...), apksigner reads CN=Rafeeq Al-Darb on Android 9+ and the old debug DN on 24-27, so every install path is still an update. Tag v3.33.0 points at ca5a52e which is HEAD, targeted at master. v3.32.0 and its tag are gone - one release, one tag. Then the published APK was installed over the debug build with adb install -r (Success, no uninstall), dumpsys reports versionName=3.33.0 versionCode=34, and the SHIPPED build was opened: the Adhkar tab shows Morning Adhkar and Evening Adhkar as two separate tiles. Nothing here is claimed from the build directory or from a test run
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
