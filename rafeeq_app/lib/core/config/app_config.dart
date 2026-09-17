@@ -126,10 +126,11 @@ abstract final class AppConfig {
   /// same way mushaf pages and recitations are, given its size (~74 MB
   /// uncompressed).
   ///
-  /// The hosted file is `hadith.zip` (~16 MB, `DownloadManager.unzipToDatabases`
-  /// unpacks it to `hadith.db` on-device) — not `hadith.db` itself, which
-  /// this constant pointed at for a while (a 404: only the zip was ever
-  /// pushed to the repo) until a real download attempt caught it.
+  /// The hosted file is `hadith.zip` ([hadithDbBytes],
+  /// `DownloadManager.unzipToDatabases` unpacks it to `hadith.db` on-device)
+  /// — not `hadith.db` itself, which this constant pointed at for a while (a
+  /// 404: only the zip was ever pushed to the repo) until a real download
+  /// attempt caught it.
   /// Where «ساهم في التكلفة» goes, and **empty until the owner has a rail**.
   ///
   /// The support screen hides its button entirely while this is empty rather
@@ -150,6 +151,20 @@ abstract final class AppConfig {
   static const String privacyPolicyUrl = '$contentBaseUrl/legal/privacy.html';
 
   static const String hadithDbUrl = '$contentBaseUrl/hadith/hadith.zip';
+
+  /// The size of that zip, so the screen can TELL the reader before he spends
+  /// it — measured with a `head_object` against the bucket on 2026-09-18, not
+  /// estimated.
+  ///
+  /// It replaces a «~16 MB» written into the sentence itself, in all seven
+  /// languages and in the comment above. The real file is 22,235,941 bytes —
+  /// the written figure had drifted 39% low, and on mobile data that is the
+  /// difference the reader is actually being asked to agree to.
+  ///
+  /// Re-measure and update this whenever `hadith.zip` is rebuilt, alongside
+  /// [hadithDbVersion].
+  static const int hadithDbBytes = 22235941;
+
 
   /// Bump this whenever `hadith.db`'s schema or content changes so devices
   /// that already downloaded the old one re-fetch instead of opening a

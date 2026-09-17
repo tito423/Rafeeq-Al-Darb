@@ -83,4 +83,62 @@ void main() {
 
     uiLanguageCode = 'ar';
   });
+
+  test('no translation string writes a file size into its prose', () {
+    // THE DEFECT. `library.hadith_download_hint` read «تنزيل لمرة واحدة
+    // (~١٦ م.ب)» in Arabic and "~16 MB" in the other six. The real
+    // hadith.zip is 22,235,941 bytes — 22.2 MB — so the figure the reader was
+    // asked to agree to had drifted 39% low, and on mobile data that is the
+    // difference he is actually agreeing to. It also wrote the unit as «م.ب»
+    // while every size the app formats says «MB».
+    //
+    // A size belongs to the file, not to a sentence. It is now
+    // `AppConfig.hadithDbBytes`, measured with head_object against the
+    // bucket, passed through formatBytes into a `{}`.
+    //
+    // Written with plain string scanning rather than one clever regex,
+    // because the first version of this test was a regex full of \u escapes,
+    // it passed on the broken strings, and a test that cannot see the bug it
+    // was written for is worse than no test (CLAUDE.md trap #47). This one
+    // was proved by putting «~16 MB» and «~١٦ م.ب» back and watching it fail.
+    const units = ['MB', 'KB', 'GB', 'Mo', 'Ko', 'Go', 'МБ', 'КБ', 'ГБ',
+        'م.ب', 'ك.ب', 'ج.ب', 'میگا'];
+    bool isDigit(String c) {
+      final r = c.runes.first;
+      return (r >= 0x30 && r <= 0x39) || // 0-9
+          (r >= 0x660 && r <= 0x669) || // Arabic-Indic
+          (r >= 0x6F0 && r <= 0x6F9); // extended Arabic-Indic
+    }
+
+    final offenders = <String>[];
+    for (final f in Directory('assets/translations')
+        .listSync()
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.json'))) {
+      final lines = f.readAsLinesSync();
+      for (var i = 0; i < lines.length; i++) {
+        final line = lines[i];
+        for (final u in units) {
+          var at = line.indexOf(u);
+          while (at > 0) {
+            // A unit counts only when a number leads into it, so prose that
+            // merely mentions a unit is not flagged.
+            var k = at - 1;
+            while (k >= 0 && (line[k] == ' ' || line[k] == ' ')) {
+              k--;
+            }
+            if (k >= 0 && isDigit(line[k])) {
+              offenders.add('${f.path}:${i + 1}  ${line.trim()}');
+              break;
+            }
+            at = line.indexOf(u, at + 1);
+          }
+        }
+      }
+    }
+    expect(offenders, isEmpty,
+        reason: 'A size written into a sentence goes stale silently — this '
+            'one had drifted 39% low. Measure it, put it in AppConfig, and '
+            'pass formatBytes() as an argument:\n${offenders.join('\n')}');
+  });
 }

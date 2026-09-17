@@ -2,6 +2,7 @@
 /// chapters and the search across them.
 library;
 import 'dart:async';
+import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/utils/digits.dart';
 
 import '../../../../core/widgets/arabic_text.dart';
@@ -139,7 +140,8 @@ class _DownloadGate extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
-              'library.hadith_download_hint'.tr(),
+              trn('library.hadith_download_hint',
+                  args: [formatBytes(AppConfig.hadithDbBytes)]),
               textAlign: TextAlign.center,
               style: TextStyle(color: scheme.onSurfaceVariant),
             ),

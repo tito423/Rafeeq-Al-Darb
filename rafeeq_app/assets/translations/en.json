@@ -319,7 +319,7 @@
     "size": "Size",
     "pdf_viewer": "Book viewer",
     "hadith_hub": "The Nine Hadith Books",
-    "hadith_download_hint": "A one-time ~16 MB download. After it, all nine books work fully offline.",
+    "hadith_download_hint": "A one-time {} download. After it, all nine books work fully offline.",
     "hadith_db": "Hadith database",
     "books_count": "books",
     "hadiths_count": {

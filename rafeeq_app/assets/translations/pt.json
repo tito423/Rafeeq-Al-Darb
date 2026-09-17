@@ -319,7 +319,7 @@
     "size": "Tamanho",
     "pdf_viewer": "Leitor de livros",
     "hadith_hub": "Os nove livros de hadith",
-    "hadith_download_hint": "Uma transferência única de ~16 MB. Depois, os nove livros funcionam sem internet.",
+    "hadith_download_hint": "Uma transferência única de {}. Depois, os nove livros funcionam sem internet.",
     "hadith_db": "Base de dados de hadith",
     "books_count": "livros",
     "hadiths_count": {
