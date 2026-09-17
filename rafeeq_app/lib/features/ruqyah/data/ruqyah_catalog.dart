@@ -98,22 +98,38 @@ const ruqyahGroups = <RuqyahGroup>[
 /// The prophetic supplications of ruqyah, addressed by their **row id in the
 /// bundled azkar database** — again, no text here.
 ///
-/// These six are the ones that are actually in `azkar_items`; they were found
-/// by searching the real table, not assumed from a list of what "should" be
-/// there. Two duas often printed with the ruqyah («بِسْمِ اللَّهِ أَرْقِيكَ»,
-/// «أَذْهِبِ الْبَاسَ رَبَّ النَّاسِ») are **not** in this edition of Ḥiṣn
-/// al-Muslim and are therefore not shown — an absent dua is an honest gap; a
-/// dua typed in from memory with no takhrij behind it is not.
+/// They were found by searching the real table, not assumed from a list of what
+/// "should" be there. Duas often printed with the ruqyah that the source book
+/// does not carry are **not** shown — an absent dua is an honest gap; a dua
+/// typed in from memory with no takhrij behind it is not.
 ///
 /// Each row carries its own footnote (البخاري، مسلم، أبو داود…), which the
 /// screen renders as-is.
+///
+/// **2026-09-17: the source book changed and so did these ids.** `azkar_items`
+/// was rebuilt from an-Nawawi's «الأذكار» (d. 676 AH) because the previous
+/// corpus, حصن المسلم, is a *selection* by a man who died in 2018 — and UAE
+/// Federal Decree-Law 38/2021 Article 3 protects a collection of free works
+/// «إذا تميز جمعها أو ترتيبها أو أي مجهود فيها بالابتكار». See
+/// `CONTENT-LICENSES.md`.
+///
+/// A rebuild renumbers rows, and the old comment — «a mis-typed id shows up as
+/// a missing dua, not a wrong one» — stops being true the moment it does: id
+/// 176 would have pointed at whatever landed on row 176. So each of these
+/// carries an **explicit** id, assigned in `scripts/azkar_curated.json` and
+/// written verbatim by `scripts/rebuild_azkar_tables.py`, outside the range the
+/// sequential numbering uses. `test/ruqyah_duas_test.dart` pins the TEXT each
+/// one resolves to, so a number alone can never go quietly wrong again.
+///
+/// **Five, not six.** «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر»
+/// returns zero hits across all 338 chapters of al-Adhkar, so it is gone rather
+/// than reconstructed — the same rule as the paragraph above.
 const ruqyahDuaItemIds = <int>[
-  176, // لا بأس طهور إن شاء الله — البخاري
-  177, // أسأل الله العظيم رب العرش العظيم أن يشفيك (سبع مرات) — الترمذي وأبو داود
-  274, // بسم الله (ثلاثاً) … أعوذ بالله وقدرته من شر ما أجد وأحاذر — مسلم
-  247, // أعوذ بكلمات الله التامات من شر ما خلق — مسلم
-  278, // أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر… — أحمد بإسناد صحيح
-  137, // أعوذ بكلمات الله التامة من غضبه وعقابه… — أبو داود
+  1001, // لا بأس طهور إن شاء الله — البخاري
+  1002, // أسأل الله العظيم رب العرش العظيم أن يشفيك — الترمذي، حسن
+  1003, // بسم الله (ثلاثاً) … أعوذ بعزة الله وقدرته من شر ما أجد وأحاذر — مسلم
+  1004, // أعوذ بكلمات الله التامات من شر ما خلق — موطأ مالك
+  1005, // أعوذ بكلمات الله التامة من غضبه وشر عباده … — الترمذي، حسن
 ];
 
 /// One full recorded ruqyah.

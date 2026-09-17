@@ -189,6 +189,16 @@ final sciencesRepositoryProvider =
   // DB; this stamp bump forces every existing install to re-copy the
   // fixed file instead of keeping its translation-less v3 copy.
   final db = await DbHelper.instance.openBundled('data/quran_sciences.db',
-      stamp: 'sciences-v4');
+      // v4 -> v5 (2026-09-17): the azkar tables were rebuilt. They held 134
+  // sections and 298 items taken from «حصن المسلم» by سعيد بن وهف القحطاني
+  // (d. 1439 AH / 2018) — his name was inside the file itself, in
+  // `azkar_items` row 2's footnote. The supplications are prophetic and free;
+  // the selection and the arrangement were his, and UAE Federal Decree-Law
+  // 38/2021 Article 3 protects exactly that: «ومع ذلك تتمتع مجموعات … بالحماية
+  // إذا تميز جمعها أو ترتيبها أو أي مجهود فيها بالابتكار». They now hold 18
+  // chapters and 48 supplications hand-picked from an-Nawawi's «الأذكار»
+  // (d. 676 AH), with the muhaqqiq's apparatus filtered out. Without this bump
+  // every existing install would keep the old file for ever.
+  stamp: 'sciences-v5');
   return SciencesRepository(db);
 });

@@ -1751,9 +1751,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 15:33 — IN PROGRESS — resume here**
+**2026-09-17 15:37 — IN PROGRESS — resume here**
 
-rain and eating: «اللهم صيبا نافعا» (al-Bukhari), «سم الله وكل بيمينك» (the two Sahihs), «بسم الله أوله وآخره» (al-Tirmidhi, hasan sahih). 48 curated adhkar across 18 abwab now, 0 errors. Still NOT done and named as not done: the DB rebuild, rewiring ruqyah_catalog.dart onto ids 1001-1005 with a test pinning the TEXT rather than the number, the sciences-db stamp bump, the 18 chapter titles in seven languages, and seeing any of it on a device. The curation file is the only thing that exists so far - nothing has touched quran_sciences.db and the app still ships Hisn al-Muslim
+the azkar tables are an-Nawawi's now. quran_sciences.db rebuilt: 134 sections and 298 items from حصن المسلم replaced by 18 chapters and 48 supplications hand-picked from «الأذكار», and a query for «القحطاني» across body and footnote returns 0. The DB was backed up to E:\My Projects\Rafeeq-Backups first. Item ids are written VERBATIM by the rebuild script, not auto-assigned, because ruqyah_catalog.dart addresses five of them - they carry 1001-1005, outside the sequential range, and the screen was rewired onto them. That rewiring was the near miss of the day: the old comment promised «a mis-typed id shows up as a missing dua, not a wrong one», which holds only while the table is never rebuilt - id 176 would have pointed at whatever landed on row 176, a WRONG supplication shown confidently on a screen people open when they are ill. ruqyah_duas_test.dart now pins the TEXT each id resolves to, asserts every one carries a takhrij, and fails if any row still names the previous compiler; it opens the bundled DB through sqflite_common_ffi, added as a dev dependency. sciences stamp bumped v4 -> v5 so every existing install re-copies instead of keeping the old file. Not done yet: the 18 chapter titles in seven languages, and seeing any of it on a device
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
