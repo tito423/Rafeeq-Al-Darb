@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 class Surah {
   final int id;
   final String nameAr;
@@ -114,6 +116,8 @@ class WordGrammar {
 
 class AzkarSection {
   final int id;
+
+  /// an-Nawawi's own chapter heading, verbatim, in Arabic.
   final String title;
 
   const AzkarSection({required this.id, required this.title});
@@ -122,6 +126,27 @@ class AzkarSection {
         id: row['id'] as int,
         title: row['title'] as String? ?? '',
       );
+
+  /// What the chapter is called **in the reader's language**.
+  ///
+  /// THE DEFECT THIS EXISTS FOR. `azkar_screen.dart` and
+  /// `azkar_section_screen.dart` both drew [title] straight from the database,
+  /// so a reader who had chosen English, French or Russian got an Arabic list
+  /// and an Arabic app bar. That is the owner's standing rule — «مش ينفع تعرض
+  /// بالعربي واللغة المختارة إنجليزي» — in a place the v3.29.0 and v3.30.0
+  /// passes never reached, and it stayed there because fixing it meant
+  /// translating 134 titles of a book that was about to be replaced.
+  ///
+  /// The book is replaced now: 18 chapters, keyed `azkar.section.<id>`. A
+  /// missing key would render as the raw key on screen (CLAUDE.md trap #8), so
+  /// this falls back to an-Nawawi's Arabic rather than to «azkar.section.7» —
+  /// and `azkar_section_titles_test.dart` fails the build if a key is absent
+  /// from any of the seven locales, so the fallback should never be reached.
+  String localizedTitle() {
+    final key = 'azkar.section.$id';
+    final translated = key.tr();
+    return translated == key ? title : translated;
+  }
 }
 
 class AzkarItem {

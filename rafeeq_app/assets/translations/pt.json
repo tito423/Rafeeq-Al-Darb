@@ -496,7 +496,27 @@
     "tasbeeh_mathur_desc": "Escolha uma e comece a contar",
     "tasbeeh_mathur_pick": "Escolher uma invocação",
     "haptic_on": "Vibração ativada",
-    "haptic_off": "Vibração desativada"
+    "haptic_off": "Vibração desativada",
+    "section": {
+      "1": "Ao acordar do sono",
+      "2": "Ao vestir uma roupa",
+      "3": "Ao estrear uma roupa",
+      "4": "Para quem estreia roupa",
+      "5": "Ao sair de casa",
+      "6": "Ao entrar em casa",
+      "7": "Ao entrar no banheiro",
+      "8": "Ao sair do banheiro",
+      "9": "Na ablução",
+      "10": "A caminho da mesquita",
+      "11": "Ao entrar e sair da mesquita",
+      "12": "Para o doente e junto dele",
+      "13": "Ao parar num lugar",
+      "14": "Ao assustar-se ou temer",
+      "15": "Manhã e tarde",
+      "16": "Ao deitar-se",
+      "17": "Quando chove",
+      "18": "Antes de comer e beber"
+    }
   },
   "prayer": {
     "fajr": "Fajr",

@@ -496,7 +496,27 @@
     "tasbeeh_mathur_desc": "Pick one and start counting",
     "tasbeeh_mathur_pick": "Choose a remembrance",
     "haptic_on": "Vibration on",
-    "haptic_off": "Vibration off"
+    "haptic_off": "Vibration off",
+    "section": {
+      "1": "On waking from sleep",
+      "2": "On putting on a garment",
+      "3": "On putting on a new garment",
+      "4": "For someone wearing something new",
+      "5": "On leaving the house",
+      "6": "On entering the house",
+      "7": "On entering the lavatory",
+      "8": "On leaving the lavatory",
+      "9": "With the ablution",
+      "10": "On setting out for the mosque",
+      "11": "On entering and leaving the mosque",
+      "12": "For the sick, and said at their side",
+      "13": "On stopping at a place",
+      "14": "When startled or afraid",
+      "15": "Morning and evening",
+      "16": "On going to bed",
+      "17": "When it rains",
+      "18": "Before eating and drinking"
+    }
   },
   "prayer": {
     "fajr": "Fajr",

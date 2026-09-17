@@ -109,7 +109,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.section.title),
+        title: Text(widget.section.localizedTitle()),
         elevation: 0,
       ),
       body: items == null
