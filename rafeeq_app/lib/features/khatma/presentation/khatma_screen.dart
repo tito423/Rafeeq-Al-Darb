@@ -847,9 +847,9 @@ class _Stepper extends StatelessWidget {
         Expanded(child: Text(label)),
         IconButton(
           onPressed: value > min ? () => onChanged(value - 1) : null,
-          icon: const Icon(Icons.remove_circle_outline),
-        ),
-        Text('$value', style: Theme.of(context).textTheme.titleMedium),
+          icon: const Icon(Icons.remove_circle_outline)),
+        Text(localizeDigits('$value', uiLanguageCode),
+            style: Theme.of(context).textTheme.titleMedium),
         IconButton(
           onPressed: value < max ? () => onChanged(value + 1) : null,
           icon: const Icon(Icons.add_circle_outline),

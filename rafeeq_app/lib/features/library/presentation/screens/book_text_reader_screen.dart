@@ -1099,7 +1099,7 @@ class _SearchSheetState extends State<_SearchSheet> {
                     leading: CircleAvatar(
                       radius: 16,
                       backgroundColor: scheme.surfaceContainerHighest,
-                      child: Text('${h.printedPage}',
+                      child: Text(localizeDigits('${h.printedPage}', uiLanguageCode),
                           style: const TextStyle(fontSize: 11)),
                     ),
                     title: Text(h.snippet,

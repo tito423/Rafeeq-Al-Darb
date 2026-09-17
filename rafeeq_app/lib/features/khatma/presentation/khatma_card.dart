@@ -281,7 +281,7 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: 8),
           _RangeLine(
-            label: 'khatma.range_from'.tr(
+            label: trn('khatma.range_from',
               args: [
                 mushaf.surahNameAr(range.start.surahId),
                 '${range.start.ayahNumber}',
@@ -291,7 +291,7 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           _RangeLine(
-            label: 'khatma.range_to'.tr(
+            label: trn('khatma.range_to',
               args: [
                 mushaf.surahNameAr(range.end.surahId),
                 '${range.end.ayahNumber}',

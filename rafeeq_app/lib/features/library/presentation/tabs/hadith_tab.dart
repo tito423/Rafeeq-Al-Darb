@@ -580,7 +580,10 @@ class _SearchResultsState extends State<_SearchResults> {
                 style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 15),
               ),
               subtitle: Text(
-                '${book?.nameAr ?? ''} · ${'library.hadith_number'.tr()} ${h.numberInBook}',
+                localizeDigits(
+                    '${book?.nameAr ?? ''} · '
+                    '${'library.hadith_number'.tr()} ${h.numberInBook}',
+                    uiLanguageCode),
               ),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(

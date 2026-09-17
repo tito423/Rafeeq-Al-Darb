@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/future_view.dart';
@@ -62,7 +63,7 @@ class _HadithChapterScreenState extends State<HadithChapterScreen> {
               return ListTile(
                 leading: CircleAvatar(
                   radius: 16,
-                  child: Text('${h.numberInBook}',
+                  child: Text(localizeDigits('${h.numberInBook}', uiLanguageCode),
                       style: const TextStyle(fontSize: 12)),
                 ),
                 // ArabicText: a preview cut to two lines still ends on a

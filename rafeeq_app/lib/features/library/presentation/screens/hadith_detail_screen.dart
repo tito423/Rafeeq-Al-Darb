@@ -2,6 +2,7 @@
 // collides with the `dart:ui` enum (ltr/rtl) this file needs for the hadith's
 // own right-to-left layout.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/arabic_normalize.dart';
 import 'package:flutter/material.dart';
 
@@ -63,7 +64,9 @@ class _HadithDetailScreenState extends State<HadithDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${'library.hadith_number'.tr()} ${item.numberInBook}'),
+        title: Text(localizeDigits(
+            '${'library.hadith_number'.tr()} ${item.numberInBook}',
+            uiLanguageCode)),
       ),
       body: SafeArea(
         child: Column(
