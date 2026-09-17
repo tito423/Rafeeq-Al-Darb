@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/hadeethenc_repository.dart';
@@ -100,6 +101,24 @@ class _HadeethEncCategoryScreenState extends State<HadeethEncCategoryScreen> {
                 );
               },
             ),
+      // Every row on this list carries «الدرجة: صحيح», and CLAUDE.md 1.2 is
+      // explicit that a grading must show WHOSE it is. The tab that leads
+      // here prints the credit at its foot and the detail screen names it
+      // under the grade — but this screen sits between them and showed a
+      // column of verdicts with no attribution anywhere in view.
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
+          child: Text(
+            trn('hadeethenc.credit',
+                namedArgs: {'source': widget.sourceName}),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+          ),
+        ),
+      ),
     );
   }
 }
