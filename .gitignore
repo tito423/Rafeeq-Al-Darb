@@ -100,3 +100,8 @@ dist/*.apk
 scripts/compat_out/*/
 scripts/compat_out/run.log
 scripts/compat_out/run*.log
+
+# Regenerable intermediates: strip_editor_apparatus.py rebuilds these from
+# the bucket in one command, and 39 MB of book copies rode into the history
+# once before anyone looked.
+scripts/_stripped/
