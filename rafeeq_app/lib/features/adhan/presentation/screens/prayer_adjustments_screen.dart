@@ -1,4 +1,5 @@
 import 'package:adhan/adhan.dart' as adhan;
+import '../../../../core/utils/digits.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -244,8 +245,10 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
     final date = HijriCalendar.fromDate(
       DateTime.now().add(Duration(days: offsetDays)),
     );
-    return '${date.hDay} ${hijriMonthName(date.hMonth)} ${date.hYear}'
-        '${'hijri.suffix'.tr()}';
+    return localizeDigits(
+        '${date.hDay} ${hijriMonthName(date.hMonth)} ${date.hYear}'
+        '${'hijri.suffix'.tr()}',
+        uiLanguageCode);
   }
 }
 
@@ -430,9 +433,11 @@ class _Stepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = value == 0 || !signed
-        ? '$value $unit'
-        : '${value > 0 ? '+' : ''}$value $unit';
+    final label = localizeDigits(
+        value == 0 || !signed
+            ? '$value $unit'
+            : '${value > 0 ? '+' : ''}$value $unit',
+        uiLanguageCode);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

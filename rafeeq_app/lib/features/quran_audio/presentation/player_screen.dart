@@ -792,7 +792,9 @@ class _Extras extends StatelessWidget {
                 style: TextButton.styleFrom(
                   foregroundColor: player.speed == 1.0 ? AppColors.textMedium : t.accent,
                 ),
-                child: Text(ltr('${_speedLabel(player.speed)}×'),
+                child: Text(
+                      ltr(localizeDigits(
+                          '${_speedLabel(player.speed)}×', uiLanguageCode)),
                     style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               ),
               _Toggle(
@@ -844,7 +846,8 @@ class _Extras extends StatelessWidget {
                 children: [
                   for (final s in QuranAudioPlayer.speeds)
                     ChoiceChip(
-                      label: Text(ltr('${_speedLabel(s)}×')),
+                      label: Text(ltr(
+                  localizeDigits('${_speedLabel(s)}×', uiLanguageCode))),
                       selected: player.speed == s,
                       selectedColor: theme.accent,
                       onSelected: (_) {

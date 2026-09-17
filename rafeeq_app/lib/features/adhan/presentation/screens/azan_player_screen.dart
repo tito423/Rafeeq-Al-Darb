@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
@@ -477,7 +478,8 @@ class _LiveClockState extends State<_LiveClock> {
   static String _fmt() {
     final n = DateTime.now();
     String two(int v) => v.toString().padLeft(2, '0');
-    return '${two(n.hour)}:${two(n.minute)}:${two(n.second)}';
+    return localizeDigits(
+        '${two(n.hour)}:${two(n.minute)}:${two(n.second)}', uiLanguageCode);
   }
 
   @override

@@ -53,7 +53,8 @@ String formatClock(Duration d) {
   final h = d.inHours;
   final m = d.inMinutes.remainder(60).toString().padLeft(h > 0 ? 2 : 1, '0');
   final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-  return ltr(h > 0 ? '$h:$m:$s' : '$m:$s');
+  return ltr(localizeDigits(
+      h > 0 ? '$h:$m:$s' : '$m:$s', uiLanguageCode));
 }
 
 /// A reciter's badge: his number in the list, centred, on a ground chosen
