@@ -37,6 +37,20 @@ object PrayerCard {
     const val ACTION_REPOST = "com.tito.rafeeq_aldarb.PRAYER_CARD_REPOST"
     const val ACTION_ROLLOVER = "com.tito.rafeeq_aldarb.PRAYER_CARD_ROLLOVER"
 
+    /**
+     * «الصلاة القادمة» — skip the elapsed hour for one post.
+     *
+     * The hour after an adhan belongs to the prayer that came in, counting UP:
+     * «لما يحين وقت الصلاة يبدأ يعد عدّاد تصاعدي … لحد ساعة». That is the
+     * owner's own rule and it stays the default. But it is also why the card
+     * reads «المغرب ٦:٢١» at 7:13 pm while Salatuk beside it reads «العشاء
+     * ٠٧:٣٨ -24:25», which is what he was comparing when he asked for the
+     * Salatuk shape. This button is the one tap that jumps the card forward;
+     * the flag clears itself on the next rollover, so the rule is not changed,
+     * only overridden on request.
+     */
+    const val ACTION_SHOW_NEXT = "com.tito.rafeeq_aldarb.PRAYER_CARD_NEXT"
+
     private fun prefs(ctx: Context) = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /** Fallback for the window Dart sends with every schedule. */
@@ -54,13 +68,26 @@ object PrayerCard {
      * Recomputing on every post makes a missed alarm harmless, and the alarm
      * is exact now besides.
      */
-    fun show(ctx: Context, eventsJson: String, elapsedMs: Long, title: String, body: String) {
+    fun show(
+        ctx: Context,
+        eventsJson: String,
+        elapsedMs: Long,
+        title: String,
+        body: String,
+        openLabel: String,
+        nextLabel: String,
+    ) {
         prefs(ctx).edit()
             .putBoolean("enabled", true)
             .putString("events", eventsJson)
             .putLong("elapsed_ms", if (elapsedMs > 0) elapsedMs else ELAPSED_WINDOW_MS)
             .putString("fallback_title", title)
             .putString("fallback_body", body)
+            // The button captions come from Dart, already in the reader's
+            // language. Nothing here may invent user-visible words.
+            .putString("open_label", openLabel)
+            .putString("next_label", nextLabel)
+            .remove("skip_elapsed")
             .apply()
         post(ctx)
     }
@@ -101,7 +128,13 @@ object PrayerCard {
         // The event that has come in within the last hour wins: that hour
         // belongs to it and the card counts UP from it. Otherwise the next
         // one, counted DOWN to.
-        val elapsed = all.lastOrNull { it.whenMs in (now - window)..now }
+        // `skip_elapsed` is «الصلاة القادمة» having been pressed: for this
+        // one post the elapsed hour is ignored and the card jumps to what is
+        // next. It is consumed here so the next rollover restores the rule.
+        val skipElapsed = p.getBoolean("skip_elapsed", false)
+        if (skipElapsed) p.edit().remove("skip_elapsed").apply()
+        val elapsed = if (skipElapsed) null
+            else all.lastOrNull { it.whenMs in (now - window)..now }
         val upcoming = all.firstOrNull { it.whenMs > now }
         val current = elapsed ?: upcoming
         val countDown = elapsed == null
@@ -140,6 +173,31 @@ object PrayerCard {
                 )
             )
         }
+        // THE TWO ACTION BUTTONS. «عايز شكل الاشعار بتاعي تيبيكال نفس اشعار
+        // صلاتك» — the visible gap beside Salatuk was that its card carries
+        // two and ours carried none.
+        val openLabel = p.getString("open_label", "") ?: ""
+        val nextLabel = p.getString("next_label", "") ?: ""
+        ctx.packageManager.getLaunchIntentForPackage(ctx.packageName)?.let {
+            if (openLabel.isNotEmpty()) {
+                builder.addAction(
+                    0, openLabel,
+                    PendingIntent.getActivity(
+                        ctx, ID + 1, it,
+                        PendingIntent.FLAG_IMMUTABLE or
+                            PendingIntent.FLAG_UPDATE_CURRENT,
+                    ),
+                )
+            }
+        }
+        // Only offered while the card is actually sitting on a prayer that
+        // has already come in — otherwise it is already showing what is next
+        // and the button would do nothing, which is worse than not being
+        // there.
+        if (nextLabel.isNotEmpty() && !countDown && upcoming != null) {
+            builder.addAction(0, nextLabel, broadcast(ctx, ACTION_SHOW_NEXT, 3))
+        }
+
         // Android's chronometer is driven by elapsedRealtime while `when` is
         // wall-clock, so the platform converts once at post time - which is why
         // a card left up across a clock correction drifts and «بيقفز ثواني أو
@@ -171,6 +229,12 @@ object PrayerCard {
 
     /** A rollover is just a repost: [post] works out what is current. */
     fun rollover(ctx: Context) = post(ctx)
+
+    /** «الصلاة القادمة»: one post that ignores the elapsed hour. */
+    fun showNext(ctx: Context) {
+        prefs(ctx).edit().putBoolean("skip_elapsed", true).apply()
+        post(ctx)
+    }
 
     private fun scheduleRollover(ctx: Context, whenMs: Long) {
         val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -226,6 +290,7 @@ class PrayerCardReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             PrayerCard.ACTION_ROLLOVER -> PrayerCard.rollover(context)
+            PrayerCard.ACTION_SHOW_NEXT -> PrayerCard.showNext(context)
             else -> PrayerCard.post(context)
         }
     }

@@ -1083,7 +1083,9 @@
     "dl_ruqyah_complete_title": "اكتمل تحميل ملفات الرقية",
     "dl_ruqyah_error_title": "تعذّر تحميل ملفات الرقية",
     "azkar_sleep_title": "أذكار النوم",
-    "azkar_sleep_body": "حان وقت أذكار النوم"
+    "azkar_sleep_body": "حان وقت أذكار النوم",
+    "prayer_open": "فتح التطبيق",
+    "prayer_next": "الصلاة القادمة"
   },
   "hijri": {
     "m1": "محرم",

@@ -117,6 +117,7 @@ class PrayerStatusNotification {
           'title': _needLocationTitle(localeCode),
           'body': _needLocationBody(localeCode),
           'elapsedMs': elapsedWindow.inMilliseconds,
+          ..._buttonLabels(),
         });
         return;
       }
@@ -132,6 +133,7 @@ class PrayerStatusNotification {
       await _native.invokeMethod<void>('show', {
         'events': schedule(times, now, localeCode),
         'elapsedMs': elapsedWindow.inMilliseconds,
+        ..._buttonLabels(),
       });
     } catch (_) {
       // Notifications are optional; the app is fine without this card.
@@ -235,6 +237,24 @@ class PrayerStatusNotification {
     if (name.isEmpty) return line;
     return '$line | $name';
   }
+
+  /// The card's two action buttons, captioned here because nothing native
+  /// may invent a user-visible word.
+  ///
+  /// «عايز شكل الاشعار بتاعي تيبيكال نفس اشعار صلاتك» (2026-09-17): beside
+  /// Salatuk's card, which carries «افتح صلاتك» and «تحديث الموقع», ours
+  /// carried none at all.
+  ///
+  /// «الصلاة القادمة» is the more useful of the two, and it exists because of
+  /// what he was looking at when he asked. At 19:13 his card read «المغرب،
+  /// ٦:٢١» while Salatuk read «العشاء ٠٧:٣٨». That is not a fault: it is
+  /// [elapsedWindow] doing exactly what he asked for earlier — «لما يحين وقت
+  /// الصلاة يبدأ يعد عدّاد تصاعدي … لحد ساعة». The rule stays; the button is
+  /// one tap past it, and the override lasts a single post.
+  Map<String, String> _buttonLabels() => {
+        'openLabel': 'notif.prayer_open'.tr(),
+        'nextLabel': 'notif.prayer_next'.tr(),
+      };
 
   String _needLocationTitle(String l) => 'app.name'.tr();
 

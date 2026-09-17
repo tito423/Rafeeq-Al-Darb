@@ -1083,7 +1083,9 @@
     "dl_ruqyah_complete_title": "Ruqyah audio downloaded",
     "dl_ruqyah_error_title": "Could not download the ruqyah audio",
     "azkar_sleep_title": "Sleep adhkar",
-    "azkar_sleep_body": "It is time for the sleep adhkar"
+    "azkar_sleep_body": "It is time for the sleep adhkar",
+    "prayer_open": "Open app",
+    "prayer_next": "Next prayer"
   },
   "hijri": {
     "m1": "Muharram",

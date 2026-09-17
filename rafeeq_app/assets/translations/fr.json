@@ -1083,7 +1083,9 @@
     "dl_ruqyah_complete_title": "Fichiers audio de roqya téléchargés",
     "dl_ruqyah_error_title": "Impossible de télécharger les fichiers de roqya",
     "azkar_sleep_title": "Invocations du coucher",
-    "azkar_sleep_body": "C'est l'heure des invocations du coucher"
+    "azkar_sleep_body": "C'est l'heure des invocations du coucher",
+    "prayer_open": "Ouvrir l'app",
+    "prayer_next": "Prière suivante"
   },
   "hijri": {
     "m1": "Mouharram",

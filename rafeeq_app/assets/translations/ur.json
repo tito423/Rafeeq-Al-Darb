@@ -1083,7 +1083,9 @@
     "dl_ruqyah_complete_title": "رقیہ کی آڈیو فائلیں ڈاؤن لوڈ ہو گئیں",
     "dl_ruqyah_error_title": "رقیہ کی آڈیو ڈاؤن لوڈ نہیں ہو سکی",
     "azkar_sleep_title": "سونے کے اذکار",
-    "azkar_sleep_body": "سونے کے اذکار کا وقت ہو گیا"
+    "azkar_sleep_body": "سونے کے اذکار کا وقت ہو گیا",
+    "prayer_open": "ایپ کھولیں",
+    "prayer_next": "اگلی نماز"
   },
   "hijri": {
     "m1": "محرم",

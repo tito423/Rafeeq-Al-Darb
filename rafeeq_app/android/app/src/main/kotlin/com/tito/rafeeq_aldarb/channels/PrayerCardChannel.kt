@@ -45,6 +45,10 @@ fun MainActivity.registerPrayerCardChannel(flutterEngine: FlutterEngine) {
                         (call.argument<Number>("elapsedMs") ?: 0).toLong(),
                         call.argument<String>("title") ?: "",
                         call.argument<String>("body") ?: "",
+                        // Button captions, already in the reader's language.
+                        // Nothing native invents user-visible words.
+                        call.argument<String>("openLabel") ?: "",
+                        call.argument<String>("nextLabel") ?: "",
                     )
                     result.success(null)
                 }

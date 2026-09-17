@@ -1083,7 +1083,9 @@
     "dl_ruqyah_complete_title": "Аудиофайлы рукъи загружены",
     "dl_ruqyah_error_title": "Не удалось загрузить аудио рукъи",
     "azkar_sleep_title": "Азкары перед сном",
-    "azkar_sleep_body": "Время азкаров перед сном"
+    "azkar_sleep_body": "Время азкаров перед сном",
+    "prayer_open": "Открыть",
+    "prayer_next": "Следующая молитва"
   },
   "hijri": {
     "m1": "Мухаррам",
