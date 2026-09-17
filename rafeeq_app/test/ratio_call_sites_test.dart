@@ -29,17 +29,23 @@ import 'package:flutter_test/flutter_test.dart';
 /// SPACES that defeat W4 and hand the separator to N1. Flagging the tight
 /// form would be noise, and worse, it would teach the next reader that the
 /// colon is the problem when the spaces are.
-/// The separator class is `/`, `-` and `×` only. An EM DASH is deliberately
+/// The separator class is `/` and `×` only. An EM DASH is deliberately
 /// not in it: the app uses one to join two ARABIC runs — «القارئ — السورة»,
 /// «الدرجة — المخرِّج» — and a neutral between two R runs resolves to R,
 /// which is the order those are supposed to paint in. Including it flagged
 /// four such lines as defects on this test's first run. N1 only reverses the
 /// pair when the operands are numbers.
+///
+/// A HYPHEN is not in the class either, for a duller reason: Dart writes
+/// subtraction inside an interpolation, so `'${out.length - n}...'` is
+/// arithmetic, not a separator. It matched `time_formatter.dart` on this
+/// test's second run. The proven defect is the solidus; that is what is
+/// guarded.
 void main() {
   test('no hand-built «a / b» pair survives anywhere under lib/', () {
     // Two interpolations joined by whitespace + a neutral + whitespace.
     final shape = RegExp(
-      r"'[^'\n]*\$[A-Za-z_{][^'\n]*?[   ][-/×]"
+      r"'[^'\n]*\$[A-Za-z_{][^'\n]*?[   ][/×]"
       r"[   ][^'\n]*?\$[A-Za-z_{][^'\n]*'",
     );
 
@@ -100,5 +106,35 @@ void main() {
           'separator — build the pair with ratio() and pass it as one '
           'argument:\n${bad.join('\n')}',
     );
+  });
+
+  test('nobody rebuilds the pair as a Row of Texts either', () {
+    // THE SECOND WRONG FIX, which shipped and was reported as done.
+    //
+    // The tasbeeh counter was "fixed" by splitting «$count / $target» into
+    // three Text widgets in a Row, on the reasoning that three Texts share no
+    // paragraph so bidi rule N1 has no neutral to resolve. That reasoning is
+    // correct and the counter STILL rendered «33 / 2» on emulator-5554 —
+    // because a Row lays its children along the ambient Directionality, and
+    // under RTL the FIRST child goes on the RIGHT. One reordering had simply
+    // been traded for another.
+    //
+    // So the separator-as-its-own-widget shape is banned outright. If a
+    // future layout genuinely needs it, it needs an explicit Directionality
+    // around the Row and a screenshot proving the order.
+    final sepWidget = RegExp(r"""Text\(\s*['"]\s*[/×]\s*['"]""");
+    final offenders = <String>[];
+    for (final f in Directory('lib').listSync(recursive: true).whereType<File>()) {
+      if (!f.path.endsWith('.dart')) continue;
+      final lines = f.readAsStringSync().split('\n');
+      for (var i = 0; i < lines.length; i++) {
+        if (sepWidget.hasMatch(lines[i])) {
+          offenders.add('${f.path}:${i + 1}  ${lines[i].trim()}');
+        }
+      }
+    }
+    expect(offenders, isEmpty,
+        reason: 'A bare separator in its own Text gets reordered by the Row '
+            'that holds it. Use ratio():\n${offenders.join('\n')}');
   });
 }

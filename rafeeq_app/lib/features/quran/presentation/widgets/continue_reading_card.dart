@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart' show localizeDigits;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -125,9 +126,17 @@ class _ContinueReadingBodyState extends ConsumerState<_ContinueReadingBody> {
                               ?.copyWith(fontFamily: 'AmiriQuran'),
                         ),
                         const SizedBox(height: 2),
+                        // Every other number on the Home screen is
+                        // Arabic-Indic in Arabic - the Hijri date, the clock,
+                        // the countdown, the prayer times - and this line was
+                        // the one printing Latin «6» and «579» next to them.
+                        // Seen on emulator-5554, not deduced.
                         Text(
-                          '${'quran.ayah'.tr()} ${first.ayahNumber} · '
-                          '${'quran.page'.tr()} ${widget.page}',
+                          localizeDigits(
+                            '${'quran.ayah'.tr()} ${first.ayahNumber} · '
+                            '${'quran.page'.tr()} ${widget.page}',
+                            context.locale.languageCode,
+                          ),
                           style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant),
                         ),

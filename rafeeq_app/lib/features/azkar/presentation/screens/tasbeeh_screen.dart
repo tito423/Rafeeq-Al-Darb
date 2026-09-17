@@ -1,6 +1,7 @@
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (ltr/rtl) the long-dhikr cards need.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../../core/utils/digits.dart' show localizeDigits;
 import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -158,8 +159,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     });
   }
 
-  String _targetLabel(int? t) =>
-      t == null ? 'azkar.tasbeeh_unlimited'.tr() : '$t';
+  String _targetLabel(int? t) => t == null
+      ? 'azkar.tasbeeh_unlimited'.tr()
+      : localizeDigits('$t', context.locale.languageCode);
 
   @override
   Widget build(BuildContext context) {
@@ -177,8 +179,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                   child: Row(
                     children: [
                       Chip(
-                        label:
-                            Text('azkar.tasbeeh_total'.tr(args: ['$_total'])),
+                        label: Text(localizeDigits(
+                            'azkar.tasbeeh_total'.tr(args: ['$_total']),
+                            context.locale.languageCode)),
                         backgroundColor: scheme.surfaceContainerHighest,
                       ),
                       const Spacer(),
@@ -336,41 +339,35 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                             const SizedBox(height: 14),
                             // «٠ / ٣٣», not «٣٣ / ٠». Seen in Arabic on
                             // emulator-5554 reading «33 / 0» — «33 of 0».
-                            // Two numbers with a neutral separator between
-                            // them flip in an RTL paragraph: the bidi
-                            // algorithm's rule N1 treats a number as R when
-                            // it resolves what the neutral « / » becomes, so
-                            // the separator goes right-to-left and the pair
-                            // swaps around it. The same defect was found in
-                            // the mushaf page badge the same day; the fix is
-                            // the same one, and it is structural rather than
-                            // an annotation: three Text widgets in a Row
-                            // share no paragraph, so there is no neutral to
-                            // resolve and nothing to reorder.
-                            if (_target == null)
-                              Text(
-                                '$_count',
-                                style: const TextStyle(
-                                    fontSize: 52, fontWeight: FontWeight.bold),
-                              )
-                            else
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text('$_count',
-                                      style: const TextStyle(
-                                          fontSize: 52,
-                                          fontWeight: FontWeight.bold)),
-                                  const Text(' / ',
-                                      style: TextStyle(
-                                          fontSize: 52,
-                                          fontWeight: FontWeight.bold)),
-                                  Text('$_target',
-                                      style: const TextStyle(
-                                          fontSize: 52,
-                                          fontWeight: FontWeight.bold)),
-                                ],
+                            // CORRECTION. This was "fixed" once already, by
+                            // splitting the pair into three Text widgets in a
+                            // Row. The reasoning about bidi was right - three
+                            // Texts share no paragraph, so rule N1 has no
+                            // neutral to resolve - and the fix STILL rendered
+                            // «33 / 2» on emulator-5554, because it swapped
+                            // one reordering for another: a Row lays its
+                            // children out along the ambient Directionality,
+                            // and under RTL that puts the FIRST child on the
+                            // RIGHT. The pair was reordered by the Row itself.
+                            //
+                            // ratio() is the fix used by the other fifteen
+                            // sites, and it is the one with a rendering test
+                            // behind it (test/ratio_direction_test.dart lays
+                            // text out under real RTL and reads caret offsets).
+                            // Wrapped in localizeDigits because in Arabic this
+                            // screen was the only one on it printing Latin
+                            // numerals - the Home clock, the date and the
+                            // prayer times are all Arabic-Indic.
+                            Text(
+                              localizeDigits(
+                                _target == null
+                                    ? '$_count'
+                                    : ratio(_count, _target!),
+                                context.locale.languageCode,
                               ),
+                              style: const TextStyle(
+                                  fontSize: 52, fontWeight: FontWeight.bold),
+                            ),
                             const SizedBox(height: 6),
                             Text('azkar.tap_to_count'.tr(),
                                 style:
@@ -382,7 +379,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                     ),
                   ),
                 ),
-                Text('azkar.rounds_count'.tr(args: ['$_rounds']),
+                Text(
+                    localizeDigits('azkar.rounds_count'.tr(args: ['$_rounds']),
+                        context.locale.languageCode),
                     style: TextStyle(color: scheme.onSurfaceVariant)),
                 Padding(
                   padding: const EdgeInsets.all(20),
