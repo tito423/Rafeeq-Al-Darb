@@ -17,6 +17,7 @@ import '../../data/mushaf_edition.dart';
 import '../../data/page_surahs.dart';
 import '../../data/quran_fullscreen_provider.dart';
 import '../../data/quran_jump_provider.dart';
+import '../../data/quran_zoom_provider.dart';
 import '../../data/mushaf_frame.dart';
 import '../../data/mushaf_theme.dart';
 import '../../data/text_layout_provider.dart';
@@ -50,10 +51,9 @@ class QuranScreen extends ConsumerStatefulWidget {
 }
 
 class _QuranScreenState extends ConsumerState<QuranScreen> {
-  /// Pages in the edition currently open. Hafs and most printings are 604,
-  /// but the raster printings genuinely differ (Shamarly 521, Indo-Pak 564),
-  /// and paging past a printing's real end would just render 404s — so this
-  /// tracks the selected edition instead of assuming the Hafs count.
+  /// Pages in the open edition. Raster printings genuinely differ (Shamarly
+  /// 521, Indo-Pak 564) and paging past the real end renders 404s, so this
+  /// follows the edition rather than assuming Hafs's 604.
   int _totalPages = 604;
 
   PageController? _pages;
@@ -79,12 +79,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   double _fontScale = 1.0;
   static const _kFontScale = 'quran_text_font_scale_v1';
 
-  /// P3‑39: auto-scroll (the owner's own clarification of P3‑34's
-  /// ambiguous "speed control" — "speed control for scrolling reading for
-  /// quran text"). `_autoScroll` itself always starts off on a fresh open
-  /// of the reader — silently resuming a hands-free scroll the moment the
-  /// tab reopens would be a bad surprise — but the *speed* the reader
-  /// picked last time is worth remembering, same as font scale.
+  /// P3‑39 auto-scroll. Always starts OFF on a fresh open — resuming a
+  /// hands-free scroll unasked would be a bad surprise — but the speed the
+  /// reader picked is remembered, same as font scale.
   bool _autoScroll = false;
   double _autoScrollSpeed = 40; // pixels/second
   static const _kAutoScrollSpeed = 'quran_text_autoscroll_speed_v1';
@@ -931,6 +928,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _pages ??= PageController(initialPage: _initialPage - 1);
     return PageView.builder(
       controller: _pages,
+      // Frozen while the page is pinched in, so a pan moves the page instead
+      // of turning it — see `quran_zoom_provider.dart`.
+      physics: ref.watch(quranPageZoomedProvider)
+          ? const NeverScrollableScrollPhysics()
+          : null,
       onPageChanged: (i) {
         setState(() {
           _current = i + 1;

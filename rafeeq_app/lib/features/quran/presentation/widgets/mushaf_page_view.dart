@@ -4,12 +4,14 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_edition.dart';
+import '../../data/quran_zoom_provider.dart';
 
 /// One mushaf page: the authentic KFQC page as vector art, with the real ayah
 /// polygons layered on top for tap and highlight.
@@ -19,7 +21,7 @@ import '../../data/mushaf_edition.dart';
 /// is a real night mode rather than a white sheet), and the ayah regions come
 /// from the very same file the page is drawn from, so a highlight can never
 /// drift out of alignment with the text.
-class MushafPageView extends StatefulWidget {
+class MushafPageView extends ConsumerStatefulWidget {
   final MushafEdition edition;
   final int page;
   final AyahRegion? highlight;
@@ -43,10 +45,10 @@ class MushafPageView extends StatefulWidget {
   });
 
   @override
-  State<MushafPageView> createState() => _MushafPageViewState();
+  ConsumerState<MushafPageView> createState() => _MushafPageViewState();
 }
 
-class _MushafPageViewState extends State<MushafPageView> {
+class _MushafPageViewState extends ConsumerState<MushafPageView> {
   /// Every KFQC page shares this box, so the aspect ratio is constant even
   /// though a few pages carry a shifted viewBox origin.
   static const double _pageAspect = 345.0 / 550.0;
@@ -60,9 +62,27 @@ class _MushafPageViewState extends State<MushafPageView> {
   /// else null → stream from the network with `cached_network_image`.
   late Future<File?> _rasterReady;
 
+  /// True while the page is pinched in. Kept locally so the viewer can turn
+  /// its own pan on and off, and mirrored into `quranPageZoomedProvider` so
+  /// the `PageView` above can stop competing for the same drag.
+  bool _zoomed = false;
+
+  /// Reads the scale straight off the matrix on every frame of a pinch.
+  /// A tolerance rather than `> 1`: the controller lands on 1.0000000002
+  /// after a pinch-out, and a page that thinks it is still zoomed never
+  /// gives the swipe back.
+  void _onTransform() {
+    final scale = _transform.value.getMaxScaleOnAxis();
+    final zoomed = scale > 1.01;
+    if (zoomed == _zoomed) return;
+    setState(() => _zoomed = zoomed);
+    ref.read(quranPageZoomedProvider.notifier).state = zoomed;
+  }
+
   @override
   void initState() {
     super.initState();
+    _transform.addListener(_onTransform);
     if (widget.edition.isRaster) {
       _rasterReady = _loadRaster();
     } else {
@@ -75,6 +95,7 @@ class _MushafPageViewState extends State<MushafPageView> {
     super.didUpdateWidget(old);
     if (old.page != widget.page || old.edition.id != widget.edition.id) {
       _transform.value = Matrix4.identity();
+      _zoomed = false;
       if (widget.edition.isRaster) {
         _rasterReady = _loadRaster();
       } else {
@@ -95,6 +116,15 @@ class _MushafPageViewState extends State<MushafPageView> {
 
   @override
   void dispose() {
+    _transform.removeListener(_onTransform);
+    // The page is leaving; whatever it last said about zoom is no longer
+    // true, and a `PageView` left frozen because a disposed page said
+    // «zoomed» is a mushaf that cannot be turned.
+    if (_zoomed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(quranPageZoomedProvider.notifier).state = false;
+      });
+    }
     _transform.dispose();
     super.dispose();
   }
@@ -140,6 +170,12 @@ class _MushafPageViewState extends State<MushafPageView> {
     return ClipRect(
       child: InteractiveViewer(
         transformationController: _transform,
+        // PAN ONLY WHILE ZOOMED. At rest the `PageView` above owns the
+        // horizontal drag outright, so a swipe starts turning the page on
+        // the first frame instead of after the gesture arena has resolved —
+        // which is the «تحسها تقيلة» the owner reported. Zoomed in, the pan
+        // is the point, and `QuranScreen` freezes the `PageView` instead.
+        panEnabled: _zoomed,
         minScale: 1,
         maxScale: 5,
         child: Center(
@@ -375,6 +411,9 @@ class _MushafPageViewState extends State<MushafPageView> {
         return ClipRect(
           child: InteractiveViewer(
             transformationController: _transform,
+            // See the vector branch above: pan only while zoomed, so the
+            // `PageView` is not fighting the viewer for every swipe.
+            panEnabled: _zoomed,
             minScale: 1,
             maxScale: 5,
             child: tappable,
