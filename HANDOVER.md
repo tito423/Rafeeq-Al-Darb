@@ -1750,9 +1750,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 14:43 — COMPLETE**
+**2026-09-17 14:55 — IN PROGRESS — resume here**
 
-v3.31.0 published, and verified the way it is actually consumed. sign_release.py printed OK: rotated. The previous release AND its tag were deleted first, as the standing policy says; the new tag was cut from master and gh release view reports target master with the tag's SHA equal to git rev-parse HEAD (419766d). Then the PUBLISHED bytes were downloaded back from GitHub and checked, not the local build: apksigner on min-sdk 28 gives CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG with SHA-256 a505464d..., the same digest the handover recorded, and on sdk 24-27 it still gives the old Android Debug key - so the lineage is intact and this installs over 3.25.0 as an update rather than forcing an uninstall that would destroy hundreds of MB of downloaded mushaf pages. Asset rafeeq-aldarb-3.31.0.apk, 212,450,637 bytes. Release notes are in Arabic and say plainly that nothing from v3.26.0 to v3.31.0 has ever run on the owner's phone
+data safety: the only copies of the 47 pre-filter book files were sitting in this session's TEMP scratchpad, which is wiped when the session ends - and their R2 objects had already been overwritten. Moved to E:\My Projects\Rafeeq-Backups\books-pre-filter-2026-09-17, deliberately outside the repo so 11 MB of book copies do not ride into its history the way 39 MB already did, with a README saying what they are, how to inspect one, how to put them back (ContentType application/json, NO Content-Encoding - the client sniffs the gzip magic), and which nine deleted objects are NOT backed up because build_book_text.py rebuilds them from the Shamela ids recorded there
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
