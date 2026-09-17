@@ -244,8 +244,8 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                       const SizedBox(height: 6),
                       Text(
                         _paused
-                            ? '${'downloads.paused'.tr()}  ${ratio(_done, total)}'
-                            : '${'downloads.downloading'.tr()}  ${ratio(_done, total)}',
+                            ? '${'downloads.paused'.tr()}  ${localizeDigits(ratio(_done, total), uiLanguageCode)}'
+                            : '${'downloads.downloading'.tr()}  ${localizeDigits(ratio(_done, total), uiLanguageCode)}',
                         style: theme.textTheme.labelSmall,
                       ),
                       const SizedBox(height: 10),
@@ -301,7 +301,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                         )
                       else if (_cached > 0)
                         Text(
-                          '${ratio(_cached, total)} ${'downloads.pages_cached'.tr()}'
+                          '${localizeDigits(ratio(_cached, total), uiLanguageCode)} ${'downloads.pages_cached'.tr()}'
                           '${_bytes > 0 ? ' · ${_formatBytes(_bytes)}' : ''}',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.outline,

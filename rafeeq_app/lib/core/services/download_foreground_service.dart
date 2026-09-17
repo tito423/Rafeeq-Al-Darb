@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import '../../core/utils/digits.dart';
 import '../utils/byte_formatter.dart' show ratio;
 
 /// P3-46: thin bridge to the real Android foreground service
@@ -56,7 +57,7 @@ class DownloadForegroundServiceBridge {
     try {
       await _channel.invokeMethod<void>('update', {
         'title': title,
-        'text': text ?? ratio(done, total),
+        'text': text ?? localizeDigits(ratio(done, total), uiLanguageCode),
         'done': done,
         'total': total,
       });
@@ -89,7 +90,7 @@ class DownloadForegroundServiceBridge {
       await _channel.invokeMethod<void>('updateItem', {
         'key': key,
         'title': title,
-        'text': text ?? ratio(done, total),
+        'text': text ?? localizeDigits(ratio(done, total), uiLanguageCode),
         'done': done,
         'total': total,
       });

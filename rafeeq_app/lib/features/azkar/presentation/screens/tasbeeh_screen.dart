@@ -362,7 +362,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                               localizeDigits(
                                 _target == null
                                     ? '$_count'
-                                    : ratio(_count, _target!),
+                                    : localizeDigits(ratio(_count, _target!), uiLanguageCode),
                                 context.locale.languageCode,
                               ),
                               style: const TextStyle(
@@ -764,7 +764,7 @@ class _MathurCounterCard extends StatelessWidget {
               builder: (context, scale, child) =>
                   Transform.scale(scale: scale, child: child),
               child: Text(
-                t == null ? '$count' : ratio(count, t),
+                t == null ? '$count' : localizeDigits(ratio(count, t), uiLanguageCode),
                 style: TextStyle(
                   fontSize: countSize,
                   fontWeight: FontWeight.bold,

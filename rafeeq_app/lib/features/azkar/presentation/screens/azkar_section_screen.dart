@@ -357,7 +357,7 @@ class _BottomControls extends StatelessWidget {
           Text(
             target > 1
                 ? localizeDigits(
-                    '${'azkar.repeat'.tr()}: ${ratio(count, target)}',
+                    '${'azkar.repeat'.tr()}: ${localizeDigits(ratio(count, target), uiLanguageCode)}',
                     context.locale.languageCode)
                 : 'azkar.tap_to_count'.tr(),
             style: TextStyle(
@@ -389,7 +389,7 @@ class _PageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = Text(
-      localizeDigits(ratio(index + 1, total), context.locale.languageCode),
+      localizeDigits(ratio(index + 1, total), uiLanguageCode),
       style: TextStyle(
         color: Colors.white.withValues(alpha: 0.7),
         fontSize: 12,

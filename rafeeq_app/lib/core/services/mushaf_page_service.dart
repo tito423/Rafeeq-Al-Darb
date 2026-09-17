@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../core/utils/digits.dart';
 import '../utils/byte_formatter.dart' show ratio;
 import 'dart:io';
 
@@ -356,7 +357,7 @@ class MushafPageService {
               title: notifTitle,
               done: done,
               total: total,
-              text: '${'downloads.paused'.tr()} · ${ratio(done, total)}',
+              text: '${'downloads.paused'.tr()} · ${localizeDigits(ratio(done, total), uiLanguageCode)}',
               force: true,
             );
           }

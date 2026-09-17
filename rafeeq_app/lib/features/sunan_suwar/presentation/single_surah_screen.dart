@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../core/utils/digits.dart';
 import '../../../core/utils/byte_formatter.dart' show ratio;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -507,8 +508,8 @@ class _ReaderBar extends StatelessWidget {
                 ),
                 Flexible(
                   child: Text(
-                    ratio(current - startPage + 1, pageCount,
-                        separator: ' / '),
+                    localizeDigits(ratio(current - startPage + 1, pageCount,
+                        separator: ' / '), uiLanguageCode),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(

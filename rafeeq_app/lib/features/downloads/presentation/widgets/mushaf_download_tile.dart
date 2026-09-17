@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -155,7 +156,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                   Text(
                     complete
                         ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
-                        : '${ratio(_cached, total)} ${'downloads.pages_cached'.tr()}'
+                        : '${localizeDigits(ratio(_cached, total), uiLanguageCode)} ${'downloads.pages_cached'.tr()}'
                               '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.outline,
@@ -170,8 +171,8 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                     const SizedBox(height: 6),
                     Text(
                       _paused
-                          ? '${'downloads.paused'.tr()}  ${ratio(_done, total)}'
-                          : '${'downloads.downloading'.tr()}  ${ratio(_done, total)}',
+                          ? '${'downloads.paused'.tr()}  ${localizeDigits(ratio(_done, total), uiLanguageCode)}'
+                          : '${'downloads.downloading'.tr()}  ${localizeDigits(ratio(_done, total), uiLanguageCode)}',
                       style: theme.textTheme.labelSmall,
                     ),
                   ],

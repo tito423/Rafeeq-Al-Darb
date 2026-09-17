@@ -37,6 +37,7 @@
 library;
 
 import 'dart:ui' as ui;
+import '../../../../../core/utils/digits.dart';
 import '../../../../../core/utils/byte_formatter.dart' show ratio;
 
 // `hide TextDirection`: easy_localization re-exports intl, whose
@@ -283,7 +284,7 @@ class _PagePill extends StatelessWidget {
         border: Border.all(color: mt.gold.withValues(alpha: 0.45)),
       ),
       child: Text(
-        ratio(arabicPageNumber(page), arabicPageNumber(total)),
+        localizeDigits(ratio(arabicPageNumber(page), arabicPageNumber(total)), uiLanguageCode),
         style: style,
       ),
     );

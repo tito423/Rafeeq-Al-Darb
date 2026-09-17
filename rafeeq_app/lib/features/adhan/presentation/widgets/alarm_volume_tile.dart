@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 
@@ -74,7 +75,7 @@ class _AlarmVolumeTileState extends State<AlarmVolumeTile> {
                   ),
                 ),
                 Text(
-                  ratio(current, _max),
+                  localizeDigits(ratio(current, _max), uiLanguageCode),
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: scheme.onSurfaceVariant,
                       ),

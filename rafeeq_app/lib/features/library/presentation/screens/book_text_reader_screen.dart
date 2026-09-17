@@ -741,7 +741,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                     child: Text(
                       doc.meta.printReliable
                           ? '${'library.text_page'.tr()} ${page.printedPage}'
-                          : ratio(_pageIndex + 1, doc.pages.length),
+                          : localizeDigits(ratio(_pageIndex + 1, doc.pages.length), uiLanguageCode),
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
