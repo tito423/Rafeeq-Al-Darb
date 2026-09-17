@@ -3,15 +3,174 @@
 **For:** the next AI agent picking up this project (Claude Code, Antigravity,
 Cline, or any other).
 **Read `CLAUDE.md` first — it is the mandatory working method — then this file.**
+
 | | |
 |---|---|
 | **Last updated** | 2026-09-17 |
-| **Released** | **v3.26.0** — tag on `master` at `120968f`, the only release in the repo; asset `rafeeq-aldarb-3.26.0.apk`, 236,567,267 bytes. Verified after publishing: `gh release view` reports target `master`, not a draft, asset `uploaded`, and the tag's SHA equals `git rev-parse HEAD` |
-| **App version** | `pubspec.yaml` `3.26.0+27`; `AboutScreen.appVersion` `3.26.0`; `aapt` reads the published APK as `versionCode=27 versionName=3.26.0 minSdk=24` |
-| **On the owner's Honor** | the signed 3.25.0 build — he took the phone to work before the 3.26.0 APK could be installed on it. **3.26.0 has never run on his phone**, only on `emulator-5554` |
-| **Signing** | `scripts/sign_release.py` printed `OK: rotated`; `apksigner verify` shows `CN=Rafeeq Al-Darb` from Android 9 up and `CN=Android Debug` for 7–8, so the update installs over 3.25.0 without an uninstall (trap #41) |
-| **Verified 2026-09-16 midday** | `flutter analyze lib test` clean · `flutter test` **250 passed** · the Tuhfa level-one screen opened on the owner's Honor with all ten lessons and the Jamzuri matn · a hosted book («روضة العقلاء», 173.8 KB) downloaded live on that same phone · the rebuilt prayer card seen on `emulator-5554`, including its own rollover from الظهر to العصر with no app process running |
-| **Measured 2026-09-16 midday** | 7 locales × **1,410** keys each (identical) · **276** books · **6** mushaf printings · `hadith.db` 109,731,840 bytes, **67,153** hadiths, **45,219** graded · signed APK 236,567,267 bytes · splash clip 1,533,982 bytes (rebuilt with audio, watermark removed) |
+| **Released** | **v3.30.0** — tag on `master` at `c0a08fd`, the only release in the repo; asset `rafeeq-aldarb-3.30.0.apk`, **212,462,925 bytes**, published `2026-09-17T00:48:55Z`. Re-verified at handover: `gh release view` reports target `master`, and the tag's SHA equals `git rev-parse HEAD` |
+| **App version** | `pubspec.yaml` `3.30.0+31`; `AboutScreen.appVersion` `3.30.0` — the two are checked against each other by a test, after v3.27.0 shipped with an About card reading 3.26.0 |
+| **On the owner's Honor** | the signed **3.25.0** build. **Nothing from v3.26.0 to v3.30.0 has ever run on his phone** — five releases of unseen-on-hardware work. Everything below was seen on `emulator-5554` |
+| **Signing** | `scripts/sign_release.py` printed `OK: rotated`; re-checked at handover — `apksigner verify --min-sdk-version 28` on the published asset's own bytes gives `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG`, SHA-256 `a505464d5d16b33554b22a18dfc391324c385f4ce52aae18a94afbe93a4d9349`, with the old debug key still covering 7–8 (trap #41) |
+| **Verified 2026-09-17 (handover)** | `flutter analyze lib test` → **No issues found** (22.9 s) · `flutter test` → **282 passed** · **all 257** catalogued book paths answer a range request on the bucket (0 failures) · one page of **each of the 6** mushaf printings → HTTP 206 with the right `Content-Type` · `hadith/hadith.zip` → 206 `application/zip` · `quran/translations/en.json.gz` and `ur.json.gz` → 206 |
+| **Measured 2026-09-17 (handover)** | 7 locales × **1,479** keys each (identical) · **257** catalogue entries = **254** distinct books (three are entered twice — see below) in **8** categories (tazkiyah 126, aqidah 40, hadith 34, adab 18, fiqh 15, **tarikh 12**, seerah 8, tafsir 4) · **6** mushaf printings × 604 pages · `hadith.db` **109,731,840** bytes, **67,153** hadiths, **45,219** graded and **every one of those 45,219 carries a named grader**, 9 books, 1,482 chapters · **58** quotes from 4 books in 7 languages · on-this-day: Hijri **358 days / 5,747 events**, Gregorian **366 days** each in ar/en/es/fr/pt/ru, **4,380–4,392 events** each · signed APK **212,462,925** bytes |
+
+## STATE AS OF 2026-09-17 — handover (v3.30.0 published)
+
+### The four releases since the last handover
+
+`v3.26.0` was the state of the last handover. Since then, in order:
+
+* **v3.27.0** — trap #47. `RegExp(r'[^\w\s]', unicode: true)` was written in two
+  heading normalisers to mean "drop the punctuation", and Dart's `\w` is
+  `[A-Za-z0-9_]` which `unicode: true` does **not** widen — so it deleted every
+  Arabic letter and returned `''` for every input. Both level-two and
+  level-three tajweed screens showed **no lesson text at all**, on every lesson,
+  while `flutter analyze` was clean and 271 tests passed — because the two
+  course tests were the same comparison, `'' == ''`. Found by opening level
+  three on the emulator. Also: `hadith.db` left the APK (236 MB → 211 MB) and
+  downloads once instead.
+* **v3.28.0** — the **history section**. `BookCategory.tarikh` added, four books
+  that were not in the app at all (al-Bidaya wa an-Nihaya — 4,918 pages, the
+  1348–1358 AH Cairo printing chosen **because it carries no modern muhaqqiq** —
+  Qisas al-Anbiya, Futuh al-Buldan, Tarikh al-Khulafa), nine books re-filed out
+  of seerah/fiqh. And the **two date sheets**: the Hijri and Gregorian dates on
+  the Home header used to open one sheet showing Wikimedia's `onthisday` feed,
+  which is keyed by the **Gregorian** month and day — so tapping «١٧ رمضان» gave
+  you the events of 8 March. The Hijri sheet now reads a dataset built for it
+  from Arabic Wikipedia's per-Hijri-day pages, which are the only source that
+  exists (English Wikipedia's `17_Ramadan` is a 404, checked).
+* **v3.29.0** — the **copyright purge**. 23 books by living or recently-dead
+  authors out of the library and their files off the bucket; the Hajj guide
+  re-sourced from Ibn Baz's manual onto an-Nawawi's **«الإيضاح في مناسك الحج
+  والعمرة»** (d. 676 AH), which had been in the library all along; makharij
+  re-sourced onto Ibn al-Jazari's own two books; the quote corpus rebuilt after
+  the discovery that **284 of the app's 352 quotes came from «لا تحزن»**, whose
+  author is alive. And the first pass of «no Arabic for a reader who chose
+  another language».
+* **v3.30.0** — the **translation release**. Detailed below.
+
+### What v3.30.0 actually did
+
+**58 quotes in seven languages.** The extractor produced 359, then 260 after the
+filter was tightened, and a large minority of those were still not maxims but
+item N of a list that began on the page before — «الفائدة الأولى», «الدرجة
+السادسة», «أنه يورث حياة القلب». All 260 were read by hand; the 58 that stand as
+a finished thought were kept and translated into en/es/fr/pt/ru/ur. **The Arabic
+is never retyped**: a curated entry in `scripts/quotes_curated_*.json` is a
+pointer — `"<bookId>|<index>"` — and `scripts/quotes_curated.py` copies the
+Arabic out of the extractor's own output at build time, so no diacritic can be
+lost in transcription. The full-screen card shows the translation with the
+author's own Arabic under it, because a translated maxim with no original is a
+claim about a book rather than a quotation from it.
+
+**Nineteen Hajj steps in seven languages.** The guide renders «الإيضاح»
+verbatim, and that book is Arabic. Translating a 522-page manual is a different
+job; what a non-Arabic reader now gets is one plain line per step saying what
+the chapter is **about** — carrying no ruling, every judgement stays in the book
+— plus a line saying the full text is an-Nawawi's own Arabic, and the page
+range. Also fixed: the card in More still read «من كتاب الشيخ ابن باز» three
+commits after his book was removed.
+
+**The Gregorian on-this-day feed in six languages.** It had `ar` and `en`, so a
+Spanish, French, Portuguese or Russian reader got the English rows. Fetched all
+four from Wikimedia's own feed. **Urdu is not there because Wikimedia has no
+Urdu feed at all** — 404 on every date, checked — so `ur` falls back to English.
+
+### What is NOT verified, and must be redone rather than trusted
+
+* **Nothing since v3.25.0 has run on the owner's phone.** Five releases.
+* **No in-app download has ever been watched succeed on this machine.** Avast's
+  Web Shield re-signs TLS with a root that lives in the Windows store and never
+  in the emulator's, so every hosted download inside the app fails on
+  `emulator-5554` with `CERTIFICATE_VERIFY_FAILED` and the screen reads as a
+  broken feature (trap #13). Specifically **unwatched**: the first `hadith.db`
+  download, the four new history books, and al-Idah. Each was proven present on
+  the bucket by a range request and then **pushed into the sandbox by hand** via
+  `run-as` so the screen could be seen — which is the bytes being there, not the
+  download working. **On a real phone, download each of those three and watch
+  it.**
+* **The splash sound has never been heard on a device** — the switch is off by
+  default and nobody has turned it on.
+
+### The one decision waiting on the owner
+
+**The azkar corpus is «حصن المسلم» by سعيد بن وهف القحطاني (d. 1439 AH / 2018).**
+His name is inside the bundled database itself — `azkar_items` row 2's footnote
+reads «الؤلف: سعيد بن علي بن وهف القحطاني» (the typo is the source's), and row
+1's reads «حرر في شهر صفر 1409هـ». Measured at handover: **134 sections, 298
+items** in `assets/data/quran_sciences.db`. The supplications are prophetic and
+free; **the selection, the ordering, the 134 chapter titles and the takhrij are
+his**. That is the same problem the purge removed 23 books for, and it is still
+in the app.
+
+It carries a **second** defect that will be fixed by the same work and not
+before: `azkar_screen.dart:307` and `azkar_section_screen.dart:112` render
+`section.title` — the **raw Arabic** out of the database — so the azkar section
+list and every section's app bar are Arabic on an English, French or Russian UI.
+That is «مش ينفع تعرض … بالعربي واللغه المختارة انجليزي» in a place the v3.29.0
+and v3.30.0 passes did not reach. Translating the 134 titles now would be work
+thrown away if the book changes, which is the other reason this waits.
+
+The replacement is already in the library: **«الأذكار» للنووي** (d. 676 AH),
+with «الكلم الطيب» for Ibn Taymiyyah and «عمل اليوم والليلة» for Ibn as-Sunni.
+Rebuilding means re-cutting **134 chapters and 298 items** out of a different
+book with a different arrangement, and then translating the new titles — a
+day's work at least, on a feature he uses personally. **It was deliberately not
+started**: the owner was asked and has not answered.
+
+### One thing he asked for that is deliberately absent
+
+He named **«رجال حول الرسول»** among the history books he wanted. It is not in
+the library and should not be: **خالد محمد خالد died in 1996**, so under the
+rule this project works to (author's death + 50 years, Egypt) it is protected
+until 2046. It was in fact **removed** by the copyright purge in v3.29.0. What
+the app carries instead, on the same subject and free, is al-Bidaya wa
+an-Nihaya, Tarikh al-Khulafa and the seerah shelf.
+
+### Found AT this handover, and not yet fixed: three books are in the library twice
+
+The §6 sweep range-requested **all 257** catalogued book paths (not a sample)
+and every one answered. Counting what came back turned up something a status
+check does not normally look for: **three books are catalogued twice**, under
+two ids each, pointing at two separate uploads of the *same* Shamela book.
+
+Proven by fetching both copies and comparing them page by page, not inferred
+from the titles:
+
+| book | ids | Shamela id | pages | identical |
+|---|---|---|---|---|
+| «الأذكار» للنووي | `al_adhkar_lil_nawawi`, `al_adhkar_nawawi` | 1956 | 411 / 411 | **411** |
+| «الأربعون النووية» | `al_arbaun_al_nawawiyyah`, `al_arbaun_an_nawawiyyah` | 12836 | 81 / 81 | **81** |
+| «التبيان في آداب حملة القرآن» | `al_tibyan_fi_adab_hamalat_al_quran`, `at_tibyan_hamalat_al_quran` | 1969 | 224 / 224 | **224** |
+
+So **the real book count is 254, not 257**, the library shows each of those
+three twice in its own category, and the bucket carries three redundant
+objects (~465 KB).
+
+Two of the pairs disagree about their own edition, which is the part that
+matters under §1.1: `al_adhkar_nawawi`'s `sourceLabel` names **تحقيق شعيب
+الأرنؤوط** (d. 2016) and the file's internal id is `aladhkar_llnwwy_t_alarnwwt`,
+while `al_adhkar_lil_nawawi` — **the same 411 pages** — names only دار الفكر and
+no muhaqqiq at all. One of those two labels is wrong about a book whose
+apparatus is still in copyright, and the app currently ships both.
+
+**Not fixed here on purpose:** `book_catalog.dart` is compiled into the app, so
+removing an entry only reaches the owner through a new release, and publishing
+one was not what «جهّز الدنيا» asked for. It is item 1 of `NEXT_PROMPT.md`.
+
+There are three further pairs that share a title and author but are **genuinely
+different printings** — `tahqiq_riyad_al_salihin_lil_albani`, `tahqiq_al_iman`,
+`takhrij_al_kalim_al_tayyib`, all المكتب الإسلامي, i.e. al-Albani's editions —
+whose ids name a muhaqqiq their `sourceLabel` does not. They are a labelling
+question, not duplicates, and they want reading before anything is deleted.
+
+### Still open, small
+
+* `AppConfig.donationUrl` is empty, so the donate button hides itself (trap #27).
+  The support screen ships and says why there are no ads; the button appears the
+  day he puts a URL there.
+
+### The older record
 
 ## STATE AS OF 2026-09-16 — midday (v3.26.0 published)
 

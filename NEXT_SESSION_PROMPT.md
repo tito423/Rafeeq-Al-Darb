@@ -1,160 +1,173 @@
 # Rafiq Al-Darb — next session brief
 
-**Last written:** 2026-09-16 at dawn, on a clean tree: `flutter analyze lib
-test` clean, `flutter test` **243 passed**, every hosted path range-requested
-and answering 206 (see `HANDOVER.md` → "Verified 2026-09-16 dawn").
+**Last written:** 2026-09-17, at the owner's «جهّز الدنيا», on a clean tree.
 
-**`v3.25.0` is the published release**, tag at `abd74b5`. **`master` is six
-commits ahead of it and that work is not released** — it is verified and
-installed on the owner's Honor, but the word to publish never came. That is
-the first question to ask him.
+**Verified at this handover, not remembered:**
 
-**A rule was added to `CLAUDE.md` this session (§6, §7): the next-session
-prompt is written ONLY when he says «جهّز الدنيا».** Not at the end of a
-batch, not to round off a reply. Finish the work and report it.
+* `flutter analyze lib test` → **No issues found** (22.9 s)
+* `flutter test` → **282 passed**
+* **all 257** catalogued book paths answered a range request on the bucket —
+  0 failures, the whole catalogue and not a sample
+* one page of **each of the 6** mushaf printings → HTTP 206 with the right
+  `Content-Type` (`image/svg+xml` for `hafs_kfqc`, `image/jpeg` for the five
+  raster printings)
+* `hadith/hadith.zip` → 206 `application/zip`; `quran/translations/en.json.gz`
+  and `ur.json.gz` → 206
+* `gh release view v3.30.0` → target `master`, asset
+  `rafeeq-aldarb-3.30.0.apk` **212,462,925 bytes**; the tag's SHA
+  `c0a08fd033b26d5c85c063303320d5ec322cd757` **equals** `git rev-parse HEAD`
+* `apksigner verify --min-sdk-version 28` on the published bytes →
+  `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG`
 
-**What the dawn session did, in one paragraph.** His batch: a new app icon
-cropped from his own artwork with nothing else touched; his new splash clip,
-cut at 7 s and **silenced** because its voice mispronounced «قرآني» and a
-voice cannot be re-recorded here; the wordmark it used to burn in — whose
-tashkeel was wrong on both words — now drawn by the app, correctly pointed,
-inside the video's own coordinate space. Then the light theme, which he said
-was unreadable «خاصة في قسم عن التطبيق»: the cause was one colour used in many
-places, and it was measured rather than judged — gold as text is **2.10 : 1**
-on white, and `goldOn(scheme)` takes it to 5.49 while keeping 9.87 on the
-night themes. About's own dua turned out to be `Colors.white` on a panel that
-follows the theme. Then his list: six settings sections and the library's
-authors and hadith sections collapsed by default; the ruqyah's duplicated
-headphones action removed, its theme fixed, and the tafsir card's own reciter
-chip put beside the play button — wired to the queue, so choosing سعود الشريم
-really does recite in his voice, which was watched happening on his phone.
-
-**Two bugs in that work were found only by looking at a device**, and both are
-worth remembering: a listener that never called `setState`, so the caption was
-computed once at zero and never drawn; and AmiriQuran being a *Quranic* face,
-which drew «قرآني» as «قرآنی» with its marks adrift.
-
-`NEXT_PROMPT.md` is the paste-ready message; this file is the longer brief it
-points at.
+**Measured at this handover:** 7 locales × **1,479** keys · **257** catalogue entries =
+**254** distinct books (see item 1) in **8** categories · **6** mushaf printings × 604 pages · `hadith.db`
+109,731,840 bytes / **67,153** hadiths / **45,219** graded, each with a named
+grader · **58** quotes × 7 languages · Hijri on-this-day **358 days / 5,747
+events**, Gregorian **366 days** × 6 languages.
 
 ---
 
-## How this project works now — read before planning
+## Where the last session stopped
 
-1. **`CLAUDE.md` is the contract.** Nothing is done until it has been seen on
-   `emulator-5554`; nothing fake; religious content held to a higher standard.
-2. **The owner tests every release on his own phone** and sends recordings and
-   screenshots. Look at them properly: a recording becomes a contact sheet with
-   ShareX's ffmpeg (`C:\Program Files\ShareX\ffmpeg.exe`,
-   `-vf "fps=3,scale=240:-1,tile=6x5"`). The last flicker was diagnosed exactly
-   that way.
-3. **The owner sometimes hands work to a second agent** (Antigravity / Gemini).
-   `AGENT_TASK_PROMPT.md` is the guarded brief for that. The last time, the
-   other agent built real features but also: committed `node_modules`, left
-   screenshots in the repo, rewrote 2,700 lines per locale file, published a
-   release with a provider that crashed start-up, and wired a sign-in button
-   that never published its result. **Treat anything it shipped as unverified
-   until you have run it.**
-4. **Quota.** He reads it as a number climbing to 100 (last reading: 97, on
-   2026-09-13; the week may have reset since). Ask for it first. Releases are
-   his call and cost him real budget — one per batch, when he says, and never
-   left unpublished when the budget is closing.
-5. **Replies in Egyptian Arabic; every string in the app in Modern Standard
-   Arabic.**
+`v3.30.0` — "the translation release" — was published and reported, and the
+reply ended by putting **one decision** to the owner and waiting for it. No
+code work was started after that, deliberately.
+
+## 1. Three books are in the library TWICE — found at the handover, not fixed
+
+The handover sweep range-requested all 257 catalogued book paths and every one
+answered; counting what came back showed that **three books are catalogued
+twice**, under two ids each, pointing at two separate uploads of the same
+Shamela book. Proven by fetching both copies and comparing page by page:
+
+| book | ids | Shamela id | pages identical |
+|---|---|---|---|
+| «الأذكار» للنووي | `al_adhkar_lil_nawawi`, `al_adhkar_nawawi` | 1956 | **411 / 411** |
+| «الأربعون النووية» | `al_arbaun_al_nawawiyyah`, `al_arbaun_an_nawawiyyah` | 12836 | **81 / 81** |
+| «التبيان في آداب حملة القرآن» | `al_tibyan_fi_adab_hamalat_al_quran`, `at_tibyan_hamalat_al_quran` | 1969 | **224 / 224** |
+
+The real book count is **254**, not 257. Worse than the duplication: the two
+«الأذكار» entries **disagree about their own edition** — `al_adhkar_nawawi`
+names تحقيق شعيب الأرنؤوط (d. 2016) and the file's internal id is
+`aladhkar_llnwwy_t_alarnwwt`, while `al_adhkar_lil_nawawi`, the same 411 pages,
+names only دار الفكر and no muhaqqiq. One label is wrong about a book whose
+apparatus is still in copyright, and both ship.
+
+**Do:** read both `sourceLabel`s against Shamela 1956 itself, keep the honest
+one, delete the other entry, delete its object from R2, and **write a test**
+that fails when two catalogue entries share a title+author or a Shamela id —
+this is the «catalogue nobody opened» failure (trap #36) in a new form and
+nothing in the suite noticed it.
+
+Three further pairs share a title and author but are genuinely different
+printings — `tahqiq_riyad_al_salihin_lil_albani`, `tahqiq_al_iman`,
+`takhrij_al_kalim_al_tayyib`, all المكتب الإسلامي, i.e. al-Albani's editions —
+whose **ids name a muhaqqiq their `sourceLabel` does not**. Read them before
+deleting anything; they may be a labelling fix, or they may be three more books
+that the v3.29.0 purge should have taken.
+
+## 2. The decision — the azkar corpus
+
+**Ask him, then act on the answer. Do not start before he answers.**
+
+The azkar feature is built on **«حصن المسلم» لسعيد بن علي بن وهف القحطاني**
+(d. 1439 AH / 2018). This is measured, not inferred: in
+`rafeeq_app/assets/data/quran_sciences.db`, `azkar_items` row 2's footnote
+reads «الؤلف: سعيد بن علي بن وهف القحطاني» (the typo is the source's) and row
+1's reads «حرر في شهر صفر 1409هـ». The tables hold **134 sections and 298
+items**.
+
+The duas themselves are prophetic and free. What is his is **the selection,
+the arrangement, the 134 chapter titles and the takhrij** — exactly the thing
+23 books were removed from the library for in v3.29.0.
+
+**The replacement is already in the library** — «الأذكار» للنووي (d. 676 AH),
+with «الكلم الطيب» لابن تيمية and «عمل اليوم والليلة» لابن السني beside it.
+**But it is in there twice** (item 1), and the copy whose label is honest about
+the printing has to be settled BEFORE anything is cut out of it — the edition
+Shamela 1956 actually is, is al-Arna'ut's, whose apparatus is in copyright, so
+what the azkar are rebuilt from is an-Nawawi's own matn and not his notes.
+
+If he says go:
+
+1. Read real pages of «الأذكار» before writing any cutter (§1.4). It is
+   arranged by باب like حصن المسلم but not in the same order, and it carries
+   isnads that حصن المسلم does not — those need the §1.2 treatment, not a
+   filter that silently drops them.
+2. Keep every dua's **text** verbatim. Never normalise scripture-adjacent
+   text (§1.2).
+3. Rebuild `azkar_sections` / `azkar_items` in `quran_sciences.db` from it,
+   and keep the ids stable enough that `azkarItemsByIds` (used by the
+   Hisn-al-Muslim cross-section lists in `sciences_repository.dart:162`)
+   still resolves — read that comment before touching the schema.
+4. **Then** translate the new section titles into all 7 locales.
+
+If he says leave it: say plainly in `HANDOVER.md` that the app ships a
+copyrighted selection knowingly, so the record is honest.
+
+## 3. The azkar screens show raw Arabic titles in every language
+
+This is a live instance of his standing rule and it is **not fixed**:
+
+* `rafeeq_app/lib/features/azkar/presentation/screens/azkar_screen.dart:307`
+  → `Text(s.title, …)`
+* `rafeeq_app/lib/features/azkar/presentation/screens/azkar_section_screen.dart:112`
+  → `Text(widget.section.title)`
+
+Both render the database's Arabic title directly, so an English/French/Russian
+reader gets an Arabic list and an Arabic app bar. Fixing it means 134
+translated titles — which is why it is tied to item 2 and should not be done
+first: if the book changes, the titles change.
+
+## 4. What has never been seen on hardware — redo it, do not trust it
+
+**Nothing since v3.25.0 has run on the owner's phone.** Five releases:
+v3.26.0, v3.27.0, v3.28.0, v3.29.0, v3.30.0.
+
+And **no in-app download has ever been watched succeed on this machine.**
+Avast's Web Shield re-signs TLS with a root that lives in the Windows store
+and never in the emulator's, so every hosted download inside the app fails on
+`emulator-5554` with `CERTIFICATE_VERIFY_FAILED` and the screen reads exactly
+like a broken feature (CLAUDE.md trap #13). These three were proven present on
+the bucket by a range request and then **pushed into the sandbox by hand**
+through `run-as` so the screen could be seen — which is the bytes being there,
+not the download working:
+
+* the first-run **`hadith.db`** download (~16 MB zip; it left the APK in
+  v3.27.0, so a fresh install now depends on it)
+* the four **history books**, above all `al_bidaya_wan_nihaya` (5.0 MB gzip)
+* **`al_idah_fi_manasik_al_hajj_wal_umrah`**, which the whole Hajj guide reads
+
+**On a real phone: install v3.30.0, then download each of those three and
+watch it finish and open.** Report what actually happened.
+
+Also unheard on any device: the **splash sound** (off by default).
+
+## 5. Smaller, open
+
+* `AppConfig.donationUrl` is empty, so the donate button hides itself rather
+  than being a dead control (trap #27). It appears the day he supplies a URL.
+* **«رجال حول الرسول» is deliberately absent** although he asked for it by
+  name: خالد محمد خالد died in 1996, so it is protected until 2046 under the
+  author-death + 50 rule this project works to. It was **removed** by the
+  v3.29.0 purge. Do not re-add it; if he asks again, say why.
 
 ---
 
-## Open work, in order
+## The rules this session must not relearn
 
-### 1. Ask about the release (first job)
-
-Six commits of verified, phone-tested work sit unreleased on `master`. He was
-asked and had not answered. If he says yes: bump `pubspec.yaml` to `3.26.0+27`
-and `AboutScreen.appVersion` to match (a test holds them equal), build, run
-`scripts/sign_release.py` until it prints `OK: rotated`, delete `v3.25.0` and
-its tag, publish `v3.26.0` from `master`, and check the tag's SHA equals
-`HEAD`. Release notes in Arabic, and honest about the splash being silent and
-why.
-
-### 2. The Tuhfa download, on a real phone
-
-The level-one screen works — ten lessons, the book's own vowelled headings,
-الضباع's note under the matn in smaller type, «إتمام الدرس» moving the header
-to «أنجزت ١ من ١٠» — **but that was seen with the book file placed on the
-device by hand.** On `emulator-5554` nothing hosted can be downloaded at all;
-see the addition to `CLAUDE.md` trap #13 for the certificate that proves why,
-and for the `run-as` recipe if you need to do it again.
-
-So: install v3.25.0 on the Honor, open المزيد ← تعليم التجويد ← المستوى الأول
-with the network on, and watch it fetch `tuhfat_al_atfal`. If it shows «يلزم
-تنزيل نصّ الدروس», `adb logcat | grep tuhfaBookProvider` prints the reason.
-Then update the Xiaomi, which is two releases behind.
-
-### 3. Sync — finish proving it (owner's current priority)
-
-Built by the second agent, repaired by this session, **never seen working
-between two devices**. What is known:
-
-* Google for identity only (`email`/`profile` — non-sensitive, so no
-  verification and no seven-day re-prompt); `AppConfig.googleServerClientId`
-  is the Web client ID. Two Android OAuth clients exist (debug fingerprint
-  `BE:6D:45:79:0B:95:BA:8F:5E:03:B2:4F:DA:30:03:EC:85:D0:8A:40`, release
-  `1B:6B:6C:67:D2:5B:6E:93:8B:3E:F8:93:F4:D2:94:A2:87:5A:2D:B3`).
-* Worker + D1 in `sync_backend/`, live at
-  `https://rafeeq-sync-backend.int-vip00.workers.dev`, on the Cloudflare
-  account **`Int.vip00@gmail.com's Account`** — not the owner's main email.
-  `scripts/.env` has `CF_WORKERS_TOKEN` (Workers + D1, tested) and
-  `CF_ACCOUNT_ID`. The older `CF_API_TOKEN` is R2-only.
-* The Worker checks `iss`, `aud`, `exp` through `tokeninfo` and scopes every
-  query by the verified `sub`. **Measured: no token → 401.**
-
-To do, in order: ask the owner what the card did on his phone (it now shows
-the error if sign-in fails); sign in on the emulator; set a counter and a
-khatma position; clear app data or use a second AVD, sign in again, **see the
-same numbers**; then the security checks nobody has run — a forged token must
-get 401, and a valid token must never return another `sub`'s rows — and check
-whether a re-sent counter batch double-counts (the owner's rule is SUM, so an
-unguarded retry inflates tasbeeh). Also: the owner wanted sign-in offered once
-at first launch with a working «تخطّي»; only the More card exists.
-
-### 4. Per-ayah recitation downloads — verify from zero
-
-Built by the second agent, **never run by anyone**. The owner's words about the
-last attempt: «فشل فشل ذريع». Entry: Downloads → «تلاوات الآيات». Download a
-whole surah, `adb shell cmd connectivity airplane-mode enable`, play it ayah by
-ayah, look at the screen. Read trap #45 before touching download callbacks.
-
-### 5. The two fixes in 3.24.1/3.24.2 that were not seen on a device
-
-* The Quran-tab flicker (`_appliedUiMode` guard in `quran_screen.dart`). Measure
-  it the way trap #43 says: `dumpsys window | grep statusBars`, and
-  `dumpsys gfxinfo … reset` / act / read.
-* The sign-in card now surfacing its result.
-
-### 6. Still not proven
-
-* The prayer-notification countdown jumping seconds — the rebase happens twice
-  per prayer now, but the jump never reproduced on the emulator.
-
-### 7. Waiting on the owner
-
-* 11 clips under `adhan/video/` on R2 (~74 MB) — delete or keep.
-* A working address for Mishkat.
-* Whether to re-bundle only the first ~20 Hafs pages so the mushaf opens with
-  no network (offered, unanswered).
-
----
-
-## Traps met this stretch (worth adding to `CLAUDE.md` if they recur)
-
-* **A provider whose default throws is a start-up crash waiting for a read.**
-  `sharedPreferencesProvider` threw `UnimplementedError` and `main()` overrode a
-  *different* provider; reads during start-up killed `runApp` before the first
-  frame, and the native splash just stayed.
-* **Re-applying `immersiveSticky` is not a no-op** — it resizes the window and
-  can loop through `build`.
-* **A crawled batch can re-fetch a book already shipped** (Shamela 592 was in the
-  catalogue twice) and **inherit the seed book's author** (al-Albani's ten books
-  claimed al-Bukhari). Check ids against the catalogue and read the card.
-* **Bash command substitution eats backticks in `git commit -m`.** Write the
-  message to a file and use `git commit -F`.
+* **`CLAUDE.md` is mandatory.** Read it before touching anything. Trap #47 is
+  the newest and cost two whole tajweed levels.
+* **Check the quota live in the first reply** (§2.0), and say whether Remote
+  Control is on (§2.0b — `ListAgents`; it can only be switched on when a
+  session *starts*, with `claude rc`).
+* **Reply in Egyptian Arabic.** Code, comments and commit messages in English.
+* **«اعلى معايير الجودة والكفاءة والمنطقية والدقة والموضوعية والاحترافية» is a
+  standing rule**, not a one-off — prefer a smaller verified deliverable to a
+  larger unverified one.
+* **Checkpoint with `.\cp.bat "what you just did"`**, constantly.
+* **One release at a time**: delete the previous release *and its tag* before
+  publishing, tag from `master`, bump `pubspec.yaml` **and**
+  `AboutScreen.appVersion` together, and sign with
+  `scripts/sign_release.py` — which must print `OK: rotated` (trap #41).
+* **Do not write a next-session prompt** unless he says «جهّز الدنيا» (§7).
