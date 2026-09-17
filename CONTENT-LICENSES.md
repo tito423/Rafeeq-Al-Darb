@@ -90,7 +90,7 @@ actually ship?** That is measurable, and it has now been measured.
 
 ---
 
-## 1. المكتبة الشاملة — the library's 249 books
+## 1. المكتبة الشاملة — the library's books (249 → 248 → 187 → 214)
 
 ### What Shamela itself says — read on 2026-09-17, not remembered
 
@@ -437,6 +437,159 @@ not one grading in the database is anonymous.**
 7. **The recitations** on everyayah.com, cdn.islamic.network and mp3quran.net.
 8. ~~The azkar corpus.~~ **Done 2026-09-17.** See below.
 
+---
+
+## The 2026-09-17 curation pass — seven names out, 27 books in
+
+This one is **not a rights decision**. It is the owner's editorial choice about
+what his own app teaches, and it is recorded here because it moved 88 books and
+because the reasoning for the one thing that was *kept* is a rights-and-honesty
+argument that the next session must not quietly undo.
+
+### What he asked for
+
+> «فيه حوار جامد سالت فيه احد الشيوخ بيقول ان ابن باز وابن عثيمين وابن تيمية
+> وابن جبرين وابن عبدالوهاب والالباني فيهم حوار تشدد شوية وانا بصراحة مش عايز
+> اختلاف، ده تطبيق يعلم الناس دينها ويقربها من ربنا فبلاش. فاحذفهم كلهم
+> والقرني معاهم. … اي حاجة ابن باز داخل فيها شيلها يعني مش تخلي له اي حاجة في
+> مصادرنا.»
+
+### What each name actually owned — measured before anything was deleted
+
+Every spelling of every name (with and without «ابن»/«بن», plus the Latin
+transliterations) was searched across `lib/`, `assets/`, `scripts/` and both
+bundled databases.
+
+| name | what the app actually attributed to him | action |
+|---|---|---|
+| **ابن تيمية** | **60 of the 248 library books** (24%), plus Ibn al-Qayyim's «أسماء مؤلفات شيخ الإسلام ابن تيمية», which is an index *of* those 60 | all 61 removed, catalogue and bucket |
+| **الألباني** | **4,898 hadith gradings** in `hadiths.grader`, i.e. nearly all of Sunan Abi Dawud | **gradings kept** — see below |
+| **ابن باز** | one row on the Sources screen | corrected (it was also stale) |
+| **العثيمين** | nothing | — |
+| **ابن جبرين** | nothing | — |
+| **ابن عبد الوهاب** | nothing | — |
+| **عائض القرني** | nothing | — |
+
+Two of those zeros needed checking rather than assuming:
+
+* «القرني» appears **96 times** in `tafseer_texts`. Read in place, every one of
+  them is **أويس القرني**, the Tābiʿī — a different man by seven centuries.
+  Nothing was touched.
+* «بن عبد الوهاب» appears in `hadiths.arabic` and `hadiths.narrator_en`. Those
+  are narrators in isnads, not Muhammad ibn ʿAbd al-Wahhāb. Nothing was touched.
+
+The general principle: a classical text that *narrates through* a man, or a
+tafsir that *mentions* him, is not the app endorsing him. What matters is where
+**Rafeeq itself** presents a name as an authority — a book on its shelf, a
+source on its Sources screen, a grading in its hadith column.
+
+### Why al-Albani's 4,898 gradings stayed
+
+This was put to the owner with the number, and he chose to keep them.
+
+A grading is **isnād criticism attributed to a named critic in a named
+edition** — which is exactly what CLAUDE.md §1.2 *requires*: «A hadith grading
+must come from a named scholar in a named edition, and the app must show whose
+it is. `grade` without `grader` is not acceptable.»
+
+The three alternatives all made the app worse:
+
+* strip the name and keep «صحيح/ضعيف» → the app states a verdict with no source,
+  which §1.2 forbids outright;
+* strip the grading too → 4,898 hadiths read «الدرجة: غير مذكورة», a real loss
+  to the reader;
+* find another critic for Sunan Abi Dawud → possible, not free, and not asked
+  for.
+
+So: his name survives **only** in the `grader` column, and nowhere else in the
+app — no books, no links, no descriptions.
+
+### The Ibn Baz row was stale as well as unwanted
+
+`sources_catalog.dart` credited «التحقيق والإيضاح — ابن باز»
+(`shamela.ws/book/31235`) for the Hajj guide. But the guide had already been
+moved off that book onto **النووي's «الإيضاح في مناسك الحج والعمرة»** when the
+rights question was settled, and `hajj.source` was rewritten in all seven
+locales at the time — the Sources screen was simply never updated. **The app
+was naming a book it reads no word from.** Corrected to
+`shamela.ws/book/96232`, which answered HTTP 200 on 2026-09-17.
+
+### The 61 removed books
+
+`scripts/removed_taymiyyah_ids.json` holds the list.
+`scripts/r2_delete_taymiyyah_books.py` deleted the objects **after** the
+catalogue was committed, refusing to run while any id was still catalogued —
+because the safe failure of a half-finished run is files nobody points at, not
+cards pointing at files that are gone. It HEAD-checked each object before and
+after: **61 of 61 deleted, 3,573,738 bytes freed.**
+
+The library went **248 → 187**, and the count of books flagged
+`editorNotesRemoved` went **47 → 29**, because 18 of the filtered books were
+his. `test/editor_notes_removed_test.dart` pins both numbers deliberately, so
+neither can move again without someone explaining it here.
+
+### The channels and the sites
+
+Channels **22 → 9**, sites **7 → 3 → 4**, and the 19 orphaned
+`channels.desc_*` / `dawah.site_*` keys were deleted from all seven locale
+files rather than left behind.
+
+Two of the removed sites were **not** on his list: **`islamqa.info`** and
+**`dorar.net`**. They were put to him because his own rule reached them — those
+two are the largest online archives of exactly the fatwas he asked to be rid of
+— and he chose to remove them and asked for replacements.
+
+The three replacements were each **fetched before being written down** (§1.1),
+and the name on each card is the site's own `<title>`:
+
+| site | answered | its own title | «ابن باز/العثيمين/الألباني» on the landing page |
+|---|---|---|---|
+| `dar-alifta.org/ar` | 200, 179,961 B | فتاوي دار الإفتاء المصرية | 0 |
+| `azhar.eg` | 200, 25,244 B | بوابة الأزهر الإلكترونية | 0 |
+| `nabulsi.com` | 200, 223,087 B | موسوعة النابلسي للعلوم الإسلامية | 0 |
+
+النابلسي is deliberate: his channel is one of the nine the owner kept.
+
+**One inconsistency is his and is left as he asked it:** «قصة الإسلام» (د. راغب
+السرجاني's site) was removed while **his channel was kept**. He was told.
+
+### The 27 books added, and why these
+
+> «عاوز اشهر وافضل الكتب في تنمية الذات واداب النفس واللي تقرب الناس من ربنا
+> بمنهج وسطي معتدل … وتزودلي في المكتبة قسم وتسميه طالب العلم وتقلب الانترنت
+> على الكتب المتدرجة اللي تعلم طالب العلم الشرعي المنهج الوسطي المعتدل بتدرج
+> … وابعد كل البعد عن التشدد او ممن وصف به.»
+
+The gap was measurable and large. The library held **99 tazkiyah books** and
+**not one** by الغزالي، ابن رجب، الشاطبي، الماوردي، ابن حزم، المحاسبي، الخطيب
+البغدادي or ابن عبد البر — a grep for each name over the whole catalogue
+returned zero. It was almost entirely ابن أبي الدنيا and ابن الجوزي.
+
+**Rights:** every author on the new list died between 204 AH and 911 AH. Under
+UAE Federal Decree-Law 38/2021 the term is life + 50 years, so the underlying
+texts are long out of copyright without argument. The editions are the usual
+Shamela question — the builder drops `<div class="hamesh">`, and
+`audit_editor_apparatus.py` is run over the new files exactly as it was over
+the previous 248.
+
+**Two editions were rejected on reading them, not on their titles:**
+
+* `iqtida_al_ilm_al_amal` (Shamela 12985) — the only printing Shamela has of
+  al-Khaṭīb's book is **al-Albani's edition**. The apparatus is dropped by the
+  builder, but `sourceLabel` would still have to name the printing, and naming
+  him is precisely what was just undone. Dropped; «جامع بيان العلم وفضله»
+  covers the same ground.
+* `maqasid_al_riayah` (Shamela 6875) — catalogued from its title as
+  al-Muḥāsibī's. The **built file's own edition card** says
+  **العز بن عبد السلام (ت ٦٦٠)**: it is his abridgement of al-Muḥāsibī's
+  «الرعاية», not al-Muḥāsibī's book. The label was corrected and the book
+  rebuilt. This is trap #17's family, caught only because the builder prints
+  the edition card and somebody read it.
+
+**One book is deliberately absent:** «الاعتصام» للشاطبي, while «الموافقات» is
+in. He asked to stay far from تشدد; الموافقات is the مقاصد book, and الاعتصام
+is the polemic. That is an editorial judgement and it is recorded so the next
+session knows it was a choice and not an oversight.
 ---
 
 ## The azkar — replaced, and why it was the clearest case in this file
