@@ -28,9 +28,13 @@ void main() {
   test('the books that were filtered are still flagged', () {
     // Not a lower bound that can rot upward: this is the count the upload
     // actually produced, and a change to it should be deliberate.
-    // 47 until 2026-09-17; 18 of them were Ibn Taymiyyah's and went out with
-    // his 60 books that afternoon. The filtering itself did not change.
-    expect(flagged.length, 29,
+    // 47 in the morning of 2026-09-17; 18 of them were Ibn Taymiyyah's and
+    // went out with his 60 books. Then the audit's editor detection was found
+    // to know eleven label forms where the library uses thirty-six, and the
+    // re-run found TWELVE more books carrying apparatus that the first pass
+    // had reported as clean. Eleven were filtered and flagged; tuhfat_at_talib
+    // was removed, because filtering left a 32-page hole in it.
+    expect(flagged.length, 40,
         reason: 'scripts/mark_editor_notes_removed.py flags exactly the set '
             'of files that scripts/upload_stripped_books.py published. If this '
             'number moved, say why in CONTENT-LICENSES.md.');
@@ -71,11 +75,18 @@ void main() {
   test('no unflagged book is silently carrying the same claim', () {
     // The flag is the only thing that turns the line on, so a book that was
     // filtered but not flagged would say nothing. That cannot be checked from
-    // inside the app — it is what `audit_editor_apparatus.py` is for, and it
-    // returned 0 books with apparatus over all 248 on 2026-09-17. This test
-    // holds the half that IS checkable: the catalogue and the bucket agree on
-    // how many were touched.
-    expect(libraryBookCatalog.length, 205,
+    // inside the app — it is what `audit_editor_apparatus.py` is for.
+    //
+    // That audit said «0 with apparatus over all 248» on the morning of
+    // 2026-09-17 and THE NUMBER WAS WRONG: its editor detector knew eleven
+    // label forms and the library's edition cards use thirty-six, so twelve
+    // books were being filed as «no editor named» with their apparatus
+    // intact. Re-run with the widened detector the same evening it returns 0
+    // for real. Do not quote the earlier figure.
+    //
+    // This test holds the half that IS checkable from inside the app: the
+    // catalogue and the bucket agree on how many were touched.
+    expect(libraryBookCatalog.length, 204,
         reason: 'the library was 257 entries on the morning of 2026-09-17: 7 '
             'duplicates and mislabelled takhrij volumes went, then '
             'al_ijaz_fi_sharh_sunan_abi_dawud on the rights audit (248), then '

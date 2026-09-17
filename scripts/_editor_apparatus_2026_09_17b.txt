@@ -1,0 +1,816 @@
+books audited: 205   (fetched from this project's own bucket, not from shamela.ws)
+
+shamela.ws on 2026-09-17: robots.txt 404, /page/terms 404, /page/rights 404, /page/license 404.
+Its «حول المشروع» states it is free and non-profit and «لا يتلقى مقابل من المؤلفين نظير نشر كتبهم».
+So it states no prohibition on reading, and grants no permission to redistribute. Neither fact is a legal opinion; both are what the site says today.
+
+MODERN_EDITOR_APPARATUS_PRESENT      0
+MODERN_EDITOR_NO_APPARATUS         144
+EDITOR_LONG_DEAD                     3
+NO_EDITOR_NAMED                     57
+UNREACHABLE                          1
+
+==============================================================================
+
+
+######## MODERN_EDITOR_NO_APPARATUS — 144 books ########
+
+  mishkat_al_masabih                                 0/15399 paras are apparatus  (  0.0% of the text)
+      «مشكاة المصابيح»
+      المحقق: محمد ناصر الدين الألباني
+
+  al_targhib_wal_tarhib                              0/17122 paras are apparatus  (  0.0% of the text)
+      «الترغيب والترهيب من الحديث الشريف»
+      المحقق: إبراهيم شمس الدين
+
+  umdat_al_ahkam                                     0/1921  paras are apparatus  (  0.0% of the text)
+      «العمدة في الأحكام»
+      المحقق: عبد المحسن بن محمد القاسم
+
+  riyad_as_salihin                                   0/3575  paras are apparatus  (  0.0% of the text)
+      «رياض الصالحين»
+      المحقق: شعيب الأرنؤوط [ت ١٤٣٨ هـ]
+
+  mukhtasar_minhaj_al_qasidin                        0/3636  paras are apparatus  (  0.0% of the text)
+      «مُخْتََصَرُ مِنْهَاجِ القَاصِدِينْ»
+      قدم له: الأستاذ محمد أحمد دهمان
+
+  nawadir_al_usul                                    0/5200  paras are apparatus  (  0.0% of the text)
+      «نوادر الأصول في أحاديث الرسول صلى الله عليه وسلم»
+      المحقق: عبد الرحمن عميرة
+
+  al_samt_wa_adab_al_lisan                           0/850   paras are apparatus  (  0.0% of the text)
+      «الصمت وآداب اللسان»
+      حققه وخرج أحاديثه: أبو إسحاق الحويني الأثري
+
+  qasr_al_amal                                       0/550   paras are apparatus  (  0.0% of the text)
+      «قصر الأمل»
+      المحقق: محمد خير رمضان يوسف
+
+  islah_al_mal                                       0/668   paras are apparatus  (  0.0% of the text)
+      «إصلاح المال»
+      المحقق: محمد عبد القادر عطا
+
+  istina_al_maruf                                    0/352   paras are apparatus  (  0.0% of the text)
+      «اصطناع المعروف»
+      المحقق: محمد خير رمضان يوسف
+
+  al_amr_bil_maruf_ibn_abi_al_dunya                  0/126   paras are apparatus  (  0.0% of the text)
+      «الأمر بالمعروف والنهي عن المنكر»
+      تحقيق: صلاح بن عايض الشلاحي
+
+  ighathat_al_lahfan_fi_hukm_talaq_al_ghadban        0/543   paras are apparatus  (  0.0% of the text)
+      «إغاثة اللهفان في حكم طلاق الغضبان - ت الحفيان»
+      حققه وخرج أحاديثه: عمر سليمان الحفيان
+
+  al_amthal_fil_quran_ibn_al_qayyim                  0/266   paras are apparatus  (  0.0% of the text)
+      «الأمثال في القرآن [من «اعلام الموقعين»]»
+      المحقق: أبو حذيفة إبراهيم بن محمد
+
+  al_ahwal                                           0/289   paras are apparatus  (  0.0% of the text)
+      «الأهوال.»
+      المحقق: مجدي فتحي السيد [ت ١٤٤٨ هـ]
+
+  al_awliya_ibn_abi_al_dunya                         0/158   paras are apparatus  (  0.0% of the text)
+      «الأولياء»
+      المحقق: محمد السعيد بن بسيوني زغلول
+
+  al_ikhlas_wal_niyyah                               0/54    paras are apparatus  (  0.0% of the text)
+      «الإخلاص والنية»
+      حققه وعلق عليه: إياد خالد الطباع
+
+  al_ikhwan                                          0/295   paras are apparatus  (  0.0% of the text)
+      «الإخوان»
+      المحقق: مصطفى عبد القادر عطا
+
+  al_jami_fi_amthal_al_quran                         0/1253  paras are apparatus  (  0.0% of the text)
+      «الجامع في أمثال القرآن، للعلامة ابن القيم»
+      راجعه وقدم له: الشيخ مصطفى العدوي
+
+  al_risalah_al_tabukiyyah                           0/584   paras are apparatus  (  0.0% of the text)
+      «الرسالة التبوكية (ضمن مجموع الرسائل)»
+      المحقق: محمد عزير شمس
+      راجعه: سليمان بن عبد الله العمير - جديع بن جديع الجديع
+
+  al_ishraf_fi_manazil_al_ashraf                     0/1206  paras are apparatus  (  0.0% of the text)
+      «الإشراف في منازل الأشراف»
+      المحقق: د نجم عبد الرحمن خلف
+
+  al_itibar_wa_aqab_al_surur                         0/188   paras are apparatus  (  0.0% of the text)
+      «الاعتبار وأعقاب السرور والأحزان»
+      المحقق: د. نجم عبد الرحمن خلف
+
+  al_tawadu_wal_khumul                               0/269   paras are apparatus  (  0.0% of the text)
+      «التواضع والخمول»
+      المحقق: محمد عبد القادر أحمد عطا
+
+  al_ju                                              0/576   paras are apparatus  (  0.0% of the text)
+      «الجوع»
+      تحقيق: محمد خير رمضان يوسف
+
+  al_hilm                                            0/312   paras are apparatus  (  0.0% of the text)
+      «الحلم»
+      المحقق: محمد عبد القادر أحمد عطا
+
+  al_rida_an_allah_biqadaihi                         0/153   paras are apparatus  (  0.0% of the text)
+      «الرضا عن الله بقضائه»
+      المحقق: ضياء الحسن السلفي
+
+  al_furusiyyah_al_muhammadiyyah                     0/3566  paras are apparatus  (  0.0% of the text)
+      «الفروسية المحمدية»
+      المحقق: زائد بن أحمد النشيري
+      راجعه: سليمان بن عبد الله العمير - علي بن محمد العمران
+
+  al_riqqah_wal_buka                                 0/480   paras are apparatus  (  0.0% of the text)
+      «الرقة والبكاء»
+      تحقيق: محمد خير رمضان يوسف
+
+  al_kalam_ala_masalat_al_sama                       0/2524  paras are apparatus  (  0.0% of the text)
+      «الكلام على مسألة السماع»
+      المحقق: محمد عزير شمس
+      راجعه: محمد أجمل الإصلاحي، عبد الرحمن بن حسن بن قائد
+
+  al_manar_al_munif                                  0/622   paras are apparatus  (  0.0% of the text)
+      «المنار المنيف في الصحيح والضعيف»
+      المحقق: عبد الفتاح أبو غدة
+
+  al_wabil_al_sayyib                                 0/1472  paras are apparatus  (  0.0% of the text)
+      «الوابل الصيب من الكلم الطيب»
+      تحقيق: سيد إبراهيم
+
+  al_shukr                                           0/218   paras are apparatus  (  0.0% of the text)
+      «الشكر»
+      المحقق: بدر البدر
+
+  al_sabr_wal_thawab_alayh                           0/228   paras are apparatus  (  0.0% of the text)
+      «الصبر والثواب عليه»
+      تحقيق: محمد خير رمضان يوسف
+
+  tuhfat_al_mawdud_bi_ahkam_al_mawlud                0/1081  paras are apparatus  (  0.0% of the text)
+      «تحفة المودود بأحكام المولود»
+      المحقق: عبد القادر الأرناؤوط [ت ١٤٢٥ هـ]
+
+  al_uzlah_wal_infirad                               0/699   paras are apparatus  (  0.0% of the text)
+      «العزلة والانفراد»
+      المحقق : مسعد عبد الحميد محمد السعدني
+
+  jala_al_afham                                      0/2126  paras are apparatus  (  0.0% of the text)
+      «جلاء الأفهام في فضل الصلاة على محمد خير الأنام»
+      المحقق: شعيب الأرناؤوط [ت ١٤٣٨ هـ]- عبد القادر الأرناؤوط [ت ١٤٢٥ هـ]
+
+  al_uqubat                                          0/435   paras are apparatus  (  0.0% of the text)
+      «العقوبات»
+      تحقيق: محمد خير رمضان يوسف
+
+  al_umr_wal_shayb                                   0/208   paras are apparatus  (  0.0% of the text)
+      «العمر والشيب»
+      المحقق: د. نجم عبد الله خلف
+
+  risalat_ibn_al_qayyim_ila_ahad_ikhwanih            0/425   paras are apparatus  (  0.0% of the text)
+      «رسالة ابن القيم إلى أحد إخوانه»
+      المحقق: عبد الله بن محمد المديفر
+      راجعه: سليمان بن عبد الله العمير - جديع بن جديع الجديع
+
+  al_qubur_ibn_abi_al_dunya                          0/639   paras are apparatus  (  0.0% of the text)
+      «القبور لابن أبي الدنيا»
+      المحقق: طارق محمد سكلوع العمود
+
+  raf_al_yadayn_fil_salah                            0/1954  paras are apparatus  (  0.0% of the text)
+      «رفع اليدين في الصلاة»
+      المحقق: علي بن محمد العمران
+      راجعه: سليمان بن عبد الله العمير - محمد أجمل الإصلاحي
+
+  al_mutamannin                                      0/203   paras are apparatus  (  0.0% of the text)
+      «المتمنين»
+      المحقق: محمد خير رمضان يوسف
+
+  al_muhtadirin                                      0/602   paras are apparatus  (  0.0% of the text)
+      «المحتضرين»
+      المحقق: محمد خير رمضان يوسف
+
+  al_marad_wal_kaffarat                              0/283   paras are apparatus  (  0.0% of the text)
+      «المرض والكفارات»
+      المحقق: عبد الوكيل الندوي
+
+  shifa_al_alil                                      0/650   paras are apparatus  (  0.0% of the text)
+      «شفاء العليل في مسائل القضاء والقدر والحكمة والتعليل»
+      المحقق: -
+
+  sigh_al_hamd                                       0/128   paras are apparatus  (  0.0% of the text)
+      «جواب في صيغ الحمد»
+      المحقق: محمد بن إبراهيم السعران
+
+  al_manamat                                         0/565   paras are apparatus  (  0.0% of the text)
+      «المنامات»
+      المحقق: عبد القادر أحمد عطا [ت ١٤٠٣ هـ]
+
+  faidah_jalilah_fi_qawaid_al_asma_al_husna          0/228   paras are apparatus  (  0.0% of the text)
+      «فائدة جليلة في قواعد الأسماء الحسنى»
+      المحقق: عبد الرزاق بن عبد المحسن البدر
+
+  fatya_fi_sighat_al_hamd                            0/369   paras are apparatus  (  0.0% of the text)
+      «فتيا في صيغة الحمد «الحمد لله حمدا يوافي نعمه ويكافئ مزيده»»
+      تحقيق: عبد الله بن سالم البطاطي
+      راجعه: سليمان بن عبد الله العمير - جديع بن جديع الجديع
+
+  al_nafaqah_ala_al_iyal                             0/903   paras are apparatus  (  0.0% of the text)
+      «العيال ويقع في مجلدين»
+      المحقق: د نجم عبد الرحمن خلف
+
+  al_hamm_wal_huzn                                   0/269   paras are apparatus  (  0.0% of the text)
+      «الهم والحزن»
+      المحقق: مجدي فتحي السيد [ت ١٤٤٨ هـ]
+
+  al_hawatif                                         0/513   paras are apparatus  (  0.0% of the text)
+      «هواتف الجنان»
+      المحقق: محمد الزغلي
+
+  al_wajal_wal_tawthuq_bil_amal                      0/53    paras are apparatus  (  0.0% of the text)
+      «الوجل والتوثق بالعمل»
+      المحقق: مشهور حسن آل سلمان
+
+  al_wara                                            0/251   paras are apparatus  (  0.0% of the text)
+      «الورع»
+      المحقق: أبي عبد الله محمد بن حمد الحمود
+
+  al_yaqin_ibn_abi_al_dunya                          0/47    paras are apparatus  (  0.0% of the text)
+      «اليقين لابن أبي الدنيا»
+      حققه وعلق عليه: ياسين محمد السورس
+
+  hidayat_al_hayara                                  0/2847  paras are apparatus  (  0.0% of the text)
+      «هداية الحيارى في أجوبة اليهود والنصارى»
+      حققه: عثمان جمعة ضميرية
+      راجعه: محمد أجمل الإصلاحي - سعود بن عبد العزيز العريفي - عبد الله بن محمد القرني
+
+  husn_al_zann_billah                                0/171   paras are apparatus  (  0.0% of the text)
+      «حسن الظن بالله»
+      المحقق: مخلص محمد
+
+  hilm_muawiyah                                      0/75    paras are apparatus  (  0.0% of the text)
+      «حلم معاوية لابن أبي الدنيا»
+      تحقيق: إبراهيم صالح [ت ١٤٤٣ هـ]
+
+  dhamm_al_baghy                                     0/103   paras are apparatus  (  0.0% of the text)
+      «ذم البغى لابن أبي الدنيا»
+      قدم له وحققه وعلق عليه: الدكتور نجم عبد الرحمن خلف الأستاذ المساعد بالجامعة الإسلامية بالمدينة المنورة
+
+  akhbar_al_zuraf_wal_mutamajinin                    0/614   paras are apparatus  (  0.0% of the text)
+      «أخبار الظراف والمتماجنين»
+      المحقق: بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]
+
+  amar_al_ayan                                       0/1117  paras are apparatus  (  0.0% of the text)
+      «أعمار الأعيان»
+      المحقق: د محمود محمد الطناحي
+
+  ikhbar_ahl_al_rusukh_fil_fiqh                      0/143   paras are apparatus  (  0.0% of the text)
+      «إخبار أهل الرسوخ في الفقه والتحديث بمقدار المنسوخ من الحديث»
+      قدم له: الشيخ محمد الغزالي
+      تحقيق: أبي عبد الرحمن محمود الجزائري
+
+  dhamm_al_ghibah_wal_namimah                        0/173   paras are apparatus  (  0.0% of the text)
+      «ذم الغيبة والنميمة»
+      حققه وخرج أحاديثه وعلق عليه: بشير محمد عيون [ت ١٤٣١ هـ]
+
+  dhamm_al_muskir                                    0/299   paras are apparatus  (  0.0% of the text)
+      «كتاب ذم المسكر»
+      المحقق: د. نجم عبد الرحمن خلف
+
+  ilam_al_alim_bi_naskh_al_hadith                    0/1259  paras are apparatus  (  0.0% of the text)
+      «إعلام العالم بعد رسوخه بناسخ الحديث ومنسوخه»
+      تحقيق: أحمد بن عبد الله العماري الزهراني
+
+  sifat_al_jannah_ibn_abi_al_dunya                   0/446   paras are apparatus  (  0.0% of the text)
+      «صفة الجنة وما أعد الله لأهلها من النعيم»
+      المحقق: عبد الرحيم أحمد عبد الرحيم العساسلة
+      راجعه: الدكتور نجم عبد الرحمن خلف
+
+  sifat_al_nar                                       0/282   paras are apparatus  (  0.0% of the text)
+      «صفة النار»
+      المحقق: محمد خير رمضان يوسف
+
+  fadail_ramadan_ibn_abi_al_dunya                    0/66    paras are apparatus  (  0.0% of the text)
+      «فضائل رمضان»
+      حققه وخرج أحاديثه: عبد الله بن حمد المنصور
+
+  qira_al_dayf                                       0/133   paras are apparatus  (  0.0% of the text)
+      «قرى الضيف»
+      حققه وأخرج أحاديثه: عبد الله بن حمد المنصور
+
+  qada_al_hawaij                                     0/240   paras are apparatus  (  0.0% of the text)
+      «قضاء الحوائج»
+      المحقق: مجدي السيد إبراهيم [ت ١٤٤٨ هـ]
+
+  kalam_al_layali_wal_ayyam                          0/136   paras are apparatus  (  0.0% of the text)
+      «كلام الليالي والأيام»
+      تحقيق: محمد خير رمضان يوسف
+
+  al_tadhkirah_fil_waz                               0/337   paras are apparatus  (  0.0% of the text)
+      «التذكرة في الوعظ»
+      المحقق: أحمد عبد الوهاب فتيح
+
+  al_thabat_ind_al_mamat                             0/740   paras are apparatus  (  0.0% of the text)
+      «الثبات عند الممات»
+      المحقق: عبد الله الليثي الأنصاري
+
+  al_hathth_ala_hifz_al_ilm                          0/413   paras are apparatus  (  0.0% of the text)
+      «الحث على حفظ العلم وذكر كبار الحفاظ»
+      حققه وعلق عليه: المستشار الدكتور فؤاد عبد المنعم
+
+  muhasabat_al_nafs                                  0/213   paras are apparatus  (  0.0% of the text)
+      «محاسبة النفس لابن أبي الدنيا»
+      تحقيق: المسعتصم بالله أبي هريرة مصطفى بن علي بن عوض
+
+  mudarat_al_nas                                     0/201   paras are apparatus  (  0.0% of the text)
+      «مداراة الناس»
+      المحقق: محمد خير رمضان يوسف
+
+  al_qussas_wal_mudhakkirin                          0/744   paras are apparatus  (  0.0% of the text)
+      «القصاص والمذكرين»
+      المحقق: د. محمد لطفي الصباغ
+
+  maqtal_ali                                         0/226   paras are apparatus  (  0.0% of the text)
+      «مقتل أمير المؤمنين علي بن أبي طالب عليه السلام»
+      المحقق: إبراهيم صالح [ت ١٤٤٣ هـ]
+
+  al_mujtaba_min_al_mujtana                          0/1192  paras are apparatus  (  0.0% of the text)
+      «المجتبى من المجتنى»
+      المحقق: أيمن عبد الجابر البحيري
+
+  makarim_al_akhlaq_ibn_abi_al_dunya                 0/861   paras are apparatus  (  0.0% of the text)
+      «مكارم الأخلاق»
+      المحقق: مجدي السيد إبراهيم [ت ١٤٤٨ هـ]
+
+  man_asha_bad_al_mawt                               0/77    paras are apparatus  (  0.0% of the text)
+      «كتاب من عاش بعد الموت»
+      المحقق: محمد حسام بيضون
+
+  riyadat_al_nafs                                    0/120   paras are apparatus  (  0.0% of the text)
+      «رياضة النفس»
+      قدم له وعلق عليه: إبراهيم شمس الدين
+
+  al_mudhish                                         0/5360  paras are apparatus  (  0.0% of the text)
+      «المدهش»
+      المحقق: الدكتور مروان قباني
+
+  al_musaffa_bi_akuff_ahl_al_rusukh                  0/279   paras are apparatus  (  0.0% of the text)
+      «المصفى بأكف أهل الرسوخ من علم الناسخ والمنسوخ»
+      المحقق: حاتم صالح الضامن [ت ١٤٣٤ هـ]
+
+  al_manahi                                          0/1047  paras are apparatus  (  0.0% of the text)
+      «المنهيات»
+      المحقق: محمد عثمان الخشت
+
+  al_muqliq_ibn_al_jawzi                             0/205   paras are apparatus  (  0.0% of the text)
+      «المقلق»
+      المحقق: مجدي فتحي السيد [ت ١٤٤٨ هـ]
+
+  bahr_al_dumu                                       0/1392  paras are apparatus  (  0.0% of the text)
+      «بحر الدموع»
+      المحقق: جمال محمود مصطفى
+
+  al_amthal_min_al_kitab_wal_sunnah                  0/1361  paras are apparatus  (  0.0% of the text)
+      «الأمثال من الكتاب والسنة»
+      المحقق: د. السيد الجميلي
+
+  bustan_al_waizin                                   0/3605  paras are apparatus  (  0.0% of the text)
+      «بستان الواعظين ورياض السامعين»
+      المحقق: أيمن البحيري
+
+  tarikh_bayt_al_maqdis                              0/140   paras are apparatus  (  0.0% of the text)
+      «تاريخ بيت المقدس»
+      المحقق: محمد زينهم محمد عزب
+
+  tadhkirat_al_arib_fi_tafsir_al_gharib              0/5159  paras are apparatus  (  0.0% of the text)
+      «تذكرة الأريب في تفسير الغريب (غريب القرآن الكريم)»
+      تحقيق: طارق فتحي السيد
+
+  tazim_al_fatya                                     0/113   paras are apparatus  (  0.0% of the text)
+      «تعظيم الفتيا»
+      المحقق: أبو عبيدة مشهور بن حسن آل سلمان
+
+  taqwim_al_lisan                                    0/1440  paras are apparatus  (  0.0% of the text)
+      «تقويم اللسان»
+      المحقق: د. عبد العزيز مطر (أستاذ علم اللغة بجامعتي عين شمس وقطر)
+
+  tanwir_al_ghabash                                  0/993   paras are apparatus  (  0.0% of the text)
+      «تنوير الغبش في فضل السودان والحبش»
+      المحقق: مرزوق علي إبراهيم
+
+  hifz_al_umr                                        0/210   paras are apparatus  (  0.0% of the text)
+      «حفظ العمر»
+      المحقق: محمد بن ناصر العجمي
+
+  muthir_al_gharam_al_sakin                          0/3857  paras are apparatus  (  0.0% of the text)
+      «مثير الغرام الساكن إلى أشرف الأماكن لابن الجوزي»
+      قدم له وحققه وفهرسه: د/ مصطفى محمد حسين الذهبي
+
+  mashyakhat_ibn_al_jawzi                            0/754   paras are apparatus  (  0.0% of the text)
+      «مشيخة ابن الجوزي»
+      تقديم وتحقيق: محمد محفوظ [ت ١٤٠٨ هـ]
+
+  nawasikh_al_quran                                  0/2351  paras are apparatus  (  0.0% of the text)
+      «نواسخ القرآن = ناسخ القرآن ومنسوخه»
+      المحقق: أبو عبد الله العاملي السّلفي الداني بن منير آل زهوي
+
+  adab_al_fatwa_wal_mufti                            0/308   paras are apparatus  (  0.0% of the text)
+      «آداب الفتوى والمفتي والمستفتي»
+      المحقق: بسام عبد الوهاب الجابي [ت ١٤٣٨ هـ]
+
+  al_usul_wal_dawabit                                0/150   paras are apparatus  (  0.0% of the text)
+      «الأصول والضوابط»
+      حققه وعلق عليه: د. محمد حسن هيتو [ت ١٤٤٧ هـ]
+
+  tahrir_alfaz_al_tanbih                             0/1802  paras are apparatus  (  0.0% of the text)
+      «تحرير ألفاظ التنبيه»
+      المحقق: عبد الغني الدقر
+
+  juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat     0/525   paras are apparatus  (  0.0% of the text)
+      «جزء فيه ذكر اعتقاد السلف في الحروف والأصوات»
+      المحقق: أحمد بن على الدمياطي
+
+  daqaiq_al_minhaj                                   0/334   paras are apparatus  (  0.0% of the text)
+      «دقائق المنهاج»
+      المحقق: إياد أحمد الغوج
+
+  minhaj_al_talibin                                  0/1255  paras are apparatus  (  0.0% of the text)
+      «منهاج الطالبين وعمدة المفتين في الفقه»
+      المحقق: عوض قاسم أحمد عوض
+
+  seerat_ibn_hisham                                  0/5350  paras are apparatus  (  0.0% of the text)
+      «السيرة النبوية لابن هشام»
+      قدم لها وعلق عليها وضبَطها: طه عبد الرؤوف سعد
+
+  as_seerah_ibn_kathir                               0/23900 paras are apparatus  (  0.0% of the text)
+      «السيرة النبوية»
+      تحقيق: د. مصطفى عبد الواحد
+
+  al_adhkar_nawawi                                   0/4074  paras are apparatus  (  0.0% of the text)
+      «الأذكار»
+      تحقيق: عبد القادر الأرنؤوط [ت ١٤٢٥ هـ]
+
+  at_tibyan_hamalat_al_quran                         0/645   paras are apparatus  (  0.0% of the text)
+      «التبيان في آداب حملة القرآن»
+      حققه وعلق عليه: محمد الحجار
+
+  al_arbaun_an_nawawiyyah                            0/181   paras are apparatus  (  0.0% of the text)
+      «الأربعون النووية»
+      عُنِيَ بِهِ: قصي محمد نورس الحلاق، أنور بن أبي بكر الشيخي
+
+  at_taqrib_wat_taysir                               0/476   paras are apparatus  (  0.0% of the text)
+      «التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث»
+      تقديم وتحقيق وتعليق: محمد عثمان الخشت
+
+  al_baith_al_hathith                                0/953   paras are apparatus  (  0.0% of the text)
+      «اختصار علوم الحديث»
+      المحقق: أحمد محمد شاكر
+
+  tabaqat_ash_shafiiyyin                             0/4897  paras are apparatus  (  0.0% of the text)
+      «طبقات الشافعيين»
+      تحقيق: د أحمد عمر هاشم [ت ١٤٤٧ هـ]، د محمد زينهم محمد عزب
+
+  adab_dukhul_al_hammam                              0/340   paras are apparatus  (  0.0% of the text)
+      «الآداب والأحكام المتعلقة بدخول الحمام»
+      المحقق: سامي بن محمد بن جاد الله
+
+  juz_bay_ummahat_al_awlad                           0/761   paras are apparatus  (  0.0% of the text)
+      «جزء في بيع أمهات الأولاد»
+      المحقق: عمر بن سليمان الحفيان
+
+  taqrib_al_tahdhib                                  0/12286 paras are apparatus  (  0.0% of the text)
+      «تقريب التهذيب»
+      المحقق: محمد عوامة
+
+  nuzhat_al_nazar                                    0/1010  paras are apparatus  (  0.0% of the text)
+      «نزهة النظر في توضيح نخبة الفكر في مصطلح أهل الأثر»
+      حققه وعلق عليه: نور الدين عتر (على نسخه مقروءة على المؤلف)
+
+  al_amali_al_mutlaqah                               0/2058  paras are apparatus  (  0.0% of the text)
+      «الأمالي المطلقة»
+      المحقق: حمدي بن عبد المجيد بن إسماعيل السلفي [ت ١٤٣٣ هـ]
+
+  al_mujam_al_mufahras                               0/5942  paras are apparatus  (  0.0% of the text)
+      «المعجم المفهرس أو تجريد أسانيد الكتب المشهورة والأجزاء المنثورة»
+      المحقق: محمد شكور المياديني
+
+  raf_al_isr_an_qudat_misr                           0/3536  paras are apparatus  (  0.0% of the text)
+      «رفع الإصر عن قضاة مصر»
+      تحقيق: الدكتور علي محمد عمر
+
+  al_ithar_bi_marifat_ruwat_al_athar                 0/426   paras are apparatus  (  0.0% of the text)
+      «الإيثار بمعرفة رواة الآثار»
+      المحقق: سيد كسروي حسن
+
+  nataij_al_afkar                                    0/2810  paras are apparatus  (  0.0% of the text)
+      «نتائج الأفكار في تخريج أحاديث الأذكار»
+      المحقق: وائل بكر زهران
+
+  al_wuquf_ala_al_mawquf                             0/448   paras are apparatus  (  0.0% of the text)
+      «الوقوف على الموقوف على صحيح مسلم»
+      المحقق: عبد الله الليثي الأنصاري
+
+  silsilat_al_dhahab                                 0/125   paras are apparatus  (  0.0% of the text)
+      «سلسلة الذهب فيما رواه الشافعي عن مالك عن نافع عن ابن عمر»
+      المحقق: د. عبد المعطي أمين قلعه جي
+
+  dalail_al_nubuwwah_abu_nuaym                       0/1211  paras are apparatus  (  0.0% of the text)
+      «دلائل النبوة»
+      حققه: الدكتور محمد رواس قلعه جي، عبد البر عباس
+
+  al_imamah_wal_radd_ala_al_rafidah                  0/703   paras are apparatus  (  0.0% of the text)
+      «الإمامة والرد على الرافضة»
+      المحقق: د. علي بن محمد بن ناصر الفقيهي [ت ١٤٤٦ هـ]
+
+  musnad_abi_hanifah_abu_nuaym                       0/702   paras are apparatus  (  0.0% of the text)
+      «مسند الإمام أبي حنيفة رواية أبي نعيم»
+      المحقق: نظر محمد الفاريابي
+
+  fadail_al_khulafa_al_rashidin                      0/366   paras are apparatus  (  0.0% of the text)
+      «فضائل الخلفاء الأربعة وغيرهم لأبي نعيم الأصبهاني»
+      تحقيق: صالح بن محمد العقيل
+
+  riyadat_al_abdan                                   0/24    paras are apparatus  (  0.0% of the text)
+      «رياضة الأبدان»
+      تحقيق: محمود محمد الحداد
+
+  al_arbaun_ala_madhhab_al_mutahaqqiqin              0/107   paras are apparatus  (  0.0% of the text)
+      «الأربعون على مذهب المتحققين من الصوفية»
+      حققه وخرج أحاديثه: بدر بن عبد الله البدر
+
+  hadith_asma_allah_al_husna                         0/116   paras are apparatus  (  0.0% of the text)
+      «طرق حديث إن لله تسعة وتسعين اسما»
+      تحقيق: مشهور بن حسن بن سلمان
+
+  fadilat_al_adilin_min_al_wulat                     0/48    paras are apparatus  (  0.0% of the text)
+      «فضيلة العادلين من الولاة لأبي نعيم»
+      تحقيق: مشهور حسن محمود سلمان
+
+  qisas_al_anbiya_ibn_kathir                         0/6962  paras are apparatus  (  0.0% of the text)
+      «قصص الأنبياء»
+      تحقيق: د. مصطفى عبد الواحد
+
+  tarikh_al_khulafa_suyuti                           0/6799  paras are apparatus  (  0.0% of the text)
+      «تاريخ الخلفاء»
+      اعتنى به: اللجنة العلمية بمركز دار المنهاج
+
+  madarij_al_salikin                                 0/12127 paras are apparatus  (  0.0% of the text)
+      «مدارج السالكين بين منازل إياك نعبد وإياك نستعين»
+      المحقق: محمد المعتصم بالله البغدادي
+
+  al_akhlaq_wal_siyar                                0/90    paras are apparatus  (  0.0% of the text)
+      «الأخلاق والسير في مداواة النفوس»
+      المحقق: بلا
+
+  bidayat_al_hidayah                                 0/391   paras are apparatus  (  0.0% of the text)
+      «بداية الهداية»
+      تقديم وتحقيق وتعليق: الدكتور محمد زينهم محمد عزب
+
+  risalat_al_mustarshidin                            0/282   paras are apparatus  (  0.0% of the text)
+      «رسالة المسترشدين»
+      المحقق: عبد الفتاح أبو غدة
+
+  maqasid_al_riayah                                  0/856   paras are apparatus  (  0.0% of the text)
+      «مقاصد الرعاية لحقوق الله عز وجل أو مختصر رعاية المحاسبي»
+      المحقق: إياد خالد الطباع
+
+  tahdhib_al_akhlaq                                  0/551   paras are apparatus  (  0.0% of the text)
+      «تهذيب الأخلاق وتطهير الأعراق»
+      حققه وشرح غريبه: ابن الخطيب
+
+  jami_bayan_al_ilm                                  0/3629  paras are apparatus  (  0.0% of the text)
+      «جامع بيان العلم وفضله»
+      المحقق: أبو الأشبال الزهيري
+
+  tadhkirat_al_sami_wal_mutakallim                   0/758   paras are apparatus  (  0.0% of the text)
+      «تذكرة السامعِ والمتكلم في أَدب العالم والمتعلم»
+      تحقيق: محمد هاشم الندوي
+
+  adab_al_imla_wal_istimla                           0/777   paras are apparatus  (  0.0% of the text)
+      «أدب الاملاء والاستملاء»
+      المحقق: ماكس فايسفايلر
+
+  al_waraqat                                         0/108   paras are apparatus  (  0.0% of the text)
+      «الورقات»
+      المحقق: د. عبد اللطيف محمد العبد
+
+  al_faqih_wal_mutafaqqih                            0/1567  paras are apparatus  (  0.0% of the text)
+      «الفقيه و المتفقه»
+      المحقق: أبو عبد الرحمن عادل بن يوسف الغرازي
+
+  qawaid_al_ahkam                                    0/2843  paras are apparatus  (  0.0% of the text)
+      «قواعد الأحكام في مصالح الأنام»
+      راجعه وعلق عليه: طه عبد الرؤوف سعد
+
+
+######## EDITOR_LONG_DEAD — 3 books ########
+
+  al_adab_al_mufrad                                  0/3414  paras are apparatus  (  0.0% of the text)
+      «الأدب المفرد»
+      المحقق: محمد فؤاد عبد الباقي [ت ١٣٨٨ هـ]
+
+  al_tibyan_fi_aqsam_al_quran                        0/1459  paras are apparatus  (  0.0% of the text)
+      «التبيان في أقسام القرآن»
+      المحقق: محمد حامد الفقي [ت ١٣٧٨ هـ]
+
+  rawdat_al_uqala                                    0/2366  paras are apparatus  (  0.0% of the text)
+      «روضة العقلاء ونزهة الفضلاء»
+      المحقق: محمد محي الدين عبد الحميد [ت ١٣٩٢ هـ]
+
+
+######## NO_EDITOR_NAMED — 57 books ########
+
+  al_idah_fi_manasik_al_hajj_wal_umrah             269/1761  paras are apparatus  ( 39.1% of the text)
+      «الإيضاح في مناسك الحج والعمرة»
+      → [editor voice p28] (١) أيضاً كلمة تقال في شيئين بينهما اتفاق في المعنى دون اللفظ ويمكن الاستغناء بأحدهما عن الآخر منصوبة مفعولاً مطلقاً أو حالاً نطق بها النبي - صلى الله عليه وسلم
+      → [editor voice p29] (١) لأنه تعالى لا يرد من سأله وفوض أمره إليه. (٢) أي اشتمال الكل على الأجزاء. (٣) إنما سمي السفر سفراً لأنه يسفر عن أخلاق الرجال. (٤) أي مما جرت به العادة من ذك
+
+  musnad_abi_bakr                                  113/2945  paras are apparatus  ( 13.7% of the text)
+      «مسند الإمام أبي بكر الصديق وأيامه وأحكامه»
+      → [= p24] =الأسد في عام ٥٨٨ هـ، على أن تكون بيت المقدس بيد المسلمين مع السماح للمسيحين بالحج إليها، وقد توالت الحملات الصليبية بعد ذلك على مصر والشام، واستمر كفاح المسلمي
+      → [= p30] = طبقات الحفاظ للسيوطي (٣/ ٢٣٨). الدرر الكامنة لابن حجر (١/ ٢١٨). نهاية الأرب للقلقشندي (ص: ٣٦٢). (١) من خُصيلة، وهو: بُطين ينتسب إلى الشرف الرفيع لقريش. البداي
+
+  tuhfat_at_talib                                   92/3889  paras are apparatus  ( 20.0% of the text)
+      «تحفة الطالب بمعرفة أحاديث مختصر ابن الحاجب»
+      → [= p87] = توضيح: قوله: "بئس الخطيب أنت". بئس: فعل ماضٍ بمعنى الذم. والبؤس: الفقر. والبأس: العذاب والشدّة. انظر مادة "بئس" في أساس البلاغة ص١٤, والقاموس المحيط ٢/ ٢٠٦. و
+      → [= p91] = وقيل: معناه: فلم يشكنا، أي: لم يحوجنا إلى الشكوى ورخّص لنا في الإبراد. قال السندي: وعلى هذا يظهر التوفيق بين الأحاديث. على أن جماعة من العلماء قالوا بالنسخ. ق
+
+  fatawa_al_nawawi                                  87/1618  paras are apparatus  ( 22.2% of the text)
+      «فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: "بالمَسَائِل المنْثورَةِ"»
+      → [= p14] = الكبائر عن الصغائر، والصغائر عن المكروهات، والمكروهات عن خلاف الأولى، كالأمور المجسدة حسًا على حد سواء. وقد دخل مرةً مطهرة جامع الكوفة فرأى شابًا يتوضأ، فنظر 
+      → [= p15] = وقوله: وملح ماء: أي ولا إن كانْ التغير بملح ناشىء من الماء، فإنه لا يضر أيضًا لكونه منعقدًا من الماء فسومح فيه. بخلاف الجبلي، فإنه يضر لكونه غير منعقد من الما
+
+  jami_al_ulum_wal_hikam                            89/7414  paras are apparatus  (  4.4% of the text)
+      «جامع العلوم والحكم في شرح خمسين حديثاً من جوامع الكلم»
+      → [(N)+takhrij p36] (١) زاد بعدها في (ص): «إنما لكل امرئ ما نوى. إخبار أنه لا يحصل له من عمله إلاّ ما نواه به، فإن نوى خيراً حصل له خير، وإن نوى شراً حصل له شر، وقوله - صلى الله عل
+      → [(N)+takhrij p47] (١) أي: العزيزة على صاحبها. النهاية ٣/ ١٦٧. (٢) أخرجه: أحمد ٥/ ٢٣٤، وأبو داود (٢٥١٥). وأخرجه: عبد بن حميد (١٠٩)، والدارمي (٢٤٢٢)، وابن أبي عاصم في " الجهاد " (١
+
+  fadail_al_quran_ibn_kathir                        61/1562  paras are apparatus  ( 15.9% of the text)
+      «فضائل القرآن»
+      → [= p36] = "ج٣/ رقم ٢٢٩٠", والحاكم "٢/ ٢٢٣" وقال: "صحيح الإسناد", وتابعه منصور بن المعتمر عن سعيد بن جبير بسنده سواء. أخرجه الطبري "٣٠/ ١٦٦-١٦٧", والحاكم "٢/ ٢٢٢، ٥٣٠" و
+      → [= p38] = وأخرجه أيضًا ابن الضريس في "فضائل القرآن" "٢٦" قال: أنبأنا ابن نمير، قال: حدثنا أبو معاوية بسنده سواء. هكذا رواه أبو معاوية، عن رجل، عن الأعمش، عن إبراهيم، عن
+
+  bulugh_al_maram                                    9/3578  paras are apparatus  (  0.3% of the text)
+      «بلوغ المرام من أدلة الأحكام»
+      → [(N)+takhrij p7] (١) - صحيح. رواه مسلم (٢٨٣) (٢) - البخاري رقم (٢٣٩) (٣) - مسلم رقم (٢٨٢) (٤) - سنن أبي داود (٧٠)
+      → [(N)+takhrij p26] (١) - صحيح. رواه أحمد رقم (٧٦٧٥)، والترمذي (٩٩٣) والحديث قد أعله جماعة كالإمام أحمد كما نقل الحافظ ولكن طرق الحديث وشواهده الكثيرة لا تدع أدنى شك في تصحيحه، وان
+
+  sayd_al_khatir                                     3/6080  paras are apparatus  (  0.3% of the text)
+      «صيد الخاطر»
+      → [= p117] = فلامته، فجحده، وكانت قد رأت جماعه لها، فقالت له: إن كنت صادقًا فاقرأ القرآن، فقال: شهدت بأن وعد الله حق ... وأن النار مثوى الكافرينا وأن العرش فوق الماء طاف .
+      → [= p215] = منامه: فإن حرارة الجوع ملهبة، وتنغيص النوم مبغضة ٧- والاحتفاظ ببيته وماله، ٨- والرعاية على نفسه وحشمه وعياله؛ فإن الاحتفاظ بالمال حسن التقدير، والرعاية على ال
+
+  al_bidaya_wan_nihaya                               2/37661 paras are apparatus  (  0.0% of the text)
+      «البداية والنهاية»
+      → [editor voice p155] أمته على خير ما يعلمه لهم وحذرهم ما يعلمه شرا لهم وان أمتكم هذه جعلت عافيتها في أولها وان آخرها سيصيبها بلاء شديد وأمور ينكرونها تجيء فتن يريق بعضها بعضا تجيء ا
+      → [(N)+takhrij p213] (١) أخرجه البخاري في الأدب والزكاة والرقاق والتوحيد؛ ومسلم في الزكاة ح (٦٦ - ٦٧ - ٦٨ - ٧٠) والترمذي في القيامة (١) والزهد (٣٧) والنسائي والدارميّ في الزكاة وا ب
+
+  fadail_bayt_al_maqdis                              2/735   paras are apparatus  (  0.7% of the text)
+      «فضائل بيت المقدس»
+      → [(*) p101] (١) (*) يُنظر: «المنتظَم» لابن الجَوزِيِّ (٤/ ١٩١ - ط. صادر). (٢) في «المنتظَم» (٤/ ١٩٣): «وقيل: كان فتحُ فلسطينَ في سنة ستِّ عشرَةَ». (٣) في «ن»، و «م»: الأرطي
+      → [(*) p103] (١) (*) يُنظر: «المنتظَم» لابن الجَوزِيِّ (٤/ ١٩١ - ط. صادر). (٢) في «الأصل»: وسبعين. والمُثبَت من «ن»، و «م» والمصادر. (٣) زيادةٌ من «م». (٤) كذا في «ن»، و «م»
+
+  talbis_iblis                                       1/1494  paras are apparatus  (  0.0% of the text)
+      «تلبيس إبليس»
+      → [editor voice p188] قال المصنف رحمه الله تعالى: وقد صنف لهم أبو عبد الله محمد بن علي الترمذي كتاباسماه رياضة النفوس قال فيه فينبغي للمبتدئ في هذا الأمر أن يصوم شهرين متتابعين توبة 
+
+  al_fusul_fi_seerat_ar_rasul                        1/1518  paras are apparatus  (  0.1% of the text)
+      «الفصول في سيرة الرسول -صلى الله عليه وسلم-»
+      → [editor voice p279] وقال إمام الحرمين: قال المحققون: وذكر الخلاف في مسائل الخصائص خبط لا فائدة فيه، فإنه لا يتعلق به حكم ناجز تمس الحاجة إليه، وإنما يجري الخلاف فيما لا نجد بداً من
+
+  al_shamail_al_muhammadiyyah                        0/1875  paras are apparatus  (  0.0% of the text)
+      «الشمائل المحمدية»
+
+  al_fawaid                                          0/725   paras are apparatus  (  0.0% of the text)
+      «الفوائد»
+
+  adab_al_nafs                                       0/215   paras are apparatus  (  0.0% of the text)
+      «أدب النفس»
+
+  al_daa_wal_dawa                                    0/2512  paras are apparatus  (  0.0% of the text)
+      «الجواب الكافي لمن سأل عن الدواء الشافي أو الداء والدواء»
+
+  al_ruh_ibn_al_qayyim                               0/1763  paras are apparatus  (  0.0% of the text)
+      «الروح في الكلام على أرواح الأموات والأحياء بالدلائل من الكتاب والسنة»
+
+  al_tawbah_ibn_abi_al_dunya                         0/455   paras are apparatus  (  0.0% of the text)
+      «كتاب التوبة.»
+
+  al_tawakkul_ala_allah                              0/68    paras are apparatus  (  0.0% of the text)
+      «مجموعة رسائل بان أبي الدنيا كتاب التوكل على الله»
+
+  al_tibb_al_nabawi                                  0/2431  paras are apparatus  (  0.0% of the text)
+      «الطب النبوي (جزء من كتاب زاد المعاد لابن القيم)»
+
+  al_turuq_al_hukmiyyah                              0/2250  paras are apparatus  (  0.0% of the text)
+      «الطرق الحكمية»
+
+  al_zuhd_ibn_abi_al_dunya                           0/1051  paras are apparatus  (  0.0% of the text)
+      «الزهد لابن أبي الدنيا»
+
+  al_aql_wa_fadluh                                   0/200   paras are apparatus  (  0.0% of the text)
+      «العقل وفضله»
+
+  al_faraj_bad_al_shiddah                            0/221   paras are apparatus  (  0.0% of the text)
+      «الفرج بعد الشدة»
+
+  hadi_al_arwah_ila_bilad_al_afrah                   0/1483  paras are apparatus  (  0.0% of the text)
+      «حادي الأرواح إلى بلاد الأفراح»
+
+  al_qanaah_wal_taaffuf                              0/551   paras are apparatus  (  0.0% of the text)
+      «القناعة والتعفف»
+
+  rawdat_al_muhibbin                                 0/2780  paras are apparatus  (  0.0% of the text)
+      «روضة المحبين ونزهة المشتاقين»
+
+  sifat_al_munafiqin                                 0/34    paras are apparatus  (  0.0% of the text)
+      «صفات المنافقين»
+
+  al_matar_wal_rad_wal_barq                          0/246   paras are apparatus  (  0.0% of the text)
+      «المطر والرعد والبرق»
+
+  tariq_al_hijratayn                                 0/2403  paras are apparatus  (  0.0% of the text)
+      «طريق الهجرتين وباب السعادتين»
+
+  uddat_al_sabirin                                   0/1276  paras are apparatus  (  0.0% of the text)
+      «عدة الصابرين وذخيرة الشاكرين»
+
+  nuniyyat_ibn_al_qayyim                             0/6032  paras are apparatus  (  0.0% of the text)
+      «متن القصيدة النونية»
+
+  akhbar_al_humqa_wal_mughaffalin                    0/1552  paras are apparatus  (  0.0% of the text)
+      «أخبار الحمقى والمغفلين»
+
+  akhbar_al_nisa_ibn_al_jawzi                        0/1676  paras are apparatus  (  0.0% of the text)
+      «أخبار النساء»
+
+  dhamm_al_dunya                                     0/1077  paras are apparatus  (  0.0% of the text)
+      «ذم الدنيا»
+
+  dhamm_al_malahi                                    0/186   paras are apparatus  (  0.0% of the text)
+      «ذم الملاهي لابن أبي الدنيا»
+
+  al_adhkiya                                         0/901   paras are apparatus  (  0.0% of the text)
+      «كتاب الأذكياء»
+
+  al_birr_wal_silah_ibn_al_jawzi                     0/1011  paras are apparatus  (  0.0% of the text)
+      «البر والصلة لابن الجوزي»
+
+  mujabu_al_dawah                                    0/243   paras are apparatus  (  0.0% of the text)
+      «مجابو الدعوة (مطبوع ضمن مجموعة رسائل ابن أبي الدنيا)»
+
+  makaid_al_shaytan                                  0/352   paras are apparatus  (  0.0% of the text)
+      «مكائد الشيطان»
+
+  talqih_fuhum_ahl_al_athar                          0/3497  paras are apparatus  (  0.0% of the text)
+      «تلقيح فهوم أهل الأثر في عيون التاريخ والسير»
+
+  tanbih_al_naim_al_ghamr                            0/168   paras are apparatus  (  0.0% of the text)
+      «تنبيه النائم الغمر على مواسم العمر»
+
+  funun_al_afnan_fi_uyun_ulum_al_quran               0/3347  paras are apparatus  (  0.0% of the text)
+      «فنون الأفنان في عيون علوم القرآن»
+
+  mawaiz_ibn_al_jawzi_al_yaqutah                     0/365   paras are apparatus  (  0.0% of the text)
+      «الياقوتة - مواعظ ابن الجوزي»
+
+  bustan_al_arifin                                   0/215   paras are apparatus  (  0.0% of the text)
+      «بستان العارفين»
+
+  zad_al_maad                                        0/14312 paras are apparatus  (  0.0% of the text)
+      «زاد المعاد في هَدي خير العباد»
+
+  uyun_al_athar                                      0/4969  paras are apparatus  (  0.0% of the text)
+      «عيون الأثر في فنون المغازي والشمائل والسير»
+
+  nur_al_yaqin                                       0/1609  paras are apparatus  (  0.0% of the text)
+      «نور اليقين في سيرة سيد المرسلين»
+
+  mujizat_an_nabi                                    0/2590  paras are apparatus  (  0.0% of the text)
+      «معجزات النبي صلى الله عليه وسلم (من كتاب البداية والنهاية)»
+
+  hilyat_al_awliya                                   0/28004 paras are apparatus  (  0.0% of the text)
+      «حلية الأولياء وطبقات الأصفياء»
+
+  hady_al_sari                                       0/8600  paras are apparatus  (  0.0% of the text)
+      «هدي الساري مقدمة فتح الباري»
+
+  futuh_al_buldan                                    0/2007  paras are apparatus  (  0.0% of the text)
+      «فتوح البلدان»
+
+  ihya_ulum_al_din                                   0/17204 paras are apparatus  (  0.0% of the text)
+      «إحياء علوم الدين»
+
+  adab_al_dunya_wal_din                              0/3314  paras are apparatus  (  0.0% of the text)
+      «أدب الدنيا والدين»
+
+  lataif_al_maarif                                   0/2388  paras are apparatus  (  0.0% of the text)
+      «لطائف المعارف فيما لمواسم العام من الوظائف»
+
+  al_ajurrumiyyah                                    0/143   paras are apparatus  (  0.0% of the text)
+      «متن الآجرومية»
+
+  al_luma_fi_usul_al_fiqh                            0/947   paras are apparatus  (  0.0% of the text)
+      «اللمع في أصول الفقه»
+
+
+######## UNREACHABLE — 1 books ########
+  sifat_al_nifaq                                 ERROR The read operation timed out

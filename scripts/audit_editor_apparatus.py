@@ -60,9 +60,26 @@ EDITOR_VOICE = re.compile(
     r"يعني النووي|يعني المصنف|قال المحقق|قال المحققون|تحفة الأبرار|"
     r"المصنف رحمه الله|قال معد الكتاب|قلت \(المحقق\)"
 )
-EDITOR_LINE = re.compile(
-    r"^\s*(?:تحقيق|المحقق|حققه[^:]*|عُنِيَ\s*بِهِ|عني به|خرج أحاديثه[^:]*|"
-    r"اعتنى به|قدم له[^:]*|راجعه[^:]*|ضبطه[^:]*|تقديم وتحقيق[^:]*)\s*:\s*(.+)$")
+# A card line is «<label>: <value>». The label names an editor when it
+# contains one of these roots. Built from a scan of every built book's card
+# (scratchpad/scan_edition_cards.py), which found 36 distinct labels in use —
+# «تعليق وتحقيق», «حققه وخرج أحاديثه», «دراسة وتحقيق», «قدم له وحققه وعلق
+# عليه», «جمعه ورتبه ووثق نصوصه وحققه» — where the old fixed alternation knew
+# eleven. «جامع العلوم والحكم» credits a LIVING editor under «تعليق وتحقيق:»
+# and was read as having no editor at all.
+#
+# None of the non-editor labels a card uses — الكتاب، المؤلف، الناشر، الطبعة،
+# عدد الصفحات، عدد الأجزاء، الموضوع — contains any of these.
+EDITOR_ROOTS = (
+    "تحقيق", "المحقق", "حقق", "تعليق", "علق", "دراسة", "درسها",
+    "ضبط", "خرج", "اعتنى", "عني", "عُنِيَ", "راجع", "قدم", "تقديم",
+    "شرح", "إخراج", "أشرف", "جمعه", "رتبه", "فهرسه", "تعليقات",
+)
+CARD_LINE = re.compile(r"^\s*([^:]{1,60}?)\s*:\s*(.+)$")
+
+
+def is_editor_label(label):
+    return any(root in label for root in EDITOR_ROOTS)
 DEATH = re.compile(r"\[\s*ت\s*([" + AR + r"0-9]+)\s*هـ?\s*\]")
 AR2EN = str.maketrans(AR, "0123456789")
 
@@ -111,8 +128,8 @@ def apparatus(doc):
 def editor_of(card):
     lines, years = [], []
     for line in (card or "").split("\n"):
-        m = EDITOR_LINE.match(line.strip())
-        if m:
+        m = CARD_LINE.match(line.strip())
+        if m and is_editor_label(m.group(1)):
             lines.append(line.strip())
             years += [int(d.translate(AR2EN)) for d in DEATH.findall(line)]
     return lines, (max(years) if years else None)
@@ -138,6 +155,13 @@ def verdict(r):
     if r.get("error"):
         return "UNREACHABLE"
     if not r["editor_lines"]:
+        # Apparatus FIRST. This used to return NO_EDITOR_NAMED here, so a book
+        # whose editor the card did not name in a form the regex knew, and
+        # which carries apparatus anyway, landed in the one bucket nobody
+        # re-reads. al-Adhkar is precisely that book: the apparatus rode in
+        # the body stream and the edition card was not what gave it away.
+        if r["app_paras"]:
+            return "APPARATUS_BUT_NO_EDITOR_NAMED"
         return "NO_EDITOR_NAMED"
     if r["editor_year"] and r["editor_year"] < MODERN_FROM:
         return "EDITOR_LONG_DEAD"
@@ -177,12 +201,14 @@ def main():
                 "permission to redistribute. Neither fact is a legal opinion; "
                 "both are what the site says today.\n\n")
         for name in ("MODERN_EDITOR_APPARATUS_PRESENT",
+                     "APPARATUS_BUT_NO_EDITOR_NAMED",
                      "MODERN_EDITOR_NO_APPARATUS",
                      "EDITOR_LONG_DEAD", "NO_EDITOR_NAMED", "UNREACHABLE"):
             group = buckets.get(name, [])
             f.write("%-34s %3d\n" % (name, len(group)))
         f.write("\n" + "=" * 78 + "\n")
         for name in ("MODERN_EDITOR_APPARATUS_PRESENT",
+                     "APPARATUS_BUT_NO_EDITOR_NAMED",
                      "MODERN_EDITOR_NO_APPARATUS",
                      "EDITOR_LONG_DEAD", "NO_EDITOR_NAMED", "UNREACHABLE"):
             group = buckets.get(name, [])

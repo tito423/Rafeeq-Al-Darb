@@ -235,8 +235,15 @@ def main():
 
     if args.all:
         rows = json.load(open(args.audit, encoding="utf-8"))
+        # BOTH apparatus verdicts. APPARATUS_BUT_NO_EDITOR_NAMED was added on
+        # 2026-09-17 for books whose edition card credits its editor in a form
+        # the old detector did not know - seven of the twelve found that day
+        # were in it, including al_idah at 39 percent of its text, the book
+        # the Hajj guide reads verbatim. Selecting only the first verdict here
+        # would have left exactly those unfiltered a second time.
         ids = [r["id"] for r in rows
-               if r.get("verdict") == "MODERN_EDITOR_APPARATUS_PRESENT"]
+               if r.get("verdict") in ("MODERN_EDITOR_APPARATUS_PRESENT",
+                                       "APPARATUS_BUT_NO_EDITOR_NAMED")]
     else:
         ids = [args.book]
 

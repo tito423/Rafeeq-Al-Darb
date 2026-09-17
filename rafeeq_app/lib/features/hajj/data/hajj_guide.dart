@@ -31,6 +31,30 @@
 /// section of a book that has none is §1.1's first rule broken.
 library;
 
+/// THE BOUNDARIES WERE RE-POINTED ON 2026-09-17, and the reason matters.
+///
+/// The only printing of «الإيضاح» that Shamela has carries a SECOND author's
+/// whole book alongside it — «الإفصاح على مسائل الإيضاح» by عبد الفتاح حسين
+/// رواه المكي, who is not a classical author. The edition card says so
+/// plainly, with «وعليه:», and nobody had read it.
+///
+/// Measured before anything was changed: of the 1,474 paragraphs these
+/// nineteen steps render, **280 (19.0%) were his, not an-Nawawi's** — under a
+/// caption that says «النص من كتاب الإيضاح … للإمام النووي». That is §1.2
+/// broken regardless of the rights question: the screen attributed one man's
+/// words to another.
+///
+/// So the hosted file was filtered, and because `hajj_screen.dart` slices by
+/// paragraph INDEX inside a page, filtering renumbered everything the guide
+/// pointed at. `scripts/remap_hajj_bounds.py` re-pointed each boundary **by
+/// its own text**, not by arithmetic: it reads the anchor paragraph from the
+/// unfiltered file and finds it again in the filtered one.
+///
+/// Twelve of the nineteen steps turned out to END on one of his notes. Each
+/// of those snaps INWARDS by one — never outwards, which would put him back.
+/// No `from` boundary moved: every step began on an-Nawawi and only ever ran
+/// past the end.
+
 /// The interactive piece shown beside a step.
 enum HajjRite { none, tawaf, sai, jamarat, journey }
 
@@ -102,24 +126,24 @@ const hajjSteps = <HajjStep>[
       key: 'preparation', fromPage: 45, fromPara: 0, toPage: 92, toPara: 0,
       tracks: _both),
   HajjStep(
-      key: 'obligation', fromPage: 92, fromPara: 1, toPage: 112, toPara: 1),
+      key: 'obligation', fromPage: 92, fromPara: 1, toPage: 112, toPara: 0),
   HajjStep(
       key: 'mawaqit', fromPage: 113, fromPara: 0, toPage: 123, toPara: 1,
       rite: HajjRite.journey, tracks: _both),
   HajjStep(
-      key: 'ihram', fromPage: 124, fromPara: 0, toPage: 131, toPara: 1,
+      key: 'ihram', fromPage: 124, fromPara: 0, toPage: 131, toPara: 0,
       tracks: _both),
   HajjStep(
-      key: 'nusuk', fromPage: 132, fromPara: 0, toPage: 145, toPara: 1,
+      key: 'nusuk', fromPage: 132, fromPara: 0, toPage: 145, toPara: 0,
       tracks: _both),
   HajjStep(
-      key: 'prohibitions', fromPage: 146, fromPara: 0, toPage: 191, toPara: 2,
+      key: 'prohibitions', fromPage: 146, fromPara: 0, toPage: 191, toPara: 1,
       tracks: _both),
   HajjStep(
-      key: 'tawaf', fromPage: 192, fromPara: 0, toPage: 250, toPara: 1,
+      key: 'tawaf', fromPage: 192, fromPara: 0, toPage: 250, toPara: 0,
       rite: HajjRite.tawaf, tracks: _both),
   HajjStep(
-      key: 'sai', fromPage: 251, fromPara: 0, toPage: 262, toPara: 1,
+      key: 'sai', fromPage: 251, fromPara: 0, toPage: 262, toPara: 0,
       rite: HajjRite.sai, tracks: _both),
   HajjStep(
       key: 'tarwiyah', fromPage: 263, fromPara: 0, toPage: 269, toPara: 1,
@@ -128,7 +152,7 @@ const hajjSteps = <HajjStep>[
       key: 'arafah', fromPage: 270, fromPara: 0, toPage: 294, toPara: 3,
       dayKey: 'hajj.day_9', rite: HajjRite.journey),
   HajjStep(
-      key: 'muzdalifah', fromPage: 295, fromPara: 0, toPage: 308, toPara: 1,
+      key: 'muzdalifah', fromPage: 295, fromPara: 0, toPage: 308, toPara: 0,
       dayKey: 'hajj.night_10', rite: HajjRite.journey),
   HajjStep(
       key: 'nahr', fromPage: 309, fromPara: 0, toPage: 329, toPara: 2,
@@ -136,21 +160,21 @@ const hajjSteps = <HajjStep>[
   HajjStep(
       key: 'hady', fromPage: 330, fromPara: 0, toPage: 356, toPara: 2),
   HajjStep(
-      key: 'tashreeq', fromPage: 357, fromPara: 0, toPage: 377, toPara: 3,
+      key: 'tashreeq', fromPage: 357, fromPara: 0, toPage: 377, toPara: 2,
       dayKey: 'hajj.days_11_13', rite: HajjRite.jamarat),
   HajjStep(
-      key: 'umrah', fromPage: 378, fromPara: 0, toPage: 387, toPara: 2,
+      key: 'umrah', fromPage: 378, fromPara: 0, toPage: 387, toPara: 1,
       tracks: _both),
   HajjStep(
       key: 'farewell', fromPage: 388, fromPara: 0, toPage: 445, toPara: 2,
       rite: HajjRite.tawaf),
   HajjStep(
-      key: 'visitation', fromPage: 446, fromPara: 0, toPage: 468, toPara: 2,
+      key: 'visitation', fromPage: 446, fromPara: 0, toPage: 468, toPara: 1,
       tracks: _both),
   HajjStep(
-      key: 'child', fromPage: 505, fromPara: 0, toPage: 512, toPara: 1,
+      key: 'child', fromPage: 505, fromPara: 0, toPage: 512, toPara: 0,
       tracks: _both),
   HajjStep(
-      key: 'counsel', fromPage: 513, fromPara: 0, toPage: 522, toPara: 1,
+      key: 'counsel', fromPage: 513, fromPara: 0, toPage: 522, toPara: 0,
       tracks: _both),
 ];

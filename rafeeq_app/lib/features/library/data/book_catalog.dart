@@ -232,7 +232,8 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.hadith,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/bulugh_al_maram.json',
-      sizeBytes: 328803,
+      sizeBytes: 315763,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — بلوغ المرام من أدلة الأحكام، أبو الفضل أحمد بن '
           'علي بن حجر العسقلاني (ت ٨٥٢هـ)، دار الفلق - الرياض، الطبعة '
@@ -396,7 +397,8 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/sayd_al_khatir.json',
-      sizeBytes: 441609,
+      sizeBytes: 441432,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — صيد الخاطر، بعناية حسن المساحي سويدان، '
           'دار القلم، دمشق، الطبعة الأولى ١٤٢٥هـ/٢٠٠٤م',
@@ -2316,7 +2318,8 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.aqidah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/talbis_iblis.json',
-      sizeBytes: 329697,
+      sizeBytes: 328913,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — تلبيس إبليس، عبد الرحمن بن علي بن محمد ابن الجوزي (ت ٥٩٧ هـ)، دار الفكر، بيروت - لبنان',
     ),
@@ -2405,7 +2408,8 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tarikh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/fadail_bayt_al_maqdis.json',
-      sizeBytes: 62170,
+      sizeBytes: 56732,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — فضائل بيت المقدس، أبو الفرج جمال الدين ابن الجوزي (٥٠٨ - ٥٩٧ هـ)، مكتبة الإمام البخاري للنشر والتوزيع، القاهرة - مصر',
     ),
@@ -2561,7 +2565,8 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json',
-      sizeBytes: 445183,
+      sizeBytes: 272191,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية، بيروت - المكتبة الأمدادية، مكة المكرمة',
     ),
@@ -2663,7 +2668,8 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.fiqh,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/fatawa_al_nawawi.json',
-      sizeBytes: 180153,
+      sizeBytes: 139740,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: "بالمَسَائِل المنْثورَةِ"، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دَارُ البشائرِ الإسلاميَّة للطبَاعَة وَالنشرَ والتوزيع، بَيروت - لبنان',
     ),
@@ -2899,7 +2905,8 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/fadail_al_quran_ibn_kathir.json',
-      sizeBytes: 166582,
+      sizeBytes: 142747,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — فضائل القرآن لابن كثير، مكتبة ابن تيمية، الطبعة الأولى ١٤١٦هـ',
     ),
@@ -2933,7 +2940,8 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_fusul_fi_seerat_ar_rasul.json',
-      sizeBytes: 99705,
+      sizeBytes: 99903,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — الفصول في سيرة الرسول ﷺ لابن كثير، مؤسسة علوم القرآن، دمشق - بيروت، الطبعة الثالثة ١٤٠٣هـ',
     ),
@@ -2967,26 +2975,10 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/musnad_abi_bakr.json',
-      sizeBytes: 479107,
+      sizeBytes: 409494,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — مسند أبي بكر الصديق لابن كثير',
-    ),
-  ),
-  LibraryBook(
-    id: 'tuhfat_at_talib',
-    titleAr: 'تحفة الطالب بمعرفة أحاديث مختصر ابن الحاجب',
-    titleEn: 'Tuhfat at-Talib',
-    authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
-    authorEn: 'Ibn Kathir',
-    deathYearAh: 774,
-    descKey: 'book_desc.tuhfat_at_talib',
-    category: BookCategory.hadith,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/tuhfat_at_talib.json',
-      sizeBytes: 305650,
-      sourceLabel:
-          'المكتبة الشاملة — تحفة الطالب بمعرفة أحاديث مختصر ابن الحاجب لابن كثير',
     ),
   ),
   LibraryBook(
@@ -3439,7 +3431,8 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_bidaya_wan_nihaya.json',
-      sizeBytes: 5191034,
+      sizeBytes: 5187917,
+      editorNotesRemoved: true,
       // The 1348–1358 AH Cairo printing, which has NO modern muhaqqiq: the
       // two editions in print today (دار هجر 1996, دار ابن كثير 2013) carry
       // apparatus that belongs to living editors, and this one carries the
@@ -3577,7 +3570,8 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/jami_al_ulum_wal_hikam.json',
-      sizeBytes: 778272,
+      sizeBytes: 707821,
+      editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — جامع العلوم والحكم، لابن رجب الحنبلي (ت '
               '٧٩٥ هـ)، تحقيق ماهر ياسين الفحل',
