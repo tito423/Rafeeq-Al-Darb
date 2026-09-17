@@ -523,12 +523,35 @@ What the three sites state, read on 2026-09-17:
 Status: **`LINKED_NOT_REHOSTED`.** No permission is needed to point a device
 at a public URL, and none is claimed here.
 
-**The one exception, stated so it is not mistaken for the rule:** the five
-ruqyah recordings under `ruqyah/` on the bucket **are** rehosted, from the
-Internet Archive, and the app's own Ruqyah screen says so on screen — «The
-recordings come from the Internet Archive (archive.org), mirrored on the
-app's own server». Those sit under the same argument as the mushaf scans, not
-this one.
+**The one exception, stated so it is not mistaken for the rule:** the ruqyah
+recordings under `ruqyah/` on the bucket **are** rehosted, and sit under the
+same argument as the mushaf scans rather than this one.
+
+Corrected 2026-09-18. This paragraph said «the five», and `list_objects_v2`
+on `ruqyah/` returns **six**, every byte size matching the catalogue:
+
+```
+ruqyah/abkar.mp3          108,436,721   archive.org
+ruqyah/afasy.mp3           60,462,176   archive.org
+ruqyah/ajami.mp3           90,244,212   archive.org
+ruqyah/muaiqly.mp3         54,721,861   archive.org
+ruqyah/sudais.mp3          41,576,448   archive.org
+ruqyah/tarteel_hadi.m4a    38,858,921   supplied by the owner
+```
+
+The sixth is **not** from the Internet Archive. `ruqyah_catalog.dart` records
+it as supplied by the owner from his own library; its embedded title tag reads
+«ضع سماعة الرأس وأسترخي ( رقية شرعية )», the file names no reciter, and the
+app claims none — its card says the reciter is not named in the source.
+
+Two things were wrong because of that miscount, and both are fixed. The
+Ruqyah screen's intro read «خمس تلاوات كاملة» — five — above six cards, in all
+seven languages; it now takes `ruqyahRecordings.length` through a plural key,
+so the sentence is counted rather than written. And the footer said the
+recordings come from the Internet Archive full stop, which was a blanket claim
+covering a file that did not come from there; it now reads «from the Internet
+Archive (archive.org) unless a card says otherwise», which is true whatever
+the list grows to.
 
 ---
 
