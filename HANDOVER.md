@@ -1750,9 +1750,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 14:39 — IN PROGRESS — resume here**
+**2026-09-17 14:43 — COMPLETE**
 
-v3.31.0 prepared: version bumped in both places (pubspec 3.31.0+32 and AboutScreen.appVersion, which a test checks against each other), and the HANDOVER state block rewritten from measurements taken now rather than from this morning - 248 books in 8 categories, 7 locales x 1,480 identical keys, 0 books carrying a modern muhaqqiq's apparatus where 48 did at dawn, 47 flagged as filtered and saying so in the reader. Release APK building
+v3.31.0 published, and verified the way it is actually consumed. sign_release.py printed OK: rotated. The previous release AND its tag were deleted first, as the standing policy says; the new tag was cut from master and gh release view reports target master with the tag's SHA equal to git rev-parse HEAD (419766d). Then the PUBLISHED bytes were downloaded back from GitHub and checked, not the local build: apksigner on min-sdk 28 gives CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG with SHA-256 a505464d..., the same digest the handover recorded, and on sdk 24-27 it still gives the old Android Debug key - so the lineage is intact and this installs over 3.25.0 as an update rather than forcing an uninstall that would destroy hundreds of MB of downloaded mushaf pages. Asset rafeeq-aldarb-3.31.0.apk, 212,450,637 bytes. Release notes are in Arabic and say plainly that nothing from v3.26.0 to v3.31.0 has ever run on the owner's phone
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
