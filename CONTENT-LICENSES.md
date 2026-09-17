@@ -481,6 +481,57 @@ book. Counted live in the bundled `hadith.db` on 2026-09-17: **45,219 rows
 carry a `grade`, and 45,219 carry a `grader` — the two numbers are equal, so
 not one grading in the database is anonymous.**
 
+### The recitations — answered 2026-09-17, and the answer is about hosting
+
+Open item 7 listed everyayah.com, cdn.islamic.network and mp3quran.net as
+unexamined. The examination turned on one question, and it is not what the
+three sites say in their terms:
+
+> **Does this app REHOST any recitation, or does it only point the reader's
+> own device at the origin?**
+
+Measured against the bucket rather than assumed — `list_objects_v2` on three
+prefixes:
+
+```
+quran/audio/     0 objects
+recitations/     0 objects
+audio/           0 objects
+```
+
+**Nothing. Not one file.** Every recitation the app plays or saves is fetched
+by the reader's own device straight from the origin: `everyayah.com/data/…`
+for per-ayah files, `cdn.islamic.network/quran/audio/…` for the ayah player,
+`mp3quran.net` for whole-surah downloads. The download engine hands the URL to
+Android's own downloader; nothing passes through this project's servers.
+
+That is a different position from the library's books, and the difference is
+the whole point. A book on R2 is **redistributed by us** — which is why 43 of
+them carry `editorNotesRemoved` and why every one was audited. A recitation is
+**streamed or downloaded by the reader from the publisher's own server**,
+which is what a browser or a podcast app does. We are not a link in the
+copying chain.
+
+What the three sites state, read on 2026-09-17:
+
+| | |
+|---|---|
+| `everyayah.com` | 200; **no robots.txt** (404); the site offers the files as a public dataset for exactly this use |
+| `cdn.islamic.network` | 403 on the bare host — it is a CDN, not a site; the audio paths answer 200 |
+| `mp3quran.net` | 301 to its own site; it publishes a **public API** (`/api/v3`) that this app uses as intended |
+
+Status: **`LINKED_NOT_REHOSTED`.** No permission is needed to point a device
+at a public URL, and none is claimed here.
+
+**The one exception, stated so it is not mistaken for the rule:** the five
+ruqyah recordings under `ruqyah/` on the bucket **are** rehosted, from the
+Internet Archive, and the app's own Ruqyah screen says so on screen — «The
+recordings come from the Internet Archive (archive.org), mirrored on the
+app's own server». Those sit under the same argument as the mushaf scans, not
+this one.
+
+---
+
 ## 5. Everything else
 
 | source | what it provides | status |
@@ -525,7 +576,10 @@ not one grading in the database is anonymous.**
    title page, imprint or colophon, and their archive.org items carry no
    rights field either. See the section above. They remain
    `NO_LICENCE_STATED`, recorded at their real strength.
-7. **The recitations** on everyayah.com, cdn.islamic.network and mp3quran.net.
+7. ~~The recitations on everyayah.com, cdn.islamic.network and mp3quran.net.~~
+   **Answered 2026-09-17** — none of them is rehosted: the bucket holds ZERO
+   recitation objects and every file is fetched by the reader device from the
+   origin. `LINKED_NOT_REHOSTED`. See the section above.
 8. ~~The azkar corpus.~~ **Done 2026-09-17.** See below.
 
 ---
