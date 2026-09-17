@@ -442,6 +442,33 @@
    "ref_from": "قال الترمذي: حديث حسن صحيح",
    "ref_to": "قال الترمذي: حديث حسن صحيح",
    "sha": "e1be22517517"
+  },
+  {
+   "section": 47,
+   "item": 4,
+   "from": "اللَّهُمَّ أنْتَ السَّلامُ وَمِنْكَ السَّلامُ",
+   "to": "يا ذَا الجَلالِ وَالإِكْرامِ",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "صحيح مسلم",
+   "sha": "1e66d3d4f0c5"
+  },
+  {
+   "section": 47,
+   "item": 5,
+   "from": "لا إلهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَريكَ لَهُ",
+   "to": "وَلا يَنْفَعُ ذا الجد مِنْكَ الجَدُّ",
+   "ref_from": "صحيحي البخاري ومسلم",
+   "ref_to": "صحيحي البخاري ومسلم",
+   "sha": "8b9e338194b6"
+  },
+  {
+   "section": 47,
+   "item": 8,
+   "from": "ثَلاثاً وَثَلاثِينَ تَسْبِيحَةً",
+   "to": "وأرْبعاً وَثَلاثِينَ تَكْبِيرةً",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "صحيح مسلم",
+   "sha": "a3925bcbbae6"
   }
  ],
  "_ruqyah": "The five of the ruqyah screen's six duas that an-Nawawi's al-Adhkar actually carries. The sixth - «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر» - is NOT in this edition: zero hits across all 338 chapters. It is therefore dropped, not reconstructed. ruqyah_catalog.dart already states the principle: «an absent dua is an honest gap; a dua typed in from memory with no takhrij behind it is not.» These carry explicit ids so the screen can address them for ever."

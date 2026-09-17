@@ -1751,15 +1751,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 15:45 — IN PROGRESS — resume here**
+**2026-09-17 15:53 — IN PROGRESS — resume here**
 
-STOP AND READ THIS BEFORE CONTINUING - two things are half-done and one of them is a defect I introduced.
-
-1. azkar_categories.dart is STILL MAPPED TO HISN AL-MUSLIM. `azkarSectionCategories` is a map of 134 Hisn section ids to the eight category tiles, with al-Qahtani's chapter titles as its comments - «أذكار النوم», «دعاء الذهاب إلى المسجد», «التشهد». The database now has 18 sections numbered 1-18, so ids 30-33 and the rest point at nothing: most category tiles will open EMPTY. It must be rewritten for the new 18. The mapping I intend: 1 waking, 2-9 narrated, 10-11 mosque, 12 narrated, 13 travel, 14 narrated, 15 morning AND evening, 16 sleep, 17-18 narrated. Read the enum first - I had not confirmed whether a `travel` category exists.
-
-2. MY DEVICE VERIFICATION WAS OF THE WRONG BUILD AND MUST BE REDONE. `flutter build apk --debug` succeeded but the `adb install -r` after it silently failed: the signed v3.32.0 RELEASE is installed and a debug APK cannot install over it (different key). `run-as` answering «package not debuggable» is what exposed it. So the Adhkar screen I looked at and reported on was v3.32.0 with the OLD Hisn corpus - that is why it showed four sleep chapters with Arabic Hisn titles. Nothing about the new azkar data has been seen on a screen yet. Uninstall the package first, then install build/app/outputs/flutter-apk/app-debug.apk, then look again.
-
-Everything else stands and is committed: the DB holds 18 chapters and 48 supplications from an-Nawawi with 0 rows naming al-Qahtani, ruqyah ids are explicit 1001-1005 with a test pinning the text, the 18 titles are in seven locales, sciences stamp is v5, analyze is clean and 304 tests pass
+azkar_categories.dart rewritten, and the test that would have caught it found a second hole on its first run. The map held 134 entries - Hisn al-Muslim's section numbering with al-Qahtani's chapter titles as its comments, a SECOND copy of the arrangement the whole replacement existed to remove, living in Dart rather than the database. With the rebuilt table numbered 1-18 every id from 19 up pointed at nothing, so most tiles on the Adhkar tab would have opened EMPTY on a screen people use every morning. flutter analyze sees a valid Map<int,...> and says nothing; the ids are plain integers with no referent; the whole suite passed over it. It was found by opening the tab and looking. azkar_categories_cover_sections_test.dart now checks both directions - no tile pointing at a chapter that does not exist, no chapter that no tile can reach - and a third thing: no tile left with nothing to show. That third check failed immediately on «After Prayer», which I had curated nothing for. Three of an-Nawawi's are in now: «اللهم أنت السلام ومنك السلام» (Muslim), «لا إله إلا الله وحده لا شريك له... اللهم لا مانع لما أعطيت» (the two Sahihs), and the tasbih of 33/33/34 (Muslim). 51 supplications across 19 chapters, the nineteenth titled in all seven locales, analyze clean, 307 tests. The release build was uninstalled so the debug one can actually install this time - the previous device check was of the wrong build and is being redone
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

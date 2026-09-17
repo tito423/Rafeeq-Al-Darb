@@ -115,144 +115,47 @@ const azkarCategoryInfo = <AzkarCategory, AzkarCategoryInfo>{
   ),
 };
 
-/// Real section-id → category assignments, read section-by-section against
-/// the real `azkar_sections` titles (§1 "المقدمة" excluded — already
-/// filtered elsewhere as front matter, not a dhikr category, per P3‑11).
+/// Section id → the tiles it appears under.
+///
+/// **Rewritten 2026-09-17, and the rewrite was overdue by one screen.** This
+/// map used to hold **134** entries — the section numbering of «حصن المسلم»,
+/// with al-Qahtani's own chapter titles as its comments. When `azkar_sections`
+/// was rebuilt from an-Nawawi's «الأذكار» the numbering became 1–18, so every
+/// id from 19 up pointed at nothing and most tiles would have opened **empty**.
+///
+/// Nothing caught that. `flutter analyze` sees a valid `Map<int, …>`, the test
+/// suite had no opinion, and the ids are plain integers with no referent to
+/// check against. It was found by opening the Adhkar tab and looking, which is
+/// the only thing that ever finds this class of defect.
+///
+/// It was also a **second copy of al-Qahtani's arrangement**, living in Dart
+/// rather than in the database — the thing the whole replacement was for. See
+/// `CONTENT-LICENSES.md`.
+///
+/// `azkar_categories_cover_sections_test.dart` now fails the build when an id
+/// here is absent from the database, or when a chapter in the database appears
+/// under no tile at all.
 const Map<int, List<AzkarCategory>> azkarSectionCategories = {
-  2: [AzkarCategory.narrated], // فضل الذكر
-  3: [AzkarCategory.waking], // أذكار الاستيقاظ من النوم
-  4: [AzkarCategory.narrated],
-  5: [AzkarCategory.narrated],
-  6: [AzkarCategory.narrated],
-  7: [AzkarCategory.narrated],
-  8: [AzkarCategory.narrated],
-  9: [AzkarCategory.narrated],
-  10: [AzkarCategory.narrated],
-  11: [AzkarCategory.narrated],
-  12: [AzkarCategory.narrated],
-  13: [AzkarCategory.narrated],
-  14: [AzkarCategory.mosque], // دعاء الذهاب إلى المسجد
-  15: [AzkarCategory.mosque], // دعاء دخول المسجد
-  16: [AzkarCategory.mosque], // دعاء الخروج من المسجد
-  17: [AzkarCategory.mosque], // أذكار الأذان
-  18: [AzkarCategory.afterPrayer], // دعاء الاستفتاح
-  19: [AzkarCategory.afterPrayer],
-  20: [AzkarCategory.afterPrayer],
-  21: [AzkarCategory.afterPrayer],
-  22: [AzkarCategory.afterPrayer],
-  23: [AzkarCategory.afterPrayer],
-  24: [AzkarCategory.afterPrayer], // التشهد
-  25: [AzkarCategory.afterPrayer],
-  26: [AzkarCategory.afterPrayer],
-  27: [AzkarCategory.afterPrayer], // الأذكار بعد السلام من الصلاة
-  28: [AzkarCategory.afterPrayer], // دعاء صلاة الاستخارة
-  29: [
-    AzkarCategory.morning,
-    AzkarCategory.evening,
-  ], // أذكار الصباح والمساء — genuinely one combined section, see class doc
-  30: [AzkarCategory.sleep], // أذكار النوم
-  31: [AzkarCategory.sleep],
-  32: [AzkarCategory.sleep],
-  33: [AzkarCategory.sleep],
-  34: [AzkarCategory.afterPrayer], // دعاء قنوت الوتر
-  35: [AzkarCategory.afterPrayer],
-  36: [AzkarCategory.narrated],
-  37: [AzkarCategory.narrated],
-  38: [AzkarCategory.narrated],
-  39: [AzkarCategory.narrated],
-  40: [AzkarCategory.narrated],
-  41: [AzkarCategory.narrated],
-  42: [AzkarCategory.narrated],
-  43: [AzkarCategory.narrated],
-  44: [AzkarCategory.afterPrayer], // دعاء الوسوسة في الصلاة والقراءة
-  45: [AzkarCategory.narrated],
-  46: [AzkarCategory.narrated],
-  47: [AzkarCategory.narrated],
-  48: [AzkarCategory.narrated],
-  49: [AzkarCategory.narrated],
-  50: [AzkarCategory.narrated],
-  51: [AzkarCategory.narrated],
-  52: [AzkarCategory.narrated],
-  53: [AzkarCategory.narrated],
-  54: [AzkarCategory.narrated],
-  55: [AzkarCategory.narrated],
-  56: [AzkarCategory.narrated],
-  57: [AzkarCategory.narrated],
-  58: [AzkarCategory.narrated],
-  59: [AzkarCategory.narrated],
-  60: [AzkarCategory.narrated],
-  61: [AzkarCategory.narrated],
-  62: [AzkarCategory.narrated],
-  63: [AzkarCategory.narrated],
-  64: [AzkarCategory.narrated],
-  65: [AzkarCategory.narrated],
-  66: [AzkarCategory.narrated],
-  67: [AzkarCategory.narrated],
-  68: [AzkarCategory.narrated],
-  69: [AzkarCategory.narrated],
-  70: [AzkarCategory.narrated],
-  71: [AzkarCategory.narrated],
-  72: [AzkarCategory.narrated],
-  73: [AzkarCategory.narrated],
-  74: [AzkarCategory.narrated],
-  75: [AzkarCategory.narrated],
-  76: [AzkarCategory.narrated],
-  77: [AzkarCategory.narrated],
-  78: [AzkarCategory.narrated],
-  79: [AzkarCategory.narrated],
-  80: [AzkarCategory.narrated],
-  81: [AzkarCategory.narrated],
-  82: [AzkarCategory.narrated],
-  83: [AzkarCategory.narrated],
-  84: [AzkarCategory.narrated],
-  85: [AzkarCategory.narrated],
-  86: [AzkarCategory.narrated],
-  87: [AzkarCategory.narrated],
-  88: [AzkarCategory.narrated],
-  89: [AzkarCategory.narrated],
-  90: [AzkarCategory.narrated],
-  91: [AzkarCategory.narrated],
-  92: [AzkarCategory.narrated],
-  93: [AzkarCategory.narrated],
-  94: [AzkarCategory.narrated],
-  95: [AzkarCategory.narrated],
-  96: [AzkarCategory.narrated],
-  97: [AzkarCategory.travel], // دعاء ركوب الدابة
-  98: [AzkarCategory.travel], // دعاء السفر
-  99: [AzkarCategory.travel],
-  100: [AzkarCategory.travel], // دعاء دخول السوق
-  101: [AzkarCategory.travel],
-  102: [AzkarCategory.travel],
-  103: [AzkarCategory.travel],
-  104: [AzkarCategory.travel],
-  105: [AzkarCategory.travel],
-  106: [AzkarCategory.travel],
-  107: [AzkarCategory.travel], // ذكر الرجوع من السفر
-  108: [AzkarCategory.narrated],
-  109: [AzkarCategory.narrated],
-  110: [AzkarCategory.narrated],
-  111: [AzkarCategory.narrated],
-  112: [AzkarCategory.narrated],
-  113: [AzkarCategory.narrated],
-  114: [AzkarCategory.narrated],
-  115: [AzkarCategory.narrated],
-  116: [AzkarCategory.narrated],
-  117: [AzkarCategory.narrated],
-  118: [AzkarCategory.narrated],
-  119: [AzkarCategory.narrated],
-  120: [AzkarCategory.narrated],
-  121: [AzkarCategory.narrated],
-  122: [AzkarCategory.narrated],
-  123: [AzkarCategory.narrated],
-  124: [AzkarCategory.narrated],
-  125: [AzkarCategory.narrated],
-  126: [AzkarCategory.narrated],
-  127: [AzkarCategory.narrated],
-  128: [AzkarCategory.narrated],
-  129: [AzkarCategory.narrated],
-  130: [AzkarCategory.narrated],
-  131: [AzkarCategory.narrated],
-  132: [AzkarCategory.narrated],
-  133: [AzkarCategory.narrated],
-  134: [AzkarCategory.narrated],
+  1: [AzkarCategory.waking], // ما يقول إذا استيقظ من منامه
+  2: [AzkarCategory.narrated], // ما يقول إذا لبس ثوبه
+  3: [AzkarCategory.narrated], // ما يقول إذا لبس ثوبا جديدا
+  4: [AzkarCategory.narrated], // ما يقول لصاحبه إذا رأى عليه ثوبا جديدا
+  5: [AzkarCategory.narrated], // ما يقول عند الخروج من البيت
+  6: [AzkarCategory.narrated], // ما يقول إذا دخل بيته
+  7: [AzkarCategory.narrated], // ما يقول عند دخول الخلاء
+  8: [AzkarCategory.narrated], // ما يقول إذا خرج من الخلاء
+  9: [AzkarCategory.narrated], // ما يقول على وضوئه
+  10: [AzkarCategory.mosque], // ما يقول إذا توجه إلى المسجد
+  11: [AzkarCategory.mosque], // ما يقوله عند دخول المسجد والخروج منه
+  12: [AzkarCategory.narrated], // ما يقوله المريض ويقال عنده
+  13: [AzkarCategory.travel], // ما يقول إذا نزل منزلا
+  14: [AzkarCategory.narrated], // ما يقوله إذا راعه شيء أو فزع
+  // an-Nawawi keeps morning and evening in ONE chapter, «باب ما يُقال عند
+  // الصباح وعند المساء» — the widest in the book by his own words. So it is
+  // the one section under two tiles, exactly as the old §29 was.
+  15: [AzkarCategory.morning, AzkarCategory.evening],
+  16: [AzkarCategory.sleep], // ما يقول إذا أراد النوم
+  17: [AzkarCategory.narrated], // ما يقول إذا نزل المطر
+  18: [AzkarCategory.narrated], // التسمية عند الأكل والشرب
+  19: [AzkarCategory.afterPrayer], // الأذكار بعد الصلاة
 };
