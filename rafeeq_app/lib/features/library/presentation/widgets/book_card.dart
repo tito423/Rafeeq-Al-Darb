@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart' show localizeDigits;
 import 'package:flutter/material.dart';
 
 import '../../../../core/i18n/proper_name.dart';
@@ -64,7 +65,9 @@ class BookCard extends StatelessWidget {
               final author = properName(book.authorAr, book.authorEn);
               final death = book.deathLabel();
               return Text(
-                death.isEmpty ? author : '$author · $death',
+                localizeDigits(
+                    death.isEmpty ? author : '$author · $death',
+                    context.locale.languageCode),
                 style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
               );
             }),
@@ -83,7 +86,9 @@ class BookCard extends StatelessWidget {
                 children: [
                   Text(
                     task.total != null
-                        ? '${(task.progress * 100).round()}%'
+                        ? localizeDigits(
+                            '${(task.progress * 100).round()}%',
+                            context.locale.languageCode)
                         : '…',
                     style: TextStyle(
                         color: scheme.onSurfaceVariant, fontSize: 12),

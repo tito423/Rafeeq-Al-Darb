@@ -122,15 +122,25 @@ void main() {
     // So the separator-as-its-own-widget shape is banned outright. If a
     // future layout genuinely needs it, it needs an explicit Directionality
     // around the Row and a screenshot proving the order.
-    final sepWidget = RegExp(r"""Text\(\s*['"]\s*[/×]\s*['"]""");
+    // MATCHED ACROSS LINES, not line by line. The first version of this
+    // check tested each line on its own and MISSED the mushaf page pill,
+    // where the separator sits on the line after `Text(`:
+    //
+    //     Text(
+    //       ' / ',
+    //
+    // That pill is the ORIGINAL report — «٦٠٤ / ١» for page 1 of 604 — and it
+    // was still rendering «٦٠٤ / ٥٧٩» on emulator-5554 after a guard written
+    // to prevent exactly it had been added, and had passed.
+    final sepWidget =
+        RegExp(r"""Text\(\s*['"]\s*[/×]\s*['"]""", dotAll: true);
     final offenders = <String>[];
     for (final f in Directory('lib').listSync(recursive: true).whereType<File>()) {
       if (!f.path.endsWith('.dart')) continue;
-      final lines = f.readAsStringSync().split('\n');
-      for (var i = 0; i < lines.length; i++) {
-        if (sepWidget.hasMatch(lines[i])) {
-          offenders.add('${f.path}:${i + 1}  ${lines[i].trim()}');
-        }
+      final src = f.readAsStringSync();
+      for (final m in sepWidget.allMatches(src)) {
+        final line = '\n'.allMatches(src.substring(0, m.start)).length + 1;
+        offenders.add('${f.path}:$line  ${m.group(0)!.replaceAll('\n', ' ')}');
       }
     }
     expect(offenders, isEmpty,

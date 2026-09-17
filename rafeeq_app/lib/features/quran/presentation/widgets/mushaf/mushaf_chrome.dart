@@ -37,6 +37,7 @@
 library;
 
 import 'dart:ui' as ui;
+import '../../../../../core/utils/byte_formatter.dart' show ratio;
 
 // `hide TextDirection`: easy_localization re-exports intl, whose
 // TextDirection has no `.rtl` and shadows the one from dart:ui that Flutter
@@ -248,9 +249,19 @@ class _Header extends StatelessWidget {
 /// direction from a strong neighbour; this is two numbers making the
 /// separator between them flip, with no strong character anywhere.
 ///
-/// Three `Text` widgets in a `Row` have no shared paragraph, so there is no
-/// neutral to resolve and nothing to reorder. A reader checking the page he
-/// is on should not have to wonder which number is which.
+/// CORRECTION, and this is the second time this pill has been "fixed".
+///
+/// The paragraph above is right about bidi and was WRONG about the fix. Three
+/// `Text` widgets in a `Row` do have no shared paragraph - and the pill still
+/// rendered «٦٠٤ / ٥٧٩» on emulator-5554, because a `Row` lays its
+/// children out along the ambient `Directionality`, and under RTL the FIRST
+/// child goes on the RIGHT. Splitting the string moved the reordering from
+/// the bidi algorithm into the widget tree; it did not remove it.
+///
+/// It now uses `ratio()`, the one path with a rendering test behind it
+/// (`test/ratio_direction_test.dart` lays text out under real RTL and reads
+/// caret offsets back). A reader checking the page he is on should not have
+/// to wonder which number is which.
 class _PagePill extends StatelessWidget {
   final MushafTheme mt;
   final int page;
@@ -271,16 +282,9 @@ class _PagePill extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
         border: Border.all(color: mt.gold.withValues(alpha: 0.45)),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(arabicPageNumber(page), style: style),
-          Text(
-            ' / ',
-            style: style.copyWith(color: mt.ink.withValues(alpha: 0.55)),
-          ),
-          Text(arabicPageNumber(total), style: style),
-        ],
+      child: Text(
+        ratio(arabicPageNumber(page), arabicPageNumber(total)),
+        style: style,
       ),
     );
   }

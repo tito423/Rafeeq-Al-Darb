@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart' show localizeDigits;
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -426,7 +427,9 @@ class _CompassDial extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '${'qibla.bearing_info'.tr()} ${qiblaBearing.round()}°',
+            localizeDigits(
+                '${'qibla.bearing_info'.tr()} ${qiblaBearing.round()}°',
+                context.locale.languageCode),
             style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12.5),
           ),
         ],

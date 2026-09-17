@@ -6,6 +6,7 @@
 /// twenty-five classes in it.
 library;
 import 'dart:async';
+import '../../../../core/utils/digits.dart' show localizeDigits;
 
 
 import 'package:easy_localization/easy_localization.dart';
@@ -283,9 +284,16 @@ class _AuthorExpansionTile extends StatelessWidget {
         // bullet. The isolates that used to wrap each half are gone with the
         // reason for them: the death line is written in the reader's own
         // language now, not Arabic inside a left-to-right paragraph.
-        deathDate.isEmpty
-            ? 'library.book_count'.plural(books.length)
-            : '$deathDate • ${'library.book_count'.plural(books.length)}',
+        // In Arabic the AUTHOR'S NAME beside this already carries
+        // Arabic-Indic digits - «(١٧٠ - ٨٥٢ هـ)» comes straight from
+        // the catalogue - so a Latin «852» on the line beneath it put two
+        // numbering systems on one row. Seen on emulator-5554.
+        localizeDigits(
+          deathDate.isEmpty
+              ? 'library.book_count'.plural(books.length)
+              : '$deathDate • ${'library.book_count'.plural(books.length)}',
+          context.locale.languageCode,
+        ),
         style: TextStyle(
           color: scheme.onSurfaceVariant,
           fontSize: 12,
@@ -310,8 +318,10 @@ class _AuthorExpansionTile extends StatelessWidget {
                   }
                 },
                 icon: const Icon(Icons.download_for_offline_rounded),
-                label: Text('library.download_author_all'
-                    .tr(args: ['${_missing.length}'])),
+                label: Text(localizeDigits(
+                    'library.download_author_all'
+                        .tr(args: ['${_missing.length}']),
+                    context.locale.languageCode)),
               ),
             ),
           ),
@@ -423,7 +433,8 @@ class _CategoryExpansionTile extends StatelessWidget {
             ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        'library.book_count'.plural(books.length),
+        localizeDigits('library.book_count'.plural(books.length),
+            context.locale.languageCode),
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurfaceVariant,
           fontSize: 12,
