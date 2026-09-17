@@ -26,11 +26,55 @@ Statuses used below describe **evidence**, not legality:
 | `MODERN_MATERIAL_PRESENT` | a modern person's own work is inside what we ship |
 | `NEEDS_REVIEW` | not settled; named here so it is not forgotten |
 
-## The rule this project works to
+## The rule this project works to, and the law that says so
 
-**Author's death + 50 years** (Egypt). It has always been applied to the
-**author**. The measurement below is the first time it was also asked of the
-**editor**, and that is the gap this file opens.
+**Author's death + 50 years.** The project adopted this from Egyptian law. On
+2026-09-17 the owner supplied the UAE statute — where he actually lives — and
+it was read directly rather than summarised from a search result.
+
+**مرسوم بقانون اتحادي رقم (38) لسنة 2021 في شأن حقوق المؤلف والحقوق المجاورة**
+(the law he first sent, Federal Law 11/2021, is **industrial** property —
+patents, industrial designs, integrated circuits — and has nothing to do with
+books). Term: the author's life **and 50 years** from the first day of the
+Gregorian year following his death.
+
+Three of its provisions decide almost everything in this file, quoted from the
+official gazette text, pages 430–431:
+
+> **المادة (2)** … ١٢. المصنفات المشتقة، دون الإخلال بالحماية المقررة
+> للمصنفات التي اشتقت منها.
+> وتشمل الحماية **عنوان المصنف إذا كان مبتكراً**.
+
+> **«المصنف المشتق»**: المصنف الذي يستمد أصله من مصنف سابق الوجود
+> **كالترجمات**، ومجموعات المصنفات الأدبية والفنية … **ما دامت مبتكرة من حيث
+> ترتيب أو اختيار محتوياتها**.
+
+> **المادة (3)** لا تشمل الحماية ما يأتي: … ٤. **المصنفات التي آلت إلى الملك
+> العام**.
+> **ومع ذلك تتمتع مجموعات** ما ورد في البنود (2)، (3)، (4) من هذه المادة
+> **بالحماية إذا تميز جمعها أو ترتيبها أو أي مجهود فيها بالابتكار**.
+
+So, in the law's own words rather than by inference:
+
+1. **an-Nawawi's text is free.** A work in the public domain is excluded from
+   protection outright — Article 3(4).
+2. **A COLLECTION of free works is not free**, if its gathering, its
+   arrangement, or any effort in it is marked by innovation — the sentence that
+   immediately follows. That is exactly حصن المسلم: the supplications are
+   prophetic and free, and **the selection and the arrangement are
+   al-Qahtani's**. The law names this case; it was not a theory.
+3. **A translation is a protected work in its own right**, «دون الإخلال
+   بالحماية المقررة للمصنفات التي اشتقت منها» — the Qur'an being free does not
+   make a translation of it free. This settles section 2 below.
+
+What is still **not** answered, and is not being guessed at: whether a
+muhaqqiq's critical apparatus over a public-domain matn is protected as a
+derivative work or simply as his own writing. Under Article 2(1) his footnotes
+are his own text either way, which is the ground today's filtering stands on.
+
+None of this is legal advice, and the sharʿī question of intellectual-property
+rights — on which contemporary scholars differ — is a separate matter for a
+scholar.
 
 The distinction that matters, and it is not a technicality:
 
