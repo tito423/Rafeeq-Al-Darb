@@ -1464,7 +1464,7 @@
   },
   "ayah_dl": {
     "surahs_done": "{} sourates complètes sur 114",
-    "ayahs_progress": "{} / {} versets",
+    "ayahs_progress": "{} versets",
     "search_hint": "Rechercher une sourate",
     "listen": "Écouter",
     "stop": "Arrêter",

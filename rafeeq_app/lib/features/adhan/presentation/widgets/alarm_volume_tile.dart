@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/adhan_native.dart';
@@ -73,7 +74,7 @@ class _AlarmVolumeTileState extends State<AlarmVolumeTile> {
                   ),
                 ),
                 Text(
-                  '$current / $_max',
+                  ratio(current, _max),
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: scheme.onSurfaceVariant,
                       ),

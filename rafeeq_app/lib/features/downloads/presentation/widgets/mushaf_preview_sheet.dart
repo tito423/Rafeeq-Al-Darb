@@ -300,7 +300,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                         )
                       else if (_cached > 0)
                         Text(
-                          '$_cached / $total ${'downloads.pages_cached'.tr()}'
+                          '${ratio(_cached, total)} ${'downloads.pages_cached'.tr()}'
                           '${_bytes > 0 ? ' · ${_formatBytes(_bytes)}' : ''}',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.outline,

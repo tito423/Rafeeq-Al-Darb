@@ -155,7 +155,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                   Text(
                     complete
                         ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
-                        : '$_cached / $total ${'downloads.pages_cached'.tr()}'
+                        : '${ratio(_cached, total)} ${'downloads.pages_cached'.tr()}'
                               '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.outline,

@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import '../utils/byte_formatter.dart' show ratio;
 
 /// P3-46: thin bridge to the real Android foreground service
 /// (`DownloadForegroundService.kt`) that keeps this process from being
@@ -55,7 +56,7 @@ class DownloadForegroundServiceBridge {
     try {
       await _channel.invokeMethod<void>('update', {
         'title': title,
-        'text': text ?? '$done / $total',
+        'text': text ?? ratio(done, total),
         'done': done,
         'total': total,
       });
@@ -88,7 +89,7 @@ class DownloadForegroundServiceBridge {
       await _channel.invokeMethod<void>('updateItem', {
         'key': key,
         'title': title,
-        'text': text ?? '$done / $total',
+        'text': text ?? ratio(done, total),
         'done': done,
         'total': total,
       });

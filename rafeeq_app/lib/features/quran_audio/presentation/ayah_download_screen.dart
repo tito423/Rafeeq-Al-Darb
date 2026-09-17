@@ -14,6 +14,7 @@
 library;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -417,8 +418,10 @@ class _SummaryCard extends StatelessWidget {
                   children: [
                     Text(
                       'ayah_dl.ayahs_progress'.tr(args: [
-                        localizeDigits('${progress.downloaded}', locale),
-                        localizeDigits('${progress.total}', locale),
+                        ratio(
+                          localizeDigits('${progress.downloaded}', locale),
+                          localizeDigits('${progress.total}', locale),
+                        ),
                       ]),
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
@@ -535,8 +538,10 @@ class _SurahTile extends StatelessWidget {
           pending
               ? 'ayah_dl.downloading'.tr()
               : 'ayah_dl.ayahs_progress'.tr(args: [
-                  localizeDigits('$have', locale),
-                  localizeDigits('$total', locale),
+                  ratio(
+                    localizeDigits('$have', locale),
+                    localizeDigits('$total', locale),
+                  ),
                 ]),
           style: TextStyle(
               fontSize: 12,

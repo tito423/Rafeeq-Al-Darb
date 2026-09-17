@@ -1,6 +1,7 @@
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (ltr/rtl) the long-dhikr cards need.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -333,11 +334,43 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                               ),
                             ],
                             const SizedBox(height: 14),
-                            Text(
-                              _target == null ? '$_count' : '$_count / $_target',
-                              style: const TextStyle(
-                                  fontSize: 52, fontWeight: FontWeight.bold),
-                            ),
+                            // «٠ / ٣٣», not «٣٣ / ٠». Seen in Arabic on
+                            // emulator-5554 reading «33 / 0» — «33 of 0».
+                            // Two numbers with a neutral separator between
+                            // them flip in an RTL paragraph: the bidi
+                            // algorithm's rule N1 treats a number as R when
+                            // it resolves what the neutral « / » becomes, so
+                            // the separator goes right-to-left and the pair
+                            // swaps around it. The same defect was found in
+                            // the mushaf page badge the same day; the fix is
+                            // the same one, and it is structural rather than
+                            // an annotation: three Text widgets in a Row
+                            // share no paragraph, so there is no neutral to
+                            // resolve and nothing to reorder.
+                            if (_target == null)
+                              Text(
+                                '$_count',
+                                style: const TextStyle(
+                                    fontSize: 52, fontWeight: FontWeight.bold),
+                              )
+                            else
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('$_count',
+                                      style: const TextStyle(
+                                          fontSize: 52,
+                                          fontWeight: FontWeight.bold)),
+                                  const Text(' / ',
+                                      style: TextStyle(
+                                          fontSize: 52,
+                                          fontWeight: FontWeight.bold)),
+                                  Text('$_target',
+                                      style: const TextStyle(
+                                          fontSize: 52,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
                             const SizedBox(height: 6),
                             Text('azkar.tap_to_count'.tr(),
                                 style:
@@ -732,7 +765,7 @@ class _MathurCounterCard extends StatelessWidget {
               builder: (context, scale, child) =>
                   Transform.scale(scale: scale, child: child),
               child: Text(
-                t == null ? '$count' : '$count / $t',
+                t == null ? '$count' : ratio(count, t),
                 style: TextStyle(
                   fontSize: countSize,
                   fontWeight: FontWeight.bold,

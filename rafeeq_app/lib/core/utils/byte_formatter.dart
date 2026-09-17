@@ -69,3 +69,33 @@ String formatBytesBinary(int bytes, {int decimals = 1}) {
   }
   return ltr('${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(decimals)} GB');
 }
+
+/// «٠ / ٣٣», never «٣٣ / ٠» — two numbers with a separator between them.
+///
+/// THE DEFECT THIS EXISTS FOR, found twice in one day. The mushaf's page
+/// badge rendered page 1 of 604 as «٦٠٤ / ١», and the tasbeeh counter
+/// rendered 0 of 33 as «33 / 0». Both were written as one plain string,
+/// `'$a / $b'`, and both flipped.
+///
+/// And [ltr] alone does NOT fix it — that was tried on the device first. The
+/// isolate fixes where the run sits inside its paragraph; it does not change
+/// what the neutral characters *inside* the run resolve to. The bidi
+/// algorithm's rule N1 treats a number as **R** when deciding what a neutral
+/// between two numbers becomes, so the « / » resolves right-to-left and the
+/// two numbers swap around it — inside an isolate, and inside an LTR
+/// paragraph, just the same.
+///
+/// The fix is to give that neutral a strong left-to-right neighbour on each
+/// side. U+200E LEFT-TO-RIGHT MARK is a zero-width strong L: with one before
+/// and one after the separator, N1 has no numbers to look at and resolves L.
+/// The whole thing is then wrapped in [ltr] as well, so the fragment cannot
+/// be re-ordered by the Arabic around it either (trap #16).
+///
+/// The marks are built with `String.fromCharCode` for the same reason [ltr]'s
+/// are: they are invisible, and a literal containing them makes the source
+/// read differently from how it compiles.
+String ratio(Object a, Object b, {String separator = ' / '}) {
+  const lrm = 0x200E;
+  final mark = String.fromCharCode(lrm);
+  return ltr('$a$mark$separator$mark$b');
+}

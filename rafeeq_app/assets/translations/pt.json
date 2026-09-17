@@ -1464,7 +1464,7 @@
   },
   "ayah_dl": {
     "surahs_done": "{} de 114 suratas completas",
-    "ayahs_progress": "{} / {} versículos",
+    "ayahs_progress": "{} versículos",
     "search_hint": "Pesquisar uma surata",
     "listen": "Ouvir",
     "stop": "Parar",
