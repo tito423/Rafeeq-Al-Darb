@@ -8,6 +8,7 @@
 library;
 
 import 'dart:async';
+import '../../../../../core/utils/digits.dart';
 
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (rtl/ltr) used throughout this file.
@@ -46,7 +47,7 @@ class SciencesHeader extends ConsumerWidget {
     required this.onToggleExpand,
   });
 
-  String get _reference => '$surahNameAr • ${ayah.surahId}:${ayah.ayahNumber}';
+  String get _reference => localizeDigits('$surahNameAr • ${ayah.surahId}:${ayah.ayahNumber}', uiLanguageCode);
 
   Future<void> _handleAction(
     BuildContext context,
@@ -143,7 +144,7 @@ class SciencesHeader extends ConsumerWidget {
               border: Border.all(color: gold.withValues(alpha: 0.4)),
             ),
             child: Text(
-              '${ayah.surahId}:${ayah.ayahNumber}',
+              localizeDigits('${ayah.surahId}:${ayah.ayahNumber}', uiLanguageCode),
               style: theme.textTheme.labelMedium?.copyWith(
                 color: gold,
                 fontWeight: FontWeight.w700,

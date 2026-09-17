@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -336,7 +337,7 @@ class _AyahLine extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${ayah.surahId}:${ayah.ayahNumber}',
+            localizeDigits('${ayah.surahId}:${ayah.ayahNumber}', uiLanguageCode),
             style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 11),
           ),
         ],

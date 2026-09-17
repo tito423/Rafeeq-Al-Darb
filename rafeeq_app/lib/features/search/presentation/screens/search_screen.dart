@@ -250,7 +250,7 @@ class _KeywordTab extends StatelessWidget {
                             maxLines: 3,
                           ),
                           subtitle: Text(
-                            '${a.surahId}:${a.ayahNumber}',
+                            localizeDigits('${a.surahId}:${a.ayahNumber}', uiLanguageCode),
                             style: TextStyle(
                               color: scheme.onSurfaceVariant,
                               fontSize: 12,
@@ -389,7 +389,7 @@ class _TopicsTabState extends State<_TopicsTab> {
     await AyahAudioService.instance.playQueue(
       [...result.curated, ...result.all],
       widget.repo,
-      titleFor: (a, i) => '$label • ${a.surahId}:${a.ayahNumber}',
+      titleFor: (a, i) => localizeDigits('$label • ${a.surahId}:${a.ayahNumber}', uiLanguageCode),
     );
     if (mounted) setState(() => _playingAll = false);
   }
@@ -417,11 +417,11 @@ class _TopicsTabState extends State<_TopicsTab> {
           onPressed: () => AyahAudioService.instance.play(
             a,
             widget.repo,
-            title: '$label • ${a.surahId}:${a.ayahNumber}',
+            title: localizeDigits('$label • ${a.surahId}:${a.ayahNumber}', uiLanguageCode),
           ),
         ),
         title: _HighlightedAyahText(text: a.textUthmani, test: test),
-        subtitle: Text('${a.surahId}:${a.ayahNumber}'),
+        subtitle: Text(localizeDigits('${a.surahId}:${a.ayahNumber}', uiLanguageCode)),
         onTap: () => widget.onOpen(a),
       );
 
