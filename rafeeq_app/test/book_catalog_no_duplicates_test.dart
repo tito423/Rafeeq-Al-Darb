@@ -78,6 +78,36 @@ void main() {
     );
   });
 
+  test('no two books by one author have a title that opens the other', () {
+    // `al_taqrib_wal_taysir` and `at_taqrib_wat_taysir` are one book —
+    // Shamela 5586, 100/100 identical pages, identical TOC — and the equality
+    // test above passed over them, because one entry carried the book's full
+    // title «… لمعرفة سنن البشير النذير في أصول الحديث» and the other stopped
+    // four words earlier. A shelf shows both; a string comparison does not.
+    // It was caught by scrolling al-Nawawi's shelf on the emulator.
+    final byAuthor = <String, List<LibraryBook>>{};
+    for (final book in libraryBookCatalog) {
+      byAuthor.putIfAbsent(_key(book.authorAr), () => []).add(book);
+    }
+    final found = <String>[];
+    for (final books in byAuthor.values) {
+      for (var i = 0; i < books.length; i++) {
+        for (var j = i + 1; j < books.length; j++) {
+          final a = _key(books[i].titleAr);
+          final b = _key(books[j].titleAr);
+          if (a == b) continue; // the equality test above owns this case
+          if (a.startsWith('$b ') || b.startsWith('$a ')) {
+            found.add('`${books[i].id}` («$a») and `${books[j].id}` («$b»)');
+          }
+        }
+      }
+    }
+    expect(found, isEmpty,
+        reason: 'one title is the opening of the other and the author is the '
+            'same — check whether it is the same book entered twice under a '
+            'long and a short form of its title.');
+  });
+
   test('no two books point at the same hosted file', () {
     expect(collisions((b) => b.textEdition?.url ?? ''), isEmpty);
   });

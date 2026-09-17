@@ -1748,9 +1748,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 11:26 — IN PROGRESS — resume here**
+**2026-09-17 11:33 — IN PROGRESS — resume here**
 
-the six objects are off the bucket too - 521,260 bytes. Each was HEAD-checked for its real size before the delete and HEAD-checked again after, so the script reports what it actually removed rather than what it asked to remove, and scripts/r2_delete_duplicate_books.py records why each one went. Then the whole catalogue was re-swept over HTTP, not a sample: all 251 remaining book paths answer 206 with 0 failures, and all six deleted keys answer 404. The three al-Albani files are recoverable from Shamela 512, 264 and 327 with build_book_text.py if he wants them back under honest titles
+opening the library on the emulator found two more the desk work had missed, which is §1.3 in one screen. Scrolling al-Nawawi's shelf showed «At-Taqrib wat-Taysir» twice: al_taqrib_wal_taysir and at_taqrib_wat_taysir are Shamela 5586 both, 100/100 identical pages and identical TOC, and the title test passed over them because one entry carried the book's full title «... لمعرفة سنن البشير النذير في أصول الحديث» and the other stopped four words earlier. The test now also compares one title against the other as a prefix, and that case was proven to fail on the old catalogue before it was trusted. And auditing who EDITED each book - reading every hosted file's own editionCard, not the catalogue's sourceLabel - turned up a fourth al-Albani takhrij volume, tahqiq_al_ihtijaj_bil_qadar: 27 pages of a 111-page printing, one section, every page a bare hadith under his grading, none of Ibn Taymiyyah's treatise in it, under Ibn Taymiyyah's name. That one had NO title twin, so no duplicate test could ever have seen it - it had to be opened. Two more objects off the bucket. 257 entries and 251 books is now 249 and 249. analyze clean, 287 tests pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

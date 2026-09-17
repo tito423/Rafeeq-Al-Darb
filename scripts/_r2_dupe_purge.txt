@@ -1,8 +1,10 @@
-books/text/al_adhkar_lil_nawawi.json                         deleted  390,619 bytes   (duplicate of al_adhkar_nawawi (Shamela 1956) — 411/411 identical)
-books/text/al_arbaun_al_nawawiyyah.json                      deleted   10,048 bytes   (duplicate of al_arbaun_an_nawawiyyah (Shamela 12836) — 81/81 identical)
-books/text/al_tibyan_fi_adab_hamalat_al_quran.json           deleted   64,098 bytes   (duplicate of at_tibyan_hamalat_al_quran (Shamela 1969) — 224/224 identical)
-books/text/tahqiq_riyad_al_salihin_lil_albani.json           deleted   17,337 bytes   (al-Albani's comments on Riyad as-Salihin (Shamela 512), 98 of 639 pages)
-books/text/tahqiq_al_iman.json                               deleted   10,488 bytes   (al-Albani's takhrij of al-Iman (Shamela 264) — none of Ibn Taymiyyah's text)
-books/text/takhrij_al_kalim_al_tayyib.json                   deleted   28,670 bytes   (al-Albani's edition of al-Kalim at-Tayyib (Shamela 327))
+books/text/al_adhkar_lil_nawawi.json                         absent already   (duplicate of al_adhkar_nawawi (Shamela 1956) — 411/411 identical)
+books/text/al_arbaun_al_nawawiyyah.json                      absent already   (duplicate of al_arbaun_an_nawawiyyah (Shamela 12836) — 81/81 identical)
+books/text/al_tibyan_fi_adab_hamalat_al_quran.json           absent already   (duplicate of at_tibyan_hamalat_al_quran (Shamela 1969) — 224/224 identical)
+books/text/tahqiq_riyad_al_salihin_lil_albani.json           absent already   (al-Albani's comments on Riyad as-Salihin (Shamela 512), 98 of 639 pages)
+books/text/tahqiq_al_iman.json                               absent already   (al-Albani's takhrij of al-Iman (Shamela 264) — none of Ibn Taymiyyah's text)
+books/text/takhrij_al_kalim_al_tayyib.json                   absent already   (al-Albani's edition of al-Kalim at-Tayyib (Shamela 327))
+books/text/tahqiq_al_ihtijaj_bil_qadar.json                  deleted    3,577 bytes   (al-Albani's takhrij of al-Ihtijaj bil-Qadar — 27 of 111 pages, no title twin in the catalogue, so only reading it found it)
+books/text/al_taqrib_wal_taysir.json                         deleted   47,554 bytes   (duplicate of at_taqrib_wat_taysir (Shamela 5586) — 100/100 identical; the two entries differed only by the tail «في أصول الحديث»)
 
-freed 521,260 bytes across 6 objects
+freed 51,131 bytes across 8 objects

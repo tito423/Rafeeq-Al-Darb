@@ -2881,23 +2881,19 @@ const List<LibraryBook> libraryBookCatalog = [
   // under al-Albani's grading label — its own first page reads «خرج أحاديثه:
   // محمد ناصر الدين الألباني». Catalogued as Ibn Taymiyyah's «الإيمان», which
   // it is not. His book itself stays as `al_iman_ibn_taymiyyah` (357 pages).
-  LibraryBook(
-    id: 'tahqiq_al_ihtijaj_bil_qadar',
-    titleAr: 'الاحتجاج بالقدر',
-    titleEn: 'Tahqiq Al Ihtijaj Bil Qadar',
-    authorAr: 'شيخ الإسلام ابن تيمية',
-    authorEn: 'Shaykh al-Islam Ibn Taymiyyah',
-    deathYearAh: 728,
-    pages: 27,
-    category: BookCategory.aqidah,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_ihtijaj_bil_qadar.json',
-      sizeBytes: 3577,
-      sourceLabel:
-          'المكتبة الشاملة — الاحتجاج بالقدر، تقي الدين أبو العباس أحمد بن عبد الحليم بن تيمية (ت ٧٢٨هـ)، المكتب الإسلامي - بيروت',
-    ),
-  ),
+  // `tahqiq_al_ihtijaj_bil_qadar` (Shamela 264's neighbour, المكتب الإسلامي)
+  // removed for the same reason as the three above, and it is the one the
+  // duplicate test could NOT have caught: «الاحتجاج بالقدر» appears only once
+  // in the catalogue, so there was no title collision to notice. It had to be
+  // opened. 27 pages out of a 111-page printing, one section, and every page
+  // is a bare hadith under al-Albani's grading — «(حسن) اقسم لنا من خشيتك…»,
+  // «(صحيح) لقنوا موتاكم لا إله إلا الله» — with none of Ibn Taymiyyah's
+  // treatise in it, under his name.
+  //
+  // What stays: `hijab_al_marah_wa_libasuha_fil_salah` and
+  // `mishkat_al_masabih` are also al-Albani editions, but they carry the
+  // classical author's own text with his apparatus around it, which is a
+  // different thing from a volume that is nothing but his gradings.
   LibraryBook(
     id: 'tahqiq_al_qawl_fi_isa_kalimat_allah',
     titleAr: 'تحقيق القول في مسألة: عيسى كلمة الله والقرآن كلام الله',
@@ -3595,22 +3591,15 @@ const List<LibraryBook> libraryBookCatalog = [
   // «التبيان في آداب حملة القرآن» was the third book catalogued twice
   // (Shamela 1969, 224/224 identical pages). The surviving entry is
   // `at_tibyan_hamalat_al_quran`, filed under adab.
-  LibraryBook(
-    id: 'al_taqrib_wal_taysir',
-    titleAr: 'التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث',
-    titleEn: 'Al Taqrib Wal Taysir',
-    authorAr: 'الإمام محيي الدين النووي',
-    authorEn: 'Imam al-Nawawi',
-    deathYearAh: 676,
-    pages: 100,
-    category: BookCategory.hadith,
-    textEdition: TextEdition(
-      url: '${AppConfig.contentBaseUrl}/books/text/al_taqrib_wal_taysir.json',
-      sizeBytes: 47554,
-      sourceLabel:
-          'المكتبة الشاملة — التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الكتاب العربي، بيروت',
-    ),
-  ),
+  // `al_taqrib_wal_taysir` was the SEVENTH copy of a book already in the
+  // library, and the one the title test could not see: the other entry calls
+  // it «التقريب والتيسير لمعرفة سنن البشير النذير» and this one added the
+  // book's tail «في أصول الحديث», so the two keys differed by four words and
+  // the comparison passed. Same Shamela 5586, 100/100 identical pages,
+  // identical TOC. It was found by scrolling al-Nawawi's shelf on the
+  // emulator and seeing the title twice — which is the only reason the other
+  // six were found too. The test now also compares one title against the
+  // other as a prefix.
   LibraryBook(
     id: 'bustan_al_arifin',
     titleAr: 'بستان العارفين',
@@ -3891,11 +3880,14 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'at_taqrib_wat_taysir',
-    titleAr: 'التقريب والتيسير لمعرفة سنن البشير النذير',
+    // The book's full title, as Shamela 5586's card prints it. The short form
+    // this entry used to carry is why the duplicate went unseen.
+    titleAr: 'التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث',
     titleEn: 'At-Taqrib wat-Taysir',
     authorAr: 'الإمام محيي الدين النووي',
     authorEn: 'Imam al-Nawawi',
     deathYearAh: 676,
+    pages: 100,
     descKey: 'book_desc.at_taqrib_wat_taysir',
     category: BookCategory.hadith,
     textEdition: TextEdition(
@@ -3903,7 +3895,10 @@ const List<LibraryBook> libraryBookCatalog = [
           '${AppConfig.contentBaseUrl}/books/text/at_taqrib_wat_taysir.json',
       sizeBytes: 47579,
       sourceLabel:
-          'المكتبة الشاملة — التقريب والتيسير لمعرفة سنن البشير النذير، للإمام النووي، دار الكتاب العربي، بيروت، الطبعة الأولى ١٤٠٥هـ/١٩٨٥م',
+          'المكتبة الشاملة — التقريب والتيسير لمعرفة سنن البشير النذير في '
+          'أصول الحديث، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، '
+          'تقديم وتحقيق وتعليق محمد عثمان الخشت، دار الكتاب العربي، بيروت، '
+          'الطبعة الأولى ١٤٠٥هـ/١٩٨٥م',
     ),
   ),
   // Nine of Ibn Kathir's, chosen for fame from his Shamela list

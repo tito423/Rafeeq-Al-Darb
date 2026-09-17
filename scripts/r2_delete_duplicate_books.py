@@ -49,6 +49,17 @@ TARGETS = [
         "books/text/takhrij_al_kalim_al_tayyib.json",
         "al-Albani's edition of al-Kalim at-Tayyib (Shamela 327)",
     ),
+    # Found after the first six, by opening the library on the emulator.
+    (
+        "books/text/tahqiq_al_ihtijaj_bil_qadar.json",
+        "al-Albani's takhrij of al-Ihtijaj bil-Qadar — 27 of 111 pages, no "
+        "title twin in the catalogue, so only reading it found it",
+    ),
+    (
+        "books/text/al_taqrib_wal_taysir.json",
+        "duplicate of at_taqrib_wat_taysir (Shamela 5586) — 100/100 identical; "
+        "the two entries differed only by the tail «في أصول الحديث»",
+    ),
 ]
 
 
