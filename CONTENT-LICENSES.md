@@ -143,6 +143,42 @@ continuation marker — 750 words of isnad criticism that read as the author's.
 intended** — `audit_editor_apparatus.py` was run again over all 248 books after
 the work below and returned **zero** in the row that matters.
 
+> ### ⚠️ CORRECTION, the evening of 2026-09-17 — the «zero» above was wrong
+>
+> Every «audit re-run returns 0» on this page describes the **morning** run,
+> and that run under-counted. `audit_editor_apparatus.py` decided whether a
+> printing had a modern editor by matching **eleven** fixed label words on the
+> edition card. A scan of every built book's card
+> (`scripts/scan_edition_cards.py`) found the library's printings use
+> **thirty-six** — «تعليق وتحقيق», «حققه وخرج أحاديثه» (5 books), «حققه وعلق
+> عليه» (8 books), «دراسة وتحقيق» (5), «قدم له وحققه وعلق عليه», «جمعه ورتبه
+> ووثق نصوصه وحققه», and more.
+>
+> And `verdict()` returned `NO_EDITOR_NAMED` **before it ever read the
+> apparatus count**, so a book whose editor the regex missed *and* which
+> carried apparatus was filed in the one bucket nobody re-reads. That is
+> al-Adhkar's shape precisely: its apparatus rode in the body stream and the
+> edition card was not what gave it away.
+>
+> Re-run with the detection widened from the observed labels, and with a new
+> `APPARATUS_BUT_NO_EDITOR_NAMED` verdict so the dangerous case cannot hide in
+> the safe bucket, the same 200-odd books produced:
+>
+> | | morning run | evening re-run |
+> |---|---|---|
+> | `MODERN_EDITOR_APPARATUS_PRESENT` | 0 | **5** |
+> | `APPARATUS_BUT_NO_EDITOR_NAMED` | (did not exist) | **7** |
+>
+> **Twelve books, not zero.** Eleven were filtered and published; one —
+> `tuhfat_at_talib` — was removed, because filtering left 45 empty pages and a
+> 32-page run of nothing, which is the verdict `al_ijaz` got that morning.
+> After that, the audit returns **0 and 0** on the widened detection. That is
+> the number to quote.
+>
+> The worst of the twelve is set out under **«الإيضاح» and the Hajj screen**
+> below. Nothing above this box was deleted: the record of what was believed,
+> and on what evidence, is the point of this file.
+
 ### What was done to the 48
 
 `scripts/strip_editor_apparatus.py` removes the apparatus and then measures
@@ -223,8 +259,9 @@ text that was his, is `scripts/_editor_apparatus_report.txt`. The worst:
 | `qaidah_jalilah_fil_tawassul_wal_wasilah` | 11.4 % | ربيع بن هادي عمير المدخلي |
 | `al_jami_fi_amthal_al_quran` | 10.5 % | الشيخ مصطفى العدوي — **alive** |
 
-Status as of 2026-09-17: **resolved — 47 filtered, 1 removed, and the audit
-re-run returns 0.**
+Status as of 2026-09-17: **47 filtered, 1 removed in the morning; then the
+detection was found to be too narrow and 12 more books were found that
+evening — 11 filtered, 1 removed. See the correction box above.**
 
 ### Books already removed on rights grounds
 
@@ -414,8 +451,11 @@ not one grading in the database is anonymous.**
 
 ## Open list, in the order it should be worked
 
-1. ~~The 48 books whose files carry a modern editor's apparatus.~~ **Done
-   2026-09-17**: 47 filtered, 1 removed, audit re-run returns 0. And both of
+1. ~~The books whose files carry a modern editor's apparatus.~~ **Done
+   2026-09-17, in two rounds**: 47 filtered and 1 removed in the morning;
+   then the audit's own editor detection was found to know 11 label forms
+   where the library uses 36, and a re-run found 12 more — 11 filtered, 1
+   removed. The widened audit now returns 0. And both of
    its follow-ups are done too — a filtered book now says so in the reader in
    seven languages, and a device holding a pre-filter copy is told to download
    it again.
@@ -590,6 +630,64 @@ the previous 248.
 in. He asked to stay far from تشدد; الموافقات is the مقاصد book, and الاعتصام
 is the polemic. That is an editorial judgement and it is recorded so the next
 session knows it was a choice and not an oversight.
+---
+
+## «الإيضاح» and the Hajj screen — the worst of the twelve
+
+The Hajj guide prints an-Nawawi's «الإيضاح في مناسك الحج والعمرة» step by
+step, under a caption that says exactly that. **Shamela has one printing of
+it, and that printing is two books.** Its own edition card, which nobody had
+read:
+
+```
+الكتاب: الإيضاح في مناسك الحج والعمرة
+المؤلف: … النووي (ت ٦٧٦هـ)
+وعليه: الإفصاح على مسائل الإيضاح على مذاهب الأئمة الأربعة وغيرهم
+        لـ عبد الفتاح حسين رواه المكي
+الناشر: دار البشائر الإسلامية، بيروت … الطبعة الثانية، ١٤١٤ هـ - ١٩٩٤ م
+```
+
+«**وعليه**» — a second author's complete commentary printed around the text,
+not a footnote apparatus. 39.1% of the hosted file was his.
+
+**Measured on the screen, before anything was changed.**
+`scripts/measure_hajj_exposure.py` walks the nineteen steps the way
+`hajj_screen.dart` slices them — same pages, same paragraph indexes — and
+counts what it renders:
+
+> Of **1,474** paragraphs shown across the nineteen steps, **280 (19.0%)**
+> were عبد الفتاح حسين's, not an-Nawawi's.
+
+That is §1.2 broken on its own terms, before any rights question: the screen
+attributed one man's words to another.
+
+**Why filtering alone would have made it worse.** `hajj_screen.dart` slices
+with `p.printedPage == step.fromPage ? step.fromPara : 0` — by paragraph
+**index inside a page**. Removing paragraphs renumbers every index, so
+filtering without re-pointing would have left nineteen steps each beginning or
+ending a few paragraphs out, and **nothing would have looked broken**: every
+step would still render Arabic prose, just not the prose the boundary was set
+on. Invisible, and on the rites of Hajj.
+
+So `scripts/remap_hajj_bounds.py` re-points each boundary **by its own text**:
+it reads the anchor paragraph out of the unfiltered file and finds it again in
+the filtered one. The result:
+
+* **no `from` boundary moved** — every step began on an-Nawawi;
+* **twelve of the nineteen ENDED on one of his notes.** Each snaps *inwards*
+  by one, to the last surviving an-Nawawi paragraph. Never outwards, which
+  would put the commentator back.
+
+One of those twelve closing anchors is literally his signature:
+«قال جامع هذا التعليق المسمى (بالإفصاح عن مسائل الإيضاح)…».
+
+**A measurement of mine that was wrong, and was not reported.** The first run
+of the exposure script said 78.6%. The stripper also removes footnote markers
+*inside* a surviving paragraph, so an exact-string test counted intact
+paragraphs as deleted. Comparing on a marker-insensitive key gives 19.0%,
+which is consistent with the 39.1% measured over the whole file. The wrong
+number never left the machine; it is recorded here because the next person to
+measure this will hit the same trap.
 ---
 
 ## The azkar — replaced, and why it was the clearest case in this file
