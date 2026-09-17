@@ -7,12 +7,14 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-17 |
-| **Released** | **v3.30.0** — tag on `master` at `c0a08fd`, the only release in the repo; asset `rafeeq-aldarb-3.30.0.apk`, **212,462,925 bytes**, published `2026-09-17T00:48:55Z`. Re-verified at handover: `gh release view` reports target `master`, and the tag's SHA equals `git rev-parse HEAD` |
-| **App version** | `pubspec.yaml` `3.30.0+31`; `AboutScreen.appVersion` `3.30.0` — the two are checked against each other by a test, after v3.27.0 shipped with an About card reading 3.26.0 |
-| **On the owner's Honor** | the signed **3.25.0** build. **Nothing from v3.26.0 to v3.30.0 has ever run on his phone** — five releases of unseen-on-hardware work. Everything below was seen on `emulator-5554` |
-| **Signing** | `scripts/sign_release.py` printed `OK: rotated`; re-checked at handover — `apksigner verify --min-sdk-version 28` on the published asset's own bytes gives `CN=Rafeeq Al-Darb, OU=Personal, O=tito423, L=Cairo, C=EG`, SHA-256 `a505464d5d16b33554b22a18dfc391324c385f4ce52aae18a94afbe93a4d9349`, with the old debug key still covering 7–8 (trap #41) |
-| **Verified 2026-09-17 (handover)** | `flutter analyze lib test` → **No issues found** (22.9 s) · `flutter test` → **282 passed** · **all 257** catalogued book paths answer a range request on the bucket (0 failures) · one page of **each of the 6** mushaf printings → HTTP 206 with the right `Content-Type` · `hadith/hadith.zip` → 206 `application/zip` · `quran/translations/en.json.gz` and `ur.json.gz` → 206 |
-| **Measured 2026-09-17 (handover)** | 7 locales × **1,479** keys each (identical) · **257** catalogue entries = **254** distinct books (three are entered twice — see below) in **8** categories (tazkiyah 126, aqidah 40, hadith 34, adab 18, fiqh 15, **tarikh 12**, seerah 8, tafsir 4) · **6** mushaf printings × 604 pages · `hadith.db` **109,731,840** bytes, **67,153** hadiths, **45,219** graded and **every one of those 45,219 carries a named grader**, 9 books, 1,482 chapters · **58** quotes from 4 books in 7 languages · on-this-day: Hijri **358 days / 5,747 events**, Gregorian **366 days** each in ar/en/es/fr/pt/ru, **4,380–4,392 events** each · signed APK **212,462,925** bytes |
+| **Released** | **v3.31.0** — the rights release. Tag on `master`; the only release in the repo, v3.30.0 and its tag deleted first as policy says |
+| **App version** | `pubspec.yaml` `3.31.0+32`; `AboutScreen.appVersion` `3.31.0` — the two are checked against each other by a test |
+| **On the owner's Honor** | still the signed **3.25.0** build. **Nothing from v3.26.0 to v3.31.0 has ever run on his phone** — six releases of unseen-on-hardware work. Everything below was seen on `emulator-5554` |
+| **Library** | **248 books** (was 257 entries / 251 books this morning) in 8 categories: tazkiyah 123, aqidah 38, hadith 30, adab 18, fiqh 15, tarikh 12, seerah 8, tafsir 4 |
+| **Rights** | `audit_editor_apparatus.py` over all 248 books: **0** carry a modern muhaqqiq's apparatus, where **48** did this morning. 173 name a modern editor whose work is not in the file, 4 an editor dead before 1396 AH, 71 no editor at all. **47** books carry `editorNotesRemoved` and say so in the reader in seven languages |
+| **Verified 2026-09-17 (evening)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **291 passed** · all **248** catalogued book paths answered a range request (0 failures) before the re-upload, and the 9 deleted keys answer 404 · the azkar extractor re-run against the re-uploaded al-Adhkar reproduces its output byte for byte with all 22 curated checksums matching · al-Adhkar opened **on the emulator**: an-Nawawi's muqaddima without al-Arna'ut's footnote, the corrected «تحقيق عبد القادر» line, and the English «the editor's notes are not included» under it |
+| **Measured 2026-09-17 (evening)** | 7 locales × **1,480** keys each (identical) · **248** books · **6** mushaf printings × 604 pages (read from `editions.json`; a memory note claiming nine was wrong and was corrected) · `hadith.db` **67,153** hadiths, **45,219** graded, **45,219** with a named grader — the two numbers are equal · **58** quotes from 4 books in 7 languages · **22** adhkar hand-picked from an-Nawawi's al-Adhkar so far, out of 338 chapters cut |
+| **Provenance** | **`CONTENT-LICENSES.md`** is new and is now the record. shamela.ws publishes **no robots.txt and no terms, rights or licence page** (all 404, checked directly), and states it takes no payment from authors for publishing their books — so it forbids nothing and grants nothing |
 
 ## STATE AS OF 2026-09-17 — handover (v3.30.0 published)
 
@@ -1748,9 +1750,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 14:26 — IN PROGRESS — resume here**
+**2026-09-17 14:39 — IN PROGRESS — resume here**
 
-seen on the emulator, which is the only thing that counts: al-Adhkar's reader now shows two lines under the page - the edition line in Arabic naming تحقيق عبد القادر (the corrected muhaqqiq, the claim I had flagged this morning as unverified on a screen), and under it, in ENGLISH because the app's UI language is English, «The author's text from this printing; the editor's notes are not included». The translation key does what it was for. And the page itself is an-Nawawi's muqaddima with al-Arna'ut's footnote that used to sit on page 3 gone
+v3.31.0 prepared: version bumped in both places (pubspec 3.31.0+32 and AboutScreen.appVersion, which a test checks against each other), and the HANDOVER state block rewritten from measurements taken now rather than from this morning - 248 books in 8 categories, 7 locales x 1,480 identical keys, 0 books carrying a modern muhaqqiq's apparatus where 48 did at dawn, 47 flagged as filtered and saying so in the reader. Release APK building
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
