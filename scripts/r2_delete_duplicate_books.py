@@ -60,6 +60,15 @@ TARGETS = [
         "duplicate of at_taqrib_wat_taysir (Shamela 5586) — 100/100 identical; "
         "the two entries differed only by the tail «في أصول الحديث»",
     ),
+    # 2026-09-17, on the rights audit: the only one of the 48 books carrying a
+    # modern editor's apparatus that filtering could not save. 47.7% of the
+    # text survives, 83 pages come out empty inside the book, and the longest
+    # blank run is 20 pages.
+    (
+        "books/text/al_ijaz_fi_sharh_sunan_abi_dawud.json",
+        "the file is Abu Ubayda Mashhur Al Salman's reconstruction and "
+        "apparatus (Dar al-Athariyyah, 2007); he is alive",
+    ),
 ]
 
 

@@ -1,11 +1,11 @@
-source: C:/Users/Asus/AppData/Local/Temp/claude/e--My-Projects-Rafiq-Al-Darb/dec57cc9-c516-45c3-9a43-d7597b6e5802/scratchpad/al_adhkar_nawawi.raw
+source: https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_adhkar_nawawi.json
 edition: المكتبة الشاملة — الأذكار للنووي ت الأرنؤوط، لـالإمام أبو زكريا يحيى بن شرف النووي، دار الفكر للطباعة والنشر والتوزيع، بيروت - لبنان
 pages: 411
 sections cut: 338
 paragraphs kept: 1392  (numbered narrations: 1241)
-dropped as the muhaqqiq's footnotes: 341
-dropped as the muhaqqiq's inserted quotations: 20
-dead footnote markers stripped from an-Nawawi's text: 745
+dropped as the muhaqqiq's footnotes: 0
+dropped as the muhaqqiq's inserted quotations: 2
+dead footnote markers stripped from an-Nawawi's text: 0
 
 --- every section, with its page and its item count ---
   0  p15    25 items  بابٌ مختصر في أحرفٍ مما جاء في فضل الذكر غير مقيّدٍ بوقت
@@ -93,7 +93,7 @@ dead footnote markers stripped from an-Nawawi's text: 745
  82  p125    1 items  بابُ ما يقولُ إذا استصعبَ عليه أمرٌ
  83  p126    1 items  بابُ ما يقولُ إذا تَعَسَّرَتْ عليه معيشتُه
  84  p126    1 items  بابُ ما يقولُه لدفعِ الآفَاتِ
- 85  p126    2 items  بابُ ما يقولُه إذا أصابتهُ نكبةٌ (٢
+ 85  p126    2 items  بابُ ما يقولُه إذا أصابتهُ نكبةٌ قليلةٌ أو كثيرة
  86  p126    1 items  بابُ ما يقولُه إذا كان عليه دينٌ عَجَزَ عنه
  87  p127    2 items  باب ما يقوله من بُلي بالوَحْشة
  88  p127    5 items  بابُ ما يقولُه مَنْ بُلي بالوَسْوَسَة

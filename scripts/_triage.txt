@@ -1,0 +1,48 @@
+al_furusiyyah_al_muhammadiyyah                 kept=91.3   front=0    inside=0    run=0    FILTER — the author's book survives intact
+al_iman_ibn_taymiyyah                          kept=99.7   front=0    inside=0    run=0    FILTER — the author's book survives intact
+al_intisar_li_ahl_al_athar                     kept=96.7   front=0    inside=2    run=1    FILTER — the author's book survives intact
+al_jami_fi_amthal_al_quran                     kept=88.1   front=0    inside=5    run=2    FILTER — the author's book survives intact
+al_musaffa_bi_akuff_ahl_al_rusukh              kept=99.0   front=0    inside=0    run=0    FILTER — the author's book survives intact
+al_radd_ala_man_qala_bi_fana_al_jannah_wal_nar kept=95.9   front=2    inside=0    run=0    FILTER — the author's book survives intact
+al_risalah_al_tabukiyyah                       kept=94.7   front=0    inside=0    run=0    FILTER — the author's book survives intact
+al_uzlah_wal_infirad                           kept=96.1   front=0    inside=3    run=2    FILTER — the author's book survives intact
+as_seerah_ibn_kathir                           kept=96.3   front=0    inside=0    run=0    FILTER — the author's book survives intact
+at_tibyan_hamalat_al_quran                     kept=98.6   front=0    inside=11   run=1    FILTER — the author's book survives intact
+fatya_fi_sighat_al_hamd                        kept=88.6   front=0    inside=0    run=0    FILTER — the author's book survives intact
+hidayat_al_hayara                              kept=96.5   front=0    inside=0    run=0    FILTER — the author's book survives intact
+hijab_al_marah_wa_libasuha_fil_salah           kept=98.5   front=0    inside=0    run=0    FILTER — the author's book survives intact
+huquq_al_al_al_bayt                            kept=97.9   front=0    inside=0    run=0    FILTER — the author's book survives intact
+ighathat_al_lahfan_fi_hukm_talaq_al_ghadban    kept=97.1   front=0    inside=0    run=0    FILTER — the author's book survives intact
+jawab_al_itiradat_al_misriyyah                 kept=95.5   front=0    inside=4    run=2    FILTER — the author's book survives intact
+juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat kept=96.3   front=0    inside=0    run=0    FILTER — the author's book survives intact
+masalah_fi_tawhid_al_falasifah                 kept=99.1   front=0    inside=1    run=1    FILTER — the author's book survives intact
+mukhtasar_minhaj_al_qasidin                    kept=99.0   front=0    inside=0    run=0    FILTER — the author's book survives intact
+nawasikh_al_quran                              kept=98.6   front=1    inside=0    run=0    FILTER — the author's book survives intact
+qaidah_azimah_fil_farq_bayn_ibadat_ahl_al_islam kept=98.7   front=0    inside=0    run=0    FILTER — the author's book survives intact
+qaidah_hasanah_fil_baqiyat_al_salihat          kept=91.3   front=0    inside=0    run=0    FILTER — the author's book survives intact
+qaidah_jalilah_fil_tawassul_wal_wasilah        kept=86.9   front=0    inside=2    run=1    FILTER — the author's book survives intact
+qaidah_mukhtasarah_fi_qital_al_kuffar          kept=87.5   front=0    inside=2    run=1    FILTER — the author's book survives intact
+qisas_al_anbiya_ibn_kathir                     kept=96.5   front=0    inside=0    run=0    FILTER — the author's book survives intact
+raf_al_isr_an_qudat_misr                       kept=99.8   front=0    inside=0    run=0    FILTER — the author's book survives intact
+raf_al_yadayn_fil_salah                        kept=92.4   front=0    inside=2    run=1    FILTER — the author's book survives intact
+risalat_ibn_al_qayyim_ila_ahad_ikhwanih        kept=89.6   front=0    inside=0    run=0    FILTER — the author's book survives intact
+seerat_ibn_hisham                              kept=98.8   front=0    inside=0    run=0    FILTER — the author's book survives intact
+sharh_al_aqidah_al_isfahaniyyah                kept=98.3   front=0    inside=0    run=0    FILTER — the author's book survives intact
+tabaqat_ash_shafiiyyin                         kept=99.9   front=0    inside=0    run=0    FILTER — the author's book survives intact
+tadhkirat_al_arib_fi_tafsir_al_gharib          kept=99.9   front=0    inside=0    run=0    FILTER — the author's book survives intact
+tahrir_alfaz_al_tanbih                         kept=99.8   front=0    inside=0    run=0    FILTER — the author's book survives intact
+tarikh_al_khulafa_suyuti                       kept=97.1   front=0    inside=1    run=1    FILTER — the author's book survives intact
+al_adhkar_nawawi                               kept=82.6   front=0    inside=0    run=0    FILTER, then read the gaps
+al_amthal_fil_quran_ibn_al_qayyim              kept=80.2   front=0    inside=0    run=0    FILTER, then read the gaps
+al_ikhnaiyyah                                  kept=95.0   front=0    inside=3    run=3    FILTER, then read the gaps
+al_kalam_ala_masalat_al_sama                   kept=95.6   front=0    inside=6    run=3    FILTER, then read the gaps
+amar_al_ayan                                   kept=80.9   front=0    inside=7    run=3    FILTER, then read the gaps
+fadl_abi_bakr_al_siddiq                        kept=76.6   front=0    inside=0    run=0    FILTER, then read the gaps
+juz_bay_ummahat_al_awlad                       kept=82.7   front=0    inside=0    run=0    FILTER, then read the gaps
+manasik_al_hajj_ibn_taymiyyah                  kept=82.9   front=0    inside=0    run=0    FILTER, then read the gaps
+nuzhat_al_nazar                                kept=88.4   front=0    inside=3    run=3    FILTER, then read the gaps
+qaidah_dhikr_malabis_al_nabi                   kept=83.0   front=0    inside=0    run=0    FILTER, then read the gaps
+qaidah_fil_inghimas_fil_aduw                   kept=78.5   front=0    inside=0    run=0    FILTER, then read the gaps
+al_ijaz_fi_sharh_sunan_abi_dawud               kept=47.7   front=4    inside=83   run=20   READ IT — the remainder may not be a book any more
+masalah_fil_kanais                             kept=68.3   front=0    inside=5    run=2    READ IT — the remainder may not be a book any more
+umdat_al_ahkam                                 kept=88.8   front=6    inside=14   run=14   READ IT — the remainder may not be a book any more
