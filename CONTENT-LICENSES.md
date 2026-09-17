@@ -391,6 +391,55 @@ trap #18: **a free scan is not automatically free to rehost.** The Taj Company
 That judgement was made once, by rendering the back matter and reading it. It
 has not been made for the five printings above.
 
+### The three printings that state no licence — answered 2026-09-17
+
+Open item 6 asked for their **printed front and back matter** to be rendered
+and read, the way the Taj Company scan was rejected on exactly that evidence
+(CLAUDE.md trap #18: its own last page prints «جملہ حقوق محفوظ» plus a
+copyright warning naming Taj Company Ltd).
+
+**That was done, and the answer is that there is no such matter to read.**
+Page 1 and page 604 of all three were fetched from our own bucket and looked
+at:
+
+| printing | page 1 | page 604 |
+|---|---|---|
+| `tajweed_color` | سورة الفاتحة in its illuminated frame | الإخلاص · الفلق · الناس |
+| `kuwait` | سورة الفاتحة, illuminated opening | الإخلاص · الفلق · الناس |
+| `madinah_night` | سورة الفاتحة, night ground | الإخلاص · الفلق · الناس |
+
+**What we host is the 604 Qur'anic leaves and nothing else** — no title page,
+no imprint, no copyright page, no colophon. Whatever the publishers print on
+those pages, it is not in the set this app redistributes. That is the opposite
+of the Taj finding, and it is the reason those two cases end differently.
+
+**And their archive.org items carry no rights statement either**, which was
+checked through the metadata API rather than by eye:
+
+```
+quraan-colored                  creator  «dar al-m`arifa, Beirut, Lebnon»
+                                (no licenseurl, no rights field)
+QuranMadina35685363568hNight    (no creator, no licenseurl, no rights field)
+```
+
+**Status: `NO_LICENCE_STATED`, and now measured rather than assumed.** What
+stands behind them is the same argument as the library's books, with one
+honest difference stated plainly:
+
+* the Qur'anic text is nobody's property;
+* the **typesetting and illumination of a particular printing can be**, and
+  unlike a book's text there is no way to filter a publisher's frame out of
+  a page image the way an editor's footnotes were filtered out of a book;
+* so these three rest on the absence of any claim — no rights statement on
+  the item, no copyright page in what is hosted — and not on a grant.
+
+That is weaker than مصحف قطر, which was chosen precisely because its item
+**states CC BY-NC-SA 3.0**, and weaker than `hafs_kfqc`, whose polygons are
+CC0. It is recorded here at its real strength rather than at the strength one
+would like it to have.
+
+---
+
 ## 4. Hadith
 
 **What `hadith.db` actually ships — read from the bundled file on 2026-09-17,
@@ -470,10 +519,12 @@ not one grading in the database is anonymous.**
    `test/mushaf_provenance_test.dart`.
 5. ~~hadeethenc.com's terms.~~ **They were read on 2026-09-10**, before
    anything was uploaded, and they permit it.
-6. **`tajweed_color`, `madinah_night` and `kuwait` state no licence.** Render
-   their printed front and back matter and read it, the way the Taj Company
-   scan was rejected on exactly that evidence (CLAUDE.md trap #18). This is now
-   the only open item on the mushaf side.
+6. ~~`tajweed_color`, `madinah_night` and `kuwait` state no licence.~~
+   **Answered 2026-09-17** — their front and back matter was rendered and
+   read, and there is none: what we host is the 604 Qur'anic leaves with no
+   title page, imprint or colophon, and their archive.org items carry no
+   rights field either. See the section above. They remain
+   `NO_LICENCE_STATED`, recorded at their real strength.
 7. **The recitations** on everyayah.com, cdn.islamic.network and mp3quran.net.
 8. ~~The azkar corpus.~~ **Done 2026-09-17.** See below.
 

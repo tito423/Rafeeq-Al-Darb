@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.widget.RemoteViews
 import org.json.JSONArray
 
 /**
@@ -207,6 +208,41 @@ object PrayerCard {
             builder.setWhen(whenMs).setShowWhen(true).setUsesChronometer(true)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 builder.setChronometerCountDown(countDown)
+            }
+
+            // THE COUNTDOWN, WHERE IT CAN BE READ.
+            //
+            // The header chronometer above stays — it is what keeps the card
+            // honest if the custom body is ever dropped by an OEM launcher —
+            // but the platform puts it in the timestamp slot, past the app
+            // name, where it reads as a clock. The owner's own screenshot
+            // shows «52:34» sitting there unrecognised, and I misread it as a
+            // clock too on the first pass. Salatuk draws its own inline, in
+            // red, and that is the whole difference.
+            //
+            // DecoratedCustomViewStyle, not a fully custom notification: the
+            // header, the icon and the action buttons stay the platform's, so
+            // the card still looks like an Android notification on every OEM
+            // skin. Only these two lines are ours.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val body = RemoteViews(ctx.packageName, R.layout.prayer_card)
+                body.setTextViewText(R.id.prayer_card_title, title)
+                body.setTextViewText(R.id.prayer_card_text, text)
+                body.setChronometer(
+                    R.id.prayer_card_countdown,
+                    // The Chronometer's base is elapsedRealtime, while
+                    // `whenMs` is wall clock, so it is converted here on
+                    // every post — the same rebasing the header one needs,
+                    // and the reason a card left up across a clock change
+                    // used to drift.
+                    android.os.SystemClock.elapsedRealtime() +
+                        (whenMs - System.currentTimeMillis()),
+                    null,
+                    true,
+                )
+                body.setChronometerCountDown(R.id.prayer_card_countdown, countDown)
+                builder.setStyle(Notification.DecoratedCustomViewStyle())
+                builder.setCustomContentView(body)
             }
         } else {
             builder.setShowWhen(false)

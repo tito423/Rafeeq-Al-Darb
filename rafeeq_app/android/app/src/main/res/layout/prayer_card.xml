@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The next-prayer card's body, so the countdown can sit INSIDE the text.
+
+  «بربك انا عايز شكل الاشعار بتاعي تيبيكال نفس اشعار صلاتك» (2026-09-17).
+  Android's own `setUsesChronometer` already gave the card a live countdown,
+  and it worked — but the platform puts it in the header's timestamp slot, on
+  the far side of the app name, where it reads as a clock. The owner's own
+  screenshot is the proof: his card showed «52:34» there and he did not
+  recognise it as a countdown at all, and neither did I on first reading.
+  Salatuk draws its own, in the body, in red, with a minus sign, and that is
+  why it is legible.
+
+  A `Chronometer` inside a RemoteViews layout is the only way to do that
+  without the app waking once a second to rewrite the text — which is a
+  battery cost Android throttles anyway.
+
+  DecoratedCustomViewStyle wraps this, so the header, the icon and the action
+  buttons all stay the platform's. Only the two lines of body are ours; that
+  keeps the card looking like an Android notification on whatever OEM skin
+  the phone runs, which a fully custom layout would not.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp">
+
+    <!-- «٦ ربيع الآخر ١٤٤٨ هـ | دبي» -->
+    <TextView
+        android:id="@+id/prayer_card_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textAppearance="@android:style/TextAppearance.Material.Notification.Title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="2dp"
+        android:gravity="center_vertical">
+
+        <!--
+          The countdown. `countDown` is set from code rather than here because
+          the same layout is reused for the hour AFTER an adhan, when the card
+          counts UP from the prayer that came in — that is the owner's own
+          earlier rule («عدّاد تصاعدي … لحد ساعة») and it is unchanged.
+
+          `holo_red_light` rather than a colour of ours: it is legible on both
+          the light and the dark notification grounds, which a fixed hex from
+          the app palette would not be on every OEM skin.
+        -->
+        <Chronometer
+            android:id="@+id/prayer_card_countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_light"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification.Info" />
+
+        <!-- «العشاء، ٧:٥١ م» -->
+        <TextView
+            android:id="@+id/prayer_card_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification.Info" />
+    </LinearLayout>
+</LinearLayout>
