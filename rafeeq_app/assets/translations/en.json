@@ -296,7 +296,14 @@
     "card_expand": "Expand",
     "card_collapse": "Collapse",
     "reciter_legend_fast": "Verified mirror — plays fast",
-    "reciter_legend_stream": "Streams from the CDN"
+    "reciter_legend_stream": "Streams from the CDN",
+    "display_title": "Display",
+    "display_layout": "Verse layout",
+    "display_font": "Text size",
+    "display_page": "The page",
+    "display_reading": "While reading",
+    "display_edition": "The mushaf",
+    "display_hint": "To jump to a surah, juz or page, use the «Go to» button."
   },
   "library": {
     "title": "Library",

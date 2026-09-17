@@ -296,7 +296,14 @@
     "card_expand": "تكبير الكارت",
     "card_collapse": "تصغير الكارت",
     "reciter_legend_fast": "تلاوة محقّقة — تشغيل سريع",
-    "reciter_legend_stream": "بث من الإنترنت"
+    "reciter_legend_stream": "بث من الإنترنت",
+    "display_title": "العرض",
+    "display_layout": "تخطيط الآيات",
+    "display_font": "حجم الخط",
+    "display_page": "الصفحة",
+    "display_reading": "أثناء القراءة",
+    "display_edition": "المصحف",
+    "display_hint": "للانتقال إلى سورة أو جزء أو صفحة استخدم زر «الانتقال»."
   },
   "library": {
     "title": "المكتبة",

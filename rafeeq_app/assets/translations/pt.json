@@ -296,7 +296,14 @@
     "card_expand": "Ampliar",
     "card_collapse": "Reduzir",
     "reciter_legend_fast": "Cópia verificada — toca rápido",
-    "reciter_legend_stream": "Transmissão pelo CDN"
+    "reciter_legend_stream": "Transmissão pelo CDN",
+    "display_title": "Exibição",
+    "display_layout": "Disposição dos versículos",
+    "display_font": "Tamanho do texto",
+    "display_page": "A página",
+    "display_reading": "Durante a leitura",
+    "display_edition": "O mushaf",
+    "display_hint": "Para ir a uma sura, juz ou página, use o botão «Ir para»."
   },
   "library": {
     "title": "Biblioteca",

@@ -1,29 +1,40 @@
-/// Every action the mushaf reader offers, in one place.
+/// The mushaf reader's bar: the four things a reader does WHILE reading.
 ///
-/// This was two hundred lines nested eight levels deep inside
-/// `quran_screen.dart`'s `build`, between a `PreferredSize` and a
-/// `TweenAnimationBuilder` — which is why the three "text mushaf only"
-/// conditions on it had drifted into three different shapes, and why nothing
-/// could be said about the bar without reading the whole screen.
+/// It used to be eleven captioned tiles in a two-row `Wrap` — layout, smaller,
+/// larger, auto-scroll, recitation, themes, full screen, search, surahs, juz,
+/// jump, editions, mode — and the owner's verdict on 2026-09-17 was «شكلهم
+/// بدائي اوي». Three separate faults, only one of them cosmetic:
 ///
-/// It takes what it draws and calls back for what it changes; it holds no
-/// state of its own. `ConsumerWidget` rather than plain `StatelessWidget`
-/// because two of the actions (the verse layout and the edition mode) read
-/// and write providers directly, exactly as they did in the screen.
+///  1. **Three of the eleven opened the same sheet.** «السور», «الجزء» and
+///     «الانتقال» all call `showJumpSheet`, which has been one sheet with
+///     three tabs since «خلي زر الانتقال يديني خيارات إلى سورة أو صفحة أو جزء
+///     مباشرة». Two of those buttons were duplicates of the third.
+///  2. **Settings and actions were mixed.** «اقرأ الآن» sits beside «حجم
+///     الخط»; one is something you do, the other is something you configure,
+///     and they were the same size and shape.
+///  3. The bar spent roughly a quarter of the phone's height, permanently, on
+///     the one tab whose whole purpose is to show the Qur'an.
+///
+/// So: four actions stay — **انتقال، بحث، استماع، عرض** — and every setting
+/// moved into `showQuranDisplaySheet`, where it is grouped and shows its
+/// current value instead of only a verb.
+///
+/// The guided tour's anchors all survive. `quranJump`, `quranSearch` and
+/// `quranRecite` stay on their own buttons; `quranLayout`, `quranFont`,
+/// `quranTheme`, `quranFullScreen` and `quranEditions` now nest on «عرض»,
+/// which is exactly where those settings live, so the tour spotlights the
+/// button that opens them rather than pointing at nothing.
 library;
 
-import '../../../../../core/config/app_config.dart';
 import '../../../../../core/widgets/toolbar_action.dart';
 import '../../../../search/presentation/screens/search_screen.dart';
 import '../../../data/mushaf_data_provider.dart';
-import '../../../data/mushaf_edition.dart';
-import '../../../data/text_layout_provider.dart';
 import '../../widgets/mushaf_nav_sheets.dart';
-import '../../widgets/mushaf_theme_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../tutorial/data/tutorial_anchors.dart';
+import 'quran_display_sheet.dart';
 import 'toolbar_strip.dart';
 
 class MushafToolbar extends ConsumerWidget {
@@ -43,6 +54,7 @@ class MushafToolbar extends ConsumerWidget {
   final bool autoScroll;
   final bool reciteActive;
   final bool pageFillScreen;
+  final double fontScale;
 
   final MushafData data;
   final int current;
@@ -67,6 +79,7 @@ class MushafToolbar extends ConsumerWidget {
     required this.autoScroll,
     required this.reciteActive,
     required this.pageFillScreen,
+    required this.fontScale,
     required this.data,
     required this.current,
     required this.totalPages,
@@ -82,9 +95,7 @@ class MushafToolbar extends ConsumerWidget {
   });
 
   /// True for the actions that only mean anything on the reflowable text
-  /// mushaf: the verse layout, the font size, auto-scroll, the continuous
-  /// recitation and the page theme. The image mode does not draw the thing
-  /// any of them changes.
+  /// mushaf. The image mode does not draw the thing any of them changes.
   bool get _textOnly => textMode && !isRaster;
 
   @override
@@ -92,97 +103,27 @@ class MushafToolbar extends ConsumerWidget {
     return ToolbarStrip(
       compact: compact,
       children: [
-        if (_textOnly) ...[
-          // Three verse layouts now, all of them real reading preferences,
-          // so this cycles rather than flips — and it is labelled with the
-          // one it will GIVE you, not the one you are in.
-          TutorialAnchor(
-            id: TourAnchor.quranLayout,
-            child: ToolbarAction(
-              icon: switch (ref.read(quranTextLayoutProvider.notifier).next) {
-                QuranTextLayout.page => Icons.article_rounded,
-                QuranTextLayout.cards => Icons.view_agenda_rounded,
-                QuranTextLayout.reading => Icons.chrome_reader_mode_rounded,
-              },
-              label: switch (ref.read(quranTextLayoutProvider.notifier).next) {
-                QuranTextLayout.page => 'quran.layout_page'.tr(),
-                QuranTextLayout.cards => 'quran.layout_cards'.tr(),
-                QuranTextLayout.reading => 'quran.layout_reading'.tr(),
-              },
-              onPressed: () =>
-                  ref.read(quranTextLayoutProvider.notifier).toggle(),
-            ),
-          ),
-          ToolbarAction(
-            icon: Icons.text_decrease_rounded,
-            label: 'quran.font_smaller'.tr(),
-            onPressed: () => onFontScale(-0.1),
-          ),
-          TutorialAnchor(
-            id: TourAnchor.quranFont,
-            child: ToolbarAction(
-              icon: Icons.text_increase_rounded,
-              label: 'quran.font_larger'.tr(),
-              onPressed: () => onFontScale(0.1),
-            ),
-          ),
-          ToolbarAction(
-            icon: autoScroll
-                ? Icons.pause_circle_outline
-                : Icons.play_circle_outline,
-            label: autoScroll
-                ? 'quran.auto_scroll_stop'.tr()
-                : 'quran.auto_scroll'.tr(),
-            onPressed: onToggleAutoScroll,
-          ),
-          // Continuous recitation lives in the text mushaf only, in every
-          // layout and theme — «شيل التلاوة المستمرة خالص من المصحف المصوّر».
-          // The Tajweed printing highlighted 4:3 on page 77 a line low, so
-          // the image page does not offer it at all.
-          TutorialAnchor(
-            id: TourAnchor.quranRecite,
-            child: ToolbarAction(
-              icon: reciteActive
-                  ? Icons.stop_circle_rounded
-                  : Icons.headphones_rounded,
-              label: reciteActive
-                  ? 'quran.recite_stop'.tr()
-                  : 'quran.recite_continuous'.tr(),
-              onPressed: onToggleRecite,
-            ),
-          ),
-          // The paper. It lived only in Settings, four taps and a different
-          // tab away from the page whose colour it changes — which is why the
-          // owner reported the app had no black reading page while shipping
-          // five of them. Khatmah puts it behind a gear on the reading screen
-          // itself; so do we. Text mushaf only: «شيل ثيمات المصحف النصي من
-          // المصحف المصوّر» — it recolours a page the image mode does not draw.
-          TutorialAnchor(
-            id: TourAnchor.quranTheme,
-            child: Builder(
-              builder: (tileContext) => ToolbarAction(
-                icon: Icons.palette_outlined,
-                label: 'mushaf_theme.title'.tr(),
-                onPressed: () =>
-                    MushafThemePicker.show(context, origin: tileContext),
-              ),
-            ),
-          ),
-        ],
-        // P3‑43 #6: NOT in the text-only block above — full-screen reading is
-        // a real, useful mode for the image mushaf too.
+        // ── انتقال ── one sheet, three tabs: surah, juz, page. This absorbed
+        // the two buttons that used to sit beside it opening the same thing.
         TutorialAnchor(
-          id: TourAnchor.quranFullScreen,
+          id: TourAnchor.quranJump,
           child: ToolbarAction(
-            icon: pageFillScreen
-                ? Icons.fullscreen_exit_rounded
-                : Icons.fullscreen_rounded,
-            label: pageFillScreen
-                ? 'quran.page_fit_small'.tr()
-                : 'quran.page_fit_full'.tr(),
-            onPressed: onTogglePageFill,
+            icon: Icons.menu_book_rounded,
+            label: 'quran.jump_to'.tr(),
+            onPressed: () => showJumpSheet(
+              context,
+              surahs: canIndexBySurah ? data.surahs : const [],
+              surahStartPages: data.surahStartPages,
+              juzStartPages: data.juzStartPages,
+              current: current,
+              totalPages: totalPages,
+              onSurahPage: (page) =>
+                  onNavigateFromIndex(page, surahStart: true),
+              onPage: (page) => onNavigateFromIndex(page),
+            ),
           ),
         ),
+        // ── بحث ──
         TutorialAnchor(
           id: TourAnchor.quranSearch,
           child: ToolbarAction(
@@ -198,76 +139,58 @@ class MushafToolbar extends ConsumerWidget {
             },
           ),
         ),
-        if (canIndexBySurah)
-          ToolbarAction(
-            icon: Icons.format_list_bulleted_rounded,
-            label: 'quran.surah_list'.tr(),
-            onPressed: () => showSurahSheet(
-              context,
-              surahs: data.surahs,
-              startPages: data.surahStartPages,
-              onSelect: (page) => onNavigateFromIndex(page, surahStart: true),
+        // ── استماع ── text mushaf only: the Tajweed printing highlighted
+        // 4:3 on page 77 a line low, so the image page does not offer it.
+        if (_textOnly)
+          TutorialAnchor(
+            id: TourAnchor.quranRecite,
+            child: ToolbarAction(
+              icon: reciteActive
+                  ? Icons.stop_circle_rounded
+                  : Icons.headphones_rounded,
+              label: reciteActive
+                  ? 'quran.recite_stop'.tr()
+                  : 'quran.recite_continuous'.tr(),
+              active: reciteActive,
+              onPressed: onToggleRecite,
             ),
           ),
-        if (canIndexBySurah)
-          ToolbarAction(
-            icon: Icons.layers_rounded,
-            label: 'quran.juz'.tr(),
-            onPressed: () => showJuzSheet(
-              context,
-              juzStartPages: data.juzStartPages,
-              onSelect: (page) => onNavigateFromIndex(page),
-            ),
-          ),
+        // ── عرض ── everything that is a setting rather than an action.
+        // The four tour anchors whose buttons moved in here are nested on it,
+        // so every step of the Qur'an chapter still has something to point at.
         TutorialAnchor(
-          id: TourAnchor.quranJump,
-          child: ToolbarAction(
-            icon: Icons.numbers_rounded,
-            label: 'quran.jump_to'.tr(),
-            // «خلي زر الانتقال يديني خيارات إلى سورة أو صفحة أو جزء مباشرة».
-            onPressed: () => showJumpSheet(
-              context,
-              surahs: canIndexBySurah ? data.surahs : const [],
-              surahStartPages: data.surahStartPages,
-              juzStartPages: data.juzStartPages,
-              current: current,
-              totalPages: totalPages,
-              onSurahPage: (page) =>
-                  onNavigateFromIndex(page, surahStart: true),
-              onPage: (page) => onNavigateFromIndex(page),
+          id: TourAnchor.quranLayout,
+          child: TutorialAnchor(
+            id: TourAnchor.quranFont,
+            child: TutorialAnchor(
+              id: TourAnchor.quranTheme,
+              child: TutorialAnchor(
+                id: TourAnchor.quranFullScreen,
+                child: TutorialAnchor(
+                  id: TourAnchor.quranEditions,
+                  child: ToolbarAction(
+                    icon: Icons.tune_rounded,
+                    label: 'quran.display_title'.tr(),
+                    active: pageFillScreen || autoScroll,
+                    onPressed: () => showQuranDisplaySheet(
+                      context,
+                      textMode: textMode,
+                      isRaster: isRaster,
+                      autoScroll: autoScroll,
+                      pageFillScreen: pageFillScreen,
+                      fontScale: fontScale,
+                      onFontScale: onFontScale,
+                      onToggleAutoScroll: onToggleAutoScroll,
+                      onTogglePageFill: onTogglePageFill,
+                      onPickEdition: onPickEdition,
+                      onEnterImageView: onEnterImageView,
+                      onLeaveImageView: onLeaveImageView,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-        TutorialAnchor(
-          id: TourAnchor.quranEditions,
-          child: ToolbarAction(
-            icon: Icons.auto_stories_rounded,
-            label: 'quran.editions'.tr(),
-            onPressed: onPickEdition,
-          ),
-        ),
-        // A raster printing is a finished scan with no reflowable text of its
-        // own — but the button is still shown, because hiding it left a reader
-        // who had picked one of those printings with no way back to the text
-        // reader at all. On a raster edition it switches back to the default
-        // text edition as well as the mode.
-        ToolbarAction(
-          icon: _textOnly ? Icons.image_rounded : Icons.notes_rounded,
-          label: _textOnly
-              ? 'quran.mushaf_mode'.tr()
-              : 'quran.text_mode'.tr(),
-          onPressed: () {
-            if (isRaster) {
-              ref
-                  .read(selectedMushafEditionProvider.notifier)
-                  .select(AppConfig.defaultMushafEdition);
-              onLeaveImageView();
-            } else if (textMode) {
-              onEnterImageView();
-            } else {
-              onLeaveImageView();
-            }
-          },
         ),
       ],
     );

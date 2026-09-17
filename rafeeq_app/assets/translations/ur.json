@@ -296,7 +296,14 @@
     "card_expand": "بڑا کریں",
     "card_collapse": "چھوٹا کریں",
     "reciter_legend_fast": "تصدیق شدہ کاپی — تیز چلتی ہے",
-    "reciter_legend_stream": "انٹرنیٹ سے اسٹریم"
+    "reciter_legend_stream": "انٹرنیٹ سے اسٹریم",
+    "display_title": "نمائش",
+    "display_layout": "آیات کی ترتیب",
+    "display_font": "متن کا سائز",
+    "display_page": "صفحہ",
+    "display_reading": "دورانِ مطالعہ",
+    "display_edition": "مصحف",
+    "display_hint": "کسی سورت، پارے یا صفحے پر جانے کے لیے «انتقال» کا بٹن استعمال کریں۔"
   },
   "library": {
     "title": "کتب خانہ",

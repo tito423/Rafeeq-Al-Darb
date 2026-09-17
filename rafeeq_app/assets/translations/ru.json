@@ -296,7 +296,14 @@
     "card_expand": "Развернуть",
     "card_collapse": "Свернуть",
     "reciter_legend_fast": "Проверенная копия — быстрое воспроизведение",
-    "reciter_legend_stream": "Потоком из сети"
+    "reciter_legend_stream": "Потоком из сети",
+    "display_title": "Отображение",
+    "display_layout": "Расположение аятов",
+    "display_font": "Размер текста",
+    "display_page": "Страница",
+    "display_reading": "Во время чтения",
+    "display_edition": "Мусхаф",
+    "display_hint": "Чтобы перейти к суре, джузу или странице, нажмите «Перейти»."
   },
   "library": {
     "title": "Библиотека",

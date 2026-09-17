@@ -296,7 +296,14 @@
     "card_expand": "Agrandir",
     "card_collapse": "Réduire",
     "reciter_legend_fast": "Copie vérifiée — lecture rapide",
-    "reciter_legend_stream": "Diffusé depuis le CDN"
+    "reciter_legend_stream": "Diffusé depuis le CDN",
+    "display_title": "Affichage",
+    "display_layout": "Disposition des versets",
+    "display_font": "Taille du texte",
+    "display_page": "La page",
+    "display_reading": "Pendant la lecture",
+    "display_edition": "Le mushaf",
+    "display_hint": "Pour aller à une sourate, un juz ou une page, utilisez « Aller à »."
   },
   "library": {
     "title": "Bibliothèque",

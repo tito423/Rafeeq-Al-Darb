@@ -33,6 +33,10 @@ void main() {
         'the Arabic-Indic numeral faces, drawn only when the reader picks them',
     'lib/features/quran/presentation/widgets/mushaf_theme_picker.dart':
         'the ayah drawn in the theme preview',
+    'lib/features/quran/presentation/widgets/mushaf/quran_display_sheet.dart':
+        'the ayah drawn in the text-size preview — the control sizes Qur\'anic '
+            'script, so the sample has to BE that script whatever language '
+            'the interface is in',
     'lib/features/settings/presentation/widgets/non_arabic_reading_card.dart':
         'the ayah shown in the transliteration preview',
     'lib/features/tajweed/presentation/screens/jazariyyah_level_screen.dart':

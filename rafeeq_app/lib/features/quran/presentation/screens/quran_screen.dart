@@ -95,8 +95,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// controls undiscoverable.
   bool _toolbarVisible = true;
 
-  /// The height the toolbar actually laid out at. 116 is the old constant,
-  /// kept as the first-frame estimate only.
+  /// First-frame estimate only; the bar reports its real height on layout.
   double _toolbarHeight = 116;
 
   /// P3‑41: "give option so I can change page from small to full fit of
@@ -703,16 +702,16 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               title: _toolbarLandscape(context)
                   ? null
                   : Text('nav.quran'.tr()),
-              // P3‑34 built this as a single horizontal-scroll row; P3‑41's
-              // real-device feedback was that this "takes place from the
-              // screen" — a long scrolling strip hides most actions until you
-              // scroll to find them. Two changes: a `Wrap` instead of a
-              // `SingleChildScrollView(Row)` so every action is visible at
-              // once across as many rows as it naturally takes (no more
-              // hidden-until-scrolled icons), and the whole thing collapses to
-              // nothing when `_toolbarVisible` is false (tapping the page
-              // itself toggles it — see `_buildViewer`), handing that space
-              // back to the page.
+              // P3‑34 made this one scrolling row; P3‑41 made it a `Wrap` so
+              // nothing hid until you scrolled. With thirteen actions that
+              // was two rows and ~116 logical pixels, permanently, on the tab
+              // whose job is to show the Qur'an — «شكلهم بدائي اوي»
+              // (2026-09-17), and right about more than the look: three of
+              // them opened the SAME sheet and none said what it was set to.
+              // It now carries the four things done WHILE reading and every
+              // setting moved to `showQuranDisplaySheet`. See
+              // `mushaf_toolbar.dart`. It still collapses to nothing when
+              // `_toolbarVisible` is false (tapping the page toggles it).
               // LANDSCAPE. A phone in landscape is about 393 logical pixels
               // tall in total. This bar was a fixed 116 of them — two wrapped
               // rows of captioned actions — which, with the 56pt title above
@@ -744,6 +743,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                         autoScroll: _autoScroll,
                         reciteActive: _recite.active,
                         pageFillScreen: _pageFillScreen,
+                        fontScale: _fontScale,
                         data: mushaf.value!,
                         current: _current,
                         totalPages: _totalPages,
