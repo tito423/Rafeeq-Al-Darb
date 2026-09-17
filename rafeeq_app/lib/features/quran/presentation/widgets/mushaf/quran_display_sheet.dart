@@ -25,6 +25,7 @@
 library;
 
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -364,7 +365,8 @@ class _FontRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${(scale * 100).round()}%',
+                  localizeDigits('${(scale * 100).round()}%',
+                      context.locale.languageCode),
                   style: TextStyle(
                     fontSize: 11,
                     color: scheme.onSurfaceVariant,

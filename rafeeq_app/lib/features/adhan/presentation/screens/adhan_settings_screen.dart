@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -382,10 +383,8 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                               value: m,
                               child: Text(
                                 m < 60
-                                    ? 'prayer.every_minutes'
-                                        .tr(args: ['$m'])
-                                    : 'prayer.every_hours'
-                                        .tr(args: ['${m ~/ 60}']),
+                                    ? trn('prayer.every_minutes', args: ['$m'])
+                                    : trn('prayer.every_hours', args: ['${m ~/ 60}']),
                               ),
                             ),
                         ],

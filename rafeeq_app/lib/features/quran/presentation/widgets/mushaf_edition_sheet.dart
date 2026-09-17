@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -151,8 +152,8 @@ class _EditionTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    '${'quran.pages_count'.plural(edition.pages)} · '
-                    '${'quran.ayahs_count'.plural(edition.ayahs)}',
+                    '${pluralN('quran.pages_count', edition.pages)} · '
+                    '${pluralN('quran.ayahs_count', edition.ayahs)}',
                     style: theme.textTheme.labelSmall
                         ?.copyWith(color: theme.colorScheme.outline),
                   ),

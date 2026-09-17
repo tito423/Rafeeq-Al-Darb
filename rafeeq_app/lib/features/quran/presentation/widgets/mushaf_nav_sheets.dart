@@ -116,7 +116,7 @@ void showSurahSheet(
                       textAlign: TextAlign.right,
                     ),
                     subtitle: Text(
-                      '${'quran.ayahs'.plural(s.ayahsCount)} — '
+                      '${pluralN('quran.ayahs', s.ayahsCount)} — '
                       '${s.revelationType == 'Meccan' ? 'quran.makkah'.tr() : 'quran.madinah'.tr()}'
                       '  •  ${'quran.page'.tr()} ${startPages[s.id] ?? 1}',
                       textAlign: TextAlign.right,

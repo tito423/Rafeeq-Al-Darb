@@ -2,6 +2,7 @@
 /// chapters and the search across them.
 library;
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/future_view.dart';
@@ -464,12 +465,12 @@ class _HadithBookTile extends StatelessWidget {
                   // where 97 takes the genitive plural, «97 глав».
                   _CountChip(
                     icon: Icons.format_list_numbered_rounded,
-                    text: 'library.hadiths_count'.plural(book.hadithCount),
+                    text: pluralN('library.hadiths_count', book.hadithCount),
                   ),
                   const SizedBox(width: 8),
                   _CountChip(
                     icon: Icons.bookmarks_outlined,
-                    text: 'library.chapters'.plural(book.chapterCount),
+                    text: pluralN('library.chapters', book.chapterCount),
                   ),
                 ],
               ),

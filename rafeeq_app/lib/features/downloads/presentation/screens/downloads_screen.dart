@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -453,7 +454,7 @@ class _StorageHero extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'downloads.items'.plural(summary.totalItems),
+            pluralN('downloads.items', summary.totalItems),
             style: TextStyle(color: low, fontSize: 12),
           ),
           if (total > 0) ...[
@@ -837,8 +838,8 @@ class _RepairButtonState extends ConsumerState<_RepairButton> {
     // «لا يوجد ما يُصلَح» after freeing eleven stuck slots is a lie the owner
     // had every reason to read as the button doing nothing.
     final parts = <String>[
-      if (freed > 0) 'downloads.repair_unjammed'.tr(args: ['$freed']),
-      if (resumed > 0) 'downloads.repair_resumed'.tr(args: ['$resumed']),
+      if (freed > 0) trn('downloads.repair_unjammed', args: ['$freed']),
+      if (resumed > 0) trn('downloads.repair_resumed', args: ['$resumed']),
     ];
     messenger.showSnackBar(
       SnackBar(

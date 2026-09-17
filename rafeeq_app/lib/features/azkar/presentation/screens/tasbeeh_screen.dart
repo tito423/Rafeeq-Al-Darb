@@ -1,7 +1,7 @@
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (ltr/rtl) the long-dhikr cards need.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
-import '../../../../core/utils/digits.dart' show localizeDigits;
+import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

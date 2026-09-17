@@ -21,6 +21,7 @@
 library;
 
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -148,7 +149,8 @@ class _LevelCard extends StatelessWidget {
                     child: complete
                         ? const Icon(Icons.check, size: 19, color: Colors.black)
                         : Text(
-                            '$number',
+                            localizeDigits(
+                                '$number', context.locale.languageCode),
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w800,
@@ -196,14 +198,17 @@ class _LevelCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'tajweed.lessons_count'.plural(total),
+                    localizeDigits('tajweed.lessons_count'.plural(total),
+                        context.locale.languageCode),
                     style: theme.textTheme.labelSmall
                         ?.copyWith(color: scheme.onSurfaceVariant),
                   ),
                   const Spacer(),
                   Text(
-                    'tajweed.progress'
-                        .tr(namedArgs: {'done': '$done', 'total': '$total'}),
+                    localizeDigits(
+                        'tajweed.progress'.tr(
+                            namedArgs: {'done': '$done', 'total': '$total'}),
+                        context.locale.languageCode),
                     style: theme.textTheme.labelSmall
                         ?.copyWith(color: scheme.onSurfaceVariant),
                   ),

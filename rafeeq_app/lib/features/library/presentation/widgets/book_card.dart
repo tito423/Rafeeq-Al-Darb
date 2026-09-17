@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart' show localizeDigits;
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/i18n/proper_name.dart';

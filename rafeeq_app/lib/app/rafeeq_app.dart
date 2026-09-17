@@ -1,4 +1,5 @@
 import '../core/widgets/arrow_scrollbar.dart';
+import '../core/utils/digits.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,6 +45,11 @@ class RafeeqApp extends ConsumerWidget {
     // has `context.locale`; scheduled off the frame because it writes provider
     // state and touches SharedPreferences.
     final localeCode = context.locale.languageCode;
+    // The numerals `trn()`/`pluralN()` shape. Set HERE, synchronously in
+    // build and not in the post-frame callback below, because descendants
+    // format strings during this very frame - a value one frame stale would
+    // render the first screen after a language change in the old numerals.
+    uiLanguageCode = localeCode;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(syncServiceProvider).init();
       ref.read(selectedTranslationLangProvider.notifier)

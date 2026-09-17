@@ -1,4 +1,5 @@
 import 'dart:math';
+import '../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -71,9 +72,9 @@ class QuoteReminderSection extends ConsumerWidget {
                           style: theme.textTheme.bodyMedium),
                       Text(
                         library.maybeWhen(
-                          data: (lib) => 'quotes.reminder_desc'.tr(namedArgs: {
-                            'count': 'quotes.count'.plural(lib.total),
-                            'books': 'quotes.books'.plural(lib.books.length),
+                          data: (lib) => trn('quotes.reminder_desc', namedArgs: {
+                            'count': pluralN('quotes.count', lib.total),
+                            'books': pluralN('quotes.books', lib.books.length),
                           }),
                           orElse: () => 'quotes.reminder_desc_plain'.tr(),
                         ),
@@ -107,7 +108,7 @@ class QuoteReminderSection extends ConsumerWidget {
             if (minutes > 0) ...[
               const SizedBox(height: 6),
               Text(
-                'quotes.window_note'.tr(namedArgs: {
+                trn('quotes.window_note', namedArgs: {
                   'n': '${QuoteReminderService.slotCount(minutes)}',
                 }),
                 style: theme.textTheme.labelSmall
@@ -150,8 +151,8 @@ class QuoteReminderSection extends ConsumerWidget {
   /// «٣٠ دقيقة» / «ساعتان» — an interval reads better as hours once it is one.
   String _label(int minutes) {
     if (minutes % 60 == 0) {
-      return 'quotes.hours'.plural(minutes ~/ 60);
+      return pluralN('quotes.hours', minutes ~/ 60);
     }
-    return 'quotes.minutes'.plural(minutes);
+    return pluralN('quotes.minutes', minutes);
   }
 }

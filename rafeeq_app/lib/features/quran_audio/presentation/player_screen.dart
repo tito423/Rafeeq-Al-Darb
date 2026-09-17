@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import '../../../core/utils/digits.dart';
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -808,7 +809,7 @@ class _Extras extends StatelessWidget {
           Text(
             player.sleepMode == SleepMode.endOfTrack
                 ? 'quran_audio.sleep_end_of_track'.tr()
-                : 'quran_audio.sleep_at'.tr(args: [
+                : trn('quran_audio.sleep_at', args: [
                     DateFormat.Hm(context.locale.languageCode).format(player.sleepAt!),
                   ]),
             style: TextStyle(color: t.accentSoft, fontSize: 12),
@@ -880,7 +881,7 @@ class _Extras extends StatelessWidget {
             for (final m in const [15, 30, 45, 60, 90])
               ListTile(
                 leading: Icon(Icons.timer_outlined, color: theme.accentSoft),
-                title: Text('quran_audio.sleep_minutes'.tr(args: ['$m'])),
+                title: Text(trn('quran_audio.sleep_minutes', args: ['$m'])),
                 onTap: () {
                   player.setSleep(SleepMode.timer, after: Duration(minutes: m));
                   Navigator.pop(ctx);

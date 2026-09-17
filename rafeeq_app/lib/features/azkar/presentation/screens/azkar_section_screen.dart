@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart' show localizeDigits;
+import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

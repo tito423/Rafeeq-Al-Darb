@@ -39,6 +39,8 @@
 ///    this.
 library;
 
+import 'package:easy_localization/easy_localization.dart';
+
 const String _latin = '0123456789';
 const String _arabicIndic = '٠١٢٣٤٥٦٧٨٩';
 const String _extendedArabicIndic = '۰۱۲۳۴۵۶۷۸۹';
@@ -74,3 +76,43 @@ String localizeDigits(String text, String localeCode) {
   }
   return b.toString();
 }
+
+/// The language the UI is currently rendering in, for the two helpers below.
+///
+/// WHY A GLOBAL, when `context.locale.languageCode` is right there. Because
+/// the defect this exists to kill was systemic, not local: **fifty-five**
+/// call sites printed a number into an Arabic sentence with Latin digits, and
+/// they were being found one screen at a time by opening the app and looking.
+/// The library authors list put both systems on a single row — the author's
+/// name «(٧٠١ - ٧٧٤ هـ)» carries Arabic-Indic digits from the catalogue, and
+/// the line beneath it read «توفي 774 هـ ▪ 11 كتابًا». Patching each site by
+/// hand is exactly how the previous fifteen were missed.
+///
+/// Several of those sites are not widgets and have no `BuildContext` at all —
+/// `BookEntry.deathLabel()` in the data layer, `surahLabel()` in
+/// `audio_common.dart` — so a context-based helper could not have covered
+/// them, and threading a locale parameter through the data layer to format a
+/// numeral is worse than this.
+///
+/// It is written from exactly one place: `RafeeqApp.build`, which is the one
+/// widget that rebuilds on every locale change and the same seam that already
+/// drives `appLocaleProvider` and the reader's translation language. It is
+/// read-only everywhere else.
+String uiLanguageCode = 'ar';
+
+/// `.tr()` with the reader's own numerals.
+///
+/// Use in place of `key.tr(...)` wherever the result can contain a number.
+String trn(String key, {List<String>? args, Map<String, String>? namedArgs}) =>
+    localizeDigits(
+        key.tr(args: args, namedArgs: namedArgs), uiLanguageCode);
+
+/// `.plural()` with the reader's own numerals.
+///
+/// Keeps easy_localization's CLDR plural selection intact — Arabic has six
+/// categories and «١٠ دقائق» is not «١٠ دقيقة» (trap #30) — and only maps the
+/// digits afterwards.
+String pluralN(String key, num value,
+        {List<String>? args, Map<String, String>? namedArgs}) =>
+    localizeDigits(
+        key.plural(value, args: args, namedArgs: namedArgs), uiLanguageCode);

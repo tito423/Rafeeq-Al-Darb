@@ -2,6 +2,7 @@
 // shadows the dart:ui one (ltr/rtl) this file uses — hide it (same fix as
 // ayah_sciences_sheet.dart, see HANDOVER §7).
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1080,7 +1081,7 @@ class _SearchSheetState extends State<_SearchSheet> {
                 child: Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(
-                    'library.text_search_results'.plural(_hits.length),
+                    pluralN('library.text_search_results', _hits.length),
                     style: TextStyle(
                         color: scheme.onSurfaceVariant, fontSize: 12),
                   ),

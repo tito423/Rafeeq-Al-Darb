@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import '../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +199,7 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'quran_audio.downloaded_of'.tr(args: [ltr('$done'), ltr('$total')]),
+                                    trn('quran_audio.downloaded_of', args: [ltr('$done'), ltr('$total')]),
                                     style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
@@ -230,7 +231,7 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'quran_audio.now_downloading_list'.tr(args: [
+                                      trn('quran_audio.now_downloading_list', args: [
                                         [
                                           for (final (surah, progress) in now)
                                             '${surahTitle(data, surah, locale)} ${ltr('${(progress * 100).round()}%')}',

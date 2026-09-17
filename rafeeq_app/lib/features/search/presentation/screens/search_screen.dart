@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 
 // easy_localization re-exports package:intl, whose TextDirection collides
 // with dart:ui's — and the ayah highlighter below needs dart:ui's.
@@ -221,7 +222,7 @@ class _KeywordTab extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    'search.results_count'.plural(results!.length),
+                    pluralN('search.results_count', results!.length),
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColors.gold,
@@ -474,13 +475,13 @@ class _TopicsTabState extends State<_TopicsTab> {
                 return ListView(
                   children: [
                     _header(context,
-                        'search.topic_selected'.tr(args: ['${r.curated.length}'])),
+                        trn('search.topic_selected', args: ['${r.curated.length}'])),
                     for (final a in r.curated) ...[
                       _tile(a, label, null),
                       const Divider(height: 1),
                     ],
                     _header(context,
-                        'search.topic_all'.tr(args: ['${r.all.length}'])),
+                        trn('search.topic_all', args: ['${r.all.length}'])),
                     for (final a in r.all) ...[
                       _tile(a, label, test),
                       const Divider(height: 1),

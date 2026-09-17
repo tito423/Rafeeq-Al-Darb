@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import '../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -228,7 +229,7 @@ class _KhatmaTile extends ConsumerWidget {
                             size: 14, color: gold),
                         const SizedBox(width: 2),
                         Text(
-                          'khatma.streak'.tr(args: ['${khatma.streak}']),
+                          trn('khatma.streak', args: ['${khatma.streak}']),
                           style:
                               theme.textTheme.labelSmall?.copyWith(color: gold),
                         ),
@@ -328,7 +329,7 @@ class _KhatmaTile extends ConsumerWidget {
                         )
                       : FilledButton(
                           onPressed: onReadToday,
-                          child: Text('khatma.read_today'.tr(args: ['$due'])),
+                          child: Text(trn('khatma.read_today', args: ['$due'])),
                         ),
                 ),
               ],
@@ -395,7 +396,7 @@ String _quarterLabel(int n) {
     case 4:
       return 'khatma.quarter_4_hizb'.tr();
     default:
-      return 'khatma.quarter_n'.tr(args: ['$n']);
+      return trn('khatma.quarter_n', args: ['$n']);
   }
 }
 
@@ -666,7 +667,7 @@ class _StartStep extends StatelessWidget {
             for (var j = 1; j <= 30; j++)
               DropdownMenuItem(
                 value: 'j$j',
-                child: Text('khatma.juz_label'.tr(args: ['$j'])),
+                child: Text(trn('khatma.juz_label', args: ['$j'])),
               ),
             // «وزود من اي سورة». The names come from the mushaf data, so
             // they are the same ones the reader sees everywhere else.

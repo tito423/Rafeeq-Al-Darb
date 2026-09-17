@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../core/utils/digits.dart';
 
 import '../../../core/i18n/proper_name.dart';
 
@@ -164,7 +165,7 @@ class LibraryBook {
   /// the page count is a number. So they share one key instead of 197.
   String description() => descKey.isNotEmpty
       ? descKey.tr()
-      : 'library.book_desc_generated'.tr(args: [
+      : trn('library.book_desc_generated', args: [
           properName(authorAr, authorEn),
           '$pages',
           category.labelKey.tr(),

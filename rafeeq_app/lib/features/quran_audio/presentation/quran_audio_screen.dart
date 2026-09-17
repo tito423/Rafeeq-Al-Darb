@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -236,7 +237,7 @@ class _LibraryTab extends ConsumerWidget {
                   leading: const Icon(Icons.folder_rounded, color: AppColors.gold, size: 30),
                   title: Text(group.first.reciterName, style: const TextStyle(fontWeight: FontWeight.w800)),
                   subtitle: Text(
-                    'quran_audio.downloaded_surahs'.tr(args: [
+                    trn('quran_audio.downloaded_surahs', args: [
                       ltr('${group.fold<int>(0, (n, e) => n + lib.downloadedCount(e.moshafId))}'),
                     ]),
                     style: const TextStyle(fontSize: 12),
@@ -276,7 +277,7 @@ class _RecitationFolder extends ConsumerWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('quran_audio.downloaded_of'.tr(args: [ltr('$done'), ltr('$total')]),
+          Text(trn('quran_audio.downloaded_of', args: [ltr('$done'), ltr('$total')]),
               style: const TextStyle(fontSize: 12)),
           if (entry.pending.isNotEmpty) ...[
             const SizedBox(height: 4),
@@ -358,7 +359,7 @@ class _DeviceTabState extends State<_DeviceTab> with AutomaticKeepAliveClientMix
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(n == 0
           ? 'quran_audio.scan_none'.tr()
-          : 'quran_audio.scan_found'.tr(args: ['$n'])),
+          : trn('quran_audio.scan_found', args: ['$n'])),
     ));
   }
 
@@ -679,7 +680,7 @@ class _Group extends StatelessWidget {
           leading: Icon(icon, color: AppColors.gold),
           title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontWeight: FontWeight.w700)),
-          subtitle: Text('quran_audio.files_count'.tr(args: [ltr('$count')]),
+          subtitle: Text(trn('quran_audio.files_count', args: [ltr('$count')]),
               style: const TextStyle(fontSize: 12)),
           trailing: IconButton(
             color: AppColors.gold,

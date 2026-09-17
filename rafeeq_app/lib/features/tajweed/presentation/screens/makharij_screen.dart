@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -186,7 +187,7 @@ class _RegionDefinition extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'makharij.page'.tr(namedArgs: {'page': '${info.page}'}),
+                trn('makharij.page', namedArgs: {'page': '${info.page}'}),
                 style: TextStyle(
                   fontSize: 11,
                   color: scheme.onSurfaceVariant,
@@ -376,7 +377,7 @@ class _Detail extends StatelessWidget {
           ],
           const SizedBox(height: 10),
           Text(
-            'makharij.page'.tr(namedArgs: {'page': '${makhraj.page}'}),
+            trn('makharij.page', namedArgs: {'page': '${makhraj.page}'}),
             style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
           ),
         ],

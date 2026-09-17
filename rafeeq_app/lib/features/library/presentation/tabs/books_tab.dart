@@ -6,7 +6,7 @@
 /// twenty-five classes in it.
 library;
 import 'dart:async';
-import '../../../../core/utils/digits.dart' show localizeDigits;
+import '../../../../core/utils/digits.dart';
 
 
 import 'package:easy_localization/easy_localization.dart';
@@ -113,7 +113,7 @@ class _BooksTabState extends State<BooksTab> {
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
       ..showSnackBar(SnackBar(
-        content: Text('library.download_failed'.plural(failed)),
+        content: Text(pluralN('library.download_failed', failed)),
       ));
   }
 
@@ -290,8 +290,8 @@ class _AuthorExpansionTile extends StatelessWidget {
         // numbering systems on one row. Seen on emulator-5554.
         localizeDigits(
           deathDate.isEmpty
-              ? 'library.book_count'.plural(books.length)
-              : '$deathDate • ${'library.book_count'.plural(books.length)}',
+              ? pluralN('library.book_count', books.length)
+              : '$deathDate • ${pluralN('library.book_count', books.length)}',
           context.locale.languageCode,
         ),
         style: TextStyle(
@@ -319,8 +319,7 @@ class _AuthorExpansionTile extends StatelessWidget {
                 },
                 icon: const Icon(Icons.download_for_offline_rounded),
                 label: Text(localizeDigits(
-                    'library.download_author_all'
-                        .tr(args: ['${_missing.length}']),
+                    trn('library.download_author_all', args: ['${_missing.length}']),
                     context.locale.languageCode)),
               ),
             ),
@@ -433,7 +432,7 @@ class _CategoryExpansionTile extends StatelessWidget {
             ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
-        localizeDigits('library.book_count'.plural(books.length),
+        localizeDigits(pluralN('library.book_count', books.length),
             context.locale.languageCode),
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurfaceVariant,

@@ -1,5 +1,5 @@
 import 'dart:async';
-import '../../../../core/utils/digits.dart' show localizeDigits;
+import '../../../../core/utils/digits.dart';
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';

@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +125,7 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
               child: Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
-                  'library.text_search_results'.plural(_hits.length),
+                  pluralN('library.text_search_results', _hits.length),
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),

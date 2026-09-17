@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -194,8 +195,8 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${'quran.pages_count'.plural(e.pages)} · '
-                      '${'quran.ayahs_count'.plural(e.ayahs)}',
+                      '${pluralN('quran.pages_count', e.pages)} · '
+                      '${pluralN('quran.ayahs_count', e.ayahs)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.outline,
                       ),

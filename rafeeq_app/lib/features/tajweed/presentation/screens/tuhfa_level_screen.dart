@@ -23,6 +23,7 @@
 library;
 
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -179,8 +180,7 @@ class _Header extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'tajweed.progress'
-                .tr(namedArgs: {'done': '$done', 'total': '$total'}),
+            trn('tajweed.progress', namedArgs: {'done': '$done', 'total': '$total'}),
             style: theme.textTheme.labelSmall
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),

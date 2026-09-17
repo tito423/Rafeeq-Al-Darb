@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -16,7 +17,7 @@ bool isArabicScript(String locale) => locale == 'ar' || locale == 'ur';
 /// host's — so it is spelled the way the rest of the app spells it.
 String surahTitle(MushafData? data, int surah, String locale) {
   final s = data?.surahs.where((x) => x.id == surah).firstOrNull;
-  if (s == null) return 'quran_audio.surah_number'.tr(args: ['$surah']);
+  if (s == null) return trn('quran_audio.surah_number', args: ['$surah']);
   return isArabicScript(locale) ? surahNameForDisplay(s.nameAr) : s.nameEn;
 }
 

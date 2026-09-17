@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../data/ayah_opening.dart';
@@ -120,7 +121,7 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                   Icon(Icons.local_fire_department, size: 14, color: gold),
                   const SizedBox(width: 2),
                   Text(
-                    'khatma.streak'.tr(args: ['${khatma.streak}']),
+                    trn('khatma.streak', args: ['${khatma.streak}']),
                     style: theme.textTheme.labelSmall?.copyWith(color: gold),
                   ),
                 ],
@@ -252,7 +253,7 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'khatma.juz_label'.tr(args: ['${range.juz}']),
+                  trn('khatma.juz_label', args: ['${range.juz}']),
                   style: theme.textTheme.labelMedium?.copyWith(color: gold),
                 ),
               ),
@@ -315,7 +316,7 @@ class _RangeLine extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: Text(label, style: style)),
-        Text('khatma.page_n'.tr(args: ['$page']), style: style),
+        Text(trn('khatma.page_n', args: ['$page']), style: style),
       ],
     );
   }
@@ -362,12 +363,12 @@ class KhatmaProgressSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'khatma.portions_previous'.tr(args: ['${khatma.portionsRead}']),
+              trn('khatma.portions_previous', args: ['${khatma.portionsRead}']),
               style: subtleStyle,
             ),
             if (upcoming != null)
               Text(
-                'khatma.portions_upcoming'.tr(args: ['$upcoming']),
+                trn('khatma.portions_upcoming', args: ['$upcoming']),
                 style: subtleStyle,
               ),
           ],

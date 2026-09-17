@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -199,7 +200,7 @@ class _RecordingCard extends StatelessWidget {
 
   String get _duration {
     final m = recording.seconds ~/ 60;
-    return 'ruqyah.minutes'.tr(namedArgs: {'n': '$m'});
+    return trn('ruqyah.minutes', namedArgs: {'n': '$m'});
   }
 
   String get _size => formatBytes(recording.bytes);

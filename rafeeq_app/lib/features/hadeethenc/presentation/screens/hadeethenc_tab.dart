@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +134,7 @@ class _Categories extends StatelessWidget {
               // `library.hadiths_count`, not a second counting key of its
               // own: that one already carries the six CLDR plural cases in
               // all seven locales, and Russian and Arabic both need them.
-              subtitle: Text('library.hadiths_count'.plural(c.count)),
+              subtitle: Text(pluralN('library.hadiths_count', c.count)),
               // `chevron_right`, not `chevron_left`: trap #7 — the left one
               // auto-mirrors in RTL and ten of them pointed the wrong way.
               trailing: const Icon(Icons.chevron_right, size: 20),
@@ -211,8 +212,7 @@ class _Credit extends ConsumerWidget {
       child: InkWell(
         onTap: () => openExternalLink(catalog.sourceUrl),
         child: Text(
-          'hadeethenc.credit'
-              .tr(namedArgs: {'source': catalog.nameFor(locale)}),
+          trn('hadeethenc.credit', namedArgs: {'source': catalog.nameFor(locale)}),
           textAlign: TextAlign.center,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
