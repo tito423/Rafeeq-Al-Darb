@@ -13,6 +13,7 @@ import '../../../../core/widgets/toolbar_action.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_text.dart';
 import '../../../../core/utils/external_link.dart';
+import '../widgets/book_provenance_strip.dart';
 
 /// P3‑29 visual redesign: a small closed set of reading-ink choices offered
 /// by the "لون الخط" toolbar action. Each entry carries both a light- and a
@@ -544,7 +545,6 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
       return Center(child: Text('library.text_empty'.tr()));
     }
 
-    final scheme = Theme.of(context).colorScheme;
     final page = doc.pages[_pageIndex];
     final section = doc.sectionTitleForPageIndex(_pageIndex);
 
@@ -652,44 +652,15 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
         ),
 
         // ── provenance strip (always visible) ──
-        InkWell(
+        // Lifted into its own widget when this file's length guard
+        // refused the next line: what a reader is told about where a
+        // text came from is its own concern, not a corner of the reader.
+        BookProvenanceStrip(
+          book: widget.book,
+          paper: paper,
+          ink: ink,
+          hairline: hairline,
           onTap: _openProvenance,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: paper,
-              border: Border(top: BorderSide(color: hairline)),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.info_outline, size: 14, color: ink.withValues(alpha: 0.6)),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: ArabicText(
-                    widget.book.textEdition?.sourceLabel ?? '',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: ink.withValues(alpha: 0.6), fontSize: 11.5),
-                  ),
-                ),
-                if (widget.book.textEdition?.isOcr ?? false)
-                  Container(
-                    margin: const EdgeInsetsDirectional.only(start: 6),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: scheme.errorContainer,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text('library.text_ocr_badge'.tr(),
-                        style: TextStyle(
-                            fontSize: 10, color: scheme.onErrorContainer)),
-                  ),
-              ],
-            ),
-          ),
         ),
 
         // ── page navigation: fast-jump slider (P3‑29/P3‑34) ──

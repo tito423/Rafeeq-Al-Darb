@@ -423,7 +423,8 @@
     "death_8th_century": "آٹھویں صدی ہجری کے علما میں سے",
     "book_desc_generated": "{} کی تصنیف، {} صفحات، باب {} میں۔",
     "tab_hadeethenc": "موسوعۂ حدیث",
-    "download_author_all": "مصنف کی تمام کتابیں ڈاؤن لوڈ کریں ({})"
+    "download_author_all": "مصنف کی تمام کتابیں ڈاؤن لوڈ کریں ({})",
+    "editor_notes_removed": "اس اشاعت سے مصنف کا متن؛ محقق کے حواشی شامل نہیں ہیں"
   },
   "azkar": {
     "title": "اذکار",

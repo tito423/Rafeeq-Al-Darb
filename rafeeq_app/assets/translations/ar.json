@@ -423,7 +423,8 @@
     "death_8th_century": "من علماء القرن الثامن الهجري",
     "book_desc_generated": "مصنَّف لـ {}، {} صفحة، ضمن باب {}.",
     "tab_hadeethenc": "الموسوعة الحديثية",
-    "download_author_all": "تحميل كل كتب المؤلف ({})"
+    "download_author_all": "تحميل كل كتب المؤلف ({})",
+    "editor_notes_removed": "نصّ المؤلف من هذه الطبعة؛ حواشي المحقق غير مضمَّنة"
   },
   "azkar": {
     "title": "الأذكار",

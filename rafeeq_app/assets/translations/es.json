@@ -423,7 +423,8 @@
     "death_8th_century": "Un sabio del siglo VIII de la Hégira",
     "book_desc_generated": "Una obra de {}, {} páginas, en la sección de {}.",
     "tab_hadeethenc": "Enciclopedia de hadices",
-    "download_author_all": "Descargar todos los libros del autor ({})"
+    "download_author_all": "Descargar todos los libros del autor ({})",
+    "editor_notes_removed": "El texto del autor de esta edición; las notas del editor no están incluidas"
   },
   "azkar": {
     "title": "Adhkar",
