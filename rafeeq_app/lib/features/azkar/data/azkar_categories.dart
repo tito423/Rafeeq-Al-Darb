@@ -150,12 +150,14 @@ const Map<int, List<AzkarCategory>> azkarSectionCategories = {
   12: [AzkarCategory.narrated], // ما يقوله المريض ويقال عنده
   13: [AzkarCategory.travel], // ما يقول إذا نزل منزلا
   14: [AzkarCategory.narrated], // ما يقوله إذا راعه شيء أو فزع
-  // an-Nawawi keeps morning and evening in ONE chapter, «باب ما يُقال عند
-  // الصباح وعند المساء» — the widest in the book by his own words. So it is
-  // the one section under two tiles, exactly as the old §29 was.
-  15: [AzkarCategory.morning, AzkarCategory.evening],
-  16: [AzkarCategory.sleep], // ما يقول إذا أراد النوم
-  17: [AzkarCategory.narrated], // ما يقول إذا نزل المطر
-  18: [AzkarCategory.narrated], // التسمية عند الأكل والشرب
-  19: [AzkarCategory.afterPrayer], // الأذكار بعد الصلاة
+  // Split in two on 2026-09-17 at the owner's request. an-Nawawi keeps them
+  // in one bab; the morning list opens on «أصبحنا وأصبح الملك لله» and the
+  // evening list on «أمسينا وأمسى الملك لله», and what he says at both times
+  // stands in both lists because that is what his narrations instruct.
+  15: [AzkarCategory.morning], // ما يقال عند الصباح
+  16: [AzkarCategory.evening], // ما يقال عند المساء
+  17: [AzkarCategory.sleep], // ما يقول إذا أراد النوم
+  18: [AzkarCategory.narrated], // ما يقول إذا نزل المطر
+  19: [AzkarCategory.narrated], // التسمية عند الأكل والشرب
+  20: [AzkarCategory.afterPrayer], // الأذكار بعد الصلاة
 };

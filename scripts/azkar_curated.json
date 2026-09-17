@@ -261,7 +261,8 @@
    "to": "فإنَّه لا يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ",
    "ref_from": "صحيح البخاري",
    "ref_to": "صحيح البخاري",
-   "sha": "8ebddaa0f2a5"
+   "sha": "8ebddaa0f2a5",
+   "when": "both"
   },
   {
    "section": 49,
@@ -270,7 +271,8 @@
    "to": "وبحمده",
    "ref_from": "صحيح مسلم",
    "ref_to": "صحيح مسلم",
-   "sha": "6dc51052b70f"
+   "sha": "6dc51052b70f",
+   "when": "both"
   },
   {
    "section": 49,
@@ -279,7 +281,8 @@
    "to": "مِنْ كُلّ شئ",
    "ref_from": "قال الترمذي: حديث حسن صحيح",
    "ref_to": "قال الترمذي: حديث حسن صحيح",
-   "sha": "d77a178b6cce"
+   "sha": "d77a178b6cce",
+   "when": "both"
   },
   {
    "section": 49,
@@ -288,7 +291,8 @@
    "to": "وَإِلَيْكَ النُّشُورُ",
    "ref_from": "قال الترمذي: حديث حسن",
    "ref_to": "قال الترمذي: حديث حسن",
-   "sha": "0d742922ea8c"
+   "sha": "0d742922ea8c",
+   "when": "morning"
   },
   {
    "section": 49,
@@ -297,7 +301,8 @@
    "to": "وحده لا شريك له",
    "ref_from": "صحيح مسلم",
    "ref_to": "صحيح مسلم",
-   "sha": "1c2c311fd3db"
+   "sha": "1c2c311fd3db",
+   "when": "evening"
   },
   {
    "section": 49,
@@ -306,7 +311,8 @@
    "to": "وَشِرْكِهِ",
    "ref_from": "قال الترمذي: حديث حسن صحيح",
    "ref_to": "قال الترمذي: حديث حسن صحيح",
-   "sha": "e6900799b1cf"
+   "sha": "e6900799b1cf",
+   "when": "both"
   },
   {
    "section": 49,
@@ -315,7 +321,8 @@
    "to": "ثَلاثَ مَرَّاتٍ",
    "ref_from": "قال الترمذي: هذا حديث حسن صحيح",
    "ref_to": "قال الترمذي: هذا حديث حسن صحيح",
-   "sha": "11dfba3ea15d"
+   "sha": "11dfba3ea15d",
+   "when": "both"
   },
   {
    "section": 49,
@@ -324,7 +331,8 @@
    "to": "عَبْدُكَ وَرَسُولُكَ",
    "ref_from": "بإسناد جيد لم يضعفه",
    "ref_to": "بإسناد جيد لم يضعفه",
-   "sha": "74564c730a6d"
+   "sha": "74564c730a6d",
+   "when": "morning"
   },
   {
    "section": 49,
@@ -333,7 +341,8 @@
    "to": "وَلَكَ الشُّكْرُ",
    "ref_from": "بإسناد جيد لم يضعفه",
    "ref_to": "بإسناد جيد لم يضعفه",
-   "sha": "968fbc251687"
+   "sha": "968fbc251687",
+   "when": "both"
   },
   {
    "section": 49,
@@ -342,7 +351,8 @@
    "to": "وَمِنْ فَوْقِي",
    "ref_from": "بالأسانيد الصحيحة في سنن أبي داود، والنسائي، وابن ماجه",
    "ref_to": "وابن ماجه",
-   "sha": "96b78b9fef37"
+   "sha": "96b78b9fef37",
+   "when": "both"
   },
   {
    "section": 49,
@@ -351,7 +361,8 @@
    "to": "وَشَرِّ ما بَعْدَهُ",
    "ref_from": "بإسناد لم يضعفه",
    "ref_to": "بإسناد لم يضعفه",
-   "sha": "8450775c030f"
+   "sha": "8450775c030f",
+   "when": "morning"
   },
   {
    "section": 49,
@@ -360,7 +371,8 @@
    "to": "لا إِلهَ إِلاَّ أنْتَ",
    "ref_from": "سنن أبي داود",
    "ref_to": "سنن أبي داود",
-   "sha": "0ca85020dd78"
+   "sha": "0ca85020dd78",
+   "when": "both"
   },
   {
    "section": 58,
@@ -469,6 +481,16 @@
    "ref_from": "صحيح مسلم",
    "ref_to": "صحيح مسلم",
    "sha": "a3925bcbbae6"
+  },
+  {
+   "section": 49,
+   "item": 4,
+   "from": "اللَّهُمَّ بِكَ أمْسَيْنا",
+   "to": "وَإِلَيْكَ النُّشُورُ",
+   "ref_from": "قال الترمذي: حديث حسن",
+   "ref_to": "قال الترمذي: حديث حسن",
+   "when": "evening",
+   "sha": "eaf1bc487762"
   }
  ],
  "_ruqyah": "The five of the ruqyah screen's six duas that an-Nawawi's al-Adhkar actually carries. The sixth - «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر» - is NOT in this edition: zero hits across all 338 chapters. It is therefore dropped, not reconstructed. ruqyah_catalog.dart already states the principle: «an absent dua is an honest gap; a dua typed in from memory with no takhrij behind it is not.» These carry explicit ids so the screen can address them for ever."

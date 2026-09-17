@@ -512,12 +512,14 @@
       "12": "Pour le malade et à son chevet",
       "13": "En s'arrêtant dans un lieu",
       "14": "En cas de frayeur",
-      "15": "Matin et soir",
-      "16": "Au coucher",
-      "17": "Quand il pleut",
-      "18": "Avant de manger et de boire",
-      "19": "Après la prière"
-    }
+      "15": "Le matin",
+      "16": "Le soir",
+      "17": "Au coucher",
+      "18": "Quand il pleut",
+      "19": "Avant de manger et de boire",
+      "20": "Après la prière"
+    },
+    "sleep_reminder": "Rappel des invocations du coucher"
   },
   "prayer": {
     "fajr": "Fajr",
@@ -1084,7 +1086,9 @@
     "quote_title": "Une parole",
     "dl_ruqyah_running_title": "Téléchargement des fichiers audio de roqya",
     "dl_ruqyah_complete_title": "Fichiers audio de roqya téléchargés",
-    "dl_ruqyah_error_title": "Impossible de télécharger les fichiers de roqya"
+    "dl_ruqyah_error_title": "Impossible de télécharger les fichiers de roqya",
+    "azkar_sleep_title": "Invocations du coucher",
+    "azkar_sleep_body": "C'est l'heure des invocations du coucher"
   },
   "hijri": {
     "m1": "Mouharram",

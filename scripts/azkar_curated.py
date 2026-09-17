@@ -75,13 +75,29 @@ def build(cut, cur):
             except ValueError as exc:
                 errors.append(str(exc))
                 continue
-        key = e["section"]
-        if key not in sections:
-            sections[key] = {"title": s["title"], "page": s["page"], "items": []}
-            order.append(key)
-        sections[key]["items"].append(
-            {"body": body, "footnote": note, "page": it["page"],
-             "no": it["no"], "sha": e["sha"]})
+        # an-Nawawi keeps morning and evening in ONE bab, «باب ما يُقال عند
+        # الصباح وعند المساء». The owner asked on 2026-09-17 for two lists, so
+        # an entry may say WHEN it is said and the chapter splits in two. A
+        # «both» entry lands in both, because the narration itself says «حين
+        # يصبح وحين يمسي» — that is the book instructing, not a duplication we
+        # invented. The half-titles are his own words, cut at his own «و».
+        when = e.get("when")
+        variants = (["morning", "evening"] if when == "both"
+                    else [when] if when else [None])
+        for variant in variants:
+            key = (e["section"], variant)
+            if key not in sections:
+                title = s["title"]
+                if variant == "morning":
+                    title = "بابُ ما يُقال عند الصَّباحِ"
+                elif variant == "evening":
+                    title = "بابُ ما يُقال عندَ المساءِ"
+                sections[key] = {"title": title, "page": s["page"],
+                                 "variant": variant, "items": []}
+                order.append(key)
+            sections[key]["items"].append(
+                {"body": body, "footnote": note, "page": it["page"],
+                 "no": it["no"], "sha": e["sha"]})
     return [sections[k] for k in order], errors
 
 

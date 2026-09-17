@@ -106,6 +106,26 @@ class _AzkarSettingsSheet extends ConsumerWidget {
                     ),
                 ]),
               ),
+              // The third one, asked for on 2026-09-17. Same shape as the
+              // other two: no default time, off until the reader sets one.
+              ListTile(
+                title: Text('azkar.sleep_reminder'.tr()),
+                subtitle: Text(settings.sleepReminder == null
+                    ? 'azkar.reminder_off'.tr()
+                    : settings.sleepReminder!.format(context)),
+                trailing: Wrap(children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _pickTime(context, ref,
+                        settings.sleepReminder, notifier.setSleepReminder),
+                  ),
+                  if (settings.sleepReminder != null)
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => notifier.setSleepReminder(null),
+                    ),
+                ]),
+              ),
             ],
           ],
         ),

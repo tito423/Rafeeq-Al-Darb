@@ -512,12 +512,14 @@
       "12": "Para el enfermo y junto a él",
       "13": "Al detenerse en un lugar",
       "14": "Ante el sobresalto o el miedo",
-      "15": "Mañana y tarde",
-      "16": "Al ir a dormir",
-      "17": "Cuando llueve",
-      "18": "Antes de comer y beber",
-      "19": "Después de la oración"
-    }
+      "15": "Por la mañana",
+      "16": "Por la tarde",
+      "17": "Al ir a dormir",
+      "18": "Cuando llueve",
+      "19": "Antes de comer y beber",
+      "20": "Después de la oración"
+    },
+    "sleep_reminder": "Recordatorio de los adhkar del sueño"
   },
   "prayer": {
     "fajr": "Fayr",
@@ -1084,7 +1086,9 @@
     "quote_title": "Una cita",
     "dl_ruqyah_running_title": "Descargando los audios de ruqyah",
     "dl_ruqyah_complete_title": "Audios de ruqyah descargados",
-    "dl_ruqyah_error_title": "No se pudieron descargar los audios de ruqyah"
+    "dl_ruqyah_error_title": "No se pudieron descargar los audios de ruqyah",
+    "azkar_sleep_title": "Adhkar del sueño",
+    "azkar_sleep_body": "Es hora de los adhkar del sueño"
   },
   "hijri": {
     "m1": "Muharram",

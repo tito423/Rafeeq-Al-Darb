@@ -24,6 +24,11 @@ class AzkarReminderService {
   static const _morningId = 6001;
   static const _eveningId = 6002;
 
+  /// The sleep adhkar reminder, asked for on 2026-09-17. Same shape as the
+  /// other two so there is nothing new to reason about: one id, one exact
+  /// daily alarm, cancelled by the same path.
+  static const _sleepId = 6003;
+
   Future<void> _ensureChannel() async {
     if (_channelReady) return;
     final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
@@ -47,8 +52,13 @@ class AzkarReminderService {
       _schedule(_eveningId, hour, minute, 'notif.azkar_evening_title'.tr(),
           'notif.azkar_evening_body'.tr());
 
+  Future<void> scheduleSleep(int hour, int minute) =>
+      _schedule(_sleepId, hour, minute, 'notif.azkar_sleep_title'.tr(),
+          'notif.azkar_sleep_body'.tr());
+
   Future<void> cancelMorning() => _plugin.cancel(_morningId);
   Future<void> cancelEvening() => _plugin.cancel(_eveningId);
+  Future<void> cancelSleep() => _plugin.cancel(_sleepId);
 
   Future<void> _schedule(
     int id,

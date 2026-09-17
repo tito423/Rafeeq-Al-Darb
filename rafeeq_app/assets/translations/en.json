@@ -512,12 +512,14 @@
       "12": "For the sick, and said at their side",
       "13": "On stopping at a place",
       "14": "When startled or afraid",
-      "15": "Morning and evening",
-      "16": "On going to bed",
-      "17": "When it rains",
-      "18": "Before eating and drinking",
-      "19": "After the prayer"
-    }
+      "15": "Morning",
+      "16": "Evening",
+      "17": "On going to bed",
+      "18": "When it rains",
+      "19": "Before eating and drinking",
+      "20": "After the prayer"
+    },
+    "sleep_reminder": "Sleep adhkar reminder"
   },
   "prayer": {
     "fajr": "Fajr",
@@ -1084,7 +1086,9 @@
     "quote_title": "A saying",
     "dl_ruqyah_running_title": "Downloading ruqyah audio files",
     "dl_ruqyah_complete_title": "Ruqyah audio downloaded",
-    "dl_ruqyah_error_title": "Could not download the ruqyah audio"
+    "dl_ruqyah_error_title": "Could not download the ruqyah audio",
+    "azkar_sleep_title": "Sleep adhkar",
+    "azkar_sleep_body": "It is time for the sleep adhkar"
   },
   "hijri": {
     "m1": "Muharram",

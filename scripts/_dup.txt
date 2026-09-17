@@ -1,0 +1,21 @@
+total sections: 20
+ 0  variant=None     items=3   باب ما يقولُ إذا استيقظَ مِن مَنامه
+ 1  variant=None     items=2   بابُ ما يَقُول إذا لبسَ ثوبَه
+ 2  variant=None     items=2   بابُ ما يقولُ إذا لبسَ ثوباً جديداً أو نعلاً أو شبهه
+ 3  variant=None     items=2   بابُ ما يقولُ لصاحبه إذا رأى عليه ثوباً جديداً
+ 4  variant=None     items=3   باب ما يقول حال خروجِهِ من بيتِه
+ 5  variant=None     items=1   بابُ ما يقولُ إذا دخلَ بيتَه
+ 6  variant=None     items=2   باب ما يقولُ إذا أراد دخول الخلاء
+ 7  variant=None     items=2   بابُ ما يقولُ إذَا خَرَجَ مِنْ الخَلاَء
+ 8  variant=None     items=1   بابُ ما يَقولُ على وضُوئه
+ 9  variant=None     items=1   بابُ ما يقولُ إذا توجَّهَ إلى المسجدِ
+10  variant=None     items=3   بابُ ما يقولُه عندَ دخول المسجد والخروج منه
+11  variant=None     items=3   بابُ ما يَقولُه المريضُ ويُقالُ عندَه ويُقرأ عليه وسؤالُه عن حالِه
+12  variant=None     items=1   بابُ ما يَقولُ إذا نزلَ مَنزلاً
+13  variant=None     items=1   باب ما يقوله إذا راعه شئ أو فَزِعَ
+14  variant=morning  items=11  بابُ ما يُقال عند الصَّباحِ
+15  variant=evening  items=10  بابُ ما يُقال عندَ المساءِ
+16  variant=None     items=6   بابُ ما يقولُ إذا أرادَ النومَ واضطجعَ على فراشِه
+17  variant=None     items=1   بابُ ما يقولُ إذا نزلَ المطرُ
+18  variant=None     items=2   باب التسمية عند الأكلِ والشُّربِ
+19  variant=None     items=3   بابُ الأذكارِ بعدَ الصَّلاة
