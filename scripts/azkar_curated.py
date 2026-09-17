@@ -25,6 +25,16 @@ def digest(s):
 
 
 def slice_span(text, frm, to, what):
+    # Both anchors the same phrase means «this phrase, and nothing else» — a
+    # takhrij that is just a book's name. Without this, a phrase that occurs
+    # TWICE in the narration made the slice swallow everything between the two
+    # occurrences: «صحيح مسلم» appears at the head of hadith ٣٨٨ and again near
+    # its end, and the takhrij line came back as the whole hadith.
+    if frm == to:
+        a = text.find(frm)
+        if a < 0:
+            raise ValueError("%s: phrase not found: %r" % (what, frm))
+        return text[a:a + len(frm)].strip()
     a = text.find(frm)
     if a < 0:
         raise ValueError("%s: opening phrase not found: %r" % (what, frm))
