@@ -105,3 +105,8 @@ scripts/compat_out/run*.log
 # the bucket in one command, and 39 MB of book copies rode into the history
 # once before anyone looked.
 scripts/_stripped/
+
+# Regenerated in one command by build_azkar_from_adhkar.py, and 1.3 MB of it
+# re-enters the history on every run. The REPORTS beside it are kept: they are
+# cited as evidence in CONTENT-LICENSES.md.
+scripts/_azkar_adhkar.json
