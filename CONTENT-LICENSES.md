@@ -145,9 +145,25 @@ to say the text is that printing's **with the editor's notes removed**. That
 wants one flag on `TextEdition` and one translated line in the reader, in all
 seven locales, not 47 hand-edited labels.
 
-**An already-downloaded book is not refreshed.** `book_meta` carries no
-version, so a device holding the old file keeps the old text. `hadith.db` has
-`AppConfig.hadithDbVersion` for exactly this; books have no equivalent.
+~~**An already-downloaded book is not refreshed.**~~ **Fixed 2026-09-17.**
+It was the defect that would have made all of the above pointless for the one
+person who uses this app: `book_meta` carried no version, so a device holding a
+pre-filter copy would have kept the editor's apparatus for ever while the card
+said «تمّ التنزيل» — true and useless.
+
+`isBookDownloaded` now compares the local file's byte length with the
+catalogue's `sizeBytes`, which is measured from the bucket on every upload and
+is never a number anybody types. A mismatch reads as «not downloaded», so the
+book offers itself again.
+
+That check is only as good as the catalogue, so the catalogue was checked
+first: `py -3 scripts/verify_catalog_sizes.py` over all 248 books found **two
+that had drifted** — `mawaiz_ibn_al_jawzi_al_yaqutah` by 7 bytes and
+`bustan_al_arifin` by 14 — and both were corrected from the bucket's own
+readback. It now reports **0 mismatches over 248**. (The first version of that
+script reported five false ones, because R2 answers a plain `HEAD` for some
+objects with no `Content-Length` at all; it uses a one-byte range GET and reads
+`Content-Range` instead.)
 
 ### What it looked like before, for the record
 
@@ -286,10 +302,10 @@ not one grading in the database is anonymous.**
 ## Open list, in the order it should be worked
 
 1. ~~The 48 books whose files carry a modern editor's apparatus.~~ **Done
-   2026-09-17: 47 filtered, 1 removed, audit re-run returns 0.** What remains
-   of it: the source label on a filtered book should say the editor's notes
-   were removed, and a device that already downloaded a book never refreshes
-   it (see «Still open on the library» above).
+   2026-09-17**: 47 filtered, 1 removed, audit re-run returns 0. And both of
+   its follow-ups are done too — a filtered book now says so in the reader in
+   seven languages, and a device holding a pre-filter copy is told to download
+   it again.
 2. **The 47 Qur'an translations.** Who translated each, and under what terms.
    Not one has been recorded. This is the largest untouched area in the app.
 3. **`madinah_gold`'s ND clause** — the one open question with a name and a

@@ -3112,7 +3112,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/mawaiz_ibn_al_jawzi_al_yaqutah.json',
-      sizeBytes: 30404,
+      sizeBytes: 30397,
       sourceLabel:
           'المكتبة الشاملة — الياقوتة - مواعظ ابن الجوزي، جمال الدين أبو الفرج عبد الرحمن بن علي بن محمد الجوزي (ت ٥٩٧هـ)',
     ),
@@ -3659,7 +3659,7 @@ const List<LibraryBook> libraryBookCatalog = [
     category: BookCategory.tazkiyah,
     textEdition: TextEdition(
       url: '${AppConfig.contentBaseUrl}/books/text/bustan_al_arifin.json',
-      sizeBytes: 43469,
+      sizeBytes: 43483,
       sourceLabel:
           'المكتبة الشاملة — بستان العارفين، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار الريان للتراث',
     ),
@@ -4580,3 +4580,13 @@ const List<LibraryBook> libraryBookCatalog = [
     ),
   ),
 ];
+
+/// One book by its id, or null.
+///
+/// Built once and cached: `isBookDownloaded` asks for it on every library card
+/// and a linear scan of 248 entries per card is a scan nobody needs.
+final Map<String, LibraryBook> _byId = {
+  for (final b in libraryBookCatalog) b.id: b,
+};
+
+LibraryBook? bookById(String id) => _byId[id];

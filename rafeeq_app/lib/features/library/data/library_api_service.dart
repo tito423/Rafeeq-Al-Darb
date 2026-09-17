@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/utils/arabic_normalize.dart';
+import 'book_catalog.dart';
 
 class LibraryApiService {
   static final LibraryApiService instance = LibraryApiService._();
@@ -122,12 +123,36 @@ class LibraryApiService {
   }
 
   /// A book counts as downloaded only when both halves are present: the
-  /// file the reader opens and the rows the search index is built from.
+  /// file the reader opens and the rows the search index is built from — and
+  /// only when the file on disk is the file the catalogue currently describes.
+  ///
+  /// THE DEFECT THIS EXISTS FOR. On 2026-09-17, 47 hosted books were rebuilt
+  /// with a modern muhaqqiq's apparatus filtered out and re-uploaded over the
+  /// same keys (see `CONTENT-LICENSES.md`). Nothing told a device about it.
+  /// `book_meta` carries no version — `hadith.db` has
+  /// `AppConfig.hadithDbVersion` for exactly this and books had no equivalent
+  /// — so a reader who had downloaded one of those books before that day kept
+  /// the old text for ever, and the whole rights fix simply never reached him.
+  /// The card said «تمّ التنزيل» and it was true and useless.
+  ///
+  /// The check is the file's own byte length against the catalogue's
+  /// [TextEdition.sizeBytes], which is measured from the bucket on every
+  /// upload and is not a number anybody types. `verify_catalog_sizes.py`
+  /// confirmed all 248 agree before this was written — two had drifted by 7
+  /// and 14 bytes and were corrected first, because one stale number here
+  /// would tell a reader to re-download a book that was perfectly fine.
+  ///
+  /// A book whose catalogue entry records no size (`0`) is left alone: unknown
+  /// is not the same as stale, and guessing would re-download the library.
   Future<bool> isBookDownloaded(String bookId) async {
     final db = await database;
     final res = await db.query('book_meta', where: 'id = ?', whereArgs: [bookId]);
     if (res.isEmpty) return false;
-    return File(await bookFilePath(bookId)).exists();
+    final file = File(await bookFilePath(bookId));
+    if (!await file.exists()) return false;
+    final expected = bookById(bookId)?.textEdition?.sizeBytes ?? 0;
+    if (expected == 0) return true;
+    return await file.length() == expected;
   }
 
   Future<void> downloadBook(String bookId, String url) async {
