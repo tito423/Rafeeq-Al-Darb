@@ -28,7 +28,9 @@ void main() {
   test('the books that were filtered are still flagged', () {
     // Not a lower bound that can rot upward: this is the count the upload
     // actually produced, and a change to it should be deliberate.
-    expect(flagged.length, 47,
+    // 47 until 2026-09-17; 18 of them were Ibn Taymiyyah's and went out with
+    // his 60 books that afternoon. The filtering itself did not change.
+    expect(flagged.length, 29,
         reason: 'scripts/mark_editor_notes_removed.py flags exactly the set '
             'of files that scripts/upload_stripped_books.py published. If this '
             'number moved, say why in CONTENT-LICENSES.md.');
@@ -73,9 +75,11 @@ void main() {
     // returned 0 books with apparatus over all 248 on 2026-09-17. This test
     // holds the half that IS checkable: the catalogue and the bucket agree on
     // how many were touched.
-    expect(libraryBookCatalog.length, 248,
-        reason: 'the library was 257 entries this morning: 7 duplicates and '
-            'mislabelled takhrij volumes went, then al_ijaz_fi_sharh_sunan_abi_'
-            'dawud on the rights audit.');
+    expect(libraryBookCatalog.length, 187,
+        reason: 'the library was 257 entries on the morning of 2026-09-17: 7 '
+            'duplicates and mislabelled takhrij volumes went, then '
+            'al_ijaz_fi_sharh_sunan_abi_dawud on the rights audit (248), then '
+            "Ibn Taymiyyah's 60 books and Ibn al-Qayyim's index of them, at "
+            'the owner\'s instruction.');
   });
 }
