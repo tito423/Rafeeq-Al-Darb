@@ -244,7 +244,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                   SizedBox(
                     width: 64,
                     child: Text(
-                      '${(_fontScale * 100).round()}%',
+                      localizeDigits('${(_fontScale * 100).round()}%', uiLanguageCode),
                       textAlign: TextAlign.center,
                       style: Theme.of(ctx).textTheme.titleMedium,
                     ),
@@ -687,7 +687,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                       SizedBox(
                         width: 44,
                         child: Text(
-                          '${_pageIndex + 1}',
+                          localizeDigits('${_pageIndex + 1}', uiLanguageCode),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 11, color: ink.withValues(alpha: 0.65)),
@@ -723,7 +723,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                       SizedBox(
                         width: 44,
                         child: Text(
-                          '${doc.pages.length}',
+                          localizeDigits('${doc.pages.length}', uiLanguageCode),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 11, color: ink.withValues(alpha: 0.65)),
@@ -890,7 +890,7 @@ class _IndexDrawerState extends State<_IndexDrawer> {
                     child: Text('library.text_index'.tr(),
                         style: Theme.of(context).textTheme.titleMedium),
                   ),
-                  Text('${widget.doc.toc.length}',
+                  Text(localizeDigits('${widget.doc.toc.length}', uiLanguageCode),
                       style: TextStyle(color: scheme.onSurfaceVariant)),
                 ],
               ),

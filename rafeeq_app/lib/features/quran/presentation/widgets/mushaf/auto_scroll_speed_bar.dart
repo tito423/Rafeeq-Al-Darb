@@ -3,6 +3,7 @@ library;
 
 
 import 'package:flutter/material.dart';
+import '../../../../../core/utils/digits.dart';
 
 
 /// Quran tab — a real mushaf browser.
@@ -38,7 +39,7 @@ class AutoScrollSpeedBar extends StatelessWidget {
           SizedBox(
             width: 40,
             child: Text(
-              '${speed.round()}',
+              localizeDigits('${speed.round()}', uiLanguageCode),
               textAlign: TextAlign.end,
               style: Theme.of(context).textTheme.labelSmall,
             ),

@@ -382,7 +382,7 @@ class _JumpSheetState extends State<_JumpSheet> {
       children: [
         Center(
           child: Text(
-            '$_page',
+            localizeDigits('$_page', uiLanguageCode),
             style: theme.textTheme.displaySmall
                 ?.copyWith(fontWeight: FontWeight.w800),
           ),
@@ -454,7 +454,7 @@ class _JumpSheetState extends State<_JumpSheet> {
                       Text('$j',
                           style: theme.textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.w800)),
-                      Text('${widget.juzStartPages[j] ?? 1}',
+                      Text(localizeDigits('${widget.juzStartPages[j] ?? 1}', uiLanguageCode),
                           style: theme.textTheme.labelSmall
                               ?.copyWith(color: theme.colorScheme.outline)),
                     ],
