@@ -1753,7 +1753,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-09-17 15:33 — IN PROGRESS — resume here**
 
-six adhkar of sleep, from an-Nawawi's own bab: «باسمك اللهم أحيا وأموت» (al-Bukhari), «باسمك ربي وضعت جنبي» (the two Sahihs), «اللهم أسلمت نفسي إليك» (the two Sahihs), «اللهم قني عذابك يوم تبعث عبادك» (Abu Dawud), «الحمد لله الذي أطعمنا وسقانا وكفانا وآوانا» (al-Tirmidhi, hasan sahih) and «بسم الله وضعت جنبي» (Abu Dawud, hasan isnad). 45 entries across 16 abwab now, 0 errors, every one a pointer into the extractor output with a frozen checksum and not a single Arabic word typed by hand
+rain and eating: «اللهم صيبا نافعا» (al-Bukhari), «سم الله وكل بيمينك» (the two Sahihs), «بسم الله أوله وآخره» (al-Tirmidhi, hasan sahih). 48 curated adhkar across 18 abwab now, 0 errors. Still NOT done and named as not done: the DB rebuild, rewiring ruqyah_catalog.dart onto ids 1001-1005 with a test pinning the TEXT rather than the number, the sciences-db stamp bump, the 18 chapter titles in seven languages, and seeing any of it on a device. The curation file is the only thing that exists so far - nothing has touched quran_sciences.db and the app still ships Hisn al-Muslim
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
