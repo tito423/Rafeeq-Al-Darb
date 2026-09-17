@@ -87,21 +87,72 @@ decisive mark is a paragraph **closing** with `(*)`, not one opening with
 `(١)`. Requiring the opening let through a footnote that began with `=`, the
 continuation marker — 750 words of isnad criticism that read as the author's.
 
-| what the book is | count |
-|---|---|
-| no editor named on the card at all | **71** |
-| editor named, died before 1396 AH | **4** |
-| **editor is modern, and NONE of his apparatus is in the file we ship** | **126** |
-| **editor is modern, and his apparatus IS in the file we ship** | **48** |
-| | **249** |
+| what the book is | before | **after** |
+|---|---|---|
+| no editor named on the card at all | 71 | **71** |
+| editor named, died before 1396 AH | 4 | **4** |
+| editor is modern, and NONE of his apparatus is in the file we ship | 126 | **173** |
+| **editor is modern, and his apparatus IS in the file we ship** | **48** | **0** |
+| | 249 | **248** |
 
-So **175 of 249 books carry nothing of any modern person's** — either no editor
-was involved, or he is long dead, or the file holds the author's text and not
-his notes. That is the useful half of the answer, and it was not known before.
+**The «after» column is the state as of 2026-09-17, and it is measured, not
+intended** — `audit_editor_apparatus.py` was run again over all 248 books after
+the work below and returned **zero** in the row that matters.
 
-**The 48 are the open list.** The full report, per book, with the editor named
-and the share of the text that is his, is
-`scripts/_editor_apparatus_report.txt`. The worst by a wide margin:
+### What was done to the 48
+
+`scripts/strip_editor_apparatus.py` removes the apparatus and then measures
+whether a book is still there. The number that decides it is **where the empty
+pages fall**, not how many there are: a blank run at the **front** means the
+editor's own introduction is gone and the author's book now starts where he
+starts, which is the intended result; a run **inside** the book means it has
+been gutted. `juz_bay_ummahat_al_awlad` loses 24 consecutive pages and keeps
+82.7 % of its text, and those two numbers only make sense together once you
+know the 24 are his front matter.
+
+* **47 books were filtered and re-uploaded.** 34 of them keep ≥ 95 % of their
+  text with no interior gap at all. The files went back over the same R2 keys,
+  gzip with no `Content-Encoding` as standing policy requires, and
+  `sizeBytes` and `pages` were rewritten in `book_catalog.dart` from **the
+  bucket's own readback**, never from what the upload intended to send.
+* **1 book was removed**, because filtering could not save it — see below.
+
+**Verified, not assumed:** re-running the azkar extractor against the newly
+filtered `al_adhkar_nawawi` produces the same 338 chapters and 1,392
+paragraphs as before, with all 22 curated checksums still matching and **«0
+footnotes dropped»** — they are already gone. Two independently written
+filters agreeing to the byte is the strongest evidence available here. And on
+the emulator, al-Adhkar opens on page 3 with an-Nawawi's own muqaddima and
+**without** al-Arna'ut's footnote that used to sit on that page.
+
+### The one book that had to go
+
+**`al_ijaz_fi_sharh_sunan_abi_dawud`.** Filtering leaves **47.7 %** of the
+text, **83 empty pages inside the book** and a run of **20** consecutive blanks;
+the printing's own page 51 is a row of dots because that whole leaf is
+footnote; and the pages that do survive still speak in the editor's voice —
+«النسخة التي اعتمدناها في التحقيق». The file is أبو عبيدة مشهور بن حسن آل
+سلمان's reconstruction from a manuscript, Dar al-Athariyyah 2007, and **he is
+alive**. Removed from the catalogue and from the bucket on 2026-09-17, the way
+the v3.29.0 purge sent the other 23. an-Nawawi keeps his other fifteen titles.
+
+### Still open on the library
+
+**The source label on a filtered book still names the muhaqqiq** — «تحقيق عبد
+القادر الأرنؤوط» — which is true about where the text came from, but a reader
+could take it to mean his edition is what they are getting. The honest form is
+to say the text is that printing's **with the editor's notes removed**. That
+wants one flag on `TextEdition` and one translated line in the reader, in all
+seven locales, not 47 hand-edited labels.
+
+**An already-downloaded book is not refreshed.** `book_meta` carries no
+version, so a device holding the old file keeps the old text. `hadith.db` has
+`AppConfig.hadithDbVersion` for exactly this; books have no equivalent.
+
+### What it looked like before, for the record
+
+The full pre-fix report, per book, with the editor named and the share of the
+text that was his, is `scripts/_editor_apparatus_report.txt`. The worst:
 
 | book | share of the file that is the editor's | editor |
 |---|---|---|
@@ -112,15 +163,8 @@ and the share of the text that is his, is
 | `qaidah_jalilah_fil_tawassul_wal_wasilah` | 11.4 % | ربيع بن هادي عمير المدخلي |
 | `al_jami_fi_amthal_al_quran` | 10.5 % | الشيخ مصطفى العدوي — **alive** |
 
-Status: **`MODERN_MATERIAL_PRESENT` / `NEEDS_REVIEW` for those 48.**
-
-**What is proposed, and not yet done:** the apparatus can be filtered out of
-those files the same way `scripts/build_azkar_from_adhkar.py` already filters
-it out of al-Adhkar — 341 of its paragraphs are al-Arna'ut's and none of them
-reaches the azkar tables. That keeps the classical book and removes the modern
-work, which is better for the app than deleting either. It has to be verified
-book by book against pages read by hand before anything is re-uploaded,
-because a filter that over-reaches deletes the author instead of the editor.
+Status as of 2026-09-17: **resolved — 47 filtered, 1 removed, and the audit
+re-run returns 0.**
 
 ### Books already removed on rights grounds
 
@@ -241,9 +285,11 @@ not one grading in the database is anonymous.**
 
 ## Open list, in the order it should be worked
 
-1. **The 48 books whose files carry a modern editor's apparatus.** Filter it
-   out the way the azkar extractor does, verified book by book. `al_ijaz_fi_
-   sharh_sunan_abi_dawud` first: 46.5 % of that file is a living author's.
+1. ~~The 48 books whose files carry a modern editor's apparatus.~~ **Done
+   2026-09-17: 47 filtered, 1 removed, audit re-run returns 0.** What remains
+   of it: the source label on a filtered book should say the editor's notes
+   were removed, and a device that already downloaded a book never refreshes
+   it (see «Still open on the library» above).
 2. **The 47 Qur'an translations.** Who translated each, and under what terms.
    Not one has been recorded. This is the largest untouched area in the app.
 3. **`madinah_gold`'s ND clause** — the one open question with a name and a
