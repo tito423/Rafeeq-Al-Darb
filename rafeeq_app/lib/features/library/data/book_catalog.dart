@@ -3554,7 +3554,8 @@ const List<LibraryBook> libraryBookCatalog = [
       sizeBytes: 1372508,
       sourceLabel:
           'المكتبة الشاملة — مدارج السالكين بين منازل إياك نعبد وإياك '
-              'نستعين، لابن قيم الجوزية (ت ٧٥١ هـ)، دار الكتاب العربي',
+              'نستعين، لابن قيم الجوزية (ت ٧٥١ هـ)، تحقيق محمد المعتصم '
+              'بالله البغدادي، دار الكتاب العربي',
     ),
   ),
   LibraryBook(
@@ -3864,6 +3865,120 @@ const List<LibraryBook> libraryBookCatalog = [
       sourceLabel:
           'المكتبة الشاملة — قواعد الأحكام في مصالح الأنام، للعز بن عبد '
               'السلام (ت ٦٦٠ هـ)',
+    ),
+  ),
+  // ══════════════════════════════════════════════════════════════════════
+  // 2026-09-17 — «اشهر وافضل الكتب في تنمية الذات واداب النفس» و«قسم
+  // وتسميه طالب العلم … الكتب المتدرجة … المنهج الوسطي المعتدل بتدرج».
+  //
+  // The library held 99 tazkiyah books and not one by الغزالي، ابن رجب،
+  // الشاطبي، الماوردي، ابن حزم، المحاسبي، الخطيب البغدادي or ابن عبد البر —
+  // measured by grepping each name over this file and getting zero. It was
+  // almost entirely ابن أبي الدنيا and ابن الجوزي.
+  //
+  // Every id came from the LOCAL Shamela title index, never from Shamela's
+  // own search, which searches inside books and returns a commentary above
+  // the book it comments on (trap #17). Every `sizeBytes` is what R2
+  // answered on a HEAD after the upload, not what the local file measured.
+  //
+  // الاعتصام للشاطبي is deliberately absent while الموافقات is here: he asked
+  // to stay far from تشدد, and الموافقات is the مقاصد book.
+  // ══════════════════════════════════════════════════════════════════════
+  LibraryBook(
+    id: 'qut_al_qulub',
+    titleAr: 'قوت القلوب في معاملة المحبوب ووصف طريق المريد إلى مقام التوحيد',
+    titleEn: 'Qut al-Qulub',
+    authorAr: 'الإمام أبو طالب المكي',
+    authorEn: 'Imam Abu Talib al-Makki',
+    deathYearAh: 386,
+    pages: 488,
+    category: BookCategory.tazkiyah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qut_al_qulub.json',
+      sizeBytes: 1020942,
+      sourceLabel:
+          'المكتبة الشاملة — قوت القلوب في معاملة المحبوب، لأبي طالب '
+              'المكي (ت ٣٨٦ هـ)، تحقيق د. عاصم إبراهيم الكيالي',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_adab_al_shariyyah',
+    titleAr: 'الآداب الشرعية والمنح المرعية',
+    titleEn: 'Al-Adab al-Shariyyah',
+    authorAr: 'الإمام ابن مفلح المقدسي',
+    authorEn: 'Imam Ibn Muflih al-Maqdisi',
+    deathYearAh: 763,
+    pages: 613,
+    category: BookCategory.adab,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_adab_al_shariyyah.json',
+      sizeBytes: 1182599,
+      sourceLabel:
+          'المكتبة الشاملة — الآداب الشرعية والمنح المرعية، لابن مفلح '
+              'المقدسي (ت ٧٦٣ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 1 — آداب الطلب — ما يُقرأ قبل أي متن
+  LibraryBook(
+    id: 'al_jami_li_akhlaq_al_rawi',
+    titleAr: 'الجامع لأخلاق الراوي وآداب السامع',
+    titleEn: 'Al-Jami li-Akhlaq al-Rawi',
+    authorAr: 'الخطيب البغدادي',
+    authorEn: 'al-Khatib al-Baghdadi',
+    deathYearAh: 463,
+    pages: 416,
+    category: BookCategory.talibIlm,
+    shelfOrder: 1,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_jami_li_akhlaq_al_rawi.json',
+      sizeBytes: 414145,
+      sourceLabel:
+          'المكتبة الشاملة — الجامع لأخلاق الراوي وآداب السامع، للخطيب '
+              'البغدادي (ت ٤٦٣ هـ)',
+    ),
+  ),
+  // طالب العلم، المرحلة 2 — المتون الأولى — الآلة التي يُقرأ بها
+  LibraryBook(
+    id: 'muqaddimat_ibn_al_salah',
+    titleAr: 'معرفة أنواع علوم الحديث، ويُعرف بمقدمة ابن الصلاح',
+    titleEn: 'Muqaddimat Ibn al-Salah',
+    authorAr: 'الإمام ابن الصلاح',
+    authorEn: 'Imam Ibn al-Salah',
+    deathYearAh: 643,
+    pages: 408,
+    descKey: 'book_desc.muqaddimat_ibn_al_salah',
+    category: BookCategory.talibIlm,
+    shelfOrder: 2,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/muqaddimat_ibn_al_salah.json',
+      sizeBytes: 188664,
+      sourceLabel:
+          'المكتبة الشاملة — معرفة أنواع علوم الحديث (مقدمة ابن '
+              'الصلاح)، لابن الصلاح (ت ٦٤٣ هـ)، تحقيق نور الدين عتر',
+    ),
+  ),
+  // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
+  LibraryBook(
+    id: 'al_risalah_lil_shafii',
+    titleAr: 'الرسالة',
+    titleEn: 'Al-Risalah',
+    authorAr: 'الإمام محمد بن إدريس الشافعي',
+    authorEn: 'Imam Muhammad ibn Idris al-Shafii',
+    deathYearAh: 204,
+    pages: 601,
+    descKey: 'book_desc.al_risalah_lil_shafii',
+    category: BookCategory.talibIlm,
+    shelfOrder: 3,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_risalah_lil_shafii.json',
+      sizeBytes: 433383,
+      sourceLabel:
+          'المكتبة الشاملة — الرسالة، للإمام الشافعي (ت ٢٠٤ هـ)',
     ),
   ),
 ];

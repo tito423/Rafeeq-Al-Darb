@@ -86,7 +86,7 @@ void main() {
     //
     // This test holds the half that IS checkable from inside the app: the
     // catalogue and the bucket agree on how many were touched.
-    expect(libraryBookCatalog.length, 204,
+    expect(libraryBookCatalog.length, 209,
         reason: 'the library was 257 entries on the morning of 2026-09-17: 7 '
             'duplicates and mislabelled takhrij volumes went, then '
             'al_ijaz_fi_sharh_sunan_abi_dawud on the rights audit (248), then '
