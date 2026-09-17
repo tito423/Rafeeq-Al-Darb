@@ -49,6 +49,16 @@ List<PlayerTrack> recitationTracks({
   ];
 }
 
+/// «1×», «1.5×» — the playback speed, in the reader's own numerals.
+///
+/// Lives here rather than privately in `player_screen.dart` for the same
+/// reason `formatClock` does: two widgets render it (the toolbar button and
+/// the chips in the speed sheet), and a number the app draws should be shaped
+/// in one place. Moving it also kept player_screen under its declared
+/// length ceiling instead of raising that ceiling a second time in one day.
+String speedLabel(double v) => ltr(localizeDigits(
+    '${v == v.roundToDouble() ? v.toStringAsFixed(0) : v}×', uiLanguageCode));
+
 String formatClock(Duration d) {
   final h = d.inHours;
   final m = d.inMinutes.remainder(60).toString().padLeft(h > 0 ? 2 : 1, '0');

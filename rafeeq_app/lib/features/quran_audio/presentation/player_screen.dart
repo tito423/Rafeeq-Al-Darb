@@ -793,8 +793,7 @@ class _Extras extends StatelessWidget {
                   foregroundColor: player.speed == 1.0 ? AppColors.textMedium : t.accent,
                 ),
                 child: Text(
-                      ltr(localizeDigits(
-                          '${_speedLabel(player.speed)}×', uiLanguageCode)),
+                    speedLabel(player.speed),
                     style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               ),
               _Toggle(
@@ -820,7 +819,6 @@ class _Extras extends StatelessWidget {
     );
   }
 
-  static String _speedLabel(double v) => v == v.roundToDouble() ? v.toStringAsFixed(0) : '$v';
 
   void _pickSpeed(BuildContext context) {
     final player = QuranAudioPlayer.instance;
@@ -846,8 +844,7 @@ class _Extras extends StatelessWidget {
                 children: [
                   for (final s in QuranAudioPlayer.speeds)
                     ChoiceChip(
-                      label: Text(ltr(
-                  localizeDigits('${_speedLabel(s)}×', uiLanguageCode))),
+                      label: Text(speedLabel(s)),
                       selected: player.speed == s,
                       selectedColor: theme.accent,
                       onSelected: (_) {
