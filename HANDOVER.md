@@ -1748,9 +1748,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 14:25 — IN PROGRESS — resume here**
+**2026-09-17 14:26 — IN PROGRESS — resume here**
 
-a filtered book now SAYS it is filtered, in the reader, in seven languages. The source label on those 47 books still names the muhaqqiq, which is right - naming the printing the text came from is what §1.2 requires - but that line on its own reads as «this is his edition», and after the filtering it is not. A card that is accurate and misleading at the same time is the harder kind of wrong to notice, and nothing in the app would ever have complained about it. So TextEdition carries editorNotesRemoved, set on exactly the set of files that were uploaded (by a script that reads _stripped/ rather than a hand-typed list, so the flag cannot drift from what was done), and the reader prints «نصّ المؤلف من هذه الطبعة؛ حواشي المحقق غير مضمَّنة» - a translation key, so a French reader reads it in French. editor_notes_removed_test.dart holds the flag, the credit and the seven locales together, and refuses a locale whose value still contains Arabic script, which is the defect v3.29.0 and v3.30.0 were spent undoing. On the way, the code_layout guard refused the change - book_text_reader_screen.dart was 1156 lines and «is on the list because it was already over, not so it could keep growing» - so the provenance strip is its own widget now and that file is down to 1127. analyze clean, 291 tests pass
+seen on the emulator, which is the only thing that counts: al-Adhkar's reader now shows two lines under the page - the edition line in Arabic naming تحقيق عبد القادر (the corrected muhaqqiq, the claim I had flagged this morning as unverified on a screen), and under it, in ENGLISH because the app's UI language is English, «The author's text from this printing; the editor's notes are not included». The translation key does what it was for. And the page itself is an-Nawawi's muqaddima with al-Arna'ut's footnote that used to sit on page 3 gone
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
