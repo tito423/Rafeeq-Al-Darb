@@ -1751,9 +1751,15 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 15:37 — IN PROGRESS — resume here**
+**2026-09-17 15:45 — IN PROGRESS — resume here**
 
-the azkar tables are an-Nawawi's now. quran_sciences.db rebuilt: 134 sections and 298 items from حصن المسلم replaced by 18 chapters and 48 supplications hand-picked from «الأذكار», and a query for «القحطاني» across body and footnote returns 0. The DB was backed up to E:\My Projects\Rafeeq-Backups first. Item ids are written VERBATIM by the rebuild script, not auto-assigned, because ruqyah_catalog.dart addresses five of them - they carry 1001-1005, outside the sequential range, and the screen was rewired onto them. That rewiring was the near miss of the day: the old comment promised «a mis-typed id shows up as a missing dua, not a wrong one», which holds only while the table is never rebuilt - id 176 would have pointed at whatever landed on row 176, a WRONG supplication shown confidently on a screen people open when they are ill. ruqyah_duas_test.dart now pins the TEXT each id resolves to, asserts every one carries a takhrij, and fails if any row still names the previous compiler; it opens the bundled DB through sqflite_common_ffi, added as a dev dependency. sciences stamp bumped v4 -> v5 so every existing install re-copies instead of keeping the old file. Not done yet: the 18 chapter titles in seven languages, and seeing any of it on a device
+STOP AND READ THIS BEFORE CONTINUING - two things are half-done and one of them is a defect I introduced.
+
+1. azkar_categories.dart is STILL MAPPED TO HISN AL-MUSLIM. `azkarSectionCategories` is a map of 134 Hisn section ids to the eight category tiles, with al-Qahtani's chapter titles as its comments - «أذكار النوم», «دعاء الذهاب إلى المسجد», «التشهد». The database now has 18 sections numbered 1-18, so ids 30-33 and the rest point at nothing: most category tiles will open EMPTY. It must be rewritten for the new 18. The mapping I intend: 1 waking, 2-9 narrated, 10-11 mosque, 12 narrated, 13 travel, 14 narrated, 15 morning AND evening, 16 sleep, 17-18 narrated. Read the enum first - I had not confirmed whether a `travel` category exists.
+
+2. MY DEVICE VERIFICATION WAS OF THE WRONG BUILD AND MUST BE REDONE. `flutter build apk --debug` succeeded but the `adb install -r` after it silently failed: the signed v3.32.0 RELEASE is installed and a debug APK cannot install over it (different key). `run-as` answering «package not debuggable» is what exposed it. So the Adhkar screen I looked at and reported on was v3.32.0 with the OLD Hisn corpus - that is why it showed four sleep chapters with Arabic Hisn titles. Nothing about the new azkar data has been seen on a screen yet. Uninstall the package first, then install build/app/outputs/flutter-apk/app-debug.apk, then look again.
+
+Everything else stands and is committed: the DB holds 18 chapters and 48 supplications from an-Nawawi with 0 rows naming al-Qahtani, ruqyah ids are explicit 1001-1005 with a test pinning the text, the 18 titles are in seven locales, sciences stamp is v5, analyze is clean and 304 tests pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

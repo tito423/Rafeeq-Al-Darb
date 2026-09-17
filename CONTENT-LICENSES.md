@@ -405,7 +405,7 @@ not one grading in the database is anonymous.**
 | Arabic Wikipedia per-Hijri-day pages | 5,747 Hijri events | CC BY-SA |
 | api.aladhan.com | prayer times | computed values, not copyrightable content |
 | YouTube | dawah channel links | links only, nothing rehosted |
-| حصن المسلم (`quran_sciences.db`) | 134 sections, 298 items | **`MODERN_MATERIAL_PRESENT`** — سعيد بن علي بن وهف القحطاني, d. 1439 AH / 2018. His name is inside the bundled database itself, in `azkar_items` row 2's footnote. **Being replaced**: see `scripts/azkar_curated.json` |
+| الأذكار للنووي (`quran_sciences.db`) | **18 chapters, 48 supplications** | `AUTHOR_LONG_DEAD` — **replaced 2026-09-17**, see below |
 | the quote of the day | 58 quotes from 4 books | `AUTHOR_LONG_DEAD` — rebuilt in v3.29.0 after the discovery that 284 of the previous 352 came from «لا تحزن», whose author is alive |
 | the Hajj guide | an-Nawawi's «الإيضاح» | `AUTHOR_LONG_DEAD` — re-sourced in v3.29.0 off Ibn Baz's manual |
 | the tajweed course | al-Jamzuri and Ibn al-Jazari | `AUTHOR_LONG_DEAD` — re-sourced in v3.28.0 off two modern books |
@@ -435,10 +435,60 @@ not one grading in the database is anonymous.**
    scan was rejected on exactly that evidence (CLAUDE.md trap #18). This is now
    the only open item on the mushaf side.
 7. **The recitations** on everyayah.com, cdn.islamic.network and mp3quran.net.
-8. **The azkar corpus.** Still حصن المسلم, which Article 3 of the UAE law
-   protects as an innovative *collection* of free supplications. 22 of
-   an-Nawawi's have been hand-picked out of 338 chapters; see
-   `scripts/azkar_curated.json`.
+8. ~~The azkar corpus.~~ **Done 2026-09-17.** See below.
+
+---
+
+## The azkar — replaced, and why it was the clearest case in this file
+
+The feature was built on **«حصن المسلم» by سعيد بن علي بن وهف القحطاني**
+(d. 1439 AH / 2018). That was not inferred: his name was **inside the bundled
+database**, in `azkar_items` row 2's footnote — «الؤلف: سعيد بن علي بن وهف
+القحطاني», the typo the source's own.
+
+The supplications in it are prophetic and free. What was his is the
+**selection, the arrangement, the 134 chapter titles and the takhrij** — and
+Article 3 of the UAE law names precisely that:
+
+> ومع ذلك تتمتع **مجموعات** ما ورد في البنود (2)، (3)، (4) من هذه المادة
+> **بالحماية إذا تميز جمعها أو ترتيبها أو أي مجهود فيها بالابتكار**.
+
+A collection of free works is protected when its gathering is innovative. There
+was no reading of that sentence under which shipping his selection was fine.
+
+**What replaced it.** an-Nawawi (d. 676 AH), «الأذكار». **48 supplications
+across 18 chapters, hand-picked** — the owner's instruction was «انتقي أنا
+بالإيد», after an automatic extractor was built and then rejected: al-Adhkar's
+quotation marks are not a dua boundary («٣٧ - وروينا في " صحيح البخاري " عن
+حذيفةَ …» puts the BOOK's name in quotes and the supplication outside them), so
+a machine would have shipped a book title as a supplication.
+
+**No Arabic was ever retyped.** `scripts/azkar_curated.json` holds *pointers* —
+a chapter, a narration, and two short phrases locating where the supplication
+starts and ends — and the text is sliced out of the extractor's own output at
+build time with a frozen checksum, the same discipline the quotes corpus uses.
+The muhaqqiq's apparatus (عبد القادر الأرنؤوط, d. 1425 AH) is filtered out
+before any of it is read: 341 paragraphs of his, none of which reaches a
+device.
+
+**Three things this forced, each of which was its own defect:**
+
+* `ruqyah_catalog.dart` addressed six supplications by row id, promising «a
+  mis-typed id shows up as a missing dua, not a wrong one». That holds only
+  while the table is never rebuilt. Ids are explicit now (1001–1005) and
+  `test/ruqyah_duas_test.dart` pins the **text** each resolves to.
+* One of those six — «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر» —
+  is **not in al-Adhkar**, zero hits across all 338 chapters. It is gone, not
+  reconstructed.
+* The chapter list and every chapter's app bar drew the database's **Arabic**
+  heading directly, so an English or French reader saw an Arabic list. The 18
+  titles are translation keys now, in all seven locales, and
+  `test/azkar_section_titles_test.dart` fails on a missing key, on a non-Arabic
+  locale still holding Arabic, and on a stale key for a chapter that no longer
+  exists.
+
+`sciences-v4` → `v5`, so every existing install re-copies the file instead of
+keeping the old one.
 
 ## How to re-run the measurements in this file
 
