@@ -1753,7 +1753,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-09-17 15:33 — IN PROGRESS — resume here**
 
-twelve of the morning-and-evening adhkar, curated from an-Nawawi's own bab - the widest chapter in the book by his own words, «ليس في الكتاب باب أوسع منه». Sayyid al-istighfar from al-Bukhari, the two sabahs from Muslim, «قل هو الله أحد والمعوذتين ثلاث مرات», «اللهم بك أصبحنا», «اللهم فاطر السموات», «بسم الله الذي لا يضر مع اسمه شيء», «اللهم إني أسألك العافية في الدنيا والآخرة», «اللهم عافني في بدني» and the rest - each with an-Nawawi's own takhrij sliced beside it and never a word retyped. 39 entries now across 15 abwab, 0 errors. Two things fixed by reading the output rather than trusting the zero: «مائة مرة» had been pulled into the body of «سبحان الله وبحمده», which is an-Nawawi telling you how often to say it and not part of what is said; and three takhrij slices ended on a stray quotation mark because the anchor «سنن أبي داود» is preceded by an opening quote in the source and the closing one fell inside the span
+six adhkar of sleep, from an-Nawawi's own bab: «باسمك اللهم أحيا وأموت» (al-Bukhari), «باسمك ربي وضعت جنبي» (the two Sahihs), «اللهم أسلمت نفسي إليك» (the two Sahihs), «اللهم قني عذابك يوم تبعث عبادك» (Abu Dawud), «الحمد لله الذي أطعمنا وسقانا وكفانا وآوانا» (al-Tirmidhi, hasan sahih) and «بسم الله وضعت جنبي» (Abu Dawud, hasan isnad). 45 entries across 16 abwab now, 0 errors, every one a pointer into the extractor output with a frozen checksum and not a single Arabic word typed by hand
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -344,6 +344,54 @@
    "to": "لا إِلهَ إِلاَّ أنْتَ",
    "ref_from": "سنن أبي داود",
    "ref_to": "سنن أبي داود"
+  },
+  {
+   "section": 58,
+   "item": 1,
+   "from": "باسْمِكَ اللَّهُمَّ أحْيا وأمُوت",
+   "to": "أحْيا وأمُوت",
+   "ref_from": "صحيح البخاري",
+   "ref_to": "صحيح البخاري"
+  },
+  {
+   "section": 58,
+   "item": 3,
+   "from": "باسْمِكَ رَبي وَضَعْتُ جَنْبِي",
+   "to": "عِبادَكَ الصَّالِحينَ",
+   "ref_from": "صحيحي البخاري ومسلم",
+   "ref_to": "صحيحي البخاري ومسلم"
+  },
+  {
+   "section": 58,
+   "item": 7,
+   "from": "اللَّهُمَّ أسْلَمْتُ نَفْسِي إِلَيْكَ",
+   "to": "إِلاَّ إِليْكَ",
+   "ref_from": "الصحيحين",
+   "ref_to": "الصحيحين"
+  },
+  {
+   "section": 58,
+   "item": 9,
+   "from": "اللَّهُمَّ قِني عَذَابَكَ",
+   "to": "يَوْمَ تَبْعَثُ عِبادَكَ",
+   "ref_from": "سنن أبي داود",
+   "ref_to": "سنن أبي داود"
+  },
+  {
+   "section": 58,
+   "item": 12,
+   "from": "الحَمْدُ لِلَّهِ الَّذي أطْعَمَنا",
+   "to": "وَلا مُؤْوِيَ",
+   "ref_from": "قال الترمذي: حديث حسن صحيح",
+   "ref_to": "قال الترمذي: حديث حسن صحيح"
+  },
+  {
+   "section": 58,
+   "item": 13,
+   "from": "بِسْمِ الله وَضَعْتُ جَنْبِي",
+   "to": "فِي النَّدِيّ الأعْلَى",
+   "ref_from": "بالإِسناد الحسن في سنن أبي داود",
+   "ref_to": "بالإِسناد الحسن في سنن أبي داود"
   }
  ],
  "_ruqyah": "The five of the ruqyah screen's six duas that an-Nawawi's al-Adhkar actually carries. The sixth - «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر» - is NOT in this edition: zero hits across all 338 chapters. It is therefore dropped, not reconstructed. ruqyah_catalog.dart already states the principle: «an absent dua is an honest gap; a dua typed in from memory with no takhrij behind it is not.» These carry explicit ids so the screen can address them for ever."
