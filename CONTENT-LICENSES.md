@@ -249,12 +249,44 @@ re-run returns 0.**
 | source | what it provides | status |
 |---|---|---|
 | quran.com / KFQC | the ʿUthmani text and page layout | `AUTHOR_LONG_DEAD` — the Qur'an is nobody's property. **`NEEDS_REVIEW`** for the *typesetting* of a specific printing, which is a publisher's work |
-| api.alquran.cloud | translations | **`NEEDS_REVIEW`** — a translation has a living or recent translator; this has never been checked per language |
+| api.alquran.cloud | **45** translations | **`STATED_LICENCE` — resolved 2026-09-17, see below** |
 | quranpedia / quran-svg | the `hafs_kfqc` SVG glyph layer | **`NEEDS_REVIEW`** |
 
-**The 47 translation files are the clearest unexamined gap in this document.**
-A Qur'an translation is a modern work with a named translator. Nobody has
-recorded, per language, who made it and under what terms.
+### The translations — settled, and three corrections to this document
+
+An earlier draft of this file called the translations «the clearest unexamined
+gap» and said nobody had recorded who translated each or under what terms.
+**That was wrong on three counts, and each was found by looking at the repo
+rather than recalling it.**
+
+1. **The translator is recorded for every one.**
+   `assets/data/catalogs/quran_translations.json` holds **45** entries — not
+   47 — each with `lang`, `native_name`, `edition`, `translator`, `gz_bytes`,
+   `ayahs`, `bundled`. Saheeh International, Julio Cortés, Muhammad
+   Hamidullah, Besim Korkut, Ivan Hrbek, Bubenheim & Elyas, and so on.
+2. **The translator is shown to the reader**, not just stored:
+   `translation_tab.dart` renders him as the subtitle under every translation
+   block.
+3. **The upstream terms were readable and now have been read.**
+   alquran.cloud's terms and conditions, read 2026-09-17: the Qur'an text may
+   be reproduced, embedded, stored and displayed freely **for any
+   non-commercial purpose**; «Translations are contributed by their
+   rights-holders or sourced from public-domain editions. Each is delivered
+   with its edition identifier intact»; and when republishing a translation you
+   must **«attribute the translator by name»**. The text must not be altered or
+   commingled with non-Qur'anic material in a way that could be mistaken for
+   the Qur'an itself.
+
+So the three conditions are the three things the app already does: it is free
+and carries no advertising at all, it keeps each `edition` identifier verbatim,
+and it prints the translator's name under his translation. **Compliant, and it
+was compliant before this audit started** — which is worth writing down as
+plainly as a defect would have been.
+
+Under UAE law a translation *is* a protected derivative work (Article 2(12) and
+the definition of المصنف المشتق, quoted at the top of this file). That is
+exactly why the upstream permission matters, and why it was read rather than
+assumed.
 
 ## 3. The mushaf page images — 6 printings
 
@@ -267,18 +299,44 @@ recorded, per language, who made it and under what terms.
 | مصحف التجويد الملوّن | Dar al-Ma'rifa colour-coded printing | none recorded | **`NEEDS_REVIEW`** |
 | `hafs_kfqc` — مصحف المدينة، رواية حفص | quranpedia / quran-svg glyph layer | none recorded | **`NEEDS_REVIEW`** |
 
-**The ND problem, stated precisely so it is not lost.** `madinah_gold` is
-recorded as **CC BY-NC-ND**. `NC` is satisfied — this app is free, refuses ads
-on purpose, and sells nothing. `ND` is the open question: the pipeline
-(`build_mushaf_from_pdf.py`) **renders each page out of the source PDF,
-re-encodes it, and trims the scan margin**, and a cropped, re-encoded page may
-count as a derivative. That needs an answer before the next release that
-touches this edition. It is the kind of question a lawyer settles, not this
-file.
+**All six were re-read from `https://archive.org/metadata/<id>` on 2026-09-17**,
+and every one now carries `source`, `license` and `license_note` **inside
+`editions.json` itself**. `test/mushaf_provenance_test.dart` fails the build if
+a printing is added without them. «none stated» is a permitted value; an empty
+one is not.
 
-The licences above were **recorded by earlier sessions when each edition was
-added; they were not re-verified today.** The archive.org item ids are written
-down so they can be.
+**The ND question, answered.** `madinah_gold` is `CC BY-NC-ND 4.0`.
+
+* **NC** — satisfied. This app is free, refuses advertising on purpose, and
+  sells nothing.
+* **BY** — satisfied. «المصحف المذهّب (Smart Mushaf)» is credited on the
+  Sources screen with a link to its item.
+* **ND** — `r2_upload_mushaf_printings.py` takes the item's numbered JPEGs
+  **as they are** and downscales them to 1200 px wide, because at ~800 KB a
+  page the original set is ~490 MB and the screen it is going to is barely
+  1080 px across. **No crop, no recolour, no recomposition.** Under the
+  definition this file quotes at the top, a مصنف مشتق is one «مبتكرة من حيث
+  ترتيب أو اختيار محتوياتها» — a resize adds nothing to arrangement or
+  selection. An earlier draft of this document said the pipeline «trims the
+  scan margin»; it does that for the **cover** thumbnails, not for the pages.
+
+And the item's own description, which the uploader wrote in bold and
+underlined, matters more than the licence code he attached to it:
+
+> **The creator does not own the content.** The creator basically used the
+> vector pages of the Qur'an already available in the internet and added colors
+> and borders for visual purposes.
+
+So what he could license at all is the colouring and the borders. That is not a
+reason to ignore his terms, and they are not being ignored — it is a reason to
+stop treating this as the file's most urgent open question. **Still not a legal
+opinion.**
+
+The two editions that state **no** licence — `tajweed_color` (creator recorded
+as «dar al-ma'rifa, Beirut, Lebanon») and `madinah_night` (no creator, no
+rights statement at all) — plus `kuwait`, are recorded as stating none, which
+is the honest value. Reading their printed front and back matter, the way the
+Taj Company scan was rejected (CLAUDE.md trap #18), is what would settle them.
 
 The six were read out of `assets/data/mushaf/editions.json` on 2026-09-17, not
 recalled: `hafs_kfqc`, `tajweed_color`, `madinah_gold`, `qatar`, `kuwait`,
@@ -317,7 +375,18 @@ where each hadith ends — but they are not stored and not shipped.
 | sunnah.com | the nine collections' matn | `AUTHOR_LONG_DEAD` |
 | Shamela — مسند أحمد، ط الرسالة | Musnad Ahmad's matn | `AUTHOR_LONG_DEAD` for the matn; the editor's footnotes are **not** shipped (see above) |
 | Shamela — سنن الدارمي ت حسين أسد | Sunan al-Darimi's matn | same shape; **`NEEDS_REVIEW`** only to confirm no apparatus leaked in |
-| hadeethenc.com | 3,574 hadiths in 7 languages, with explanations and glossaries | **`NEEDS_REVIEW`** — a modern, living editorial project; its own terms have never been read. This is the one hadith source where the *modern* material (translations, explanations, word glossaries) is the point |
+| hadeethenc.com | 3,574 hadiths in 7 languages, with explanations and glossaries | **`STATED_LICENCE` — its terms were read on 2026-09-10**, before a byte was uploaded, and they permit it. See below |
+
+**hadeethenc.com — a fourth correction to this document.** An earlier draft
+said its terms «have never been read». They had been, on 2026-09-10, and the
+reasoning is written into `AppConfig.hadeethEncUrl`'s own doc comment: the
+publisher's «الشروط والسياسات» permits downloading and republishing the
+translations on conditions — no modification, addition or deletion; clear
+credit to the publisher and the source; the version number; and no advertising
+unbefitting the content. The app modifies nothing, credits the source on the
+collection screen, on every hadith and on the Sources screen, and carries no
+advertising at all. That session cited CLAUDE.md trap #18 as its reason for
+reading the terms first. Recording it here so the record is in one place.
 
 **Gradings are a separate matter and are handled correctly.** Saying «صححه
 الألباني» is a statement of fact about a hadith and is what CLAUDE.md §1.2
@@ -350,21 +419,26 @@ not one grading in the database is anonymous.**
    its follow-ups are done too — a filtered book now says so in the reader in
    seven languages, and a device holding a pre-filter copy is told to download
    it again.
-2. **The 47 Qur'an translations.** Who translated each, and under what terms.
-   Not one has been recorded. This is the largest untouched area in the app.
-3. **`madinah_gold`'s ND clause** — the one open question with a name and a
-   deadline, because the rendering pipeline may be making a derivative.
-4. **The four mushaf printings with no licence recorded.** Render the front and
-   back matter and read it, as was done for the Taj Company scan — that scan
-   was rejected on exactly this evidence (CLAUDE.md trap #18).
-5. **Add `source` and `license` fields to `editions.json`**, so a printing
-   cannot be added again without recording where it came from. Today those
-   facts survive only in a session's memory file, which was found to be
-   **wrong** on 2026-09-17 (it said nine printings ship; six do).
-6. **hadeethenc.com's terms.** Its modern material — translations,
-   explanations, 83k word glossaries — is the point of that feature, so this
-   one cannot be answered by «the matn is old».
+2. ~~The 47 Qur'an translations.~~ **Done 2026-09-17** — and they turned out
+   to be 45, each with its translator recorded *and shown*, under upstream
+   terms that permit exactly this. Nothing to fix.
+3. ~~`madinah_gold`'s ND clause.~~ **Answered 2026-09-17** — NC and BY are
+   satisfied, the pipeline only downscales, and the uploader states he does not
+   own the content.
+4. ~~Add `source` and `license` fields to `editions.json`.~~ **Done
+   2026-09-17**, for all six, from the items' own metadata, held by
+   `test/mushaf_provenance_test.dart`.
+5. ~~hadeethenc.com's terms.~~ **They were read on 2026-09-10**, before
+   anything was uploaded, and they permit it.
+6. **`tajweed_color`, `madinah_night` and `kuwait` state no licence.** Render
+   their printed front and back matter and read it, the way the Taj Company
+   scan was rejected on exactly that evidence (CLAUDE.md trap #18). This is now
+   the only open item on the mushaf side.
 7. **The recitations** on everyayah.com, cdn.islamic.network and mp3quran.net.
+8. **The azkar corpus.** Still حصن المسلم, which Article 3 of the UAE law
+   protects as an innovative *collection* of free supplications. 22 of
+   an-Nawawi's have been hand-picked out of 338 chapters; see
+   `scripts/azkar_curated.json`.
 
 ## How to re-run the measurements in this file
 

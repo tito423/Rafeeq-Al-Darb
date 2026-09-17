@@ -1,6 +1,6 @@
 {
  "version": 2,
- "license": "quranpedia/quran-svg — polygon metadata CC0-1.0; KFQC glyphs free for digital use. Raster editions rehosted first-party on R2: Tajweed (Dar Al-Maarifa), Warsh + Qalun (Quran-for-Android page scans), Madinah illuminated (archive.org public scans). Every edition listed here has its full page count verified present on R2 before shipping.",
+ "license": "Per-edition provenance lives on each entry below, in `source` and `license`, read from the item itself on 2026-09-17. This line used to be the only record and it had gone stale — it still named Warsh and Qalun, which were deleted on 2026-09-09. Two editions state a Creative Commons licence; three state none and say so. See CONTENT-LICENSES.md.",
  "pin": "b91d39e1065b57bdda3e94aca8ecf3575e50e1e6",
  "editions": [
   {
@@ -28,7 +28,10 @@
    "is_default": true,
    "hafs_pagination": true,
    "cover_asset": "assets/mushaf_covers/hafs_kfqc.jpg",
-   "printed_header": false
+   "printed_header": false,
+   "source": "quranpedia/quran-svg",
+   "license": "polygon metadata CC0-1.0; KFQC glyphs free for digital use",
+   "license_note": "The vector edition. Not a scan."
   },
   {
    "id": "tajweed_color",
@@ -81,7 +84,10 @@
      }
     }
    },
-   "printed_header": true
+   "printed_header": true,
+   "source": "archive.org/details/quraan-colored",
+   "license": "none stated",
+   "license_note": "Creator recorded on the item as «dar al-ma'rifa, Beirut, Lebanon». The item states no licence."
   },
   {
    "id": "madinah_gold",
@@ -4342,7 +4348,10 @@
      }
     }
    },
-   "printed_header": true
+   "printed_header": true,
+   "source": "archive.org/details/smartmushaf",
+   "license": "CC BY-NC-ND 4.0",
+   "license_note": "The uploader states in his own item description, bolded and underlined: «The creator does not own the content. The creator basically used the vector pages of the Qur'an already available in the internet and added colors and borders for visual purposes.» NC is satisfied — this app is free and carries no advertising. BY is satisfied — Smart Mushaf is credited on the Sources screen with a link. Pages are served downscaled to 1200px for bandwidth, with no crop, recolour or recomposition."
   },
   {
    "id": "qatar",
@@ -8603,7 +8612,10 @@
      }
     }
    },
-   "printed_header": true
+   "printed_header": true,
+   "source": "archive.org/details/QuranMushafQatar",
+   "license": "CC BY-NC-SA 3.0",
+   "license_note": "Stated on the item itself; it is why this printing was chosen."
   },
   {
    "id": "kuwait",
@@ -12864,7 +12876,10 @@
      }
     }
    },
-   "printed_header": true
+   "printed_header": true,
+   "source": "archive.org — Ministry of Awqaf and Islamic Affairs, Kuwait",
+   "license": "none stated",
+   "license_note": "Recorded when the edition was added; the item id is in scripts/build_mushaf_from_pdf.py."
   },
   {
    "id": "madinah_night",
@@ -17125,7 +17140,10 @@
      }
     }
    },
-   "printed_header": true
+   "printed_header": true,
+   "source": "archive.org/details/QuranMadina35685363568hNight",
+   "license": "none stated",
+   "license_note": "The item carries no licence, no creator and no rights statement."
   }
  ]
 }
