@@ -369,8 +369,19 @@ class _CategoriesView extends StatelessWidget {
           _CategoryExpansionTile(
             key: PageStorageKey<int>(cats[i].index),
             category: cats[i],
+            // `shelfOrder` first, then the Arabic collation handle. Every
+            // shelf but طالب العلم leaves `shelfOrder` at 0, so this is the
+            // old alphabetical sort everywhere else; that one shelf is a
+            // graduated path and sorting it by title would put الآجرومية at
+            // the top and جامع بيان العلم وفضله — what a student reads first
+            // — in the middle.
             books: byCat[cats[i]]!
-              ..sort((x, y) => x.sortKey.compareTo(y.sortKey)),
+              ..sort((x, y) {
+                final byShelf = x.shelfOrder.compareTo(y.shelfOrder);
+                return byShelf != 0
+                    ? byShelf
+                    : x.sortKey.compareTo(y.sortKey);
+              }),
             initiallyExpanded: i == 0,
             paths: paths,
             onDownload: onDownload,

@@ -145,6 +145,7 @@ class LibraryBook {
     this.pages = 0,
     this.descKey = '',
     required this.category,
+    this.shelfOrder = 0,
     this.downloadUrl,
     this.fileName,
     this.approxSizeBytes,
@@ -184,6 +185,23 @@ class LibraryBook {
 
   bool get hasText => textEdition != null;
   bool get hasImage => downloadUrl != null;
+
+  /// Where this book sits on its shelf, when the shelf is a **path** rather
+  /// than a list. 0 — the default, and what every other shelf uses — means
+  /// «no opinion, sort me alphabetically with the rest».
+  ///
+  /// It exists for `BookCategory.talibIlm`. The owner asked for «الكتب
+  /// المتدرجة … بتدرج», and a graduated shelf sorted by title is not a path:
+  /// الآجرومية would open the shelf and جامع بيان العلم وفضله, which is what a
+  /// student reads first, would sit in the middle. The four stages are
+  /// آداب الطلب (1), المتون الأولى (2), التوسّع (3) and المقاصد (4); books
+  /// inside a stage still sort by [sortKey].
+  ///
+  /// `books_tab.dart` sorts on `(shelfOrder, sortKey)` and
+  /// `test/talib_ilm_shelf_test.dart` holds the result, because the ordering
+  /// is invisible in the data — every id is a valid `int` and nothing else
+  /// would notice it being wrong.
+  final int shelfOrder;
 
   /// Arabic-collation-friendly sort handle: drops a leading "ال" so
   /// "الفوائد" files under fā', not alif, and normalises alef forms.
@@ -3496,7 +3514,7 @@ const List<LibraryBook> libraryBookCatalog = [
 /// One book by its id, or null.
 ///
 /// Built once and cached: `isBookDownloaded` asks for it on every library card
-/// and a linear scan of 248 entries per card is a scan nobody needs.
+/// and a linear scan of the whole catalogue per card is a scan nobody needs.
 final Map<String, LibraryBook> _byId = {
   for (final b in libraryBookCatalog) b.id: b,
 };
