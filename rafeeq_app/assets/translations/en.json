@@ -745,7 +745,15 @@
     "wudu": "Wudu (Ablution)",
     "prayer_steps": "Steps of Prayer",
     "faith": "Faith",
-    "quran_basics": "Introduction to the Quran"
+    "quran_basics": "Introduction to the Quran",
+    "points_count": {
+      "zero": "{} points",
+      "one": "{} point",
+      "two": "{} points",
+      "few": "{} points",
+      "many": "{} points",
+      "other": "{} points"
+    }
   },
   "search": {
     "title": "Thematic Search",
@@ -937,7 +945,8 @@
     "src_ed_qatar": "CC BY-NC-SA 3.0, as stated on the archive item",
     "src_ed_kuwait": "State of Kuwait — Ministry of Awqaf and Islamic Affairs. The volume prints no rights notice; its front and back matter were checked.",
     "src_ed_madinah_night": "King Fahd Complex for the Printing of the Holy Quran, Madinah — night setting. The volume prints no rights notice.",
-    "src_youtube": "Each channel picture is taken from that channel’s own YouTube page and mirrored on the app’s server so the grid works offline. The channels open in YouTube; no video is re-published."
+    "src_youtube": "Each channel picture is taken from that channel’s own YouTube page and mirrored on the app’s server so the grid works offline. The channels open in YouTube; no video is re-published.",
+    "src_unsplash": "The card photographs on the Azkar grid and the New Muslim guide — under the Unsplash License, fetched straight from the source to your device."
   },
   "ruqyah": {
     "title": "Ruqyah",

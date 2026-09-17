@@ -45,8 +45,6 @@ void main() {
             'open on one of them',
     'lib/features/tajweed/presentation/screens/tamhid_level_screen.dart':
         'the same two anchors, for the same reason',
-    'lib/features/new_muslim/presentation/screens/new_muslim_guide_screen.dart':
-        'an Arabic-only plural in a locale-aware branch',
     'lib/features/home/presentation/screens/home_screen.dart':
         'the Arabic comma used as a separator',
     'lib/features/settings/presentation/screens/about_screen.dart':

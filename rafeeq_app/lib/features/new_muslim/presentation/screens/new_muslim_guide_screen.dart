@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/utils/digits.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -29,8 +30,6 @@ class NewMuslimGuideScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = context.locale.languageCode == 'ar';
-
     return Scaffold(
       appBar: AppBar(title: Text('new_muslim.title'.tr())),
       body: GridView.builder(
@@ -137,8 +136,12 @@ class NewMuslimGuideScreen extends StatelessWidget {
                               ),
                         ),
                         const Spacer(),
+                        // Was `isAr ? "بنود" : "points"` - which gave the other
+                        // FIVE languages the English word, and printed the
+                        // count in Latin digits beside Arabic-Indic ones.
                         Text(
-                          '${section.items.length} ${isAr ? "بنود" : "points"}',
+                          pluralN('new_muslim.points_count',
+                              section.items.length),
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium

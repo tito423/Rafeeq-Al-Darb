@@ -122,6 +122,13 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // author and Commons page is in `assets/data/quote_backgrounds.json`.
       SourceEntry('Wikimedia Commons', 'https://commons.wikimedia.org',
           'about.src_commons'),
+      // The Azkar grid and the New Muslim guide draw their card photographs
+      // from Unsplash, hotlinked to `images.unsplash.com` — the reader's own
+      // device fetches them and nothing is rehosted here, the same position
+      // the recitations sit in. Credited because this screen says every
+      // source is on it, and this one was not.
+      SourceEntry('Unsplash', 'https://unsplash.com/license',
+          'about.src_unsplash'),
     ]
   ),
   (

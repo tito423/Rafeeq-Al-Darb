@@ -745,7 +745,15 @@
     "wudu": "Wudu (Ablutions)",
     "prayer_steps": "Étapes de la prière",
     "faith": "La foi",
-    "quran_basics": "Introduction au Coran"
+    "quran_basics": "Introduction au Coran",
+    "points_count": {
+      "zero": "{} points",
+      "one": "{} point",
+      "two": "{} points",
+      "few": "{} points",
+      "many": "{} points",
+      "other": "{} points"
+    }
   },
   "search": {
     "title": "Recherche thématique",
@@ -937,7 +945,8 @@
     "src_ed_qatar": "CC BY-NC-SA 3.0, selon la page d’archive",
     "src_ed_kuwait": "État du Koweït — ministère des Awqaf et des Affaires islamiques. Le volume ne porte aucune mention de droits ; les pages liminaires et finales ont été vérifiées.",
     "src_ed_madinah_night": "Complexe du Roi Fahd pour l’impression du noble Coran, Médine — composition de nuit. Le volume ne porte aucune mention de droits.",
-    "src_youtube": "Chaque image de chaîne provient de la page YouTube de cette chaîne et est mise en miroir sur le serveur de l’application pour fonctionner hors ligne. Les chaînes s’ouvrent dans YouTube ; aucune vidéo n’est republiée."
+    "src_youtube": "Chaque image de chaîne provient de la page YouTube de cette chaîne et est mise en miroir sur le serveur de l’application pour fonctionner hors ligne. Les chaînes s’ouvrent dans YouTube ; aucune vidéo n’est republiée.",
+    "src_unsplash": "Les photographies des cartes des adhkar et du guide du nouveau musulman — sous licence Unsplash, récupérées directement à la source."
   },
   "ruqyah": {
     "title": "Roqya",

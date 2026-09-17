@@ -17,8 +17,12 @@ const azkarCategoryBackgrounds = <AzkarCategory, String>{
   // so the card now actually looks like when they belong.
   AzkarCategory.morning:
       'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=640&q=70&fit=crop',
+  // Replaced 2026-09-18: the previous photo 404s. This one was fetched at
+  // this exact URL and LOOKED AT before being catalogued (trap #36) - the
+  // prayer hall of Sultan Mosque, Singapore, with worshippers seated and
+  // the mihrab at the far end.
   AzkarCategory.mosque:
-      'https://images.unsplash.com/photo-1591604129939-f1efa4d99f7e?w=640&q=70&fit=crop',
+      'https://images.unsplash.com/photo-1540567736792-f78f6242e4e0?w=640&q=70&fit=crop',
   AzkarCategory.afterPrayer:
       'https://images.unsplash.com/photo-1564769625905-50e93615e769?w=640&q=70&fit=crop',
   AzkarCategory.evening:
@@ -27,6 +31,9 @@ const azkarCategoryBackgrounds = <AzkarCategory, String>{
       'https://images.unsplash.com/photo-1532978379173-523e16f371f2?w=640&q=70&fit=crop',
   AzkarCategory.travel:
       'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=640&q=70&fit=crop',
+  // Replaced 2026-09-18, same reason and same check: a mushaf on a carved
+  // rihal with a misbaha beside it on a dark ground - prayer beads being
+  // the thing this section is actually about.
   AzkarCategory.narrated:
-      'https://images.unsplash.com/photo-1585036156171-384164a8c956?w=640&q=70&fit=crop',
+      'https://images.unsplash.com/photo-1587617425953-9075d28b8c46?w=640&q=70&fit=crop',
 };
