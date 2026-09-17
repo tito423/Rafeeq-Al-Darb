@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rafeeq_app/features/adhan/data/adhan_settings_provider.dart';
 
 /// The adhan is an alarm, and these are the measurements that decide whether
 /// it works as one. Taken with ffmpeg and written to
@@ -34,7 +35,15 @@ void main() {
     expect(catalogIds.difference(measuredIds), isEmpty,
         reason: 'catalogued but never measured — run scripts/ffmpeg over it '
             'before shipping it');
-    expect(measuredIds.difference(catalogIds), isEmpty);
+    // The other direction catches dead measurement data. An adhan taken out
+    // of the picker ON PURPOSE is the exception: `azan13` (الشيخ ربيع القاضي)
+    // was removed temporarily on 2026-09-17 and its measurement, timings and
+    // mp3 are kept deliberately so restoring it needs no re-measuring. An
+    // orphan that is NOT declared in `removedAdhanIds` still fails here.
+    expect(measuredIds.difference(catalogIds).difference(removedAdhanIds),
+        isEmpty,
+        reason: 'measured but no longer catalogued, and not declared in '
+            'removedAdhanIds — either put it back or say it is gone');
   });
 
   test('every bundled file exists in both places it ships', () {
