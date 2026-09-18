@@ -199,6 +199,9 @@ final sciencesRepositoryProvider =
   // chapters and 48 supplications hand-picked from an-Nawawi's «الأذكار»
   // (d. 676 AH), with the muhaqqiq's apparatus filtered out. Without this bump
   // every existing install would keep the old file for ever.
-  stamp: 'sciences-v5');
+  // v6 (2026-09-18): «الأذكار ناقصة جداً» — 13 more narrations from the same
+  // book, 60 -> 74 rows: morning/evening and sleep, each attributed and graded
+  // in an-Nawawi's own words; none he calls weak.
+  stamp: 'sciences-v6');
   return SciencesRepository(db);
 });
