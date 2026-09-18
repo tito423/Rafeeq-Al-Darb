@@ -56,8 +56,23 @@ import 'byte_formatter.dart' show ltr;
 /// single Latin letter, so a future `intl` that fixes `ur` makes this entry
 /// redundant rather than wrong.
 const Map<String, List<String>> _markerOverrides = {
-  // intl 0.20.2 gives ['a', 'p']; intl 0.18.1 gave ['AM', 'PM'].
-  'ur': ['AM', 'PM'],
+  // intl 0.20.2 gives ['a', 'p'] for Urdu — CLDR's NARROW day-period in the
+  // abbreviated slot. The app's own `home.am` / `home.pm` say «صبح» / «شام»,
+  // which is what an Urdu reader actually writes, and what the big Home
+  // clock has been drawing all along.
+  //
+  // The value here MUST equal `home.am` / `home.pm` in ur.json, and
+  // `time_marker_locale_test` fails if it ever stops matching. Keeping it a
+  // plain constant rather than reading tr() at runtime is deliberate: tr()
+  // needs EasyLocalization loaded, so a test could only ever check the
+  // fallback — which is precisely the kind of test that passes while the
+  // thing it guards is broken.
+  //
+  // Before this, the Home clock read «٠٥:٠٠ صبح» while the prayer row
+  // directly beneath it read «٤:٤٧ AM» — one screen, two markers, same
+  // language. Seen on emulator-5554 while walking the five languages that
+  // had never been opened.
+  'ur': ['صبح', 'شام'],
 };
 
 /// Swaps a degenerate marker out of an already-formatted clock.
