@@ -5,6 +5,7 @@ import '../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../core/services/download_manager.dart';
 import '../../../core/services/mushaf_page_service.dart';
 import '../../quran/data/mushaf_edition.dart';
+import '../../library/data/library_api_service.dart';
 import '../../library/data/tts/open_voice.dart';
 
 /// P2‑5 — a read-only aggregator over every place the app stores downloaded
@@ -135,6 +136,12 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       out.add(CategoryUsage(cat, reciteBytes + bytes, reciteItems + ids.length));
     } else if (cat == DownloadCategory.ayahRecitations) {
       out.add(CategoryUsage(cat, ayahBytes, ayahItems));
+    } else if (cat == DownloadCategory.books) {
+      // Library books are fetched by LibraryApiService, not DownloadManager,
+      // so the manager artifacts alone left this row at «لا يوجد محتوى»
+      // with a book on the device.
+      final (bb, bn) = await LibraryApiService.instance.storageUsage();
+      out.add(CategoryUsage(cat, bytes + bb, ids.length + bn));
     } else if (cat == DownloadCategory.voices) {
       final vb = await OpenVoice.usageBytes();
       out.add(CategoryUsage(cat, vb, vb > 0 ? 1 : 0));
@@ -160,8 +167,9 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
       await AyahRecitationLibrary.instance.freeAll();
     case DownloadCategory.voices:
       await OpenVoice.uninstall();
-    case DownloadCategory.hadith:
     case DownloadCategory.books:
+      await LibraryApiService.instance.deleteAllBooks();
+    case DownloadCategory.hadith:
       break;
   }
   // Whatever the bucket also owns in DownloadManager goes with it — for

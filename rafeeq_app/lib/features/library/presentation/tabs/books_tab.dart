@@ -32,6 +32,7 @@ class BooksTab extends StatefulWidget {
 
 class _BooksTabState extends State<BooksTab> {
   StreamSubscription<List<DownloadTask>>? _sub;
+  StreamSubscription<void>? _bookSub;
 
   /// download id -> local file path (once on disk). Keyed by `book.id` for the
   /// image PDF and by `book.textDownloadId` for the text edition.
@@ -44,6 +45,7 @@ class _BooksTabState extends State<BooksTab> {
     super.initState();
     _loadRegistry();
     _sub = DownloadManager.instance.stream.listen((_) => _loadRegistry());
+    _bookSub = LibraryApiService.instance.changes.listen((_) => _loadRegistry());
   }
 
   Future<void> _loadRegistry() async {
@@ -63,6 +65,7 @@ class _BooksTabState extends State<BooksTab> {
   @override
   void dispose() {
     _sub?.cancel();
+    _bookSub?.cancel();
     super.dispose();
   }
 

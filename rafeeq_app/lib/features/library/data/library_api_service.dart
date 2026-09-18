@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,6 +15,11 @@ class LibraryApiService {
   LibraryApiService._();
 
   Database? _db;
+
+  /// Fires whenever a book is added or removed, from anywhere — the Library
+  /// tab listens so a book freed on the Downloads screen stops showing «فتح».
+  final _changes = StreamController<void>.broadcast();
+  Stream<void> get changes => _changes.stream;
 
   Future<Database> get database async {
     if (_db != null) return _db!;
@@ -203,6 +209,7 @@ class LibraryApiService {
       }
       await batch.commit(noResult: true);
     });
+    _changes.add(null);
   }
 
   Future<void> deleteBook(String bookId) async {
@@ -213,6 +220,40 @@ class LibraryApiService {
       await txn.delete('book_meta', where: 'id = ?', whereArgs: [bookId]);
       await txn.delete('book_pages', where: 'book_id = ?', whereArgs: [bookId]);
     });
+    _changes.add(null);
+  }
+
+  /// Every book whose rows are on this device.
+  Future<List<String>> downloadedBookIds() async {
+    final db = await database;
+    final rows = await db.query('book_meta', columns: ['id']);
+    return [for (final r in rows) r['id'] as String];
+  }
+
+  /// What the downloaded books really occupy: each text file plus the
+  /// search index, which for one book of 2,010 pages was 2.6 MB against a
+  /// 225 KB file — counting the files alone would understate it tenfold.
+  Future<(int bytes, int count)> storageUsage() async {
+    final ids = await downloadedBookIds();
+    if (ids.isEmpty) return (0, 0);
+    var bytes = 0;
+    for (final id in ids) {
+      final f = File(await bookFilePath(id));
+      if (await f.exists()) bytes += await f.length();
+    }
+    final dbFile = File(join(await getDatabasesPath(), 'library_books.db'));
+    if (await dbFile.exists()) bytes += await dbFile.length();
+    return (bytes, ids.length);
+  }
+
+  /// Removes every downloaded book, then compacts the index so the space
+  /// really comes back (SQLite keeps freed pages inside the file).
+  Future<void> deleteAllBooks() async {
+    for (final id in await downloadedBookIds()) {
+      await deleteBook(id);
+    }
+    final db = await database;
+    await db.execute('VACUUM');
   }
 
   /// Searches every downloaded book at once.
