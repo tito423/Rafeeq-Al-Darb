@@ -1702,5 +1702,29 @@
     "t_thousand": "Cien tasbihs",
     "t_istighfar": "Astaghfirullaha wa atubu ilayh",
     "t_mufarridun": "Recuerda mucho a Allah"
+  },
+  "dedication": {
+    "title": "Dedicatorias",
+    "card_subtitle": "Dedica lectura, istighfar o tasbih a alguien querido, por su nombre y con tus palabras",
+    "add": "Nueva dedicatoria",
+    "edit": "Editar",
+    "share": "Compartir",
+    "reset": "Reiniciar contador",
+    "delete": "Eliminar",
+    "delete_confirm": "¿Eliminar la dedicatoria a {name}?",
+    "empty": "Aún no hay dedicatorias.\nPulsa «Nueva dedicatoria» y escribe el nombre de alguien querido y lo que quieres dedicarle.",
+    "kind_quran": "Lectura del Corán",
+    "kind_istighfar": "Istighfar",
+    "kind_tasbih": "Tasbih",
+    "kind_dua": "Dua",
+    "unit_pages": "Páginas",
+    "unit_times": "Veces",
+    "add_page": "Leí una página",
+    "name_label": "Para quién es",
+    "name_hint": "p. ej. mi padre",
+    "note_label": "Tus palabras para él o ella (opcional)",
+    "note_hint": "Escribe la dua o la intención con tus palabras",
+    "save": "Guardar",
+    "share_line": "{kind} — dedicado a {name}"
   }
 }

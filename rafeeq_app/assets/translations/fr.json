@@ -1702,5 +1702,29 @@
     "t_thousand": "Cent tasbihs",
     "t_istighfar": "Astaghfirullaha wa atubu ilayh",
     "t_mufarridun": "Invoquez Allah abondamment"
+  },
+  "dedication": {
+    "title": "Dédicaces",
+    "card_subtitle": "Dédiez une lecture, un istighfar ou un tasbih à un être cher, par son nom et avec vos mots",
+    "add": "Nouvelle dédicace",
+    "edit": "Modifier",
+    "share": "Partager",
+    "reset": "Remettre à zéro",
+    "delete": "Supprimer",
+    "delete_confirm": "Supprimer la dédicace à {name} ?",
+    "empty": "Aucune dédicace pour l'instant.\nAppuyez sur « Nouvelle dédicace » et écrivez le nom d'un être cher et ce que vous voulez lui dédier.",
+    "kind_quran": "Lecture du Coran",
+    "kind_istighfar": "Istighfar",
+    "kind_tasbih": "Tasbih",
+    "kind_dua": "Dou'a",
+    "unit_pages": "Pages",
+    "unit_times": "Fois",
+    "add_page": "J'ai lu une page",
+    "name_label": "Pour qui",
+    "name_hint": "ex. mon père",
+    "note_label": "Vos mots pour lui ou elle (facultatif)",
+    "note_hint": "Écrivez la dou'a ou l'intention avec vos mots",
+    "save": "Enregistrer",
+    "share_line": "{kind} — dédié à {name}"
   }
 }

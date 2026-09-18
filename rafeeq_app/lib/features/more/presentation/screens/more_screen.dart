@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../dedications/presentation/dedications_screen.dart';
 import '../../../ruqyah/data/ruqyah_catalog.dart';
 import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
@@ -134,6 +135,16 @@ class MoreScreen extends ConsumerWidget {
             subtitle: 'hajj.card_subtitle'.tr(),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const HajjScreen()),
+            ),
+          ),
+
+          IslamicActionCard(
+            icon: Icons.volunteer_activism,
+            accent: AppColors.primarySoft,
+            title: 'dedication.title'.tr(),
+            subtitle: 'dedication.card_subtitle'.tr(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const DedicationsScreen()),
             ),
           ),
 

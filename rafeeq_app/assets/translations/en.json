@@ -1702,5 +1702,29 @@
     "t_thousand": "A hundred tasbihs",
     "t_istighfar": "Astaghfirullaha wa atubu ilayh",
     "t_mufarridun": "Remember Allah much"
+  },
+  "dedication": {
+    "title": "Dedications",
+    "card_subtitle": "Dedicate reading, istighfar or tasbih to someone you love, by name and in your own words",
+    "add": "New dedication",
+    "edit": "Edit",
+    "share": "Share",
+    "reset": "Reset counter",
+    "delete": "Delete",
+    "delete_confirm": "Delete the dedication to {name}?",
+    "empty": "No dedications yet.\nTap «New dedication» and write the name of someone you love and what you want to dedicate to them.",
+    "kind_quran": "Qur'an reading",
+    "kind_istighfar": "Istighfar",
+    "kind_tasbih": "Tasbih",
+    "kind_dua": "Dua",
+    "unit_pages": "Pages",
+    "unit_times": "Times",
+    "add_page": "I read a page",
+    "name_label": "Who it is for",
+    "name_hint": "e.g. my father",
+    "note_label": "Your words for them (optional)",
+    "note_hint": "Write the dua or intention in your own words",
+    "save": "Save",
+    "share_line": "{kind} — dedicated to {name}"
   }
 }
