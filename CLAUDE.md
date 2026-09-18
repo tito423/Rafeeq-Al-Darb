@@ -257,6 +257,14 @@ Do not rediscover these.
    code that fetches a book must sniff, exactly as `BookText.fromFile` and
    `LibraryApiService.downloadBook` do.
 
+   **And the header must stay OFF.** On 2026-09-18 four books were found
+   carrying `Content-Encoding: gzip` on R2. Dio unpacks those transparently,
+   so the device stores the *decompressed* file, `isBookDownloaded`'s size
+   check fails, and the book downloads, indexes 2,010 pages, and still shows
+   «تنزيل» for ever. Never upload a book with `ContentEncoding`;
+   `py -3 scripts/fix_book_content_encoding.py` strips it in place and
+   checks all books on the public endpoint.
+
 7. **`Icons.chevron_left` auto-mirrors in RTL.** For a disclosure chevron that
    should point the same way in Arabic, use `chevron_right`. Ten of them pointed
    the wrong way.

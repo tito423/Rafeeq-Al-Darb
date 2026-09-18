@@ -74,6 +74,13 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       SourceEntry('cdn.islamic.network', 'https://islamic.network',
           'about.src_islamicnetwork'),
       SourceEntry('mp3quran.net', 'https://mp3quran.net', 'about.src_mp3quran'),
+      // The book reader's downloadable voice: the speaker and the corpus
+      // (CC BY 4.0) and the phonetiser rules (CC BY-NC 4.0) are Halabi's, the
+      // trained models nipponjo's. See CONTENT-LICENSES.md.
+      SourceEntry('Arabic Speech Corpus', 'http://en.arabicspeechcorpus.com/',
+          'about.src_asc'),
+      SourceEntry('nipponjo/tts_arabic', 'https://github.com/nipponjo/tts_arabic',
+          'about.src_tts_arabic'),
     ]
   ),
   (

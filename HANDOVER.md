@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-18 21:33 — IN PROGRESS — resume here**
+**2026-09-18 21:53 — IN PROGRESS — resume here**
 
-TTS stage 3c: OpenVoice wired into BookSpeaker (native MediaPlayer channel voice_player, 220-char word-safe chunks, render-ahead, fallback to Google voice), offerOpenVoice install dialog + 7-locale keys. Analyze clean, chunk tests pass. NOT yet run on device.
+Library bug FIXED on R2: 4 books (al_adab_al_mufrad, al_shamail_al_muhammadiyyah, al_targhib_wal_tarhib, mishkat_al_masabih) carried Content-Encoding gzip -> Dio decompressed -> size check failed -> book stuck on download. scripts/fix_book_content_encoding.py stripped it, 213/213 clean; re-download seen working on emulator. TTS: install dialog seen on emulator, voice pack downloading (~380KB/s on emulator). Sources credit for Arabic Speech Corpus + nipponjo added.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
