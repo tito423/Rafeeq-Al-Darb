@@ -2,6 +2,7 @@
 // shadows the dart:ui one (ltr/rtl) this file uses — hide it (same fix as
 // ayah_sciences_sheet.dart, see HANDOVER §7).
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../widgets/book_listen_action.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
@@ -490,6 +491,11 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                           icon: Icons.search,
                           label: 'library.text_search'.tr(),
                           onPressed: _openSearch,
+                        ),
+                        BookListenAction(
+                          book: widget.book,
+                          doc: doc,
+                          pageIndex: _pageIndex,
                         ),
                         // `Scaffold.of(context)` needs a context *below*
                         // the Scaffold in the tree — this `build()`

@@ -434,7 +434,13 @@
     "tab_hadeethenc": "Encyclopédie des hadiths",
     "download_author_all": "Télécharger tous les livres de l'auteur ({})",
     "editor_notes_removed": "Le texte de l'auteur d'après cette édition ; les notes de l'éditeur ne sont pas incluses",
-    "cat_talibIlm": "L'étudiant en sciences religieuses"
+    "cat_talibIlm": "L'étudiant en sciences religieuses",
+    "text_listen": "Écouter",
+    "text_listen_stop": "Arrêter",
+    "text_listen_unavailable_title": "Ce livre n'est pas lu à voix haute",
+    "text_listen_unavailable_body": "Le texte de cette édition n'est pas vocalisé (seulement {} % de ses lettres portent les harakat). L'arabe lu sans voyelles est mal prononcé, et dans un texte religieux une voyelle fausse est un sens faux.",
+    "text_listen_no_engine": "Votre appareil n'a pas de voix arabe. Installez-en une depuis Paramètres Android → Langue → Synthèse vocale.",
+    "text_listen_skips_quran": "Les versets sont récités par de vrais récitants dans la section des récitations ; cette voix synthétique ne les lit pas."
   },
   "azkar": {
     "title": "Adhkar",

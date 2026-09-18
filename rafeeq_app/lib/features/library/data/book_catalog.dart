@@ -134,6 +134,34 @@ class LibraryBook {
   /// the only one offered, no switch shown.
   final TextEdition? textEdition;
 
+  /// How much of this book's text carries its harakat, as a percentage,
+  /// MEASURED against the hosted file by `scripts/measure_diacritisation.py`
+  /// and written in by `apply_diacritisation.py`. Never typed by hand.
+  ///
+  /// It exists for the spoken reader. Arabic without vowels is genuinely
+  /// ambiguous - one consonantal skeleton is several different words - so in
+  /// a scholarly religious text a wrong vowel is a wrong MEANING. A voice can
+  /// only be trusted with a book that carries its own vowels.
+  ///
+  /// The corpus is bimodal, which is why this is a per-book number and not a
+  /// global switch: of 213 books, **80 are at or above 80%** and **49 are
+  /// under 5%**. Nothing measures above 87.2%, because many Arabic letters
+  /// take no mark at all - so 80% here means "essentially fully vowelled",
+  /// not "a fifth missing".
+  final int diacritisedPct;
+
+  /// Whether the spoken reader is offered for this book.
+  ///
+  /// The threshold is 80% because that is where the distribution's own
+  /// cluster ends: the well-vowelled group runs 80.2% to 87.2% with no gaps,
+  /// and below it the values scatter - 79.8, 78.7, 75.3, 70.9, 65.8, 57.8.
+  /// Drawn from the data rather than chosen for roundness.
+  ///
+  /// Books below it are neither silently degraded nor silently hidden: the
+  /// reader says why there is no audio, because "the app mispronounces Ibn
+  /// al-Qayyim" is worse than "the app does not read this one aloud".
+  bool get canBeSpoken => diacritisedPct >= 80;
+
   const LibraryBook({
     required this.id,
     required this.titleAr,
@@ -152,6 +180,7 @@ class LibraryBook {
     this.approxSizeBytes,
     this.sourceUrl,
     this.textEdition,
+    this.diacritisedPct = 0,
   }) : assert(
          downloadUrl != null || textEdition != null,
          'a book needs at least one edition',
@@ -224,6 +253,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // below is copied from that card — see scripts/build_book_text.py.
   LibraryBook(
     id: 'bulugh_al_maram',
+    diacritisedPct: 39,
     titleAr: 'بلوغ المرام من أدلة الأحكام',
     titleEn: 'Bulugh al-Maram',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -243,6 +273,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_adab_al_mufrad',
+    diacritisedPct: 84,
     titleAr: 'الأدب المفرد',
     titleEn: 'Al-Adab al-Mufrad',
     authorAr: 'الإمام محمد بن إسماعيل البخاري',
@@ -261,6 +292,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_shamail_al_muhammadiyyah',
+    diacritisedPct: 1,
     titleAr: 'الشمائل المحمدية',
     titleEn: 'Al-Shamail al-Muhammadiyyah',
     authorAr: 'الإمام أبو عيسى محمد بن عيسى الترمذي',
@@ -280,6 +312,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'mishkat_al_masabih',
+    diacritisedPct: 79,
     titleAr: 'مشكاة المصابيح',
     titleEn: 'Mishkat al-Masabih',
     authorAr: 'الخطيب وليّ الدين محمد بن عبد الله التبريزي',
@@ -298,6 +331,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_targhib_wal_tarhib',
+    diacritisedPct: 40,
     titleAr: 'الترغيب والترهيب',
     titleEn: 'Al-Targhib wal-Tarhib',
     authorAr: 'الحافظ زكي الدين عبد العظيم المنذري',
@@ -316,6 +350,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'umdat_al_ahkam',
+    diacritisedPct: 26,
     titleAr: 'عمدة الأحكام',
     titleEn: 'Umdat al-Ahkam',
     authorAr: 'الحافظ عبد الغني بن عبد الواحد المقدسي',
@@ -335,6 +370,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'riyad_as_salihin',
+    diacritisedPct: 58,
     titleAr: 'رياض الصالحين',
     titleEn: 'Riyad as-Salihin',
     authorAr: 'الإمام محيي الدين النووي',
@@ -352,6 +388,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'mukhtasar_minhaj_al_qasidin',
+    diacritisedPct: 2,
     titleAr: 'مختصر منهاج القاصدين',
     titleEn: 'Mukhtasar Minhaj al-Qasidin',
     authorAr: 'الإمام موفق الدين ابن قدامة المقدسي',
@@ -372,6 +409,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_fawaid',
+    diacritisedPct: 36,
     titleAr: 'الفوائد',
     titleEn: 'Al-Fawaid',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -389,6 +427,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'sayd_al_khatir',
+    diacritisedPct: 2,
     titleAr: 'صيد الخاطر',
     titleEn: 'Sayd al-Khatir',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -408,6 +447,7 @@ const List<LibraryBook> libraryBookCatalog = [
 
   LibraryBook(
     id: 'nawadir_al_usul',
+    diacritisedPct: 34,
     titleAr: 'نوادر الأصول في أحاديث الرسول',
     titleEn: 'Nawadir al-Usul',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
@@ -426,6 +466,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_samt_wa_adab_al_lisan',
+    diacritisedPct: 87,
     titleAr: 'الصمت وآداب اللسان',
     titleEn: 'Al-Samt wa Adab al-Lisan',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -452,6 +493,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // not guessed at.
   LibraryBook(
     id: 'qasr_al_amal',
+    diacritisedPct: 86,
     titleAr: 'قصر الأمل',
     titleEn: 'Qasr al-Amal',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -470,6 +512,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'adab_al_nafs',
+    diacritisedPct: 0,
     titleAr: 'أدب النفس',
     titleEn: 'Adab al-Nafs',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
@@ -489,6 +532,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'islah_al_mal',
+    diacritisedPct: 86,
     titleAr: 'إصلاح المال',
     titleEn: 'Islah Al Mal',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -505,6 +549,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'istina_al_maruf',
+    diacritisedPct: 80,
     titleAr: 'اصطناع المعروف',
     titleEn: 'Istina Al Maruf',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -521,6 +566,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_amr_bil_maruf_ibn_abi_al_dunya',
+    diacritisedPct: 86,
     titleAr: 'الأمر بالمعروف والنهي عن المنكر',
     titleEn: 'Al Amr Bil Maruf Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -538,6 +584,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'ighathat_al_lahfan_fi_hukm_talaq_al_ghadban',
+    diacritisedPct: 15,
     titleAr: 'إغاثة اللهفان في حكم طلاق الغضبان - ت الحفيان',
     titleEn: 'Ighathat Al Lahfan Fi Hukm Talaq Al Ghadban',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -556,6 +603,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_amthal_fil_quran_ibn_al_qayyim',
+    diacritisedPct: 8,
     titleAr: 'الأمثال في القرآن [من «اعلام الموقعين»]',
     titleEn: 'Al Amthal Fil Quran Ibn Al Qayyim',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -574,6 +622,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_ahwal',
+    diacritisedPct: 80,
     titleAr: 'الأهوال.',
     titleEn: 'Al Ahwal',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -590,6 +639,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_awliya_ibn_abi_al_dunya',
+    diacritisedPct: 85,
     titleAr: 'الأولياء',
     titleEn: 'Al Awliya Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -607,6 +657,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_ikhlas_wal_niyyah',
+    diacritisedPct: 87,
     titleAr: 'الإخلاص والنية',
     titleEn: 'Al Ikhlas Wal Niyyah',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -623,6 +674,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_tibyan_fi_aqsam_al_quran',
+    diacritisedPct: 5,
     titleAr: 'التبيان في أقسام القرآن',
     titleEn: 'Al Tibyan Fi Aqsam Al Quran',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -640,6 +692,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_ikhwan',
+    diacritisedPct: 87,
     titleAr: 'الإخوان',
     titleEn: 'Al Ikhwan',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -656,6 +709,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_jami_fi_amthal_al_quran',
+    diacritisedPct: 30,
     titleAr: 'الجامع في أمثال القرآن، للعلامة ابن القيم',
     titleEn: 'Al Jami Fi Amthal Al Quran',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -674,6 +728,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_daa_wal_dawa',
+    diacritisedPct: 85,
     titleAr: 'الجواب الكافي لمن سأل عن الدواء الشافي أو الداء والدواء',
     titleEn: 'Al Daa Wal Dawa',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -690,6 +745,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_risalah_al_tabukiyyah',
+    diacritisedPct: 14,
     titleAr: 'الرسالة التبوكية (ضمن مجموع الرسائل)',
     titleEn: 'Al Risalah Al Tabukiyyah',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -708,6 +764,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_ishraf_fi_manazil_al_ashraf',
+    diacritisedPct: 85,
     titleAr: 'الإشراف في منازل الأشراف',
     titleEn: 'Al Ishraf Fi Manazil Al Ashraf',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -725,6 +782,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_itibar_wa_aqab_al_surur',
+    diacritisedPct: 85,
     titleAr: 'الاعتبار وأعقاب السرور والأحزان',
     titleEn: 'Al Itibar Wa Aqab Al Surur',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -742,6 +800,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_tawadu_wal_khumul',
+    diacritisedPct: 87,
     titleAr: 'التواضع والخمول',
     titleEn: 'Al Tawadu Wal Khumul',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -758,6 +817,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_ruh_ibn_al_qayyim',
+    diacritisedPct: 36,
     titleAr:
         'الروح في الكلام على أرواح الأموات والأحياء بالدلائل من الكتاب والسنة',
     titleEn: 'Al Ruh Ibn Al Qayyim',
@@ -775,6 +835,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_tawbah_ibn_abi_al_dunya',
+    diacritisedPct: 84,
     titleAr: 'كتاب التوبة.',
     titleEn: 'Al Tawbah Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -792,6 +853,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_tawakkul_ala_allah',
+    diacritisedPct: 86,
     titleAr: 'مجموعة رسائل بان أبي الدنيا كتاب التوكل على الله',
     titleEn: 'Al Tawakkul Ala Allah',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -808,6 +870,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_tibb_al_nabawi',
+    diacritisedPct: 75,
     titleAr: 'الطب النبوي (جزء من كتاب زاد المعاد لابن القيم)',
     titleEn: 'Al Tibb Al Nabawi',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -824,6 +887,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_turuq_al_hukmiyyah',
+    diacritisedPct: 84,
     titleAr: 'الطرق الحكمية',
     titleEn: 'Al Turuq Al Hukmiyyah',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -840,6 +904,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_ju',
+    diacritisedPct: 86,
     titleAr: 'الجوع',
     titleEn: 'Al Ju',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -856,6 +921,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_hilm',
+    diacritisedPct: 85,
     titleAr: 'الحلم',
     titleEn: 'Al Hilm',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -872,6 +938,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_rida_an_allah_biqadaihi',
+    diacritisedPct: 85,
     titleAr: 'الرضا عن الله بقضائه',
     titleEn: 'Al Rida An Allah Biqadaihi',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -889,6 +956,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_furusiyyah_al_muhammadiyyah',
+    diacritisedPct: 8,
     titleAr: 'الفروسية المحمدية',
     titleEn: 'Al Furusiyyah Al Muhammadiyyah',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -907,6 +975,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_riqqah_wal_buka',
+    diacritisedPct: 86,
     titleAr: 'الرقة والبكاء',
     titleEn: 'Al Riqqah Wal Buka',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -923,6 +992,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_kalam_ala_masalat_al_sama',
+    diacritisedPct: 10,
     titleAr: 'الكلام على مسألة السماع',
     titleEn: 'Al Kalam Ala Masalat Al Sama',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -941,6 +1011,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_zuhd_ibn_abi_al_dunya',
+    diacritisedPct: 83,
     titleAr: 'الزهد لابن أبي الدنيا',
     titleEn: 'Al Zuhd Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -958,6 +1029,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_manar_al_munif',
+    diacritisedPct: 75,
     titleAr: 'المنار المنيف في الصحيح والضعيف',
     titleEn: 'Al Manar Al Munif',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -974,6 +1046,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_wabil_al_sayyib',
+    diacritisedPct: 4,
     titleAr: 'الوابل الصيب من الكلم الطيب',
     titleEn: 'Al Wabil Al Sayyib',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -990,6 +1063,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_shukr',
+    diacritisedPct: 86,
     titleAr: 'الشكر',
     titleEn: 'Al Shukr',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1006,6 +1080,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_sabr_wal_thawab_alayh',
+    diacritisedPct: 86,
     titleAr: 'الصبر والثواب عليه',
     titleEn: 'Al Sabr Wal Thawab Alayh',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1023,6 +1098,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tuhfat_al_mawdud_bi_ahkam_al_mawlud',
+    diacritisedPct: 38,
     titleAr: 'تحفة المودود بأحكام المولود',
     titleEn: 'Tuhfat Al Mawdud Bi Ahkam Al Mawlud',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1040,6 +1116,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_uzlah_wal_infirad',
+    diacritisedPct: 53,
     titleAr: 'العزلة والانفراد',
     titleEn: 'Al Uzlah Wal Infirad',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1057,6 +1134,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_aql_wa_fadluh',
+    diacritisedPct: 79,
     titleAr: 'العقل وفضله',
     titleEn: 'Al Aql Wa Fadluh',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1073,6 +1151,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'jala_al_afham',
+    diacritisedPct: 40,
     titleAr: 'جلاء الأفهام في فضل الصلاة على محمد خير الأنام',
     titleEn: 'Jala Al Afham',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1089,6 +1168,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_uqubat',
+    diacritisedPct: 85,
     titleAr: 'العقوبات',
     titleEn: 'Al Uqubat',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1105,6 +1185,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_umr_wal_shayb',
+    diacritisedPct: 85,
     titleAr: 'العمر والشيب',
     titleEn: 'Al Umr Wal Shayb',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1121,6 +1202,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_faraj_bad_al_shiddah',
+    diacritisedPct: 85,
     titleAr: 'الفرج بعد الشدة',
     titleEn: 'Al Faraj Bad Al Shiddah',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1138,6 +1220,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hadi_al_arwah_ila_bilad_al_afrah',
+    diacritisedPct: 4,
     titleAr: 'حادي الأرواح إلى بلاد الأفراح',
     titleEn: 'Hadi Al Arwah Ila Bilad Al Afrah',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1155,6 +1238,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'risalat_ibn_al_qayyim_ila_ahad_ikhwanih',
+    diacritisedPct: 5,
     titleAr: 'رسالة ابن القيم إلى أحد إخوانه',
     titleEn: 'Risalat Ibn Al Qayyim Ila Ahad Ikhwanih',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1173,6 +1257,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_qubur_ibn_abi_al_dunya',
+    diacritisedPct: 0,
     titleAr: 'القبور لابن أبي الدنيا',
     titleEn: 'Al Qubur Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1190,6 +1275,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_qanaah_wal_taaffuf',
+    diacritisedPct: 84,
     titleAr: 'القناعة والتعفف',
     titleEn: 'Al Qanaah Wal Taaffuf',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1206,6 +1292,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'raf_al_yadayn_fil_salah',
+    diacritisedPct: 4,
     titleAr: 'رفع اليدين في الصلاة',
     titleEn: 'Raf Al Yadayn Fil Salah',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1224,6 +1311,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_mutamannin',
+    diacritisedPct: 87,
     titleAr: 'المتمنين',
     titleEn: 'Al Mutamannin',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1240,6 +1328,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_muhtadirin',
+    diacritisedPct: 85,
     titleAr: 'المحتضرين',
     titleEn: 'Al Muhtadirin',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1256,6 +1345,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'rawdat_al_muhibbin',
+    diacritisedPct: 2,
     titleAr: 'روضة المحبين ونزهة المشتاقين',
     titleEn: 'Rawdat Al Muhibbin',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1272,6 +1362,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_marad_wal_kaffarat',
+    diacritisedPct: 87,
     titleAr: 'المرض والكفارات',
     titleEn: 'Al Marad Wal Kaffarat',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1288,6 +1379,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'shifa_al_alil',
+    diacritisedPct: 7,
     titleAr: 'شفاء العليل في مسائل القضاء والقدر والحكمة والتعليل',
     titleEn: 'Shifa Al Alil',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1304,6 +1396,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'sifat_al_munafiqin',
+    diacritisedPct: 21,
     titleAr: 'صفات المنافقين',
     titleEn: 'Sifat Al Munafiqin',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1320,6 +1413,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'sigh_al_hamd',
+    diacritisedPct: 37,
     titleAr: 'جواب في صيغ الحمد',
     titleEn: 'Sigh Al Hamd',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1336,6 +1430,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_matar_wal_rad_wal_barq',
+    diacritisedPct: 83,
     titleAr: 'المطر والرعد والبرق',
     titleEn: 'Al Matar Wal Rad Wal Barq',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1353,6 +1448,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_manamat',
+    diacritisedPct: 84,
     titleAr: 'المنامات',
     titleEn: 'Al Manamat',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1369,6 +1465,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tariq_al_hijratayn',
+    diacritisedPct: 7,
     titleAr: 'طريق الهجرتين وباب السعادتين',
     titleEn: 'Tariq Al Hijratayn',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1385,6 +1482,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'uddat_al_sabirin',
+    diacritisedPct: 2,
     titleAr: 'عدة الصابرين وذخيرة الشاكرين',
     titleEn: 'Uddat Al Sabirin',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1401,6 +1499,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'faidah_jalilah_fi_qawaid_al_asma_al_husna',
+    diacritisedPct: 5,
     titleAr: 'فائدة جليلة في قواعد الأسماء الحسنى',
     titleEn: 'Faidah Jalilah Fi Qawaid Al Asma Al Husna',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1418,6 +1517,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'fatya_fi_sighat_al_hamd',
+    diacritisedPct: 7,
     titleAr: 'فتيا في صيغة الحمد «الحمد لله حمدا يوافي نعمه ويكافئ مزيده»',
     titleEn: 'Fatya Fi Sighat Al Hamd',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1436,6 +1536,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_nafaqah_ala_al_iyal',
+    diacritisedPct: 87,
     titleAr: 'العيال ويقع في مجلدين',
     titleEn: 'Al Nafaqah Ala Al Iyal',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1452,6 +1553,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_hamm_wal_huzn',
+    diacritisedPct: 84,
     titleAr: 'الهم والحزن',
     titleEn: 'Al Hamm Wal Huzn',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1468,6 +1570,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'nuniyyat_ibn_al_qayyim',
+    diacritisedPct: 0,
     titleAr: 'متن القصيدة النونية',
     titleEn: 'Nuniyyat Ibn Al Qayyim',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1484,6 +1587,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_hawatif',
+    diacritisedPct: 85,
     titleAr: 'هواتف الجنان',
     titleEn: 'Al Hawatif',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1500,6 +1604,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_wajal_wal_tawthuq_bil_amal',
+    diacritisedPct: 85,
     titleAr: 'الوجل والتوثق بالعمل',
     titleEn: 'Al Wajal Wal Tawthuq Bil Amal',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1517,6 +1622,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_wara',
+    diacritisedPct: 86,
     titleAr: 'الورع',
     titleEn: 'Al Wara',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1533,6 +1639,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_yaqin_ibn_abi_al_dunya',
+    diacritisedPct: 83,
     titleAr: 'اليقين لابن أبي الدنيا',
     titleEn: 'Al Yaqin Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1550,6 +1657,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hidayat_al_hayara',
+    diacritisedPct: 14,
     titleAr: 'هداية الحيارى في أجوبة اليهود والنصارى',
     titleEn: 'Hidayat Al Hayara',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1567,6 +1675,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'husn_al_zann_billah',
+    diacritisedPct: 87,
     titleAr: 'حسن الظن بالله',
     titleEn: 'Husn Al Zann Billah',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1583,6 +1692,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hilm_muawiyah',
+    diacritisedPct: 2,
     titleAr: 'حلم معاوية لابن أبي الدنيا',
     titleEn: 'Hilm Muawiyah',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1599,6 +1709,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'dhamm_al_baghy',
+    diacritisedPct: 86,
     titleAr: 'ذم البغى لابن أبي الدنيا',
     titleEn: 'Dhamm Al Baghy',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1615,6 +1726,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'akhbar_al_humqa_wal_mughaffalin',
+    diacritisedPct: 1,
     titleAr: 'أخبار الحمقى والمغفلين',
     titleEn: 'Akhbar Al Humqa Wal Mughaffalin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1632,6 +1744,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'akhbar_al_zuraf_wal_mutamajinin',
+    diacritisedPct: 4,
     titleAr: 'أخبار الظراف والمتماجنين',
     titleEn: 'Akhbar Al Zuraf Wal Mutamajinin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1649,6 +1762,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'akhbar_al_nisa_ibn_al_jawzi',
+    diacritisedPct: 6,
     titleAr: 'أخبار النساء',
     titleEn: 'Akhbar Al Nisa Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1666,6 +1780,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'dhamm_al_dunya',
+    diacritisedPct: 0,
     titleAr: 'ذم الدنيا',
     titleEn: 'Dhamm Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1682,6 +1797,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'amar_al_ayan',
+    diacritisedPct: 8,
     titleAr: 'أعمار الأعيان',
     titleEn: 'Amar Al Ayan',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1699,6 +1815,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'ikhbar_ahl_al_rusukh_fil_fiqh',
+    diacritisedPct: 84,
     titleAr: 'إخبار أهل الرسوخ في الفقه والتحديث بمقدار المنسوخ من الحديث',
     titleEn: 'Ikhbar Ahl Al Rusukh Fil Fiqh',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1716,6 +1833,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'dhamm_al_ghibah_wal_namimah',
+    diacritisedPct: 87,
     titleAr: 'ذم الغيبة والنميمة',
     titleEn: 'Dhamm Al Ghibah Wal Namimah',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1733,6 +1851,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'dhamm_al_muskir',
+    diacritisedPct: 84,
     titleAr: 'كتاب ذم المسكر',
     titleEn: 'Dhamm Al Muskir',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1749,6 +1868,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'dhamm_al_malahi',
+    diacritisedPct: 87,
     titleAr: 'ذم الملاهي لابن أبي الدنيا',
     titleEn: 'Dhamm Al Malahi',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1765,6 +1885,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'ilam_al_alim_bi_naskh_al_hadith',
+    diacritisedPct: 86,
     titleAr: 'إعلام العالم بعد رسوخه بناسخ الحديث ومنسوخه',
     titleEn: 'Ilam Al Alim Bi Naskh Al Hadith',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1782,6 +1903,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'sifat_al_jannah_ibn_abi_al_dunya',
+    diacritisedPct: 66,
     titleAr: 'صفة الجنة وما أعد الله لأهلها من النعيم',
     titleEn: 'Sifat Al Jannah Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1799,6 +1921,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_adhkiya',
+    diacritisedPct: 35,
     titleAr: 'كتاب الأذكياء',
     titleEn: 'Al Adhkiya',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1815,6 +1938,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'sifat_al_nar',
+    diacritisedPct: 83,
     titleAr: 'صفة النار',
     titleEn: 'Sifat Al Nar',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1831,6 +1955,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'fadail_ramadan_ibn_abi_al_dunya',
+    diacritisedPct: 85,
     titleAr: 'فضائل رمضان',
     titleEn: 'Fadail Ramadan Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1848,6 +1973,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_birr_wal_silah_ibn_al_jawzi',
+    diacritisedPct: 83,
     titleAr: 'البر والصلة لابن الجوزي',
     titleEn: 'Al Birr Wal Silah Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1865,6 +1991,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'qira_al_dayf',
+    diacritisedPct: 86,
     titleAr: 'قرى الضيف',
     titleEn: 'Qira Al Dayf',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1881,6 +2008,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'qada_al_hawaij',
+    diacritisedPct: 85,
     titleAr: 'قضاء الحوائج',
     titleEn: 'Qada Al Hawaij',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1897,6 +2025,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'kalam_al_layali_wal_ayyam',
+    diacritisedPct: 86,
     titleAr: 'كلام الليالي والأيام',
     titleEn: 'Kalam Al Layali Wal Ayyam',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1914,6 +2043,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_tadhkirah_fil_waz',
+    diacritisedPct: 27,
     titleAr: 'التذكرة في الوعظ',
     titleEn: 'Al Tadhkirah Fil Waz',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1930,6 +2060,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'mujabu_al_dawah',
+    diacritisedPct: 86,
     titleAr: 'مجابو الدعوة (مطبوع ضمن مجموعة رسائل ابن أبي الدنيا)',
     titleEn: 'Mujabu Al Dawah',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1946,6 +2077,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_thabat_ind_al_mamat',
+    diacritisedPct: 81,
     titleAr: 'الثبات عند الممات',
     titleEn: 'Al Thabat Ind Al Mamat',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1962,6 +2094,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_hathth_ala_hifz_al_ilm',
+    diacritisedPct: 84,
     titleAr: 'الحث على حفظ العلم وذكر كبار الحفاظ',
     titleEn: 'Al Hathth Ala Hifz Al Ilm',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -1979,6 +2112,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'muhasabat_al_nafs',
+    diacritisedPct: 81,
     titleAr: 'محاسبة النفس لابن أبي الدنيا',
     titleEn: 'Muhasabat Al Nafs',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1995,6 +2129,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'mudarat_al_nas',
+    diacritisedPct: 86,
     titleAr: 'مداراة الناس',
     titleEn: 'Mudarat Al Nas',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -2011,6 +2146,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_qussas_wal_mudhakkirin',
+    diacritisedPct: 81,
     titleAr: 'القصاص والمذكرين',
     titleEn: 'Al Qussas Wal Mudhakkirin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2028,6 +2164,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'maqtal_ali',
+    diacritisedPct: 0,
     titleAr: 'مقتل أمير المؤمنين علي بن أبي طالب عليه السلام',
     titleEn: 'Maqtal Ali',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -2044,6 +2181,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_mujtaba_min_al_mujtana',
+    diacritisedPct: 5,
     titleAr: 'المجتبى من المجتنى',
     titleEn: 'Al Mujtaba Min Al Mujtana',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2061,6 +2199,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'makaid_al_shaytan',
+    diacritisedPct: 78,
     titleAr: 'مكائد الشيطان',
     titleEn: 'Makaid Al Shaytan',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -2077,6 +2216,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'makarim_al_akhlaq_ibn_abi_al_dunya',
+    diacritisedPct: 84,
     titleAr: 'مكارم الأخلاق',
     titleEn: 'Makarim Al Akhlaq Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -2094,6 +2234,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'man_asha_bad_al_mawt',
+    diacritisedPct: 85,
     titleAr: 'كتاب من عاش بعد الموت',
     titleEn: 'Man Asha Bad Al Mawt',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -2110,6 +2251,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'riyadat_al_nafs',
+    diacritisedPct: 0,
     titleAr: 'رياضة النفس',
     titleEn: 'Riyadat Al Nafs',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
@@ -2127,6 +2269,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_mudhish',
+    diacritisedPct: 26,
     titleAr: 'المدهش',
     titleEn: 'Al Mudhish',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2143,6 +2286,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_musaffa_bi_akuff_ahl_al_rusukh',
+    diacritisedPct: 23,
     titleAr: 'المصفى بأكف أهل الرسوخ من علم الناسخ والمنسوخ',
     titleEn: 'Al Musaffa Bi Akuff Ahl Al Rusukh',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2161,6 +2305,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_manahi',
+    diacritisedPct: 2,
     titleAr: 'المنهيات',
     titleEn: 'Al Manahi',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
@@ -2178,6 +2323,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_muqliq_ibn_al_jawzi',
+    diacritisedPct: 0,
     titleAr: 'المقلق',
     titleEn: 'Al Muqliq Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2194,6 +2340,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'bahr_al_dumu',
+    diacritisedPct: 4,
     titleAr: 'بحر الدموع',
     titleEn: 'Bahr Al Dumu',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2210,6 +2357,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_amthal_min_al_kitab_wal_sunnah',
+    diacritisedPct: 32,
     titleAr: 'الأمثال من الكتاب والسنة',
     titleEn: 'Al Amthal Min Al Kitab Wal Sunnah',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
@@ -2228,6 +2376,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'bustan_al_waizin',
+    diacritisedPct: 32,
     titleAr: 'بستان الواعظين ورياض السامعين',
     titleEn: 'Bustan Al Waizin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2244,6 +2393,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tarikh_bayt_al_maqdis',
+    diacritisedPct: 0,
     titleAr: 'تاريخ بيت المقدس',
     titleEn: 'Tarikh Bayt Al Maqdis',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2260,6 +2410,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tadhkirat_al_arib_fi_tafsir_al_gharib',
+    diacritisedPct: 0,
     titleAr: 'تذكرة الأريب في تفسير الغريب (غريب القرآن الكريم)',
     titleEn: 'Tadhkirat Al Arib Fi Tafsir Al Gharib',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2278,6 +2429,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tazim_al_fatya',
+    diacritisedPct: 1,
     titleAr: 'تعظيم الفتيا',
     titleEn: 'Tazim Al Fatya',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2294,6 +2446,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'taqwim_al_lisan',
+    diacritisedPct: 7,
     titleAr: 'تقويم اللسان',
     titleEn: 'Taqwim Al Lisan',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2310,6 +2463,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'talbis_iblis',
+    diacritisedPct: 1,
     titleAr: 'تلبيس إبليس',
     titleEn: 'Talbis Iblis',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2327,6 +2481,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'talqih_fuhum_ahl_al_athar',
+    diacritisedPct: 36,
     titleAr: 'تلقيح فهوم أهل الأثر في عيون التاريخ والسير',
     titleEn: 'Talqih Fuhum Ahl Al Athar',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2344,6 +2499,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tanbih_al_naim_al_ghamr',
+    diacritisedPct: 12,
     titleAr: 'تنبيه النائم الغمر على مواسم العمر',
     titleEn: 'Tanbih Al Naim Al Ghamr',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2361,6 +2517,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tanwir_al_ghabash',
+    diacritisedPct: 38,
     titleAr: 'تنوير الغبش في فضل السودان والحبش',
     titleEn: 'Tanwir Al Ghabash',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2377,6 +2534,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hifz_al_umr',
+    diacritisedPct: 79,
     titleAr: 'حفظ العمر',
     titleEn: 'Hifz Al Umr',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2400,6 +2558,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // `al_kalim_al_tayyib` (Shamela 21578, دار الفكر اللبناني).
   LibraryBook(
     id: 'fadail_bayt_al_maqdis',
+    diacritisedPct: 34,
     titleAr: 'فضائل بيت المقدس',
     titleEn: 'Fadail Bayt Al Maqdis',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2417,6 +2576,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'funun_al_afnan_fi_uyun_ulum_al_quran',
+    diacritisedPct: 4,
     titleAr: 'فنون الأفنان في عيون علوم القرآن',
     titleEn: 'Funun Al Afnan Fi Uyun Ulum Al Quran',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2434,6 +2594,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'muthir_al_gharam_al_sakin',
+    diacritisedPct: 84,
     titleAr: 'مثير الغرام الساكن إلى أشرف الأماكن لابن الجوزي',
     titleEn: 'Muthir Al Gharam Al Sakin',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2451,6 +2612,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'mashyakhat_ibn_al_jawzi',
+    diacritisedPct: 83,
     titleAr: 'مشيخة ابن الجوزي',
     titleEn: 'Mashyakhat Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2468,6 +2630,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'mawaiz_ibn_al_jawzi_al_yaqutah',
+    diacritisedPct: 0,
     titleAr: 'الياقوتة - مواعظ ابن الجوزي',
     titleEn: 'Mawaiz Ibn Al Jawzi Al Yaqutah',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2485,6 +2648,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'nawasikh_al_quran',
+    diacritisedPct: 9,
     titleAr: 'نواسخ القرآن = ناسخ القرآن ومنسوخه',
     titleEn: 'Nawasikh Al Quran',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2502,6 +2666,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'adab_al_fatwa_wal_mufti',
+    diacritisedPct: 40,
     titleAr: 'آداب الفتوى والمفتي والمستفتي',
     titleEn: 'Adab Al Fatwa Wal Mufti',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2524,6 +2689,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // ones carrying a translated descKey kept. See the duplicate test.
   LibraryBook(
     id: 'al_usul_wal_dawabit',
+    diacritisedPct: 35,
     titleAr: 'الأصول والضوابط',
     titleEn: 'Al Usul Wal Dawabit',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2556,6 +2722,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // an-Nawawi keeps his other fifteen titles in the library.
   LibraryBook(
     id: 'al_idah_fi_manasik_al_hajj_wal_umrah',
+    diacritisedPct: 27,
     titleAr: 'الإيضاح في مناسك الحج والعمرة',
     titleEn: 'Al Idah Fi Manasik Al Hajj Wal Umrah',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2586,6 +2753,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // other as a prefix.
   LibraryBook(
     id: 'bustan_al_arifin',
+    diacritisedPct: 1,
     titleAr: 'بستان العارفين',
     titleEn: 'Bustan Al Arifin',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2602,6 +2770,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tahrir_alfaz_al_tanbih',
+    diacritisedPct: 36,
     titleAr: 'تحرير ألفاظ التنبيه',
     titleEn: 'Tahrir Alfaz Al Tanbih',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2625,6 +2794,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // The real book is `riyad_as_salihin` (810 pages, ت شعيب الأرنؤوط).
   LibraryBook(
     id: 'juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat',
+    diacritisedPct: 4,
     titleAr: 'جزء فيه ذكر اعتقاد السلف في الحروف والأصوات',
     titleEn: 'Juz Fih Dhikr Iiqad Al Salaf Fil Huruf Wal Aswat',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2643,6 +2813,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'daqaiq_al_minhaj',
+    diacritisedPct: 39,
     titleAr: 'دقائق المنهاج',
     titleEn: 'Daqaiq Al Minhaj',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2659,6 +2830,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'fatawa_al_nawawi',
+    diacritisedPct: 7,
     titleAr:
         'فَتَّاوَى الإِمامِ النَّوَوَيِ المُسمَّاةِ: "بالمَسَائِل المنْثورَةِ"',
     titleEn: 'Fatawa Al Nawawi',
@@ -2677,6 +2849,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'minhaj_al_talibin',
+    diacritisedPct: 0,
     titleAr: 'منهاج الطالبين وعمدة المفتين في الفقه',
     titleEn: 'Minhaj Al Talibin',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2693,6 +2866,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'seerat_ibn_hisham',
+    diacritisedPct: 55,
     titleAr: 'السيرة النبوية لابن هشام',
     titleEn: 'The Prophetic Biography of Ibn Hisham',
     authorAr: 'ابن هشام',
@@ -2713,6 +2887,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'zad_al_maad',
+    diacritisedPct: 83,
     titleAr: 'زاد المعاد في هَدي خير العباد',
     titleEn: 'Zad al-Ma\'ad',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -2732,6 +2907,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'uyun_al_athar',
+    diacritisedPct: 68,
     titleAr: 'عيون الأثر في فنون المغازي والشمائل والسير',
     titleEn: 'Uyun al-Athar',
     authorAr: 'محمد بن محمد بن محمد بن أحمد، ابن سيد الناس، اليعمري الربعي، أبو الفتح، فتح الدين (ت ٧٣٤هـ)',
@@ -2751,6 +2927,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'nur_al_yaqin',
+    diacritisedPct: 5,
     titleAr: 'نور اليقين في سيرة سيد المرسلين',
     titleEn: 'Nur al-Yaqin',
     authorAr: 'محمد بن عفيفي الباجوري، المعروف بالشيخ الخضري (ت ١٣٤٥هـ)',
@@ -2770,6 +2947,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'as_seerah_ibn_kathir',
+    diacritisedPct: 80,
     titleAr: 'السيرة النبوية',
     titleEn: 'The Prophetic Biography of Ibn Kathir',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -2804,6 +2982,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // by page count, which had produced hadith fragments nobody asks for.
   LibraryBook(
     id: 'al_adhkar_nawawi',
+    diacritisedPct: 18,
     titleAr: 'الأذكار',
     titleEn: 'Al-Adhkar',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2829,6 +3008,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'at_tibyan_hamalat_al_quran',
+    diacritisedPct: 0,
     titleAr: 'التبيان في آداب حملة القرآن',
     titleEn: 'At-Tibyan fi Adab Hamalat al-Quran',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2850,6 +3030,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_arbaun_an_nawawiyyah',
+    diacritisedPct: 0,
     titleAr: 'الأربعون النووية',
     titleEn: 'The Forty Hadith of an-Nawawi',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2871,6 +3052,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'at_taqrib_wat_taysir',
+    diacritisedPct: 0,
     // The book's full title, as Shamela 5586's card prints it. The short form
     // this entry used to carry is why the duplicate went unseen.
     titleAr: 'التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث',
@@ -2896,6 +3078,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // (2026-09-12). His seerah was the Library's only book of his.
   LibraryBook(
     id: 'fadail_al_quran_ibn_kathir',
+    diacritisedPct: 7,
     titleAr: 'فضائل القرآن',
     titleEn: 'Fadail al-Quran',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -2914,6 +3097,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_baith_al_hathith',
+    diacritisedPct: 1,
     titleAr: 'الباعث الحثيث إلى اختصار علوم الحديث',
     titleEn: 'Al-Baith al-Hathith',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -2931,6 +3115,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_fusul_fi_seerat_ar_rasul',
+    diacritisedPct: 1,
     titleAr: 'الفصول في سيرة الرسول ﷺ',
     titleEn: 'Al-Fusul fi Seerat ar-Rasul',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -2949,6 +3134,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'mujizat_an_nabi',
+    diacritisedPct: 70,
     titleAr: 'معجزات النبي ﷺ من البداية والنهاية',
     titleEn: 'Mujizat an-Nabi',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -2966,6 +3152,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'musnad_abi_bakr',
+    diacritisedPct: 8,
     titleAr: 'مسند أبي بكر الصديق رضي الله عنه',
     titleEn: 'Musnad Abi Bakr as-Siddiq',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -2984,6 +3171,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tabaqat_ash_shafiiyyin',
+    diacritisedPct: 4,
     titleAr: 'طبقات الشافعيين',
     titleEn: 'Tabaqat ash-Shafiiyyin',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -3002,6 +3190,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'adab_dukhul_al_hammam',
+    diacritisedPct: 38,
     titleAr: 'الآداب والأحكام المتعلقة بدخول الحمّام',
     titleEn: 'Adab Dukhul al-Hammam',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -3019,6 +3208,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'juz_bay_ummahat_al_awlad',
+    diacritisedPct: 9,
     titleAr: 'جزء في بيع أمهات الأولاد',
     titleEn: 'Juz fi Bay Ummahat al-Awlad',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -3039,6 +3229,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // seerah already here, so this author is complete at what exists.
   LibraryBook(
     id: 'rawdat_al_uqala',
+    diacritisedPct: 15,
     titleAr: 'روضة العقلاء ونزهة الفضلاء',
     titleEn: 'Rawdat al-Uqala wa Nuzhat al-Fudala',
     authorAr: 'أبو حاتم محمد بن حبان البستي',
@@ -3058,6 +3249,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hilyat_al_awliya',
+    diacritisedPct: 0,
     titleAr: 'حلية الأولياء وطبقات الأصفياء',
     titleEn: 'Hilyat al-Awliya wa Tabaqat al-Asfiya',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3077,6 +3269,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'taqrib_al_tahdhib',
+    diacritisedPct: 0,
     titleAr: 'تقريب التهذيب',
     titleEn: 'Taqrib al-Tahdhib',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3094,6 +3287,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'nuzhat_al_nazar',
+    diacritisedPct: 27,
     titleAr: 'نزهة النظر في توضيح نخبة الفكر',
     titleEn: 'Nuzhat al-Nazar',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3113,6 +3307,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hady_al_sari',
+    diacritisedPct: 0,
     titleAr: 'هدي الساري مقدمة فتح الباري',
     titleEn: 'Hady al-Sari',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3131,6 +3326,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_amali_al_mutlaqah',
+    diacritisedPct: 80,
     titleAr: 'الأمالي المطلقة',
     titleEn: 'Al-Amali al-Mutlaqah',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3149,6 +3345,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_mujam_al_mufahras',
+    diacritisedPct: 36,
     titleAr: 'المعجم المفهرس',
     titleEn: 'Al-Mujam al-Mufahras',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3168,6 +3365,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'raf_al_isr_an_qudat_misr',
+    diacritisedPct: 7,
     titleAr: 'رفع الإصر عن قضاة مصر',
     titleEn: 'Raf al-Isr an Qudat Misr',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3187,6 +3385,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_ithar_bi_marifat_ruwat_al_athar',
+    diacritisedPct: 40,
     titleAr: 'الإيثار بمعرفة رواة الآثار',
     titleEn: 'Al-Ithar bi Marifat Ruwat al-Athar',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3205,6 +3404,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'nataij_al_afkar',
+    diacritisedPct: 0,
     titleAr: 'قطعة من نتائج الأفكار في تخريج أحاديث الأذكار',
     titleEn: 'Nataij al-Afkar',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3224,6 +3424,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_wuquf_ala_al_mawquf',
+    diacritisedPct: 36,
     titleAr: 'الوقوف على الموقوف',
     titleEn: 'Al-Wuquf ala al-Mawquf',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3242,6 +3443,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'silsilat_al_dhahab',
+    diacritisedPct: 38,
     titleAr: 'سلسلة الذهب',
     titleEn: 'Silsilat al-Dhahab',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3259,6 +3461,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'dalail_al_nubuwwah_abu_nuaym',
+    diacritisedPct: 84,
     titleAr: 'دلائل النبوة',
     titleEn: 'Dalail al-Nubuwwah',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3277,6 +3480,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_imamah_wal_radd_ala_al_rafidah',
+    diacritisedPct: 40,
     titleAr: 'الإمامة والرد على الرافضة',
     titleEn: 'Al-Imamah wal-Radd ala al-Rafidah',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3296,6 +3500,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'musnad_abi_hanifah_abu_nuaym',
+    diacritisedPct: 84,
     titleAr: 'مسند أبي حنيفة رواية أبي نعيم',
     titleEn: 'Musnad Abi Hanifah',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3314,6 +3519,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'sifat_al_nifaq',
+    diacritisedPct: 84,
     titleAr: 'صفة النفاق ونعت المنافقين',
     titleEn: 'Sifat al-Nifaq',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3332,6 +3538,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'fadail_al_khulafa_al_rashidin',
+    diacritisedPct: 85,
     titleAr: 'فضائل الخلفاء الراشدين',
     titleEn: 'Fadail al-Khulafa al-Rashidin',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3350,6 +3557,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'riyadat_al_abdan',
+    diacritisedPct: 84,
     titleAr: 'رياضة الأبدان',
     titleEn: 'Riyadat al-Abdan',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3368,6 +3576,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_arbaun_ala_madhhab_al_mutahaqqiqin',
+    diacritisedPct: 87,
     titleAr: 'الأربعون على مذهب المتحققين من الصوفية',
     titleEn: 'Al-Arbaun ala Madhhab al-Mutahaqqiqin',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3386,6 +3595,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hadith_asma_allah_al_husna',
+    diacritisedPct: 85,
     titleAr: 'حديث إن لله تسعة وتسعين اسمًا',
     titleEn: 'Hadith Asma Allah al-Husna',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3404,6 +3614,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'fadilat_al_adilin_min_al_wulat',
+    diacritisedPct: 83,
     titleAr: 'فضيلة العادلين من الولاة',
     titleEn: 'Fadilat al-Adilin min al-Wulat',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3422,6 +3633,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_bidaya_wan_nihaya',
+    diacritisedPct: 2,
     titleAr: 'البداية والنهاية',
     titleEn: 'The Beginning and the End',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -3446,6 +3658,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'qisas_al_anbiya_ibn_kathir',
+    diacritisedPct: 75,
     titleAr: 'قصص الأنبياء',
     titleEn: 'Stories of the Prophets',
     authorAr: 'أبو الفداء، إسماعيل بن كثير (٧٠١ - ٧٧٤ هـ)',
@@ -3466,6 +3679,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'futuh_al_buldan',
+    diacritisedPct: 16,
     titleAr: 'فتوح البلدان',
     titleEn: 'The Conquests of the Lands',
     authorAr: 'أحمد بن يحيى بن جابر البَلَاذُري (ت ٢٧٩ هـ)',
@@ -3484,6 +3698,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tarikh_al_khulafa_suyuti',
+    diacritisedPct: 0,
     titleAr: 'تاريخ الخلفاء',
     titleEn: 'History of the Caliphs',
     authorAr: 'جلال الدين عبد الرحمن السيوطي (ت ٩١١ هـ)',
@@ -3522,6 +3737,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // ══════════════════════════════════════════════════════════════════════
   LibraryBook(
     id: 'ihya_ulum_al_din',
+    diacritisedPct: 8,
     titleAr: 'إحياء علوم الدين',
     titleEn: 'Ihya Ulum al-Din',
     authorAr: 'الإمام أبو حامد الغزالي',
@@ -3541,6 +3757,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'madarij_al_salikin',
+    diacritisedPct: 84,
     titleAr: 'مدارج السالكين بين منازل إياك نعبد وإياك نستعين',
     titleEn: 'Madarij al-Salikin',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -3561,6 +3778,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'jami_al_ulum_wal_hikam',
+    diacritisedPct: 13,
     titleAr: 'جامع العلوم والحكم في شرح خمسين حديثاً من جوامع الكلم',
     titleEn: 'Jami al-Ulum wal-Hikam',
     authorAr: 'الحافظ ابن رجب الحنبلي',
@@ -3581,6 +3799,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'adab_al_dunya_wal_din',
+    diacritisedPct: 84,
     titleAr: 'أدب الدنيا والدين',
     titleEn: 'Adab al-Dunya wal-Din',
     authorAr: 'الإمام أبو الحسن الماوردي',
@@ -3599,6 +3818,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_akhlaq_wal_siyar',
+    diacritisedPct: 32,
     titleAr: 'الأخلاق والسير في مداواة النفوس',
     titleEn: 'Al-Akhlaq wal-Siyar',
     authorAr: 'الإمام ابن حزم الأندلسي',
@@ -3618,6 +3838,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'bidayat_al_hidayah',
+    diacritisedPct: 1,
     titleAr: 'بداية الهداية',
     titleEn: 'Bidayat al-Hidayah',
     authorAr: 'الإمام أبو حامد الغزالي',
@@ -3635,6 +3856,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'lataif_al_maarif',
+    diacritisedPct: 3,
     titleAr: 'لطائف المعارف فيما لمواسم العام من الوظائف',
     titleEn: 'Lataif al-Maarif',
     authorAr: 'الحافظ ابن رجب الحنبلي',
@@ -3653,6 +3875,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'risalat_al_mustarshidin',
+    diacritisedPct: 31,
     titleAr: 'رسالة المسترشدين',
     titleEn: 'Risalat al-Mustarshidin',
     authorAr: 'الإمام الحارث المحاسبي',
@@ -3670,6 +3893,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'maqasid_al_riayah',
+    diacritisedPct: 34,
     titleAr: 'مقاصد الرعاية لحقوق الله عز وجل أو مختصر رعاية المحاسبي',
     titleEn: 'Maqasid al-Riayah',
     authorAr: 'العز بن عبد السلام',
@@ -3689,6 +3913,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tahdhib_al_akhlaq',
+    diacritisedPct: 0,
     titleAr: 'تهذيب الأخلاق وتطهير الأعراق',
     titleEn: 'Tahdhib al-Akhlaq',
     authorAr: 'ابن مسكويه',
@@ -3708,6 +3933,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 1 — آداب الطلب — ما يُقرأ قبل أي متن
   LibraryBook(
     id: 'jami_bayan_al_ilm',
+    diacritisedPct: 84,
     titleAr: 'جامع بيان العلم وفضله',
     titleEn: 'Jami Bayan al-Ilm wa Fadlih',
     authorAr: 'الحافظ ابن عبد البر',
@@ -3729,6 +3955,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 1 — آداب الطلب — ما يُقرأ قبل أي متن
   LibraryBook(
     id: 'tadhkirat_al_sami_wal_mutakallim',
+    diacritisedPct: 2,
     titleAr: 'تذكرة السامعِ والمتكلم في أَدب العالم والمتعلم',
     titleEn: 'Tadhkirat al-Sami wal-Mutakallim',
     authorAr: 'بدر الدين ابن جماعة',
@@ -3750,6 +3977,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 1 — آداب الطلب — ما يُقرأ قبل أي متن
   LibraryBook(
     id: 'adab_al_imla_wal_istimla',
+    diacritisedPct: 82,
     titleAr: 'أدب الاملاء والاستملاء',
     titleEn: 'Adab al-Imla wal-Istimla',
     authorAr: 'الإمام أبو سعد السمعاني',
@@ -3770,6 +3998,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 2 — المتون الأولى — الآلة التي يُقرأ بها
   LibraryBook(
     id: 'al_waraqat',
+    diacritisedPct: 40,
     titleAr: 'الورقات',
     titleEn: 'Al-Waraqat',
     authorAr: 'إمام الحرمين الجويني',
@@ -3791,6 +4020,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 2 — المتون الأولى — الآلة التي يُقرأ بها
   LibraryBook(
     id: 'al_ajurrumiyyah',
+    diacritisedPct: 20,
     titleAr: 'متن الآجرومية',
     titleEn: 'Al-Ajurrumiyyah',
     authorAr: 'ابن آجُرُّوم الصنهاجي',
@@ -3811,6 +4041,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
   LibraryBook(
     id: 'al_luma_fi_usul_al_fiqh',
+    diacritisedPct: 2,
     titleAr: 'اللمع في أصول الفقه',
     titleEn: 'Al-Luma fi Usul al-Fiqh',
     authorAr: 'الإمام أبو إسحاق الشيرازي',
@@ -3831,6 +4062,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
   LibraryBook(
     id: 'al_faqih_wal_mutafaqqih',
+    diacritisedPct: 83,
     titleAr: 'الفقيه و المتفقه',
     titleEn: 'Al-Faqih wal-Mutafaqqih',
     authorAr: 'الخطيب البغدادي',
@@ -3850,6 +4082,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 4 — المقاصد — لماذا شُرع الحكم
   LibraryBook(
     id: 'qawaid_al_ahkam',
+    diacritisedPct: 83,
     titleAr: 'قواعد الأحكام في مصالح الأنام',
     titleEn: 'Qawaid al-Ahkam fi Masalih al-Anam',
     authorAr: 'العز بن عبد السلام',
@@ -3887,6 +4120,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // ══════════════════════════════════════════════════════════════════════
   LibraryBook(
     id: 'qut_al_qulub',
+    diacritisedPct: 5,
     titleAr: 'قوت القلوب في معاملة المحبوب ووصف طريق المريد إلى مقام التوحيد',
     titleEn: 'Qut al-Qulub',
     authorAr: 'الإمام أبو طالب المكي',
@@ -3905,6 +4139,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_adab_al_shariyyah',
+    diacritisedPct: 84,
     titleAr: 'الآداب الشرعية والمنح المرعية',
     titleEn: 'Al-Adab al-Shariyyah',
     authorAr: 'الإمام ابن مفلح المقدسي',
@@ -3924,6 +4159,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 1 — آداب الطلب — ما يُقرأ قبل أي متن
   LibraryBook(
     id: 'al_jami_li_akhlaq_al_rawi',
+    diacritisedPct: 84,
     titleAr: 'الجامع لأخلاق الراوي وآداب السامع',
     titleEn: 'Al-Jami li-Akhlaq al-Rawi',
     authorAr: 'الخطيب البغدادي',
@@ -3944,6 +4180,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 2 — المتون الأولى — الآلة التي يُقرأ بها
   LibraryBook(
     id: 'muqaddimat_ibn_al_salah',
+    diacritisedPct: 85,
     titleAr: 'معرفة أنواع علوم الحديث، ويُعرف بمقدمة ابن الصلاح',
     titleEn: 'Muqaddimat Ibn al-Salah',
     authorAr: 'الإمام ابن الصلاح',
@@ -3966,6 +4203,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
   LibraryBook(
     id: 'al_risalah_lil_shafii',
+    diacritisedPct: 5,
     titleAr: 'الرسالة',
     titleEn: 'Al-Risalah',
     authorAr: 'الإمام محمد بن إدريس الشافعي',
@@ -4003,6 +4241,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // ══════════════════════════════════════════════════════════════════════
   LibraryBook(
     id: 'al_risalah_al_qushayriyyah',
+    diacritisedPct: 26,
     titleAr: 'الرسالة القشيرية',
     titleEn: 'Al-Risalah al-Qushayriyyah',
     authorAr: 'الإمام أبو القاسم القشيري',
@@ -4022,6 +4261,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
   LibraryBook(
     id: 'al_burhan_fi_ulum_al_quran',
+    diacritisedPct: 71,
     titleAr: 'البرهان في علوم القرآن',
     titleEn: 'Al-Burhan fi Ulum al-Quran',
     authorAr: 'الإمام بدر الدين الزركشي',
@@ -4042,6 +4282,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
   LibraryBook(
     id: 'al_itqan_fi_ulum_al_quran',
+    diacritisedPct: 80,
     titleAr: 'الإتقان في علوم القرآن',
     titleEn: 'Al-Itqan fi Ulum al-Quran',
     authorAr: 'الحافظ جلال الدين السيوطي',
@@ -4063,6 +4304,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // طالب العلم، المرحلة 4 — المقاصد — لماذا شُرع الحكم
   LibraryBook(
     id: 'al_muwafaqat',
+    diacritisedPct: 37,
     titleAr: 'الموافقات',
     titleEn: 'Al-Muwafaqat',
     authorAr: 'الإمام أبو إسحاق الشاطبي',

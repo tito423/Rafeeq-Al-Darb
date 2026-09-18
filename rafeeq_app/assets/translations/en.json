@@ -434,7 +434,13 @@
     "tab_hadeethenc": "Hadith Encyclopedia",
     "download_author_all": "Download all of this author's books ({})",
     "editor_notes_removed": "The author's text from this printing; the editor's notes are not included",
-    "cat_talibIlm": "The student of knowledge"
+    "cat_talibIlm": "The student of knowledge",
+    "text_listen": "Listen",
+    "text_listen_stop": "Stop",
+    "text_listen_unavailable_title": "This book is not read aloud",
+    "text_listen_unavailable_body": "This edition's text is not vowelled (only {}% of its letters carry harakat). Arabic read without harakat is mispronounced, and in a scholarly religious text a wrong vowel is a wrong meaning — so we would rather not read it than read it wrongly.",
+    "text_listen_no_engine": "Your device has no Arabic voice. Install one from Android Settings → Language & input → Text-to-speech.",
+    "text_listen_skips_quran": "Qur'anic verses are recited by real reciters in the recitations section; this synthetic voice does not read them."
   },
   "azkar": {
     "title": "Adhkar",

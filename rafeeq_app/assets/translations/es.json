@@ -434,7 +434,13 @@
     "tab_hadeethenc": "Enciclopedia de hadices",
     "download_author_all": "Descargar todos los libros del autor ({})",
     "editor_notes_removed": "El texto del autor de esta edición; las notas del editor no están incluidas",
-    "cat_talibIlm": "El estudiante del saber"
+    "cat_talibIlm": "El estudiante del saber",
+    "text_listen": "Escuchar",
+    "text_listen_stop": "Detener",
+    "text_listen_unavailable_title": "Este libro no se lee en voz alta",
+    "text_listen_unavailable_body": "El texto de esta edición no está vocalizado (solo el {}% de sus letras lleva harakat). El árabe leído sin vocales se pronuncia mal, y en un texto religioso una vocal equivocada es un significado equivocado.",
+    "text_listen_no_engine": "Tu dispositivo no tiene voz árabe. Instálala en Ajustes de Android → Idioma → Texto a voz.",
+    "text_listen_skips_quran": "Las aleyas las recitan recitadores reales en la sección de recitaciones; esta voz sintética no las lee."
   },
   "azkar": {
     "title": "Adhkar",
