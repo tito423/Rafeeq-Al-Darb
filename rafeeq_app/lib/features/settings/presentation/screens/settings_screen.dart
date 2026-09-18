@@ -50,6 +50,7 @@ class SettingsBody extends ConsumerWidget {
           // current locale (P2‑3 added es / ru / pt).
           CollapsibleSection(
             title: 'settings.language'.tr(),
+            icon: Icons.translate_rounded,
             children: [
             Wrap(
               spacing: 8,
@@ -119,6 +120,7 @@ class SettingsBody extends ConsumerWidget {
           // «شاشة البداية». They have a heading now.
           CollapsibleSection(
             title: 'settings.splash_section'.tr(),
+            icon: Icons.auto_awesome_rounded,
             children: [
             // P3‑49: the AI-generated splash video is back on by default; keep
             // a toggle for anyone who prefers a faster cold start.
@@ -181,6 +183,7 @@ class SettingsBody extends ConsumerWidget {
           // ── Home clock ──
           CollapsibleSection(
             title: 'home.clock_section'.tr(),
+            icon: Icons.watch_later_rounded,
             children: [
             Card(
               child: Column(
@@ -294,6 +297,7 @@ class SettingsBody extends ConsumerWidget {
           // calls `build()` again with fresh translations.
           CollapsibleSection(
             title: 'settings.permissions'.tr(),
+            icon: Icons.verified_user_rounded,
             children: [
             PermissionsSection(),
             ],
@@ -304,6 +308,7 @@ class SettingsBody extends ConsumerWidget {
           // the Home "سنن السور" card — see that card's own doc comment.
           CollapsibleSection(
             title: 'sunan_suwar.reminders_section_title'.tr(),
+            icon: Icons.menu_book_rounded,
             children: [
             SunanSuwarRemindersSection(),
             ],
@@ -312,6 +317,7 @@ class SettingsBody extends ConsumerWidget {
 
           CollapsibleSection(
             title: 'tasbih.section_title'.tr(),
+            icon: Icons.all_inclusive_rounded,
             children: const [
               TasbihReminderSection(),
             ],
@@ -320,6 +326,7 @@ class SettingsBody extends ConsumerWidget {
 
           CollapsibleSection(
             title: 'fasting.section_title'.tr(),
+            icon: Icons.nights_stay_rounded,
             children: const [
               FastingReminderSection(),
             ],
@@ -331,6 +338,7 @@ class SettingsBody extends ConsumerWidget {
           // preview.
           CollapsibleSection(
             title: 'quotes.section_title'.tr(),
+            icon: Icons.format_quote_rounded,
             children: [
             QuoteReminderSection(),
             ],
@@ -424,10 +432,15 @@ class CollapsibleSection extends StatefulWidget {
   final String title;
   final List<Widget> children;
 
+  /// What the section holds, drawn in a gold badge beside its title —
+  /// «حط أيقونات شكلها جميل جنب رؤوس القوائم … وخليها انيميتد».
+  final IconData? icon;
+
   const CollapsibleSection({
     super.key,
     required this.title,
     required this.children,
+    this.icon,
   });
 
   @override
@@ -451,6 +464,10 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
             padding: const EdgeInsets.only(bottom: 8, top: 4),
             child: Row(
               children: [
+                if (widget.icon != null) ...[
+                  _SectionBadge(icon: widget.icon!, open: _open),
+                  const SizedBox(width: 12),
+                ],
                 Expanded(
                   child: Text(
                     widget.title,
@@ -482,6 +499,55 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
           sizeCurve: Curves.easeOutCubic,
         ),
       ],
+    );
+  }
+}
+
+/// The section's icon in a round gold badge. It animates only when there is
+/// something to say: opening fills the badge and gives the icon a small
+/// elastic pop and turn; closing settles it back. No idle loop — nine of these
+/// breathing on one scrolling page would be motion for nothing and repaint
+/// cost on every frame.
+class _SectionBadge extends StatelessWidget {
+  final IconData icon;
+  final bool open;
+  const _SectionBadge({required this.icon, required this.open});
+
+  @override
+  Widget build(BuildContext context) {
+    const gold = Color(0xFFC9A227);
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOutCubic,
+      width: 38,
+      height: 38,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: open
+            ? const LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Color(0xFFE2C15A), gold],
+              )
+            : null,
+        color: open ? null : gold.withValues(alpha: 0.14),
+        border: Border.all(color: gold.withValues(alpha: open ? 0 : 0.45)),
+        boxShadow: open
+            ? [BoxShadow(color: gold.withValues(alpha: 0.35), blurRadius: 10)]
+            : const [],
+      ),
+      child: TweenAnimationBuilder<double>(
+        // Keyed by state so each open/close replays the pop.
+        key: ValueKey(open),
+        tween: Tween(begin: 0.7, end: 1),
+        duration: const Duration(milliseconds: 420),
+        curve: Curves.elasticOut,
+        builder: (context, v, child) => Transform.rotate(
+          angle: (1 - v) * (open ? -0.6 : 0.6),
+          child: Transform.scale(scale: v, child: child),
+        ),
+        child: Icon(icon, size: 20, color: open ? Colors.white : gold),
+      ),
     );
   }
 }
