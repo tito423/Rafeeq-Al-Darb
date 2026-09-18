@@ -450,7 +450,12 @@
     "open_voice_use_device": "صوت الهاتف",
     "open_voice_download": "تنزيل الصوت",
     "open_voice_failed": "تعذّر تنزيل الصوت. تحقّق من الاتصال ثم حاول مرة أخرى.",
-    "open_voice_hide": "متابعة في الخلفية"
+    "open_voice_hide": "متابعة في الخلفية",
+    "voice_section_title": "قارئ الكتب",
+    "voice_open_installed": "مثبّت على جهازك، ويعمل دون إنترنت.",
+    "voice_open_not_installed": "غير مثبّت. يُنزَّل عند اختياره ({}).",
+    "voice_device_desc": "صوت رجل من محرّك الهاتف نفسه، لا يحتاج تنزيلًا، لكنه لا يفخّم لفظ الجلالة.",
+    "voice_open_fallback_note": "إلى أن يكتمل تنزيل الصوت المحسَّن، يقرأ صوت الهاتف."
   },
   "azkar": {
     "title": "الأذكار",
@@ -730,6 +735,7 @@
     "cat_recitations": "التلاوات",
     "cat_hadith": "الحديث",
     "cat_books": "الكتب",
+    "cat_voices": "صوت قارئ الكتب",
     "free": "تفريغ",
     "free_all": "تفريغ كل المساحة",
     "repair": "إصلاح التحميلات",

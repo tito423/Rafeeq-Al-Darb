@@ -20,6 +20,7 @@ import '../../../quran_audio/data/mp3quran_api.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
+import '../widgets/download_category_style.dart';
 import '../widgets/mushaf_download_tile.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../quran_audio/presentation/ayah_download_screen.dart';
@@ -28,22 +29,6 @@ String _fmtSize(int bytes) {
   // Binary units, matching what Android's own storage screen reports.
   return formatBytesBinary(bytes);
 }
-
-IconData _iconFor(DownloadCategory c) => switch (c) {
-  DownloadCategory.mushafs => Icons.menu_book_rounded,
-  DownloadCategory.recitations => Icons.headphones_rounded,
-  DownloadCategory.ayahRecitations => Icons.record_voice_over_outlined,
-  DownloadCategory.hadith => Icons.format_quote_rounded,
-  DownloadCategory.books => Icons.auto_stories_rounded,
-};
-
-Color _colorFor(DownloadCategory c) => switch (c) {
-  DownloadCategory.mushafs => AppColors.gold,
-  DownloadCategory.recitations => AppColors.primarySoft,
-  DownloadCategory.ayahRecitations => AppColors.success,
-  DownloadCategory.hadith => AppColors.info,
-  DownloadCategory.books => AppColors.goldSoft,
-};
 
 /// How much empty space every list in this screen keeps at its foot.
 ///
@@ -167,6 +152,10 @@ class _OverviewTab extends ConsumerWidget {
           ref.read(requestedTabProvider.notifier).state = AppTab.library;
           ref.read(requestedLibraryTabProvider.notifier).state = 0;
         };
+      case DownloadCategory.voices:
+        // One pack and nothing to browse: the row's free button is all the
+        // management it needs. It is installed from the book reader.
+        return null;
     }
   }
 
@@ -472,7 +461,7 @@ class _StorageHero extends StatelessWidget {
                       if (summary.usage(c).bytes > 0)
                         Expanded(
                           flex: summary.usage(c).bytes,
-                          child: ColoredBox(color: _colorFor(c)),
+                          child: ColoredBox(color: categoryColor(c)),
                         ),
                   ],
                 ),
@@ -492,7 +481,7 @@ class _StorageHero extends StatelessWidget {
                           width: 9,
                           height: 9,
                           decoration: BoxDecoration(
-                            color: _colorFor(c),
+                            color: categoryColor(c),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -547,7 +536,7 @@ class _CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final accent = _colorFor(usage.category);
+    final accent = categoryColor(usage.category);
     final empty = usage.bytes == 0;
 
     return Padding(
@@ -569,7 +558,7 @@ class _CategoryCard extends StatelessWidget {
                     color: accent.withValues(alpha: 0.16),
                     borderRadius: BorderRadius.circular(13),
                   ),
-                  child: Icon(_iconFor(usage.category), color: accent, size: 22),
+                  child: Icon(categoryIcon(usage.category), color: accent, size: 22),
                 ),
                 const SizedBox(width: 12),
                 Expanded(

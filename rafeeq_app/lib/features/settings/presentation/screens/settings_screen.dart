@@ -13,6 +13,7 @@ import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../splash/presentation/screens/splash_preview_screen.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
+import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../fasting/presentation/fasting_reminder_section.dart';
 import '../../../tasbih_reminder/presentation/tasbih_reminder_section.dart';
 import '../widgets/non_arabic_reading_card.dart';
@@ -329,6 +330,15 @@ class SettingsBody extends ConsumerWidget {
             icon: Icons.nights_stay_rounded,
             children: const [
               FastingReminderSection(),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          CollapsibleSection(
+            title: 'library.voice_section_title'.tr(),
+            icon: Icons.record_voice_over_rounded,
+            children: const [
+              BookVoiceSection(),
             ],
           ),
           const SizedBox(height: 24),

@@ -8,6 +8,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'tts/book_voice_pref.dart';
 import 'tts/open_voice.dart';
 
 /// Reads a book's page aloud, one sentence at a time.
@@ -142,7 +143,7 @@ class BookSpeaker {
   /// `[ar]`. `isLanguageAvailable` waits for the binding; the list is kept as
   /// a second opinion for engines that do not implement it.
   Future<bool> get available async {
-    if (await OpenVoice.isInstalled()) return true;
+    if (await _useOpenVoice()) return true;
     try {
       final direct = await _tts.isLanguageAvailable('ar');
       if (direct == true) return true;
@@ -161,7 +162,7 @@ class BookSpeaker {
 
   Future<void> speak(String pageText, {double rate = 0.45}) async {
     await stop();
-    if (await OpenVoice.isInstalled()) {
+    if (await _useOpenVoice()) {
       final done = await _speakOpen(pageText);
       if (done) return;
       // The open voice failed on this device (a model that would not load,
@@ -211,6 +212,11 @@ class BookSpeaker {
       total: _chunks.length,
     ));
   }
+
+  /// The owner's choice in Settings, and only when the pack is really there.
+  static Future<bool> _useOpenVoice() async =>
+      await BookVoicePref.load() == BookVoice.open &&
+      await OpenVoice.isInstalled();
 
   static const _voicePlayer = MethodChannel('com.tito.rafeeq_aldarb/voice_player');
 

@@ -450,7 +450,12 @@
     "open_voice_use_device": "Voz del teléfono",
     "open_voice_download": "Descargar voz",
     "open_voice_failed": "No se pudo descargar la voz. Comprueba la conexión e inténtalo de nuevo.",
-    "open_voice_hide": "Continuar en segundo plano"
+    "open_voice_hide": "Continuar en segundo plano",
+    "voice_section_title": "Lector de libros",
+    "voice_open_installed": "Instalada en tu dispositivo; funciona sin internet.",
+    "voice_open_not_installed": "No instalada. Se descarga al elegirla ({}).",
+    "voice_device_desc": "Una voz masculina del propio motor del teléfono. No requiere descarga, pero no pronuncia el nombre de Allah con su énfasis.",
+    "voice_open_fallback_note": "Hasta que termine de descargarse la voz mejorada, lee la voz del teléfono."
   },
   "azkar": {
     "title": "Adhkar",
@@ -730,6 +735,7 @@
     "cat_recitations": "Recitaciones",
     "cat_hadith": "Hadiz",
     "cat_books": "Libros",
+    "cat_voices": "Voz del lector de libros",
     "free": "Liberar",
     "free_all": "Liberar todo",
     "free_confirm": "¿Eliminar del dispositivo los archivos descargados de esta categoría?",

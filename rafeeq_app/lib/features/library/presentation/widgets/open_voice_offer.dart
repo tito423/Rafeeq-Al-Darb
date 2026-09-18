@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/byte_formatter.dart';
+import '../../data/tts/book_voice_pref.dart';
 import '../../data/tts/open_voice.dart';
 
 /// Offers the open reader voice before the first «استماع» without it.
@@ -17,7 +18,10 @@ import '../../data/tts/open_voice.dart';
 /// Returns true when the reader should go on and read (in whichever voice
 /// is now available), false when the user cancelled.
 Future<bool> offerOpenVoice(BuildContext context) async {
-  if (_declinedThisSession || await OpenVoice.isInstalled()) return true;
+  if (await BookVoicePref.load() == BookVoice.device ||
+      await OpenVoice.isInstalled()) {
+    return true;
+  }
   if (!context.mounted) return false;
   final choice = await showDialog<String>(
     context: context,
@@ -38,21 +42,24 @@ Future<bool> offerOpenVoice(BuildContext context) async {
     ),
   );
   if (choice == 'device') {
-    _declinedThisSession = true;
+    // Remembered, not asked again on every page: Settings → «قارئ الكتب»
+    // is where it is changed back.
+    await BookVoicePref.save(BookVoice.device);
     return true;
   }
   if (choice != 'download' || !context.mounted) return false;
-  return await showDialog<bool>(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => const _InstallDialog(),
-      ) ??
-      false;
+  return installOpenVoice(context);
 }
 
-/// Asked once per run: someone who chose the phone's voice is not asked
-/// again on every page turn.
-bool _declinedThisSession = false;
+/// Downloads the pack behind a progress dialog. True once it is installed;
+/// false if it failed or the user sent it to the background.
+Future<bool> installOpenVoice(BuildContext context) async =>
+    await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const _InstallDialog(),
+    ) ??
+    false;
 
 class _InstallDialog extends StatefulWidget {
   const _InstallDialog();

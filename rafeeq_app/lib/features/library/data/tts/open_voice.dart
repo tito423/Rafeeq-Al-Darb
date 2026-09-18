@@ -90,6 +90,18 @@ class OpenVoice {
     }
   }
 
+  /// Bytes the pack occupies now, partial files included, for the
+  /// Downloads hub.
+  static Future<int> usageBytes() async {
+    final d = await _dir();
+    if (!d.existsSync()) return 0;
+    var n = 0;
+    for (final f in d.listSync().whereType<File>()) {
+      n += f.lengthSync();
+    }
+    return n;
+  }
+
   static Future<void> uninstall() async {
     await instance.release();
     final d = await _dir();

@@ -5,6 +5,7 @@ import '../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../core/services/download_manager.dart';
 import '../../../core/services/mushaf_page_service.dart';
 import '../../quran/data/mushaf_edition.dart';
+import '../../library/data/tts/open_voice.dart';
 
 /// P2‑5 — a read-only aggregator over every place the app stores downloaded
 /// content, so the Downloads hub can show one storage picture and free space
@@ -19,7 +20,11 @@ import '../../quran/data/mushaf_edition.dart';
 /// nothing left to show and nothing left to do. The owner put it plainly:
 /// «شيل الاذان من التنزيلات مالوش لازمة». Its two manager categories are
 /// swept by `freeAllStorage` below so no orphaned bytes are left uncounted.
-enum DownloadCategory { mushafs, recitations, ayahRecitations, hadith, books }
+///
+/// `voices` is the book reader's open voice (~252 MB, `OpenVoice`): the
+/// largest single download in the app, so it has to be visible here and
+/// freeable, not only installable from the reader.
+enum DownloadCategory { mushafs, recitations, ayahRecitations, hadith, books, voices }
 
 extension DownloadCategoryX on DownloadCategory {
   String get labelKey => switch (this) {
@@ -28,6 +33,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.ayahRecitations => 'downloads.cat_ayah_recitations',
         DownloadCategory.hadith => 'downloads.cat_hadith',
         DownloadCategory.books => 'downloads.cat_books',
+        DownloadCategory.voices => 'downloads.cat_voices',
       };
 
   /// [DownloadManager] `category` string(s) that map to this bucket.
@@ -49,6 +55,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.ayahRecitations => const [],
         DownloadCategory.hadith => const ['hadith'],
         DownloadCategory.books => const ['books', 'books_text'],
+        DownloadCategory.voices => const [],
       };
 }
 
@@ -128,6 +135,9 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       out.add(CategoryUsage(cat, reciteBytes + bytes, reciteItems + ids.length));
     } else if (cat == DownloadCategory.ayahRecitations) {
       out.add(CategoryUsage(cat, ayahBytes, ayahItems));
+    } else if (cat == DownloadCategory.voices) {
+      final vb = await OpenVoice.usageBytes();
+      out.add(CategoryUsage(cat, vb, vb > 0 ? 1 : 0));
     } else {
       out.add(CategoryUsage(cat, bytes, ids.length));
     }
@@ -148,6 +158,8 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
       await QuranAudioLibrary.instance.freeAll();
     case DownloadCategory.ayahRecitations:
       await AyahRecitationLibrary.instance.freeAll();
+    case DownloadCategory.voices:
+      await OpenVoice.uninstall();
     case DownloadCategory.hadith:
     case DownloadCategory.books:
       break;

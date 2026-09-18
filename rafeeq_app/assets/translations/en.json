@@ -450,7 +450,12 @@
     "open_voice_use_device": "Phone voice",
     "open_voice_download": "Download voice",
     "open_voice_failed": "The voice could not be downloaded. Check your connection and try again.",
-    "open_voice_hide": "Continue in background"
+    "open_voice_hide": "Continue in background",
+    "voice_section_title": "Book reader",
+    "voice_open_installed": "Installed on your device; works without internet.",
+    "voice_open_not_installed": "Not installed. Downloaded when chosen ({}).",
+    "voice_device_desc": "A man's voice from the phone's own engine. Nothing to download, but it does not give the name of Allah its heavy pronunciation.",
+    "voice_open_fallback_note": "Until the enhanced voice finishes downloading, the phone voice reads."
   },
   "azkar": {
     "title": "Adhkar",
@@ -730,6 +735,7 @@
     "cat_recitations": "Recitations",
     "cat_hadith": "Hadith",
     "cat_books": "Books",
+    "cat_voices": "Book reader voice",
     "free": "Free up",
     "free_all": "Free all",
     "repair": "Repair Downloads",
