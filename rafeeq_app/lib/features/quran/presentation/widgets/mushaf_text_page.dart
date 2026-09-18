@@ -1,3 +1,4 @@
+import 'mushaf/ayah_wash_painter.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -939,16 +940,9 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
       spans.add(
         TextSpan(
           text: text,
+          // The wash is `AyahWashPainter` (own glyph boxes); only ink here.
           style: isPlaying
-              ? widget.textStyle.copyWith(
-                  // A wash behind the glyphs rather than a bordered box, so
-                  // the highlight rides the text as it wraps across lines.
-                  // Both colours come from the theme: on the black
-                  // high-contrast page a gold wash under gold text would be
-                  // unreadable, so that theme flips the ink instead.
-                  backgroundColor: widget.mt.highlightPlaying,
-                  color: widget.mt.inkOnHighlight,
-                )
+              ? widget.textStyle.copyWith(color: widget.mt.inkOnHighlight)
               : widget.textStyle,
         ),
       );
@@ -980,11 +974,17 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
         final ayah = _ayahAt(d.localPosition);
         if (ayah != null) widget.onAyahLongPress(ayah);
       },
-      child: Text.rich(
-        TextSpan(children: spans),
-        key: _textKey,
-        textAlign: TextAlign.justify,
-        textDirection: TextDirection.rtl,
+      child: CustomPaint(
+        painter: AyahWashPainter(
+          textKey: _textKey,
+          color: widget.mt.highlightPlaying,
+          range: [
+            for (final r in ranges)
+              if (r.$3 == widget.playingIndex) (r.$1, r.$2 - 1),
+          ].firstOrNull,
+        ),
+        child: Text.rich(TextSpan(children: spans), key: _textKey,
+            textAlign: TextAlign.justify, textDirection: TextDirection.rtl),
       ),
     );
   }
