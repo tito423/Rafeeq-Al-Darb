@@ -86,7 +86,7 @@ class _ToolbarActionState extends State<ToolbarAction>
           curve: Curves.easeOut,
           padding: widget.compact
               ? const EdgeInsets.symmetric(horizontal: 10, vertical: 8)
-              : const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              : const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: widget.active
@@ -96,30 +96,40 @@ class _ToolbarActionState extends State<ToolbarAction>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AnimatedBuilder(
-                animation: _wiggle,
-                builder: (context, icon) {
-                  final t = _wiggle.value;
-                  final decay = 1 - t;
-                  return Transform.rotate(
-                    angle: math.sin(t * math.pi * 3) * 0.28 * decay,
-                    child: Transform.scale(
-                      scale: 1 + 0.22 * math.sin(t * math.pi) * decay,
-                      child: icon,
+              // «خليها شكلها جميلة احترافية»: in the captioned form the icon
+              // sits in the same round gold badge as the settings sections —
+              // tinted at rest, filled when active — so the app has one look.
+              // 28 + 3 + caption + 8 of padding stays inside [captionedHeight].
+              _Badge(
+                enabled: !widget.compact,
+                active: widget.active,
+                child: AnimatedBuilder(
+                  animation: _wiggle,
+                  builder: (context, icon) {
+                    final t = _wiggle.value;
+                    final decay = 1 - t;
+                    return Transform.rotate(
+                      angle: math.sin(t * math.pi * 3) * 0.28 * decay,
+                      child: Transform.scale(
+                        scale: 1 + 0.22 * math.sin(t * math.pi) * decay,
+                        child: icon,
+                      ),
+                    );
+                  },
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 280),
+                    transitionBuilder: (child, anim) => RotationTransition(
+                      turns: Tween<double>(begin: -0.25, end: 0).animate(anim),
+                      child: ScaleTransition(scale: anim, child: child),
                     ),
-                  );
-                },
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 280),
-                  transitionBuilder: (child, anim) => RotationTransition(
-                    turns: Tween<double>(begin: -0.25, end: 0).animate(anim),
-                    child: ScaleTransition(scale: anim, child: child),
-                  ),
-                  child: Icon(
-                    widget.icon,
-                    key: ValueKey(widget.icon.codePoint),
-                    size: widget.compact ? 24 : 22,
-                    color: color,
+                    child: Icon(
+                      widget.icon,
+                      key: ValueKey(widget.icon.codePoint),
+                      size: widget.compact ? 24 : 18,
+                      color: widget.compact
+                          ? color
+                          : (widget.active ? Colors.white : AppColors.gold),
+                    ),
                   ),
                 ),
               ),
@@ -131,10 +141,12 @@ class _ToolbarActionState extends State<ToolbarAction>
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 10,
-                    color:
-                        widget.active ? AppColors.gold : scheme.onSurfaceVariant,
-                    fontWeight:
-                        widget.active ? FontWeight.w700 : FontWeight.w400,
+                    color: widget.active
+                        ? AppColors.gold
+                        : scheme.onSurfaceVariant,
+                    fontWeight: widget.active
+                        ? FontWeight.w700
+                        : FontWeight.w400,
                   ),
                 ),
               ],
@@ -148,5 +160,48 @@ class _ToolbarActionState extends State<ToolbarAction>
     return widget.compact
         ? Tooltip(message: widget.label, child: child)
         : child;
+  }
+}
+
+class _Badge extends StatelessWidget {
+  final bool enabled;
+  final bool active;
+  final Widget child;
+  const _Badge({
+    required this.enabled,
+    required this.active,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (!enabled) return child;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 240),
+      curve: Curves.easeOutCubic,
+      width: 28,
+      height: 28,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: active
+            ? const LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Color(0xFFE2C15A), AppColors.gold],
+              )
+            : null,
+        color: active ? null : AppColors.gold.withValues(alpha: 0.13),
+        boxShadow: active
+            ? [
+                BoxShadow(
+                  color: AppColors.gold.withValues(alpha: 0.35),
+                  blurRadius: 8,
+                ),
+              ]
+            : const [],
+      ),
+      child: child,
+    );
   }
 }
