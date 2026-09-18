@@ -68,22 +68,29 @@ Future<void> main() async {
           e.value, '${dir.path}/jalala__${v['name']}__${e.key}.wav', true);
     }
   }
-  // Round two (2026-09-18): the owner chose voice 1 (ard) and heard «ظلع
-  // حريمي» in it. The one lever the engine gives is pitch, so the same book
-  // sentence at four pitches, and at two rates.
-  // A plain sentence of our own, attributed to nobody: a test sample must not
-  // put words in a scholar's mouth.
-  const book = 'ومِنْ أعظمِ نِعَمِ اللَّهِ على العبدِ أنْ يُوفِّقَهُ لذِكْرِهِ، '
-      'والحمدُ للَّهِ ربِّ العالمين.';
-  await tts.setVoice({'name': 'ar-xa-x-ard-local', 'locale': 'ar'});
-  for (final p in const [1.0, 0.9, 0.8, 0.7]) {
-    for (final r in const [0.45, 0.38]) {
-      status.value = 'pitch $p rate $r';
-      await tts.setPitch(p);
-      await tts.setSpeechRate(r);
-      await tts.synthesizeToFile(book, '${dir.path}/pitch__${p}__rate__$r.wav', true);
+  // Round three (2026-09-18): tafkhim of the divine name, MEASURED. A
+  // heavy lam backs the long vowel after it: its second formant (F2) sits
+  // low, ~1000-1300 Hz in a man's voice; a light one (بِاللَّهِ, correctly
+  // light after kasra) sits ~1600+. Each spelling is spoken ALONE so the
+  // host can read F2 off its vowel.
+  const alone = <String, String>{
+    'h_diac': 'اللَّهُ',
+    'h_bare': 'الله',
+    'h_alif': 'اللّاه',
+    'h_alif2': 'اللَّاهُ',
+    'h_hamza': 'أَللَّهُ',
+    'h_lig': 'ﷲ',
+    'l_billah': 'بِاللَّهِ',
+    'h_ssml': '<speak><phoneme alphabet="ipa" ph="ʔɑlˤˈlˤɑːh">اللَّهُ</phoneme></speak>',
+  };
+  for (final vname in const ['ar-xa-x-ard-local', 'ar-xa-x-ard-network']) {
+    await tts.setVoice({'name': vname, 'locale': 'ar'});
+    await tts.setPitch(1.0);
+    await tts.setSpeechRate(0.38);
+    for (final e in alone.entries) {
+      status.value = '$vname ${e.key}';
+      await tts.synthesizeToFile(e.value, '${dir.path}/allah__${vname}__${e.key}.wav', true);
     }
   }
-  await tts.setPitch(1.0);
   status.value = 'DONE ${voices.length}';
 }
