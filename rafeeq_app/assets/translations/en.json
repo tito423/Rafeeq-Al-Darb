@@ -444,7 +444,13 @@
     "text_listen_unavailable_title": "This book is not read aloud",
     "text_listen_unavailable_body": "This edition's text is not vowelled (only {}% of its letters carry harakat). Arabic read without harakat is mispronounced, and in a scholarly religious text a wrong vowel is a wrong meaning — so we would rather not read it than read it wrongly.",
     "text_listen_no_engine": "Your device has no Arabic voice. Install one from Android Settings → Language & input → Text-to-speech.",
-    "text_listen_skips_quran": "Qur'anic verses are recited by real reciters in the recitations section; this synthetic voice does not read them."
+    "text_listen_skips_quran": "Qur'anic verses are recited by real reciters in the recitations section; this synthetic voice does not read them.",
+    "open_voice_title": "Enhanced reader voice",
+    "open_voice_body": "A man's voice that runs on your device without internet and gives the name of Allah its proper heavy pronunciation, unlike the phone's built-in voices. Size {}, downloaded once.",
+    "open_voice_use_device": "Phone voice",
+    "open_voice_download": "Download voice",
+    "open_voice_failed": "The voice could not be downloaded. Check your connection and try again.",
+    "open_voice_hide": "Continue in background"
   },
   "azkar": {
     "title": "Adhkar",

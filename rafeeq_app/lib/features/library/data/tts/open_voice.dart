@@ -51,7 +51,17 @@ class OpenVoice {
 
   /// Downloads the pack, resuming nothing - a partial file is replaced.
   /// [onProgress] gets (bytesSoFar, totalBytes).
-  static Future<void> install(void Function(int, int)? onProgress) async {
+  static Future<void> install(void Function(int, int)? onProgress) {
+    // One download at a time: a second tap while the first is running joins
+    // it rather than writing the same .part files twice.
+    final running = _installing;
+    if (running != null) return running;
+    return _installing = _install(onProgress).whenComplete(() => _installing = null);
+  }
+
+  static Future<void>? _installing;
+
+  static Future<void> _install(void Function(int, int)? onProgress) async {
     final d = await _dir();
     d.createSync(recursive: true);
     var done = 0;

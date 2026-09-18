@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-18 21:02 — IN PROGRESS — resume here**
+**2026-09-18 21:33 — IN PROGRESS — resume here**
 
-TTS stage 2 DONE (7ed2a96, Dart phonetiser token-exact on 304 sentences). Library: no duplicate editions found (213 books, test/book_catalog_no_duplicates_test guards it). Page turn during continuous recitation tested on emulator: clean. Stage 3 facts: fp_ms.onnx inputs token_ids int64[1,N], pace f32[1], speaker i32[1] (use 0), pitch_mul f32[1], pitch_add f32[1] -> mel [1,80,T]; hifigan.onnx input 'input' mel f32[1,80,T] -> wave [1,1,S] @22050; denoiser.onnx inputs audio f32[1,S], strength f64[1]=0.005 -> [1,S]; then scale peak to 0.9. Next: upload the three to R2 tts/ (r2_client), onnxruntime pub 1.4.1, engine + BookSpeaker switch, measure tafkhim on device.
+TTS stage 3c: OpenVoice wired into BookSpeaker (native MediaPlayer channel voice_player, 220-char word-safe chunks, render-ahead, fallback to Google voice), offerOpenVoice install dialog + 7-locale keys. Analyze clean, chunk tests pass. NOT yet run on device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -1,7 +1,14 @@
 import 'dart:async';
 
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+import 'tts/open_voice.dart';
 
 /// Reads a book's page aloud, one sentence at a time.
 ///
@@ -51,7 +58,7 @@ class BookSpeaker {
 
   /// Splits a page into utterances the engine will accept and the ear will
   /// follow. Public so a test can check the splitting without a device.
-  static List<String> chunk(String text) {
+  static List<String> chunk(String text, {int max = _maxChunk}) {
     final clean = text.trim();
     if (clean.isEmpty) return const [];
 
@@ -69,17 +76,15 @@ class BookSpeaker {
     final buf = StringBuffer();
     for (final s in sentences) {
       if (s.isEmpty) continue;
-      if (s.length >= _maxChunk) {
+      if (s.length >= max) {
         if (buf.isNotEmpty) {
           out.add(buf.toString().trim());
           buf.clear();
         }
-        for (var i = 0; i < s.length; i += _maxChunk) {
-          out.add(s.substring(i, i + _maxChunk > s.length ? s.length : i + _maxChunk));
-        }
+        out.addAll(_splitLong(s, max));
         continue;
       }
-      if (buf.length + s.length + 1 > _maxChunk) {
+      if (buf.length + s.length + 1 > max) {
         out.add(buf.toString().trim());
         buf.clear();
       }
@@ -88,6 +93,22 @@ class BookSpeaker {
     }
     if (buf.isNotEmpty) out.add(buf.toString().trim());
     return out.where((c) => c.isNotEmpty).toList();
+  }
+
+  /// Cuts one over-long sentence, preferring a comma, then a space, so no
+  /// word is ever broken in two — a half word is a mispronounced word.
+  static List<String> _splitLong(String s, int max) {
+    final out = <String>[];
+    var rest = s;
+    while (rest.length > max) {
+      var cut = rest.lastIndexOf('،', max);
+      if (cut < max ~/ 3) cut = rest.lastIndexOf(' ', max);
+      if (cut <= 0) cut = max;
+      out.add(rest.substring(0, cut + (cut < rest.length && rest[cut] == '،' ? 1 : 0)).trim());
+      rest = rest.substring(cut).replaceFirst(RegExp(r'^[،\s]+'), '');
+    }
+    if (rest.trim().isNotEmpty) out.add(rest.trim());
+    return out;
   }
 
   /// Picks an Arabic voice, preferring one that lives ON THE DEVICE.
@@ -121,6 +142,7 @@ class BookSpeaker {
   /// `[ar]`. `isLanguageAvailable` waits for the binding; the list is kept as
   /// a second opinion for engines that do not implement it.
   Future<bool> get available async {
+    if (await OpenVoice.isInstalled()) return true;
     try {
       final direct = await _tts.isLanguageAvailable('ar');
       if (direct == true) return true;
@@ -139,6 +161,13 @@ class BookSpeaker {
 
   Future<void> speak(String pageText, {double rate = 0.45}) async {
     await stop();
+    if (await OpenVoice.isInstalled()) {
+      final done = await _speakOpen(pageText);
+      if (done) return;
+      // The open voice failed on this device (a model that would not load,
+      // an input it refused). Read the page in the phone's voice rather
+      // than leave the listener in silence; the failure is in the log.
+    }
     _chunks = chunk(pageText);
     if (_chunks.isEmpty) return;
 
@@ -183,9 +212,73 @@ class BookSpeaker {
     ));
   }
 
+  static const _voicePlayer = MethodChannel('com.tito.rafeeq_aldarb/voice_player');
+
+  /// FastPitch is fed short chunks: its cost grows with input length and the
+  /// first sound waits for the whole first chunk, so a sentence or two at a
+  /// time keeps the start quick while the next chunk renders during playback.
+  static const _openChunk = 220;
+
+  /// Reads the page in the open voice (the one the owner chose for its
+  /// tafkhim of the divine name). Returns false if it could not start, so
+  /// the caller falls back; true once it has read or been stopped.
+  Future<bool> _speakOpen(String pageText) async {
+    // A stop() followed by a new speak() resets _cancelled before the old
+    // loop has woken up; the generation tells the old loop it is stale.
+    final gen = ++_gen;
+    bool stale() => _cancelled || gen != _gen;
+    _chunks = chunk(pageText, max: _openChunk);
+    if (_chunks.isEmpty) return true;
+    _cancelled = false;
+    _index = 0;
+    _speaking = true;
+    final tmp = await getTemporaryDirectory();
+
+    Future<String> render(int i) async {
+      final samples = await OpenVoice.instance.synthesize(_chunks[i]);
+      final f = File(p.join(tmp.path, 'book_voice_${i % 2}.wav'));
+      await f.writeAsBytes(OpenVoice.wav(samples), flush: true);
+      return f.path;
+    }
+
+    Future<String>? next = render(0);
+    var started = false;
+    try {
+      for (; _index < _chunks.length; _index++) {
+        final path = await next!;
+        next = null;
+        if (stale()) break;
+        started = true;
+        next = _index + 1 < _chunks.length ? render(_index + 1) : null;
+        _stateController.add(BookSpeakerState(
+            speaking: true, chunk: _index, total: _chunks.length));
+        final ended = await _voicePlayer.invokeMethod<bool>('play', {'path': path});
+        if (ended != true) break;
+      }
+    } catch (e) {
+      debugPrint('BookSpeaker: open voice failed at chunk $_index: $e');
+      next?.ignore();
+      if (!started && !stale()) {
+        _speaking = false;
+        return false;
+      }
+    }
+    next?.ignore();
+    _speaking = false;
+    _stateController.add(BookSpeakerState(
+        speaking: false, chunk: _index, total: _chunks.length));
+    return true;
+  }
+
+  int _gen = 0;
+
   Future<void> stop() async {
+    _gen++;
     _cancelled = true;
     _speaking = false;
+    try {
+      await _voicePlayer.invokeMethod<void>('stop');
+    } catch (_) {}
     try {
       await _tts.stop();
     } catch (_) {}

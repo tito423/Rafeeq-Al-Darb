@@ -51,6 +51,24 @@ void main() {
     }
   });
 
+  test('the open voice gets short chunks that never break a word', () {
+    // FastPitch is fed ~220 characters at a time. A long sentence must be
+    // cut at a comma or a space: half a word is a mispronounced word.
+    final words = List.generate(120, (i) => i.isEven ? 'وَقَالَ' : 'الْعُلَمَاءُ،');
+    final text = '${words.join(' ')}.';
+    final chunks = BookSpeaker.chunk(text, max: 220);
+    expect(chunks.length, greaterThan(3));
+    final allowed = {'وَقَالَ', 'الْعُلَمَاءُ،', 'الْعُلَمَاءُ', 'وَقَالَ.', 'الْعُلَمَاءُ،.'};
+    for (final c in chunks) {
+      expect(c.length, lessThanOrEqualTo(220));
+      for (final w in c.split(' ')) {
+        expect(allowed, contains(w), reason: 'a word was cut: "$w"');
+      }
+    }
+    expect(chunks.join(' ').split(' ').length, words.length,
+        reason: 'no word may be lost between chunks');
+  });
+
   test('an empty or blank page produces nothing to say', () {
     expect(BookSpeaker.chunk(''), isEmpty);
     expect(BookSpeaker.chunk('   \n  '), isEmpty);

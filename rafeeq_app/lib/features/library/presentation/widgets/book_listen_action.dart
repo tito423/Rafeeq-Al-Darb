@@ -6,6 +6,7 @@ import '../../../../core/widgets/toolbar_action.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_speaker.dart';
 import '../../data/book_text.dart';
+import 'open_voice_offer.dart';
 
 /// The reader's «استماع» control, and everything behind it.
 ///
@@ -73,6 +74,7 @@ class BookListenActionState extends State<BookListenAction> {
       if (mounted) setState(() => _speaking = false);
       return;
     }
+    if (!await offerOpenVoice(context)) return;
     if (!await _speaker.available) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

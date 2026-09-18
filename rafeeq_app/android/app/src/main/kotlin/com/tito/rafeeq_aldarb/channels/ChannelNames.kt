@@ -17,4 +17,5 @@ object Channels {
     const val DOWNLOAD_TAP = "com.tito.rafeeq_aldarb/download_tap"
     const val MEDIA_AUDIO = "com.tito.rafeeq_aldarb/media_audio"
     const val PRAYER_CARD = "com.tito.rafeeq_aldarb/prayer_card"
+    const val VOICE_PLAYER = "com.tito.rafeeq_aldarb/voice_player"
 }

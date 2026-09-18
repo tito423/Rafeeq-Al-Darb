@@ -444,7 +444,13 @@
     "text_listen_unavailable_title": "Este libro no se lee en voz alta",
     "text_listen_unavailable_body": "El texto de esta edición no está vocalizado (solo el {}% de sus letras lleva harakat). El árabe leído sin vocales se pronuncia mal, y en un texto religioso una vocal equivocada es un significado equivocado.",
     "text_listen_no_engine": "Tu dispositivo no tiene voz árabe. Instálala en Ajustes de Android → Idioma → Texto a voz.",
-    "text_listen_skips_quran": "Las aleyas las recitan recitadores reales en la sección de recitaciones; esta voz sintética no las lee."
+    "text_listen_skips_quran": "Las aleyas las recitan recitadores reales en la sección de recitaciones; esta voz sintética no las lee.",
+    "open_voice_title": "Voz de lectura mejorada",
+    "open_voice_body": "Una voz masculina que funciona en tu dispositivo sin internet y pronuncia el nombre de Allah con su énfasis correcto, a diferencia de las voces integradas del teléfono. Tamaño {}, se descarga una vez.",
+    "open_voice_use_device": "Voz del teléfono",
+    "open_voice_download": "Descargar voz",
+    "open_voice_failed": "No se pudo descargar la voz. Comprueba la conexión e inténtalo de nuevo.",
+    "open_voice_hide": "Continuar en segundo plano"
   },
   "azkar": {
     "title": "Adhkar",

@@ -147,5 +147,7 @@ class MainActivity: AudioServiceActivity() {
         registerPrayerCardChannel(flutterEngine)
 
         registerAdhanControlChannel(flutterEngine)
+
+        registerVoicePlayerChannel(flutterEngine)
     }
 }
