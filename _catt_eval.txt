@@ -1,0 +1,18 @@
+CATT (encoder-only) against 10 of the app's own vowelled books
+ground truth = the book's own harakat, stripped and re-predicted
+
+  al_wajal_wal_tawthuq_bil_amal      words  1334  vowel-WER  17.0%  shadda  15.7%  case  15.0%
+  al_awliya_ibn_abi_al_dunya         words    39  vowel-WER  64.1%  shadda   2.6%  case  57.9%
+  al_adab_al_mufrad                  words    73  vowel-WER  37.0%  shadda   0.0%  case  28.8%
+  al_tawakkul_ala_allah              words   108  vowel-WER  23.1%  shadda  24.1%  case  22.5%
+  al_faqih_wal_mutafaqqih            words   487  vowel-WER  18.3%  shadda  20.7%  case  16.7%
+  adab_al_dunya_wal_din              words   851  vowel-WER   4.0%  shadda  18.2%  case   9.5%
+  man_asha_bad_al_mawt               words    51  vowel-WER  27.5%  shadda   5.9%  case  17.6%
+  al_manamat                         words    49  vowel-WER  18.4%  shadda  14.3%  case  23.9%
+  al_riqqah_wal_buka                 words    20  vowel-WER  65.0%  shadda   0.0%  case  50.0%
+  al_shukr                           words    32  vowel-WER  40.6%  shadda   0.0%  case  31.2%
+
+TOTAL  words 3044
+  vowel-WER 15.6%  (words with a WRONG VOWEL — the real failure)
+  shadda    16.5%  (words differing ONLY by a shadda)
+  case 15.4%   (final mark wrong — where grammar lives)
