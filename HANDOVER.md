@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-18 16:55 — IN PROGRESS — resume here**
+**2026-09-18 20:35 — IN PROGRESS — resume here**
 
-2026-09-18 batch: adhan re-timed by listening (Whisper), Fajr-only rule + 2 mislabelled Fajr found, Abdulbasit/Toubar Fajr added, page-turn remount fix, display sheet theme, male TTS voice (ard) + pitch samples sent, fasting + tasbih reminders, toolbar text/mushaf button, Dorar/IslamQA back. Seen on emulator: Fajr list, Fajr alarm text at 247s, fasting alarms, home rows, tutorial brightness. NOT seen: mushaf page badges, toolbar button. Pending owner: TTS pitch choice. Next: dedication feature, azkar from al-Wabil al-Sayyib, night/warm paper mushaf.
+TTS engine B plan (owner chose sample B, tafkhim): stage 1 host proof DONE (F2 1232 vs Google 1500, Minshawi 972). Stage 2: port the Buckwalter phonetiser (tts_arabic/text/phonetise_buckwalter.py, CC BY-NC, Halabi) + tokenizer to Dart ourselves - do NOT copy nipponjo/tts-arabic-flutter (no licence); test = token ids equal to the Python output on >=200 real book sentences. Stage 3: onnxruntime (pub 1.4.1, as nipponjo's app) + fp_ms.onnx 187MB + hifigan.onnx 56MB as an R2 download pack; BookSpeaker backend switch with Google fallback. Stage 4: measure tafkhim (scripts/measure_jalala_tafkhim.py) on DEVICE output, then owner listens. Azkar: +13 from al-Adhkar done (486c5cf); al-Wabil NOT added - our copy is 4% diacritised and its morning/evening hadiths duplicate an-Nawawi's.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
