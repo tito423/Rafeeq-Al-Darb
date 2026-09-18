@@ -43,6 +43,17 @@ class RafeeqApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final variant = ref.watch(themeControllerProvider);
 
+    // A new Hijri correction moves every planned fast by a day, so the
+    // armed reminders are re-planned at once, not at the next launch.
+    ref.listen<int>(
+      prayerAdjustmentsProvider.select((a) => a.hijriOffsetDays),
+      (prev, next) {
+        if (prev == null || prev == next) return;
+        final s = ref.read(fastingReminderProvider);
+        if (s.anyOn) rearmFastingReminders(s, next);
+      },
+    );
+
     // P3‑57: the reader's translation follows the app's language. Done here
     // because this is the one widget that rebuilds on every locale change and
     // has `context.locale`; scheduled off the frame because it writes provider

@@ -59,8 +59,22 @@ class FastingReminder {
 }
 
 /// The Hijri date of [day], shifted by the reader's correction in days.
-HijriCalendar hijriOf(DateTime day, int offsetDays) =>
-    HijriCalendar.fromDate(day.add(Duration(days: offsetDays)));
+///
+/// From [official] — the declared calendar, see `OfficialHijri` — when it
+/// holds that day, otherwise from the Umm al-Qura table.
+HijriCalendar hijriOf(DateTime day, int offsetDays,
+    [Map<String, (int, int, int)>? official]) {
+  final shifted = DateTime(day.year, day.month, day.day + offsetDays);
+  final o = official?[_key(shifted)];
+  if (o == null) return HijriCalendar.fromDate(shifted);
+  return HijriCalendar()
+    ..hYear = o.$1
+    ..hMonth = o.$2
+    ..hDay = o.$3;
+}
+
+String _key(DateTime d) =>
+    '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
 /// Whether a VOLUNTARY fast may be kept on this Hijri date.
 ///
@@ -82,6 +96,7 @@ List<FastingReminder> planFastingReminders({
   required int hour,
   required int minute,
   int days = 60,
+  Map<String, (int, int, int)>? official,
 }) {
   final out = <FastingReminder>[];
   // Hijri months whose white-days reminder was actually planned.
@@ -91,14 +106,15 @@ List<FastingReminder> planFastingReminders({
     final day = DateTime(today.year, today.month, today.day + i);
     final eve = DateTime(day.year, day.month, day.day - 1, hour, minute);
     if (!eve.isAfter(now)) continue;
-    final h = hijriOf(day, hijriOffsetDays);
+    final h = hijriOf(day, hijriOffsetDays, official);
     final isWhite = h.hDay >= 13 && h.hDay <= 15;
 
     if (whiteDays && h.hDay == 13) {
       // All three must be permitted — which in practice rules out Ramadan
       // and Dhu al-Hijjah, whose thirteenth is a day of tashriq.
       final allOk = [0, 1, 2].every((k) => voluntaryFastAllowed(
-          hijriOf(DateTime(day.year, day.month, day.day + k), hijriOffsetDays)));
+          hijriOf(DateTime(day.year, day.month, day.day + k), hijriOffsetDays,
+              official)));
       if (allOk) {
         out.add(FastingReminder(eve, day, FastKind.whiteDays));
         remindedWhite.add(h.hYear * 12 + h.hMonth);

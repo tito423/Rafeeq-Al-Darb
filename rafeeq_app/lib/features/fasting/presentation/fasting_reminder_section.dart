@@ -65,6 +65,8 @@ class FastingReminderSection extends ConsumerWidget {
             ),
             const SizedBox(height: 4),
             Text('fasting.note'.tr(), style: faint),
+            const SizedBox(height: 6),
+            Text('fasting.calendar_note'.tr(), style: faint),
             const Divider(height: 20),
             // What the reminder will say, so it is not a surprise — the same
             // two hadith, verbatim, with at-Tirmidhi's own grading.

@@ -250,20 +250,28 @@ class SettingsBody extends ConsumerWidget {
           // The text mushaf's own colour scheme — its own section, because it
           // is not the app theme: a light mushaf can be read inside a dark
           // app, and the two settings genuinely mean different things.
-          SectionLabel('mushaf_theme.title'.tr()),
-          Builder(
-            builder: (tileContext) => Card(
-              child: ListTile(
-                leading: Icon(Icons.palette_outlined, color: scheme.primary),
-                title: Text('mushaf_theme.title'.tr()),
-                subtitle: Text(_currentMushafThemeLabel(ref)),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => MushafThemePicker.show(
-                  context,
-                  origin: tileContext,
+          // A collapsible section like its neighbours («الأذونات» and the
+          // rest), not a heading over a lone card - the owner asked for it.
+          CollapsibleSection(
+            title: 'mushaf_theme.title'.tr(),
+            icon: Icons.palette_rounded,
+            children: [
+              Builder(
+                builder: (tileContext) => Card(
+                  child: ListTile(
+                    leading:
+                        Icon(Icons.palette_outlined, color: scheme.primary),
+                    title: Text(_currentMushafThemeLabel(ref)),
+                    subtitle: Text('mushaf_theme.subtitle'.tr()),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => MushafThemePicker.show(
+                      context,
+                      origin: tileContext,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
           const SizedBox(height: 24),
 
