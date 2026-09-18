@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-17 21:59 — IN PROGRESS — resume here**
+**2026-09-18 16:55 — IN PROGRESS — resume here**
 
-the 12-hour marker was English in all seven languages, and he caught it. formatTime12h called DateFormat('h:mm a') with NO locale, and Intl.defaultLocale is set nowhere in this app, so intl fell back to en_US and wrote AM/PM everywhere. His own screenshot is the evidence: the prayer card read المغرب ٦:٢١ PM - Arabic-Indic digits, an Arabic prayer name, and a Latin marker welded to the end of it. There was a SECOND half to the bug that would have defeated the obvious fix: main.dart called initializeDateFormatting('ar') and nothing else, so passing a correct locale for the other six would have thrown and fallen back to English anyway. It now loads every locale in kSupportedLocales, walked from the same list the app is built on, so a language added later cannot skip the clock. Every call site that has a locale in scope passes it; the parameter is optional because two callers are deep in a build with none to hand, and an English clock beats a crash. Seen on the device in Arabic, which needed the app switched over by writing flutter.locale into its own SharedPreferences because easy_localization had never persisted one: the big clock reads ٠٩:٥٨:١١ م, الفجر ٤:٤٧ ص, الشروق ٦:٠٦ ص. And the test was proved against the broken code before being trusted - restoring the old call makes it fail with «4:47 AM» instead of «٤:٤٧ ص», which is exactly the string he photographed. 347 tests, analyze clean
+2026-09-18 batch: adhan re-timed by listening (Whisper), Fajr-only rule + 2 mislabelled Fajr found, Abdulbasit/Toubar Fajr added, page-turn remount fix, display sheet theme, male TTS voice (ard) + pitch samples sent, fasting + tasbih reminders, toolbar text/mushaf button, Dorar/IslamQA back. Seen on emulator: Fajr list, Fajr alarm text at 247s, fasting alarms, home rows, tutorial brightness. NOT seen: mushaf page badges, toolbar button. Pending owner: TTS pitch choice. Next: dedication feature, azkar from al-Wabil al-Sayyib, night/warm paper mushaf.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
