@@ -68,5 +68,22 @@ Future<void> main() async {
           e.value, '${dir.path}/jalala__${v['name']}__${e.key}.wav', true);
     }
   }
+  // Round two (2026-09-18): the owner chose voice 1 (ard) and heard «ظلع
+  // حريمي» in it. The one lever the engine gives is pitch, so the same book
+  // sentence at four pitches, and at two rates.
+  // A plain sentence of our own, attributed to nobody: a test sample must not
+  // put words in a scholar's mouth.
+  const book = 'ومِنْ أعظمِ نِعَمِ اللَّهِ على العبدِ أنْ يُوفِّقَهُ لذِكْرِهِ، '
+      'والحمدُ للَّهِ ربِّ العالمين.';
+  await tts.setVoice({'name': 'ar-xa-x-ard-local', 'locale': 'ar'});
+  for (final p in const [1.0, 0.9, 0.8, 0.7]) {
+    for (final r in const [0.45, 0.38]) {
+      status.value = 'pitch $p rate $r';
+      await tts.setPitch(p);
+      await tts.setSpeechRate(r);
+      await tts.synthesizeToFile(book, '${dir.path}/pitch__${p}__rate__$r.wav', true);
+    }
+  }
+  await tts.setPitch(1.0);
   status.value = 'DONE ${voices.length}';
 }

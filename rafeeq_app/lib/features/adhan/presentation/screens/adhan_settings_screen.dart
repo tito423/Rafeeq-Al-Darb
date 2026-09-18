@@ -304,10 +304,19 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
           // show no selection at all and the subtitle would be blank, while
           // the alarm quietly fell back to `catalog.first` anyway. Heal it
           // instead of leaving the screen disagreeing with what will play.
-          if (catalog.isNotEmpty &&
-              !catalog.any((o) => o.id == settings.defaultAdhanId)) {
+          // A default that turned out to be a Fajr recording (azan6, azan9 —
+          // Whisper heard «الصلاة خير من النوم» in both) keeps the reader's
+          // choice where it belongs: it becomes their Fajr adhan, and the
+          // default moves to the first ordinary one.
+          final def = catalog.where((o) => o.id == settings.defaultAdhanId).firstOrNull;
+          final firstPlain = catalog.where((o) => !o.isFajr).firstOrNull;
+          if (catalog.isNotEmpty && (def == null || def.isFajr) && firstPlain != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) _saveDefault(catalog.first.id);
+              if (!mounted) return;
+              if (def != null && settings.adhanIdByPrayer['fajr'] == null) {
+                _saveChoice('fajr', def.id);
+              }
+              _saveDefault(firstPlain.id);
             });
           }
           return ListView(
