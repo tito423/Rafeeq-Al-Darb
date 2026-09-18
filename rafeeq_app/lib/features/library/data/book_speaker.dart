@@ -106,10 +106,7 @@ class BookSpeaker {
         .where((v) => (v['locale'] ?? '').toLowerCase().startsWith('ar'))
         .toList();
     if (arabic.isEmpty) return null;
-    final local = arabic.firstWhere(
-      (v) => (v['name'] ?? '').contains('-local'),
-      orElse: () => arabic.first,
-    );
+    final local = pickArabicVoice(arabic);
     await _tts.setVoice({'name': local['name']!, 'locale': local['locale']!});
     return local['name'];
   }
@@ -235,3 +232,37 @@ String pageSpeechText(Iterable<({String text, String kind})> paras) => paras
     .map((p) => p.text.trim())
     .where((t) => t.isNotEmpty)
     .join('\n');
+
+/// A MAN's voice, on the device if possible.
+///
+/// «عاوزه رجل مش أنثى لأنه تطبيق إسلامي». The reader used to take the first
+/// `-local` voice the engine listed, which on Google's engine is
+/// `ar-xa-x-arz` — a woman's voice. Voice names say nothing about sex, so it
+/// was measured: every Arabic voice on emulator-5554 spoke the same sentence
+/// (`tool/tts_samples_main.dart`) and its median pitch was read on the host.
+/// `ard` 135.6 Hz and `are` 144.6 Hz are male; `arz` 206.9 Hz and `arc`
+/// 235.3 Hz are female (network variants within 10 Hz of the local ones).
+///
+/// Preference: a measured male voice on the device, then the same over the
+/// network, then any voice whose name says it is male, then the first local
+/// voice. An engine that has no male Arabic voice at all still reads — in
+/// the voice it has — rather than refusing.
+@visibleForTesting
+Map<String, String> pickArabicVoice(List<Map<String, String>> arabic) {
+  const maleOrder = ['ar-xa-x-ard', 'ar-xa-x-are'];
+  String name(Map<String, String> v) => (v['name'] ?? '').toLowerCase();
+  for (final suffix in ['-local', '-network']) {
+    for (final m in maleOrder) {
+      final hit = arabic.where((v) => name(v) == '$m$suffix').firstOrNull;
+      if (hit != null) return hit;
+    }
+  }
+  final saysMale = arabic
+      .where((v) => name(v).contains('male') && !name(v).contains('female'))
+      .firstOrNull;
+  if (saysMale != null) return saysMale;
+  return arabic.firstWhere(
+    (v) => name(v).contains('-local'),
+    orElse: () => arabic.first,
+  );
+}

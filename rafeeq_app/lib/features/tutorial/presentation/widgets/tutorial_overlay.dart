@@ -293,8 +293,12 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     // reads as a blink — measured at 30 fps, mean frame brightness fell from
     // 98 to 59 for exactly one frame on every stop. Rising from 0.62 keeps the
     // movement (it still lifts and grows into place) without the gap.
-    final card = Opacity(
-      opacity: (0.62 + 0.38 * v).clamp(0.0, 1.0),
+    //
+    // And not 0.62 either. «التوتوريال رجع تاني يعمل فليكر، مش كتير بس بيعمل»
+    // (2026-09-18, after v3.36.1 on his Honor): a card that drops to 62% on
+    // every «التالي» and climbs back is a smaller blink, but still a blink.
+    // It stays fully opaque now; the lift and the growth carry the arrival.
+    final card = RepaintBoundary(
       child: Transform.translate(
         offset: Offset(0, (1 - v) * (below ? 28 : -28)),
         child: Transform.scale(

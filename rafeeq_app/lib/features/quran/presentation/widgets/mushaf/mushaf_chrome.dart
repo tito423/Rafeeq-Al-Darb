@@ -47,7 +47,7 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 
 import '../../../data/mushaf_theme.dart';
-import 'page_overlay.dart' show arabicPageNumber;
+import 'page_overlay.dart' show HeaderBadge, PageNumberBadge, arabicPageNumber;
 
 /// How opaque the glass is over the page.
 ///
@@ -75,6 +75,15 @@ class MushafChrome extends StatelessWidget {
   /// The actions, already built by `MushafToolbar`.
   final Widget actions;
 
+  /// «لما أضغط وتظهر الخيارات أظهر اسم السورة والجزء على الصفحة يمين وشمال
+  /// ورقم الصفحة تحت — في المصحف الورقي بالذات لو مش موجودة فيهم أصلاً، ولو
+  /// موجودة مش تكررهم». True for a page image that does not print its own
+  /// header (the vector Hafs pages): surah and juz then sit on the page's two
+  /// top corners under the panel, the page number at its foot, and the
+  /// panel's own header row is dropped so none of them shows twice. A
+  /// printing that prints them gets none of this.
+  final bool pageBadges;
+
   const MushafChrome({
     super.key,
     required this.visible,
@@ -84,10 +93,37 @@ class MushafChrome extends StatelessWidget {
     required this.pageNumber,
     required this.totalPages,
     required this.actions,
+    this.pageBadges = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final panel = _panel(context);
+    if (!pageBadges) return panel;
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        panel,
+        IgnorePointer(
+          child: AnimatedOpacity(
+            opacity: visible ? 1 : 0,
+            duration: Duration(milliseconds: visible ? 240 : 180),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: PageNumberBadge(page: pageNumber),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _panel(BuildContext context) {
     final glass = mt.paper.withValues(alpha: glassOpacity);
     final onGlass = mt.ink;
 
@@ -108,62 +144,90 @@ class MushafChrome extends StatelessWidget {
             bottom: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 8, 10, 0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(22),
-                child: BackdropFilter(
-                  filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: glass,
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(
-                        color: mt.gold.withValues(alpha: 0.35),
-                        width: 1,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.18),
-                          blurRadius: 18,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _Header(
-                          mt: mt,
-                          surahName: surahName,
-                          juzNumber: juzNumber,
-                          pageNumber: pageNumber,
-                          totalPages: totalPages,
-                        ),
-                        Divider(
-                          height: 1,
-                          thickness: 1,
-                          color: onGlass.withValues(alpha: 0.10),
-                        ),
-                        // The actions are `ToolbarAction`s, which colour
-                        // themselves from the ambient `ColorScheme`. Over the
-                        // glass that would be the app's scheme, not the
-                        // page's — black icons on a charcoal mushaf. This
-                        // hands them the page's ink instead.
-                        Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: Theme.of(context).colorScheme.copyWith(
-                              onSurface: onGlass,
-                              onSurfaceVariant: onGlass.withValues(alpha: 0.75),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(22),
+                    child: BackdropFilter(
+                      filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: glass,
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(
+                            color: mt.gold.withValues(alpha: 0.35),
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.18),
+                              blurRadius: 18,
+                              offset: const Offset(0, 6),
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            child: actions,
-                          ),
+                          ],
                         ),
-                      ],
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (!pageBadges) ...[
+                              _Header(
+                                mt: mt,
+                                surahName: surahName,
+                                juzNumber: juzNumber,
+                                pageNumber: pageNumber,
+                                totalPages: totalPages,
+                              ),
+                              Divider(
+                                height: 1,
+                                thickness: 1,
+                                color: onGlass.withValues(alpha: 0.10),
+                              ),
+                            ],
+                            // The actions are `ToolbarAction`s, which colour
+                            // themselves from the ambient `ColorScheme`. Over the
+                            // glass that would be the app's scheme, not the
+                            // page's — black icons on a charcoal mushaf. This
+                            // hands them the page's ink instead.
+                            Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: Theme.of(context).colorScheme
+                                    .copyWith(
+                                      onSurface: onGlass,
+                                      onSurfaceVariant: onGlass.withValues(
+                                        alpha: 0.75,
+                                      ),
+                                    ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 2,
+                                ),
+                                child: actions,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  if (pageBadges)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Row(
+                        children: [
+                          if (surahName != null) HeaderBadge(text: surahName!),
+                          const Spacer(),
+                          if (juzNumber != null)
+                            HeaderBadge(
+                              text:
+                                  '${'quran.juz'.tr()} ${arabicPageNumber(juzNumber!)}',
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -284,7 +348,10 @@ class _PagePill extends StatelessWidget {
         border: Border.all(color: mt.gold.withValues(alpha: 0.45)),
       ),
       child: Text(
-        localizeDigits(ratio(arabicPageNumber(page), arabicPageNumber(total)), uiLanguageCode),
+        localizeDigits(
+          ratio(arabicPageNumber(page), arabicPageNumber(total)),
+          uiLanguageCode,
+        ),
         style: style,
       ),
     );

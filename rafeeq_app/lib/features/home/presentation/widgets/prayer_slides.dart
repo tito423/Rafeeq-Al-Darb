@@ -13,9 +13,11 @@ import '../../../../core/services/adhan_native.dart';
 import '../../../../core/utils/time_formatter.dart';
 import '../../../../core/widgets/card_route.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
+import '../../../adhan/data/adhan_scheduler.dart';
 import '../../../adhan/data/adhan_settings_provider.dart';
 import '../../../adhan/data/prayer_adjustments_provider.dart';
 import '../../data/prayer_controller.dart';
+import 'prayer_slide_adhan_extras.dart';
 
 /// The six timings, in the order they occur.
 const prayerSlideOrder = [
@@ -468,7 +470,10 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
 
     final adhanId = settings.adhanIdFor(widget.prayerKey);
     final hero = HeroSurface.of(context);
-    final option = catalog.where((o) => o.id == adhanId).firstOrNull;
+    // What will actually sound — a Fajr recording at Fajr, never at the rest.
+    final option = catalog.isEmpty || !_hasAdhan
+        ? null
+        : resolveAdhanFor(catalog, settings, widget.prayerKey);
     final usesDefault =
         settings.adhanIdByPrayer[widget.prayerKey] == null;
 
@@ -570,7 +575,13 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
                       ),
                     ),
             ),
-
+            PrayerSlideAdhanExtras(
+              prayerKey: widget.prayerKey,
+              color: color,
+              stopRowPreview: () async {
+                if (_previewing && option != null) await _togglePreview(option);
+              },
+            ),
           ],
         ],
     );
@@ -605,7 +616,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
               onTap: () => Navigator.of(ctx).pop('__default__'),
             ),
             Divider(height: 1, color: HeroSurface.of(context).hairline),
-            for (final o in catalog)
+            for (final o in catalog.where((o) => o.fitsPrayer(widget.prayerKey)))
               ListTile(
                 title: Text(
                   o.name,
