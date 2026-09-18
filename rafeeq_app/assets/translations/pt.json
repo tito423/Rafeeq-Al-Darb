@@ -1660,5 +1660,21 @@
     "khandaq": "A batalha do Fosso (al-Ahzab) e o cerco de Medina.",
     "hudaybiyyah": "O tratado de Hudaybiyyah entre o Profeta ﷺ e Quraysh, pelo qual Quraysh reconheceu o Estado muçulmano.",
     "farewell_hajj": "O Profeta ﷺ chega a Meca para a Peregrinação de Despedida, com milhares de muçulmanos."
+  },
+  "fasting": {
+    "section_title": "Lembretes de jejum da Sunna",
+    "mon_thu": "Jejum de segunda e quinta",
+    "mon_thu_desc": "Um lembrete no domingo e na quarta à noite.",
+    "white_days": "Os Dias Brancos",
+    "white_days_desc": "Um lembrete na noite do dia 12 de cada mês hégira, para os dias 13, 14 e 15.",
+    "time": "Hora do lembrete, na noite anterior",
+    "note": "Não há lembrete no Ramadã, nos dois Eids nem nos dias de Tashriq, e segue a correção da data hégira definida nas configurações dos horários de oração.",
+    "channel": "Lembretes de jejum",
+    "channel_desc": "Lembretes para jejuar às segundas, às quintas e nos Dias Brancos",
+    "notif_monday": "Amanhã é segunda — jejum da Sunna",
+    "notif_thursday": "Amanhã é quinta — jejum da Sunna",
+    "notif_white": "Os Dias Brancos começam amanhã: 13, 14 e 15",
+    "cite_747": "Narrado por at-Tirmidhi (747), que disse: hadith hasan gharib.",
+    "cite_761": "Narrado por at-Tirmidhi (761), que disse: hadith hasan."
   }
 }

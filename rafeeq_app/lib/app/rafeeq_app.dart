@@ -9,6 +9,8 @@ import '../core/services/native_strings.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/rgb_backdrop.dart';
 import '../core/theme/theme_controller.dart';
+import '../features/adhan/data/prayer_adjustments_provider.dart';
+import '../features/fasting/data/fasting_reminder_provider.dart';
 import '../features/home/data/prayer_controller.dart';
 import '../core/services/quote_reminder_service.dart';
 import '../features/quotes/data/quote_reminder_provider.dart';
@@ -99,6 +101,14 @@ class RafeeqApp extends ConsumerWidget {
       // setting once it has actually loaded: on the first frame the provider
       // still holds its default of 0.
       if (localeCode != _lastQuoteLocale) {
+        // The fasting reminders' two-month window is topped up on the same
+        // occasions, for the same two reasons: their text is frozen when
+        // armed, and nothing else re-arms them while the app is closed.
+        ref.read(fastingReminderProvider.notifier).loaded.then((s) {
+          if (!s.anyOn) return;
+          rearmFastingReminders(ref.read(fastingReminderProvider),
+              ref.read(prayerAdjustmentsProvider).hijriOffsetDays);
+        });
         _lastQuoteLocale = localeCode;
         ref.read(quoteReminderProvider.notifier).loaded.then((every) async {
           if (every <= 0) return;

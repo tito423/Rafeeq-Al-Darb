@@ -13,6 +13,7 @@ import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../splash/presentation/screens/splash_preview_screen.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
+import '../../../fasting/presentation/fasting_reminder_section.dart';
 import '../widgets/non_arabic_reading_card.dart';
 import '../../../../core/i18n/supported_locales.dart';
 import 'about_screen.dart';
@@ -304,6 +305,14 @@ class SettingsBody extends ConsumerWidget {
             title: 'sunan_suwar.reminders_section_title'.tr(),
             children: [
             SunanSuwarRemindersSection(),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          CollapsibleSection(
+            title: 'fasting.section_title'.tr(),
+            children: const [
+              FastingReminderSection(),
             ],
           ),
           const SizedBox(height: 24),

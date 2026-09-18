@@ -155,6 +155,15 @@ class MushafToolbar extends ConsumerWidget {
               onPressed: onToggleRecite,
             ),
           ),
+        // ── نصي ⇄ ورقي ── «ضيف خيار التنقل من وضع النص لوضع المصحف مباشرة».
+        // It lived only inside «العرض», two taps and a scroll away; it is the
+        // switch readers flip most, so it sits on the strip itself. The label
+        // names where the tap takes you.
+        ToolbarAction(
+          icon: _textOnly ? Icons.image_rounded : Icons.notes_rounded,
+          label: _textOnly ? 'quran.mushaf_mode'.tr() : 'quran.text_mode'.tr(),
+          onPressed: _textOnly ? onEnterImageView : onLeaveImageView,
+        ),
         // ── عرض ── everything that is a setting rather than an action.
         // The four tour anchors whose buttons moved in here are nested on it,
         // so every step of the Qur'an chapter still has something to point at.

@@ -1660,5 +1660,21 @@
     "khandaq": "La bataille du Fossé (al-Ahzab) et le siège de Médine.",
     "hudaybiyyah": "Le traité de Houdaybiya entre le Prophète ﷺ et Quraysh, par lequel Quraysh reconnut l'État musulman.",
     "farewell_hajj": "Le Prophète ﷺ arrive à La Mecque pour le Pèlerinage d'Adieu, avec des milliers de musulmans."
+  },
+  "fasting": {
+    "section_title": "Rappels de jeûne de la Sunna",
+    "mon_thu": "Jeûne du lundi et du jeudi",
+    "mon_thu_desc": "Un rappel le dimanche et le mercredi soir.",
+    "white_days": "Les Jours blancs",
+    "white_days_desc": "Un rappel le soir du 12 de chaque mois hégirien, pour les 13, 14 et 15.",
+    "time": "Heure du rappel, la veille au soir",
+    "note": "Aucun rappel pendant le Ramadan, les deux Aïds ni les jours de Tachriq ; il suit la correction de la date hégirienne réglée dans les paramètres des horaires de prière.",
+    "channel": "Rappels de jeûne",
+    "channel_desc": "Rappels de jeûne du lundi, du jeudi et des Jours blancs",
+    "notif_monday": "Demain, lundi — jeûne de la Sunna",
+    "notif_thursday": "Demain, jeudi — jeûne de la Sunna",
+    "notif_white": "Les Jours blancs commencent demain : 13, 14 et 15",
+    "cite_747": "Rapporté par at-Tirmidhi (747), qui a dit : hadith hasan gharib.",
+    "cite_761": "Rapporté par at-Tirmidhi (761), qui a dit : hadith hasan."
   }
 }

@@ -1660,5 +1660,21 @@
     "khandaq": "The battle of the Trench (al-Ahzab), and the siege of Medina.",
     "hudaybiyyah": "The treaty of Hudaybiyyah between the Prophet ﷺ and Quraysh, by which Quraysh recognised the Muslim state.",
     "farewell_hajj": "The Prophet ﷺ reaches Mecca for the Farewell Pilgrimage, with thousands of Muslims."
+  },
+  "fasting": {
+    "section_title": "Sunnah fasting reminders",
+    "mon_thu": "Monday and Thursday fasts",
+    "mon_thu_desc": "A reminder on Sunday and Wednesday evenings.",
+    "white_days": "The White Days",
+    "white_days_desc": "A reminder on the evening of the 12th of each Hijri month, for the 13th, 14th and 15th.",
+    "time": "Reminder time, the evening before",
+    "note": "No reminder is sent in Ramadan, on the two Eids or on the days of Tashriq, and it follows the Hijri date correction set in the prayer-time settings.",
+    "channel": "Fasting reminders",
+    "channel_desc": "Reminders to fast Mondays, Thursdays and the White Days",
+    "notif_monday": "Tomorrow is Monday — a sunnah fast",
+    "notif_thursday": "Tomorrow is Thursday — a sunnah fast",
+    "notif_white": "The White Days begin tomorrow: 13th, 14th and 15th",
+    "cite_747": "Narrated by al-Tirmidhi (747), who said: a hasan gharib hadith.",
+    "cite_761": "Narrated by al-Tirmidhi (761), who said: a hasan hadith."
   }
 }

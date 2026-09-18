@@ -1660,5 +1660,21 @@
     "khandaq": "La batalla del Foso (al-Ahzab) y el asedio de Medina.",
     "hudaybiyyah": "El tratado de Hudaybiya entre el Profeta ﷺ y Quraysh, por el que Quraysh reconoció al Estado musulmán.",
     "farewell_hajj": "El Profeta ﷺ llega a La Meca para la Peregrinación de Despedida, con miles de musulmanes."
+  },
+  "fasting": {
+    "section_title": "Recordatorios de ayuno de la Sunna",
+    "mon_thu": "Ayuno del lunes y el jueves",
+    "mon_thu_desc": "Un recordatorio el domingo y el miércoles por la tarde.",
+    "white_days": "Los Días Blancos",
+    "white_days_desc": "Un recordatorio la tarde del día 12 de cada mes hégira, para los días 13, 14 y 15.",
+    "time": "Hora del recordatorio, la tarde anterior",
+    "note": "No se envía recordatorio en Ramadán, en los dos Eids ni en los días de Tashriq, y sigue la corrección de la fecha hégira fijada en los ajustes de horarios de oración.",
+    "channel": "Recordatorios de ayuno",
+    "channel_desc": "Recordatorios para ayunar los lunes, los jueves y los Días Blancos",
+    "notif_monday": "Mañana es lunes — ayuno de la Sunna",
+    "notif_thursday": "Mañana es jueves — ayuno de la Sunna",
+    "notif_white": "Mañana empiezan los Días Blancos: 13, 14 y 15",
+    "cite_747": "Narrado por al-Tirmidhi (747), quien dijo: hadiz hasan garib.",
+    "cite_761": "Narrado por al-Tirmidhi (761), quien dijo: hadiz hasan."
   }
 }
