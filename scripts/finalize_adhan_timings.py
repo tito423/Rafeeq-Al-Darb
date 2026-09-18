@@ -33,7 +33,7 @@ from align_adhan_phrases import FAJR, FFMPEG, PLAIN, SR, norm, place, sim  # noq
 
 # A candidate is accepted when its clips read back at least this well on
 # average, with no more than this many clips that read as something else.
-MIN_MEAN = 0.50
+MIN_MEAN = 0.55
 MAX_WRONG = 2
 WRONG = 0.30
 

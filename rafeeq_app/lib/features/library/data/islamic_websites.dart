@@ -61,4 +61,22 @@ const islamicWebsites = [
     icon: Icons.local_library,
     color: Color(0xFF00695C),
   ),
+  // Back on 2026-09-18 at the owner's word — «مش مشكلة حطها المواقع اللي
+  // طلبتها الوقتي» — after being told they had been taken out under his
+  // earlier «اي حاجة ابن باز داخل فيها شيلها». Both fetched first: each
+  // answered 200 and the names below are their own `<title>` values.
+  WebsiteInfo(
+    name: 'الدرر السنية',
+    descriptionKey: 'dawah.site_dorar',
+    url: 'https://dorar.net',
+    icon: Icons.auto_stories,
+    color: Color(0xFF6D4C41),
+  ),
+  WebsiteInfo(
+    name: 'الإسلام سؤال وجواب',
+    descriptionKey: 'dawah.site_islamqa',
+    url: 'https://islamqa.info/ar',
+    icon: Icons.question_answer,
+    color: Color(0xFF1565C0),
+  ),
 ];

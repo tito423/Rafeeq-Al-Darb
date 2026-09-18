@@ -7,6 +7,7 @@ import 'package:rafeeq_app/core/models/adhan_mode.dart';
 import 'package:rafeeq_app/core/models/adhan_option.dart';
 import 'package:rafeeq_app/features/adhan/data/adhan_scheduler.dart';
 import 'package:rafeeq_app/features/adhan/data/adhan_settings_provider.dart';
+import 'package:rafeeq_app/features/adhan/data/azan_subtitle.dart';
 
 /// «ممكن يضيف أي أذان مع الفجر اللي مختلف أصلاً في الصلاة خير من النوم —
 /// كارثة». Fajr sounded whatever adhan was chosen; the default is an ordinary
@@ -74,6 +75,26 @@ void main() {
     for (final k in adhanPrayerKeys) {
       expect(
           resolveAdhanFor(all, settings(per: {k: 'custom_1'}), k).id, 'custom_1');
+    }
+  });
+
+  test('Fajr in the catalogue is Fajr in the measured timings', () {
+    // `fajr` in adhan_phrase_timings.json comes from what Whisper heard
+    // (scripts/finalize_adhan_timings.py); `fajr` in adhans.json is what the
+    // app acts on. They must agree, or a recording recites a line the screen
+    // does not show, or shows one it does not recite.
+    final timings = jsonDecode(File(
+            'assets/data/catalogs/adhan_phrase_timings.json')
+        .readAsStringSync()) as Map<String, dynamic>;
+    for (final o in catalog) {
+      final t = timings['${o.id}.mp3'] as Map<String, dynamic>?;
+      expect(t, isNotNull, reason: o.id);
+      expect(t!['fajr'] == true, o.isFajr, reason: o.id);
+      // A timeline, when there is one, is for the adhan it will be played as.
+      final at = AdhanTimings.fromJson(t);
+      if (at.breaths != null) {
+        expect(at.followsAdhan(isFajr: o.isFajr), isTrue, reason: o.id);
+      }
     }
   });
 }

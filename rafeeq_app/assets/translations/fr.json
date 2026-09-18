@@ -1134,7 +1134,9 @@
     "site_shamela": "Le site officiel du projet de bibliothèque Shamela",
     "site_daralifta": "L'autorité officielle égyptienne de la fatwa : avis, communiqués et réponses",
     "site_azhar": "Le portail officiel d'al-Azhar : communiqués, articles et revues",
-    "site_nabulsi": "L'encyclopédie du Dr Muhammad Ratib al-Nabulsi : leçons, sermons et articles"
+    "site_nabulsi": "L'encyclopédie du Dr Muhammad Ratib al-Nabulsi : leçons, sermons et articles",
+    "site_dorar": "Encyclopédie de hadiths, de croyance et de fiqh, avec recherche des hadiths et leurs jugements",
+    "site_islamqa": "Site de fatwas répondant aux questions sur la croyance, le fiqh et la vie quotidienne"
   },
   "adhan_video": {
     "source": "Source : Pixabay — licence Pixabay (usage libre, sans attribution)",

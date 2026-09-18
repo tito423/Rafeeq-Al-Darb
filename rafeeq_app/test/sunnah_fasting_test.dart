@@ -2,22 +2,25 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/features/fasting/data/sunnah_fasting.dart';
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 /// «تذكير بصيام السنن كالاثنين والخميس والأيام البيض».
 void main() {
   group('the quoted hadith are the database\'s own words', () {
     // §1.2: a hadith is never retyped. Each quote must be a verbatim
     // substring of the numbered hadith it cites, in the bundled hadith.db.
-    final db = sqlite3.open('assets/data/hadith.db', mode: OpenMode.readOnly);
-    tearDownAll(db.dispose);
+    sqfliteFfiInit();
     for (final h in const [mondayThursdayHadith, whiteDaysHadith]) {
-      test('${h.bookKey} ${h.number}', () {
-        final rows = db.select(
+      test('${h.bookKey} ${h.number}', () async {
+        final db = await databaseFactoryFfi.openDatabase(
+            File('assets/data/hadith.db').absolute.path,
+            options: OpenDatabaseOptions(readOnly: true));
+        final rows = await db.rawQuery(
           'SELECT h.arabic FROM hadiths h JOIN books b ON b.id = h.book_id '
           'WHERE b.book_key = ? AND h.number_in_book = ?',
           [h.bookKey, h.number],
         );
+        await db.close();
         expect(rows, hasLength(1));
         final arabic = rows.single['arabic'] as String;
         expect(arabic.contains(h.text), isTrue,

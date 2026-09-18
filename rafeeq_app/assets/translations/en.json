@@ -1134,7 +1134,9 @@
     "site_shamela": "The official site of the Shamela library project",
     "site_daralifta": "Egypt's official fatwa authority — rulings, statements and answers to public questions",
     "site_azhar": "The official portal of al-Azhar al-Sharif — its statements, articles and journals",
-    "site_nabulsi": "Dr. Muhammad Ratib al-Nabulsi's encyclopedia — his lessons, sermons and articles"
+    "site_nabulsi": "Dr. Muhammad Ratib al-Nabulsi's encyclopedia — his lessons, sermons and articles",
+    "site_dorar": "An encyclopedia of hadith, creed and fiqh, with a searchable hadith archive and gradings",
+    "site_islamqa": "A fatwa site answering people's questions on creed, fiqh and daily life"
   },
   "adhan_video": {
     "source": "Source: Pixabay — Pixabay licence (free use, no attribution required)",

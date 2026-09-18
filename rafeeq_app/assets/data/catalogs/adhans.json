@@ -34,7 +34,8 @@
     "asset": "assets/audio/adhan/azan2.mp3",
     "raw": "azan2",
     "url": "https://archive.org/download/adhan-mp3-collection/abdulbasit-abdusamad-4-egypt.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "fajr_pair": "azan18"
   },
   {
     "id": "azan3",
@@ -50,7 +51,8 @@
     "asset": "assets/audio/adhan/azan4.mp3",
     "raw": "azan4",
     "url": "https://archive.org/download/adhan-mp3-collection/nasreddine-toubar.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "fajr_pair": "azan19"
   },
   {
     "id": "azan5",
@@ -94,6 +96,24 @@
     "raw": "azan16",
     "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-3-fajr-kuwait.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "fajr": true
+  },
+  {
+    "id": "azan18",
+    "name": "عبد الباسط عبد الصمد — أذان الفجر",
+    "asset": "assets/audio/adhan/azan18.mp3",
+    "raw": "azan18",
+    "url": "https://archive.org/download/adhan-mp3-collection/abdulbasit-abdusamad-6-fajr-egypt.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، وأنه أذان فجر تحقّق منه التطبيق بالاستماع الآلي (Whisper) إلى «الصلاة خير من النوم» فيه؛ والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "fajr": true
+  },
+  {
+    "id": "azan19",
+    "name": "نصر الدين طوبار — أذان الفجر",
+    "asset": "assets/audio/adhan/azan19.mp3",
+    "raw": "azan19",
+    "url": "https://archive.org/download/adhan-mp3-collection/fajr-adhan-by-nasreddine-toubar.mp3",
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، وأنه أذان فجر تحقّق منه التطبيق بالاستماع الآلي (Whisper) إلى «الصلاة خير من النوم» فيه؛ والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
     "fajr": true
   }
 ]
