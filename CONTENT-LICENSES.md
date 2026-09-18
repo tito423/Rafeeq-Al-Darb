@@ -876,3 +876,23 @@ py -3 scripts/audit_editor_apparatus.py
 ```
 
 Nothing in this file should be updated from memory. Re-run, then edit.
+
+## Book read-aloud voice — decision recorded 2026-09-18
+
+The owner chose sample **B**: the open FastPitch model by nipponjo
+(`tts_arabic`, speaker 0, HiFi-GAN vocoder), because it gives لفظ الجلالة
+its tafkhim and Google's engine does not (F2 of the vowel after the lam:
+≈1232 Hz vs Google's ≈1450–1600; al-Minshawi ≈972 — see
+`scripts/measure_jalala_tafkhim.py`).
+
+What is known about the right to ship it, stated so it is not forgotten:
+* Training data — Arabic Speech Corpus (Nawar Halabi): **CC BY 4.0**.
+* Phonetiser (Buckwalter, from Halabi's Arabic-Phonetiser): **CC BY-NC 4.0**.
+* The model weights: **no licence stated** anywhere in the repository or on
+  Hugging Face.
+
+Told this, the owner's answer was «التطبيق بالتبرع مش محتاج استئذان»: the app
+is free and donation-supported, so he considers the NC terms met and asking
+the author unnecessary. That is his decision as the publisher; it is recorded
+here, with the facts, rather than argued again. If the app ever charges for
+anything, the NC phonetiser has to be replaced.
