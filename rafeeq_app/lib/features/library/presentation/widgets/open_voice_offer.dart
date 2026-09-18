@@ -94,7 +94,7 @@ class _InstallDialogState extends State<_InstallDialog> {
               children: [
                 LinearProgressIndicator(value: _done / total),
                 const SizedBox(height: 12),
-                Text('${formatBytes(_done)} / ${formatBytes(total)}'),
+                Text(ratio(formatBytes(_done), formatBytes(total))),
               ],
             ),
       actions: [

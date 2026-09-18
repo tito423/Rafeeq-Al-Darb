@@ -66,6 +66,20 @@ android {
             )
         }
     }
+
+    // The book reader's open voice runs on ONNX Runtime through the
+    // `onnxruntime` pub package, which bundles libonnxruntime.so for ARM
+    // only. On an x86_64 device (Chromebooks, the emulator) the voice failed
+    // with «libonnxruntime.so not found». Microsoft's own AAR of the SAME
+    // version (1.15.1, see dependencies) supplies x86_64; the ARM copies are
+    // the package's, the Java binding's JNI shim is never used, and 32-bit
+    // x86 is not an ABI Flutter builds for.
+    packaging {
+        jniLibs {
+            pickFirsts += "**/libonnxruntime.so"
+            excludes += listOf("**/libonnxruntime4j_jni.so", "lib/x86/**")
+        }
+    }
 }
 
 flutter {
@@ -82,4 +96,8 @@ dependencies {
     // the one that plugin declares (9.5.9 -> work-runtime-ktx:2.11.0) so the
     // two can never resolve to different majors behind our back.
     implementation("androidx.work:work-runtime-ktx:2.11.0")
+
+    // Only for its x86_64 libonnxruntime.so — see `packaging` above. Must stay
+    // at the ORT version the `onnxruntime` pub package was built against.
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.15.1")
 }
