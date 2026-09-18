@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-18 20:35 — IN PROGRESS — resume here**
+**2026-09-18 21:02 — IN PROGRESS — resume here**
 
-TTS engine B plan (owner chose sample B, tafkhim): stage 1 host proof DONE (F2 1232 vs Google 1500, Minshawi 972). Stage 2: port the Buckwalter phonetiser (tts_arabic/text/phonetise_buckwalter.py, CC BY-NC, Halabi) + tokenizer to Dart ourselves - do NOT copy nipponjo/tts-arabic-flutter (no licence); test = token ids equal to the Python output on >=200 real book sentences. Stage 3: onnxruntime (pub 1.4.1, as nipponjo's app) + fp_ms.onnx 187MB + hifigan.onnx 56MB as an R2 download pack; BookSpeaker backend switch with Google fallback. Stage 4: measure tafkhim (scripts/measure_jalala_tafkhim.py) on DEVICE output, then owner listens. Azkar: +13 from al-Adhkar done (486c5cf); al-Wabil NOT added - our copy is 4% diacritised and its morning/evening hadiths duplicate an-Nawawi's.
+TTS stage 2 DONE (7ed2a96, Dart phonetiser token-exact on 304 sentences). Library: no duplicate editions found (213 books, test/book_catalog_no_duplicates_test guards it). Page turn during continuous recitation tested on emulator: clean. Stage 3 facts: fp_ms.onnx inputs token_ids int64[1,N], pace f32[1], speaker i32[1] (use 0), pitch_mul f32[1], pitch_add f32[1] -> mel [1,80,T]; hifigan.onnx input 'input' mel f32[1,80,T] -> wave [1,1,S] @22050; denoiser.onnx inputs audio f32[1,S], strength f64[1]=0.005 -> [1,S]; then scale peak to 0.9. Next: upload the three to R2 tts/ (r2_client), onnxruntime pub 1.4.1, engine + BookSpeaker switch, measure tafkhim on device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
