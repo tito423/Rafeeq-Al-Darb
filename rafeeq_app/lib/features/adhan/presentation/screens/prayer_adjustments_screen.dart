@@ -1,3 +1,4 @@
+import '../../../../core/utils/time_formatter.dart';
 import 'package:adhan/adhan.dart' as adhan;
 import '../../../../core/utils/digits.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -24,6 +25,7 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final adj = ref.watch(prayerAdjustmentsProvider);
+    final times = ref.watch(prayerControllerProvider).valueOrNull?.times;
     final settings = ref.watch(adhanSettingsProvider);
 
     return Scaffold(
@@ -210,10 +212,31 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                     const Divider(height: 20),
                     Row(
                       children: [
+                        // «المفروض ينكتب الوقت الحالي جنب كل صلاة عشان أعرف
+                        // نتيجة التعديل فورياً». The controller re-fetches on
+                        // every change to the offsets, so this is the time the
+                        // card shows and the adhan fires at.
                         Expanded(
-                          child: Text(
-                            'prayer.$key'.tr(),
-                            style: Theme.of(context).textTheme.titleSmall,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'prayer.$key'.tr(),
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              if (times != null && times.byName(key).isNotEmpty)
+                                Text(
+                                  formatTime12h(times.byName(key),
+                                      context.locale.languageCode),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        color: AppColors.gold,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                ),
+                            ],
                           ),
                         ),
                         _Stepper(
