@@ -1678,5 +1678,29 @@
     "notif_white": "Mañana empiezan los Días Blancos: 13, 14 y 15",
     "cite_747": "Narrado por al-Tirmidhi (747), quien dijo: hadiz hasan garib.",
     "cite_761": "Narrado por al-Tirmidhi (761), quien dijo: hadiz hasan."
+  },
+  "tasbih": {
+    "section_title": "Recordatorios de tasbih",
+    "desc": "Recordatorios a lo largo del día, un dhikr distinto cada vez, con el hadiz que lo recomienda.",
+    "window": "Solo entre las 8:00 y las 21:00.",
+    "off": "Desactivado",
+    "every_60": "Cada hora",
+    "every_120": "Cada 2 horas",
+    "every_180": "Cada 3 horas",
+    "every_240": "Cada 4 horas",
+    "every_360": "Cada 6 horas",
+    "channel": "Recordatorios de tasbih",
+    "channel_desc": "Dhikr variado durante el día, con su virtud",
+    "cite_both": "Narrado por al-Bujari y Muslim.",
+    "cite_bukhari": "Narrado por al-Bujari.",
+    "cite_muslim": "Narrado por Muslim.",
+    "t_subhan_100": "SubhanAllahi wa bihamdihi — cien veces",
+    "t_tahlil_100": "La ilaha illallahu wahdahu la sharika lah… — cien veces",
+    "t_two_words": "SubhanAllahi wa bihamdihi, SubhanAllahil-Azim",
+    "t_four_words": "SubhanAllah, Alhamdulillah, La ilaha illallah, Allahu Akbar",
+    "t_hawqala": "La hawla wa la quwwata illa billah",
+    "t_thousand": "Cien tasbihs",
+    "t_istighfar": "Astaghfirullaha wa atubu ilayh",
+    "t_mufarridun": "Recuerda mucho a Allah"
   }
 }

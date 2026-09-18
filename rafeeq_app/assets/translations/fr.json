@@ -1678,5 +1678,29 @@
     "notif_white": "Les Jours blancs commencent demain : 13, 14 et 15",
     "cite_747": "Rapporté par at-Tirmidhi (747), qui a dit : hadith hasan gharib.",
     "cite_761": "Rapporté par at-Tirmidhi (761), qui a dit : hadith hasan."
+  },
+  "tasbih": {
+    "section_title": "Rappels de tasbih",
+    "desc": "Des rappels tout au long de la journée, un dhikr différent à chaque fois, avec le hadith qui l'encourage.",
+    "window": "Seulement entre 8 h et 21 h.",
+    "off": "Désactivé",
+    "every_60": "Toutes les heures",
+    "every_120": "Toutes les 2 heures",
+    "every_180": "Toutes les 3 heures",
+    "every_240": "Toutes les 4 heures",
+    "every_360": "Toutes les 6 heures",
+    "channel": "Rappels de tasbih",
+    "channel_desc": "Dhikr variés au fil de la journée, avec leur mérite",
+    "cite_both": "Rapporté par al-Boukhari et Mouslim.",
+    "cite_bukhari": "Rapporté par al-Boukhari.",
+    "cite_muslim": "Rapporté par Mouslim.",
+    "t_subhan_100": "SubhanAllahi wa bihamdihi — cent fois",
+    "t_tahlil_100": "La ilaha illallahu wahdahu la sharika lah… — cent fois",
+    "t_two_words": "SubhanAllahi wa bihamdihi, SubhanAllahil-Azim",
+    "t_four_words": "SubhanAllah, Alhamdulillah, La ilaha illallah, Allahu Akbar",
+    "t_hawqala": "La hawla wa la quwwata illa billah",
+    "t_thousand": "Cent tasbihs",
+    "t_istighfar": "Astaghfirullaha wa atubu ilayh",
+    "t_mufarridun": "Invoquez Allah abondamment"
   }
 }

@@ -1678,5 +1678,29 @@
     "notif_white": "Os Dias Brancos começam amanhã: 13, 14 e 15",
     "cite_747": "Narrado por at-Tirmidhi (747), que disse: hadith hasan gharib.",
     "cite_761": "Narrado por at-Tirmidhi (761), que disse: hadith hasan."
+  },
+  "tasbih": {
+    "section_title": "Lembretes de tasbih",
+    "desc": "Lembretes ao longo do dia, um dhikr diferente de cada vez, com o hadith que o recomenda.",
+    "window": "Apenas entre as 8h e as 21h.",
+    "off": "Desligado",
+    "every_60": "A cada hora",
+    "every_120": "A cada 2 horas",
+    "every_180": "A cada 3 horas",
+    "every_240": "A cada 4 horas",
+    "every_360": "A cada 6 horas",
+    "channel": "Lembretes de tasbih",
+    "channel_desc": "Dhikr variado ao longo do dia, com a sua virtude",
+    "cite_both": "Narrado por al-Bukhari e Muslim.",
+    "cite_bukhari": "Narrado por al-Bukhari.",
+    "cite_muslim": "Narrado por Muslim.",
+    "t_subhan_100": "SubhanAllahi wa bihamdihi — cem vezes",
+    "t_tahlil_100": "La ilaha illallahu wahdahu la sharika lah… — cem vezes",
+    "t_two_words": "SubhanAllahi wa bihamdihi, SubhanAllahil-Azim",
+    "t_four_words": "SubhanAllah, Alhamdulillah, La ilaha illallah, Allahu Akbar",
+    "t_hawqala": "La hawla wa la quwwata illa billah",
+    "t_thousand": "Cem tasbihs",
+    "t_istighfar": "Astaghfirullaha wa atubu ilayh",
+    "t_mufarridun": "Lembre-se muito de Allah"
   }
 }

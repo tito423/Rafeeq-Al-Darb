@@ -11,6 +11,7 @@ import '../core/theme/rgb_backdrop.dart';
 import '../core/theme/theme_controller.dart';
 import '../features/adhan/data/prayer_adjustments_provider.dart';
 import '../features/fasting/data/fasting_reminder_provider.dart';
+import '../features/tasbih_reminder/data/tasbih_reminder_provider.dart';
 import '../features/home/data/prayer_controller.dart';
 import '../core/services/quote_reminder_service.dart';
 import '../features/quotes/data/quote_reminder_provider.dart';
@@ -108,6 +109,11 @@ class RafeeqApp extends ConsumerWidget {
           if (!s.anyOn) return;
           rearmFastingReminders(ref.read(fastingReminderProvider),
               ref.read(prayerAdjustmentsProvider).hijriOffsetDays);
+        });
+        // Tasbih slots repeat daily on their own; re-arming here shifts the
+        // rotation for the new day and re-words them in the new language.
+        ref.read(tasbihReminderProvider.notifier).loaded.then((every) {
+          if (every > 0) rearmTasbihReminders(every);
         });
         _lastQuoteLocale = localeCode;
         ref.read(quoteReminderProvider.notifier).loaded.then((every) async {

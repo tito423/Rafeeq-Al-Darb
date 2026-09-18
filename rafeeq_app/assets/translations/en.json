@@ -1678,5 +1678,29 @@
     "notif_white": "The White Days begin tomorrow: 13th, 14th and 15th",
     "cite_747": "Narrated by al-Tirmidhi (747), who said: a hasan gharib hadith.",
     "cite_761": "Narrated by al-Tirmidhi (761), who said: a hasan hadith."
+  },
+  "tasbih": {
+    "section_title": "Tasbih reminders",
+    "desc": "Reminders through the day, a different dhikr each time, with the hadith that encourages it.",
+    "window": "Only between 8 a.m. and 9 p.m.",
+    "off": "Off",
+    "every_60": "Every hour",
+    "every_120": "Every 2 hours",
+    "every_180": "Every 3 hours",
+    "every_240": "Every 4 hours",
+    "every_360": "Every 6 hours",
+    "channel": "Tasbih reminders",
+    "channel_desc": "Varied dhikr through the day, with its virtue",
+    "cite_both": "Narrated by al-Bukhari and Muslim.",
+    "cite_bukhari": "Narrated by al-Bukhari.",
+    "cite_muslim": "Narrated by Muslim.",
+    "t_subhan_100": "SubhanAllahi wa bihamdihi — a hundred times",
+    "t_tahlil_100": "La ilaha illallahu wahdahu la sharika lah… — a hundred times",
+    "t_two_words": "SubhanAllahi wa bihamdihi, SubhanAllahil-Azim",
+    "t_four_words": "SubhanAllah, Alhamdulillah, La ilaha illallah, Allahu Akbar",
+    "t_hawqala": "La hawla wa la quwwata illa billah",
+    "t_thousand": "A hundred tasbihs",
+    "t_istighfar": "Astaghfirullaha wa atubu ilayh",
+    "t_mufarridun": "Remember Allah much"
   }
 }
