@@ -956,7 +956,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
           controller: _pages!,
           index: index,
           child: FutureBuilder<List<Ayah>>(
-          future: _ayahsOfPage(page, data),
+          future: _ayahsOfPage(page, data), initialData: data.repo.pageIfLoaded(page),
           builder: (context, snap) {
             if (!snap.hasData) {
               return const Center(child: CircularProgressIndicator());

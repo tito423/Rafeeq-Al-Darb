@@ -48,11 +48,22 @@ Future<void> showQuranDisplaySheet(
   required VoidCallback onEnterImageView,
   required VoidCallback onLeaveImageView,
 }) {
+  // The button that opens this sheet sits inside the mushaf panel's own
+  // `Theme`, which recolours `onSurface`/`onSurfaceVariant` to the page's
+  // ink for the glass toolbar — near-white over a dark panel. A modal route
+  // captures the themes of the context it is opened from, so the sheet
+  // inherited that ink and drew its group labels, layout cards and «A−/A+»
+  // pale on its own light surface: the owner's «النصوص باهتة مش واضحة».
+  // The sheet is app chrome, not page chrome — give it the app's theme.
+  final appTheme = Theme.of(Navigator.of(context).context);
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (_) => _QuranDisplaySheet(
+    backgroundColor: appTheme.bottomSheetTheme.backgroundColor,
+    builder: (_) => Theme(
+      data: appTheme,
+      child: _QuranDisplaySheet(
       textMode: textMode,
       isRaster: isRaster,
       autoScroll: autoScroll,
@@ -64,6 +75,7 @@ Future<void> showQuranDisplaySheet(
       onPickEdition: onPickEdition,
       onEnterImageView: onEnterImageView,
       onLeaveImageView: onLeaveImageView,
+      ),
     ),
   );
 }

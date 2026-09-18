@@ -58,6 +58,15 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
 
   late Future<String> _ready;
 
+  /// The last few pages' SVG, so a page the `PageView` builds again — the
+  /// neighbour that appears the moment a turn begins — paints on its first
+  /// frame instead of showing «جارٍ تحميل الصفحة» while a Future that is
+  /// already answered resolves. That one frame of spinner, on every turn,
+  /// was part of the flicker the owner filmed.
+  static final Map<String, String> _svgMemo = {};
+  static const int _svgMemoMax = 8;
+  String get _memoKey => '${widget.edition.id}/${widget.page}';
+
   /// Raster editions only: the on-disk scan if it's already cached (offline),
   /// else null → stream from the network with `cached_network_image`.
   late Future<File?> _rasterReady;
@@ -192,12 +201,19 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   }
 
   Future<String> _load() async {
+    final key = _memoKey;
     await _coords.ensureLoaded(widget.edition.polygonsAsset);
-    return MushafPageService.instance.svgForPage(
+    final svg = await MushafPageService.instance.svgForPage(
       editionId: widget.edition.id,
       sourcePath: widget.edition.sourcePath,
       page: widget.page,
     );
+    _svgMemo.remove(key);
+    _svgMemo[key] = svg;
+    while (_svgMemo.length > _svgMemoMax) {
+      _svgMemo.remove(_svgMemo.keys.first);
+    }
+    return svg;
   }
 
   // A block body, not `=> _ready = _load()` — that arrow form returns the
@@ -222,8 +238,10 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
 
     return FutureBuilder<String>(
       future: _ready,
+      key: ValueKey(_memoKey),
+      initialData: _svgMemo[_memoKey],
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
+        if (!snapshot.hasData && !snapshot.hasError) {
           return _Centered(
             children: [
               const CircularProgressIndicator(),

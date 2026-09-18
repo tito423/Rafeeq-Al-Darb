@@ -78,8 +78,16 @@ class QuranRepository {
       whereArgs: [page],
       orderBy: 'id',
     );
-    return rows.map(Ayah.fromRow).toList();
+    return _pageCache[page] = rows.map(Ayah.fromRow).toList();
   }
+
+  /// A page's ayahs if they have been read already. The mushaf's
+  /// `FutureBuilder` shows a spinner for one frame even on a finished Future,
+  /// and the neighbouring page a turn builds flashed it every time — part of
+  /// the flicker in the owner's video. Given as `initialData`, this paints
+  /// the page on its first frame.
+  List<Ayah>? pageIfLoaded(int page) => _pageCache[page];
+  final Map<int, List<Ayah>> _pageCache = {};
 
   Future<Ayah?> ayah(int surah, int number) async {
     final rows = await _db.query(

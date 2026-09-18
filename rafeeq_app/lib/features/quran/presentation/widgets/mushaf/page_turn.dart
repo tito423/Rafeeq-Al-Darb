@@ -73,26 +73,50 @@ class PageTurn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Off-screen pages are left alone: a `PageView` keeps neighbours alive,
-    // and transforming one nobody can see is paint work for nothing.
-    if (offset.abs() < 0.001 || offset.abs() > 1) return child;
+    // ONE TREE SHAPE, ALWAYS. This used to `return child` at rest and a
+    // `Transform` while turning. Swapping the widget type at that slot makes
+    // Flutter throw the whole page subtree away and build it again, so the
+    // page REMOUNTED at the end of every turn — `MushafPageView` started a
+    // fresh load and showed «جارٍ تحميل الصفحة» for a frame. That was the
+    // flicker in the owner's video. An identity transform costs nothing.
+    final size = MediaQuery.sizeOf(context);
+    final landscape = size.width > size.height;
+    // Portrait only — «خليه في الوضع العمودي بس». On its side the page is
+    // laid out at full width and scrolls, and a turn about a 900-px spine
+    // is not a book any more.
+    final turning = !landscape && offset.abs() >= 0.001 && offset.abs() <= 1;
 
     // The page being turned AWAY is the one the reader is leaving, i.e. the
     // one with a negative offset in LTR. Clamped so a fling that overshoots
     // cannot invert the paper.
     final t = offset.clamp(-1.0, 1.0);
-    final angle = t * _maxTurn * (rtl ? 1 : -1);
+    final angle = turning ? t * _maxTurn * (rtl ? 1 : -1) : 0.0;
+
+    // Perspective scaled to the page's own width. A fixed 0.0012 puts the
+    // eye 833 px away: fine for a 400-px phone, but a page wider than that
+    // swings its far edge THROUGH the eye at 90° and the projection inverts —
+    // the black shards in the landscape half of the owner's video.
+    final depth = 0.48 / math.max(size.width, 1);
 
     return Transform(
       alignment: rtl ? Alignment.centerRight : Alignment.centerLeft,
-      // 0.0012 is the usual perspective depth for a phone-sized surface:
-      // enough that the far edge of the page visibly recedes, little enough
-      // that straight lines of script do not bow.
       transform: Matrix4.identity()
-        ..setEntry(3, 2, 0.0012)
+        ..setEntry(3, 2, turning ? depth : 0.0)
         ..rotateY(angle),
-      child: child,
+      // Opaque while it turns. The mushaf page is drawn as ink on a
+      // transparent ground, so the page arriving behind showed straight
+      // through the one leaving — two pages of script on top of each other.
+      child: ColoredBox(
+        color: turning ? _paper(context) : Colors.transparent,
+        child: child,
+      ),
     );
+  }
+
+  static Color _paper(BuildContext context) {
+    final theme = Theme.of(context);
+    final bg = theme.scaffoldBackgroundColor;
+    return (bg.a >= 1 ? bg : theme.colorScheme.surface).withValues(alpha: 1);
   }
 }
 
