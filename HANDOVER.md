@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-18 23:07 — IN PROGRESS — resume here**
+**2026-09-18 23:48 — IN PROGRESS — resume here**
 
-Verified on emulator (no code change): 13 new Nawawi adhkar all present in evening/morning/sleep with sources; dedications add+note+counters+menu+delete work; continuous recitation fetches the reciter basmala 001001 before verse 1 of each surah (pcap: Ikhlas 216930B~215050 then 112001-004 in order; Falaq basmala again then 113001). Remaining: owner listens to TTS sample; voices free button not pressed; release is owner call.
+RELEASED v3.37.0 (tag = HEAD 3fd8529, asset 277672055 B matches local). Release APK verified on emulator: runs, voice pack downloaded from Settings, open voice plays via app MediaPlayer ~5s after tap. v3.36.1 release+tag deleted.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
