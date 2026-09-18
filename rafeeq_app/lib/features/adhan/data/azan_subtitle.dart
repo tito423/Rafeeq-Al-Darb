@@ -85,6 +85,17 @@ class AdhanTimings {
   static const breathsPerLine = [2, 2, 2, 2, 2, 1, 1];
   static const breathsPerLineFajr = [2, 2, 2, 2, 2, 2, 1, 1];
 
+  /// Whether this recording has a checked, breath-by-breath timeline for
+  /// the adhan it is being played as. Without one the screen writes the whole
+  /// adhan out rather than guess which line is sounding.
+  bool followsAdhan({required bool isFajr}) {
+    final b = breaths;
+    if (b == null || linesAreFajr != isFajr) return false;
+    final want = (isFajr ? breathsPerLineFajr : breathsPerLine)
+        .fold<int>(0, (a, c) => a + c);
+    return b.length == want;
+  }
+
   factory AdhanTimings.fromJson(Map<String, dynamic> j) {
     final fajr = j['lines_fajr'] as List<dynamic>?;
     final plain = j['lines'] as List<dynamic>?;

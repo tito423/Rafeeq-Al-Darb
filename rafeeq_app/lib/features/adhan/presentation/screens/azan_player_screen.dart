@@ -16,6 +16,7 @@ import '../../../../core/services/adhan_native.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/azan_subtitle.dart';
 import '../../data/adhan_background.dart';
+import '../widgets/adhan_full_text.dart';
 import '../widgets/adhan_scene.dart';
 
 /// The prayer's name in the app's *current* language.
@@ -191,6 +192,18 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
 
   /// This recording's measured speech, when it is one of the bundled ones.
   AdhanTimings? _timings;
+  bool _timingsTried = false;
+
+  /// Whole text, no line-by-line: a file the user imported, or a recording
+  /// whose breaths could not be confirmed by listening
+  /// (`scripts/finalize_adhan_timings.py`). A wrong line on screen while the
+  /// muezzin recites another is the «صفر تزامن» the owner reported.
+  bool get _wholeText {
+    if (widget.spec.assetPath == null) return true;
+    final t = _timings;
+    return _timingsTried &&
+        (t == null || !t.followsAdhan(isFajr: widget.spec.prayerKey == 'fajr'));
+  }
 
   Future<void> _loadTimings() async {
     final asset = widget.spec.assetPath;
@@ -201,6 +214,7 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
       final entry = all[p.basename(asset)] as Map<String, dynamic>?;
       if (entry != null) _timings = AdhanTimings.fromJson(entry);
     } catch (_) {}
+    if (mounted) setState(() => _timingsTried = true);
   }
 
   void _rebuildSubtitles(Duration total) {
@@ -356,6 +370,16 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
                       const _PreviewBadge(),
                     ],
                     const Spacer(),
+                    // An imported file has no measured timings: show the
+                    // whole adhan rather than guess which line is sounding.
+                    if (_wholeText)
+                      Expanded(
+                        flex: 6,
+                        child: AdhanFullText(
+                          isFajr: widget.spec.prayerKey == 'fajr',
+                        ),
+                      )
+                    else
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 450),
                       transitionBuilder: (child, anim) => FadeTransition(

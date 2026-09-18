@@ -20,6 +20,7 @@ import '../../data/adhan_catalog_provider.dart';
 import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
 import '../widgets/adhan_backgrounds_card.dart';
+import '../widgets/adhan_choice_cards.dart';
 import '../widgets/adhan_preview_card.dart';
 import '../widgets/alarm_volume_tile.dart';
 import '../../data/prayer_status_enabled_provider.dart';
@@ -451,8 +452,10 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                       builder: (context, playingId, _) => ListView(
                     padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
                     children: [
-                      for (final option in options)
-                        _AdhanCard(
+                      // A Fajr recording is not offered as the default: it
+                      // would recite «الصلاة خير من النوم» at Dhuhr.
+                      for (final option in options.where((o) => !o.isFajr))
+                        AdhanCard(
                           option: option,
                           isSelected: live.defaultAdhanId == option.id,
                           isPlaying: playingId == option.id,
@@ -485,6 +488,79 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                 ),
               ),
             ),
+            const SizedBox(height: 12),
+            Card(
+              clipBehavior: Clip.antiAlias,
+              child: ListTile(
+                leading: const Icon(Icons.wb_twilight_rounded),
+                title: Text('prayer.fajr_adhan_label'.tr()),
+                subtitle: Text(
+                  resolveAdhanFor(catalog, settings, 'fajr').name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _openFullScreen(
+                  title: 'prayer.fajr_adhan_label'.tr(),
+                  builder: (context, pageRef) {
+                    final live = pageRef.watch(adhanSettingsProvider);
+                    final options =
+                        pageRef.watch(adhanCatalogProvider).valueOrNull ??
+                            const <AdhanOption>[];
+                    final picked = live.adhanIdByPrayer['fajr'];
+                    return ValueListenableBuilder<String?>(
+                      valueListenable: _playingId,
+                      builder: (context, playingId, _) => ListView(
+                        padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                            child: Text('prayer.fajr_adhan_desc'.tr()),
+                          ),
+                          Card(
+                            color: picked == null
+                                ? AppColors.gold.withValues(alpha: 0.12)
+                                : null,
+                            child: ListTile(
+                              leading: Icon(
+                                picked == null
+                                    ? Icons.radio_button_checked
+                                    : Icons.radio_button_off,
+                                color: AppColors.gold,
+                              ),
+                              title: Text('prayer.fajr_adhan_auto'.tr()),
+                              subtitle: Text(
+                                resolveAdhanFor(
+                                  options,
+                                  live.copyWith(adhanIdByPrayer: {
+                                    ...live.adhanIdByPrayer,
+                                    'fajr': null,
+                                  }),
+                                  'fajr',
+                                ).name,
+                              ),
+                              onTap: () => _saveChoice('fajr', null),
+                            ),
+                          ),
+                          for (final option
+                              in options.where((o) => o.fitsPrayer('fajr')))
+                            AdhanCard(
+                              option: option,
+                              isSelected: picked == option.id,
+                              isPlaying: playingId == option.id,
+                              onTap: () {
+                                _saveChoice('fajr', option.id);
+                                _togglePreview(option, forcePlay: true);
+                              },
+                              onStop: () => _togglePreview(option),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             Card(
               clipBehavior: Clip.antiAlias,
@@ -507,7 +583,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                     padding: const EdgeInsets.fromLTRB(8, 12, 8, 24),
                     children: [
                       for (final key in adhanPrayerKeys)
-                        _PrayerModeCard(
+                        PrayerModeCard(
                           prayerKey: key,
                           label: _prayerLabels[key]!.tr(),
                           mode: live.modeFor(key),
@@ -621,215 +697,6 @@ class _BatteryCard extends StatelessWidget {
                 child: Text('prayer.battery_optimization_action'.tr()),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Adhan selection card — tapping the entire card selects that adhan,
-/// saves it immediately, and previews it. No separate "select" button.
-class _AdhanCard extends StatelessWidget {
-  final AdhanOption option;
-  final bool isSelected;
-  final bool isPlaying;
-  final VoidCallback onTap;
-  final VoidCallback onStop;
-  final VoidCallback? onRemove;
-
-  const _AdhanCard({
-    required this.option,
-    required this.isSelected,
-    required this.isPlaying,
-    required this.onTap,
-    required this.onStop,
-    this.onRemove,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      child: Material(
-        color: isSelected
-            ? AppColors.gold.withValues(alpha: 0.12)
-            : scheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(14),
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: isSelected
-                    ? AppColors.gold.withValues(alpha: 0.6)
-                    : Colors.transparent,
-                width: 1.5,
-              ),
-            ),
-            child: Row(
-              children: [
-                // Selection indicator
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isSelected ? AppColors.gold : Colors.transparent,
-                    border: Border.all(
-                      color: isSelected
-                          ? AppColors.gold
-                          : scheme.onSurfaceVariant.withValues(alpha: 0.4),
-                      width: 2,
-                    ),
-                  ),
-                  child: isSelected
-                      ? const Icon(Icons.check, color: Colors.white, size: 16)
-                      : null,
-                ),
-                const SizedBox(width: 14),
-                // Name and label
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        option.name,
-                        style: TextStyle(
-                          fontWeight:
-                              isSelected ? FontWeight.w700 : FontWeight.w500,
-                          color: isSelected
-                              ? AppColors.gold
-                              : scheme.onSurface,
-                          fontSize: 15,
-                        ),
-                      ),
-                      if (option.isCustom)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            'prayer.imported'.tr(),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: scheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                // Stop button (only visible when this adhan is playing)
-                if (isPlaying)
-                  IconButton(
-                    icon: Icon(Icons.stop_circle,
-                        color: AppColors.gold, size: 28),
-                    tooltip: 'prayer.test'.tr(),
-                    onPressed: onStop,
-                  ),
-                // Delete button for custom adhans
-                if (onRemove != null)
-                  IconButton(
-                    icon: Icon(Icons.delete_outline,
-                        color: scheme.error, size: 22),
-                    tooltip: 'prayer.remove_custom'.tr(),
-                    onPressed: onRemove,
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PrayerModeCard extends StatelessWidget {
-  final String prayerKey;
-  final String label;
-  final AdhanMode mode;
-  final String? adhanId;
-  final List<AdhanOption> catalog;
-  final ValueChanged<AdhanMode> onModeChanged;
-  final ValueChanged<String?> onAdhanChanged;
-  final VoidCallback onTest;
-  final Color accent;
-
-  const _PrayerModeCard({
-    required this.prayerKey,
-    required this.label,
-    required this.mode,
-    required this.adhanId,
-    required this.catalog,
-    required this.onModeChanged,
-    required this.onAdhanChanged,
-    required this.onTest,
-    required this.accent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(label,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: accent)),
-                ),
-                TextButton.icon(
-                  onPressed: onTest,
-                  icon: const Icon(Icons.notifications_active_outlined, size: 18),
-                  label: Text('prayer.test'.tr()),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text('prayer.notification_mode'.tr(),
-                style: Theme.of(context).textTheme.labelMedium),
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: AdhanMode.values.map((m) {
-                return ChoiceChip(
-                  label: Text(m.trKey.tr()),
-                  selected: mode == m,
-                  onSelected: (_) => onModeChanged(m),
-                );
-              }).toList(),
-            ),
-            if (mode == AdhanMode.full || mode == AdhanMode.audio) ...[
-              const SizedBox(height: 10),
-              DropdownButtonFormField<String?>(
-                initialValue: adhanId,
-                decoration: InputDecoration(
-                  labelText: 'prayer.choose_adhan'.tr(),
-                  isDense: true,
-                ),
-                items: [
-                  DropdownMenuItem<String?>(
-                    value: null,
-                    child: Text('prayer.use_default'.tr()),
-                  ),
-                  for (final o in catalog)
-                    DropdownMenuItem<String?>(value: o.id, child: Text(o.name)),
-                ],
-                onChanged: onAdhanChanged,
-              ),
-            ],
           ],
         ),
       ),

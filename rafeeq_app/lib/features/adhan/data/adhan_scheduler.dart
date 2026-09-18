@@ -15,10 +15,39 @@ AdhanOption _resolveOption(
   List<AdhanOption> catalog,
   AdhanSettings settings,
   String prayerKey,
+) => resolveAdhanFor(catalog, settings, prayerKey);
+
+/// The recording that sounds for [prayerKey].
+///
+/// «ممكن يضيف أي أذان مع الفجر اللي مختلف أصلاً في الصلاة خير من النوم».
+/// It used to be whatever was chosen, so the default adhan — an ordinary one
+/// — played at Fajr without its Fajr line while the screen printed it. Now:
+///
+/// * the choice is used when it fits the prayer (see [AdhanOption.fitsPrayer]);
+/// * at Fajr an ordinary choice gives way to the same muezzin's Fajr adhan
+///   ([AdhanOption.fajrPair]) and, failing that, the first Fajr recording;
+/// * at the other four a Fajr choice gives way to the default, then to the
+///   first ordinary recording.
+AdhanOption resolveAdhanFor(
+  List<AdhanOption> catalog,
+  AdhanSettings settings,
+  String prayerKey,
 ) {
-  final id = settings.adhanIdFor(prayerKey);
-  final match = catalog.where((o) => o.id == id);
-  return match.isNotEmpty ? match.first : catalog.first;
+  AdhanOption? byId(String? id) =>
+      id == null ? null : catalog.where((o) => o.id == id).firstOrNull;
+  final chosen = byId(settings.adhanIdFor(prayerKey)) ??
+      byId(settings.defaultAdhanId);
+  if (chosen != null && chosen.fitsPrayer(prayerKey)) return chosen;
+  if (prayerKey == 'fajr') {
+    final pair = byId(chosen?.fajrPair);
+    if (pair != null) return pair;
+  } else {
+    final fallback = byId(settings.defaultAdhanId);
+    if (fallback != null && fallback.fitsPrayer(prayerKey)) return fallback;
+  }
+  return catalog.where((o) => o.fitsPrayer(prayerKey)).firstOrNull ??
+      chosen ??
+      catalog.first;
 }
 
 AdhanSpec _specFor({
@@ -117,10 +146,7 @@ AdhanSpec previewSpec({
   String prayerKey = 'dhuhr',
   required String prayerLabel,
 }) {
-  final option = catalog
-      .where((o) => o.id == settings.defaultAdhanId)
-      .firstOrNull ??
-      catalog.first;
+  final option = resolveAdhanFor(catalog, settings, prayerKey);
   return AdhanNative.specFor(
     prayerKey: prayerKey,
     prayerLabel: prayerLabel,

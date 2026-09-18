@@ -58,7 +58,8 @@
     "asset": "assets/audio/adhan/azan5.mp3",
     "raw": "azan5",
     "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-1-kuwait.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "fajr_pair": "azan16"
   },
   {
     "id": "azan6",
@@ -66,7 +67,8 @@
     "asset": "assets/audio/adhan/azan6.mp3",
     "raw": "azan6",
     "url": "https://archive.org/download/adhan-mp3-collection/ali-ibn-ahmad-mala-hq.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "fajr": true
   },
   {
     "id": "azan8",
@@ -82,7 +84,8 @@
     "asset": "assets/audio/adhan/azan9.mp3",
     "raw": "azan9",
     "url": "https://archive.org/download/adhan-mp3-collection/mansur-al-zahrane.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "fajr": true
   },
   {
     "id": "azan16",
@@ -90,6 +93,7 @@
     "asset": "assets/audio/adhan/azan16.mp3",
     "raw": "azan16",
     "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-3-fajr-kuwait.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "fajr": true
   }
 ]

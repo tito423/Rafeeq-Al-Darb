@@ -59,7 +59,6 @@ void main() {
     // explains a real decision, which is how three earlier increases on this
     // list were funded.
     'lib/features/khatma/presentation/khatma_screen.dart': 860,
-    'lib/features/adhan/presentation/screens/adhan_settings_screen.dart': 855,
     'lib/features/home/presentation/widgets/analog_clock_faces.dart': 828,
     'lib/core/services/ayah_audio_service.dart': 810,
   };
