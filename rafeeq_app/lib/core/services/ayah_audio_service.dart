@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'download_engine.dart';
+import 'surah_playlist.dart';
 
 import '../db/models.dart';
 import '../db/quran_repository.dart';
@@ -545,24 +546,9 @@ class AyahAudioService {
       return;
     }
 
-    // The WHOLE surah, starting at the chosen verse — so a later jump back to
-    // an earlier verse of it is a seek (see `startContinuous`).
-    final startIndex = all.indexWhere((a) => a.ayahNumber == startAyahNumber);
-    // THE BASMALA. «بيظلل على بسم الله الرحمن الرحيم واللي بعدها مع إن
-    // القارئ مش بيقول البسملة». The text of verse 1 carries the basmala in
-    // front of it, so it was highlighted, but the verse-1 recording holds the
-    // verse alone. A murattal reading opens every surah with the basmala —
-    // except al-Fatiha, where it IS verse 1, and at-Tawba, which has none —
-    // so the reciter's own basmala (his recording of 1:1) is played first,
-    // under verse 1's highlight. The playlist then holds verse 1 twice in
-    // `_continuousAyahs`: index 0 is the basmala, index 1 the verse.
-    final basmala = surahId != 1 && surahId != 9;
-    final ayahs = basmala ? [all.first, ...all] : all;
-    final initialIndex = startIndex < 0
-        ? 0
-        : (basmala && startIndex > 0 ? startIndex + 1 : startIndex);
-    _continuousAyahs = ayahs;
-
+    // The WHOLE surah (a jump back is a seek), basmala first: `SurahPlaylist`.
+    final plan = SurahPlaylist.plan(all, surahId, startAyahNumber);
+    final ayahs = _continuousAyahs = plan.ayahs;
     final firstGlobal = await repo.globalAyahNumber(surahId, 1);
     if (token != _continuousToken) return;
 
@@ -576,7 +562,7 @@ class AyahAudioService {
             () {
               final a = ayahs[k];
               final global = firstGlobal + (a.ayahNumber - 1);
-              final isBasmala = basmala && k == 0;
+              final isBasmala = plan.isBasmalaAt(k);
               final urls = RecitationSource.urlsFor(
                 edition: _continuousEdition,
                 surah: isBasmala ? 1 : a.surahId,
@@ -610,7 +596,7 @@ class AyahAudioService {
           ConcatenatingAudioSource(
             children: buildChildren(host: attempt == 2 ? 1 : 0),
           ),
-          initialIndex: initialIndex,
+          initialIndex: plan.initialIndex,
         );
         loaded = true;
       } catch (_) {
@@ -631,7 +617,7 @@ class AyahAudioService {
       if (token != _continuousToken || index == null) return;
       if (index < 0 || index >= _continuousAyahs.length) return;
       final a = _continuousAyahs[index];
-      final lead = basmala ? 1 : 0;
+      final lead = plan.lead;
       continuous.value = ContinuousRecitation(
         active: true,
         surahId: a.surahId,
