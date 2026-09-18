@@ -7,15 +7,17 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-18 |
-| **Released** | **v3.36.0** — the spoken-reader release. v3.35.0's tag and release are replaced, so the repo holds one release |
-| **App version** | `pubspec.yaml` `3.36.0+37`; `AboutScreen.appVersion` `3.36.0` — a test checks the two against each other |
-| **On the owner's Honor** | still the signed **3.25.0** build. **Nothing from v3.26.0 to v3.36.0 has run on his phone.** Everything below was seen on `emulator-5554` |
+| **Released** | **v3.36.1** — the spoken-reader release. v3.36.0 was published and then superseded within the hour: the quote carrying «شيخ الإسلام» was removed after it was built, so the APK on that tag still contained it |
+| **App version** | `pubspec.yaml` `3.36.1+38`; `AboutScreen.appVersion` `3.36.1` — a test checks the two against each other |
+| **On the owner's Honor** | still the signed **3.25.0** build. **Nothing from v3.26.0 to v3.36.1 has run on his phone.** Everything below was seen on `emulator-5554` |
 | **Spoken reader** | NEW. Offered on **83 of 213 books** — those whose text carries its harakat. All 213 were measured: median 37.8%, max 87.2%, **83 at or above 80%**, **46 under 5%**. The threshold is where the distribution's own cluster ends (80.2–87.2 with no gaps; below it the values scatter). Generated into the catalogue by `measure_diacritisation.py` + `apply_diacritisation.py`, never typed |
 | **Why it refuses** | A book below the threshold shows the button and explains, rather than reading badly or hiding. **The Qur'an is never spoken by the synthesiser** — `pageSpeechText` drops every `kind == 'aya'` paragraph, because the Qur'an is recited and the app carries real recitations by named qurra' |
 | **The evidence it rests on** | `integration_test/tts_harakat_test.dart`, run against the device: four minimal pairs (كَتَبَ/كُتُبٌ، عِلْمٌ/عَلَمٌ، سَأَلَ/سُئِلَ، رَجُلٌ/رَجُلًا) synthesised to separate files and compared byte for byte. All four differ, reproducibly — **the voice reads the harakat**. Nine Arabic voices on the device, four of them embedded, so it works offline |
 | **Languages** | all seven now opened on a device. Spanish, Russian, French, Portuguese and Urdu had **never** been seen before this session. Urdu is right-to-left and correct |
-| **Verified 2026-09-18** | `flutter analyze lib test integration_test` → **No issues found** · `flutter test` → **364 passed** · 3 device tests passed · **12/12** hosted paths · **213/213** catalogue sizes match the bucket · **0** books carry a modern editor's apparatus · **13/13** hotlinked backgrounds resolve |
+| **Verified 2026-09-18** | `flutter analyze lib test integration_test` → **No issues found** · `flutter test` → **366 passed** · 3 device tests passed · **12/12** hosted paths · **213/213** catalogue sizes match the bucket · **0** books carry a modern editor's apparatus · **13/13** hotlinked backgrounds resolve |
 | **Not a regression, recorded because it looks like one** | a DEBUG build is slow past its splash video on this emulator and can sit on a blank screen for minutes; the console shows ExoPlayer and the h264/aac decoders working. A clean install of the RELEASE build reaches onboarding in about thirty seconds |
+| **Quotes** | **57** across 4 books. One was removed — al-Wabil al-Sayyib p7, «قال شيخ الإسلام», Ibn al-Qayyim quoting Ibn Taymiyyah. Swept every shipped asset for all seven removed names afterwards: the only survivor anywhere is «(صححه الألباني)» on a hadith grading, which the owner chose to keep |
+| **All 18 screens** | opened. The spoken reader was seen working on the device: «استماع» → «إيقاف», and logcat shows the dispatch to `ar-xa-x-arz-seanet-embedded` — an EMBEDDED voice, so it spoke offline |
 | **Emulator** | `hw.ramSize` raised **2048 → 4096** (config backed up beside it). At 2 GB the app ANR'd for 13.9 s on launch — 109% kernel, 4,197 major faults, kswapd 34%. That was the host, not the app |
 
 ## STATE AS OF 2026-09-17 — handover (v3.30.0 published)
