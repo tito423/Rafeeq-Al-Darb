@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-18 |
+| **Last updated** | 2026-09-19 |
 | **Released** | **v3.36.1**, tag and release both at `HEAD`. One release, one tag, tree clean |
 | **App version** | `pubspec.yaml` `3.36.1+38`; `AboutScreen.appVersion` `3.36.1` — a test checks the two against each other. APK **217.6 MB** |
 | **On the owner's Honor** | still the signed **3.25.0** build. **Nothing from v3.26.0 to v3.36.1 has run on his phone** — eleven releases. He is installing v3.36.1 now; see NEXT_PROMPT.md for the four questions only his phone can answer |
@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-18 23:48 — IN PROGRESS — resume here**
+**2026-09-19 01:28 — IN PROGRESS — resume here**
 
-RELEASED v3.37.0 (tag = HEAD 3fd8529, asset 277672055 B matches local). Release APK verified on emulator: runs, voice pack downloaded from Settings, open voice plays via app MediaPlayer ~5s after tap. v3.36.1 release+tag deleted.
+Diacritiser research: CATT encoder-DECODER now running on the RTX 3050 (separate venv scratchpad/gpuenv, onnxruntime-gpu 1.20.2 + pip CUDA/cuDNN, CUDAExecutionProvider confirmed) over the same 10-book sample as the EO run; ~10 min/book (decodes to max length regardless of size), ETA 02:50. MEASURED: the 133 undiacritised books hold 84,026,566 non-Quran chars -> ~47 days of this GPU at 11,905 chars/576 s. So ED is impractical on this hardware whatever its accuracy; accuracy still being measured to decide whether renting a cloud GPU is worth asking the owner.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
