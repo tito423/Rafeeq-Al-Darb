@@ -187,6 +187,11 @@ class MushafEdition {
   /// of every scanned printing: all five do; the vector Hafs pages do not.
   final bool printedHeader;
 
+  /// The scan is already light ink on a dark page (the night printing), so
+  /// the app's own night and warm-paper filters must leave it alone —
+  /// inverting it would turn a night page into a glaring white one.
+  final bool darkPage;
+
   const MushafEdition({
     required this.id,
     required this.sourcePath,
@@ -206,6 +211,7 @@ class MushafEdition {
     required this.isDefault,
     this.hafsPagination = true,
     this.printedHeader = false,
+    this.darkPage = false,
     this.imagePath,
     this.imageExt = 'jpg',
     this.coverAsset = '',
@@ -251,6 +257,7 @@ class MushafEdition {
         isDefault: j['is_default'] as bool? ?? false,
         hafsPagination: j['hafs_pagination'] as bool? ?? true,
         printedHeader: j['printed_header'] as bool? ?? false,
+        darkPage: j['dark_page'] as bool? ?? false,
       );
   }
 

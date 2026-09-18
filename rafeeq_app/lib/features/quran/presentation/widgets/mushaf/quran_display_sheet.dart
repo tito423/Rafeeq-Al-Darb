@@ -29,6 +29,7 @@ import '../../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/mushaf_paper_provider.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../data/page_turn_provider.dart';
 import '../../../data/text_layout_provider.dart';
@@ -166,6 +167,24 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                 icon: Icons.palette_outlined,
                 title: 'mushaf_theme.title'.tr(),
                 onTap: () => MushafThemePicker.show(context),
+              ),
+            ],
+            // The paper mushaf's own night and warm paper. The text mushaf
+            // has its full theme picker above; this is its image-mode twin.
+            if (!_textOnly) ...[
+              _Group(label: 'quran.paper_title'.tr()),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final p in MushafPaper.values)
+                    ChoiceChip(
+                      label: Text(p.titleKey.tr()),
+                      selected: ref.watch(mushafPaperProvider) == p,
+                      onSelected: (_) =>
+                          ref.read(mushafPaperProvider.notifier).set(p),
+                    ),
+                ],
               ),
             ],
             _Group(label: 'quran.display_turn'.tr()),

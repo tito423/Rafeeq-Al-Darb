@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../widgets/mushaf/toolbar_bar.dart';
+import '../../data/mushaf_paper_provider.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../downloads/data/reciters_provider.dart';
@@ -725,6 +725,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     });
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: mushafGround(ref.watch(mushafPaperProvider), imageMode: _mode == MushafMode.image || (edition?.isRaster ?? false), darkPage: edition?.darkPage ?? false),
       // P3‑43 #6: "ملء الشاشة" now hides the AppBar entirely (not just its
       // own toolbar row) plus this screen's own bottom bar below, and
       // (via `quranFullScreenProvider`) `AppShell`'s bottom nav bar too —
@@ -1031,7 +1032,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       },
     );
   }
-
 
   void _onImageAyahTap(
     AyahRegion region,

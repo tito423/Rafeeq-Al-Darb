@@ -1,3 +1,4 @@
+import '../../data/mushaf_paper_provider.dart';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -227,14 +228,36 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
 
   @override
   Widget build(BuildContext context) {
+    final paper = ref.watch(mushafPaperProvider);
+    // The page's own ground under warm paper and night — the whole viewport,
+    // so the letterbox around a scan is the page's colour and not the app's,
+    // and a page turning over another is opaque (see `PageTurn`).
+    final ground = widget.edition.darkPage
+        ? null
+        : switch (paper) {
+            MushafPaper.normal => null,
+            MushafPaper.warm => warmPaper,
+            MushafPaper.night => nightPaper,
+          };
+    final page = _buildPage(context, paper);
+    return ground == null
+        ? page
+        : ColoredBox(color: ground, child: SizedBox.expand(child: page));
+  }
+
+  Widget _buildPage(BuildContext context, MushafPaper paper) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    if (widget.edition.isRaster) return _buildRaster(theme);
+    if (widget.edition.isRaster) return _buildRaster(theme, paper);
 
     // The mushaf glyphs are monochrome, so a single srcIn recolour carries the
-    // whole page into the active theme.
-    final ink = isDark ? AppColors.paperDark : AppColors.ink;
+    // whole page into the active theme — or into warm paper or night.
+    final ink = switch (paper) {
+      MushafPaper.warm => warmInk,
+      MushafPaper.night => nightInk,
+      MushafPaper.normal => isDark ? AppColors.paperDark : AppColors.ink,
+    };
 
     return FutureBuilder<String>(
       future: _ready,
@@ -320,7 +343,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   /// the drawn rect depends on the surrounding box and the highlight would
   /// float free of the text. A printing with no layer keeps the plain centred
   /// image and a tap that only forwards to [onBackgroundTap].
-  Widget _buildRaster(ThemeData theme) {
+  Widget _buildRaster(ThemeData theme, MushafPaper paper) {
     // `sizeOf`, not `MediaQuery.of`: the full query also carries the keyboard
     // inset, so every frame of a keyboard sliding up (the «الانتقال إلى»
     // field) rebuilt and re-decoded the page behind the dialog — the flicker
@@ -343,7 +366,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
         }
 
         final localFile = snapshot.data;
-        final Widget image = localFile != null
+        Widget image = localFile != null
             ? Image.file(
                 localFile,
                 fit: BoxFit.contain,
@@ -377,6 +400,9 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
                   ],
                 ),
               );
+
+        final filter = scanFilter(paper, darkPage: widget.edition.darkPage);
+        if (filter != null) image = ColorFiltered(colorFilter: filter, child: image);
 
         final fit = widget.edition.fitForPage(widget.page);
         if (fit != null) {
