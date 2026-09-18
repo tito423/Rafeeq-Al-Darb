@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-18 21:53 — IN PROGRESS — resume here**
+**2026-09-18 23:07 — IN PROGRESS — resume here**
 
-Library bug FIXED on R2: 4 books (al_adab_al_mufrad, al_shamail_al_muhammadiyyah, al_targhib_wal_tarhib, mishkat_al_masabih) carried Content-Encoding gzip -> Dio decompressed -> size check failed -> book stuck on download. scripts/fix_book_content_encoding.py stripped it, 213/213 clean; re-download seen working on emulator. TTS: install dialog seen on emulator, voice pack downloading (~380KB/s on emulator). Sources credit for Arabic Speech Corpus + nipponjo added.
+Verified on emulator (no code change): 13 new Nawawi adhkar all present in evening/morning/sleep with sources; dedications add+note+counters+menu+delete work; continuous recitation fetches the reciter basmala 001001 before verse 1 of each surah (pcap: Ikhlas 216930B~215050 then 112001-004 in order; Falaq basmala again then 113001). Remaining: owner listens to TTS sample; voices free button not pressed; release is owner call.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
