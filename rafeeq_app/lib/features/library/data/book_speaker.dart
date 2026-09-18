@@ -115,12 +115,27 @@ class BookSpeaker {
   }
 
   /// True when this device can speak Arabic at all.
+  ///
+  /// Asks `isLanguageAvailable` FIRST and only falls back to listing. On a
+  /// freshly constructed `FlutterTts` the engine is not bound yet, and
+  /// `getLanguages` came back without Arabic on a device that plainly had
+  /// nine Arabic voices — the first run of `tts_harakat_test` failed on
+  /// exactly that, with `available` false and the probe beside it reporting
+  /// `[ar]`. `isLanguageAvailable` waits for the binding; the list is kept as
+  /// a second opinion for engines that do not implement it.
   Future<bool> get available async {
+    try {
+      final direct = await _tts.isLanguageAvailable('ar');
+      if (direct == true) return true;
+    } catch (e) {
+      debugPrint('BookSpeaker: isLanguageAvailable threw: $e');
+    }
     try {
       final langs = await _tts.getLanguages;
       if (langs is! List) return false;
       return langs.any((l) => '$l'.toLowerCase().startsWith('ar'));
-    } catch (_) {
+    } catch (e) {
+      debugPrint('BookSpeaker: getLanguages threw: $e');
       return false;
     }
   }

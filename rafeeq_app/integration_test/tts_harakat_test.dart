@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rafeeq_app/features/library/data/book_speaker.dart';
 import 'package:rafeeq_app/features/library/data/tts_probe.dart';
 
 /// THE experiment the spoken-reader feature rests on.
@@ -96,6 +97,68 @@ void main() {
     }
 
     await _save(report.toString());
+  });
+
+  testWidgets('BookSpeaker actually speaks a vowelled passage', (tester) async {
+    // The probe above proves the ENGINE reads harakat. This proves the
+    // wrapper the app ships works on a device: that it finds an Arabic
+    // voice, chunks a real page, and runs to completion without throwing.
+    //
+    // The passage is the opening of al-Adab al-Mufrad as the app stores it —
+    // vowelled, with a sentence break, which is what the chunker splits on.
+    const passage =
+        'حَدَّثَنَا عَبْدُ اللَّهِ بْنُ مُحَمَّدٍ قَالَ حَدَّثَنَا أَبُو عَامِرٍ. '
+        'سَأَلْتُ النَّبِيَّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ أَيُّ الْعَمَلِ '
+        'أَحَبُّ إِلَى اللَّهِ؟ قَالَ الصَّلَاةُ عَلَى وَقْتِهَا.';
+
+    final speaker = BookSpeaker();
+    expect(await speaker.available, isTrue,
+        reason: 'no Arabic voice on this device');
+
+    final chunks = BookSpeaker.chunk(passage);
+    expect(chunks, isNotEmpty);
+
+    final marks = RegExp('[ً-ْٰ]');
+    expect(marks.allMatches(chunks.join(' ')).length,
+        marks.allMatches(passage).length,
+        reason: 'the harakat must survive chunking');
+
+    final seen = <bool>[];
+    final sub = speaker.state.listen((s) => seen.add(s.speaking));
+
+    await speaker.speak(passage, rate: 1.0);
+
+    // Let the broadcast stream deliver its last event. `speak()` adds the
+    // final «not speaking» state as it returns, and cancelling the
+    // subscription in the same turn drops it — which is what made this test
+    // report «it never finished» while `isSpeaking` was already false.
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+    await sub.cancel();
+    expect(seen, isNotEmpty, reason: 'the speaker never reported any state');
+    // NOT `seen.first`: speak() calls stop() before it starts, and stop()
+    // emits a «not speaking» state, so the first event is false by
+    // construction. That is what this assertion said the first time it ran,
+    // and it was the test that was wrong, not the speaker.
+    expect(seen.contains(true), isTrue, reason: 'it never started');
+    expect(seen.last, isFalse, reason: 'it never finished');
+    // The authoritative flag, independent of stream timing.
+    expect(speaker.isSpeaking, isFalse);
+    speaker.dispose();
+  });
+
+  testWidgets('the Quran is never handed to the synthesiser', (tester) async {
+    // The rule this feature refuses to break. A page carrying an ayah must
+    // reach the engine without it — the Quran is recited, and this app
+    // carries real recitations by named qurra' for that.
+    final spoken = pageSpeechText([
+      (text: 'قَالَ الْمُصَنِّفُ رَحِمَهُ اللَّهُ:', kind: 'body'),
+      (text: 'وَاعْتَصِمُوا بِحَبْلِ اللَّهِ جَمِيعًا', kind: 'aya'),
+      (text: 'وَفِي هَذَا دَلِيلٌ عَلَى وُجُوبِ الْجَمَاعَةِ.', kind: 'body'),
+    ]);
+    expect(spoken, contains('الْمُصَنِّفُ'));
+    expect(spoken, contains('الْجَمَاعَةِ'));
+    expect(spoken, isNot(contains('وَاعْتَصِمُوا')),
+        reason: 'an ayah reached the speech text');
   });
 }
 
