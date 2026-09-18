@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../app/app_locale_provider.dart';
 
 import '../../../core/db/hadeethenc_repository.dart';
 import '../../hadeethenc/data/hadeethenc_providers.dart';
@@ -33,6 +34,21 @@ class DailyHadith {
 class DailyHadithNotifier extends AsyncNotifier<DailyHadith?> {
   @override
   Future<DailyHadith?> build() async {
+    // WATCHED, so the card follows the app's language.
+    //
+    // The repository below already picks the pack for the current locale,
+    // but this notifier holds what it ALREADY picked — in `state` and in
+    // `_history` for the swipe. Without this watch the card kept the hadith
+    // chosen under the old language until something rerolled it: switching
+    // the app to Arabic left «حديث اليوم» with its «الشرح» still in Spanish,
+    // under an Arabic hadith and an Arabic grading. Seen on emulator-5554
+    // while walking the five languages.
+    //
+    // Same family as trap #29 — content composed in one language and kept
+    // after the language changed.
+    ref.watch(appLocaleProvider);
+    _history.clear();
+    _index = -1;
     final first = await _pick();
     if (first != null) _remember(first);
     return first;
