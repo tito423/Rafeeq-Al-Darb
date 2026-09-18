@@ -23,6 +23,8 @@ library;
 // `intl`, which easy_localization re-exports, has a `TextDirection` of its own
 // (`TextDirection.RTL`), and it shadows the widget one in this file. The
 // paragraph direction below wants Flutter's, so it is named explicitly.
+import '../../../../core/services/official_hijri.dart';
+import '../../../../core/services/official_hijri_provider.dart';
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -77,10 +79,12 @@ class _DaySheet extends ConsumerWidget {
     final now = DateTime.now();
 
     HijriCalendar.setLocal(locale == 'ar' ? 'ar' : 'en');
-    final h = HijriCalendar.fromDate(now.add(Duration(days: hijriOffset)));
-    final hijri = '${localizeDigits('${h.hDay}', locale)} '
-        '${hijriMonthName(h.hMonth)} '
-        '${localizeDigits('${h.hYear}', locale)} '
+    ref.watch(officialHijriProvider);
+    final (hYear, hMonth, hDay) =
+        OfficialHijri.dateOf(now, offsetDays: hijriOffset);
+    final hijri = '${localizeDigits('$hDay', locale)} '
+        '${hijriMonthName(hMonth)} '
+        '${localizeDigits('$hYear', locale)} '
         '${'hijri.suffix'.tr()}';
     final gregorian = DateFormat.yMMMMEEEEd(locale).format(now);
 
@@ -152,13 +156,13 @@ class _DaySheet extends ConsumerWidget {
             error: (_, _) => _Note(text: 'home.on_this_day_none'.tr()),
             data: (data) {
               final rows = isHijri
-                  ? data.forMonthDay(h.hMonth, h.hDay)
+                  ? data.forMonthDay(hMonth, hDay)
                   : data.forDate(now);
               // What a non-Arabic reader is actually shown on the Hijri sheet:
               // the landmark events of this Hijri day, written in their own
               // language (`hijri_landmarks.dart`).
               final landmarks = isHijri && locale != 'ar'
-                  ? hijriLandmarksFor(h.hMonth, h.hDay)
+                  ? hijriLandmarksFor(hMonth, hDay)
                   : const <HistoricalEvent>[];
               if (rows.isEmpty && landmarks.isEmpty) {
                 return _Note(text: 'home.on_this_day_none'.tr());
@@ -189,7 +193,7 @@ class _DaySheet extends ConsumerWidget {
                     onTap: () => openExternalLink(
                       isHijri
                           ? 'https://ar.wikipedia.org/wiki/'
-                              '${Uri.encodeComponent('${h.hDay} ${hijriMonthNameAr(h.hMonth)}')}'
+                              '${Uri.encodeComponent('$hDay ${hijriMonthNameAr(hMonth)}')}'
                           : 'https://${locale == 'ar' ? 'ar' : 'en'}.wikipedia.org/'
                               'wiki/Special:Search?search='
                               '${Uri.encodeComponent(DateFormat.MMMMd(locale).format(now))}',

@@ -1,3 +1,5 @@
+import '../../../../core/services/official_hijri.dart';
+import '../../../../core/services/official_hijri_provider.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -176,9 +178,10 @@ class _HeaderCard extends ConsumerWidget {
   String _hijriLine(String localeCode, int offsetDays) {
     final lang = localeCode == 'ar' ? 'ar' : 'en';
     HijriCalendar.setLocal(lang);
-    final h = HijriCalendar.fromDate(
-      DateTime.now().add(Duration(days: offsetDays)),
-    );
+    // The declared calendar (see `OfficialHijri`), so the card and the
+    // fasting reminders never name two different days.
+    final (hYear, hMonth, hDay) =
+        OfficialHijri.dateOf(DateTime.now(), offsetDays: offsetDays);
     // The month names and the era suffix come from the locale files, via
     // `hijriMonthName`. The two tables that used to sit here (and a second
     // copy in the prayer notification) covered Arabic and English only, so a
@@ -187,9 +190,9 @@ class _HeaderCard extends ConsumerWidget {
     // الآخر 1448 هـ» in Latin figures while the sheet it opens printed
     // «٦ ربيع الآخر ١٤٤٨ هـ» — the same date, twice, in two scripts, one
     // above the other on screen.
-    return '${digits.localizeDigits('${h.hDay}', localeCode)} '
-        '${hijriMonthName(h.hMonth)} '
-        '${digits.localizeDigits('${h.hYear}', localeCode)}'
+    return '${digits.localizeDigits('$hDay', localeCode)} '
+        '${hijriMonthName(hMonth)} '
+        '${digits.localizeDigits('$hYear', localeCode)}'
         '${'hijri.suffix'.tr()}';
   }
 
@@ -206,6 +209,8 @@ class _HeaderCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Redraws the Hijri line once the declared calendar has loaded.
+    ref.watch(officialHijriProvider);
     final isLight = Theme.of(context).brightness == Brightness.light;
     // Same teal/gold brand identity in both themes, just re-pitched: a
     // parchment-toned gradient + dark ink text for Light, the original

@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/config/app_config.dart';
+import '../config/app_config.dart';
 
 /// The Hijri calendar as officially DECLARED, not only as computed.
 ///
@@ -34,6 +35,25 @@ class OfficialHijri {
   static Map<String, (int, int, int)> _days = {};
   static Map<String, (int, int, int)> get days => _days;
 
+  static DateTime? _lastRefresh;
+
+  /// The Hijri date of [day] as (year, month, day): declared where cached,
+  /// the Umm al-Qura table otherwise, with the reader's correction applied.
+  /// Synchronous, for widgets; [ensureLoaded] fills the cache first.
+  static (int, int, int) dateOf(DateTime day, {int offsetDays = 0}) {
+    final shifted = DateTime(day.year, day.month, day.day + offsetDays);
+    final o = _days[keyOf(shifted)];
+    if (o != null) return o;
+    final h = HijriCalendar.fromDate(shifted);
+    return (h.hYear, h.hMonth, h.hDay);
+  }
+
+  @visibleForTesting
+  static set debugDays(Map<String, (int, int, int)> d) => _days = d;
+
+  /// Reads the cache from disk; cheap, and safe to call repeatedly.
+  static Future<void> ensureLoaded() => _load();
+
   static String keyOf(DateTime d) =>
       '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
@@ -55,6 +75,14 @@ class OfficialHijri {
   static Future<Map<String, (int, int, int)>> refresh(
       {DateTime? from, int months = 3}) async {
     await _load();
+    // Launch and the fasting re-arm both ask within seconds of each other;
+    // the calendar does not change by the minute.
+    final last = _lastRefresh;
+    if (from == null &&
+        last != null &&
+        DateTime.now().difference(last) < const Duration(hours: 1)) {
+      return _days;
+    }
     final start = from ?? DateTime.now();
     final dio = Dio(BaseOptions(
       connectTimeout: const Duration(seconds: 8),
@@ -75,6 +103,7 @@ class OfficialHijri {
       return _days;
     }
     _days = {..._days, ...fresh};
+    _lastRefresh = DateTime.now();
     final p = await SharedPreferences.getInstance();
     await p.setString(_prefsKey, jsonEncode({
       for (final e in _days.entries) e.key: [e.value.$1, e.value.$2, e.value.$3],

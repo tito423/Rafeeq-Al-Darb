@@ -1,4 +1,4 @@
-import 'official_hijri.dart';
+import '../../../core/services/official_hijri.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

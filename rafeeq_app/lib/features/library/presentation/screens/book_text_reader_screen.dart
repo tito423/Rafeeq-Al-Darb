@@ -611,6 +611,10 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
           child: Container(
             color: paper,
             child: Listener(
+              // Translucent, not the default deferToChild: on a short page
+              // most of this area is empty, and a swipe there hit nothing
+              // and turned nothing (seen on the emulator, 2026-09-18).
+              behavior: HitTestBehavior.translucent,
               onPointerDown: _handlePointerDown,
               onPointerUp: _handlePointerUp,
               child: SelectionArea(

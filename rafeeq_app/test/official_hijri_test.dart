@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rafeeq_app/features/fasting/data/official_hijri.dart';
+import 'package:rafeeq_app/core/services/official_hijri.dart';
 import 'package:rafeeq_app/features/fasting/data/sunnah_fasting.dart';
 
 void main() {
@@ -45,5 +45,18 @@ void main() {
     // +1 day: 30 March is read as the declared 31st.
     final h = hijriOf(DateTime(2025, 3, 30), 1, official);
     expect((h.hYear, h.hMonth, h.hDay), (1446, 10, 2));
+  });
+
+  test('every screen date comes from the declared calendar when cached',
+      () {
+    // Home card, «هذا اليوم» sheet and the adjustment preview all read
+    // OfficialHijri.dateOf; the fasting plan reads the same days.
+    OfficialHijri.debugDays = {'2025-03-30': (1446, 10, 1)};
+    expect(OfficialHijri.dateOf(DateTime(2025, 3, 30)), (1446, 10, 1));
+    expect(OfficialHijri.dateOf(DateTime(2025, 3, 29), offsetDays: 1),
+        (1446, 10, 1));
+    // A day not in the cache falls back to the Umm al-Qura table.
+    expect(OfficialHijri.dateOf(DateTime(2025, 3, 31)).$2, 10);
+    OfficialHijri.debugDays = {};
   });
 }

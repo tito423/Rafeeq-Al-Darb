@@ -1,10 +1,10 @@
+import '../../../../core/services/official_hijri.dart';
 import '../../../../core/utils/time_formatter.dart';
 import 'package:adhan/adhan.dart' as adhan;
 import '../../../../core/utils/digits.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hijri/hijri_calendar.dart';
 
 import '../../../../core/i18n/hijri_months.dart';
 import '../../../../core/services/prayer_reminder_service.dart';
@@ -265,11 +265,10 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
   /// What the corrected Hijri date reads as today, so the user can dial the
   /// offset until it matches what their locality announced.
   String _hijriPreview(int offsetDays) {
-    final date = HijriCalendar.fromDate(
-      DateTime.now().add(Duration(days: offsetDays)),
-    );
+    final (hYear, hMonth, hDay) =
+        OfficialHijri.dateOf(DateTime.now(), offsetDays: offsetDays);
     return localizeDigits(
-        '${date.hDay} ${hijriMonthName(date.hMonth)} ${date.hYear}'
+        '$hDay ${hijriMonthName(hMonth)} $hYear'
         '${'hijri.suffix'.tr()}',
         uiLanguageCode);
   }
