@@ -18,7 +18,8 @@ from r2_common import BUCKET, r2_client  # noqa: E402
 
 SRC = os.path.join(os.path.dirname(sys.executable), "Lib", "site-packages",
                    "tts_arabic", "data")
-FILES = ["fp_ms.onnx", "hifigan.onnx", "denoiser.onnx"]
+import sys as _sys
+FILES = _sys.argv[1:] or ["fp_ms.onnx", "vocos44.onnx"]
 PUBLIC = "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev"
 
 

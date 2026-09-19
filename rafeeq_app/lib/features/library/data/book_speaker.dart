@@ -53,6 +53,13 @@ class BookSpeaker {
   final _stateController = StreamController<BookSpeakerState>.broadcast();
   Stream<BookSpeakerState> get state => _stateController.stream;
 
+  /// Stops and loops still running after the reader closed (dispose) must
+  /// not write to the closed stream - «Cannot add new events after calling
+  /// close», seen when leaving the reader on emulator-5554.
+  void _emit(BookSpeakerState s) {
+    if (!_stateController.isClosed) _stateController.add(s);
+  }
+
   int _index = 0;
   List<String> _chunks = const [];
   bool _cancelled = false;
@@ -186,13 +193,13 @@ class BookSpeaker {
     } catch (e) {
       debugPrint('BookSpeaker: engine setup failed: $e');
       _speaking = false;
-      _stateController.add(BookSpeakerState(speaking: false, chunk: 0, total: 0));
+      _emit(BookSpeakerState(speaking: false, chunk: 0, total: 0));
       return;
     }
 
     for (; _index < _chunks.length; _index++) {
       if (_cancelled) break;
-      _stateController.add(BookSpeakerState(
+      _emit(BookSpeakerState(
         speaking: true,
         chunk: _index,
         total: _chunks.length,
@@ -206,7 +213,7 @@ class BookSpeaker {
     }
 
     _speaking = false;
-    _stateController.add(BookSpeakerState(
+    _emit(BookSpeakerState(
       speaking: false,
       chunk: _index,
       total: _chunks.length,
@@ -263,7 +270,7 @@ class BookSpeaker {
         if (stale()) break;
         started = true;
         next = _index + 1 < _chunks.length ? render(_index + 1) : null;
-        _stateController.add(BookSpeakerState(
+        _emit(BookSpeakerState(
             speaking: true, chunk: _index, total: _chunks.length));
         final ended = await _voicePlayer.invokeMethod<bool>('play', {'path': path});
         if (ended != true) break;
@@ -278,7 +285,7 @@ class BookSpeaker {
     }
     next?.ignore();
     _speaking = false;
-    _stateController.add(BookSpeakerState(
+    _emit(BookSpeakerState(
         speaking: false, chunk: _index, total: _chunks.length));
     return true;
   }
@@ -295,7 +302,7 @@ class BookSpeaker {
     try {
       await _tts.stop();
     } catch (_) {}
-    _stateController.add(const BookSpeakerState(speaking: false, chunk: 0, total: 0));
+    _emit(const BookSpeakerState(speaking: false, chunk: 0, total: 0));
   }
 
   void dispose() {

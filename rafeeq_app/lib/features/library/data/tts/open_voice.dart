@@ -10,25 +10,33 @@ import '../../../../core/config/app_config.dart';
 import 'arabic_phonetiser.dart';
 
 /// The open Arabic voice the owner chose (sample B) for its tafkhim of the
-/// divine name: FastPitch -> HiFi-GAN -> denoiser, three ONNX files from
+/// divine name: FastPitch -> Vocos (44.1 kHz), two ONNX files from
 /// nipponjo/tts_arabic (Arabic Speech Corpus, male speaker 0), mirrored on R2
-/// under `tts/open_ar_v1/` (~252 MB). Runs entirely on the device.
+/// under `tts/open_ar_v1/` (~261 MB). Runs entirely on the device.
 ///
 /// The pipeline is `tts_arabic/models/tts_models.py`'s, input for input:
 ///  * fp_ms.onnx: token_ids int64[1,N], pace f32[1], speaker i32[1],
 ///    pitch_mul f32[1], pitch_add f32[1] -> mel f32[1,80,T];
-///  * hifigan.onnx: input f32[1,80,T] -> wave [1,1,S] at 22,050 Hz;
-///  * denoiser.onnx: audio f32[1,S], strength f64[1] (0.005) -> [1,S];
+///  * vocos44.onnx: mel_spec f32[1,80,T], denoise f32[1] (0.005)
+///    -> wave f32[1,S] at 44,100 Hz;
 ///  * then the peak is scaled to 0.9, as `tts(volume=0.9)` does.
 class OpenVoice {
   OpenVoice._();
   static final OpenVoice instance = OpenVoice._();
 
-  static const sampleRate = 22050;
-  static const files = ['fp_ms.onnx', 'hifigan.onnx', 'denoiser.onnx'];
-  static const totalBytes = 187215347 + 56378934 + 8420151;
+  /// «التالت مقبول» (2026-09-19): of three vocoders heard on the same
+  /// sentence, the owner chose Vocos at 44.1 kHz over the original HiFi-GAN
+  /// (which he heard as shaky). Vocos takes the same mel and returns the wave
+  /// directly - it has its own denoise input, so there is no third model.
+  static const sampleRate = 44100;
+  static const files = ['fp_ms.onnx', 'vocos44.onnx'];
+  static const _sizes = {'fp_ms.onnx': 187215347, 'vocos44.onnx': 73485606};
+  static const totalBytes = 187215347 + 73485606;
 
-  OrtSession? _fp, _voc, _den;
+  /// The earlier vocoder's files, removed from devices that installed it.
+  static const _retired = ['hifigan.onnx', 'denoiser.onnx'];
+
+  OrtSession? _fp, _voc;
 
   static Future<Directory> _dir() async {
     final base = await getApplicationSupportDirectory();
@@ -41,10 +49,9 @@ class OpenVoice {
   /// All three files present at their full size.
   static Future<bool> isInstalled() async {
     final d = await _dir();
-    const sizes = {'fp_ms.onnx': 187215347, 'hifigan.onnx': 56378934, 'denoiser.onnx': 8420151};
     for (final f in files) {
       final file = File(p.join(d.path, f));
-      if (!file.existsSync() || file.lengthSync() != sizes[f]) return false;
+      if (!file.existsSync() || file.lengthSync() != _sizes[f]) return false;
     }
     return true;
   }
@@ -91,8 +98,19 @@ class OpenVoice {
     final client = HttpClient()..userAgent = 'RafeeqAlDarb (tts voice)';
     _client = client;
     try {
+      for (final r in _retired) {
+        final old = File(p.join(d.path, r));
+        if (old.existsSync()) old.deleteSync();
+      }
       for (final f in files) {
         final target = File(p.join(d.path, f));
+        // A file already complete (fp_ms from the earlier pack) is kept:
+        // moving to the new vocoder costs 73 MB, not 261.
+        if (target.existsSync() && target.lengthSync() == _sizes[f]) {
+          done += _sizes[f]!;
+          onProgress?.call(done, totalBytes);
+          continue;
+        }
         final part = File('${target.path}.part');
         final req = await client.getUrl(Uri.parse(urlFor(f)));
         final res = await req.close();
@@ -145,8 +163,7 @@ class OpenVoice {
     OrtSession open(String f) =>
         OrtSession.fromFile(File(p.join(d.path, f)), OrtSessionOptions());
     _fp = open('fp_ms.onnx');
-    _voc = open('hifigan.onnx');
-    _den = open('denoiser.onnx');
+    _voc = open('vocos44.onnx');
   }
 
   /// Loads the three models ahead of the first «استماع», so the wait is
@@ -159,8 +176,7 @@ class OpenVoice {
   Future<void> release() async {
     _fp?.release();
     _voc?.release();
-    _den?.release();
-    _fp = _voc = _den = null;
+    _fp = _voc = null;
   }
 
   /// Diacritised Arabic -> mono float samples at [sampleRate].
@@ -199,22 +215,15 @@ class OpenVoice {
     }
 
     final melIn = OrtValueTensor.createTensorWithDataList(flat, [1, 80, t]);
-    final waveOut = (await _voc!.runAsync(run, {'input': melIn}))!;
+    final strength =
+        OrtValueTensor.createTensorWithDataList(Float32List.fromList([0.005]), [1]);
+    final waveOut =
+        (await _voc!.runAsync(run, {'mel_spec': melIn, 'denoise': strength}))!;
     melIn.release();
-    final wave = ((waveOut.first!.value as List)[0] as List)[0] as List;
-    final audio = Float32List.fromList([for (final s in wave) (s as num).toDouble()]);
-    for (final v in waveOut) {
-      v?.release();
-    }
-
-    final a = OrtValueTensor.createTensorWithDataList(audio, [1, audio.length]);
-    final strength = OrtValueTensor.createTensorWithDataList(Float64List.fromList([0.005]), [1]);
-    final denOut = (await _den!.runAsync(run, {'audio': a, 'strength': strength}))!;
-    a.release();
     strength.release();
-    final clean = (denOut.first!.value as List)[0] as List;
-    final out = Float32List.fromList([for (final s in clean) (s as num).toDouble()]);
-    for (final v in denOut) {
+    final wave = (waveOut.first!.value as List)[0] as List; // [1][S]
+    final out = Float32List.fromList([for (final s in wave) (s as num).toDouble()]);
+    for (final v in waveOut) {
       v?.release();
     }
     run.release();
