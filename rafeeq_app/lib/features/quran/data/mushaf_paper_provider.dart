@@ -33,7 +33,11 @@ const nightInk = Color(0xFFE8E0CC);
 /// page (status bar, page-number band) are the page's colour too — a white
 /// band under a night page glares. Null keeps the app's own background.
 Color? mushafGround(MushafPaper p, {required bool imageMode, required bool darkPage}) {
-  if (!imageMode || darkPage) return null;
+  if (!imageMode) return null;
+  // A printing whose scans are black pages (Madinah night) sits on black:
+  // the app's light ground showed as a pale band under the page in
+  // landscape, where the page scrolls and the strip below it is visible.
+  if (darkPage) return const Color(0xFF000000);
   return switch (p) {
     MushafPaper.normal => null,
     MushafPaper.warm => warmPaper,
