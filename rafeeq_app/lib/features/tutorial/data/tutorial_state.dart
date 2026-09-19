@@ -66,3 +66,12 @@ void endTutorial(WidgetRef ref) {
   markTutorialSeen(ref.read(sharedPrefsProvider));
   ref.read(tutorialRunningProvider.notifier).state = false;
 }
+
+/// «ممكن تحط دليل تعامل مع التطبيق بحيث يبقى واحد سريع والتاني تفصيلي».
+/// The quick tour takes the app screen by screen - what each is for, framed
+/// on its most important part; the detailed one goes feature by feature. The
+/// first run gets the quick one.
+enum TutorialMode { quick, detailed }
+
+final tutorialModeProvider =
+    StateProvider<TutorialMode>((ref) => TutorialMode.quick);

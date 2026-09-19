@@ -848,7 +848,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // mushaf keeps the whole screen — «مش تاكل اي حاجة من الشاشة».
                 if (_pageFillScreen && !isLandscape)
                   MushafChrome(
-                    visible: _chromeVisible,
+                    visible: _chromeVisible || ref.watch(tutorialRunningProvider),
                     mt: resolveMushafTheme(ref.watch(mushafThemeProvider),
                         Theme.of(context).brightness),
                     surahName: (edition?.hafsPagination ?? true)

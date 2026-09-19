@@ -11,6 +11,7 @@
 /// spotlight rather than pointing at nothing.
 library;
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 /// The ids the tour knows how to point at. String constants rather than bare
@@ -93,9 +94,32 @@ Rect? anchorRect(String id) {
   if (context == null) return null;
   final box = context.findRenderObject();
   if (box is! RenderBox || !box.hasSize) return null;
+  if (!_isShowing(box)) return null;
   final origin = box.localToGlobal(Offset.zero);
   final rect = origin & box.size;
   // A card scrolled mostly off screen is worse to point at than nothing.
   if (rect.height <= 0 || rect.width <= 0) return null;
   return rect;
+}
+
+/// Whether [box] is actually on the glass.
+///
+/// «التوتوريال بيشاور على حاجات فاضية». A widget can be mounted, laid out and
+/// measured while nothing of it is visible: the mushaf toolbar faded to
+/// opacity 0 until the page is tapped, an Offstage child, a section folded
+/// shut. The tour framed those rectangles anyway - an ornate frame around
+/// empty page. Any ancestor that hides it now makes the stop skip (or, for
+/// the mushaf, the tour shows the toolbar first; see `QuranScreen`).
+bool _isShowing(RenderBox box) {
+  RenderObject? node = box;
+  while (node != null) {
+    if (node is RenderOffstage && node.offstage) return false;
+    if (node is RenderOpacity && node.opacity == 0) return false;
+    if (node is RenderAnimatedOpacity && node.opacity.value == 0) return false;
+    if (node is RenderSliverAnimatedOpacity && node.opacity.value == 0) {
+      return false;
+    }
+    node = node.parent;
+  }
+  return true;
 }

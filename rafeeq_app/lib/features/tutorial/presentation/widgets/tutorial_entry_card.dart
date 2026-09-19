@@ -50,11 +50,32 @@ class TutorialEntryCard extends ConsumerWidget {
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: scheme.onSurfaceVariant),
             ),
-            trailing: FilledButton.tonalIcon(
-              onPressed: () =>
-                  ref.read(tutorialRunningProvider.notifier).state = true,
-              icon: const Icon(Icons.play_arrow_rounded, size: 18),
-              label: Text('tutorial.play_now'.tr()),
+          ),
+          // Two tours: screen by screen, or feature by feature.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.gold,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () => _start(ref, TutorialMode.quick),
+                    icon: const Icon(Icons.bolt_rounded, size: 18),
+                    label: Text('tutorial.quick_tour'.tr()),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _start(ref, TutorialMode.detailed),
+                    icon: const Icon(Icons.list_alt_rounded, size: 18),
+                    label: Text('tutorial.detailed_tour'.tr()),
+                  ),
+                ),
+              ],
             ),
           ),
           Divider(
@@ -84,4 +105,9 @@ class TutorialEntryCard extends ConsumerWidget {
       ),
     );
   }
+}
+
+void _start(WidgetRef ref, TutorialMode mode) {
+  ref.read(tutorialModeProvider.notifier).state = mode;
+  ref.read(tutorialRunningProvider.notifier).state = true;
 }

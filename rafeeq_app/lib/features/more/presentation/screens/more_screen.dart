@@ -17,7 +17,6 @@ import '../../../hajj/presentation/hajj_screen.dart';
 import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
-import '../../../tutorial/data/tutorial_state.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 import '../widgets/sync_account_card.dart';
 import '../../../support/presentation/screens/support_screen.dart';

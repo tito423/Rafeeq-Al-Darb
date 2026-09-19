@@ -1,4 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// The tour's running flag, re-exported so a screen that already imports this
+// file (QuranScreen, at its length ceiling) can show its toolbar while the
+// tour points at it without another import.
+export '../../features/tutorial/data/tutorial_state.dart' show tutorialRunningProvider;
 
 /// `AppShell`'s bottom-nav tab indices, named — P3‑16 (inserting the new
 /// "الصلاة" tab between Quran and Azkar) silently broke a hardcoded `= 3`

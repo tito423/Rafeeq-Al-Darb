@@ -86,11 +86,14 @@ class SettingsBody extends ConsumerWidget {
           CollapsibleSection(
             title: 'settings.theme'.tr(),
             icon: Icons.palette_outlined,
+            // The tour frames the section's header, which is always shown -
+            // not the chips inside, which are folded away until it opens.
+            tourAnchor: TourAnchor.settingsTheme,
             children: [
               // A Wrap (not SegmentedButton) so longer translated labels never
               // clip — matches the language selector above.
               TutorialAnchor(
-                id: TourAnchor.settingsTheme,
+                id: 'settings_theme_chips',
                 child: Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -472,11 +475,15 @@ class CollapsibleSection extends StatefulWidget {
   /// «حط أيقونات شكلها جميل جنب رؤوس القوائم … وخليها انيميتد».
   final IconData? icon;
 
+  /// A tour anchor for the whole section (header included).
+  final String? tourAnchor;
+
   const CollapsibleSection({
     super.key,
     required this.title,
     required this.children,
     this.icon,
+    this.tourAnchor,
   });
 
   @override
@@ -489,6 +496,12 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
 
   @override
   Widget build(BuildContext context) {
+    final body = _build(context);
+    final anchor = widget.tourAnchor;
+    return anchor == null ? body : TutorialAnchor(id: anchor, child: body);
+  }
+
+  Widget _build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

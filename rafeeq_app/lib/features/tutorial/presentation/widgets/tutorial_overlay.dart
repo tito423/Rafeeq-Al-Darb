@@ -51,6 +51,12 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     with TickerProviderStateMixin {
   int _index = 0;
 
+  /// The tour being played, fixed when it starts.
+  late final List<TutorialChapter> _chapters =
+      ref.read(tutorialModeProvider) == TutorialMode.quick
+          ? quickTutorialChapters
+          : tutorialChapters;
+
   /// The stop currently **on screen**, which is not the same thing as
   /// [_index], the stop being moved to.
   ///
@@ -106,15 +112,15 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
   /// Open chapter [i]'s tab, then measure its target once that tab has had a
   /// frame to lay itself out.
   void _enter(int i) {
-    widget.onGoToTab(tutorialChapters[i].tab);
+    widget.onGoToTab(_chapters[i].tab);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
       // A part further down a scrolling screen is brought into view first,
       // then measured where it has come to rest.
-      final anchor = tutorialChapters[i].anchor;
+      final anchor = _chapters[i].anchor;
       if (anchor != null) await revealAnchor(anchor);
       if (!mounted || _index != i) return;
-      final next = _targetOf(tutorialChapters[i]);
+      final next = _targetOf(_chapters[i]);
       // A feature that is not on screen — a Home card switched off in
       // Settings — is skipped in the direction the reader was going, never
       // stood in for by a navigation button.
@@ -123,7 +129,7 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
         _lastIndex = i;
         final to = i + step;
         if (to < 0) return;
-        if (to >= tutorialChapters.length) {
+        if (to >= _chapters.length) {
           _finish();
           return;
         }
@@ -164,7 +170,7 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
   }
 
   void _next() {
-    if (_index >= tutorialChapters.length - 1) {
+    if (_index >= _chapters.length - 1) {
       _finish();
       return;
     }
@@ -191,7 +197,7 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final chapter = tutorialChapters[_shown];
+    final chapter = _chapters[_shown];
     final locale = context.locale.languageCode;
     final media = MediaQuery.of(context);
 
@@ -337,10 +343,10 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     return _ChapterBubble(
       chapter: chapter,
       index: _shown,
-      total: tutorialChapters.length,
+      total: _chapters.length,
       locale: locale,
       isFirst: _shown == 0,
-      isLast: _shown == tutorialChapters.length - 1,
+      isLast: _shown == _chapters.length - 1,
       onPrev: _shown == 0 ? null : _prev,
       onNext: _next,
       onSkip: _finish,

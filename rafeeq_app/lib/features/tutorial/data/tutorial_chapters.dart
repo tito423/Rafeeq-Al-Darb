@@ -150,3 +150,30 @@ const tutorialChapters = <TutorialChapter>[
       AppColors.gold,
       anchor: TourAnchor.settingsSources),
 ];
+
+/// The quick tour: one stop per screen, each an overview of that screen,
+/// framed on the part a newcomer needs first («شاشة شاشة ويشرح نبذة عنها
+/// ويشاور على أهم اللي فيها»).
+const quickTutorialChapters = <TutorialChapter>[
+  TutorialChapter('welcome', AppTab.home, Icons.mosque_rounded, AppColors.gold),
+  TutorialChapter('quick_home', AppTab.home, Icons.home_rounded, AppColors.gold,
+      anchor: TourAnchor.homeClock),
+  TutorialChapter('quick_quran', AppTab.quran, Icons.menu_book_rounded,
+      _quranGold,
+      anchor: TourAnchor.quranJump),
+  TutorialChapter('quick_prayer', AppTab.prayer, Icons.explore_rounded,
+      _prayerViolet,
+      anchor: TourAnchor.qiblaCompass),
+  TutorialChapter('quick_azkar', AppTab.azkar, Icons.auto_awesome_rounded,
+      _azkarGreen,
+      anchor: TourAnchor.azkarCategory),
+  TutorialChapter('quick_tasbeeh', AppTab.tasbeeh, Icons.radio_button_checked,
+      _tasbeehCopper,
+      anchor: TourAnchor.tasbeehTargets),
+  TutorialChapter('quick_library', AppTab.library, Icons.local_library_rounded,
+      _libraryTeal,
+      anchor: TourAnchor.libraryTabs),
+  TutorialChapter('quick_more', AppTab.more, Icons.menu_rounded,
+      AppColors.primarySoft,
+      anchor: TourAnchor.moreQuranAudio),
+];
