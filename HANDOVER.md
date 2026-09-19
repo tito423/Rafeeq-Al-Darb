@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-19 06:09 — IN PROGRESS — resume here**
+**2026-09-19 06:28 — IN PROGRESS — resume here**
 
-al-Wabil al-Sayyib: searched for a vowelled edition - Shamela 216 (Dar al-Hadith) measures 2 pct of letters marked, Shamela 18128 (Ataat al-Ilm) 4-18 pct across pages 20-250 (and is a modern critical edition with an editor apparatus); archive.org ASCII search found only unrelated Indonesian lectures. Not added; the reader needs 80 pct. Session also shipped (committed, not released): notification re-sort fix, Quran no-layer rendering, hajj gloss filter, travel + post-prayer adhkar, adhan text card, hadith animation (not yet seen - emulator went offline).
+RELEASED v3.38.0 (tag = HEAD 87be076, asset 277688439 B, v3.37.0 deleted). Contains the Quran no-layer fix (glyphs missing on owner's Honor, landscape p316; not reproducible on emulator GL - verify on phone), hajj gloss filter (155 paras), azkar travel/post-prayer, notification fixes, tasbih, adhan text card, hadith animation, fasting time card, recitation auto-retry. REMAINING owner list (in order): More section reorganisation into logical groups with rich cards (reminders out of settings, app theme collapsible, sync placement, about/sources at bottom); tutorial redesign (screen-by-screen + quick guide + detailed guide; it points at empty things); library search (author/title/with-without tashkeel/phrase, visual); library tabs visual redesign animated; landscape pinch-zoom in mushaf without breaking vertical scroll; remaining adhkar sections from an-Nawawi (waking, morning/evening, mosque, narrated...); mushaf picker subtitles too pale; reader LAST: in-reader quick switch device/open voice, open voice slow+shaky on phone, cancel voice download. Owner idea to answer: diacritise via i'rab of every word.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
