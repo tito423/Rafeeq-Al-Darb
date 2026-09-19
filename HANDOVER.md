@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-19 06:36 — IN PROGRESS — resume here**
+**2026-09-19 12:33 — IN PROGRESS — resume here**
 
-More tab regrouped (fe02815, seen on emulator); mushaf picker text contrast (dbe9c79). Released v3.38.0 before these two. NEXT in order: tutorial redesign (screen-by-screen overview + quick guide + detailed guide; check every anchor still exists after the More regroup); library search (author/title/tashkeel on-off/phrase, visual); library tabs redesign; landscape pinch-zoom (careful: Quran); remaining adhkar sections from an-Nawawi; reader last (quick voice switch in reader, open voice speed/quality on phone, cancel download). Owner idea pending an answer: diacritise via i'rab.
+RELEASED v3.39.0 (tag = HEAD f2daa15, 277725303 B, v3.38.0 deleted): quick+detailed tours, sign-in offer on first run, library search scopes/phrase/harakat, More regroup, onboarding readability. REMAINING: library tabs visual redesign; landscape pinch-zoom in mushaf; remaining adhkar sections; reader: in-reader voice switch, open voice speed/quality, cancel download.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
