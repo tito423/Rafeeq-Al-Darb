@@ -1,3 +1,5 @@
+import 'package:rafeeq_app/core/theme/app_font.dart';
+import 'package:rafeeq_app/core/theme/app_typography.dart';
 import '../core/widgets/arrow_scrollbar.dart';
 import '../core/utils/digits.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -42,6 +44,8 @@ class RafeeqApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final variant = ref.watch(themeControllerProvider);
+    // The reader's interface font; the themes below are built with it.
+    AppTypography.uiFamily = ref.watch(appFontProvider);
 
     // A new Hijri correction moves every planned fast by a day, so the
     // armed reminders are re-planned at once, not at the next launch.
@@ -66,7 +70,8 @@ class RafeeqApp extends ConsumerWidget {
     uiLanguageCode = localeCode;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(syncServiceProvider).init();
-      ref.read(selectedTranslationLangProvider.notifier)
+      ref
+          .read(selectedTranslationLangProvider.notifier)
           .followAppLocale(localeCode);
       // The strings Android renders itself — the three adhan notification
       // channels, the adhan alert's title/body/buttons, and the download
@@ -118,8 +123,10 @@ class RafeeqApp extends ConsumerWidget {
         // armed, and nothing else re-arms them while the app is closed.
         ref.read(fastingReminderProvider.notifier).loaded.then((s) {
           if (!s.anyOn) return;
-          rearmFastingReminders(ref.read(fastingReminderProvider),
-              ref.read(prayerAdjustmentsProvider).hijriOffsetDays);
+          rearmFastingReminders(
+            ref.read(fastingReminderProvider),
+            ref.read(prayerAdjustmentsProvider).hijriOffsetDays,
+          );
         });
         // Tasbih slots repeat daily on their own; re-arming here shifts the
         // rotation for the new day and re-words them in the new language.
@@ -133,9 +140,11 @@ class RafeeqApp extends ConsumerWidget {
           // The owner may have changed it while the corpus loaded.
           final now = ref.read(quoteReminderProvider);
           if (now <= 0) return;
-          await QuoteReminderService.instance
-              .reschedule(
-                  library: library, everyMinutes: now, locale: localeCode);
+          await QuoteReminderService.instance.reschedule(
+            library: library,
+            everyMinutes: now,
+            locale: localeCode,
+          );
         });
       }
     });
@@ -143,8 +152,16 @@ class RafeeqApp extends ConsumerWidget {
     // Resolve the active variant into MaterialApp's theme slots. Only `rgb`
     // needs the animated backdrop; the other three are plain.
     final (ThemeData light, ThemeData dark, ThemeMode mode) = switch (variant) {
-      ThemeVariant.system => (AppTheme.light(), AppTheme.dark(), ThemeMode.system),
-      ThemeVariant.light => (AppTheme.light(), AppTheme.dark(), ThemeMode.light),
+      ThemeVariant.system => (
+        AppTheme.light(),
+        AppTheme.dark(),
+        ThemeMode.system,
+      ),
+      ThemeVariant.light => (
+        AppTheme.light(),
+        AppTheme.dark(),
+        ThemeMode.light,
+      ),
       ThemeVariant.dark => (AppTheme.light(), AppTheme.dark(), ThemeMode.dark),
       ThemeVariant.rgb => (AppTheme.rgb(), AppTheme.rgb(), ThemeMode.dark),
     };

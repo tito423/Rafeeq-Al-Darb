@@ -1,3 +1,4 @@
+import '../widgets/app_font_picker.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -138,6 +139,12 @@ class SettingsBody extends ConsumerWidget {
           // الأساس». Both switches were here, but inside the appearance block
           // with no heading of their own, so nothing on the screen said
           // «شاشة البداية». They have a heading now.
+          // «كارت … بتغيير نوع الخط في البرنامج مع عرض شكل الاختيار فوري».
+          CollapsibleSection(
+            title: 'settings.font_section'.tr(),
+            icon: Icons.font_download_rounded,
+            children: const [AppFontPicker()],
+          ),
           CollapsibleSection(
             title: 'settings.splash_section'.tr(),
             icon: Icons.auto_awesome_rounded,

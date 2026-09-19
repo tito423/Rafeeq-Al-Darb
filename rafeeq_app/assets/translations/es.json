@@ -751,7 +751,11 @@
     "show_transliteration_desc": "Muestra la guía de pronunciación latina debajo de los versos árabes",
     "live_preview": "Vista previa en vivo",
     "transliteration_off_hint": "La transliteración latina está desactivada",
-    "splash_section": "Pantalla de inicio"
+    "splash_section": "Pantalla de inicio",
+    "font_section": "Fuente",
+    "font_modern": "Modernas",
+    "font_traditional": "Islámicas tradicionales",
+    "font_sample": "En el nombre de Allah comenzamos; Rafeeq te acompaña"
   },
   "downloads": {
     "title": "Descargas",

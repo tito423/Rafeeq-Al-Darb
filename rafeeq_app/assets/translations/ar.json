@@ -751,7 +751,11 @@
     "show_transliteration_desc": "عرض نطق الآيات بالحروف اللاتينية أسفل النص القرآني مباشرة",
     "live_preview": "معاينة حية للمظهر",
     "transliteration_off_hint": "النطق اللاتيني متوقف (مخصص لتسهيل القراءة لغير العرب)",
-    "splash_section": "شاشة البداية"
+    "splash_section": "شاشة البداية",
+    "font_section": "الخط",
+    "font_modern": "خطوط عصرية",
+    "font_traditional": "خطوط إسلامية تراثية",
+    "font_sample": "بسم الله نبدأ، ورفيق الدرب معك في كل خطوة"
   },
   "downloads": {
     "title": "التنزيلات",

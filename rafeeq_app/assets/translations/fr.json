@@ -751,7 +751,11 @@
     "show_transliteration_desc": "Afficher la prononciation en caractères latins sous les versets arabes",
     "live_preview": "Aperçu en direct",
     "transliteration_off_hint": "La translittération latine est désactivée",
-    "splash_section": "Écran de démarrage"
+    "splash_section": "Écran de démarrage",
+    "font_section": "Police",
+    "font_modern": "Modernes",
+    "font_traditional": "Islamiques traditionnelles",
+    "font_sample": "Au nom d'Allah nous commençons ; Rafeeq vous accompagne"
   },
   "downloads": {
     "title": "Téléchargements",

@@ -751,7 +751,11 @@
     "show_transliteration_desc": "Exibir guia de pronúncia latina sob os versículos em árabe",
     "live_preview": "Pré-visualização ao vivo",
     "transliteration_off_hint": "A transliteração latina está desativada",
-    "splash_section": "Tela de abertura"
+    "splash_section": "Tela de abertura",
+    "font_section": "Fonte",
+    "font_modern": "Modernas",
+    "font_traditional": "Islâmicas tradicionais",
+    "font_sample": "Em nome de Allah começamos; Rafeeq acompanha você"
   },
   "downloads": {
     "title": "Transferências",

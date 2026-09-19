@@ -751,7 +751,11 @@
     "show_transliteration_desc": "عربی آیات کے نیچے لاطینی حروف میں تلفظ دکھائیں",
     "live_preview": "ظاہری شکل کا فوری معائنہ",
     "transliteration_off_hint": "لاطینی تلفظ بند ہے (غیر عرب قارئین کے لیے بنایا گیا ہے)",
-    "splash_section": "ابتدائی اسکرین"
+    "splash_section": "ابتدائی اسکرین",
+    "font_section": "فونٹ",
+    "font_modern": "جدید",
+    "font_traditional": "روایتی اسلامی",
+    "font_sample": "اللہ کے نام سے آغاز، رفیق الدرب ہر قدم آپ کے ساتھ"
   },
   "downloads": {
     "title": "ڈاؤن لوڈز",

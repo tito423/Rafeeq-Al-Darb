@@ -751,7 +751,11 @@
     "show_transliteration_desc": "Display Latin pronunciation guide directly beneath Arabic verses",
     "live_preview": "Live Appearance Preview",
     "transliteration_off_hint": "Latin transliteration is off (designed for non-Arabic readers)",
-    "splash_section": "Splash screen"
+    "splash_section": "Splash screen",
+    "font_section": "Font",
+    "font_modern": "Modern",
+    "font_traditional": "Traditional Islamic",
+    "font_sample": "In the name of Allah we begin; Rafeeq is with you on the way"
   },
   "downloads": {
     "title": "Downloads",

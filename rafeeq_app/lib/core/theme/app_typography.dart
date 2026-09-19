@@ -11,28 +11,38 @@ abstract final class AppTypography {
   static const String quranFontFamily = 'AmiriQuran';
   static const String quranFontFamilyFallback = 'Amiri';
 
-  static TextStyle uiBold(double size, {Color? color}) => GoogleFonts.cairo(
-        fontSize: size,
-        fontWeight: FontWeight.w700,
-        color: color,
-        height: 1.35,
-      );
+  /// The interface face, set from `appFontProvider` by `RafeeqApp` before it
+  /// builds the themes (Settings > الخط). Cairo unless the reader chose.
+  static String uiFamily = 'Cairo';
 
-  static TextStyle uiSemibold(double size, {Color? color}) => GoogleFonts.cairo(
+  static TextStyle uiBold(double size, {Color? color}) => GoogleFonts.getFont(
+    uiFamily,
+    fontSize: size,
+    fontWeight: FontWeight.w700,
+    color: color,
+    height: 1.35,
+  );
+
+  static TextStyle uiSemibold(double size, {Color? color}) =>
+      GoogleFonts.getFont(
+        uiFamily,
         fontSize: size,
         fontWeight: FontWeight.w600,
         color: color,
         height: 1.35,
       );
 
-  static TextStyle uiMedium(double size, {Color? color}) => GoogleFonts.cairo(
-        fontSize: size,
-        fontWeight: FontWeight.w500,
-        color: color,
-        height: 1.4,
-      );
+  static TextStyle uiMedium(double size, {Color? color}) => GoogleFonts.getFont(
+    uiFamily,
+    fontSize: size,
+    fontWeight: FontWeight.w500,
+    color: color,
+    height: 1.4,
+  );
 
-  static TextStyle uiRegular(double size, {Color? color}) => GoogleFonts.cairo(
+  static TextStyle uiRegular(double size, {Color? color}) =>
+      GoogleFonts.getFont(
+        uiFamily,
         fontSize: size,
         fontWeight: FontWeight.w400,
         color: color,
@@ -44,21 +54,21 @@ abstract final class AppTypography {
     required double fontSize,
     Color color = AppColors.ink,
     double height = 1.9,
-  }) =>
-      TextStyle(
-        fontFamily: quranFontFamily,
-        package: null,
-        fontSize: fontSize,
-        color: color,
-        height: height,
-      );
+  }) => TextStyle(
+    fontFamily: quranFontFamily,
+    package: null,
+    fontSize: fontSize,
+    color: color,
+    height: height,
+  );
 
   /// Display style for headers (app bar titles).
   static TextStyle display({Color? color, double size = 20}) =>
       uiBold(size, color: color);
 
   static TextTheme apply(Brightness brightness) {
-    final base = GoogleFonts.cairoTextTheme(
+    final base = GoogleFonts.getTextTheme(
+      uiFamily,
       brightness == Brightness.dark
           ? const TextTheme(
               displayLarge: TextStyle(color: AppColors.textHigh),

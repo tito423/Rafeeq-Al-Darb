@@ -751,7 +751,11 @@
     "show_transliteration_desc": "Отображать транслитерацию латиницей под арабскими аятами",
     "live_preview": "Предпросмотр в реальном времени",
     "transliteration_off_hint": "Транслитерация латиницей отключена",
-    "splash_section": "Заставка"
+    "splash_section": "Заставка",
+    "font_section": "Шрифт",
+    "font_modern": "Современные",
+    "font_traditional": "Традиционные исламские",
+    "font_sample": "Во имя Аллаха начинаем; Рафик с вами в пути"
   },
   "downloads": {
     "title": "Загрузки",
