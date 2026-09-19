@@ -200,6 +200,13 @@ A change is done when **all** of these hold:
 - One release at a time. The owner wants the repo clean: «كل حاجة تبقى على
   نضافة». Delete the previous release **and its tag** before publishing the new
   one, unless told otherwise.
+- **Build the GitHub APK with `build_github_release.bat`**, never a bare
+  `flutter build apk`. It passes
+  `--dart-define=RAFEEQ_DONATION_URL=https://paypal.me/Tito320` and then
+  signs. The owner wants the PayPal link **only** in the GitHub build
+  (2026-09-19); `AppConfig.donationUrl` is empty in the source, so a build
+  without the define simply has no donation button. Check the Support
+  screen shows «ساهم في التكلفة» on the published APK.
 - `pubspec.yaml`'s `version:` is what the About card shows. **Bump it** — a
   release tagged `v3.2.0` while the About card said `3.0.0` shipped once.
 - Tag from `master`. `gh release create ... --target master`. A previous session
