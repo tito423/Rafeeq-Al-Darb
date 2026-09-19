@@ -896,3 +896,12 @@ is free and donation-supported, so he considers the NC terms met and asking
 the author unnecessary. That is his decision as the publisher; it is recorded
 here, with the facts, rather than argued again. If the app ever charges for
 anything, the NC phonetiser has to be replaced.
+
+## Interface fonts (added 2026-09-19)
+
+`rafeeq_app/assets/fonts/google_fonts/` - Cairo, Tajawal, Almarai, IBM Plex
+Sans Arabic, Noto Kufi Arabic, Changa, Alexandria, Amiri, Scheherazade New,
+Noto Naskh Arabic, Lateef, Markazi Text, Reem Kufi, El Messiri, Aref Ruqaa.
+Static TTFs from the Google Fonts CSS API (`scripts/fetch_app_fonts.py`).
+All are **SIL Open Font License 1.1** (text in `OFL.txt` beside them), which
+permits bundling and redistribution in an application. Risk: none known.
