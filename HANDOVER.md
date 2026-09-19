@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-19 01:28 — IN PROGRESS — resume here**
+**2026-09-19 06:09 — IN PROGRESS — resume here**
 
-Diacritiser research: CATT encoder-DECODER now running on the RTX 3050 (separate venv scratchpad/gpuenv, onnxruntime-gpu 1.20.2 + pip CUDA/cuDNN, CUDAExecutionProvider confirmed) over the same 10-book sample as the EO run; ~10 min/book (decodes to max length regardless of size), ETA 02:50. MEASURED: the 133 undiacritised books hold 84,026,566 non-Quran chars -> ~47 days of this GPU at 11,905 chars/576 s. So ED is impractical on this hardware whatever its accuracy; accuracy still being measured to decide whether renting a cloud GPU is worth asking the owner.
+al-Wabil al-Sayyib: searched for a vowelled edition - Shamela 216 (Dar al-Hadith) measures 2 pct of letters marked, Shamela 18128 (Ataat al-Ilm) 4-18 pct across pages 20-250 (and is a modern critical edition with an editor apparatus); archive.org ASCII search found only unrelated Indonesian lectures. Not added; the reader needs 80 pct. Session also shipped (committed, not released): notification re-sort fix, Quran no-layer rendering, hajj gloss filter, travel + post-prayer adhkar, adhan text card, hadith animation (not yet seen - emulator went offline).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
