@@ -109,7 +109,8 @@
     "undo": "Annuler",
     "reset_all": "Tout réinitialiser",
     "download": "Télécharger",
-    "script": "latin"
+    "script": "latin",
+    "ok": "OK"
   },
   "nav": {
     "home": "Accueil",
@@ -550,7 +551,10 @@
       "19": "Avant de manger et de boire",
       "20": "Après la prière"
     },
-    "sleep_reminder": "Rappel des invocations du coucher"
+    "sleep_reminder": "Rappel des invocations du coucher",
+    "tasbeeh_custom": "Personnalisé",
+    "tasbeeh_custom_title": "Nombre personnalisé",
+    "tasbeeh_custom_hint": "Saisissez un nombre"
   },
   "prayer": {
     "fajr": "Fajr",

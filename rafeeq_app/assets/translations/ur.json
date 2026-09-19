@@ -109,7 +109,8 @@
     "undo": "واپس لیں",
     "reset_all": "سب ری سیٹ کریں",
     "download": "ڈاؤن لوڈ",
-    "script": "arabic"
+    "script": "arabic",
+    "ok": "ٹھیک ہے"
   },
   "nav": {
     "home": "مرکزی",
@@ -550,7 +551,10 @@
       "19": "کھانے پینے سے پہلے",
       "20": "نماز کے بعد"
     },
-    "sleep_reminder": "سونے کے اذکار کی یاد دہانی"
+    "sleep_reminder": "سونے کے اذکار کی یاد دہانی",
+    "tasbeeh_custom": "اپنی مرضی",
+    "tasbeeh_custom_title": "اپنی مرضی کی تعداد",
+    "tasbeeh_custom_hint": "تعداد لکھیں"
   },
   "prayer": {
     "fajr": "فجر",

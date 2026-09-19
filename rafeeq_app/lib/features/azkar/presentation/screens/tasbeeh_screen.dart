@@ -1,5 +1,6 @@
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (ltr/rtl) the long-dhikr cards need.
+import 'package:vibration/vibration.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart' show ratio;
@@ -51,6 +52,10 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   bool _hapticEnabled = true;
   static const _kHapticPref = 'tasbeeh_haptic_enabled';
 
+  /// The reader's own round size, if they set one - no upper limit.
+  int? _customTarget;
+  static const _kCustomPref = 'tasbeeh_custom_target';
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +64,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
         setState(() {
           _hapticEnabled = prefs.getBool(_kHapticPref) ?? true;
           _total = prefs.getInt('tasbeeh_total') ?? 0;
+          _customTarget = prefs.getInt(_kCustomPref);
         });
       }
     });
@@ -96,6 +102,10 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     final hitMilestone = _target == null
         ? _count > 0 && _count % tasbeehCelebrateEvery == 0
         : (_target! % tasbeehCelebrateEvery == 0 && _count == _target);
+    if (_hapticEnabled && tasbeehStrongBuzz(_count)) {
+      // One second at full strength, so it is felt through a pocket.
+      Vibration.vibrate(duration: 1000, amplitude: 255);
+    }
     if (_hapticEnabled) {
       if (hitMilestone) {
         _celebrate
@@ -150,6 +160,39 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       _count = 0;
       _rounds = 0;
     });
+  }
+
+  Future<void> _askCustomTarget() async {
+    final ctrl = TextEditingController(
+        text: _customTarget == null ? '' : '$_customTarget');
+    final n = await showDialog<int>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('azkar.tasbeeh_custom_title'.tr()),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(hintText: 'azkar.tasbeeh_custom_hint'.tr()),
+          onSubmitted: (v) => Navigator.of(ctx).pop(int.tryParse(v)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('common.cancel'.tr()),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(int.tryParse(ctrl.text)),
+            child: Text('common.ok'.tr()),
+          ),
+        ],
+      ),
+    );
+    if (n == null || n <= 0) return;
+    setState(() => _customTarget = n);
+    SharedPreferences.getInstance().then((p) => p.setInt(_kCustomPref, n));
+    _selectTarget(n);
   }
 
   void _clearAll() {
@@ -229,6 +272,17 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                             selected: _target == t,
                             onSelected: (_) => _selectTarget(t),
                           ),
+                        // «مربع لعدد مخصص مالوش سقف».
+                        ChoiceChip(
+                          avatar: const Icon(Icons.edit_rounded, size: 16),
+                          label: Text(_customTarget == null ||
+                                  tasbeehTargets.contains(_customTarget)
+                              ? 'azkar.tasbeeh_custom'.tr()
+                              : _targetLabel(_customTarget)),
+                          selected: _target != null &&
+                              !tasbeehTargets.contains(_target),
+                          onSelected: (_) => _askCustomTarget(),
+                        ),
                       ],
                     ),
                   ),

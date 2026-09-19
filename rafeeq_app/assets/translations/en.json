@@ -109,7 +109,8 @@
     "undo": "Undo",
     "reset_all": "Reset all",
     "download": "Download",
-    "script": "latin"
+    "script": "latin",
+    "ok": "OK"
   },
   "nav": {
     "home": "Home",
@@ -550,7 +551,10 @@
       "19": "Before eating and drinking",
       "20": "After the prayer"
     },
-    "sleep_reminder": "Sleep adhkar reminder"
+    "sleep_reminder": "Sleep adhkar reminder",
+    "tasbeeh_custom": "Custom",
+    "tasbeeh_custom_title": "Custom count",
+    "tasbeeh_custom_hint": "Enter a number"
   },
   "prayer": {
     "fajr": "Fajr",

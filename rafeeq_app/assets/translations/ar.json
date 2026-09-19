@@ -109,7 +109,8 @@
     "undo": "تراجع",
     "reset_all": "تصفير الكل",
     "download": "تنزيل",
-    "script": "arabic"
+    "script": "arabic",
+    "ok": "حسنًا"
   },
   "nav": {
     "home": "الرئيسية",
@@ -550,7 +551,10 @@
       "19": "التسمية عند الأكل والشرب",
       "20": "الأذكار بعد الصلاة"
     },
-    "sleep_reminder": "منبّه أذكار النوم"
+    "sleep_reminder": "منبّه أذكار النوم",
+    "tasbeeh_custom": "مخصص",
+    "tasbeeh_custom_title": "عدد مخصص",
+    "tasbeeh_custom_hint": "اكتب العدد"
   },
   "prayer": {
     "fajr": "الفجر",

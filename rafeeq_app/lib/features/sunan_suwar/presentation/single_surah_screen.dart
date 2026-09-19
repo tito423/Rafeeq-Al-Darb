@@ -483,7 +483,7 @@ class _ReaderBar extends StatelessWidget {
                     onPressed: onToggleAutoScroll,
                   ),
                   IconButton(
-                    tooltip: 'quran.layout_toggle'.tr(),
+                    tooltip: 'quran.display_layout'.tr(),
                     icon: Icon(
                       switch (layout) {
                         QuranTextLayout.page => Icons.view_agenda_outlined,

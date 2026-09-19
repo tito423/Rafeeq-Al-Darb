@@ -57,3 +57,11 @@ const List<int?> tasbeehTargets = [33, 100, 1000, null];
 /// Milestone every N counts triggers the full-screen celebration — the
 /// owner asked specifically for 1000 / 1000n.
 const tasbeehCelebrateEvery = 1000;
+
+/// Whether this count earns the long, strong buzz rather than a tap.
+///
+/// «أول ما يوصل ٣٣ سواء منفردة أو مضاعفاتها قبل المية — ٣٣، ٦٦، ٩٩، ١٠٠،
+/// ومضاعفات المية — يعمل هزاز شديد». So: 33, 66 and 99, and every hundred.
+/// Past the first hundred only the hundreds buzz, as he listed them.
+bool tasbeehStrongBuzz(int count) =>
+    count > 0 && ((count < 100 && count % 33 == 0) || count % 100 == 0);

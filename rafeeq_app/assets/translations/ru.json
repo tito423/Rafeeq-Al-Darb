@@ -109,7 +109,8 @@
     "undo": "Отменить",
     "reset_all": "Сбросить всё",
     "download": "Загрузить",
-    "script": "latin"
+    "script": "latin",
+    "ok": "ОК"
   },
   "nav": {
     "home": "Главная",
@@ -550,7 +551,10 @@
       "19": "Перед едой и питьём",
       "20": "После молитвы"
     },
-    "sleep_reminder": "Напоминание об азкарах перед сном"
+    "sleep_reminder": "Напоминание об азкарах перед сном",
+    "tasbeeh_custom": "Своё",
+    "tasbeeh_custom_title": "Своё число",
+    "tasbeeh_custom_hint": "Введите число"
   },
   "prayer": {
     "fajr": "Фаджр",

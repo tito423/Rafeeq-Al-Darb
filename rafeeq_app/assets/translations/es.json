@@ -109,7 +109,8 @@
     "undo": "Deshacer",
     "reset_all": "Restablecer todo",
     "download": "Descargar",
-    "script": "latin"
+    "script": "latin",
+    "ok": "Aceptar"
   },
   "nav": {
     "home": "Inicio",
@@ -550,7 +551,10 @@
       "19": "Antes de comer y beber",
       "20": "Después de la oración"
     },
-    "sleep_reminder": "Recordatorio de los adhkar del sueño"
+    "sleep_reminder": "Recordatorio de los adhkar del sueño",
+    "tasbeeh_custom": "Personalizado",
+    "tasbeeh_custom_title": "Cantidad personalizada",
+    "tasbeeh_custom_hint": "Escribe un número"
   },
   "prayer": {
     "fajr": "Fayr",

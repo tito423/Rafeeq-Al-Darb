@@ -31,18 +31,44 @@ class AyahWashPainter extends CustomPainter {
     if (r == null || r.$2 <= r.$1) return;
     final ro = textKey.currentContext?.findRenderObject();
     if (ro is! RenderParagraph || !ro.hasSize) return;
-    final paint = Paint()..color = color;
-    for (final b in ro.getBoxesForSelection(
+    final boxes = ro.getBoxesForSelection(
       TextSelection(baseOffset: r.$1, extentOffset: r.$2),
       boxHeightStyle: BoxHeightStyle.max,
-    )) {
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(b.toRect().inflate(1.5), const Radius.circular(6)),
-        paint,
-      );
-    }
+    );
+    canvas.drawPath(washPath(boxes.map((b) => b.toRect())), Paint()..color = color);
   }
 
   @override
   bool shouldRepaint(AyahWashPainter old) => true;
+}
+
+/// The wash as ONE shape.
+///
+/// «لما بيظلل الآية بيبان خط غريب تحت الآية». Each glyph box used to be
+/// drawn as its own translucent rounded rectangle. Inflated so the wash
+/// breathes, the boxes of two consecutive lines overlap by a few pixels, and
+/// a line can come back as several boxes; wherever two overlapped, the
+/// translucent colour was laid down twice and showed as a darker band - the
+/// line the owner saw under every verse that wraps.
+///
+/// Now each line's boxes are merged into one rectangle, and all of them go
+/// into a single path filled once (non-zero winding: the overlap is inside
+/// the shape once, not twice).
+@visibleForTesting
+Path washPath(Iterable<Rect> boxes) {
+  final lines = <Rect>[];
+  for (final b in boxes) {
+    final i = lines.indexWhere(
+        (l) => (l.center.dy - b.center.dy).abs() < b.height / 2);
+    if (i < 0) {
+      lines.add(b);
+    } else {
+      lines[i] = lines[i].expandToInclude(b);
+    }
+  }
+  final path = Path()..fillType = PathFillType.nonZero;
+  for (final l in lines) {
+    path.addRRect(RRect.fromRectAndRadius(l.inflate(1.5), const Radius.circular(6)));
+  }
+  return path;
 }
