@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-19 13:13 — IN PROGRESS — resume here**
+**2026-09-19 15:47 — IN PROGRESS — resume here**
 
-RELEASED v3.40.0 (tag = HEAD 3640152, 277807223 B, v3.39.0 deleted). ROOT CAUSE of missing ayah words found: SvgPicture picture strategy re-tessellated at large scale, Impeller dropped word paths (reproduced by 2x zoom on p316); fixed with RenderingStrategy.raster (trap #48). All items from owner's big list now done except: quality of the enhanced voice itself (shaky) - not addressed; tap on empty area under a short mushaf page does not show toolbar (small, noted). Owner to verify on Honor: p316 landscape + zoom.
+QUOTA 97 pct - stopping. Tasbih jump fixed (committed, not released, not re-filmed). OWNER ASKED, NOT STARTED, do these then release: (1) REMOVE the whole-text adhan display entirely for any adhan without a verified synced timeline - rule for every custom adhan too (AdhanFullText / _wholeText in azan_player_screen.dart). (2) Mushaf pages must ALWAYS turn right-to-left, also in Latin locales (PageView reverse/direction in quran_screen / page_turn). (3) Bundle the nine hadith books (hadith.db) and the mutoon INTO the app - their download fails when the app goes to background; check what the hadith tab gate and mutoon downloads use.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
