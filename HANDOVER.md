@@ -6,27 +6,48 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-19 |
-| **Released** | **v3.42.0** — see the release notes on GitHub. Built with `build_github_release.bat` (carries the «ادعم التطبيق» PayPal link; any other build has none) |
+| **Last updated** | 2026-09-20 (handover) |
+| **Released** | **v3.42.0**, tag at commit `6e56cc2b`, asset `RafeeqAlDarb-v3.42.0.apk` **339,969,649 B**. One release, one tag. **HEAD is 2 commits ahead of the tag** (`6c9f10f9` removed the night printing, `6492702a` added the highlight tools) — neither is released |
 | **App version** | `pubspec.yaml` `3.42.0+44`; `AboutScreen.appVersion` `3.42.0` |
-| **Tests** | `flutter analyze lib test` clean · `flutter test` **433 passed** (2026-09-19) |
-| **Store kit** | `store/google_play/` — 8 captioned screenshots, feature graphic, Arabic/English listing, README. Rebuild with `scripts/build_store_screenshots.py` |
+| **Verified 2026-09-20** | `flutter analyze lib test` → **No issues found** · `flutter test` → **433 passed, 2 skipped** (the two `@Tags(['export'])` pipeline tests, skipped by `dart_test.yaml`) · hosted content **10/10** answered a range request: `hadith/hadith.zip`, a book, a page of each of the 4 remaining printings, `hafs/kfqc/svg/050.svg`, `legal/privacy.html`, `tts/open_ar_v1/vocos44.onnx`, `quran/translations/en.json.gz` |
+| **Measured 2026-09-20** | 7 locales × **1,666** keys, identical · **5** mushaf printings (`hafs_kfqc`, `tajweed_color`, `madinah_gold`, `qatar`, `kuwait`) · **213** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded and every one of them naming its grader · bundled `hadith.zip` **22,235,941 B** · **33** built-in books **7,550,754 B** · **53** UI font files **9,294,252 B** |
+| **On the owner's phone** | he installs from GitHub Releases, so he has **v3.42.0**. Everything after it (night printing removed) is unreleased |
 
-## WHAT 3.42.0 CHANGED (2026-09-19, all seen on emulator-5554)
+## WHAT 3.42.0 SHIPPED (2026-09-19, all seen on emulator-5554)
 
-* **Built into the APK now:** `assets/data/hadith.zip` (22,235,941 B, unpacked on first open to `databases/hadith.db` with the v3 stamp) and `assets/data/builtin_books/` — the 29 hadith-category books, the three tajweed mutoon and the Hajj manual, installed into the library by `LibraryApiService.installBuiltinBooks` (8 s after the first frame; decode in an isolate). `test/builtin_books_test.dart` holds sizes to the catalogue.
-* **Downloads:** the enhanced voice goes through `DownloadManager` (WorkManager), so it continues in the background; `DownloadManager.enqueue` re-attaches to a still-running platform task after a restart.
-* **Home:** the prayer card draws at once from `LocationService.lastSaved` and refreshes behind it (was a 15 s GPS wait); date sheets parsed in isolates and pre-warmed; header card has theme / language / support / settings buttons.
+* **Built into the APK:** `hadith.zip` (unpacked on first open to `databases/hadith.db` with the v3 stamp) and `assets/data/builtin_books/` — the 29 hadith-category books, the three tajweed mutoon and the Hajj manual, installed by `LibraryApiService.installBuiltinBooks` 8 s after the first frame, decoded in an isolate.
+* **Downloads:** the enhanced voice goes through `DownloadManager` (WorkManager), so it continues in the background; `enqueue` re-attaches to a running platform task after a restart.
+* **Home:** the prayer card draws at once from `LocationService.lastSaved` and refreshes behind it (was a 15 s GPS wait); date sheets parsed in isolates and pre-warmed; header carries theme / language / support / settings buttons.
 * **«المزيد»:** seven collapsible `MoreGroup` cards; settings sections are cards; «شرح ميزات واستخدام التطبيق».
-* **Reader:** «استماع» asks page or whole book, and whole-book mode turns pages itself. New library tab «مسموعة» (83 books).
-* **ListenTextButton** on tajweed lessons: offered only where the passage is >= 80% vowelled (same measure as the library) and never speaks Qur'an, inline citations included. Hajj (16-71%) and Tamhid (0-1%) are NOT vowelled, so they get no button — the owner decided not to pursue auto-diacritisation or pre-rendered audio (2026-09-19).
-* **Mushaf** turns right-to-left in every language. **Adhan** shows text only for a recording with a verified timeline. **Fonts:** 15 interface fonts in Settings > الخط. **Hajj:** header overflow fixed, A-/A+ text size. **Search:** title/author match word by word («ابن القيم»).
-* **Privacy policy** updated and re-uploaded (`scripts/r2_upload_privacy.py`): bundled content, the voice download, the PayPal button.
+* **Reader:** «استماع» asks page or whole book and turns pages itself; new library tab «مسموعة» (83 books); `ListenTextButton` on tajweed lessons, only where the passage is ≥ 80% vowelled, and never speaking Qur'an.
+* **Mushaf** turns right-to-left in every language. **Adhan** shows text only with a verified timeline. **Fonts:** 15 interface fonts. **Hajj:** header overflow fixed, A−/A+ size. **Search:** title/author matched word by word.
+* **Support:** «ادعم التطبيق» (never «تبرع»), amount chosen by the reader, link injected only by `build_github_release.bat`.
+* Privacy policy, About, README and the Google Play kit under `store/google_play/` were brought up to date.
 
-## OPEN
+## AFTER THE RELEASE, UNRELEASED
 
-* Not seen on a real phone: the «ابن القيم» search on the search screen (unit-tested on the real catalogue only — the emulator cannot type Arabic).
-* In image mode, very fast adb flings (120 ms) did not turn the page on the emulator while a 500 ms drag did. Unconfirmed with a finger.
+* `6c9f10f9` — **the Madinah night printing is gone** (editions.json, cover, Sources entry, 7 locales, the fit test). Seen on emulator-5554: the sheet lists five printings.
+* `6492702a` — **the per-printing ayah-map tools**, committed but **not installed in the app**: `scripts/printing_ayah_map.py`, `scripts/build_printing_map.py`, `scripts/install_printing_maps.py`, `scripts/audit_highlight.py`, `scripts/audit_ayah_markers.py`, plus `test/export_highlight_rects_test.dart` and `dart_test.yaml`.
+
+## THE HIGHLIGHT PROBLEM (the owner's top priority)
+
+He photographed the highlight sitting off the text in several printings and said it is «أهم من التطبيق نفسه». What was established, with pictures:
+
+* The four scans (`tajweed_color`, `madinah_gold`, `qatar`, `kuwait`) do **not** have coordinates of their own. They borrow the Madinah (`hafs_kfqc`) polygons through a per-page affine. **The printings do not break their lines at the same words, and do not put their banners on the same lines** — Qatar sets al-Nisa's banner at the foot of page 76 where Madinah opens page 77 with it. So a borrowed highlight can end a word, or a whole line, away from the printed marker.
+* `scripts/build_printing_map.py` builds each printing its **own** map from its own scan: the 15 baselines fitted on the scan's ink (with printed ruling removed), every ayah marker found by template match, each ayah running from the previous marker to its own. A page is accepted only if the marker count equals the page's ayah count, each ayah ends within one line of Madinah's, every ring has ink under it, each line's dense core sits inside its band, the rings cover ≥ 97% of the text ink, and each ayah's length matches Madinah's (scaled by the page's own density). **A page that fails gets no entry, so it gets no highlight at all.**
+* **Numbers are NOT current.** The last full 604-page run (qatar 591, tajweed 556, gold 524, kuwait 336) was made **before** the last three fixes (ruling removal, the line-core vertical check, and restricting header lines to real surah starts). After those fixes only pages 1–60 were run: **qatar 56/58, gold 55/58, tajweed 47/58**. Everything must be re-run from scratch.
+* **Never trust the pipeline's own numbers alone** — every conclusion this session came from drawing the map over the real scan and looking at it.
+
+## OPEN, IN THE OWNER'S ORDER
+
+1. Finish the per-printing maps, install them, and check on the device in every paper colour and both orientations.
+2. In the TEXT mushaf: move the basmala out of the first ayah onto its own centred line above it; count it as an ayah only in al-Fatiha; never print it in at-Tawbah (the recitation highlight currently marks basmala + ayah 1 as one).
+3. Pinch-zoom in the mushaf, and a tap back to normal size.
+4. The mushaf toolbar: surah name on the right, juz on the left, page number at the bottom, no duplicate of a number the page already prints.
+5. Library tab titles are clipped, and must stay inside their pill when the chosen font is large.
+6. «المزيد»: a card that opens onto cards should colour them like itself, make them narrower, and style them like the Sources cards.
+7. The privacy policy says «لا يطلب حسابًا» — reword: no account is needed, sign-in is optional and only for sync.
+8. Review site stage 2: the nine books with grade and grader per hadith, then the library, at https://tito423.github.io/rafeeq-review/
 
 ## STATE AS OF 2026-09-17 — handover (v3.30.0 published)
 
