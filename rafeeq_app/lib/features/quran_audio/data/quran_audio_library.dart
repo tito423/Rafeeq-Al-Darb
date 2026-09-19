@@ -263,6 +263,9 @@ class QuranAudioLibrary extends ChangeNotifier {
     ));
   }
 
+  /// Automatic re-queues per surah this run (see the failed branch below).
+  final _autoRetries = <String, int>{};
+
   void _onUpdate(TaskUpdate u) {
     if (u.task.group != DownloadEngine.groupQuranAudio) return;
     final id = _parseTaskId(u.task.taskId);
@@ -287,6 +290,28 @@ class QuranAudioLibrary extends ChangeNotifier {
             SurahAudioState.running, _status[key]?.progress ?? 0);
       } else if (status == TaskStatus.failed || status == TaskStatus.notFound) {
         _status[key] = const SurahAudioStatus(SurahAudioState.failed);
+        // «ساعات بيتعذّر إكمال تحميل التلاوة». The plugin's own three
+        // retries come seconds apart, which a dropped connection on a long
+        // 114-surah download outlasts. A failed surah (not a missing one -
+        // `notFound` is the server saying it has no such file) is queued
+        // again a minute later, at most twice per run, so a passing outage
+        // does not leave holes in a recitation.
+        final e = _entries[m];
+        final tries = _autoRetries[key] ?? 0;
+        if (status == TaskStatus.failed &&
+            e != null &&
+            !e.paused &&
+            e.pending.contains(s) &&
+            tries < 2) {
+          _autoRetries[key] = tries + 1;
+          Future<void>.delayed(const Duration(minutes: 1), () {
+            final again = _entries[m];
+            if (again == null || again.paused || isDownloaded(m, s)) return;
+            _status.remove(key);
+            _enqueue(again, s);
+            _notifyNow();
+          });
+        }
       } else {
         // canceled / paused: back to "not downloaded"; still pending if it
         // was a pause of the whole recitation, which [resume] picks up.
