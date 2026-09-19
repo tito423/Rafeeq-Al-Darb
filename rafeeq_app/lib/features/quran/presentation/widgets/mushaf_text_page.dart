@@ -11,6 +11,8 @@ import '../../data/mushaf_theme.dart';
 import 'mushaf_frame_painter.dart';
 import '../../data/text_layout_provider.dart';
 
+part 'mushaf_ayah_row.dart';
+
 /// Renders one mushaf page (or a surah's ayahs) as a **vertical list** of
 /// individually-tappable ayah items, with the surah name pinned at the top
 /// via a `SliverAppBar`.
@@ -180,7 +182,8 @@ class _MushafTextPageState extends State<MushafTextPage> {
         // the top instead, so the reader is at the start of the verse and the
         // rest is below them where reading goes.
         final box = ctx.findRenderObject();
-        final fits = box is! RenderBox ||
+        final fits =
+            box is! RenderBox ||
             box.size.height <= _scroll.position.viewportDimension;
         // Already on screen: leave the page where it is. Moving it on every
         // start was «بيقوم مظلّلها وينزل بالشاشة لتحت على اللي بعدها».
@@ -204,7 +207,8 @@ class _MushafTextPageState extends State<MushafTextPage> {
       if (!mounted || !_scroll.hasClients) return;
       final ctx = _runKeys[runIndex].currentContext;
       if (ctx == null) return;
-      final state = ctx.findAncestorStateOfType<_FlowingAyahsState>() ??
+      final state =
+          ctx.findAncestorStateOfType<_FlowingAyahsState>() ??
           (ctx is StatefulElement && ctx.state is _FlowingAyahsState
               ? ctx.state as _FlowingAyahsState
               : null);
@@ -221,8 +225,9 @@ class _MushafTextPageState extends State<MushafTextPage> {
       final viewport = _scroll.position.viewportDimension;
       // The verse's start already in the upper part of the screen: no scroll.
       final pageBox = context.findRenderObject();
-      final pageTop =
-          pageBox is RenderBox ? pageBox.localToGlobal(Offset.zero).dy : 0.0;
+      final pageTop = pageBox is RenderBox
+          ? pageBox.localToGlobal(Offset.zero).dy
+          : 0.0;
       final verseTop = top + dy - pageTop;
       if (verseTop >= 0 && verseTop <= viewport * 0.8) return;
       final target = _scroll.offset + top + dy - viewport / 3;
@@ -341,8 +346,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
       return const Center(child: Text('—'));
     }
 
-    final mt = widget.mushafTheme ??
-        resolveMushafTheme(null, theme.brightness);
+    final mt = widget.mushafTheme ?? resolveMushafTheme(null, theme.brightness);
     final paper = mt.paper;
     final ink = mt.ink;
     final isLandscape =
@@ -371,8 +375,9 @@ class _MushafTextPageState extends State<MushafTextPage> {
     var runStart = 0;
     for (var i = 0; i < widget.ayahs.length; i++) {
       final ayah = widget.ayahs[i];
-      final isNewSurah =
-          i == 0 ? ayah.ayahNumber == 1 : ayah.surahId != widget.ayahs[i - 1].surahId;
+      final isNewSurah = i == 0
+          ? ayah.ayahNumber == 1
+          : ayah.surahId != widget.ayahs[i - 1].surahId;
       if (isNewSurah && i > 0) {
         items.add(_ListItem.run(runs.length, runStart, i - 1));
         runs.add((runStart, i - 1));
@@ -416,28 +421,28 @@ class _MushafTextPageState extends State<MushafTextPage> {
             title: opensWithBanner
                 ? null
                 : Text(
-              widget.surahNameOf(widget.ayahs.first.surahId),
-              textDirection: TextDirection.rtl,
-              textAlign: TextAlign.center,
-              strutStyle: const StrutStyle(
-                fontFamily: 'AmiriQuran',
-                fontSize: 22,
-                height: 1.0,
-                leading: 0,
-                forceStrutHeight: true,
-              ),
-              textHeightBehavior: const TextHeightBehavior(
-                applyHeightToFirstAscent: false,
-                applyHeightToLastDescent: false,
-              ),
-              style: TextStyle(
-                fontFamily: 'AmiriQuran',
-                fontSize: 22,
-                height: 1.0,
-                color: mt.gold,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+                    widget.surahNameOf(widget.ayahs.first.surahId),
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.center,
+                    strutStyle: const StrutStyle(
+                      fontFamily: 'AmiriQuran',
+                      fontSize: 22,
+                      height: 1.0,
+                      leading: 0,
+                      forceStrutHeight: true,
+                    ),
+                    textHeightBehavior: const TextHeightBehavior(
+                      applyHeightToFirstAscent: false,
+                      applyHeightToLastDescent: false,
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'AmiriQuran',
+                      fontSize: 22,
+                      height: 1.0,
+                      color: mt.gold,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
             centerTitle: true,
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(1),
@@ -456,63 +461,89 @@ class _MushafTextPageState extends State<MushafTextPage> {
           // meant to mirror. Each contiguous run of one surah's verses is a
           // single justified paragraph; a surah change breaks the run so its
           // banner can sit between them.
-          SliverPadding(
-            padding: EdgeInsets.symmetric(
-              horizontal: bare
-                  ? (isLandscape ? 18.0 : 8.0)
-                  : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0)),
-              vertical: bare ? 6.0 : 12.0,
-            ),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = items[index];
-                  if (item.isBanner) {
-                    return _SurahBanner(
-                      name: widget.surahNameOf(item.surahId!),
-                      mt: mt,
-                      bare: bare,
-                    );
-                  }
-                  if (widget.layout == QuranTextLayout.cards) {
-                    return Column(
-                      children: [
-                        for (var i = item.runFrom!; i <= item.runTo!; i++)
-                          _AyahRow(
-                            key: _ayahKeys.length > i ? _ayahKeys[i] : null,
-                            ayah: widget.ayahs[i],
-                            isPlaying: i == playingIndex,
-                            textStyle: textStyle,
+          // «خلّي الصفحة القصيرة تاخد شكل سورة الفاتحة في المصحف المصوّر» -
+          // «الكلام ده في الفاتحة». The page fills at least the rest of the
+          // screen, so the paper below a short page is the page's and a tap
+          // there shows the toolbar; pages 1 and 2 (al-Fatiha, the opening of
+          // al-Baqara) sit in the middle as the printed mushaf sets them.
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: widget.onBackgroundTap,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: bare
+                      ? (isLandscape ? 18.0 : 8.0)
+                      : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0)),
+                  vertical: bare ? 6.0 : 12.0,
+                ),
+                child: Column(
+                  // Centred only where the printed mushaf centres: its first
+                  // two pages. Every other page starts at the top.
+                  mainAxisAlignment: widget.ayahs.first.pageNumber <= 2
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.start,
+                  children: [
+                    for (var index = 0; index < items.length; index++)
+                      Builder(
+                        builder: (context) {
+                          final item = items[index];
+                          if (item.isBanner) {
+                            return _SurahBanner(
+                              name: widget.surahNameOf(item.surahId!),
+                              mt: mt,
+                              bare: bare,
+                            );
+                          }
+                          if (widget.layout == QuranTextLayout.cards) {
+                            return Column(
+                              children: [
+                                for (
+                                  var i = item.runFrom!;
+                                  i <= item.runTo!;
+                                  i++
+                                )
+                                  _AyahRow(
+                                    key: _ayahKeys.length > i
+                                        ? _ayahKeys[i]
+                                        : null,
+                                    ayah: widget.ayahs[i],
+                                    isPlaying: i == playingIndex,
+                                    textStyle: textStyle,
+                                    mt: mt,
+                                    onLongPress: () =>
+                                        widget.onAyahLongPress(widget.ayahs[i]),
+                                    onTap: widget.onBackgroundTap,
+                                    onPlayTap: widget.onPlayTap != null
+                                        ? () =>
+                                              widget.onPlayTap!(widget.ayahs[i])
+                                        : null,
+                                  ),
+                              ],
+                            );
+                          }
+                          return _FlowingAyahs(
+                            key: _runKeys[item.runIndex!],
                             mt: mt,
-                            onLongPress: () =>
-                                widget.onAyahLongPress(widget.ayahs[i]),
-                            onTap: widget.onBackgroundTap,
-                            onPlayTap: widget.onPlayTap != null
-                                ? () => widget.onPlayTap!(widget.ayahs[i])
-                                : null,
-                          ),
-                      ],
-                    );
-                  }
-                  return _FlowingAyahs(
-                    key: _runKeys[item.runIndex!],
-                    mt: mt,
-                    ayahs: widget.ayahs,
-                    from: item.runFrom!,
-                    to: item.runTo!,
-                    playingIndex: playingIndex,
-                    textStyle: textStyle,
-                    // A long press selects the verse and opens its card; a
-                    // tap anywhere, verse or not, is the page's. A tap used
-                    // to START THE RECITATION («لما بضغط على آية في المصحف
-                    // النصي بيقوم مشغّل تلقائي التلاوة»), then to open the
-                    // card; «ضغطة مطولة على الآية تظليل وكارت الآية».
-                    onAyahLongPress: widget.onAyahLongPress,
-                    onBackgroundTap: widget.onBackgroundTap,
-                    bare: bare,
-                  );
-                },
-                childCount: items.length,
+                            ayahs: widget.ayahs,
+                            from: item.runFrom!,
+                            to: item.runTo!,
+                            playingIndex: playingIndex,
+                            textStyle: textStyle,
+                            // A long press selects the verse and opens its card; a
+                            // tap anywhere, verse or not, is the page's. A tap used
+                            // to START THE RECITATION («لما بضغط على آية في المصحف
+                            // النصي بيقوم مشغّل تلقائي التلاوة»), then to open the
+                            // card; «ضغطة مطولة على الآية تظليل وكارت الآية».
+                            onAyahLongPress: widget.onAyahLongPress,
+                            onBackgroundTap: widget.onBackgroundTap,
+                            bare: bare,
+                          );
+                        },
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -557,106 +588,11 @@ class _ListItem {
       _ListItem._(isBanner: true, surahId: surahId);
 
   factory _ListItem.run(int runIndex, int from, int to) => _ListItem._(
-        isBanner: false,
-        runIndex: runIndex,
-        runFrom: from,
-        runTo: to,
-      );
-}
-
-// ─── Ayah row widget ───────────────────────────────────────────────────────
-
-/// One ayah rendered as a card-like row: Uthmani text (right-aligned, RTL) with
-/// a rosette marker on the side, an `InkWell` for long-press → sciences sheet,
-/// and an optional highlight when this is the verse being recited.
-class _AyahRow extends StatelessWidget {
-  final Ayah ayah;
-  final bool isPlaying;
-  final TextStyle textStyle;
-  final MushafTheme mt;
-  final VoidCallback onLongPress;
-  final VoidCallback? onTap;
-  final VoidCallback? onPlayTap;
-
-  const _AyahRow({
-    super.key,
-    required this.ayah,
-    required this.isPlaying,
-    required this.textStyle,
-    required this.mt,
-    required this.onLongPress,
-    this.onTap,
-    this.onPlayTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // The row's resting tint comes from the *theme's* own lightness, not the
-    // app's: a light mushaf theme can be selected while the app is in dark
-    // mode, and a white wash on cream paper is invisible.
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(
-        color: isPlaying
-            ? mt.highlightPlaying
-            : (mt.isLight
-                ? Colors.black.withValues(alpha: 0.015)
-                : Colors.white.withValues(alpha: 0.03)),
-        borderRadius: BorderRadius.circular(14),
-        border: isPlaying
-            ? Border.all(color: mt.gold.withValues(alpha: 0.5), width: 1.2)
-            : null,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(14),
-          onLongPress: onLongPress,
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              textDirection: TextDirection.rtl,
-              children: [
-                // ── Ayah text ──
-                Expanded(
-                  child: InkWell(
-                    onTap: onTap,
-                    onLongPress: onLongPress,
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Text(
-                        ayah.textUthmani,
-                        textAlign: TextAlign.right,
-                        textDirection: TextDirection.rtl,
-                        style: textStyle,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                // ── Rosette marker ──
-                InkWell(
-                  onTap: onPlayTap,
-                  borderRadius: BorderRadius.circular(20),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 6, left: 4, right: 4, bottom: 4),
-                    child: _AyahMarker(
-                      number: ayah.ayahNumber,
-                      playing: isPlaying,
-                      mt: mt,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+    isBanner: false,
+    runIndex: runIndex,
+    runFrom: from,
+    runTo: to,
+  );
 }
 
 // ─── Surah banner ──────────────────────────────────────────────────────────
@@ -672,11 +608,7 @@ class _SurahBanner extends StatelessWidget {
   /// block of ornament on the page.
   final bool bare;
 
-  const _SurahBanner({
-    required this.name,
-    required this.mt,
-    this.bare = false,
-  });
+  const _SurahBanner({required this.name, required this.mt, this.bare = false});
 
   @override
   Widget build(BuildContext context) {
@@ -690,8 +622,10 @@ class _SurahBanner extends StatelessWidget {
           ? null
           : BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              border:
-                  Border.all(color: gold.withValues(alpha: 0.55), width: 1.4),
+              border: Border.all(
+                color: gold.withValues(alpha: 0.55),
+                width: 1.4,
+              ),
               gradient: LinearGradient(
                 colors: [
                   gold.withValues(alpha: 0.16),
@@ -795,7 +729,8 @@ class _AyahMarker extends StatelessWidget {
   }
 
   static String _arabicNumber(int n) {
-    const digits = '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669';
+    const digits =
+        '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669';
     return n.toString().split('').map((c) => digits[int.parse(c)]).join();
   }
 }
@@ -983,8 +918,12 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
               if (r.$3 == widget.playingIndex) (r.$1, r.$2 - 1),
           ].firstOrNull,
         ),
-        child: Text.rich(TextSpan(children: spans), key: _textKey,
-            textAlign: TextAlign.justify, textDirection: TextDirection.rtl),
+        child: Text.rich(
+          TextSpan(children: spans),
+          key: _textKey,
+          textAlign: TextAlign.justify,
+          textDirection: TextDirection.rtl,
+        ),
       ),
     );
   }
