@@ -115,9 +115,25 @@ const hajjGuideShamelaUrl = 'https://shamela.ws/book/96232';
 /// They are recognisable the way the Musnad's were (trap #34): a paragraph
 /// that opens on a bracketed note number, or on the «=» that continues one
 /// from the page before.
-bool isHajjGuideNote(String text) => _hajjNote.hasMatch(text);
+///
+/// And a second family, found 2026-09-19 (155 more paragraphs between
+/// printed pages 45 and 522, shown as an-Nawawi's text until then): the
+/// commentary that carries no note number but always one of its OWN marks -
+/// a gloss that opens «أي …», «قال في الحاشية», «قال المحشي», the annotator's
+/// «أقول:», and «اه» closing a quotation. an-Nawawi uses none of these; the
+/// annotator writes «زماننا آخر القرن الرابع عشر» and dates a door of the
+/// Ka'ba to King Khalid. Matched on a diacritic-free copy (trap #34), the
+/// text itself untouched.
+bool isHajjGuideNote(String text) {
+  if (_hajjNote.hasMatch(text)) return true;
+  final bare = text.replaceAll(_marks, '');
+  return _hajjGloss.hasMatch(bare);
+}
 
 final _hajjNote = RegExp(r'^\s*(\(\s*[\d٠-٩]+\s*\)|=)');
+final _marks = RegExp('[ً-ْٰـ]');
+final _hajjGloss = RegExp(
+    r'^\s*أي\s|قال في الحاشية|قال المحشي|أقول\s*:|(^|\s)اه\s*\.|اه (حاشية|تعليق|تقريرات)|الحكومة السعودية');
 
 const _both = {HajjTrack.hajj, HajjTrack.umrah};
 
@@ -178,3 +194,19 @@ const hajjSteps = <HajjStep>[
       key: 'counsel', fromPage: 513, fromPara: 0, toPage: 522, toPara: 0,
       tracks: _both),
 ];
+
+/// The steps one track shows, in reading order.
+///
+/// «العمرة فاضية مش فيها معلومات تخصها»: the Umrah track opened on the
+/// same general chapters as the Hajj one (preparation, mawaqit, ihram…) and
+/// reached an-Nawawi's own «الباب الرابع في العمرة» - its obligation, its
+/// times, «وأركان العمرة أربعة» - only near the end. For Umrah that chapter
+/// now comes first; the shared chapters follow as the detail behind it.
+List<HajjStep> hajjStepsFor(HajjTrack track) {
+  final steps = hajjSteps.where((s) => s.tracks.contains(track)).toList();
+  if (track == HajjTrack.umrah) {
+    final i = steps.indexWhere((s) => s.key == 'umrah');
+    if (i > 0) steps.insert(0, steps.removeAt(i));
+  }
+  return steps;
+}

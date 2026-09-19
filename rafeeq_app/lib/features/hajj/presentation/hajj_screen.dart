@@ -52,8 +52,7 @@ class HajjScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final book = ref.watch(hajjBookProvider);
     final track = ref.watch(_trackProvider);
-    final steps =
-        hajjSteps.where((s) => s.tracks.contains(track)).toList();
+    final steps = hajjStepsFor(track);
 
     return Scaffold(
       appBar: AppBar(title: Text('hajj.title'.tr())),
