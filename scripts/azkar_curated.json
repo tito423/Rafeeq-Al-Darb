@@ -739,6 +739,82 @@
    "ref_from": "صحيح مسلم",
    "ref_to": "صحيح مسلم",
    "sha": "0fcde1a6aefd"
+  },
+  {
+   "section": 49,
+   "item": 5,
+   "from": "سَمَّعَ سامِعٌ",
+   "to": "عائِذاً باللَّهِ منَ النَّارِ",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "صحيح مسلم",
+   "when": "morning",
+   "sha": "1414138e3b42"
+  },
+  {
+   "section": 49,
+   "item": 19,
+   "from": "سُبْحانَ اللَّه وبِحَمْدِهِ، لا قُوَّةَ",
+   "to": "بكل شئ عِلْماً",
+   "ref_from": "سنن أبي داود",
+   "ref_to": "سنن أبي داود",
+   "when": "both",
+   "sha": "23a8babef8df"
+  },
+  {
+   "section": 49,
+   "item": 20,
+   "from": "اللَّهُمَّ إِني أعُوذُ بِكَ مِنَ الهَمّ",
+   "to": "وَقَهْرِ الرّجالِ",
+   "ref_from": "سنن أبي داود",
+   "ref_to": "سنن أبي داود",
+   "when": "both",
+   "sha": "6406dc79e2ba"
+  },
+  {
+   "section": 49,
+   "item": 28,
+   "from": "اللَّهُمَّ إني أسألُكَ عِلْماً نافعاً",
+   "to": "وَعَمَلاً مُتَقَبَّلاً",
+   "ref_from": "سنن ابن ماجه",
+   "ref_to": "سنن ابن ماجه",
+   "when": "morning",
+   "sha": "c5468f36ed26"
+  },
+  {
+   "section": 1,
+   "item": 5,
+   "from": "كَبَّرَ عَشْراً",
+   "to": "وضِيقِ يَوْمِ القِيامَة عَشْراً",
+   "ref_from": "سنن أبي داود",
+   "ref_to": "سنن أبي داود",
+   "sha": "e6cf6552bd59"
+  },
+  {
+   "section": 8,
+   "item": 1,
+   "from": "يا بُنَيَّ إذَا دَخَلْتَ على أهْلِكَ",
+   "to": "وعلى أهْلِ بَيْتِكَ",
+   "ref_from": "قال الترمذي: حديث حسن صحيح",
+   "ref_to": "قال الترمذي: حديث حسن صحيح",
+   "sha": "ca740671ddab"
+  },
+  {
+   "section": 15,
+   "item": 6,
+   "from": "اللَّهُمَّ اغْفِرْ لي ذَنْبِي، وَوَسِّعِ",
+   "to": "وَبارِكْ لي في رِزْقِي",
+   "ref_from": "روى النسائي",
+   "ref_to": "بإسناد صحيح",
+   "sha": "21016b4999d5"
+  },
+  {
+   "section": 187,
+   "item": 5,
+   "from": "بِسْمِ الله أوّله وآخرُه",
+   "to": "بِسْمِ الله أوّله وآخرُه",
+   "ref_from": "سنن أبي داود والنسائي",
+   "ref_to": "سنن أبي داود والنسائي",
+   "sha": "45fdeb878ca5"
   }
  ],
  "_ruqyah": "The five of the ruqyah screen's six duas that an-Nawawi's al-Adhkar actually carries. The sixth - «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر» - is NOT in this edition: zero hits across all 338 chapters. It is therefore dropped, not reconstructed. ruqyah_catalog.dart already states the principle: «an absent dua is an honest gap; a dua typed in from memory with no takhrij behind it is not.» These carry explicit ids so the screen can address them for ever."

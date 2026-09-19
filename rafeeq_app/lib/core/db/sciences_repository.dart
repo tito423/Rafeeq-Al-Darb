@@ -202,6 +202,6 @@ final sciencesRepositoryProvider =
   // v6 (2026-09-18): «الأذكار ناقصة جداً» — 13 more narrations from the same
   // book, 60 -> 74 rows: morning/evening and sleep, each attributed and graded
   // in an-Nawawi's own words; none he calls weak.
-  stamp: 'sciences-v8');
+  stamp: 'sciences-v9');
   return SciencesRepository(db);
 });
