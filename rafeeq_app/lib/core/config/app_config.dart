@@ -131,14 +131,18 @@ abstract final class AppConfig {
   /// — not `hadith.db` itself, which this constant pointed at for a while (a
   /// 404: only the zip was ever pushed to the repo) until a real download
   /// attempt caught it.
-  /// Where «ساهم في التكلفة» goes, and **empty until the owner has a rail**.
+  /// Where «ادعم التطبيق» goes: the owner's PayPal.Me page, injected only
+  /// into the GitHub build by `build_github_release.bat` - «حطه بس في
+  /// التطبيق اللي هيبقى على جيت هب». Empty in the source, so any other build
+  /// has no button. The link carries no amount: the reader chooses it.
+  /// («بلاش كلمة دونيشن … دعم التطبيق», 2026-09-19.)
   ///
   /// The support screen hides its button entirely while this is empty rather
   /// than showing one that opens nothing — this project has shipped a dead
-  /// control before (trap #27) and the lesson stuck. Set it to the donation
-  /// page's URL and the button appears; nothing else has to change.
-  static const String donationUrl = String.fromEnvironment(
-    'RAFEEQ_DONATION_URL',
+  /// control before (trap #27) and the lesson stuck. Set it and the button
+  /// appears; nothing else has to change.
+  static const String supportUrl = String.fromEnvironment(
+    'RAFEEQ_SUPPORT_URL',
     defaultValue: '',
   );
 

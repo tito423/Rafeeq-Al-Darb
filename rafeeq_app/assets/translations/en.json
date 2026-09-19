@@ -1704,10 +1704,11 @@
     "why": "The ads were refused on purpose: an ad network shows whatever it likes, and an unfitting advert beside an ayah is not something we will accept. Tracking was refused too — nothing is collected about you.\n\nWhat remains is a real cost: hosting the mushafs, the recitations and the books, and running the sync. Whoever wishes to share in it may; whoever does not has the whole app exactly as it is.",
     "free_forever_title": "Free forever",
     "free_forever": "The mushaf and its translations · prayer times and the adhan · the adhkar · the hadith books · the tajweed lessons · the library. None of it is behind anything, and none of it will be.",
-    "donate": "Share in the cost",
     "later": "Not now",
     "read_more": "Read more",
-    "no_obligation": "Nothing in the app changes either way: no feature unlocks, no advert is removed, no reminder comes back."
+    "no_obligation": "Nothing in the app changes either way: no feature unlocks, no advert is removed, no reminder comes back.",
+    "action": "Support the app",
+    "any_amount": "You choose the amount, whatever you wish - no minimum and no suggested sum."
   },
   "hijri_day": {
     "hijra": "The Prophet ﷺ emigrates from Mecca to Medina — the event the Hijri calendar counts from.",

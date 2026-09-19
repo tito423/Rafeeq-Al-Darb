@@ -24,7 +24,7 @@ import '../../../../core/utils/external_link.dart';
 ///   * **It promises what stays free.** The Qur'an, the prayer times, the
 ///     adhkar, the hadith and the lessons are the app; they are not a tier.
 ///
-/// The button appears only when [AppConfig.donationUrl] is set. A support
+/// The button appears only when [AppConfig.supportUrl] is set. A support
 /// button that opens nothing is a dead control, and this project has shipped
 /// one of those before.
 class SupportScreen extends ConsumerWidget {
@@ -79,12 +79,23 @@ class SupportScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 22),
-          if (AppConfig.donationUrl.isNotEmpty)
+          if (AppConfig.supportUrl.isNotEmpty) ...[
             FilledButton.icon(
-              onPressed: () => openLink(AppConfig.donationUrl, inApp: true),
+              onPressed: () => openLink(AppConfig.supportUrl, inApp: true),
               icon: const Icon(Icons.favorite_outline),
-              label: Text('support.donate'.tr()),
+              label: Text('support.action'.tr()),
             ),
+            const SizedBox(height: 8),
+            // «المستخدم يحط القيمة اللي عايز يحطها، إحنا مش هنفرض عليه».
+            Text(
+              'support.any_amount'.tr(),
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: AppColors.gold,
+                height: 1.8,
+              ),
+            ),
+          ],
           const SizedBox(height: 14),
           Text(
             'support.no_obligation'.tr(),

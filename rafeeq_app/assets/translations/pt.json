@@ -1704,10 +1704,11 @@
     "why": "Os anúncios foram recusados de propósito: uma rede de anúncios mostra o que quiser, e um anúncio impróprio ao lado de um versículo não é algo que aceitemos. O rastreio também foi recusado — nada é recolhido sobre si.\n\nResta um custo real: alojar os mushafs, as recitações e os livros, e manter a sincronização. Quem quiser participar pode; quem não quiser tem a aplicação inteira tal como está.",
     "free_forever_title": "Gratuito para sempre",
     "free_forever": "O mushaf e as suas traduções · os horários de oração e o adhan · os adhkar · os livros de hadith · as lições de tajwid · a biblioteca. Nada disto está atrás de um pagamento, nem estará.",
-    "donate": "Participar no custo",
     "later": "Agora não",
     "read_more": "Saber mais",
-    "no_obligation": "Nada muda na aplicação: nenhuma função é desbloqueada, nenhum anúncio é removido, nenhum lembrete volta."
+    "no_obligation": "Nada muda na aplicação: nenhuma função é desbloqueada, nenhum anúncio é removido, nenhum lembrete volta.",
+    "action": "Apoiar a aplicação",
+    "any_amount": "Você escolhe o valor que quiser, sem mínimo nem quantia sugerida."
   },
   "hijri_day": {
     "hijra": "O Profeta ﷺ emigra de Meca para Medina — o acontecimento a partir do qual conta o calendário hijri.",
