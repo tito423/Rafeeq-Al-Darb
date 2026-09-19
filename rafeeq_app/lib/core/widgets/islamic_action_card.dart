@@ -121,15 +121,19 @@ class IslamicActionCard extends StatelessWidget {
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),
-                              const SizedBox(height: 3),
-                              Text(
-                                subtitle,
-                                style: TextStyle(
-                                  color: hero.onSurfaceMuted,
-                                  fontSize: 12,
-                                  height: 1.45,
+                              // A card with nothing to add under its title
+                              // (a settings section) leaves the line out.
+                              if (subtitle.isNotEmpty) ...[
+                                const SizedBox(height: 3),
+                                Text(
+                                  subtitle,
+                                  style: TextStyle(
+                                    color: hero.onSurfaceMuted,
+                                    fontSize: 12,
+                                    height: 1.45,
+                                  ),
                                 ),
-                              ),
+                              ],
                             ],
                           ),
                         ),

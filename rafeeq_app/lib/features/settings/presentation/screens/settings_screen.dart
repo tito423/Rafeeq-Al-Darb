@@ -1,3 +1,5 @@
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/islamic_action_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,7 +81,6 @@ class SettingsBody extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
 
           // Theme - collapsible like every other section here: «اختيار
           // ثيم التطبيق يبقى كولابسد برده».
@@ -133,7 +134,6 @@ class SettingsBody extends ConsumerWidget {
               ],
             ],
           ),
-          const SizedBox(height: 16),
           // «مش لاقي فعليًا خيار الاسبلاش سكرين بصوت أو بغير أو عرضها من
           // الأساس». Both switches were here, but inside the appearance block
           // with no heading of their own, so nothing on the screen said
@@ -205,7 +205,6 @@ class SettingsBody extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
 
           // ── Home clock ──
           CollapsibleSection(
@@ -273,7 +272,6 @@ class SettingsBody extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
 
           // The text mushaf's own colour scheme — its own section, because it
           // is not the app theme: a light mushaf can be read inside a dark
@@ -301,7 +299,6 @@ class SettingsBody extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
 
           // Reading Options for Non-Arabs (Transliteration) — and only for
           // them. In Arabic the whole section is gone, which is the same rule
@@ -337,14 +334,12 @@ class SettingsBody extends ConsumerWidget {
             icon: Icons.verified_user_rounded,
             children: [PermissionsSection()],
           ),
-          const SizedBox(height: 24),
 
           CollapsibleSection(
             title: 'library.voice_section_title'.tr(),
             icon: Icons.record_voice_over_rounded,
             children: const [BookVoiceSection()],
           ),
-          const SizedBox(height: 24),
 
           // P3‑41: the Adhan settings entry that used to live here is
           // gone — real-device feedback pointed out it duplicated the
@@ -359,21 +354,18 @@ class SettingsBody extends ConsumerWidget {
             icon: Icons.menu_book_rounded,
             children: [SunanSuwarRemindersSection()],
           ),
-          const SizedBox(height: 24),
 
           CollapsibleSection(
             title: 'tasbih.section_title'.tr(),
             icon: Icons.all_inclusive_rounded,
             children: const [TasbihReminderSection()],
           ),
-          const SizedBox(height: 24),
 
           CollapsibleSection(
             title: 'fasting.section_title'.tr(),
             icon: Icons.nights_stay_rounded,
             children: const [FastingReminderSection()],
           ),
-          const SizedBox(height: 24),
 
           // The Islamic-quote notification, beside the other reminders
           // rather than on a screen of its own: it is one interval and a
@@ -383,54 +375,40 @@ class SettingsBody extends ConsumerWidget {
             icon: Icons.format_quote_rounded,
             children: [QuoteReminderSection()],
           ),
-          const SizedBox(height: 24),
         ],
         if (part == SettingsPart.about) ...[
-          // About
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.info_outline, color: scheme.primary),
-              title: Text('app.name'.tr()),
-              subtitle: Text('settings.about_desc'.tr()),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
-              ),
+          // About - the same cards as the rest of «المزيد».
+          IslamicActionCard(
+            icon: Icons.info_outline_rounded,
+            accent: AppColors.info,
+            title: 'app.name'.tr(),
+            subtitle: 'settings.about_desc'.tr(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
             ),
           ),
-          const SizedBox(height: 8),
           TutorialAnchor(
             id: TourAnchor.settingsSources,
-            child: Card(
-              child: ListTile(
-                leading: Icon(
-                  Icons.verified_user_outlined,
-                  color: scheme.primary,
-                ),
-                title: Text('settings.credits'.tr()),
-                subtitle: Text('about.sources_hint'.tr()),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const SourcesScreen(),
-                  ),
-                ),
+            child: IslamicActionCard(
+              icon: Icons.verified_user_outlined,
+              accent: AppColors.primarySoft,
+              title: 'settings.credits'.tr(),
+              subtitle: 'about.sources_hint'.tr(),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const SourcesScreen()),
               ),
             ),
           ),
-          const SizedBox(height: 8),
           // The policy lives on the app's own bucket rather than in a screen,
           // because Play wants a URL it can open without installing anything
           // — and because a policy nobody outside the app can read is not a
           // policy. Opened in a Custom Tab over the app.
-          Card(
-            child: ListTile(
-              leading: Icon(Icons.privacy_tip_outlined, color: scheme.primary),
-              title: Text('settings.privacy_policy'.tr()),
-              subtitle: Text('settings.privacy_policy_desc'.tr()),
-              trailing: Icon(Icons.chevron_right, color: scheme.primary),
-              onTap: () => openLink(AppConfig.privacyPolicyUrl, inApp: true),
-            ),
+          IslamicActionCard(
+            icon: Icons.privacy_tip_outlined,
+            accent: AppColors.primarySoft,
+            title: 'settings.privacy_policy'.tr(),
+            subtitle: 'settings.privacy_policy_desc'.tr(),
+            onTap: () => openLink(AppConfig.privacyPolicyUrl, inApp: true),
           ),
         ],
       ],
@@ -502,40 +480,24 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
   }
 
   Widget _build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        InkWell(
-          borderRadius: BorderRadius.circular(10),
+        // «يبقى له كروت بنفس شكل القرآن والعبادات» (2026-09-19): the
+        // section's heading is the same card the worship entries use.
+        IslamicActionCard(
+          icon: widget.icon ?? Icons.tune_rounded,
+          title: widget.title,
+          subtitle: '',
           onTap: () => setState(() => _open = !_open),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 8, top: 4),
-            child: Row(
-              children: [
-                if (widget.icon != null) ...[
-                  _SectionBadge(icon: widget.icon!, open: _open),
-                  const SizedBox(width: 12),
-                ],
-                Expanded(
-                  child: Text(
-                    widget.title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ),
-                AnimatedRotation(
-                  turns: _open ? 0.25 : 0,
-                  duration: const Duration(milliseconds: 180),
-                  // chevron_right, not chevron_left: the left one auto-mirrors
-                  // in RTL and would point the wrong way (trap #7).
-                  child: Icon(
-                    Icons.chevron_right,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ],
+          trailing: AnimatedRotation(
+            turns: _open ? 0.25 : 0,
+            duration: const Duration(milliseconds: 180),
+            // chevron_right, not chevron_left: the left one auto-mirrors
+            // in RTL and would point the wrong way (trap #7).
+            child: Icon(
+              Icons.chevron_right,
+              color: AppColors.gold.withValues(alpha: 0.85),
             ),
           ),
         ),
@@ -552,55 +514,6 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
           sizeCurve: Curves.easeOutCubic,
         ),
       ],
-    );
-  }
-}
-
-/// The section's icon in a round gold badge. It animates only when there is
-/// something to say: opening fills the badge and gives the icon a small
-/// elastic pop and turn; closing settles it back. No idle loop — nine of these
-/// breathing on one scrolling page would be motion for nothing and repaint
-/// cost on every frame.
-class _SectionBadge extends StatelessWidget {
-  final IconData icon;
-  final bool open;
-  const _SectionBadge({required this.icon, required this.open});
-
-  @override
-  Widget build(BuildContext context) {
-    const gold = Color(0xFFC9A227);
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 260),
-      curve: Curves.easeOutCubic,
-      width: 38,
-      height: 38,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: open
-            ? const LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [Color(0xFFE2C15A), gold],
-              )
-            : null,
-        color: open ? null : gold.withValues(alpha: 0.14),
-        border: Border.all(color: gold.withValues(alpha: open ? 0 : 0.45)),
-        boxShadow: open
-            ? [BoxShadow(color: gold.withValues(alpha: 0.35), blurRadius: 10)]
-            : const [],
-      ),
-      child: TweenAnimationBuilder<double>(
-        // Keyed by state so each open/close replays the pop.
-        key: ValueKey(open),
-        tween: Tween(begin: 0.7, end: 1),
-        duration: const Duration(milliseconds: 420),
-        curve: Curves.elasticOut,
-        builder: (context, v, child) => Transform.rotate(
-          angle: (1 - v) * (open ? -0.6 : 0.6),
-          child: Transform.scale(scale: v, child: child),
-        ),
-        child: Icon(icon, size: 20, color: open ? Colors.white : gold),
-      ),
     );
   }
 }
