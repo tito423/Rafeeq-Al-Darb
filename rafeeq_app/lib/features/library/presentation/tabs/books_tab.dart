@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/services/download_manager.dart';
 import '../widgets/book_card.dart';
+import 'spoken_books_view.dart';
 import '../../data/library_api_service.dart';
 import '../../../../core/i18n/proper_name.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -163,7 +164,7 @@ class _BooksTabState extends State<BooksTab> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Column(
         children: [
           Material(
@@ -200,6 +201,7 @@ class _BooksTabState extends State<BooksTab> {
                 tabs: [
                   Tab(text: 'library.sub_authors'.tr()),
                   Tab(text: 'library.sub_categories'.tr()),
+                  Tab(text: 'library.sub_spoken'.tr()),
                   Tab(text: 'library.sub_mine'.tr()),
                 ],
               ),
@@ -214,6 +216,11 @@ class _BooksTabState extends State<BooksTab> {
                   onOpen: _open,
                 ),
                 _CategoriesView(
+                  paths: _paths,
+                  onDownload: _download,
+                  onOpen: _open,
+                ),
+                SpokenBooksView(
                   paths: _paths,
                   onDownload: _download,
                   onOpen: _open,

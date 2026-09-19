@@ -484,7 +484,9 @@
     "voice_short": "Voz",
     "listen_scope_book": "O livro inteiro",
     "listen_scope_book_desc": "Lê a partir desta página e vira as páginas sozinho até você tocar em parar.",
-    "listen_scope_page": "Só esta página"
+    "listen_scope_page": "Só esta página",
+    "sub_spoken": "Áudio",
+    "spoken_intro": "Livros totalmente vocalizados que a voz do leitor pode ler. Baixe um e toque em «Ouvir» dentro dele."
   },
   "azkar": {
     "title": "Adhkar",

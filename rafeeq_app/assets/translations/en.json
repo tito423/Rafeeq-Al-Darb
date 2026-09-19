@@ -484,7 +484,9 @@
     "voice_short": "Voice",
     "listen_scope_book": "The whole book",
     "listen_scope_book_desc": "Reads on from this page, turning pages by itself until you press stop.",
-    "listen_scope_page": "This page only"
+    "listen_scope_page": "This page only",
+    "sub_spoken": "Audio",
+    "spoken_intro": "Fully vowelled books the reader voice can read aloud. Download one, then press «Listen» inside it."
   },
   "azkar": {
     "title": "Adhkar",
