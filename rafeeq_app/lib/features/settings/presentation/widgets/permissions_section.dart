@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/services/adhan_uri_bridge.dart';
@@ -30,6 +31,14 @@ class _PermissionsSectionState extends State<PermissionsSection>
   bool? _fullScreenOk;
   bool _hasAutostartSettings = false;
 
+  /// Whether this exemption was EVER seen granted on this device. «استثناء
+  /// البطارية لما التطبيق بيروح للخلفية بيرجع تاني لوحده»: on Honor/Huawei
+  /// the skin's own «إدارة تشغيل التطبيقات» withdraws it while it manages
+  /// the app automatically. Nothing in the app revokes it; what the app CAN
+  /// do is notice the reversal and say where it is fixed.
+  bool _batteryRevoked = false;
+  static const _kBatterySeen = 'perm_battery_seen_granted';
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +64,9 @@ class _PermissionsSectionState extends State<PermissionsSection>
     final notif = await Permission.notification.status;
     final loc = await Geolocator.checkPermission();
     final battery = await AlarmPermissionsService.instance.isBatteryOptimizationExempt();
+    final prefs = await SharedPreferences.getInstance();
+    if (battery) await prefs.setBool(_kBatterySeen, true);
+    final revoked = !battery && (prefs.getBool(_kBatterySeen) ?? false);
     final fullScreen = await AdhanUriBridge.canUseFullScreenIntent();
     if (!mounted) return;
     setState(() {
@@ -62,6 +74,7 @@ class _PermissionsSectionState extends State<PermissionsSection>
       _locationOk = loc == LocationPermission.always ||
           loc == LocationPermission.whileInUse;
       _batteryOk = battery;
+      _batteryRevoked = revoked;
       _fullScreenOk = fullScreen ?? true; // null = not applicable below API 34
     });
   }
@@ -103,10 +116,20 @@ class _PermissionsSectionState extends State<PermissionsSection>
           _PermissionTile(
             icon: Icons.battery_charging_full_outlined,
             title: 'settings.perm_battery'.tr(),
-            subtitle: 'settings.perm_battery_desc'.tr(),
+            subtitle: _batteryRevoked && _hasAutostartSettings
+                ? 'settings.perm_battery_revoked'.tr()
+                : 'settings.perm_battery_desc'.tr(),
             granted: _batteryOk,
+            warn: _batteryRevoked && _hasAutostartSettings,
             onTap: () async {
-              await AlarmPermissionsService.instance.requestBatteryOptimizationExemption();
+              // Once the skin has taken it back, asking again only repeats
+              // the cycle; the launch manager is where it stays fixed.
+              if (_batteryRevoked && _hasAutostartSettings) {
+                await AdhanUriBridge.openAutostartSettings();
+              } else {
+                await AlarmPermissionsService.instance
+                    .requestBatteryOptimizationExemption();
+              }
               _refreshAll();
             },
           ),
@@ -148,8 +171,10 @@ class _PermissionTile extends StatelessWidget {
   final String subtitle;
   final bool? granted;
   final VoidCallback onTap;
+  final bool warn;
 
   const _PermissionTile({
+    this.warn = false,
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -164,7 +189,8 @@ class _PermissionTile extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, color: scheme.primary),
       title: Text(title),
-      subtitle: Text(subtitle),
+      subtitle: Text(subtitle,
+          style: warn ? TextStyle(color: scheme.error) : null),
       trailing: granted == null
           ? const SizedBox(
               width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))

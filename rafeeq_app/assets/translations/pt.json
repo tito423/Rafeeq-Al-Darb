@@ -697,6 +697,7 @@
     "perm_location_desc": "Para calcular os horários de oração e a direção da Qibla",
     "perm_battery": "Isenção de otimização de bateria",
     "perm_battery_desc": "Para que o Adhan dispare de forma confiável em segundo plano",
+    "perm_battery_revoked": "O sistema reativou a otimização de bateria depois que você a permitiu. Em Honor e Huawei: toque aqui, abra «Inicialização de apps», defina este app como «Gerenciar manualmente» com as três opções ativadas e permita a exceção de novo.",
     "perm_full_screen": "Alerta de Adhan em tela cheia",
     "perm_full_screen_desc": "Para que o alerta do Adhan abra sobre a tela de bloqueio",
     "perm_autostart": "Início automático / apps protegidos",

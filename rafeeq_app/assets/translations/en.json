@@ -697,6 +697,7 @@
     "perm_location_desc": "To calculate prayer times and the Qibla direction",
     "perm_battery": "Battery optimization exemption",
     "perm_battery_desc": "So the Adhan fires reliably in the background",
+    "perm_battery_revoked": "The system turned battery optimisation back on after you allowed it. On Honor and Huawei: tap here, open «App launch», set this app to «Manage manually» with all three options on, then allow the exemption again.",
     "perm_full_screen": "Full-screen Adhan alert",
     "perm_full_screen_desc": "So the Adhan alert can open over the lock screen",
     "perm_autostart": "Auto-start / protected apps",
