@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-19 06:28 — IN PROGRESS — resume here**
+**2026-09-19 06:36 — IN PROGRESS — resume here**
 
-RELEASED v3.38.0 (tag = HEAD 87be076, asset 277688439 B, v3.37.0 deleted). Contains the Quran no-layer fix (glyphs missing on owner's Honor, landscape p316; not reproducible on emulator GL - verify on phone), hajj gloss filter (155 paras), azkar travel/post-prayer, notification fixes, tasbih, adhan text card, hadith animation, fasting time card, recitation auto-retry. REMAINING owner list (in order): More section reorganisation into logical groups with rich cards (reminders out of settings, app theme collapsible, sync placement, about/sources at bottom); tutorial redesign (screen-by-screen + quick guide + detailed guide; it points at empty things); library search (author/title/with-without tashkeel/phrase, visual); library tabs visual redesign animated; landscape pinch-zoom in mushaf without breaking vertical scroll; remaining adhkar sections from an-Nawawi (waking, morning/evening, mosque, narrated...); mushaf picker subtitles too pale; reader LAST: in-reader quick switch device/open voice, open voice slow+shaky on phone, cancel voice download. Owner idea to answer: diacritise via i'rab of every word.
+More tab regrouped (fe02815, seen on emulator); mushaf picker text contrast (dbe9c79). Released v3.38.0 before these two. NEXT in order: tutorial redesign (screen-by-screen overview + quick guide + detailed guide; check every anchor still exists after the More regroup); library search (author/title/tashkeel on-off/phrase, visual); library tabs redesign; landscape pinch-zoom (careful: Quran); remaining adhkar sections from an-Nawawi; reader last (quick voice switch in reader, open voice speed/quality on phone, cancel download). Owner idea pending an answer: diacritise via i'rab.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
