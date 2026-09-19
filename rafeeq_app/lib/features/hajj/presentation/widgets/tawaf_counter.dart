@@ -15,7 +15,11 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 
 class TawafCounter extends StatefulWidget {
-  const TawafCounter({super.key});
+  const TawafCounter({super.key, this.compact = false});
+
+  /// The drawing alone - no count, no hint, no tap - for the Umrah header,
+  /// where the counter itself belongs to the «الطواف» step below.
+  final bool compact;
 
   @override
   State<TawafCounter> createState() => _TawafCounterState();
@@ -61,6 +65,19 @@ class _TawafCounterState extends State<TawafCounter>
     final scheme = Theme.of(context).colorScheme;
     final locale = context.locale.languageCode;
     final complete = _done >= laps;
+    if (widget.compact) {
+      return AspectRatio(
+        aspectRatio: 1,
+        child: CustomPaint(
+          painter: _TawafPainter(
+            done: 0,
+            progress: 0,
+            track: scheme.outlineVariant,
+            ink: scheme.onSurface,
+          ),
+        ),
+      );
+    }
     return Column(
       children: [
         GestureDetector(

@@ -1677,7 +1677,9 @@
     "desc_visitation": "A visita à Mesquita do Profeta, a saudação ao Profeta ﷺ e aos seus dois companheiros, e os modos da estada em Medina.",
     "desc_child": "O Hajj da criança, do servo, da mulher e de quem está no seu caso, e as normas de cada um.",
     "desc_counsel": "Os modos do regresso da peregrinação e os conselhos com que o livro se encerra.",
-    "arabic_only": "O texto completo do capítulo é o árabe do próprio an-Nawawi; é mostrado na interface em árabe."
+    "arabic_only": "O texto completo do capítulo é o árabe do próprio an-Nawawi; é mostrado na interface em árabe.",
+    "text_smaller": "Texto menor",
+    "text_larger": "Texto maior"
   },
   "makharij": {
     "page": "p. {page}",

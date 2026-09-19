@@ -1677,7 +1677,9 @@
     "desc_visitation": "La visite de la Mosquée du Prophète, le salut au Prophète ﷺ et à ses deux compagnons, et les convenances du séjour à Médine.",
     "desc_child": "Le Hajj de l'enfant, de l'esclave, de la femme et de ceux qui sont dans leur cas, et les règles pour chacun.",
     "desc_counsel": "Les convenances du retour du pèlerinage, et les conseils sur lesquels le livre se referme.",
-    "arabic_only": "Le texte intégral du chapitre est l'arabe d'an-Nawawi lui-même ; il s'affiche sur l'interface arabe."
+    "arabic_only": "Le texte intégral du chapitre est l'arabe d'an-Nawawi lui-même ; il s'affiche sur l'interface arabe.",
+    "text_smaller": "Texte plus petit",
+    "text_larger": "Texte plus grand"
   },
   "makharij": {
     "page": "p. {page}",

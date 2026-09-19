@@ -13,30 +13,24 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../library/data/book_text.dart';
-import '../../library/data/library_api_service.dart';
+import '../../tajweed/data/bundled_matn.dart';
+import '../data/hajj_text_scale.dart';
 import '../data/hajj_guide.dart';
 import 'widgets/jamarat_counter.dart';
 import 'widgets/journey_map.dart';
 import 'widgets/sai_counter.dart';
 import 'widgets/tawaf_counter.dart';
 
-/// The manual's text, downloaded once like any Library book and read from
-/// disk after that. A failure is logged, not only shown.
+/// The manual's text. A failure is logged, not only shown.
 final hajjBookProvider = FutureProvider<BookText?>((ref) async {
   try {
-    final api = LibraryApiService.instance;
-    if (!await api.isBookDownloaded(hajjGuideBook)) {
-      await api.downloadBook(
-        hajjGuideBook,
-        '${AppConfig.contentBaseUrl}/books/text/$hajjGuideBook.json',
-      );
-    }
-    return BookText.fromFile(await api.bookFilePath(hajjGuideBook));
+    // Built into the app (272 KB) like the tajweed mutoon: the manual is
+    // read from the asset, never waiting on a download.
+    return await bundledMatn(hajjGuideBook);
   } catch (e, st) {
     debugPrint('hajjBookProvider failed: $e\n$st');
     rethrow;
@@ -55,7 +49,22 @@ class HajjScreen extends ConsumerWidget {
     final steps = hajjStepsFor(track);
 
     return Scaffold(
-      appBar: AppBar(title: Text('hajj.title'.tr())),
+      appBar: AppBar(
+        title: Text('hajj.title'.tr()),
+        // «أدوات التحكم في الخط تصغير وتكبير … لأن الخط في العمرة صغير».
+        actions: [
+          IconButton(
+            tooltip: 'hajj.text_smaller'.tr(),
+            icon: const Icon(Icons.text_decrease_rounded),
+            onPressed: () => ref.read(hajjTextScaleProvider.notifier).step(-1),
+          ),
+          IconButton(
+            tooltip: 'hajj.text_larger'.tr(),
+            icon: const Icon(Icons.text_increase_rounded),
+            onPressed: () => ref.read(hajjTextScaleProvider.notifier).step(1),
+          ),
+        ],
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(14, 10, 14, 28),
         itemCount: steps.length + 1,
@@ -135,12 +144,18 @@ class _Header extends StatelessWidget {
             duration: const Duration(milliseconds: 350),
             child: track == HajjTrack.hajj
                 ? const JourneyMap(key: ValueKey('map'))
-                : const SizedBox(
+                // «نزّل النص الشارح للمصدر تحت الرسم مش فوقه»: this was a
+                // full counter forced into 260 px - taller than that, so its
+                // rings ran over the source line and its «الشوط ١ / ٧» was
+                // painted behind the step cards below. The drawing alone,
+                // at a width it fits in; the counter lives in the tawaf step.
+                : const Center(
                     key: ValueKey('umrah'),
-                    height: 260,
-                    child: TawafCounter(),
+                    child: SizedBox(
+                        width: 220, child: TawafCounter(compact: true)),
                   ),
           ),
+          const SizedBox(height: 10),
           Text(
             'hajj.source'.tr(),
             textAlign: TextAlign.center,
@@ -278,14 +293,15 @@ class _StepCard extends StatelessWidget {
 }
 
 /// The step's span of the manual, verbatim, inclusive at both ends.
-class _StepText extends StatelessWidget {
+class _StepText extends ConsumerWidget {
   final HajjStep step;
   final BookText? book;
 
   const _StepText({required this.step, required this.book});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final k = ref.watch(hajjTextScaleProvider);
     // «مش ينفع تعرض ... واللغه المختارة انجليزي».
     //
     // The chapter is al-Nawawi's Arabic, and translating a 522-page manual is
@@ -300,7 +316,7 @@ class _StepText extends StatelessWidget {
         children: [
           Text(
             'hajj.desc_${step.key}'.tr(),
-            style: const TextStyle(height: 1.9),
+            style: TextStyle(height: 1.9, fontSize: 16 * k),
           ),
           const SizedBox(height: 10),
           Text(
@@ -356,14 +372,17 @@ class _StepText extends StatelessWidget {
                   child: ArabicText(
                     para.text,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontFamily: 'AmiriQuran', fontSize: 18, height: 2),
+                    style: TextStyle(
+                        fontFamily: 'AmiriQuran', fontSize: 20 * k, height: 2),
                   ),
                 ),
               'head' => ArabicText(para.text,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w800, color: AppColors.gold)),
-              _ => ArabicText(para.text, style: const TextStyle(height: 1.9)),
+                  style: TextStyle(
+                      fontSize: 17 * k,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.gold)),
+              _ => ArabicText(para.text,
+                  style: TextStyle(fontSize: 16 * k, height: 1.9)),
             },
           ),
         Text(
