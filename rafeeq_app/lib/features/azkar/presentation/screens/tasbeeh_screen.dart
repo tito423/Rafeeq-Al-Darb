@@ -270,12 +270,18 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                       children: [
                         for (final t in tasbeehTargets)
                           ChoiceChip(
+                            // No tick: it widened the chosen chip, the row
+                            // re-wrapped («مخصص» hopping lines) and the whole
+                            // counter below jumped - the glitch in the
+                            // owner's recording. Selection shows by colour.
+                            showCheckmark: false,
                             label: Text(_targetLabel(t)),
                             selected: _target == t,
                             onSelected: (_) => _selectTarget(t),
                           ),
                         // «مربع لعدد مخصص مالوش سقف».
                         ChoiceChip(
+                          showCheckmark: false,
                           avatar: const Icon(Icons.edit_rounded, size: 16),
                           label: Text(_customTarget == null ||
                                   tasbeehTargets.contains(_customTarget)
