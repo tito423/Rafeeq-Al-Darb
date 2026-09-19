@@ -1,8 +1,9 @@
+import 'package:shared_preferences/shared_preferences.dart';
+import 'official_hijri.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hijri/hijri_calendar.dart';
 
 import '../i18n/hijri_months.dart';
 import '../models/prayer_times.dart';
@@ -103,6 +104,14 @@ class PrayerStatusNotification {
     }
 
     final now = DateTime.now();
+    // The same Hijri date the Home card and the fasting reminders use: the
+    // declared calendar with the reader's own correction on top. The card
+    // used to print AlAdhan's table date and ignore the correction, so after
+    // a change it could name a different day from everything else.
+    await OfficialHijri.ensureLoaded();
+    _hijriOffset = (await SharedPreferences.getInstance())
+            .getInt('prayer_hijri_offset_days_v1') ??
+        0;
 
     // THE HOUR AFTER THE ADHAN BELONGS TO THE PRAYER THAT CAME IN.
     // «لما يحين وقت الصلاة يبدأ يعد عدّاد تصاعدي … لحد ساعة، وبعد الساعة يبدأ
@@ -175,17 +184,14 @@ class PrayerStatusNotification {
     }
     entries.sort((a, b) => a.$2.compareTo(b.$2));
 
-    // Only AlAdhan's Umm al-Qura date belongs to today; every other day's
-    // line is computed by `_hijriLine` from the date it is handed.
-    final today = DateTime(now.year, now.month, now.day);
+    // Each event's line carries the Hijri date of its own day.
     final out = <Map<String, Object>>[];
     for (final e in entries) {
       if (!e.$2.isAfter(now.subtract(elapsedWindow))) continue;
-      final day = DateTime(e.$2.year, e.$2.month, e.$2.day);
       out.add({
         'label': _eventLine(e.$1, e.$2, localeCode),
         'body': _withCity(
-          _hijriLine(day == today ? times.hijriDate : '', e.$2, localeCode),
+          _hijriLine(e.$2, localeCode),
           times.cityName,
         ),
         'when': e.$2.millisecondsSinceEpoch,
@@ -264,27 +270,12 @@ class PrayerStatusNotification {
   /// Formats the Hijri line. [aladhanHijri] is AlAdhan's "DD-MM-YYYY" string
   /// (Umm al-Qura — authoritative, offline via cache); when it's empty/bad we
   /// fall back to the `hijri` package computed from [day].
-  String _hijriLine(String aladhanHijri, DateTime day, String localeCode) {
-    final lang = localeCode == 'ar' ? 'ar' : 'en';
-    final suffix = 'hijri.suffix'.tr();
+  int _hijriOffset = 0;
 
-    final m = RegExp(r'^(\d{1,2})-(\d{1,2})-(\d{3,4})').firstMatch(aladhanHijri);
-    if (m != null) {
-      final d = int.parse(m.group(1)!);
-      final mo = int.parse(m.group(2)!);
-      final y = int.parse(m.group(3)!);
-      if (mo >= 1 && mo <= 12) {
-        final line = '$d ${hijriMonthName(mo)} $y$suffix';
-        return localizeDigits(line, localeCode);
-      }
-    }
-    try {
-      HijriCalendar.setLocal(lang);
-      final h = HijriCalendar.fromDate(day);
-      final line = '${h.hDay} ${hijriMonthName(h.hMonth)} ${h.hYear}$suffix';
-      return localizeDigits(line, localeCode);
-    } catch (_) {
-      return '';
-    }
+  String _hijriLine(DateTime day, String localeCode) {
+    final (y, m, d) = OfficialHijri.dateOf(day, offsetDays: _hijriOffset);
+    return localizeDigits(
+        '$d ${hijriMonthName(m)} $y${'hijri.suffix'.tr()}', localeCode);
   }
+
 }
