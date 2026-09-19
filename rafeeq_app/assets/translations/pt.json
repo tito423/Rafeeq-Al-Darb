@@ -554,7 +554,8 @@
     "sleep_reminder": "Lembrete dos adhkar do sono",
     "tasbeeh_custom": "Personalizado",
     "tasbeeh_custom_title": "Contagem personalizada",
-    "tasbeeh_custom_hint": "Digite um número"
+    "tasbeeh_custom_hint": "Digite um número",
+    "tap_to_count_dhikr": "Toque para contar"
   },
   "prayer": {
     "fajr": "Fajr",

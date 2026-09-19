@@ -554,7 +554,8 @@
     "sleep_reminder": "سونے کے اذکار کی یاد دہانی",
     "tasbeeh_custom": "اپنی مرضی",
     "tasbeeh_custom_title": "اپنی مرضی کی تعداد",
-    "tasbeeh_custom_hint": "تعداد لکھیں"
+    "tasbeeh_custom_hint": "تعداد لکھیں",
+    "tap_to_count_dhikr": "گننے کے لیے دبائیں"
   },
   "prayer": {
     "fajr": "فجر",

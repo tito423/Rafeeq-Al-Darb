@@ -70,8 +70,17 @@ def build(cut, cur):
         note = ""
         if e.get("ref_from"):
             try:
-                note = slice_span(it["text"], e["ref_from"], e["ref_to"],
+                # «وروينا فيه»: an-Nawawi names the book once and then says
+                # «in it» for the next item. `ref_item` points the source line
+                # at the item that names it, still cut verbatim.
+                ref_it = s["items"][e.get("ref_item", e["item"])]
+                note = slice_span(ref_it["text"], e["ref_from"], e["ref_to"],
                                   where + " [ref]")
+                # The edition's ASCII quote marks around a book title are its
+                # typography, not an-Nawawi's words, and a cut through them
+                # left one dangling («سنن أبي داود " بإسناد»). Dropped from the
+                # SOURCE LINE only; the dhikr's own text is never touched.
+                note = " ".join(note.replace('"', " ").split())
             except ValueError as exc:
                 errors.append(str(exc))
                 continue

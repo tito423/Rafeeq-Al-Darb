@@ -554,7 +554,8 @@
     "sleep_reminder": "Rappel des invocations du coucher",
     "tasbeeh_custom": "Personnalisé",
     "tasbeeh_custom_title": "Nombre personnalisé",
-    "tasbeeh_custom_hint": "Saisissez un nombre"
+    "tasbeeh_custom_hint": "Saisissez un nombre",
+    "tap_to_count_dhikr": "Touchez pour compter"
   },
   "prayer": {
     "fajr": "Fajr",

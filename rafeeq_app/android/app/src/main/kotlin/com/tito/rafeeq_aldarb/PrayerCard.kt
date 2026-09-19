@@ -32,6 +32,9 @@ import org.json.JSONArray
  * the app's settings.
  */
 object PrayerCard {
+    /** The card's first post this process: its fixed `when` (see [post]). */
+    private var cardWhen = 0L
+
     const val ID = 6100
     private const val CHANNEL_ID = "rafeeq_prayer_status"
     private const val PREFS = "rafeeq_prayer_card"
@@ -205,9 +208,20 @@ object PrayerCard {
         // بياخر ثواني». Every repost rebases it.
         val whenMs = current?.whenMs ?: 0L
         if (whenMs > 0) {
-            builder.setWhen(whenMs).setShowWhen(true).setUsesChronometer(true)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                builder.setChronometerCountDown(countDown)
+                // «فيه عدادين في الإشعار». The custom body below carries the
+                // countdown the owner reads (red, inline, like Salatuk); the
+                // header chronometer beside the app name was a second copy of
+                // it, one second apart. From N on only the body counts. The
+                // `when` is the card's first post, fixed, so a repost does not
+                // move the card among the other notifications either.
+                builder.setWhen(cardWhen.takeIf { it > 0 }
+                    ?: System.currentTimeMillis().also { cardWhen = it })
+                    .setShowWhen(false)
+            } else {
+                // Before N there is no custom body: the header is the only
+                // countdown there is, so it stays.
+                builder.setWhen(whenMs).setShowWhen(true).setUsesChronometer(true)
             }
 
             // THE COUNTDOWN, WHERE IT CAN BE READ.

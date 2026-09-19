@@ -554,7 +554,8 @@
     "sleep_reminder": "Напоминание об азкарах перед сном",
     "tasbeeh_custom": "Своё",
     "tasbeeh_custom_title": "Своё число",
-    "tasbeeh_custom_hint": "Введите число"
+    "tasbeeh_custom_hint": "Введите число",
+    "tap_to_count_dhikr": "Нажмите для счёта"
   },
   "prayer": {
     "fajr": "Фаджр",

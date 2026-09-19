@@ -86,6 +86,12 @@ class DownloadForegroundService : Service() {
                 .setContentText(text ?: "")
                 .setSmallIcon(context.applicationInfo.icon)
                 .setOnlyAlertOnce(true)
+                // A fixed `when` and sort key per item: without them every
+                // progress tick stamped «now» and Android re-sorted the shade -
+                // «الإشعارات بتجري ورا بعضها وتتبدّل أماكنها».
+                .setWhen(itemWhen.getOrPut(key) { System.currentTimeMillis() })
+                .setShowWhen(false)
+                .setSortKey(key)
                 .setGroup(GROUP)
                 .setContentIntent(routeIntent(context, "mushaf"))
                 .setTimeoutAfter(120_000)
@@ -94,7 +100,12 @@ class DownloadForegroundService : Service() {
             nm.notify(NOTIFICATION_ID, summary(context))
         }
 
+        /** First-seen time of each item, its fixed `when`. */
+        private val itemWhen = java.util.concurrent.ConcurrentHashMap<String, Long>()
+        private var summaryWhen = 0L
+
         fun finishItem(context: android.content.Context, key: String) {
+            itemWhen.remove(key)
             val id = items.remove(key) ?: itemId(key)
             val nm = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             nm.cancel(id)
@@ -161,6 +172,8 @@ class DownloadForegroundService : Service() {
                 .setSmallIcon(context.applicationInfo.icon)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
+                .setWhen(summaryWhen.takeIf { it > 0 } ?: System.currentTimeMillis().also { summaryWhen = it })
+                .setShowWhen(false)
                 .setContentIntent(pendingIntent)
                 .setGroup(GROUP)
                 .setGroupSummary(true)

@@ -359,7 +359,7 @@ class _BottomControls extends StatelessWidget {
                 ? localizeDigits(
                     '${'azkar.repeat'.tr()}: ${localizeDigits(ratio(count, target), uiLanguageCode)}',
                     context.locale.languageCode)
-                : 'azkar.tap_to_count'.tr(),
+                : 'azkar.tap_to_count_dhikr'.tr(),
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.85),
               fontSize: 13,

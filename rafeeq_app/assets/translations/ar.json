@@ -554,7 +554,8 @@
     "sleep_reminder": "منبّه أذكار النوم",
     "tasbeeh_custom": "مخصص",
     "tasbeeh_custom_title": "عدد مخصص",
-    "tasbeeh_custom_hint": "اكتب العدد"
+    "tasbeeh_custom_hint": "اكتب العدد",
+    "tap_to_count_dhikr": "اضغط للعدّ"
   },
   "prayer": {
     "fajr": "الفجر",

@@ -44,9 +44,10 @@
    "item": 2,
    "from": "الحَمْدُ لِلَّهِ الذي كساني هذا",
    "to": "وَلاَ قُوَّة",
-   "ref_from": "عن معاذ بن أنس",
-   "ref_to": "رضي الله عنه",
-   "sha": "083c1ff4e771"
+   "ref_from": "كتاب ابن السني",
+   "ref_to": "كتاب ابن السني",
+   "sha": "083c1ff4e771",
+   "ref_item": 1
   },
   {
    "section": 3,
@@ -329,7 +330,7 @@
    "item": 11,
    "from": "اللَّهُمَّ إِنِّي أصْبَحْتُ أُشْهِدُكَ",
    "to": "عَبْدُكَ وَرَسُولُكَ",
-   "ref_from": "بإسناد جيد لم يضعفه",
+   "ref_from": "سنن أبي داود",
    "ref_to": "بإسناد جيد لم يضعفه",
    "sha": "74564c730a6d",
    "when": "morning"
@@ -339,7 +340,7 @@
    "item": 12,
    "from": "اللَّهُمَّ ما أصْبَحَ بِي مِنْ نِعْمَةٍ",
    "to": "وَلَكَ الشُّكْرُ",
-   "ref_from": "بإسناد جيد لم يضعفه",
+   "ref_from": "سنن أبي داود",
    "ref_to": "بإسناد جيد لم يضعفه",
    "sha": "968fbc251687",
    "when": "both"
@@ -359,7 +360,7 @@
    "item": 16,
    "from": "أَصْبَحْنَا وأصْبَحَ المُلْكُ لِلَّهِ رَبّ العَالَمِينَ",
    "to": "وَشَرِّ ما بَعْدَهُ",
-   "ref_from": "بإسناد لم يضعفه",
+   "ref_from": "سنن أبي داود",
    "ref_to": "بإسناد لم يضعفه",
    "sha": "8450775c030f",
    "when": "morning"
@@ -612,6 +613,51 @@
    "ref_from": "سنن أبي داود، والترمذي، وغيرهما بالأسانيد الصحيحة",
    "ref_to": "سنن أبي داود، والترمذي، وغيرهما بالأسانيد الصحيحة",
    "sha": "c83d4647bf26"
+  },
+  {
+   "section": 47,
+   "item": 6,
+   "from": "لا إلهَ إِلاَّ اللَّهُ وَحدَهُ",
+   "to": "وَلَوْ كَرِهَ الكافِرُونَ",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "صحيح مسلم",
+   "sha": "e0343b82e6e3"
+  },
+  {
+   "section": 47,
+   "item": 9,
+   "from": "مَنْ سَبَّحَ اللَّهَ",
+   "to": "مِثْلَ زَبَدِ البَحْرِ",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "صحيح مسلم",
+   "sha": "265b16881792"
+  },
+  {
+   "section": 47,
+   "item": 10,
+   "from": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الجُبْنِ",
+   "to": "عَذَابِ القَبْرِ",
+   "ref_from": "صحيح البخاري",
+   "ref_to": "صحيح البخاري",
+   "sha": "90ce98d56cc7"
+  },
+  {
+   "section": 47,
+   "item": 11,
+   "from": "يُسَبِّحُ اللَّهُ تَعالى دُبُرَ كُلّ صَلاةٍ",
+   "to": "ويُكَبِّر عَشْراً",
+   "ref_from": "إسناده صحيح",
+   "ref_to": "بسبب اختلاطه",
+   "sha": "aa303927978b"
+  },
+  {
+   "section": 47,
+   "item": 13,
+   "from": "اللَّهُمَّ أعِنِّي",
+   "to": "وَحُسْنِ عِبادَتِكَ",
+   "ref_from": "بإسناد صحيح في سنن أبي داود",
+   "ref_to": "والنسائي",
+   "sha": "a4392bd888df"
   }
  ],
  "_ruqyah": "The five of the ruqyah screen's six duas that an-Nawawi's al-Adhkar actually carries. The sixth - «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر» - is NOT in this edition: zero hits across all 338 chapters. It is therefore dropped, not reconstructed. ruqyah_catalog.dart already states the principle: «an absent dua is an honest gap; a dua typed in from memory with no takhrij behind it is not.» These carry explicit ids so the screen can address them for ever."

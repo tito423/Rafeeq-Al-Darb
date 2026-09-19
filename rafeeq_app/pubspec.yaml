@@ -198,3 +198,9 @@ flutter_native_splash:
   android: true
   ios: true
   web: false
+
+# Vendored with one patch (fixed notification `when`, so the shade stops
+# re-sorting on every progress tick). See third_party/background_downloader/RAFEEQ_PATCH.md.
+dependency_overrides:
+  background_downloader:
+    path: third_party/background_downloader
