@@ -62,9 +62,6 @@ final sourceGroups = <(String, List<SourceEntry>)>[
           'https://archive.org/details/'
               'HQ23AlQuranAlKareemMushafDolatUlKuwaitWww.Quranpdf.blogspot.in',
           'about.src_ed_kuwait'),
-      SourceEntry('مصحف المدينة — الطبعة الليلية',
-          'https://archive.org/details/QuranMadina35685363568hNight',
-          'about.src_ed_madinah_night'),
     ]
   ),
   (

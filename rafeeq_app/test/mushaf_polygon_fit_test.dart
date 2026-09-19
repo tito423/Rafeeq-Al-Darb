@@ -236,7 +236,6 @@ void main() {
     // would do and every page carries its own.
     for (final row in [
       ('qatar', 604, 604),
-      ('madinah_night', 604, 604),
       ('madinah_gold', 604, 604),
       // Kuwait's two illuminated openings shipped unfitted at v3.8.0 because
       // no luminance threshold separated their seven lines. Darkness was the
@@ -268,7 +267,7 @@ void main() {
     // Every per-page printing's illuminated openings carry their OWN affine,
     // not the body one — they set a smaller text block inside a heavy frame,
     // so an entry equal to page 3's would mean the opening was never measured.
-    for (final id in ['qatar', 'kuwait', 'madinah_night', 'madinah_gold']) {
+    for (final id in ['qatar', 'kuwait', 'madinah_gold']) {
       final e = byId(id);
       for (final p in [1, 2]) {
         final f = e.fitForPage(p);
