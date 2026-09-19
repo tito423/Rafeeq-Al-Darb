@@ -549,7 +549,13 @@
       "17": "Au coucher",
       "18": "Quand il pleut",
       "19": "Avant de manger et de boire",
-      "20": "Après la prière"
+      "20": "Après la prière",
+      "21": "En montant sa monture",
+      "22": "L'adieu au voyageur",
+      "23": "L'invocation du résident pour le voyageur",
+      "24": "Takbir en montant, tasbih en descendant",
+      "25": "Quand on craint des gens",
+      "26": "Au retour de voyage"
     },
     "sleep_reminder": "Rappel des invocations du coucher",
     "tasbeeh_custom": "Personnalisé",

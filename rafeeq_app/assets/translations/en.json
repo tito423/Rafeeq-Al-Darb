@@ -549,7 +549,13 @@
       "17": "On going to bed",
       "18": "When it rains",
       "19": "Before eating and drinking",
-      "20": "After the prayer"
+      "20": "After the prayer",
+      "21": "On mounting a ride",
+      "22": "Farewell for a journey",
+      "23": "The resident's prayer for the traveller",
+      "24": "Takbir going up, tasbih going down",
+      "25": "When afraid of people",
+      "26": "On returning from a journey"
     },
     "sleep_reminder": "Sleep adhkar reminder",
     "tasbeeh_custom": "Custom",

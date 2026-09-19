@@ -549,7 +549,13 @@
       "17": "Al ir a dormir",
       "18": "Cuando llueve",
       "19": "Antes de comer y beber",
-      "20": "Después de la oración"
+      "20": "Después de la oración",
+      "21": "Al montar en el transporte",
+      "22": "Despedida del viaje",
+      "23": "La súplica del residente por el viajero",
+      "24": "Takbir al subir, tasbih al bajar",
+      "25": "Cuando se teme a alguien",
+      "26": "Al regresar de un viaje"
     },
     "sleep_reminder": "Recordatorio de los adhkar del sueño",
     "tasbeeh_custom": "Personalizado",

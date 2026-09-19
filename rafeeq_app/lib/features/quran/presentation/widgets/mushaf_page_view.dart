@@ -1,3 +1,4 @@
+import '../../data/inked_svg.dart';
 import '../../data/mushaf_paper_provider.dart';
 import 'dart:io';
 import 'dart:math' as math;
@@ -310,9 +311,8 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
               fit: StackFit.expand,
               children: [
                 SvgPicture.string(
-                  svg,
+                  inkedSvg(svg, ink),
                   fit: BoxFit.fill,
-                  colorFilter: ColorFilter.mode(ink, BlendMode.srcIn),
                   placeholderBuilder: (_) => const Center(
                     child: CircularProgressIndicator(),
                   ),
@@ -366,17 +366,31 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
         }
 
         final localFile = snapshot.data;
+        // Night and warm paper recolour the scan AS IT IS DRAWN - the filter
+        // rides on the image's own paint (`DecorationImage.colorFilter`) - and
+        // not through a `ColorFiltered` layer over it. A layer is an offscreen
+        // pass with bounds the renderer computes, and a wrong bound is what
+        // cut words off a Hafs page on the owner's phone (see `inkedSvg`).
+        final filter = scanFilter(paper, darkPage: widget.edition.darkPage);
+        Widget painted(ImageProvider provider) => DecoratedBox(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: provider,
+                  fit: BoxFit.contain,
+                  colorFilter: filter,
+                  filterQuality: FilterQuality.medium,
+                ),
+              ),
+              child: const SizedBox.expand(),
+            );
+
         Widget image = localFile != null
-            ? Image.file(
-                localFile,
-                fit: BoxFit.contain,
-                cacheWidth: memCacheWidth,
-                gaplessPlayback: true,
-              )
+            ? painted(ResizeImage(FileImage(localFile), width: memCacheWidth))
             : CachedNetworkImage(
                 imageUrl: widget.edition.imagePageUrl(widget.page),
                 fit: BoxFit.contain,
                 memCacheWidth: memCacheWidth,
+                imageBuilder: (_, provider) => painted(provider),
                 placeholder: (_, _) => _Centered(
                   children: [
                     const CircularProgressIndicator(),
@@ -401,8 +415,6 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
                 ),
               );
 
-        final filter = scanFilter(paper, darkPage: widget.edition.darkPage);
-        if (filter != null) image = ColorFiltered(colorFilter: filter, child: image);
 
         final fit = widget.edition.fitForPage(widget.page);
         if (fit != null) {
