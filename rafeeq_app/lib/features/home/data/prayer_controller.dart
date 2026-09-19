@@ -47,11 +47,66 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
     );
     // Re-fetch when the manual corrections change so the card, the alarms and
     // the status notification all move together.
+    // Recomputed from the saved position, not `refresh()`: the adjustments
+    // load from disk just after start-up, and a refresh there threw away the
+    // card's instant answer for a wait on a fresh GPS fix.
     ref.listen<PrayerAdjustments>(prayerAdjustmentsProvider, (_, _) {
-      refresh();
+      _recompute();
     });
     ref.onDispose(() => _autoTimer?.cancel());
-    return _load();
+    return _firstLoad();
+  }
+
+  /// The card's first answer comes from the last saved position - the times
+  /// are calculated offline, so that is instant - and the real fix, the
+  /// geocoder and the re-arming of the alarms follow in the background.
+  /// With no saved position (a first run) it waits for the fix as before.
+  /// «كارت مواقيت الصلاة … بيحمّل متأخر» (2026-09-19): it used to wait for a
+  /// fresh GPS fix (up to 15 s indoors) before drawing anything.
+  Future<PrayerTimesResult> _firstLoad() async {
+    final saved = await LocationService.instance
+        .lastSaved(localeCode: ref.read(appLocaleProvider));
+    if (saved == null) return _load();
+    final quick = await _timesAt(saved);
+    if (quick.isEmpty) return _load();
+    unawaited(_silentRefresh());
+    return PrayerTimesResult(times: quick, locationDenied: false);
+  }
+
+  /// New corrections applied to the last saved position at once; the alarms
+  /// are re-armed behind it. Falls back to a full refresh with no position.
+  Future<void> _recompute() async {
+    final saved = await LocationService.instance
+        .lastSaved(localeCode: ref.read(appLocaleProvider));
+    if (saved == null) return refresh();
+    final times = await _timesAt(saved);
+    if (times.isEmpty) return refresh();
+    final prev = state.valueOrNull?.times;
+    // Keep the place names the card already has; the saved ones may be in
+    // another language until the next fix.
+    final shown = prev == null || prev.isEmpty
+        ? times
+        : times.withPlace(prev.cityName, prev.countryName);
+    state = AsyncData(PrayerTimesResult(times: shown, locationDenied: false));
+    unawaited(_reschedule(shown).catchError((_) {}));
+  }
+
+  Future<PrayerTimes> _timesAt(AppPosition pos) async {
+    final settings = ref.read(adhanSettingsProvider);
+    final rawTimes = await PrayerTimesService().fetchPrayerTimes(
+      lat: pos.latitude,
+      lon: pos.longitude,
+      cityName: pos.locality ?? '',
+      countryName: pos.country ?? '',
+      method: settings.calculationMethod,
+      madhab: settings.asrMadhab,
+      highLatitudeRule: settings.highLatitudeRule,
+    );
+    // The user's own corrections are applied here, before scheduling, so the
+    // Adhan fires at the time they actually see on the card rather than the
+    // uncorrected calculation.
+    final adjustments = ref.read(prayerAdjustmentsProvider);
+    return rawTimes.withOffsets(adjustments.minuteOffsets, applyMinuteOffset);
   }
 
   void _restartAutoRefresh({required bool enabled, required int minutes}) {
@@ -151,22 +206,7 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
     if (pos == null) {
       return PrayerTimesResult(times: PrayerTimes.empty(), locationDenied: true);
     }
-    final settings = ref.read(adhanSettingsProvider);
-    final rawTimes = await PrayerTimesService().fetchPrayerTimes(
-      lat: pos.latitude,
-      lon: pos.longitude,
-      cityName: pos.locality ?? '',
-      countryName: pos.country ?? '',
-      method: settings.calculationMethod,
-      madhab: settings.asrMadhab,
-      highLatitudeRule: settings.highLatitudeRule,
-    );
-    // The user's own corrections are applied here, before scheduling, so the
-    // Adhan fires at the time they actually see on the card rather than the
-    // uncorrected calculation.
-    final adjustments = ref.read(prayerAdjustmentsProvider);
-    final times =
-        rawTimes.withOffsets(adjustments.minuteOffsets, applyMinuteOffset);
+    final times = await _timesAt(pos);
     if (!times.isEmpty) {
       await _reschedule(times);
     }

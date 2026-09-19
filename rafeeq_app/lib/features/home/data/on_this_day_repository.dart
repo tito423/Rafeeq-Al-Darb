@@ -23,6 +23,7 @@ library;
 
 import 'dart:convert';
 import 'dart:io' show gzip;
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show rootBundle;
@@ -74,24 +75,9 @@ final onThisDayProvider =
   for (final lang in {locale, 'en'}) {
     try {
       final raw = await rootBundle.load('assets/data/on_this_day_$lang.json');
-      var bytes = raw.buffer.asUint8List(raw.offsetInBytes, raw.lengthInBytes);
-      // Stored gzipped with no Content-Encoding, exactly like the books —
-      // sniffed by its magic bytes rather than trusted from the name.
-      if (bytes.length > 2 && bytes[0] == 0x1f && bytes[1] == 0x8b) {
-        bytes = Uint8List.fromList(gzip.decode(bytes));
-      }
-      final doc = jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
-      final days = (doc['days'] as Map<String, dynamic>?) ?? const {};
-      return OnThisDay({
-        for (final e in days.entries)
-          e.key: [
-            for (final r in (e.value as List<dynamic>))
-              HistoricalEvent(
-                year: (r as Map<String, dynamic>)['y'] as int?,
-                text: (r['t'] as String?) ?? '',
-              ),
-          ],
-      }, lang: lang);
+      final bytes =
+          raw.buffer.asUint8List(raw.offsetInBytes, raw.lengthInBytes);
+      return OnThisDay(await Isolate.run(() => _parseDays(bytes)), lang: lang);
     } catch (_) {
       // Try the fallback language, then give up quietly.
     }
@@ -113,23 +99,32 @@ final onThisDayProvider =
 final onThisDayHijriProvider = FutureProvider<OnThisDay>((ref) async {
   try {
     final raw = await rootBundle.load('assets/data/on_this_day_hijri_ar.json');
-    var bytes = raw.buffer.asUint8List(raw.offsetInBytes, raw.lengthInBytes);
-    if (bytes.length > 2 && bytes[0] == 0x1f && bytes[1] == 0x8b) {
-      bytes = Uint8List.fromList(gzip.decode(bytes));
-    }
-    final doc = jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
-    final days = (doc['days'] as Map<String, dynamic>?) ?? const {};
-    return OnThisDay({
-      for (final e in days.entries)
-        e.key: [
-          for (final r in (e.value as List<dynamic>))
-            HistoricalEvent(
-              year: (r as Map<String, dynamic>)['y'] as int?,
-              text: (r['t'] as String?) ?? '',
-            ),
-        ],
-    }, lang: 'ar');
+    final bytes = raw.buffer.asUint8List(raw.offsetInBytes, raw.lengthInBytes);
+    return OnThisDay(await Isolate.run(() => _parseDays(bytes)), lang: 'ar');
   } catch (_) {
     return OnThisDay.empty;
   }
 });
+
+/// A year of events, unpacked and parsed off the UI isolate - «الضغط على
+/// التواريخ متأخر» (2026-09-19) was this running on the tap itself. Stored
+/// gzipped with no Content-Encoding, exactly like the books, so it is
+/// sniffed by its magic bytes rather than trusted from the name.
+Map<String, List<HistoricalEvent>> _parseDays(Uint8List bytes) {
+  var b = bytes;
+  if (b.length > 2 && b[0] == 0x1f && b[1] == 0x8b) {
+    b = Uint8List.fromList(gzip.decode(b));
+  }
+  final doc = jsonDecode(utf8.decode(b)) as Map<String, dynamic>;
+  final days = (doc['days'] as Map<String, dynamic>?) ?? const {};
+  return {
+    for (final e in days.entries)
+      e.key: [
+        for (final r in (e.value as List<dynamic>))
+          HistoricalEvent(
+            year: (r as Map<String, dynamic>)['y'] as int?,
+            text: (r['t'] as String?) ?? '',
+          ),
+      ],
+  };
+}

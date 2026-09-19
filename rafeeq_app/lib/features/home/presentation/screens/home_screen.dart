@@ -1,3 +1,4 @@
+import '../../data/on_this_day_repository.dart';
 import '../widgets/header_quick_actions.dart';
 import '../../../../core/services/official_hijri.dart';
 import '../../../../core/services/official_hijri_provider.dart';
@@ -53,9 +54,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => ref.read(prayerControllerProvider.notifier).refresh(),
-    );
+    // No `refresh()` here any more: it replaced the controller's instant
+    // first answer (drawn from the last saved position) with a wait for a
+    // fresh GPS fix, which is what kept the card a spinner for up to 15 s.
+    // The controller refreshes itself in the background on first load.
+    //
+    // The two date sheets read a year of events each; parse them now, in
+    // the background, so a tap on a date finds them ready.
+    Future<void>.delayed(const Duration(seconds: 4), () {
+      if (!mounted) return;
+      ref.read(onThisDayHijriProvider.future).ignore();
+      ref.read(onThisDayProvider(context.locale.languageCode).future).ignore();
+    });
     // This used to tick every second, with a comment saying the live HH:MM:SS
     // clock needed it. It does not: `DigitalClockFaceView` drives itself from
     // its own `Ticker`, and `PrayerCountdown` has its own one-second timer.

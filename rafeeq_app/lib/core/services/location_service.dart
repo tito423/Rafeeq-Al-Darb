@@ -96,13 +96,18 @@ class LocationService {
       if (last != null) {
         final (locality, country) =
             await _reverseGeocode(last.latitude, last.longitude, localeCode);
-        return AppPosition(
+        final pos = AppPosition(
           latitude: last.latitude,
           longitude: last.longitude,
           locality: locality,
           country: country,
           localeCode: localeCode,
         );
+        // Saved like a fresh fix: indoors this tier is the one that answers
+        // every time, and without saving it [lastSaved] never had anything
+        // and the Home card waited out the 15 s on every launch.
+        unawaited(_persist(pos));
+        return pos;
       }
     } catch (_) {
       // fall through to this service's own cache
@@ -145,6 +150,45 @@ class LocationService {
     await prefs.setString(_cacheCountryKey, pos.country ?? '');
     await prefs.setString(_cacheTimeKey, DateTime.now().toIso8601String());
     await prefs.setString(_cacheLocaleKey, pos.localeCode);
+  }
+
+  /// The last good fix this service saved, read straight from disk: no GPS,
+  /// no geocoder, no network. The Home card draws from it at once and lets
+  /// [getCurrentPosition] correct it when a fresh fix arrives - waiting up
+  /// to 15 s for that fix before showing anything was the owner's «كارت
+  /// مواقيت الصلاة بيحمّل متأخر». The place names may be in the language
+  /// they were last read in until then.
+  Future<AppPosition?> lastSaved({String localeCode = 'ar'}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final lat = prefs.getDouble(_cacheLatKey);
+    final lon = prefs.getDouble(_cacheLonKey);
+    final timeStr = prefs.getString(_cacheTimeKey);
+    if (lat == null || lon == null || timeStr == null) return _lastKnown();
+    final age =
+        DateTime.now().difference(DateTime.tryParse(timeStr) ?? DateTime(0));
+    if (age > _maxCacheAge) return _lastKnown();
+    final locality = prefs.getString(_cacheLocalityKey) ?? '';
+    final country = prefs.getString(_cacheCountryKey) ?? '';
+    return AppPosition(
+      latitude: lat,
+      longitude: lon,
+      locality: locality.isEmpty ? null : locality,
+      country: country.isEmpty ? null : country,
+      localeCode: localeCode,
+    );
+  }
+
+  /// The OS's own last fix, without names and without waiting on anything
+  /// slow - the fallback for [lastSaved] before this service has saved one.
+  Future<AppPosition?> _lastKnown() async {
+    try {
+      final last = await Geolocator.getLastKnownPosition()
+          .timeout(const Duration(seconds: 2));
+      if (last == null) return null;
+      return AppPosition(latitude: last.latitude, longitude: last.longitude);
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<AppPosition?> _readCached(String localeCode) async {
