@@ -1,7 +1,7 @@
 """Build «مراجعة محتوى رفيق الدرب» - a static site for a scholar to review
 every religious text the app ships, on his phone.
 
-    cd rafeeq_app && flutter test --tags export test/export_review_texts_test.dart
+    cd rafeeq_app && flutter test --tags export --run-skipped test/export_review_texts_test.dart
     py -3 scripts/build_review_site.py
 
 Writes ../rafeeq-review/ (its own git repo, published with GitHub Pages).
