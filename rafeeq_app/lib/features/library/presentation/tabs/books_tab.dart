@@ -5,9 +5,9 @@
 /// their sub-views and a websites catalogue in one 1,625-line file with
 /// twenty-five classes in it.
 library;
+
 import 'dart:async';
 import '../../../../core/utils/digits.dart';
-
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +45,9 @@ class _BooksTabState extends State<BooksTab> {
     super.initState();
     _loadRegistry();
     _sub = DownloadManager.instance.stream.listen((_) => _loadRegistry());
-    _bookSub = LibraryApiService.instance.changes.listen((_) => _loadRegistry());
+    _bookSub = LibraryApiService.instance.changes.listen(
+      (_) => _loadRegistry(),
+    );
   }
 
   Future<void> _loadRegistry() async {
@@ -57,7 +59,9 @@ class _BooksTabState extends State<BooksTab> {
     }
     if (mounted) {
       setState(() {
-        _paths..clear()..addAll(paths);
+        _paths
+          ..clear()
+          ..addAll(paths);
       });
     }
   }
@@ -97,8 +101,10 @@ class _BooksTabState extends State<BooksTab> {
 
   Future<void> _downloadOne(LibraryBook book) async {
     try {
-      await LibraryApiService.instance
-          .downloadBook(book.id, book.textEdition!.url);
+      await LibraryApiService.instance.downloadBook(
+        book.id,
+        book.textEdition!.url,
+      );
       await _loadRegistry();
     } catch (e) {
       debugPrint('library: ${book.id} failed to download: $e');
@@ -115,16 +121,19 @@ class _BooksTabState extends State<BooksTab> {
     if (failed == 0 || !mounted) return;
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
-      ..showSnackBar(SnackBar(
-        content: Text(pluralN('library.download_failed', failed)),
-      ));
+      ..showSnackBar(
+        SnackBar(content: Text(pluralN('library.download_failed', failed))),
+      );
   }
 
   void _open(LibraryBook book) {
     if (!_paths.containsKey(book.id)) return;
-    Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (_) => BookTextReaderScreen(book: book, path: _paths[book.id]!),
-    ));
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            BookTextReaderScreen(book: book, path: _paths[book.id]!),
+      ),
+    );
   }
 
   Future<void> _delete(LibraryBook book) async {
@@ -159,14 +168,41 @@ class _BooksTabState extends State<BooksTab> {
         children: [
           Material(
             color: Theme.of(context).colorScheme.surface,
-            child: TabBar(
-              labelColor: AppColors.gold,
-              indicatorColor: AppColors.gold,
-              tabs: [
-                Tab(text: 'library.sub_authors'.tr()),
-                Tab(text: 'library.sub_categories'.tr()),
-                Tab(text: 'library.sub_mine'.tr()),
-              ],
+            // A segmented control rather than a second underline bar, so the
+            // two levels of tabs read as two levels.
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(16, 4, 16, 6),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: TabBar(
+                dividerColor: Colors.transparent,
+                indicatorSize: TabBarIndicatorSize.tab,
+                splashBorderRadius: BorderRadius.circular(12),
+                indicator: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                labelColor: AppColors.gold,
+                labelStyle: const TextStyle(fontWeight: FontWeight.w700),
+                unselectedLabelColor: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant,
+                tabs: [
+                  Tab(text: 'library.sub_authors'.tr()),
+                  Tab(text: 'library.sub_categories'.tr()),
+                  Tab(text: 'library.sub_mine'.tr()),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -182,12 +218,7 @@ class _BooksTabState extends State<BooksTab> {
                   onDownload: _download,
                   onOpen: _open,
                 ),
-                _MyLibraryView(
-                  paths: _paths,
-                  
-                  onOpen: _open,
-                  onDelete: _delete,
-                ),
+                _MyLibraryView(paths: _paths, onOpen: _open, onDelete: _delete),
               ],
             ),
           ),
@@ -230,7 +261,9 @@ class _AuthorsView extends StatelessWidget {
           _AuthorExpansionTile(
             key: PageStorageKey<String>(authors[i]),
             authorName: properName(
-                authors[i], byAuthor[authors[i]]!.first.authorEn),
+              authors[i],
+              byAuthor[authors[i]]!.first.authorEn,
+            ),
             deathDate: byAuthor[authors[i]]!.first.deathLabel(),
             books: byAuthor[authors[i]]!,
             // Closed on entry, by the owner's instruction — the authors view
@@ -277,10 +310,9 @@ class _AuthorExpansionTile extends StatelessWidget {
       ),
       title: Text(
         authorName,
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall
-            ?.copyWith(fontWeight: FontWeight.w700),
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
         // A living author has no death date; do not render a dangling
@@ -297,10 +329,7 @@ class _AuthorExpansionTile extends StatelessWidget {
               : '$deathDate • ${pluralN('library.book_count', books.length)}',
           context.locale.languageCode,
         ),
-        style: TextStyle(
-          color: scheme.onSurfaceVariant,
-          fontSize: 12,
-        ),
+        style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
       ),
       shape: const Border(),
       collapsedShape: const Border(),
@@ -321,9 +350,15 @@ class _AuthorExpansionTile extends StatelessWidget {
                   }
                 },
                 icon: const Icon(Icons.download_for_offline_rounded),
-                label: Text(localizeDigits(
-                    trn('library.download_author_all', args: ['${_missing.length}']),
-                    context.locale.languageCode)),
+                label: Text(
+                  localizeDigits(
+                    trn(
+                      'library.download_author_all',
+                      args: ['${_missing.length}'],
+                    ),
+                    context.locale.languageCode,
+                  ),
+                ),
               ),
             ),
           ),
@@ -341,13 +376,13 @@ class _AuthorExpansionTile extends StatelessWidget {
   }
 
   List<LibraryBook> get _missing => [
-        for (final b in books)
-          if (b.textEdition != null &&
-              !paths.containsKey(b.id) &&
-              DownloadManager.instance.taskById(b.id)?.status !=
-                  DownloadStatus.downloading)
-            b,
-      ];
+    for (final b in books)
+      if (b.textEdition != null &&
+          !paths.containsKey(b.id) &&
+          DownloadManager.instance.taskById(b.id)?.status !=
+              DownloadStatus.downloading)
+        b,
+  ];
 }
 
 class _CategoriesView extends StatelessWidget {
@@ -390,9 +425,7 @@ class _CategoriesView extends StatelessWidget {
             books: byCat[cats[i]]!
               ..sort((x, y) {
                 final byShelf = x.shelfOrder.compareTo(y.shelfOrder);
-                return byShelf != 0
-                    ? byShelf
-                    : x.sortKey.compareTo(y.sortKey);
+                return byShelf != 0 ? byShelf : x.sortKey.compareTo(y.sortKey);
               }),
             initiallyExpanded: i == 0,
             paths: paths,
@@ -429,14 +462,16 @@ class _CategoryExpansionTile extends StatelessWidget {
       leading: Icon(category.icon, color: AppColors.gold),
       title: Text(
         category.labelKey.tr(),
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall
-            ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          color: AppColors.gold,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       subtitle: Text(
-        localizeDigits(pluralN('library.book_count', books.length),
-            context.locale.languageCode),
+        localizeDigits(
+          pluralN('library.book_count', books.length),
+          context.locale.languageCode,
+        ),
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurfaceVariant,
           fontSize: 12,
@@ -462,12 +497,12 @@ class _CategoryExpansionTile extends StatelessWidget {
 
 class _MyLibraryView extends StatelessWidget {
   final Map<String, String> paths;
-  
+
   final void Function(LibraryBook) onOpen;
   final void Function(LibraryBook) onDelete;
   const _MyLibraryView({
     required this.paths,
-    
+
     required this.onOpen,
     required this.onDelete,
   });
@@ -499,8 +534,11 @@ class _MyLibraryView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.download_done_outlined,
-                  size: 56, color: scheme.onSurfaceVariant),
+              Icon(
+                Icons.download_done_outlined,
+                size: 56,
+                color: scheme.onSurfaceVariant,
+              ),
               const SizedBox(height: 12),
               Text('library.empty_mine'.tr(), textAlign: TextAlign.center),
             ],
@@ -511,10 +549,7 @@ class _MyLibraryView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(14),
       children: [
-        for (final b in rows) ...[
-          _row(context, b),
-          const SizedBox(height: 8),
-        ],
+        for (final b in rows) ...[_row(context, b), const SizedBox(height: 8)],
       ],
     );
   }
@@ -527,16 +562,19 @@ class _MyLibraryView extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
         child: Row(
           children: [
-            Icon(Icons.article_outlined,
-                size: 18, color: AppColors.gold),
+            Icon(Icons.article_outlined, size: 18, color: AppColors.gold),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(properName(b.titleAr, b.titleEn),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 15)),
+                  Text(
+                    properName(b.titleAr, b.titleEn),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                    ),
+                  ),
                   const SizedBox(height: 3),
                   Text(
                     [
@@ -544,7 +582,9 @@ class _MyLibraryView extends StatelessWidget {
                       if (size.isNotEmpty) size,
                     ].join(' · '),
                     style: TextStyle(
-                        color: scheme.onSurfaceVariant, fontSize: 12),
+                      color: scheme.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
@@ -565,7 +605,5 @@ class _MyLibraryView extends StatelessWidget {
     );
   }
 }
-
-
 
 // ── Hadith hub (unchanged from Phase 1) ────────────────────────────────────

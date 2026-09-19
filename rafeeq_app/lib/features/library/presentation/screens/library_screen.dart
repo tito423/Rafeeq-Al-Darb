@@ -1,5 +1,3 @@
-
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +11,6 @@ import '../tabs/channels_tab.dart';
 import '../tabs/hadith_tab.dart';
 import '../tabs/websites_tab.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
-
 
 /// Library — two top tabs:
 ///  • "الكتب المتوفرة" — the books catalog, itself split into
@@ -36,8 +33,10 @@ class LibraryScreen extends ConsumerStatefulWidget {
 /// a controller `build()` can drive from `requestedLibraryTabProvider`.
 class _LibraryScreenState extends ConsumerState<LibraryScreen>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabController =
-      TabController(length: 5, vsync: this);
+  late final TabController _tabController = TabController(
+    length: 5,
+    vsync: this,
+  );
 
   @override
   void dispose() {
@@ -59,23 +58,53 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
         // abbreviated to fit seven tiles (see test/nav_label_width_test.dart),
         // and an AppBar has room for the whole word.
         title: Text('library.title'.tr()),
+        // «طوّر قسم المكتبة بصريًا … التابات … أحدث وأروع بصريًا وأنيميتد».
+        // Each tab is an icon and a word in a pill; the gold pill slides to
+        // the chosen tab as the pages swipe (TabBar animates its indicator
+        // with the controller), so the eye follows the move.
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(kTextTabBarHeight),
+          preferredSize: const Size.fromHeight(58),
           child: TutorialAnchor(
             id: TourAnchor.libraryTabs,
-            child: TabBar(
-              controller: _tabController,
-              isScrollable: true,
-              indicatorColor: AppColors.gold,
-              labelColor: AppColors.gold,
-              tabAlignment: TabAlignment.start,
-              tabs: [
-                Tab(text: 'library.tab_books'.tr()),
-                Tab(text: 'library.tab_hadith'.tr()),
-                Tab(text: 'library.tab_hadeethenc'.tr()),
-                Tab(text: 'library.tab_channels'.tr()),
-                Tab(text: 'library.tab_websites'.tr()),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 4, 8, 10),
+              child: TabBar(
+                controller: _tabController,
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                dividerColor: Colors.transparent,
+                indicatorSize: TabBarIndicatorSize.tab,
+                splashBorderRadius: BorderRadius.circular(22),
+                labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  gradient: const LinearGradient(
+                    colors: [AppColors.gold, Color(0xFFB8913A)],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.gold.withValues(alpha: 0.35),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                labelColor: Colors.white,
+                unselectedLabelColor: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant,
+                labelStyle: const TextStyle(fontWeight: FontWeight.w700),
+                tabs: [
+                  _pill(Icons.auto_stories_rounded, 'library.tab_books'.tr()),
+                  _pill(Icons.menu_book_rounded, 'library.tab_hadith'.tr()),
+                  _pill(
+                    Icons.library_books_rounded,
+                    'library.tab_hadeethenc'.tr(),
+                  ),
+                  _pill(Icons.live_tv_rounded, 'library.tab_channels'.tr()),
+                  _pill(Icons.public_rounded, 'library.tab_websites'.tr()),
+                ],
+              ),
             ),
           ),
         ),
@@ -104,3 +133,15 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
     );
   }
 }
+
+/// One library tab: an icon and its name, padded into a pill.
+Widget _pill(IconData icon, String label) => Tab(
+  height: 40,
+  child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [Icon(icon, size: 18), const SizedBox(width: 6), Text(label)],
+    ),
+  ),
+);
