@@ -68,31 +68,13 @@ class MoreScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
         children: [
-          const SyncAccountCard(),
-          const SizedBox(height: 16),
-          SectionLabel('more.section_more'.tr()),
-
-          // The guided tour, first in the section: it is the thing a reader
-          // who is lost comes here looking for, and it carries its own
-          // every-launch switch rather than sending them down to Settings.
-          const TutorialEntryCard(),
-
-          // «وضع التركيز» - turning it on leaves the Qur'an tab and nothing
-          // else. It is entered from here and left from the bar that replaces
-          // the navigation bar, or with the back gesture; see `AppShell`.
-          TutorialAnchor(
-            id: TourAnchor.moreFocus,
-            child: IslamicActionCard(
-              icon: Icons.center_focus_strong_outlined,
-              accent: AppColors.primarySoft,
-              title: 'focus.title'.tr(),
-              subtitle: 'focus.subtitle'.tr(),
-              onTap: () => showFocusModePicker(context),
-            ),
-          ),
-
-          // «انشئ في المزيد قسم جديد سميه تحميل تلاوات القرآن … عبارة عن
-          // music player احترافي». First, because it is the one he asked for.
+          // «عايزك ترتب قسم المزيد بشكل أحسن … يبقى فيه تقسيمات منطقية
+          // للمتشابهات» (2026-09-19). Seven groups, each under its own
+          // header: what the reader does with the Qur'an and worship, what
+          // teaches, the tools, the reminders (out of the settings - they are
+          // not set once and forgotten), the settings proper, the account,
+          // and «عن التطبيق» at the very foot.
+          _GroupHeader('more.group_worship'.tr(), Icons.auto_awesome_rounded),
           TutorialAnchor(
             id: TourAnchor.moreQuranAudio,
             child: IslamicActionCard(
@@ -108,9 +90,6 @@ class MoreScreen extends ConsumerWidget {
             ),
           ),
 
-          // «تعليم التجويد» — the lessons come verbatim from a real graded
-          // course on Shamela, and every rule that can be pointed at is heard
-          // in an ayah rather than described, which is what he asked for.
           TutorialAnchor(
             id: TourAnchor.moreTajweed,
             child: IslamicActionCard(
@@ -126,15 +105,30 @@ class MoreScreen extends ConsumerWidget {
             ),
           ),
 
-          // «اعمل قسم جديد في المزيد باسم مناسك الحج والعمرة». Its text is
-          // Ibn Baz's manual, verbatim; see `hajj_guide.dart`.
           IslamicActionCard(
             icon: Icons.mosque_outlined,
             accent: AppColors.gold,
             title: 'hajj.title'.tr(),
             subtitle: 'hajj.card_subtitle'.tr(),
+            onTap: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute<void>(builder: (_) => const HajjScreen())),
+          ),
+
+          IslamicActionCard(
+            icon: Icons.healing_outlined,
+            accent: AppColors.goldSoft,
+            title: 'ruqyah.audio_title'.tr(),
+            subtitle: trn(
+              'ruqyah.audio_intro',
+              args: [
+                pluralN('ruqyah.recordings_count', ruqyahRecordings.length),
+              ],
+            ),
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const HajjScreen()),
+              MaterialPageRoute<void>(
+                builder: (_) => const RuqyahAudioScreen(),
+              ),
             ),
           ),
 
@@ -144,29 +138,14 @@ class MoreScreen extends ConsumerWidget {
             title: 'dedication.title'.tr(),
             subtitle: 'dedication.card_subtitle'.tr(),
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const DedicationsScreen()),
-            ),
-          ),
-
-          IslamicActionCard(
-            icon: Icons.healing_outlined,
-            accent: AppColors.goldSoft,
-            title: 'ruqyah.audio_title'.tr(),
-            subtitle: trn('ruqyah.audio_intro', args: [
-              pluralN('ruqyah.recordings_count', ruqyahRecordings.length)
-            ]),
-            onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => const RuqyahAudioScreen(),
+                builder: (_) => const DedicationsScreen(),
               ),
             ),
           ),
 
-          // The Islamic-channels card used to sit here as well as in the
-          // Library's own "القنوات" tab — two routes to the same screen, which
-          // the owner found while using it. The Library is where the app
-          // already keeps its directories of external content (books, hadith,
-          // channels, websites), so the duplicate here is the one that goes.
+          _GroupHeader('more.group_learning'.tr(), Icons.school_rounded),
+          const TutorialEntryCard(),
           IslamicActionCard(
             icon: Icons.auto_stories_outlined,
             accent: AppColors.primarySoft,
@@ -176,6 +155,18 @@ class MoreScreen extends ConsumerWidget {
               MaterialPageRoute<void>(
                 builder: (_) => const NewMuslimGuideScreen(),
               ),
+            ),
+          ),
+
+          _GroupHeader('more.group_tools'.tr(), Icons.handyman_rounded),
+          TutorialAnchor(
+            id: TourAnchor.moreFocus,
+            child: IslamicActionCard(
+              icon: Icons.center_focus_strong_outlined,
+              accent: AppColors.primarySoft,
+              title: 'focus.title'.tr(),
+              subtitle: 'focus.subtitle'.tr(),
+              onTap: () => showFocusModePicker(context),
             ),
           ),
 
@@ -194,8 +185,19 @@ class MoreScreen extends ConsumerWidget {
             ),
           ),
 
-          // «خلي مكانها في المزيد» — the permanent way back to it, after the
-          // one-time sheet has been seen and dismissed.
+          _GroupHeader(
+            'more.group_reminders'.tr(),
+            Icons.notifications_active_rounded,
+          ),
+          const SettingsBody(part: SettingsPart.reminders),
+
+          _GroupHeader('more.section_settings'.tr(), Icons.tune_rounded),
+          const SettingsBody(),
+
+          _GroupHeader('more.group_account'.tr(), Icons.cloud_sync_rounded),
+          const SyncAccountCard(),
+
+          _GroupHeader('settings.about'.tr(), Icons.info_outline_rounded),
           IslamicActionCard(
             icon: Icons.volunteer_activism_outlined,
             accent: AppColors.gold,
@@ -206,11 +208,60 @@ class MoreScreen extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 14),
-          SectionLabel('more.section_settings'.tr()),
+          const SettingsBody(part: SettingsPart.about),
+        ],
+      ),
+    );
+  }
+}
 
-          // Everything that is genuinely a setting, below the destinations.
-          const SettingsBody(),
+/// A group's heading in «المزيد»: a gold badge, the name, and a hairline that
+/// fades out - so seven groups read as seven places, not one long list.
+class _GroupHeader extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  const _GroupHeader(this.title, this.icon);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(2, 22, 2, 10),
+      child: Row(
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [AppColors.gold, AppColors.gold.withValues(alpha: 0.7)],
+              ),
+            ),
+            child: Icon(icon, size: 17, color: Colors.white),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              height: 1,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.gold.withValues(alpha: 0.55),
+                    AppColors.gold.withValues(alpha: 0),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -1022,7 +1022,12 @@
   },
   "more": {
     "section_more": "Ещё",
-    "section_settings": "Настройки"
+    "section_settings": "Настройки",
+    "group_worship": "Коран и поклонение",
+    "group_learning": "Обучение и руководство",
+    "group_tools": "Инструменты",
+    "group_reminders": "Напоминания",
+    "group_account": "Аккаунт и синхронизация"
   },
   "channels": {
     "title": "Исламские каналы",

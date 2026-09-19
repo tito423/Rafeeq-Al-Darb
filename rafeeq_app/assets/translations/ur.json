@@ -1022,7 +1022,12 @@
   },
   "more": {
     "section_more": "مزید",
-    "section_settings": "ترتیبات"
+    "section_settings": "ترتیبات",
+    "group_worship": "قرآن اور عبادات",
+    "group_learning": "سیکھنا اور رہنمائی",
+    "group_tools": "اوزار",
+    "group_reminders": "یاد دہانیاں",
+    "group_account": "اکاؤنٹ اور ہم آہنگی"
   },
   "channels": {
     "title": "اسلامی چینلز",

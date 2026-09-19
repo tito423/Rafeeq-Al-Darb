@@ -1022,7 +1022,12 @@
   },
   "more": {
     "section_more": "More",
-    "section_settings": "Settings"
+    "section_settings": "Settings",
+    "group_worship": "Qur'an & worship",
+    "group_learning": "Learning & guidance",
+    "group_tools": "Tools",
+    "group_reminders": "Reminders",
+    "group_account": "Account & sync"
   },
   "channels": {
     "title": "Islamic channels",
