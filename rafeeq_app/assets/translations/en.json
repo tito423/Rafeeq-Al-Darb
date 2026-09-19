@@ -1555,7 +1555,8 @@
     "sign_in_subtitle": "Sync your khatma, progress and counters across your devices",
     "hide": "Hide",
     "sign_out": "Sign out",
-    "sign_in_failed": "Sign-in failed: {error}"
+    "sign_in_failed": "Sign-in failed: {error}",
+    "later": "Later"
   },
   "links": {
     "manage": "Customize list",

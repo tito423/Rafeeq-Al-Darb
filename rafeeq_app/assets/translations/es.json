@@ -1555,7 +1555,8 @@
     "sign_in_subtitle": "Sincroniza tu jatma, tu progreso y tus contadores en todos tus dispositivos",
     "hide": "Ocultar",
     "sign_out": "Cerrar sesión",
-    "sign_in_failed": "Error al iniciar sesión: {error}"
+    "sign_in_failed": "Error al iniciar sesión: {error}",
+    "later": "Más tarde"
   },
   "links": {
     "manage": "Personalizar la lista",

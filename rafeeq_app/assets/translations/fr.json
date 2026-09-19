@@ -1555,7 +1555,8 @@
     "sign_in_subtitle": "Synchronisez votre khatma, votre progression et vos compteurs sur tous vos appareils",
     "hide": "Masquer",
     "sign_out": "Se déconnecter",
-    "sign_in_failed": "Échec de la connexion : {error}"
+    "sign_in_failed": "Échec de la connexion : {error}",
+    "later": "Plus tard"
   },
   "links": {
     "manage": "Personnaliser la liste",

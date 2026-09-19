@@ -1,3 +1,4 @@
+import '../../../more/presentation/widgets/sign_in_offer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,6 +39,9 @@ class OnboardingScreen extends ConsumerWidget {
   Future<void> _finish(BuildContext context, WidgetRef ref) async {
     final prefs = ref.read(sharedPrefsProvider);
     await markOnboardingCompleted(prefs);
+    if (!context.mounted) return;
+    // Once per install: the sign-in offer (see `offerSignInOnce`).
+    await offerSignInOnce(context, ref);
     if (!context.mounted) return;
     // Read the locale code *before* navigating, not inside `builder:` — a
     // real crash caught live: `pushReplacement` starts deactivating this
