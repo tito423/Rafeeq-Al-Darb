@@ -60,6 +60,9 @@ dependencies:
   # Images
   cached_network_image: ^3.4.1
   flutter_svg: ^2.0.10+1
+  # RenderingStrategy.raster for the mushaf pages (see mushaf_page_view.dart);
+  # already in the tree through flutter_svg, pinned to the same version.
+  vector_graphics: ^1.2.3
 
   # Background video for the video-mode Adhan (P2â€‘7) â€” clip downloaded on
   # demand, played muted + looped behind the karaoke text.

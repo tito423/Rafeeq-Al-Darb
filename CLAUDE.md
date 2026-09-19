@@ -702,6 +702,23 @@ Do not rediscover these.
     to *hide* something, open it and check something is still there: this was
     found in one tap on the emulator, and by nothing else.
 
+48. **Impeller drops the words of a Qur'an page drawn too large.** On
+    2026-09-19 the owner photographed page 316 in landscape on his Honor
+    with «قالوا يموسى إما أن» simply not drawn. On emulator-5554 the same
+    thing reproduced only when the page was zoomed two-fold: every word
+    vanished and the small ayah markers stayed. The page SVG was drawn as
+    live vector paths (`SvgPicture`, `RenderingStrategy.picture`, the
+    default), re-tessellated at whatever size a zoom or a wide landscape
+    screen asks for, and the big word paths are what gets dropped.
+
+    `mushaf_page_view.dart` now uses `RenderingStrategy.raster`: the page
+    is drawn once into an image at its own size and that image is scaled.
+    Zoomed text is a little softer; it is never missing. Removing the
+    colour-filter and backdrop-blur layers (`inkedSvg`) came first and was
+    not enough on its own. **Never draw a mushaf page as live vector paths
+    at an unbounded scale**, and when checking a Qur'an screen, zoom in —
+    that is what makes this failure visible on an emulator.
+
 ---
 
 ## 4. Where things live

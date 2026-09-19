@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics_compat.dart' show RenderingStrategy;
 
 import '../../../../core/services/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -72,6 +73,20 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   /// Raster editions only: the on-disk scan if it's already cached (offline),
   /// else null → stream from the network with `cached_network_image`.
   late Future<File?> _rasterReady;
+
+  Offset _doubleTapAt = Offset.zero;
+
+  /// Double tap: 2x around the finger, or back to the whole page.
+  void _toggleZoom() {
+    if (_zoomed) {
+      _transform.value = Matrix4.identity();
+      return;
+    }
+    const s = 2.0;
+    final p = _doubleTapAt;
+    _transform.value = Matrix4.diagonal3Values(s, s, 1)
+      ..setTranslationRaw(-p.dx * (s - 1), -p.dy * (s - 1), 0);
+  }
 
   /// True while the page is pinched in. Kept locally so the viewer can turn
   /// its own pan on and off, and mirrored into `quranPageZoomedProvider` so
@@ -168,12 +183,31 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     final landscape =
         MediaQuery.orientationOf(context) == Orientation.landscape;
     if (landscape) {
+      // «مفيش زوم في وضع الأورينتيشن … بحيث مش يتعارض مع حركة نص الصفحة
+      // لفوق أو لتحت». At rest the page scrolls up and down as before and
+      // the viewer only listens for a pinch or a double tap; once zoomed,
+      // the scroll stands still and a drag pans the enlarged page, and the
+      // PageView is frozen (quranPageZoomedProvider) so a pan never turns
+      // the page. Double tap again, or pinch back out, to return.
       return LayoutBuilder(
         builder: (context, constraints) {
           final w = constraints.maxWidth;
           final h = w / aspect;
-          return SingleChildScrollView(
-            child: SizedBox(width: w, height: h, child: build(w, h)),
+          return GestureDetector(
+            onDoubleTapDown: (d) => _doubleTapAt = d.localPosition,
+            onDoubleTap: _toggleZoom,
+            child: InteractiveViewer(
+              transformationController: _transform,
+              panEnabled: _zoomed,
+              minScale: 1,
+              maxScale: 4,
+              child: SingleChildScrollView(
+                physics: _zoomed
+                    ? const NeverScrollableScrollPhysics()
+                    : null,
+                child: SizedBox(width: w, height: h, child: build(w, h)),
+              ),
+            ),
           );
         },
       );
@@ -313,6 +347,14 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
                 SvgPicture.string(
                   inkedSvg(svg, ink),
                   fit: BoxFit.fill,
+                  // Drawn ONCE into an image at the page's own size, then
+                  // that image is shown - never the vector paths redrawn
+                  // at whatever size a zoom or a wide landscape screen asks
+                  // for. Redrawn huge, Impeller dropped the words' paths
+                  // and kept only the small ayah markers: reproduced on
+                  // emulator-5554 by zooming page 316 two-fold, the same
+                  // blank-where-text-was shape the owner photographed.
+                  renderingStrategy: RenderingStrategy.raster,
                   placeholderBuilder: (_) => const Center(
                     child: CircularProgressIndicator(),
                   ),
