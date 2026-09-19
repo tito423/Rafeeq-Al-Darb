@@ -1755,9 +1755,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-19 12:33 — IN PROGRESS — resume here**
+**2026-09-19 13:13 — IN PROGRESS — resume here**
 
-RELEASED v3.39.0 (tag = HEAD f2daa15, 277725303 B, v3.38.0 deleted): quick+detailed tours, sign-in offer on first run, library search scopes/phrase/harakat, More regroup, onboarding readability. REMAINING: library tabs visual redesign; landscape pinch-zoom in mushaf; remaining adhkar sections; reader: in-reader voice switch, open voice speed/quality, cancel download.
+RELEASED v3.40.0 (tag = HEAD 3640152, 277807223 B, v3.39.0 deleted). ROOT CAUSE of missing ayah words found: SvgPicture picture strategy re-tessellated at large scale, Impeller dropped word paths (reproduced by 2x zoom on p316); fixed with RenderingStrategy.raster (trap #48). All items from owner's big list now done except: quality of the enhanced voice itself (shaky) - not addressed; tap on empty area under a short mushaf page does not show toolbar (small, noted). Owner to verify on Honor: p316 landscape + zoom.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
