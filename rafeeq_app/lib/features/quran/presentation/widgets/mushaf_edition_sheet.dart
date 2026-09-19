@@ -147,15 +147,17 @@ class _EditionTile extends StatelessWidget {
                   Text(
                     '${'quran.riwayah'.tr()}: '
                     '${edition.localizedRiwayah(context.locale.languageCode)}',
+                    // onSurfaceVariant, not outline: outline is a BORDER
+                    // colour, and as text it was too faint to read.
                     style: theme.textTheme.bodySmall
-                        ?.copyWith(color: theme.colorScheme.outline),
+                        ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     '${pluralN('quran.pages_count', edition.pages)} · '
                     '${pluralN('quran.ayahs_count', edition.ayahs)}',
                     style: theme.textTheme.labelSmall
-                        ?.copyWith(color: theme.colorScheme.outline),
+                        ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                   ),
                   if (!edition.sciencesAligned) ...[
                     const SizedBox(height: 8),
