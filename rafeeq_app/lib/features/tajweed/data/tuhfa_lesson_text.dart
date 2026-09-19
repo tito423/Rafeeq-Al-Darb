@@ -23,7 +23,11 @@ class TuhfaPara {
   final String text;
   final bool commentary;
 
-  const TuhfaPara(this.text, this.commentary);
+  /// The book's own kind (`aya` for a Qur'anic citation), so the listen
+  /// button can leave the Qur'an out.
+  final String kind;
+
+  const TuhfaPara(this.text, this.commentary, [this.kind = 'body']);
 }
 
 /// The same normalisation `tuhfa_course_test.dart` compares headings with: the
@@ -50,7 +54,7 @@ List<TuhfaPara> tuhfaLessonParas(TuhfaLesson lesson, BookText? book) {
       for (var i = first; i <= last && i < p.paras.length; i++) {
         final t = p.paras[i].text;
         if (t.trim().isEmpty) continue;
-        out.add(TuhfaPara(t, r.commentary));
+        out.add(TuhfaPara(t, r.commentary, p.paras[i].kind));
       }
     }
   }

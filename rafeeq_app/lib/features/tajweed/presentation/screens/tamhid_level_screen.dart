@@ -1,3 +1,4 @@
+import '../../../library/presentation/widgets/listen_text_button.dart';
 import '../../data/bundled_matn.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -238,6 +239,11 @@ class _LessonTile extends ConsumerWidget {
         subtitle: Text(pages, style: theme.textTheme.bodySmall),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         children: [
+          if (body.isNotEmpty)
+            ListenTextButton(
+              text: () => speakablePassage(
+                  body.map((p) => (text: p.text, kind: p.kind))),
+            ),
           for (final p in body)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),

@@ -9,6 +9,7 @@
 /// pebbles at the jamarat.
 library;
 
+import '../../library/presentation/widgets/listen_text_button.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -359,6 +360,10 @@ class _StepText extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        ListenTextButton(
+          text: () => speakablePassage(
+              paras.map((p) => (text: p.text, kind: p.kind))),
+        ),
         for (final para in paras)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
