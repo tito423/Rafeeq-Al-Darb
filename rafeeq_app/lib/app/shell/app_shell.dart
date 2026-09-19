@@ -1,3 +1,4 @@
+import '../../features/library/data/library_api_service.dart';
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -101,6 +102,10 @@ class _AppShellState extends ConsumerState<AppShell>
       // on screen. See `DownloadTapChannel` for why the plugin's own callback
       // cannot do this.
       unawaited(DownloadTapChannel.instance.start());
+      // Books that ship in the APK are put in the library once, quietly -
+      // after the first screen has settled, not while it is drawing.
+      unawaited(Future<void>.delayed(const Duration(seconds: 8),
+          LibraryApiService.instance.installBuiltinBooks));
       // The one point both first-run and returning users pass through, so
       // this is where the startup grants are asked for. Delayed past the
       // route transition so the dialog lands on a settled screen rather than

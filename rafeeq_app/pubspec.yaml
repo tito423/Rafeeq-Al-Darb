@@ -109,6 +109,8 @@ flutter:
   assets:
     - assets/translations/
     - assets/data/quran_local.db
+    - assets/data/hadith.zip
+    - assets/data/builtin_books/
     - assets/data/quran_sciences.db
     - assets/data/quotes.json
     - assets/data/quote_backgrounds.json

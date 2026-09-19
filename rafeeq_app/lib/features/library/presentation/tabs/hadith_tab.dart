@@ -201,7 +201,10 @@ class _BookListState extends State<_BookList> {
   @override
   void initState() {
     super.initState();
+    // The built-in texts are installed at start-up; asked again here in
+    // case this tab opens first, then the cards are read.
     _loadRegistry();
+    LibraryApiService.instance.installBuiltinBooks().whenComplete(_loadRegistry);
     _sub = DownloadManager.instance.stream.listen((_) => _loadRegistry());
   }
 

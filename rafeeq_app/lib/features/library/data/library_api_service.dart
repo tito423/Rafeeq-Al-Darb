@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/foundation.dart' show debugPrint, visibleForTesting;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/utils/arabic_normalize.dart';
 import 'book_catalog.dart';
+import 'builtin_books.dart';
 
 class LibraryApiService {
   static final LibraryApiService instance = LibraryApiService._();
@@ -170,15 +173,64 @@ class LibraryApiService {
     );
     final bytes = res.data;
     if (bytes == null || bytes.isEmpty) throw Exception('No data');
+    await installBookBytes(bookId, bytes);
+  }
 
+  /// «حط … المتون built-in في التطبيق لأن تحميلهم بيفشل لما التطبيق بيروح
+  /// في الخلفية» (2026-09-19). Every book in the hadith category («كتب
+  /// ومتون الحديث», 29 books, 7.2 MB) and the three tajweed mutoon ship under
+  /// `assets/data/builtin_books/` as the exact bytes R2 serves. Any that is
+  /// not on the device is installed from there, as if it had been
+  /// downloaded - so the reader, search and «مكتبتي» see no difference.
+  Future<int> installBuiltinBooks() =>
+      _builtinRun ??= _installBuiltin().whenComplete(() => _builtinRun = null);
+  Future<int>? _builtinRun;
+
+  Future<int> _installBuiltin() async {
+    var n = 0;
+    for (final id in builtinBookIds) {
+      if (await isBookDownloaded(id)) continue;
+      try {
+        final d = await rootBundle.load('assets/data/builtin_books/$id.json');
+        await installBookBytes(
+            id, d.buffer.asUint8List(d.offsetInBytes, d.lengthInBytes));
+        n++;
+      } catch (e) {
+        debugPrint('installBuiltinBooks: $id failed: $e');
+      }
+    }
+    return n;
+  }
+
+  /// Decodes a hosted book and builds its index rows (pure; isolate-safe).
+  static ({Map meta, List<Map<String, Object?>> rows}) _parseBook(
+      List<int> bytes) {
     // Most hosted books are gzip bytes served without a Content-Encoding
     // header, so nothing upstream unpacks them -- sniff the magic instead.
     final isGzip = bytes.length >= 2 && bytes[0] == 0x1f && bytes[1] == 0x8b;
     final raw = isGzip ? utf8.decode(gzip.decode(bytes)) : utf8.decode(bytes);
-
     final j = jsonDecode(raw) as Map<String, dynamic>;
-    final meta = j['meta'] as Map;
     final pages = j['pages'] as List? ?? [];
+    final rows = <Map<String, Object?>>[];
+    for (var i = 0; i < pages.length; i++) {
+      final p = pages[i] as Map;
+      final content = jsonEncode(p['paras'] ?? []);
+      rows.add({
+        'page_index': i,
+        'printed_page': p['p'] ?? 0,
+        'content': content,
+        'body_norm': _indexableBody(content),
+      });
+    }
+    return (meta: j['meta'] as Map, rows: rows);
+  }
+
+  /// Writes a book's hosted bytes to disk and indexes it.
+  Future<void> installBookBytes(String bookId, List<int> bytes) async {
+    // Unpacking, parsing and normalising a book is the expensive part (the
+    // built-in set is 7 MB of gzip), so it runs off the UI isolate.
+    final parsed = await Isolate.run(() => _parseBook(bytes));
+    final meta = parsed.meta;
 
     // The reader reads this file; the DB rows below only feed the index.
     final file = File(await bookFilePath(bookId));
@@ -197,16 +249,8 @@ class LibraryApiService {
       await txn.delete('book_pages', where: 'book_id = ?', whereArgs: [bookId]);
 
       final batch = txn.batch();
-      for (var i = 0; i < pages.length; i++) {
-        final p = pages[i] as Map;
-        final content = jsonEncode(p['paras'] ?? []);
-        batch.insert('book_pages', {
-          'book_id': bookId,
-          'page_index': i,
-          'printed_page': p['p'] ?? 0,
-          'content': content,
-          'body_norm': _indexableBody(content),
-        });
+      for (final row in parsed.rows) {
+        batch.insert('book_pages', {'book_id': bookId, ...row});
       }
       await batch.commit(noResult: true);
     });

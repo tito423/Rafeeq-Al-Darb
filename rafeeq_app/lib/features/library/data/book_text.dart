@@ -37,8 +37,11 @@ class BookText {
   /// extension, so an **already-downloaded, still-plain-JSON file from
   /// before this change keeps working** without forcing every reader to
   /// re-download it — real backward compatibility, not just new files.
-  static Future<BookText> fromFile(String path) async {
-    final bytes = await File(path).readAsBytes();
+  static Future<BookText> fromFile(String path) async =>
+      fromBytes(await File(path).readAsBytes());
+
+  /// The same, from bytes already in hand - a text bundled as an asset.
+  static BookText fromBytes(List<int> bytes) {
     final isGzip = bytes.length >= 2 && bytes[0] == 0x1f && bytes[1] == 0x8b;
     final raw = isGzip
         ? utf8.decode(gzip.decode(bytes))

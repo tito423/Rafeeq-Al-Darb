@@ -1,12 +1,11 @@
+import '../../data/bundled_matn.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/config/app_config.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../library/data/book_text.dart';
-import '../../../library/data/library_api_service.dart';
 import '../../data/jazariyyah_course.dart';
 import '../../data/jazariyyah_examples.dart';
 import '../../data/jazariyyah_lesson_text.dart';
@@ -51,14 +50,7 @@ final jazariyyahProgressProvider =
 /// than only turned into «يلزم تنزيل نصّ الدروس».
 final jazariyyahBookProvider = FutureProvider<BookText?>((ref) async {
   try {
-    final api = LibraryApiService.instance;
-    if (!await api.isBookDownloaded(jazariyyahBook)) {
-      await api.downloadBook(
-        jazariyyahBook,
-        '${AppConfig.contentBaseUrl}/books/text/$jazariyyahBook.json',
-      );
-    }
-    return BookText.fromFile(await api.bookFilePath(jazariyyahBook));
+    return await bundledMatn(jazariyyahBook);
   } catch (e, st) {
     debugPrint('jazariyyahBookProvider failed: $e\n$st');
     rethrow;

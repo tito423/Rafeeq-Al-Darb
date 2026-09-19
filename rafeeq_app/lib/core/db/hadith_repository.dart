@@ -1,4 +1,11 @@
+import 'dart:io';
+import 'dart:isolate';
+
+import 'package:archive/archive.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../config/app_config.dart';
@@ -350,10 +357,44 @@ final hadithRepositoryProvider = FutureProvider<HadithRepository?>((ref) async {
     // deletes a copy whose `.version` stamp no longer matches
     // `AppConfig.hadithDbVersion` and reports it as missing, so a device
     // holding a pre-grading `hadith.db` re-fetches instead of opening it.
-    final db = await DbHelper.instance
+    var db = await DbHelper.instance
         .openDownloaded('hadith.db', expectedVersion: AppConfig.hadithDbVersion);
+    if (db == null) {
+      await installBundledHadith();
+      db = await DbHelper.instance.openDownloaded('hadith.db',
+          expectedVersion: AppConfig.hadithDbVersion);
+    }
     return db == null ? null : HadithRepository(db);
   } catch (_) {
     return null;
   }
 });
+
+/// «حط الكتب التسعة … built-in في التطبيق لأن تحميلهم بيفشل لما التطبيق
+/// بيروح في الخلفية» (2026-09-19). The nine collections ship inside the APK
+/// again - as `hadith.zip` (22,235,941 bytes, the same file R2 serves), not
+/// the 109,731,840-byte database, which is what made the earlier bundling
+/// so heavy. On first open it is unpacked, off the UI isolate, to exactly
+/// where a finished download used to put it, with the same version stamp,
+/// so everything downstream is unchanged.
+Future<void> installBundledHadith() async {
+  final data = await rootBundle.load('assets/data/hadith.zip');
+  final bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+  final support = await getApplicationSupportDirectory();
+  final dir = p.join(support.path, 'databases');
+  final version = AppConfig.hadithDbVersion;
+  await Isolate.run(() async {
+    final archive = ZipDecoder().decodeBytes(bytes);
+    final entry = archive.files.firstWhere(
+        (f) => f.isFile && f.name.toLowerCase() == 'hadith.db');
+    await Directory(dir).create(recursive: true);
+    final target = p.join(dir, 'hadith.db');
+    final tmp = File('$target.tmp');
+    await tmp.writeAsBytes(entry.content as List<int>, flush: true);
+    final dest = File(target);
+    if (dest.existsSync()) await dest.delete();
+    await tmp.rename(target);
+    await File('$target.version').writeAsString(version, flush: true);
+  });
+}

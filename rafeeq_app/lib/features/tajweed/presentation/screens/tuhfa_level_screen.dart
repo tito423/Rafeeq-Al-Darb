@@ -22,17 +22,16 @@
 /// paragraph rather than swallowing it.
 library;
 
+import '../../data/bundled_matn.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../library/data/book_text.dart';
-import '../../../library/data/library_api_service.dart';
 import '../../data/tuhfa_course.dart';
 import '../../data/tuhfa_lesson_text.dart';
 
@@ -68,14 +67,7 @@ final tuhfaProgressProvider =
 /// for the reason written on `tajweedBookProvider`.
 final tuhfaBookProvider = FutureProvider<BookText?>((ref) async {
   try {
-    final api = LibraryApiService.instance;
-    if (!await api.isBookDownloaded(tuhfaBook)) {
-      await api.downloadBook(
-        tuhfaBook,
-        '${AppConfig.contentBaseUrl}/books/text/$tuhfaBook.json',
-      );
-    }
-    return BookText.fromFile(await api.bookFilePath(tuhfaBook));
+    return await bundledMatn(tuhfaBook);
   } catch (e, st) {
     debugPrint('tuhfaBookProvider failed: $e\n$st');
     rethrow;
