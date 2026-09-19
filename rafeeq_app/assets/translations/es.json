@@ -979,7 +979,7 @@
     "f_azkar": "Adhkar y tasbih",
     "f_azkar_desc": "Los adhkar del día y la noche en tarjetas, un contador de tasbih con las invocaciones transmitidas, seguimiento de la jatma y la ruqya.",
     "f_offline": "Funciona sin conexión",
-    "f_offline_desc": "El Corán, los adhkar y los horarios funcionan sin conexión, y lo descargado permanece en tu dispositivo.",
+    "f_offline_desc": "El Corán, los adhkar, los horarios de oración, los nueve libros de hadiz y los textos de hadiz, taywid y Hajj funcionan sin conexión, y lo que descargue queda en su dispositivo.",
     "f_quran_desc_loading": "Un mushaf textual completo, más ediciones escaneadas.",
     "f_hadith_loading": "Colecciones de hadices",
     "f_hadith_desc_loading": "Los textos completos con sus capítulos, cada uno con su tajrij.",

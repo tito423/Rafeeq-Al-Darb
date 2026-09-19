@@ -7,19 +7,26 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-19 |
-| **Released** | **v3.36.1**, tag and release both at `HEAD`. One release, one tag, tree clean |
-| **App version** | `pubspec.yaml` `3.36.1+38`; `AboutScreen.appVersion` `3.36.1` — a test checks the two against each other. APK **217.6 MB** |
-| **On the owner's Honor** | still the signed **3.25.0** build. **Nothing from v3.26.0 to v3.36.1 has run on his phone** — eleven releases. He is installing v3.36.1 now; see NEXT_PROMPT.md for the four questions only his phone can answer |
-| **Verified 2026-09-18 (handover)** | `flutter analyze lib test integration_test` → **No issues found** · `flutter test` → **366 passed** · hosted content **12/12** · hotlinked backgrounds **13/13** · catalogue sizes **213/213**, 0 mismatches |
-| **Measured 2026-09-18** | **213** books in 9 shelves (tazkiyah 107, hadith 29, adab 22, **talibIlm 14**, tarikh 12, fiqh 10, aqidah 8, seerah 8, tafsir 3) · **43** carry `editorNotesRemoved` · 7 locales × **1,529** keys, identical · **57** quotes across 4 books · **9** dawah channels |
-| **Spoken reader (NEW)** | offered on **83 of 213** books — those whose text carries its harakat. Gated on `diacritisedPct`, generated into the catalogue by `measure_diacritisation.py` + `apply_diacritisation.py`, never typed. Seen working on the device: «استماع» → «إيقاف», logcat showing dispatch to `ar-xa-x-arz-seanet-embedded` — an EMBEDDED voice, so it spoke offline |
-| **What it refuses** | a book under 80% is not read and the button says why · **the Qur'an is never spoken by the synthesiser** — `pageSpeechText` drops every `kind == 'aya'` paragraph, because the Qur'an is recited and the app carries real recitations by named qurra' |
-| **The evidence under it** | `integration_test/tts_harakat_test.dart` on the device: four minimal pairs (كَتَبَ/كُتُبٌ، عِلْمٌ/عَلَمٌ، سَأَلَ/سُئِلَ، رَجُلٌ/رَجُلًا) synthesised to separate files and compared byte for byte. All four differ, reproducibly — the voice reads the harakat. Nine Arabic voices on the device, four embedded |
-| **Can the other 130 be read?** | **Not yet, and it is measured.** CATT encoder-only against 10 of our own vowelled books (3,044 words): **vowel-WER 15.6%**, shadda 16.5%, **case endings 15.4% wrong**. One word in six. Tooling is fine (CATT ships ONNX export, Apache-2.0); the accuracy on THIS corpus is not. `scripts/evaluate_catt_on_our_books.py` re-takes the number |
-| **Languages** | all seven opened on a device this session. Spanish, Russian, French, Portuguese and Urdu had **never** been seen before. Two bugs found and fixed: Urdu showed two different AM markers on one screen, and «حديث اليوم» kept its Spanish explanation after switching to Arabic |
-| **Screens** | all 46 screen files have now been opened and looked at |
-| **Not a regression, recorded because it looks like one** | a DEBUG build sits on a blank splash for minutes on this emulator while ExoPlayer decodes the splash video. A clean install of the RELEASE build reaches onboarding in ~30 s |
-| **Emulator** | `hw.ramSize` raised **2048 → 4096** (`config.ini.bak-2026-09-17` beside it). At 2 GB the app ANR'd 13.9 s on launch — 109% kernel, 4,197 major faults, kswapd 34%. Host, not app |
+| **Released** | **v3.42.0** — see the release notes on GitHub. Built with `build_github_release.bat` (carries the «ادعم التطبيق» PayPal link; any other build has none) |
+| **App version** | `pubspec.yaml` `3.42.0+44`; `AboutScreen.appVersion` `3.42.0` |
+| **Tests** | `flutter analyze lib test` clean · `flutter test` **433 passed** (2026-09-19) |
+| **Store kit** | `store/google_play/` — 8 captioned screenshots, feature graphic, Arabic/English listing, README. Rebuild with `scripts/build_store_screenshots.py` |
+
+## WHAT 3.42.0 CHANGED (2026-09-19, all seen on emulator-5554)
+
+* **Built into the APK now:** `assets/data/hadith.zip` (22,235,941 B, unpacked on first open to `databases/hadith.db` with the v3 stamp) and `assets/data/builtin_books/` — the 29 hadith-category books, the three tajweed mutoon and the Hajj manual, installed into the library by `LibraryApiService.installBuiltinBooks` (8 s after the first frame; decode in an isolate). `test/builtin_books_test.dart` holds sizes to the catalogue.
+* **Downloads:** the enhanced voice goes through `DownloadManager` (WorkManager), so it continues in the background; `DownloadManager.enqueue` re-attaches to a still-running platform task after a restart.
+* **Home:** the prayer card draws at once from `LocationService.lastSaved` and refreshes behind it (was a 15 s GPS wait); date sheets parsed in isolates and pre-warmed; header card has theme / language / support / settings buttons.
+* **«المزيد»:** seven collapsible `MoreGroup` cards; settings sections are cards; «شرح ميزات واستخدام التطبيق».
+* **Reader:** «استماع» asks page or whole book, and whole-book mode turns pages itself. New library tab «مسموعة» (83 books).
+* **ListenTextButton** on tajweed lessons: offered only where the passage is >= 80% vowelled (same measure as the library) and never speaks Qur'an, inline citations included. Hajj (16-71%) and Tamhid (0-1%) are NOT vowelled, so they get no button — the owner decided not to pursue auto-diacritisation or pre-rendered audio (2026-09-19).
+* **Mushaf** turns right-to-left in every language. **Adhan** shows text only for a recording with a verified timeline. **Fonts:** 15 interface fonts in Settings > الخط. **Hajj:** header overflow fixed, A-/A+ text size. **Search:** title/author match word by word («ابن القيم»).
+* **Privacy policy** updated and re-uploaded (`scripts/r2_upload_privacy.py`): bundled content, the voice download, the PayPal button.
+
+## OPEN
+
+* Not seen on a real phone: the «ابن القيم» search on the search screen (unit-tested on the real catalogue only — the emulator cannot type Arabic).
+* In image mode, very fast adb flings (120 ms) did not turn the page on the emulator while a 500 ms drag did. Unconfirmed with a finger.
 
 ## STATE AS OF 2026-09-17 — handover (v3.30.0 published)
 
