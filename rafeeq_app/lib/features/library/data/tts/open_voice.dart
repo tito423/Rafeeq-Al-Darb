@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:onnxruntime/onnxruntime.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/config/app_config.dart';
+import '../../../../core/services/download_manager.dart';
 import 'arabic_phonetiser.dart';
 
 /// The open Arabic voice the owner chose (sample B) for its tafkhim of the
@@ -48,6 +51,7 @@ class OpenVoice {
 
   /// All three files present at their full size.
   static Future<bool> isInstalled() async {
+    await _adoptFinished();
     final d = await _dir();
     for (final f in files) {
       final file = File(p.join(d.path, f));
@@ -56,85 +60,131 @@ class OpenVoice {
     return true;
   }
 
-  /// Downloads the pack, resuming nothing - a partial file is replaced.
+  /// Downloads the pack through [DownloadManager] - Android's WorkManager,
+  /// not this isolate - so it carries on when the app is sent to the
+  /// background or killed, resumes a dropped connection from where it
+  /// stopped, and shows in the status bar. The previous in-process
+  /// `HttpClient` loop froze the moment the reader left the app, which is
+  /// why «يكمل في الخلفية» restarted from zero (2026-09-19).
   /// [onProgress] gets (bytesSoFar, totalBytes).
-  static Future<void> install(void Function(int, int)? onProgress) {
-    // One download at a time: a second tap while the first is running joins
-    // it rather than writing the same .part files twice.
-    final running = _installing;
-    if (running != null) return running;
-    return _installing = _install(onProgress).whenComplete(() => _installing = null);
+  static Future<void> install(void Function(int, int)? onProgress) async {
+    _cancel = false;
+    final d = await _dir();
+    d.createSync(recursive: true);
+    for (final r in _retired) {
+      final old = File(p.join(d.path, r));
+      if (old.existsSync()) old.deleteSync();
+    }
+    await _adoptFinished();
+    final dm = DownloadManager.instance;
+    final pending = [
+      for (final f in files)
+        if (!_complete(File(p.join(d.path, f)), f)) f,
+    ];
+    for (final f in pending) {
+      await dm.enqueue(
+        id: taskId(f),
+        url: urlFor(f),
+        category: downloadCategory,
+        fileName: taskId(f),
+        title: 'library.open_voice_title'.tr(),
+      );
+    }
+    final done = Completer<void>();
+    void check(List<DownloadTask> _) {
+      if (done.isCompleted) return;
+      var bytes = 0;
+      var finished = 0;
+      for (final f in files) {
+        if (!pending.contains(f)) {
+          bytes += _sizes[f]!;
+          finished++;
+          continue;
+        }
+        final t = dm.taskById(taskId(f));
+        switch (t?.status) {
+          case DownloadStatus.completed:
+            bytes += _sizes[f]!;
+            finished++;
+          case DownloadStatus.failed:
+            done.completeError(HttpException(t?.error ?? 'failed'));
+            return;
+          case DownloadStatus.canceled:
+            _cancel = true;
+            done.completeError(StateError('cancelled'));
+            return;
+          default:
+            bytes += t?.received ?? 0;
+        }
+      }
+      onProgress?.call(bytes, totalBytes);
+      if (finished == files.length) done.complete();
+    }
+
+    final sub = dm.stream.listen(check);
+    check(const []);
+    try {
+      await done.future;
+    } finally {
+      await sub.cancel();
+    }
+    // `_finish` registers the file a moment after it reports completion;
+    // wait for the bytes to be where the registry says, then move them.
+    for (var i = 0; i < 50 && !await _adoptFinished(); i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    }
+    if (!await isInstalled()) throw const FileSystemException('incomplete');
   }
 
-  static Future<void>? _installing;
-  static HttpClient? _client;
+  /// The DownloadManager id (and download file name) for one file.
+  static String taskId(String f) => 'tts_open_ar_v1_$f';
+
+  /// The `category` these transfers are enqueued under; the Downloads hub's
+  /// «الأصوات» bucket claims it.
+  static const downloadCategory = 'tts_voice';
+
+  static bool _complete(File f, String name) =>
+      f.existsSync() && f.lengthSync() == _sizes[name];
+
+  /// Moves any file the background downloader finished - possibly while the
+  /// app was closed - into the voice folder. True when nothing is left
+  /// waiting in `downloads/`.
+  static Future<bool> _adoptFinished() async {
+    final d = await _dir();
+    d.createSync(recursive: true);
+    final dl = await DownloadManager.instance.downloadDir;
+    var ok = true;
+    for (final f in files) {
+      final target = File(p.join(d.path, f));
+      if (_complete(target, f)) continue;
+      final got = File(p.join(dl.path, taskId(f)));
+      if (_complete(got, f)) {
+        if (target.existsSync()) target.deleteSync();
+        try {
+          got.renameSync(target.path);
+        } on FileSystemException {
+          got.copySync(target.path);
+          got.deleteSync();
+        }
+      } else {
+        ok = false;
+      }
+    }
+    return ok;
+  }
+
   static bool _cancel = false;
 
   /// Whether the last install ended because the reader cancelled it.
   static bool get wasCancelled => _cancel;
 
-  /// Stops a running download and removes what it wrote, so 252 MB started
+  /// Stops a running download and removes what it wrote, so 261 MB started
   /// by mistake can be taken back. The pending [install] completes with a
   /// [StateError] ('cancelled').
   static Future<void> cancelInstall() async {
     _cancel = true;
-    _client?.close(force: true);
-    final d = await _dir();
-    if (!d.existsSync()) return;
-    for (final f in d.listSync().whereType<File>()) {
-      if (f.path.endsWith('.part')) {
-        try {
-          f.deleteSync();
-        } catch (_) {}
-      }
-    }
-  }
-
-  static Future<void> _install(void Function(int, int)? onProgress) async {
-    final d = await _dir();
-    d.createSync(recursive: true);
-    var done = 0;
-    _cancel = false;
-    final client = HttpClient()..userAgent = 'RafeeqAlDarb (tts voice)';
-    _client = client;
-    try {
-      for (final r in _retired) {
-        final old = File(p.join(d.path, r));
-        if (old.existsSync()) old.deleteSync();
-      }
-      for (final f in files) {
-        final target = File(p.join(d.path, f));
-        // A file already complete (fp_ms from the earlier pack) is kept:
-        // moving to the new vocoder costs 73 MB, not 261.
-        if (target.existsSync() && target.lengthSync() == _sizes[f]) {
-          done += _sizes[f]!;
-          onProgress?.call(done, totalBytes);
-          continue;
-        }
-        final part = File('${target.path}.part');
-        final req = await client.getUrl(Uri.parse(urlFor(f)));
-        final res = await req.close();
-        if (res.statusCode != 200) {
-          throw HttpException('HTTP ${res.statusCode} for $f');
-        }
-        final sink = part.openWrite();
-        await for (final chunk in res) {
-          if (_cancel) {
-            await sink.close();
-            if (part.existsSync()) part.deleteSync();
-            throw StateError('cancelled');
-          }
-          sink.add(chunk);
-          done += chunk.length;
-          onProgress?.call(done, totalBytes);
-        }
-        await sink.close();
-        if (target.existsSync()) target.deleteSync();
-        part.renameSync(target.path);
-      }
-    } finally {
-      client.close();
-      _client = null;
+    for (final f in files) {
+      await DownloadManager.instance.remove(taskId(f));
     }
   }
 
@@ -152,6 +202,9 @@ class OpenVoice {
 
   static Future<void> uninstall() async {
     await instance.release();
+    for (final f in files) {
+      await DownloadManager.instance.remove(taskId(f));
+    }
     final d = await _dir();
     if (d.existsSync()) d.deleteSync(recursive: true);
   }

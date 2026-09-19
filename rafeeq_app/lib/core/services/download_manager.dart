@@ -283,6 +283,25 @@ class DownloadManager {
       title: title,
     );
 
+    // A transfer this id started before the app was closed may still be
+    // running in WorkManager, where `_tasks` (in memory) cannot see it.
+    // Re-attach to it instead of downloading the same file twice.
+    try {
+      final group = category == 'ruqyah'
+          ? DownloadEngine.groupRuqyah
+          : DownloadEngine.groupFiles;
+      for (final t in await bd.FileDownloader().allTasks(group: group)) {
+        if (t is bd.DownloadTask && t.metaData == id && t.url == url) {
+          task.platformTask = t;
+          task.status = DownloadStatus.downloading;
+          _tasks[id] = task;
+          _byPlatformId[t.taskId] = id;
+          _notify();
+          return;
+        }
+      }
+    } catch (_) {}
+
     final platform = bd.DownloadTask(
       url: url,
       filename: fileName,

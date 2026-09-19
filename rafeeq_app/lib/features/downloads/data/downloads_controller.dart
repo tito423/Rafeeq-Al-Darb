@@ -56,7 +56,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.ayahRecitations => const [],
         DownloadCategory.hadith => const ['hadith'],
         DownloadCategory.books => const ['books', 'books_text'],
-        DownloadCategory.voices => const [],
+        DownloadCategory.voices => const ['tts_voice'],
       };
 }
 
