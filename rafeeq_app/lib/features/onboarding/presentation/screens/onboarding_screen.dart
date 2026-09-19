@@ -255,7 +255,25 @@ class _SelectableEdition extends StatelessWidget {
                 size: 20,
               ),
             ),
-            Expanded(child: MushafDownloadTile(edition: edition)),
+            // This screen is always night-dark, but the tile colours its text
+            // from the app theme - dark ink on a dark ground on a light-themed
+            // phone, the grey-on-black edition names seen on a fresh install.
+            // A dark theme here makes its text light whatever the app uses.
+            Expanded(
+              child: Theme(
+                data: ThemeData.dark(useMaterial3: true).copyWith(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: AppColors.gold,
+                    brightness: Brightness.dark,
+                  ),
+                  textTheme: Theme.of(context).textTheme.apply(
+                        bodyColor: Colors.white,
+                        displayColor: Colors.white,
+                      ),
+                ),
+                child: MushafDownloadTile(edition: edition),
+              ),
+            ),
           ],
         ),
       ),
