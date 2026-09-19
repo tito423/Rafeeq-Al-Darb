@@ -480,7 +480,8 @@
     "search_opt_phrase": "Точная фраза",
     "search_opt_marks": "С огласовками",
     "search_books_found": "Найденные книги",
-    "search_in_text_found": "В загруженных книгах"
+    "search_in_text_found": "В загруженных книгах",
+    "voice_short": "Голос"
   },
   "azkar": {
     "title": "Азкары",

@@ -480,7 +480,8 @@
     "search_opt_phrase": "Exact phrase",
     "search_opt_marks": "Match harakat",
     "search_books_found": "Matching books",
-    "search_in_text_found": "Inside downloaded books"
+    "search_in_text_found": "Inside downloaded books",
+    "voice_short": "Voice"
   },
   "azkar": {
     "title": "Adhkar",

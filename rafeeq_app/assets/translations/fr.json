@@ -480,7 +480,8 @@
     "search_opt_phrase": "Phrase exacte",
     "search_opt_marks": "Avec harakat",
     "search_books_found": "Livres trouvés",
-    "search_in_text_found": "Dans les livres téléchargés"
+    "search_in_text_found": "Dans les livres téléchargés",
+    "voice_short": "Voix"
   },
   "azkar": {
     "title": "Adhkar",

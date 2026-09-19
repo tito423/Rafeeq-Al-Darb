@@ -85,6 +85,12 @@ class _InstallDialogState extends State<_InstallDialog> {
       });
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
+      // Closing the connection to cancel surfaces as a network error; the
+      // flag says it was the reader, not the network.
+      if (OpenVoice.wasCancelled) {
+        if (mounted) Navigator.of(context).pop(false);
+        return;
+      }
       if (mounted) setState(() => _error = '$e');
     }
   }
@@ -107,6 +113,11 @@ class _InstallDialogState extends State<_InstallDialog> {
       actions: [
         // The download carries on after the dialog closes (OpenVoice keeps
         // one install in flight), so nobody is held on a progress bar.
+        if (_error == null)
+          TextButton(
+            onPressed: OpenVoice.cancelInstall,
+            child: Text('common.cancel'.tr()),
+          ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(_error != null

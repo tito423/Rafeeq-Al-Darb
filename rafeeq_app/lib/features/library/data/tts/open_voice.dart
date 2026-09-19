@@ -60,12 +60,36 @@ class OpenVoice {
   }
 
   static Future<void>? _installing;
+  static HttpClient? _client;
+  static bool _cancel = false;
+
+  /// Whether the last install ended because the reader cancelled it.
+  static bool get wasCancelled => _cancel;
+
+  /// Stops a running download and removes what it wrote, so 252 MB started
+  /// by mistake can be taken back. The pending [install] completes with a
+  /// [StateError] ('cancelled').
+  static Future<void> cancelInstall() async {
+    _cancel = true;
+    _client?.close(force: true);
+    final d = await _dir();
+    if (!d.existsSync()) return;
+    for (final f in d.listSync().whereType<File>()) {
+      if (f.path.endsWith('.part')) {
+        try {
+          f.deleteSync();
+        } catch (_) {}
+      }
+    }
+  }
 
   static Future<void> _install(void Function(int, int)? onProgress) async {
     final d = await _dir();
     d.createSync(recursive: true);
     var done = 0;
+    _cancel = false;
     final client = HttpClient()..userAgent = 'RafeeqAlDarb (tts voice)';
+    _client = client;
     try {
       for (final f in files) {
         final target = File(p.join(d.path, f));
@@ -77,6 +101,11 @@ class OpenVoice {
         }
         final sink = part.openWrite();
         await for (final chunk in res) {
+          if (_cancel) {
+            await sink.close();
+            if (part.existsSync()) part.deleteSync();
+            throw StateError('cancelled');
+          }
           sink.add(chunk);
           done += chunk.length;
           onProgress?.call(done, totalBytes);
@@ -87,6 +116,7 @@ class OpenVoice {
       }
     } finally {
       client.close();
+      _client = null;
     }
   }
 
@@ -117,6 +147,13 @@ class OpenVoice {
     _fp = open('fp_ms.onnx');
     _voc = open('hifigan.onnx');
     _den = open('denoiser.onnx');
+  }
+
+  /// Loads the three models ahead of the first «استماع», so the wait is
+  /// spent while the reader is reading rather than after they tap.
+  Future<void> warmUp() async {
+    if (_fp != null || !await isInstalled()) return;
+    await _ensureLoaded();
   }
 
   Future<void> release() async {

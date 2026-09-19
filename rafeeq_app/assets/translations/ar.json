@@ -480,7 +480,8 @@
     "search_opt_phrase": "العبارة كما هي",
     "search_opt_marks": "مطابقة التشكيل",
     "search_books_found": "كتب مطابقة",
-    "search_in_text_found": "داخل نصوص الكتب المنزَّلة"
+    "search_in_text_found": "داخل نصوص الكتب المنزَّلة",
+    "voice_short": "الصوت"
   },
   "azkar": {
     "title": "الأذكار",

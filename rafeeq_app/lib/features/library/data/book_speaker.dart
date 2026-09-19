@@ -224,6 +224,7 @@ class BookSpeaker {
   /// first sound waits for the whole first chunk, so a sentence or two at a
   /// time keeps the start quick while the next chunk renders during playback.
   static const _openChunk = 220;
+  static const _firstChunk = 90;
 
   /// Reads the page in the open voice (the one the owner chose for its
   /// tafkhim of the divine name). Returns false if it could not start, so
@@ -235,6 +236,12 @@ class BookSpeaker {
     bool stale() => _cancelled || gen != _gen;
     _chunks = chunk(pageText, max: _openChunk);
     if (_chunks.isEmpty) return true;
+    // The first sound waits for the whole first chunk to be synthesised, so
+    // that one is cut short (~90 characters, still at a word): the voice
+    // starts sooner and the rest renders while it speaks.
+    if (_chunks.first.length > _firstChunk) {
+      _chunks = [..._splitLong(_chunks.first, _firstChunk), ..._chunks.skip(1)];
+    }
     _cancelled = false;
     _index = 0;
     _speaking = true;
