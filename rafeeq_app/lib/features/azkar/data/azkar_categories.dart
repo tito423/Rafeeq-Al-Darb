@@ -160,4 +160,13 @@ const Map<int, List<AzkarCategory>> azkarSectionCategories = {
   18: [AzkarCategory.narrated], // ما يقول إذا نزل المطر
   19: [AzkarCategory.narrated], // التسمية عند الأكل والشرب
   20: [AzkarCategory.afterPrayer], // الأذكار بعد الصلاة
+  // 2026-09-19, «أدعية السفر قليلة جدًا»: an-Nawawi's travel chapters, each
+  // item with a named source or his grading (Ibn al-Sunni's ungraded ones
+  // left out).
+  21: [AzkarCategory.travel], // ما يقوله إذا ركب دابته
+  22: [AzkarCategory.travel], // أذكاره إذا خرج (التوديع)
+  23: [AzkarCategory.travel], // استحباب طلبه الوصية من أهل الخير
+  24: [AzkarCategory.travel], // تكبير المسافر إذا صعد وتسبيحه إذا هبط
+  25: [AzkarCategory.travel], // ما يدعو به إذا خاف ناسًا
+  26: [AzkarCategory.travel], // ما يقول إذا رجع من سفره
 };

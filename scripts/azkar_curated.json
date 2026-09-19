@@ -239,8 +239,8 @@
    "item": 0,
    "from": "أعُوذُ بِكَلِماتِ اللَّهِ التَّامَّاتِ مِنْ شَرّ ما خلق",
    "to": "مِنْ شَرّ ما خلق",
-   "ref_from": "موطأ مالك",
-   "ref_to": "موطأ مالك",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "كتاب الترمذي",
    "ruqyah": true,
    "sha": "a2606597b016"
   },
@@ -658,6 +658,87 @@
    "ref_from": "بإسناد صحيح في سنن أبي داود",
    "ref_to": "والنسائي",
    "sha": "a4392bd888df"
+  },
+  {
+   "section": 166,
+   "item": 2,
+   "from": "اللَّهُمَّ إنَّا نَسألُكَ فِي سفَرِنَا",
+   "to": "وَسُوءِ المُنْقَلَبِ في المَالِ والأهْلِ",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "صحيح مسلم",
+   "sha": "3ac201036171"
+  },
+  {
+   "section": 166,
+   "item": 4,
+   "from": "اللَّهُمَّ أنْتَ الصَّاحِبُ فِي السَّفَرِ",
+   "to": "وَمِنْ سُوءِ المَنْظَرِ فِي الأهْلِ وَالمَالِ",
+   "ref_from": "قال الترمذي: حديث حسن صحيح",
+   "ref_to": "قال الترمذي: حديث حسن صحيح",
+   "sha": "18c733c5c152"
+  },
+  {
+   "section": 163,
+   "item": 6,
+   "from": "أسْتَوْدِعُ اللَّهَ دِينَكَ",
+   "to": "وَخَوَاتِيمَ عَمَلِكَ",
+   "ref_from": "قال الترمذي: هذا حديث حسن صحيح",
+   "ref_to": "قال الترمذي: هذا حديث حسن صحيح",
+   "sha": "95f02a7bbef7"
+  },
+  {
+   "section": 163,
+   "item": 8,
+   "from": "زَوّدَكَ اللَّهُ التَّقْوَى",
+   "to": "حَيْثُما كُنْتَ",
+   "ref_from": "قال الترمذي: حديث حسن",
+   "ref_to": "قال الترمذي: حديث حسن",
+   "sha": "24ea47b1445b"
+  },
+  {
+   "section": 164,
+   "item": 0,
+   "from": "اللَّهُمَّ اطْوِ لَهُ البَعِيدَ",
+   "to": "عَلَيْهِ السَّفَرَ",
+   "ref_from": "قال الترمذي: حديث حسن",
+   "ref_to": "قال الترمذي: حديث حسن",
+   "sha": "ca0ae1e325b9"
+  },
+  {
+   "section": 169,
+   "item": 0,
+   "from": "كنّا إذا صَعِدْنَا كَبَّرْنَا",
+   "to": "وإذا نزلنا سبَّحنا",
+   "ref_from": "صحيح البخاري",
+   "ref_to": "صحيح البخاري",
+   "sha": "02363e06fa0f"
+  },
+  {
+   "section": 169,
+   "item": 2,
+   "from": "لا إِلهَ إِلاَّ اللَّهُ وحده",
+   "to": "وَهَزَمَ الأحْزَابَ وَحْدَهُ",
+   "ref_from": "صحيحي البخاري ومسلم",
+   "ref_to": "صحيحي البخاري ومسلم",
+   "sha": "a62a43e13418"
+  },
+  {
+   "section": 175,
+   "item": 0,
+   "from": "اللهم إنا نجعلك في نحورهم",
+   "to": "وَنَعُوذُ بِكَ مِنْ شُرُورِهِمْ",
+   "ref_from": "سنن أبي داود والنسائي",
+   "ref_to": "بالإِسناد الصحيح",
+   "sha": "1b6447d0a8a9"
+  },
+  {
+   "section": 178,
+   "item": 1,
+   "from": "آيِبُونَ تائِبُونَ عابِدُون لِرَبِّنا حامِدُونَ",
+   "to": "آيِبُونَ تائِبُونَ عابِدُون لِرَبِّنا حامِدُونَ",
+   "ref_from": "صحيح مسلم",
+   "ref_to": "صحيح مسلم",
+   "sha": "0fcde1a6aefd"
   }
  ],
  "_ruqyah": "The five of the ruqyah screen's six duas that an-Nawawi's al-Adhkar actually carries. The sixth - «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر» - is NOT in this edition: zero hits across all 338 chapters. It is therefore dropped, not reconstructed. ruqyah_catalog.dart already states the principle: «an absent dua is an honest gap; a dua typed in from memory with no takhrij behind it is not.» These carry explicit ids so the screen can address them for ever."

@@ -15,6 +15,7 @@ import argparse
 import hashlib
 import io
 import json
+import re
 import sys
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
@@ -46,6 +47,17 @@ def slice_span(text, frm, to, what):
         if b < 0:
             raise ValueError("%s: closing phrase not found: %r" % (what, to))
     return text[a:b + len(to)].strip()
+
+
+def unquote(t):
+    """Drop the edition's ASCII quote marks - Shamela's typesetting around a
+    book title or a quoted saying, never a word of the text - and the spacing
+    they leave: «صحيح مسلم " و " موطأ» -> «صحيح مسلم وموطأ», «التقوى "، قال»
+    -> «التقوى، قال». Applied AFTER the sha, so the pointer check still runs
+    on the source exactly as cut."""
+    t = " ".join(t.replace('"', " ").split())
+    t = re.sub(r" ([،,.:؛])", r"\1", t)
+    return re.sub(r"(^| )و (?=\S)", r"\1و", t)
 
 
 def build(cut, cur):
@@ -80,7 +92,7 @@ def build(cut, cur):
                 # typography, not an-Nawawi's words, and a cut through them
                 # left one dangling («سنن أبي داود " بإسناد»). Dropped from the
                 # SOURCE LINE only; the dhikr's own text is never touched.
-                note = " ".join(note.replace('"', " ").split())
+                note = unquote(note)
             except ValueError as exc:
                 errors.append(str(exc))
                 continue
@@ -105,7 +117,7 @@ def build(cut, cur):
                                  "variant": variant, "items": []}
                 order.append(key)
             sections[key]["items"].append(
-                {"body": body, "footnote": note, "page": it["page"],
+                {"body": unquote(body), "footnote": note, "page": it["page"],
                  "no": it["no"], "sha": e["sha"]})
     return [sections[k] for k in order], errors
 
