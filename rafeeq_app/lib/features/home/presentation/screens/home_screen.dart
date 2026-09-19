@@ -173,6 +173,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 class _HeaderCard extends ConsumerWidget {
   const _HeaderCard();
 
+  /// Height of the band the dates sit in: room for weekday + date.
+  static const double _dateBand = 36;
+
   /// [offsetDays] is the reader's own correction (see `PrayerAdjustments`) —
   /// the Hijri date is set by moon sighting, so an arithmetic calendar can sit
   /// a day either side of what a locality actually announced.
@@ -229,9 +232,10 @@ class _HeaderCard extends ConsumerWidget {
         : const Color(0xFFD4AF37);
     return Container(
       // «وسّع كارت التاريخ ومرحبًا شوية».
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        // «ممكن تكوّر شكل الكارت ده».
+        borderRadius: BorderRadius.circular(30),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -281,24 +285,35 @@ class _HeaderCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(
-                  _hijriLine(
-                    context.locale.languageCode,
-                    ref.watch(prayerAdjustmentsProvider).hijriOffsetDays,
+                  // Both dates sit in a band of the same height, so the
+                  // buttons under them line up whether the Gregorian side
+                  // takes one line or two (English: «Saturday / Sep 19»).
+                  SizedBox(
+                    height: _dateBand,
+                    child: Align(
+                      alignment: AlignmentDirectional.bottomStart,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          _hijriLine(
+                            context.locale.languageCode,
+                            ref.watch(prayerAdjustmentsProvider).hijriOffsetDays,
+                          ),
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: hijriColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: hijriColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   ThemeQuickButton(color: hijriColor),
+                  const SizedBox(height: 6),
+                  SupportQuickButton(color: hijriColor),
                 ],
               ),
             ),
@@ -363,6 +378,12 @@ class _HeaderCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  SizedBox(
+                    height: _dateBand,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: AlignmentDirectional.centerEnd,
@@ -391,8 +412,13 @@ class _HeaderCard extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   LanguageQuickButton(color: gregorianColor),
+                  const SizedBox(height: 6),
+                  SettingsQuickButton(color: gregorianColor),
                 ],
               ),
             ),

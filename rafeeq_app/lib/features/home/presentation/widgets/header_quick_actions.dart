@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/i18n/supported_locales.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
+import '../../../settings/presentation/screens/settings_screen.dart';
+import '../../../support/presentation/screens/support_screen.dart';
 
 /// «حط تحت التاريخ الهجري زر سريع لتغيير الثيم … وتحت التاريخ الميلادي زر
 /// سريع لتغيير اللغة … وخلّي أيقوناتهم جميلة وأنيميتد». Two small round
@@ -72,6 +74,47 @@ class LanguageQuickButton extends StatelessWidget {
   }
 }
 
+/// «حط زرار ادعم التطبيق تحت زرار تغيير الثيم».
+class SupportQuickButton extends StatelessWidget {
+  final Color color;
+  const SupportQuickButton({super.key, required this.color});
+
+  @override
+  Widget build(BuildContext context) => _QuickButton(
+    color: color,
+    icon: Icons.volunteer_activism_rounded,
+    label: 'support.title'.tr(),
+    onTap: () => Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const SupportScreen())),
+  );
+}
+
+/// «وزرار للانتقال للإعدادات مباشرة … تحت زرار اللغة»: the same settings
+/// the «المزيد» tab holds, on a page of their own.
+class SettingsQuickButton extends StatelessWidget {
+  final Color color;
+  const SettingsQuickButton({super.key, required this.color});
+
+  @override
+  Widget build(BuildContext context) => _QuickButton(
+    color: color,
+    icon: Icons.settings_rounded,
+    label: 'more.section_settings'.tr(),
+    onTap: () => Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          appBar: AppBar(title: Text('more.section_settings'.tr())),
+          body: const SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 32),
+            child: SettingsBody(),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 class _QuickButton extends StatefulWidget {
   final Color color;
   final IconData icon;
@@ -101,41 +144,64 @@ class _QuickButtonState extends State<_QuickButton> {
         setState(() => _turns += 1);
         widget.onTap();
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          AnimatedRotation(
-            turns: _turns,
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.easeOutBack,
-            child: Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(colors: [
-                  c.withValues(alpha: 0.22),
-                  AppColors.gold.withValues(alpha: 0.18),
-                ]),
-                border: Border.all(color: c.withValues(alpha: 0.55)),
+      // A fixed width, so a stack of buttons with labels of different
+      // lengths keeps its circles on one vertical line.
+      child: SizedBox(
+        width: 84,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedRotation(
+                turns: _turns,
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeOutBack,
+                child: Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [
+                        c.withValues(alpha: 0.22),
+                        AppColors.gold.withValues(alpha: 0.18),
+                      ],
+                    ),
+                    border: Border.all(color: c.withValues(alpha: 0.55)),
+                  ),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 350),
+                    transitionBuilder: (w, a) =>
+                        ScaleTransition(scale: a, child: w),
+                    child: Icon(
+                      widget.icon,
+                      key: ValueKey(widget.icon),
+                      size: 18,
+                      color: c,
+                    ),
+                  ),
+                ),
               ),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 350),
-                transitionBuilder: (w, a) =>
-                    ScaleTransition(scale: a, child: w),
-                child: Icon(widget.icon,
-                    key: ValueKey(widget.icon), size: 18, color: c),
+              const SizedBox(height: 3),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 84),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.label,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      color: c,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 3),
-          Text(
-            widget.label,
-            maxLines: 1,
-            style: TextStyle(
-                fontSize: 10.5, color: c, fontWeight: FontWeight.w600),
-          ),
-        ]),
+        ),
       ),
     );
   }
