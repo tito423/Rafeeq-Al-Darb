@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -934,7 +934,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     QuranTextLayout textLayout,
   ) {
     _pages ??= PageController(initialPage: _initialPage - 1);
-    return PageView.builder(
+    // «دايمًا خلّي تقليب الصفحات من اليمين للشمال»: a mushaf turns right to
+    // left in every UI language; each page keeps the UI's own direction.
+    final ambient = Directionality.of(context);
+    return Directionality(textDirection: TextDirection.rtl, child: PageView.builder(
       controller: _pages,
       // Frozen while the page is pinched in, so a pan moves the page instead
       // of turning it — see `quran_zoom_provider.dart`.
@@ -957,7 +960,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         return TurningPage(
           controller: _pages!,
           index: index,
-          child: FutureBuilder<List<Ayah>>(
+          child: Directionality(textDirection: ambient, child: FutureBuilder<List<Ayah>>(
           future: _ayahsOfPage(page, data), initialData: data.repo.pageIfLoaded(page),
           builder: (context, snap) {
             if (!snap.hasData) {
@@ -1003,14 +1006,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               playingSurah: _recite.active ? _recite.surahId : _highlightSurah,
               playingAyah: _recite.active ? _recite.ayahNumber : _highlightAyah,
               onAyahLongPress: (a) => _openSciences(a, data),
-              // `edition:` here is the RECITER, not the mushaf. It used to
-              // be handed `edition?.id ?? 'hafs_kfqc'` — a *mushaf* printing
-              // id — so every verse resolved to
-              // `cdn.islamic.network/quran/audio/128/hafs_kfqc/<n>.mp3`,
-              // which 404s; `setAudioSource` threw, the catch called
-              // `stopContinuous()`, and picking a verse stopped the
-              // recitation instead of moving it. That is the owner's
-              // «واجي اختار آية … بتقف التلاوة مش بتشتغل».
+              // `edition:` is the RECITER, not the mushaf. Handed a printing
+              // id (`hafs_kfqc`) every verse URL 404'd, `setAudioSource`
+              // threw and the recitation stopped: «بتقف التلاوة مش بتشتغل».
               // The verse's own marker plays that one verse — separate from the
               // continuous recitation, which only the toolbar starts.
               onPlayTap: (a) => AyahAudioService.instance.play(
@@ -1028,9 +1026,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               pageFillScreen: _pageFillScreen,
             );
           },
-        ));
+        )));
       },
-    );
+    ));
   }
 
   void _onImageAyahTap(
