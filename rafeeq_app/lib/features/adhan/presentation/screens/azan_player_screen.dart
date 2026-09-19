@@ -16,7 +16,6 @@ import '../../../../core/services/adhan_native.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/azan_subtitle.dart';
 import '../../data/adhan_background.dart';
-import '../widgets/adhan_full_text.dart';
 import '../widgets/adhan_scene.dart';
 
 /// The prayer's name in the app's *current* language.
@@ -145,9 +144,11 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
 
     // Lay the text out over a sensible estimate immediately, then re-lay it
     // the moment the native player reports its real duration.
-    _rebuildSubtitles(_timings == null
-        ? const Duration(minutes: 3)
-        : Duration(milliseconds: _timings!.totalMs));
+    _rebuildSubtitles(
+      _timings == null
+          ? const Duration(minutes: 3)
+          : Duration(milliseconds: _timings!.totalMs),
+    );
     if (!sounding) _silentStart = DateTime.now();
 
     _poll = Timer.periodic(const Duration(milliseconds: 200), (_) => _tick());
@@ -194,22 +195,27 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
   AdhanTimings? _timings;
   bool _timingsTried = false;
 
-  /// Whole text, no line-by-line: a file the user imported, or a recording
-  /// whose breaths could not be confirmed by listening
-  /// (`scripts/finalize_adhan_timings.py`). A wrong line on screen while the
-  /// muezzin recites another is the «صفر تزامن» the owner reported.
-  bool get _wholeText {
-    if (widget.spec.assetPath == null) return true;
+  /// Text is shown only for a recording with a checked, breath-by-breath
+  /// timeline. «شيل الأذان النصي تمامًا من أي أذان مش مظبوط عليه ظهور النص
+  /// بالتزامن، وخلّي دي قاعدة لأي أذان مخصص ينضاف» (2026-09-19): a file the
+  /// user imported, or a bundled one whose breaths could not be confirmed by
+  /// listening (`scripts/finalize_adhan_timings.py`), plays with no text at
+  /// all - not the whole adhan written out, and never a guessed line.
+  bool get _synced {
+    if (widget.spec.assetPath == null) return false;
     final t = _timings;
     return _timingsTried &&
-        (t == null || !t.followsAdhan(isFajr: widget.spec.prayerKey == 'fajr'));
+        t != null &&
+        t.followsAdhan(isFajr: widget.spec.prayerKey == 'fajr');
   }
 
   Future<void> _loadTimings() async {
     final asset = widget.spec.assetPath;
     if (asset == null) return;
     try {
-      final raw = await rootBundle.loadString('assets/data/catalogs/adhan_phrase_timings.json');
+      final raw = await rootBundle.loadString(
+        'assets/data/catalogs/adhan_phrase_timings.json',
+      );
       final all = jsonDecode(raw) as Map<String, dynamic>;
       final entry = all[p.basename(asset)] as Map<String, dynamic>?;
       if (entry != null) _timings = AdhanTimings.fromJson(entry);
@@ -223,7 +229,11 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     setState(() {
       _subtitles = timings == null
           ? buildAzanSubtitles(isFajr: isFajr, total: total)
-          : buildAzanSubtitlesMeasured(isFajr: isFajr, total: total, timings: timings);
+          : buildAzanSubtitlesMeasured(
+              isFajr: isFajr,
+              total: total,
+              timings: timings,
+            );
     });
   }
 
@@ -238,7 +248,9 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     }
     // Past the last window (the tail of the recording) — keep the final
     // phrase up rather than blanking the screen.
-    if (idx == -1 && _subtitles.isNotEmpty && pos >= _subtitles.last.startTime) {
+    if (idx == -1 &&
+        _subtitles.isNotEmpty &&
+        pos >= _subtitles.last.startTime) {
       idx = _subtitles.length - 1;
     }
     if (idx != _activeIndex) setState(() => _activeIndex = idx);
@@ -370,45 +382,37 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
                       const _PreviewBadge(),
                     ],
                     const Spacer(),
-                    // An imported file has no measured timings: show the
-                    // whole adhan rather than guess which line is sounding.
-                    if (_wholeText)
-                      Expanded(
-                        flex: 6,
-                        child: AdhanFullText(
-                          isFajr: widget.spec.prayerKey == 'fajr',
+                    // No verified timeline, no text (see [_synced]).
+                    if (_synced)
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 450),
+                        transitionBuilder: (child, anim) => FadeTransition(
+                          opacity: anim,
+                          child: ScaleTransition(
+                            scale: Tween<double>(
+                              begin: 0.92,
+                              end: 1.0,
+                            ).animate(anim),
+                            child: child,
+                          ),
                         ),
-                      )
-                    else
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 450),
-                      transitionBuilder: (child, anim) => FadeTransition(
-                        opacity: anim,
-                        child: ScaleTransition(
-                          scale: Tween<double>(
-                            begin: 0.92,
-                            end: 1.0,
-                          ).animate(anim),
-                          child: child,
-                        ),
-                      ),
-                      child: Text(
-                        current,
-                        key: ValueKey(current),
-                        textAlign: TextAlign.center,
-                        textDirection: TextDirection.rtl,
-                        style: const TextStyle(
-                          fontFamily: 'AmiriQuran',
-                          fontSize: 40,
-                          height: 1.6,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.gold,
-                          shadows: [
-                            Shadow(blurRadius: 18, color: Color(0xFF000000)),
-                          ],
+                        child: Text(
+                          current,
+                          key: ValueKey(current),
+                          textAlign: TextAlign.center,
+                          textDirection: TextDirection.rtl,
+                          style: const TextStyle(
+                            fontFamily: 'AmiriQuran',
+                            fontSize: 40,
+                            height: 1.6,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.gold,
+                            shadows: [
+                              Shadow(blurRadius: 18, color: Color(0xFF000000)),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
                     const Spacer(),
                     if (_muted)
                       Padding(
@@ -503,7 +507,9 @@ class _LiveClockState extends State<_LiveClock> {
     final n = DateTime.now();
     String two(int v) => v.toString().padLeft(2, '0');
     return localizeDigits(
-        '${two(n.hour)}:${two(n.minute)}:${two(n.second)}', uiLanguageCode);
+      '${two(n.hour)}:${two(n.minute)}:${two(n.second)}',
+      uiLanguageCode,
+    );
   }
 
   @override
