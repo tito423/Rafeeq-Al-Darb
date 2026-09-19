@@ -472,7 +472,15 @@
     "voice_open_installed": "Installed on your device; works without internet.",
     "voice_open_not_installed": "Not installed. Downloaded when chosen ({}).",
     "voice_device_desc": "A man's voice from the phone's own engine. Nothing to download, but it does not give the name of Allah its heavy pronunciation.",
-    "voice_open_fallback_note": "Until the enhanced voice finishes downloading, the phone voice reads."
+    "voice_open_fallback_note": "Until the enhanced voice finishes downloading, the phone voice reads.",
+    "search_scope_all": "All",
+    "search_scope_title": "Book title",
+    "search_scope_author": "Author",
+    "search_scope_text": "Inside the text",
+    "search_opt_phrase": "Exact phrase",
+    "search_opt_marks": "Match harakat",
+    "search_books_found": "Matching books",
+    "search_in_text_found": "Inside downloaded books"
   },
   "azkar": {
     "title": "Adhkar",

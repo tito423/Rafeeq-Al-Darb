@@ -472,7 +472,15 @@
     "voice_open_installed": "Установлен на устройстве; работает без интернета.",
     "voice_open_not_installed": "Не установлен. Загружается при выборе ({}).",
     "voice_device_desc": "Мужской голос встроенного движка телефона. Ничего не нужно загружать, но имя Аллаха он произносит без твёрдости.",
-    "voice_open_fallback_note": "Пока улучшенный голос не загружен, читает голос телефона."
+    "voice_open_fallback_note": "Пока улучшенный голос не загружен, читает голос телефона.",
+    "search_scope_all": "Всё",
+    "search_scope_title": "Название",
+    "search_scope_author": "Автор",
+    "search_scope_text": "В тексте",
+    "search_opt_phrase": "Точная фраза",
+    "search_opt_marks": "С огласовками",
+    "search_books_found": "Найденные книги",
+    "search_in_text_found": "В загруженных книгах"
   },
   "azkar": {
     "title": "Азкары",

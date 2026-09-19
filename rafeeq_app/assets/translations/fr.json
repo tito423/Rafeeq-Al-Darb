@@ -472,7 +472,15 @@
     "voice_open_installed": "Installée sur votre appareil ; fonctionne sans internet.",
     "voice_open_not_installed": "Non installée. Téléchargée une fois choisie ({}).",
     "voice_device_desc": "Une voix d'homme du moteur du téléphone. Rien à télécharger, mais elle ne prononce pas le nom d'Allah avec son emphase.",
-    "voice_open_fallback_note": "Tant que la voix améliorée n'est pas téléchargée, la voix du téléphone lit."
+    "voice_open_fallback_note": "Tant que la voix améliorée n'est pas téléchargée, la voix du téléphone lit.",
+    "search_scope_all": "Tout",
+    "search_scope_title": "Titre",
+    "search_scope_author": "Auteur",
+    "search_scope_text": "Dans le texte",
+    "search_opt_phrase": "Phrase exacte",
+    "search_opt_marks": "Avec harakat",
+    "search_books_found": "Livres trouvés",
+    "search_in_text_found": "Dans les livres téléchargés"
   },
   "azkar": {
     "title": "Adhkar",

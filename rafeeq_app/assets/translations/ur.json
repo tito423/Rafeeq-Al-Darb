@@ -472,7 +472,15 @@
     "voice_open_installed": "آپ کے آلے پر نصب؛ انٹرنیٹ کے بغیر چلتی ہے۔",
     "voice_open_not_installed": "نصب نہیں۔ منتخب کرنے پر ڈاؤن لوڈ ہو گی ({})۔",
     "voice_device_desc": "فون کے اپنے انجن کی مردانہ آواز۔ ڈاؤن لوڈ کی ضرورت نہیں، مگر لفظِ جلالہ کو تفخیم سے ادا نہیں کرتی۔",
-    "voice_open_fallback_note": "جب تک بہتر آواز ڈاؤن لوڈ نہ ہو، فون کی آواز پڑھتی ہے۔"
+    "voice_open_fallback_note": "جب تک بہتر آواز ڈاؤن لوڈ نہ ہو، فون کی آواز پڑھتی ہے۔",
+    "search_scope_all": "سب",
+    "search_scope_title": "کتاب کا نام",
+    "search_scope_author": "مصنف",
+    "search_scope_text": "متن میں",
+    "search_opt_phrase": "بعینہ جملہ",
+    "search_opt_marks": "اعراب کے ساتھ",
+    "search_books_found": "ملنے والی کتابیں",
+    "search_in_text_found": "ڈاؤن لوڈ شدہ کتابوں کے متن میں"
   },
   "azkar": {
     "title": "اذکار",

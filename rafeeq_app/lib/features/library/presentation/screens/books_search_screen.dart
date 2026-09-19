@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/book_catalog.dart';
 import '../../data/library_api_service.dart';
+import '../../../../core/utils/arabic_normalize.dart';
 import 'book_text_reader_screen.dart';
 
 /// Searches every downloaded book at once.
@@ -28,8 +29,16 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
   Timer? _debounce;
 
   List<BookSearchHit> _hits = const [];
+  List<LibraryBook> _books = const [];
   bool _searching = false;
   bool _ran = false;
+
+  /// «طوّر نظام البحث في المكتبة ووسّع خياراته … بالمؤلف أو الكتاب، بالتشكيل
+  /// أو من غير، بجملة أو غيره». Where to look, and how strictly.
+  _Scope _scope = _Scope.all;
+  bool _phrase = false;
+  bool _exactMarks = false;
+  String? _downloading;
 
   @override
   void dispose() {
@@ -44,26 +53,53 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
     _debounce = Timer(const Duration(milliseconds: 350), () => _run(q));
   }
 
+  /// Titles and authors come from the catalogue itself - every book,
+  /// downloaded or not - matched without harakat.
+  List<LibraryBook> _matchCatalogue(String q) {
+    final t = q.trim();
+    final n = normalizeArabic(t);
+    final loose = normalizeArabicLoose(t);
+    final lower = t.toLowerCase();
+    bool hit(String ar, String en) =>
+        normalizeArabic(ar).contains(n) ||
+        normalizeArabicLoose(ar).contains(loose) ||
+        en.toLowerCase().contains(lower);
+    return [
+      for (final b in libraryBookCatalog)
+        if ((_scope != _Scope.author && hit(b.titleAr, b.titleEn)) ||
+            (_scope != _Scope.title && hit(b.authorAr, b.authorEn)))
+          b,
+    ];
+  }
+
   Future<void> _run(String q) async {
     if (q.trim().length < 2) {
       setState(() {
         _hits = const [];
+        _books = const [];
         _ran = false;
       });
       return;
     }
     setState(() => _searching = true);
     try {
-      final hits = await LibraryApiService.instance.searchAllBooks(q);
+      final books =
+          _scope == _Scope.text ? <LibraryBook>[] : _matchCatalogue(q);
+      final hits = (_scope == _Scope.all || _scope == _Scope.text)
+          ? await LibraryApiService.instance
+              .searchAllBooks(q, phrase: _phrase, exactMarks: _exactMarks)
+          : <BookSearchHit>[];
       if (!mounted) return;
       setState(() {
         _hits = hits;
+        _books = books;
         _ran = true;
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _hits = const [];
+        _books = const [];
         _ran = true;
       });
     } finally {
@@ -82,6 +118,33 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
         path: path,
         initialPageIndex: hit.pageIndex,
       ),
+    ));
+  }
+
+  /// A book found by title or author: opened if it is on the device,
+  /// otherwise downloaded first, with a spinner on its card.
+  Future<void> _openBook(LibraryBook b) async {
+    final api = LibraryApiService.instance;
+    if (!await api.isBookDownloaded(b.id)) {
+      final url = b.textEdition?.url;
+      if (url == null) return;
+      setState(() => _downloading = b.id);
+      try {
+        await api.downloadBook(b.id, url);
+      } catch (_) {
+        if (!mounted) return;
+        setState(() => _downloading = null);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(pluralN('library.download_failed', 1))));
+        return;
+      }
+      if (!mounted) return;
+      setState(() => _downloading = null);
+    }
+    final path = await api.bookFilePath(b.id);
+    if (!mounted) return;
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (_) => BookTextReaderScreen(book: b, path: path),
     ));
   }
 
@@ -118,6 +181,23 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
               ),
             ),
           ),
+          _SearchOptions(
+            scope: _scope,
+            phrase: _phrase,
+            exactMarks: _exactMarks,
+            onScope: (v) {
+              setState(() => _scope = v);
+              _run(_controller.text);
+            },
+            onPhrase: (v) {
+              setState(() => _phrase = v);
+              _run(_controller.text);
+            },
+            onExactMarks: (v) {
+              setState(() => _exactMarks = v);
+              _run(_controller.text);
+            },
+          ),
           if (_searching) const LinearProgressIndicator(minHeight: 2),
           if (_ran && !_searching)
             Padding(
@@ -125,23 +205,39 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
               child: Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
-                  pluralN('library.text_search_results', _hits.length),
+                  pluralN('library.text_search_results',
+                      _hits.length + _books.length),
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ),
             ),
           Expanded(
-            child: _hits.isEmpty
+            child: _hits.isEmpty && _books.isEmpty
                 ? _EmptyState(ran: _ran, searching: _searching)
-                : ListView.separated(
+                : ListView(
                     padding: const EdgeInsets.all(14),
-                    itemCount: _hits.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 8),
-                    itemBuilder: (context, i) => _HitCard(
-                      hit: _hits[i],
-                      onTap: () => _open(_hits[i]),
-                    ),
+                    children: [
+                      if (_books.isNotEmpty) ...[
+                        _ResultsHeader('library.search_books_found'.tr(),
+                            Icons.auto_stories_rounded),
+                        for (final b in _books)
+                          _BookResult(
+                            book: b,
+                            busy: _downloading == b.id,
+                            onOpen: () => _openBook(b),
+                          ),
+                      ],
+                      if (_hits.isNotEmpty) ...[
+                        _ResultsHeader('library.search_in_text_found'.tr(),
+                            Icons.format_quote_rounded),
+                        for (final h in _hits)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: _HitCard(hit: h, onTap: () => _open(h)),
+                          ),
+                      ],
+                    ],
                   ),
           ),
         ],
@@ -270,6 +366,162 @@ class _HitCard extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+enum _Scope { all, title, author, text }
+
+/// Where to search, and - for the text - how strictly.
+class _SearchOptions extends StatelessWidget {
+  final _Scope scope;
+  final bool phrase;
+  final bool exactMarks;
+  final ValueChanged<_Scope> onScope;
+  final ValueChanged<bool> onPhrase;
+  final ValueChanged<bool> onExactMarks;
+
+  const _SearchOptions({
+    required this.scope,
+    required this.phrase,
+    required this.exactMarks,
+    required this.onScope,
+    required this.onPhrase,
+    required this.onExactMarks,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final inText = scope == _Scope.all || scope == _Scope.text;
+    Widget scopeChip(_Scope s, String key, IconData icon) => Padding(
+          padding: const EdgeInsetsDirectional.only(end: 8),
+          child: ChoiceChip(
+            avatar: Icon(icon, size: 17),
+            label: Text(key.tr()),
+            selected: scope == s,
+            onSelected: (_) => onScope(s),
+          ),
+        );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(children: [
+              scopeChip(_Scope.all, 'library.search_scope_all',
+                  Icons.travel_explore_rounded),
+              scopeChip(_Scope.title, 'library.search_scope_title',
+                  Icons.menu_book_rounded),
+              scopeChip(_Scope.author, 'library.search_scope_author',
+                  Icons.person_rounded),
+              scopeChip(_Scope.text, 'library.search_scope_text',
+                  Icons.format_quote_rounded),
+            ]),
+          ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 220),
+            child: inText
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Wrap(spacing: 8, runSpacing: 4, children: [
+                      FilterChip(
+                        avatar: const Icon(Icons.short_text_rounded, size: 17),
+                        label: Text('library.search_opt_phrase'.tr()),
+                        selected: phrase,
+                        onSelected: onPhrase,
+                      ),
+                      FilterChip(
+                        avatar:
+                            const Icon(Icons.text_fields_rounded, size: 17),
+                        label: Text('library.search_opt_marks'.tr()),
+                        selected: exactMarks,
+                        onSelected: onExactMarks,
+                      ),
+                    ]),
+                  )
+                : const SizedBox(width: double.infinity),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ResultsHeader extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  const _ResultsHeader(this.title, this.icon);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.fromLTRB(2, 6, 2, 8),
+        child: Row(children: [
+          Icon(icon, size: 18, color: AppColors.gold),
+          const SizedBox(width: 6),
+          Text(title,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w700)),
+        ]),
+      );
+}
+
+/// A book matched by its title or its author.
+class _BookResult extends StatelessWidget {
+  final LibraryBook book;
+  final bool busy;
+  final VoidCallback onOpen;
+  const _BookResult(
+      {required this.book, required this.busy, required this.onOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: busy ? null : onOpen,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: AppColors.gold.withValues(alpha: 0.14),
+              ),
+              child: const Icon(Icons.auto_stories_rounded,
+                  color: AppColors.gold),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(book.titleAr,
+                      style: theme.textTheme.titleSmall
+                          ?.copyWith(fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 2),
+                  Text(book.authorAr,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant)),
+                ],
+              ),
+            ),
+            busy
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2))
+                : const Icon(Icons.chevron_right),
+          ]),
         ),
       ),
     );

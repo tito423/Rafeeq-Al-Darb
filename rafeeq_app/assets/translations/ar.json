@@ -472,7 +472,15 @@
     "voice_open_installed": "مثبّت على جهازك، ويعمل دون إنترنت.",
     "voice_open_not_installed": "غير مثبّت. يُنزَّل عند اختياره ({}).",
     "voice_device_desc": "صوت رجل من محرّك الهاتف نفسه، لا يحتاج تنزيلًا، لكنه لا يفخّم لفظ الجلالة.",
-    "voice_open_fallback_note": "إلى أن يكتمل تنزيل الصوت المحسَّن، يقرأ صوت الهاتف."
+    "voice_open_fallback_note": "إلى أن يكتمل تنزيل الصوت المحسَّن، يقرأ صوت الهاتف.",
+    "search_scope_all": "الكل",
+    "search_scope_title": "عنوان الكتاب",
+    "search_scope_author": "المؤلف",
+    "search_scope_text": "داخل النص",
+    "search_opt_phrase": "العبارة كما هي",
+    "search_opt_marks": "مطابقة التشكيل",
+    "search_books_found": "كتب مطابقة",
+    "search_in_text_found": "داخل نصوص الكتب المنزَّلة"
   },
   "azkar": {
     "title": "الأذكار",

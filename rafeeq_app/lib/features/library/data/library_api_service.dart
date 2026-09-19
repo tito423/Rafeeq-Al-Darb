@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -271,15 +272,20 @@ class LibraryApiService {
   /// at a word boundary, so "صلاة الجماعة" narrows rather than widening.
   /// Rows are read in small pages so no single query hands the whole library
   /// across the platform channel at once.
+  ///
+  /// [phrase]: the words must appear together, in order - not merely all on
+  /// the same page. [exactMarks]: the query's own harakat must match the
+  /// book's - «عِلْم» finds عِلْم and not عَلَم. The page is first found on
+  /// the normalised text, then checked against the original.
   Future<List<BookSearchHit>> searchAllBooks(
     String query, {
     int limit = 200,
+    bool phrase = false,
+    bool exactMarks = false,
   }) async {
-    final terms = query
-        .trim()
-        .split(RegExp(r'\s+'))
-        .where((t) => t.isNotEmpty)
-        .toList();
+    final words = query.trim().split(RegExp(r'\s+')).where((t) => t.isNotEmpty);
+    final terms = phrase ? [words.join(' ')] : words.toList();
+    final raw = query.trim().split(RegExp(r'\s+')).join(' ');
     if (terms.isEmpty) return const [];
     final normTerms = terms.map(normalizeArabic).toList();
     final looseTerms = terms.map(normalizeArabicLoose).toList();
@@ -306,7 +312,13 @@ class LibraryApiService {
     while (hits.length < limit) {
       final rows = await db.query(
         'book_pages',
-        columns: ['book_id', 'page_index', 'printed_page', 'body_norm'],
+        columns: [
+          'book_id',
+          'page_index',
+          'printed_page',
+          'body_norm',
+          if (exactMarks) 'content',
+        ],
         orderBy: 'book_id, page_index',
         limit: pageSize,
         offset: offset,
@@ -338,6 +350,9 @@ class LibraryApiService {
           }
         }
         if (!all) continue;
+        if (exactMarks && !hasExactMarks(r['content'] as String?, raw, phrase)) {
+          continue;
+        }
 
         final meta = titles[bookId] ?? const ['', ''];
         perBookHits[bookId] = (perBookHits[bookId] ?? 0) + 1;
@@ -355,6 +370,18 @@ class LibraryApiService {
       offset += pageSize;
     }
     return hits;
+  }
+
+  /// The page's own text holds the query WITH its harakat: the whole phrase,
+  /// or every word. Tatweel is ignored on both sides; nothing else is.
+  @visibleForTesting
+  static bool hasExactMarks(String? content, String query, bool phrase) {
+    if (content == null || content.isEmpty) return false;
+    String clean(String s) => s.replaceAll('ـ', '');
+    final text = clean(content);
+    final q = clean(query);
+    if (phrase) return text.contains(q);
+    return q.split(' ').every(text.contains);
   }
 
   /// Index of [needle] in [haystack] at a word boundary, or -1 -- the
