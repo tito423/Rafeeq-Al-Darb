@@ -1,3 +1,5 @@
+import '../../../core/utils/time_formatter.dart';
+import '../../../core/theme/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +25,6 @@ class FastingReminderSection extends ConsumerWidget {
     final theme = Theme.of(context);
     final faint = theme.textTheme.bodySmall
         ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
-    String two(int v) => v.toString().padLeft(2, '0');
 
     return Card(
       child: Padding(
@@ -45,23 +46,15 @@ class FastingReminderSection extends ConsumerWidget {
               title: Text('fasting.white_days'.tr()),
               subtitle: Text('fasting.white_days_desc'.tr(), style: faint),
             ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
+            // «طوّر وقت التذكير ويبقى شكله أجمل». A plain row with a small
+            // «٢١:٠٠» at its end became a card: the time large, in the app's
+            // own 12-hour form, and three evenings people actually choose,
+            // with «وقت آخر» for anything else.
+            _TimeCard(
               enabled: s.anyOn,
-              leading: const Icon(Icons.schedule_rounded),
-              title: Text('fasting.time'.tr()),
-              trailing: Text(
-                localizeDigits('${two(s.hour)}:${two(s.minute)}', uiLanguageCode),
-                style: theme.textTheme.titleMedium,
-              ),
-              onTap: () async {
-                final t = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay(hour: s.hour, minute: s.minute),
-                );
-                if (t == null) return;
-                await _set(ref, s.copyWith(hour: t.hour, minute: t.minute));
-              },
+              hour: s.hour,
+              minute: s.minute,
+              onPick: (h, m) => _set(ref, s.copyWith(hour: h, minute: m)),
             ),
             const SizedBox(height: 4),
             Text('fasting.note'.tr(), style: faint),
@@ -80,6 +73,105 @@ class FastingReminderSection extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TimeCard extends StatelessWidget {
+  final bool enabled;
+  final int hour;
+  final int minute;
+  final void Function(int hour, int minute) onPick;
+
+  const _TimeCard({
+    required this.enabled,
+    required this.hour,
+    required this.minute,
+    required this.onPick,
+  });
+
+  static const _presets = [(20, 0), (21, 0), (22, 30)];
+
+  String _label(int h, int m) => formatTime12h(
+      '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}',
+      uiLanguageCode);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 200),
+      opacity: enabled ? 1 : 0.45,
+      child: IgnorePointer(
+        ignoring: !enabled,
+        child: Container(
+          margin: const EdgeInsets.only(top: 6),
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                AppColors.gold.withValues(alpha: 0.16),
+                scheme.surfaceContainerHighest,
+              ],
+            ),
+            border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.nights_stay_rounded, color: AppColors.gold),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text('fasting.time'.tr(),
+                        style: theme.textTheme.titleSmall),
+                  ),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: Text(
+                      _label(hour, minute),
+                      key: ValueKey(hour * 60 + minute),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        color: AppColors.gold,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 6,
+                alignment: WrapAlignment.center,
+                children: [
+                  for (final (h, m) in _presets)
+                    ChoiceChip(
+                      label: Text(_label(h, m)),
+                      selected: hour == h && minute == m,
+                      onSelected: (_) => onPick(h, m),
+                    ),
+                  ActionChip(
+                    avatar: const Icon(Icons.schedule_rounded, size: 18),
+                    label: Text('fasting.time_other'.tr()),
+                    onPressed: () async {
+                      final t = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay(hour: hour, minute: minute),
+                      );
+                      if (t != null) onPick(t.hour, t.minute);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

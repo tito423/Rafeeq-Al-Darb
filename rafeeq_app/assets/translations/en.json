@@ -1708,7 +1708,8 @@
     "notif_thursday": "Tomorrow is Thursday — a sunnah fast",
     "notif_white": "The White Days begin tomorrow: 13th, 14th and 15th",
     "cite_747": "Narrated by al-Tirmidhi (747), who said: a hasan gharib hadith.",
-    "cite_761": "Narrated by al-Tirmidhi (761), who said: a hasan hadith."
+    "cite_761": "Narrated by al-Tirmidhi (761), who said: a hasan hadith.",
+    "time_other": "Other time"
   },
   "tasbih": {
     "section_title": "Tasbih reminders",

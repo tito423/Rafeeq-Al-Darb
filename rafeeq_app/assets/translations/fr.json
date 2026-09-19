@@ -1708,7 +1708,8 @@
     "notif_thursday": "Demain, jeudi — jeûne de la Sunna",
     "notif_white": "Les Jours blancs commencent demain : 13, 14 et 15",
     "cite_747": "Rapporté par at-Tirmidhi (747), qui a dit : hadith hasan gharib.",
-    "cite_761": "Rapporté par at-Tirmidhi (761), qui a dit : hadith hasan."
+    "cite_761": "Rapporté par at-Tirmidhi (761), qui a dit : hadith hasan.",
+    "time_other": "Autre heure"
   },
   "tasbih": {
     "section_title": "Rappels de tasbih",
