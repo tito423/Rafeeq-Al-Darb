@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/book_catalog.dart';
 import '../../data/library_api_service.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/name_match.dart';
 import 'book_text_reader_screen.dart';
 
 /// Searches every downloaded book at once.
@@ -63,6 +64,7 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
     bool hit(String ar, String en) =>
         normalizeArabic(ar).contains(n) ||
         normalizeArabicLoose(ar).contains(loose) ||
+        nameMatches(ar, t) ||
         en.toLowerCase().contains(lower);
     return [
       for (final b in libraryBookCatalog)

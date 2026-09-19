@@ -1,3 +1,4 @@
+import '../widgets/header_quick_actions.dart';
 import '../../../../core/services/official_hijri.dart';
 import '../../../../core/services/official_hijri_provider.dart';
 import 'dart:async';
@@ -227,7 +228,8 @@ class _HeaderCard extends ConsumerWidget {
         ? const Color(0xFF9A7A15)
         : const Color(0xFFD4AF37);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      // «وسّع كارت التاريخ ومرحبًا شوية».
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         gradient: LinearGradient(
@@ -275,7 +277,11 @@ class _HeaderCard extends ConsumerWidget {
                     .hijriOffsetDays,
               ),
               borderRadius: BorderRadius.circular(12),
-              child: FittedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+              FittedBox(
                 fit: BoxFit.scaleDown,
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
@@ -290,6 +296,10 @@ class _HeaderCard extends ConsumerWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+              ),
+                  const SizedBox(height: 8),
+                  ThemeQuickButton(color: hijriColor),
+                ],
               ),
             ),
           ),
@@ -381,6 +391,8 @@ class _HeaderCard extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  LanguageQuickButton(color: gregorianColor),
                 ],
               ),
             ),
