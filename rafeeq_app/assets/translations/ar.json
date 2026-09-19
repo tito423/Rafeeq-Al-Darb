@@ -481,7 +481,10 @@
     "search_opt_marks": "مطابقة التشكيل",
     "search_books_found": "كتب مطابقة",
     "search_in_text_found": "داخل نصوص الكتب المنزَّلة",
-    "voice_short": "الصوت"
+    "voice_short": "الصوت",
+    "listen_scope_book": "الكتاب متواصلًا",
+    "listen_scope_book_desc": "يقرأ من هذه الصفحة ويقلب الصفحات تلقائيًا حتى تضغط إيقاف.",
+    "listen_scope_page": "هذه الصفحة فقط"
   },
   "azkar": {
     "title": "الأذكار",

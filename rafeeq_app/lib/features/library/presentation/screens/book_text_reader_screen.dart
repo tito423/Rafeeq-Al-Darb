@@ -496,6 +496,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                           book: widget.book,
                           doc: doc,
                           pageIndex: _pageIndex,
+                          onTurnPage: _goToPageIndex,
                         ),
                         // `Scaffold.of(context)` needs a context *below*
                         // the Scaffold in the tree — this `build()`

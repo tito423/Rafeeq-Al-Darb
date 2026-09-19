@@ -481,7 +481,10 @@
     "search_opt_marks": "С огласовками",
     "search_books_found": "Найденные книги",
     "search_in_text_found": "В загруженных книгах",
-    "voice_short": "Голос"
+    "voice_short": "Голос",
+    "listen_scope_book": "Всю книгу",
+    "listen_scope_book_desc": "Читает с этой страницы и сам листает страницы, пока вы не нажмёте «стоп».",
+    "listen_scope_page": "Только эту страницу"
   },
   "azkar": {
     "title": "Азкары",

@@ -481,7 +481,10 @@
     "search_opt_marks": "اعراب کے ساتھ",
     "search_books_found": "ملنے والی کتابیں",
     "search_in_text_found": "ڈاؤن لوڈ شدہ کتابوں کے متن میں",
-    "voice_short": "آواز"
+    "voice_short": "آواز",
+    "listen_scope_book": "پوری کتاب",
+    "listen_scope_book_desc": "اس صفحے سے پڑھتا ہے اور خود صفحے پلٹتا ہے جب تک آپ روک نہ دیں۔",
+    "listen_scope_page": "صرف یہ صفحہ"
   },
   "azkar": {
     "title": "اذکار",

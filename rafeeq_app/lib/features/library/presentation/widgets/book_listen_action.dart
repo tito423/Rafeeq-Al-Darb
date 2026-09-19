@@ -40,11 +40,16 @@ class BookListenAction extends StatefulWidget {
     required this.book,
     required this.doc,
     required this.pageIndex,
+    this.onTurnPage,
   });
 
   final LibraryBook book;
   final BookText doc;
   final int pageIndex;
+
+  /// Turns the reader to a page; continuous listening calls it when a page
+  /// has been read so the text on screen follows the voice.
+  final ValueChanged<int>? onTurnPage;
 
   @override
   State<BookListenAction> createState() => BookListenActionState();
@@ -53,6 +58,14 @@ class BookListenAction extends StatefulWidget {
 class BookListenActionState extends State<BookListenAction> {
   final BookSpeaker _speaker = BookSpeaker();
   bool _speaking = false;
+
+  /// Bumped by every stop, so a reading loop can tell "the page ended" from
+  /// "the reader pressed stop" after `speak` returns.
+  int _run = 0;
+
+  /// The page this widget turned to itself; its own turn must not stop the
+  /// voice the way the reader's turn does.
+  int? _autoTurn;
 
   @override
   void initState() {
@@ -70,7 +83,13 @@ class BookListenActionState extends State<BookListenAction> {
     super.didUpdateWidget(oldWidget);
     // Turning the page stops the voice. Letting it read on while the reader
     // is looking at a different page is worse than silence.
+    if (oldWidget.pageIndex != widget.pageIndex &&
+        widget.pageIndex == _autoTurn) {
+      _autoTurn = null;
+      return;
+    }
     if (oldWidget.pageIndex != widget.pageIndex && _speaking) {
+      _run++;
       _speaker.stop();
       if (mounted) setState(() => _speaking = false);
     }
@@ -85,6 +104,7 @@ class BookListenActionState extends State<BookListenAction> {
 
   Future<void> _toggle() async {
     if (_speaking) {
+      _run++;
       await _speaker.stop();
       if (mounted) setState(() => _speaking = false);
       return;
@@ -97,14 +117,49 @@ class BookListenActionState extends State<BookListenAction> {
       );
       return;
     }
-    final page = widget.doc.pages[widget.pageIndex];
-    final text =
-        pageSpeechText(page.paras.map((p) => (text: p.text, kind: p.kind)));
-    if (text.trim().isEmpty) return;
-    if (mounted) setState(() => _speaking = true);
-    await _speaker.speak(text);
-    if (mounted) setState(() => _speaking = false);
+    if (!mounted) return;
+    final whole = await _askScope();
+    if (whole == null || !mounted) return;
+    final run = ++_run;
+    setState(() => _speaking = true);
+    var i = widget.pageIndex;
+    final last = widget.doc.pages.length - 1;
+    while (mounted && run == _run) {
+      final page = widget.doc.pages[i];
+      final text =
+          pageSpeechText(page.paras.map((p) => (text: p.text, kind: p.kind)));
+      if (text.trim().isNotEmpty) await _speaker.speak(text);
+      // «خليه هو يقلب الصفحة بنفسه ويكمل أوتوماتيك»: a page that ended on
+      // its own, in whole-book mode, turns the reader and reads the next.
+      if (!whole || run != _run || i >= last || !mounted) break;
+      i++;
+      _autoTurn = i;
+      widget.onTurnPage?.call(i);
+    }
+    if (mounted && run == _run) setState(() => _speaking = false);
   }
+
+  /// This page only, or on to the end of the book. Null if dismissed.
+  Future<bool?> _askScope() => showModalBottomSheet<bool>(
+        context: context,
+        showDragHandle: true,
+        builder: (ctx) => SafeArea(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            ListTile(
+              leading: const Icon(Icons.menu_book_rounded),
+              title: Text('library.listen_scope_book'.tr()),
+              subtitle: Text('library.listen_scope_book_desc'.tr()),
+              onTap: () => Navigator.of(ctx).pop(true),
+            ),
+            ListTile(
+              leading: const Icon(Icons.article_outlined),
+              title: Text('library.listen_scope_page'.tr()),
+              onTap: () => Navigator.of(ctx).pop(false),
+            ),
+            const SizedBox(height: 8),
+          ]),
+        ),
+      );
 
   void _explain() {
     showDialog<void>(

@@ -481,7 +481,10 @@
     "search_opt_marks": "Avec harakat",
     "search_books_found": "Livres trouvés",
     "search_in_text_found": "Dans les livres téléchargés",
-    "voice_short": "Voix"
+    "voice_short": "Voix",
+    "listen_scope_book": "Tout le livre",
+    "listen_scope_book_desc": "Lit à partir de cette page et tourne les pages tout seul jusqu'à ce que vous l'arrêtiez.",
+    "listen_scope_page": "Cette page seulement"
   },
   "azkar": {
     "title": "Adhkar",
