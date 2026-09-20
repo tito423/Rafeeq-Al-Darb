@@ -13,6 +13,7 @@ import '../../../../core/theme/theme_controller.dart';
 import '../../../onboarding/data/onboarding_state.dart';
 import '../../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../data/splash_video_provider.dart';
+import '../../../onboarding/presentation/screens/permissions_intro_screen.dart';
 
 /// The colour the OS paints at launch, and the colour of the intro's first
 /// frame — `#2B516B`, the clip's own median pixel. Kept beside the native
@@ -215,9 +216,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final localeCode = context.locale.languageCode;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
+        // FIRST RUN: splash -> every permission, explained on one page ->
+        // onboarding. «كلها ورا بعضها مباشرة» rather than a system dialog
+        // landing on top of whatever the reader had started doing.
         builder: (_) => done
             ? AppShell(key: ValueKey(localeCode))
-            : const OnboardingScreen(),
+            : PermissionsIntroScreen(
+                onDone: () {
+                  if (!mounted) return;
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const OnboardingScreen(),
+                    ),
+                  );
+                },
+              ),
       ),
     );
     // A notification tap that started the app cold: route it now that there is

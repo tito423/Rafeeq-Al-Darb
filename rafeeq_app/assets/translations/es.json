@@ -1798,5 +1798,21 @@
     "note_hint": "Escribe la dua o la intención con tus palabras",
     "save": "Guardar",
     "share_line": "{kind} — dedicado a {name}"
+  },
+  "permissions_intro": {
+    "title": "Permisos que necesita la app",
+    "subtitle": "Todos opcionales, cada uno con su motivo. Puede cambiarlos luego en Ajustes.",
+    "allow": "Permitirlos",
+    "later": "Más tarde",
+    "location": "Ubicación",
+    "location_why": "Para calcular los horarios de oración y la alquibla donde está.",
+    "notifications": "Notificaciones",
+    "notifications_why": "Para avisarle del adhan, los adhkar y los recordatorios.",
+    "alarms": "Alarmas exactas",
+    "alarms_why": "Para que el adhan llegue a su hora, no minutos después.",
+    "audio": "Audio y archivos",
+    "audio_why": "Para reproducir las recitaciones guardadas en su dispositivo.",
+    "battery": "Funcionar en segundo plano",
+    "battery_why": "Para que el sistema no detenga el adhan con la app cerrada."
   }
 }

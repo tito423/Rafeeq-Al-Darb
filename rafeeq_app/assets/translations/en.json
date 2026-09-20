@@ -1798,5 +1798,21 @@
     "note_hint": "Write the dua or intention in your own words",
     "save": "Save",
     "share_line": "{kind} — dedicated to {name}"
+  },
+  "permissions_intro": {
+    "title": "Permissions the app needs",
+    "subtitle": "All optional, each with its reason. You can change them later in Settings.",
+    "allow": "Allow them",
+    "later": "Later",
+    "location": "Location",
+    "location_why": "To work out prayer times and the qibla where you are.",
+    "notifications": "Notifications",
+    "notifications_why": "To reach you with the adhan, the adhkar and reminders.",
+    "alarms": "Exact alarms",
+    "alarms_why": "So the adhan arrives on time, not minutes after it.",
+    "audio": "Audio and files",
+    "audio_why": "To play recitations saved on your device.",
+    "battery": "Running in the background",
+    "battery_why": "So the system does not stop the adhan while the app is closed."
   }
 }

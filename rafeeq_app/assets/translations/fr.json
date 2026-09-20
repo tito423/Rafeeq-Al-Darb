@@ -1798,5 +1798,21 @@
     "note_hint": "Écrivez la dou'a ou l'intention avec vos mots",
     "save": "Enregistrer",
     "share_line": "{kind} — dédié à {name}"
+  },
+  "permissions_intro": {
+    "title": "Autorisations nécessaires",
+    "subtitle": "Toutes facultatives, chacune avec sa raison. Modifiables plus tard dans les réglages.",
+    "allow": "Les autoriser",
+    "later": "Plus tard",
+    "location": "Position",
+    "location_why": "Pour calculer les horaires de prière et la qibla chez vous.",
+    "notifications": "Notifications",
+    "notifications_why": "Pour vous avertir de l’adhan, des adhkar et des rappels.",
+    "alarms": "Alarmes exactes",
+    "alarms_why": "Pour que l’adhan arrive à l’heure, pas quelques minutes après.",
+    "audio": "Audio et fichiers",
+    "audio_why": "Pour lire les récitations enregistrées sur votre appareil.",
+    "battery": "Fonctionnement en arrière-plan",
+    "battery_why": "Pour que le système n’arrête pas l’adhan quand l’app est fermée."
   }
 }
