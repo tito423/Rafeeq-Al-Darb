@@ -27,8 +27,6 @@ void main() {
     'lib/features/azkar/presentation/screens/azkar_screen.dart':
         'keys matched against the azkar database\'s own Arabic section names, '
             'to pick an icon',
-    'lib/features/quran/presentation/widgets/quran_book_cover_thumbnail.dart':
-        'matched against the mushaf editions\' own Arabic names',
     'lib/features/home/presentation/widgets/analog_clock_faces.dart':
         'the Arabic-Indic numeral faces, drawn only when the reader picks them',
     'lib/features/quran/presentation/widgets/mushaf_theme_picker.dart':

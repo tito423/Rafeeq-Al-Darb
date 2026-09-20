@@ -9,35 +9,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/services/mushaf_page_service.dart';
 
-/// Carries the Hafs/Madinah ayah polygons onto a printing that sets the *same*
-/// line grid at a different scale and offset.
+/// How a printing's polygon layer maps onto its own pages.
 ///
-/// The KFQC vector edition ships the only real polygon layer this app has. A
-/// scan that typesets the identical Madinah page differs from it by a uniform
-/// scale plus an offset — its decorative border eats margin, nothing else
-/// moves — so one axis-aligned affine per page group maps every polygon onto
-/// it, and the scan gets real ayah highlighting and tap-to-sciences without a
-/// coordinate layer of its own.
+/// IT IS THE IDENTITY NOW, AND THAT IS THE POINT. Until 2026-09-20 four
+/// scanned printings shipped with no coordinates of their own and BORROWED
+/// the Madinah vector layer through an affine fitted per page group or per
+/// page. It was measured and rendered and looked at, and it still could not
+/// be right: printings do not break their lines at the same words and do not
+/// put their surah banners on the same lines, so a borrowed highlight could
+/// land a word — or a whole line — from the printed marker. The owner's
+/// ruling ended it: «انا معنديش اي مشكلة انه يكون عندي مصحف نصي ومصحف واحد
+/// ورقي، بس يكون التظليل فيه تمام».
 ///
-/// This is only legitimate where the layouts really do match, and that has to
-/// be measured, not assumed. Two scripts fit it and then render the mapped
-/// polygons over the real scans to be looked at:
+/// The one printing that ships, `madinah_qc`, carries the ayah coordinates
+/// its own publisher measured, so its entry in `editions.json` is
+/// sx 1, dx 0, sy 1, dy 0 and only `page_aspect` says anything. That keeps
+/// the drawing path that already existed while removing every fitted number
+/// from it, and `test/mushaf_polygon_fit_test.dart` fails if the identity is
+/// ever replaced by a fit again.
 ///
-/// * `scripts/fit_mushaf_polygon_transform.py` — one affine per page GROUP,
-///   for a printing whose pages are all the same crop. The Tajweed printing
-///   uses it, and lands every ring within a median 3.9 px of its printed line
-///   on a page whose lines are 84 px apart.
-/// * `scripts/fit_mushaf_polygon_per_page.py` — one affine PER PAGE, for a
-///   printing whose leaves were cropped individually. Qatar, Kuwait and the
-///   Madinah night edition use it: on Qatar the printed frame keeps a constant
-///   size but slides up to 3% of the page width, about two letters, which no
-///   single affine could absorb.
-///
-/// Where the layouts do NOT match, no transform can fix it and the printing
-/// honestly ships with no polygon layer: `madinah_gold` sets 6 lines on its
-/// page 2 where the Madinah mushaf sets 15, and `shamarly` (521 pages),
-/// `indopak_tajweed` (564) and `madinah_nastaleeq` (611) paginate their own
-/// way outright.
+/// The fitting scripts stay in `scripts/` as a record of what was tried.
 class AyahPolygonFit {
   /// x' = [sx] · x + [dx], y' = [sy] · y + [dy], both in normalized page space.
   final double sx;

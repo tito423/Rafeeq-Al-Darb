@@ -124,7 +124,20 @@ List<Rect> highlightRectsFor(
     }
     if (right - left < _kMinWidth) continue;
 
-    for (final band in _bands(top, bottom, grid)) {
+    // A ring that is already one line tall is NOT cut. The layer shipped
+    // before 2026-09-20 was a tap layer whose rings ran over several lines at
+    // once, and cutting them is the whole reason this file exists; the
+    // `madinah_qc` layer is built one ring per printed line, and its rings
+    // are tight to the ink rather than to the line pitch. Cutting those at
+    // the page's merged edges split a single line into two half-height bands
+    // with a gap through the middle of the words — the edges of a SHORT ring
+    // on the same line land inside a longer one. Measured on the real asset:
+    // Al-Baqarah 2:31 on page 6 came back as four rectangles for two lines.
+    final bands = (bottom - top) <= 1.35 * grid.pitch
+        ? <(double, double)>[(top, bottom)]
+        : _bands(top, bottom, grid);
+
+    for (final band in bands) {
       final inset = math.min(
         grid.pitch * _kVerticalInsetFactor,
         (band.$2 - band.$1) * 0.25,

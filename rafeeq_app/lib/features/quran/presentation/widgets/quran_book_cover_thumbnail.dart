@@ -30,41 +30,16 @@ class QuranBookCoverThumbnail extends StatelessWidget {
   /// so the shelf reads at a glance. Keyed by the ids actually shipped in
   /// `editions.json`; unknown ids fall back to royal emerald.
   static const Map<String, _Leather> _palette = {
-    // Madinah Hafs — royal emerald green.
+    // Madinah Hafs — royal emerald green. The only printing that ships; the
+    // six others were removed on 2026-09-20 with the printings themselves.
     'madinah_qc': _Leather(Color(0xFF063D27), Color(0xFF0B5D3B), Color(0xFF14814F)),
-    // Coloured Tajweed — deep maroon (نبيتي).
-    'tajweed_color':
-        _Leather(Color(0xFF460B18), Color(0xFF6E1327), Color(0xFF922038)),
-    // Shamarly — black & gold, the board that printing is known by.
-    'shamarly': _Leather(Color(0xFF0A0A0A), Color(0xFF1C1C1C), Color(0xFF343434)),
-    // Madinah illuminated — antique gold over deep brown.
-    'madinah_gold':
-        _Leather(Color(0xFF3A2A08), Color(0xFF5C4310), Color(0xFF8A6A1C)),
-    // Indo-Pak colour-coded — teal, matching its cover stock.
-    'indopak_tajweed':
-        _Leather(Color(0xFF06302E), Color(0xFF0B4A47), Color(0xFF116E69)),
-    // Qatar — the deep crimson and gold of its printed board.
-    'qatar': _Leather(Color(0xFF4A0A12), Color(0xFF7A1420), Color(0xFFA82232)),
-    // Kuwait — the burgundy of its printed board.
-    'kuwait': _Leather(Color(0xFF3B0A12), Color(0xFF61151F), Color(0xFF8A2231)),
-    // Nastaliq — the navy and gold of the Complex's Urdu binding.
-    'madinah_nastaleeq':
-        _Leather(Color(0xFF06162E), Color(0xFF0C2549), Color(0xFF163A70)),
   };
 
-  /// Medallion text override where the first riwayah word would be ambiguous
-  /// (e.g. the Tajweed mushaf is also Hafs — show "تجويد", not a second "حفص").
-  static const Map<String, String> _medallionOverride = {
-    // These are all Hafs, so the riwayah's first word would read "حفص" on
-    // every one of them — the medallion names the printing instead.
-    'tajweed_color': 'تجويد',
-    'shamarly': 'الشمرلي',
-    'madinah_gold': 'المدينة',
-    'indopak_tajweed': 'هندي',
-    'qatar': 'قطر',
-    'kuwait': 'الكويت',
-    'madinah_nastaleeq': 'نستعليق',
-  };
+  /// Medallion text override where the first riwayah word would be
+  /// ambiguous. Empty since 2026-09-20: one printing ships, and «حفص» on its
+  /// medallion is exactly right. Kept as the seam for the day a second
+  /// printing arrives that is also Hafs.
+  static const Map<String, String> _medallionOverride = {};
 
   static const _Leather _fallback =
       _Leather(Color(0xFF063D27), Color(0xFF0B5D3B), Color(0xFF14814F));
