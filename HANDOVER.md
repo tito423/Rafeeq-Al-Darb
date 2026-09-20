@@ -1783,9 +1783,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-20 04:32 — IN PROGRESS — resume here**
+**2026-09-20 04:42 — IN PROGRESS — resume here**
 
-Text mushaf: the basmala is its own centred line, not part of verse 1. quran_local.db welds it onto verse 1 for 112 surahs (al-Fatiha counts its own as verse 1, at-Tawbah has none); basmalaOf/bodyOf split it as a verbatim substring, matching on a diacritic-stripped copy so al-Tin's and al-Qadr's shadda spelling is recognised and an-Naml 27:30's quoted basmala is never touched. The recitation highlight now sits on the basmala line while the reciter's basmala sounds (ContinuousRecitation.basmala from SurahPlaylist.isBasmalaAt) instead of washing basmala+verse 1 as one block. flutter analyze clean, 442 tests pass (9 new, generated from the real DB by scripts/gen_basmala_test.py and proven to fail on the wrong normaliser). NOT yet seen on a device.
+Seen on emulator-5554: al-Fatiha still counts the basmala as verse 1 with its rosette; al-Baqara p2 and Yunus p208 set the basmala as a centred line of its own under the banner with verse 1 starting at the letters; at-Tawbah p187 prints none. Checked in both verse layouts (page-flow and cards), Arabic UI. NOT verified: the highlight sitting on the basmala line while the reciter sounds it - continuous recitation streams over HTTPS and every hosted fetch on this machine dies in Avast's TLS interception (trap #13), so it could not be played here.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
