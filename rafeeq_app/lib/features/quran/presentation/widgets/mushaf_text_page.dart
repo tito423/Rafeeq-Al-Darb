@@ -736,21 +736,47 @@ class _AyahMarker extends StatelessWidget {
                 color: gold.withValues(alpha: playing ? 1.0 : 0.85),
               ),
             ),
+          // «صغر الارقام … وخليها في النص بالظبط». Two faults: the size was
+          // measured against the whole box while a rosette's points stick out
+          // past its usable middle, and `height: 1.0` alone does not centre a
+          // glyph - the font's ascent and descent still pad the line box and
+          // Arabic-Indic digits sit low in it. See `_numberScale` below.
           Text(
             _arabicNumber(number),
+            textHeightBehavior: const TextHeightBehavior(
+              applyHeightToFirstAscent: false,
+              applyHeightToLastDescent: false,
+              leadingDistribution: TextLeadingDistribution.even,
+            ),
             style: TextStyle(
-              fontSize: size * (bare ? 0.42 : 0.38),
+              fontSize: size * _numberScale(bare, number),
               // On the disc the number sits ON the gold, so it takes the
               // paper's colour; the rosette is an outline and the number
               // stays gold inside it.
               color: bare ? mt.paper : gold,
               fontWeight: FontWeight.w700,
               height: 1.0,
+              leadingDistribution: TextLeadingDistribution.even,
             ),
           ),
         ],
       ),
     );
+  }
+
+  /// How much of the marker's box the number may take.
+  ///
+  /// The open rosette keeps less room than the filled disc, and every extra
+  /// digit needs the glyphs to come down again so «٢٨٦» sits inside the same
+  /// ornament «٧» does.
+  static double _numberScale(bool bare, int number) {
+    final digits = number < 10 ? 1 : (number < 100 ? 2 : 3);
+    final base = bare ? 0.36 : 0.32;
+    return switch (digits) {
+      1 => base,
+      2 => base * 0.88,
+      _ => base * 0.74,
+    };
   }
 
   static String _arabicNumber(int n) {

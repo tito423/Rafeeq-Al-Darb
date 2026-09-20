@@ -162,15 +162,43 @@ class SyncService {
     _processQueue();
   }
 
+  /// THE ONLY PREFERENCE KEYS THAT TRAVEL BETWEEN DEVICES.
+  ///
+  /// It used to be "everything that does not start with `local_`" - every
+  /// setting in the app - and the pull below wrote each one straight back
+  /// with no look at `updated_at`. So a stale snapshot silently reverted
+  /// settings the owner had never touched, WHILE THE APP WAS OPEN, behind
+  /// notifiers that had already read them: «وضع التركيز بيشتغل لوحده» · «وضع
+  /// الـRGB بيشتغل لوحده» · «صوت الأذان بيشتغل لوحده» · «سلوك التطبيق مش
+  /// مظبوط».
+  ///
+  /// His rule, asked and answered: «خلي بس الحاجات الاساسية تتزامن اللي لو
+  /// ضاعت هبدا اعد من الاول زي الختمة والتسابيح والاذكار». So what travels is
+  /// what he would have to earn again, and nothing else. A theme, a font
+  /// size, a reciter, a full-screen toggle belong to the phone in his hand.
+  ///
+  /// The tasbih and adhkar totals are NOT here on purpose: they go down the
+  /// `counter` path, which ADDS the two devices' progress instead of letting
+  /// the last writer win. Putting them here as well would have the two paths
+  /// fight each other.
+  ///
+  /// Adding a key here is a decision about someone's data. Make it
+  /// deliberately.
+  static const syncedStateKeys = <String>{
+    'khatma_list_v1', // الختمة: the plans, the pages read, the streak
+    'ayah_notes_v1', // his own notes on ayahs - text he wrote
+    'quran_last_page', // «متابعة القراءة»
+    'tasbeeh_custom_target', // the target he set himself
+  };
+
   Future<void> _queueStateSync() async {
     final keys = _prefs.getKeys();
     final List<Map<String, dynamic>> updates = [];
     final now = DateTime.now().millisecondsSinceEpoch;
 
     for (final key in keys) {
-      // Exclude local specific keys if any
-      if (key.startsWith('local_')) continue;
-      
+      if (!syncedStateKeys.contains(key)) continue;
+
       final value = _prefs.get(key);
       if (value != null) {
         updates.add({
@@ -279,6 +307,10 @@ class SyncService {
         final stateItems = data['state'] as List;
         for (final item in stateItems) {
           final key = item['key'];
+          // THE PULL FILTERS TOO, and it matters more than the push: the
+          // server still holds every setting an older build sent it, and
+          // without this line it would keep restoring them for ever.
+          if (!syncedStateKeys.contains(key)) continue;
           final value = jsonDecode(item['value']);
           
           if (value is String) {

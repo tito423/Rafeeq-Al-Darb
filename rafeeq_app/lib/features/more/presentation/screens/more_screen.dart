@@ -172,30 +172,17 @@ class MoreScreen extends ConsumerWidget {
               ),
             ],
           ),
+          // «افصل التنزيلات عن الادوات وحط شرح ميزات التطبيق مكان التنزيلات
+          // في الادوات». Downloads is a place you go to manage half a
+          // gigabyte; it is not a tool you reach for beside focus mode. So it
+          // is a card of its own, and the tour - which IS a tool, and was
+          // taking a whole group to hold one card - takes the seat it left.
           MoreGroup(
-            title: 'more.group_learning'.tr(),
-            subtitle: 'tutorial.card_subtitle'.tr(),
-            icon: Icons.school_rounded,
-            accent: AppColors.primarySoft,
-            children: const [TutorialEntryCard()],
-          ),
-          MoreGroup(
-            title: 'more.group_tools'.tr(),
-            subtitle: _names(['focus.title', 'downloads.title']),
-            icon: Icons.handyman_rounded,
+            title: 'downloads.title'.tr(),
+            subtitle: 'downloads.offline_ready'.tr(),
+            icon: Icons.download_for_offline_outlined,
             accent: AppColors.info,
             children: [
-              TutorialAnchor(
-                id: TourAnchor.moreFocus,
-                child: IslamicActionCard(
-                  icon: Icons.center_focus_strong_outlined,
-                  accent: AppColors.primarySoft,
-                  title: 'focus.title'.tr(),
-                  subtitle: 'focus.subtitle'.tr(),
-                  onTap: () => showFocusModePicker(context),
-                ),
-              ),
-
               TutorialAnchor(
                 id: TourAnchor.moreDownloads,
                 child: IslamicActionCard(
@@ -210,6 +197,25 @@ class MoreScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+            ],
+          ),
+          MoreGroup(
+            title: 'more.group_tools'.tr(),
+            subtitle: _names(['focus.title', 'tutorial.title']),
+            icon: Icons.handyman_rounded,
+            accent: AppColors.info,
+            children: [
+              TutorialAnchor(
+                id: TourAnchor.moreFocus,
+                child: IslamicActionCard(
+                  icon: Icons.center_focus_strong_outlined,
+                  accent: AppColors.primarySoft,
+                  title: 'focus.title'.tr(),
+                  subtitle: 'focus.subtitle'.tr(),
+                  onTap: () => showFocusModePicker(context),
+                ),
+              ),
+              const TutorialEntryCard(),
             ],
           ),
           MoreGroup(
@@ -236,14 +242,10 @@ class MoreScreen extends ConsumerWidget {
             ]),
             icon: Icons.tune_rounded,
             accent: AppColors.primarySoft,
-            children: const [SettingsBody()],
-          ),
-          MoreGroup(
-            title: 'more.group_account'.tr(),
-            subtitle: 'sync.sign_in_subtitle'.tr(),
-            icon: Icons.cloud_sync_rounded,
-            accent: AppColors.info,
-            children: const [SyncAccountCard()],
+            // «حط الحساب والمزامنة في الاعدادات». It had a group of its own
+            // holding one card, between the settings and «عن التطبيق», which
+            // is where a setting belongs anyway.
+            children: const [SettingsBody(), SyncAccountCard()],
           ),
           MoreGroup(
             title: 'settings.about'.tr(),
