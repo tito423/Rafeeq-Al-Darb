@@ -45,30 +45,14 @@ class DownloadsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('downloads.title'.tr()),
-          bottom: TabBar(
-            isScrollable: true,
-            tabAlignment: TabAlignment.center,
-            indicatorColor: AppColors.gold,
-            indicatorSize: TabBarIndicatorSize.label,
-            indicatorWeight: 3,
-            labelColor: AppColors.gold,
-            labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-            tabs: [
-              Tab(text: 'downloads.tab_overview'.tr()),
-              Tab(text: 'downloads.mushafs'.tr()),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: [_OverviewTab(), _MushafsTab()],
-        ),
-        floatingActionButton: const _RepairButton(),
-      ),
+    // ONE SCREEN, NO TABS. «تبويب المصاحف في التنزيلات مالوش لازمة» - it
+    // held a tab bar, a whole second page, and one row, because after the
+    // 3.43.0 swap there is one printing. Its tile moved to the foot of the
+    // overview, where the pause / cancel / delete it carries still live.
+    return Scaffold(
+      appBar: AppBar(title: Text('downloads.title'.tr())),
+      body: const _OverviewTab(),
+      floatingActionButton: const _RepairButton(),
     );
   }
 }
@@ -129,7 +113,8 @@ class _OverviewTab extends ConsumerWidget {
   ) {
     switch (category) {
       case DownloadCategory.mushafs:
-        return () => DefaultTabController.of(context).animateTo(1);
+        // The printing's own tile is at the foot of this very list now.
+        return null;
       case DownloadCategory.recitations:
         // Whole-surah recitations and their player live in their own section
         // since 3.17.0 — not tied to a mushaf, not in this screen.
@@ -213,6 +198,8 @@ class _OverviewTab extends ConsumerWidget {
                 DownloadCategory.books,
               ],
             ),
+            const SizedBox(height: 16),
+            const _MushafTiles(),
           ],
         ),
       ),
@@ -312,7 +299,7 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
           (
             e.localizedName(locale),
             service.progressFor(e.id).fraction,
-            () => DefaultTabController.of(context).animateTo(1),
+            () {},
           ),
       for (final d in audio)
         if (d.running)
@@ -736,21 +723,25 @@ class _ArtifactListState extends State<_ArtifactList> {
 
 // ── Mushafs ────────────────────────────────────────────────────────────────
 
-class _MushafsTab extends ConsumerWidget {
-  const _MushafsTab();
+/// The printings, at the foot of the overview rather than behind a tab of
+/// their own - there is one of them.
+class _MushafTiles extends ConsumerWidget {
+  const _MushafTiles();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final editions = ref.watch(mushafEditionsProvider);
     return editions.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const SizedBox.shrink(),
       error: (_, _) =>
           ErrorRetry(onRetry: () => ref.invalidate(mushafEditionsProvider)),
-      data: (list) => ListView.separated(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, kRepairButtonClearance),
-        itemCount: list.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 10),
-        itemBuilder: (_, i) => MushafDownloadTile(edition: list[i]),
+      data: (list) => Column(
+        children: [
+          for (final e in list) ...[
+            MushafDownloadTile(edition: e),
+            const SizedBox(height: 10),
+          ],
+        ],
       ),
     );
   }

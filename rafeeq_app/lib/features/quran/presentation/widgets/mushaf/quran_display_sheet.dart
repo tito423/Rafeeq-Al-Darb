@@ -45,7 +45,6 @@ Future<void> showQuranDisplaySheet(
   required void Function(double delta) onFontScale,
   required VoidCallback onToggleAutoScroll,
   required VoidCallback onTogglePageFill,
-  required VoidCallback onPickEdition,
   required VoidCallback onEnterImageView,
   required VoidCallback onLeaveImageView,
 }) {
@@ -73,7 +72,6 @@ Future<void> showQuranDisplaySheet(
       onFontScale: onFontScale,
       onToggleAutoScroll: onToggleAutoScroll,
       onTogglePageFill: onTogglePageFill,
-      onPickEdition: onPickEdition,
       onEnterImageView: onEnterImageView,
       onLeaveImageView: onLeaveImageView,
       ),
@@ -90,7 +88,6 @@ class _QuranDisplaySheet extends ConsumerStatefulWidget {
   final void Function(double delta) onFontScale;
   final VoidCallback onToggleAutoScroll;
   final VoidCallback onTogglePageFill;
-  final VoidCallback onPickEdition;
   final VoidCallback onEnterImageView;
   final VoidCallback onLeaveImageView;
 
@@ -103,7 +100,6 @@ class _QuranDisplaySheet extends ConsumerStatefulWidget {
     required this.onFontScale,
     required this.onToggleAutoScroll,
     required this.onTogglePageFill,
-    required this.onPickEdition,
     required this.onEnterImageView,
     required this.onLeaveImageView,
   });
@@ -218,15 +214,11 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                   widget.onToggleAutoScroll();
                 },
               ),
+            // «اختيار المصاحف في خيارات المصاحف في القرآن مالهاش لازمة» -
+            // the sheet it opened listed one printing with a tick beside it.
+            // What is left under this heading is the only choice there is:
+            // paper or text.
             _Group(label: 'quran.display_edition'.tr()),
-            _Tile(
-              icon: Icons.auto_stories_rounded,
-              title: 'quran.editions'.tr(),
-              onTap: () {
-                Navigator.of(context).pop();
-                widget.onPickEdition();
-              },
-            ),
             _Tile(
               icon: _textOnly ? Icons.image_rounded : Icons.notes_rounded,
               title: _textOnly

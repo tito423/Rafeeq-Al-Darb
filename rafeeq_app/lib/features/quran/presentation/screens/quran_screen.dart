@@ -23,7 +23,6 @@ import '../../data/mushaf_theme.dart';
 import '../../data/text_layout_provider.dart';
 import '../../data/quran_last_read.dart';
 import '../widgets/ayah_sciences_sheet.dart';
-import '../widgets/mushaf_edition_sheet.dart';
 import '../widgets/mushaf_page_view.dart';
 import '../widgets/reciter_picker_sheet.dart';
 import '../widgets/mushaf_text_page.dart';
@@ -212,7 +211,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         onGoToPage: _goToPage,
         onNavigateFromIndex: (page, {surahStart = false}) =>
             _navigateFromIndex(page, d, surahStart: surahStart),
-        onPickEdition: _pickEdition,
         onEnterImageView: _enterImageView,
         onLeaveImageView: _leaveImageView,
       );
@@ -480,17 +478,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _applyOrientationLock();
     _persistMode();
     _setPageFillScreen(_fillBeforeImage, persist: false);
-  }
-
-  /// The printings sheet. Picking a printing IS choosing the mushaf view:
-  /// picking «مصحف المدينة — حفص» used to change the printing and leave the
-  /// reader in the text mode he was in, so from his side the button did
-  /// nothing — only the scanned printings, which have no text mode, ever
-  /// opened as a mushaf.
-  Future<void> _pickEdition() async {
-    final id = await MushafEditionSheet.show(context);
-    if (id == null || !mounted) return;
-    _enterImageView();
   }
 
   /// A jump from the surah, juz or page index. While the reciter is reading,

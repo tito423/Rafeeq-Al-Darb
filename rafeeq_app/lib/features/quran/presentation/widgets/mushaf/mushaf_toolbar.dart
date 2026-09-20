@@ -66,7 +66,6 @@ class MushafToolbar extends ConsumerWidget {
   final VoidCallback onTogglePageFill;
   final void Function(int page) onGoToPage;
   final void Function(int page, {bool surahStart}) onNavigateFromIndex;
-  final VoidCallback onPickEdition;
   final VoidCallback onEnterImageView;
   final VoidCallback onLeaveImageView;
 
@@ -89,7 +88,6 @@ class MushafToolbar extends ConsumerWidget {
     required this.onTogglePageFill,
     required this.onGoToPage,
     required this.onNavigateFromIndex,
-    required this.onPickEdition,
     required this.onEnterImageView,
     required this.onLeaveImageView,
   });
@@ -195,7 +193,6 @@ class MushafToolbar extends ConsumerWidget {
                       onFontScale: onFontScale,
                       onToggleAutoScroll: onToggleAutoScroll,
                       onTogglePageFill: onTogglePageFill,
-                      onPickEdition: onPickEdition,
                       onEnterImageView: onEnterImageView,
                       onLeaveImageView: onLeaveImageView,
                     ),

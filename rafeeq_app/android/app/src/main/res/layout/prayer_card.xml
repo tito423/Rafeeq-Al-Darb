@@ -64,13 +64,27 @@
             android:layout_marginEnd="8dp"
             android:textAppearance="@android:style/TextAppearance.Material.Notification.Info" />
 
-        <!-- «العشاء، ٧:٥١ م» -->
+        <!--
+          «العشاء، ٧:٥١ م», hugging the countdown instead of the far edge.
+
+          It was `match_parent`, which in a horizontal LinearLayout means
+          "take the whole remaining row" - and an Arabic string inside it
+          aligns itself to the right. On a phone whose SYSTEM language is
+          English the RemoteViews lays out left-to-right, so the counter sat
+          hard left, the Arabic text hard right, and the width of the screen
+          between them: «العداد بعيد اوي». `viewStart` keeps the two together
+          whichever way round the row is built, and 0dp+weight keeps
+          `ellipsize` working on a long line.
+        -->
         <TextView
             android:id="@+id/prayer_card_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
+            android:gravity="start"
+            android:textAlignment="viewStart"
             android:textStyle="bold"
             android:textAppearance="@android:style/TextAppearance.Material.Notification.Info" />
     </LinearLayout>
