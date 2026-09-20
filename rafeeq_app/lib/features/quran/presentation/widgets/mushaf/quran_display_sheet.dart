@@ -114,9 +114,23 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
   late bool _auto = widget.autoScroll;
 
   /// The reflowable text mushaf is the only thing the layout, the font size
-  /// and the page colour change. A scanned printing draws none of them, which
-  /// is why those rows are hidden rather than shown doing nothing.
-  bool get _textOnly => widget.textMode && !widget.isRaster;
+  /// and the page colour change, so those rows are hidden in the image mode
+  /// rather than shown doing nothing.
+  ///
+  /// THE THIRD COPY of the clause that killed the text mushaf. It read
+  /// `widget.textMode && !widget.isRaster`, and every printing is raster
+  /// since 3.43.0 - so it was always false and this sheet hid «شكل الصفحة»,
+  /// «A− / A+» and the TEXT mushaf's own theme picker even while you were
+  /// reading the text mushaf. What was left on screen was the PAPER
+  /// mushaf's «عادي / ورقي دافئ / ليلي» twin below, which is why the owner
+  /// said «العرض اللي بيغير شكل المصحف النصي مش شغال وبيودي على حاجة تانية»
+  /// and that the two belonged the other way round. They did: he was looking
+  /// at the paper controls inside the text mushaf.
+  ///
+  /// `quran_screen.dart` and `mushaf_toolbar.dart` were fixed in 3.45.0 and
+  /// this one was missed; `text_mushaf_reachable_test.dart` covers all three
+  /// now.
+  bool get _textOnly => widget.textMode;
 
   void _bumpFont(double delta) {
     final next = (_scale + delta).clamp(0.75, 1.8);

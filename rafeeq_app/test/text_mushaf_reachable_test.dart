@@ -51,6 +51,20 @@ void main() {
             'below it becomes dead code and the text mushaf disappears.');
   });
 
+  test('the display sheet keys its text controls off the mode alone', () {
+    // THE THIRD COPY, and it shipped in 3.45.0 and 3.46.0 while the other
+    // two were being fixed. `quran_display_sheet.dart` hid «شكل الصفحة»,
+    // «A− / A+» and the text mushaf's theme picker, and showed the PAPER
+    // mushaf's «عادي / ورقي دافئ / ليلي» in their place - inside the text
+    // mushaf. «العرض اللي بيغير شكل المصحف النصي مش شغال وبيودي على حاجة
+    // تانية».
+    final sheet = codeOnly(read('lib/features/quran/presentation/widgets/'
+        'mushaf/quran_display_sheet.dart'));
+    expect(sheet, contains('bool get _textOnly => widget.textMode;'),
+        reason: 'anding `!widget.isRaster` on again hides every text-mushaf '
+            'control and leaves the paper ones in their place');
+  });
+
   test('the text-only controls key off the mode alone', () {
     final code = codeOnly(read(
         'lib/features/quran/presentation/widgets/mushaf/mushaf_toolbar.dart'));
