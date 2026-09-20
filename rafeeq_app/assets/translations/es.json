@@ -990,7 +990,7 @@
     "f_library_desc": "Libros para descargar, leer y buscar, más {} canales islámicos y una selección de sitios.",
     "f_locales": "Una interfaz en {} idiomas",
     "f_locales_desc": "Árabe, inglés, francés, español, portugués, ruso y urdu.",
-    "dua": "Os pido vuestras súplicas: por mí, por mi padre —que Allah tenga misericordia de él— y por mi madre, que Allah alargue su vida y la proteja. Y lo mismo para vosotros, in sha’ Allah.",
+    "dua": "Y les pido también una oración: por mí, por mi padre —que Dios se apiade de él— y por mi madre, que Dios alargue y guarde su vida. Y lo mismo para ustedes, si Dios quiere.",
     "sources_intro": "Todo el contenido de la app procede de las fuentes siguientes. Toca cualquiera para abrir su sitio y comprobarlo tú mismo.",
     "sources_hint": "De dónde procede el contenido",
     "src_quran": "Corán",
@@ -1016,7 +1016,8 @@
     "src_quotes": "Citas y sus fondos",
     "src_commons": "Wikimedia Commons — los fondos de ornamento islámico, dominio público o CC0, con la licencia y el autor de cada archivo guardados en la app",
     "src_youtube": "Cada imagen de canal procede de la propia página de YouTube de ese canal y se replica en el servidor de la aplicación para funcionar sin conexión. Los canales se abren en YouTube; no se republica ningún vídeo.",
-    "src_unsplash": "Las fotografías de las tarjetas de Adhkar y de la guía del nuevo musulmán — bajo la licencia de Unsplash, obtenidas directamente de la fuente."
+    "src_unsplash": "Las fotografías de las tarjetas de Adhkar y de la guía del nuevo musulmán — bajo la licencia de Unsplash, obtenidas directamente de la fuente.",
+    "dedication": "Dedico este trabajo a mi esposa, compañera de mi camino"
   },
   "ruqyah": {
     "title": "Ruqyah",

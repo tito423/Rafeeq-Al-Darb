@@ -25,6 +25,7 @@ import '../../../../core/utils/byte_formatter.dart';
 import '../../../quran_audio/presentation/ayah_download_screen.dart';
 import '../widgets/library_route.dart';
 import '../widgets/mushaf_tiles.dart';
+import '../../../settings/presentation/screens/settings_screen.dart';
 
 String _fmtSize(int bytes) {
   // Binary units, matching what Android's own storage screen reports.
@@ -124,6 +125,22 @@ class _OverviewTab extends ConsumerWidget {
         return () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const AyahDownloadScreen()));
       // Every destination is PUSHED, so back comes back here - see
       // `LibraryRoute` for why.
+      case DownloadCategory.voices:
+        // «التنزيلات صوت القارئ بيوديني للمكتبة خليه يوديني على الاعداد
+        // بتاعه في الاعدادات» - the pack is a SETTING of the book reader,
+        // not a shelf, so the row goes to where it is turned on and off.
+        return () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => Scaffold(
+                  appBar:
+                      AppBar(title: Text('library.voice_section_title'.tr())),
+                  body: const SingleChildScrollView(
+                    padding: EdgeInsets.all(14),
+                    child: SettingsBody(),
+                  ),
+                ),
+              ),
+            );
       case DownloadCategory.hadith:
         return () => Navigator.of(context).push(
               MaterialPageRoute<void>(
@@ -143,15 +160,6 @@ class _OverviewTab extends ConsumerWidget {
               ),
             );
       // «والباقي مش بيوديني لحاجة» - these two had no destination at all.
-      case DownloadCategory.voices:
-        return () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => LibraryRoute(
-                  title: 'downloads.cat_voices'.tr(),
-                  initialTab: 0,
-                ),
-              ),
-            );
       case DownloadCategory.quranSciences:
         // It is installed from the ayah card, so that is where this goes.
         return () {
@@ -192,7 +200,13 @@ class _OverviewTab extends ConsumerWidget {
                 ),
               ),
             ),
+            // «احذف المصاحف من التنزيلات لانها اصلا في اخر الصفحة تحت
+            // موجودة» - the printing has its own tile at the foot of this
+            // list, with its progress, its pause and its delete. A second
+            // row for the same bytes higher up is the storage counted twice
+            // to the reader's eye.
             for (final c in DownloadCategory.values)
+              if (c != DownloadCategory.mushafs)
               _CategoryCard(
                 usage: summary.usage(c),
                 share: summary.totalBytes == 0

@@ -990,7 +990,7 @@
     "f_library_desc": "Livros para descarregar, ler e pesquisar, mais {} canais islâmicos e uma seleção de sites.",
     "f_locales": "Uma interface em {} idiomas",
     "f_locales_desc": "Árabe, inglês, francês, espanhol, português, russo e urdu.",
-    "dua": "Peço-vos as vossas súplicas: por mim, pelo meu pai — que Allah tenha misericórdia dele — e pela minha mãe, que Allah prolongue a sua vida e a proteja. E o mesmo para vós, in sha’ Allah.",
+    "dua": "E peço-vos também uma oração: por mim, pelo meu pai — que Deus tenha misericórdia dele — e pela minha mãe, que Deus prolongue e guarde a sua vida. E o mesmo para vós, se Deus quiser.",
     "sources_intro": "Todo o conteúdo da aplicação provém das fontes abaixo. Toque em qualquer uma para abrir o site e verificar por si.",
     "sources_hint": "De onde vem o conteúdo",
     "src_quran": "Alcorão",
@@ -1016,7 +1016,8 @@
     "src_quotes": "Citações e os seus fundos",
     "src_commons": "Wikimedia Commons — os fundos de ornamento islâmico, domínio público ou CC0, com a licença e o autor de cada ficheiro guardados na aplicação",
     "src_youtube": "Cada imagem de canal vem da própria página do YouTube desse canal e é replicada no servidor da aplicação para funcionar offline. Os canais abrem no YouTube; nenhum vídeo é republicado.",
-    "src_unsplash": "As fotografias dos cartões dos adhkar e do guia do novo muçulmano — sob a licença Unsplash, obtidas diretamente da fonte."
+    "src_unsplash": "As fotografias dos cartões dos adhkar e do guia do novo muçulmano — sob a licença Unsplash, obtidas diretamente da fonte.",
+    "dedication": "Dedico este trabalho à minha esposa, companheira do meu caminho"
   },
   "ruqyah": {
     "title": "Ruqyah",

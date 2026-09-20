@@ -990,7 +990,7 @@
     "f_library_desc": "Text books to download, read and search, plus {} Islamic channels and a set of websites.",
     "f_locales": "An interface in {} languages",
     "f_locales_desc": "Arabic, English, French, Spanish, Portuguese, Russian and Urdu.",
-    "dua": "I ask you for your du‘a: for me, for my father — may Allah have mercy on him — and for my mother, may Allah lengthen her life and protect her. And the same for you, in sha’ Allah.",
+    "dua": "And I ask you too for a prayer: for me, for my father — may God have mercy on him — and for my mother, may God lengthen and keep her life. And the same for you, God willing.",
     "sources_intro": "Every piece of content in the app comes from the sources below. Tap any one to open its site and check for yourself.",
     "sources_hint": "Where the app’s content comes from",
     "src_quran": "Quran",
@@ -1016,7 +1016,8 @@
     "src_quotes": "Quotes and their backgrounds",
     "src_commons": "Wikimedia Commons — the Islamic-ornament backgrounds, public domain or CC0, each file’s licence and author kept in the app",
     "src_youtube": "Each channel picture is taken from that channel’s own YouTube page and mirrored on the app’s server so the grid works offline. The channels open in YouTube; no video is re-published.",
-    "src_unsplash": "The card photographs on the Azkar grid and the New Muslim guide — under the Unsplash License, fetched straight from the source to your device."
+    "src_unsplash": "The card photographs on the Azkar grid and the New Muslim guide — under the Unsplash License, fetched straight from the source to your device.",
+    "dedication": "I dedicate this work to my wife, the companion of my road"
   },
   "ruqyah": {
     "title": "Ruqyah",

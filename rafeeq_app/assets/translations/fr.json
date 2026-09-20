@@ -990,7 +990,7 @@
     "f_library_desc": "Des livres à télécharger, lire et rechercher, plus {} chaînes islamiques et une sélection de sites.",
     "f_locales": "Une interface en {} langues",
     "f_locales_desc": "Arabe, anglais, français, espagnol, portugais, russe et ourdou.",
-    "dua": "Je vous demande vos invocations : pour moi, pour mon père — qu’Allah lui fasse miséricorde — et pour ma mère, qu’Allah prolonge sa vie et la préserve. Et de même pour vous, in sha’ Allah.",
+    "dua": "Et je vous demande aussi une prière : pour moi, pour mon père — que Dieu lui fasse miséricorde — et pour ma mère, que Dieu prolonge et protège sa vie. Et de même pour vous, si Dieu le veut.",
     "sources_intro": "Tout le contenu de l'application provient des sources ci-dessous. Touchez-en une pour ouvrir son site et vérifier par vous-même.",
     "sources_hint": "D'où vient le contenu",
     "src_quran": "Coran",
@@ -1016,7 +1016,8 @@
     "src_quotes": "Citations et leurs fonds",
     "src_commons": "Wikimedia Commons — les fonds d’ornement islamique, domaine public ou CC0, la licence et l’auteur de chaque fichier étant conservés dans l’application",
     "src_youtube": "Chaque image de chaîne provient de la page YouTube de cette chaîne et est mise en miroir sur le serveur de l’application pour fonctionner hors ligne. Les chaînes s’ouvrent dans YouTube ; aucune vidéo n’est republiée.",
-    "src_unsplash": "Les photographies des cartes des adhkar et du guide du nouveau musulman — sous licence Unsplash, récupérées directement à la source."
+    "src_unsplash": "Les photographies des cartes des adhkar et du guide du nouveau musulman — sous licence Unsplash, récupérées directement à la source.",
+    "dedication": "Je dédie ce travail à mon épouse, la compagne de ma route"
   },
   "ruqyah": {
     "title": "Roqya",

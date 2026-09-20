@@ -177,31 +177,27 @@ class MoreScreen extends ConsumerWidget {
           // gigabyte; it is not a tool you reach for beside focus mode. So it
           // is a card of its own, and the tour - which IS a tool, and was
           // taking a whole group to hold one card - takes the seat it left.
-          MoreGroup(
-            title: 'downloads.title'.tr(),
-            subtitle: 'downloads.offline_ready'.tr(),
-            icon: Icons.download_for_offline_outlined,
-            accent: AppColors.info,
-            children: [
-              TutorialAnchor(
-                id: TourAnchor.moreDownloads,
-                child: IslamicActionCard(
-                  icon: Icons.download_for_offline_outlined,
-                  accent: AppColors.info,
-                  title: 'downloads.title'.tr(),
-                  subtitle: 'downloads.offline_ready'.tr(),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const DownloadsScreen(),
-                    ),
-                  ),
+          // «التنزيلات كارتين فوق بعض نفس المهمة» - giving it a `MoreGroup`
+          // of its own put its title and subtitle on the group header AND on
+          // the one card inside it, one directly under the other. It is a
+          // destination, not a group: a single card that opens the screen.
+          TutorialAnchor(
+            id: TourAnchor.moreDownloads,
+            child: IslamicActionCard(
+              icon: Icons.download_for_offline_outlined,
+              accent: AppColors.info,
+              title: 'downloads.title'.tr(),
+              subtitle: 'downloads.offline_ready'.tr(),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const DownloadsScreen(),
                 ),
               ),
-            ],
+            ),
           ),
           MoreGroup(
             title: 'more.group_tools'.tr(),
-            subtitle: _names(['focus.title', 'tutorial.title']),
+            subtitle: _names(['focus.title', 'tutorial.card_title']),
             icon: Icons.handyman_rounded,
             accent: AppColors.info,
             children: [

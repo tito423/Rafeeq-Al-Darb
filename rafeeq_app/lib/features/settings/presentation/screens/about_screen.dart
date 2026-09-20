@@ -401,6 +401,23 @@ class _DuaCardState extends State<_DuaCard>
           const SizedBox(height: 14),
           _rule(),
           const SizedBox(height: 14),
+          // THE DEDICATION, above the du'a and set apart from it.
+          //
+          // «قبل اسالكم الدعاء لي في عن التكبيق اكتب بشكل جميل اهدي هذا
+          // العمل لزوجتي ورفيقة دربي. بعدين حط قبل اسالكم الدعاء كما عشان
+          // تبقى كما اسالكم الدعاء». So it reads as one breath: the
+          // dedication first, then «كما أسألكم الدعاء…».
+          Text(
+            'about.dedication'.tr(),
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontFamily: 'AmiriQuran',
+              height: 2.1,
+              fontWeight: FontWeight.w700,
+              color: goldOn(theme.colorScheme),
+            ),
+          ),
+          const SizedBox(height: 12),
           Text(
             'about.dua'.tr(),
             textAlign: TextAlign.center,
