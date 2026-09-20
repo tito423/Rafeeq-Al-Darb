@@ -1783,9 +1783,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-20 13:13 — IN PROGRESS — resume here**
+**2026-09-20 13:31 — IN PROGRESS — resume here**
 
-The paper mushaf is now madinah_qc: quran.com's Madinah page images with the ayah coordinates their own publisher ships. 286 MB of SVG replaced by 604 PNGs at 1260x2038, 74,336,240 bytes measured over all of them, plus a 960,501-byte coordinate layer. ayahinfo_1260 was opened and counted, not trusted: 88,246 word boxes, 604 pages with none missing, all 6,236 ayahs, every page 1260x2038 read from its own PNG header. build_madinah_qc_polygons.py merges the word boxes into one ring per LINE of each ayah - 13,766 rings - because the owner does not want word-level highlighting: a press must open the ayah's card. The edition carries an IDENTITY polygon_fit, so the existing raster drawing path applies its own coordinates with no arithmetic. Uploaded with upload_madinah_qc_pages.py, no ContentEncoding (trap 6); all 604 verified byte-for-byte on the bucket and 8 sampled on the public endpoint as image/png. Seen on emulator-5554: page 208 draws, a long press resolves to Yunus 10:4 and opens its card, and the highlight runs from just after marker 3 to marker 4 across four line segments and stops there. Sources screen and all 7 locales now credit quran/quran_android and its CC BY-NC-ND data statement. flutter analyze clean, 438 tests pass.
+The three paper modes work on the new raster mushaf, measured rather than eyeballed. normal / warm / night all render page 208 and keep the ayah highlight readable on top of them. Contrast ratios computed from the real screenshots' pixels (WCAG relative luminance, darkest and lightest decile of a highlighted line): page text 15.89 normal, 13.60 warm, 14.57 night; text INSIDE the highlight band 9.45 normal, 8.10 warm, 7.69 night - all far above the 4.5:1 floor that trap 15 was written for, and the night ground measured exactly 0F1722 as mushaf_paper_provider declares. No new assets: the modes are a colour matrix at draw time, so all three cost zero bytes.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
