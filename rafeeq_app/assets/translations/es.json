@@ -329,7 +329,9 @@
     "display_edition": "El mushaf",
     "display_hint": "Para ir a una sura, yuz o página, usa el botón «Ir a».",
     "display_turn": "Paso de página",
-    "display_turn_book": "Pasar como un mushaf de papel"
+    "display_turn_book": "Pasar como un mushaf de papel",
+    "sciences_words": "Palabras",
+    "ayah_count": "{} versículos"
   },
   "library": {
     "title": "Biblioteca",
@@ -1815,6 +1817,8 @@
     "audio": "Audio y archivos",
     "audio_why": "Para reproducir las recitaciones guardadas en su dispositivo.",
     "battery": "Funcionar en segundo plano",
-    "battery_why": "Para que el sistema no detenga el adhan con la app cerrada."
+    "battery_why": "Para que el sistema no detenga el adhan con la app cerrada.",
+    "full_screen": "Adhan a pantalla completa",
+    "full_screen_why": "Para que el adhan llene la pantalla a la hora de la oración, incluso bloqueada."
   }
 }

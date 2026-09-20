@@ -4,6 +4,7 @@ import 'notification_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'adhan_native.dart';
+import 'adhan_uri_bridge.dart';
 
 /// The permission gates the Adhan actually depends on, and nothing else.
 ///
@@ -27,7 +28,20 @@ import 'adhan_native.dart';
 ///  * a battery-optimization exemption, so the process is not frozen before
 ///    the alarm lands.
 /// The five the first-run page lists, in the order it lists them.
-enum AppPermission { location, notifications, exactAlarms, audio, battery }
+enum AppPermission {
+  location,
+  notifications,
+  exactAlarms,
+  audio,
+  battery,
+  /// «اعرض اذن شاشة الاذان الكاملة مع شاشة الاذونات». Android 14
+  /// took `USE_FULL_SCREEN_INTENT` away from apps that are not
+  /// alarms or calls, and without it the adhan cannot take the
+  /// lock screen - it becomes a notification like any other. It
+  /// has no `permission_handler` entry; `AdhanUriBridge` asks the
+  /// platform and opens its settings page.
+  fullScreen,
+}
 
 class AlarmPermissionsService {
   AlarmPermissionsService._();
@@ -127,6 +141,8 @@ class AlarmPermissionsService {
         AppPermission.audio => await Permission.audio.isGranted,
         AppPermission.battery =>
           await Permission.ignoreBatteryOptimizations.isGranted,
+        AppPermission.fullScreen =>
+          await AdhanUriBridge.canUseFullScreenIntent() ?? true,
       };
     } catch (_) {
       return false;
@@ -155,6 +171,11 @@ class AlarmPermissionsService {
           await [Permission.audio, Permission.storage].request();
         case AppPermission.battery:
           await Permission.ignoreBatteryOptimizations.request();
+        case AppPermission.fullScreen:
+          // A settings screen, not a dialog: the page re-reads
+          // every status on resume, which is when the answer
+          // exists.
+          await AdhanUriBridge.openFullScreenIntentSettings();
       }
     } catch (_) {
       // Best effort: the row simply stays unticked.

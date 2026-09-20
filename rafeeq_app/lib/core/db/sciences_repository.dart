@@ -31,6 +31,27 @@ class AyahTranslation {
   });
 }
 
+/// What the pack holds, counted from the file rather than written down.
+///
+/// «علوم القران خليها تعرضلي بشكل جميل ايه اللي نزلته سواء التفاسير او
+/// الاعراب او الترجمة» - so `SciencesPackScreen` can show it, and so no
+/// number on that screen is a claim nobody checked.
+class SciencesPackContents {
+  /// (name, verses) per tafsir, biggest first.
+  final List<(String, int)> tafsirs;
+
+  /// (translator or language, verses) per translation.
+  final List<(String, int)> translations;
+  final int grammarRows;
+  final int meaningRows;
+  const SciencesPackContents({
+    required this.tafsirs,
+    required this.translations,
+    required this.grammarRows,
+    required this.meaningRows,
+  });
+}
+
 /// Read access to quran_sciences.db: tafseer ranges, word-by-word meanings,
 /// i'rab (corpus morphology), ayah translations.
 ///
@@ -134,6 +155,42 @@ class SciencesRepository {
       );
     }
     return out;
+  }
+
+  /// Counted on demand, for the pack screen. Four aggregate queries over
+  /// indexed columns; it is not something to call on every frame.
+  Future<SciencesPackContents> contents() async {
+    Future<int> count(String table) async {
+      final r = await _db.rawQuery('SELECT COUNT(*) AS n FROM $table');
+      return (r.first['n'] as int?) ?? 0;
+    }
+
+    final tafsir = await _db.rawQuery(
+        'SELECT source, COUNT(*) AS n FROM tafseer_texts '
+        'GROUP BY source ORDER BY n DESC');
+    final trans = await _db.rawQuery(
+        'SELECT t.lang AS lang, e.name AS name, COUNT(*) AS n '
+        'FROM translations t LEFT JOIN translation_editions e '
+        'ON e.lang = t.lang GROUP BY t.lang ORDER BY n DESC');
+    return SciencesPackContents(
+      tafsirs: [
+        for (final r in tafsir)
+          (
+            tafseerSources[r['source'] as String? ?? ''] ??
+                (r['source'] as String? ?? ''),
+            (r['n'] as int?) ?? 0,
+          ),
+      ],
+      translations: [
+        for (final r in trans)
+          (
+            (r['name'] as String?) ?? (r['lang'] as String? ?? ''),
+            (r['n'] as int?) ?? 0,
+          ),
+      ],
+      grammarRows: await count('word_grammar'),
+      meaningRows: await count('word_meanings'),
+    );
   }
 
   /// One ayah in a single language, or null when that language is absent.

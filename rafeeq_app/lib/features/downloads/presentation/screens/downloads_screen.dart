@@ -5,7 +5,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/services/download_engine.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/services/mushaf_page_service.dart';
@@ -26,6 +25,7 @@ import '../../../quran_audio/presentation/ayah_download_screen.dart';
 import '../widgets/library_route.dart';
 import '../widgets/mushaf_tiles.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
+import '../../../quran/presentation/screens/sciences_pack_screen.dart';
 
 String _fmtSize(int bytes) {
   // Binary units, matching what Android's own storage screen reports.
@@ -161,11 +161,14 @@ class _OverviewTab extends ConsumerWidget {
             );
       // «والباقي مش بيوديني لحاجة» - these two had no destination at all.
       case DownloadCategory.quranSciences:
-        // It is installed from the ayah card, so that is where this goes.
-        return () {
-          Navigator.of(context).pop();
-          ref.read(requestedTabProvider.notifier).state = AppTab.quran;
-        };
+        // «علوم القران خليها تعرضلي بشكل جميل ايه اللي نزلته سواء التفاسير
+        // او الاعراب او الترجمة» - the row used to throw the reader at the
+        // Qur'an tab, which tells him nothing about what he downloaded.
+        return () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const SciencesPackScreen(),
+              ),
+            );
     }
   }
 

@@ -123,6 +123,11 @@ class _PermissionsIntroScreenState
       (Icons.alarm_on_outlined, 'alarms', AppPermission.exactAlarms),
       (Icons.audiotrack_outlined, 'audio', AppPermission.audio),
       (Icons.battery_saver_outlined, 'battery', AppPermission.battery),
+      (
+        Icons.fullscreen_rounded,
+        'full_screen',
+        AppPermission.fullScreen
+      ),
     ];
 
     return Scaffold(

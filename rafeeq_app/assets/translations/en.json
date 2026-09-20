@@ -329,7 +329,9 @@
     "display_edition": "The mushaf",
     "display_hint": "To jump to a surah, juz or page, use the «Go to» button.",
     "display_turn": "Page turn",
-    "display_turn_book": "Turn like a real mushaf"
+    "display_turn_book": "Turn like a real mushaf",
+    "sciences_words": "Words",
+    "ayah_count": "{} verses"
   },
   "library": {
     "title": "Library",
@@ -1815,6 +1817,8 @@
     "audio": "Audio and files",
     "audio_why": "To play recitations saved on your device.",
     "battery": "Running in the background",
-    "battery_why": "So the system does not stop the adhan while the app is closed."
+    "battery_why": "So the system does not stop the adhan while the app is closed.",
+    "full_screen": "Full-screen adhan",
+    "full_screen_why": "So the adhan fills the screen at prayer time, even locked."
   }
 }

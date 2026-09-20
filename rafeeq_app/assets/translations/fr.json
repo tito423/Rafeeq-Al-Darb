@@ -329,7 +329,9 @@
     "display_edition": "Le mushaf",
     "display_hint": "Pour aller à une sourate, un juz ou une page, utilisez « Aller à ».",
     "display_turn": "Tourner la page",
-    "display_turn_book": "Tourner comme un mushaf papier"
+    "display_turn_book": "Tourner comme un mushaf papier",
+    "sciences_words": "Mots",
+    "ayah_count": "{} versets"
   },
   "library": {
     "title": "Bibliothèque",
@@ -1815,6 +1817,8 @@
     "audio": "Audio et fichiers",
     "audio_why": "Pour lire les récitations enregistrées sur votre appareil.",
     "battery": "Fonctionnement en arrière-plan",
-    "battery_why": "Pour que le système n’arrête pas l’adhan quand l’app est fermée."
+    "battery_why": "Pour que le système n’arrête pas l’adhan quand l’app est fermée.",
+    "full_screen": "Adhan en plein écran",
+    "full_screen_why": "Pour que l’adhan remplisse l’écran à l’heure de la prière, même verrouillé."
   }
 }

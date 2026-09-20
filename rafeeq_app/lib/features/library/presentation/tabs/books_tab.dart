@@ -198,11 +198,26 @@ class _BooksTabState extends State<BooksTab> {
                 unselectedLabelColor: Theme.of(
                   context,
                 ).colorScheme.onSurfaceVariant,
+                // A four-way TabBar gives each tab a quarter of the width
+                // and a `Tab`'s text CLIPS rather than ellipsises, so on a
+                // phone a little narrower than the emulator «التصنيفات» lost
+                // its alif and «مسموعة» its meem - «المؤلفين والتصنيفات
+                // واللي جنبها في مكتبتي مقصوصة ومش كاملة». Shrinking a label
+                // to fit its quarter keeps the word whole, which is what a
+                // tab is for.
                 tabs: [
-                  Tab(text: 'library.sub_authors'.tr()),
-                  Tab(text: 'library.sub_categories'.tr()),
-                  Tab(text: 'library.sub_spoken'.tr()),
-                  Tab(text: 'library.sub_mine'.tr()),
+                  for (final key in const [
+                    'library.sub_authors',
+                    'library.sub_categories',
+                    'library.sub_spoken',
+                    'library.sub_mine',
+                  ])
+                    Tab(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(key.tr()),
+                      ),
+                    ),
                 ],
               ),
             ),

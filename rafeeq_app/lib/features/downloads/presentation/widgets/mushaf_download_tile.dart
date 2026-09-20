@@ -159,7 +159,10 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                         : '${localizeDigits(ratio(_cached, total), uiLanguageCode)} ${'downloads.pages_cached'.tr()}'
                               '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.outline,
+                      // `outline` is the palette's DIVIDER grey - it is meant
+                      // for hairlines, not for a line someone has to read.
+                      // «وصف مصحف المدينة في التنزيلات باهت اللون».
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                   if (_busy) ...[
