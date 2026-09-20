@@ -250,6 +250,12 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
       child: Row(
+        // «خلي الجزء في اقصى الشمال». A `Spacer` did not do it: `Flexible`
+        // defaults to flex 1, so the surah and the spacer SHARED the free
+        // space and the juz pill came to rest near the middle. spaceBetween
+        // pins the first child to the start and the last to the end, which
+        // in RTL is the surah hard right and the juz hard left.
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (surahName != null)
             Flexible(
@@ -269,7 +275,6 @@ class _Header extends StatelessWidget {
                 ),
               ),
             ),
-          const Spacer(),
           // «اسم السورة يمينًا والجزء شمالًا ورقم الصفحة أسفل الشاشة». The
           // page number used to sit here too, beside the juz, and again in
           // the badge at the foot of the screen — the same number printed

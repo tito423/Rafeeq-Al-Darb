@@ -1783,9 +1783,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-20 14:01 — IN PROGRESS — resume here**
+**2026-09-20 14:04 — IN PROGRESS — resume here**
 
-Items 4, 5 and 6. (4) The mushaf toolbar: the page number is out of the header, which now carries only the surah on the right and the juz on the left, and the number is the badge at the foot of the screen - it used to be printed twice. The badge now shows in the TEXT mode too (pageBadges no longer keyed to image mode), since the owner's «ويشمل ذلك الوضع النصي». _PagePill went with it. (5) Library tabs: a Tab has a FIXED height, so at a large interface font the label grew past it and was sliced; the type inside the capsule is now clamped to 1.1x and the bar is 62px. (6) «المزيد»: a new MoreGroupAccent inherited widget lets a group hand its colour down, and IslamicActionCard prefers it, so the cards under one heading are one family instead of a row of unrelated accents; they are also inset on both sides so an opened group reads as a narrower column. Seen on emulator-5554: the toolbar shows surah right, juz left, no number, and 208 at the foot in the image mushaf; the library tabs sit inside their pills at system font_scale 1.6 (measured by setting it, not guessed); the opened «القرآن والعبادات» group draws its three cards narrower and in the group's gold. NOT seen: the toolbar in TEXT mode - the same MushafChrome and the same flag, but the emulator would not switch modes for me. flutter analyze clean, 438 tests pass.
+The juz pill sits hard left now. A Spacer was not enough: Flexible defaults to flex 1, so the surah name and the spacer SHARED the free space and the pill came to rest near the middle of the bar. mainAxisAlignment spaceBetween pins the first child to the start and the last to the end - in RTL that is the surah hard right and the juz hard left. Seen on emulator-5554: the pill is against the left edge of the panel.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
