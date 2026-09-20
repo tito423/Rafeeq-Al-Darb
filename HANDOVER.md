@@ -7,12 +7,47 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-21 |
+| **Current source, after v3.51.0** | Hajj/Umrah presentation and tajweed TTS cleanup, verified on emulator-5554 on 2026-09-21. Analyzer clean; **456 tests passed, 2 skipped**. Debug build only; no new release. See the verification note below. |
 | **Released** | **v3.51.0** — 260,277,487 B, three ABIs, minSdk 24. One release, one tag. **It is the RESTORE POINT**: branch `known-good/v3.51.0` and tag `backup-2026-09-21c` sit on this commit; `RESTORE.md` says how to come back |
 | **App version** | `pubspec.yaml` `3.51.0+53`; `AboutScreen.appVersion` `3.51.0` |
 | **Verified 2026-09-20 (final)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **453 passed, 2 skipped** · hosted content **8/8** range-checked with a User-Agent: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `ruqyah/afasy.mp3` — all 206 with the right `Content-Type` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker with Arabic text · the signed v3.47.0 APK installs, launches, zero FATAL EXCEPTION, support URL in all three `libapp.so` |
 | **Measured 2026-09-20 (final)** | 7 locales × **1,678** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B** · sciences pack **33,239,511 B** on R2 · R2 holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) · APK **259,748,286 B** |
 | **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
 | **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.51.0** |
+
+## VERIFIED AFTER v3.51.0 — Hajj/Umrah and tajweed (2026-09-21)
+
+* Umrah's own chapter appears only in its track, at the beginning. Its two
+  exact opening headings are omitted from the presentation, leaving the
+  first ruling and all subsequent source paragraphs unchanged. Tests read
+  the actual bundled book and assert the Arabic comparison is nonempty.
+* The child's Hajj chapter appears only in Hajj. The owner explicitly chose
+  to keep counsel in both tracks. The shared rite chapters retain their order.
+* Umrah's header now loops its tawaf illustration. The Hajj journey map is
+  no longer shown inside Umrah's mawaqit card. The separate tawaf counter
+  remains interactive rather than advancing automatically.
+* Removed synthetic ListenTextButton from all three tajweed lesson screens.
+  No replacement recording or voice was introduced. The level-two header
+  and lesson texts were not changed. Audio quality was NOT auditioned:
+  this tool session cannot hear the emulator's audio output.
+* `flutter analyze lib test --no-pub`: **No issues found**.
+  `flutter test --no-pub --reporter expanded`: **456 passed, 2 skipped**.
+  The updated track regression test first failed against the old code.
+* Built `flutter build apk --debug --no-pub`, then started emulator-5554.
+  The old release rejected the debug signature; uninstall/install on this
+  emulator both returned Success. Walked the Arabic first run and opened
+  both pilgrimage tracks and lessons in all three tajweed levels.
+* SEEN: Umrah's ten cards, no child chapter, counsel retained; Hajj's eighteen
+  cards without a duplicate Umrah chapter; Umrah body starts at the first
+  ruling; no Hajj map inside Umrah mawaqit; tawaf advances from lap 1 to 2;
+  populated Tuhfa, Jazariyyah and Tamhid lessons without the synthetic button.
+  An eight-second screen recording, inspected as eight one-second frames,
+  shows the header marker making an anticlockwise circuit and looping.
+* Local evidence: `scripts/pipeline_temp/hajj_umrah_verification/` contains
+  the recording, contact sheet, and inspected screenshots. Test/build logs:
+  `scripts/hajj_umrah_tests.log`, `scripts/hajj_umrah_build.log` (all ignored).
+* Restore refs still resolve to `dbeb094044fc663ee12f772fc27a29522c984c42`;
+  the untouched bundle measures **693,194,105 bytes**. No release published.
 
 ## WHAT v3.51.0 SHIPPED (2026-09-21) — the restore point
 
@@ -2034,9 +2069,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-21 02:23 — IN PROGRESS — resume here**
+**2026-09-21 02:32 — COMPLETE**
 
-Separate pilgrimage tracks and remove synthetic tajweed reading; analyze clean, device verification pending
+Verified pilgrimage tracks, looping Umrah header and all three tajweed lessons on emulator-5554; analyzer clean, 456 tests pass and 2 skip
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
@@ -3256,4 +3291,3 @@ nothing. The owner checks. Say plainly what you ran and what you did not.
   `core.autocrlf` got lost — see §4.1.
 - **Tell the owner the truth**, including what you could not verify. He has been
   burned by confident-sounding agents. Honesty is worth more than polish here.
-
