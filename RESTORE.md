@@ -44,7 +44,24 @@ adb install -r "E:\My Projects\Rafiq-Al-Darb\dist\RafeeqAlDarb-v3.51.0.apk"
 أو نزّله من:
 https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.51.0
 
-## ٣) ما لا يُغطّيه هذا
+## ٣) نسخة كاملة خارج GitHub
+
+لو المستودع نفسه خرب أو ضاع الوصول إليه، هناك حزمة git تحمل **كل التاريخ**
+وكل الفروع والوسوم في ملف واحد، خارج المستودع:
+
+    ../Rafeeq-Backups/Rafeeq-Al-Darb-2026-09-21.bundle      (661 ميجابايت)
+
+تحقّق منها ثم استنسخ منها:
+
+```bash
+git bundle verify "E:\My Projects\Rafeeq-Backups\Rafeeq-Al-Darb-2026-09-21.bundle"
+git clone "E:\My Projects\Rafeeq-Backups\Rafeeq-Al-Darb-2026-09-21.bundle" Rafeeq-Al-Darb-restored
+```
+
+تخرج نسخة كاملة تعمل، بكل الفروع والوسوم، دون شبكة. **انسخ هذا الملف على
+قرص خارجي** — هو والمفتاح، فهما الشيئان اللذان لا يعوّضهما شيء.
+
+## ٤) ما لا يُغطّيه هذا
 
 * **مفتاح التوقيع** في `../Rafeeq-Keys/` **خارج المستودع**، وهو مسؤوليتك أنت.
   لو ضاع فلن يُثبَّت أي تحديث فوق التطبيق بعد اليوم إلا بإلغاء تثبيته — وهذا
@@ -55,7 +72,7 @@ https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.51.0
 * **قواعد البيانات المولَّدة** (`rafeeq_app/assets/data/*.db`) مستثناة من git
   لأنها تُبنى من `scripts/`.
 
-## ٤) كيف تعرف أنك رجعت صح
+## ٥) كيف تعرف أنك رجعت صح
 
 ```bash
 cd rafeeq_app
