@@ -6,14 +6,59 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-20 |
-| **Released** | **v3.43.0**, tag at `dd30123b`, asset `RafeeqAlDarb-v3.43.0.apk` **339,920,197 B**. One release, one tag. **HEAD is 2 commits ahead of it and NOT released**: `740d0302` (cleanup after the mushaf swap) and `13be4f06` (3.44.0 — the hadith rulings read Arabic). The owner stopped the v3.44.0 build mid-flight with «قبل ما تنشر وترفع فيه حاجة لسه مخلصتش» and did not say what — **ask him before building** |
-| **App version** | `pubspec.yaml` `3.44.0+46`; `AboutScreen.appVersion` `3.44.0` — bumped but unreleased |
-| **Verified 2026-09-20 (second)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **439 passed, 2 skipped** · hosted content **8/8** answered a range request with the right `Content-Type`: `hadith/hadith.zip`, a book, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, the TTS model, a Quran translation, `hadeethenc/ar.zip` · the review site and its two data files answered 200 |
-| **Measured 2026-09-20 (second)** | 7 locales × **1,661** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books in the catalogue, **213** with a text URL · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded with a named grader · the paper mushaf is **74,336,240 B** over 604 pages (was 286 MB of SVG) |
-| **On the owner's phone** | he installs from GitHub Releases, so he has **v3.43.0**. The Arabic-ruling fix is NOT on it |
+| **Last updated** | 2026-09-20 (third handover of the day; the earlier two are below) |
+| **Released** | **v3.45.0** — see the release notes. One release, one tag; v3.43.0 and its tag were deleted |
+| **App version** | `pubspec.yaml` `3.45.0+47`; `AboutScreen.appVersion` `3.45.0` |
+| **Verified 2026-09-20 (third), all on emulator-5554 unless stated** | `flutter analyze lib test` → **No issues found** · `flutter test` → **447 passed, 2 skipped** · the text mushaf opens again, with its toolbar, «التلاوة المستمرة», the basmala highlight and pinch-zoom · علوم القرآن downloads, unpacks and serves تفسير/ترجمة/إعراب · the adhan plays with `res/raw` deleted (`dumpsys audio`: MediaPlayer `state:started`, `USAGE_ALARM`, 44100 Hz) · الأذكار and الرقية read the new `azkar.db` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker |
+| **Measured 2026-09-20 (third)** | 7 locales × **1,664** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B**, 26 chapters / 98 supplications · the sciences pack **33,239,511 B** on R2 · R2 now holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) |
+| **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
+| **On the owner's phone** | he installs from GitHub Releases, so once he updates he has **v3.45.0** |
 
-## WHAT CHANGED AFTER v3.43.0 (committed, not released)
+## WHAT v3.45.0 SHIPPED (2026-09-20)
+
+* **THE TEXT MUSHAF WAS UNREACHABLE SINCE v3.43.0, AND IS BACK.** The render
+  branch read `if (_mode == MushafMode.image || edition.isRaster)`, written
+  when a vector printing shared the screen with the scans. The 3.43.0 swap
+  left ONE printing and it is raster, so that clause was always true and
+  `MushafTextPage` was dead code — and with it «التلاوة المستمرة» (gated on
+  `textMode && !isRaster`, also always false), the basmala highlight and the
+  pinch zoom. The «وضع النص» button still fired; it just could not change
+  what was drawn, which is why it looked fine. `flutter analyze` and 439
+  tests had no opinion. `test/text_mushaf_reachable_test.dart` holds it, and
+  was proven to fail with the clause put back.
+* **The three things the last handover left unverified are verified**, and
+  two of them could not have been reached at all before the fix: the basmala
+  highlight sits on its own line and then moves to ayah 1 (measured: only
+  rows 360–460 of the screen change), pinch-zoom works and one tap restores
+  the page pixel-for-pixel, and the text-mode toolbar puts the surah right,
+  the juz left and the page number once at the foot.
+* **The APK is 76.5 MiB smaller** — 259,727,806 B against v3.43.0's
+  339,920,197 B, and it still carries arm64-v8a, armeabi-v7a AND x86_64 with
+  `minSdk` 24. Two measured steps: `quran_sciences.db` (131.68 MB on disk,
+  33 MiB in the APK) became a download, and the 14 adhans stopped shipping
+  twice.
+* **A partial ABI set makes a BROKEN APK, and it was caught by installing the
+  signed one.** `--target-platform android-arm,android-arm64` drops the
+  Flutter engine for x86_64 but not the plugins' x86_64 `.so` files, so the
+  APK keeps a `lib/x86_64/` folder with no engine in it, Android picks its
+  primary ABI from the folders it sees, and the app installs and dies with
+  «dlopen failed: libflutter.so is for EM_AARCH64 (183) instead of EM_X86_64
+  (62)». The finding is written into `build.gradle.kts`; nothing of it
+  ships.
+* **علوم القرآن is a download.** 33,239,511 B on R2. An install that already
+  holds the bundled copy adopts it rather than re-fetching (`_adoptBundledCopy`
+  reads the `sciences-v9` stamp, which names the exact file the pack zips).
+* **The adhkar are their own 49,152-byte `azkar.db`**, so the الأذكار tab
+  never waits on علوم القرآن.
+* **1,635.55 MB of dead objects left R2** — the old SVG mushaf, eight retired
+  printings and the deleted adhan clips; 5,331 objects, the full key list in
+  `docs/r2/deleted_2026-09-20.txt`. The bucket is 909 objects / 860.61 MB.
+* **The review backend is deployed and works end to end** — the owner ran
+  `wrangler login` and `deploy`; POST/GET `/review` were then tested against
+  the live Worker with Arabic text, which came back verbatim, and the CORS
+  preflight from `tito423.github.io` answers 204.
+
+## WHAT CHANGED AFTER v3.43.0 (committed, released in 3.45.0)
 
 * **The hadith rulings read Arabic.** The text was always Arabic; the ruling
   beside it was not. Four of the nine books take their gradings from an

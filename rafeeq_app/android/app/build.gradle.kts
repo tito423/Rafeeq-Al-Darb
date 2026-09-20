@@ -34,6 +34,21 @@ android {
 
     buildTypes {
         release {
+            // ONLY the two ABIs a phone actually has.
+            //
+            // `--target-platform android-arm,android-arm64` on the Flutter
+            // side drops the ENGINE for x86_64 but not the four plugin `.so`
+            // files (onnxruntime 15.77 MiB, sqlite3, dartjni, datastore),
+            // which every plugin ships for every ABI. That left a `lib/x86_64/`
+            // folder in the APK with no `libflutter.so` or `libapp.so` in it,
+            // and Android picks its primary ABI from the folders it SEES: on
+            // an x86_64 device the app installed and then died on launch with
+            // «dlopen failed: libflutter.so is for EM_AARCH64 (183) instead of
+            // EM_X86_64 (62)». Caught on emulator-5554 while checking the
+            // signed 3.45.0 APK, which is the only reason it did not ship.
+            //
+            // Debug builds keep every ABI, because emulator-5554 is x86_64 and
+            // it is where this project verifies everything (CLAUDE.md §1.3).
             // Gradle deliberately still signs with the debug key here, and the
             // APK is then RE-SIGNED by `scripts/sign_release.py` with the real
             // release key before it is published.
@@ -81,6 +96,27 @@ android {
         }
     }
 }
+
+// A PARTIAL ABI SET MAKES A BROKEN APK - recorded so nobody tries it again.
+//
+// `--target-platform android-arm,android-arm64` drops the Flutter ENGINE for
+// x86_64 but NOT the four plugin `.so` files every plugin ships for every ABI
+// (onnxruntime 15.77 MiB, sqlite3, dartjni, datastore). The APK then has a
+// `lib/x86_64/` folder with no `libflutter.so` and no `libapp.so`, Android
+// picks its primary ABI from the folders it SEES, and on an x86_64 device the
+// app installs and dies on launch with «dlopen failed: libflutter.so is for
+// EM_AARCH64 (183) instead of EM_X86_64 (62)». Caught on emulator-5554 while
+// checking the signed 3.45.0 APK - which is the only reason it did not ship.
+//
+// Removing the folder as well needs BOTH a release-scoped
+// `jniLibs.excludes += "lib/x86_64/**"` AND a narrowed `pickFirsts`, because a
+// pickFirst beats an exclude and the one above matches every ABI.
+// `ndk.abiFilters` on the build type does nothing here; that was tried with
+// the native-lib intermediates deleted.
+//
+// None of it ships. The owner's rule is compatibility: «يشتغل مع اي نوع من
+// انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». minSdk is 24
+// (Android 7.0) and all three ABIs Flutter supports are in the APK.
 
 flutter {
     source = "../.."
