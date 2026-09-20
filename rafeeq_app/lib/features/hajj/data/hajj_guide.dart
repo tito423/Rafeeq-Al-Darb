@@ -76,7 +76,7 @@ class HajjStep {
 
   final HajjRite rite;
 
-  /// Umrah steps are a subset of the Hajj steps, in the same order.
+  /// Shared chapters retain their order; each track also has its own chapters.
   final Set<HajjTrack> tracks;
 
   const HajjStep({
@@ -180,7 +180,7 @@ const hajjSteps = <HajjStep>[
       dayKey: 'hajj.days_11_13', rite: HajjRite.jamarat),
   HajjStep(
       key: 'umrah', fromPage: 378, fromPara: 0, toPage: 387, toPara: 1,
-      tracks: _both),
+      tracks: {HajjTrack.umrah}),
   HajjStep(
       key: 'farewell', fromPage: 388, fromPara: 0, toPage: 445, toPara: 2,
       rite: HajjRite.tawaf),
@@ -188,8 +188,7 @@ const hajjSteps = <HajjStep>[
       key: 'visitation', fromPage: 446, fromPara: 0, toPage: 468, toPara: 1,
       tracks: _both),
   HajjStep(
-      key: 'child', fromPage: 505, fromPara: 0, toPage: 512, toPara: 0,
-      tracks: _both),
+      key: 'child', fromPage: 505, fromPara: 0, toPage: 512, toPara: 0),
   HajjStep(
       key: 'counsel', fromPage: 513, fromPara: 0, toPage: 522, toPara: 0,
       tracks: _both),

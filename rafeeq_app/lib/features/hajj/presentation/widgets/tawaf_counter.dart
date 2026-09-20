@@ -17,7 +17,7 @@ import '../../../../core/utils/digits.dart';
 class TawafCounter extends StatefulWidget {
   const TawafCounter({super.key, this.compact = false});
 
-  /// The drawing alone - no count, no hint, no tap - for the Umrah header,
+  /// A looping illustration - no count, no hint, no tap - for the Umrah header,
   /// where the counter itself belongs to the «الطواف» step below.
   final bool compact;
 
@@ -35,6 +35,21 @@ class _TawafCounterState extends State<TawafCounter>
     vsync: this,
     duration: const Duration(milliseconds: 1600),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.compact) _walk.repeat(period: const Duration(seconds: 7));
+  }
+
+  @override
+  void didUpdateWidget(covariant TawafCounter oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.compact == widget.compact) return;
+    _walk.stop();
+    _walk.reset();
+    if (widget.compact) _walk.repeat(period: const Duration(seconds: 7));
+  }
 
   @override
   void dispose() {
@@ -68,12 +83,15 @@ class _TawafCounterState extends State<TawafCounter>
     if (widget.compact) {
       return AspectRatio(
         aspectRatio: 1,
-        child: CustomPaint(
-          painter: _TawafPainter(
-            done: 0,
-            progress: 0,
-            track: scheme.outlineVariant,
-            ink: scheme.onSurface,
+        child: AnimatedBuilder(
+          animation: _walk,
+          builder: (context, _) => CustomPaint(
+            painter: _TawafPainter(
+              done: 0,
+              progress: _walk.value,
+              track: scheme.outlineVariant,
+              ink: scheme.onSurface,
+            ),
           ),
         ),
       );
@@ -102,16 +120,18 @@ class _TawafCounterState extends State<TawafCounter>
           complete
               ? 'hajj.done'.tr()
               : '${'hajj.lap'.tr()} ${localizeDigits('${_done + 1}', locale)}'
-                  ' / ${localizeDigits('$laps', locale)}',
+                    ' / ${localizeDigits('$laps', locale)}',
           style: TextStyle(
             fontWeight: FontWeight.w800,
             color: complete ? AppColors.success : AppColors.gold,
           ),
         ),
         const SizedBox(height: 4),
-        Text('hajj.tawaf_hint'.tr(),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
+        Text(
+          'hajj.tawaf_hint'.tr(),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+        ),
         TextButton.icon(
           onPressed: _tap,
           icon: Icon(complete ? Icons.replay_rounded : Icons.touch_app_rounded),
@@ -158,8 +178,10 @@ class _TawafPainter extends CustomPainter {
     // The Kaaba: a black cube with its gold band.
     final side = size.shortestSide * 0.26;
     final kaaba = Rect.fromCenter(center: c, width: side, height: side);
-    canvas.drawRRect(RRect.fromRectAndRadius(kaaba, const Radius.circular(3)),
-        Paint()..color = const Color(0xFF111111));
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(kaaba, const Radius.circular(3)),
+      Paint()..color = const Color(0xFF111111),
+    );
     canvas.drawRect(
       Rect.fromLTWH(kaaba.left, kaaba.top + side * 0.22, side, side * 0.09),
       Paint()..color = AppColors.gold,
@@ -204,15 +226,19 @@ class _TawafPainter extends CustomPainter {
     );
     canvas.drawCircle(pos, 7, Paint()..color = AppColors.gold);
     canvas.drawCircle(
-        pos,
-        7,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2
-          ..color = ink);
+      pos,
+      7,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = ink,
+    );
   }
 
   @override
   bool shouldRepaint(_TawafPainter old) =>
-      old.done != done || old.progress != progress || old.track != track;
+      old.done != done ||
+      old.progress != progress ||
+      old.track != track ||
+      old.ink != ink;
 }

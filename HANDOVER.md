@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-20 (third handover of the day; the earlier two are below) |
+| **Last updated** | 2026-09-21 |
 | **Released** | **v3.51.0** — 260,277,487 B, three ABIs, minSdk 24. One release, one tag. **It is the RESTORE POINT**: branch `known-good/v3.51.0` and tag `backup-2026-09-21c` sit on this commit; `RESTORE.md` says how to come back |
 | **App version** | `pubspec.yaml` `3.51.0+53`; `AboutScreen.appVersion` `3.51.0` |
 | **Verified 2026-09-20 (final)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **453 passed, 2 skipped** · hosted content **8/8** range-checked with a User-Agent: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `ruqyah/afasy.mp3` — all 206 with the right `Content-Type` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker with Arabic text · the signed v3.47.0 APK installs, launches, zero FATAL EXCEPTION, support URL in all three `libapp.so` |
@@ -2034,9 +2034,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-20 16:06 — IN PROGRESS — resume here**
+**2026-09-21 02:23 — IN PROGRESS — resume here**
 
-3.44.0: the text mushaf was unreachable since 3.43.0 - fixed and seen; 1,635 MB of dead R2 objects deleted
+Separate pilgrimage tracks and remove synthetic tajweed reading; analyze clean, device verification pending
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

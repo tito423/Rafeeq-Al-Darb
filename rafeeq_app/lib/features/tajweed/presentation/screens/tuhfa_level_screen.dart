@@ -22,7 +22,6 @@
 /// paragraph rather than swallowing it.
 library;
 
-import '../../../library/presentation/widgets/listen_text_button.dart';
 import '../../data/bundled_matn.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/utils/digits.dart';
@@ -262,15 +261,7 @@ class _LessonBody extends StatelessWidget {
           style: TextStyle(color: scheme.onSurfaceVariant));
     }
 
-    final children = <Widget>[
-      ListenTextButton(
-        // The verses only: al-Dabba''s commentary is not vowelled (5-34%
-        // per lesson measured), the matn is (80-94% in seven lessons).
-        text: () => speakablePassage(paras
-            .where((p) => !p.commentary)
-            .map((p) => (text: p.text, kind: p.kind))),
-      ),
-    ];
+    final children = <Widget>[];
     var labelled = false;
     for (final p in paras) {
       if (p.commentary && !labelled) {

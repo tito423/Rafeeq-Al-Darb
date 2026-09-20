@@ -1,7 +1,7 @@
 /// «مناسك الحج والعمرة».
 ///
 /// «اشرح فيهم كل شي من مصادر موثوقة وبشكل تفاعلي واحترافي وروعه بصريا». The
-/// explanation is the source's own text, read verbatim from Ibn Baz's manual
+/// explanation is the source's own text, read verbatim from al-Nawawi's manual
 /// by the ranges in `hajj_guide.dart` — the app writes none of the fiqh. What
 /// the app adds is the path through it (Hajj or Umrah, day by day) and the
 /// interactive pieces beside the steps they illustrate: the route between the
@@ -21,6 +21,7 @@ import '../../library/data/book_text.dart';
 import '../../tajweed/data/bundled_matn.dart';
 import '../data/hajj_text_scale.dart';
 import '../data/hajj_guide.dart';
+import '../data/hajj_step_text.dart';
 import 'widgets/jamarat_counter.dart';
 import 'widgets/journey_map.dart';
 import 'widgets/sai_counter.dart';
@@ -82,6 +83,7 @@ class HajjScreen extends ConsumerWidget {
             index: i,
             child: _StepCard(
               number: i,
+              track: track,
               step: step,
               book: book,
               onRetry: () => ref.invalidate(hajjBookProvider),
@@ -192,12 +194,14 @@ class _Entrance extends StatelessWidget {
 
 class _StepCard extends StatelessWidget {
   final int number;
+  final HajjTrack track;
   final HajjStep step;
   final AsyncValue<BookText?> book;
   final VoidCallback onRetry;
 
   const _StepCard({
     required this.number,
+    required this.track,
     required this.step,
     required this.book,
     required this.onRetry,
@@ -247,7 +251,7 @@ class _StepCard extends StatelessWidget {
                 style: const TextStyle(color: AppColors.gold, fontSize: 12)),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         children: [
-          if (_rite(step) case final rite?) ...[
+          if (_rite(step, track) case final rite?) ...[
             rite,
             const Divider(height: 22),
           ],
@@ -275,11 +279,13 @@ class _StepCard extends StatelessWidget {
     );
   }
 
-  static Widget? _rite(HajjStep s) => switch (s.rite) {
+  static Widget? _rite(HajjStep s, HajjTrack track) => switch (s.rite) {
         HajjRite.tawaf => const TawafCounter(),
         HajjRite.sai => const SaiCounter(),
         HajjRite.jamarat => JamaratCounter(nahr: s.key == 'nahr'),
-        HajjRite.journey => JourneyMap(highlight: _placeOf(s.key)),
+        HajjRite.journey => track == HajjTrack.hajj
+            ? JourneyMap(highlight: _placeOf(s.key))
+            : null,
         HajjRite.none => null,
       };
 
@@ -338,22 +344,7 @@ class _StepText extends ConsumerWidget {
       );
     }
 
-    final paras = <BookPara>[];
-    for (final p in book?.pages ?? const <BookPage>[]) {
-      if (p.printedPage < step.fromPage || p.printedPage > step.toPage) {
-        continue;
-      }
-      final first = p.printedPage == step.fromPage ? step.fromPara : 0;
-      final last =
-          p.printedPage == step.toPage ? step.toPara : p.paras.length - 1;
-      for (var i = first; i <= last && i < p.paras.length; i++) {
-        if (p.paras[i].text.trim().isEmpty) continue;
-        // الإفصاح's notes, not al-Nawawi's text — thirty per cent of this
-        // printing's body paragraphs, and a modern commentator's words.
-        if (isHajjGuideNote(p.paras[i].text)) continue;
-        paras.add(p.paras[i]);
-      }
-    }
+    final paras = hajjStepParas(step, book);
     if (paras.isEmpty) {
       return Text('hajj.needs_download'.tr());
     }
