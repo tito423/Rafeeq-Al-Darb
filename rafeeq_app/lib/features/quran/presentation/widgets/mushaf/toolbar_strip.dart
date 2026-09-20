@@ -34,11 +34,27 @@ class ToolbarStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!compact) {
-      return Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 4,
-        runSpacing: 0,
-        children: children,
+      // ONE ROW, ALWAYS. This was a `Wrap`, and on a phone a little narrower
+      // than the emulator the five buttons did not fit: «العرض» dropped onto
+      // a second run of its own, centred, floating over the mushaf page -
+      // the owner photographed it. Wrapping is the wrong answer for a strip
+      // of equals; shrinking is. `BoxFit.scaleDown` leaves the row alone
+      // while it fits and takes it down a few points when it does not, so
+      // every button stays on the strip and none is pushed off the edge the
+      // way a horizontal scroller pushes them (see the half-drawn «ط» on the
+      // book reader's own toolbar).
+      return FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < children.length; i++) ...[
+              if (i > 0) const SizedBox(width: 4),
+              children[i],
+            ],
+          ],
+        ),
       );
     }
     return SingleChildScrollView(

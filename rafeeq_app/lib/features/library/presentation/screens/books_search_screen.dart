@@ -342,7 +342,8 @@ class _HitCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '${'library.text_page'.tr()} ${hit.printedPage}',
+                      '${'library.text_page'.tr()} '
+                          '${localizeDigits('${hit.printedPage}', uiLanguageCode)}',
                       style: theme.textTheme.labelSmall
                           ?.copyWith(color: AppColors.gold),
                     ),

@@ -600,7 +600,11 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
               ),
               if (doc.meta.printReliable)
                 Text(
-                  '${'library.text_page'.tr()} ${page.printedPage}',
+                  // localizeDigits, like the ratio on the other branch of
+                  // this very screen: «صفحة 8» printed a Latin 8 under an
+                  // Arabic-Indic slider that read «٢٣٧ … ٢».
+                  '${'library.text_page'.tr()} '
+                      '${localizeDigits('${page.printedPage}', uiLanguageCode)}',
                   style: TextStyle(color: ink.withValues(alpha: 0.75), fontSize: 12),
                 ),
             ],
@@ -751,7 +755,8 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                     style: TextButton.styleFrom(foregroundColor: ink),
                     child: Text(
                       doc.meta.printReliable
-                          ? '${'library.text_page'.tr()} ${page.printedPage}'
+                          ? '${'library.text_page'.tr()} '
+                              '${localizeDigits('${page.printedPage}', uiLanguageCode)}'
                           : localizeDigits(ratio(_pageIndex + 1, doc.pages.length), uiLanguageCode),
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
@@ -946,8 +951,8 @@ class _IndexDrawerState extends State<_IndexDrawer> {
                             label: Text(
                               widget.doc.meta.printReliable
                                   ? '${'library.text_page'.tr()} '
-                                      '${widget.doc.pages[idx].printedPage}'
-                                  : '${idx + 1}',
+                                      '${localizeDigits('${widget.doc.pages[idx].printedPage}', uiLanguageCode)}'
+                                  : localizeDigits('${idx + 1}', uiLanguageCode),
                               style: const TextStyle(fontSize: 11),
                             ),
                             onPressed: () => widget.onPick(idx),
@@ -985,8 +990,9 @@ class _IndexDrawerState extends State<_IndexDrawer> {
                           ),
                           trailing: Text(
                             widget.doc.meta.printReliable
-                                ? '${'library.text_page'.tr()} ${s.page}'
-                                : '${s.pageIndex + 1}',
+                                ? '${'library.text_page'.tr()} '
+                                    '${localizeDigits('${s.page}', uiLanguageCode)}'
+                                : localizeDigits('${s.pageIndex + 1}', uiLanguageCode),
                             style: TextStyle(
                                 fontSize: 11, color: scheme.onSurfaceVariant),
                           ),
