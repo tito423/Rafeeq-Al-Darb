@@ -7,12 +7,45 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-20 (third handover of the day; the earlier two are below) |
-| **Released** | **v3.46.0** — 259,727,806 B. One release, one tag; v3.45.0 and its tag were deleted. **Its fixes were NOT seen on a device before publishing**: the owner said «ارفعه جبت هب … هجربه وخلاص», so the only check run was that the signed APK installs, launches and logs no FATAL EXCEPTION. He is testing it |
-| **App version** | `pubspec.yaml` `3.46.0+48`; `AboutScreen.appVersion` `3.46.0` |
+| **Released** | **v3.47.0** — 259,748,286 B, all three ABIs, minSdk 24. One release, one tag; v3.46.0 and its tag were deleted. Part of it was seen on a device (below); the rest was not |
+| **App version** | `pubspec.yaml` `3.47.0+49`; `AboutScreen.appVersion` `3.47.0` |
 | **Verified 2026-09-20 (third), all on emulator-5554 unless stated** | `flutter analyze lib test` → **No issues found** · `flutter test` → **447 passed, 2 skipped** · the text mushaf opens again, with its toolbar, «التلاوة المستمرة», the basmala highlight and pinch-zoom · علوم القرآن downloads, unpacks and serves تفسير/ترجمة/إعراب · the adhan plays with `res/raw` deleted (`dumpsys audio`: MediaPlayer `state:started`, `USAGE_ALARM`, 44100 Hz) · الأذكار and الرقية read the new `azkar.db` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker |
 | **Measured 2026-09-20 (third)** | 7 locales × **1,664** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B**, 26 chapters / 98 supplications · the sciences pack **33,239,511 B** on R2 · R2 now holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) |
 | **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
 | **On the owner's phone** | he installs from GitHub Releases, so once he updates he has **v3.45.0** |
+
+## WHAT v3.47.0 SHIPPED (2026-09-20) — his second round of findings
+
+**SEEN on emulator-5554:** the permissions page is the first thing after the
+splash and switching it to العربية flips it live; العرض shows the text
+mushaf's own controls in text mode and the paper ones in image mode; the
+five toolbar buttons sit on one row. **Everything else below is written and
+tested but was not opened on a device.**
+
+* **THE SYNC WAS OVERWRITING HIS SETTINGS.** `_queueStateSync` pushed EVERY
+  SharedPreferences key and the pull wrote every key back with no look at
+  `updated_at` — while the app was running, behind notifiers that had
+  already read them. That is the whole of «وضع التركيز بيشتغل لوحده» · «وضع
+  الـRGB بيشتغل لوحده» · «صوت الأذان بيشتغل لوحده» · «سلوك التطبيق مش
+  مظبوط». `SyncService.syncedStateKeys` is now an allowlist of four —
+  `khatma_list_v1`, `ayah_notes_v1`, `quran_last_page`,
+  `tasbeeh_custom_target` — and BOTH directions respect it. The pull filter
+  matters more: the server still holds every setting older builds sent it.
+  The tasbih/adhkar totals stay off the list because they travel down the
+  `counter` path, which ADDS the two devices' progress.
+* **ALL PERMISSIONS ON ONE PAGE, FIRST.** `PermissionsIntroScreen`, five rows
+  each with one line of why, one button that runs the whole sequence, and
+  the language picker moved onto it — it came up in English in front of an
+  Arabic reader otherwise.
+* **The RGB theme's animated backdrop was showing through the Qur'an page**:
+  its scaffold is `Colors.transparent` and `mushafGround` returned null.
+* **العرض was the THIRD copy of the `isRaster` clause** and hid every
+  text-mushaf control while showing the paper mushaf's in their place.
+* **التنزيلات**: every row leads somewhere, back returns to it rather than
+  dumping you in a tab, and dead 0-byte rows are gone.
+* **المزيد** regrouped as asked; **ayah marker numbers** smaller and truly
+  centred; **SnackBar actions** visible; **book page numbers** localized;
+  **the toolbar** stays on one row.
 
 ## WHAT v3.46.0 SHIPPED (2026-09-20) — the owner's own findings, UNVERIFIED
 
