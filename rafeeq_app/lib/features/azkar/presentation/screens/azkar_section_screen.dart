@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
-import '../../../../core/db/sciences_repository.dart';
+import '../../../../core/db/azkar_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/services/sync_service.dart';
@@ -60,8 +60,8 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(sciencesRepositoryProvider.future).then((repo) async {
-      final items = await repo.azkarItems(widget.section.id);
+    ref.read(azkarRepositoryProvider.future).then((repo) async {
+      final items = await repo.items(widget.section.id);
       if (mounted) setState(() => _items = items);
     });
   }

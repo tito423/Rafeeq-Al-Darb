@@ -26,7 +26,11 @@ class AyahTranslation {
 }
 
 /// Read access to quran_sciences.db: tafseer ranges, word-by-word meanings,
-/// i'rab (corpus morphology), ayah translations, azkar.
+/// i'rab (corpus morphology), ayah translations.
+///
+/// The adhkar were here too until 3.45.0. They are 48 KB and this file is
+/// 131.68 MB on its way to the download screen, so they moved to
+/// `azkar.db` and [AzkarRepository] - see `scripts/split_azkar_db.py`.
 class SciencesRepository {
   final Database _db;
   SciencesRepository(this._db);
@@ -133,47 +137,6 @@ class SciencesRepository {
     return all[lang];
   }
 
-  Future<List<AzkarSection>> azkarSections() async {
-    final rows = await _db.query('azkar_sections', orderBy: 'id');
-    return rows.map(AzkarSection.fromRow).toList();
-  }
-
-  Future<List<AzkarItem>> azkarItems(int sectionId) async {
-    final rows = await _db.query(
-      'azkar_items',
-      where: 'section_id = ?',
-      whereArgs: [sectionId],
-      orderBy: 'id',
-    );
-    return rows.map(AzkarItem.fromRow).toList();
-  }
-
-  /// Specific azkar rows by id, returned in the order [ids] asks for.
-  ///
-  /// The ruqyah screen needs six duas that live in five different Ḥiṣn
-  /// al-Muslim sections, so neither `azkarItems(section)` nor the section
-  /// order is any use to it. Addressing them by id keeps the text and its
-  /// takhrij coming from the database at runtime — the alternative was
-  /// copying six duas into Dart, which is exactly how a second, drifting copy
-  /// of religious text gets into an app.
-  ///
-  /// Ids that are not in the table are simply absent from the result rather
-  /// than faked, so a mis-typed id shows up as a missing dua, not a wrong one.
-  Future<List<AzkarItem>> azkarItemsByIds(List<int> ids) async {
-    if (ids.isEmpty) return const [];
-    final rows = await _db.query(
-      'azkar_items',
-      where: 'id IN (${List.filled(ids.length, '?').join(',')})',
-      whereArgs: ids,
-    );
-    final byId = {
-      for (final r in rows.map(AzkarItem.fromRow)) r.id: r,
-    };
-    return [
-      for (final id in ids)
-        if (byId[id] != null) byId[id]!,
-    ];
-  }
 }
 
 final sciencesRepositoryProvider =

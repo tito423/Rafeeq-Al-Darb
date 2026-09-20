@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/db/quran_repository.dart';
-import '../../../../core/db/sciences_repository.dart';
+import '../../../../core/db/azkar_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
@@ -175,7 +175,7 @@ class _RuqyahContent {
 
 final _ruqyahContentProvider = FutureProvider<_RuqyahContent>((ref) async {
   final quran = await ref.watch(quranRepositoryProvider.future);
-  final sciences = await ref.watch(sciencesRepositoryProvider.future);
+  final azkar = await ref.watch(azkarRepositoryProvider.future);
 
   final groups = <List<Ayah>>[];
   for (final g in ruqyahGroups) {
@@ -185,7 +185,7 @@ final _ruqyahContentProvider = FutureProvider<_RuqyahContent>((ref) async {
     }
     groups.add(ayahs);
   }
-  final duas = await sciences.azkarItemsByIds(ruqyahDuaItemIds);
+  final duas = await azkar.itemsByIds(ruqyahDuaItemIds);
   return _RuqyahContent(groups, duas);
 });
 

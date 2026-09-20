@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
-import '../../../../core/db/sciences_repository.dart';
+import '../../../../core/db/azkar_repository.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_screen.dart';
 import '../../data/azkar_categories.dart';
@@ -147,8 +147,8 @@ class _CategoryCard extends ConsumerWidget {
             );
             return;
           }
-          final repo = await ref.read(sciencesRepositoryProvider.future);
-          final allSections = await repo.azkarSections();
+          final repo = await ref.read(azkarRepositoryProvider.future);
+          final allSections = await repo.sections();
           final sections = allSections.where((s) {
             final cats = azkarSectionCategories[s.id] ?? const [AzkarCategory.narrated];
             return cats.contains(category) && s.title != 'المقدمة';

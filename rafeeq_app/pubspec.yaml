@@ -115,6 +115,10 @@ flutter:
     - assets/data/hadith.zip
     - assets/data/builtin_books/
     - assets/data/quran_sciences.db
+    # The adhkar, 124 rows and 48 KB, lifted out of quran_sciences.db by
+    # scripts/split_azkar_db.py so the الأذكار tab does not wait on a
+    # 131.68 MB download once that database leaves the APK.
+    - assets/data/azkar.db
     - assets/data/quotes.json
     - assets/data/quote_backgrounds.json
     # «في مثل هذا اليوم» — 366 days x 12 events, built by
