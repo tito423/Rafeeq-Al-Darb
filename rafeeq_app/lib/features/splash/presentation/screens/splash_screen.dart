@@ -9,9 +9,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../app/rafeeq_app.dart';
 import '../../../../app/shell/app_shell.dart';
-import '../../../../core/theme/theme_controller.dart';
 import '../../../onboarding/data/onboarding_state.dart';
-import '../../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../data/splash_video_provider.dart';
 import '../../../onboarding/presentation/screens/permissions_intro_screen.dart';
 
@@ -70,12 +68,22 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     WidgetsBinding.instance.addObserver(this);
     _checkNotificationLaunch();
     final firstRun = !ref.read(splashFirstRunProvider);
-    final shouldPlayVideo = firstRun ||
-        (ref.read(splashVideoEnabledProvider) &&
-            splashAwayLongEnough(ref.read(sharedPrefsProvider)));
+    // THE SPLASH IS NOT THE RGB BACKDROP.
+    //
+    // This read `motionEffectsProvider` - «تشغيل الخلفية المتحركة في ثيم
+    // RGB» - so a reader who turned the RGB theme's moving gradient off
+    // silently lost the splash clip as well, and got `splashGround`
+    // (0xFF2B516B) and nothing else: «الاسبلاش اسكرين راحت خالص ومش شغال
+    // وبدالها شاشة زرقا صامتة». Two unrelated settings on one switch. The
+    // clip answers to its own setting, `splashVideoEnabledProvider`, and to
+    // the system's reduce-motion, which is the only other thing entitled to
+    // silence it.
     final reduceMotion = WidgetsBinding
         .instance.platformDispatcher.accessibilityFeatures.disableAnimations;
-    final motionOn = ref.read(motionEffectsProvider) && !reduceMotion;
+    final wantsVideo = ref.read(splashVideoEnabledProvider);
+    final shouldPlayVideo = wantsVideo &&
+        (firstRun || splashAwayLongEnough(ref.read(sharedPrefsProvider)));
+    final motionOn = !reduceMotion;
     if (motionOn && shouldPlayVideo) {
       _initVideo();
     } else {
@@ -221,16 +229,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         // landing on top of whatever the reader had started doing.
         builder: (_) => done
             ? AppShell(key: ValueKey(localeCode))
-            : PermissionsIntroScreen(
-                onDone: () {
-                  if (!mounted) return;
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const OnboardingScreen(),
-                    ),
-                  );
-                },
-              ),
+            : const PermissionsIntroScreen(),
       ),
     );
     // A notification tap that started the app cold: route it now that there is

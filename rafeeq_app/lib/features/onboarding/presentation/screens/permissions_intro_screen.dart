@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/i18n/supported_locales.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'onboarding_screen.dart';
 
 /// EVERY PERMISSION, ONCE, BEFORE ANYTHING ELSE — and told why first.
 ///
@@ -24,8 +25,7 @@ import '../../../../core/theme/app_colors.dart';
 /// one of these is optional - the app works without all of them, only less
 /// well, which is what each line says.
 class PermissionsIntroScreen extends ConsumerStatefulWidget {
-  final VoidCallback onDone;
-  const PermissionsIntroScreen({super.key, required this.onDone});
+  const PermissionsIntroScreen({super.key});
 
   @override
   ConsumerState<PermissionsIntroScreen> createState() =>
@@ -56,6 +56,21 @@ class _PermissionsIntroScreenState
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) _refresh();
+  }
+
+  /// ON TO THE APP. This page navigates ITSELF.
+  ///
+  /// 3.48.0 took an `onDone` callback built inside the SPLASH's
+  /// `pushReplacement`, so the closure captured the splash state - which had
+  /// already been replaced by the time anyone could press a button. Its own
+  /// `if (!mounted) return` then swallowed every attempt in silence: «بضغط
+  /// allow all او لاحقا برده الشاشة بتقف ومش بتفتح التكبيق». A screen that
+  /// knows where it goes should use its own context to get there.
+  void _continue() {
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => const OnboardingScreen()),
+    );
   }
 
   Future<void> _refresh() async {
@@ -92,6 +107,7 @@ class _PermissionsIntroScreenState
       await _ask(which);
       if (!mounted) return;
     }
+    _continue();
   }
 
   @override
@@ -250,7 +266,7 @@ class _PermissionsIntroScreenState
                     // NEVER disabled. Whatever a request does, the reader can
                     // always get into the app.
                     TextButton(
-                      onPressed: widget.onDone,
+                      onPressed: _continue,
                       child: Text('permissions_intro.later'.tr()),
                     ),
                   ],
