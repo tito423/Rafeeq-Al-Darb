@@ -1783,9 +1783,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-20 04:42 — IN PROGRESS — resume here**
+**2026-09-20 11:26 — IN PROGRESS — resume here**
 
-Seen on emulator-5554: al-Fatiha still counts the basmala as verse 1 with its rosette; al-Baqara p2 and Yunus p208 set the basmala as a centred line of its own under the banner with verse 1 starting at the letters; at-Tawbah p187 prints none. Checked in both verse layouts (page-flow and cards), Arabic UI. NOT verified: the highlight sitting on the basmala line while the reciter sounds it - continuous recitation streams over HTTPS and every hosted fetch on this machine dies in Avast's TLS interception (trap #13), so it could not be played here.
+One paper mushaf, and its highlight is exact. The owner: «انا معنديش اي مشكلة انه يكون عندي مصحف نصي ومصحف واحد ورقي، بس يكون التظليل فيه تمام». The four SCANNED printings (tajweed_color, madinah_gold, qatar, kuwait) had no ayah coordinates of their own - each borrowed the Madinah polygons through a per-page affine, and the printings break their lines at different words, so the highlight could sit a word or a line off. They are out of editions.json (256,744 -> 1,694 bytes), their covers, their Sources entries and their strings in all 7 locales. What is left is the VECTOR Madinah edition, whose polygons quran-ws/quran-svg publishes with the pages themselves, so nothing is fitted or guessed. mushaf_polygon_fit_test.dart rewritten around that state: one printing, a real layer covering 604 pages, no per-page affine, named in 7 locales, cover on disk. Also item 3: pinch-zoom added to the TEXT mushaf (it had only A-/A+) and a tap now returns either mushaf to its own size instead of toggling full screen. flutter analyze clean, 438 tests pass. Seen on emulator-5554: «اختر المصحف» lists one printing. NOT verified: the pinch itself - this AVD refuses sendevent on /dev/input, so two-finger input cannot be injected, and the image mushaf could not be opened at all because its pages download over HTTPS (trap 13).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

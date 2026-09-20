@@ -76,6 +76,18 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
 
   Offset _doubleTapAt = Offset.zero;
 
+  /// A tap on the page. «الرجوع للحجم الطبيعي بضغطة»: while the page is
+  /// pinched in, one tap puts it back at its own size, and does NOT also
+  /// toggle full screen — leaving the zoom is what the reader asked for, and
+  /// hiding the toolbar at the same time would be a second, unasked answer.
+  void _tap() {
+    if (_zoomed) {
+      _transform.value = Matrix4.identity();
+      return;
+    }
+    widget.onBackgroundTap?.call();
+  }
+
   /// Double tap: 2x around the finger, or back to the whole page.
   void _toggleZoom() {
     if (_zoomed) {
@@ -339,7 +351,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
           aspect: _pageAspect,
           build: (w, h) => GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () => widget.onBackgroundTap?.call(),
+            onTap: _tap,
             onLongPressStart: (d) => _handleLongPress(d.localPosition, w, h),
             child: Stack(
               fit: StackFit.expand,
@@ -464,7 +476,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
             aspect: fit.pageAspect,
             build: (w, h) => GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => widget.onBackgroundTap?.call(),
+              onTap: _tap,
               onLongPressStart: (d) => _handleLongPress(d.localPosition, w, h),
               child: Stack(
                 fit: StackFit.expand,
@@ -493,7 +505,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
             MediaQuery.orientationOf(context) == Orientation.landscape;
         final tappable = GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => widget.onBackgroundTap?.call(),
+          onTap: _tap,
           child: landscape
               ? LayoutBuilder(
                   builder: (context, constraints) => SingleChildScrollView(

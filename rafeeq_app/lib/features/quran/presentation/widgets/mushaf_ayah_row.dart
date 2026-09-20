@@ -149,3 +149,70 @@ class _BasmalaLine extends StatelessWidget {
     );
   }
 }
+
+// ─── Surah banner ──────────────────────────────────────────────────────────
+
+/// An ornamental surah-name banner, styled like a mushaf's own section
+/// headers — a bordered cartouche.
+class _SurahBanner extends StatelessWidget {
+  final String name;
+  final MushafTheme mt;
+
+  /// The reading layout keeps the surah's name — you have to know which surah
+  /// you are in — but not its illuminated frame, which is the single biggest
+  /// block of ornament on the page.
+  final bool bare;
+
+  const _SurahBanner({required this.name, required this.mt, this.bare = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final gold = mt.gold;
+    return Container(
+      margin: bare
+          ? const EdgeInsets.only(top: 6, bottom: 8)
+          : const EdgeInsets.only(top: 10, bottom: 16),
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: bare
+          ? null
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: gold.withValues(alpha: 0.55),
+                width: 1.4,
+              ),
+              gradient: LinearGradient(
+                colors: [
+                  gold.withValues(alpha: 0.16),
+                  gold.withValues(alpha: 0.05),
+                  gold.withValues(alpha: 0.16),
+                ],
+              ),
+            ),
+      alignment: Alignment.center,
+      child: Text(
+        name,
+        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.center,
+        strutStyle: const StrutStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: 22,
+          height: 1.0,
+          leading: 0,
+          forceStrutHeight: true,
+        ),
+        textHeightBehavior: const TextHeightBehavior(
+          applyHeightToFirstAscent: false,
+          applyHeightToLastDescent: false,
+        ),
+        style: TextStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: 22,
+          height: 1.0,
+          color: gold,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}

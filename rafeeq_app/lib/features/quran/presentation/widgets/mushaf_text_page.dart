@@ -4,11 +4,13 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../data/basmala.dart';
 import '../../data/mushaf_frame.dart';
 import '../../data/mushaf_theme.dart';
+import '../../data/quran_zoom_provider.dart';
 import 'mushaf_frame_painter.dart';
 import '../../data/text_layout_provider.dart';
 
@@ -25,7 +27,7 @@ part 'mushaf_ayah_row.dart';
 ///
 /// Gestures: a tap anywhere is the page's (`onBackgroundTap` — the screen
 /// toggles full screen with it); a long press on a verse is `onAyahLongPress`.
-class MushafTextPage extends StatefulWidget {
+class MushafTextPage extends ConsumerStatefulWidget {
   final List<Ayah> ayahs;
 
   /// Real surah-name lookup — the pinned header calls this with the first
@@ -122,11 +124,37 @@ class MushafTextPage extends StatefulWidget {
   });
 
   @override
-  State<MushafTextPage> createState() => _MushafTextPageState();
+  ConsumerState<MushafTextPage> createState() => _MushafTextPageState();
 }
 
-class _MushafTextPageState extends State<MushafTextPage> {
+class _MushafTextPageState extends ConsumerState<MushafTextPage> {
   final ScrollController _scroll = ScrollController();
+
+  /// «تكبير المصحف بإصبعين، والرجوع للحجم الطبيعي بضغطة». The image mushaf
+  /// has had this since v3.16; the text page had nothing but A−/A+.
+  ///
+  /// The pattern is the one `MushafPageView` already proved in landscape: the
+  /// viewer pans only while zoomed, the list stands still under it while it
+  /// does, and `quranPageZoomedProvider` freezes the `PageView` so a pan
+  /// never turns the page. A tap while zoomed goes back to the page's own
+  /// size instead of toggling full screen.
+  final TransformationController _zoom = TransformationController();
+  bool _zoomedIn = false;
+
+  void _onZoom() {
+    final zoomed = _zoom.value.getMaxScaleOnAxis() > 1.01;
+    if (zoomed == _zoomedIn) return;
+    setState(() => _zoomedIn = zoomed);
+    ref.read(quranPageZoomedProvider.notifier).state = zoomed;
+  }
+
+  void _tapPage() {
+    if (_zoomedIn) {
+      _zoom.value = Matrix4.identity();
+      return;
+    }
+    widget.onBackgroundTap?.call();
+  }
 
   /// One key per ayah — used as scroll anchors for playing-verse tracking
   /// and auto-scroll end detection.
@@ -144,12 +172,18 @@ class _MushafTextPageState extends State<MushafTextPage> {
   @override
   void initState() {
     super.initState();
+    _zoom.addListener(_onZoom);
     _syncAutoScroll();
   }
 
   @override
   void didUpdateWidget(covariant MushafTextPage old) {
     super.didUpdateWidget(old);
+    if (old.ayahs.isNotEmpty &&
+        widget.ayahs.isNotEmpty &&
+        old.ayahs.first.pageNumber != widget.ayahs.first.pageNumber) {
+      _zoom.value = Matrix4.identity();
+    }
     _syncAutoScroll();
     if (old.playingSurah != widget.playingSurah ||
         old.playingAyah != widget.playingAyah) {
@@ -343,6 +377,15 @@ class _MushafTextPageState extends State<MushafTextPage> {
     _autoTimer?.cancel();
     _resumeTimer?.cancel();
     _scroll.dispose();
+    _zoom.removeListener(_onZoom);
+    // A page left behind while zoomed would freeze the `PageView` for good —
+    // the same trap `MushafPageView.dispose` guards against.
+    if (_zoomedIn) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(quranPageZoomedProvider.notifier).state = false;
+      });
+    }
+    _zoom.dispose();
     super.dispose();
   }
 
@@ -415,6 +458,9 @@ class _MushafTextPageState extends State<MushafTextPage> {
       onNotification: _onScrollNotification,
       child: CustomScrollView(
         controller: _scroll,
+        // Standing still while the reader pans the enlarged page: a scroll
+        // and a pan cannot both own the same drag.
+        physics: _zoomedIn ? const NeverScrollableScrollPhysics() : null,
         slivers: [
           // ── Pinned surah header ──
           SliverAppBar(
@@ -485,7 +531,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
             hasScrollBody: false,
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: widget.onBackgroundTap,
+              onTap: _tapPage,
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: bare
@@ -538,7 +584,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
                                     mt: mt,
                                     onLongPress: () =>
                                         widget.onAyahLongPress(widget.ayahs[i]),
-                                    onTap: widget.onBackgroundTap,
+                                    onTap: _tapPage,
                                     onPlayTap: widget.onPlayTap != null
                                         ? () =>
                                               widget.onPlayTap!(widget.ayahs[i])
@@ -561,7 +607,7 @@ class _MushafTextPageState extends State<MushafTextPage> {
                             // النصي بيقوم مشغّل تلقائي التلاوة»), then to open the
                             // card; «ضغطة مطولة على الآية تظليل وكارت الآية».
                             onAyahLongPress: widget.onAyahLongPress,
-                            onBackgroundTap: widget.onBackgroundTap,
+                            onBackgroundTap: _tapPage,
                             bare: bare,
                           );
                         },
@@ -583,7 +629,17 @@ class _MushafTextPageState extends State<MushafTextPage> {
       child: MushafFrame(
         style: widget.frameStyle,
         color: widget.frameColor ?? mt.gold,
-        child: body,
+        child: ClipRect(
+          child: InteractiveViewer(
+            transformationController: _zoom,
+            // At rest the `PageView` above owns the horizontal drag outright,
+            // so a swipe turns the page on the first frame.
+            panEnabled: _zoomedIn,
+            minScale: 1,
+            maxScale: 4,
+            child: body,
+          ),
+        ),
       ),
     );
   }
@@ -629,73 +685,6 @@ class _ListItem {
     runFrom: from,
     runTo: to,
   );
-}
-
-// ─── Surah banner ──────────────────────────────────────────────────────────
-
-/// An ornamental surah-name banner, styled like a mushaf's own section
-/// headers — a bordered cartouche.
-class _SurahBanner extends StatelessWidget {
-  final String name;
-  final MushafTheme mt;
-
-  /// The reading layout keeps the surah's name — you have to know which surah
-  /// you are in — but not its illuminated frame, which is the single biggest
-  /// block of ornament on the page.
-  final bool bare;
-
-  const _SurahBanner({required this.name, required this.mt, this.bare = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final gold = mt.gold;
-    return Container(
-      margin: bare
-          ? const EdgeInsets.only(top: 6, bottom: 8)
-          : const EdgeInsets.only(top: 10, bottom: 16),
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: bare
-          ? null
-          : BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: gold.withValues(alpha: 0.55),
-                width: 1.4,
-              ),
-              gradient: LinearGradient(
-                colors: [
-                  gold.withValues(alpha: 0.16),
-                  gold.withValues(alpha: 0.05),
-                  gold.withValues(alpha: 0.16),
-                ],
-              ),
-            ),
-      alignment: Alignment.center,
-      child: Text(
-        name,
-        textDirection: TextDirection.rtl,
-        textAlign: TextAlign.center,
-        strutStyle: const StrutStyle(
-          fontFamily: 'AmiriQuran',
-          fontSize: 22,
-          height: 1.0,
-          leading: 0,
-          forceStrutHeight: true,
-        ),
-        textHeightBehavior: const TextHeightBehavior(
-          applyHeightToFirstAscent: false,
-          applyHeightToLastDescent: false,
-        ),
-        style: TextStyle(
-          fontFamily: 'AmiriQuran',
-          fontSize: 22,
-          height: 1.0,
-          color: gold,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
 }
 
 // ─── Ayah marker (rosette) ─────────────────────────────────────────────────

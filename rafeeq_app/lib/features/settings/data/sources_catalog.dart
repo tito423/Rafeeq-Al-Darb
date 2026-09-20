@@ -44,26 +44,11 @@ final sourceGroups = <(String, List<SourceEntry>)>[
   // they are read rather than assumed: a free scan is not automatically free
   // to rehost, and one candidate printing was dropped for exactly that.
   //
-  // Only the five printings that actually ship appear here. `editions.json`
-  // is the list; a printing built in `scripts/` but not shipped (the Nastaliq
-  // setting) is not credited, because the app does not carry it.
-  (
-    'about.src_mushaf_printings',
-    [
-      SourceEntry('مصحف التجويد الملوّن',
-          'https://github.com/Imomzoda8/tajweed-quran-images',
-          'about.src_ed_tajweed'),
-      SourceEntry('المصحف المذهّب (Smart Mushaf)',
-          'https://archive.org/details/smartmushaf', 'about.src_ed_gold'),
-      SourceEntry('مصحف قطر', 'https://archive.org/details/QuranMushafQatar',
-          'about.src_ed_qatar'),
-      SourceEntry(
-          'مصحف دولة الكويت',
-          'https://archive.org/details/'
-              'HQ23AlQuranAlKareemMushafDolatUlKuwaitWww.Quranpdf.blogspot.in',
-          'about.src_ed_kuwait'),
-    ]
-  ),
+  // The four SCANNED printings were removed on 2026-09-20: none carried ayah
+  // coordinates of its own, so their highlight was fitted rather than known.
+  // The one printing that ships is the vector Madinah edition, credited above
+  // with its source, `quranpedia/quran-svg`, which publishes the pages and the
+  // ayah polygons together.
   (
     'about.src_audio',
     [
