@@ -36,8 +36,6 @@
 /// not depend on what is behind it.
 library;
 
-import '../../../../../core/utils/digits.dart';
-import '../../../../../core/utils/byte_formatter.dart' show ratio;
 
 // `hide TextDirection`: easy_localization re-exports intl, whose
 // TextDirection has no `.rtl` and shadows the one from dart:ui that Flutter
@@ -185,7 +183,6 @@ class MushafChrome extends StatelessWidget {
                               surahName: surahName,
                               juzNumber: juzNumber,
                               pageNumber: pageNumber,
-                              totalPages: totalPages,
                             ),
                             Divider(
                               height: 1,
@@ -240,14 +237,12 @@ class _Header extends StatelessWidget {
   final String? surahName;
   final int? juzNumber;
   final int pageNumber;
-  final int totalPages;
 
   const _Header({
     required this.mt,
     required this.surahName,
     required this.juzNumber,
     required this.pageNumber,
-    required this.totalPages,
   });
 
   @override
@@ -275,74 +270,16 @@ class _Header extends StatelessWidget {
               ),
             ),
           const Spacer(),
+          // «اسم السورة يمينًا والجزء شمالًا ورقم الصفحة أسفل الشاشة». The
+          // page number used to sit here too, beside the juz, and again in
+          // the badge at the foot of the screen — the same number printed
+          // twice, which is what the owner asked to end.
           if (juzNumber != null)
             _Pill(
               mt: mt,
               text: '${'quran.juz'.tr()} ${arabicPageNumber(juzNumber!)}',
             ),
-          const SizedBox(width: 6),
-          _PagePill(mt: mt, page: pageNumber, total: totalPages),
         ],
-      ),
-    );
-  }
-}
-
-/// «١ / ٦٠٤», laid out as three separate widgets so bidi cannot touch it.
-///
-/// A NEW TRAP, measured on emulator-5554 and not the same as trap #16.
-/// Written as one string, `'١ / ٦٠٤'` renders as **«٦٠٤ / ١»** — «604 / 1» —
-/// and it does so *even in an LTR paragraph*. Neither `ltr()` (the isolate
-/// helper) nor `textDirection: TextDirection.ltr` fixes it; both were tried
-/// on the device first, and both still printed 604 / 1.
-///
-/// The reason is in the bidi algorithm's neutral resolution: Arabic-Indic
-/// digits are class **AN**, and rule N1 treats AN as if it were **R** when
-/// deciding what the neutral characters *between* two numbers become. So the
-/// « / » in the middle resolves right-to-left, its span is reversed, and the
-/// two numbers swap around it. Trap #16 was a weak numeral taking its
-/// direction from a strong neighbour; this is two numbers making the
-/// separator between them flip, with no strong character anywhere.
-///
-/// CORRECTION, and this is the second time this pill has been "fixed".
-///
-/// The paragraph above is right about bidi and was WRONG about the fix. Three
-/// `Text` widgets in a `Row` do have no shared paragraph - and the pill still
-/// rendered «٦٠٤ / ٥٧٩» on emulator-5554, because a `Row` lays its
-/// children out along the ambient `Directionality`, and under RTL the FIRST
-/// child goes on the RIGHT. Splitting the string moved the reordering from
-/// the bidi algorithm into the widget tree; it did not remove it.
-///
-/// It now uses `ratio()`, the one path with a rendering test behind it
-/// (`test/ratio_direction_test.dart` lays text out under real RTL and reads
-/// caret offsets back). A reader checking the page he is on should not have
-/// to wonder which number is which.
-class _PagePill extends StatelessWidget {
-  final MushafTheme mt;
-  final int page;
-  final int total;
-  const _PagePill({required this.mt, required this.page, required this.total});
-
-  @override
-  Widget build(BuildContext context) {
-    final style = TextStyle(
-      fontSize: 11,
-      fontWeight: FontWeight.w700,
-      color: mt.ink,
-    );
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-      decoration: BoxDecoration(
-        color: mt.gold.withValues(alpha: 0.22),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: mt.gold.withValues(alpha: 0.45)),
-      ),
-      child: Text(
-        localizeDigits(
-          ratio(arabicPageNumber(page), arabicPageNumber(total)),
-          uiLanguageCode,
-        ),
-        style: style,
       ),
     );
   }

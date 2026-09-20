@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../features/more/presentation/widgets/more_group.dart';
+
 import '../theme/app_colors.dart';
 import '../theme/hero_surface.dart';
 import 'islamic_pattern.dart';
@@ -48,6 +50,10 @@ class IslamicActionCard extends StatelessWidget {
     // to follow the theme; [HeroSurface] keeps the dark and RGB looks and
     // supplies the light one.
     final hero = HeroSurface.of(context);
+    // Inside an opened «المزيد» group the group's colour wins, so the cards
+    // under one heading read as one family. Everywhere else this is null and
+    // the card keeps the accent it was given.
+    final accent = MoreGroupAccent.of(context) ?? this.accent;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: ClipRRect(

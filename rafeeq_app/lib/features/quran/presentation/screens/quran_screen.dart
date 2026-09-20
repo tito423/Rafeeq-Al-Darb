@@ -860,7 +860,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     pageNumber: _current,
                     totalPages: _totalPages,
                     actions: _toolbarFor(data, isRaster, canIndexBySurah),
-                    pageBadges: (_mode == MushafMode.image || isRaster) && !(edition?.printedHeader ?? false),
+                    pageBadges: !(edition?.printedHeader ?? false),
                   ),
               ],
             ),

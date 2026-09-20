@@ -63,7 +63,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
         // the chosen tab as the pages swipe (TabBar animates its indicator
         // with the controller), so the eye follows the move.
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(58),
+          preferredSize: const Size.fromHeight(62),
           child: TutorialAnchor(
             id: TourAnchor.libraryTabs,
             child: Padding(
@@ -135,13 +135,29 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
 }
 
 /// One library tab: an icon and its name, padded into a pill.
+/// A tab as an icon and a word inside a capsule.
+///
+/// «التابات عناوينها مقصوصة، ويجب أن يصغر الخط داخل الكبسولة عند اختيار خط
+/// كبير حتى لا يخرج عنها». A `Tab` has a FIXED height, so at the largest
+/// interface font the label grew past it and was cut off top and bottom —
+/// the capsule cannot stretch to meet it. The type inside the capsule is
+/// therefore clamped: the reader's chosen size still shows, up to a tenth
+/// larger, and past that the capsule wins rather than the word being sliced.
+/// `softWrap: false` keeps it one line; the bar scrolls sideways anyway.
 Widget _pill(IconData icon, String label) => Tab(
-  height: 40,
-  child: Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 12),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [Icon(icon, size: 18), const SizedBox(width: 6), Text(label)],
+  height: 44,
+  child: MediaQuery.withClampedTextScaling(
+    maxScaleFactor: 1.1,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18),
+          const SizedBox(width: 6),
+          Text(label, softWrap: false, maxLines: 1),
+        ],
+      ),
     ),
   ),
 );

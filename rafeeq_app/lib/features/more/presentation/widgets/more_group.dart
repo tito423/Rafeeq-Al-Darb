@@ -15,6 +15,32 @@ import '../../../tutorial/data/tutorial_state.dart';
 /// Every group starts closed, and every group is open while the guided tour
 /// runs: the tour frames cards inside these groups, and a card in a closed
 /// group has no size to frame.
+/// The accent a [MoreGroup] hands down to the cards inside it.
+///
+/// «الكارت الذي تحته كروت يأخذ لونًا مميزًا، والكروت التي تحته تأخذ لونه
+/// وتكون أقصر عرضًا، وبشكل كروت المصادر والمراجع». Each nested card used to
+/// carry its own accent, so an opened group was a row of unrelated colours
+/// under one heading. Rather than edit twenty call sites — and rather than
+/// take the accent away from a card that is used outside a group too — the
+/// group publishes its colour here and [IslamicActionCard] prefers it when
+/// there is one.
+class MoreGroupAccent extends InheritedWidget {
+  final Color accent;
+
+  const MoreGroupAccent({
+    super.key,
+    required this.accent,
+    required super.child,
+  });
+
+  static Color? of(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<MoreGroupAccent>()
+      ?.accent;
+
+  @override
+  bool updateShouldNotify(MoreGroupAccent old) => old.accent != accent;
+}
+
 class MoreGroup extends ConsumerStatefulWidget {
   final String title;
   final String subtitle;
@@ -66,11 +92,17 @@ class _MoreGroupState extends ConsumerState<MoreGroup> {
           alignment: Alignment.topCenter,
           child: open
               ? Padding(
+                  // Inset on BOTH sides, so an opened group reads as a
+                  // narrower column stepped in under its own card rather
+                  // than as more cards of the same width.
                   padding: const EdgeInsetsDirectional.only(
-                      start: 14, bottom: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: widget.children,
+                      start: 26, end: 12, bottom: 8),
+                  child: MoreGroupAccent(
+                    accent: widget.accent,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: widget.children,
+                    ),
                   ),
                 )
               : const SizedBox(width: double.infinity),
