@@ -114,7 +114,11 @@ flutter:
     - assets/data/quran_local.db
     - assets/data/hadith.zip
     - assets/data/builtin_books/
-    - assets/data/quran_sciences.db
+    # quran_sciences.db is NOT bundled since 3.45.0. It was 131.68 MB -
+    # more than half of everything the APK carried - for seven tafsirs,
+    # six translations, i'rab and word meanings, all of which only the
+    # ayah card reads. It is hosted as a 31.70 MB pack
+    # (AppConfig.sciencesDbUrl) and downloaded on demand.
     # The adhkar, 124 rows and 48 KB, lifted out of quran_sciences.db by
     # scripts/split_azkar_db.py so the الأذكار tab does not wait on a
     # 131.68 MB download once that database leaves the APK.

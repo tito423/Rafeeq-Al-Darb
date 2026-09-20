@@ -257,6 +257,8 @@
     "riwayah": "Riwayah",
     "sciences_hafs_only": "La numérotation des versets dans cette riwayah diffère de celle de Hafs, le tafsir et la traduction sont donc indisponibles dans certaines sourates",
     "sciences_unavailable_here": "Le tafsir et la traduction sont indisponibles pour cette sourate dans cette riwayah",
+    "sciences_pack": "Sciences du Coran",
+    "sciences_pack_hint": "Un téléchargement unique de {}. Ensuite, le tafsir, la traduction, l’i’rab et le sens des mots fonctionnent hors ligne.",
     "pages_count": {
       "zero": "{} pages",
       "one": "{} page",
@@ -782,6 +784,7 @@
     "cat_hadith": "Hadith",
     "cat_books": "Livres",
     "cat_voices": "Voix du lecteur de livres",
+    "cat_quran_sciences": "Sciences du Coran",
     "free": "Libérer",
     "free_all": "Tout libérer",
     "free_confirm": "Supprimer les fichiers téléchargés de cette catégorie de l'appareil ?",

@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../config/app_config.dart';
 
 import 'db_helper.dart';
 import 'models.dart';
@@ -139,32 +145,45 @@ class SciencesRepository {
 
 }
 
+/// The bundled asset became a download in 3.45.0.
+///
+/// `quran_sciences.db` was 131.68 MB of a 246.67 MB asset bundle - over half
+/// of everything the APK carried - for seven tafsirs, six translations,
+/// 75,973 i'rab rows and 83,665 word meanings. Deflate takes it to 31.7 MB,
+/// so it is hosted (`AppConfig.sciencesDbUrl`) and fetched by the reader who
+/// wants it. Null means "not downloaded yet", and the ayah card shows the
+/// download prompt rather than an error or a spinner that never ends.
+///
+/// AN EXISTING INSTALL DOES NOT RE-DOWNLOAD IT. Every build up to 3.44.0
+/// copied the asset to `databases/quran_sciences.db` and wrote its content
+/// stamp beside it. That stamp names the exact asset the copy came from, and
+/// `sciences-v9` is the very file `scripts/upload_sciences_pack.py` zips - so
+/// where the stamp says `sciences-v9`, the copy on disk is byte-for-byte the
+/// pack, and [_adoptBundledCopy] marks it downloaded instead of deleting 131
+/// MB and asking for 32 MB back. Any other stamp is a different build of the
+/// database and is left to the normal version check, which removes it.
+/// The DownloadManager id for the pack, so the card and the manager
+/// name the same transfer.
+const sciencesDbDownloadId = 'sciences_db';
+
+const _bundledStamp = 'sciences-v9';
+
+Future<void> _adoptBundledCopy() async {
+  final supportDir = await getApplicationSupportDirectory();
+  final dbPath = p.join(supportDir.path, 'databases', 'quran_sciences.db');
+  final legacy = File('$dbPath.stamp');
+  final version = File('$dbPath.version');
+  if (!File(dbPath).existsSync() || version.existsSync()) return;
+  if (!legacy.existsSync()) return;
+  if (legacy.readAsStringSync().trim() != _bundledStamp) return;
+  await version.writeAsString(AppConfig.sciencesDbVersion, flush: true);
+}
+
+/// Null until the sciences pack has been downloaded - see above.
 final sciencesRepositoryProvider =
-    FutureProvider<SciencesRepository>((ref) async {
-  // Bumped for P2‑8 #9 (es/ru/pt translations added) — devices holding an
-  // already-copied v2 file would otherwise never see the new languages.
-  // P3‑49: bumped v3→v4. A later sciences-DB rebuild (P3‑40, expanded
-  // tafsir) had silently shipped a bundled DB with the `translations` /
-  // `translation_editions` tables MISSING entirely — so the ayah
-  // "الترجمة" tab threw "no such table" and showed an error on every
-  // device (real-device report). The tables were recovered from git
-  // history (37,416 rows, 6 languages) and merged back into the current
-  // DB; this stamp bump forces every existing install to re-copy the
-  // fixed file instead of keeping its translation-less v3 copy.
-  final db = await DbHelper.instance.openBundled('data/quran_sciences.db',
-      // v4 -> v5 (2026-09-17): the azkar tables were rebuilt. They held 134
-  // sections and 298 items taken from «حصن المسلم» by سعيد بن وهف القحطاني
-  // (d. 1439 AH / 2018) — his name was inside the file itself, in
-  // `azkar_items` row 2's footnote. The supplications are prophetic and free;
-  // the selection and the arrangement were his, and UAE Federal Decree-Law
-  // 38/2021 Article 3 protects exactly that: «ومع ذلك تتمتع مجموعات … بالحماية
-  // إذا تميز جمعها أو ترتيبها أو أي مجهود فيها بالابتكار». They now hold 18
-  // chapters and 48 supplications hand-picked from an-Nawawi's «الأذكار»
-  // (d. 676 AH), with the muhaqqiq's apparatus filtered out. Without this bump
-  // every existing install would keep the old file for ever.
-  // v6 (2026-09-18): «الأذكار ناقصة جداً» — 13 more narrations from the same
-  // book, 60 -> 74 rows: morning/evening and sleep, each attributed and graded
-  // in an-Nawawi's own words; none he calls weak.
-  stamp: 'sciences-v9');
-  return SciencesRepository(db);
+    FutureProvider<SciencesRepository?>((ref) async {
+  await _adoptBundledCopy();
+  final db = await DbHelper.instance.openDownloaded('quran_sciences.db',
+      expectedVersion: AppConfig.sciencesDbVersion);
+  return db == null ? null : SciencesRepository(db);
 });

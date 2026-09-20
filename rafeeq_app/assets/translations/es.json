@@ -257,6 +257,8 @@
     "riwayah": "Riwaya",
     "sciences_hafs_only": "La numeración de las aleyas en esta riwaya difiere de la de Hafs, por lo que el tafsir y la traducción no están disponibles en algunas suras",
     "sciences_unavailable_here": "El tafsir y la traducción no están disponibles para esta sura en esta riwaya",
+    "sciences_pack": "Ciencias del Corán",
+    "sciences_pack_hint": "Una descarga única de {}. Después, el tafsir, la traducción, el i’rab y el significado de las palabras funcionan sin conexión.",
     "pages_count": {
       "zero": "{} páginas",
       "one": "{} página",
@@ -782,6 +784,7 @@
     "cat_hadith": "Hadiz",
     "cat_books": "Libros",
     "cat_voices": "Voz del lector de libros",
+    "cat_quran_sciences": "Ciencias del Corán",
     "free": "Liberar",
     "free_all": "Liberar todo",
     "free_confirm": "¿Eliminar del dispositivo los archivos descargados de esta categoría?",

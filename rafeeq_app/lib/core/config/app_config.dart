@@ -154,6 +154,32 @@ abstract final class AppConfig {
   /// there and re-upload, so the two can never drift.
   static const String privacyPolicyUrl = '$contentBaseUrl/legal/privacy.html';
 
+  /// علوم القرآن — the tafsir/translation/i'rab/word-meanings database.
+  ///
+  /// It was `assets/data/quran_sciences.db`, 131.68 MB inside the APK and
+  /// more than half of everything the install carried, for seven tafsirs,
+  /// six translations, 75,973 i'rab rows and 83,665 word meanings. Deflate
+  /// takes it to 31.70 MB, so 3.45.0 hosts it and the ayah card offers it to
+  /// the reader who opens التفسير. Nothing else in the app reads it.
+  ///
+  /// The archive is named after the database it becomes — trap #27:
+  /// `DownloadManager._unzipToDatabases` writes `basename(zip) + '.db'` and
+  /// ignores the entry's own name.
+  static const String sciencesDbUrl =
+      '$contentBaseUrl/sciences/quran_sciences.zip';
+
+  /// Measured with `head_object` against the bucket on 2026-09-20, and
+  /// range-checked over the public endpoint — not estimated. Re-measure
+  /// whenever `scripts/upload_sciences_pack.py` runs again.
+  static const int sciencesDbBytes = 33239511;
+
+  /// Same contract as [hadithDbVersion]: stamped beside the extracted file,
+  /// and `DbHelper.openDownloaded` treats any other stamp as "not
+  /// downloaded". v1 is the `sciences-v9` content that shipped bundled up to
+  /// 3.44.0, so an install that already holds that copy adopts it instead of
+  /// fetching 32 MB again (see `_adoptBundledCopy`).
+  static const String sciencesDbVersion = 'v1';
+
   static const String hadithDbUrl = '$contentBaseUrl/hadith/hadith.zip';
 
   /// The size of that zip, so the screen can TELL the reader before he spends

@@ -1,0 +1,31 @@
+top res entries by size in APK
+      4.48 MiB  res/bq.mp3
+      4.40 MiB  res/s5.mp3
+      4.33 MiB  res/tI.mp3
+      4.04 MiB  res/r5.mp3
+      3.77 MiB  res/HW.mp3
+      3.73 MiB  res/63.mp3
+      3.40 MiB  res/0r.mp3
+      3.21 MiB  res/oI.mp3
+      2.82 MiB  res/b8.mp3
+      2.72 MiB  res/1Q.mp3
+      2.64 MiB  res/of.mp3
+      1.84 MiB  res/gy.mp3
+      1.43 MiB  res/pa.mp3
+      0.95 MiB  res/gZ.mp3
+      0.34 MiB  resources.arsc
+      0.30 MiB  res/CH.png
+      0.17 MiB  res/BM.png
+      0.08 MiB  res/tP.png
+
+by res folder
+      4.48 MiB  bq.mp3
+      4.40 MiB  s5.mp3
+      4.33 MiB  tI.mp3
+      4.04 MiB  r5.mp3
+      3.77 MiB  HW.mp3
+      3.73 MiB  63.mp3
+      3.40 MiB  0r.mp3
+      3.21 MiB  oI.mp3
+      2.82 MiB  b8.mp3
+      2.72 MiB  1Q.mp3

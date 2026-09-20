@@ -6,10 +6,14 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/db/quran_repository.dart';
 import '../../../../core/db/sciences_repository.dart';
+import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/digits.dart' show trn;
+import '../../../../core/utils/byte_formatter.dart' show formatBytes;
 import 'ayah_sciences/ayah_panel.dart';
 import 'ayah_sciences/irab_tab.dart';
 import 'ayah_sciences/sciences_common.dart';
@@ -17,9 +21,12 @@ import 'ayah_sciences/sciences_header.dart';
 import 'ayah_sciences/tafseer_tab.dart';
 import 'ayah_sciences/translation_tab.dart';
 
-/// "علوم الآية" — tafsir, translation, i'rab and word meanings for one ayah,
-/// served straight from the bundled quran_sciences.db so the whole card works
-/// with no network.
+/// "علوم الآية" — tafsir, translation, i'rab and word meanings for one ayah.
+///
+/// Its database was bundled until 3.44.0; it is 131.68 MB and now downloads
+/// (31.70 MB packed) the first time a reader opens this card. Until then the
+/// card shows [_SciencesPackGate] — the ayah itself, and an offer — rather
+/// than an error or a spinner that never ends.
 class AyahSciencesSheet extends ConsumerStatefulWidget {
   final Ayah ayah;
   final String surahNameAr;
@@ -69,9 +76,14 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   // to show each word's Arabic meaning alongside the Uthmani script.
   late final TabController _tabs = TabController(length: 3, vsync: this);
 
-  late final Future<Map<String, String>> _tafseer;
-  late final Future<Map<String, AyahTranslation>> _translations;
-  late final Future<List<WordGrammar>> _grammar;
+  /// Built once, the first frame on which the pack is actually open. They
+  /// stay null while it is missing, which is what the gate renders.
+  Future<Map<String, String>>? _tafseer;
+  Future<Map<String, AyahTranslation>>? _translations;
+  Future<List<WordGrammar>>? _grammar;
+
+  /// The gate redraws on every progress tick, the way the hadith tab's does.
+  StreamSubscription<List<DownloadTask>>? _downloads;
 
   /// «حط جنب زر تلاوة الآية زر تكبير لخيارات الآية بحيث يملى الشاشة كلها لأن
   /// التفسير بتبقى مساحة عرضه صغيرة».
@@ -80,16 +92,46 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   @override
   void initState() {
     super.initState();
-    final repo = ref.read(sciencesRepositoryProvider.future);
+    _downloads = DownloadManager.instance.stream.listen((_) {
+      if (!mounted) return;
+      // TRAP #27, caught on emulator-5554 before this line existed: the pack
+      // downloaded, `_unzipToDatabases` wrote the 138,080,256-byte file and
+      // its version stamp, and the card still said «تحميل» - for ever. The
+      // provider had already resolved to null and Riverpod had no reason to
+      // ask again. Watching a stream is not the same as re-reading the disk.
+      final task = DownloadManager.instance.taskById(sciencesDbDownloadId);
+      if (task?.status == DownloadStatus.completed && _tafseer == null) {
+        ref.invalidate(sciencesRepositoryProvider);
+      }
+      setState(() {});
+    });
+  }
+
+  void _bindRepo(SciencesRepository repo) {
+    if (_tafseer != null) return;
     final s = widget.ayah.surahId;
     final a = widget.ayah.ayahNumber;
-    _tafseer = repo.then((r) => r.tafseerForAyah(s, a));
-    _translations = repo.then((r) => r.translationsForAyah(s, a));
-    _grammar = repo.then((r) => r.wordGrammar(s, a));
+    _tafseer = repo.tafseerForAyah(s, a);
+    _translations = repo.translationsForAyah(s, a);
+    _grammar = repo.wordGrammar(s, a);
+  }
+
+  Future<void> _startDownload() async {
+    await DownloadManager.instance.enqueue(
+      id: sciencesDbDownloadId,
+      url: AppConfig.sciencesDbUrl,
+      category: 'sciences',
+      // Named after the database it becomes - trap #27.
+      fileName: 'quran_sciences.zip',
+      unzipToDatabases: true,
+      dbVersion: AppConfig.sciencesDbVersion,
+      title: 'quran.sciences_pack'.tr(),
+    );
   }
 
   @override
   void dispose() {
+    _downloads?.cancel();
     _tabs.dispose();
     super.dispose();
   }
@@ -98,6 +140,9 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gold = AppColors.gold;
+    final repo = ref.watch(sciencesRepositoryProvider).valueOrNull;
+    if (repo != null) _bindRepo(repo);
+    final ready = _tafseer != null;
 
     return SafeArea(
       top: _expanded,
@@ -121,7 +166,8 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                 surahNameAr: widget.surahNameAr,
                 ayah: widget.ayah,
                 quranRepo: widget.quranRepo,
-                translationsFuture: _translations,
+                translationsFuture: _translations ??
+                    Future<Map<String, AyahTranslation>>.value(const {}),
                 expanded: _expanded,
                 onToggleExpand: () => setState(() => _expanded = !_expanded),
               ),
@@ -132,6 +178,10 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                     icon: Icons.info_outline,
                     message: 'quran.sciences_unavailable_here'.tr(),
                   ),
+                )
+              else if (!ready)
+                Expanded(
+                  child: _SciencesPackGate(onDownload: _startDownload),
                 )
               else ...[
                 TabBar(
@@ -151,10 +201,10 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                   child: TabBarView(
                     controller: _tabs,
                     children: [
-                      TafseerTab(future: _tafseer),
+                      TafseerTab(future: _tafseer!),
                       TranslationTab(
-                          ayah: widget.ayah, future: _translations),
-                      IrabTab(ayah: widget.ayah, future: _grammar),
+                          ayah: widget.ayah, future: _translations!),
+                      IrabTab(ayah: widget.ayah, future: _grammar!),
                     ],
                   ),
                 ),
@@ -180,4 +230,68 @@ class _DragHandle extends StatelessWidget {
           borderRadius: BorderRadius.circular(2),
         ),
       );
+}
+
+
+/// Shown in place of the three tabs while علوم القرآن has not been
+/// downloaded. It tells the reader the real size before he spends it -
+/// `AppConfig.sciencesDbBytes`, measured against the bucket, not written by
+/// hand - and `formatBytes` wraps the figure in an LTR isolate so «31.7 MB»
+/// does not come out «MB 31.7» inside an Arabic sentence (trap #16).
+class _SciencesPackGate extends StatelessWidget {
+  final Future<void> Function() onDownload;
+  const _SciencesPackGate({required this.onDownload});
+
+  @override
+  Widget build(BuildContext context) {
+    final task = DownloadManager.instance.taskById(sciencesDbDownloadId);
+    final busy = task != null &&
+        (task.status == DownloadStatus.downloading ||
+            task.status == DownloadStatus.queued);
+    final failed = task?.status == DownloadStatus.failed;
+    final scheme = Theme.of(context).colorScheme;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.auto_stories_outlined, size: 56, color: scheme.primary),
+            const SizedBox(height: 14),
+            Text('quran.sciences_pack'.tr(),
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(
+              trn('quran.sciences_pack_hint',
+                  args: [formatBytes(AppConfig.sciencesDbBytes)]),
+              textAlign: TextAlign.center,
+              style: TextStyle(color: scheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 18),
+            if (busy) ...[
+              LinearProgressIndicator(
+                value: task.total == null ? null : task.progress,
+                color: AppColors.gold,
+              ),
+              const SizedBox(height: 8),
+              Text(task.total != null
+                  ? '${(task.progress * 100).round()}%'
+                  : 'quran.sciences_pack'.tr()),
+            ] else
+              FilledButton.icon(
+                onPressed: onDownload,
+                icon: const Icon(Icons.download_rounded),
+                label: Text('downloads.download'.tr()),
+              ),
+            if (failed) ...[
+              const SizedBox(height: 8),
+              Text(task?.error ?? 'errors.generic'.tr(),
+                  style: TextStyle(color: scheme.error)),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 }

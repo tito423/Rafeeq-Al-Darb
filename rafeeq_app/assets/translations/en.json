@@ -257,6 +257,8 @@
     "riwayah": "Riwayah",
     "sciences_hafs_only": "Verse numbering in this riwayah differs from Hafs, so tafsir and translation are unavailable in some surahs",
     "sciences_unavailable_here": "Tafsir and translation are unavailable for this surah in this riwayah",
+    "sciences_pack": "Quranic sciences",
+    "sciences_pack_hint": "A one-time {} download. After it, tafsir, translation, i’rab and word meanings work fully offline.",
     "pages_count": {
       "zero": "{} pages",
       "one": "{} page",
@@ -782,6 +784,7 @@
     "cat_hadith": "Hadith",
     "cat_books": "Books",
     "cat_voices": "Book reader voice",
+    "cat_quran_sciences": "Quranic sciences",
     "free": "Free up",
     "free_all": "Free all",
     "repair": "Repair Downloads",

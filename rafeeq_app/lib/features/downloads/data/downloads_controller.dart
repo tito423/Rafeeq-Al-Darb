@@ -7,6 +7,8 @@ import '../../../core/services/mushaf_page_service.dart';
 import '../../quran/data/mushaf_edition.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/data/tts/open_voice.dart';
+import '../../../core/db/db_helper.dart';
+import '../../../core/db/sciences_repository.dart';
 
 /// P2‑5 — a read-only aggregator over every place the app stores downloaded
 /// content, so the Downloads hub can show one storage picture and free space
@@ -25,7 +27,17 @@ import '../../library/data/tts/open_voice.dart';
 /// `voices` is the book reader's open voice (~252 MB, `OpenVoice`): the
 /// largest single download in the app, so it has to be visible here and
 /// freeable, not only installable from the reader.
-enum DownloadCategory { mushafs, recitations, ayahRecitations, hadith, books, voices }
+enum DownloadCategory {
+  mushafs,
+  recitations,
+  ayahRecitations,
+  hadith,
+  books,
+  voices,
+  /// علوم القرآن - the tafsir/translation/i'rab/word-meanings pack that
+  /// left the APK in 3.45.0. 31.70 MB is worth a row of its own.
+  quranSciences,
+}
 
 extension DownloadCategoryX on DownloadCategory {
   String get labelKey => switch (this) {
@@ -35,6 +47,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.hadith => 'downloads.cat_hadith',
         DownloadCategory.books => 'downloads.cat_books',
         DownloadCategory.voices => 'downloads.cat_voices',
+        DownloadCategory.quranSciences => 'downloads.cat_quran_sciences',
       };
 
   /// [DownloadManager] `category` string(s) that map to this bucket.
@@ -57,6 +70,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.hadith => const ['hadith'],
         DownloadCategory.books => const ['books', 'books_text'],
         DownloadCategory.voices => const ['tts_voice'],
+        DownloadCategory.quranSciences => const ['sciences'],
       };
 }
 
@@ -171,6 +185,11 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
       await LibraryApiService.instance.deleteAllBooks();
     case DownloadCategory.hadith:
       break;
+    case DownloadCategory.quranSciences:
+      // Nothing outside DownloadManager: the pack IS the artifact, and
+      // the loop below removes it. The ayah card reopens its download
+      // gate on the next build because the provider then finds no file.
+      break;
   }
   // Whatever the bucket also owns in DownloadManager goes with it — for
   // `recitations` that is the ruqyah audio, which the per-reciter caches above
@@ -180,6 +199,12 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
     if (category.managerCategories.contains(a['category'])) {
       await DownloadManager.instance.remove(a['id'] as String);
     }
+  }
+  if (category == DownloadCategory.quranSciences) {
+    // The ayah card holds an open handle on the file that was just removed;
+    // without this it keeps serving from it and never shows its gate again.
+    await DbHelper.instance.deleteDownloaded('quran_sciences.db');
+    ref.invalidate(sciencesRepositoryProvider);
   }
   ref.invalidate(storageSummaryProvider);
 }

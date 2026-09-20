@@ -12,6 +12,7 @@ IconData categoryIcon(DownloadCategory c) => switch (c) {
   DownloadCategory.hadith => Icons.format_quote_rounded,
   DownloadCategory.books => Icons.auto_stories_rounded,
   DownloadCategory.voices => Icons.graphic_eq_rounded,
+  DownloadCategory.quranSciences => Icons.auto_stories_outlined,
 };
 
 Color categoryColor(DownloadCategory c) => switch (c) {
@@ -21,4 +22,5 @@ Color categoryColor(DownloadCategory c) => switch (c) {
   DownloadCategory.hadith => AppColors.info,
   DownloadCategory.books => AppColors.goldSoft,
   DownloadCategory.voices => AppColors.primary,
+  DownloadCategory.quranSciences => AppColors.info,
 };

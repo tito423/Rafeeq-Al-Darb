@@ -156,6 +156,10 @@ class _OverviewTab extends ConsumerWidget {
         // One pack and nothing to browse: the row's free button is all the
         // management it needs. It is installed from the book reader.
         return null;
+      case DownloadCategory.quranSciences:
+        // Same: one pack, installed from the ayah card, and the row's
+        // free button is the whole of managing it.
+        return null;
     }
   }
 

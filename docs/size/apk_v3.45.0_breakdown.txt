@@ -1,0 +1,24 @@
+APK app-release.apk  305330037 bytes (291.2 MiB)
+
+entry group                                in APK MiB  on disk MiB
+native libs (x86_64)                            51.73        51.73
+native libs (arm64-v8a)                         47.17        47.17
+android res                                     45.04        45.13
+assets/audio/adhan                              43.75        43.75
+native libs (armeabi-v7a)                       41.13        41.13
+assets/data                                     23.59        28.25
+assets/data/hadeethenc                          16.05        16.08
+assets/data/builtin_books                        7.20         7.20
+assets/quote_backgrounds                         4.44         4.44
+assets/fonts/google_fonts                        3.96         8.87
+assets/branding                                  3.87         3.87
+dex                                              1.81         3.73
+assets/mushaf_covers                             0.43         0.43
+flutter_assets (engine/fonts)                    0.26         0.47
+assets/translations                              0.25         0.82
+assets/data/mushaf                               0.21         0.92
+assets/icons                                     0.15         0.15
+assets/fonts                                     0.07         0.13
+other                                            0.03         0.11
+assets/data/catalogs                             0.02         0.24
+assets/diagrams                                  0.01         0.03
