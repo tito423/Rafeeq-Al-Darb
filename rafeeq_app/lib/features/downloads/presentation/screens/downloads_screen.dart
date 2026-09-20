@@ -21,9 +21,10 @@ import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../widgets/download_category_style.dart';
-import '../widgets/mushaf_download_tile.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../quran_audio/presentation/ayah_download_screen.dart';
+import '../widgets/library_route.dart';
+import '../widgets/mushaf_tiles.dart';
 
 String _fmtSize(int bytes) {
   // Binary units, matching what Android's own storage screen reports.
@@ -121,30 +122,42 @@ class _OverviewTab extends ConsumerWidget {
         return () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const QuranAudioScreen()));
       case DownloadCategory.ayahRecitations:
         return () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const AyahDownloadScreen()));
+      // Every destination is PUSHED, so back comes back here - see
+      // `LibraryRoute` for why.
       case DownloadCategory.hadith:
-        return () {
-          // `popUntil(isFirst)` rather than a single `pop()`: this screen is
-          // pushed from Settings, which is itself pushed from `AppShell`, so
-          // popping once would leave `AppShell` buried and the tab switch
-          // below invisible.
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          ref.read(requestedTabProvider.notifier).state = AppTab.library;
-          ref.read(requestedLibraryTabProvider.notifier).state = 1;
-        };
+        return () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => LibraryRoute(
+                  title: 'downloads.cat_hadith'.tr(),
+                  initialTab: 1,
+                ),
+              ),
+            );
       case DownloadCategory.books:
-        return () {
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          ref.read(requestedTabProvider.notifier).state = AppTab.library;
-          ref.read(requestedLibraryTabProvider.notifier).state = 0;
-        };
+        return () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => LibraryRoute(
+                  title: 'downloads.cat_books'.tr(),
+                  initialTab: 0,
+                ),
+              ),
+            );
+      // «والباقي مش بيوديني لحاجة» - these two had no destination at all.
       case DownloadCategory.voices:
-        // One pack and nothing to browse: the row's free button is all the
-        // management it needs. It is installed from the book reader.
-        return null;
+        return () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => LibraryRoute(
+                  title: 'downloads.cat_voices'.tr(),
+                  initialTab: 0,
+                ),
+              ),
+            );
       case DownloadCategory.quranSciences:
-        // Same: one pack, installed from the ayah card, and the row's
-        // free button is the whole of managing it.
-        return null;
+        // It is installed from the ayah card, so that is where this goes.
+        return () {
+          Navigator.of(context).pop();
+          ref.read(requestedTabProvider.notifier).state = AppTab.quran;
+        };
     }
   }
 
@@ -199,7 +212,7 @@ class _OverviewTab extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 16),
-            const _MushafTiles(),
+            const MushafTiles(),
           ],
         ),
       ),
@@ -649,11 +662,8 @@ class _ArtifactListState extends State<_ArtifactList> {
         a['id'] as String,
       );
     }
-    // A registry row whose file is not on the disk any more is not a
-    // «عنصر منزَّل» - it is a leftover. «قاعدة بيانات الحديث · ٠ B» sat
-    // under that heading in the owner's screenshot with nothing behind it,
-    // which is «فيه حاجات كتير في التنزيلات لما بضغط عليها مش عارف بيحصل
-    // ايه» at its plainest: a row that names something you do not have.
+    // A registry row whose file is gone is a leftover, not an «عنصر
+    // منزَّل»: «قاعدة بيانات الحديث · ٠ B» offered a delete for nothing.
     final items = candidates
         .where((a) => (sizes[a['id'] as String] ?? 0) > 0)
         .toList();
@@ -731,30 +741,6 @@ class _ArtifactListState extends State<_ArtifactList> {
 }
 
 // ── Mushafs ────────────────────────────────────────────────────────────────
-
-/// The printings, at the foot of the overview rather than behind a tab of
-/// their own - there is one of them.
-class _MushafTiles extends ConsumerWidget {
-  const _MushafTiles();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final editions = ref.watch(mushafEditionsProvider);
-    return editions.when(
-      loading: () => const SizedBox.shrink(),
-      error: (_, _) =>
-          ErrorRetry(onRetry: () => ref.invalidate(mushafEditionsProvider)),
-      data: (list) => Column(
-        children: [
-          for (final e in list) ...[
-            MushafDownloadTile(edition: e),
-            const SizedBox(height: 10),
-          ],
-        ],
-      ),
-    );
-  }
-}
 
 // ── Repair ─────────────────────────────────────────────────────────────────
 
