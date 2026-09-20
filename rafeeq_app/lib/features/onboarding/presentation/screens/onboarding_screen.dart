@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/rafeeq_app.dart' show sharedPrefsProvider;
 import '../../../../app/shell/app_shell.dart';
-import '../../../../core/i18n/supported_locales.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../downloads/presentation/widgets/mushaf_download_tile.dart';
@@ -111,55 +110,14 @@ class OnboardingScreen extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
                 children: [
-                  // P3‑41: an explicit, visible language choice on the
-                  // very first run — real-device feedback asked for this
-                  // directly. Doesn't replace the existing device-locale
-                  // auto-detect (`main.dart`'s own P3‑37 fix already
-                  // defaults to Arabic whenever the device's own language
-                  // isn't one of the six shipped) — this just makes that
-                  // choice visible and overridable instead of silent.
-                  Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.language, color: AppColors.gold, size: 20),
-                            const SizedBox(width: 8),
-                            Text(
-                              'settings.language'.tr(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textHigh,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            for (final e in kLanguageNames.entries)
-                              ChoiceChip(
-                                label: Text(e.value),
-                                selected: context.locale.languageCode == e.key,
-                                onSelected: (_) {
-                                  if (context.locale.languageCode != e.key) {
-                                    context.setLocale(Locale(e.key));
-                                  }
-                                },
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  // THE LANGUAGE IS NOT HERE ANY MORE.
+                  //
+                  // It moved to `PermissionsIntroScreen`, the page BEFORE
+                  // this one, because that page was asking for five
+                  // permissions in whatever language the phone happened to
+                  // be set to. Leaving a copy here put the same chooser on
+                  // two screens in a row - «اللغة اتكررت في شاشة الاذونات
+                  // وشاشة تحميل المصحف».
                   const SizedBox(height: 18),
                   editions.when(
                     loading: () => const Padding(

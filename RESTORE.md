@@ -2,15 +2,15 @@
 
 هذا الملف موجود لسبب واحد: **لو خرّب أي عميل (أو أنا) شيئًا، ترجع من هنا.**
 
-النقطة الآمنة المعتمدة هي **v3.49.0** — آخر إصدار بُني ووُقّع ورُكّب وفُتح على
+النقطة الآمنة المعتمدة هي **v3.50.0** — آخر إصدار بُني ووُقّع ورُكّب وفُتح على
 جهاز بلا انهيار، بتاريخ 2026-09-21.
 
 | | |
 |---|---|
-| الوسم | `v3.49.0` |
-| الفرع الثابت | `known-good/v3.49.0` — **لا يُحرّك ولا يُحذف** |
-| الوسم الاحتياطي | `backup-2026-09-21` — نفس الكوميت، اسم يسهل تذكّره |
-| الـAPK | `dist/RafeeqAlDarb-v3.49.0.apk` وعلى GitHub Releases |
+| الوسم | `v3.50.0` |
+| الفرع الثابت | `known-good/v3.50.0` — **لا يُحرّك ولا يُحذف** |
+| الوسم الاحتياطي | `backup-2026-09-21b` — نفس الكوميت، اسم يسهل تذكّره |
+| الـAPK | `dist/RafeeqAlDarb-v3.50.0.apk` وعلى GitHub Releases |
 
 ---
 
@@ -19,14 +19,14 @@
 ```bash
 cd "E:\My Projects\Rafiq-Al-Darb"
 git fetch --all --tags
-git switch -c rescue-$(date +%Y%m%d) known-good/v3.49.0
+git switch -c rescue-$(date +%Y%m%d) known-good/v3.50.0
 ```
 
 فرع جديد من النقطة الآمنة، **بلا مسح أي شيء**. راجعه، وإن أردته هو الأساس:
 
 ```bash
 git switch master
-git reset --hard known-good/v3.49.0
+git reset --hard known-good/v3.50.0
 git push --force-with-lease origin master
 ```
 
@@ -35,14 +35,14 @@ git push --force-with-lease origin master
 ## ٢) ترجّع التطبيق على التليفون
 
 ```bash
-adb install -r "E:\My Projects\Rafiq-Al-Darb\dist\RafeeqAlDarb-v3.49.0.apk"
+adb install -r "E:\My Projects\Rafiq-Al-Darb\dist\RafeeqAlDarb-v3.50.0.apk"
 ```
 
 `-r` تحديث فوق المثبّت، فلا يضيع ما نزّلته. والتوقيع يحمل السلسلة (lineage)
 فيُقبل التثبيت فوق أي إصدار سابق دون إلغاء التثبيت.
 
 أو نزّله من:
-https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.49.0
+https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.50.0
 
 ## ٣) ما لا يُغطّيه هذا
 
@@ -63,4 +63,4 @@ flutter analyze lib test     # No issues found
 flutter test                 # 453 passed, 2 skipped
 ```
 
-ثم `grep "^version:" rafeeq_app/pubspec.yaml` ← `3.49.0+51`.
+ثم `grep "^version:" rafeeq_app/pubspec.yaml` ← `3.50.0+52`.
