@@ -119,6 +119,15 @@ class LocationService {
   Future<AppPosition?> _fetchPosition(String localeCode) async {
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
+      // NOT BEFORE THE FIRST-RUN PAGE HAS EXPLAINED IT.
+      //
+      // «اذن الموقع بيظهر قبل صفحة الاذونات» - this service warms up while
+      // the splash is still on screen, and its own prompt beat the page
+      // whose whole job is to say why any of them is being asked for.
+      // Until onboarding is done the app works from the cached fix, which
+      // is what it does for a reader who says no anyway.
+      final prefs = await SharedPreferences.getInstance();
+      if (!(prefs.getBool('onboarding.completed') ?? false)) return null;
       permission = await Geolocator.requestPermission();
     }
     if (permission == LocationPermission.denied ||

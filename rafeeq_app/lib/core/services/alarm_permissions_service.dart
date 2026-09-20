@@ -26,6 +26,9 @@ import 'adhan_native.dart';
 ///  * the full-screen-intent grant (Android 14+, see `AdhanUriBridge`);
 ///  * a battery-optimization exemption, so the process is not frozen before
 ///    the alarm lands.
+/// The five the first-run page lists, in the order it lists them.
+enum AppPermission { location, notifications, exactAlarms, audio, battery }
+
 class AlarmPermissionsService {
   AlarmPermissionsService._();
   static final AlarmPermissionsService instance = AlarmPermissionsService._();
@@ -100,6 +103,63 @@ class AlarmPermissionsService {
     if (await Permission.scheduleExactAlarm.isDenied) {
       await Permission.scheduleExactAlarm.request();
     }
+  }
+
+  /// ── ONE PERMISSION AT A TIME ───────────────────────────────────────
+  ///
+  /// «المفروض ان لما اضغط على اسم اذن يطلب الاذن ويعطيني علامة صح مش ابقى
+  /// صفحة شكليه بس خاصة اذن البطاريية». `requestStartupGrants` fires the
+  /// whole sequence, which is right for one button and wrong for a list:
+  /// a row the reader taps has to ask for ITS permission and then show
+  /// whether it was granted. Battery in particular was never in that
+  /// sequence at all - it has its own dialog - so the row for it was
+  /// decoration.
+  Future<bool> isGranted(AppPermission which) async {
+    try {
+      return switch (which) {
+        AppPermission.location => await Geolocator.checkPermission() !=
+                LocationPermission.denied &&
+            await Geolocator.checkPermission() !=
+                LocationPermission.deniedForever,
+        AppPermission.notifications => await Permission.notification.isGranted,
+        AppPermission.exactAlarms =>
+          await Permission.scheduleExactAlarm.isGranted,
+        AppPermission.audio => await Permission.audio.isGranted,
+        AppPermission.battery =>
+          await Permission.ignoreBatteryOptimizations.isGranted,
+      };
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Asks for one, and answers whether it is granted afterwards. Every call
+  /// is wrapped: a platform that has no such permission must not take the
+  /// page down with it.
+  Future<bool> request(AppPermission which) async {
+    try {
+      switch (which) {
+        case AppPermission.location:
+          await Geolocator.requestPermission();
+        case AppPermission.notifications:
+          await _plugin
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>()
+              ?.requestNotificationsPermission();
+          if (await Permission.notification.isDenied) {
+            await Permission.notification.request();
+          }
+        case AppPermission.exactAlarms:
+          await Permission.scheduleExactAlarm.request();
+        case AppPermission.audio:
+          await [Permission.audio, Permission.storage].request();
+        case AppPermission.battery:
+          await Permission.ignoreBatteryOptimizations.request();
+      }
+    } catch (_) {
+      // Best effort: the row simply stays unticked.
+    }
+    return isGranted(which);
   }
 
   /// Prompts the system's battery-optimization exemption dialog for this

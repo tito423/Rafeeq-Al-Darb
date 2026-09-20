@@ -11,6 +11,10 @@ import '../../../../core/widgets/error_retry.dart';
 import '../../../downloads/presentation/widgets/mushaf_download_tile.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/onboarding_state.dart';
+import '../../../../core/config/app_config.dart';
+import '../../../../core/db/sciences_repository.dart';
+import '../../../../core/services/download_manager.dart';
+import '../widgets/content_pack_tile.dart';
 
 
 /// P3‑21: first-run onboarding — structured like the reference video's own
@@ -178,6 +182,31 @@ class OnboardingScreen extends ConsumerWidget {
                           const SizedBox(height: 10),
                         ],
                       ],
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  // EVERYTHING ELSE THAT CAN BE DOWNLOADED, HERE.
+                  //
+                  // «والاوبشنز اللي ممكن يحملها المستخدم في نفس الصفحة بدل
+                  // مايتفاجأ بيها جوه مش موجودة زي التفاسير مثلا». علوم
+                  // القرآن left the APK in 3.45.0 and the only place that
+                  // said so was a prompt inside an ayah card, weeks later.
+                  ContentPackTile(
+                    icon: Icons.auto_stories_outlined,
+                    titleKey: 'quran.sciences_pack',
+                    hintKey: 'quran.sciences_pack_hint',
+                    bytes: AppConfig.sciencesDbBytes,
+                    downloadId: sciencesDbDownloadId,
+                    installed: ref.watch(sciencesRepositoryProvider).valueOrNull
+                        != null,
+                    onDownload: () => DownloadManager.instance.enqueue(
+                      id: sciencesDbDownloadId,
+                      url: AppConfig.sciencesDbUrl,
+                      category: 'sciences',
+                      fileName: 'quran_sciences.zip',
+                      unzipToDatabases: true,
+                      dbVersion: AppConfig.sciencesDbVersion,
+                      title: 'quran.sciences_pack'.tr(),
                     ),
                   ),
                 ],

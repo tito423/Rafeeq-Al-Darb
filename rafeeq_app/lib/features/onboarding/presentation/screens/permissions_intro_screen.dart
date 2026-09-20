@@ -33,29 +33,80 @@ class PermissionsIntroScreen extends ConsumerStatefulWidget {
 }
 
 class _PermissionsIntroScreenState
-    extends ConsumerState<PermissionsIntroScreen> {
-  bool _busy = false;
+    extends ConsumerState<PermissionsIntroScreen>
+    with WidgetsBindingObserver {
+  final _granted = <AppPermission, bool>{};
+  AppPermission? _asking;
 
-  Future<void> _allow() async {
-    if (_busy) return;
-    setState(() => _busy = true);
-    // One call, one sequence: location, notifications, exact alarms, audio.
-    // Each request no-ops when it is already granted, so a reader who comes
-    // back to this page is not asked twice.
-    await AlarmPermissionsService.instance.requestStartupGrants();
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _refresh();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// The exact-alarm and battery prompts are full SETTINGS SCREENS on many
+  /// phones, not dialogs, so the answer only exists once the app is resumed.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refresh();
+  }
+
+  Future<void> _refresh() async {
+    for (final which in AppPermission.values) {
+      final ok = await AlarmPermissionsService.instance.isGranted(which);
+      if (!mounted) return;
+      setState(() => _granted[which] = ok);
+    }
+  }
+
+  /// One row, one permission. NOTHING HERE BLOCKS THE PAGE.
+  ///
+  /// The first cut awaited the whole five-permission sequence and only then
+  /// navigated, so «بعد اما اقبل اذنين الصفحة بالكامل بتعلق ومش بتدخلني ع
+  /// التطبيق»: a request that opens a settings screen does not complete
+  /// until the reader comes back, and the button had disabled itself and
+  /// the page with it. Each row is asked on its own now, «لاحقًا» is never
+  /// disabled, and a row being asked shows its own spinner rather than
+  /// freezing the screen.
+  Future<void> _ask(AppPermission which) async {
+    if (_asking != null) return;
+    setState(() => _asking = which);
+    final ok = await AlarmPermissionsService.instance.request(which);
     if (!mounted) return;
-    widget.onDone();
+    setState(() {
+      _granted[which] = ok;
+      _asking = null;
+    });
+  }
+
+  Future<void> _askAll() async {
+    for (final which in AppPermission.values) {
+      if (_granted[which] == true) continue;
+      await _ask(which);
+      if (!mounted) return;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    const rows = <(IconData, String)>[
-      (Icons.location_on_outlined, 'location'),
-      (Icons.notifications_active_outlined, 'notifications'),
-      (Icons.alarm_on_outlined, 'alarms'),
-      (Icons.audiotrack_outlined, 'audio'),
-      (Icons.battery_saver_outlined, 'battery'),
+    const rows = <(IconData, String, AppPermission)>[
+      (Icons.location_on_outlined, 'location', AppPermission.location),
+      (
+        Icons.notifications_active_outlined,
+        'notifications',
+        AppPermission.notifications
+      ),
+      (Icons.alarm_on_outlined, 'alarms', AppPermission.exactAlarms),
+      (Icons.audiotrack_outlined, 'audio', AppPermission.audio),
+      (Icons.battery_saver_outlined, 'battery', AppPermission.battery),
     ];
 
     return Scaffold(
@@ -141,10 +192,11 @@ class _PermissionsIntroScreenState
                         ),
                       ),
                     ),
-                    for (final (icon, key) in rows)
+                    for (final (icon, key, which) in rows)
                       Card(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: ListTile(
+                          onTap: _asking == null ? () => _ask(which) : null,
                           leading: Icon(icon, color: AppColors.gold),
                           title: Text(
                             'permissions_intro.$key'.tr(),
@@ -152,6 +204,21 @@ class _PermissionsIntroScreenState
                                 const TextStyle(fontWeight: FontWeight.w700),
                           ),
                           subtitle: Text('permissions_intro.${key}_why'.tr()),
+                          trailing: _asking == which
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                      strokeWidth: 2.2),
+                                )
+                              : Icon(
+                                  _granted[which] == true
+                                      ? Icons.check_circle_rounded
+                                      : Icons.chevron_right_rounded,
+                                  color: _granted[which] == true
+                                      ? AppColors.primary
+                                      : scheme.onSurfaceVariant,
+                                ),
                         ),
                       ),
                   ],
@@ -172,23 +239,18 @@ class _PermissionsIntroScreenState
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        onPressed: _busy ? null : _allow,
-                        child: _busy
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2.4),
-                              )
-                            : Text(
-                                'permissions_intro.allow'.tr(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 16),
-                              ),
+                        onPressed: _asking == null ? _askAll : null,
+                        child: Text(
+                          'permissions_intro.allow'.tr(),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 16),
+                        ),
                       ),
                     ),
+                    // NEVER disabled. Whatever a request does, the reader can
+                    // always get into the app.
                     TextButton(
-                      onPressed: _busy ? null : widget.onDone,
+                      onPressed: widget.onDone,
                       child: Text('permissions_intro.later'.tr()),
                     ),
                   ],
