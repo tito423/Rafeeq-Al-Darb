@@ -6,14 +6,58 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-20 |
-| **Released** | **v3.42.0**, tag at commit `6e56cc2b`, asset `RafeeqAlDarb-v3.42.0.apk` **339,969,649 B**. One release, one tag. **HEAD is 2 commits ahead of the tag** (`6c9f10f9` removed the night printing, `6492702a` added the highlight tools) — neither is released |
-| **App version** | `pubspec.yaml` `3.42.0+44`; `AboutScreen.appVersion` `3.42.0` |
-| **Verified 2026-09-20** | `flutter analyze lib test` → **No issues found** · `flutter test` → **433 passed, 2 skipped** (the two `@Tags(['export'])` pipeline tests, skipped by `dart_test.yaml`) · hosted content **10/10** answered a range request: `hadith/hadith.zip`, a book, a page of each of the 4 remaining printings, `hafs/kfqc/svg/050.svg`, `legal/privacy.html`, `tts/open_ar_v1/vocos44.onnx`, `quran/translations/en.json.gz` |
-| **Measured 2026-09-20** | 7 locales × **1,666** keys, identical · **5** mushaf printings (`hafs_kfqc`, `tajweed_color`, `madinah_gold`, `qatar`, `kuwait`) · **213** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded and every one of them naming its grader · bundled `hadith.zip` **22,235,941 B** · **33** built-in books **7,550,754 B** · **53** UI font files **9,294,252 B** |
-| **On the owner's phone** | he installs from GitHub Releases, so he has **v3.42.0**. Everything after it (night printing removed) is unreleased |
+| **Last updated** | 2026-09-20 (second handover of the day — the first is below) |
+| **Released** | **v3.43.0**, tag at `dd30123b`, asset `RafeeqAlDarb-v3.43.0.apk` **339,920,197 B**. One release, one tag. **HEAD is 2 commits ahead of it and NOT released**: `740d0302` (cleanup after the mushaf swap) and `13be4f06` (3.44.0 — the hadith rulings read Arabic). The owner stopped the v3.44.0 build mid-flight with «قبل ما تنشر وترفع فيه حاجة لسه مخلصتش» and did not say what — **ask him before building** |
+| **App version** | `pubspec.yaml` `3.44.0+46`; `AboutScreen.appVersion` `3.44.0` — bumped but unreleased |
+| **Verified 2026-09-20 (second)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **439 passed, 2 skipped** · hosted content **8/8** answered a range request with the right `Content-Type`: `hadith/hadith.zip`, a book, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, the TTS model, a Quran translation, `hadeethenc/ar.zip` · the review site and its two data files answered 200 |
+| **Measured 2026-09-20 (second)** | 7 locales × **1,661** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books in the catalogue, **213** with a text URL · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded with a named grader · the paper mushaf is **74,336,240 B** over 604 pages (was 286 MB of SVG) |
+| **On the owner's phone** | he installs from GitHub Releases, so he has **v3.43.0**. The Arabic-ruling fix is NOT on it |
 
-## WHAT 3.42.0 SHIPPED (2026-09-19, all seen on emulator-5554)
+## WHAT CHANGED AFTER v3.43.0 (committed, not released)
+
+* **The hadith rulings read Arabic.** The text was always Arabic; the ruling
+  beside it was not. Four of the nine books take their gradings from an
+  English-facing dataset, so «صحيح» was written `Sahih` and the grader was
+  `Al-Albani`/`Darussalam`. **23,058 of 45,219 rulings** reached an Arabic
+  reader in Latin script. All 54 distinct values were gone through; the count
+  is now **0**. `test/hadith_grade_arabic_test.dart` takes every distinct
+  grade and grader in the bundled database through the app's own Arabic path
+  and fails on one surviving Latin letter — proven to fail first by removing
+  the `Darussalam` row (`{'grader: Darussalam': 13149}`).
+* **Why no audit caught it:** every i18n check here runs the other way —
+  `ui_strings_translated_test` hunts Arabic in Dart code, parity compares
+  locale files, `i18n_audit.txt` reads source files. None looks at what comes
+  out of the database.
+* **`highlightRectsFor` was splitting single lines.** Cutting every ring at
+  the page's merged edges is right for a tap layer and wrong for a per-line
+  one: al-Baqarah 2:31 on page 6 came back as four rectangles for two printed
+  lines. A ring within 1.35 pitches is now left alone.
+* `hafs_kfqc_polygons.json` deleted (764,545 B that nothing read), six dead
+  printing ids out of the cover palette, the `AyahPolygonFit` doc rewritten.
+
+## WHAT v3.43.0 SHIPPED (2026-09-20)
+
+* **The paper mushaf was replaced.** 286 MB of SVG across five printings →
+  **one** printing, `madinah_qc`: quran.com's Madinah page images at
+  1260×2038, **74,336,240 B**, with the ayah coordinates their own publisher
+  ships (`ayahinfo_1260`: 88,246 word boxes, 604 pages, 6,236 ayahs, every
+  page measured from its own PNG header). `build_madinah_qc_polygons.py`
+  merges them into **13,766 rings, one per printed line**. The edition carries
+  an IDENTITY `polygon_fit`, so nothing is fitted or guessed. The four scanned
+  printings that borrowed Madinah's polygons are gone.
+* **Basmala** is its own centred line in the text mushaf, counted as a verse
+  only in al-Fatiha, never printed in at-Tawbah; the recitation highlight sits
+  on it alone while it sounds.
+* **Pinch-zoom** in the text mushaf, and a tap returns either mushaf to its
+  own size.
+* **Toolbar:** surah hard right, juz hard left, the page number only at the
+  foot — it used to be printed twice.
+* **Library tabs** keep their label inside the pill at a large font;
+  **«المزيد»** hands its colour down to the cards under it and insets them.
+* **Privacy policy** reworded: using the app needs no account at all, and
+  signing in is optional and only for sync.
+
+## WHAT 3.42.0 SHIPPED (earlier handover, kept for the record) (2026-09-19, all seen on emulator-5554)
 
 * **Built into the APK:** `hadith.zip` (unpacked on first open to `databases/hadith.db` with the v3 stamp) and `assets/data/builtin_books/` — the 29 hadith-category books, the three tajweed mutoon and the Hajj manual, installed by `LibraryApiService.installBuiltinBooks` 8 s after the first frame, decoded in an isolate.
 * **Downloads:** the enhanced voice goes through `DownloadManager` (WorkManager), so it continues in the background; `enqueue` re-attaches to a running platform task after a restart.
