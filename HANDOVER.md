@@ -7,14 +7,37 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-20 (third handover of the day; the earlier two are below) |
-| **Released** | **v3.48.0** — 259,813,822 B, three ABIs, minSdk 24. One release, one tag. **It is also the RESTORE POINT**: branch `known-good/v3.48.0` and tag `backup-2026-09-20` both sit on the same commit, and `RESTORE.md` in the repo root says how to come back to it |
-| **App version** | `pubspec.yaml` `3.48.0+50`; `AboutScreen.appVersion` `3.48.0` |
+| **Released** | **v3.49.0** — 259,813,822 B, three ABIs, minSdk 24. One release, one tag. **It is the RESTORE POINT**: branch `known-good/v3.49.0` and tag `backup-2026-09-21` sit on the same commit; `RESTORE.md` says how to come back |
+| **App version** | `pubspec.yaml` `3.49.0+51`; `AboutScreen.appVersion` `3.49.0` |
 | **Verified 2026-09-20 (final)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **453 passed, 2 skipped** · hosted content **8/8** range-checked with a User-Agent: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `ruqyah/afasy.mp3` — all 206 with the right `Content-Type` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker with Arabic text · the signed v3.47.0 APK installs, launches, zero FATAL EXCEPTION, support URL in all three `libapp.so` |
 | **Measured 2026-09-20 (final)** | 7 locales × **1,678** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B** · sciences pack **33,239,511 B** on R2 · R2 holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) · APK **259,748,286 B** |
 | **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
-| **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.48.0** |
+| **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.49.0** |
 
-## WHAT v3.48.0 SHIPPED (2026-09-20) — and why it is the restore point
+## WHAT v3.49.0 SHIPPED (2026-09-21) — and why it is the restore point
+
+3.48.0's permissions page shipped two regressions and he found both within
+minutes. Fixed and seen on a device, the whole first run in one pass:
+
+* **«بضغط allow all او لاحقا برده الشاشة بتقف»** — the splash built the
+  page's `onDone` closure inside its own `pushReplacement`, so the closure
+  captured the splash state the push had just replaced, and its
+  `if (!mounted) return` swallowed every press. The page pushes onboarding
+  itself now.
+* **«الاسبلاش اسكرين راحت خالص وبدالها شاشة زرقا صامتة»** — the clip was
+  gated on `motionEffectsProvider`, the RGB theme's moving-gradient switch,
+  so turning that off killed the splash and left `splashGround` (0xFF2B516B)
+  bare. It answers to `splashVideoEnabledProvider` and reduce-motion only.
+
+SEEN: ExoPlayer plays the clip → the permissions page → «Allow them» walks
+all five, Location and Exact alarms tick green, the BATTERY dialog appears
+(it never could before) → and the app moves itself on to «Choose your
+Mushaf», which offers «Quranic sciences — 33.2 MB» beside the mushaf.
+
+**The restore point is now v3.49.0** — `known-good/v3.49.0`,
+`backup-2026-09-21`, and the APK. The 3.48.0 refs are left where they are.
+
+## WHAT v3.48.0 SHIPPED (2026-09-20)
 
 The owner is about to have another agent audit the whole app and asked for
 something to come back to: «عايزك تعمل حاجة احتياطية عشان لو خرب حاجة ينفع
