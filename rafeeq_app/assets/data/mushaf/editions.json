@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "license": "Per-edition provenance lives on each entry below, in `source` and `license`, read from the item itself on 2026-09-17. This line used to be the only record and it had gone stale — it still named Warsh and Qalun, which were deleted on 2026-09-09. Two editions state a Creative Commons licence; three state none and say so. See CONTENT-LICENSES.md.",
+  "license": "One paper mushaf. Its ayah coordinates are published WITH its pages by the same source, so nothing is fitted or measured. See CONTENT-LICENSES.md.",
   "pin": "b91d39e1065b57bdda3e94aca8ecf3575e50e1e6",
   "editions": [
     {
-      "id": "hafs_kfqc",
-      "source_path": "hafs/kfqc",
+      "id": "madinah_qc",
       "name_ar": "مصحف المدينة — رواية حفص",
       "name_en": "Madinah Mushaf — Hafs",
       "name_es": "Mushaf de Medina — Hafs",
@@ -22,16 +21,27 @@
       "riwayah_ur": "حفص عن عاصم",
       "pages": 604,
       "ayahs": 6236,
-      "polygons_asset": "assets/data/mushaf/hafs_kfqc_polygons.json",
+      "polygons_asset": "assets/data/mushaf/madinah_qc_polygons.json",
       "sciences_aligned": true,
       "diverging_surahs": [],
       "is_default": true,
       "hafs_pagination": true,
-      "cover_asset": "assets/mushaf_covers/hafs_kfqc.jpg",
+      "cover_asset": "assets/mushaf_covers/madinah_qc.jpg",
       "printed_header": false,
-      "source": "quranpedia/quran-svg",
-      "license": "polygon metadata CC0-1.0; KFQC glyphs free for digital use",
-      "license_note": "The vector edition. Not a scan."
+      "source": "quran.com page images (width_1260) + ayahinfo_1260 coordinates",
+      "license": "CC BY-NC-ND per quran/quran_android: \"the data is licensed under the various licenses of the data’s authors (typically, this is CC BY-NC-ND)\". Free, non-commercial, redistributed unmodified, credited.",
+      "license_note": "Mirrored on our own R2 rather than fetched from android.quran.com, which asks not to be used as a CDN. Replaced the 286 MB hafs_kfqc SVG set on 2026-09-20.",
+      "image_path": "madinah_qc",
+      "image_ext": "png",
+      "polygon_fit": {
+        "default": {
+          "sx": 1.0,
+          "dx": 0.0,
+          "sy": 1.0,
+          "dy": 0.0,
+          "page_aspect": 0.618253
+        }
+      }
     }
   ]
 }

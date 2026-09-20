@@ -29,8 +29,8 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       SourceEntry('quran.com', 'https://quran.com', 'about.src_qurancom'),
       SourceEntry('api.alquran.cloud', 'https://alquran.cloud',
           'about.src_alquran'),
-      SourceEntry('quranpedia/quran-svg',
-          'https://github.com/quranpedia/quran-svg', 'about.src_svg'),
+      SourceEntry('quran/quran_android (mushaf images + ayahinfo)',
+          'https://github.com/quran/quran_android', 'about.src_svg'),
       SourceEntry('archive.org', 'https://archive.org', 'about.src_archive'),
     ]
   ),

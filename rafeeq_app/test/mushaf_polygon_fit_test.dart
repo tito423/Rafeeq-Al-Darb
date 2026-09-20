@@ -6,23 +6,26 @@ import 'package:rafeeq_app/features/quran/data/mushaf_edition.dart';
 
 /// ONE paper mushaf, and its highlight is exact.
 ///
-/// Until 2026-09-20 the catalogue carried four SCANNED printings — the
-/// coloured Tajweed mushaf, the illuminated "gold" printing, Mushaf Qatar and
-/// Mushaf Kuwait. None of them had ayah coordinates of its own: each borrowed
-/// the Madinah (`hafs_kfqc`) polygons through a per-page affine. The printings
-/// do not break their lines at the same words and do not put their surah
-/// banners on the same lines — Qatar sets al-Nisa's banner at the foot of page
-/// 76 where Madinah opens page 77 with it — so a borrowed highlight could sit
-/// a word, or a whole line, away from the printed marker.
+/// Until 2026-09-20 the catalogue carried five printings. Four were SCANS with
+/// no ayah coordinates of their own — the coloured Tajweed mushaf, the
+/// illuminated "gold" printing, Mushaf Qatar and Mushaf Kuwait — each
+/// borrowing the Madinah polygons through a per-page affine. Printings do not
+/// break their lines at the same words and do not put their surah banners on
+/// the same lines (Qatar sets al-Nisa's banner at the foot of page 76 where
+/// Madinah opens page 77 with it), so a borrowed highlight could sit a word,
+/// or a whole line, away from the printed marker. The fifth was `hafs_kfqc`,
+/// correct but 286 MB of SVG.
 ///
 /// The owner's ruling: «انا معنديش اي مشكلة انه يكون عندي مصحف نصي ومصحف واحد
-/// ورقي، بس يكون التظليل فيه تمام». So the four scans are gone and the vector
-/// Madinah edition is the whole list. Its polygons are published WITH the
-/// pages by quran-ws/quran-svg, page by page, so nothing is fitted, measured
-/// or guessed — which is the only way «تمام» is true rather than hoped for.
+/// ورقي، بس يكون التظليل فيه تمام». What ships now is `madinah_qc`: the same
+/// 604-page Madinah pagination as page images at 1260x2038 (71 MB), whose
+/// publisher ships the ayah coordinates WITH the pages — 88,246 word boxes
+/// merged into 13,766 per-line rings over all 6,236 ayahs. Nothing is fitted,
+/// measured or guessed, which is the only way «تمام» is true rather than
+/// hoped for.
 ///
-/// What this file guards is that state: one printing, carrying a real ayah
-/// layer, named in every locale, with a cover on disk.
+/// What this file guards is that state: one printing, its own coordinates,
+/// covering every ayah, named in every locale, with a cover on disk.
 void main() {
   final doc = jsonDecode(File('assets/data/mushaf/editions.json')
       .readAsStringSync()) as Map<String, dynamic>;
@@ -32,7 +35,7 @@ void main() {
   ];
 
   test('the catalogue is exactly one printing: the vector Madinah Hafs', () {
-    expect([for (final e in editions) e.id], ['hafs_kfqc']);
+    expect([for (final e in editions) e.id], ['madinah_qc']);
   });
 
   test('no printing that borrows another printing\'s coordinates is back', () {
@@ -67,13 +70,20 @@ void main() {
     }
   });
 
-  test('the remaining printing needs no fit of its own', () {
-    // `fitForPage` returning null is the point: the page's polygons are the
-    // page's own, so there is nothing to map them through.
+  test('the printing carries its own coordinates, not a fitted borrowing', () {
+    // The fit it does carry is the IDENTITY — the polygons already ARE this
+    // printing's own space, and an identity entry is what lets the existing
+    // raster drawing path use them with no arithmetic at all. Anything other
+    // than identity would mean the coordinates came from somewhere else.
     final e = editions.single;
     for (final page in [1, 2, 50, 77, 300, 604]) {
-      expect(e.fitForPage(page), isNull,
-          reason: '${e.id} p$page should not need an affine');
+      final fit = e.fitForPage(page)!;
+      expect(fit.sx, 1.0, reason: 'p$page sx');
+      expect(fit.dx, 0.0, reason: 'p$page dx');
+      expect(fit.sy, 1.0, reason: 'p$page sy');
+      expect(fit.dy, 0.0, reason: 'p$page dy');
+      // Every one of the 604 PNGs measured 1260x2038.
+      expect(fit.pageAspect, closeTo(1260 / 2038, 1e-5), reason: 'p$page');
     }
   });
 
@@ -86,6 +96,22 @@ void main() {
       final rings = pages[page] as List<dynamic>;
       expect(rings, isNotEmpty, reason: 'page $page carries no ayah region');
     }
+    // Every ayah of the mushaf, and every ring inside the page.
+    var ayahs = 0;
+    for (final entry in pages.values) {
+      for (final a in entry as List<dynamic>) {
+        ayahs++;
+        for (final ring in (a as List<dynamic>)[2] as List<dynamic>) {
+          for (final pt in ring as List<dynamic>) {
+            final x = (pt as List<dynamic>)[0] as num;
+            final y = pt[1] as num;
+            expect(x >= 0 && x <= 1, isTrue, reason: 'x $x out of the page');
+            expect(y >= 0 && y <= 1, isTrue, reason: 'y $y out of the page');
+          }
+        }
+      }
+    }
+    expect(ayahs, 6236);
   });
 
   test('every printing names itself in all seven app locales', () {

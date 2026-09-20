@@ -46,7 +46,7 @@ abstract final class AppConfig {
       '.apps.googleusercontent.com';
 
   /// Edition used until the reader picks another one.
-  static const String defaultMushafEdition = 'hafs_kfqc';
+  static const String defaultMushafEdition = 'madinah_qc';
 
   /// URL for the Cloudflare Worker Sync Backend.
   static const String syncBackendUrl = 'https://rafeeq-sync-backend.int-vip00.workers.dev';

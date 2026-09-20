@@ -31,7 +31,7 @@ class QuranBookCoverThumbnail extends StatelessWidget {
   /// `editions.json`; unknown ids fall back to royal emerald.
   static const Map<String, _Leather> _palette = {
     // Madinah Hafs — royal emerald green.
-    'hafs_kfqc': _Leather(Color(0xFF063D27), Color(0xFF0B5D3B), Color(0xFF14814F)),
+    'madinah_qc': _Leather(Color(0xFF063D27), Color(0xFF0B5D3B), Color(0xFF14814F)),
     // Coloured Tajweed — deep maroon (نبيتي).
     'tajweed_color':
         _Leather(Color(0xFF460B18), Color(0xFF6E1327), Color(0xFF922038)),
