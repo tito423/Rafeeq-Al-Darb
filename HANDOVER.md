@@ -7,12 +7,46 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-20 (third handover of the day; the earlier two are below) |
-| **Released** | **v3.47.0** — 259,748,286 B, all three ABIs, minSdk 24. One release, one tag; v3.46.0 and its tag were deleted. Part of it was seen on a device (below); the rest was not |
-| **App version** | `pubspec.yaml` `3.47.0+49`; `AboutScreen.appVersion` `3.47.0` |
+| **Released** | **v3.48.0** — 259,813,822 B, three ABIs, minSdk 24. One release, one tag. **It is also the RESTORE POINT**: branch `known-good/v3.48.0` and tag `backup-2026-09-20` both sit on the same commit, and `RESTORE.md` in the repo root says how to come back to it |
+| **App version** | `pubspec.yaml` `3.48.0+50`; `AboutScreen.appVersion` `3.48.0` |
 | **Verified 2026-09-20 (final)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **453 passed, 2 skipped** · hosted content **8/8** range-checked with a User-Agent: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `ruqyah/afasy.mp3` — all 206 with the right `Content-Type` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker with Arabic text · the signed v3.47.0 APK installs, launches, zero FATAL EXCEPTION, support URL in all three `libapp.so` |
 | **Measured 2026-09-20 (final)** | 7 locales × **1,678** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B** · sciences pack **33,239,511 B** on R2 · R2 holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) · APK **259,748,286 B** |
 | **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
-| **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.47.0** |
+| **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.48.0** |
+
+## WHAT v3.48.0 SHIPPED (2026-09-20) — and why it is the restore point
+
+The owner is about to have another agent audit the whole app and asked for
+something to come back to: «عايزك تعمل حاجة احتياطية عشان لو خرب حاجة ينفع
+نرجع للاصدار اللي هتعمله الوقتي، دي مهمه جدا». So this commit is pinned as
+`known-good/v3.48.0` (a branch nothing may move), `backup-2026-09-20` (a tag
+on the same commit) and `v3.48.0` (the release), with `RESTORE.md` spelling
+out how to branch off it, how to reset master onto it with
+`--force-with-lease`, and what it does NOT cover — the keystore in
+`../Rafeeq-Keys/`, the R2 bucket, the generated databases.
+
+**It fixes what 3.47.0 broke.** The permissions page 3.47.0 introduced had
+three faults, all reported within the hour:
+
+* **It froze.** `_allow` awaited all five requests then navigated, with the
+  button disabled meanwhile — and an exact-alarm or battery prompt is a
+  full settings SCREEN whose future does not complete until the app is
+  resumed. Two grants in, the page sat there. Each row is asked on its own
+  now and «لاحقًا» is never disabled.
+* **The rows were decoration.** They are tappable, each asks for its own
+  permission, and a granted one shows a tick read back from the system and
+  refreshed on resume. Battery was not even in `requestStartupGrants`.
+* **The location dialog beat the page.** `LocationService._fetchPosition`
+  prompts on its own during the splash; it no longer prompts before
+  onboarding is complete.
+
+Also: the first-run page offers علوم القرآن beside the mushaf, so the pack
+is not met for the first time as a prompt inside an ayah card weeks later.
+
+SEEN on emulator-5554, fresh install: no dialog before the page, «Exact
+alarms» ticked from the system, tapping «Location» asks and turns that row's
+chevron into a green tick, and the signed APK launches with zero FATAL
+EXCEPTION.
 
 ## WHAT v3.47.0 SHIPPED (2026-09-20) — his second round of findings
 
