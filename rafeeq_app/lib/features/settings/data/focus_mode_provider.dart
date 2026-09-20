@@ -43,27 +43,53 @@ class FocusModeNotifier extends StateNotifier<FocusTarget?> {
     _restore();
   }
 
-  /// v2: v1 stored a bool, from when the Qur'an was the only destination. A
-  /// stored `true` becomes [FocusTarget.quran], which is what it meant.
-  static const _key = 'focus_mode_target_v2';
+  /// THE `local_` PREFIX IS LOAD-BEARING.
+  ///
+  /// `SyncService` pushes EVERY SharedPreferences key that does not start
+  /// with `local_`, and its pull writes every key the server returns straight
+  /// back into preferences with no comparison of `updated_at` at all. So
+  /// focus mode - which is a thing you are in right now, not a preference -
+  /// travelled between devices and could switch itself on while the app was
+  /// open, behind the notifier that had already read it. That is the owner's
+  /// «وضع التركيز بيشتغل لوحده».
+  ///
+  /// v3 is the same value under a key sync cannot see; v2 is read once and
+  /// carried over so nobody loses the mode they were in.
+  static const _key = 'local_focus_mode_target_v3';
+  static const _v2Key = 'focus_mode_target_v2';
   static const _legacyKey = 'focus_mode_v1';
+
+  static FocusTarget? _parse(String? name) => name == null
+      ? null
+      : FocusTarget.values.where((t) => t.name == name).firstOrNull;
 
   Future<void> _restore() async {
     final prefs = await SharedPreferences.getInstance();
-    final stored = prefs.getString(_key);
+    final stored = _parse(prefs.getString(_key));
     if (stored != null) {
-      state = FocusTarget.values
-          .where((t) => t.name == stored)
-          .firstOrNull;
+      state = stored;
       return;
     }
-    if (prefs.getBool(_legacyKey) ?? false) state = FocusTarget.quran;
+    // Migrate the old, synced key once, then take it out of sync's reach.
+    final carried = _parse(prefs.getString(_v2Key));
+    if (carried != null) {
+      state = carried;
+      await prefs.setString(_key, carried.name);
+      await prefs.remove(_v2Key);
+      return;
+    }
+    if (prefs.getBool(_legacyKey) ?? false) {
+      state = FocusTarget.quran;
+      await prefs.setString(_key, FocusTarget.quran.name);
+      await prefs.remove(_legacyKey);
+    }
   }
 
   Future<void> enter(FocusTarget target) async {
     state = target;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, target.name);
+    await prefs.remove(_v2Key);
     await prefs.remove(_legacyKey);
   }
 
@@ -71,6 +97,7 @@ class FocusModeNotifier extends StateNotifier<FocusTarget?> {
     state = null;
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key);
+    await prefs.remove(_v2Key);
     await prefs.remove(_legacyKey);
   }
 }
