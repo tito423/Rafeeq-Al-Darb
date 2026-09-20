@@ -1,4 +1,4 @@
-import 'package:flutter/painting.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +32,22 @@ const nightInk = Color(0xFFE8E0CC);
 /// The ground for the whole Qur'an screen, so the strips above and below the
 /// page (status bar, page-number band) are the page's colour too — a white
 /// band under a night page glares. Null keeps the app's own background.
+/// An opaque version of [surface], for a theme whose surfaces are not.
+///
+/// The RGB theme's scaffold is `Colors.transparent` and its surface is 94%
+/// opaque, because `RgbScaffoldBackground` paints an animated gradient behind
+/// every screen and the cards are meant to let a little of it through. A
+/// Qur'an page is not a card. «لما وضع الار جي بي اشتغل المصحف الورقي الوانه
+/// باظت» - the gradient was moving underneath the printed page, through the
+/// transparent scaffold, and compositing with the printing's own ink.
+Color opaqueMushafGround(Color surface, Brightness brightness) =>
+    Color.alphaBlend(
+      surface,
+      brightness == Brightness.dark
+          ? const Color(0xFF000000)
+          : const Color(0xFFFFFFFF),
+    );
+
 Color? mushafGround(MushafPaper p, {required bool imageMode, required bool darkPage}) {
   if (!imageMode) return null;
   // A printing whose scans are black pages (Madinah night) sits on black:

@@ -712,7 +712,14 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     });
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: mushafGround(ref.watch(mushafPaperProvider), imageMode: _mode == MushafMode.image, darkPage: edition?.darkPage ?? false),
+      // Never transparent over a printed page - see `opaqueMushafGround`.
+      backgroundColor: mushafGround(ref.watch(mushafPaperProvider),
+              imageMode: _mode == MushafMode.image,
+              darkPage: edition?.darkPage ?? false) ??
+          (_mode == MushafMode.image
+              ? opaqueMushafGround(Theme.of(context).colorScheme.surface,
+                  Theme.of(context).brightness)
+              : null),
       // P3‑43 #6: "ملء الشاشة" now hides the AppBar entirely (not just its
       // own toolbar row) plus this screen's own bottom bar below, and
       // (via `quranFullScreenProvider`) `AppShell`'s bottom nav bar too —
