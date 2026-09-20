@@ -673,10 +673,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // `_applyImmersive` for the flicker this was.
     ref.listen<int>(activeTabProvider, (_, tab) => _syncImmersiveToTab(tab));
     final mushaf = ref.watch(mushafDataProvider);
-    // P3‑53: a raster (image-scan) edition — e.g. the coloured Tajweed mushaf —
-    // has no reflowable text form, so it's always shown as page images. This
-    // coerces the reader into image mode and hides the text/image toggle and
-    // the text-only controls for those editions.
+    // `isRaster` means "this printing ships page images", nothing more. It
+    // also coerced image mode until 3.44.0 (P3‑53) — harmless beside a vector
+    // printing, fatal once 3.43.0 left `madinah_qc` as the only one: always
+    // true, so the text mushaf and everything in it became unreachable.
     final edition = ref.watch(currentMushafEditionProvider).valueOrNull;
     final textLayout = ref.watch(quranTextLayoutProvider);
     final isRaster = edition?.isRaster ?? false;
@@ -692,7 +692,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // A recitation does not carry on into an image page (see
     // `_toggleContinuousRecitation`): switching to the image mode, or to a
     // scanned printing, while it runs ends it.
-    if (_recite.active && (_mode == MushafMode.image || isRaster)) {
+    if (_recite.active && _mode == MushafMode.image) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => AyahAudioService.instance.stopContinuous(),
       );
@@ -725,7 +725,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     });
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: mushafGround(ref.watch(mushafPaperProvider), imageMode: _mode == MushafMode.image || (edition?.isRaster ?? false), darkPage: edition?.darkPage ?? false),
+      backgroundColor: mushafGround(ref.watch(mushafPaperProvider), imageMode: _mode == MushafMode.image, darkPage: edition?.darkPage ?? false),
       // P3‑43 #6: "ملء الشاشة" now hides the AppBar entirely (not just its
       // own toolbar row) plus this screen's own bottom bar below, and
       // (via `quranFullScreenProvider`) `AppShell`'s bottom nav bar too —
@@ -830,12 +830,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   // vector Hafs pages) keeps both. The text page has its own
                   // header, so it keeps only the juz.
                   surahName: (edition?.hafsPagination ?? true) &&
-                          (_mode == MushafMode.image || isRaster) &&
+                          _mode == MushafMode.image &&
                           !(edition?.printedHeader ?? false)
                       ? _currentSurahName(data)
                       : null,
                   juzNumber: (edition?.hafsPagination ?? true) &&
-                          !((_mode == MushafMode.image || isRaster) &&
+                          !(_mode == MushafMode.image &&
                               (edition?.printedHeader ?? false))
                       ? _currentJuzNumber(data)
                       : null,
@@ -967,9 +967,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             final ayahs = snap.data!;
-            // A raster edition is always shown as page images, regardless of
-            // the persisted text/image mode (it has no reflowable text form).
-            if (_mode == MushafMode.image || (edition?.isRaster ?? false)) {
+            // The reader's own mode decides; the `|| edition.isRaster` that
+            // stood here was always true after 3.43.0, so `MushafTextPage`
+            // below was dead code. See the note on `isRaster` above.
+            if (_mode == MushafMode.image) {
               if (edition == null) {
                 return const Center(child: CircularProgressIndicator());
               }

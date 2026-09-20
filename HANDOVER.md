@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-20 (second handover of the day — the first is below) |
+| **Last updated** | 2026-09-20 |
 | **Released** | **v3.43.0**, tag at `dd30123b`, asset `RafeeqAlDarb-v3.43.0.apk` **339,920,197 B**. One release, one tag. **HEAD is 2 commits ahead of it and NOT released**: `740d0302` (cleanup after the mushaf swap) and `13be4f06` (3.44.0 — the hadith rulings read Arabic). The owner stopped the v3.44.0 build mid-flight with «قبل ما تنشر وترفع فيه حاجة لسه مخلصتش» and did not say what — **ask him before building** |
 | **App version** | `pubspec.yaml` `3.44.0+46`; `AboutScreen.appVersion` `3.44.0` — bumped but unreleased |
 | **Verified 2026-09-20 (second)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **439 passed, 2 skipped** · hosted content **8/8** answered a range request with the right `Content-Type`: `hadith/hadith.zip`, a book, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, the TTS model, a Quran translation, `hadeethenc/ar.zip` · the review site and its two data files answered 200 |
@@ -1827,9 +1827,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-20 14:04 — IN PROGRESS — resume here**
+**2026-09-20 16:06 — IN PROGRESS — resume here**
 
-The juz pill sits hard left now. A Spacer was not enough: Flexible defaults to flex 1, so the surah name and the spacer SHARED the free space and the pill came to rest near the middle of the bar. mainAxisAlignment spaceBetween pins the first child to the start and the last to the end - in RTL that is the surah hard right and the juz hard left. Seen on emulator-5554: the pill is against the left edge of the panel.
+3.44.0: the text mushaf was unreachable since 3.43.0 - fixed and seen; 1,635 MB of dead R2 objects deleted
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

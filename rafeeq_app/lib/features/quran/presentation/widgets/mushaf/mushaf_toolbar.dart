@@ -96,7 +96,11 @@ class MushafToolbar extends ConsumerWidget {
 
   /// True for the actions that only mean anything on the reflowable text
   /// mushaf. The image mode does not draw the thing any of them changes.
-  bool get _textOnly => textMode && !isRaster;
+  /// The text-only controls — «التلاوة المستمرة» and the switch's label.
+  /// This read `textMode && !isRaster` until 3.44.0. Every printing is a
+  /// raster one now, so that was always false: the recitation button had
+  /// vanished from the strip and the switch was stuck saying «وضع النص».
+  bool get _textOnly => textMode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
