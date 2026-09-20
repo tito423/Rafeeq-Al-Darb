@@ -1005,6 +1005,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               // continuous recitation will start from.
               playingSurah: _recite.active ? _recite.surahId : _highlightSurah,
               playingAyah: _recite.active ? _recite.ayahNumber : _highlightAyah,
+              playingBasmalaSurah: _recite.basmala ? _recite.surahId : null,
               onAyahLongPress: (a) => _openSciences(a, data),
               // `edition:` is the RECITER, not the mushaf. Handed a printing
               // id (`hafs_kfqc`) every verse URL 404'd, `setAudioSource`

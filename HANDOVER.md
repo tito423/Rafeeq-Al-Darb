@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-20 (handover) |
+| **Last updated** | 2026-09-20 |
 | **Released** | **v3.42.0**, tag at commit `6e56cc2b`, asset `RafeeqAlDarb-v3.42.0.apk` **339,969,649 B**. One release, one tag. **HEAD is 2 commits ahead of the tag** (`6c9f10f9` removed the night printing, `6492702a` added the highlight tools) — neither is released |
 | **App version** | `pubspec.yaml` `3.42.0+44`; `AboutScreen.appVersion` `3.42.0` |
 | **Verified 2026-09-20** | `flutter analyze lib test` → **No issues found** · `flutter test` → **433 passed, 2 skipped** (the two `@Tags(['export'])` pipeline tests, skipped by `dart_test.yaml`) · hosted content **10/10** answered a range request: `hadith/hadith.zip`, a book, a page of each of the 4 remaining printings, `hafs/kfqc/svg/050.svg`, `legal/privacy.html`, `tts/open_ar_v1/vocos44.onnx`, `quran/translations/en.json.gz` |
@@ -1783,9 +1783,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-19 15:47 — IN PROGRESS — resume here**
+**2026-09-20 04:32 — IN PROGRESS — resume here**
 
-QUOTA 97 pct - stopping. Tasbih jump fixed (committed, not released, not re-filmed). OWNER ASKED, NOT STARTED, do these then release: (1) REMOVE the whole-text adhan display entirely for any adhan without a verified synced timeline - rule for every custom adhan too (AdhanFullText / _wholeText in azan_player_screen.dart). (2) Mushaf pages must ALWAYS turn right-to-left, also in Latin locales (PageView reverse/direction in quran_screen / page_turn). (3) Bundle the nine hadith books (hadith.db) and the mutoon INTO the app - their download fails when the app goes to background; check what the hadith tab gate and mutoon downloads use.
+Text mushaf: the basmala is its own centred line, not part of verse 1. quran_local.db welds it onto verse 1 for 112 surahs (al-Fatiha counts its own as verse 1, at-Tawbah has none); basmalaOf/bodyOf split it as a verbatim substring, matching on a diacritic-stripped copy so al-Tin's and al-Qadr's shadda spelling is recognised and an-Naml 27:30's quoted basmala is never touched. The recitation highlight now sits on the basmala line while the reciter's basmala sounds (ContinuousRecitation.basmala from SurahPlaylist.isBasmalaAt) instead of washing basmala+verse 1 as one block. flutter analyze clean, 442 tests pass (9 new, generated from the real DB by scripts/gen_basmala_test.py and proven to fail on the wrong normaliser). NOT yet seen on a device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

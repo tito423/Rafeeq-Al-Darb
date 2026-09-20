@@ -66,7 +66,7 @@ class _AyahRow extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Text(
-                        ayah.textUthmani,
+                        bodyOf(ayah),
                         textAlign: TextAlign.right,
                         textDirection: TextDirection.rtl,
                         style: textStyle,
@@ -96,6 +96,54 @@ class _AyahRow extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Basmala line ──────────────────────────────────────────────────────────
+
+/// The basmala, set on its own centred line under the surah banner, the way a
+/// printed mushaf sets it. It is NOT a verse: it carries no rosette and no
+/// number, because outside al-Fatiha it is not counted as one.
+///
+/// [text] is the verbatim substring `basmalaOf` took off verse 1 — al-Tin and
+/// al-Qadr print theirs with a shadda and that is what shows here.
+class _BasmalaLine extends StatelessWidget {
+  final String text;
+  final MushafTheme mt;
+  final TextStyle textStyle;
+
+  /// True while the reciter is sounding the basmala itself, which is a
+  /// separate recording ahead of verse 1.
+  final bool playing;
+
+  const _BasmalaLine({
+    required this.text,
+    required this.mt,
+    required this.textStyle,
+    this.playing = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: playing
+          ? BoxDecoration(
+              color: mt.highlightPlaying,
+              borderRadius: BorderRadius.circular(10),
+            )
+          : null,
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.rtl,
+        style: textStyle.copyWith(
+          fontSize: (textStyle.fontSize ?? 22) * 0.86,
+          color: playing ? mt.inkOnHighlight : textStyle.color,
         ),
       ),
     );

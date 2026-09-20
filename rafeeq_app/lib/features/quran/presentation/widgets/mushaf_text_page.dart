@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
 
 import '../../../../core/db/models.dart';
+import '../../data/basmala.dart';
 import '../../data/mushaf_frame.dart';
 import '../../data/mushaf_theme.dart';
 import 'mushaf_frame_painter.dart';
@@ -75,6 +76,11 @@ class MushafTextPage extends StatefulWidget {
   final int? playingSurah;
   final int? playingAyah;
 
+  /// The surah whose **basmala** is sounding right now, if any. A murattal
+  /// reading opens a surah with the basmala before verse 1, and that is a
+  /// separate line here, so it takes the highlight on its own.
+  final int? playingBasmalaSurah;
+
   /// Whether verses are set as boxed cards or as one flowing justified page.
   final QuranTextLayout layout;
 
@@ -108,6 +114,7 @@ class MushafTextPage extends StatefulWidget {
     this.onReadingScroll,
     this.playingSurah,
     this.playingAyah,
+    this.playingBasmalaSurah,
     this.layout = QuranTextLayout.page,
     this.mushafTheme,
     this.frameStyle = MushafFrameStyle.none,
@@ -247,6 +254,8 @@ class _MushafTextPageState extends State<MushafTextPage> {
     final surah = widget.playingSurah;
     final ayah = widget.playingAyah;
     if (surah == null || ayah == null) return -1;
+    // The basmala line owns the highlight while it is the child sounding.
+    if (widget.playingBasmalaSurah != null) return -1;
     for (var i = 0; i < widget.ayahs.length; i++) {
       final a = widget.ayahs[i];
       if (a.surahId == surah && a.ayahNumber == ayah) return i;
@@ -383,7 +392,13 @@ class _MushafTextPageState extends State<MushafTextPage> {
         runs.add((runStart, i - 1));
         runStart = i;
       }
-      if (isNewSurah) items.add(_ListItem.banner(ayah.surahId));
+      if (isNewSurah) {
+        items.add(_ListItem.banner(ayah.surahId));
+        // At-Tawbah has none and al-Fatiha counts its own as verse 1, so
+        // `basmalaOf` returns null there and no line is added.
+        final b = basmalaOf(ayah);
+        if (b != null) items.add(_ListItem.basmala(ayah.surahId, b));
+      }
     }
     items.add(_ListItem.run(runs.length, runStart, widget.ayahs.length - 1));
     runs.add((runStart, widget.ayahs.length - 1));
@@ -496,6 +511,15 @@ class _MushafTextPageState extends State<MushafTextPage> {
                               bare: bare,
                             );
                           }
+                          if (item.isBasmala) {
+                            return _BasmalaLine(
+                              text: item.basmalaText!,
+                              mt: mt,
+                              textStyle: textStyle,
+                              playing:
+                                  widget.playingBasmalaSurah == item.surahId,
+                            );
+                          }
                           if (widget.layout == QuranTextLayout.cards) {
                             return Column(
                               children: [
@@ -571,13 +595,21 @@ class _MushafTextPageState extends State<MushafTextPage> {
 /// the same surah that are set as a single flowing paragraph.
 class _ListItem {
   final bool isBanner;
-  final int? surahId; // banners only
+
+  /// The centred basmala line that a printed mushaf sets under the banner,
+  /// above verse 1. Its own row, so the recitation highlight can sit on it
+  /// alone while the reciter sounds it.
+  final bool isBasmala;
+  final String? basmalaText; // basmala rows only, verbatim from the source
+  final int? surahId; // banners and basmala rows
   final int? runIndex; // runs only — index into the page's run list
   final int? runFrom; // runs only — first index into widget.ayahs
   final int? runTo; // runs only — last index, inclusive
 
   const _ListItem._({
     required this.isBanner,
+    this.isBasmala = false,
+    this.basmalaText,
     this.surahId,
     this.runIndex,
     this.runFrom,
@@ -586,6 +618,10 @@ class _ListItem {
 
   factory _ListItem.banner(int surahId) =>
       _ListItem._(isBanner: true, surahId: surahId);
+
+  factory _ListItem.basmala(int surahId, String text) =>
+      _ListItem._(isBanner: false, isBasmala: true, surahId: surahId,
+          basmalaText: text);
 
   factory _ListItem.run(int runIndex, int from, int to) => _ListItem._(
     isBanner: false,
@@ -870,7 +906,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
     for (var i = widget.from; i <= widget.to; i++) {
       final ayah = widget.ayahs[i];
       final isPlaying = i == widget.playingIndex;
-      final text = '${ayah.textUthmani} ';
+      final text = '${bodyOf(ayah)} ';
 
       spans.add(
         TextSpan(

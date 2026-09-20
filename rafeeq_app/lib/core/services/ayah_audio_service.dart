@@ -13,65 +13,10 @@ import 'download_engine.dart';
 import 'surah_playlist.dart';
 
 import '../db/models.dart';
+import 'continuous_recitation.dart';
+export 'continuous_recitation.dart';
 import '../db/quran_repository.dart';
 import 'recitation_source.dart';
-
-/// Progress of a surah recitation download.
-class ContinuousRecitation {
-  final bool active;
-
-  /// The verse currently sounding, or null before the first one starts.
-  final int? surahId;
-  final int? ayahNumber;
-
-  /// Position within the surah being recited, for a progress readout.
-  final int indexInSurah;
-  final int totalInSurah;
-
-  /// True while the next surah's sources are being prepared, so the UI can
-  /// say "جارٍ التحميل" instead of looking frozen between surahs.
-  final bool buffering;
-
-  /// The run is nominally still active but the platform player has gone —
-  /// Android released it while the app sat in the background. The verse and
-  /// position are still meaningful (they are where to resume from); what is
-  /// not true any more is that anything is sounding. Set on app resume by
-  /// [AyahAudioService.onAppResumed].
-  final bool stalled;
-
-  const ContinuousRecitation({
-    this.active = false,
-    this.surahId,
-    this.ayahNumber,
-    this.indexInSurah = 0,
-    this.totalInSurah = 0,
-    this.buffering = false,
-    this.stalled = false,
-  });
-
-  static const stopped = ContinuousRecitation();
-
-  ContinuousRecitation copyWith({bool? stalled, bool? buffering}) =>
-      ContinuousRecitation(
-        active: active,
-        surahId: surahId,
-        ayahNumber: ayahNumber,
-        indexInSurah: indexInSurah,
-        totalInSurah: totalInSurah,
-        buffering: buffering ?? this.buffering,
-        stalled: stalled ?? this.stalled,
-      );
-
-  bool isAyah(int surah, int ayah) =>
-      active && surahId == surah && ayahNumber == ayah;
-}
-
-/// Why a continuous recitation could not start or carry on.
-enum ContinuousError {
-  /// The verses' audio could not be opened, even after the player itself was
-  /// rebuilt. Network, or a source that genuinely is not there.
-  loadFailed,
-}
 
 /// Ayah-level recitation: streaming, on-disk caching, whole-surah downloads,
 /// and continuous auto-advancing playback.
@@ -622,6 +567,7 @@ class AyahAudioService {
         active: true,
         surahId: a.surahId,
         ayahNumber: a.ayahNumber,
+        basmala: plan.isBasmalaAt(index),
         indexInSurah: (index - lead).clamp(0, _continuousAyahs.length),
         totalInSurah: _continuousAyahs.length - lead,
       );
