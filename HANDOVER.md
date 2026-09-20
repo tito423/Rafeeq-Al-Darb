@@ -7,12 +7,44 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-20 (third handover of the day; the earlier two are below) |
-| **Released** | **v3.45.0** — see the release notes. One release, one tag; v3.43.0 and its tag were deleted |
-| **App version** | `pubspec.yaml` `3.45.0+47`; `AboutScreen.appVersion` `3.45.0` |
+| **Released** | **v3.46.0** — 259,727,806 B. One release, one tag; v3.45.0 and its tag were deleted. **Its fixes were NOT seen on a device before publishing**: the owner said «ارفعه جبت هب … هجربه وخلاص», so the only check run was that the signed APK installs, launches and logs no FATAL EXCEPTION. He is testing it |
+| **App version** | `pubspec.yaml` `3.46.0+48`; `AboutScreen.appVersion` `3.46.0` |
 | **Verified 2026-09-20 (third), all on emulator-5554 unless stated** | `flutter analyze lib test` → **No issues found** · `flutter test` → **447 passed, 2 skipped** · the text mushaf opens again, with its toolbar, «التلاوة المستمرة», the basmala highlight and pinch-zoom · علوم القرآن downloads, unpacks and serves تفسير/ترجمة/إعراب · the adhan plays with `res/raw` deleted (`dumpsys audio`: MediaPlayer `state:started`, `USAGE_ALARM`, 44100 Hz) · الأذكار and الرقية read the new `azkar.db` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker |
 | **Measured 2026-09-20 (third)** | 7 locales × **1,664** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B**, 26 chapters / 98 supplications · the sciences pack **33,239,511 B** on R2 · R2 now holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) |
 | **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
 | **On the owner's phone** | he installs from GitHub Releases, so once he updates he has **v3.45.0** |
+
+## WHAT v3.46.0 SHIPPED (2026-09-20) — the owner's own findings, UNVERIFIED
+
+He went through the app and reported seven things. Six are fixed here and
+**none of the six has been opened on a device** — analyze is clean and 452
+tests pass, and that is all. The next session opens each one.
+
+* **The repeat played one voice whoever you chose.** `playRepeated` defaulted
+  to `ar.minshawimujawwad` and the ayah card passed no reciter. Making the
+  parameter `required` made the compiler find a SECOND site with the same
+  bug: «تشغيل الكل» on a search topic.
+* **«جارٍ تكرار الآية…» would not go away.** Reproduced on emulator-5554:
+  still over the mushaf minutes later, with no visible «إيقاف» — the theme's
+  SnackBar is pale and Material's default action colour is for its own dark
+  one. `actionTextColor` on the theme fixes every SnackBar in the app; the
+  banner now lives on `rootScaffoldMessengerKey` and closes when the audio
+  does, not on a 4-second timer.
+* **The hadith row in التنزيلات showed nothing** while 109,731,840 bytes sat
+  behind it: the hub sizes buckets from DownloadManager's registry and
+  `hadith.db` comes from the bundled zip. It measures the file now, and
+  frees it for real. `quran_sciences.db` had the identical hole.
+* **التنزيلات is one page.** The المصاحف tab held one row.
+* **The «المصاحف» picker is gone** from العرض, and its widget with it.
+* **The prayer card's counter sat across the card from its prayer.** The text
+  was `match_parent`; on a phone whose SYSTEM language is English the
+  RemoteViews builds left-to-right, so the counter went hard left and the
+  Arabic text hard right.
+
+NOT a fault and left alone: the card counts UP for an hour after a prayer —
+the owner's own earlier rule. STILL OPEN: «لما يجي الأذان وارفع الاشعار لفوق
+مفيش حاجة اوقفه منها» is undiagnosed, and the onboarding «اختر مصحفك» screen
+he asked to be deleted is still there.
 
 ## WHAT v3.45.0 SHIPPED (2026-09-20)
 
