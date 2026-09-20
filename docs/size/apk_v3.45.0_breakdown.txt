@@ -22,3 +22,29 @@ assets/fonts                                     0.07         0.13
 other                                            0.03         0.11
 assets/data/catalogs                             0.02         0.24
 assets/diagrams                                  0.01         0.03
+
+MEASURED RELEASE APK SIZES, 2026-09-20 (all `flutter build apk --release`)
+  v3.43.0 as shipped, 3 ABIs, sciences bundled   339,920,197 B   324.2 MiB
+  after the sciences pack, 3 ABIs                305,608,798 B   291.5 MiB
+  ... minus x86_64  (--target-platform arm,arm64) 269,711,318 B   257.2 MiB
+  ... arm64 only                                 238,171,972 B   227.1 MiB
+
+WHAT IS LEFT, and what it is really worth (in-APK, deflated - the raw file
+size on disk is NOT what an install costs; quran_sciences.db was 131.68 MB
+on disk and 33 MiB in the APK, which is why removing it saved 32.7, not 131)
+  the 14 adhans, TWICE                            87.65 MiB
+      assets/audio/adhan/                         43.75
+      res/*.mp3  (the same clips as Android raw
+      resources, so a notification channel can
+      name one as its sound)                      43.90
+  assets/data (hadith.zip 21.2 + quran_local
+      5.4 + on_this_day + catalogs + azkar)       23.59 MiB
+  assets/data/hadeethenc                          16.05 MiB
+  assets/data/builtin_books                        7.20 MiB
+  assets/quote_backgrounds                         4.44 MiB
+  assets/fonts/google_fonts                        3.96 MiB
+  assets/branding                                  3.87 MiB
+
+So arm64-only + one adhan instead of fourteen + hadith + hadeethenc +
+builtin books + the interface fonts lands near 100 MiB. Nothing else in the
+tree is worth more than 5.
