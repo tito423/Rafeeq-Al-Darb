@@ -7,13 +7,60 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-21 |
-| **Current source, after v3.51.0** | Hajj/Umrah presentation and tajweed TTS cleanup, verified on emulator-5554 on 2026-09-21. Analyzer clean; **456 tests passed, 2 skipped**. Debug build only; no new release. See the verification note below. |
-| **Released** | **v3.51.0** — 260,277,487 B, three ABIs, minSdk 24. One release, one tag. **It is the RESTORE POINT**: branch `known-good/v3.51.0` and tag `backup-2026-09-21c` sit on this commit; `RESTORE.md` says how to come back |
-| **App version** | `pubspec.yaml` `3.51.0+53`; `AboutScreen.appVersion` `3.51.0` |
+| **Current source** | `master` at `b0380411`, released as **v3.52.0**. Nothing uncommitted. |
+| **Released** | **v3.52.0** — 260,277,487 B, three ABIs, minSdk 24, tag on `b0380411` = `HEAD`. **TWO releases are published on purpose**: «مش تحذف الموجود ممكن يكون فيه خطا ولا حاجة» (2026-09-21), so **v3.51.0 and its tag were NOT deleted** and stay as the fallback. |
+| **Restore point** | still **v3.51.0**: branch `known-good/v3.51.0`, tags `backup-2026-09-21c` and `v3.51.0`, and `../Rafeeq-Backups/Rafeeq-Al-Darb-2026-09-21.bundle`. `RESTORE.md` says how to come back. It does not move to 3.52.0 until 3.52.0 has lived on his phone |
+| **App version** | `pubspec.yaml` `3.52.0+54`; `AboutScreen.appVersion` `3.52.0`; the installed APK reports `versionCode=54 versionName=3.52.0` (aapt2 badging) |
 | **Verified 2026-09-20 (final)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **453 passed, 2 skipped** · hosted content **8/8** range-checked with a User-Agent: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `ruqyah/afasy.mp3` — all 206 with the right `Content-Type` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker with Arabic text · the signed v3.47.0 APK installs, launches, zero FATAL EXCEPTION, support URL in all three `libapp.so` |
 | **Measured 2026-09-20 (final)** | 7 locales × **1,678** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B** · sciences pack **33,239,511 B** on R2 · R2 holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) · APK **259,748,286 B** |
 | **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
-| **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.51.0** |
+| **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.52.0**, and v3.51.0 is still downloadable beside it |
+
+## v3.52.0 — RELEASED 2026-09-21, WITH v3.51.0 LEFT IN PLACE
+
+Built with `build_github_release.bat` (trap #41: Gradle signs debug, then
+`scripts/sign_release.py` re-signs with the real key and the lineage). The
+script's own two-pass check passed: `CN=Rafeeq Al-Darb` from Android 9 up,
+the old debug certificate still covering Android 7-8, so an install over any
+earlier build is an update and not a reinstall.
+
+Measured, not remembered:
+
+* `dist/RafeeqAlDarb-v3.52.0.apk` — **260,277,487 B**, sha256
+  `0c85b6c25ab93a7bd9dac4929e5adc1b28a44addf27265f625b8fc128522607a`.
+  Byte-identical in SIZE to v3.51.0 and different in content (v3.51.0 is
+  `1027d3ad6e80…`); the Dart-only change happened to compress to the same
+  length.
+* `aapt2 dump badging`: `versionCode='54' versionName='3.52.0'`,
+  `minSdkVersion:'24'`, `native-code: 'arm64-v8a' 'armeabi-v7a' 'x86_64'`.
+* `gh release view v3.52.0` → tag on `master`, asset uploaded;
+  `git ls-remote origin refs/tags/v3.52.0` = `b0380411` = `git rev-parse HEAD`.
+* `gh release list` shows **both** v3.52.0 (Latest) and v3.51.0, each with
+  its APK still attached.
+
+Seen on emulator-5554, on the SIGNED APK, not a debug build:
+
+* `adb install` → Success; app launches, `logcat -b crash` empty.
+* First run: permissions page → mushaf choice → sign-in sheet → home with
+  live prayer times. The header shows **«Support the app»**, which only
+  exists when `RAFEEQ_SUPPORT_URL` is defined, so the GitHub-only define
+  reached this build.
+* Hajj track: **18** cards, and «Umrah» is not among them.
+* Umrah track: **10** cards, «A child's Hajj» gone, «Counsel for the
+  pilgrim» still present.
+* The Umrah header illustration moves: frame diffs against t0 were
+  `(348,64,719,375)` at +2s and `(348,51,719,368)` at +4s.
+
+NOT seen on this build: the Arabic «الباب الرابع» check was made on the
+debug build earlier the same night (step 1 opened on «الأول: العمرة فرض على
+المستطيع كالحج»), not re-done on the signed APK. Same Dart, but it is a
+different binary — say so rather than claim it.
+
+A detail worth knowing: the emulator died during the first install (trap
+#24's neighbour). It came back with the package record present, `pkg=null`
+and no launcher activity — `pm path` returned nothing. An uninstall and a
+clean install fixed it. A "Success" from `adb install` immediately before
+an emulator crash is not an install.
 
 ## VERIFIED AFTER v3.51.0 — Hajj/Umrah and tajweed (2026-09-21)
 
@@ -21,8 +68,13 @@ Cline, or any other).
   exact opening headings are omitted from the presentation, leaving the
   first ruling and all subsequent source paragraphs unchanged. Tests read
   the actual bundled book and assert the Arabic comparison is nonempty.
-* The child's Hajj chapter appears only in Hajj. The owner explicitly chose
-  to keep counsel in both tracks. The shared rite chapters retain their order.
+* The child's Hajj chapter appears only in Hajj. **Counsel (وصايا للحاج) is
+  still on both tracks, and that is NOT something the owner asked for** - he
+  named both trailing tabs as wrong («اخر تابين حج الصبي ووصايا للحاج مش
+  مناسبة»). The earlier wording here claimed he chose to keep it; he did
+  not, he was never asked. It is flagged to him in the 3.52.0 notes and is
+  one line in `hajj_guide.dart` if he wants it gone. The shared rite
+  chapters retain their order.
 * Umrah's header now loops its tawaf illustration. The Hajj journey map is
   no longer shown inside Umrah's mawaqit card. The separate tawaf counter
   remains interactive rather than advancing automatically.
