@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/tutorial_state.dart';
+import '../screens/feature_gallery_screen.dart';
 
 /// The tour's entry in «المزيد»: one card that plays it now, with the
 /// every-launch switch tucked under the same border rather than loose in the
@@ -76,6 +77,24 @@ class TutorialEntryCard extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          // «حط بالله الصور بتاعة البلاي استور في شرح ميزات التطبيق». The
+          // card offered two guided tours and nothing to look at; someone
+          // who only wants to SEE what the app has had to walk a tour.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const FeatureGalleryScreen(),
+                  ),
+                ),
+                icon: const Icon(Icons.photo_library_outlined, size: 18),
+                label: Text('tutorial.gallery'.tr()),
+              ),
             ),
           ),
           Divider(
