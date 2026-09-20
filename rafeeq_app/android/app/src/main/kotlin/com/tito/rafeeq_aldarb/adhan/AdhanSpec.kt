@@ -25,11 +25,14 @@ data class AdhanSpec(
     val soundType: String,
     val soundValue: String?,
     /**
-     * The same bundled recording as a Flutter asset path
-     * (`assets/audio/adhan/azanN.mp3`), used as a fallback when the `raw`
-     * resource cannot be resolved. Belt and braces against the resource
-     * shrinker, which silently stripped `res/raw/azan*` from release builds
-     * until `res/raw/keep.xml` was added. Null for a custom or silent adhan.
+     * The bundled recording's Flutter asset path
+     * (`assets/audio/adhan/azanN.mp3`). Written as a fallback for when the
+     * `raw` resource could not be resolved — R8's resource shrinker used to
+     * strip `res/raw/azan*` out of release builds, and the adhan went silent.
+     * Since 3.45.0 it is not a fallback but THE source: the `res/raw` copies
+     * were deleted, being a byte-for-byte second copy of these same 14 files
+     * that cost 43.90 MiB of every install. `res/raw/keep.xml` went with
+     * them. Null for a custom or silent adhan.
      */
     val assetPath: String?,
     val hour: Int,

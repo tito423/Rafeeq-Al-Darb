@@ -93,6 +93,9 @@ object AdhanPlayer {
                     val resId = context.resources.getIdentifier(
                         value, "raw", context.packageName,
                     )
+                    // resId is 0 for every bundled adhan since 3.45.0: the
+                    // `res/raw` copies were deleted as duplicates. The branch
+                    // stays so a future res-backed sound still works.
                     if (resId != 0) {
                         context.resources.openRawResourceFd(resId).use { fd ->
                             mp.setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
@@ -178,14 +181,21 @@ object AdhanPlayer {
     }
 
     /**
-     * Plays the recording straight out of the Flutter asset bundle.
+     * Plays the recording straight out of the Flutter asset bundle. This is
+     * now the ONLY source for a bundled adhan.
      *
-     * The bundled adhans ship twice — as `res/raw/azanN.mp3` (what the native
-     * player prefers) and as `assets/audio/adhan/azanN.mp3` inside
-     * `flutter_assets` (what the app's own catalog lists). Flutter assets are
-     * never touched by the Android resource shrinker, so this is the source
-     * that cannot go missing, and it is why a stripped `res/raw` no longer
-     * means a silent adhan.
+     * They used to ship twice — `res/raw/azanN.mp3` as well as
+     * `assets/audio/adhan/azanN.mp3` — and the two copies cost 87.65 MiB of
+     * a 291 MiB APK, the heaviest thing in it by far. Nothing needed the res
+     * copy: every adhan channel in `AdhanNotifications` is
+     * `setSound(null, null)`, so Android never plays one itself; this player
+     * does, and the Flutter asset is the copy the resource shrinker cannot
+     * reach. The 14 recordings themselves are untouched — the owner chose
+     * them one by one.
+     *
+     * `openFd` needs the asset STORED rather than deflated. mp3 already is,
+     * measured: `assets/audio/adhan` is 43.75 MiB in the APK and 43.75 MiB
+     * on disk.
      */
     private fun setFlutterAsset(
         context: Context,

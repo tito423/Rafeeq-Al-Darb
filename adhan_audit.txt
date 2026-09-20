@@ -1,0 +1,35 @@
+catalogue entries: 14
+
+{"id": "azan11", "asset": "assets/audio/adhan/azan11.mp3", "raw": "azan11", "file": null, "url": null, "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan12", "asset": "assets/audio/adhan/azan12.mp3", "raw": "azan12", "file": null, "url": null, "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan13", "asset": "assets/audio/adhan/azan13.mp3", "raw": "azan13", "file": null, "url": null, "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan1", "asset": "assets/audio/adhan/azan1.mp3", "raw": "azan1", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/mahmoud-ali-al-banna-cairo.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan2", "asset": "assets/audio/adhan/azan2.mp3", "raw": "azan2", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/abdulbasit-abdusamad-4-egypt.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan3", "asset": "assets/audio/adhan/azan3.mp3", "raw": "azan3", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/mohamed-siddiq-el-minshawi-egypt-2.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan4", "asset": "assets/audio/adhan/azan4.mp3", "raw": "azan4", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/nasreddine-toubar.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan5", "asset": "assets/audio/adhan/azan5.mp3", "raw": "azan5", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-1-kuwait.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan6", "asset": "assets/audio/adhan/azan6.mp3", "raw": "azan6", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/ali-ibn-ahmad-mala-hq.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan8", "asset": "assets/audio/adhan/azan8.mp3", "raw": "azan8", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/abdul-majid-al-surehi-3.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan9", "asset": "assets/audio/adhan/azan9.mp3", "raw": "azan9", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/mansur-al-zahrane.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan16", "asset": "assets/audio/adhan/azan16.mp3", "raw": "azan16", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-3-fajr-kuwait.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan18", "asset": "assets/audio/adhan/azan18.mp3", "raw": "azan18", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/abdulbasit-abdusamad-6-fajr-egypt.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+{"id": "azan19", "asset": "assets/audio/adhan/azan19.mp3", "raw": "azan19", "file": null, "url": "https://archive.org/download/adhan-mp3-collection/fajr-adhan-by-nasreddine-toubar.mp3", "name_ar": null, "muezzin_ar": null, "title_ar": null}
+
+mp3 files on disk: 14
+  azan1          996276  USED
+  azan11        2848959  USED
+  azan12        3567849  USED
+  azan13        2771114  USED
+  azan16        1498845  USED
+  azan18        4696233  USED
+  azan19        4615149  USED
+  azan2         4535946  USED
+  azan3         3951848  USED
+  azan4         4231880  USED
+  azan5         1926626  USED
+  azan6         3910888  USED
+  azan8         3369213  USED
+  azan9         2955851  USED
+
+referenced by the catalogue: ['azan1', 'azan11', 'azan12', 'azan13', 'azan16', 'azan18', 'azan19', 'azan2', 'azan3', 'azan4', 'azan5', 'azan6', 'azan8', 'azan9']
+orphans: []  (0 bytes)

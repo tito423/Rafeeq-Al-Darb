@@ -46,16 +46,40 @@ void main() {
             'removedAdhanIds — either put it back or say it is gone');
   });
 
-  test('every bundled file exists in both places it ships', () {
+  /// Renamed from «every bundled file exists in both places it ships», which
+  /// is what it used to check.
+  ///
+  /// The 14 recordings shipped TWICE until 3.45.0 - once as Flutter assets
+  /// and once as `res/raw/azanN.mp3` - and the two copies were 87.65 MiB of
+  /// a 291 MiB APK, more than any other content in the app. The res copy was
+  /// never needed: every adhan channel in `AdhanNotifications` is
+  /// `setSound(null, null)`, so Android never plays one itself. `AdhanPlayer`
+  /// does, and it already fell back to the Flutter asset - a path written as
+  /// belt-and-braces and, as far as anyone could tell, never once exercised.
+  ///
+  /// So it was exercised before this test was changed: on emulator-5554,
+  /// «معاينة الأذان» with `res/raw` deleted put
+  /// `AudioPlaybackConfiguration piid:215 type:android.media.MediaPlayer
+  /// state:started usage=USAGE_ALARM 44100 Hz` in `dumpsys audio` under this
+  /// package's uid, the adhan screen ran its synchronised «الله أكبر», and
+  /// logcat carried neither «no playable source» nor «flutter asset not
+  /// playable».
+  ///
+  /// The 14 recordings themselves are untouched - the owner picked them one
+  /// by one, listening to each muezzin, and the gaps in the numbering
+  /// (azan7, azan10, azan14, azan15, azan17) are the ones he rejected.
+  test('every bundled file ships once, as a Flutter asset', () {
     for (final m in measured) {
       final id = m['id'] as String;
       expect(File('assets/audio/adhan/$id.mp3').existsSync(), isTrue,
           reason: id);
       expect(
         File('android/app/src/main/res/raw/$id.mp3').existsSync(),
-        isTrue,
-        reason: '$id is missing from res/raw, which is what the native alarm '
-            'player prefers',
+        isFalse,
+        reason: '$id is back in res/raw. That is a byte-for-byte second copy '
+            'of the Flutter asset and it costs 43.90 MiB of every install; '
+            'nothing reads it, because the adhan channels are silent and '
+            'AdhanPlayer plays the asset itself.',
       );
     }
   });
