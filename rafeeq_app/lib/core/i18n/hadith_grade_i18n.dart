@@ -18,6 +18,44 @@
 /// source would be worse than showing the honest English.
 const _kGradeTermsArabic = <String, String>{
   // Longest/most specific phrases first.
+  // The last three, counted rather than guessed: after the pass
+  // above, 45,219 rulings read Arabic and exactly three still held
+  // an English word. Each is one row in 67,153 and each is an
+  // editor’s note, so each is matched whole.
+  "[Abu 'Eisa said:] This Hadith is": "[قال أبو عيسى:] هذا حديث",
+  // Single-quoted on purpose: the key itself contains double quotes,
+  // and the generator that reads this table splits on the quote the
+  // line opens with.
+  'except for "one vessel ..."': 'إلا قوله: «إناء واحد …»',
+  "Mauquf and Marfu'": "موقوف ومرفوع",
+  // Added 2026-09-20 after counting every distinct grade in the
+  // bundled database: 54 carried Latin letters and the table below
+  // caught most but not all. Longest first, because the table is
+  // applied in order and a sentence has to match before the terms
+  // inside it do.
+  "Abu Eisa (at-Tirmidhi) said: This Hadith is Hasan Sahih.": "قال أبو عيسى الترمذي: هذا حديث حسن صحيح.",
+  "Da'if Munkar, and the Sahih version is 19 days as in a previous hadith.": "ضعيف منكر، والمحفوظ تسعة عشر يومًا كما في حديث سابق.",
+  "1: Hasan 2: Sahih 3: The authenticator did not find a chain": "١: حسن ٢: صحيح ٣: لم يقف المحقق على إسناد",
+  "1: Sahih 2: 3: Sahih Mauquf 4: The chain is da'if": "١: صحيح ٢: ٣: صحيح موقوف ٤: الإسناد ضعيف",
+  "The authenticator did not find a chain": "لم يقف المحقق على إسناد",
+  "The chain is da'if": "الإسناد ضعيف",
+  "(fabricated)": "(موضوع)",
+  "(Fabricated)": "(موضوع)",
+  "(Weak)": "(ضعيف)",
+  "Mutawatir": "متواتر",
+  "Mawdu'": "موضوع",
+  "Maudu’": "موضوع",
+  "Maudu'": "موضوع",
+  "Maudu": "موضوع",
+  "Marfu'": "مرفوع",
+  "Marfu": "مرفوع",
+  "mursal": "مرسل",
+  "Da`if": "ضعيف",
+  "Da,if": "ضعيف",
+  "Da if": "ضعيف",
+  "Daif": "ضعيف",
+  "da'if": "ضعيف",
+  "Sah,": "صحيح،",
   "Sahih li ghairih": "صحيح لغيره",
   "Hasan li ghairih": "حسن لغيره",
   "Da'if Jiddan": "ضعيف جدًا",
@@ -36,6 +74,15 @@ const _kGradeTermsArabic = <String, String>{
   "Sahih": "صحيح",
   "Hasan": "حسن",
   "Da'if": "ضعيف",
+  // The dataset writes the apostrophe BOTH ways. Counted on the bundled
+  // hadith.db: "Da'if" 2,122 rows, "Da’if" 652, "Da’if in chain"
+  // and friends besides — and only the straight form was here, so 652
+  // hadiths went on showing a transliteration to an Arabic reader.
+  "Da’if Jiddan": "ضعيف جدًا",
+  "Da’if Mauquf": "ضعيف موقوف",
+  "Da’if Maqtu'": "ضعيف مقطوع",
+  "Da’if": "ضعيف",
+  "Maqtu’": "مقطوع",
   "Shadh": "شاذ",
   "Munkar": "منكر",
 };

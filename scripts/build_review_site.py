@@ -20,6 +20,7 @@ chapter at a time.
 """
 import json
 import os
+import re
 import shutil
 import sqlite3
 
@@ -48,6 +49,46 @@ TEXT_GROUPS = {
     'azkar': 'الأذكار (نصوص الواجهة)',
     'quotes': 'المقولات (نصوص الواجهة)',
 }
+
+
+def grade_tables():
+    """The app's own Arabic terms, parsed out of `hadith_grade_i18n.dart`.
+
+    The bundled dataset's grade and grader columns are English free text
+    ("Hasan Sahih", "Al-Albani"), and the reviewers are Arabic speakers:
+    «انا عاوزه عربي لان الشيوخ كلهم عرب». The app already restores those
+    terms; reading its table here instead of writing a second one means the
+    site and the app can never drift, and nobody is shown a transliteration.
+    """
+    src = open(os.path.join(APP, 'lib', 'core', 'i18n',
+                            'hadith_grade_i18n.dart'), encoding='utf-8').read()
+    quote = chr(34)
+    bs = chr(92)
+
+    def table(name):
+        head = 'const ' + name + ' = <String, String>{'
+        i = src.index(head) + len(head)
+        block = src[i:src.index(bs.join([]) + '\n};', i)]
+        out = []
+        for line in block.split('\n'):
+            line = line.strip()
+            # The grade table is double-quoted and the grader table is
+            # single-quoted; reading only one of them is how 18,047 rulings
+            # kept an English grader name on an Arabic screen.
+            quote = line[:1]
+            if quote not in ('"', chr(39)):
+                continue
+            # "key": "value",
+            j = line.index(quote, 1)
+            key = line[1:j]
+            rest = line[j + 1:]
+            k = rest.index(quote)
+            val = rest[k + 1:rest.index(quote, k + 1)]
+            key = key.replace(bs + 'u2019', chr(0x2019)).replace(bs + "'", "'")
+            out.append((key, val))
+        return out
+
+    return table('_kGradeTermsArabic'), dict(table('_kGraderNamesArabic'))
 
 
 def dump(name, obj):
@@ -97,6 +138,7 @@ def hadith(_unused):
     states each hadith is in rather than leaving a blank column to be read as
     an omission.
     """
+    terms, graders = grade_tables()
     con = sqlite3.connect(os.path.join(APP, 'assets', 'data', 'hadith.db'))
     root = os.path.join(DATA, 'hadith')
     os.makedirs(root, exist_ok=True)
@@ -124,6 +166,11 @@ def hadith(_unused):
             for num, arabic, grade, grader in rows:
                 g = (grade or '').strip()
                 r = (grader or '').strip()
+                # Longest phrase first, exactly as the app
+                # applies them.
+                for en, ar in terms:
+                    g = g.replace(en, ar)
+                r = graders.get(r, r)
                 if g and r:
                     graded += 1
                 else:

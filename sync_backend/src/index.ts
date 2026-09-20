@@ -33,8 +33,135 @@ async function verifyGoogleToken(idToken: string): Promise<string | null> {
 	}
 }
 
+const REVIEW_CORS: Record<string, string> = {
+	'Access-Control-Allow-Origin': '*',
+	'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+	'Access-Control-Allow-Headers': 'content-type',
+	'Access-Control-Max-Age': '86400',
+};
+
+const MAX_NAME = 60;
+const MAX_ID = 120;
+const MAX_NOTE = 4000;
+const MAX_BATCH = 200;
+
+function reviewJson(body: unknown, status = 200): Response {
+	return new Response(JSON.stringify(body), {
+		status,
+		headers: { 'content-type': 'application/json; charset=utf-8', ...REVIEW_CORS },
+	});
+}
+
+function clean(v: unknown, max: number): string {
+	return typeof v === 'string' ? v.trim().slice(0, max) : '';
+}
+
+async function handleReview(request: Request, url: URL, env: Env): Promise<Response> {
+	if (request.method === 'OPTIONS') {
+		return new Response(null, { status: 204, headers: REVIEW_CORS });
+	}
+
+	await env.DB.prepare(
+		`CREATE TABLE IF NOT EXISTS review_notes (
+			reviewer TEXT NOT NULL,
+			item_id TEXT NOT NULL,
+			note TEXT NOT NULL,
+			done INTEGER NOT NULL DEFAULT 0,
+			excerpt TEXT NOT NULL DEFAULT '',
+			section TEXT NOT NULL DEFAULT '',
+			updated_at INTEGER NOT NULL,
+			PRIMARY KEY (reviewer, item_id)
+		)`
+	).run();
+
+	// POST /review - one reviewer's notes, upserted by (reviewer, item).
+	if (request.method === 'POST') {
+		let body: any;
+		try {
+			body = await request.json();
+		} catch {
+			return reviewJson({ error: 'bad json' }, 400);
+		}
+		const reviewer = clean(body?.reviewer, MAX_NAME);
+		if (!reviewer) return reviewJson({ error: 'reviewer required' }, 400);
+		const notes = Array.isArray(body?.notes) ? body.notes.slice(0, MAX_BATCH) : [];
+		if (!notes.length) return reviewJson({ saved: 0 });
+
+		const now = Date.now();
+		const statements: D1PreparedStatement[] = [];
+		for (const n of notes) {
+			const itemId = clean(n?.id, MAX_ID);
+			if (!itemId) continue;
+			const note = clean(n?.note, MAX_NOTE);
+			const done = n?.done ? 1 : 0;
+			// A row with neither a note nor a tick is the reviewer undoing
+			// what he wrote; it is deleted rather than stored empty.
+			if (!note && !done) {
+				statements.push(
+					env.DB.prepare('DELETE FROM review_notes WHERE reviewer = ? AND item_id = ?')
+						.bind(reviewer, itemId)
+				);
+				continue;
+			}
+			statements.push(
+				env.DB.prepare(
+					`INSERT INTO review_notes (reviewer, item_id, note, done, excerpt, section, updated_at)
+					 VALUES (?, ?, ?, ?, ?, ?, ?)
+					 ON CONFLICT(reviewer, item_id) DO UPDATE SET
+					 note = excluded.note, done = excluded.done,
+					 excerpt = excluded.excerpt, section = excluded.section,
+					 updated_at = excluded.updated_at`
+				).bind(reviewer, itemId, note, done, clean(n?.excerpt, 300), clean(n?.section, 200), now)
+			);
+		}
+		if (statements.length) await env.DB.batch(statements);
+		return reviewJson({ saved: statements.length, at: now });
+	}
+
+	if (request.method !== 'GET') return reviewJson({ error: 'method' }, 405);
+
+	// GET /review/reviewers - who has reviewed, and how much.
+	if (url.pathname === '/review/reviewers') {
+		const { results } = await env.DB.prepare(
+			`SELECT reviewer, COUNT(*) AS items,
+			        SUM(CASE WHEN note <> '' THEN 1 ELSE 0 END) AS notes,
+			        SUM(done) AS done, MAX(updated_at) AS last
+			 FROM review_notes GROUP BY reviewer ORDER BY last DESC`
+		).all();
+		return reviewJson({ reviewers: results });
+	}
+
+	// GET /review?reviewer=NAME - everything that reviewer wrote.
+	const reviewer = clean(url.searchParams.get('reviewer'), MAX_NAME);
+	if (!reviewer) return reviewJson({ error: 'reviewer required' }, 400);
+	const { results } = await env.DB.prepare(
+		`SELECT item_id, note, done, excerpt, section, updated_at
+		 FROM review_notes WHERE reviewer = ? ORDER BY updated_at DESC`
+	).bind(reviewer).all();
+	return reviewJson({ reviewer, notes: results });
+}
+
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+		const url0 = new URL(request.url);
+
+		// ── The content-review site ─────────────────────────────────────
+		// https://tito423.github.io/rafeeq-review/ is where a scholar reads
+		// every religious text the app ships and writes his notes on it.
+		// These routes are deliberately OUTSIDE the Google check below: a
+		// reviewer types his name and starts; asking him to hold a Google
+		// account before he can correct a hadith grading is a wall in front
+		// of the one thing we want him to do.
+		//
+		// The trade is that this is an open write endpoint, so it is fenced
+		// rather than trusted: fixed short columns, a per-request size cap,
+		// and a reviewer name that is stored as given but bounded. It holds
+		// review notes and nothing else - no reader's data is reachable
+		// from here.
+		if (url0.pathname.startsWith('/review')) {
+			return handleReview(request, url0, env);
+		}
+
 		const authHeader = request.headers.get('Authorization');
 		if (!authHeader || !authHeader.startsWith('Bearer ')) {
 			return new Response('Unauthorized', { status: 401 });

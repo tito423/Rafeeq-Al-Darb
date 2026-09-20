@@ -2,7 +2,7 @@ name: rafeeq_app
 description: "Rafeeq Al-Darb â€” Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
 publish_to: 'none'
 
-version: 3.43.0+45
+version: 3.44.0+46
 
 environment:
   sdk: ^3.10.7
@@ -95,6 +95,9 @@ dependencies:
   onnxruntime: 1.4.1
 
 dev_dependencies:
+  # Named so test/hadith_grade_arabic_test.dart may open the bundled
+  # hadith.db directly and put every distinct ruling through the app.
+  sqlite3: any
   integration_test:
     sdk: flutter
   flutter_test:
