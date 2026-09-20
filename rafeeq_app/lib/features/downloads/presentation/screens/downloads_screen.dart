@@ -641,13 +641,22 @@ class _ArtifactListState extends State<_ArtifactList> {
   Future<void> _load() async {
     final all = await DownloadManager.instance.registeredArtifacts();
     final wanted = {for (final c in widget.categories) ...c.managerCategories};
-    final items = all.where((a) => wanted.contains(a['category'])).toList();
+    final candidates =
+        all.where((a) => wanted.contains(a['category'])).toList();
     final sizes = <String, int>{};
-    for (final a in items) {
+    for (final a in candidates) {
       sizes[a['id'] as String] = await DownloadManager.instance.artifactSize(
         a['id'] as String,
       );
     }
+    // A registry row whose file is not on the disk any more is not a
+    // «عنصر منزَّل» - it is a leftover. «قاعدة بيانات الحديث · ٠ B» sat
+    // under that heading in the owner's screenshot with nothing behind it,
+    // which is «فيه حاجات كتير في التنزيلات لما بضغط عليها مش عارف بيحصل
+    // ايه» at its plainest: a row that names something you do not have.
+    final items = candidates
+        .where((a) => (sizes[a['id'] as String] ?? 0) > 0)
+        .toList();
     if (mounted) {
       setState(() {
         _items = items;
