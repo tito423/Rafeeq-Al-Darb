@@ -14,6 +14,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/utils/quran_search_match.dart';
 import '../../data/topic_tree.dart';
+import '../../../downloads/data/reciters_provider.dart';
 
 /// Thematic + keyword Quran search. Returns the tapped ayah's page number via
 /// `Navigator.pop`, so the Quran screen can jump straight there.
@@ -320,13 +321,16 @@ class _HighlightedAyahText extends StatelessWidget {
   }
 }
 
-class _TopicsTab extends StatefulWidget {
+/// A Consumer widget since 3.46.0: «تشغيل الكل» needs
+/// `selectedReciterProvider`, and reading the reader's own reciter is not
+/// something a screen should have to be handed.
+class _TopicsTab extends ConsumerStatefulWidget {
   final QuranRepository repo;
   final ValueChanged<Ayah> onOpen;
   const _TopicsTab({required this.repo, required this.onOpen});
 
   @override
-  State<_TopicsTab> createState() => _TopicsTabState();
+  ConsumerState<_TopicsTab> createState() => _TopicsTabState();
 }
 
 class _TopicResult {
@@ -337,7 +341,7 @@ class _TopicResult {
   const _TopicResult(this.curated, this.all);
 }
 
-class _TopicsTabState extends State<_TopicsTab> {
+class _TopicsTabState extends ConsumerState<_TopicsTab> {
   Topic? _openTopic;
   Future<_TopicResult>? _future;
 
@@ -389,6 +393,11 @@ class _TopicsTabState extends State<_TopicsTab> {
     await AyahAudioService.instance.playQueue(
       [...result.curated, ...result.all],
       widget.repo,
+      // The reader's own reciter. This call took the service's default too,
+      // so «تشغيل الكل» on a search result played al-Minshawi whoever was
+      // chosen - the same bug as the memorisation loop, found by the
+      // compiler the moment `edition` became required.
+      edition: ref.read(selectedReciterProvider),
       titleFor: (a, i) => localizeDigits('$label • ${a.surahId}:${a.ayahNumber}', uiLanguageCode),
     );
     if (mounted) setState(() => _playingAll = false);

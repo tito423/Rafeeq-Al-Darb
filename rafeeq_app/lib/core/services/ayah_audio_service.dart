@@ -168,10 +168,14 @@ class AyahAudioService {
   /// Plays [ayahs] one after another, waiting for each to finish before
   /// starting the next. Used for both the memorization repeat-loop (the same
   /// ayah repeated N times) and a topic's audio playlist.
+  /// [edition] is REQUIRED on purpose. It used to default to
+  /// [defaultEdition], and the memorisation loop took that default while the
+  /// rest of the app passed `selectedReciterProvider` - so every repeat came
+  /// out in al-Minshawi's voice whoever the reader had chosen.
   Future<void> playQueue(
     List<Ayah> ayahs,
     QuranRepository repo, {
-    String edition = defaultEdition,
+    required String edition,
     Duration gap = Duration.zero,
     String Function(Ayah ayah, int index)? titleFor,
     void Function(int index)? onIndex,
@@ -201,7 +205,7 @@ class AyahAudioService {
     QuranRepository repo, {
     required int times,
     required Duration gap,
-    String edition = defaultEdition,
+    required String edition,
     String? title,
   }) {
     return playQueue(

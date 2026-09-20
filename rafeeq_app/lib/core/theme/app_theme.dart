@@ -219,6 +219,10 @@ class AppTheme {
       snackBarTheme: SnackBarThemeData(
         backgroundColor: card,
         contentTextStyle: AppTypography.uiMedium(14, color: onSurface),
+        // Material's default action colour is meant for its own dark
+        // SnackBar; on this pale `card` background it was all but
+        // invisible, so «إيقاف» on the repeat banner read as no button.
+        actionTextColor: primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm + 2),

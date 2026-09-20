@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../quran_audio/data/quran_audio_library.dart';
@@ -9,6 +11,9 @@ import '../../library/data/library_api_service.dart';
 import '../../library/data/tts/open_voice.dart';
 import '../../../core/db/db_helper.dart';
 import '../../../core/db/sciences_repository.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import '../../../core/db/hadith_repository.dart';
 
 /// P2‑5 — a read-only aggregator over every place the app stores downloaded
 /// content, so the Downloads hub can show one storage picture and free space
@@ -106,6 +111,19 @@ class StorageSummary {
       );
 }
 
+/// Bytes of a database sitting in the app's `databases/` directory.
+///
+/// Two of the buckets hold content that never passed through
+/// `DownloadManager` - `hadith.db` is unpacked from a bundled zip, and
+/// `quran_sciences.db` may have been adopted from the copy an older build
+/// left there - so the artifact registry knows nothing about either, and a
+/// row that counts only artifacts reports zero over a hundred megabytes.
+Future<int> downloadedDbBytes(String fileName) async {
+  final support = await getApplicationSupportDirectory();
+  final file = File(p.join(support.path, 'databases', fileName));
+  return file.existsSync() ? file.lengthSync() : 0;
+}
+
 /// Recomputed on demand (invalidate it after a download finishes or a
 /// "free space" action).
 final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
@@ -156,6 +174,20 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       // with a book on the device.
       final (bb, bn) = await LibraryApiService.instance.storageUsage();
       out.add(CategoryUsage(cat, bytes + bb, ids.length + bn));
+    } else if (cat == DownloadCategory.hadith) {
+      // NOT a DownloadManager artifact when it came from the bundled
+      // `hadith.zip`, which is the usual case since 3.42.0 - so this row
+      // read «لا يوجد محتوى» with 109,731,840 bytes on the disk behind it,
+      // and «تفريغ» had nothing to free. That is the owner's «قاعدة بيانات
+      // الحديث في التنزيلات مش شغالة». Measure the file itself.
+      final hb = await downloadedDbBytes('hadith.db');
+      out.add(CategoryUsage(cat, hb, hb > 0 ? 1 : 0));
+    } else if (cat == DownloadCategory.quranSciences) {
+      // Same hole, and it would have been the same bug: an install that
+      // ADOPTED the old bundled copy (`_adoptBundledCopy`) never downloaded
+      // anything either.
+      final sb = await downloadedDbBytes('quran_sciences.db');
+      out.add(CategoryUsage(cat, sb, sb > 0 ? 1 : 0));
     } else if (cat == DownloadCategory.voices) {
       final vb = await OpenVoice.usageBytes();
       out.add(CategoryUsage(cat, vb, vb > 0 ? 1 : 0));
@@ -184,7 +216,11 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
     case DownloadCategory.books:
       await LibraryApiService.instance.deleteAllBooks();
     case DownloadCategory.hadith:
-      break;
+      // The nine books re-install themselves from the bundled `hadith.zip`
+      // the next time the tab is opened, so this frees the 109 MB now
+      // without taking the library away for good.
+      await DbHelper.instance.deleteDownloaded('hadith.db');
+      ref.invalidate(hadithRepositoryProvider);
     case DownloadCategory.quranSciences:
       // Nothing outside DownloadManager: the pack IS the artifact, and
       // the loop below removes it. The ayah card reopens its download

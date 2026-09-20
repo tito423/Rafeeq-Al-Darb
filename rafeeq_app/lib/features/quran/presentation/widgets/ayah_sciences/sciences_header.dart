@@ -22,6 +22,7 @@ import '../../../../../core/db/quran_repository.dart';
 import '../../../../../core/db/sciences_repository.dart';
 import '../../../../../core/services/ayah_audio_service.dart';
 import '../../../../downloads/data/reciters_provider.dart';
+import '../../../../../app/navigation.dart' show rootScaffoldMessengerKey;
 import '../../../../../core/theme/app_colors.dart';
 import '../../../data/ayah_notes_store.dart';
 import '../../../data/translation_lang_provider.dart';
@@ -77,26 +78,42 @@ class SciencesHeader extends ConsumerWidget {
         );
         if (config == null) return;
         final (times, gapSeconds) = config;
-        unawaited(AyahAudioService.instance.playRepeated(
+        // THE RECITER. `playRepeated` defaults to `ar.minshawimujawwad`, and
+        // this call used to take the default - so «لما بشغل تكرار فالمنشاوي
+        // بيشتغل لوحده حتى لو اخترت قارئ غيره». The parameter is required
+        // now, so no caller can quietly fall back to one voice again.
+        final repeat = AyahAudioService.instance.playRepeated(
           ayah,
           quranRepo,
           times: times,
           gap: Duration(seconds: gapSeconds),
+          edition: ref.read(selectedReciterProvider),
           title: _reference,
-        ));
-        messenger.showSnackBar(
+        );
+        // THE BANNER LASTS EXACTLY AS LONG AS THE AUDIO.
+        //
+        // It used to be a 4-second SnackBar, and the owner photographed it
+        // still sitting there on the Downloads screen, the mushaf and the
+        // ayah page - «في كلمة معلّقة ما بين الشاشات مكتوب فيها جار تكرار
+        // الآية». A timed toast is the wrong thing for sound that is still
+        // playing anyway: what the reader needs is «إيقاف» in front of him
+        // until it stops. So it is closed by the audio finishing, not by a
+        // clock, and `stopQueue` makes `repeat` complete at once.
+        final banner = rootScaffoldMessengerKey.currentState?.showSnackBar(
           SnackBar(
             content: Text('quran.repeat_playing'.tr()),
-            duration: const Duration(seconds: 4),
+            duration: const Duration(hours: 1),
             action: SnackBarAction(
               label: 'quran.repeat_stop'.tr(),
-              onPressed: () {
-                AyahAudioService.instance.stopQueue();
-                messenger.hideCurrentSnackBar();
-              },
+              // Explicit, because the default action colour on this theme's
+              // pale SnackBar was all but invisible - the reader could not
+              // see that there WAS a stop button.
+              textColor: AppColors.primary,
+              onPressed: AyahAudioService.instance.stopQueue,
             ),
           ),
         );
+        unawaited(repeat.whenComplete(() => banner?.close()));
       case 'note':
         await showDialog<void>(
           context: context,
