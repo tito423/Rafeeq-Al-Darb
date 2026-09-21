@@ -463,12 +463,19 @@ class CollapsibleSection extends StatefulWidget {
   /// A tour anchor for the whole section (header included).
   final String? tourAnchor;
 
+  /// Starts expanded. Used where a section is the WHOLE reason the screen
+  /// was opened — «خلي صوت القارئ في التنزيلات يفتح أوتوماتيك الكارت بتاعه
+  /// في الإعدادات» (2026-09-21): arriving on a card you then have to tap
+  /// open is one tap that carries no decision.
+  final bool initiallyOpen;
+
   const CollapsibleSection({
     super.key,
     required this.title,
     required this.children,
     this.icon,
     this.tourAnchor,
+    this.initiallyOpen = false,
   });
 
   @override
@@ -477,7 +484,7 @@ class CollapsibleSection extends StatefulWidget {
 
 class _CollapsibleSectionState extends State<CollapsibleSection>
     with SingleTickerProviderStateMixin {
-  bool _open = false;
+  late bool _open = widget.initiallyOpen;
 
   @override
   Widget build(BuildContext context) {

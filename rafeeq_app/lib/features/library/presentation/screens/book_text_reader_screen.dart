@@ -4,7 +4,6 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import '../widgets/book_listen_action.dart';
 import '../../../../core/utils/digits.dart';
-import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +16,7 @@ import '../../data/book_catalog.dart';
 import '../../data/book_text.dart';
 import '../../../../core/utils/external_link.dart';
 import '../widgets/book_provenance_strip.dart';
+import '../widgets/book_page_rail.dart';
 
 /// P3‑29 visual redesign: a small closed set of reading-ink choices offered
 /// by the "لون الخط" toolbar action. Each entry carries both a light- and a
@@ -315,9 +315,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
     if (doc == null) return;
     final byPrinted = doc.meta.printReliable;
     final ctrl = TextEditingController(
-      text: byPrinted
-          ? '${doc.pages[_pageIndex].printedPage}'
-          : '${_pageIndex + 1}',
+      text: '${doc.printedPageAt(_pageIndex) ?? _pageIndex + 1}',
     );
     final n = await showDialog<int>(
       context: context,
@@ -598,13 +596,13 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                       fontSize: 13),
                 ),
               ),
-              if (doc.meta.printReliable)
+              if (doc.printedPageAt(_pageIndex) != null)
                 Text(
                   // localizeDigits, like the ratio on the other branch of
                   // this very screen: «صفحة 8» printed a Latin 8 under an
                   // Arabic-Indic slider that read «٢٣٧ … ٢».
                   '${'library.text_page'.tr()} '
-                      '${localizeDigits('${page.printedPage}', uiLanguageCode)}',
+                      '${localizeDigits('${doc.printedPageAt(_pageIndex)}', uiLanguageCode)}',
                   style: TextStyle(color: ink.withValues(alpha: 0.75), fontSize: 12),
                 ),
             ],
@@ -680,91 +678,21 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
           onTap: _openProvenance,
         ),
 
-        // ── page navigation: fast-jump slider (P3‑29/P3‑34) ──
-        // The two chevron buttons the owner flagged as still there are gone
-        // — turning pages now happens by swipe (`_onSwipe` above) or by
-        // dragging this slider for long-range scrubbing across the whole
-        // book, same "شريط تمرير سريع" (fast scroll bar) the feedback asked
-        // for. Dragging updates the visible page live; the position is only
-        // persisted once the drag ends, so a long scrub doesn't spam prefs.
-        Material(
-          color: paper,
-          elevation: 8,
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 44,
-                        child: Text(
-                          localizeDigits('${_pageIndex + 1}', uiLanguageCode),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 11, color: ink.withValues(alpha: 0.65)),
-                        ),
-                      ),
-                      Expanded(
-                        child: SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            trackHeight: 2.5,
-                            thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 7),
-                            overlayShape: const RoundSliderOverlayShape(
-                                overlayRadius: 16),
-                          ),
-                          child: Slider(
-                            min: 0,
-                            max: (doc.pages.length - 1).toDouble(),
-                            value: _pageIndex.toDouble(),
-                            divisions: doc.pages.length > 1
-                                ? doc.pages.length - 1
-                                : null,
-                            onChanged: (v) =>
-                                setState(() => _pageIndex = v.round()),
-                            onChangeEnd: (v) {
-                              if (_scrollCtrl.hasClients) {
-                                _scrollCtrl.jumpTo(0);
-                              }
-                              _persist();
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 44,
-                        child: Text(
-                          localizeDigits('${doc.pages.length}', uiLanguageCode),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 11, color: ink.withValues(alpha: 0.65)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // typed goto, kept as a precise alternative to the slider
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: TextButton(
-                    onPressed: _openGotoDialog,
-                    style: TextButton.styleFrom(foregroundColor: ink),
-                    child: Text(
-                      doc.meta.printReliable
-                          ? '${'library.text_page'.tr()} '
-                              '${localizeDigits('${page.printedPage}', uiLanguageCode)}'
-                          : localizeDigits(ratio(_pageIndex + 1, doc.pages.length), uiLanguageCode),
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        // ── page navigation: fast-jump slider + typed goto ──
+        // Its own widget since 2026-09-21, when the printed-page fix to
+        // its two end labels would have pushed this file past the ceiling
+        // `code_layout_test` holds it to. See `BookPageRail`.
+        BookPageRail(
+          doc: doc,
+          pageIndex: _pageIndex,
+          paper: paper,
+          ink: ink,
+          onChanged: (i) => setState(() => _pageIndex = i),
+          onChangeEnd: (_) {
+            if (_scrollCtrl.hasClients) _scrollCtrl.jumpTo(0);
+            _persist();
+          },
+          onGoto: _openGotoDialog,
         ),
       ],
     );
@@ -949,9 +877,9 @@ class _IndexDrawerState extends State<_IndexDrawer> {
                           ActionChip(
                             visualDensity: VisualDensity.compact,
                             label: Text(
-                              widget.doc.meta.printReliable
+                              widget.doc.printedPageAt(idx) != null
                                   ? '${'library.text_page'.tr()} '
-                                      '${localizeDigits('${widget.doc.pages[idx].printedPage}', uiLanguageCode)}'
+                                      '${localizeDigits('${widget.doc.printedPageAt(idx)}', uiLanguageCode)}'
                                   : localizeDigits('${idx + 1}', uiLanguageCode),
                               style: const TextStyle(fontSize: 11),
                             ),
@@ -988,10 +916,18 @@ class _IndexDrawerState extends State<_IndexDrawer> {
                                   : FontWeight.w400,
                             ),
                           ),
+                          // The page the entry OPENS, not the number written
+                          // beside it in the file. Those two disagreed in four
+                          // bundled books - 173 of `nawasikh_al_quran`'s 174
+                          // entries - so the فهرس promised one page and landed
+                          // on another. `BookText._resolveSectionIndex` now
+                          // re-derives the index from the printed number, and
+                          // this reads the number back off the destination, so
+                          // the two cannot drift apart again.
                           trailing: Text(
-                            widget.doc.meta.printReliable
+                            widget.doc.printedPageAt(s.pageIndex) != null
                                 ? '${'library.text_page'.tr()} '
-                                    '${localizeDigits('${s.page}', uiLanguageCode)}'
+                                    '${localizeDigits('${widget.doc.printedPageAt(s.pageIndex)}', uiLanguageCode)}'
                                 : localizeDigits('${s.pageIndex + 1}', uiLanguageCode),
                             style: TextStyle(
                                 fontSize: 11, color: scheme.onSurfaceVariant),

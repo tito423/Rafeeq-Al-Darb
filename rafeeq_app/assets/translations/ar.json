@@ -268,6 +268,14 @@
       "many": "{} صفحة",
       "other": "{} صفحة"
     },
+    "sources_count": {
+      "zero": "لا مصادر",
+      "one": "مصدر واحد",
+      "two": "مصدران",
+      "few": "{} مصادر",
+      "many": "{} مصدرًا",
+      "other": "{} مصدر"
+    },
     "ayahs_count": {
       "zero": "لا آيات",
       "one": "آية واحدة",
@@ -784,7 +792,6 @@
     "tab_overview": "نظرة عامة",
     "cat_mushafs": "المصاحف",
     "cat_recitations": "التلاوات",
-    "cat_hadith": "الحديث",
     "cat_books": "الكتب",
     "cat_voices": "صوت قارئ الكتب",
     "cat_quran_sciences": "علوم القرآن",

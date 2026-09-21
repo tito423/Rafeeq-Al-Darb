@@ -268,6 +268,14 @@
       "many": "{} pages",
       "other": "{} pages"
     },
+    "sources_count": {
+      "zero": "{} sources",
+      "one": "{} source",
+      "two": "{} sources",
+      "few": "{} sources",
+      "many": "{} sources",
+      "other": "{} sources"
+    },
     "ayahs_count": {
       "zero": "{} versets",
       "one": "{} verset",
@@ -784,7 +792,6 @@
     "tab_overview": "Aperçu",
     "cat_mushafs": "Mushafs",
     "cat_recitations": "Récitations",
-    "cat_hadith": "Hadith",
     "cat_books": "Livres",
     "cat_voices": "Voix du lecteur de livres",
     "cat_quran_sciences": "Sciences du Coran",

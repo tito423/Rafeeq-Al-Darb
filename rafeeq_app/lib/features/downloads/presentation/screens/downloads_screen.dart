@@ -25,6 +25,7 @@ import '../../../quran_audio/presentation/ayah_download_screen.dart';
 import '../widgets/library_route.dart';
 import '../widgets/mushaf_tiles.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
+import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quran/presentation/screens/sciences_pack_screen.dart';
 
 String _fmtSize(int bytes) {
@@ -104,7 +105,7 @@ class _OverviewTab extends ConsumerWidget {
 
   /// Each overview row jumps to where that category is actually managed.
   /// Mushafs/recitations have their own tab right here on this screen — a
-  /// local `TabController` switch. Hadith/books are managed on a completely
+  /// local `TabController` switch. Books are managed on a completely
   /// different screen (`LibraryScreen`, its own bottom-nav tab), so pop back
   /// out to `AppShell` and request both the bottom-nav tab and
   /// `LibraryScreen`'s own inner tab.
@@ -129,24 +130,27 @@ class _OverviewTab extends ConsumerWidget {
         // «التنزيلات صوت القارئ بيوديني للمكتبة خليه يوديني على الاعداد
         // بتاعه في الاعدادات» - the pack is a SETTING of the book reader,
         // not a shelf, so the row goes to where it is turned on and off.
+        //
+        // And it lands ON that setting. This pushed the WHOLE `SettingsBody`
+        // - every section of it, each one collapsed - so the row arrived at
+        // a screen titled «صوت قارئ الكتب» where the voice card was one
+        // closed card among a dozen others and still had to be found and
+        // tapped. «خلي صوت القارئ في التنزيلات يفتح أوتوماتيك الكارت بتاعه
+        // في الإعدادات» (2026-09-21): it is that card alone, already open.
         return () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => Scaffold(
                   appBar:
                       AppBar(title: Text('library.voice_section_title'.tr())),
-                  body: const SingleChildScrollView(
-                    padding: EdgeInsets.all(14),
-                    child: SettingsBody(),
+                  body: SingleChildScrollView(
+                    padding: const EdgeInsets.all(14),
+                    child: CollapsibleSection(
+                      title: 'library.voice_section_title'.tr(),
+                      icon: Icons.record_voice_over_rounded,
+                      initiallyOpen: true,
+                      children: const [BookVoiceSection()],
+                    ),
                   ),
-                ),
-              ),
-            );
-      case DownloadCategory.hadith:
-        return () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => LibraryRoute(
-                  title: 'downloads.cat_hadith'.tr(),
-                  initialTab: 1,
                 ),
               ),
             );
@@ -223,10 +227,7 @@ class _OverviewTab extends ConsumerWidget {
             const SizedBox(height: 16),
             _ArtifactList(
               ref: ref,
-              categories: const [
-                DownloadCategory.hadith,
-                DownloadCategory.books,
-              ],
+              categories: const [DownloadCategory.books],
             ),
             const SizedBox(height: 16),
             const MushafTiles(),

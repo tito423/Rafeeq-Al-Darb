@@ -13,7 +13,6 @@ import '../../../core/db/db_helper.dart';
 import '../../../core/db/sciences_repository.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import '../../../core/db/hadith_repository.dart';
 
 /// P2‑5 — a read-only aggregator over every place the app stores downloaded
 /// content, so the Downloads hub can show one storage picture and free space
@@ -32,11 +31,20 @@ import '../../../core/db/hadith_repository.dart';
 /// `voices` is the book reader's open voice (~252 MB, `OpenVoice`): the
 /// largest single download in the app, so it has to be visible here and
 /// freeable, not only installable from the reader.
+/// There is deliberately NO `hadith` bucket. «شيل الحديث خالص من التنزيلات»
+/// (2026-09-21): the nine collections ship INSIDE the APK as
+/// `assets/data/hadith.zip` and [installBundledHadith] unpacks them on first
+/// open, so nothing about them is a download. The row could only ever say
+/// «لا يوجد محتوى منزّل» (before the first open) or offer a «تفريغ» that
+/// frees 109 MB the next open puts straight back from the asset bundle.
+/// The one path that does hit the network — `hadith_tab.dart`'s gate, kept
+/// for the case where unpacking the asset fails — enqueues under `hadith`,
+/// which [DownloadCategory.books] claims, so those bytes stay countable and
+/// freeable exactly as `downloads_categories_test.dart` requires.
 enum DownloadCategory {
   mushafs,
   recitations,
   ayahRecitations,
-  hadith,
   books,
   voices,
   /// علوم القرآن - the tafsir/translation/i'rab/word-meanings pack that
@@ -49,7 +57,6 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.mushafs => 'downloads.cat_mushafs',
         DownloadCategory.recitations => 'downloads.cat_recitations',
         DownloadCategory.ayahRecitations => 'downloads.cat_ayah_recitations',
-        DownloadCategory.hadith => 'downloads.cat_hadith',
         DownloadCategory.books => 'downloads.cat_books',
         DownloadCategory.voices => 'downloads.cat_voices',
         DownloadCategory.quranSciences => 'downloads.cat_quran_sciences',
@@ -72,8 +79,8 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.mushafs => const [],
         DownloadCategory.recitations => const ['ruqyah'],
         DownloadCategory.ayahRecitations => const [],
-        DownloadCategory.hadith => const ['hadith'],
-        DownloadCategory.books => const ['books', 'books_text'],
+        // `hadith` rides here: see the note on the enum.
+        DownloadCategory.books => const ['books', 'books_text', 'hadith'],
         DownloadCategory.voices => const ['tts_voice'],
         DownloadCategory.quranSciences => const ['sciences'],
       };
@@ -113,11 +120,11 @@ class StorageSummary {
 
 /// Bytes of a database sitting in the app's `databases/` directory.
 ///
-/// Two of the buckets hold content that never passed through
-/// `DownloadManager` - `hadith.db` is unpacked from a bundled zip, and
-/// `quran_sciences.db` may have been adopted from the copy an older build
-/// left there - so the artifact registry knows nothing about either, and a
-/// row that counts only artifacts reports zero over a hundred megabytes.
+/// `quran_sciences.db` never has to have passed through `DownloadManager`:
+/// an install that ADOPTED the copy an older build left there
+/// (`_adoptBundledCopy`) downloaded nothing, so the artifact registry knows
+/// nothing about it, and a row that counts only artifacts reports zero over
+/// a hundred megabytes.
 Future<int> downloadedDbBytes(String fileName) async {
   final support = await getApplicationSupportDirectory();
   final file = File(p.join(support.path, 'databases', fileName));
@@ -174,14 +181,6 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       // with a book on the device.
       final (bb, bn) = await LibraryApiService.instance.storageUsage();
       out.add(CategoryUsage(cat, bytes + bb, ids.length + bn));
-    } else if (cat == DownloadCategory.hadith) {
-      // NOT a DownloadManager artifact when it came from the bundled
-      // `hadith.zip`, which is the usual case since 3.42.0 - so this row
-      // read «لا يوجد محتوى» with 109,731,840 bytes on the disk behind it,
-      // and «تفريغ» had nothing to free. That is the owner's «قاعدة بيانات
-      // الحديث في التنزيلات مش شغالة». Measure the file itself.
-      final hb = await downloadedDbBytes('hadith.db');
-      out.add(CategoryUsage(cat, hb, hb > 0 ? 1 : 0));
     } else if (cat == DownloadCategory.quranSciences) {
       // Same hole, and it would have been the same bug: an install that
       // ADOPTED the old bundled copy (`_adoptBundledCopy`) never downloaded
@@ -215,12 +214,6 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
       await OpenVoice.uninstall();
     case DownloadCategory.books:
       await LibraryApiService.instance.deleteAllBooks();
-    case DownloadCategory.hadith:
-      // The nine books re-install themselves from the bundled `hadith.zip`
-      // the next time the tab is opened, so this frees the 109 MB now
-      // without taking the library away for good.
-      await DbHelper.instance.deleteDownloaded('hadith.db');
-      ref.invalidate(hadithRepositoryProvider);
     case DownloadCategory.quranSciences:
       // Nothing outside DownloadManager: the pack IS the artifact, and
       // the loop below removes it. The ayah card reopens its download

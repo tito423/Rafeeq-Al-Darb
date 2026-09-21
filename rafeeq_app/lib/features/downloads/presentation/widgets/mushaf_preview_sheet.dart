@@ -512,10 +512,26 @@ class _PreviewPage extends StatelessWidget {
     final ink = isDark ? AppColors.paperDark : AppColors.ink;
 
     if (edition.isRaster) {
+      // «صورة المصحف اللي بتبين الطبعة بتبوظ في الليلي» (2026-09-21).
+      //
+      // A scanned page is NOT an opaque white sheet: every one of
+      // `madinah_qc`'s 604 PNGs is a palette image with an alpha channel
+      // whose ground is fully transparent (page 001 reads
+      // `mode=P, size=1260x2038, alpha extrema (0, 255)`, and both the
+      // corner and the centre pixel come back `(255,255,255,0)`). The ink
+      // is dark and the app supplies the paper behind it. Drawing that over
+      // `nightSurface` in the dark theme left dark ink on navy — the two
+      // preview pages the owner photographed, unreadable, beside a cover
+      // thumbnail that was fine because it is a flat opaque JPEG.
+      //
+      // So a printing's own page keeps its paper in every theme. This is
+      // the preview of a PRINTED book; paper is what it looks like. Only a
+      // printing that really is set on black pages (`darkPage`) gets a dark
+      // ground, which is what `mushafGround` does in the reader.
       return Container(
         width: width,
         height: height,
-        color: bgColor,
+        color: edition.darkPage ? const Color(0xFF000000) : AppColors.paper,
         child: CachedNetworkImage(
           imageUrl: edition.imagePageUrl(page),
           fit: BoxFit.contain,

@@ -268,6 +268,14 @@
       "many": "{} صفحات",
       "other": "{} صفحات"
     },
+    "sources_count": {
+      "zero": "{} مآخذ",
+      "one": "{} ماخذ",
+      "two": "{} مآخذ",
+      "few": "{} مآخذ",
+      "many": "{} مآخذ",
+      "other": "{} مآخذ"
+    },
     "ayahs_count": {
       "zero": "{} آیات",
       "one": "{} آیت",
@@ -784,7 +792,6 @@
     "tab_overview": "خلاصہ",
     "cat_mushafs": "مصاحف",
     "cat_recitations": "تلاوتیں",
-    "cat_hadith": "حدیث",
     "cat_books": "کتب",
     "cat_voices": "کتاب پڑھنے والی آواز",
     "cat_quran_sciences": "علومِ قرآن",

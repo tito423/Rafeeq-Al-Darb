@@ -74,16 +74,26 @@ void main() {
             'on this pale one «إيقاف» was invisible');
   });
 
-  test('the storage hub measures the two databases it cannot see as artifacts',
+  /// This asserted the same for `hadith.db` until 2026-09-21. It no longer
+  /// can, and that is the point: «شيل الحديث خالص من التنزيلات». The
+  /// nine collections ship inside the APK and are unpacked from the asset
+  /// bundle on first open, so a row offering to free 109 MB that the next
+  /// open puts straight back was never a download and is gone.
+  /// `downloads_categories_test.dart` holds the removal and holds the
+  /// `hadith` manager category to its new bucket.
+  test('the storage hub measures the database it cannot see as an artifact',
       () {
     final controller =
         read('lib/features/downloads/data/downloads_controller.dart');
-    expect(controller, contains("downloadedDbBytes('hadith.db')"));
     expect(controller, contains("downloadedDbBytes('quran_sciences.db')"));
+    expect(controller, isNot(contains("downloadedDbBytes('hadith.db')")),
+        reason: 'the hadith bucket was removed; measuring the bundled '
+            'database again would put its bytes back in the total with no '
+            'row to explain them');
     final free =
         controller.substring(controller.indexOf('Future<void> freeCategory'));
-    expect(free, contains("deleteDownloaded('hadith.db')"),
-        reason: '«تفريغ» on the hadith row has to remove the real file');
     expect(free, contains("deleteDownloaded('quran_sciences.db')"));
+    expect(free, isNot(contains("deleteDownloaded('hadith.db')")),
+        reason: 'nothing in Downloads may delete the bundled hadith library');
   });
 }

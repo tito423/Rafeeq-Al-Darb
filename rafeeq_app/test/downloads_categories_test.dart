@@ -67,9 +67,24 @@ void main() {
     expect(
       StorageSummary(const [
         CategoryUsage(DownloadCategory.mushafs, 348, 1),
-        CategoryUsage(DownloadCategory.hadith, 4, 2),
+        CategoryUsage(DownloadCategory.books, 4, 2),
       ]).totalBytes,
       352,
     );
+  });
+
+  /// «شيل الحديث خالص من التنزيلات» (2026-09-21).
+  ///
+  /// The nine collections are bundled (`assets/data/hadith.zip`), so the row
+  /// could only ever offer a «تفريغ» that the next open undoes. Removing the
+  /// bucket without re-homing its manager category would have orphaned the
+  /// one path that does hit the network - which is the very hole the first
+  /// test in this file exists to catch - so `hadith` moved onto `books`.
+  test('no bucket is labelled as hadith, and `hadith` is still claimed', () {
+    expect(
+      DownloadCategory.values.map((c) => c.name),
+      isNot(contains('hadith')),
+    );
+    expect(DownloadCategory.books.managerCategories, contains('hadith'));
   });
 }

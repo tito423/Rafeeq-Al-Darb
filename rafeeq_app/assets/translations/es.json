@@ -268,6 +268,14 @@
       "many": "{} páginas",
       "other": "{} páginas"
     },
+    "sources_count": {
+      "zero": "{} fuentes",
+      "one": "{} fuente",
+      "two": "{} fuentes",
+      "few": "{} fuentes",
+      "many": "{} fuentes",
+      "other": "{} fuentes"
+    },
     "ayahs_count": {
       "zero": "{} aleyas",
       "one": "{} aleya",
@@ -784,7 +792,6 @@
     "tab_overview": "Resumen",
     "cat_mushafs": "Ejemplares del Corán",
     "cat_recitations": "Recitaciones",
-    "cat_hadith": "Hadiz",
     "cat_books": "Libros",
     "cat_voices": "Voz del lector de libros",
     "cat_quran_sciences": "Ciencias del Corán",
