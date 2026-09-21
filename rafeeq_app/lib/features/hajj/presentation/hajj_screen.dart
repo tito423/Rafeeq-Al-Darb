@@ -155,7 +155,9 @@ class _Header extends StatelessWidget {
                 : const Center(
                     key: ValueKey('umrah'),
                     child: SizedBox(
-                        width: 220, child: TawafCounter(compact: true)),
+                      width: 220,
+                      child: TawafCounter(compact: true),
+                    ),
                   ),
           ),
           const SizedBox(height: 10),
@@ -240,15 +242,21 @@ class _StepCard extends StatelessWidget {
             // the first build on the owner's phone showed «1 2 3» in Arabic.
             localizeDigits('$number', context.locale.languageCode),
             style: const TextStyle(
-                color: Colors.black, fontWeight: FontWeight.w800),
+              color: Colors.black,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
-        title: Text('hajj.step_${step.key}'.tr(),
-            style: const TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(
+          'hajj.step_${step.key}'.tr(),
+          style: const TextStyle(fontWeight: FontWeight.w800),
+        ),
         subtitle: step.dayKey == null
             ? null
-            : Text(step.dayKey!.tr(),
-                style: const TextStyle(color: AppColors.gold, fontSize: 12)),
+            : Text(
+                step.dayKey!.tr(),
+                style: const TextStyle(color: AppColors.gold, fontSize: 12),
+              ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         children: [
           if (_rite(step, track) case final rite?) ...[
@@ -262,9 +270,11 @@ class _StepCard extends StatelessWidget {
             ),
             error: (_, _) => Column(
               children: [
-                Text('hajj.needs_download'.tr(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: scheme.onSurfaceVariant)),
+                Text(
+                  'hajj.needs_download'.tr(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: scheme.onSurfaceVariant),
+                ),
                 TextButton.icon(
                   onPressed: onRetry,
                   icon: const Icon(Icons.refresh_rounded),
@@ -280,23 +290,25 @@ class _StepCard extends StatelessWidget {
   }
 
   static Widget? _rite(HajjStep s, HajjTrack track) => switch (s.rite) {
-        HajjRite.tawaf => const TawafCounter(),
-        HajjRite.sai => const SaiCounter(),
-        HajjRite.jamarat => JamaratCounter(nahr: s.key == 'nahr'),
-        HajjRite.journey => track == HajjTrack.hajj
-            ? JourneyMap(highlight: _placeOf(s.key))
-            : null,
-        HajjRite.none => null,
-      };
+    HajjRite.tawaf => const TawafCounter(),
+    HajjRite.sai => const SaiCounter(),
+    HajjRite.jamarat => JamaratCounter(nahr: s.key == 'nahr'),
+    HajjRite.journey =>
+      track == HajjTrack.hajj ? JourneyMap(highlight: _placeOf(s.key)) : null,
+    HajjRite.umrah => const Column(
+      children: [TawafCounter(), Divider(height: 28), SaiCounter()],
+    ),
+    HajjRite.none => null,
+  };
 
   /// Where on the route a day's step happens.
   static int? _placeOf(String key) => switch (key) {
-        'tarwiyah' => 1,
-        'arafah' => 2,
-        'muzdalifah' => 3,
-        'mawaqit' => 0,
-        _ => null,
-      };
+    'tarwiyah' => 1,
+    'arafah' => 2,
+    'muzdalifah' => 3,
+    'mawaqit' => 0,
+    _ => null,
+  };
 }
 
 /// The step's span of the manual, verbatim, inclusive at both ends.
@@ -336,7 +348,7 @@ class _StepText extends ConsumerWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'p. ${step.fromPage}–${step.toPage}',
+            'p. ${step.pageCitation}',
             textDirection: TextDirection.ltr,
             style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
           ),
@@ -352,41 +364,50 @@ class _StepText extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ListenTextButton(
-          text: () => speakablePassage(
-              paras.map((p) => (text: p.text, kind: p.kind))),
+          text: () =>
+              speakablePassage(paras.map((p) => (text: p.text, kind: p.kind))),
         ),
         for (final para in paras)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: switch (para.kind) {
               'aya' => Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppColors.gold.withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ArabicText(
-                    para.text,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'AmiriQuran', fontSize: 20 * k, height: 2),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.gold.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ArabicText(
+                  para.text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'AmiriQuran',
+                    fontSize: 20 * k,
+                    height: 2,
                   ),
                 ),
-              'head' => ArabicText(para.text,
-                  style: TextStyle(
-                      fontSize: 17 * k,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.gold)),
-              _ => ArabicText(para.text,
-                  style: TextStyle(fontSize: 16 * k, height: 1.9)),
+              ),
+              'head' => ArabicText(
+                para.text,
+                style: TextStyle(
+                  fontSize: 17 * k,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.gold,
+                ),
+              ),
+              _ => ArabicText(
+                para.text,
+                style: TextStyle(fontSize: 16 * k, height: 1.9),
+              ),
             },
           ),
         Text(
-          'p. ${step.fromPage}–${step.toPage}',
+          'p. ${step.pageCitation}',
           textDirection: TextDirection.ltr,
           style: TextStyle(
-              fontSize: 11,
-              color: Theme.of(context).colorScheme.onSurfaceVariant),
+            fontSize: 11,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );

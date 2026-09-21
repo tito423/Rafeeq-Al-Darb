@@ -10,36 +10,52 @@ void main() {
     File('assets/data/builtin_books/$hajjGuideBook.json').readAsBytesSync(),
   );
 
-  test('heading comparison preserves Arabic and distinguishes body text', () {
-    expect(hajjHeadingBare('الباب الرَّابع'), isNotEmpty);
-    expect(hajjHeadingBare('الباب الرَّابع'), 'الباب الرابع');
-    expect(
-      hajjHeadingBare('في الْعُمْرة وَفِيهِ مَسَائِلُ'),
-      'في العمرة وفيه مسائل',
-    );
-    expect(
-      hajjHeadingBare('الأوْلَى: الْعُمْرَةُ فَرْض'),
-      isNot(hajjHeadingBare('الباب الرَّابع')),
-    );
-  });
-
   test(
-    'Umrah omits only its two headings and keeps the real body verbatim',
+    'Umrah resolves every cross-reference to verbatim source paragraphs',
     () {
-      final step = hajjStepsFor(HajjTrack.umrah).first;
-      final original = book.pages
-          .where((p) => p.printedPage >= 378 && p.printedPage <= 387)
-          .expand((p) => p.paras)
-          .where((p) => p.text.trim().isNotEmpty && !isHajjGuideNote(p.text))
-          .toList();
-      final body = hajjStepParas(step, book);
-      expect(body, isNotEmpty);
-      expect(body.first.text, startsWith('الأوْلَى: الْعُمْرَةُ'));
-      expect(body, original.sublist(2));
+      final steps = hajjStepsFor(HajjTrack.umrah);
+      final body = [for (final step in steps) ...hajjStepParas(step, book)];
+      expect(body.length, greaterThan(100));
+      expect(body.first.text, startsWith('الأوْلَى: الْعُمْرَةُ فَرْض'));
+      expect(body.last.text, startsWith('الرَّابِعَةُ: لَوْ جَامَعَ'));
+      expect(body.every((p) => p.text.trim().isNotEmpty), isTrue);
+      expect(body.any((p) => p.text.contains('في آداب الإِحرام')), isTrue);
+      expect(body.any((p) => p.text.contains('في محرمات الإِحرام')), isTrue);
+      expect(body.any((p) => p.text.contains('في كيفية الطواف')), isTrue);
+      expect(body.any((p) => p.text.contains('في السعي')), isTrue);
       expect(
-        book.pages.firstWhere((p) => p.printedPage == 378).paras.first.text,
-        'الباب الرَّابع',
+        body.any((p) => p.text.contains('يدخل وقت طواف الإِفاضة بعد نصف')),
+        isFalse,
+        reason: 'the modern hamesh must not be attributed to al-Nawawi',
       );
+      expect(
+        body.any((p) => p.text.contains('الدعاء عند الركن العراقي')),
+        isFalse,
+      );
+
+      final source = <BookPara>[];
+      for (final step in steps) {
+        for (final range in step.textRanges) {
+          for (final page in book.pages) {
+            if (page.printedPage < range.fromPage ||
+                page.printedPage > range.toPage) {
+              continue;
+            }
+            final first = page.printedPage == range.fromPage
+                ? range.fromPara
+                : 0;
+            final last = page.printedPage == range.toPage
+                ? range.toPara
+                : page.paras.length - 1;
+            for (var i = first; i <= last && i < page.paras.length; i++) {
+              if (!isHajjGuideNote(page.paras[i].text)) {
+                source.add(page.paras[i]);
+              }
+            }
+          }
+        }
+      }
+      expect(body, source);
     },
   );
 
@@ -47,12 +63,10 @@ void main() {
     for (final step in hajjSteps) {
       final body = hajjStepParas(step, book);
       expect(body, isNotEmpty, reason: step.key);
-      if (step.key != 'umrah') {
-        final opening = book.pages
-            .firstWhere((p) => p.printedPage == step.fromPage)
-            .paras[step.fromPara];
-        expect(body.first, same(opening), reason: step.key);
-      }
+      final opening = book.pages
+          .firstWhere((p) => p.printedPage == step.fromPage)
+          .paras[step.fromPara];
+      expect(body.first, same(opening), reason: step.key);
     }
   });
 }

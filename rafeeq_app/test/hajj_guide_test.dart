@@ -19,71 +19,90 @@ import 'package:rafeeq_app/features/hajj/data/hajj_guide.dart';
 /// invariant is "no two steps share a paragraph", not "each starts after the
 /// previous one".
 void main() {
-  (int, int) start(HajjStep s) => (s.fromPage, s.fromPara);
-  (int, int) end(HajjStep s) => (s.toPage, s.toPara);
+  (int, int) start(HajjTextRange r) => (r.fromPage, r.fromPara);
+  (int, int) end(HajjTextRange r) => (r.toPage, r.toPara);
   bool before((int, int) a, (int, int) b) =>
       a.$1 < b.$1 || (a.$1 == b.$1 && a.$2 < b.$2);
 
   test('every step has a well-formed, forward range', () {
     expect(hajjSteps, isNotEmpty);
     for (final s in hajjSteps) {
-      expect(s.fromPage, greaterThanOrEqualTo(0), reason: s.key);
-      expect(s.fromPara, greaterThanOrEqualTo(0), reason: s.key);
-      expect(s.toPara, greaterThanOrEqualTo(0), reason: s.key);
-      expect(
-        before(end(s), start(s)),
-        isFalse,
-        reason: '${s.key} ends before it starts',
-      );
-    }
-  });
-
-  test('no two steps share a paragraph of the book', () {
-    for (var i = 0; i < hajjSteps.length; i++) {
-      for (var j = i + 1; j < hajjSteps.length; j++) {
-        final a = hajjSteps[i];
-        final b = hajjSteps[j];
-        final disjoint = before(end(a), start(b)) || before(end(b), start(a));
-        expect(disjoint, isTrue, reason: '${a.key} overlaps ${b.key}');
+      for (final range in s.textRanges) {
+        expect(range.fromPage, greaterThanOrEqualTo(0), reason: s.key);
+        expect(range.fromPara, greaterThanOrEqualTo(0), reason: s.key);
+        expect(range.toPara, greaterThanOrEqualTo(0), reason: s.key);
+        expect(
+          before(end(range), start(range)),
+          isFalse,
+          reason: '${s.key} ends before it starts',
+        );
       }
     }
   });
 
-  test('tracks keep their own chapters and shared rites in reading order', () {
+  test('no two steps in the same track share a source paragraph', () {
+    for (final track in HajjTrack.values) {
+      final entries = [
+        for (final step in hajjStepsFor(track))
+          for (final range in step.textRanges) (step.key, range),
+      ];
+      for (var i = 0; i < entries.length; i++) {
+        for (var j = i + 1; j < entries.length; j++) {
+          final a = entries[i];
+          final b = entries[j];
+          final disjoint =
+              before(end(a.$2), start(b.$2)) || before(end(b.$2), start(a.$2));
+          expect(disjoint, isTrue, reason: '${a.$1} overlaps ${b.$1}');
+        }
+      }
+    }
+  });
+
+  test('Umrah follows only its chapter and its explicit shared references', () {
     final keys = hajjSteps.map((s) => s.key).toList();
     expect(keys.toSet().length, keys.length);
     final hajj = hajjStepsFor(HajjTrack.hajj).map((s) => s.key).toList();
     final umrah = hajjStepsFor(HajjTrack.umrah).map((s) => s.key).toList();
     expect(hajj, isNot(contains('umrah')));
-    expect(
-      hajj,
-      containsAllInOrder([
-        'ihram',
-        'tawaf',
-        'sai',
-        'arafah',
-        'child',
-        'counsel',
-      ]),
-    );
+    expect(hajj, containsAllInOrder(['ihram', 'tawaf', 'sai', 'arafah']));
     expect(umrah, [
-      'umrah',
-      'preparation',
-      'mawaqit',
-      'ihram',
-      'nusuk',
-      'prohibitions',
-      'tawaf',
-      'sai',
-      'visitation',
-      'counsel',
+      'umrah_obligation',
+      'umrah_miqaat',
+      'umrah_ihram',
+      'umrah_prohibitions',
+      'umrah_rites',
+      'umrah_invalidating',
     ]);
+    expect(hajj.toSet().intersection(umrah.toSet()), isEmpty);
+    final shared = hajjStepsFor(HajjTrack.umrah)
+        .expand((step) => step.textRanges)
+        .where((range) => range.fromPage < 378)
+        .map((range) => (range.fromPage, range.toPage))
+        .toList();
+    expect(shared, [
+      (115, 123),
+      (124, 124),
+      (126, 130),
+      (142, 143),
+      (144, 145),
+      (146, 191),
+      (206, 247),
+      (251, 262),
+    ]);
+    expect(
+      hajjStepsFor(HajjTrack.umrah)
+          .expand((step) => step.textRanges)
+          .any((range) => range.fromPage >= 263 && range.fromPage <= 377),
+      isFalse,
+      reason: 'Hajj-day chapters must not appear in the Umrah track',
+    );
   });
 
   test('every title and day label exists in all seven locales', () {
     const locales = ['ar', 'en', 'es', 'ru', 'pt', 'fr', 'ur'];
     final keys = <String>{
       for (final s in hajjSteps) 'hajj.step_${s.key}',
+      for (final s in hajjSteps) 'hajj.desc_${s.key}',
       for (final s in hajjSteps)
         if (s.dayKey != null) s.dayKey!,
     };
@@ -130,18 +149,24 @@ void main() {
         paras[page['p'] as int] = (page['paras'] as List).length;
       }
       for (final s in hajjSteps) {
-        expect(
-          paras[s.fromPage],
-          isNotNull,
-          reason: '${s.key}: no page ${s.fromPage}',
-        );
-        expect(s.fromPara, lessThan(paras[s.fromPage]!), reason: s.key);
-        expect(
-          paras[s.toPage],
-          isNotNull,
-          reason: '${s.key}: no page ${s.toPage}',
-        );
-        expect(s.toPara, lessThan(paras[s.toPage]!), reason: s.key);
+        for (final range in s.textRanges) {
+          expect(
+            paras[range.fromPage],
+            isNotNull,
+            reason: '${s.key}: no page ${range.fromPage}',
+          );
+          expect(
+            range.fromPara,
+            lessThan(paras[range.fromPage]!),
+            reason: s.key,
+          );
+          expect(
+            paras[range.toPage],
+            isNotNull,
+            reason: '${s.key}: no page ${range.toPage}',
+          );
+          expect(range.toPara, lessThan(paras[range.toPage]!), reason: s.key);
+        }
       }
     },
     skip: built.existsSync() ? false : 'book not built on this machine',

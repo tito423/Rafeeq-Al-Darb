@@ -2733,7 +2733,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json',
-      sizeBytes: 272191,
+      sizeBytes: 169015,
       editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية، بيروت - المكتبة الأمدادية، مكة المكرمة',

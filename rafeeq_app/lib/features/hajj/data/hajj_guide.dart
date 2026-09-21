@@ -56,10 +56,24 @@ library;
 /// past the end.
 
 /// The interactive piece shown beside a step.
-enum HajjRite { none, tawaf, sai, jamarat, journey }
+enum HajjRite { none, tawaf, sai, jamarat, journey, umrah }
 
 /// Which pilgrimage a step belongs to.
 enum HajjTrack { hajj, umrah }
+
+class HajjTextRange {
+  final int fromPage;
+  final int fromPara;
+  final int toPage;
+  final int toPara;
+
+  const HajjTextRange({
+    required this.fromPage,
+    required this.fromPara,
+    required this.toPage,
+    required this.toPara,
+  });
+}
 
 class HajjStep {
   /// Translation key suffix: `hajj.step_<key>` is the step's title.
@@ -76,6 +90,10 @@ class HajjStep {
 
   final HajjRite rite;
 
+  /// Exact shared passages followed when the Umrah chapter says «كما سبق».
+  /// They are kept as source ranges rather than rewritten summaries.
+  final List<HajjTextRange> additionalRanges;
+
   /// Shared chapters retain their order; each track also has its own chapters.
   final Set<HajjTrack> tracks;
 
@@ -87,8 +105,27 @@ class HajjStep {
     required this.toPara,
     this.dayKey,
     this.rite = HajjRite.none,
+    this.additionalRanges = const [],
     this.tracks = const {HajjTrack.hajj},
   });
+
+  List<HajjTextRange> get textRanges => [
+    HajjTextRange(
+      fromPage: fromPage,
+      fromPara: fromPara,
+      toPage: toPage,
+      toPara: toPara,
+    ),
+    ...additionalRanges,
+  ];
+
+  String get pageCitation => textRanges
+      .map(
+        (range) => range.fromPage == range.toPage
+            ? '${range.fromPage}'
+            : '${range.fromPage}–${range.toPage}',
+      )
+      .join(', ');
 }
 
 /// The route of Hajj in the order the manual walks it (p263–378), as
@@ -109,103 +146,209 @@ const hajjGuideShamelaUrl = 'https://shamela.ws/book/96232';
 /// الإفصاح, the modern commentary this printing carries under al-Nawawi's
 /// text, and which is NOT his and not ours to show.
 ///
-/// Shamela puts most of it in `div.hamesh`, which the build already drops —
-/// but not all of it: 472 of the 1,576 paragraphs from p.45 on are apparatus
-/// that arrived in the ordinary body flow, thirty per cent of the book.
-/// They are recognisable the way the Musnad's were (trap #34): a paragraph
-/// that opens on a bracketed note number, or on the «=» that continues one
-/// from the page before.
+/// The first build dropped `div.hamesh` only. The real pages also use
+/// `p.hamesh`, so 184 complete footnote paragraphs survived the earlier
+/// cleanup. The source asset was rebuilt on 2026-09-21 from the stored raw
+/// HTML with both forms removed: 1,454 paragraphs became 1,270.
 ///
-/// And a second family, found 2026-09-19 (155 more paragraphs between
-/// printed pages 45 and 522, shown as an-Nawawi's text until then): the
-/// commentary that carries no note number but always one of its OWN marks -
-/// a gloss that opens «أي …», «قال في الحاشية», «قال المحشي», the annotator's
-/// «أقول:», and «اه» closing a quotation. an-Nawawi uses none of these; the
-/// annotator writes «زماننا آخر القرن الرابع عشر» and dates a door of the
-/// Ka'ba to King Khalid. Matched on a diacritic-free copy (trap #34), the
-/// text itself untouched.
+/// These checks remain as defence for a previously downloaded flattened copy:
+/// numbered note openings, continuation marks, known gloss openings and the
+/// dot-only leaves left when a printed page contains apparatus but no matn.
 bool isHajjGuideNote(String text) {
   if (_hajjNote.hasMatch(text)) return true;
+  if (_hajjDots.hasMatch(text)) return true;
   final bare = text.replaceAll(_marks, '');
   return _hajjGloss.hasMatch(bare);
 }
 
 final _hajjNote = RegExp(r'^\s*(\(\s*[\d٠-٩]+\s*\)|=)');
+final _hajjDots = RegExp(r'^[\s.·،]+$');
 final _marks = RegExp('[ً-ْٰـ]');
 final _hajjGloss = RegExp(
-    r'^\s*أي\s|قال في الحاشية|قال المحشي|أقول\s*:|(^|\s)اه\s*\.|اه (حاشية|تعليق|تقريرات)|الحكومة السعودية');
-
-const _both = {HajjTrack.hajj, HajjTrack.umrah};
+  r'^\s*أي\s|قال في الحاشية|قال المحشي|أقول\s*:|(^|\s)اه\s*\.|اه (حاشية|تعليق|تقريرات)|الحكومة السعودية',
+);
 
 const hajjSteps = <HajjStep>[
   HajjStep(
-      key: 'preparation', fromPage: 45, fromPara: 0, toPage: 92, toPara: 0,
-      tracks: _both),
+    key: 'preparation',
+    fromPage: 45,
+    fromPara: 0,
+    toPage: 92,
+    toPara: 0,
+  ),
   HajjStep(
-      key: 'obligation', fromPage: 92, fromPara: 1, toPage: 112, toPara: 0),
+    key: 'obligation',
+    fromPage: 92,
+    fromPara: 1,
+    toPage: 112,
+    toPara: 0,
+  ),
   HajjStep(
-      key: 'mawaqit', fromPage: 113, fromPara: 0, toPage: 123, toPara: 1,
-      rite: HajjRite.journey, tracks: _both),
+    key: 'mawaqit',
+    fromPage: 113,
+    fromPara: 0,
+    toPage: 123,
+    toPara: 0,
+    rite: HajjRite.journey,
+  ),
+  HajjStep(key: 'ihram', fromPage: 124, fromPara: 0, toPage: 131, toPara: 0),
+  HajjStep(key: 'nusuk', fromPage: 132, fromPara: 0, toPage: 145, toPara: 0),
   HajjStep(
-      key: 'ihram', fromPage: 124, fromPara: 0, toPage: 131, toPara: 0,
-      tracks: _both),
+    key: 'prohibitions',
+    fromPage: 146,
+    fromPara: 0,
+    toPage: 191,
+    toPara: 1,
+  ),
   HajjStep(
-      key: 'nusuk', fromPage: 132, fromPara: 0, toPage: 145, toPara: 0,
-      tracks: _both),
+    key: 'tawaf',
+    fromPage: 192,
+    fromPara: 0,
+    toPage: 250,
+    toPara: 0,
+    rite: HajjRite.tawaf,
+  ),
   HajjStep(
-      key: 'prohibitions', fromPage: 146, fromPara: 0, toPage: 191, toPara: 1,
-      tracks: _both),
+    key: 'sai',
+    fromPage: 251,
+    fromPara: 0,
+    toPage: 262,
+    toPara: 0,
+    rite: HajjRite.sai,
+  ),
   HajjStep(
-      key: 'tawaf', fromPage: 192, fromPara: 0, toPage: 250, toPara: 0,
-      rite: HajjRite.tawaf, tracks: _both),
+    key: 'tarwiyah',
+    fromPage: 263,
+    fromPara: 0,
+    toPage: 269,
+    toPara: 0,
+    dayKey: 'hajj.day_8',
+    rite: HajjRite.journey,
+  ),
   HajjStep(
-      key: 'sai', fromPage: 251, fromPara: 0, toPage: 262, toPara: 0,
-      rite: HajjRite.sai, tracks: _both),
+    key: 'arafah',
+    fromPage: 270,
+    fromPara: 0,
+    toPage: 294,
+    toPara: 2,
+    dayKey: 'hajj.day_9',
+    rite: HajjRite.journey,
+  ),
   HajjStep(
-      key: 'tarwiyah', fromPage: 263, fromPara: 0, toPage: 269, toPara: 1,
-      dayKey: 'hajj.day_8', rite: HajjRite.journey),
+    key: 'muzdalifah',
+    fromPage: 295,
+    fromPara: 0,
+    toPage: 308,
+    toPara: 0,
+    dayKey: 'hajj.night_10',
+    rite: HajjRite.journey,
+  ),
   HajjStep(
-      key: 'arafah', fromPage: 270, fromPara: 0, toPage: 294, toPara: 3,
-      dayKey: 'hajj.day_9', rite: HajjRite.journey),
+    key: 'nahr',
+    fromPage: 309,
+    fromPara: 0,
+    toPage: 329,
+    toPara: 1,
+    dayKey: 'hajj.day_10',
+    rite: HajjRite.jamarat,
+  ),
+  HajjStep(key: 'hady', fromPage: 330, fromPara: 0, toPage: 356, toPara: 1),
   HajjStep(
-      key: 'muzdalifah', fromPage: 295, fromPara: 0, toPage: 308, toPara: 0,
-      dayKey: 'hajj.night_10', rite: HajjRite.journey),
+    key: 'tashreeq',
+    fromPage: 357,
+    fromPara: 0,
+    toPage: 377,
+    toPara: 2,
+    dayKey: 'hajj.days_11_13',
+    rite: HajjRite.jamarat,
+  ),
   HajjStep(
-      key: 'nahr', fromPage: 309, fromPara: 0, toPage: 329, toPara: 2,
-      dayKey: 'hajj.day_10', rite: HajjRite.jamarat),
+    key: 'farewell',
+    fromPage: 388,
+    fromPara: 0,
+    toPage: 445,
+    toPara: 1,
+    rite: HajjRite.tawaf,
+  ),
   HajjStep(
-      key: 'hady', fromPage: 330, fromPara: 0, toPage: 356, toPara: 2),
+    key: 'visitation',
+    fromPage: 446,
+    fromPara: 0,
+    toPage: 468,
+    toPara: 1,
+  ),
+  HajjStep(key: 'child', fromPage: 505, fromPara: 0, toPage: 512, toPara: 0),
+  HajjStep(key: 'counsel', fromPage: 513, fromPara: 0, toPage: 522, toPara: 0),
+  // The Umrah chapter repeatedly says «كما سبق» instead of repeating the
+  // procedure. Each such reference is followed to the exact shared passage;
+  // chapters that concern Hajj alone remain outside the Umrah track.
   HajjStep(
-      key: 'tashreeq', fromPage: 357, fromPara: 0, toPage: 377, toPara: 2,
-      dayKey: 'hajj.days_11_13', rite: HajjRite.jamarat),
+    key: 'umrah_obligation',
+    fromPage: 378,
+    fromPara: 2,
+    toPage: 380,
+    toPara: 0,
+    tracks: {HajjTrack.umrah},
+  ),
   HajjStep(
-      key: 'umrah', fromPage: 378, fromPara: 0, toPage: 387, toPara: 1,
-      tracks: {HajjTrack.umrah}),
+    key: 'umrah_miqaat',
+    fromPage: 383,
+    fromPara: 0,
+    toPage: 384,
+    toPara: 1,
+    additionalRanges: [
+      HajjTextRange(fromPage: 115, fromPara: 1, toPage: 123, toPara: 0),
+    ],
+    tracks: {HajjTrack.umrah},
+  ),
   HajjStep(
-      key: 'farewell', fromPage: 388, fromPara: 0, toPage: 445, toPara: 2,
-      rite: HajjRite.tawaf),
+    key: 'umrah_ihram',
+    fromPage: 385,
+    fromPara: 1,
+    toPage: 386,
+    toPara: 0,
+    additionalRanges: [
+      HajjTextRange(fromPage: 124, fromPara: 0, toPage: 124, toPara: 3),
+      HajjTextRange(fromPage: 126, fromPara: 1, toPage: 130, toPara: 1),
+      HajjTextRange(fromPage: 142, fromPara: 0, toPage: 143, toPara: 1),
+      HajjTextRange(fromPage: 144, fromPara: 2, toPage: 145, toPara: 0),
+    ],
+    tracks: {HajjTrack.umrah},
+  ),
   HajjStep(
-      key: 'visitation', fromPage: 446, fromPara: 0, toPage: 468, toPara: 1,
-      tracks: _both),
+    key: 'umrah_prohibitions',
+    fromPage: 146,
+    fromPara: 0,
+    toPage: 191,
+    toPara: 1,
+    tracks: {HajjTrack.umrah},
+  ),
   HajjStep(
-      key: 'child', fromPage: 505, fromPara: 0, toPage: 512, toPara: 0),
+    key: 'umrah_rites',
+    fromPage: 386,
+    fromPara: 1,
+    toPage: 387,
+    toPara: 0,
+    additionalRanges: [
+      HajjTextRange(fromPage: 206, fromPara: 1, toPage: 247, toPara: 0),
+      HajjTextRange(fromPage: 251, fromPara: 0, toPage: 262, toPara: 0),
+    ],
+    rite: HajjRite.umrah,
+    tracks: {HajjTrack.umrah},
+  ),
   HajjStep(
-      key: 'counsel', fromPage: 513, fromPara: 0, toPage: 522, toPara: 0,
-      tracks: _both),
+    key: 'umrah_invalidating',
+    fromPage: 387,
+    fromPara: 1,
+    toPage: 387,
+    toPara: 1,
+    tracks: {HajjTrack.umrah},
+  ),
 ];
 
 /// The steps one track shows, in reading order.
 ///
-/// «العمرة فاضية مش فيها معلومات تخصها»: the Umrah track opened on the
-/// same general chapters as the Hajj one (preparation, mawaqit, ihram…) and
-/// reached an-Nawawi's own «الباب الرابع في العمرة» - its obligation, its
-/// times, «وأركان العمرة أربعة» - only near the end. For Umrah that chapter
-/// now comes first; the shared chapters follow as the detail behind it.
-List<HajjStep> hajjStepsFor(HajjTrack track) {
-  final steps = hajjSteps.where((s) => s.tracks.contains(track)).toList();
-  if (track == HajjTrack.umrah) {
-    final i = steps.indexWhere((s) => s.key == 'umrah');
-    if (i > 0) steps.insert(0, steps.removeAt(i));
-  }
-  return steps;
-}
+/// The step catalogues are disjoint; shared source passages are attached only
+/// where al-Nawawi's Umrah chapter explicitly sends the reader back to them.
+List<HajjStep> hajjStepsFor(HajjTrack track) =>
+    hajjSteps.where((s) => s.tracks.contains(track)).toList();

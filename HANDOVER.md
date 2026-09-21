@@ -17,14 +17,15 @@ Cline, or any other).
 | **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.52.0**, and v3.51.0 is still downloadable beside it |
 | **Verified 2026-09-21 (handover)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **456 passed, 2 skipped** · hosted content **10/10** range-checked with a User-Agent, every one 206 with the right `Content-Type`: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `legal/privacy.html`, `ruqyah/afasy.mp3` |
 | **Measured 2026-09-21 (handover)** | 7 locales × **1,684** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `quran_local.db` **5,640,192 B**, **6,236** ayahs · `azkar.db` **49,152 B** · APK **260,277,487 B** |
-| **Quota at handover** | **97% of the weekly limit spent**, resets 2026-09-21 22:00 UTC; the 5-hour window at 12%. Read live, not remembered (§2.0) |
+| **Umrah guide verified 2026-09-21** | The Umrah track now has **6 Umrah-only cards**. Explicit cross-references in al-Nawawi are followed to the exact shared passages for spatial miqats, ihram preparation/talbiyah/prohibitions, tawaf and sa'i; Hajj day chapters, visitation and Hajj counsel are absent. `flutter analyze lib test` → **No issues found**; `flutter test` → **455 passed, 2 skipped**. Seen on `emulator-5554`: the six-card Arabic overview, p. 383–384 + 115–123 citation, and both tawaf/sa'i counters. The clean 169,015-byte gzip was uploaded to R2 and verified byte-for-byte (`sha256 DC607CD7…CEC7F`) with no `Content-Encoding`. |
+| **Quota at handover** | Read live at the end of the latest session; do not reuse the older number (§2.0). |
 
-## THE THREE THINGS HE ASKED FOR NEXT (2026-09-21) — NONE STARTED
+## THE THREE THINGS HE ASKED FOR NEXT (2026-09-21)
 
 Full instructions, with everything measured so the next session need not
 measure it again, are in `NEXT_PROMPT.md`. In one line each:
 
-1. **العمرة must become a genuinely separate section.** «قسم العمرة
+1. **DONE 2026-09-21 — العمرة is now a genuinely separate section.** «قسم العمرة
    بالكامل هو معلومات مكس من الحج». He is right and the previous session
    did NOT fix this: it moved the `umrah` chapter to the front and dropped
    `child`, and the other nine chapters on that track are still
@@ -32,7 +33,9 @@ measure it again, are in `NEXT_PROMPT.md`. In one line each:
    «المواقيت» opens on «الباب الثاني / في الإحرام / فصل / **في ميقات
    الحج**». The fix is paragraph-level slicing of the shared chapters, or
    a second sourced book, or saying honestly that al-Idah has no
-   self-contained Umrah manual. No invented text (§1.1, §1.2).
+   self-contained Umrah manual. The completed implementation uses paragraph-level
+   slicing, follows every explicit shared cross-reference needed by Umrah, and
+   keeps Hajj-only chapters out. No invented text (§1.1, §1.2).
 
 2. **Audit the text mushaf, word by word and mark by mark.** «فيه كوارث
    في المصحف النصي، علامات داخل في الايات، وحرف الـ ج متكرر اكتر من مرة».
@@ -2174,9 +2177,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-21 02:32 — COMPLETE**
+**2026-09-21 05:04 — COMPLETE**
 
-Verified pilgrimage tracks, looping Umrah header and all three tajweed lessons on emulator-5554; analyzer clean, 456 tests pass and 2 skip
+Verified the independent Umrah guide on emulator and uploaded the cleaned source
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

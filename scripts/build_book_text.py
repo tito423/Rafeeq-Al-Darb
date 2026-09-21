@@ -262,10 +262,10 @@ BOOKS = {
     # الإيضاح للنووي (ت ٦٧٦هـ) — the classical pilgrim's manual, and the
     # replacement for التحقيق والإيضاح لابن باز that the Hajj guide used to
     # read verbatim. The printing carries الإفصاح, a modern commentary, but
-    # Shamela puts every word of it in `div.hamesh` — checked on page 206 — and
-    # this build drops that div, so what is parsed is al-Nawawi's own vowelled
-    # matn. The editor's front matter runs to printed p.44; the Hajj steps
-    # start at الباب الأول on p.45.
+    # Shamela puts it in `div.hamesh` or `p.hamesh` — page 206 uses the latter.
+    # This build drops both forms, so what is parsed is al-Nawawi's own
+    # vowelled matn. The editor's front matter runs to printed p.44; the Hajj
+    # steps start at الباب الأول on p.45.
     "al_idah_fi_manasik_al_hajj_wal_umrah": {
         "shamela_id": 96232,
         "source_label": "المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، للإمام النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية والمكتبة الإمدادية، الثانية ١٤١٤هـ - ١٩٩٤م",
@@ -817,7 +817,13 @@ def fetch_meta_card(shamela_id):
 
 # --- parse one page's `nass` HTML ---------------------------------------------
 _P_RE = re.compile(r"<p\b[^>]*>(.*?)</p>", re.S)
-_HAMESH_RE = re.compile(r'<div[^>]*class="[^"]*hamesh[^"]*"[^>]*>.*?</div>', re.S)
+# Shamela uses both `<div class="hamesh">` and `<p class="hamesh">` across
+# books. Matching only the div form left whole modern footnotes in al-Idah's
+# body stream and made the app attribute them to al-Nawawi.
+_HAMESH_RE = re.compile(
+    r'<(?P<tag>div|p)\b[^>]*class="[^"]*\bhamesh\b[^"]*"[^>]*>.*?</(?P=tag)>',
+    re.S,
+)
 _BTN_TAG_RE = re.compile(r'<a[^>]*class="[^"]*btn_tag[^"]*"[^>]*>.*?</a>', re.S)
 _ANCHOR_RE = re.compile(r'<span[^>]*class="[^"]*anchor[^"]*"[^>]*>.*?</span>', re.S)
 _C3_RE = re.compile(r'<span[^>]*class="[^"]*\bc3\b[^"]*"[^>]*>(.*?)</span>', re.S)
