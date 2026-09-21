@@ -7,10 +7,10 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-21 |
-| **Current source** | `master` clean and pushed at `942e37d0`. The published APK was built from it (= tag `v3.53.0` = branch `known-good/v3.53.0`). |
-| **Released** | **v3.53.0** — 260,175,087 B, three ABIs, minSdk 24, tag on `942e37d0` = `HEAD`. **v3.52.0 and its tag were deleted** (§2.3) now that 3.53.0 supersedes them; **v3.51.0 stays published** as the fallback, as the owner asked on 2026-09-21. |
+| **Current source** | `master` clean and pushed at `cec5aaf2`. The published APK was built from it (= tag `v3.54.0`). |
+| **Released** | **v3.54.0** — 260,191,471 B, sha256 `5c1a3877…3759f9`, three ABIs, minSdk 24, tag on `cec5aaf2` = `HEAD`. v3.53.0 and its tag were deleted; **v3.51.0 stays published** as the fallback. |
 | **Restore point** | still **v3.51.0**: branch `known-good/v3.51.0`, tags `backup-2026-09-21c` and `v3.51.0`, and `../Rafeeq-Backups/Rafeeq-Al-Darb-2026-09-21.bundle`. `RESTORE.md` says how to come back. It does not move to 3.52.0 until 3.52.0 has lived on his phone |
-| **App version** | `pubspec.yaml` `3.53.0+55`; `AboutScreen.appVersion` `3.53.0`; the installed APK reports `versionCode='55' versionName='3.53.0'` (aapt2 badging), minSdkVersion 24, native-code `arm64-v8a armeabi-v7a x86_64` |
+| **App version** | `pubspec.yaml` `3.54.0+56`; `AboutScreen.appVersion` `3.54.0`; the APK reports `versionCode='56' versionName='3.54.0'` (aapt2 badging) |
 | **Verified 2026-09-20 (final)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **453 passed, 2 skipped** · hosted content **8/8** range-checked with a User-Agent: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `legal/privacy.html`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `ruqyah/afasy.mp3` — all 206 with the right `Content-Type` · the review backend answers POST/GET `/review` and its CORS preflight, tested against the live Worker with Arabic text · the signed v3.47.0 APK installs, launches, zero FATAL EXCEPTION, support URL in all three `libapp.so` |
 | **Measured 2026-09-20 (final)** | 7 locales × **1,678** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B** · sciences pack **33,239,511 B** on R2 · R2 holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) · APK **259,748,286 B** |
 | **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
@@ -18,10 +18,53 @@ Cline, or any other).
 | **Verified 2026-09-21 (handover)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **456 passed, 2 skipped** · hosted content **10/10** range-checked with a User-Agent, every one 206 with the right `Content-Type`: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `legal/privacy.html`, `ruqyah/afasy.mp3` |
 | **Measured 2026-09-21 (handover)** | 7 locales × **1,684** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `quran_local.db` **5,640,192 B**, **6,236** ayahs · `azkar.db` **49,152 B** · APK **260,277,487 B** |
 | **Umrah guide verified 2026-09-21** | The Umrah track now has **6 Umrah-only cards**. Explicit cross-references in al-Nawawi are followed to the exact shared passages for spatial miqats, ihram preparation/talbiyah/prohibitions, tawaf and sa'i; Hajj day chapters, visitation and Hajj counsel are absent. `flutter analyze lib test` → **No issues found**; `flutter test` → **455 passed, 2 skipped**. Seen on `emulator-5554`: the six-card Arabic overview, p. 383–384 + 115–123 citation, and both tawaf/sa'i counters. The clean 169,015-byte gzip was uploaded to R2 and verified byte-for-byte (`sha256 DC607CD7…CEC7F`) with no `Content-Encoding`. |
-| **Quota at handover** | **17% of the 5-hour window and 69% of the weekly limit remain**, read live after the final push. Most of this session went to source-boundary auditing, full tests/build, emulator verification and R2 verification. Read live again next session (§2.0). |
+| **Quota at 3.54.0** | **98% of the weekly limit spent**, read live. He said «خد بالك الكوته ٨٩ باسرع وقت ابني الريليز ومتجهزش الدنيا», so the release was built and published and **the §6 handover routine was deliberately NOT run** — no NEXT_PROMPT.md was written. Read the quota live next session (§2.0). |
 
 | **Verified 2026-09-21 (release 3.53.0)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **455 passed, 2 skipped** · built with `build_github_release.bat` and re-signed by `scripts/sign_release.py`, whose two-pass check passed (`CN=Rafeeq Al-Darb` from Android 9 up, the old debug certificate still covering Android 7–8) · `dist/RafeeqAlDarb-v3.53.0.apk` **260,175,087 B**, sha256 `033e183ae4377a8bef83286b32b128869cf5b2e1a20cf57685fcc347b14570ed` · installed on `emulator-5554` with `adb install -r` → `Success`, no FATAL EXCEPTION · hosted content range-checked with a User-Agent, all 206 with the right `Content-Type`: `books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json`, `hadith/hadith.zip`, `mushaf/madinah_qc/001.png`, and the Umrah JSON carries **no** `Content-Encoding` |
 | **Seen on the device 2026-09-21 (release 3.53.0)** | Home renders and the More list shows «ادعم التطبيق», so the GitHub-only support define is in this build · the العمرة track shows exactly **6** Umrah-only cards · step 2 «ميقات العمرة» — the one he photographed opening onto «في ميقات الحج» — now opens on «للعُمرةِ المُفرَدةِ عنِ الحجِّ ميقاتانِ زَمانيٌّ ومَكانيٌّ» · the About card reads **v3.53.0** |
+
+## OPEN, NOT DONE, NOT IN v3.54.0 — the next session starts HERE
+
+Asked for on 2026-09-21 right before the quota ran out. **Only the reading
+was done. Nothing was changed and nothing was verified. Do all three
+again from the start.**
+
+1. **«اتأكد ان زر اصلاح التحميلات شغال»** — `_RepairButton` in
+   `downloads_screen.dart:786`. The code READS correctly (12-second
+   deadline per step, unjam → cancelStalled → resumeAll → recitations →
+   mushaf, and it reports what it actually restarted). **It was never
+   pressed.** To make the test mean anything, give it something to repair
+   first: start the mushaf download on `emulator-5554`, let Avast's TLS
+   interception fail it (trap #13), then press «إصلاح التحميلات» and
+   read the SnackBar — it must say what it freed/resumed, not
+   «لا يوجد ما يُصلَح».
+
+2. **The eight «شرح التطبيق» screenshots must match today's app.**
+   `assets/tutorial_shots/*.jpg` are resized from
+   `store/google_play/screenshots/phone/`, which are composed from
+   `store/google_play/screenshots/raw/` — and **every raw capture is dated
+   2026-09-19**, before 3.51, 3.52, 3.53 and 3.54. At least `08_hajj`
+   predates the الحج/العمرة toggle entirely. The fix is to recapture the
+   raw 1080×2400 shots on the emulator and rerun
+   `py -3 scripts/build_store_screenshots.py` then
+   `py -3 scripts/build_tutorial_shots.py`. The eight raws needed are named
+   in `build_store_screenshots.py`'s `SHOTS` list: `01_home`, `02_quran`,
+   `12_adhan`, `04_azkar`, `07_hadith`, `11_lesson`, `08_hajj`, `10_more`.
+   The adhan one needs the alarm trick (trap #28).
+
+3. **«التوتوريال ساعات مش بيجيب الشاشة كاملة اللي بيشرحها زي القبلة».**
+   The suspected cause, NOT yet reproduced: `_enter(i)` in
+   `tutorial_overlay.dart:113` switches the tab and then measures the
+   anchor after a SINGLE `addPostFrameCallback`. If the new tab has not
+   finished building, `anchorRect` returns null and the stop is **skipped
+   outright** (`if (anchor != null && next == null)` → advance). القبلة is
+   the likeliest victim because `QiblaScreen`'s compass card starts in
+   `_LocationState.loading` and only becomes the real compass later, so
+   even when it measures it can frame a small spinner card. Reproduce it
+   on the device first (run the quick tour and watch the الصلاة stop),
+   then fix by retrying the measurement over a few frames instead of once,
+   and by not skipping a stop whose anchor is merely not ready yet.
+   `test/tutorial_quick_tour_test.dart` is the test that will need to grow.
 
 ## THE THREE THINGS HE ASKED FOR NEXT (2026-09-21)
 
