@@ -15,6 +15,59 @@ Cline, or any other).
 | **Measured 2026-09-20 (final)** | 7 locales × **1,678** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `azkar.db` **49,152 B** · sciences pack **33,239,511 B** on R2 · R2 holds **909 objects / 860.61 MB** (was 6,240 / 2,496.16) · APK **259,748,286 B** |
 | **APK size, the session's main work** | **259,727,806 B (247.7 MiB)**, from v3.43.0's **339,920,197 B (324.2 MiB)** — **76.5 MiB off**, with EVERY architecture still in the APK and `minSdk` 24 (Android 7.0). Two measured steps: علوم القرآن became a download (−32.7 MiB) and the 14 adhans stopped shipping twice (−43.9 MiB). Dropping x86_64 would take another 34 MiB and the owner ruled it out — «يشتغل مع اي نوع من انواع الاندرويد فوق سبعة ويشتغل على اي نوع من معمارية». Full per-group breakdown in `docs/size/` |
 | **On the owner's phone** | he installs from GitHub Releases; once he updates he has **v3.52.0**, and v3.51.0 is still downloadable beside it |
+| **Verified 2026-09-21 (handover)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **456 passed, 2 skipped** · hosted content **10/10** range-checked with a User-Agent, every one 206 with the right `Content-Type`: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `quran/translations/am.json.gz`, `tts/open_ar_v1/hifigan.onnx`, `legal/privacy.html`, `ruqyah/afasy.mp3` |
+| **Measured 2026-09-21 (handover)** | 7 locales × **1,684** keys, identical · **1** mushaf printing (`madinah_qc`) · **214** library books · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `quran_local.db` **5,640,192 B**, **6,236** ayahs · `azkar.db` **49,152 B** · APK **260,277,487 B** |
+| **Quota at handover** | **97% of the weekly limit spent**, resets 2026-09-21 22:00 UTC; the 5-hour window at 12%. Read live, not remembered (§2.0) |
+
+## THE THREE THINGS HE ASKED FOR NEXT (2026-09-21) — NONE STARTED
+
+Full instructions, with everything measured so the next session need not
+measure it again, are in `NEXT_PROMPT.md`. In one line each:
+
+1. **العمرة must become a genuinely separate section.** «قسم العمرة
+   بالكامل هو معلومات مكس من الحج». He is right and the previous session
+   did NOT fix this: it moved the `umrah` chapter to the front and dropped
+   `child`, and the other nine chapters on that track are still
+   an-Nawawi's **Hajj** chapters. Proof from his screenshot: Umrah step 3
+   «المواقيت» opens on «الباب الثاني / في الإحرام / فصل / **في ميقات
+   الحج**». The fix is paragraph-level slicing of the shared chapters, or
+   a second sourced book, or saying honestly that al-Idah has no
+   self-contained Umrah manual. No invented text (§1.1, §1.2).
+
+2. **Audit the text mushaf, word by word and mark by mark.** «فيه كوارث
+   في المصحف النصي، علامات داخل في الايات، وحرف الـ ج متكرر اكتر من مرة».
+   MEASURED here so nobody repeats it:
+   * The DB text is correct. 2:255 carries **5 × U+06DA** (ARABIC SMALL
+     HIGH JEEM) — a real waqf mark of the Uthmani rasm, not a stray letter.
+     Corpus counts of `U+06D6`–`U+06ED`: `U+06ED` 4,807 · `U+06DF` 3,988 ·
+     `U+06E2` 2,445 · `U+06DA` 1,972 · `U+06D6` 1,682 · `U+06E5` 1,257 ·
+     `U+06E6` 995 · `U+06D7` 603 · `U+06DE` 199, and smaller tails.
+   * The font is complete. `assets/fonts/AmiriQuran-Regular.ttf` is genuine
+     Amiri Quran 1.003, 1,446 glyphs, `GPOS` 19,006 B, `GSUB` 15,958 B, and
+     **all 21 mark codepoints are in the cmap**.
+   * The likely cause, still to be PROVEN: in the Tanzil Uthmani text a
+     waqf mark is its own space-delimited token (`ٱلْقَيُّومُ ۚ لَا`).
+     **4,578 standalone mark tokens across 2,719 of 6,236 ayahs** — 44% of
+     the Qur'an. Justified lines then spread them out and each one stands
+     alone in a gap, exactly as his screenshots show.
+   * So the fix is TYPOGRAPHIC, not textual. `text_uthmani` is not to be
+     touched (§1.2). Files: `mushaf_text_page.dart` (981 lines),
+     `mushaf_ayah_row.dart`, `data/text_layout_provider.dart`.
+   * His pages: **42** (Ayat al-Kursi) and **47**. Zoom in — trap #48.
+
+3. **المقدمة الجزرية needs a commentary.** «الجزرية دي محتاجة شرح، خليه
+   يجيب حاجة فري تشرحها موثقة». Level two shows the bare verse with no
+   explanation, and 3.52.0 removed its «استماع» button, so it is now the
+   metre alone on screen. Wanted: a **freely licensed, attributed** شرح,
+   tied to each numbered verse. Two real candidates from the local index
+   (`py -3 scripts/shamela_index.py find "الجزرية"`, trap #17):
+   **21580** «فتح رب البرية شرح المقدمة الجزرية في علم التجويد» and
+   **17065** «الروضة الندية شرح متن الجزرية». **Neither author, death date
+   nor licence has been checked** — that is step one, and
+   `CONTENT-LICENSES.md` is where the answer is recorded. Classical
+   commentaries outside the index worth an archive.org search (ASCII
+   queries only, trap #9): «المنح الفكرية» by Mulla Ali al-Qari and
+   «الحواشي الأزهرية» by Khalid al-Azhari.
 
 ## v3.52.0 — RELEASED 2026-09-21, WITH v3.51.0 LEFT IN PLACE
 
