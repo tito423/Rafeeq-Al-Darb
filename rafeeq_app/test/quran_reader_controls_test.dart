@@ -35,8 +35,9 @@ void main() {
       'lib/features/khatma/presentation/khatma_card.dart',
     ).readAsStringSync();
 
-    expect(card, contains('onOpenPrevious'));
-    expect(card, contains('onOpenUpcoming'));
+    expect(card, contains('onOpenPage'));
+    expect(card, contains('previousPortionPage'));
+    expect(card, contains('upcomingPortionPage'));
     expect(card, contains('OutlinedButton.icon('));
   });
 }

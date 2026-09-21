@@ -64,9 +64,8 @@ class KhatmaScreen extends ConsumerWidget {
                             showKhatmaUndoSnackBar(context, ref, before);
                             Navigator.of(context).pop();
                           },
-                    onOpenReader: () {
-                      ref.read(quranJumpRequestProvider.notifier).state =
-                          k.currentPage;
+                    onOpenReader: (page) {
+                      ref.read(quranJumpRequestProvider.notifier).state = page;
                       ref.read(requestedTabProvider.notifier).state =
                           AppTab.quran;
                       Navigator.of(context).pop();
@@ -171,7 +170,7 @@ class _KhatmaTile extends ConsumerWidget {
   final Khatma khatma;
   final MushafData? mushaf;
   final VoidCallback? onReadToday;
-  final VoidCallback onOpenReader;
+  final ValueChanged<int> onOpenReader;
   final VoidCallback onSetReminder;
   final VoidCallback onDelete;
 
@@ -310,39 +309,14 @@ class _KhatmaTile extends ConsumerWidget {
               mushaf: mushaf,
               gold: gold,
               subtleStyle: subtleStyle,
-              onOpenPrevious: mushaf == null
-                  ? null
-                  : () {
-                      final page = khatma.previousPortionPage(
-                        mushaf!.juzStartPages,
-                        mushaf!.rubElHizbPages,
-                      );
-                      if (page == null) return;
-                      ref.read(quranJumpRequestProvider.notifier).state = page;
-                      ref.read(requestedTabProvider.notifier).state =
-                          AppTab.quran;
-                      Navigator.of(context).pop();
-                    },
-              onOpenUpcoming: mushaf == null
-                  ? null
-                  : () {
-                      final page = khatma.upcomingPortionPage(
-                        mushaf!.juzStartPages,
-                        mushaf!.rubElHizbPages,
-                      );
-                      if (page == null) return;
-                      ref.read(quranJumpRequestProvider.notifier).state = page;
-                      ref.read(requestedTabProvider.notifier).state =
-                          AppTab.quran;
-                      Navigator.of(context).pop();
-                    },
+              onOpenPage: onOpenReader,
             ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: onOpenReader,
+                    onPressed: () => onOpenReader(khatma.currentPage),
                     child: Text('khatma.open_reader'.tr()),
                   ),
                 ),

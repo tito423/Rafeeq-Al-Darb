@@ -163,25 +163,9 @@ class _ActiveKhatmaRow extends ConsumerWidget {
           mushaf: mushaf,
           gold: gold,
           subtleStyle: subtleStyle,
-          onOpenPrevious: mushaf == null
+          onOpenPage: mushaf == null
               ? null
-              : () {
-                  final page = khatma.previousPortionPage(
-                    mushaf.juzStartPages,
-                    mushaf.rubElHizbPages,
-                  );
-                  if (page == null) return;
-                  ref.read(quranJumpRequestProvider.notifier).state = page;
-                  _switchToQuranTab(context);
-                },
-          onOpenUpcoming: mushaf == null
-              ? null
-              : () {
-                  final page = khatma.upcomingPortionPage(
-                    mushaf.juzStartPages,
-                    mushaf.rubElHizbPages,
-                  );
-                  if (page == null) return;
+              : (page) {
                   ref.read(quranJumpRequestProvider.notifier).state = page;
                   _switchToQuranTab(context);
                 },
@@ -353,8 +337,7 @@ class KhatmaProgressSection extends StatelessWidget {
   final MushafData? mushaf;
   final Color gold;
   final TextStyle? subtleStyle;
-  final VoidCallback? onOpenPrevious;
-  final VoidCallback? onOpenUpcoming;
+  final ValueChanged<int>? onOpenPage;
 
   const KhatmaProgressSection({
     super.key,
@@ -362,8 +345,7 @@ class KhatmaProgressSection extends StatelessWidget {
     required this.mushaf,
     required this.gold,
     required this.subtleStyle,
-    this.onOpenPrevious,
-    this.onOpenUpcoming,
+    this.onOpenPage,
   });
 
   @override
@@ -371,6 +353,18 @@ class KhatmaProgressSection extends StatelessWidget {
     final upcoming = mushaf == null
         ? null
         : khatma.portionsRemaining(
+            mushaf!.juzStartPages,
+            mushaf!.rubElHizbPages,
+          );
+    final previousPage = mushaf == null
+        ? null
+        : khatma.previousPortionPage(
+            mushaf!.juzStartPages,
+            mushaf!.rubElHizbPages,
+          );
+    final upcomingPage = mushaf == null
+        ? null
+        : khatma.upcomingPortionPage(
             mushaf!.juzStartPages,
             mushaf!.rubElHizbPages,
           );
@@ -391,7 +385,9 @@ class KhatmaProgressSection extends StatelessWidget {
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: khatma.portionsRead > 0 ? onOpenPrevious : null,
+                onPressed: previousPage == null || onOpenPage == null
+                    ? null
+                    : () => onOpenPage!(previousPage),
                 icon: const Icon(Icons.history_rounded, size: 18),
                 label: Text(
                   trn(
@@ -406,7 +402,9 @@ class KhatmaProgressSection extends StatelessWidget {
             if (upcoming != null)
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: onOpenUpcoming,
+                  onPressed: upcomingPage == null || onOpenPage == null
+                      ? null
+                      : () => onOpenPage!(upcomingPage),
                   icon: const Icon(Icons.upcoming_rounded, size: 18),
                   label: Text(
                     trn('khatma.portions_upcoming', args: ['$upcoming']),

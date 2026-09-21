@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-21 16:54 — IN PROGRESS — resume here**
+**2026-09-21 17:54 — IN PROGRESS — resume here**
 
-Implement the five Quran and khatma UI fixes; 19 targeted tests and flutter analyze pass, device verification pending
+Refactor the Quran and khatma fixes under the file-size guards; analyze is clean and all 475 tests pass, device verification pending
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
