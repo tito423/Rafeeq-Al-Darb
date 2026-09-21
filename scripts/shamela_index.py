@@ -130,10 +130,11 @@ def find(terms):
 
 BOOKS_MD = os.path.join(ROOT, "shamela_books.md")
 BOOKS_CSV = os.path.join(ROOT, "shamela_books.csv")
+BOOKS_JSON = os.path.join(ROOT, "shamela_books.json")
 
 
 def export():
-    """Write every indexed book to a readable .md and a machine-readable .csv."""
+    """Write every indexed book to .md, .csv and a flat .json."""
     if not os.path.exists(INDEX):
         raise SystemExit("build the index first: py -3 scripts/shamela_index.py build")
     index = json.loads(io.open(INDEX, encoding="utf-8").read())
@@ -172,9 +173,31 @@ def export():
         for cid, cname, bid, title in rows:
             w.writerow([cid, cname, bid, title, f"https://shamela.ws/book/{bid}"])
 
+    doc = {
+        "source": "https://shamela.ws",
+        "crawled": stamp,
+        "categories": len(index),
+        "entries": total,
+        "distinct_books": uniq,
+        "book_url_template": "https://shamela.ws/book/{id}",
+        "books": [
+            {
+                "id": bid,
+                "title": title,
+                "category_id": int(cid),
+                "category": cname,
+                "url": f"https://shamela.ws/book/{bid}",
+            }
+            for cid, cname, bid, title in rows
+        ],
+    }
+    with io.open(BOOKS_JSON, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(doc, f, ensure_ascii=False, indent=1)
+
     print(f"{total} entries, {uniq} distinct books")
     print(f"-> {BOOKS_MD}")
     print(f"-> {BOOKS_CSV}")
+    print(f"-> {BOOKS_JSON}")
 
 
 if __name__ == "__main__":
