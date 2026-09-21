@@ -19,7 +19,9 @@
 | النسخة | `pubspec.yaml` `3.52.0+54`، `AboutScreen.appVersion` `3.52.0` |
 | الـ APK | `dist/RafeeqAlDarb-v3.52.0.apk` — 260,277,487 بايت، sha256 `0c85b6c2…` |
 | المعماريات | `arm64-v8a` + `armeabi-v7a` + `x86_64`، `minSdk` 24 |
-| نقطة الرجوع | الفرع `known-good/v3.51.0`، الوسوم `backup-2026-09-21c` و`v3.51.0`، وحزمة `../Rafeeq-Backups/Rafeeq-Al-Darb-2026-09-21.bundle` — و`RESTORE.md` يشرح العودة |
+| نقطة الرجوع | الفرع `known-good/v3.51.0` والوسمان `backup-2026-09-21c` و`v3.51.0` — لا تحرّكها |
+| وللإصدار الجديد | `known-good/v3.52.0` على `b0380411`، والوسم `backup-2026-09-21d` على `bfd2bd5c` |
+| النسخ خارج جيت هب | `../Rafeeq-Backups/Rafeeq-Al-Darb-2026-09-21b.bundle` — 693,225,542 بايت، تاريخ كامل، `git bundle verify` نجح؛ والأقدم عند v3.51.0 باقية بجانبها. و`RESTORE.md` يشرح العودة |
 
 تم التحقق منه في 2026-09-21 قبل تسليم هذا البرومبت مباشرة:
 `flutter analyze lib test` → **No issues found** · `flutter test` →
