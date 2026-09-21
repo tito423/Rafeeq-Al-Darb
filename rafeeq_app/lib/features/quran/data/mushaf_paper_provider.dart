@@ -16,8 +16,10 @@ enum MushafPaper {
   warm,
   night;
 
-  static MushafPaper fromName(String? n) => MushafPaper.values
-      .firstWhere((v) => v.name == n, orElse: () => MushafPaper.normal);
+  static MushafPaper fromName(String? n) => MushafPaper.values.firstWhere(
+    (v) => v.name == n,
+    orElse: () => MushafPaper.normal,
+  );
 
   String get titleKey => 'quran.paper_$name';
 }
@@ -48,14 +50,22 @@ Color opaqueMushafGround(Color surface, Brightness brightness) =>
           : const Color(0xFFFFFFFF),
     );
 
-Color? mushafGround(MushafPaper p, {required bool imageMode, required bool darkPage}) {
+Color? mushafGround(
+  MushafPaper p, {
+  required bool imageMode,
+  required bool darkPage,
+}) {
   if (!imageMode) return null;
   // A printing whose scans are black pages (Madinah night) sits on black:
   // the app's light ground showed as a pale band under the page in
   // landscape, where the page scrolls and the strip below it is visible.
   if (darkPage) return const Color(0xFF000000);
   return switch (p) {
-    MushafPaper.normal => null,
+    // The Madinah PNG is black ink on a transparent ground. Letting the app
+    // theme show through therefore makes a normal page black-on-black in dark
+    // mode, and lets the animated RGB gradient tint it. Normal paper owns a
+    // real white sheet independently of the surrounding app theme.
+    MushafPaper.normal => const Color(0xFFFFFFFF),
     MushafPaper.warm => warmPaper,
     MushafPaper.night => nightPaper,
   };
@@ -110,8 +120,10 @@ const List<double> _warmMultiply = [
   0, 0, 0, 1, 0, //
 ];
 
-final List<double> nightScanMatrix =
-    _compose(_nightGround, _compose(_hue180, _invert));
+final List<double> nightScanMatrix = _compose(
+  _nightGround,
+  _compose(_hue180, _invert),
+);
 
 /// The filter a scanned page gets, or null to draw it untouched.
 ColorFilter? scanFilter(MushafPaper p, {required bool darkPage}) {
@@ -126,13 +138,14 @@ ColorFilter? scanFilter(MushafPaper p, {required bool darkPage}) {
 /// Where a colour lands under a 4×5 matrix — for the contrast test.
 Color applyMatrix(List<double> m, Color c) {
   final v = [c.r * 255, c.g * 255, c.b * 255, c.a * 255];
-  int ch(int r) => (m[r * 5] * v[0] +
-          m[r * 5 + 1] * v[1] +
-          m[r * 5 + 2] * v[2] +
-          m[r * 5 + 3] * v[3] +
-          m[r * 5 + 4])
-      .round()
-      .clamp(0, 255);
+  int ch(int r) =>
+      (m[r * 5] * v[0] +
+              m[r * 5 + 1] * v[1] +
+              m[r * 5 + 2] * v[2] +
+              m[r * 5 + 3] * v[3] +
+              m[r * 5 + 4])
+          .round()
+          .clamp(0, 255);
   return Color.fromARGB(ch(3), ch(0), ch(1), ch(2));
 }
 
@@ -160,4 +173,5 @@ class MushafPaperNotifier extends StateNotifier<MushafPaper> {
 
 final mushafPaperProvider =
     StateNotifierProvider<MushafPaperNotifier, MushafPaper>(
-        (ref) => MushafPaperNotifier());
+      (ref) => MushafPaperNotifier(),
+    );

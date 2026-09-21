@@ -282,7 +282,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     final ground = widget.edition.darkPage
         ? null
         : switch (paper) {
-            MushafPaper.normal => null,
+            MushafPaper.normal => const Color(0xFFFFFFFF),
             MushafPaper.warm => warmPaper,
             MushafPaper.night => nightPaper,
           };

@@ -66,7 +66,7 @@ class _AyahRow extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Text(
-                        bodyOf(ayah),
+                        shapeQuranForDisplay(bodyOf(ayah)),
                         textAlign: TextAlign.right,
                         textDirection: TextDirection.rtl,
                         style: textStyle,

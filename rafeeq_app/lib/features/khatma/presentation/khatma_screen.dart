@@ -12,10 +12,7 @@ import '../../quran/data/quran_jump_provider.dart';
 import '../data/khatma_range.dart';
 import '../data/khatma_store.dart';
 import 'khatma_card.dart'
-    show
-        showKhatmaUndoSnackBar,
-        KhatmaPortionRangeBlock,
-        KhatmaProgressSection;
+    show showKhatmaUndoSnackBar, KhatmaPortionRangeBlock, KhatmaProgressSection;
 
 /// The full khatma manager (P2‑11) — every active khatma with its own
 /// progress/read-today/reminder controls, a "+" to start a new one, and a
@@ -225,13 +222,17 @@ class _KhatmaTile extends ConsumerWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.local_fire_department,
-                            size: 14, color: gold),
+                        Icon(
+                          Icons.local_fire_department,
+                          size: 14,
+                          color: gold,
+                        ),
                         const SizedBox(width: 2),
                         Text(
                           trn('khatma.streak', args: ['${khatma.streak}']),
-                          style:
-                              theme.textTheme.labelSmall?.copyWith(color: gold),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: gold,
+                          ),
                         ),
                       ],
                     ),
@@ -309,6 +310,32 @@ class _KhatmaTile extends ConsumerWidget {
               mushaf: mushaf,
               gold: gold,
               subtleStyle: subtleStyle,
+              onOpenPrevious: mushaf == null
+                  ? null
+                  : () {
+                      final page = khatma.previousPortionPage(
+                        mushaf!.juzStartPages,
+                        mushaf!.rubElHizbPages,
+                      );
+                      if (page == null) return;
+                      ref.read(quranJumpRequestProvider.notifier).state = page;
+                      ref.read(requestedTabProvider.notifier).state =
+                          AppTab.quran;
+                      Navigator.of(context).pop();
+                    },
+              onOpenUpcoming: mushaf == null
+                  ? null
+                  : () {
+                      final page = khatma.upcomingPortionPage(
+                        mushaf!.juzStartPages,
+                        mushaf!.rubElHizbPages,
+                      );
+                      if (page == null) return;
+                      ref.read(quranJumpRequestProvider.notifier).state = page;
+                      ref.read(requestedTabProvider.notifier).state =
+                          AppTab.quran;
+                      Navigator.of(context).pop();
+                    },
             ),
             const SizedBox(height: 12),
             Row(
@@ -586,41 +613,37 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          _StartStep(
-            mushaf: mushaf,
-            startKey: _startKey,
-            onChanged: _setStart,
-          ),
+          _StartStep(mushaf: mushaf, startKey: _startKey, onChanged: _setStart),
           const SizedBox(height: 18),
           const Divider(height: 1),
           const SizedBox(height: 18),
           _DurationStep(
-              unit: _unit,
-              durationDays: _durationDays,
-              dailyAmount: _dailyAmount,
-              reminder: _reminder,
-              onUnitChanged: (u) => _onUnitChanged(u, mushaf),
-              onDurationChanged: (v) => _onDurationChanged(v, mushaf),
-              onAmountChanged: (v) => _onAmountChanged(v, mushaf),
-              onReminderChanged: (t) => setState(() => _reminder = t),
-              onCreate: () async {
-                final startPage = _startPage(mushaf);
-                final mode = switch (_unit) {
-                  _AmountUnit.pages => KhatmaMode.dailyPages,
-                  _AmountUnit.juz => KhatmaMode.dailyJuz,
-                  _AmountUnit.quarters => KhatmaMode.dailyQuarters,
-                };
-                await ref
-                    .read(khatmaStoreProvider.notifier)
-                    .create(
-                      mode: mode,
-                      dailyAmount: _dailyAmount,
-                      startPage: startPage,
-                      reminderTime: _reminder,
-                    );
-                if (context.mounted) Navigator.of(context).pop();
-              },
-            ),
+            unit: _unit,
+            durationDays: _durationDays,
+            dailyAmount: _dailyAmount,
+            reminder: _reminder,
+            onUnitChanged: (u) => _onUnitChanged(u, mushaf),
+            onDurationChanged: (v) => _onDurationChanged(v, mushaf),
+            onAmountChanged: (v) => _onAmountChanged(v, mushaf),
+            onReminderChanged: (t) => setState(() => _reminder = t),
+            onCreate: () async {
+              final startPage = _startPage(mushaf);
+              final mode = switch (_unit) {
+                _AmountUnit.pages => KhatmaMode.dailyPages,
+                _AmountUnit.juz => KhatmaMode.dailyJuz,
+                _AmountUnit.quarters => KhatmaMode.dailyQuarters,
+              };
+              await ref
+                  .read(khatmaStoreProvider.notifier)
+                  .create(
+                    mode: mode,
+                    dailyAmount: _dailyAmount,
+                    startPage: startPage,
+                    reminderTime: _reminder,
+                  );
+              if (context.mounted) Navigator.of(context).pop();
+            },
+          ),
         ],
       ),
     );
@@ -847,9 +870,12 @@ class _Stepper extends StatelessWidget {
         Expanded(child: Text(label)),
         IconButton(
           onPressed: value > min ? () => onChanged(value - 1) : null,
-          icon: const Icon(Icons.remove_circle_outline)),
-        Text(localizeDigits('$value', uiLanguageCode),
-            style: Theme.of(context).textTheme.titleMedium),
+          icon: const Icon(Icons.remove_circle_outline),
+        ),
+        Text(
+          localizeDigits('$value', uiLanguageCode),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         IconButton(
           onPressed: value < max ? () => onChanged(value + 1) : null,
           icon: const Icon(Icons.add_circle_outline),

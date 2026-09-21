@@ -163,6 +163,28 @@ class _ActiveKhatmaRow extends ConsumerWidget {
           mushaf: mushaf,
           gold: gold,
           subtleStyle: subtleStyle,
+          onOpenPrevious: mushaf == null
+              ? null
+              : () {
+                  final page = khatma.previousPortionPage(
+                    mushaf.juzStartPages,
+                    mushaf.rubElHizbPages,
+                  );
+                  if (page == null) return;
+                  ref.read(quranJumpRequestProvider.notifier).state = page;
+                  _switchToQuranTab(context);
+                },
+          onOpenUpcoming: mushaf == null
+              ? null
+              : () {
+                  final page = khatma.upcomingPortionPage(
+                    mushaf.juzStartPages,
+                    mushaf.rubElHizbPages,
+                  );
+                  if (page == null) return;
+                  ref.read(quranJumpRequestProvider.notifier).state = page;
+                  _switchToQuranTab(context);
+                },
         ),
         const SizedBox(height: 12),
         Row(
@@ -281,7 +303,8 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: 8),
           _RangeLine(
-            label: trn('khatma.range_from',
+            label: trn(
+              'khatma.range_from',
               args: [
                 mushaf.surahNameAr(range.start.surahId),
                 '${range.start.ayahNumber}',
@@ -291,7 +314,8 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           _RangeLine(
-            label: trn('khatma.range_to',
+            label: trn(
+              'khatma.range_to',
               args: [
                 mushaf.surahNameAr(range.end.surahId),
                 '${range.end.ayahNumber}',
@@ -329,6 +353,8 @@ class KhatmaProgressSection extends StatelessWidget {
   final MushafData? mushaf;
   final Color gold;
   final TextStyle? subtleStyle;
+  final VoidCallback? onOpenPrevious;
+  final VoidCallback? onOpenUpcoming;
 
   const KhatmaProgressSection({
     super.key,
@@ -336,6 +362,8 @@ class KhatmaProgressSection extends StatelessWidget {
     required this.mushaf,
     required this.gold,
     required this.subtleStyle,
+    this.onOpenPrevious,
+    this.onOpenUpcoming,
   });
 
   @override
@@ -360,16 +388,31 @@ class KhatmaProgressSection extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              trn('khatma.portions_previous', args: ['${khatma.portionsRead}']),
-              style: subtleStyle,
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: khatma.portionsRead > 0 ? onOpenPrevious : null,
+                icon: const Icon(Icons.history_rounded, size: 18),
+                label: Text(
+                  trn(
+                    'khatma.portions_previous',
+                    args: ['${khatma.portionsRead}'],
+                  ),
+                  style: subtleStyle,
+                ),
+              ),
             ),
+            const SizedBox(width: 8),
             if (upcoming != null)
-              Text(
-                trn('khatma.portions_upcoming', args: ['$upcoming']),
-                style: subtleStyle,
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onOpenUpcoming,
+                  icon: const Icon(Icons.upcoming_rounded, size: 18),
+                  label: Text(
+                    trn('khatma.portions_upcoming', args: ['$upcoming']),
+                    style: subtleStyle,
+                  ),
+                ),
               ),
           ],
         ),

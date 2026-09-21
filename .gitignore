@@ -110,3 +110,6 @@ scripts/_stripped/
 # re-enters the history on every run. The REPORTS beside it are kept: they are
 # cited as evidence in CONTENT-LICENSES.md.
 scripts/_azkar_adhkar.json
+
+# Files attached to a Codex task are user input, not repository content.
+.codex-remote-attachments/

@@ -213,6 +213,62 @@ class Khatma {
     }
   }
 
+  /// A real page inside the immediately previous completed portion.
+  ///
+  /// Fixed-size page plans and real juz/rub plans can recover the portion's
+  /// exact start. Target-date portions vary whenever the reader catches up,
+  /// and older persisted khatmas do not store their historical boundaries;
+  /// for those, the last page that was certainly read is the honest target.
+  int? previousPortionPage(
+    Map<int, int> juzStartPages, [
+    List<int>? rubElHizbPages,
+  ]) {
+    if (pagesRead <= 0 || portionsRead <= 0) return null;
+    final logicalNextPage = startPage + pagesRead;
+    switch (mode) {
+      case KhatmaMode.dailyPages:
+        return math.max(
+          startPage,
+          logicalNextPage - math.max(1, dailyAmount ?? 1),
+        );
+      case KhatmaMode.dailyJuz:
+        final starts = <int>{
+          startPage,
+          ...juzStartPages.values.where(
+            (page) => page >= startPage && page < logicalNextPage,
+          ),
+        }.toList()..sort();
+        final index = math
+            .max(0, starts.length - math.max(1, dailyAmount ?? 1))
+            .toInt();
+        return starts[index];
+      case KhatmaMode.dailyQuarters:
+        final starts = <int>{
+          startPage,
+          ...?rubElHizbPages?.where(
+            (page) => page >= startPage && page < logicalNextPage,
+          ),
+        }.toList()..sort();
+        final index = math
+            .max(0, starts.length - math.max(1, dailyAmount ?? 1))
+            .toInt();
+        return starts[index];
+      case KhatmaMode.targetDate:
+        return math.max(startPage, logicalNextPage - 1);
+    }
+  }
+
+  /// Start of the portion after today's currently displayed portion.
+  int? upcomingPortionPage(
+    Map<int, int> juzStartPages, [
+    List<int>? rubElHizbPages,
+  ]) {
+    final remaining = totalPagesInPlan - pagesRead;
+    final due = duePages(juzStartPages, rubElHizbPages);
+    if (due <= 0 || remaining <= due) return null;
+    return (currentPage + due).clamp(startPage, totalPages);
+  }
+
   Khatma copyWith({
     int? pagesRead,
     int? portionsRead,

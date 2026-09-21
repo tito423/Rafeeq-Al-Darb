@@ -52,6 +52,7 @@ class MushafToolbar extends ConsumerWidget {
   final bool canIndexBySurah;
 
   final bool autoScroll;
+  final double autoScrollSpeed;
   final bool reciteActive;
   final bool pageFillScreen;
   final double fontScale;
@@ -62,6 +63,7 @@ class MushafToolbar extends ConsumerWidget {
 
   final void Function(double delta) onFontScale;
   final VoidCallback onToggleAutoScroll;
+  final ValueChanged<double> onAutoScrollSpeedChanged;
   final VoidCallback onToggleRecite;
   final VoidCallback onTogglePageFill;
   final void Function(int page) onGoToPage;
@@ -76,6 +78,7 @@ class MushafToolbar extends ConsumerWidget {
     required this.isRaster,
     required this.canIndexBySurah,
     required this.autoScroll,
+    required this.autoScrollSpeed,
     required this.reciteActive,
     required this.pageFillScreen,
     required this.fontScale,
@@ -84,6 +87,7 @@ class MushafToolbar extends ConsumerWidget {
     required this.totalPages,
     required this.onFontScale,
     required this.onToggleAutoScroll,
+    required this.onAutoScrollSpeedChanged,
     required this.onToggleRecite,
     required this.onTogglePageFill,
     required this.onGoToPage,
@@ -188,10 +192,12 @@ class MushafToolbar extends ConsumerWidget {
                       textMode: textMode,
                       isRaster: isRaster,
                       autoScroll: autoScroll,
+                      autoScrollSpeed: autoScrollSpeed,
                       pageFillScreen: pageFillScreen,
                       fontScale: fontScale,
                       onFontScale: onFontScale,
                       onToggleAutoScroll: onToggleAutoScroll,
+                      onAutoScrollSpeedChanged: onAutoScrollSpeedChanged,
                       onTogglePageFill: onTogglePageFill,
                       onEnterImageView: onEnterImageView,
                       onLeaveImageView: onLeaveImageView,

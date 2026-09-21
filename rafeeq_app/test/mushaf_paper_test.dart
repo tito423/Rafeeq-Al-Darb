@@ -23,14 +23,20 @@ void main() {
   const white = Color(0xFFFFFFFF);
   const black = Color(0xFF000000);
 
-  test('a scan at night: white page becomes the night ground, ink stays legible', () {
-    final page = applyMatrix(nightScanMatrix, white);
-    final ink = applyMatrix(nightScanMatrix, black);
-    expect((page.r * 255).round(), closeTo(0x0F, 2));
-    expect((page.b * 255).round(), closeTo(0x22, 2));
-    expect(_contrast(page, ink), greaterThanOrEqualTo(7.0),
-        reason: 'contrast ${_contrast(page, ink).toStringAsFixed(1)}');
-  });
+  test(
+    'a scan at night: white page becomes the night ground, ink stays legible',
+    () {
+      final page = applyMatrix(nightScanMatrix, white);
+      final ink = applyMatrix(nightScanMatrix, black);
+      expect((page.r * 255).round(), closeTo(0x0F, 2));
+      expect((page.b * 255).round(), closeTo(0x22, 2));
+      expect(
+        _contrast(page, ink),
+        greaterThanOrEqualTo(7.0),
+        reason: 'contrast ${_contrast(page, ink).toStringAsFixed(1)}',
+      );
+    },
+  );
 
   test('warm paper: white becomes the warm ground, black ink stays black', () {
     final page = applyMatrix(warmScanMatrix, white);
@@ -48,11 +54,18 @@ void main() {
     // The rule colours of a coloured-tajweed printing: a red, a green, a
     // blue. Inverting alone would give their complements; the half-turn hue
     // rotation brings each back near its own hue.
-    for (final c in const [Color(0xFFD32F2F), Color(0xFF2E7D32), Color(0xFF1565C0)]) {
+    for (final c in const [
+      Color(0xFFD32F2F),
+      Color(0xFF2E7D32),
+      Color(0xFF1565C0),
+    ]) {
       final out = applyMatrix(nightScanMatrix, c);
       final d = (_hue(out) - _hue(c)).abs() % 360;
-      expect(math.min(d, 360 - d), lessThan(40),
-          reason: '$c -> $out (hue ${_hue(c).round()} -> ${_hue(out).round()})');
+      expect(
+        math.min(d, 360 - d),
+        lessThan(40),
+        reason: '$c -> $out (hue ${_hue(c).round()} -> ${_hue(out).round()})',
+      );
     }
   });
 
@@ -61,5 +74,16 @@ void main() {
       expect(scanFilter(p, darkPage: true), isNull);
     }
     expect(scanFilter(MushafPaper.normal, darkPage: false), isNull);
+  });
+
+  test('normal paper stays white under dark and RGB app themes', () {
+    expect(
+      mushafGround(MushafPaper.normal, imageMode: true, darkPage: false),
+      white,
+    );
+    expect(
+      mushafGround(MushafPaper.normal, imageMode: false, darkPage: false),
+      isNull,
+    );
   });
 }

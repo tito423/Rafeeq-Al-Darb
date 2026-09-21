@@ -34,16 +34,19 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../data/page_turn_provider.dart';
 import '../../../data/text_layout_provider.dart';
 import '../mushaf_theme_picker.dart';
+import 'auto_scroll_speed_bar.dart';
 
 Future<void> showQuranDisplaySheet(
   BuildContext context, {
   required bool textMode,
   required bool isRaster,
   required bool autoScroll,
+  required double autoScrollSpeed,
   required bool pageFillScreen,
   required double fontScale,
   required void Function(double delta) onFontScale,
   required VoidCallback onToggleAutoScroll,
+  required ValueChanged<double> onAutoScrollSpeedChanged,
   required VoidCallback onTogglePageFill,
   required VoidCallback onEnterImageView,
   required VoidCallback onLeaveImageView,
@@ -64,16 +67,18 @@ Future<void> showQuranDisplaySheet(
     builder: (_) => Theme(
       data: appTheme,
       child: _QuranDisplaySheet(
-      textMode: textMode,
-      isRaster: isRaster,
-      autoScroll: autoScroll,
-      pageFillScreen: pageFillScreen,
-      fontScale: fontScale,
-      onFontScale: onFontScale,
-      onToggleAutoScroll: onToggleAutoScroll,
-      onTogglePageFill: onTogglePageFill,
-      onEnterImageView: onEnterImageView,
-      onLeaveImageView: onLeaveImageView,
+        textMode: textMode,
+        isRaster: isRaster,
+        autoScroll: autoScroll,
+        autoScrollSpeed: autoScrollSpeed,
+        pageFillScreen: pageFillScreen,
+        fontScale: fontScale,
+        onFontScale: onFontScale,
+        onToggleAutoScroll: onToggleAutoScroll,
+        onAutoScrollSpeedChanged: onAutoScrollSpeedChanged,
+        onTogglePageFill: onTogglePageFill,
+        onEnterImageView: onEnterImageView,
+        onLeaveImageView: onLeaveImageView,
       ),
     ),
   );
@@ -83,10 +88,12 @@ class _QuranDisplaySheet extends ConsumerStatefulWidget {
   final bool textMode;
   final bool isRaster;
   final bool autoScroll;
+  final double autoScrollSpeed;
   final bool pageFillScreen;
   final double fontScale;
   final void Function(double delta) onFontScale;
   final VoidCallback onToggleAutoScroll;
+  final ValueChanged<double> onAutoScrollSpeedChanged;
   final VoidCallback onTogglePageFill;
   final VoidCallback onEnterImageView;
   final VoidCallback onLeaveImageView;
@@ -95,10 +102,12 @@ class _QuranDisplaySheet extends ConsumerStatefulWidget {
     required this.textMode,
     required this.isRaster,
     required this.autoScroll,
+    required this.autoScrollSpeed,
     required this.pageFillScreen,
     required this.fontScale,
     required this.onFontScale,
     required this.onToggleAutoScroll,
+    required this.onAutoScrollSpeedChanged,
     required this.onTogglePageFill,
     required this.onEnterImageView,
     required this.onLeaveImageView,
@@ -112,6 +121,7 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
   late double _scale = widget.fontScale;
   late bool _fill = widget.pageFillScreen;
   late bool _auto = widget.autoScroll;
+  late double _autoSpeed = widget.autoScrollSpeed;
 
   /// The reflowable text mushaf is the only thing the layout, the font size
   /// and the page colour change, so those rows are hidden in the image mode
@@ -226,6 +236,14 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                 onChanged: (_) {
                   setState(() => _auto = !_auto);
                   widget.onToggleAutoScroll();
+                },
+              ),
+            if (_textOnly && _auto)
+              AutoScrollSpeedBar(
+                speed: _autoSpeed,
+                onChanged: (speed) {
+                  setState(() => _autoSpeed = speed);
+                  widget.onAutoScrollSpeedChanged(speed);
                 },
               ),
             // «اختيار المصاحف في خيارات المصاحف في القرآن مالهاش لازمة» -
@@ -402,8 +420,10 @@ class _FontRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  localizeDigits('${(scale * 100).round()}%',
-                      context.locale.languageCode),
+                  localizeDigits(
+                    '${(scale * 100).round()}%',
+                    context.locale.languageCode,
+                  ),
                   style: TextStyle(
                     fontSize: 11,
                     color: scheme.onSurfaceVariant,

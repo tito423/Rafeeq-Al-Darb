@@ -11,6 +11,7 @@ import '../../data/basmala.dart';
 import '../../data/mushaf_frame.dart';
 import '../../data/mushaf_theme.dart';
 import '../../data/quran_zoom_provider.dart';
+import '../../data/quran_typography.dart';
 import 'mushaf_frame_painter.dart';
 import '../../data/text_layout_provider.dart';
 
@@ -675,9 +676,12 @@ class _ListItem {
   factory _ListItem.banner(int surahId) =>
       _ListItem._(isBanner: true, surahId: surahId);
 
-  factory _ListItem.basmala(int surahId, String text) =>
-      _ListItem._(isBanner: false, isBasmala: true, surahId: surahId,
-          basmalaText: text);
+  factory _ListItem.basmala(int surahId, String text) => _ListItem._(
+    isBanner: false,
+    isBasmala: true,
+    surahId: surahId,
+    basmalaText: text,
+  );
 
   factory _ListItem.run(int runIndex, int from, int to) => _ListItem._(
     isBanner: false,
@@ -921,7 +925,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
     for (var i = widget.from; i <= widget.to; i++) {
       final ayah = widget.ayahs[i];
       final isPlaying = i == widget.playingIndex;
-      final text = '${bodyOf(ayah)} ';
+      final text = '${shapeQuranForDisplay(bodyOf(ayah))} ';
 
       spans.add(
         TextSpan(
