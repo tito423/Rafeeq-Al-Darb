@@ -7,7 +7,7 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-21 |
-| **Current source** | `master` at `b0380411`, released as **v3.52.0**. Nothing uncommitted. |
+| **Current source** | `master` clean and pushed. The published APK was built from `b0380411` (= tag `v3.52.0` = branch `known-good/v3.52.0`); everything after it is documentation. |
 | **Released** | **v3.52.0** — 260,277,487 B, three ABIs, minSdk 24, tag on `b0380411` = `HEAD`. **TWO releases are published on purpose**: «مش تحذف الموجود ممكن يكون فيه خطا ولا حاجة» (2026-09-21), so **v3.51.0 and its tag were NOT deleted** and stay as the fallback. |
 | **Restore point** | still **v3.51.0**: branch `known-good/v3.51.0`, tags `backup-2026-09-21c` and `v3.51.0`, and `../Rafeeq-Backups/Rafeeq-Al-Darb-2026-09-21.bundle`. `RESTORE.md` says how to come back. It does not move to 3.52.0 until 3.52.0 has lived on his phone |
 | **App version** | `pubspec.yaml` `3.52.0+54`; `AboutScreen.appVersion` `3.52.0`; the installed APK reports `versionCode=54 versionName=3.52.0` (aapt2 badging) |
