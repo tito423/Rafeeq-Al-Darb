@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-21 17:54 — IN PROGRESS — resume here**
+**2026-09-21 22:02 — IN PROGRESS — resume here**
 
-Refactor the Quran and khatma fixes under the file-size guards; analyze is clean and all 475 tests pass, device verification pending
+Re-crawl Shamela's 40 category pages fresh (2026-09-21) and export the full book list. shamela_index.py gains 'build --fresh' and 'export', writing shamela_books.md (grouped by category, with a shamela.ws/book/<id> link per title) and shamela_books.csv. Measured: 8,598 books, all 8,598 distinct - no title sits in two categories. The re-crawl found ZERO drift against the 2026-09-09 index: same 8,598 ids, none added, none removed, so the catalogue is genuinely unchanged rather than merely re-saved. Six ids sampled at random were fetched live and all returned 200 with real 28-31 KB book pages; the site's homepage is 59 KB, so these are not soft-404s (trap #5). Trap #11 bit again: a heredoc collapsed the two backslash-n literals in the generated export code into real newlines and the file would not compile - fixed with the editor, then py_compile'd before running.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

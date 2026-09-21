@@ -10,13 +10,15 @@ So: fetch the 40 category pages once, keep them, and search the result locally
 as often as needed. One pass over someone else's server instead of a query per
 title.
 
-    py -3 scripts/shamela_index.py build      # fetch/refresh the index
+    py -3 scripts/shamela_index.py build [--fresh]   # fetch/refresh the index
+    py -3 scripts/shamela_index.py export            # -> shamela_books.md / .csv
     py -3 scripts/shamela_index.py find "الرحيق المختوم" ["..." ...]
 
 Results are written to a UTF-8 file as well as stdout, because the Windows
 console is cp1256 and raises UnicodeEncodeError on Arabic.
 """
 
+import csv
 import io
 import json
 import os
@@ -60,9 +62,9 @@ def fetch(url, tries=4):
             time.sleep(2 * (i + 1))
 
 
-def build():
+def build(fresh=False):
     index = {}
-    if os.path.exists(INDEX):
+    if os.path.exists(INDEX) and not fresh:
         index = json.loads(io.open(INDEX, encoding="utf-8").read())
     for cid, cname in CATEGORIES.items():
         key = str(cid)
@@ -126,11 +128,62 @@ def find(terms):
     print(f"wrote {OUT}")
 
 
+BOOKS_MD = os.path.join(ROOT, "shamela_books.md")
+BOOKS_CSV = os.path.join(ROOT, "shamela_books.csv")
+
+
+def export():
+    """Write every indexed book to a readable .md and a machine-readable .csv."""
+    if not os.path.exists(INDEX):
+        raise SystemExit("build the index first: py -3 scripts/shamela_index.py build")
+    index = json.loads(io.open(INDEX, encoding="utf-8").read())
+    stamp = time.strftime("%Y-%m-%d")
+    rows, seen = [], {}
+    for cid in sorted(index, key=int):
+        cat = index[cid]
+        for b in cat["books"]:
+            rows.append((cid, cat["name"], b["id"], b["title"]))
+            seen.setdefault(b["id"], b["title"])
+    total, uniq = len(rows), len(seen)
+
+    md = [
+        "# فهرس كتب المكتبة الشاملة",
+        "",
+        f"مأخوذ من صفحات التصنيفات الأربعين على shamela.ws بتاريخ {stamp}.",
+        f"عدد المداخل: {total} — عدد الكتب المختلفة: {uniq}"
+        + (" (الفرق كتب مُدرجة في أكثر من تصنيف)." if total != uniq else "."),
+        "",
+        "رابط أي كتاب: `https://shamela.ws/book/<الرقم>`",
+        "",
+    ]
+    for cid in sorted(index, key=int):
+        cat = index[cid]
+        md.append(f"## {cid}. {cat['name']} ({len(cat['books'])})")
+        md.append("")
+        for i, b in enumerate(cat["books"], 1):
+            md.append(f"{i}. [{b['id']}](https://shamela.ws/book/{b['id']}) — {b['title']}")
+        md.append("")
+    with io.open(BOOKS_MD, "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(md))
+
+    with io.open(BOOKS_CSV, "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["category_id", "category", "book_id", "title", "url"])
+        for cid, cname, bid, title in rows:
+            w.writerow([cid, cname, bid, title, f"https://shamela.ws/book/{bid}"])
+
+    print(f"{total} entries, {uniq} distinct books")
+    print(f"-> {BOOKS_MD}")
+    print(f"-> {BOOKS_CSV}")
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
     if sys.argv[1] == "build":
-        build()
+        build(fresh="--fresh" in sys.argv[2:])
+    elif sys.argv[1] == "export":
+        export()
     elif sys.argv[1] == "find":
         find(sys.argv[2:])
     else:
