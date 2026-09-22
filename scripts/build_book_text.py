@@ -224,6 +224,20 @@ BOOKS = {
     "ihkam_al_ahkam": {"shamela_id": 1665, "source_label": "المكتبة الشاملة — إحكام الأحكام شرح عمدة الأحكام، ابن دقيق العيد"},
     "sharh_al_waraqat_al_mahalli": {"shamela_id": 21547, "source_label": "المكتبة الشاملة — شرح الورقات في أصول الفقه، جلال الدين المحلي"},
     "tanwir_al_hawalik": {"shamela_id": 5757, "source_label": "المكتبة الشاملة — تنوير الحوالك شرح موطأ مالك، جلال الدين السيوطي"},
+    # ── library «المرحلة ٢» (2026-09-23): the encyclopaedias. Cleared for
+    # size by measuring البداية والنهاية (4.9 MB, 4,918 pages) on the owner's
+    # phone: 7.5 s to download and index, 4.3 s to open, 5 s to jump to the
+    # last page, Java heap flat at 10 MB (trap #4). Every card below was read
+    # before it was listed; none names one of the seven.
+    "ilam_al_muwaqqiin": {"shamela_id": 11496, "source_label": "المكتبة الشاملة — إعلام الموقعين عن رب العالمين، ابن قيم الجوزية"},
+    "al_majmu_sharh_al_muhadhdhab": {"shamela_id": 2186, "source_label": "المكتبة الشاملة — المجموع شرح المهذب، النووي"},
+    "al_mughni_ibn_qudamah": {"shamela_id": 6910, "source_label": "المكتبة الشاملة — المغني، ابن قدامة المقدسي"},
+    "fath_al_bari": {"shamela_id": 1673, "source_label": "المكتبة الشاملة — فتح الباري بشرح البخاري، ابن حجر العسقلاني"},
+    "tafsir_al_qurtubi": {"shamela_id": 20855, "source_label": "المكتبة الشاملة — الجامع لأحكام القرآن، القرطبي"},
+    "siyar_alam_al_nubala": {"shamela_id": 10906, "source_label": "المكتبة الشاملة — سير أعلام النبلاء، الذهبي"},
+    "tafsir_al_tabari": {"shamela_id": 7798, "source_label": "المكتبة الشاملة — جامع البيان عن تأويل آي القرآن، الطبري"},
+    "lisan_al_arab": {"shamela_id": 1687, "source_label": "المكتبة الشاملة — لسان العرب، ابن منظور"},
+    "tahdhib_al_kamal": {"shamela_id": 3722, "source_label": "المكتبة الشاملة — تهذيب الكمال في أسماء الرجال، المزي"},
     "al_rahiq_al_makhtum": {"shamela_id": 9820, "source_label": "المكتبة الشاملة — الرحيق المختوم، صفي الرحمن المباركفوري"},
     "sharh_al_ajurrumiyyah_hifzi": {"shamela_id": 2122, "source_label": "المكتبة الشاملة — شرح الآجرومية، حسن بن محمد الحفظي"},
     "tawdih_al_maqasid_sharh_al_nuniyyah": {"shamela_id": 6362, "source_label": "المكتبة الشاملة — توضيح المقاصد شرح نونية ابن القيم، أحمد بن إبراهيم بن عيسى"},
