@@ -4590,6 +4590,27 @@ const List<LibraryBook> libraryBookCatalog = [
       sourceLabel: 'المكتبة الشاملة — شرح الآجرومية، د حسن بن محمد الحفظي',
     ),
   ),
+
+  // ── 2026-09-23 — library «المرحلة ٢»: the encyclopaedias, per the owner's
+  // rulings. scripts/library_phase2.py.
+  LibraryBook(
+    id: 'ilam_al_muwaqqiin',
+    titleAr: 'إعلام الموقعين عن رب العالمين',
+    titleEn: 'Ilam al-Muwaqqiin',
+    authorAr: 'الإمام ابن قيّم الجوزية',
+    authorEn: 'Ibn Qayyim al-Jawziyyah',
+    deathYearAh: 751,
+    pages: 1221,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ilam_al_muwaqqiin.json',
+      sizeBytes: 1487925,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — إعلام الموقعين عن رب العالمين، محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)، دار الكتب العلمية - ييروت، الأولى، ١٤١١هـ - ١٩٩١م',
+    ),
+  ),
+
 ];
 
 /// One book by its id, or null.

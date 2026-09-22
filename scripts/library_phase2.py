@@ -171,7 +171,14 @@ def main():
     report = "--report" in sys.argv
     out = io.open(REPORT, "w", encoding="utf-8")
     entries, refused = [], []
+    # Phase 2 lands in batches as the crawls finish, so the same run may be
+    # made twice: a book already in the catalogue is left alone rather than
+    # written in twice.
+    catalogue = io.open(CATALOG, encoding="utf-8").read()
     for book_id, (t_ar, t_en, a_ar, a_en, death, cat, shelf) in PLAN.items():
+        if f"id: '{book_id}'" in catalogue:
+            refused.append((book_id, "already catalogued"))
+            continue
         path = os.path.join(BUILD, book_id + ".json")
         if not os.path.exists(path):
             refused.append((book_id, "not built"))
