@@ -1,5 +1,6 @@
 import '../widgets/app_font_picker.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/accordion.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -483,8 +484,19 @@ class CollapsibleSection extends StatefulWidget {
 }
 
 class _CollapsibleSectionState extends State<CollapsibleSection>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AccordionMember<CollapsibleSection> {
   late bool _open = widget.initiallyOpen;
+
+  @override
+  bool get accordionIsOpen => _open;
+
+  @override
+  void accordionCollapse() => setState(() => _open = false);
+
+  void _toggle() {
+    setState(() => _open = !_open);
+    if (_open) accordionOpened();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -503,7 +515,7 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
           icon: widget.icon ?? Icons.tune_rounded,
           title: widget.title,
           subtitle: '',
-          onTap: () => setState(() => _open = !_open),
+          onTap: _toggle,
           trailing: AnimatedRotation(
             turns: _open ? 0.25 : 0,
             duration: const Duration(milliseconds: 180),

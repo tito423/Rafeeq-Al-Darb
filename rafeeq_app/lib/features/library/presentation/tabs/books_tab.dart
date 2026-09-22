@@ -6,6 +6,7 @@
 /// twenty-five classes in it.
 library;
 
+import '../../../../core/widgets/accordion.dart';
 import 'dart:async';
 import '../../../../core/utils/digits.dart';
 
@@ -324,7 +325,10 @@ class _AuthorExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return ExpansionTile(
+    return AccordionTile(
+      builder: (controller, onExpansionChanged) => ExpansionTile(
+        controller: controller,
+        onExpansionChanged: onExpansionChanged,
       initiallyExpanded: initiallyExpanded,
       leading: CircleAvatar(
         backgroundColor: AppColors.gold.withValues(alpha: 0.15),
@@ -394,6 +398,7 @@ class _AuthorExpansionTile extends StatelessWidget {
           const SizedBox(height: 10),
         ],
       ],
+    ),
     );
   }
 
@@ -479,7 +484,10 @@ class _CategoryExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
+    return AccordionTile(
+      builder: (controller, onExpansionChanged) => ExpansionTile(
+        controller: controller,
+        onExpansionChanged: onExpansionChanged,
       initiallyExpanded: initiallyExpanded,
       leading: Icon(category.icon, color: AppColors.gold),
       title: Text(
@@ -513,6 +521,7 @@ class _CategoryExpansionTile extends StatelessWidget {
           const SizedBox(height: 10),
         ],
       ],
+    ),
     );
   }
 }

@@ -953,6 +953,9 @@
     "wird_done": "Porção {} concluída",
     "no_wirds": "Ainda não há porções"
   },
+  "selected_surahs": {
+    "title": "Suratas selecionadas"
+  },
   "sunan_suwar": {
     "title": "Sunan das Suras (Dia e Noite)",
     "reminder": "Lembrete semanal",

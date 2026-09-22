@@ -953,6 +953,9 @@
     "wird_done": "أتممت الورد {}",
     "no_wirds": "لا توجد أوراد بعد"
   },
+  "selected_surahs": {
+    "title": "سور مختارة"
+  },
   "sunan_suwar": {
     "title": "سنن السور في اليوم والليلة",
     "reminder": "تذكير أسبوعي",

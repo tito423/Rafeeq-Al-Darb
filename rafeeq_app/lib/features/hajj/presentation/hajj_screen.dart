@@ -9,6 +9,7 @@
 /// pebbles at the jamarat.
 library;
 
+import '../../../core/widgets/accordion.dart';
 import '../../library/presentation/widgets/listen_text_button.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
@@ -219,7 +220,10 @@ class _StepCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(color: AppColors.gold.withValues(alpha: 0.25)),
       ),
-      child: ExpansionTile(
+      child: AccordionTile(
+        builder: (controller, onExpansionChanged) => ExpansionTile(
+          controller: controller,
+          onExpansionChanged: onExpansionChanged,
         shape: const Border(),
         leading: Container(
           width: 36,
@@ -285,6 +289,7 @@ class _StepCard extends StatelessWidget {
             data: (text) => _StepText(step: step, book: text),
           ),
         ],
+      ),
       ),
     );
   }

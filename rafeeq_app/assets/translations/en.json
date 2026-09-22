@@ -953,6 +953,9 @@
     "wird_done": "Portion {} completed",
     "no_wirds": "No portions yet"
   },
+  "selected_surahs": {
+    "title": "Selected surahs"
+  },
   "sunan_suwar": {
     "title": "Sunnah of the Surahs (Day & Night)",
     "reminder": "Weekly reminder",

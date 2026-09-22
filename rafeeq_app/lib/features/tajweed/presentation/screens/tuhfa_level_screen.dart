@@ -22,6 +22,7 @@
 /// paragraph rather than swallowing it.
 library;
 
+import '../../../../core/widgets/accordion.dart';
 import '../../data/bundled_matn.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/utils/digits.dart';
@@ -207,7 +208,10 @@ class _LessonTile extends ConsumerWidget {
     final scheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
-      child: ExpansionTile(
+      child: AccordionTile(
+        builder: (controller, onExpansionChanged) => ExpansionTile(
+          controller: controller,
+          onExpansionChanged: onExpansionChanged,
         shape: const Border(),
         leading: CircleAvatar(
           radius: 16,
@@ -241,6 +245,7 @@ class _LessonTile extends ConsumerWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

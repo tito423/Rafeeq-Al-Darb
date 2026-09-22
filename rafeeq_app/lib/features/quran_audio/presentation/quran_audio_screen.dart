@@ -1,3 +1,4 @@
+import '../../../core/widgets/accordion.dart';
 import 'dart:io';
 import '../../../core/utils/digits.dart';
 
@@ -232,7 +233,10 @@ class _LibraryTab extends ConsumerWidget {
                 margin: const EdgeInsets.only(bottom: 10),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                 clipBehavior: Clip.antiAlias,
-                child: ExpansionTile(
+                child: AccordionTile(
+                  builder: (controller, onExpansionChanged) => ExpansionTile(
+                    controller: controller,
+                    onExpansionChanged: onExpansionChanged,
                   initiallyExpanded: byReciter.length <= 3,
                   leading: const Icon(Icons.folder_rounded, color: AppColors.gold, size: 30),
                   title: Text(group.first.reciterName, style: const TextStyle(fontWeight: FontWeight.w800)),
@@ -246,6 +250,7 @@ class _LibraryTab extends ConsumerWidget {
                     for (final e in group)
                       _RecitationFolder(entry: e, data: data, locale: locale),
                   ],
+                ),
                 ),
               ),
           ],
@@ -676,7 +681,10 @@ class _Group extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         clipBehavior: Clip.antiAlias,
-        child: ExpansionTile(
+        child: AccordionTile(
+          builder: (controller, onExpansionChanged) => ExpansionTile(
+            controller: controller,
+            onExpansionChanged: onExpansionChanged,
           leading: Icon(icon, color: AppColors.gold),
           title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontWeight: FontWeight.w700)),
@@ -688,6 +696,7 @@ class _Group extends StatelessWidget {
             onPressed: onPlayAll,
           ),
           children: children,
+        ),
         ),
       );
 }

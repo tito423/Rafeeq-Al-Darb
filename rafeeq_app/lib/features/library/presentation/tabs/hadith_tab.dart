@@ -284,7 +284,11 @@ class _BookListState extends State<_BookList> {
               subtitle: 'library.section_nine_desc'.tr(),
               icon: Icons.auto_stories_rounded,
               open: _nineOpen,
-              onTap: () => setState(() => _nineOpen = !_nineOpen),
+              // One section open at a time (see core/widgets/accordion.dart).
+              onTap: () => setState(() {
+                _nineOpen = !_nineOpen;
+                if (_nineOpen) _textsOpen = false;
+              }),
             ),
             if (_nineOpen)
               for (final b in books) ...[
@@ -305,7 +309,10 @@ class _BookListState extends State<_BookList> {
                 subtitle: 'library.section_texts_desc'.tr(),
                 icon: Icons.menu_book_rounded,
                 open: _textsOpen,
-                onTap: () => setState(() => _textsOpen = !_textsOpen),
+                onTap: () => setState(() {
+                  _textsOpen = !_textsOpen;
+                  if (_textsOpen) _nineOpen = false;
+                }),
               ),
               if (_textsOpen)
                 for (final b in _hadithTexts) ...[

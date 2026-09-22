@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/accordion.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 import '../../../tutorial/data/tutorial_state.dart';
 
@@ -61,8 +62,20 @@ class MoreGroup extends ConsumerStatefulWidget {
   ConsumerState<MoreGroup> createState() => _MoreGroupState();
 }
 
-class _MoreGroupState extends ConsumerState<MoreGroup> {
+class _MoreGroupState extends ConsumerState<MoreGroup>
+    with AccordionMember<MoreGroup> {
   bool _open = false;
+
+  @override
+  bool get accordionIsOpen => _open;
+
+  @override
+  void accordionCollapse() => setState(() => _open = false);
+
+  void _toggle() {
+    setState(() => _open = !_open);
+    if (_open) accordionOpened();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +88,7 @@ class _MoreGroupState extends ConsumerState<MoreGroup> {
           accent: widget.accent,
           title: widget.title,
           subtitle: widget.subtitle,
-          onTap: () => setState(() => _open = !_open),
+          onTap: _toggle,
           trailing: AnimatedRotation(
             turns: open ? 0.25 : 0,
             duration: const Duration(milliseconds: 200),

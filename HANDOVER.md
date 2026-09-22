@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 15:49 — IN PROGRESS — resume here**
+**2026-09-22 15:55 — IN PROGRESS — resume here**
 
-Khatma verified on emulator-5554 (release-signed APK): create sheet fits and 'insha al-khatma' creates; two wirds in a row (0->2 previous, 29->27 upcoming, bar fills from the right); undo from the khatma screen (3->2) and from Home (2->1); previous-wirds list shows real surah/ayah/page/date per wird and 'irja3 lah' rewound to wird 1 after confirmation; tapping an upcoming wird opened the mushaf at 2:257 p.43. SnackBar now auto-dismisses. Follow-ups this commit: undo action colour 3.2:1 -> 5.0:1 (primarySoft on dark), khatma delete button red. Owner's phone disconnected from adb before install, so not yet on his device.
+Home gains 'suwar mukhtara' (Yusuf, Maryam, ar-Rahman, al-Waqi'a, Ya-Sin, Qaf; 2x3 tiles, each opens SingleSurahScreen locked to that surah). New core/widgets/accordion.dart: one card open per scrolling list (nested parents excluded) and an opened card scrolls fully into view; applied to all 8 ExpansionTiles (hajj, library authors/categories, quran audio x2, three tajweed levels), More groups, Settings sections, and the two hadith-tab sections. analyze clean; not yet seen on a device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

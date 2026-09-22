@@ -33,6 +33,7 @@ import '../../../settings/presentation/widgets/reader_name_sheet.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../khatma/presentation/khatma_card.dart';
 import '../../../quran/presentation/widgets/continue_reading_card.dart';
+import '../../../sunan_suwar/presentation/selected_surahs_card.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
 
@@ -138,6 +139,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   id: TourAnchor.sunanCard,
                   child: SunanSuwarCard(),
                 ),
+                const SizedBox(height: 16),
+                const SelectedSurahsCard(),
                 const SizedBox(height: 16),
                 // «حط كارت مقولة اليوم … في الشاشة الرئيسية فوق حديث
                 // اليوم». It draws nothing at all when the setting is off.
