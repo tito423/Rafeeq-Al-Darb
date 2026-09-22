@@ -23,7 +23,7 @@ Cline, or any other).
 | **Verified 2026-09-21 (release 3.53.0)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **455 passed, 2 skipped** · built with `build_github_release.bat` and re-signed by `scripts/sign_release.py`, whose two-pass check passed (`CN=Rafeeq Al-Darb` from Android 9 up, the old debug certificate still covering Android 7–8) · `dist/RafeeqAlDarb-v3.53.0.apk` **260,175,087 B**, sha256 `033e183ae4377a8bef83286b32b128869cf5b2e1a20cf57685fcc347b14570ed` · installed on `emulator-5554` with `adb install -r` → `Success`, no FATAL EXCEPTION · hosted content range-checked with a User-Agent, all 206 with the right `Content-Type`: `books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json`, `hadith/hadith.zip`, `mushaf/madinah_qc/001.png`, and the Umrah JSON carries **no** `Content-Encoding` |
 | **Seen on the device 2026-09-21 (release 3.53.0)** | Home renders and the More list shows «ادعم التطبيق», so the GitHub-only support define is in this build · the العمرة track shows exactly **6** Umrah-only cards · step 2 «ميقات العمرة» — the one he photographed opening onto «في ميقات الحج» — now opens on «للعُمرةِ المُفرَدةِ عنِ الحجِّ ميقاتانِ زَمانيٌّ ومَكانيٌّ» · the About card reads **v3.53.0** |
 
-## SESSION 2026-09-22 — committed, NOT pushed, NOT released, NOT on his phone
+## SESSION 2026-09-22 — committed and pushed, NOT released, NOT on his phone
 
 Everything below is in checkpoint commits on `master` (`a334aefe` … the
 last `checkpoint(wip)`). Verified on **emulator-5554** with the signed
@@ -2278,9 +2278,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 18:01 — IN PROGRESS — resume here**
+**2026-09-22 18:07 — IN PROGRESS — resume here**
 
-HANDOVER: 2026-09-22 session block (committed, not pushed, not released, not on his phone), the three 2026-09-21 OPEN items marked done with evidence, and the Jazariyyah commentary research: both Shamela candidates are modern copyrighted works (21580 Safwat Salim 2003, 17065 al-Abd 2001); classical commentaries absent from the 8,598-book index; archive.org has recordings and the bare matn, no licensed text - owner's decision needed.
+HANDOVER: the 2026-09-22 work is pushed (bb476739..200bce64); the percent and prayer-offset digit fixes seen on emulator-5554 (font size reads ١٠٠٪, offset reads ٠).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
