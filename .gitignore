@@ -117,3 +117,6 @@ scripts/_azkar_adhkar.json
 # strip_named_notes.py writes the cleaned books here before uploading; the
 # report stays in git, the books are on R2.
 scripts/strip_named_notes_out/*.json
+
+# measure_quran_asr.py downloads recitations and writes its report here.
+scripts/asr_probe/

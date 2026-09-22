@@ -106,12 +106,19 @@ record.
   mask hiding from the END, per-ayah recitation repeated 1/3/5/10 times.
   Seen: the card in «المزيد», the surah list, al-Fatiha, words hidden, audio
   playing (dumpsys: AudioTrack state:started).
-* **Phase 2 (تسميع آلي) NOT built and NOT promised.** Measured research only:
-  Vosk's Modern-Standard-Arabic model is `vosk-model-ar-mgb2-0.4`, 318 MB,
-  Apache-2.0, 16.4% WER on broadcast news; the 1.3 G linto model is AGPL and
-  is therefore out. Nothing has been run on a real recitation yet — the next
-  step is to measure it on the per-ayah MP3s the app already downloads,
-  before a line of app code is written.
+* **Phase 2 (تسميع آلي) — MEASURED, not built.** Vosk's Arabic model is
+  318 MB at 16.4% WER on broadcast news, so a Qur'an-tuned Whisper was tried
+  instead: `tarteel-ai/whisper-base-ar-quran` (Apache-2.0), through the
+  CTranslate2 build `OdyAsh/faster-whisper-base-ar-quran`, **model.bin
+  145 MB int8**. `scripts/measure_quran_asr.py` runs it on the everyayah
+  MP3s the app itself downloads and compares with `quran_local.db`:
+  **73 words, 67 exact (91.8%), 72 (98.6%) once Uthmani spelling is allowed
+  to differ from imla'i («السموت» / «السماوات»); 94 s of audio in 13.6 s,
+  ~7x real time on this desktop CPU.** So word-level checking against a
+  known ayah is realistic; tajweed errors are NOT (a wrong madd is not a
+  wrong word). Not measured yet: a phone's CPU, and a learner's voice rather
+  than a studio reciter. On-device path would be whisper.cpp or
+  onnxruntime with this model, downloaded like a mushaf, not bundled.
 * Store screenshots NOT re-shot yet (the owner asked for them after he looks
   at the emulator himself).
 
