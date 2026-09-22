@@ -159,7 +159,10 @@ class _RgbPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
         ..isAntiAlias = true
-        ..color = _gold.withValues(alpha: 0.055),
+        // 0.09, was 0.055: «غيّر الخلفية المتحركة … خليه حاجات إسلامية»
+        // (2026-09-22) came from someone who had had this lattice since
+        // 3.19 — at 5 % it was not reading as anything on his phone.
+        ..color = _gold.withValues(alpha: 0.09),
     );
     canvas.restore();
 
@@ -220,6 +223,137 @@ class _RgbPainter extends CustomPainter {
           stops: [0.0, 0.38, 1.0],
         ).createShader(rect),
     );
+
+    // 4. The night sky of an Islamic evening, in the same gold: stars that
+    // twinkle, a crescent with a slow breathing glow, and three lanterns
+    // hanging from the top edge, each swinging on its own chain. These are
+    // the "Islamic things" of the owner's ask; the lattice alone read as a
+    // texture, not as a scene.
+    _paintStars(canvas, size, t);
+    _paintCrescent(canvas, Offset(w * 0.86, h * 0.11), w * 0.075, t);
+    for (final (fx, len, phase) in const [
+      (0.14, 0.13, 0.0),
+      (0.40, 0.19, 1.9),
+      (0.64, 0.15, 3.7),
+    ]) {
+      _paintLantern(canvas, Offset(w * fx, 0), h * len, w * 0.05, t, phase);
+    }
+  }
+
+  /// Fixed star positions (fractions of the screen), made once.
+  static final List<Offset> _stars = () {
+    final rnd = math.Random(7);
+    return [
+      for (var i = 0; i < 22; i++)
+        Offset(rnd.nextDouble(), rnd.nextDouble() * 0.55),
+    ];
+  }();
+
+  static void _paintStars(Canvas canvas, Size size, double t) {
+    final tau = 2 * math.pi;
+    for (var i = 0; i < _stars.length; i++) {
+      final twinkle = 0.5 + 0.5 * math.sin(t * tau * 3 + i * 1.7);
+      final c = Offset(_stars[i].dx * size.width, _stars[i].dy * size.height);
+      final r = 1.2 + twinkle * 1.3;
+      final p = Paint()..color = _gold.withValues(alpha: 0.10 + 0.25 * twinkle);
+      // A four-point sparkle, not a dot: two thin crossed diamonds.
+      canvas.drawPath(
+        Path()
+          ..moveTo(c.dx, c.dy - r * 2.2)
+          ..lineTo(c.dx + r * 0.45, c.dy)
+          ..lineTo(c.dx, c.dy + r * 2.2)
+          ..lineTo(c.dx - r * 0.45, c.dy)
+          ..close()
+          ..moveTo(c.dx - r * 2.2, c.dy)
+          ..lineTo(c.dx, c.dy + r * 0.45)
+          ..lineTo(c.dx + r * 2.2, c.dy)
+          ..lineTo(c.dx, c.dy - r * 0.45)
+          ..close(),
+        p,
+      );
+    }
+  }
+
+  static void _paintCrescent(Canvas canvas, Offset c, double r, double t) {
+    final breathe = 0.5 + 0.5 * math.sin(t * 2 * math.pi);
+    canvas.drawCircle(
+      c,
+      r * 2.6,
+      Paint()
+        ..shader = RadialGradient(
+          colors: [
+            _gold.withValues(alpha: 0.10 + 0.08 * breathe),
+            _gold.withValues(alpha: 0.0),
+          ],
+        ).createShader(Rect.fromCircle(center: c, radius: r * 2.6)),
+    );
+    final moon = Path.combine(
+      PathOperation.difference,
+      Path()..addOval(Rect.fromCircle(center: c, radius: r)),
+      Path()
+        ..addOval(
+          Rect.fromCircle(center: c + Offset(r * 0.42, -r * 0.18), radius: r * 0.86),
+        ),
+    );
+    canvas.drawPath(moon, Paint()..color = _gold.withValues(alpha: 0.42));
+  }
+
+  /// A fanous on a chain from [top], swinging a few degrees.
+  static void _paintLantern(
+    Canvas canvas,
+    Offset top,
+    double chain,
+    double width,
+    double t,
+    double phase,
+  ) {
+    final swing = math.sin(t * 2 * math.pi * 2 + phase) * 0.07;
+    canvas.save();
+    canvas.translate(top.dx, top.dy);
+    canvas.rotate(swing);
+    final line = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1
+      ..color = _gold.withValues(alpha: 0.35);
+    canvas.drawLine(Offset.zero, Offset(0, chain), line);
+
+    final hw = width / 2;
+    final y0 = chain; // top of the cap
+    final body = Rect.fromLTRB(-hw, y0 + width * 0.45, hw, y0 + width * 1.55);
+    // The lit glass first, so the frame is drawn over it.
+    final glowAlpha = 0.14 + 0.06 * math.sin(t * 2 * math.pi * 3 + phase);
+    canvas.drawCircle(
+      body.center,
+      width * 1.6,
+      Paint()
+        ..shader = RadialGradient(
+          colors: [
+            _gold.withValues(alpha: glowAlpha),
+            _gold.withValues(alpha: 0.0),
+          ],
+        ).createShader(Rect.fromCircle(center: body.center, radius: width * 1.6)),
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(body, Radius.circular(width * 0.18)),
+      Paint()..color = _gold.withValues(alpha: 0.12),
+    );
+    final frame = Path()
+      // domed cap
+      ..moveTo(-hw * 0.7, y0 + width * 0.45)
+      ..quadraticBezierTo(0, y0 - width * 0.15, hw * 0.7, y0 + width * 0.45)
+      // bottom point
+      ..moveTo(-hw * 0.7, y0 + width * 1.55)
+      ..lineTo(0, y0 + width * 2.0)
+      ..lineTo(hw * 0.7, y0 + width * 1.55)
+      // the glass panes
+      ..moveTo(0, y0 + width * 0.45)
+      ..lineTo(0, y0 + width * 1.55);
+    canvas.drawPath(frame, line..strokeWidth = 1.2);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(body, Radius.circular(width * 0.18)),
+      line,
+    );
+    canvas.restore();
   }
 
   /// The tessellation for a screen of [size], built once and kept. Static

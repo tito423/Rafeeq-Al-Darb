@@ -534,12 +534,14 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
               behavior: HitTestBehavior.translucent,
               onTap: _tapPage,
               child: Padding(
+                // Bottom 72: room for the floating page pill, which hid the
+                // last line of a long page (p.20 on the owner's phone).
                 padding: EdgeInsets.symmetric(
                   horizontal: bare
                       ? (isLandscape ? 18.0 : 8.0)
                       : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0)),
                   vertical: bare ? 6.0 : 12.0,
-                ),
+                ).copyWith(bottom: bare ? 6.0 : 72.0),
                 child: Column(
                   // Centred only where the printed mushaf centres: its first
                   // two pages. Every other page starts at the top.

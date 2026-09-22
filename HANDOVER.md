@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 17:16 — IN PROGRESS — resume here**
+**2026-09-22 17:23 — IN PROGRESS — resume here**
 
-I'rab card: the spelling-based morpheme splitter is gone (it labelled the final ha of Allah an attached pronoun and the lam of la'alla a preposition); invented 'wa alamat nasbihi al-fatha' wording removed (wrong for arba'in 2:51); 16 raw corpus tags + the ACC mistranslation mapped to the corpus's own Arabic names from corpus.quran.com tagset.jsp (NUM = ism per the corpus word pages for 2:29/2:51/2:60); root/lemma chips in AmiriQuran (UI font drew zay/waw like j/g, wasla lemma as 'ashm'); page number Arabic-Indic; duplicate drag handle removed. Single-surah reader shows only its own surah's ayahs on shared pages (Ya-Sin opened under Fatir 45). Reciter screen uses surahNameForDisplay (U+06E1 garbled an-Nasr in the UI font). Verified on emulator-5554 release build: khatma persists across force-stop; suwar mukhtara card + Ya-Sin; library accordion + back closes card then goes Home; hide book (11->10, hidden(1), undo); per-ayah: an-Nasr 0/3, downloaded 3/3 complete, delete immediate 3->0; English wbw row gone. 485 tests pass.
+RGB theme: lattice 5.5%->9%, plus twinkling stars, a breathing crescent and three swinging lanterns (the owner had the girih lattice since 3.19 and asked again for 'Islamic things' - at 5% it read as nothing); RGB cards 90%->80% so the motion shows inside cards (worst-case contrast computed: 16.0:1 body, 9.7:1 secondary). Text mushaf: 72px bottom room for the floating page pill (last line of p.20 hid under it at large font). Test: a khatma saved by 3.55.0 (no wirds key) loads. Investigated, NOT changed: waqf marks at large font sit above their own words (checked 2:129, 2:130, 2:131) but float between lines; the small 'meem' under ummatan muslimatan is U+06ED in the source text, drawn literally by AmiriQuran - Quran text is not edited.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

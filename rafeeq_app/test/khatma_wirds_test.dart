@@ -66,6 +66,28 @@ void main() {
     expect(up.last.to - up.last.from, 4);
   });
 
+  // What the owner's phone holds today: saved by 3.55.0, no «wirds» key.
+  test('a khatma saved before this release still loads', () {
+    final k = Khatma.fromJson({
+      'id': '1',
+      'startDate': '2026-09-19T08:00:00.000',
+      'mode': 'dailyPages',
+      'targetDate': null,
+      'dailyAmount': 10,
+      'startPage': 1,
+      'pagesRead': 20,
+      'portionsRead': 2,
+      'lastReadDate': '2026-09-21T21:00:00.000',
+      'streak': 2,
+      'completedAt': null,
+      'reminderHour': null,
+      'reminderMinute': null,
+    });
+    expect(k.wirds, isEmpty);
+    expect(k.previousWirds(const {}).length, 2);
+    expect(k.currentPage, 21);
+  });
+
   test('wird records survive a save and a restore', () {
     final k = pages10(
       read: 10,

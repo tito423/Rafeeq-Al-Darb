@@ -44,7 +44,11 @@ class AppTheme {
         scaffold: Colors.transparent,
         appBarColor: const Color(0x73070B14),
         surface: const Color(0xF00A0E1A),
-        card: const Color(0xE60C1322),
+        // 80 %, was 90 %: «اتأكد إن أنيميشن الـRGB شغال في كل كارت»
+        // (2026-09-22) — at 90 % the backdrop barely moved behind a card.
+        // Measured worst case, every glow of the backdrop stacked under one
+        // card: body text 16.0 : 1, secondary text 9.7 : 1 (floor 4.5).
+        card: const Color(0xCC0C1322),
         border: const Color(0x3322E0C6),
         onSurface: const Color(0xFFEFFCFA),
         onSurfaceVar: const Color(0xFFA9CCC7),
