@@ -134,6 +134,18 @@ record.
   52 MB (+ with-past 49 MB) + tokenizer 3.6 MB ≈ 75–125 MB** (HEAD on the
   real files) — a download like a mushaf, never bundled. **OPEN RISK, check
   it first:** sherpa-onnx expects whisper exported by ITS OWN script and
+  **SETTLED 2026-09-22, and the answer is NO.** sherpa-onnx's own
+  `scripts/whisper/export-onnx.py` names the encoder's tensors `mel` ->
+  `n_layer_cross_k` / `n_layer_cross_v`, and its decoder takes the caches by
+  name. The ready-made ONNX (`eventhorizon0/…`, 23 MB encoder downloaded and
+  read) carries `input_features` -> `last_hidden_state`: the optimum names.
+  **It will not load in sherpa_onnx as it is.** Three ways out, none tried:
+  (a) run sherpa's export script on `tarteel-ai/whisper-base-ar-quran`
+  ourselves (needs torch + openai-whisper on this machine); (b) use
+  whisper.cpp instead (`whisper_ggml` on pub.dev) with a ggml conversion;
+  (c) run the optimum export directly through `onnxruntime` and write the
+  decoding loop in Dart — the most work and the most to get wrong. Decide
+  (a) vs (b) before any UI.
   these are optimum exports, so the tensor names may not match. Settle that
   before any UI is written.
 * Store screenshots NOT re-shot yet (the owner asked for them after he looks
