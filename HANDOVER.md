@@ -92,6 +92,24 @@ record.
 * Prayer card redone (three lines, app-language direction) — seen on the
   emulator, owner approved the picture.
 
+**SESSION 2026-09-22 (evening) — phase 1 DONE and seen; named-notes ruling applied.**
+* 18 books uploaded (public URL: 200, gzip magic, size = catalogue, no
+  Content-Encoding — each one), الورقات/الآجرومية retired → **229 books**.
+  الروض from Rakaiz 147658 (1679 refused on its card). توضيح المقاصد dropped.
+  Ihkam + Tanwir are hadith-shelf → bundled assets.
+* Named-notes ruling: `scripts/strip_named_notes.py` (5 passages + one
+  editor biography, 3 books); record in `CONTENT-LICENSES.md`.
+* **Whole library audited, book by book:** all 229 fetched from the public
+  endpoint and parsed by the app's own `BookText.fromBytes` → 229/229 open,
+  no blank pages, every TOC entry in range. Left as found: «الإيضاح» has 38
+  pages that are a row of dots (the printed leaf was all footnote) — it is
+  tied to the Hajj screen by page index, so not touched.
+* Seen on emulator-5554 (debug build; the release install was removed from the
+  EMULATOR only): library authors list, إحكام الأحكام (bundled) opens clean,
+  شرح الورقات downloaded (downloads work on the emulator today) and opened,
+  الاختيار (949 KB) downloaded, opened in <2 s, jumped to p.820/834; Java heap
+  26 MB. analyze clean, 491 pass. **Not released; not on his phone.**
+
 **NEXT — library «المرحلة ١» (was: not started).** The owner approved: no bare
 mutun; shuruh/explained books from Shamela (filter the modern editor where
 possible, otherwise ship as served); keep every existing imam's book. The
@@ -2326,9 +2344,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 20:31 — IN PROGRESS — resume here**
+**2026-09-22 20:48 — IN PROGRESS — resume here**
 
-Library phase 1 catalogued: 18 explained books uploaded (public URL, gzip magic, size, no Content-Encoding verified each), bare al-Waraqat and al-Ajurrumiyyah retired, 229 books. al-Rawd from Rakaiz 147658 (1679 refused on its card). tidy() drops matn-over-sharh running heads (659 in Ihkam), dot rows, orphan footnote numbers. Ihkam + Tanwir bundled as hadith-shelf assets; stripped Musnad Abi Bakr asset replaced. Fixed: library_phase1 appended after _byId[id] (rindex bug); pages field added (measured). analyze clean, 491 pass. NOT yet seen on emulator.
+Library phase 1 seen on emulator-5554 and the whole library audited: all 229 books fetched from the public endpoint (status, size = catalogue, gzip, no Content-Encoding) and parsed by the app's BookText.fromBytes -> 229/229 open, no blank pages, TOC in range. al-Rawd: 7 pages left blank by the orphan-number tidy are dropped and the TOC remapped (every entry opens the same line as before), re-uploaded and verified. Left as found: al-Idah's 38 dot-only pages (tied to the Hajj screen by index). Seen: Ihkam (bundled) clean matn/rule/sharh, Sharh al-Waraqat downloaded and opened, al-Ikhtiyar 949 KB opened in <2 s to p.820/834. analyze clean, 491 pass. CONTENT-LICENSES records phase 1 and the named-notes ruling. Not released.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

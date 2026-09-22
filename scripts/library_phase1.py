@@ -153,6 +153,22 @@ def tidy(book):
                 continue
             out.append(p)
         pg["paras"] = out
+    # A page whose only line was an orphan «١ -» is empty now, and the reader
+    # would page into a blank leaf (7 in al-Rawd, Rakaiz). Drop it, and move
+    # each TOC entry to where its page went — the app trusts `pageIndex`
+    # first — or to the next page that survived.
+    keep = [i for i, pg in enumerate(book["pages"]) if pg["paras"]]
+    if len(keep) < len(book["pages"]):
+        new_at, j = {}, 0
+        for i in range(len(book["pages"])):
+            while j < len(keep) - 1 and keep[j] < i:
+                j += 1
+            new_at[i] = j
+        for e in book.get("toc") or []:
+            e["pageIndex"] = new_at.get(e.get("pageIndex", 0), 0)
+        n["empty pages"] = len(book["pages"]) - len(keep)
+        book["pages"] = [book["pages"][i] for i in keep]
+        book["meta"]["pageCount"] = len(book["pages"])
     return n
 
 

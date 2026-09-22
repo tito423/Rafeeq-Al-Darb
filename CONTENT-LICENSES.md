@@ -933,3 +933,29 @@ Chosen over 17065 «الروضة الندية» (محمود عبد المنعم 
 owner's criterion. The classical commentaries (القاري، الأنصاري، الأزهري،
 ابن الناظم) are not in the 8,598-book Shamela index, and archive.org had no
 licensed text edition of any of them.
+
+## 2026-09-22 — library «المرحلة ١», and the named-notes ruling
+
+**Phase 1 (18 in, 2 out).** Each book's Shamela card was read before upload
+(`scripts/library_phase1.py --report`; cards in `scripts/library_phase1_out.txt`).
+Refused: «توضيح المقاصد» (a Najdi author — «مش ناقصين تشدد»), and «الروض
+المربع» printing 1679, whose card reads «ومعه حاشية … محمد بن صالح العثيمين»
+and «تعليقات … عبدالرحمن بن ناصر السعدي» (the card adds that the e-text lacks
+both; the owner's rule was to refuse such a card or take another printing).
+Shipped instead: Rakaiz 147658 (1438هـ, ed. المشيقح والعيدان واليتامى), no
+حاشية on its card. The bare الورقات and الآجرومية left the shelf for
+المحلي's شرح (21547) and الحفظي's شرح. The Shamela hamesh is dropped at
+build time, so `editorNotesRemoved` is true of all 18; `tidy()` also drops the
+matn-over-sharh running heads, dot rows and orphan footnote numbers — layout
+debris, never text.
+
+**The named-notes ruling** («شيل أي حاجة لابن باز وابن عثيمين وابن جبرين وابن
+عبد الوهاب والألباني إلا التخريج…»). Measured on all 213 hosted books as the
+public endpoint served them: 111 al-Albani mentions are takhrij (kept — the
+ruling's own exception); every «بن عبد الوهاب» is a classical narrator (no
+mention of the Najdi in any book); «العثيمين» elsewhere is the historian-editor
+عبد الرحمن بن سليمان. Five editor passages and one section came out, listed
+with their reasons in `scripts/strip_named_notes.py`: al-Muwafaqat (three of
+مشهور حسن's notes and the student-written biography of the editor), Ighathat
+al-Lahfan (one footnote), Musnad Abi Bakr (one quotation). Not a word of any
+author was touched.

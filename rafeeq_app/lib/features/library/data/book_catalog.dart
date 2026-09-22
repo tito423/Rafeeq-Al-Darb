@@ -4477,12 +4477,12 @@ const List<LibraryBook> libraryBookCatalog = [
     authorAr: 'منصور بن يونس البهوتي',
     authorEn: 'Mansur ibn Yunus al-Buhuti',
     deathYearAh: 1051,
-    pages: 1607,
+    pages: 1600,
     category: BookCategory.fiqh,
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_rawd_al_murbi.json',
-      sizeBytes: 581180,
+      sizeBytes: 581137,
       editorNotesRemoved: true,
       sourceLabel: 'المكتبة الشاملة — الروض المربع بشرح زاد المستقنع مختصر المقنع، منصور بن يونس البهوتي (ت: ١٠٥١ هـ)، دار ركائز للنشر والتوزيع - الكويت، الأولى، ١٤٣٨ هـ',
     ),
