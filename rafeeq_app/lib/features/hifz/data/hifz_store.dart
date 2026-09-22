@@ -28,14 +28,27 @@ class HifzAyah {
   /// How many times it has been answered «حفظت» in a row.
   final int streak;
 
-  const HifzAyah({required this.box, required this.dueDay, this.streak = 0});
+  /// The best «تسميع» this ayah has had: percent of its words heard, or -1
+  /// when it has never been recited to the device. Kept as the BEST rather
+  /// than the last, because a bad attempt with a passing lorry should not
+  /// erase a good one.
+  final int bestPercent;
 
-  Map<String, Object?> toJson() => {'b': box, 'd': dueDay, 's': streak};
+  const HifzAyah({
+    required this.box,
+    required this.dueDay,
+    this.streak = 0,
+    this.bestPercent = -1,
+  });
+
+  Map<String, Object?> toJson() =>
+      {'b': box, 'd': dueDay, 's': streak, 'p': bestPercent};
 
   static HifzAyah fromJson(Map<String, Object?> j) => HifzAyah(
     box: (j['b'] as num?)?.toInt() ?? 0,
     dueDay: (j['d'] as num?)?.toInt() ?? 0,
     streak: (j['s'] as num?)?.toInt() ?? 0,
+    bestPercent: (j['p'] as num?)?.toInt() ?? -1,
   );
 }
 
@@ -108,6 +121,7 @@ class HifzStore extends StateNotifier<HifzState> {
         box: box,
         dueDay: now + hifzBoxDays[box],
         streak: (cur?.streak ?? 0) + 1,
+        bestPercent: cur?.bestPercent ?? -1,
       ),
     );
   }
@@ -115,8 +129,39 @@ class HifzStore extends StateNotifier<HifzState> {
   /// «أعِده»: back to the first box, and due again today.
   Future<void> forgot(int surah, int ayah, {int? today}) async {
     final now = today ?? todayDay();
-    await _put(surah, ayah, HifzAyah(box: 0, dueDay: now, streak: 0));
+    final cur = state.ayahs[hifzKey(surah, ayah)];
+    await _put(
+      surah,
+      ayah,
+      HifzAyah(
+        box: 0,
+        dueDay: now,
+        streak: 0,
+        bestPercent: cur?.bestPercent ?? -1,
+      ),
+    );
   }
+
+  /// Records a «تسميع» attempt: [percent] of the ayah's words were heard.
+  /// Keeps the best, and never changes the review ladder by itself — the
+  /// reader still says «حفظتها» or «أعِدها» himself.
+  Future<void> recordTasmee(int surah, int ayah, int percent) async {
+    final cur = state.ayahs[hifzKey(surah, ayah)];
+    if (cur != null && cur.bestPercent >= percent) return;
+    await _put(
+      surah,
+      ayah,
+      HifzAyah(
+        box: cur?.box ?? 0,
+        dueDay: cur?.dueDay ?? todayDay(),
+        streak: cur?.streak ?? 0,
+        bestPercent: percent,
+      ),
+    );
+  }
+
+  int bestTasmee(int surah, int ayah) =>
+      state.ayahs[hifzKey(surah, ayah)]?.bestPercent ?? -1;
 
   Future<void> reset(int surah, int ayah) async {
     final map = Map<String, HifzAyah>.from(state.ayahs)

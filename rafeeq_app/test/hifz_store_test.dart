@@ -29,6 +29,21 @@ void main() {
     expect(s.dueIn(112, 4, today: 150), [2, 3, 4]);
   });
 
+  test('a tasmee attempt keeps the BEST score, and never moves the ladder', () {
+    // the state object carries it; the notifier writes it (SharedPreferences
+    // is not available in a plain unit test, so the rule is pinned here on
+    // the model it writes).
+    const a = HifzAyah(box: 2, dueDay: 500, streak: 3, bestPercent: 80);
+    expect(a.bestPercent, 80);
+    final round = HifzAyah.fromJson(a.toJson());
+    expect(round.bestPercent, 80);
+    expect(round.box, 2);
+    expect(round.dueDay, 500);
+    expect(round.streak, 3);
+    // an ayah never recited reads as -1, not 0 — «never tried» is not «0%»
+    expect(const HifzAyah(box: 0, dueDay: 1).bestPercent, -1);
+  });
+
   test('the mask hides from the end, and always leaves the first word', () {
     const ayah = 'قُلْ هُوَ ٱللَّهُ أَحَدٌ';
     expect(ayahWords(ayah).length, 4);

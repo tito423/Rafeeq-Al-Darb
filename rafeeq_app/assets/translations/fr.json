@@ -1658,6 +1658,9 @@
     "start": "Commencer la récitation",
     "stop": "Terminé",
     "result": "Vous avez dit {} mots sur {}",
+    "heard": "Ce que l'appareil a entendu :",
+    "mark_memorized": "Bien récité — la marquer mémorisée",
+    "best": "Meilleure récitation : {} %",
     "needs_mic": "L'autorisation du microphone est requise"
   },
   "hifz": {

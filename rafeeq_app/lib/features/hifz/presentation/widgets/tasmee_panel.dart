@@ -13,6 +13,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
@@ -21,20 +22,33 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/widgets/arabic_text.dart';
+import '../../data/hifz_store.dart';
 import '../../data/tasmee_engine.dart';
 
 enum _Phase { idle, downloading, recording, thinking, done }
 
-class TasmeePanel extends StatefulWidget {
+class TasmeePanel extends ConsumerStatefulWidget {
   final String ayahText;
+  final int surahId;
+  final int ayahNumber;
 
-  const TasmeePanel({super.key, required this.ayahText});
+  /// Called when the reader recites the ayah well enough that the screen
+  /// offers to mark it memorized — the offer is his to take.
+  final VoidCallback? onMastered;
+
+  const TasmeePanel({
+    super.key,
+    required this.ayahText,
+    required this.surahId,
+    required this.ayahNumber,
+    this.onMastered,
+  });
 
   @override
-  State<TasmeePanel> createState() => _TasmeePanelState();
+  ConsumerState<TasmeePanel> createState() => _TasmeePanelState();
 }
 
-class _TasmeePanelState extends State<TasmeePanel> {
+class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   final _recorder = AudioRecorder();
   final _dio = Dio();
   Timer? _cap;
@@ -45,6 +59,7 @@ class _TasmeePanelState extends State<TasmeePanel> {
   bool? _installed;
   double _progress = 0;
   String? _error;
+  String? _heard;
   TasmeeResult? _result;
 
   @override
@@ -62,6 +77,7 @@ class _TasmeePanelState extends State<TasmeePanel> {
     if (old.ayahText != widget.ayahText && _result != null) {
       setState(() {
         _result = null;
+        _heard = null;
         _phase = _Phase.idle;
       });
     }
@@ -147,8 +163,16 @@ class _TasmeePanelState extends State<TasmeePanel> {
         ayahText: widget.ayahText,
         heard: heard,
       );
+      // The attempt is kept per ayah (the best one), so «أفضل تسميع» means
+      // something the next time this ayah comes round. It does NOT move the
+      // review ladder by itself.
+      await ref
+          .read(hifzStoreProvider.notifier)
+          .recordTasmee(widget.surahId, widget.ayahNumber,
+              (result.ratio * 100).round());
       if (mounted) {
         setState(() {
+          _heard = heard.trim();
           _result = result;
           _phase = _Phase.done;
         });
@@ -280,6 +304,36 @@ class _TasmeePanelState extends State<TasmeePanel> {
                       ),
                   ],
                 ),
+              ),
+              if (_heard case final h? when h.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Text(
+                  'tasmee.heard'.tr(),
+                  style: TextStyle(fontSize: 11.5, color: scheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 2),
+                ArabicText(
+                  h,
+                  style: TextStyle(fontSize: 14, height: 1.8,
+                      color: scheme.onSurfaceVariant),
+                ),
+              ],
+              if (r.ratio >= 0.9 && widget.onMastered != null) ...[
+                const SizedBox(height: 10),
+                FilledButton.icon(
+                  onPressed: widget.onMastered,
+                  icon: const Icon(Icons.verified_rounded, size: 18),
+                  label: Text('tasmee.mark_memorized'.tr()),
+                ),
+              ],
+            ],
+            if (ref.watch(hifzStoreProvider.notifier)
+                    .bestTasmee(widget.surahId, widget.ayahNumber)
+                case final best when best >= 0 && _result == null) ...[
+              const SizedBox(height: 8),
+              Text(
+                trn('tasmee.best', args: ['$best']),
+                style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
               ),
             ],
           ],

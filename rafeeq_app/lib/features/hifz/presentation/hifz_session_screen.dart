@@ -217,7 +217,20 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
           ),
           const Divider(height: 28),
           // «سمّع لنفسك»: the device listens and marks the words.
-          TasmeePanel(ayahText: ayah.textUthmani),
+          TasmeePanel(
+            key: ValueKey('${widget.surah.id}:${ayah.ayahNumber}'),
+            ayahText: ayah.textUthmani,
+            surahId: widget.surah.id,
+            ayahNumber: ayah.ayahNumber,
+            // «أتقنتها»: the same step «حفظتها» takes, offered where the
+            // reader just proved it — never taken for him.
+            onMastered: () async {
+              await ref
+                  .read(hifzStoreProvider.notifier)
+                  .remembered(widget.surah.id, ayah.ayahNumber);
+              if (context.mounted) _next();
+            },
+          ),
           const Divider(height: 28),
           Row(
             children: [

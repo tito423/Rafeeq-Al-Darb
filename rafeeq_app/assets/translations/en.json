@@ -1658,6 +1658,9 @@
     "start": "Start reciting",
     "stop": "Done",
     "result": "You said {} of {} words",
+    "heard": "What the device heard:",
+    "mark_memorized": "Well recited — mark it memorized",
+    "best": "Best recitation: {}%",
     "needs_mic": "Microphone permission is needed"
   },
   "hifz": {
