@@ -15,8 +15,10 @@ import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/arabic_normalize.dart' show surahNameForDisplay;
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
+import '../../quran/data/basmala.dart';
 import '../data/hifz_mask.dart';
 import 'widgets/tasmee_panel.dart';
 import '../data/hifz_store.dart';
@@ -75,7 +77,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
         times: _repeats,
         gap: const Duration(milliseconds: 600),
         edition: AyahAudioService.defaultEdition,
-        title: '${widget.surah.nameAr} — ${ayah.ayahNumber}',
+        title: '$_name — ${ayah.ayahNumber}',
       );
     } finally {
       if (mounted) setState(() => _playing = false);
@@ -95,28 +97,37 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     });
   }
 
+  /// The Uthmani name with its U+06E1 sukun swapped for the plain one — the
+  /// chrome font draws U+06E1 as a stray mark (P3-46).
+  String get _name => surahNameForDisplay(widget.surah.nameAr);
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final list = _ayahs;
     if (_error != null) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.surah.nameAr)),
+        appBar: AppBar(title: Text(_name)),
         body: Center(child: Text(_error!)),
       );
     }
     if (list == null) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.surah.nameAr)),
+        appBar: AppBar(title: Text(_name)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
     final ayah = list[_at];
-    final words = ayahWords(ayah.textUthmani);
+    // The stored verse 1 carries the basmala (quran_local.db, 112 surahs);
+    // it is not part of the verse, so it is neither hidden, counted nor
+    // listened for — it is shown above, on its own line, as a mushaf sets it.
+    final basmala = basmalaOf(ayah);
+    final body = bodyOf(ayah);
+    final words = ayahWords(body);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.surah.nameAr),
+        title: Text(_name),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
@@ -138,6 +149,15 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
             style: TextStyle(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: 12),
+          if (basmala != null) ...[
+            Center(
+              child: ArabicText(
+                basmala,
+                style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 20),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
           // The ayah, with the hidden words covered — never altered.
           Container(
             padding: const EdgeInsets.all(16),
@@ -219,7 +239,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
           // «سمّع لنفسك»: the device listens and marks the words.
           TasmeePanel(
             key: ValueKey('${widget.surah.id}:${ayah.ayahNumber}'),
-            ayahText: ayah.textUthmani,
+            ayahText: body,
             surahId: widget.surah.id,
             ayahNumber: ayah.ayahNumber,
             // «أتقنتها»: the same step «حفظتها» takes, offered where the

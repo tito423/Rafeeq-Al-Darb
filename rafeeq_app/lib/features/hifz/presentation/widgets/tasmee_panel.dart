@@ -162,6 +162,8 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
       final result = TasmeeEngine.compare(
         ayahText: widget.ayahText,
         heard: heard,
+        surahId: widget.surahId,
+        ayahNumber: widget.ayahNumber,
       );
       // The attempt is kept per ayah (the best one), so «أفضل تسميع» means
       // something the next time this ayah comes round. It does NOT move the

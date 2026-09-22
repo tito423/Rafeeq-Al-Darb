@@ -11,8 +11,25 @@
 /// the text (§1.2).
 library;
 
-List<String> ayahWords(String text) =>
-    text.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+List<String> ayahWords(String text) {
+  final out = <String>[];
+  for (final t in text.split(RegExp(r'\s+'))) {
+    if (t.isEmpty) continue;
+    // A pause mark (ۚ ۖ ۗ ۛ …) is set in the source as a token of its own.
+    // As a «word» it wrapped alone to the start of the next line, away from
+    // the word it belongs to (the owner's al-Nisa 1, 2026-09-23), and cost
+    // a step of the hiding ladder. It stays with the word before it, with
+    // the source's own space — the text is unchanged.
+    if (out.isNotEmpty && !_letter.hasMatch(t)) {
+      out[out.length - 1] = '${out.last} $t';
+    } else {
+      out.add(t);
+    }
+  }
+  return out;
+}
+
+final _letter = RegExp('[ء-يٱ]');
 
 /// How many steps this ayah has, counting step 0 (nothing hidden).
 int hifzMaskSteps(String text) => ayahWords(text).length;
