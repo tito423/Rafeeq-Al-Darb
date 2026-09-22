@@ -59,6 +59,28 @@ release APK; the owner's phone dropped off adb before any install, so
 * **One percent format** (`percentOf`, `common.percent`) for the 11 sites.
 * The three OPEN items below: **all done and seen on the emulator.**
 
+**UPDATE, same day: the Jazariyyah شرح is BUILT and seen on the emulator.**
+The owner ruled «اللي من الشاملة خد نصه» (recorded in `CONTENT-LICENSES.md`),
+so 21580 «فتح رب البرية» ships: `scripts/build_jazariyyah_sharh.py` →
+`jazariyyah_sharh.dart`, a folded «الشرح» in every lesson, pinned by
+`test/jazariyyah_sharh_test.dart`. The research note below is kept for the
+record.
+
+**NEXT — library «المرحلة ١» (not started).** The owner approved: no bare
+mutun; shuruh/explained books from Shamela (filter the modern editor where
+possible, otherwise ship as served); keep every existing imam's book. The
+~30 first-phase books are the classical, beginner/intermediate picks of the
+ChatGPT list he pasted on 2026-09-22 — the measurement of that list (104
+titles, 83 in the Shamela index, 15 already ours, and the title-search
+traps: مصباح الزجاجة 5635 is al-Busiri's zawa'id, فتح القريب 660 is on
+al-Targhib, بذل المجهود 6529 is on the Jews, تفسير القرآن العظيم 533 is
+al-Sakhawi's) was done with a throwaway script; redo it and link every book
+by its Shamela **id**. Also asked and agreed: put the sharh beside the
+existing mutun (الورقات → شرح المحلي 21547، بلوغ المرام → سبل السلام،
+عمدة الأحكام → إحكام الأحكام، الآجرومية → a plain sharh) and remove the
+bare الورقات، متن الآجرومية، متن القصيدة النونية. Measure one big book on
+the phone before promising the encyclopaedias (trap #4).
+
 **المقدمة الجزرية commentary — researched, NOT built, needs the owner.**
 The two Shamela candidates are MODERN works: 21580 «فتح رب البرية» by
 صفوت محمود سالم (دار نور المكتبات، ط٢ ١٤٢٤هـ/٢٠٠٣م) and 17065 «الروضة
@@ -2280,7 +2302,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-09-22 18:41 — IN PROGRESS — resume here**
 
-Jazariyyah sharh seen on emulator-5554 (signed release): lesson 1 'muqaddimat an-nazim' shows the folded 'al-sharh' under its verses; opened, it reads the sharh's own heading, the quoted verses, the plain-language explanation and the source line, and the accordion scrolls it into view. Sharh colours moved from the app green (3.2:1 on the dark card) to gold. analyze clean.
+HANDOVER: Jazariyyah sharh marked built; the next step (library phase 1) written down with the owner's rulings, the measured traps in the ChatGPT list, and the mutun he agreed to replace. Stopped here at 82% of the 5-hour quota.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
