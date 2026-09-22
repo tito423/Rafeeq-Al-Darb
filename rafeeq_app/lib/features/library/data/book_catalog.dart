@@ -391,8 +391,12 @@ const List<LibraryBook> libraryBookCatalog = [
     diacritisedPct: 2,
     titleAr: 'مختصر منهاج القاصدين',
     titleEn: 'Mukhtasar Minhaj al-Qasidin',
-    authorAr: 'الإمام موفق الدين ابن قدامة المقدسي',
-    authorEn: 'Imam Ibn Qudamah al-Maqdisi',
+    // Najm al-Din Ahmad ibn Abd al-Rahman, as the edition's own card names
+    // him - not Muwaffaq al-Din (d. 620), the author of al-Mughni, whose
+    // name this entry carried until al-Mughni landed beside it on 2026-09-23
+    // and the authors list printed «موفق الدين … توفي ٦٨٩».
+    authorAr: 'الإمام نجم الدين ابن قدامة المقدسي',
+    authorEn: 'Imam Najm al-Din Ibn Qudamah al-Maqdisi',
     deathYearAh: 689,
     descKey: 'book_desc.mukhtasar_minhaj_al_qasidin',
     category: BookCategory.tazkiyah,
@@ -4615,8 +4619,8 @@ const List<LibraryBook> libraryBookCatalog = [
     id: 'al_majmu_sharh_al_muhadhdhab',
     titleAr: 'المجموع شرح المهذب',
     titleEn: 'Al-Majmu Sharh al-Muhadhdhab',
-    authorAr: 'الإمام النووي',
-    authorEn: 'Al-Nawawi',
+    authorAr: 'الإمام محيي الدين النووي',
+    authorEn: 'Imam al-Nawawi',
     deathYearAh: 676,
     pages: 4869,
     category: BookCategory.fiqh,
@@ -4626,6 +4630,41 @@ const List<LibraryBook> libraryBookCatalog = [
       sizeBytes: 4189854,
       editorNotesRemoved: true,
       sourceLabel: 'المكتبة الشاملة — المجموع شرح المهذب، أبو زكريا محيي الدين بن شرف النووي (ت ٦٧٦ هـ)، (إدارة الطباعة المنيرية، مطبعة التضامن الأخوي) - القاهرة',
+    ),
+  ),
+
+  LibraryBook(
+    id: 'tafsir_al_qurtubi',
+    titleAr: 'الجامع لأحكام القرآن',
+    titleEn: 'Tafsir al-Qurtubi',
+    authorAr: 'الإمام القرطبي',
+    authorEn: 'Al-Qurtubi',
+    deathYearAh: 671,
+    pages: 7453,
+    category: BookCategory.tafsir,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tafsir_al_qurtubi.json',
+      sizeBytes: 7297017,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — الجامع لأحكام القرآن، أبو عبد الله، محمد بن أحمد الأنصاري القرطبي، دار الكتب المصرية - القاهرة، الثانية، ١٣٨٤ هـ - ١٩٦٤ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_mughni_ibn_qudamah',
+    titleAr: 'المغني',
+    titleEn: 'Al-Mughni',
+    authorAr: 'الإمام موفق الدين ابن قدامة المقدسي',
+    authorEn: 'Ibn Qudamah al-Maqdisi',
+    deathYearAh: 620,
+    pages: 7955,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_mughni_ibn_qudamah.json',
+      sizeBytes: 5655276,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — المغني، موفق الدين أبو محمد عبد الله بن أحمد بن محمد بن قدامة المقدسي الجماعيلي الدمشقي الصالحي الحنبلي (٥٤١ - ٦٢٠ هـ)، دار عالم الكتب للطباعة والنشر والتوزيع، الرياض - المملكة العربية السعودية، الثالثة، ١٤١٧ هـ - ١٩٩٧ م',
     ),
   ),
 

@@ -62,7 +62,7 @@ PLAN = {
     "al_mughni_ibn_qudamah": ("المغني", "Al-Mughni",
         "الإمام موفق الدين ابن قدامة المقدسي", "Ibn Qudamah al-Maqdisi", 620, "fiqh", 0),
     "al_majmu_sharh_al_muhadhdhab": ("المجموع شرح المهذب", "Al-Majmu Sharh al-Muhadhdhab",
-        "الإمام النووي", "Al-Nawawi", 676, "fiqh", 0),
+        "الإمام محيي الدين النووي", "Imam al-Nawawi", 676, "fiqh", 0),
     "ilam_al_muwaqqiin": ("إعلام الموقعين عن رب العالمين", "Ilam al-Muwaqqiin",
         "الإمام ابن قيّم الجوزية", "Ibn Qayyim al-Jawziyyah", 751, "fiqh", 0),
     "siyar_alam_al_nubala": ("سير أعلام النبلاء", "Siyar Alam al-Nubala",
@@ -167,6 +167,18 @@ def dart_str(s):
     return "'" + s.replace("\\", "\\\\").replace("'", "\\'").replace("$", "\\$") + "'"
 
 
+# Built but NOT to be catalogued until the reason is dealt with. Read from the
+# report's name hits in context, 2026-09-23.
+HOLD = {
+    # The Salafiyya edition prints Ibn Baz's own preface in the text stream
+    # (vol. 1 pp. 3-4, signed «عبد العزيز بن عبد الله بن باز», 1379 AH) and
+    # his closing note at the end of vol. 3 (p. 625). The builder drops only
+    # the hamesh, so both are in the body - and the owner's rule is nothing
+    # of Ibn Baz's but takhrij. Those pages must come out before it ships.
+    "fath_al_bari": "Ibn Baz's preface and vol. 3 note are in the body",
+}
+
+
 def main():
     report = "--report" in sys.argv
     out = io.open(REPORT, "w", encoding="utf-8")
@@ -178,6 +190,9 @@ def main():
     for book_id, (t_ar, t_en, a_ar, a_en, death, cat, shelf) in PLAN.items():
         if f"id: '{book_id}'" in catalogue:
             refused.append((book_id, "already catalogued"))
+            continue
+        if book_id in HOLD:
+            refused.append((book_id, "held: " + HOLD[book_id]))
             continue
         path = os.path.join(BUILD, book_id + ".json")
         if not os.path.exists(path):
