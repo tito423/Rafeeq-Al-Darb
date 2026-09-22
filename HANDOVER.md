@@ -125,6 +125,17 @@ record.
   ayah: 9/50, and it names the words that were skipped. The WRONG ayah
   played against al-Kahf 1: 1/11 — rejected, not accepted. So a skip and a
   wrong passage both show up plainly; tajweed still does not.
+  **The on-device path, measured but NOT tried on a device yet:** the runtime
+  would be `sherpa_onnx` (pub.dev 1.13.8, Apache-2.0) — offline Whisper, and
+  it ships arm64-v8a, armeabi-v7a and x86_64, which «any Android 7+, any ABI»
+  needs. The model exists as ONNX under
+  `eventhorizon0/tarteel-ai-onnx-whisper-base-ar-quran` (Apache-2.0); the
+  files a user would download measure **encoder int8 23 MB + decoder int8
+  52 MB (+ with-past 49 MB) + tokenizer 3.6 MB ≈ 75–125 MB** (HEAD on the
+  real files) — a download like a mushaf, never bundled. **OPEN RISK, check
+  it first:** sherpa-onnx expects whisper exported by ITS OWN script and
+  these are optimum exports, so the tensor names may not match. Settle that
+  before any UI is written.
 * Store screenshots NOT re-shot yet (the owner asked for them after he looks
   at the emulator himself).
 
