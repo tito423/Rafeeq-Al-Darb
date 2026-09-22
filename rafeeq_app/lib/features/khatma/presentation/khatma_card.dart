@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
@@ -426,22 +428,27 @@ class KhatmaProgressSection extends StatelessWidget {
             ),
           ],
         ),
+        if (m != null)
+          _FinishedWirdLine(khatmaId: khatma.id, mushaf: m, gold: gold),
       ],
     );
   }
 }
 
-/// «أتممت القراءة»: finishes the current wird and offers «تراجع».
+/// The wird just finished, for the «تراجع» line inside the khatma card.
+/// `stamp` tells one tap from the next, so an older timer never hides the
+/// line a newer tap put up.
+typedef FinishedWird = ({String khatmaId, int number, int stamp});
+
+final lastFinishedWirdProvider = StateProvider<FinishedWird?>((ref) => null);
+
+/// «أتممت القراءة»: finishes the current wird. «تراجع» is offered INSIDE
+/// the khatma card ([_FinishedWirdLine]) and leaves by itself.
 ///
-/// The undo used to call `ref.read(...)` on the widget that showed it —
-/// and the khatma screen pops itself straight after, so by the time anyone
-/// tapped «تراجع» that ref belonged to a disposed widget and the tap did
-/// nothing. The notifier is taken here, while the widget is alive, and the
-/// undo works on the live state, not on a stale snapshot.
-///
-/// The bar also carries an action, and a SnackBar with an action no longer
-/// dismisses itself by default — that is why «تراجع» sat on the screen for
-/// ever. `persist: false` gives it back its timeout.
+/// It used to be a SnackBar. That one had already stuck on the screen once
+/// (an action makes a bar persist by default in Flutter 3.38), and the owner
+/// asked on 2026-09-22 for it not to appear at all: «خلي تراجع في الختمة
+/// متظهرش اصلا لانها ممكن تعلق … اظهره في الختمة نفسها ويروح تلقائي».
 Future<void> completeKhatmaWird(
   BuildContext context,
   WidgetRef ref,
@@ -449,31 +456,104 @@ Future<void> completeKhatmaWird(
   MushafData mushaf,
 ) async {
   final store = ref.read(khatmaStoreProvider.notifier);
-  final messenger = ScaffoldMessenger.of(context);
+  final last = ref.read(lastFinishedWirdProvider.notifier);
   final updated = await store.completeWird(
     khatma,
     mushaf.juzStartPages,
     mushaf.rubElHizbPages,
   );
-  messenger
-    ..clearSnackBars()
-    ..showSnackBar(
-      SnackBar(
-        persist: false,
-        duration: const Duration(seconds: 5),
-        content: Text(
-          trn('khatma.wird_done', args: ['${updated.portionsRead}']),
-        ),
-        action: SnackBarAction(
-          label: 'common.undo'.tr(),
-          onPressed: () => store.undoLastWird(
-            khatma.id,
-            mushaf.juzStartPages,
-            mushaf.rubElHizbPages,
-          ),
-        ),
-      ),
+  last.state = (
+    khatmaId: khatma.id,
+    number: updated.portionsRead,
+    stamp: DateTime.now().microsecondsSinceEpoch,
+  );
+}
+
+/// «أتممت الورد ٣ · تراجع», for six seconds, then gone. Nothing global: it
+/// is part of the card, so it cannot outlive it or cover anything else.
+class _FinishedWirdLine extends ConsumerStatefulWidget {
+  final String khatmaId;
+  final MushafData mushaf;
+  final Color gold;
+  const _FinishedWirdLine({
+    required this.khatmaId,
+    required this.mushaf,
+    required this.gold,
+  });
+
+  @override
+  ConsumerState<_FinishedWirdLine> createState() => _FinishedWirdLineState();
+}
+
+class _FinishedWirdLineState extends ConsumerState<_FinishedWirdLine> {
+  static const _shown = Duration(seconds: 6);
+  Timer? _timer;
+  int? _armedFor;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _hide(int stamp) {
+    final now = ref.read(lastFinishedWirdProvider);
+    if (now != null && now.stamp == stamp) {
+      ref.read(lastFinishedWirdProvider.notifier).state = null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final w = ref.watch(lastFinishedWirdProvider);
+    final mine = w != null && w.khatmaId == widget.khatmaId;
+    if (mine && _armedFor != w.stamp) {
+      _armedFor = w.stamp;
+      _timer?.cancel();
+      _timer = Timer(_shown, () => _hide(w.stamp));
+    }
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 200),
+      child: !mine
+          ? const SizedBox(width: double.infinity)
+          : Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Container(
+                padding: const EdgeInsetsDirectional.fromSTEB(12, 2, 4, 2),
+                decoration: BoxDecoration(
+                  color: widget.gold.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.check_circle_rounded,
+                        size: 18, color: widget.gold),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        trn('khatma.wird_done', args: ['${w.number}']),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _timer?.cancel();
+                        ref.read(lastFinishedWirdProvider.notifier).state =
+                            null;
+                        ref.read(khatmaStoreProvider.notifier).undoLastWird(
+                              widget.khatmaId,
+                              widget.mushaf.juzStartPages,
+                              widget.mushaf.rubElHizbPages,
+                            );
+                      },
+                      child: Text('common.undo'.tr()),
+                    ),
+                  ],
+                ),
+              ),
+            ),
     );
+  }
 }
 
 /// A tiny inherited callback so cards below `HomeScreen` (this one) can ask

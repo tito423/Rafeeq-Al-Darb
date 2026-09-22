@@ -43,8 +43,8 @@ class KhatmaScreen extends ConsumerWidget {
                     khatma: k,
                     mushaf: mushaf,
                     // Stays on this screen: more than one wird can be
-                    // finished in a sitting, and «تراجع» has to be here to
-                    // be tapped.
+                    // finished in a sitting, and the «تراجع» line inside the tile has
+                    // to be here to be tapped.
                     onReadToday: mushaf == null
                         ? null
                         : () => completeKhatmaWird(context, ref, k, mushaf),
