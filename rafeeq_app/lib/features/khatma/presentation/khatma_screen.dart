@@ -87,7 +87,9 @@ class KhatmaScreen extends ConsumerWidget {
             onPressed: () => Navigator.of(context).pop(false),
             child: Text('common.cancel'.tr()),
           ),
+          // Destructive, so it is drawn as one — not in the app's green.
           FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () => Navigator.of(context).pop(true),
             child: Text('khatma.delete'.tr()),
           ),

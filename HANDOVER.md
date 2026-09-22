@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 15:37 — IN PROGRESS — resume here**
+**2026-09-22 15:49 — IN PROGRESS — resume here**
 
-Khatma: wird history, previous/upcoming wird lists with go-back, always-enabled 'atmamt al-qira'a' (several wirds a day), working undo (notifier captured, SnackBar persist:false - Flutter 3.38 defaults persist=true when an action is set, which is why 'taraaja3' never left the screen), create sheet scrollable in the safe area (the button was laid out past the sheet and never hit-tested; the unit label wrapped letter-per-line and made the gap), overlays opaque in the RGB theme. analyze clean, 478 tests pass. NOT yet seen on a device.
+Khatma verified on emulator-5554 (release-signed APK): create sheet fits and 'insha al-khatma' creates; two wirds in a row (0->2 previous, 29->27 upcoming, bar fills from the right); undo from the khatma screen (3->2) and from Home (2->1); previous-wirds list shows real surah/ayah/page/date per wird and 'irja3 lah' rewound to wird 1 after confirmation; tapping an upcoming wird opened the mushaf at 2:257 p.43. SnackBar now auto-dismisses. Follow-ups this commit: undo action colour 3.2:1 -> 5.0:1 (primarySoft on dark), khatma delete button red. Owner's phone disconnected from adb before install, so not yet on his device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -226,7 +226,10 @@ class AppTheme {
         // Material's default action colour is meant for its own dark
         // SnackBar; on this pale `card` background it was all but
         // invisible, so «إيقاف» on the repeat banner read as no button.
-        actionTextColor: primary,
+        // On the dark themes `primary` (#0E7C61) over the card measures
+        // 3.2 : 1 — «تراجع» read as disabled. `primarySoft` is 5.0 : 1.
+        actionTextColor:
+            brightness == Brightness.dark ? primarySoft : primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm + 2),
