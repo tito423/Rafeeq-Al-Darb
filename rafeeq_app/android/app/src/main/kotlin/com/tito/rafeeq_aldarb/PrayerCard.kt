@@ -239,7 +239,13 @@ object PrayerCard {
             // the card still looks like an Android notification on every OEM
             // skin. Only these two lines are ours.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val body = RemoteViews(ctx.packageName, R.layout.prayer_card)
+                // The direction of the language the card is WRITTEN in, not of
+                // the phone: a RemoteViews layout otherwise follows the system
+                // locale, and on an English phone reading the app in Arabic the
+                // lines were thrown to opposite edges (2026-09-22).
+                val layout = if (isRtl(title + text)) R.layout.prayer_card_rtl
+                    else R.layout.prayer_card
+                val body = RemoteViews(ctx.packageName, layout)
                 body.setTextViewText(R.id.prayer_card_title, title)
                 body.setTextViewText(R.id.prayer_card_text, text)
                 body.setChronometer(
@@ -275,6 +281,18 @@ object PrayerCard {
             else -> current.whenMs + window
         }
         scheduleRollover(ctx, nextChange)
+    }
+
+    /** Whether [s]'s first strong character is right-to-left (Arabic, Urdu). */
+    private fun isRtl(s: String): Boolean {
+        for (ch in s) {
+            when (Character.getDirectionality(ch)) {
+                Character.DIRECTIONALITY_RIGHT_TO_LEFT,
+                Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC -> return true
+                Character.DIRECTIONALITY_LEFT_TO_RIGHT -> return false
+            }
+        }
+        return false
     }
 
     /** A rollover is just a repost: [post] works out what is current. */

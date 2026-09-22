@@ -2300,9 +2300,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 18:41 — IN PROGRESS — resume here**
+**2026-09-22 19:46 — IN PROGRESS — resume here**
 
-HANDOVER: Jazariyyah sharh marked built; the next step (library phase 1) written down with the owner's rulings, the measured traps in the ChatGPT list, and the mutun he agreed to replace. Stopped here at 82% of the 5-hour quota.
+Prayer card: the three items stand one under another (date|city, prayer and time, countdown) with 6dp between them, and the card takes the direction of the language it is WRITTEN in, not the phone's - two copies of the layout (prayer_card.xml ltr, prayer_card_rtl.xml) chosen by the first strong character. Seen on emulator-5554 (system English, app Arabic): three right-aligned lines, countdown in red on its own line. The chronometer's digits stay Latin: Android formats them with the system locale.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

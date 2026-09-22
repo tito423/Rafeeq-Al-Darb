@@ -201,6 +201,31 @@ BOOKS = {
         "shamela_id": 581,
         "source_label": "المكتبة الشاملة — المقدمة فيما على قارئ القرآن أن يعلمه (الجزرية)، لابن الجزري (ت ٨٣٣ هـ)",
     },
+    # 2026-09-22 — library «المرحلة ١». The owner's rulings: no bare mutun,
+    # the explained book instead; Shamela text may be taken as served. Every
+    # book is picked by its Shamela ID, never by title search (trap #17), and
+    # each is under ~1,150 Shamela pages — the encyclopaedias wait until one
+    # big book has been measured on a phone (trap #4). The source label is
+    # rewritten from each book's own card once built.
+    "sharh_al_aqidah_al_tahawiyyah": {"shamela_id": 8352, "source_label": "المكتبة الشاملة — شرح العقيدة الطحاوية لابن أبي العز الحنفي"},
+    "al_iqtisad_fil_itiqad": {"shamela_id": 9217, "source_label": "المكتبة الشاملة — الاقتصاد في الاعتقاد، أبو حامد الغزالي"},
+    "qawaid_al_aqaid": {"shamela_id": 6397, "source_label": "المكتبة الشاملة — قواعد العقائد، أبو حامد الغزالي"},
+    "al_lubab_fi_sharh_al_kitab": {"shamela_id": 21496, "source_label": "المكتبة الشاملة — اللباب في شرح الكتاب، عبد الغني الميداني"},
+    "al_ikhtiyar_li_talil_al_mukhtar": {"shamela_id": 1066, "source_label": "المكتبة الشاملة — الاختيار لتعليل المختار، عبد الله بن محمود الموصلي"},
+    "al_thamar_al_dani": {"shamela_id": 7441, "source_label": "المكتبة الشاملة — الثمر الداني شرح رسالة ابن أبي زيد القيرواني، صالح الآبي"},
+    "al_fawakih_al_dawani": {"shamela_id": 21589, "source_label": "المكتبة الشاملة — الفواكه الدواني على رسالة ابن أبي زيد القيرواني، النفراوي"},
+    "kifayat_al_akhyar": {"shamela_id": 6140, "source_label": "المكتبة الشاملة — كفاية الأخيار في حل غاية الاختصار، تقي الدين الحصني"},
+    "al_iqna_fi_hall_alfaz_abi_shuja": {"shamela_id": 6121, "source_label": "المكتبة الشاملة — الإقناع في حل ألفاظ أبي شجاع، الخطيب الشربيني"},
+    "fath_al_qarib_al_mujib": {"shamela_id": 35120, "source_label": "المكتبة الشاملة — فتح القريب المجيب في شرح ألفاظ التقريب، ابن قاسم الغزي"},
+    "al_uddah_sharh_al_umdah": {"shamela_id": 10908, "source_label": "المكتبة الشاملة — العدة شرح العمدة، بهاء الدين المقدسي"},
+    "al_rawd_al_murbi": {"shamela_id": 1679, "source_label": "المكتبة الشاملة — الروض المربع شرح زاد المستقنع، منصور البهوتي"},
+    "bidayat_al_mujtahid": {"shamela_id": 21739, "source_label": "المكتبة الشاملة — بداية المجتهد ونهاية المقتصد، ابن رشد"},
+    "ihkam_al_ahkam": {"shamela_id": 1665, "source_label": "المكتبة الشاملة — إحكام الأحكام شرح عمدة الأحكام، ابن دقيق العيد"},
+    "sharh_al_waraqat_al_mahalli": {"shamela_id": 21547, "source_label": "المكتبة الشاملة — شرح الورقات في أصول الفقه، جلال الدين المحلي"},
+    "tanwir_al_hawalik": {"shamela_id": 5757, "source_label": "المكتبة الشاملة — تنوير الحوالك شرح موطأ مالك، جلال الدين السيوطي"},
+    "al_rahiq_al_makhtum": {"shamela_id": 9820, "source_label": "المكتبة الشاملة — الرحيق المختوم، صفي الرحمن المباركفوري"},
+    "sharh_al_ajurrumiyyah_hifzi": {"shamela_id": 2122, "source_label": "المكتبة الشاملة — شرح الآجرومية، حسن بن محمد الحفظي"},
+    "tawdih_al_maqasid_sharh_al_nuniyyah": {"shamela_id": 6362, "source_label": "المكتبة الشاملة — توضيح المقاصد شرح نونية ابن القيم، أحمد بن إبراهيم بن عيسى"},
     # 2026-09-22 — the شرح for the second tajweed level. A MODERN work
     # (صفوت محمود سالم، دار نور المكتبات، ط٢ ١٤٢٤هـ/٢٠٠٣م), taken on the owner's
     # explicit ruling: «اللي من الشاملة خد نصه». Chosen over 17065 «الروضة

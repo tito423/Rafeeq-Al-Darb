@@ -1,30 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  The next-prayer card's body, so the countdown can sit INSIDE the text.
-
-  Two copies of one layout: this one (left-to-right) and prayer_card_rtl.xml.
-  «حط الكلام تحت بعضه وسيب مسافة كويسة … واتجاه الكلام يبقى حسب اللغة
-  المستخدمة» (2026-09-22). A RemoteViews layout takes its direction from the
-  PHONE's language, not the app's; on the owner's phone (system English, app
-  Arabic) the Arabic lines were pushed right and the countdown left, with the
-  screen's width between them. `PrayerCard` now picks the copy whose direction
-  matches the language the card is written in, and every item has its own
-  line.
-
-  DecoratedCustomViewStyle wraps this, so the header, the icon and the action
-  buttons all stay the platform's; only these lines are ours.
+  The right-to-left copy of prayer_card.xml, for a card written in Arabic or
+  Urdu. Kept identical to it apart from direction; see that file for why there
+  are two.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layoutDirection="ltr"
+    android:layoutDirection="rtl"
     android:paddingStart="4dp"
     android:paddingEnd="4dp"
     android:paddingTop="2dp"
     android:paddingBottom="4dp">
 
-    <!-- The Hijri date and the city. -->
     <TextView
         android:id="@+id/prayer_card_title"
         android:layout_width="match_parent"
@@ -32,10 +21,9 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:gravity="start"
-        android:textDirection="ltr"
+        android:textDirection="rtl"
         android:textAppearance="@android:style/TextAppearance.Material.Notification.Title" />
 
-    <!-- The prayer and its time. -->
     <TextView
         android:id="@+id/prayer_card_text"
         android:layout_width="match_parent"
@@ -44,15 +32,10 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:gravity="start"
-        android:textDirection="ltr"
+        android:textDirection="rtl"
         android:textStyle="bold"
         android:textAppearance="@android:style/TextAppearance.Material.Notification.Info" />
 
-    <!--
-      The countdown, on its own line. `countDown` is set from code because the
-      same view counts UP in the hour after an adhan (the owner's rule).
-      `holo_red_light` stays legible on light and dark notification grounds.
-    -->
     <Chronometer
         android:id="@+id/prayer_card_countdown"
         android:layout_width="match_parent"
