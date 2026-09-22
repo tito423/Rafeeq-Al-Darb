@@ -240,7 +240,16 @@ class _GrammarCard extends StatelessWidget {
           ],
 
           // Word-by-Word Translation & Transliteration (from Quran.com API v4)
-          if (item.englishMeaning != null || item.transliteration != null) ...[
+          //
+          // Not in Arabic. «ليه الإعراب فيه نص إنجليزي» (2026-09-22): Quran.com
+          // has no Arabic word-by-word translation, so `language=ar` quietly
+          // answers in English, and an Arabic reader got «innā • Indeed, We»
+          // under every word of an Arabic grammar card. A Latin
+          // transliteration is for readers who cannot read the script — the
+          // same rule `ayah_panel.dart` already applies.
+          if (uiLanguageCode != 'ar' &&
+              (item.englishMeaning != null ||
+                  item.transliteration != null)) ...[
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),

@@ -2,6 +2,8 @@
 /// chapters and the search across them.
 library;
 import 'dart:async';
+
+import '../../../../core/widgets/accordion.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/utils/digits.dart';
 
@@ -260,10 +262,9 @@ class _BookListState extends State<_BookList> {
   /// resolves. Hoisting it means one query per visit.
   late Future<List<HadithBook>> _booksFuture = widget.repo.books();
 
-  /// Both closed on entry, by the owner's instruction. Local state, not
-  /// persisted: «افتراضيًا» means every visit starts closed.
-  bool _nineOpen = false;
-  bool _textsOpen = false;
+  // Both sections start closed, by the owner's instruction; each keeps its
+  // own open state in an AccordionSection, and nothing is persisted:
+  // «افتراضيًا» means every visit starts closed.
 
   void _retryBooks() =>
       setState(() => _booksFuture = widget.repo.books());
@@ -279,51 +280,61 @@ class _BookListState extends State<_BookList> {
         return ListView(
           padding: const EdgeInsets.all(14),
           children: [
-            _HadithSectionHeader(
-              title: 'library.section_nine'.tr(),
-              subtitle: 'library.section_nine_desc'.tr(),
-              icon: Icons.auto_stories_rounded,
-              open: _nineOpen,
-              // One section open at a time (see core/widgets/accordion.dart).
-              onTap: () => setState(() {
-                _nineOpen = !_nineOpen;
-                if (_nineOpen) _textsOpen = false;
-              }),
-            ),
-            if (_nineOpen)
-              for (final b in books) ...[
-              _HadithBookTile(
-                book: b,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => HadithBookScreen(book: b, repo: widget.repo),
+            // Each section is an accordion card: one open at a time, and
+            // back closes it before leaving (core/widgets/accordion.dart).
+            AccordionSection(
+              builder: (context, open, toggle) => Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _HadithSectionHeader(
+                    title: 'library.section_nine'.tr(),
+                    subtitle: 'library.section_nine_desc'.tr(),
+                    icon: Icons.auto_stories_rounded,
+                    open: open,
+                    onTap: toggle,
                   ),
-                ),
+                  if (open)
+                    for (final b in books) ...[
+                      _HadithBookTile(
+                        book: b,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) =>
+                                HadithBookScreen(book: b, repo: widget.repo),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                ],
               ),
-              const SizedBox(height: 8),
-            ],
+            ),
             if (_hadithTexts.isNotEmpty) ...[
               const SizedBox(height: 18),
-              _HadithSectionHeader(
-                title: 'library.section_texts'.tr(),
-                subtitle: 'library.section_texts_desc'.tr(),
-                icon: Icons.menu_book_rounded,
-                open: _textsOpen,
-                onTap: () => setState(() {
-                  _textsOpen = !_textsOpen;
-                  if (_textsOpen) _nineOpen = false;
-                }),
-              ),
-              if (_textsOpen)
-                for (final b in _hadithTexts) ...[
-                BookCard(
-                  book: b,
-                  paths: _paths,
-                  onDownload: () => _download(b),
-                  onOpen: () => _open(b),
+              AccordionSection(
+                builder: (context, open, toggle) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _HadithSectionHeader(
+                      title: 'library.section_texts'.tr(),
+                      subtitle: 'library.section_texts_desc'.tr(),
+                      icon: Icons.menu_book_rounded,
+                      open: open,
+                      onTap: toggle,
+                    ),
+                    if (open)
+                      for (final b in _hadithTexts) ...[
+                        BookCard(
+                          book: b,
+                          paths: _paths,
+                          onDownload: () => _download(b),
+                          onOpen: () => _open(b),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                  ],
                 ),
-                const SizedBox(height: 10),
-              ],
+              ),
             ],
           ],
         );

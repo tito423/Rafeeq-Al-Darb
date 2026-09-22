@@ -1598,7 +1598,16 @@
     "delete_confirm": "Do you want to delete this reciter's audio?",
     "started": "Started downloading {} ayahs",
     "error": "Error fetching reciters",
-    "no_reciters": "No reciters support direct download"
+    "no_reciters": "No reciters support direct download",
+    "filter_all": "Todas",
+    "filter_missing": "Incompletas",
+    "filter_complete": "Completas",
+    "remaining": "Faltam {} versículos por baixar",
+    "download_remaining": "Baixar o restante",
+    "failed": "Alguns versículos não puderam ser baixados",
+    "paused": "Download pausado",
+    "none_here": "Nenhuma surata aqui",
+    "percent": "{}%"
   },
   "sync": {
     "status_idle": "Ainda não sincronizado",

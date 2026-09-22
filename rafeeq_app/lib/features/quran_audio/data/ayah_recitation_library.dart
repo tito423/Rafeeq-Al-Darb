@@ -83,7 +83,20 @@ class AyahRecitationLibrary extends ChangeNotifier {
   static const _dirName = 'ayah_recitations';
 
   /// The number of ayahs in each surah (1-indexed: index 0 is unused).
-  /// From the standard Hafs mushaf.
+  /// From the standard Hafs mushaf — read out of the bundled
+  /// `quran_local.db` (`SELECT surah_id, COUNT(*) FROM ayahs GROUP BY
+  /// surah_id`), which agrees with its own `surahs.ayahs_count` and totals
+  /// 6,236.
+  ///
+  /// The previous table was right to surah 107 and wrong after it —
+  /// al-Kawthar 6, al-Kafirun 3, an-Nasr 6, al-Masad 4, al-Ikhlas 5,
+  /// al-Falaq 6, an-Nas 8, plus a 115th entry. Every one showed on the
+  /// owner's phone: the library asked everyayah for ayahs that do not
+  /// exist (an-Nasr 4-6, an-Nas 7-8), those tasks could never succeed, so
+  /// the reciter sat at 6,232 / 6,236 for ever and «إصلاح التحميلات»
+  /// re-queued the same impossible files every time — while al-Kafirun
+  /// counted as complete with half its ayahs missing.
+  /// `test/ayah_counts_test.dart` pins every value.
   static const List<int> _ayahCounts = [
     0, // placeholder for 1-indexing
     7, 286, 200, 176, 120, 165, 206, 75, 129, 109,
@@ -96,8 +109,8 @@ class AyahRecitationLibrary extends ChangeNotifier {
     28, 28, 20, 56, 40, 31, 50, 40, 46, 42,
     29, 19, 36, 25, 22, 17, 19, 26, 30, 20,
     15, 21, 11, 8, 8, 19, 5, 8, 8, 11,
-    11, 8, 3, 9, 5, 4, 7, 6, 3, 6,
-    4, 5, 6, 8, 4, // surahs 110-114
+    11, 8, 3, 9, 5, 4, 7, 3, 6, 3,
+    5, 4, 5, 6, // surahs 111-114
   ];
 
   /// Total ayahs in the Quran.
@@ -130,8 +143,16 @@ class AyahRecitationLibrary extends ChangeNotifier {
         }
       } catch (_) {}
     }
-    for (final edition in _entries.keys) {
-      _countDownloaded(edition);
+    for (final entry in _entries.values) {
+      _countDownloaded(entry.edition);
+      // A surah with some of its ayahs on disk and not all was asked for and
+      // never finished — whatever the pending list says. Under the old count
+      // table al-Kafirun «finished» at 3 of 6 and left the list, so nothing
+      // would ever have fetched ayahs 4-6; this puts it back for repair().
+      for (var s = 1; s <= 114; s++) {
+        final have = surahDownloadedCount(entry.edition, s);
+        if (have > 0 && have < ayahCount(s)) entry.pendingSurahs.add(s);
+      }
     }
     await DownloadEngine.ensureInitialized(askForNotifications: false);
     _sub ??= DownloadEngine.updates.listen(_onUpdate);
@@ -139,12 +160,21 @@ class AyahRecitationLibrary extends ChangeNotifier {
     unawaited(repair());
   }
 
+  /// Counts the files that are real ayahs. A name the Hafs count has no
+  /// ayah for (left by the old table, which asked for an-Nas 7 and 8) is
+  /// not a download and must not push the total past what exists.
   void _countDownloaded(String edition) {
     final dir = Directory(p.join(_root.path, edition));
     var count = 0;
     if (dir.existsSync()) {
       for (final f in dir.listSync()) {
         if (f is! File || !f.path.endsWith('.mp3')) continue;
+        final name = p.basenameWithoutExtension(f.path);
+        final surah = int.tryParse(name.length == 6 ? name.substring(0, 3) : '');
+        final ayah = int.tryParse(name.length == 6 ? name.substring(3) : '');
+        if (surah == null || ayah == null || ayah < 1 || ayah > ayahCount(surah)) {
+          continue;
+        }
         if (f.lengthSync() > 0) count++;
       }
     }
@@ -181,9 +211,24 @@ class AyahRecitationLibrary extends ChangeNotifier {
     return n;
   }
 
-  /// Whether [surah] is queued (asked for and not finished) for [edition].
-  bool isSurahPending(String edition, int surah) =>
-      _entries[edition]?.pendingSurahs.contains(surah) ?? false;
+  /// Ayahs whose transfer failed this session, per `edition/surah`.
+  final Map<String, Set<int>> _failed = {};
+
+  /// Whether [surah] is queued (asked for and not finished) for [edition]
+  /// AND still has something in flight. A surah whose every missing ayah
+  /// has failed is not "downloading" — it showed a spinner for ever — so it
+  /// reads as not pending, and its download button comes back as a retry.
+  bool isSurahPending(String edition, int surah) {
+    if (!(_entries[edition]?.pendingSurahs.contains(surah) ?? false)) {
+      return false;
+    }
+    final failed = _failed['$edition/$surah'];
+    if (failed == null || failed.isEmpty) return true;
+    for (var a = 1; a <= ayahCount(surah); a++) {
+      if (!failed.contains(a) && !isDownloaded(edition, surah, a)) return true;
+    }
+    return false;
+  }
 
   AyahDlProgress progressOf(String edition) {
     final entry = _entries[edition];
@@ -338,6 +383,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
   }
 
   void _enqueueAyah(AyahDlEntry entry, int surah, int ayah) {
+    _failed['${entry.edition}/$surah']?.remove(ayah);
     final url = AppConfig.everyAyahUrl(entry.folder, surah, ayah);
     final dir = p.join(_dirName, entry.edition);
 
@@ -361,6 +407,13 @@ class AyahRecitationLibrary extends ChangeNotifier {
     final (edition, surah, _) = parsed;
 
     if (u is TaskStatusUpdate && u.status == TaskStatus.complete) {
+      // A transfer that finishes after its reciter was deleted is not a
+      // download any more: its file goes, and nothing is counted.
+      if (!_entries.containsKey(edition)) {
+        final f = fileFor(edition, surah, parsed.$3);
+        if (f.existsSync()) unawaited(f.delete());
+        return;
+      }
       final prev = _downloadedCounts[edition] ?? 0;
       _downloadedCounts[edition] = prev + 1;
       // Check if the whole surah is now done.
@@ -379,6 +432,10 @@ class AyahRecitationLibrary extends ChangeNotifier {
         }
       }
       _notifyNow();
+    } else if (u is TaskStatusUpdate &&
+        (u.status == TaskStatus.failed || u.status == TaskStatus.notFound)) {
+      (_failed['$edition/$surah'] ??= <int>{}).add(parsed.$3);
+      _notifyNow();
     } else if (u is TaskProgressUpdate) {
       // Throttled: progress arrives many times a second per file.
       _notifySoon();
@@ -390,17 +447,8 @@ class AyahRecitationLibrary extends ChangeNotifier {
     if (entry == null) return;
     entry.paused = true;
     await _save();
-    // Cancel all pending tasks for this edition.
-    final ids = <String>[];
-    for (var s = 1; s <= 114; s++) {
-      final count = _ayahCounts[s];
-      for (var a = 1; a <= count; a++) {
-        ids.add(_taskId(edition, s, a));
-      }
-    }
-    try {
-      await FileDownloader().cancelTasksWithIds(ids);
-    } catch (_) {}
+    _notifyNow();
+    await _cancelLiveTasks(edition);
     _notifyNow();
   }
 
@@ -427,28 +475,49 @@ class AyahRecitationLibrary extends ChangeNotifier {
     entry.pendingSurahs.clear();
     entry.paused = false;
     await _save();
-    // Cancel all running tasks.
-    final ids = <String>[];
-    for (var s = 1; s <= 114; s++) {
-      final count = _ayahCounts[s];
-      for (var a = 1; a <= count; a++) {
-        ids.add(_taskId(edition, s, a));
-      }
-    }
-    try {
-      await FileDownloader().cancelTasksWithIds(ids);
-    } catch (_) {}
+    await _cancelLiveTasks(edition);
     _notifyNow();
   }
 
+  /// Cancels the tasks the downloader actually holds for [edition] — a
+  /// handful at most — instead of sending it all 6,236 possible ids, which
+  /// is a single platform call large enough to stall the screen behind it.
+  Future<void> _cancelLiveTasks(String edition) async {
+    try {
+      final prefix = 'ayah_${edition}_';
+      final live = await FileDownloader()
+          .allTasks(group: DownloadEngine.groupFiles)
+          .timeout(const Duration(seconds: 10));
+      final ids = [
+        for (final t in live)
+          if (t.taskId.startsWith(prefix)) t.taskId,
+      ];
+      if (ids.isNotEmpty) {
+        await FileDownloader()
+            .cancelTasksWithIds(ids)
+            .timeout(const Duration(seconds: 10));
+      }
+    } catch (_) {}
+  }
+
   /// Delete all downloaded ayahs for [edition].
+  ///
+  /// «حذف» on the owner's phone left the reciter at 100 % — the files went
+  /// only after a cancel call that had to finish first, and that call
+  /// carried every possible task id. The record and the files go first now,
+  /// so the screen empties the moment he confirms; the queue is cleared
+  /// after, and any ayah that still lands is deleted with the folder again.
   Future<void> deleteReciter(String edition) async {
-    await cancel(edition);
+    await ensureReady();
+    _entries.remove(edition);
+    _downloadedCounts.remove(edition);
+    await _save();
+    _notifyNow();
     final dir = Directory(p.join(_root.path, edition));
     if (dir.existsSync()) await dir.delete(recursive: true);
+    await _cancelLiveTasks(edition);
+    if (dir.existsSync()) await dir.delete(recursive: true);
     _downloadedCounts.remove(edition);
-    _entries.remove(edition);
-    await _save();
     _notifyNow();
   }
 

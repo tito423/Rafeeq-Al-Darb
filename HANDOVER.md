@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 15:55 — IN PROGRESS — resume here**
+**2026-09-22 16:51 — IN PROGRESS — resume here**
 
-Home gains 'suwar mukhtara' (Yusuf, Maryam, ar-Rahman, al-Waqi'a, Ya-Sin, Qaf; 2x3 tiles, each opens SingleSurahScreen locked to that surah). New core/widgets/accordion.dart: one card open per scrolling list (nested parents excluded) and an opened card scrolls fully into view; applied to all 8 ExpansionTiles (hajj, library authors/categories, quran audio x2, three tajweed levels), More groups, Settings sections, and the two hadith-tab sections. analyze clean; not yet seen on a device.
+Per-ayah recitations: the ayah-count table was wrong from surah 108 (Kawthar 6, Kafirun 3, Nasr 6, Masad 4, Ikhlas 5, Falaq 6, Nas 8, plus a 115th entry; sum 6242) - that is the owner's stuck 6232/6236 and the repair that never repaired; fixed from quran_local.db (COUNT per surah = surahs.ayahs_count, sum 6236) and pinned by ayah_counts_test, proven to fail on the old table. Library: counts only real ayah files, re-flags half-done surahs for repair, repair button now includes per-ayah recitations, delete is immediate and cancels only live tasks, failed ayahs no longer spin forever. Reciter screen rebuilt in its own file (floored ring, per-state summary, all/missing/complete filter, red delete). Back closes an open card first, app-wide (accordion PopEntry; AppShell defers), with a widget test. I'rab: English wbw row hidden in Arabic UI (Quran.com has no Arabic wbw, language=ar answers English); root A = hamza (qrA -> q-r-hamza, 151 roots). The 'n-j-l' root is nzl and renders zay - font glyph, not data. analyze clean, 483 pass. Not yet on a device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

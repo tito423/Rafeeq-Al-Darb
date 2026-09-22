@@ -495,7 +495,11 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
 
   void _toggle() {
     setState(() => _open = !_open);
-    if (_open) accordionOpened();
+    if (_open) {
+      accordionOpened();
+    } else {
+      accordionClosed();
+    }
   }
 
   @override

@@ -53,9 +53,19 @@ class QuranGrammarParser {
   QuranGrammarParser._();
 
   /// Formats Buckwalter root string (e.g. "Hmd") to spaced Arabic letters (e.g. "ح - م - د").
+  ///
+  /// In a ROOT the Quranic Arabic Corpus writes the hamza radical as `A` —
+  /// `qrA` قرأ, `Amn` أمن, `nbA` نبأ, `$yA` شيء: 151 distinct roots in the
+  /// bundled `word_grammar`, measured 2026-09-22. A root never has a long
+  /// alif as a radical (a weak radical is w or y), so plain Buckwalter's
+  /// `A` → «ا» turned قرآن's root into «ق ر ا». Here `A` is the hamza, drawn
+  /// «أ» as the corpus itself displays it. Lemmas are real Buckwalter and
+  /// keep the standard mapping.
   static String formatRootLetters(String rawRoot) {
     if (rawRoot.isEmpty) return '';
-    final arabicRoot = buckwalterForDisplay(rawRoot).replaceAll(RegExp(r'\s+'), '');
+    final hamzaRoot = rawRoot.replaceAll('A', '>');
+    final arabicRoot =
+        buckwalterForDisplay(hamzaRoot).replaceAll(RegExp(r'\s+'), '');
     if (arabicRoot.isEmpty) return '';
     return arabicRoot.split('').join(' - ');
   }

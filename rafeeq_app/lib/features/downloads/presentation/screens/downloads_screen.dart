@@ -18,6 +18,7 @@ import '../../../quran_audio/presentation/reciter_screen.dart';
 import '../../../quran_audio/data/mp3quran_api.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
+import '../../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../widgets/download_category_style.dart';
 import '../../../../core/utils/byte_formatter.dart';
@@ -818,6 +819,8 @@ class _RepairButtonState extends ConsumerState<_RepairButton> {
 
       // 2. Whole-surah recitations that were asked for and are not on disk.
       resumed += await step(QuranAudioLibrary.instance.repair) ?? 0;
+      // 2b. Per-ayah recitations — never part of this button until 2026-09-22.
+      resumed += await step(AyahRecitationLibrary.instance.repair) ?? 0;
 
       // 3. Mushaf editions: paused, stuck, or asked for and not complete.
       resumed += await step(() async {

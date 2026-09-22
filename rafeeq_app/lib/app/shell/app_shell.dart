@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/accordion.dart';
 import '../../core/services/alarm_permissions_service.dart';
 import '../../core/services/ayah_audio_service.dart';
 import '../../core/services/download_manager.dart';
@@ -315,6 +316,9 @@ class _AppShellState extends ConsumerState<AppShell>
       canPop: !tour && focus == null && _index == AppTab.home,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
+        // An open card on the tab in front takes this press: back closes it
+        // first, and only the next press goes Home (core/widgets/accordion).
+        if (accordionHandlesBack(context)) return;
         // In focus mode the back gesture IS the way out - the owner asked
         // for «جيستشر عادي او زر الخروج» and this is the gesture half. No
         // `maybePop` anywhere near it: that would hand the request back to

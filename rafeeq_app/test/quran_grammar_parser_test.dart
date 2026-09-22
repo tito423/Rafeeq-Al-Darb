@@ -12,6 +12,15 @@ void main() {
       expect(QuranGrammarParser.formatRootLetters(''), '');
     });
 
+    // Real rows of the bundled word_grammar: 12:2's قُرْءَٰنًا is `qrA`, and
+    // the corpus writes every hamza radical as `A`. It showed «ق - ر - ا».
+    test('a root\'s A is the hamza radical', () {
+      expect(QuranGrammarParser.formatRootLetters('qrA'), 'ق - ر - أ');
+      expect(QuranGrammarParser.formatRootLetters('Amn'), 'أ - م - ن');
+      expect(QuranGrammarParser.formatRootLetters('nbA'), 'ن - ب - أ');
+      expect(QuranGrammarParser.formatRootLetters('nzl'), 'ن - ز - ل');
+    });
+
     test('formatLemma converts Buckwalter lemma to Arabic word', () {
       expect(QuranGrammarParser.formatLemma('{som'), 'ٱسْم');
       expect(QuranGrammarParser.formatLemma('Hamod'), 'حَمْد');
