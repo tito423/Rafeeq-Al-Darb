@@ -320,8 +320,25 @@ class _Chip extends StatelessWidget {
             Icon(icon, size: 13, color: gold),
             const SizedBox(width: 4),
           ],
-          Text(
-            '$label: $value',
+          // The value is Qur'anic orthography — a lemma with wasla and dagger
+          // alif, a root spelled out letter by letter — and the UI font
+          // draws those badly: «ٱسْم» read «أشم», «رَحْمَٰن» read «إحمن», and a
+          // lone «ز» or «و» looks like a Latin «j» or «g» («ن - j - ل»). The
+          // mushaf's own font draws every one of them properly.
+          Text.rich(
+            TextSpan(
+              text: '$label: ',
+              children: [
+                TextSpan(
+                  text: value,
+                  style: const TextStyle(
+                    fontFamily: 'AmiriQuran',
+                    fontSize: 14,
+                    height: 1.2,
+                  ),
+                ),
+              ],
+            ),
             style: theme.textTheme.labelSmall?.copyWith(
               color: gold,
               fontWeight: FontWeight.w600,

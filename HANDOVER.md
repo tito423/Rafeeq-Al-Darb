@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 16:55 — IN PROGRESS — resume here**
+**2026-09-22 17:16 — IN PROGRESS — resume here**
 
-Library: any book not on the phone can be removed from the authors/categories/hadith-texts lists (per-device HiddenBooks set in prefs, undo snackbar, 'hidden books (N)' sheet to restore). analyze clean, 483 pass; not yet on a device.
+I'rab card: the spelling-based morpheme splitter is gone (it labelled the final ha of Allah an attached pronoun and the lam of la'alla a preposition); invented 'wa alamat nasbihi al-fatha' wording removed (wrong for arba'in 2:51); 16 raw corpus tags + the ACC mistranslation mapped to the corpus's own Arabic names from corpus.quran.com tagset.jsp (NUM = ism per the corpus word pages for 2:29/2:51/2:60); root/lemma chips in AmiriQuran (UI font drew zay/waw like j/g, wasla lemma as 'ashm'); page number Arabic-Indic; duplicate drag handle removed. Single-surah reader shows only its own surah's ayahs on shared pages (Ya-Sin opened under Fatir 45). Reciter screen uses surahNameForDisplay (U+06E1 garbled an-Nasr in the UI font). Verified on emulator-5554 release build: khatma persists across force-stop; suwar mukhtara card + Ya-Sin; library accordion + back closes card then goes Home; hide book (11->10, hidden(1), undo); per-ayah: an-Nasr 0/3, downloaded 3/3 complete, delete immediate 3->0; English wbw row gone. 485 tests pass.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

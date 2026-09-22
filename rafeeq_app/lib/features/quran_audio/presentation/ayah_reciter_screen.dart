@@ -25,6 +25,7 @@ import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/arabic_normalize.dart' show surahNameForDisplay;
 import '../../../core/utils/byte_formatter.dart' show ratio;
 import '../../../core/utils/digits.dart';
 import '../../downloads/data/reciters_provider.dart';
@@ -83,12 +84,15 @@ class _AyahReciterScreenState extends ConsumerState<AyahReciterScreen> {
       ayahs,
       repo,
       edition: _edition,
-      titleFor: (a, _) => '${surah.nameAr} ${a.ayahNumber}',
+      titleFor: (a, _) => '${surahNameForDisplay(surah.nameAr)} ${a.ayahNumber}',
     );
     if (mounted && _playing == surah.id) setState(() => _playing = null);
   }
 
   Future<void> _confirmDelete() async {
+    // Otherwise the search field takes the focus back when the dialog
+    // closes, and the keyboard opens over the list for no reason.
+    FocusScope.of(context).unfocus();
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -402,8 +406,12 @@ class _SurahTile extends StatelessWidget {
     final asked = !complete &&
         !pending &&
         have > 0; // started, and nothing is fetching the rest
+    // surahNameForDisplay: the stored name writes its sukun as the mushaf's
+    // U+06E1, which this UI font draws as a stray mark — «النَّصۡرِ» read as
+    // gibberish on the owner's screen. Every other surah list already does
+    // this, or draws in AmiriQuran, which has the glyph.
     final name = Reciter.arabicScriptLocales.contains(locale)
-        ? surah.nameAr
+        ? surahNameForDisplay(surah.nameAr)
         : surah.nameEn;
 
     final String subtitle;

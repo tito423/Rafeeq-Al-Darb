@@ -180,10 +180,17 @@ class SciencesHeader extends ConsumerWidget {
                       ?.copyWith(fontWeight: FontWeight.w700),
                   overflow: TextOverflow.ellipsis,
                 ),
+                // Arabic-Indic in Arabic, like the «١٢:٢» beside it — it
+                // read «صفحة 235» on the owner's phone. And onSurfaceVariant,
+                // not outline: the border colour made it all but invisible.
                 Text(
-                  '${'quran.page'.tr()} ${ayah.pageNumber}',
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.outline),
+                  localizeDigits(
+                    '${'quran.page'.tr()} ${ayah.pageNumber}',
+                    uiLanguageCode,
+                  ),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 // «حط في كارت الآية صوت القارئ وإمكانية اختيار قارئ آخر لأنه
                 // مش موجود فعلًا». The card was already reciting in the

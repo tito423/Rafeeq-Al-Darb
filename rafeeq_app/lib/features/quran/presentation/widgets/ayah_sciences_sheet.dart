@@ -56,6 +56,9 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      // The sheet draws its own handle (and hides it when expanded); the
+      // theme's default one put a second bar above it.
+      showDragHandle: false,
       builder: (_) => AyahSciencesSheet(
         ayah: ayah,
         surahNameAr: surahNameAr,

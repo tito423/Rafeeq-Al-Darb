@@ -51,14 +51,51 @@ void main() {
       expect(parsed.position, 1);
       expect(parsed.token, 'بِسْمِ');
       expect(parsed.posLabel, 'اسم');
-      expect(parsed.caseDetail, contains('مجرور (وعلامة جره الكسرة)'));
+      // The case as the corpus gives it — no «وعلامة جره الكسرة» added.
+      expect(parsed.caseDetail, 'مجرور');
       expect(parsed.rootFormatted, 'س - م - و');
       expect(parsed.lemmaFormatted, 'ٱسْم');
       expect(parsed.englishMeaning, 'In (the) name');
       expect(parsed.transliteration, "bis'mi");
-      expect(parsed.segments, isNotEmpty);
-      expect(parsed.segments.first.text, 'بِـ');
-      expect(parsed.segments.first.type, MorphemeType.prefix);
+      // No segments guessed from the spelling.
+      expect(parsed.segments, isEmpty);
+    });
+
+    // «ٱللَّهِ» ends in «ه», and the spelling-based splitter labelled that
+    // «هاء الغائب (ضمير متصل)» — the Name shown with an attached pronoun.
+    test('the Name is never split into a stem and a pronoun', () {
+      const local = WordGrammar(
+        pos: 2,
+        token: 'ٱللَّهِ',
+        posAr: 'اسم عَلَم',
+        caseAr: 'مجرور',
+        root: 'Alh',
+        lemma: '{ll~ah',
+      );
+      final parsed = QuranGrammarParser.parse(local: local);
+      expect(parsed.segments, isEmpty);
+      expect(
+        parsed.segments.map((s) => s.label).join(),
+        isNot(contains('ضمير')),
+      );
+    });
+
+    test('raw corpus tags read in the corpus\'s own Arabic names', () {
+      String pos(String tag) => QuranGrammarParser.parse(
+        local: WordGrammar(
+          pos: 1,
+          token: 'x',
+          posAr: tag,
+          caseAr: '',
+          root: '',
+          lemma: '',
+        ),
+      ).posLabel;
+      expect(pos('حرف تنصيص'), 'حرف نصب');
+      expect(pos('COND'), 'حرف شرط');
+      expect(pos('T'), 'ظرف زمان');
+      expect(pos('NUM'), 'اسم');
+      expect(pos('حرف جر'), 'حرف جر');
     });
 
     test('parse handles verbs and verb tenses', () {
@@ -75,7 +112,7 @@ void main() {
 
       expect(parsed.posLabel, 'فعل مضارع');
       expect(parsed.rootFormatted, 'ع - ب - د');
-      expect(parsed.caseDetail, contains('مرفوع (وعلامة رفعه الضمة)'));
+      expect(parsed.caseDetail, 'مرفوع');
     });
   });
 }

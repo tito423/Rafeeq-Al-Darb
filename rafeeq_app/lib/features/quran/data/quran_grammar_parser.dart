@@ -104,139 +104,76 @@ class QuranGrammarParser {
     );
   }
 
+  /// The Quranic Arabic Corpus's own Arabic name for each part-of-speech
+  /// tag, copied from its tagset page
+  /// (corpus.quran.com/documentation/tagset.jsp, read 2026-09-22).
+  ///
+  /// The bundled `word_grammar.pos_ar` was only partly translated: 4,533
+  /// words still carried a raw tag (`COND` 899, `T` 660, `RES` 634, `SUB`
+  /// 631, `LOC` 602, `CERT` 402, …) and 2,223 carried «حرف تنصيص», a
+  /// mistranslation of ACC, which the corpus names «حرف نصب». `NUM` is not
+  /// on the tagset page; the corpus's own word pages for سَبْعَ (2:29),
+  /// أَرْبَعِينَ (2:51) and عَشْرَةَ (2:60) call each one «اسم», so that is
+  /// what it shows.
+  static const _corpusPosNames = {
+    'حرف تنصيص': 'حرف نصب',
+    'COND': 'حرف شرط',
+    'T': 'ظرف زمان',
+    'RES': 'أداة حصر',
+    'SUB': 'حرف مصدري',
+    'LOC': 'ظرف مكان',
+    'CERT': 'حرف تحقيق',
+    'NUM': 'اسم',
+    'INC': 'حرف ابتداء',
+    'RET': 'حرف اضراب',
+    'FUT': 'حرف استقبال',
+    'AVR': 'حرف ردع',
+    'ANS': 'حرف جواب',
+    'EXP': 'أداة استثناء',
+    'EXL': 'حرف تفصيل',
+    'IMPN': 'اسم فعل أمر',
+    'EXH': 'حرف تحضيض',
+    'حرف (تفسير/عطف بيان)': 'حرف تفسير',
+    'حرف (آيات الابتداء)': 'حروف مقطعة',
+  };
+
   static String _enhancePosLabel(String posAr, String caseAr) {
     if (posAr.isEmpty) return 'كلمة قرآنيّة';
     if (caseAr.contains('فعل ماضٍ')) return 'فعل ماضٍ';
     if (caseAr.contains('فعل مضارع')) return 'فعل مضارع';
     if (caseAr.contains('فعل أمر')) return 'فعل أمر';
-    return posAr;
+    return _corpusPosNames[posAr] ?? posAr;
   }
 
+  /// The corpus's features, as the corpus states them.
+  ///
+  /// This used to add «(وعلامة نصبه الفتحة)» to every منصوب, «الكسرة» to
+  /// every مجرور and so on — which is wrong wherever the sign is not the
+  /// short vowel: أَرْبَعِينَ (2:51) is منصوب by its ياء. The corpus gives the
+  /// case and nothing more («اسم منصوب»), and so does this now.
   static String _enhanceCaseDetail(String caseAr, String posAr) {
     if (caseAr.isEmpty) {
       if (posAr.contains('حرف')) return 'مبني لا محل له من الإعراب';
       return 'حسب موقعه في الجملة';
     }
-
-    final parts = caseAr.split(RegExp(r'\s*[/،]\s*'));
-    final enhanced = <String>[];
-
-    for (final p in parts) {
-      final trimmed = p.trim();
-      if (trimmed.isEmpty) continue;
-      switch (trimmed) {
-        case 'مرفوع':
-          enhanced.add('مرفوع (وعلامة رفعه الضمة)');
-        case 'منصوب':
-          enhanced.add('منصوب (وعلامة نصبه الفتحة)');
-        case 'مجرور':
-          enhanced.add('مجرور (وعلامة جره الكسرة)');
-        case 'مجزوم':
-          enhanced.add('مجزوم (وعلامة جزمه السكون)');
-        case 'مبني':
-          enhanced.add('مبني في محل');
-        case 'مفرد':
-          enhanced.add('صيغة الإفراد');
-        case 'مثنى':
-          enhanced.add('صيغة التثنية');
-        case 'جمع':
-          enhanced.add('صيغة الجمع');
-        case 'مذكر':
-          enhanced.add('مذكر');
-        case 'مؤنث':
-          enhanced.add('مؤنث');
-        default:
-          if (!trimmed.contains('فعل')) {
-            enhanced.add(trimmed);
-          }
-      }
-    }
-
-    if (enhanced.isEmpty) {
-      return caseAr;
-    }
-    return enhanced.join(' • ');
+    final parts = [
+      for (final p in caseAr.split(RegExp(r'\s*[/،]\s*')))
+        if (p.trim().isNotEmpty && !p.contains('فعل')) p.trim(),
+    ];
+    return parts.isEmpty ? caseAr : parts.join(' • ');
   }
 
-  static List<MorphemeSegment> _decomposeWord(String token, WordGrammar local) {
-    final segments = <MorphemeSegment>[];
-    final clean = token.replaceAll(RegExp(r'[\u064B-\u065F\u0670]'), '');
-
-    // Check common prefixes
-    if (clean.startsWith('وب') || clean.startsWith('فب')) {
-      segments.add(const MorphemeSegment(
-        text: 'وَ / فَ',
-        label: 'حرف عطف / استئناف',
-        type: MorphemeType.prefix,
-      ));
-      segments.add(const MorphemeSegment(
-        text: 'بِـ',
-        label: 'حرف جر أصيل',
-        type: MorphemeType.prefix,
-      ));
-    } else if (clean.startsWith('ب') && !clean.startsWith('بل') && clean.length > 2) {
-      segments.add(const MorphemeSegment(
-        text: 'بِـ',
-        label: 'حرف جر',
-        type: MorphemeType.prefix,
-      ));
-    } else if (clean.startsWith('ل') && !clean.startsWith('لا') && clean.length > 2) {
-      segments.add(const MorphemeSegment(
-        text: 'لِـ',
-        label: 'حرف جر / لام التعليل',
-        type: MorphemeType.prefix,
-      ));
-    } else if (clean.startsWith('ال') && clean.length > 3) {
-      segments.add(const MorphemeSegment(
-        text: 'الْـ',
-        label: 'لام التعريف',
-        type: MorphemeType.prefix,
-      ));
-    } else if (clean.startsWith('و') && clean.length > 2 && local.posAr.contains('حرف عطف')) {
-      segments.add(const MorphemeSegment(
-        text: 'وَ',
-        label: 'حرف عطف',
-        type: MorphemeType.prefix,
-      ));
-    }
-
-    // Stem / Root representation
-    final stemText = local.lemma.isNotEmpty
-        ? formatLemma(local.lemma)
-        : token;
-    segments.add(MorphemeSegment(
-      text: stemText,
-      label: local.posAr.isNotEmpty ? local.posAr : 'أصل الكلمة (جذع)',
-      type: MorphemeType.stem,
-    ));
-
-    // Common attached suffixes (pronouns, dual/plural markers)
-    if (clean.endsWith('هم') || clean.endsWith('هن') || clean.endsWith('كم') || clean.endsWith('كن')) {
-      segments.add(const MorphemeSegment(
-        text: 'ـهُم / ـكُم',
-        label: 'ضمير متصل في محل جر / نصب',
-        type: MorphemeType.suffix,
-      ));
-    } else if (clean.endsWith('ه') || clean.endsWith('ها')) {
-      segments.add(const MorphemeSegment(
-        text: 'ـهُ / ـهَا',
-        label: 'هاء الغائب (ضمير متصل)',
-        type: MorphemeType.suffix,
-      ));
-    } else if (clean.endsWith('ك')) {
-      segments.add(const MorphemeSegment(
-        text: 'ـكَ',
-        label: 'كاف الخطاب (ضمير متصل)',
-        type: MorphemeType.suffix,
-      ));
-    } else if (clean.endsWith('ين') || clean.endsWith('ون')) {
-      segments.add(const MorphemeSegment(
-        text: 'ـونَ / ـينَ',
-        label: 'علامة جمع المذكر السالم',
-        type: MorphemeType.suffix,
-      ));
-    }
-
-    return segments;
-  }
+  /// No splitting by spelling.
+  ///
+  /// This used to cut every word into prefix + stem + suffix by looking at
+  /// its letters: anything ending in «ه» got «هاء الغائب (ضمير متصل)», so
+  /// the Name «ٱللَّهِ» (1:1) was shown carrying an attached pronoun, and
+  /// anything starting with «ل» got «لِـ حرف جر», so «لَعَلَّكُمْ» (12:2)
+  /// was a preposition plus a word. The bundled table has one row per word
+  /// and no segments, so there is nothing true to show here; the card shows
+  /// the word's own part of speech, case, root and lemma instead.
+  static List<MorphemeSegment> _decomposeWord(
+    String token,
+    WordGrammar local,
+  ) => const [];
 }

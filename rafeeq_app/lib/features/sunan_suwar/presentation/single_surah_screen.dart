@@ -255,7 +255,18 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                     if (!snap.hasData) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    final ayahs = snap.data!;
+                    final pageAyahs = snap.data!;
+                    // «تفتح السورة نفسها بس على قد السورة» — the first and
+                    // last pages are usually shared with the neighbouring
+                    // surahs (Ya-Sin opened under Fatir's last ayah). The
+                    // text page draws only this surah's own ayahs; a scanned
+                    // page cannot be cut, and keeps the whole page.
+                    final ayahs = isText
+                        ? [
+                            for (final a in pageAyahs)
+                              if (a.surahId == widget.surahId) a,
+                          ]
+                        : pageAyahs;
                     if (!isText) {
                       if (edition == null) {
                         return const Center(
