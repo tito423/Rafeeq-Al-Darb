@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 17:37 — IN PROGRESS — resume here**
+**2026-09-22 17:47 — IN PROGRESS — resume here**
 
-Open tanween: Tanzil's tanween+U+06ED (measured: 2,901 fathatan + 1,807 dammatan, all before idgham/ikhfa letters, none before a throat letter) is drawn as U+08F0/U+08F1 ARABIC OPEN FATHATAN/DAMMATAN (both in AmiriQuran's cmap) - display only, stored text untouched; the 99 kasratan+U+06ED (all before ba, iqlab) keep their meem. Tutorial: the target is measured frame by frame until it holds still for 6 frames (max 2 s) instead of once after one frame, so a tab still building is not skipped and the Qibla compass is not framed at its loading size. 488 pass; not yet on device.
+Verified on emulator-5554 (signed release): open tanween drawn staggered, no meem, under ummatan muslimatan (2:128, p.20); quick tour's 4th stop frames the whole Qibla compass card (dial + 258 deg); repair button: mushaf download cut at 7/604 by disabling wifi+data, network restored, 'islah' showed 'tamma isti'naf 1 tahmil ghayr muktamil' and the download went 10 -> 40 pages in 20 s. Items 1 and 3 of the 2026-09-21 OPEN list are done.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
