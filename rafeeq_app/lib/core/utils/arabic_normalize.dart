@@ -109,6 +109,33 @@ String stripTashkeelForDisplay(String s) => s.replaceAll(_arabicDiacritics, '');
 /// name is touched, so fully-vocalized names stay fully vocalized.
 String surahNameForDisplay(String s) => s.replaceAll('ۡ', 'ْ');
 
+/// A surah name with no marks at all — «سورة الفاتحة» — for list rows and
+/// titles set in the chrome font. That font draws the damma of «سُورَةُ» as
+/// a small loop over the س, and the owner read every row of the hifz list
+/// as «شورة» (2026-09-23). The name is a heading, not a verse; the ayah
+/// text is never passed through this. Alif wasla becomes a plain alif and
+/// the tatweel of «المَائـِدَةِ» goes with the marks.
+///
+/// A madda or hamza written as a combining mark is a LETTER here, not a
+/// vowel: the source spells «آلِ عِمۡرَانَ» as alif + U+0653, and stripping
+/// the marks naively printed «سورة ال عمران». Those are composed first.
+String surahNamePlain(String s) {
+  var t = s.replaceAll('ٱ', 'ا');
+  for (final c in _stripLeft) {
+    t = t.replaceAll(c, '');
+  }
+  const composed = {
+    'آ': 'آ', 'أ': 'أ', 'إ': 'إ',
+    'ؤ': 'ؤ', 'ئ': 'ئ',
+  };
+  composed.forEach((a, b) => t = t.replaceAll(a, b));
+  return t.replaceAll(RegExp('[ً-ٰٟۖ-ۭـ]'), '');
+}
+
+/// Vowel marks that the source may set BETWEEN a letter and its madda or
+/// hamza mark, which would keep the pair from composing.
+const _stripLeft = ['َ', 'ُ', 'ِ', 'ْ', 'ّ'];
+
 /// The invisible bidi formatting characters, removed before hadith text is
 /// drawn — and **only** those.
 ///

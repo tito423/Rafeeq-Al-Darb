@@ -18,7 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/arabic_normalize.dart' show surahNameForDisplay;
+import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
 import '../../../core/utils/digits.dart';
 import '../data/hifz_store.dart';
 import 'hifz_session_screen.dart';
@@ -95,7 +95,7 @@ class HifzScreen extends ConsumerWidget {
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                 ),
-                title: Text(surahNameForDisplay(s.nameAr)),
+                title: Text(surahNamePlain(s.nameAr)),
                 subtitle: Text(
                   trn('hifz.due_count', args: ['$due', '${s.ayahsCount}']),
                 ),

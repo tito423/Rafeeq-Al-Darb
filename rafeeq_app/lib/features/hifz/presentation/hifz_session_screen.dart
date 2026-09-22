@@ -15,7 +15,7 @@ import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/arabic_normalize.dart' show surahNameForDisplay;
+import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../quran/data/basmala.dart';
@@ -97,9 +97,8 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     });
   }
 
-  /// The Uthmani name with its U+06E1 sukun swapped for the plain one — the
-  /// chrome font draws U+06E1 as a stray mark (P3-46).
-  String get _name => surahNameForDisplay(widget.surah.nameAr);
+  /// The name as a heading, marks off — see [surahNamePlain].
+  String get _name => surahNamePlain(widget.surah.nameAr);
 
   @override
   Widget build(BuildContext context) {
