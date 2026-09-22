@@ -245,7 +245,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                   SizedBox(
                     width: 64,
                     child: Text(
-                      localizeDigits('${(_fontScale * 100).round()}%', uiLanguageCode),
+                      localizeDigits(percentOf(_fontScale), uiLanguageCode),
                       textAlign: TextAlign.center,
                       style: Theme.of(ctx).textTheme.titleMedium,
                     ),

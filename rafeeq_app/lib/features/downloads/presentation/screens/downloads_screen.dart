@@ -389,7 +389,7 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
                                   style: const TextStyle(fontSize: 13)),
                             ),
                             Text(
-                              value == null ? '…' : ltr('${(value * 100).round()}%'),
+                              value == null ? '…' : percentOf(value),
                               style: TextStyle(fontSize: 12, color: goldOn(scheme), fontWeight: FontWeight.w700),
                             ),
                           ],

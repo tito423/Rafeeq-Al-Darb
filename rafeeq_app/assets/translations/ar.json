@@ -127,7 +127,8 @@
     "reset_all": "تصفير الكل",
     "download": "تنزيل",
     "script": "arabic",
-    "ok": "حسنًا"
+    "ok": "حسنًا",
+    "percent": "{}٪"
   },
   "nav": {
     "home": "الرئيسية",
@@ -1611,8 +1612,7 @@
     "download_remaining": "تنزيل الباقي",
     "failed": "تعذّر تنزيل بعض الآيات",
     "paused": "التنزيل متوقف مؤقتًا",
-    "none_here": "لا توجد سور هنا",
-    "percent": "{}٪"
+    "none_here": "لا توجد سور هنا"
   },
   "sync": {
     "status_idle": "لم تتم المزامنة",

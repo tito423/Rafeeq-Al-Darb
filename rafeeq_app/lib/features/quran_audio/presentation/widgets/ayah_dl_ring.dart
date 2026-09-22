@@ -24,7 +24,7 @@ class AyahDlRing extends StatelessWidget {
   /// language's own form elsewhere. The Latin sign in an RTL run printed
   /// «%٤٧».
   static String percent(int n, String locale) =>
-      trn('ayah_dl.percent', args: ['$n']);
+      trn('common.percent', args: ['$n']);
 
   @override
   Widget build(BuildContext context) {

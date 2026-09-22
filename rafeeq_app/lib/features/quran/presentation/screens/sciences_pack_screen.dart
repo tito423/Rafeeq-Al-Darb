@@ -1,3 +1,4 @@
+import '../../../../core/utils/digits.dart' show percentOf;
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -158,7 +159,7 @@ class _NotHere extends StatelessWidget {
               Text(
                 task.total != null
                     ? localizeDigits(
-                        '${(task.progress * 100).round()}%', uiLanguageCode)
+                        percentOf(task.progress), uiLanguageCode)
                     : 'downloads.download'.tr(),
                 style: TextStyle(color: scheme.onSurfaceVariant),
               ),

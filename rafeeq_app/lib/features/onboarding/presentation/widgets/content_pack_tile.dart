@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart' show formatBytes;
-import '../../../../core/utils/digits.dart' show trn;
+import '../../../../core/utils/digits.dart' show trn, percentOf;
 
 /// One downloadable pack, offered on the first-run page.
 ///
@@ -110,7 +110,7 @@ class _ContentPackTileState extends State<ContentPackTile> {
           if (done)
             const Icon(Icons.check_circle_rounded, color: AppColors.gold)
           else if (busy)
-            Text('${(task.progress * 100).round()}%',
+            Text(percentOf(task.progress),
                 style: const TextStyle(fontWeight: FontWeight.w700))
           else
             FilledButton.icon(

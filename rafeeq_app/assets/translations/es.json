@@ -127,7 +127,8 @@
     "reset_all": "Restablecer todo",
     "download": "Descargar",
     "script": "latin",
-    "ok": "Aceptar"
+    "ok": "Aceptar",
+    "percent": "{} %"
   },
   "nav": {
     "home": "Inicio",
@@ -1611,8 +1612,7 @@
     "download_remaining": "Descargar el resto",
     "failed": "Algunas aleyas no se pudieron descargar",
     "paused": "Descarga en pausa",
-    "none_here": "No hay suras aquí",
-    "percent": "{} %"
+    "none_here": "No hay suras aquí"
   },
   "sync": {
     "status_idle": "Sin sincronizar",

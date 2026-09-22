@@ -127,7 +127,8 @@
     "reset_all": "Reset all",
     "download": "Download",
     "script": "latin",
-    "ok": "OK"
+    "ok": "OK",
+    "percent": "{}%"
   },
   "nav": {
     "home": "Home",
@@ -1611,8 +1612,7 @@
     "download_remaining": "Download the rest",
     "failed": "Some ayahs failed to download",
     "paused": "Download paused",
-    "none_here": "No surahs here",
-    "percent": "{}%"
+    "none_here": "No surahs here"
   },
   "sync": {
     "status_idle": "Not synced yet",

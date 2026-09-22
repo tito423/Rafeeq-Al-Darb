@@ -234,7 +234,7 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                                       trn('quran_audio.now_downloading_list', args: [
                                         [
                                           for (final (surah, progress) in now)
-                                            '${surahTitle(data, surah, locale)} ${ltr('${(progress * 100).round()}%')}',
+                                            '${surahTitle(data, surah, locale)} ${percentOf(progress)}',
                                         ].join('  ·  '),
                                       ]),
                                       style: TextStyle(color: theme.accentSoft, fontWeight: FontWeight.w700),
@@ -381,7 +381,7 @@ class _SurahRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text(ltr('${(status.progress * 100).round()}%'),
+            Text(percentOf(status.progress),
                 style: TextStyle(
                     fontSize: 11,
                     color: Theme.of(context).colorScheme.onSurfaceVariant)),

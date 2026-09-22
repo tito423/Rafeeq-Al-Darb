@@ -88,7 +88,7 @@ class BookCard extends StatelessWidget {
                   Text(
                     task.total != null
                         ? localizeDigits(
-                            '${(task.progress * 100).round()}%',
+                            percentOf(task.progress),
                             context.locale.languageCode)
                         : '…',
                     style: TextStyle(

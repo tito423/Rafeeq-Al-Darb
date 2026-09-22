@@ -157,7 +157,7 @@ class _DownloadGate extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 task.total != null
-                    ? '${(task.progress * 100).round()}%'
+                    ? percentOf(task.progress)
                     : 'library.downloading_hadith_db'.tr(),
               ),
             ] else

@@ -127,7 +127,8 @@
     "reset_all": "Repor tudo",
     "download": "Transferir",
     "script": "latin",
-    "ok": "OK"
+    "ok": "OK",
+    "percent": "{}%"
   },
   "nav": {
     "home": "Início",
@@ -1611,8 +1612,7 @@
     "download_remaining": "Baixar o restante",
     "failed": "Alguns versículos não puderam ser baixados",
     "paused": "Download pausado",
-    "none_here": "Nenhuma surata aqui",
-    "percent": "{}%"
+    "none_here": "Nenhuma surata aqui"
   },
   "sync": {
     "status_idle": "Ainda não sincronizado",

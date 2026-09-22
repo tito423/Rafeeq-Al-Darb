@@ -127,7 +127,8 @@
     "reset_all": "Tout réinitialiser",
     "download": "Télécharger",
     "script": "latin",
-    "ok": "OK"
+    "ok": "OK",
+    "percent": "{} %"
   },
   "nav": {
     "home": "Accueil",
@@ -1611,8 +1612,7 @@
     "download_remaining": "Télécharger le reste",
     "failed": "Certains versets n'ont pas pu être téléchargés",
     "paused": "Téléchargement en pause",
-    "none_here": "Aucune sourate ici",
-    "percent": "{} %"
+    "none_here": "Aucune sourate ici"
   },
   "sync": {
     "status_idle": "Pas encore synchronisé",

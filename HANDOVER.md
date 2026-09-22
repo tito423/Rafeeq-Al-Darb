@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 17:54 — IN PROGRESS — resume here**
+**2026-09-22 17:59 — IN PROGRESS — resume here**
 
-Item 2 of the 2026-09-21 OPEN list: the 8 'sharh at-tatbiq' screenshots recaptured today on emulator-5554 (signed release, demo-mode status bar 09:30): 01_home, 02_quran (raster Madinah p.20), 12_adhan (preview), 04_azkar, 07_hadith (nine books open), 11_lesson (Tuhfa lesson 2), 08_hajj (with the Hajj/Umrah toggle), 10_more; store images and assets/tutorial_shots rebuilt with the two scripts (8 shots 6.64 MB -> 0.45 MB). All three OPEN items are now done.
+One percent format for the whole app: common.percent in all 7 locales ({}٪ ar, {} % fr/es, {}% others) behind percentOf() in core/utils/digits.dart; the 11 hand-written '\%' sites (downloads, reciter, content packs, book card, sciences pack, hadith gate, ayah sciences sheet, book reader font, mushaf display font, ayah ring) use it - the Latin sign printed first in Arabic ('%١٠٠'). Arabic digits also in the go-to sheet steps/range/slider and the prayer-time adjustment. analyze clean, 488 pass.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

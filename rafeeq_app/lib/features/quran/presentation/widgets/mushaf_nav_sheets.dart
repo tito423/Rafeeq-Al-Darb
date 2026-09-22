@@ -375,7 +375,8 @@ class _JumpSheetState extends State<_JumpSheet> {
             minimumSize: const Size(56, 44),
             padding: EdgeInsets.zero,
           ),
-          child: Text(ltr(by > 0 ? '+$by' : '−${-by}')),
+          child: Text(ltr(localizeDigits(
+              by > 0 ? '+$by' : '−${-by}', uiLanguageCode))),
         );
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
@@ -389,7 +390,7 @@ class _JumpSheetState extends State<_JumpSheet> {
         ),
         Center(
           // Trap #16: a Latin range is bidi-weak inside Arabic.
-          child: Text(ltr('1 – $total'),
+          child: Text(ltr(localizeDigits('1 – $total', uiLanguageCode)),
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: theme.colorScheme.outline)),
         ),
@@ -400,7 +401,7 @@ class _JumpSheetState extends State<_JumpSheet> {
             min: 1,
             max: total.toDouble(),
             divisions: total - 1,
-            label: '$_page',
+            label: localizeDigits('$_page', uiLanguageCode),
             onChanged: (v) => _setPage(v.round()),
           ),
         Wrap(

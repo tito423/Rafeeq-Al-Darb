@@ -10,6 +10,7 @@ import '../../../../core/models/adhan_option.dart';
 import '../../../../core/models/prayer_times.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/services/adhan_native.dart';
+import '../../../../core/utils/digits.dart' show localizeDigits, uiLanguageCode;
 import '../../../../core/utils/time_formatter.dart';
 import '../../../../core/widgets/card_route.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
@@ -494,10 +495,14 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
                 ),
                 SizedBox(
                   width: 60,
+                  // The reader's numerals: «0» sat in an Arabic dialog.
                   child: Text(
-                    offset == 0
-                        ? '0'
-                        : (offset > 0 ? '+$offset' : '$offset'),
+                    localizeDigits(
+                      offset == 0
+                          ? '0'
+                          : (offset > 0 ? '+$offset' : '$offset'),
+                      uiLanguageCode,
+                    ),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: offset == 0

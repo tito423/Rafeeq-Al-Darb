@@ -116,3 +116,12 @@ String pluralN(String key, num value,
         {List<String>? args, Map<String, String>? namedArgs}) =>
     localizeDigits(
         key.plural(value, args: args, namedArgs: namedArgs), uiLanguageCode);
+
+/// A percentage in the reader's own form: «٤٧٪» in Arabic — the Arabic
+/// percent sign after the number — «47 %» in French, «47%» in English.
+///
+/// Eleven places wrote `'${n}%'` by hand, and in an Arabic line the Latin
+/// sign printed first: «%١٠٠» for the mushaf font size, «%٤٧» on the
+/// recitation ring. [fraction] is 0..1.
+String percentOf(num fraction) =>
+    trn('common.percent', args: ['${(fraction * 100).round()}']);

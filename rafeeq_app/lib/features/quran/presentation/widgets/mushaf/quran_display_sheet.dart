@@ -421,7 +421,7 @@ class _FontRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   localizeDigits(
-                    '${(scale * 100).round()}%',
+                    percentOf(scale),
                     context.locale.languageCode,
                   ),
                   style: TextStyle(
