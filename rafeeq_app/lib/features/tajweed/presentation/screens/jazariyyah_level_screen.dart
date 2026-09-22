@@ -10,6 +10,7 @@ import '../../../library/data/book_text.dart';
 import '../../data/jazariyyah_course.dart';
 import '../../data/jazariyyah_examples.dart';
 import '../../data/jazariyyah_lesson_text.dart';
+import '../../data/jazariyyah_sharh.dart';
 import '../widgets/listen_card.dart';
 
 /// المستوى الثاني — «المقدمة الجزرية» لابن الجزري (ت ٨٣٣ هـ).
@@ -55,6 +56,16 @@ final jazariyyahBookProvider = FutureProvider<BookText?>((ref) async {
   } catch (e, st) {
     debugPrint('jazariyyahBookProvider failed: $e\n$st');
     rethrow;
+  }
+});
+
+/// The شرح, bundled beside the matn for the same reason the matn is.
+final jazariyyahSharhProvider = FutureProvider<BookText?>((ref) async {
+  try {
+    return await bundledMatn(jazariyyahSharhBook);
+  } catch (e, st) {
+    debugPrint('jazariyyahSharhProvider failed: $e\n$st');
+    return null;
   }
 });
 
@@ -263,6 +274,11 @@ class _LessonTile extends ConsumerWidget {
                 },
               ),
             ),
+          // «الجزرية دي محتاجة شرح»: the verses above, then their شرح under
+          // its own fold, so the poem stays the lesson and the explanation is
+          // one tap away rather than in between its lines.
+          if (index < jazariyyahSharhRanges.length)
+            _SharhSection(range: jazariyyahSharhRanges[index]),
           // «اسمع الحكم في آية». One chapter can hold several rules here —
           // الجزرية puts izhar, idgham, iqlab, ikhfa and the sakin mim in a
           // single باب — so this is a list, not one card.
@@ -287,6 +303,114 @@ class _LessonTile extends ConsumerWidget {
           ),
         ],
       ),
+      ),
+    );
+  }
+}
+
+/// «الشرح» inside a lesson: folded until tapped, and part of the accordion,
+/// so opening it scrolls it into view and back folds it first.
+class _SharhSection extends ConsumerWidget {
+  final JazariyyahSharhRange range;
+  const _SharhSection({required this.range});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final book = ref.watch(jazariyyahSharhProvider).valueOrNull;
+    if (book == null) return const SizedBox.shrink();
+    final paras = jazariyyahSharhParas(range, book);
+    if (paras.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: AccordionSection(
+        builder: (context, open, toggle) => Container(
+          decoration: BoxDecoration(
+            color: scheme.primary.withValues(alpha: 0.06),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: scheme.primary.withValues(alpha: 0.25)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: toggle,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.menu_book_rounded, color: scheme.primary),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'tajweed.sharh_title'.tr(),
+                          style: theme.textTheme.titleSmall
+                              ?.copyWith(color: scheme.primary),
+                        ),
+                      ),
+                      Icon(
+                        open ? Icons.expand_less : Icons.expand_more,
+                        color: scheme.primary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (open)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (range.shared)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            'tajweed.sharh_shared'.tr(),
+                            style: theme.textTheme.bodySmall
+                                ?.copyWith(color: scheme.onSurfaceVariant),
+                          ),
+                        ),
+                      for (final p in paras)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            p.text,
+                            textAlign: isJazariyyahVerse(p.text)
+                                ? TextAlign.center
+                                : TextAlign.justify,
+                            style: isJazariyyahVerse(p.text)
+                                ? theme.textTheme.bodyMedium?.copyWith(
+                                    height: 1.9,
+                                    color: scheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                : p.kind == 'aya'
+                                    ? theme.textTheme.bodyLarge?.copyWith(
+                                        fontFamily: 'AmiriQuran',
+                                        height: 1.9,
+                                        color: scheme.primary,
+                                      )
+                                    : theme.textTheme.bodyMedium
+                                        ?.copyWith(height: 1.9),
+                          ),
+                        ),
+                      Text(
+                        'tajweed.sharh_source'.tr(),
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: scheme.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

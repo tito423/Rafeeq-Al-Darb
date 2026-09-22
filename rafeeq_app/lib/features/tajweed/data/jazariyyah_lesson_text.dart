@@ -14,6 +14,7 @@ library;
 
 import '../../library/data/book_text.dart';
 import 'jazariyyah_course.dart';
+import 'jazariyyah_sharh.dart';
 
 /// One line as it will be drawn.
 class JazariyyahPara {
@@ -56,6 +57,38 @@ List<JazariyyahPara> jazariyyahLessonParas(
   }
   return out;
 }
+
+/// A lesson's part of the شرح («فتح رب البرية»), in reading order.
+///
+/// «الجزرية دي محتاجة شرح» — the ranges come from
+/// `scripts/build_jazariyyah_sharh.py`, which finds each lesson's first verse
+/// in the شرح. Shamela's own footnote block is already gone from the built
+/// book; a paragraph that still opens with «(١)» is dropped here too, by the
+/// same rule the matn uses.
+List<JazariyyahPara> jazariyyahSharhParas(
+  JazariyyahSharhRange range,
+  BookText book,
+) {
+  final out = <JazariyyahPara>[];
+  if (range.fromIndex < 0 || range.toIndex >= book.pages.length) return out;
+  for (var i = range.fromIndex; i <= range.toIndex; i++) {
+    final paras = book.pages[i].paras;
+    final from = i == range.fromIndex ? range.fromPara : 0;
+    final to = i == range.toIndex ? range.toPara : paras.length - 1;
+    for (var j = from; j <= to && j < paras.length; j++) {
+      if (j < 0) continue;
+      final p = paras[j];
+      if (isJazariyyahEditorNote(p.text)) continue;
+      out.add(JazariyyahPara(p.text, p.kind));
+    }
+  }
+  return out;
+}
+
+/// A line of the poem quoted inside the شرح: its two halves are split by an
+/// ellipsis, «… », the way every verse of this printing is set.
+bool isJazariyyahVerse(String text) =>
+    text.contains('…') || text.contains('...');
 
 /// The comparison form for checking a lesson opens on its own heading: the
 /// matn is fully vowelled and its headings carry the editor's marker.

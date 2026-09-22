@@ -201,6 +201,16 @@ BOOKS = {
         "shamela_id": 581,
         "source_label": "المكتبة الشاملة — المقدمة فيما على قارئ القرآن أن يعلمه (الجزرية)، لابن الجزري (ت ٨٣٣ هـ)",
     },
+    # 2026-09-22 — the شرح for the second tajweed level. A MODERN work
+    # (صفوت محمود سالم، دار نور المكتبات، ط٢ ١٤٢٤هـ/٢٠٠٣م), taken on the owner's
+    # explicit ruling: «اللي من الشاملة خد نصه». Chosen over 17065 «الروضة
+    # الندية» because it explains in plain language for an ordinary reader —
+    # the owner's criterion — and quotes each group of verses before its
+    # explanation, which is what lets each lesson get its own part.
+    "fath_rabb_al_bariyyah_sharh_al_jazariyyah": {
+        "shamela_id": 21580,
+        "source_label": "المكتبة الشاملة — فتح رب البرية شرح المقدمة الجزرية في علم التجويد، صفوت محمود سالم، دار نور المكتبات، جدة، ط٢ ١٤٢٤هـ",
+    },
     "at_tamhid_fi_ilm_at_tajwid": {
         "shamela_id": 8194,
         "source_label": "المكتبة الشاملة — التمهيد في علم التجويد، لابن الجزري (ت ٨٣٣ هـ)",

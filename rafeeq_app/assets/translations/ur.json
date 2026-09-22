@@ -1584,7 +1584,10 @@
     "listen_qalqalah": "The articulation bounces on the silent qalqalah letter",
     "listen_ra_tafkhim": "An open ra, so it is pronounced heavy",
     "listen_ra_tarqiq": "A silent ra after a kasrah, so it is pronounced light",
-    "stop": "روکیں"
+    "stop": "روکیں",
+    "sharh_title": "شرح",
+    "sharh_source": "«فتح رب البریۃ شرح المقدمۃ الجزریۃ» از صفوت محمود سالم — دار نور المکتبات، طبع دوم ۱۴۲۴ھ — المکتبۃ الشاملۃ",
+    "sharh_shared": "شارح نے اس سبق اور ساتھ والے سبق کے اشعار کی شرح ایک ساتھ کی ہے، اس لیے یہی شرح دونوں میں دکھائی گئی ہے۔"
   },
   "ayah_dl": {
     "surahs_done": "۱۱۴ میں سے {} سورتیں مکمل",

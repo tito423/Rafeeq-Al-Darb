@@ -905,3 +905,31 @@ Noto Naskh Arabic, Lateef, Markazi Text, Reem Kufi, El Messiri, Aref Ruqaa.
 Static TTFs from the Google Fonts CSS API (`scripts/fetch_app_fonts.py`).
 All are **SIL Open Font License 1.1** (text in `OFL.txt` beside them), which
 permits bundling and redistribution in an application. Risk: none known.
+
+## 2026-09-22 — the owner's ruling on Shamela text, and the Jazariyyah شرح
+
+**Ruling (the owner, 2026-09-22):** «اللي من الشاملة خد نصه … لو ينفع تاخد
+النص التراثي تمام، منفعش خلاص مش بإيدينا» — library and course text may be
+taken from Shamela. Where the classical author's text can be separated from a
+modern editor's apparatus, it is (the existing filters stay); where it cannot,
+the text ships as Shamela serves it. He also asked for **no bare mutun** in
+the library (the explained book instead), and is considering a Play Store
+build with **no library at all**, which is where this exposure lives.
+
+**First use — `fath_rabb_al_bariyyah_sharh_al_jazariyyah`** (the شرح under
+each lesson of the second tajweed level):
+
+| | |
+|---|---|
+| Work | «فتح رب البرية شرح المقدمة الجزرية في علم التجويد» |
+| Author | صفوت محمود سالم — a **modern** author |
+| Edition | دار نور المكتبات، جدة، الطبعة الثانية ١٤٢٤ هـ / ٢٠٠٣ م, 137 pp. |
+| Source | Shamela 21580, fetched 2026-09-22, 106 pages, `hamesh` dropped |
+| Shipped | bundled asset + `books/text/…json` on R2, 55,442 B gzip, no `Content-Encoding` |
+| Rights | **Not cleared.** Shipped on the owner's explicit ruling above. |
+
+Chosen over 17065 «الروضة الندية» (محمود عبد المنعم العبد، المكتبة الأزهرية
+٢٠٠١م — equally modern) because it explains in plain language, which was the
+owner's criterion. The classical commentaries (القاري، الأنصاري، الأزهري،
+ابن الناظم) are not in the 8,598-book Shamela index, and archive.org had no
+licensed text edition of any of them.
