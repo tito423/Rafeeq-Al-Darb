@@ -1,13 +1,14 @@
 
-== ilam_al_muwaqqiin  (1487925 B, 1221 pages)
-الكتاب: إعلام الموقعين عن رب العالمين
-المؤلف: محمد بن أبي بكر بن أيوب بن سعد شمس الدين ابن قيم الجوزية (ت ٧٥١هـ)
-تحقيق: محمد عبد السلام إبراهيم
-الناشر: دار الكتب العلمية - ييروت
-الطبعة: الأولى، ١٤١١هـ - ١٩٩١م
-عدد الأجزاء:٤
+== al_majmu_sharh_al_muhadhdhab  (4189854 B, 4869 pages)
+الكتاب: المجموع شرح المهذب
+المؤلف: أبو زكريا محيي الدين بن شرف النووي (ت ٦٧٦ هـ)
+باشر تصحيحه: لجنة من العلماء
+الناشر: (إدارة الطباعة المنيرية، مطبعة التضامن الأخوي) - القاهرة
+عام النشر:١٣٤٤ - ١٣٤٧ هـ
+عدد الأجزاء: ٩ (أصل النووي فقط)
+وصَوَّرَتْها: دار الفكر بيروت في ٢٠ مجلدًا: مشتملا على مجموع النووي وتكملة السبكي وتكملة المطيعي
 [ترقيم الكتاب موافق للمطبوع]
   seven-names on card: none
   seven-names in text: none
 
-REFUSED: tafsir_al_tabari (not built), tafsir_al_qurtubi (not built), fath_al_bari (not built), al_mughni_ibn_qudamah (not built), al_majmu_sharh_al_muhadhdhab (not built), siyar_alam_al_nubala (not built), tahdhib_al_kamal (not built), lisan_al_arab (not built)
+REFUSED: tafsir_al_tabari (not built), tafsir_al_qurtubi (not built), fath_al_bari (not built), al_mughni_ibn_qudamah (not built), ilam_al_muwaqqiin (already catalogued), siyar_alam_al_nubala (not built), tahdhib_al_kamal (not built), lisan_al_arab (not built)

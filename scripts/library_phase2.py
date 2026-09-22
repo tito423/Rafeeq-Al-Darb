@@ -229,8 +229,10 @@ def main():
             r"|\n  LibraryBook\(\n    id: '" + rid + r"',.*?\n  \),",
             "", src, count=1, flags=re.S)
         print("retired", rid, n)
-    lines = ["", "  // ── 2026-09-23 — library «المرحلة ٢»: the encyclopaedias, per the owner's",
-             "  // rulings. scripts/library_phase2.py."]
+    header = "  // ── 2026-09-23 — library «المرحلة ٢»: the encyclopaedias, per the owner's"
+    # Written once: every later batch appends under the header already there.
+    lines = [""] if header in src else ["", header,
+                                      "  // rulings. scripts/library_phase2.py."]
     for (bid, t_ar, t_en, a_ar, a_en, death, cat, shelf, size, label) in entries:
         lines += [
             "  LibraryBook(",

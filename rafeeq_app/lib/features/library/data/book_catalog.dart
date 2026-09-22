@@ -4611,6 +4611,24 @@ const List<LibraryBook> libraryBookCatalog = [
     ),
   ),
 
+  LibraryBook(
+    id: 'al_majmu_sharh_al_muhadhdhab',
+    titleAr: 'المجموع شرح المهذب',
+    titleEn: 'Al-Majmu Sharh al-Muhadhdhab',
+    authorAr: 'الإمام النووي',
+    authorEn: 'Al-Nawawi',
+    deathYearAh: 676,
+    pages: 4869,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_majmu_sharh_al_muhadhdhab.json',
+      sizeBytes: 4189854,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — المجموع شرح المهذب، أبو زكريا محيي الدين بن شرف النووي (ت ٦٧٦ هـ)، (إدارة الطباعة المنيرية، مطبعة التضامن الأخوي) - القاهرة',
+    ),
+  ),
+
 ];
 
 /// One book by its id, or null.
