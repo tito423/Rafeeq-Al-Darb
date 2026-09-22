@@ -6,7 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
-| **Last updated** | 2026-09-21 |
+| **Last updated** | 2026-09-22 |
 | **Current source** | `master` clean and pushed at `cec5aaf2`. The published APK was built from it (= tag `v3.54.0`). |
 | **Released** | **v3.54.0** — 260,191,471 B, sha256 `5c1a3877…3759f9`, three ABIs, minSdk 24, tag on `cec5aaf2` = `HEAD`. v3.53.0 and its tag were deleted; **v3.51.0 stays published** as the fallback. |
 | **Restore point** | still **v3.51.0**: branch `known-good/v3.51.0`, tags `backup-2026-09-21c` and `v3.51.0`, and `../Rafeeq-Backups/Rafeeq-Al-Darb-2026-09-21.bundle`. `RESTORE.md` says how to come back. It does not move to 3.52.0 until 3.52.0 has lived on his phone |
@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-21 22:12 — IN PROGRESS — resume here**
+**2026-09-22 15:37 — IN PROGRESS — resume here**
 
-Add a flat JSON export of the Shamela catalogue so the owner can download it from a remote mobile session. 'shamela_index.py export' now also writes shamela_books.json (1.71 MB): a header carrying source, crawl date 2026-09-21, 40 categories, 8,598 entries and 8,598 distinct books, plus one flat 'books' array where each object has id, title, category_id, category and url. Validated by reloading the written file with json.load: the array holds 8,598 objects and its first and last entries read back correctly.
+Khatma: wird history, previous/upcoming wird lists with go-back, always-enabled 'atmamt al-qira'a' (several wirds a day), working undo (notifier captured, SnackBar persist:false - Flutter 3.38 defaults persist=true when an action is set, which is why 'taraaja3' never left the screen), create sheet scrollable in the safe area (the button was laid out past the sheet and never hit-tested; the unit label wrapped letter-per-line and made the gap), overlays opaque in the RGB theme. analyze clean, 478 tests pass. NOT yet seen on a device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

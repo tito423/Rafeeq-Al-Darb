@@ -941,7 +941,17 @@
     "quarter_2": "Two quarters",
     "quarter_3": "3 quarters",
     "quarter_4_hizb": "One hizb",
-    "quarter_n": "{} quarters"
+    "quarter_n": "{} quarters",
+    "previous_label": "Previous portions",
+    "upcoming_label": "Upcoming portions",
+    "wird_n": "Portion {}",
+    "wird_current": "Current portion",
+    "wird_pages": "Pages {} – {}",
+    "rewind": "Go back to it",
+    "rewind_confirm": "Go back to portion {}? Portions you read after it will be marked unread.",
+    "rewound": "Back to portion {}",
+    "wird_done": "Portion {} completed",
+    "no_wirds": "No portions yet"
   },
   "sunan_suwar": {
     "title": "Sunnah of the Surahs (Day & Night)",

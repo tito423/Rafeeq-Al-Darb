@@ -46,19 +46,12 @@ void main() {
     // is still owed.
     'lib/features/quran/presentation/screens/quran_screen.dart': 1057,
     'lib/features/quran/presentation/widgets/mushaf_text_page.dart': 991,
-    // 949 -> 950: the same one import line as khatma_screen above, for
-    // the same app-wide Arabic-numeral fix. The sleep-timer menu read
+    // 949 -> 950: one import line, for the app-wide Arabic-numeral fix
+    // (khatma_screen took the same line, and left this list on 2026-09-22
+    // when its create sheet moved to its own file). The sleep-timer menu read
     // «15 دقيقة» in Latin digits; it goes through `trn()` now.
     'lib/features/quran_audio/presentation/player_screen.dart': 950,
     'lib/features/downloads/presentation/screens/downloads_screen.dart': 870,
-    // 859 -> 860: ONE import line, for the app-wide Arabic-numeral fix.
-    // Nine of this screen's labels printed «٥ من 30» — Latin digits inside an
-    // Arabic sentence — and the fix routes them through `trn()`/`pluralN()`
-    // in core/utils/digits.dart. The line is an import, not new logic, and it
-    // is declared here rather than paid for by deleting a comment that
-    // explains a real decision, which is how three earlier increases on this
-    // list were funded.
-    'lib/features/khatma/presentation/khatma_screen.dart': 860,
     'lib/features/home/presentation/widgets/analog_clock_faces.dart': 828,
     'lib/core/services/ayah_audio_service.dart': 810,
   };

@@ -36,8 +36,7 @@ void main() {
     ).readAsStringSync();
 
     expect(card, contains('onOpenPage'));
-    expect(card, contains('previousPortionPage'));
-    expect(card, contains('upcomingPortionPage'));
-    expect(card, contains('OutlinedButton.icon('));
+    expect(card, contains('showKhatmaWirdsSheet('));
+    expect(card, contains('previousWirds('));
   });
 }

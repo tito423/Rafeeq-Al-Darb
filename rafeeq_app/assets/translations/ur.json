@@ -941,7 +941,17 @@
     "quarter_2": "دو ارباع",
     "quarter_3": "تین ارباع",
     "quarter_4_hizb": "ایک حزب",
-    "quarter_n": "{} ارباع"
+    "quarter_n": "{} ارباع",
+    "previous_label": "پچھلے حصے",
+    "upcoming_label": "آنے والے حصے",
+    "wird_n": "حصہ {}",
+    "wird_current": "موجودہ حصہ",
+    "wird_pages": "صفحہ {} – {}",
+    "rewind": "اس پر واپس جائیں",
+    "rewind_confirm": "حصہ {} پر واپس جائیں؟ اس کے بعد پڑھے گئے حصے غیر پڑھے ہو جائیں گے۔",
+    "rewound": "حصہ {} پر واپس",
+    "wird_done": "حصہ {} مکمل",
+    "no_wirds": "ابھی کوئی حصہ نہیں"
   },
   "sunan_suwar": {
     "title": "دن اور رات کی سورتوں کی سنت",

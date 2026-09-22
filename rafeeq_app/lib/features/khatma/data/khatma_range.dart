@@ -40,7 +40,16 @@ Future<KhatmaPortionRange?> resolveKhatmaPortionRange(
     startPage,
     Khatma.totalPages,
   );
+  return resolvePageSpan(mushaf, startPage, endPage);
+}
 
+/// The first ayah of [startPage] through the last ayah of [endPage] — how
+/// every wird in the previous/upcoming lists is labelled.
+Future<KhatmaPortionRange?> resolvePageSpan(
+  MushafData mushaf,
+  int startPage,
+  int endPage,
+) async {
   final startAyahs = await mushaf.repo.ayahsOfPage(startPage);
   if (startAyahs.isEmpty) return null;
   final endAyahs = endPage == startPage
@@ -65,4 +74,9 @@ Future<KhatmaPortionRange?> resolveKhatmaPortionRange(
 final khatmaPortionRangeProvider = FutureProvider.family
     .autoDispose<KhatmaPortionRange?, (Khatma, MushafData)>((ref, args) {
       return resolveKhatmaPortionRange(args.$1, args.$2);
+    });
+
+final pageSpanRangeProvider = FutureProvider.family
+    .autoDispose<KhatmaPortionRange?, (MushafData, int, int)>((ref, args) {
+      return resolvePageSpan(args.$1, args.$2, args.$3);
     });

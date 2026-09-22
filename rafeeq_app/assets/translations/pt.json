@@ -941,7 +941,17 @@
     "quarter_2": "Dois quartos",
     "quarter_3": "3 quartos",
     "quarter_4_hizb": "Um hizb",
-    "quarter_n": "{} quartos"
+    "quarter_n": "{} quartos",
+    "previous_label": "Porções anteriores",
+    "upcoming_label": "Próximas porções",
+    "wird_n": "Porção {}",
+    "wird_current": "Porção atual",
+    "wird_pages": "Páginas {} – {}",
+    "rewind": "Voltar a ela",
+    "rewind_confirm": "Voltar à porção {}? As porções lidas depois serão marcadas como não lidas.",
+    "rewound": "De volta à porção {}",
+    "wird_done": "Porção {} concluída",
+    "no_wirds": "Ainda não há porções"
   },
   "sunan_suwar": {
     "title": "Sunan das Suras (Dia e Noite)",

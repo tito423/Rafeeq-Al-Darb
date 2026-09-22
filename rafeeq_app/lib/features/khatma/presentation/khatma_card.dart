@@ -12,6 +12,7 @@ import '../../quran/data/quran_jump_provider.dart';
 import '../data/khatma_range.dart';
 import '../data/khatma_store.dart';
 import 'khatma_screen.dart';
+import 'khatma_wirds_sheet.dart';
 
 /// Home, top card (P2‑11) — shows the nearest active khatma's progress ring
 /// + today's portion + "اقرأ اليوم", or an honest "ابدأ ختمة" invitation
@@ -186,30 +187,16 @@ class _ActiveKhatmaRow extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 10),
+            // «غير قرأت اليوم دي لـ أتممت القراءة لأني أصلًا ممكن أقرا أكتر
+            // من ورد»: always enabled; each tap finishes one wird.
             Expanded(
-              child: khatma.readToday
-                  ? FilledButton.tonalIcon(
-                      onPressed: null,
-                      icon: const Icon(Icons.check, size: 16),
-                      label: Text('khatma.read_today_done'.tr()),
-                    )
-                  : FilledButton(
-                      onPressed: mushaf == null
-                          ? null
-                          : () async {
-                              final before = khatma;
-                              await ref
-                                  .read(khatmaStoreProvider.notifier)
-                                  .readToday(
-                                    khatma,
-                                    mushaf.juzStartPages,
-                                    mushaf.rubElHizbPages,
-                                  );
-                              if (!context.mounted) return;
-                              showKhatmaUndoSnackBar(context, ref, before);
-                            },
-                      child: Text('khatma.mark_read'.tr()),
-                    ),
+              child: FilledButton.icon(
+                onPressed: mushaf == null
+                    ? null
+                    : () => completeKhatmaWird(context, ref, khatma, mushaf),
+                icon: const Icon(Icons.check_rounded, size: 18),
+                label: Text('khatma.mark_read'.tr()),
+              ),
             ),
           ],
         ),
@@ -350,24 +337,65 @@ class KhatmaProgressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final upcoming = mushaf == null
+    final m = mushaf;
+    final previousCount = m == null
+        ? khatma.portionsRead
+        : khatma.previousWirds(m.juzStartPages, m.rubElHizbPages).length;
+    final upcomingCount = m == null
         ? null
-        : khatma.portionsRemaining(
-            mushaf!.juzStartPages,
-            mushaf!.rubElHizbPages,
-          );
-    final previousPage = mushaf == null
-        ? null
-        : khatma.previousPortionPage(
-            mushaf!.juzStartPages,
-            mushaf!.rubElHizbPages,
-          );
-    final upcomingPage = mushaf == null
-        ? null
-        : khatma.upcomingPortionPage(
-            mushaf!.juzStartPages,
-            mushaf!.rubElHizbPages,
-          );
+        : khatma.portionsRemaining(m.juzStartPages, m.rubElHizbPages);
+    final open = onOpenPage;
+
+    // Each count opens the full list of those wirds — «يعرض الأوراد كلها
+    // وأنا أختار أي واحد».
+    Widget countButton({
+      required IconData icon,
+      required String label,
+      required int? count,
+      required bool previous,
+    }) {
+      return Expanded(
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          ),
+          onPressed: m == null || open == null || (count ?? 0) == 0
+              ? null
+              : () => showKhatmaWirdsSheet(
+                  context,
+                  khatmaId: khatma.id,
+                  previous: previous,
+                  onOpenPage: open,
+                ),
+          child: Row(
+            children: [
+              Icon(icon, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: subtleStyle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      count == null
+                          ? '—'
+                          : localizeDigits('$count', uiLanguageCode),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -380,38 +408,22 @@ class KhatmaProgressSection extends StatelessWidget {
             color: gold,
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 10),
         Row(
           children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: previousPage == null || onOpenPage == null
-                    ? null
-                    : () => onOpenPage!(previousPage),
-                icon: const Icon(Icons.history_rounded, size: 18),
-                label: Text(
-                  trn(
-                    'khatma.portions_previous',
-                    args: ['${khatma.portionsRead}'],
-                  ),
-                  style: subtleStyle,
-                ),
-              ),
+            countButton(
+              icon: Icons.history_rounded,
+              label: 'khatma.previous_label'.tr(),
+              count: previousCount,
+              previous: true,
             ),
             const SizedBox(width: 8),
-            if (upcoming != null)
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: upcomingPage == null || onOpenPage == null
-                      ? null
-                      : () => onOpenPage!(upcomingPage),
-                  icon: const Icon(Icons.upcoming_rounded, size: 18),
-                  label: Text(
-                    trn('khatma.portions_upcoming', args: ['$upcoming']),
-                    style: subtleStyle,
-                  ),
-                ),
-              ),
+            countButton(
+              icon: Icons.upcoming_rounded,
+              label: 'khatma.upcoming_label'.tr(),
+              count: upcomingCount,
+              previous: false,
+            ),
           ],
         ),
       ],
@@ -419,24 +431,49 @@ class KhatmaProgressSection extends StatelessWidget {
   }
 }
 
-/// Shared "قرأت اليوم" undo snackbar (P3‑6) — a "تراجع" action that restores
-/// the exact pre-update [before] snapshot, for an accidental tap. Used by
-/// both this card's inline button and `KhatmaScreen`'s tile.
-void showKhatmaUndoSnackBar(
+/// «أتممت القراءة»: finishes the current wird and offers «تراجع».
+///
+/// The undo used to call `ref.read(...)` on the widget that showed it —
+/// and the khatma screen pops itself straight after, so by the time anyone
+/// tapped «تراجع» that ref belonged to a disposed widget and the tap did
+/// nothing. The notifier is taken here, while the widget is alive, and the
+/// undo works on the live state, not on a stale snapshot.
+///
+/// The bar also carries an action, and a SnackBar with an action no longer
+/// dismisses itself by default — that is why «تراجع» sat on the screen for
+/// ever. `persist: false` gives it back its timeout.
+Future<void> completeKhatmaWird(
   BuildContext context,
   WidgetRef ref,
-  Khatma before,
-) {
-  ScaffoldMessenger.of(context).clearSnackBars();
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('khatma.read_today_done'.tr()),
-      action: SnackBarAction(
-        label: 'common.undo'.tr(),
-        onPressed: () => ref.read(khatmaStoreProvider.notifier).restore(before),
-      ),
-    ),
+  Khatma khatma,
+  MushafData mushaf,
+) async {
+  final store = ref.read(khatmaStoreProvider.notifier);
+  final messenger = ScaffoldMessenger.of(context);
+  final updated = await store.completeWird(
+    khatma,
+    mushaf.juzStartPages,
+    mushaf.rubElHizbPages,
   );
+  messenger
+    ..clearSnackBars()
+    ..showSnackBar(
+      SnackBar(
+        persist: false,
+        duration: const Duration(seconds: 5),
+        content: Text(
+          trn('khatma.wird_done', args: ['${updated.portionsRead}']),
+        ),
+        action: SnackBarAction(
+          label: 'common.undo'.tr(),
+          onPressed: () => store.undoLastWird(
+            khatma.id,
+            mushaf.juzStartPages,
+            mushaf.rubElHizbPages,
+          ),
+        ),
+      ),
+    );
 }
 
 /// A tiny inherited callback so cards below `HomeScreen` (this one) can ask

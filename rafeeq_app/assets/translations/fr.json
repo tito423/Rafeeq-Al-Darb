@@ -941,7 +941,17 @@
     "quarter_2": "Deux quarts",
     "quarter_3": "3 quarts",
     "quarter_4_hizb": "Un hizb",
-    "quarter_n": "{} quarts"
+    "quarter_n": "{} quarts",
+    "previous_label": "Portions précédentes",
+    "upcoming_label": "Portions à venir",
+    "wird_n": "Portion {}",
+    "wird_current": "Portion actuelle",
+    "wird_pages": "Pages {} – {}",
+    "rewind": "Y revenir",
+    "rewind_confirm": "Revenir à la portion {} ? Les portions lues après seront marquées non lues.",
+    "rewound": "Retour à la portion {}",
+    "wird_done": "Portion {} terminée",
+    "no_wirds": "Aucune portion pour l'instant"
   },
   "sunan_suwar": {
     "title": "Sunna des sourates (jour et nuit)",

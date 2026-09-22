@@ -196,8 +196,12 @@ class AppTheme {
           borderSide: BorderSide(color: primarySoft, width: 1.6),
         ),
       ),
+      // Sheets, dialogs and snack bars are drawn OVER other content, so
+      // they are fully opaque even in the RGB theme, whose surfaces are
+      // ~90% opaque on purpose. At 90%, the khatma card's text read through
+      // the «ختمة جديدة» sheet and a hadith's text through «قرأت اليوم».
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: surface,
+        backgroundColor: surface.withAlpha(255),
         surfaceTintColor: Colors.transparent,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -208,7 +212,7 @@ class AppTheme {
         dragHandleColor: onSurfaceVar,
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: surface,
+        backgroundColor: surface.withAlpha(255),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -217,7 +221,7 @@ class AppTheme {
         contentTextStyle: AppTypography.uiRegular(14, color: onSurfaceVar),
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: card,
+        backgroundColor: card.withAlpha(255),
         contentTextStyle: AppTypography.uiMedium(14, color: onSurface),
         // Material's default action colour is meant for its own dark
         // SnackBar; on this pale `card` background it was all but

@@ -91,37 +91,20 @@ void main() {
     },
   );
 
-  test(
-    'portionsRemaining for dailyQuarters uses the real page span at the current position, same rule dailyJuz already uses',
-    () {
-      final khatma = Khatma(
-        id: 't5',
-        startDate: DateTime(2026, 1, 1),
-        mode: KhatmaMode.dailyQuarters,
-        dailyAmount: 1,
-        pagesRead: 0,
-      );
-      final remainingPortions = khatma.portionsRemaining(const {}, rubPages);
-      // Same current-position-rate simplification dailyJuz's own
-      // portionsRemaining already uses (real quarters vary in page length,
-      // e.g. رُبع 1 spans 4 real pages here) — not a naive 240-quarter count.
-      final perDayPages = rubPages[1] - rubPages[0];
-      expect(remainingPortions, (604 / perDayPages).ceil());
-    },
-  );
-
-  test('wird navigation uses real rub boundaries in both directions', () {
-    final rubPages = List<int>.generate(240, (i) => 1 + i * 2);
+  test('portionsRemaining counts the real quarter wirds to the end', () {
     final khatma = Khatma(
-      id: 'nav',
-      startDate: DateTime(2026, 9, 1),
+      id: 't5',
+      startDate: DateTime(2026, 1, 1),
       mode: KhatmaMode.dailyQuarters,
-      dailyAmount: 2,
-      pagesRead: 8,
-      portionsRead: 2,
+      dailyAmount: 1,
     );
-
-    expect(khatma.previousPortionPage(const {}, rubPages), 5);
-    expect(khatma.upcomingPortionPage(const {}, rubPages), 13);
+    final wirds = khatma.upcomingWirds(const {}, rubPages);
+    expect(khatma.portionsRemaining(const {}, rubPages), wirds.length);
+    // Contiguous, starting at 0 and ending on the last page of the plan.
+    expect(wirds.first.from, 0);
+    expect(wirds.last.to, khatma.totalPagesInPlan);
+    for (var i = 1; i < wirds.length; i++) {
+      expect(wirds[i].from, wirds[i - 1].to);
+    }
   });
 }
