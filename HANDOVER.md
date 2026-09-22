@@ -92,6 +92,29 @@ record.
 * Prayer card redone (three lines, app-language direction) — seen on the
   emulator, owner approved the picture.
 
+**SESSION 2026-09-22 (night) — khatma undo, Hajj «المذاهب الأربعة», memorization.**
+* Khatma: «تراجع» is no longer a SnackBar (it had stuck once). It is a line
+  inside the khatma card, «أتممت الورد N · تراجع», and it leaves by itself
+  after six seconds. Seen on emulator-5554, including it going.
+* Hajj: every step now folds open «في المذاهب الأربعة» from al-Jaziri
+  (Shamela 9849, ت ١٣٦٠هـ). His schools' positions are in HIS hamesh, which
+  build_book_text drops, so `scripts/build_hajj_madhahib.py` keeps it and
+  ties each note to its section by the note's own number in the body — 49
+  notes, 0 unlinked, 147 school statements. Seen under السعي on the device.
+* **NEW: `lib/features/hifz`** — «التحفيظ والتسميع», phase 1 (no speech
+  recognition). Leitner ladder 0/3/7/16/35 days in SharedPreferences, word
+  mask hiding from the END, per-ayah recitation repeated 1/3/5/10 times.
+  Seen: the card in «المزيد», the surah list, al-Fatiha, words hidden, audio
+  playing (dumpsys: AudioTrack state:started).
+* **Phase 2 (تسميع آلي) NOT built and NOT promised.** Measured research only:
+  Vosk's Modern-Standard-Arabic model is `vosk-model-ar-mgb2-0.4`, 318 MB,
+  Apache-2.0, 16.4% WER on broadcast news; the 1.3 G linto model is AGPL and
+  is therefore out. Nothing has been run on a real recitation yet — the next
+  step is to measure it on the per-ayah MP3s the app already downloads,
+  before a line of app code is written.
+* Store screenshots NOT re-shot yet (the owner asked for them after he looks
+  at the emulator himself).
+
 **SESSION 2026-09-22 (evening) — phase 1 DONE and seen; named-notes ruling applied.**
 * 18 books uploaded (public URL: 200, gzip magic, size = catalogue, no
   Content-Encoding — each one), الورقات/الآجرومية retired → **229 books**.
