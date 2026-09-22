@@ -7,6 +7,9 @@ Cline, or any other).
 | | |
 |---|---|
 | **Last updated** | 2026-09-22 |
+| **STATE 2026-09-22** | `master` pushed; **no release since v3.55.0** (tag `v3.55.0` = `bb476739`, NOT `HEAD` — everything in the «SESSION 2026-09-22» block below is unreleased and has **never been on the owner's phone**, only on emulator-5554, because his phone dropped off adb). `pubspec` still `3.55.0+57`: bump before the next release (§2.3). |
+| **Verified 2026-09-22 (handover)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **491 passed, 2 skipped** · hosted content **10/10** range-checked with a User-Agent, all **206** with the right `Content-Type`: `hadith/hadith.zip`, `sciences/quran_sciences.zip`, `mushaf/madinah_qc/001.png` and `/604.png`, `hadeethenc/ar.zip`, `books/text/adab_al_dunya_wal_din.json`, `books/text/fath_rabb_al_bariyyah_sharh_al_jazariyyah.json`, `quran/translations/am.json.gz`, `legal/privacy.html`, `ruqyah/afasy.mp3` |
+| **Measured 2026-09-22 (handover)** | 7 locales × **1,729** keys, identical · **1** mushaf printing · **213** library books (phase 1 NOT yet added) · `hadith.db` **109,731,840 B**, **67,153** hadiths, **45,219** graded · `quran_local.db` **6,236** ayahs · last signed APK **260,425,139 B** |
 | **Current source** | `master` clean and pushed at `cec5aaf2`. The published APK was built from it (= tag `v3.54.0`). |
 | **Released** | **v3.54.0** — 260,191,471 B, sha256 `5c1a3877…3759f9`, three ABIs, minSdk 24, tag on `cec5aaf2` = `HEAD`. v3.53.0 and its tag were deleted; **v3.51.0 stays published** as the fallback. |
 | **Restore point** | still **v3.51.0**: branch `known-good/v3.51.0`, tags `backup-2026-09-21c` and `v3.51.0`, and `../Rafeeq-Backups/Rafeeq-Al-Darb-2026-09-21.bundle`. `RESTORE.md` says how to come back. It does not move to 3.52.0 until 3.52.0 has lived on his phone |
@@ -66,7 +69,30 @@ so 21580 «فتح رب البرية» ships: `scripts/build_jazariyyah_sharh.py`
 `test/jazariyyah_sharh_test.dart`. The research note below is kept for the
 record.
 
-**NEXT — library «المرحلة ١» (not started).** The owner approved: no bare
+**LATER THE SAME DAY — phase 1 HALF-DONE, and two new rulings.**
+* 19 books were being built by `scripts/build_book_text.py` in 5 background
+  lanes (`BOOKS` entries added, id-picked). **16 had landed** in
+  `scripts/book_text_build/` (gitignored — local disk only) when the session
+  ended; `ihkam_al_ahkam`, `al_rawd_al_murbi`, `al_iqna_fi_hall_alfaz_abi_shuja`
+  were still crawling. `scripts/library_phase1.py --report` reads every card and
+  refuses one naming any of the seven; without `--report` it uploads, verifies
+  on the public URL, removes the bare `al_waraqat` / `al_ajurrumiyyah` and
+  appends the entries. **Nothing has been uploaded or catalogued yet.** Before
+  running it: drop `tawdih_al_maqasid_sharh_al_nuniyyah` (Ahmad ibn Isa is a
+  Najdi scholar — the owner's «مش ناقصين تشدد»), and read `al_rawd_al_murbi`'s
+  card — the Dar al-Mu'ayyad printing is believed to carry Ibn Uthaymeen's حاشية.
+* Ruling: «شيل من المكتبة أي حاجة لابن باز وابن عثيمين وابن جبرين وابن عبد
+  الوهاب والألباني إلا التخريج، وأي حد معروف عنه التشدد». Measured: **no**
+  catalogue book is BY any of them; the matches are editors' notes (e.g. مشهور
+  حسن's introduction to «الموافقات», 26 mentions of «شيخنا الألباني»), plus
+  namesakes that must NOT be touched (عبد الرحمن بن سليمان العثيمين the
+  historian-editor; classical narrators called محمد بن عبد الوهاب). His
+  follow-up: «لو شيلها هيضر الكتاب سيبها، مش هيضر شيلها» — remove such
+  apparatus where removing it leaves the author's text whole.
+* Prayer card redone (three lines, app-language direction) — seen on the
+  emulator, owner approved the picture.
+
+**NEXT — library «المرحلة ١» (was: not started).** The owner approved: no bare
 mutun; shuruh/explained books from Shamela (filter the modern editor where
 possible, otherwise ship as served); keep every existing imam's book. The
 ~30 first-phase books are the classical, beginner/intermediate picks of the
@@ -2300,9 +2326,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 19:46 — IN PROGRESS — resume here**
+**2026-09-22 19:54 — IN PROGRESS — resume here**
 
-Prayer card: the three items stand one under another (date|city, prayer and time, countdown) with 6dp between them, and the card takes the direction of the language it is WRITTEN in, not the phone's - two copies of the layout (prayer_card.xml ltr, prayer_card_rtl.xml) chosen by the first strong character. Seen on emulator-5554 (system English, app Arabic): three right-aligned lines, countdown in red on its own line. The chronometer's digits stay Latin: Android formats them with the system locale.
+Handover (jahhiz ad-dunya) 2026-09-22: verified analyze clean, 491 tests pass, 10/10 hosted paths 206 with correct types; measured 7x1,729 keys, 1 mushaf, 213 books, hadith.db 109,731,840 B / 67,153 / 45,219 graded, APK 260,425,139 B. HANDOVER state block, NEXT_SESSION_PROMPT.md and NEXT_PROMPT.md rewritten: library phase 1 is half-done (16/19 built locally, nothing uploaded or catalogued), tawdih al-maqasid to be dropped, al-rawd card to be read, and the owner's ruling on editors' notes naming the five. No release since v3.55.0; nothing of today on his phone.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
