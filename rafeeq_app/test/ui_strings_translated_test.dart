@@ -24,6 +24,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   /// Files where an Arabic literal is content or a data key, not UI text.
   const allowed = <String, String>{
+    'lib/features/hajj/presentation/widgets/madhahib_section.dart':
+        'al-Jaziri\'s Arabic, shown only on the Arabic interface: the school '
+            'names matched in his own notes, and «ص» citing his printed page',
     'lib/features/azkar/presentation/screens/azkar_screen.dart':
         'keys matched against the azkar database\'s own Arabic section names, '
             'to pick an icon',

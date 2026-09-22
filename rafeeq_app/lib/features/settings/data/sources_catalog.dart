@@ -100,6 +100,12 @@ final sourceGroups = <(String, List<SourceEntry>)>[
           'الإيضاح في مناسك الحج والعمرة — النووي',
           'https://shamela.ws/book/96232',
           'hajj.source'),
+      // «في المذاهب الأربعة» under each step (2026-09-22), verbatim from
+      // al-Jaziri's كتاب الحج — scripts/build_hajj_madhahib.py.
+      SourceEntry(
+          'الفقه على المذاهب الأربعة — عبد الرحمن الجزيري',
+          'https://shamela.ws/book/9849',
+          'hajj.madhahib_title'),
     ]
   ),
   (

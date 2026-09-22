@@ -959,3 +959,17 @@ with their reasons in `scripts/strip_named_notes.py`: al-Muwafaqat (three of
 مشهور حسن's notes and the student-written biography of the editor), Ighathat
 al-Lahfan (one footnote), Musnad Abi Bakr (one quotation). Not a word of any
 author was touched.
+
+## 2026-09-22 — «في المذاهب الأربعة» in the Hajj guide
+
+«طورها من جديد بوسطية». Shamela's Hajj manuals were read by card: the modern
+ones are الألباني (12090)، ابن عثيمين (21585)، القحطاني (96547)، العمري
+(11096) — out on the standing rulings; the classical ones are al-Nawawi
+(96232, already the guide) and Ibn Farhun (132974, Maliki only). The step text
+stays al-Nawawi's; under each step now sits al-Jaziri's treatment of the same
+rite, «الفقه على المذاهب الأربعة» (9849, ت ١٣٦٠هـ — out of copyright under
+Egypt's life+50), which sets the four schools side by side. His schools'
+positions are in his own hamesh, so `scripts/build_hajj_madhahib.py` keeps
+the hamesh (the book builder drops it) and ties every note to its section by
+the note's own number in the body: 49 notes, none unlinked, 147 school
+statements. Pages crawled verbatim to `scripts/jaziri_raw/` (569-640).

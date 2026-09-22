@@ -25,6 +25,7 @@ import '../data/hajj_guide.dart';
 import '../data/hajj_step_text.dart';
 import 'widgets/jamarat_counter.dart';
 import 'widgets/journey_map.dart';
+import 'widgets/madhahib_section.dart';
 import 'widgets/sai_counter.dart';
 import 'widgets/tawaf_counter.dart';
 
@@ -414,6 +415,7 @@ class _StepText extends ConsumerWidget {
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
+        MadhahibSection(stepKey: step.key, scale: k),
       ],
     );
   }

@@ -2344,9 +2344,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 20:48 — IN PROGRESS — resume here**
+**2026-09-22 21:52 — IN PROGRESS — resume here**
 
-Library phase 1 seen on emulator-5554 and the whole library audited: all 229 books fetched from the public endpoint (status, size = catalogue, gzip, no Content-Encoding) and parsed by the app's BookText.fromBytes -> 229/229 open, no blank pages, TOC in range. al-Rawd: 7 pages left blank by the orphan-number tidy are dropped and the TOC remapped (every entry opens the same line as before), re-uploaded and verified. Left as found: al-Idah's 38 dot-only pages (tied to the Hajj screen by index). Seen: Ihkam (bundled) clean matn/rule/sharh, Sharh al-Waraqat downloaded and opened, al-Ikhtiyar 949 KB opened in <2 s to p.820/834. analyze clean, 491 pass. CONTENT-LICENSES records phase 1 and the named-notes ruling. Not released.
+Hajj guide gets «في المذاهب الأربعة»: al-Jaziri under every step. Shamela's Hajj manuals read by card - the modern ones are al-Albani/Ibn Uthaymeen/al-Qahtani/al-Umari (out on the standing rulings), the classical ones al-Nawawi (already the guide) and Ibn Farhun (Maliki only). So the step text stays al-Nawawi's and each step now folds open al-Jaziri's treatment of the same rite (9849, d.1360 AH, out of copyright), which sets the four schools side by side - that is what 'bi-wasatiyya' asks for. His schools' positions live in his OWN hamesh, which build_book_text drops, so build_hajj_madhahib.py keeps it and ties each note to its section by the note's own number in the body: 72 pages crawled verbatim to scripts/jaziri_raw, 49 notes, 0 orphans, 0 unlinked, 147 school statements, every one beginning with its school. hajj_madhahib_test pins the mapping; sources screen and CONTENT-LICENSES credit it. analyze clean, 495 pass. NOT yet seen on the emulator.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

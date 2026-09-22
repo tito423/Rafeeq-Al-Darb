@@ -114,6 +114,7 @@ flutter:
     - assets/data/quran_local.db
     - assets/data/hadith.zip
     - assets/data/builtin_books/
+    - assets/data/hajj_madhahib.json
     # quran_sciences.db is NOT bundled since 3.45.0. It was 131.68 MB -
     # more than half of everything the APK carried - for seven tafsirs,
     # six translations, i'rab and word meanings, all of which only the
