@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 17:47 — IN PROGRESS — resume here**
+**2026-09-22 17:54 — IN PROGRESS — resume here**
 
-Verified on emulator-5554 (signed release): open tanween drawn staggered, no meem, under ummatan muslimatan (2:128, p.20); quick tour's 4th stop frames the whole Qibla compass card (dial + 258 deg); repair button: mushaf download cut at 7/604 by disabling wifi+data, network restored, 'islah' showed 'tamma isti'naf 1 tahmil ghayr muktamil' and the download went 10 -> 40 pages in 20 s. Items 1 and 3 of the 2026-09-21 OPEN list are done.
+Item 2 of the 2026-09-21 OPEN list: the 8 'sharh at-tatbiq' screenshots recaptured today on emulator-5554 (signed release, demo-mode status bar 09:30): 01_home, 02_quran (raster Madinah p.20), 12_adhan (preview), 04_azkar, 07_hadith (nine books open), 11_lesson (Tuhfa lesson 2), 08_hajj (with the Hajj/Umrah toggle), 10_more; store images and assets/tutorial_shots rebuilt with the two scripts (8 shots 6.64 MB -> 0.45 MB). All three OPEN items are now done.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
