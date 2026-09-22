@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../library/data/book_text.dart';
 import '../../data/jazariyyah_course.dart';
@@ -327,9 +328,9 @@ class _SharhSection extends ConsumerWidget {
       child: AccordionSection(
         builder: (context, open, toggle) => Container(
           decoration: BoxDecoration(
-            color: scheme.primary.withValues(alpha: 0.06),
+            color: AppColors.gold.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: scheme.primary.withValues(alpha: 0.25)),
+            border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -344,18 +345,18 @@ class _SharhSection extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.menu_book_rounded, color: scheme.primary),
+                      Icon(Icons.menu_book_rounded, color: AppColors.gold),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'tajweed.sharh_title'.tr(),
                           style: theme.textTheme.titleSmall
-                              ?.copyWith(color: scheme.primary),
+                              ?.copyWith(color: AppColors.gold),
                         ),
                       ),
                       Icon(
                         open ? Icons.expand_less : Icons.expand_more,
-                        color: scheme.primary,
+                        color: AppColors.gold,
                       ),
                     ],
                   ),
@@ -387,14 +388,14 @@ class _SharhSection extends ConsumerWidget {
                             style: isJazariyyahVerse(p.text)
                                 ? theme.textTheme.bodyMedium?.copyWith(
                                     height: 1.9,
-                                    color: scheme.primary,
+                                    color: AppColors.gold,
                                     fontWeight: FontWeight.w600,
                                   )
                                 : p.kind == 'aya'
                                     ? theme.textTheme.bodyLarge?.copyWith(
                                         fontFamily: 'AmiriQuran',
                                         height: 1.9,
-                                        color: scheme.primary,
+                                        color: AppColors.gold,
                                       )
                                     : theme.textTheme.bodyMedium
                                         ?.copyWith(height: 1.9),

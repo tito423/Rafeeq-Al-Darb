@@ -2278,9 +2278,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 18:34 — IN PROGRESS — resume here**
+**2026-09-22 18:41 — IN PROGRESS — resume here**
 
-Jazariyyah level gets its sharh: 'Fath Rabb al-Bariyyah' (Shamela 21580, Safwat Salim 2003) on the owner's ruling, built with build_book_text.py (106 pages, 1,497 paras, hamesh dropped), uploaded to R2 (55,442 B, 1f8b, no Content-Encoding) and bundled like the matn. scripts/build_jazariyyah_sharh.py finds each lesson's first verse in the sharh and cuts from its chapter heading; three pairs whose verses stand in one unbroken block (lamat+tahdhirat, za'at+tahdhirat, waqf+khatima) share one range and say so; the author's 'fawa'id mutafarriqa' belong to no lesson. Folded 'al-sharh' section in every lesson (accordion). jazariyyah_sharh_test proves each part holds its lesson's first verse from the bundled bytes. CONTENT-LICENSES records the ruling. 491 pass; not yet seen on device.
+Jazariyyah sharh seen on emulator-5554 (signed release): lesson 1 'muqaddimat an-nazim' shows the folded 'al-sharh' under its verses; opened, it reads the sharh's own heading, the quoted verses, the plain-language explanation and the source line, and the accordion scrolls it into view. Sharh colours moved from the app green (3.2:1 on the dark card) to gold. analyze clean.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
