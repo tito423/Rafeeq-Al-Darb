@@ -4,6 +4,7 @@ library;
 import 'dart:async';
 
 import '../../../../core/widgets/accordion.dart';
+import '../../data/hidden_books.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/utils/digits.dart';
 
@@ -206,12 +207,19 @@ class _BookListState extends State<_BookList> {
     // The built-in texts are installed at start-up; asked again here in
     // case this tab opens first, then the cards are read.
     _loadRegistry();
+    HiddenBooks.instance.ensureReady();
+    HiddenBooks.instance.addListener(_onHiddenChanged);
     LibraryApiService.instance.installBuiltinBooks().whenComplete(_loadRegistry);
     _sub = DownloadManager.instance.stream.listen((_) => _loadRegistry());
   }
 
+  void _onHiddenChanged() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void dispose() {
+    HiddenBooks.instance.removeListener(_onHiddenChanged);
     _sub?.cancel();
     super.dispose();
   }
@@ -323,7 +331,8 @@ class _BookListState extends State<_BookList> {
                       onTap: toggle,
                     ),
                     if (open)
-                      for (final b in _hadithTexts) ...[
+                      for (final b in _hadithTexts)
+                        if (!HiddenBooks.instance.isHidden(b.id)) ...[
                         BookCard(
                           book: b,
                           paths: _paths,

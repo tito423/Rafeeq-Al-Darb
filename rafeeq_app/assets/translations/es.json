@@ -499,7 +499,12 @@
     "listen_scope_book_desc": "Lee desde esta página y pasa las páginas solo hasta que pulse detener.",
     "listen_scope_page": "Solo esta página",
     "sub_spoken": "Audio",
-    "spoken_intro": "Libros totalmente vocalizados que la voz del lector puede leer. Descargue uno y pulse «Escuchar» dentro."
+    "spoken_intro": "Libros totalmente vocalizados que la voz del lector puede leer. Descargue uno y pulse «Escuchar» dentro.",
+    "hide": "Quitar de la lista",
+    "hidden_done": "«{}» se quitó de la lista",
+    "hidden_books": "Libros ocultos ({})",
+    "restore": "Restaurar",
+    "hidden_empty": "No hay libros ocultos"
   },
   "azkar": {
     "title": "Adhkar",

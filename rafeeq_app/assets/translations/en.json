@@ -499,7 +499,12 @@
     "listen_scope_book_desc": "Reads on from this page, turning pages by itself until you press stop.",
     "listen_scope_page": "This page only",
     "sub_spoken": "Audio",
-    "spoken_intro": "Fully vowelled books the reader voice can read aloud. Download one, then press «Listen» inside it."
+    "spoken_intro": "Fully vowelled books the reader voice can read aloud. Download one, then press «Listen» inside it.",
+    "hide": "Remove from list",
+    "hidden_done": "“{}” removed from the list",
+    "hidden_books": "Hidden books ({})",
+    "restore": "Restore",
+    "hidden_empty": "No hidden books"
   },
   "azkar": {
     "title": "Adhkar",

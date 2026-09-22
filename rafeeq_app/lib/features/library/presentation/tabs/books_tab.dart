@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/services/download_manager.dart';
 import '../widgets/book_card.dart';
+import '../widgets/hidden_books_sheet.dart';
+import '../../data/hidden_books.dart';
 import 'spoken_books_view.dart';
 import '../../data/library_api_service.dart';
 import '../../../../core/i18n/proper_name.dart';
@@ -45,6 +47,9 @@ class _BooksTabState extends State<BooksTab> {
   @override
   void initState() {
     super.initState();
+    // A book taken off the list (or put back) redraws both lists at once.
+    HiddenBooks.instance.ensureReady();
+    HiddenBooks.instance.addListener(_onHiddenChanged);
     _loadRegistry();
     _sub = DownloadManager.instance.stream.listen((_) => _loadRegistry());
     _bookSub = LibraryApiService.instance.changes.listen(
@@ -68,8 +73,13 @@ class _BooksTabState extends State<BooksTab> {
     }
   }
 
+  void _onHiddenChanged() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void dispose() {
+    HiddenBooks.instance.removeListener(_onHiddenChanged);
     _sub?.cancel();
     _bookSub?.cancel();
     super.dispose();
@@ -268,7 +278,7 @@ class _AuthorsView extends StatelessWidget {
     // Grouped by the Arabic name, which is the stable identity — the Latin
     // form is what gets DISPLAYED, and is taken from the group's first book.
     final byAuthor = <String, List<LibraryBook>>{};
-    for (final b in libraryBookCatalog) {
+    for (final b in visibleBookCatalog()) {
       byAuthor.putIfAbsent(b.authorAr, () => []).add(b);
     }
     // Sort authors alphabetically, sort each author's books
@@ -280,6 +290,7 @@ class _AuthorsView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 8),
       children: [
+        const HiddenBooksButton(),
         for (var i = 0; i < authors.length; i++)
           _AuthorExpansionTile(
             key: PageStorageKey<String>(authors[i]),
@@ -425,7 +436,7 @@ class _CategoriesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final byCat = <BookCategory, List<LibraryBook>>{};
-    for (final b in libraryBookCatalog) {
+    for (final b in visibleBookCatalog()) {
       byCat.putIfAbsent(b.category, () => []).add(b);
     }
     final cats = byCat.keys.toList()
@@ -439,6 +450,7 @@ class _CategoriesView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 8),
       children: [
+        const HiddenBooksButton(),
         for (var i = 0; i < cats.length; i++)
           _CategoryExpansionTile(
             key: PageStorageKey<int>(cats[i].index),

@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../data/book_catalog.dart';
+import 'hidden_books_sheet.dart';
 
 /// One downloadable book, as a card.
 ///
@@ -114,6 +115,18 @@ class BookCard extends StatelessWidget {
                         style: TextStyle(
                             color: scheme.onSurfaceVariant, fontSize: 12)),
                   const Spacer(),
+                  // «امسح أي كتاب من التصنيف نفسه قبل تحميله»: only a book
+                  // that is not on the phone — one that is has «حذف» in
+                  // «مكتبتي», which frees its storage.
+                  if (!downloaded)
+                    IconButton(
+                      tooltip: 'library.hide'.tr(),
+                      icon: Icon(
+                        Icons.remove_circle_outline_rounded,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                      onPressed: () => hideBook(context, book),
+                    ),
                   if (downloaded)
                     FilledButton.icon(
                       onPressed: () => onOpen(),
