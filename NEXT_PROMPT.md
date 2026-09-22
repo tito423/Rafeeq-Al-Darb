@@ -14,17 +14,20 @@ Remote Control بـ `ListAgents` (§2.0b).
 
 ## افعل بالترتيب
 
-1. **التسميع الآلي على الجهاز — الخطر المفتوح أولًا، قبل أي واجهة.**
+1. **التسميع الآلي على الجهاز — القرار أولًا، قبل أي واجهة.**
    `scripts/measure_quran_asr.py` أثبت على الحاسوب: 73 كلمة، 98.6٪ مطابقة،
    ويمسك الوقف والآية الغلط ولا يتأثر بقارئ آخر ولا بميكروفون ضيق النطاق.
-   الآن: تأكد أن `sherpa_onnx` (pub.dev 1.13.8، Apache-2.0، يدعم arm64 و
-   arm32 و x86_64) **يقبل فعلًا** تصدير ONNX الموجود
-   (`eventhorizon0/tarteel-ai-onnx-whisper-base-ar-quran`، Apache-2.0،
-   encoder int8 23 MB + decoder int8 52 MB + with-past 49 MB + tokenizer
-   3.6 MB). sherpa يتوقع تصديرًا بسكربته هو، وهذه بـoptimum: **إن لم تتطابق
-   أسماء المدخلات/المخرجات فلا تبنِ شيئًا — أعد التصدير أو غيّر المشغّل،
-   وقُل ذلك**. بعدها: شغّله على المحاكي بملف تلاوة حقيقي وقِس الزمن، ثم على
-   هاتفي. لا تكتب شاشة تسميع قبل رقم من جهاز حقيقي.
+   **وحُسم في 2026-09-22 أن التصدير الجاهز لا يعمل مع `sherpa_onnx`:**
+   سكربت sherpa يسمّي موتّرات المشفّر `mel` ← `n_layer_cross_k/v`، بينما
+   `eventhorizon0/tarteel-ai-onnx-whisper-base-ar-quran` يحمل
+   `input_features` ← `last_hidden_state` (نزّلتُ المشفّر 23 MB وقرأت
+   الأسماء من الملف نفسه، لا من التوثيق). فالخيارات الثلاثة:
+   **(أ)** نشغّل `scripts/whisper/export-onnx.py` من sherpa-onnx بأنفسنا على
+   `tarteel-ai/whisper-base-ar-quran` (يحتاج torch + openai-whisper على هذا
+   الجهاز)، **(ب)** `whisper_ggml` على pub.dev مع تحويل ggml، **(ج)**
+   onnxruntime مباشرةً وكتابة حلقة فكّ الترميز في Dart (الأصعب والأخطر).
+   **اختر (أ) أو (ب)، نفّذه، ثم قِس على المحاكي بملف تلاوة حقيقي ثم على
+   هاتفي. لا تكتب شاشة تسميع قبل رقم من جهاز حقيقي.**
 
 2. **إصدار يوصل هاتفي** (هذا أهم ما ينقص): ارفع `pubspec`،
    `build_github_release.bat` (لا `flutter build apk` المجرّد — مصيدة #41)،
