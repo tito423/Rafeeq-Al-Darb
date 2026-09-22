@@ -243,7 +243,6 @@
     "word": "Palabra",
     "root": "Raíz",
     "play": "Reproducir recitación",
-    "stop": "Detener",
     "settings": "Ajustes de lectura",
     "reciter": "Recitador",
     "translation": "Traducción",
@@ -1569,6 +1568,7 @@
     "progress": "{done} de {total} completadas",
     "source": "Texto de las lecciones: Taysir Ahkam at-Taywid (nivel uno), vía al-Maktaba al-Shamela. Recitación en la riwaya de Hafs de Asim, por Muhammad Siddiq al-Minshawi (muyawwad).",
     "needs_download": "El texto de las lecciones debe descargarse una vez. Comprueba tu conexión e inténtalo de nuevo.",
+    "stop": "Detener",
     "listen": "Escuchar",
     "mark_done": "Marcar como completada",
     "mark_undone": "Marcar como no completada",
@@ -1649,6 +1649,21 @@
     "open_external": "En una aplicación externa",
     "drag_hint": "Arrastra el asa para reordenar",
     "open_failed": "No se pudo abrir el enlace"
+  },
+  "hifz": {
+    "title": "Memorizar y recitar",
+    "card_subtitle": "Aprende aleya por aleya y ponte a prueba",
+    "intro": "Elige una sura, escucha la aleya las veces que quieras, oculta sus palabras una a una y recítala. La aplicación guarda una fecha de repaso para cada aleya.",
+    "progress": "Aleyas comenzadas: {}",
+    "due_count": "Para hoy: {} de {}",
+    "ayah_of": "Aleya {} · quedan {}",
+    "hide_one": "Ocultar una palabra",
+    "show_all": "Mostrar todo",
+    "repeats": "Repeticiones",
+    "stop": "Detener",
+    "listen": "Escuchar",
+    "memorized": "Memorizada",
+    "again": "Otra vez"
   },
   "hajj": {
     "safa": "as-Safa",

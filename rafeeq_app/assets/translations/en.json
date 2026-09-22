@@ -243,7 +243,6 @@
     "word": "Word",
     "root": "Root",
     "play": "Play recitation",
-    "stop": "Stop",
     "settings": "Reading settings",
     "reciter": "Reciter",
     "translation": "Translation",
@@ -1569,6 +1568,7 @@
     "progress": "{done} of {total} completed",
     "source": "Lesson text from Taysir Ahkam at-Tajwid (level one), via al-Maktaba al-Shamela. Recitation in the riwayah of Hafs from Asim, by Muhammad Siddiq al-Minshawi (mujawwad).",
     "needs_download": "The lesson text needs downloading once. Check your connection and try again.",
+    "stop": "Stop",
     "listen": "Listen",
     "mark_done": "Mark complete",
     "mark_undone": "Mark incomplete",
@@ -1649,6 +1649,21 @@
     "open_external": "In an external app",
     "drag_hint": "Drag the handle to reorder",
     "open_failed": "Could not open the link"
+  },
+  "hifz": {
+    "title": "Memorize and recite",
+    "card_subtitle": "Learn ayah by ayah, and test yourself",
+    "intro": "Pick a surah, hear the ayah as many times as you like, hide its words one by one, then recite it to yourself. The app keeps a review date for each ayah.",
+    "progress": "Ayahs started: {}",
+    "due_count": "Due today: {} of {}",
+    "ayah_of": "Ayah {} · {} left",
+    "hide_one": "Hide a word",
+    "show_all": "Show all",
+    "repeats": "Repeats",
+    "stop": "Stop",
+    "listen": "Listen",
+    "memorized": "Memorized",
+    "again": "Again"
   },
   "hajj": {
     "safa": "as-Safa",

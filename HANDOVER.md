@@ -2344,9 +2344,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 21:52 — IN PROGRESS — resume here**
+**2026-09-22 22:16 — IN PROGRESS — resume here**
 
-Hajj guide gets «في المذاهب الأربعة»: al-Jaziri under every step. Shamela's Hajj manuals read by card - the modern ones are al-Albani/Ibn Uthaymeen/al-Qahtani/al-Umari (out on the standing rulings), the classical ones al-Nawawi (already the guide) and Ibn Farhun (Maliki only). So the step text stays al-Nawawi's and each step now folds open al-Jaziri's treatment of the same rite (9849, d.1360 AH, out of copyright), which sets the four schools side by side - that is what 'bi-wasatiyya' asks for. His schools' positions live in his OWN hamesh, which build_book_text drops, so build_hajj_madhahib.py keeps it and ties each note to its section by the note's own number in the body: 72 pages crawled verbatim to scripts/jaziri_raw, 49 notes, 0 orphans, 0 unlinked, 147 school statements, every one beginning with its school. hajj_madhahib_test pins the mapping; sources screen and CONTENT-LICENSES credit it. analyze clean, 495 pass. NOT yet seen on the emulator.
+Memorization section (phase 1) built and seen; Hajj madhahib and the khatma undo line seen on emulator-5554. New lib/features/hifz: a Leitner ladder (0/3/7/16/35 days) in SharedPreferences, a word mask that hides from the END so the run-up is always given, a surah picker showing what is due today, and a session that plays the ayah 1/3/5/10 times through the app's own per-ayah recitation, hides its words one tap at a time, then takes «حفظتها» or «أعِدها». Nothing judges a recitation - that is phase 2 and is not pretended at. hifz_store_test pins the ladder and the mask. Seen on the emulator: the card in «المزيد», the surah list, al-Fatiha's session, two words hidden, and audio actually playing (dumpsys audio: AudioTrack state:started for the package). Also seen: «في المذاهب الأربعة» under the sa'i step showing al-Jaziri's heading, body and «الحنفية قالوا:» with his printed page; and the khatma's «أتممت الورد ١ · تراجع» inside the card, gone by itself six seconds later. analyze clean, 499 tests pass.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

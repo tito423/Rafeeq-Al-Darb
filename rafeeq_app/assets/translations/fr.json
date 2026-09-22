@@ -243,7 +243,6 @@
     "word": "Mot",
     "root": "Racine",
     "play": "Écouter la récitation",
-    "stop": "Arrêter",
     "settings": "Paramètres de lecture",
     "reciter": "Récitateur",
     "translation": "Traduction",
@@ -1569,6 +1568,7 @@
     "progress": "{done} sur {total} terminées",
     "source": "Texte des leçons : Taysir Ahkam at-Tajwid (niveau un), via al-Maktaba al-Shamela. Récitation en riwayat Hafs de Asim, par Muhammad Siddiq al-Minshawi (moujawwad).",
     "needs_download": "Le texte des leçons doit être téléchargé une fois. Vérifiez votre connexion et réessayez.",
+    "stop": "Arrêter",
     "listen": "Écouter",
     "mark_done": "Marquer comme terminée",
     "mark_undone": "Marquer comme non terminée",
@@ -1649,6 +1649,21 @@
     "open_external": "Dans une application externe",
     "drag_hint": "Faites glisser la poignée pour réordonner",
     "open_failed": "Impossible d'ouvrir le lien"
+  },
+  "hifz": {
+    "title": "Mémoriser et réciter",
+    "card_subtitle": "Apprenez verset par verset et testez-vous",
+    "intro": "Choisissez une sourate, écoutez le verset autant de fois que vous le souhaitez, masquez ses mots un à un, puis récitez-le. L'application garde une date de révision pour chaque verset.",
+    "progress": "Versets commencés : {}",
+    "due_count": "À réviser aujourd'hui : {} sur {}",
+    "ayah_of": "Verset {} · {} restants",
+    "hide_one": "Masquer un mot",
+    "show_all": "Tout afficher",
+    "repeats": "Répétitions",
+    "stop": "Arrêter",
+    "listen": "Écouter",
+    "memorized": "Mémorisé",
+    "again": "À revoir"
   },
   "hajj": {
     "safa": "as-Safa",

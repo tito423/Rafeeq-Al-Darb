@@ -14,6 +14,7 @@ import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../settings/presentation/widgets/focus_mode_picker.dart';
 import '../../../hajj/presentation/hajj_screen.dart';
+import '../../../hifz/presentation/hifz_screen.dart';
 import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
@@ -128,6 +129,17 @@ class MoreScreen extends ConsumerWidget {
                 subtitle: 'hajj.card_subtitle'.tr(),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(builder: (_) => const HajjScreen()),
+                ),
+              ),
+
+              // «ممكن نعمل قسم لتحفيظ القرآن الكريم وتسميعه» (2026-09-22).
+              IslamicActionCard(
+                icon: Icons.school_outlined,
+                accent: AppColors.gold,
+                title: 'hifz.title'.tr(),
+                subtitle: 'hifz.card_subtitle'.tr(),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const HifzScreen()),
                 ),
               ),
 
