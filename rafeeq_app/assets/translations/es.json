@@ -1650,6 +1650,16 @@
     "drag_hint": "Arrastra el asa para reordenar",
     "open_failed": "No se pudo abrir el enlace"
   },
+  "tasmee": {
+    "title": "Recita esta aleya",
+    "not_tajweed": "Escucha las palabras y te dice cuáles omitiste. No juzga el taywid: ni el madd ni la gunna.",
+    "download_note": "Requiere descargar una vez el modelo de voz ({}); después funciona sin internet.",
+    "download": "Descargar el modelo",
+    "start": "Empezar a recitar",
+    "stop": "Terminé",
+    "result": "Dijiste {} de {} palabras",
+    "needs_mic": "Se necesita permiso del micrófono"
+  },
   "hifz": {
     "title": "Memorizar y recitar",
     "card_subtitle": "Aprende aleya por aleya y ponte a prueba",

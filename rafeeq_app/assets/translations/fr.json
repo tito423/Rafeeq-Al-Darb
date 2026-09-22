@@ -1650,6 +1650,16 @@
     "drag_hint": "Faites glisser la poignée pour réordonner",
     "open_failed": "Impossible d'ouvrir le lien"
   },
+  "tasmee": {
+    "title": "Récitez ce verset",
+    "not_tajweed": "Il écoute les mots et vous dit lesquels vous avez omis. Il ne juge pas le tajwid — ni le madd, ni la ghunna.",
+    "download_note": "Nécessite un téléchargement unique du modèle vocal ({}) ; ensuite il fonctionne sans internet.",
+    "download": "Télécharger le modèle",
+    "start": "Commencer la récitation",
+    "stop": "Terminé",
+    "result": "Vous avez dit {} mots sur {}",
+    "needs_mic": "L'autorisation du microphone est requise"
+  },
   "hifz": {
     "title": "Mémoriser et réciter",
     "card_subtitle": "Apprenez verset par verset et testez-vous",

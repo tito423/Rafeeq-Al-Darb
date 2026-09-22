@@ -18,6 +18,9 @@
          countdown card that isn't one of the predefined categories. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <!-- Vibration for notifications -->
+    <!-- «التسميع»: the microphone is read only while the reader is reciting,
+         and the audio never leaves the device. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- Push notifications (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>

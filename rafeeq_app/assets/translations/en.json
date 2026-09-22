@@ -1650,6 +1650,16 @@
     "drag_hint": "Drag the handle to reorder",
     "open_failed": "Could not open the link"
   },
+  "tasmee": {
+    "title": "Recite this ayah",
+    "not_tajweed": "It listens for the words and tells you which ones you missed. It does not judge tajweed — not madd, not ghunnah.",
+    "download_note": "Needs a one-time speech model download ({}); after that it works with no internet.",
+    "download": "Download the model",
+    "start": "Start reciting",
+    "stop": "Done",
+    "result": "You said {} of {} words",
+    "needs_mic": "Microphone permission is needed"
+  },
   "hifz": {
     "title": "Memorize and recite",
     "card_subtitle": "Learn ayah by ayah, and test yourself",

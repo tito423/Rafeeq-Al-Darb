@@ -228,5 +228,10 @@ flutter_native_splash:
 # Vendored with one patch (fixed notification `when`, so the shade stops
 # re-sorting on every progress tick). See third_party/background_downloader/RAFEEQ_PATCH.md.
 dependency_overrides:
+  # record 5.x allows record_linux <1.0.0, and the newest in that range
+  # (0.7.2) does not implement record_platform_interface 1.2's methods -
+  # the Android build fails compiling a LINUX plugin we never use. Pin the
+  # interface to the version 0.7.2 was written against.
+  record_platform_interface: 1.1.0
   background_downloader:
     path: third_party/background_downloader

@@ -18,6 +18,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../data/hifz_mask.dart';
+import 'widgets/tasmee_panel.dart';
 import '../data/hifz_store.dart';
 
 class HifzSessionScreen extends ConsumerStatefulWidget {
@@ -214,6 +215,9 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
             icon: Icon(_playing ? Icons.stop_rounded : Icons.play_arrow_rounded),
             label: Text(_playing ? 'hifz.stop'.tr() : 'hifz.listen'.tr()),
           ),
+          const Divider(height: 28),
+          // «سمّع لنفسك»: the device listens and marks the words.
+          TasmeePanel(ayahText: ayah.textUthmani),
           const Divider(height: 28),
           Row(
             children: [

@@ -19,6 +19,7 @@
 ///    wrong WORD, and nothing here would catch it. The screen must say so.
 library;
 
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -54,12 +55,16 @@ int get tasmeeDownloadBytes =>
 const tasmeeMaxSeconds = 30;
 
 class TasmeeResult {
-  /// The ayah's words, in order, each with whether it was heard.
+  /// The ayah's own words, in order — what the panel prints back.
+  final List<String> words;
+
+  /// One flag per word of [words]: was it heard?
   final List<bool> heardWord;
   final List<String> saidWords;
   final int matched;
 
   const TasmeeResult({
+    required this.words,
     required this.heardWord,
     required this.saidWords,
     required this.matched,
@@ -141,6 +146,15 @@ class TasmeeEngine {
     if (!await isInstalled()) {
       throw StateError('the recogniser is not downloaded yet');
     }
+    // On Android `initBindings()` resolves symbols out of the PROCESS, so the
+    // native libraries have to be in it first. They ship in the APK but
+    // nothing loads them: on the owner's phone this failed with «cannot
+    // locate symbol OrtGetApiBase referenced by libsherpa-onnx-c-api.so» —
+    // onnxruntime has to be opened BEFORE the sherpa wrapper that needs it.
+    if (Platform.isAndroid) {
+      DynamicLibrary.open('libonnxruntime.so');
+      DynamicLibrary.open('libsherpa-onnx-c-api.so');
+    }
     sherpa.initBindings();
     final dir = await _modelDir();
     final config = sherpa.OfflineRecognizerConfig(
@@ -202,7 +216,12 @@ class TasmeeEngine {
         j++;
       }
     }
-    return TasmeeResult(heardWord: flags, saidWords: said, matched: matched);
+    return TasmeeResult(
+      words: expected,
+      heardWord: flags,
+      saidWords: said,
+      matched: matched,
+    );
   }
 }
 

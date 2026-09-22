@@ -1650,6 +1650,16 @@
     "drag_hint": "Arraste a alça para reordenar",
     "open_failed": "Não foi possível abrir o link"
   },
+  "tasmee": {
+    "title": "Recite este versículo",
+    "not_tajweed": "Ouve as palavras e diz quais faltaram. Não avalia o tajwid — nem o madd nem a ghunna.",
+    "download_note": "Requer transferir uma vez o modelo de voz ({}); depois funciona sem internet.",
+    "download": "Transferir o modelo",
+    "start": "Começar a recitar",
+    "stop": "Terminei",
+    "result": "Disse {} de {} palavras",
+    "needs_mic": "É necessária permissão do microfone"
+  },
   "hifz": {
     "title": "Memorizar e recitar",
     "card_subtitle": "Aprenda versículo a versículo e teste-se",
