@@ -19,6 +19,7 @@
 /// setting is.
 library;
 
+import 'dart:async';
 import 'dart:math' as math;
 
 // easy_localization re-exports package:intl, whose `TextDirection`
@@ -120,7 +121,8 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       final anchor = _chapters[i].anchor;
       if (anchor != null) await revealAnchor(anchor);
       if (!mounted || _index != i) return;
-      final next = _targetOf(_chapters[i]);
+      final next = await _settledTarget(_chapters[i]);
+      if (!mounted || _index != i) return;
       // A feature that is not on screen — a Home card switched off in
       // Settings — is skipped in the direction the reader was going, never
       // stood in for by a navigation button.
@@ -150,6 +152,42 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
         ..reset()
         ..forward();
     });
+  }
+
+  /// Measures the target until it has stopped moving.
+  ///
+  /// «التوتوريال ساعات مش بيجيب الشاشة كاملة اللي بيشرحها زي القبلة». The
+  /// target used to be measured once, one frame after switching tabs. A tab
+  /// still building answered «no anchor», and the stop was SKIPPED; the
+  /// Qibla compass card, which opens as a small «locating…» card and grows
+  /// into the compass, was framed at its loading size. So it is measured
+  /// frame after frame until the rectangle holds still for six frames, up
+  /// to two seconds, and only a target still absent after that is treated
+  /// as switched off.
+  Future<Rect?> _settledTarget(TutorialChapter chapter) async {
+    if (chapter.anchor == null) return null;
+    Rect? last;
+    var still = 0;
+    final deadline = DateTime.now().add(const Duration(seconds: 2));
+    while (mounted && DateTime.now().isBefore(deadline)) {
+      final rect = _targetOf(chapter);
+      final same = rect != null &&
+          last != null &&
+          (rect.topLeft - last.topLeft).distance < 1 &&
+          (rect.bottomRight - last.bottomRight).distance < 1;
+      still = same ? still + 1 : 0;
+      if (still >= 6) return rect;
+      last = rect;
+      await _nextFrame();
+    }
+    return mounted ? _targetOf(chapter) : null;
+  }
+
+  Future<void> _nextFrame() {
+    final done = Completer<void>();
+    WidgetsBinding.instance.addPostFrameCallback((_) => done.complete());
+    WidgetsBinding.instance.ensureVisualUpdate();
+    return done.future;
   }
 
   /// The last stop entered, so a skipped feature is skipped in the direction

@@ -2223,9 +2223,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 17:23 — IN PROGRESS — resume here**
+**2026-09-22 17:37 — IN PROGRESS — resume here**
 
-RGB theme: lattice 5.5%->9%, plus twinkling stars, a breathing crescent and three swinging lanterns (the owner had the girih lattice since 3.19 and asked again for 'Islamic things' - at 5% it read as nothing); RGB cards 90%->80% so the motion shows inside cards (worst-case contrast computed: 16.0:1 body, 9.7:1 secondary). Text mushaf: 72px bottom room for the floating page pill (last line of p.20 hid under it at large font). Test: a khatma saved by 3.55.0 (no wirds key) loads. Investigated, NOT changed: waqf marks at large font sit above their own words (checked 2:129, 2:130, 2:131) but float between lines; the small 'meem' under ummatan muslimatan is U+06ED in the source text, drawn literally by AmiriQuran - Quran text is not edited.
+Open tanween: Tanzil's tanween+U+06ED (measured: 2,901 fathatan + 1,807 dammatan, all before idgham/ikhfa letters, none before a throat letter) is drawn as U+08F0/U+08F1 ARABIC OPEN FATHATAN/DAMMATAN (both in AmiriQuran's cmap) - display only, stored text untouched; the 99 kasratan+U+06ED (all before ba, iqlab) keep their meem. Tutorial: the target is measured frame by frame until it holds still for 6 frames (max 2 s) instead of once after one frame, so a tab still building is not skipped and the Qibla compass is not framed at its loading size. 488 pass; not yet on device.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
