@@ -2326,9 +2326,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 20:07 — IN PROGRESS — resume here**
+**2026-09-22 20:31 — IN PROGRESS — resume here**
 
-Named-notes ruling applied: all 213 hosted books read for Ibn Baz/Ibn Uthaymeen/Ibn Jibrin/Ibn Abd al-Wahhab/al-Albani; 111 al-Albani takhrij kept (the ruling's exception), namesakes kept (al-Uthaymeen the historian, classical narrators), no Najdi mention anywhere. Cut editors' opinion/praise only: al-Muwafaqat (3 notes + the editor's biography, 10 pp), Ighathat (1), Musnad Abi Bakr (1) - scripts/strip_named_notes.py, uploaded, public URL verified, catalogue sizes updated. Phase 1: tawdih al-maqasid dropped; al-rawd 1679 refused (card: hashiyat al-Uthaymeen, ta'liqat al-Sadi), Rakaiz 147658 building; matn-over-sharh running heads and dot rows tidied. NOT yet: phase-1 upload, analyze/test, emulator.
+Library phase 1 catalogued: 18 explained books uploaded (public URL, gzip magic, size, no Content-Encoding verified each), bare al-Waraqat and al-Ajurrumiyyah retired, 229 books. al-Rawd from Rakaiz 147658 (1679 refused on its card). tidy() drops matn-over-sharh running heads (659 in Ihkam), dot rows, orphan footnote numbers. Ihkam + Tanwir bundled as hadith-shelf assets; stripped Musnad Abi Bakr asset replaced. Fixed: library_phase1 appended after _byId[id] (rindex bug); pages field added (measured). analyze clean, 491 pass. NOT yet seen on emulator.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

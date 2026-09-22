@@ -113,6 +113,9 @@ def load(book_id):
 # paging through would see «. . . . . ــ إحكام الأحكام» on every page.
 DOTS = re.compile(r"^[\s.·،]+$")
 RULE = re.compile(r"^[\sـ_\-–—]+$")
+# A footnote's number left standing on its own line once build_book_text.py
+# has dropped the hamesh it pointed to: «١ -», 246 of them in al-Fawakih.
+ORPHAN = re.compile(r"^\s*\(?[0-9٠-٩]+\)?\s*[-–]\s*$")
 
 
 def tidy(book):
@@ -128,13 +131,16 @@ def tidy(book):
     head = max(after, key=after.get) if after else None
     if head is None or after[head] < 0.5 * len(book["pages"]) or len(head) > 60:
         head = None
-    n = {"dots": 0, "head": 0, "rule": 0}
+    n = {"dots": 0, "head": 0, "rule": 0, "orphan": 0}
     for pg in book["pages"]:
         kept = []
         for p in pg["paras"]:
             t = text(p)
             if DOTS.match(t):
                 n["dots"] += 1
+                continue
+            if ORPHAN.match(t):
+                n["orphan"] += 1
                 continue
             if head and t == head and kept and RULE.match(text(kept[-1])):
                 n["head"] += 1
@@ -231,6 +237,9 @@ def main():
         ]
         if death:
             lines.append(f"    deathYearAh: {death},")
+        # The reader's own page count: the generated blurb needs one (a book
+        # with neither blurb nor count renders a blank line).
+        lines.append(f"    pages: {len(load(bid)[1]['pages'])},")
         lines.append(f"    category: BookCategory.{cat},")
         if shelf:
             lines.append(f"    shelfOrder: {shelf},")
@@ -244,7 +253,9 @@ def main():
             "    ),",
             "  ),",
         ]
-    end = src.rindex("];")
+    # The END of libraryBookCatalog, not of the file: the file ends in
+    # `_byId[id];`, which a bare rindex("];") took for it on 2026-09-22.
+    end = src.index("\n];\n", src.index("libraryBookCatalog"))
     src = src[:end].rstrip() + "\n" + "\n".join(lines) + "\n" + src[end:]
     io.open(CATALOG, "w", encoding="utf-8", newline="\n").write(src)
     print(f"catalogue: +{len(entries)} books, -{len(RETIRED)} mutun")

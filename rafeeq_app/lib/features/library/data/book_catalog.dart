@@ -3995,49 +3995,6 @@ const List<LibraryBook> libraryBookCatalog = [
               '(ت ٥٦٢ هـ)',
     ),
   ),
-  // طالب العلم، المرحلة 2 — المتون الأولى — الآلة التي يُقرأ بها
-  LibraryBook(
-    id: 'al_waraqat',
-    diacritisedPct: 40,
-    titleAr: 'الورقات',
-    titleEn: 'Al-Waraqat',
-    authorAr: 'إمام الحرمين الجويني',
-    authorEn: 'Imam al-Haramayn al-Juwayni',
-    deathYearAh: 478,
-    pages: 31,
-    descKey: 'book_desc.al_waraqat',
-    category: BookCategory.talibIlm,
-    shelfOrder: 2,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/al_waraqat.json',
-      sizeBytes: 6768,
-      sourceLabel:
-          'المكتبة الشاملة — الورقات في أصول الفقه، لإمام الحرمين '
-              'الجويني (ت ٤٧٨ هـ)',
-    ),
-  ),
-  // طالب العلم، المرحلة 2 — المتون الأولى — الآلة التي يُقرأ بها
-  LibraryBook(
-    id: 'al_ajurrumiyyah',
-    diacritisedPct: 20,
-    titleAr: 'متن الآجرومية',
-    titleEn: 'Al-Ajurrumiyyah',
-    authorAr: 'ابن آجُرُّوم الصنهاجي',
-    authorEn: 'Ibn Ajurrum al-Sanhaji',
-    deathYearAh: 723,
-    pages: 23,
-    descKey: 'book_desc.al_ajurrumiyyah',
-    category: BookCategory.talibIlm,
-    shelfOrder: 2,
-    textEdition: TextEdition(
-      url:
-          '${AppConfig.contentBaseUrl}/books/text/al_ajurrumiyyah.json',
-      sizeBytes: 7150,
-      sourceLabel:
-          'المكتبة الشاملة — الآجرومية، لابن آجروم الصنهاجي (ت ٧٢٣ هـ)',
-    ),
-  ),
   // طالب العلم، المرحلة 3 — التوسّع — الأصول وعلوم القرآن
   LibraryBook(
     id: 'al_luma_fi_usul_al_fiqh',
@@ -4321,6 +4278,316 @@ const List<LibraryBook> libraryBookCatalog = [
       editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — الموافقات، لأبي إسحاق الشاطبي (ت ٧٩٠ هـ)',
+    ),
+  ),
+
+  // ── 2026-09-22 — library «المرحلة ١»: explained books, per the owner's
+  // rulings (no bare mutun; Shamela text as served). scripts/library_phase1.py.
+  LibraryBook(
+    id: 'sharh_al_aqidah_al_tahawiyyah',
+    titleAr: 'شرح العقيدة الطحاوية',
+    titleEn: 'Sharh al-Aqidah al-Tahawiyyah',
+    authorAr: 'ابن أبي العز الحنفي',
+    authorEn: 'Ibn Abi al-Izz al-Hanafi',
+    deathYearAh: 792,
+    pages: 797,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/sharh_al_aqidah_al_tahawiyyah.json',
+      sizeBytes: 447418,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — شرح العقيدة الطحاوية، عليّ بن علي بن محمد بن أبي العز الدمشقي (ت ٧٩٢ هـ)، مؤسسة الرسالة، بيروت - لبنان، الثانية، ١٤١١ هـ - ١٩٩٠ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_iqtisad_fil_itiqad',
+    titleAr: 'الاقتصاد في الاعتقاد',
+    titleEn: 'Al-Iqtisad fi al-Itiqad',
+    authorAr: 'الإمام أبو حامد الغزالي',
+    authorEn: 'Imam Abu Hamid al-Ghazali',
+    deathYearAh: 505,
+    pages: 128,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_iqtisad_fil_itiqad.json',
+      sizeBytes: 109739,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — الاقتصاد في الاعتقاد، أبو حامد محمد بن محمد الغزالي الطوسي (ت ٥٠٥هـ)، دار الكتب العلمية، بيروت - لبنان، الأولى، ١٤٢٤ هـ - ٢٠٠٤ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'qawaid_al_aqaid',
+    titleAr: 'قواعد العقائد',
+    titleEn: 'Qawaid al-Aqaid',
+    authorAr: 'الإمام أبو حامد الغزالي',
+    authorEn: 'Imam Abu Hamid al-Ghazali',
+    deathYearAh: 505,
+    pages: 224,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/qawaid_al_aqaid.json',
+      sizeBytes: 61753,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — قواعد العقائد، أبو حامد محمد بن محمد الغزالي الطوسي (ت ٥٠٥هـ)، عالم الكتب - لبنان، الثانية، ١٤٠٥هـ - ١٩٨٥م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_lubab_fi_sharh_al_kitab',
+    titleAr: 'اللباب في شرح الكتاب',
+    titleEn: 'Al-Lubab fi Sharh al-Kitab',
+    authorAr: 'عبد الغني الغنيمي الميداني',
+    authorEn: 'Abd al-Ghani al-Maydani',
+    deathYearAh: 1298,
+    pages: 904,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_lubab_fi_sharh_al_kitab.json',
+      sizeBytes: 518367,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — اللباب في شرح الكتاب، عبد الغني الغنيمي الدمشقي الميداني الحنفي [ت ١٢٩٨ هـ]',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_ikhtiyar_li_talil_al_mukhtar',
+    titleAr: 'الاختيار لتعليل المختار',
+    titleEn: 'Al-Ikhtiyar li Talil al-Mukhtar',
+    authorAr: 'عبد الله بن محمود الموصلي',
+    authorEn: 'Abdullah ibn Mahmud al-Mawsili',
+    deathYearAh: 683,
+    pages: 834,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_ikhtiyar_li_talil_al_mukhtar.json',
+      sizeBytes: 971989,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — الاختيار لتعليل المختار، عبد الله بن محمود بن مودود الموصلي الحنفي، مطبعة الحلبي - القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_thamar_al_dani',
+    titleAr: 'الثمر الداني شرح رسالة ابن أبي زيد القيرواني',
+    titleEn: 'Al-Thamar al-Dani',
+    authorAr: 'صالح عبد السميع الآبي الأزهري',
+    authorEn: 'Salih Abd al-Sami al-Abi al-Azhari',
+    deathYearAh: 1335,
+    pages: 751,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_thamar_al_dani.json',
+      sizeBytes: 413925,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — الثمر الداني شرح رسالة ابن أبي زيد القيرواني، صالح بن عبد السميع الآبي الأزهري (ت ١٣٣٥هـ)، المكتبة الثقافية - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_fawakih_al_dawani',
+    titleAr: 'الفواكه الدواني على رسالة ابن أبي زيد القيرواني',
+    titleEn: 'Al-Fawakih al-Dawani',
+    authorAr: 'أحمد بن غانم النفراوي',
+    authorEn: 'Ahmad ibn Ghanim al-Nafrawi',
+    deathYearAh: 1126,
+    pages: 778,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_fawakih_al_dawani.json',
+      sizeBytes: 1808872,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — الفواكه الدواني على رسالة ابن أبي زيد القيرواني، أحمد بن غانم (أو غنيم) بن سالم ابن مهنا، شهاب الدين النفراوي الأزهري المالكي (ت ١١٢٦هـ)، دار الفكر، بدون طبعة',
+    ),
+  ),
+  LibraryBook(
+    id: 'kifayat_al_akhyar',
+    titleAr: 'كفاية الأخيار في حل غاية الاختصار',
+    titleEn: 'Kifayat al-Akhyar',
+    authorAr: 'تقي الدين الحصني',
+    authorEn: 'Taqi al-Din al-Hisni',
+    deathYearAh: 829,
+    pages: 576,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/kifayat_al_akhyar.json',
+      sizeBytes: 566024,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — كفاية الأخيار في حل غاية الإختصار، أبو بكر بن محمد بن عبد المؤمن بن حريز بن معلى الحسيني الحصني، تقي الدين الشافعي (ت ٨٢٩هـ)، دار الخير - دمشق، الأولى، ١٩٩٤',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_iqna_fi_hall_alfaz_abi_shuja',
+    titleAr: 'الإقناع في حل ألفاظ أبي شجاع',
+    titleEn: 'Al-Iqna fi Hall Alfaz Abi Shuja',
+    authorAr: 'الخطيب الشربيني',
+    authorEn: 'Al-Khatib al-Shirbini',
+    deathYearAh: 977,
+    pages: 661,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_iqna_fi_hall_alfaz_abi_shuja.json',
+      sizeBytes: 800674,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — الإقناع في حل ألفاظ أبي شجاع، شمس الدين، محمد بن أحمد الخطيب الشربيني الشافعي (ت ٩٧٧هـ)، دار الفكر - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'fath_al_qarib_al_mujib',
+    titleAr: 'فتح القريب المجيب في شرح ألفاظ التقريب',
+    titleEn: 'Fath al-Qarib al-Mujib',
+    authorAr: 'ابن قاسم الغزي',
+    authorEn: 'Ibn Qasim al-Ghazzi',
+    deathYearAh: 918,
+    pages: 329,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/fath_al_qarib_al_mujib.json',
+      sizeBytes: 121645,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — فتح القريب المجيب في شرح ألفاظ التقريب = القول المختار في شرح غاية الاختصار (ويعرف بشرح ابن قاسم على متن أبي شجاع)، محمد بن قاسم بن محمد بن محمد، أبو عبد الله، شمس الدين الغزي، ويعرف بابن قاسم وبابن الغرابيلي (ت ٩١٨ هـ)، الجفان والجابي للطباعة والنشر، دار ابن حزم للطباعة والنشر والتوزيع، بيروت - لبنان، الأولى، ١٤٢٥ هـ - ٢٠٠٥ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_uddah_sharh_al_umdah',
+    titleAr: 'العدة شرح العمدة',
+    titleEn: 'Al-Uddah Sharh al-Umdah',
+    authorAr: 'بهاء الدين المقدسي',
+    authorEn: 'Baha al-Din al-Maqdisi',
+    deathYearAh: 624,
+    pages: 682,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_uddah_sharh_al_umdah.json',
+      sizeBytes: 462416,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — العدة شرح العمدة، في فقه إمام السنة أحمد بن حنبل، بهاء الدين عبد الرحمن بن إبراهيم المقدسي (ت ٦٢٤ هـ)، دار الحديث، القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_rawd_al_murbi',
+    titleAr: 'الروض المربع شرح زاد المستقنع',
+    titleEn: 'Al-Rawd al-Murbi',
+    authorAr: 'منصور بن يونس البهوتي',
+    authorEn: 'Mansur ibn Yunus al-Buhuti',
+    deathYearAh: 1051,
+    pages: 1607,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_rawd_al_murbi.json',
+      sizeBytes: 581180,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — الروض المربع بشرح زاد المستقنع مختصر المقنع، منصور بن يونس البهوتي (ت: ١٠٥١ هـ)، دار ركائز للنشر والتوزيع - الكويت، الأولى، ١٤٣٨ هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'bidayat_al_mujtahid',
+    titleAr: 'بداية المجتهد ونهاية المقتصد',
+    titleEn: 'Bidayat al-Mujtahid',
+    authorAr: 'ابن رشد الحفيد',
+    authorEn: 'Ibn Rushd',
+    deathYearAh: 595,
+    pages: 945,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/bidayat_al_mujtahid.json',
+      sizeBytes: 919151,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — بداية المجتهد ونهاية المقتصد، أبو الوليد محمد بن أحمد بن محمد بن أحمد بن رشد القرطبي الأندلسي، الشهير بابن رشد الحفيد [ت ٥٩٥ هـ]، دار الحديث - القاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'ihkam_al_ahkam',
+    titleAr: 'إحكام الأحكام شرح عمدة الأحكام',
+    titleEn: 'Ihkam al-Ahkam',
+    authorAr: 'ابن دقيق العيد',
+    authorEn: 'Ibn Daqiq al-Id',
+    deathYearAh: 702,
+    pages: 659,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/ihkam_al_ahkam.json',
+      sizeBytes: 565843,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — إحكام الإحكام شرح عمدة الأحكام، تقي الدين ابن دقيق العيد (٦٢٥ - ٧٠٢ هـ)، دار عالم الكتب بيروت - بالاتفاق مع دار الكتب السلفية بالقاهرة',
+    ),
+  ),
+  LibraryBook(
+    id: 'tanwir_al_hawalik',
+    titleAr: 'تنوير الحوالك شرح موطأ مالك',
+    titleEn: 'Tanwir al-Hawalik',
+    authorAr: 'الحافظ جلال الدين السيوطي',
+    authorEn: 'Jalal al-Din al-Suyuti',
+    deathYearAh: 911,
+    pages: 414,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tanwir_al_hawalik.json',
+      sizeBytes: 286567,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — تنوير الحوالك شرح موطأ مالك، عبد الرحمن بن أبي بكر، جلال الدين السيوطي (ت ٩١١هـ)، المكتبة التجارية الكبرى - مصر',
+    ),
+  ),
+  LibraryBook(
+    id: 'al_rahiq_al_makhtum',
+    titleAr: 'الرحيق المختوم',
+    titleEn: 'Al-Raheeq al-Makhtum',
+    authorAr: 'صفي الرحمن المباركفوري',
+    authorEn: 'Safi al-Rahman al-Mubarakpuri',
+    deathYearAh: 1427,
+    pages: 452,
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_rahiq_al_makhtum.json',
+      sizeBytes: 361830,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — الرحيق المختوم، صفي الرحمن المباركفوري [ت ١٤٢٧ هـ]، دار الفكر (طبعة خاصة بدار ومكتبة الهلال) - بيروت',
+    ),
+  ),
+  LibraryBook(
+    id: 'sharh_al_waraqat_al_mahalli',
+    titleAr: 'شرح الورقات في أصول الفقه',
+    titleEn: 'Sharh al-Waraqat',
+    authorAr: 'جلال الدين المحلي',
+    authorEn: 'Jalal al-Din al-Mahalli',
+    deathYearAh: 864,
+    pages: 226,
+    category: BookCategory.talibIlm,
+    shelfOrder: 2,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/sharh_al_waraqat_al_mahalli.json',
+      sizeBytes: 43470,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — شرح الورقات في أصول الفقه، جلال الدين محمد بن أحمد بن محمد بن إبراهيم المحلي الشافعي (ت ٨٦٤هـ)، جامعة القدس، فلسطين، الأولى، ١٤٢٠ هـ - ١٩٩٩ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'sharh_al_ajurrumiyyah_hifzi',
+    titleAr: 'شرح الآجرومية',
+    titleEn: 'Sharh al-Ajurrumiyyah',
+    authorAr: 'حسن بن محمد الحفظي',
+    authorEn: 'Hasan ibn Muhammad al-Hifzi',
+    pages: 302,
+    category: BookCategory.talibIlm,
+    shelfOrder: 2,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/sharh_al_ajurrumiyyah_hifzi.json',
+      sizeBytes: 178224,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — شرح الآجرومية، د حسن بن محمد الحفظي',
     ),
   ),
 ];
