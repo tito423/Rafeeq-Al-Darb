@@ -146,6 +146,22 @@ record.
   (c) run the optimum export directly through `onnxruntime` and write the
   decoding loop in Dart — the most work and the most to get wrong. Decide
   (a) vs (b) before any UI.
+  **DONE 2026-09-23 — route (a) works end to end.**
+  `scripts/export_quran_asr_onnx.py` turns the HF weights into an OpenAI
+  checkpoint and PROVES the conversion before exporting (38/38 words agree
+  with the faster-whisper reference on a real recitation). sherpa's own
+  exporter then needs two patches, both printed by that script: its `--model`
+  choices list, and `dynamo=False` on both `torch.onnx.export` calls — torch
+  2.14's dynamo exporter bakes a STATIC reshape into the decoder, sherpa
+  feeds three SOT tokens in one step, onnxruntime dies with «Input
+  shape:{1,4,512}, requested shape:{1,512}» and every result comes back
+  EMPTY. With that, **sherpa-onnx's own recognizer runs this model**:
+  al-Fatiha 1 and 2, al-Kahf 1, al-Ikhlas → **23/23 words = 100%**, ~5.7x
+  real time on this CPU; al-Baqarah 255 → 26/50, because it runs 60 s and
+  whisper's window is 30 s (sherpa says so out loud). Files: encoder int8
+  **29 MB** + decoder int8 **130 MB** + tokens 0.9 MB. NEXT: host them,
+  wire `sherpa_onnx` in the app, measure on the emulator and on the phone,
+  and split any ayah longer than 30 s.
   these are optimum exports, so the tensor names may not match. Settle that
   before any UI is written.
 * Store screenshots NOT re-shot yet (the owner asked for them after he looks
