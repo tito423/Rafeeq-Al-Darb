@@ -2326,9 +2326,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 19:54 — IN PROGRESS — resume here**
+**2026-09-22 20:07 — IN PROGRESS — resume here**
 
-Handover (jahhiz ad-dunya) 2026-09-22: verified analyze clean, 491 tests pass, 10/10 hosted paths 206 with correct types; measured 7x1,729 keys, 1 mushaf, 213 books, hadith.db 109,731,840 B / 67,153 / 45,219 graded, APK 260,425,139 B. HANDOVER state block, NEXT_SESSION_PROMPT.md and NEXT_PROMPT.md rewritten: library phase 1 is half-done (16/19 built locally, nothing uploaded or catalogued), tawdih al-maqasid to be dropped, al-rawd card to be read, and the owner's ruling on editors' notes naming the five. No release since v3.55.0; nothing of today on his phone.
+Named-notes ruling applied: all 213 hosted books read for Ibn Baz/Ibn Uthaymeen/Ibn Jibrin/Ibn Abd al-Wahhab/al-Albani; 111 al-Albani takhrij kept (the ruling's exception), namesakes kept (al-Uthaymeen the historian, classical narrators), no Najdi mention anywhere. Cut editors' opinion/praise only: al-Muwafaqat (3 notes + the editor's biography, 10 pp), Ighathat (1), Musnad Abi Bakr (1) - scripts/strip_named_notes.py, uploaded, public URL verified, catalogue sizes updated. Phase 1: tawdih al-maqasid dropped; al-rawd 1679 refused (card: hashiyat al-Uthaymeen, ta'liqat al-Sadi), Rakaiz 147658 building; matn-over-sharh running heads and dot rows tidied. NOT yet: phase-1 upload, analyze/test, emulator.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

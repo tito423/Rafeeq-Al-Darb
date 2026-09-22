@@ -595,7 +595,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/ighathat_al_lahfan_fi_hukm_talaq_al_ghadban.json',
-      sizeBytes: 59028,
+      sizeBytes: 59018,
       editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — إغاثة اللهفان في حكم طلاق الغضبان - ت الحفيان، شمس الدين محمد بن أبي بكر ابن قيم الجوزية (٦٩١ - ٧٥١ هـ)، مؤسسة الرسالة، بيروت - لبنان',
@@ -3163,7 +3163,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/musnad_abi_bakr.json',
-      sizeBytes: 409494,
+      sizeBytes: 409442,
       editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — مسند أبي بكر الصديق لابن كثير',
@@ -4317,7 +4317,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_muwafaqat.json',
-      sizeBytes: 2280034,
+      sizeBytes: 2272461,
       editorNotesRemoved: true,
       sourceLabel:
           'المكتبة الشاملة — الموافقات، لأبي إسحاق الشاطبي (ت ٧٩٠ هـ)',

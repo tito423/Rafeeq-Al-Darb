@@ -1,0 +1,15 @@
+
+al_muwafaqat p33: cut «ومن الجدير بالذكر هنا أمران: الأول: أن الشاطبي مجدد ومصلح، وأن كتابه "الموافقات"…»
+
+al_muwafaqat p79: cut «وسألتُ شيخنا الألباني -حفظه الله- عن هذه المسألة؛ فأجاب بأنه لم يثبت عنده ولم يط…»
+
+al_muwafaqat p407: cut «re.compile(' قلت: وسمعت شيخنا الألباني -حفظه الله- مرارًا.*$', re.DOTALL)…»
+
+al_muwafaqat: section «ترجمة محقق الكتاب مشهور بن حسن آل سلمان» removed (10 pages)
+al_muwafaqat: 4701208 -> 4687039 chars (14169 removed), 2272461 B
+
+ighathat_al_lahfan_fi_hukm_talaq_al_ghadban p86: cut «وهو اختيار شيخنا محمد بن صالح العثيمين -رحمه الله- انظر: «الشرح الممتع» (٢/ ١٩).…»
+ighathat_al_lahfan_fi_hukm_talaq_al_ghadban: 104450 -> 104369 chars (81 removed), 59018 B
+
+musnad_abi_bakr p667: cut «قال ابن عثيمين (ت ١٤٢١ هـ): "النواصب هم الذين ينصبون العداء لآل البيت، ويقدحون ف…»
+musnad_abi_bakr: 1049507 -> 1049386 chars (121 removed), 409442 B

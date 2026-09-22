@@ -1,4 +1,4 @@
-"""Library «المرحلة ١» (2026-09-22): nineteen explained books into the app.
+"""Library «المرحلة ١» (2026-09-22): eighteen explained books into the app.
 
 The owner's rulings for this batch (see the memory note and
 CONTENT-LICENSES.md): no bare mutun — the explained book instead; Shamela text
@@ -41,6 +41,11 @@ REPORT = os.path.join(ROOT, "scripts", "library_phase1_out.txt")
 
 SEVEN = ["ابن باز", "بن باز", "عثيمين", "ابن تيمية", "بن تيمية", "جبرين",
          "عبد الوهاب", "عبدالوهاب", "الألباني", "الالباني", "القرني"]
+# On a card a bare «عبد الوهاب» is a namesake far more often than not — fath
+# al-qarib's editor is «بسام عبد الوهاب الجابي» — so the card test names the
+# man; the body count above still reports every bare hit for a human to read.
+CARD_NAMES = [n for n in SEVEN if n not in ("عبد الوهاب", "عبدالوهاب")] + [
+    "ابن عبد الوهاب", "محمد بن عبد الوهاب", "ابن عبدالوهاب", "محمد بن عبدالوهاب"]
 
 # id -> (titleAr, titleEn, authorAr, authorEn, deathAH, category, shelfOrder)
 PLAN = {
@@ -50,8 +55,8 @@ PLAN = {
         "الإمام أبو حامد الغزالي", "Imam Abu Hamid al-Ghazali", 505, "aqidah", 0),
     "qawaid_al_aqaid": ("قواعد العقائد", "Qawaid al-Aqaid",
         "الإمام أبو حامد الغزالي", "Imam Abu Hamid al-Ghazali", 505, "aqidah", 0),
-    "tawdih_al_maqasid_sharh_al_nuniyyah": ("توضيح المقاصد شرح نونية ابن القيم", "Tawdih al-Maqasid",
-        "أحمد بن إبراهيم بن عيسى", "Ahmad ibn Ibrahim ibn Isa", 1327, "aqidah", 0),
+    # «توضيح المقاصد» (Ahmad ibn Ibrahim ibn Isa, a Najdi scholar) was built and
+    # then dropped on the owner's ruling «مش ناقصين تشدد» (2026-09-22).
     "al_lubab_fi_sharh_al_kitab": ("اللباب في شرح الكتاب", "Al-Lubab fi Sharh al-Kitab",
         "عبد الغني الغنيمي الميداني", "Abd al-Ghani al-Maydani", 1298, "fiqh", 0),
     "al_ikhtiyar_li_talil_al_mukhtar": ("الاختيار لتعليل المختار", "Al-Ikhtiyar li Talil al-Mukhtar",
@@ -100,6 +105,51 @@ def load(book_id):
     return raw, json.loads(gzip.decompress(raw) if raw[:2] == b"\x1f\x8b" else raw)
 
 
+# Shamela prints a matn-over-sharh edition (al-Ikhtiyar, al-Fawakih, al-Uddah,
+# Ihkam al-Ahkam, …) as: the matn, a «ــ» rule, then the book's name as a
+# running head, then the sharh. A page with no matn keeps a row of full stops
+# where the matn would be. Measured 2026-09-22: 659 running heads «إحكام
+# الأحكام» and 248 rows of dots in Ihkam alone. None of it is text; a reader
+# paging through would see «. . . . . ــ إحكام الأحكام» on every page.
+DOTS = re.compile(r"^[\s.·،]+$")
+RULE = re.compile(r"^[\sـ_\-–—]+$")
+
+
+def tidy(book):
+    """Drop dot rows, a running head repeated after the rule on most pages,
+    and a rule with no matn above it. Returns what was dropped."""
+    text = lambda p: p["t"] if isinstance(p, dict) else p
+    after = {}
+    for pg in book["pages"]:
+        ps = [text(p) for p in pg["paras"]]
+        for j, t in enumerate(ps[:-1]):
+            if RULE.match(t):
+                after[ps[j + 1]] = after.get(ps[j + 1], 0) + 1
+    head = max(after, key=after.get) if after else None
+    if head is None or after[head] < 0.5 * len(book["pages"]) or len(head) > 60:
+        head = None
+    n = {"dots": 0, "head": 0, "rule": 0}
+    for pg in book["pages"]:
+        kept = []
+        for p in pg["paras"]:
+            t = text(p)
+            if DOTS.match(t):
+                n["dots"] += 1
+                continue
+            if head and t == head and kept and RULE.match(text(kept[-1])):
+                n["head"] += 1
+                continue
+            kept.append(p)
+        out = []
+        for j, p in enumerate(kept):
+            if RULE.match(text(p)) and not out:
+                n["rule"] += 1  # nothing above it on this page
+                continue
+            out.append(p)
+        pg["paras"] = out
+    return n
+
+
 def public_ok(book_id, size):
     url = f"{PUBLIC}/books/text/{book_id}.json"
     head = subprocess.run(["curl", "-sSI", "-A", UA, url], capture_output=True, text=True).stdout
@@ -123,9 +173,16 @@ def main():
             refused.append((book_id, "not built"))
             continue
         raw, book = load(book_id)
+        dropped = tidy(book)
+        if any(dropped.values()):
+            book["meta"]["tidiedBy"] = "scripts/library_phase1.py"
+            raw = gzip.compress(json.dumps(book, ensure_ascii=False, separators=(",", ":"))
+                                .encode("utf-8"), mtime=0)
+            open(path, "wb").write(raw)
+            out.write(f"\n   tidied {book_id}: {dropped}")
         meta = book["meta"]
         card = meta.get("editionCard", "")
-        hit = [n for n in SEVEN if n in card]
+        hit = [n for n in CARD_NAMES if n in card]
         body = " ".join(p["t"] if isinstance(p, dict) else p
                         for pg in book["pages"] for p in pg["paras"])
         mentions = {n: body.count(n) for n in SEVEN if body.count(n)}

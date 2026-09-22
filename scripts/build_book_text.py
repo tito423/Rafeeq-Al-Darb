@@ -218,7 +218,8 @@ BOOKS = {
     "al_iqna_fi_hall_alfaz_abi_shuja": {"shamela_id": 6121, "source_label": "المكتبة الشاملة — الإقناع في حل ألفاظ أبي شجاع، الخطيب الشربيني"},
     "fath_al_qarib_al_mujib": {"shamela_id": 35120, "source_label": "المكتبة الشاملة — فتح القريب المجيب في شرح ألفاظ التقريب، ابن قاسم الغزي"},
     "al_uddah_sharh_al_umdah": {"shamela_id": 10908, "source_label": "المكتبة الشاملة — العدة شرح العمدة، بهاء الدين المقدسي"},
-    "al_rawd_al_murbi": {"shamela_id": 1679, "source_label": "المكتبة الشاملة — الروض المربع شرح زاد المستقنع، منصور البهوتي"},
+    # 1679 (ط المؤيد والرسالة) was refused: its card prints «ومعه حاشية … العثيمين» and «تعليقات … السعدي» (2026-09-22).
+    "al_rawd_al_murbi": {"shamela_id": 147658, "source_label": "المكتبة الشاملة — الروض المربع بشرح زاد المستقنع، منصور البهوتي"},
     "bidayat_al_mujtahid": {"shamela_id": 21739, "source_label": "المكتبة الشاملة — بداية المجتهد ونهاية المقتصد، ابن رشد"},
     "ihkam_al_ahkam": {"shamela_id": 1665, "source_label": "المكتبة الشاملة — إحكام الأحكام شرح عمدة الأحكام، ابن دقيق العيد"},
     "sharh_al_waraqat_al_mahalli": {"shamela_id": 21547, "source_label": "المكتبة الشاملة — شرح الورقات في أصول الفقه، جلال الدين المحلي"},

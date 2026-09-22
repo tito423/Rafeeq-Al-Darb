@@ -113,3 +113,7 @@ scripts/_azkar_adhkar.json
 
 # Files attached to a Codex task are user input, not repository content.
 .codex-remote-attachments/
+
+# strip_named_notes.py writes the cleaned books here before uploading; the
+# report stays in git, the books are on R2.
+scripts/strip_named_notes_out/*.json
