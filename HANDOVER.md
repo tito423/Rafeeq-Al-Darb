@@ -23,7 +23,62 @@ Cline, or any other).
 | **Verified 2026-09-21 (release 3.53.0)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **455 passed, 2 skipped** · built with `build_github_release.bat` and re-signed by `scripts/sign_release.py`, whose two-pass check passed (`CN=Rafeeq Al-Darb` from Android 9 up, the old debug certificate still covering Android 7–8) · `dist/RafeeqAlDarb-v3.53.0.apk` **260,175,087 B**, sha256 `033e183ae4377a8bef83286b32b128869cf5b2e1a20cf57685fcc347b14570ed` · installed on `emulator-5554` with `adb install -r` → `Success`, no FATAL EXCEPTION · hosted content range-checked with a User-Agent, all 206 with the right `Content-Type`: `books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json`, `hadith/hadith.zip`, `mushaf/madinah_qc/001.png`, and the Umrah JSON carries **no** `Content-Encoding` |
 | **Seen on the device 2026-09-21 (release 3.53.0)** | Home renders and the More list shows «ادعم التطبيق», so the GitHub-only support define is in this build · the العمرة track shows exactly **6** Umrah-only cards · step 2 «ميقات العمرة» — the one he photographed opening onto «في ميقات الحج» — now opens on «للعُمرةِ المُفرَدةِ عنِ الحجِّ ميقاتانِ زَمانيٌّ ومَكانيٌّ» · the About card reads **v3.53.0** |
 
-## OPEN, NOT DONE, NOT IN v3.54.0 — the next session starts HERE
+## SESSION 2026-09-22 — committed, NOT pushed, NOT released, NOT on his phone
+
+Everything below is in checkpoint commits on `master` (`a334aefe` … the
+last `checkpoint(wip)`). Verified on **emulator-5554** with the signed
+release APK; the owner's phone dropped off adb before any install, so
+**none of it has been on his device** and there is no release yet.
+
+* **Khatma** — wird history (`WirdRecord`), «أتممت القراءة» always enabled
+  (several wirds a day), «تراجع» that works (the notifier is captured, and
+  Flutter 3.38 sets `SnackBar.persist` true whenever there is an action —
+  that is why it never left the screen), previous/upcoming wird lists with
+  «ارجع له», create sheet scrolls (its button was laid out past the sheet
+  and never hit-tested). A khatma saved by 3.55.0 loads (test).
+* **Home «سور مختارة»** (يوسف، مريم، الرحمن، الواقعة، يس، ق), locked reader
+  now shows only its own surah's ayahs on a shared page.
+* **Accordion** (`core/widgets/accordion.dart`): one card open per list,
+  an opened card scrolls fully into view, and **back closes the open card
+  first**, app-wide (a `PopEntry` per route; `AppShell` defers).
+* **Per-ayah recitations**: the ayah-count table was wrong from surah 108
+  (sum 6,242) — the stuck 6,232/6,236 and the repair that never repaired;
+  fixed from `quran_local.db`, pinned by `ayah_counts_test`. Repair button
+  now includes them; delete immediate; screen rebuilt
+  (`ayah_reciter_screen.dart`).
+* **Library**: remove any not-downloaded book from the lists
+  (`HiddenBooks`), restorable.
+* **I'rab card**: the spelling-based morpheme splitter was fabricating
+  grammar (the Name «الله» shown with an attached pronoun) — removed;
+  invented «وعلامة نصبه الفتحة» removed; raw corpus tags mapped to the
+  corpus's own Arabic names (tagset.jsp); roots' `A` = hamza; English wbw
+  row hidden in Arabic.
+* **Open tanween**: Tanzil's tanween+U+06ED drawn as U+08F0/U+08F1 (display
+  only); the 99 iqlab cases keep their meem.
+* **RGB theme** more visibly Islamic (lanterns, crescent, stars), cards 80 %.
+* **One percent format** (`percentOf`, `common.percent`) for the 11 sites.
+* The three OPEN items below: **all done and seen on the emulator.**
+
+**المقدمة الجزرية commentary — researched, NOT built, needs the owner.**
+The two Shamela candidates are MODERN works: 21580 «فتح رب البرية» by
+صفوت محمود سالم (دار نور المكتبات، ط٢ ١٤٢٤هـ/٢٠٠٣م) and 17065 «الروضة
+الندية» by محمود عبد المنعم العبد (المكتبة الأزهرية ١٤٢٢هـ/٢٠٠١م) — the
+whole commentary is the modern author's, so neither is free to rehost
+(see `CONTENT-LICENSES.md`). The classical ones (القاري «المنح الفكرية»،
+الأنصاري «الدقائق المحكمة»، الأزهري «الحواشي الأزهرية»، ابن الناظم
+«الحواشي المفهمة») are **not** in the 8,598-book Shamela index, and
+archive.org (ASCII queries) returned lesson recordings and the bare matn,
+no licensed text edition. Next step is his call: a scan to OCR, or asking
+a publisher, or an audio شرح instead of a text one.
+
+## OPEN on 2026-09-21 — ALL THREE DONE 2026-09-22
+
+1 (repair button): cut a mushaf download at 7/604 with wifi+data off,
+restored, pressed it → «تم استئناف ١ تحميل غير مكتمل», 10 → 40 pages in
+20 s. 2 (tutorial shots): all eight recaptured on today's build, both
+scripts rerun. 3 (tutorial/Qibla): the target is now measured until it
+holds still (6 frames, max 2 s); the Qibla stop frames the whole compass.
+The original notes follow for the record.
 
 Asked for on 2026-09-21 right before the quota ran out. **Only the reading
 was done. Nothing was changed and nothing was verified. Do all three
@@ -2223,9 +2278,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 17:59 — IN PROGRESS — resume here**
+**2026-09-22 18:01 — IN PROGRESS — resume here**
 
-One percent format for the whole app: common.percent in all 7 locales ({}٪ ar, {} % fr/es, {}% others) behind percentOf() in core/utils/digits.dart; the 11 hand-written '\%' sites (downloads, reciter, content packs, book card, sciences pack, hadith gate, ayah sciences sheet, book reader font, mushaf display font, ayah ring) use it - the Latin sign printed first in Arabic ('%١٠٠'). Arabic digits also in the go-to sheet steps/range/slider and the prayer-time adjustment. analyze clean, 488 pass.
+HANDOVER: 2026-09-22 session block (committed, not pushed, not released, not on his phone), the three 2026-09-21 OPEN items marked done with evidence, and the Jazariyyah commentary research: both Shamela candidates are modern copyrighted works (21580 Safwat Salim 2003, 17065 al-Abd 2001); classical commentaries absent from the 8,598-book index; archive.org has recordings and the bare matn, no licensed text - owner's decision needed.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
