@@ -119,6 +119,12 @@ record.
   wrong word). Not measured yet: a phone's CPU, and a learner's voice rather
   than a studio reciter. On-device path would be whisper.cpp or
   onnxruntime with this model, downloaded like a mushaf, not bundled.
+  `--hard` (same script) answers the next question — does it catch a
+  mistake? Another reciter (Alafasy): 11/11 and 49/50. Band-limited to
+  8 kHz like a phone mic: 11/11. A recitation stopped 12 s into a 60 s
+  ayah: 9/50, and it names the words that were skipped. The WRONG ayah
+  played against al-Kahf 1: 1/11 — rejected, not accepted. So a skip and a
+  wrong passage both show up plainly; tajweed still does not.
 * Store screenshots NOT re-shot yet (the owner asked for them after he looks
   at the emulator himself).
 

@@ -29,12 +29,29 @@ TWO TRAPS THIS RUN ALREADY HIT, both in the MEASUREMENT and not the model:
   * the database's ayah 1 of a surah carries the basmala, and the audio
     file does not — al-Ikhlas scored 0% until that was taken off.
 
+SECOND RUN, `--hard` (2026-09-22): does it hold up, and does it catch a
+mistake? Measured the same way, with ffmpeg making the harder inputs:
+
+    same reciter (Husary), clean            al-Kahf 1   11/11 = 100%
+    ANOTHER reciter (Alafasy)               al-Kahf 1   11/11 = 100%
+    ANOTHER reciter (Alafasy)               al-Baqarah 255  49/50 = 98%
+    phone-like (band-limited to 8 kHz, quieter)  al-Kahf 1   11/11 = 100%
+    stopped after 12 s of a 60 s ayah        al-Baqarah 255   9/50 = 18%
+      -> names the skipped words: «سنه ولا نوم له ما في السموت وما …»
+    the WRONG ayah played against al-Kahf 1               1/11 = 9%
+      -> rejects it instead of accepting anything
+
+So it is not tied to one reciter, a phone's narrow band does not break it,
+and both kinds of mistake a tasmee' screen must catch — a skip and a wrong
+passage — show up as a plain drop in matched words.
+
 WHAT IT DOES NOT MEASURE: a phone's CPU (this is a desktop), a learner's
-voice (this is a professional reciter in a studio), and tajweed — a mistake
-in madd or ghunnah is not a wrong WORD and nothing here would catch it.
+voice (every file here is a professional reciter in a studio), and tajweed —
+a mistake in madd or ghunnah is not a wrong WORD and nothing here would
+catch it.
 
     py -3 -m pip install faster-whisper
-    py -3 scripts/measure_quran_asr.py
+    py -3 scripts/measure_quran_asr.py [--hard]
 """
 import io
 import os
@@ -52,6 +69,13 @@ UA = "RafeeqAlDarb/3.56 (https://github.com/tito423/Rafeeq-Al-Darb) curl/8"
 MODEL = "OdyAsh/faster-whisper-base-ar-quran"
 RECITER = "Husary_128kbps"
 AYAHS = [(1, 1), (1, 2), (2, 255), (18, 1), (112, 1)]
+# --hard: (label, file built by _build_hard, the ayah it is checked against)
+HARD = [("same reciter, clean", "018001.wav", (18, 1)),
+        ("another reciter (Alafasy)", "al_018001.wav", (18, 1)),
+        ("another reciter (Alafasy)", "al_002255.wav", (2, 255)),
+        ("phone-like: band-limited 8k, quieter", "noisy_018001.wav", (18, 1)),
+        ("stopped after 12 s (a skip)", "half_002255.wav", (2, 255)),
+        ("the WRONG ayah, against al-Kahf 1", "112001.wav", (18, 1))]
 
 MARKS = re.compile(r"[\u064b-\u065f\u0670\u06d6-\u06ed\u0640]")
 SUBS = [("أ", "ا"), ("إ", "ا"), ("آ", "ا"), ("ى", "ي"), ("ة", "ه"),
@@ -69,6 +93,56 @@ def norm(t):
 
 def skeleton(w):
     return re.sub(r"[اوي]", "", w)
+
+
+def _check(exp, got):
+    """What a tasmee' screen would say: how many words matched, which ones
+    it would report as skipped, and what it heard in their place."""
+    i = j = ok = 0
+    missed, instead = [], []
+    while i < len(exp) and j < len(got):
+        if skeleton(exp[i]) == skeleton(got[j]):
+            ok += 1
+            i += 1
+            j += 1
+        elif j + 1 < len(got) and skeleton(exp[i]) == skeleton(got[j + 1]):
+            instead.append(got[j])
+            j += 1
+        elif i + 1 < len(exp) and skeleton(exp[i + 1]) == skeleton(got[j]):
+            missed.append(exp[i])
+            i += 1
+        else:
+            missed.append(exp[i])
+            instead.append(got[j])
+            i += 1
+            j += 1
+    return ok, missed + exp[i:], instead
+
+
+def _build_hard():
+    """The harder inputs, made with ffmpeg from files already fetched: a
+    second reciter, a phone-like narrow band, and a recitation cut short."""
+    for name in ("002255", "018001"):
+        mp3 = os.path.join(WORK, "al_" + name + ".mp3")
+        wav = os.path.join(WORK, "al_" + name + ".wav")
+        if not os.path.exists(wav):
+            subprocess.run(["curl", "-sS", "-A", UA, "-o", mp3,
+                            f"https://everyayah.com/data/Alafasy_128kbps/{name}.mp3"],
+                           check=True)
+            subprocess.run([FFMPEG, "-v", "quiet", "-y", "-i", mp3,
+                            "-ar", "16000", "-ac", "1", wav], check=True)
+    noisy = os.path.join(WORK, "noisy_018001.wav")
+    if not os.path.exists(noisy):
+        subprocess.run([FFMPEG, "-v", "quiet", "-y", "-i",
+                        os.path.join(WORK, "018001.wav"), "-af",
+                        "highpass=f=200,lowpass=f=3400,volume=0.6,"
+                        "aresample=8000,aresample=16000",
+                        "-ar", "16000", "-ac", "1", noisy], check=True)
+    half = os.path.join(WORK, "half_002255.wav")
+    if not os.path.exists(half):
+        subprocess.run([FFMPEG, "-v", "quiet", "-y", "-i",
+                        os.path.join(WORK, "002255.wav"), "-t", "12",
+                        "-ar", "16000", "-ac", "1", half], check=True)
 
 
 def main():
@@ -90,6 +164,32 @@ def main():
         return w
 
     model = WhisperModel(MODEL, device="cpu", compute_type="int8")
+
+    def heard(wav):
+        segs, _ = model.transcribe(os.path.join(WORK, wav), language="ar",
+                                   beam_size=5)
+        return norm(" ".join(x.text for x in segs))
+
+    if "--hard" in sys.argv:
+        _build_hard()
+        rep = io.open(os.path.join(WORK, "hard.txt"), "w", encoding="utf-8")
+        for label, wav, (s, a) in HARD:
+            exp = expected(s, a)
+            t0 = time.time()
+            got = heard(wav)
+            dt = time.time() - t0
+            ok, missed, instead = _check(exp, got)
+            rep.write(f"\n{label}  [{s}:{a}]  {ok}/{len(exp)} words = "
+                      f"{100 * ok / len(exp):.0f}%   {dt:.1f}s\n")
+            if missed:
+                rep.write("   reported as skipped/mistaken: "
+                          + " ".join(missed[:8]) + "\n")
+            if instead:
+                rep.write("   heard instead: " + " ".join(instead[:8]) + "\n")
+        rep.close()
+        sys.stdout.buffer.write(open(os.path.join(WORK, "hard.txt"), "rb").read())
+        return
+
     out = io.open(os.path.join(WORK, "report.txt"), "w", encoding="utf-8")
     total = exact = loose = 0
     audio = proc = 0.0
