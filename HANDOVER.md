@@ -2367,9 +2367,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-22 22:16 — IN PROGRESS — resume here**
+**2026-09-22 22:55 — IN PROGRESS — resume here**
 
-Memorization section (phase 1) built and seen; Hajj madhahib and the khatma undo line seen on emulator-5554. New lib/features/hifz: a Leitner ladder (0/3/7/16/35 days) in SharedPreferences, a word mask that hides from the END so the run-up is always given, a surah picker showing what is due today, and a session that plays the ayah 1/3/5/10 times through the app's own per-ayah recitation, hides its words one tap at a time, then takes «حفظتها» or «أعِدها». Nothing judges a recitation - that is phase 2 and is not pretended at. hifz_store_test pins the ladder and the mask. Seen on the emulator: the card in «المزيد», the surah list, al-Fatiha's session, two words hidden, and audio actually playing (dumpsys audio: AudioTrack state:started for the package). Also seen: «في المذاهب الأربعة» under the sa'i step showing al-Jaziri's heading, body and «الحنفية قالوا:» with his printed page; and the khatma's «أتممت الورد ١ · تراجع» inside the card, gone by itself six seconds later. analyze clean, 499 tests pass.
+Store screenshots re-shot on today's build, and the in-app feature gallery rebuilt from them. Fresh raw captures on emulator-5554 in demo mode (clean status bar): home, the text mushaf, the Hajj guide, «المزيد» with the new memorization card, and a memorization session with two words hidden. The eight-slot Play set now carries «احفظ آية آية، وسمّع لنفسك» in place of the azkar shot - Play allows eight, azkar is in every app of this kind, and the memorization section is what is new. build_store_screenshots.py then build_tutorial_shots.py: 8 shots, 5.80 MB -> 0.38 MB bundled. Contact sheet read before committing.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
