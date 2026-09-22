@@ -54,10 +54,10 @@ void main() {
   });
 
   test('the model download is the measured size, not a guess', () {
-    expect(tasmeeAssets.length, 3);
-    expect(tasmeeDownloadBytes, 29104812 + 130659024 + 866987);
+    expect(tasmeeAssets.length, 1);
+    expect(tasmeeDownloadBytes, 77691713);
     for (final a in tasmeeAssets) {
-      expect(a.url, contains('/asr/whisper-base-ar-quran/'));
+      expect(a.url, contains('/asr/whisper-tiny-ar-quran/'));
       expect(a.url, startsWith('https://'));
     }
   });

@@ -1,9 +1,16 @@
 /// «التسميع»: listening to a recitation and saying which words were missed.
 ///
 /// The recogniser is a Whisper fine-tuned on Qur'an recitation
-/// (`tarteel-ai/whisper-base-ar-quran`, Apache-2.0), exported for
-/// sherpa-onnx by `scripts/export_quran_asr_onnx.py` and hosted on the
-/// content bucket. It runs **on the device, offline**, once downloaded.
+/// (`tarteel-ai/whisper-tiny-ar-quran`, Apache-2.0), converted to whisper.cpp's
+/// ggml format by `scripts/export_quran_asr_onnx.py` and hosted on the content
+/// bucket. It runs **on the device, offline**, once downloaded.
+///
+/// WHY whisper.cpp AND NOT sherpa-onnx (2026-09-23, found on the owner's
+/// phone): sherpa ships its own onnxruntime, the app already ships another
+/// for the book reading voice, and two ONNX Runtimes in one APK collide —
+/// «cannot locate symbol OrtGetApiBase». whisper.cpp needs no onnxruntime,
+/// and its ggml tiny model measured the SAME 95.9% as the base one at three
+/// times the speed and half the size.
 ///
 /// WHAT IT CAN AND CANNOT DO — measured on a desktop before any of this was
 /// written (`scripts/measure_quran_asr.py`, and sherpa's own recognizer on
@@ -19,14 +26,13 @@
 ///    wrong WORD, and nothing here would catch it. The screen must say so.
 library;
 
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';  // Float32List, @visibleForTesting
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:sherpa_onnx/sherpa_onnx.dart' as sherpa;
+import 'package:whisper_flutter_new/whisper_flutter_new.dart';
 
 import '../../../core/config/app_config.dart';
 
@@ -38,21 +44,23 @@ class TasmeeAsset {
   final int bytes;
   const TasmeeAsset(this.name, this.bytes);
 
-  String get url => '${AppConfig.contentBaseUrl}/asr/whisper-base-ar-quran/$name';
+  String get url =>
+      '${AppConfig.contentBaseUrl}/asr/whisper-tiny-ar-quran/$name';
 }
 
 /// Measured with a HEAD against the bucket on 2026-09-23.
 const tasmeeAssets = <TasmeeAsset>[
-  TasmeeAsset('encoder.int8.onnx', 29104812),
-  TasmeeAsset('decoder.int8.onnx', 130659024),
-  TasmeeAsset('tokens.txt', 866987),
+  TasmeeAsset('ggml-model.bin', 77691713),
 ];
 
 int get tasmeeDownloadBytes =>
     tasmeeAssets.fold(0, (sum, a) => sum + a.bytes);
 
-/// Whisper's window. Anything longer has to be recited in pieces.
-const tasmeeMaxSeconds = 30;
+/// How long one recitation may run. whisper.cpp slides its own 30-second
+/// window, so a longer ayah is handled — this is a cap on the recording, so a
+/// forgotten «stop» does not fill the disk. Al-Baqarah 255 runs 60 s and
+/// measured 47/50 words, which is why it is not 30.
+const tasmeeMaxSeconds = 120;
 
 class TasmeeResult {
   /// The ayah's own words, in order — what the panel prints back.
@@ -78,15 +86,18 @@ class TasmeeEngine {
   TasmeeEngine._();
   static final TasmeeEngine instance = TasmeeEngine._();
 
-  sherpa.OfflineRecognizer? _recognizer;
+  Whisper? _whisper;
   Directory? _dir;
 
+  /// whisper.cpp looks for `ggml-tiny.bin` in the directory it is given,
+  /// and downloads it if missing — which it never has to, because the file is
+  /// already there under that name.
   Future<Directory> _modelDir() async {
-    final base = await getApplicationDocumentsDirectory();
-    return _dir ??= Directory(p.join(base.path, 'asr', 'whisper-base-ar-quran'));
+    final base = await getApplicationSupportDirectory();
+    return _dir ??= Directory(p.join(base.path, 'asr'));
   }
 
-  /// True when every file is present at exactly its expected size.
+  /// True when the model is present at exactly its expected size.
   Future<bool> isInstalled() async {
     final dir = await _modelDir();
     for (final a in tasmeeAssets) {
@@ -96,8 +107,8 @@ class TasmeeEngine {
     return true;
   }
 
-  /// Downloads the three files, verifying each one's size before it counts as
-  /// installed. [onProgress] gets 0..1 over the whole set.
+  /// Downloads the model, verifying its exact byte count before it counts as
+  /// installed. [onProgress] gets 0..1.
   Future<void> download({
     required Dio dio,
     void Function(double progress)? onProgress,
@@ -134,54 +145,28 @@ class TasmeeEngine {
   }
 
   Future<void> deleteModel() async {
-    _recognizer?.free();
-    _recognizer = null;
+    _whisper = null;
     final dir = await _modelDir();
     if (dir.existsSync()) await dir.delete(recursive: true);
   }
 
-  /// Loads the recogniser (once). Throws if the model is not installed.
-  Future<void> _ensureLoaded() async {
-    if (_recognizer != null) return;
+  /// Transcribes a 16 kHz mono WAV file recorded from the microphone.
+  Future<String> transcribeFile(String wavPath) async {
     if (!await isInstalled()) {
       throw StateError('the recogniser is not downloaded yet');
     }
-    // On Android `initBindings()` resolves symbols out of the PROCESS, so the
-    // native libraries have to be in it first. They ship in the APK but
-    // nothing loads them: on the owner's phone this failed with «cannot
-    // locate symbol OrtGetApiBase referenced by libsherpa-onnx-c-api.so» —
-    // onnxruntime has to be opened BEFORE the sherpa wrapper that needs it.
-    if (Platform.isAndroid) {
-      DynamicLibrary.open('libonnxruntime.so');
-      DynamicLibrary.open('libsherpa-onnx-c-api.so');
-    }
-    sherpa.initBindings();
     final dir = await _modelDir();
-    final config = sherpa.OfflineRecognizerConfig(
-      model: sherpa.OfflineModelConfig(
-        whisper: sherpa.OfflineWhisperModelConfig(
-          encoder: p.join(dir.path, 'encoder.int8.onnx'),
-          decoder: p.join(dir.path, 'decoder.int8.onnx'),
-          language: 'ar',
-          task: 'transcribe',
-        ),
-        tokens: p.join(dir.path, 'tokens.txt'),
-        numThreads: 2,
-        modelType: 'whisper',
+    _whisper ??= Whisper(model: WhisperModel.tiny, modelDir: dir.path);
+    final res = await _whisper!.transcribe(
+      transcribeRequest: TranscribeRequest(
+        audio: wavPath,
+        language: 'ar',
+        threads: 4,
+        isNoTimestamps: true,
+        noFallback: true,
       ),
     );
-    _recognizer = sherpa.OfflineRecognizer(config);
-  }
-
-  /// Transcribes [samples] (16 kHz mono float32 in [-1, 1]).
-  Future<String> transcribe(Float32List samples) async {
-    await _ensureLoaded();
-    final stream = _recognizer!.createStream();
-    stream.acceptWaveform(samples: samples, sampleRate: 16000);
-    _recognizer!.decode(stream);
-    final text = _recognizer!.getResult(stream).text;
-    stream.free();
-    return text;
+    return res.text;
   }
 
   /// Compares what was heard with the ayah, word by word.

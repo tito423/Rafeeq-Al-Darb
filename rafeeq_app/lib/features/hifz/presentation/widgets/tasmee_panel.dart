@@ -8,11 +8,13 @@
 library;
 
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -35,8 +37,8 @@ class TasmeePanel extends StatefulWidget {
 class _TasmeePanelState extends State<TasmeePanel> {
   final _recorder = AudioRecorder();
   final _dio = Dio();
-  final _samples = <double>[];
-  StreamSubscription<Uint8List>? _mic;
+  Timer? _cap;
+  String? _wavPath;
   CancelToken? _cancel;
 
   _Phase _phase = _Phase.idle;
@@ -67,7 +69,7 @@ class _TasmeePanelState extends State<TasmeePanel> {
 
   @override
   void dispose() {
-    _mic?.cancel();
+    _cap?.cancel();
     _recorder.dispose();
     _cancel?.cancel();
     super.dispose();
@@ -107,27 +109,22 @@ class _TasmeePanelState extends State<TasmeePanel> {
       if (mounted) setState(() => _error = 'tasmee.needs_mic'.tr());
       return;
     }
-    _samples.clear();
-    final stream = await _recorder.startStream(
+    // whisper.cpp reads a 16 kHz mono WAV from disk, so record straight into
+    // one instead of holding the samples in memory.
+    final dir = await getTemporaryDirectory();
+    final path = p.join(dir.path, 'tasmee.wav');
+    await _recorder.start(
       const RecordConfig(
-        encoder: AudioEncoder.pcm16bits,
+        encoder: AudioEncoder.wav,
         sampleRate: 16000,
         numChannels: 1,
       ),
+      path: path,
     );
-    _mic = stream.listen((chunk) {
-      // 16-bit little-endian PCM -> float32 in [-1, 1], what the recogniser
-      // takes. Stop at whisper's window rather than feed it more than it can
-      // hear (see TasmeeEngine's note on the 30-second limit).
-      final pcm = chunk.buffer.asInt16List(
-        chunk.offsetInBytes,
-        chunk.lengthInBytes ~/ 2,
-      );
-      for (final s in pcm) {
-        _samples.add(s / 32768.0);
-      }
-      if (_samples.length >= 16000 * tasmeeMaxSeconds) _stopRecording();
-    });
+    _wavPath = path;
+    // A forgotten «stop» should not record for ever.
+    _cap?.cancel();
+    _cap = Timer(const Duration(seconds: tasmeeMaxSeconds), _stopRecording);
     setState(() {
       _phase = _Phase.recording;
       _error = null;
@@ -138,12 +135,14 @@ class _TasmeePanelState extends State<TasmeePanel> {
   Future<void> _stopRecording() async {
     if (_phase != _Phase.recording) return;
     setState(() => _phase = _Phase.thinking);
-    await _mic?.cancel();
-    _mic = null;
+    _cap?.cancel();
     await _recorder.stop();
+    final path = _wavPath;
     try {
-      final heard = await TasmeeEngine.instance
-          .transcribe(Float32List.fromList(_samples));
+      if (path == null || !File(path).existsSync()) {
+        throw StateError('nothing was recorded');
+      }
+      final heard = await TasmeeEngine.instance.transcribeFile(path);
       final result = TasmeeEngine.compare(
         ayahText: widget.ayahText,
         heard: heard,
