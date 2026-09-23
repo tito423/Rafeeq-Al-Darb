@@ -43,7 +43,25 @@ Not started. Do them in this order unless he says otherwise.
    See it on a fresh install (`adb uninstall`, then install) — an upgraded
    install keeps the old choice and will not show the problem.
 
-2. Carried from v3.57.0, **still unseen on a real phone**: tasmee with the
+2. **The text beside the mushaf's download progress on that same first
+   screen moves up and down as the number changes.** «الكلام اللي في اول
+   شاشة جنب نسبة تحميل المصحف بيطلع وينزل حسب الرقم ابقى ثبته»
+   (2026-09-23). The line is «٠ / ٦٠٤ صفحة محفوظة» (`quran.pages_cached`)
+   under «مصحف المدينة — رواية حفص» in `onboarding_screen.dart`. Pin it:
+   the label must not move while the count runs — fixed height / aligned
+   baseline, and tabular (equal-width) digits so «٩» → «١٠» → «١٠٠» does not
+   change the row's size. Watch it DURING a real download, recorded
+   (`adb shell screenrecord`, contact sheet with ffmpeg) — a still
+   screenshot cannot show a jump.
+
+3. **«اختر مصحفك» is wrong: there is one mushaf, the printed one.** «غير
+   كلمه اختر مصحفك لانه مصحف واحد اصلا ورقي» (2026-09-23). Change
+   `onboarding.title` in all 7 locales — and `onboarding.subtitle` with it,
+   which also says «اختر الرواية المفضلة لديك»; there is one riwayah to
+   choose from. Something like «مصحفك» / «نزّل المصحف لتقرأ بلا إنترنت».
+   The translation-parity test keeps the 7 locales honest.
+
+4. Carried from v3.57.0, **still unseen on a real phone**: tasmee with the
    Quran-tuned model (the generic-model fix), and opening the big
    encyclopaedias (al-Tabari, 16,699 pages).
 
