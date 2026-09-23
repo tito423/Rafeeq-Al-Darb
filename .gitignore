@@ -67,6 +67,11 @@ RafeeqAlDarb-*.apk
 # (musnad_ahmad_arnaut.json) is what the build actually reads.
 scripts/musnad_ahmad_arnaut_pages.jsonl
 scripts/sunan_darimi_asad_pages.jsonl
+# The two phase-2 encyclopaedias fetched with fetch_shamela_pages.py (71 MB
+# and 76 MB, 2026-09-23). Regenerable with that script; the built book on
+# the bucket is what the app reads.
+scripts/shamela_raw/tahdhib_al_kamal.jsonl
+scripts/shamela_raw/lisan_al_arab.jsonl
 scripts/mushaf_pdf_build/
 scripts/mushaf_fit_build/
 
