@@ -74,28 +74,27 @@ void main() {
       'umrah_invalidating',
     ]);
     expect(hajj.toSet().intersection(umrah.toSet()), isEmpty);
-    final shared = hajjStepsFor(HajjTrack.umrah)
-        .expand((step) => step.textRanges)
-        .where((range) => range.fromPage < 378)
-        .map((range) => (range.fromPage, range.toPage))
-        .toList();
-    expect(shared, [
-      (115, 123),
-      (124, 124),
-      (126, 130),
-      (142, 143),
-      (144, 145),
-      (146, 191),
-      (206, 247),
-      (251, 262),
-    ]);
-    expect(
-      hajjStepsFor(HajjTrack.umrah)
-          .expand((step) => step.textRanges)
-          .any((range) => range.fromPage >= 263 && range.fromPage <= 377),
-      isFalse,
-      reason: 'Hajj-day chapters must not appear in the Umrah track',
-    );
+    // al-Fiqh al-Manhaji (2026-09-23): the Umrah track is the chapter
+    // «ثانياً: أعمال العمرة» (p.143:9-144) and what it rests on - the ruling
+    // on Umrah, the miqats, the ihram, its prohibitions, and the Umrah path of
+    // «كيف تحج؟», which ends at 184:7 («حلق شعره أو قصره، وقد انتهى من
+    // عمرته»). Nothing about the days of Hajj may appear in it: the
+    // obligations of Muzdalifah, stoning and Mina (pp. 136-139), Arafah
+    // (p.140:0-4), the outings from 8 Dhu al-Hijjah (pp. 149:5-153) and the
+    // Hajj path from 184:8 on.
+    bool hajjDays(int page, int para) =>
+        (page >= 136 && page <= 139) ||
+        (page == 140 && para <= 4) ||
+        (page == 149 && para >= 5) ||
+        (page >= 150 && page <= 153) ||
+        (page == 184 && para >= 8) ||
+        page >= 185;
+    for (final step in hajjStepsFor(HajjTrack.umrah)) {
+      for (final r in step.textRanges) {
+        expect(hajjDays(r.fromPage, r.fromPara), isFalse, reason: step.key);
+        expect(hajjDays(r.toPage, r.toPara), isFalse, reason: step.key);
+      }
+    }
   });
 
   test('every title and day label exists in all seven locales', () {

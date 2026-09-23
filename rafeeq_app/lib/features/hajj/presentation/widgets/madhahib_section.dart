@@ -148,14 +148,12 @@ class MadhahibSection extends ConsumerWidget {
               ),
             for (final note in part.notes)
               for (final s in note) _SchoolStatement(text: s, scale: k),
-            Text(
-              '${data.sourceTitle} — ص ${part.printedPage}',
-              style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
-            ),
             const Divider(height: 18),
           ],
+          // The book's name only - no page, author line or edition, at the
+          // owner's word (2026-09-23); the Sources screen has the rest.
           Text(
-            '${data.sourceAuthor}، ${data.sourceEdition}',
+            data.sourceTitle,
             style: TextStyle(
               fontSize: 11,
               height: 1.6,

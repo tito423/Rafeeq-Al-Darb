@@ -1,8 +1,8 @@
 /// «المواقيت اليوم» under the miqat steps of the Hajj and Umrah guide.
 ///
 /// «الميقات في الحج والعمرة اسماءهم اتغيرت من زمن النووي لزمانا» (the owner,
-/// 2026-09-23). al-Nawawi's text above stays exactly as he wrote it; this
-/// card adds what a pilgrim needs today — the name each miqat goes by now and
+/// 2026-09-23). The step's own text above is left as its book writes it;
+/// this card adds what a pilgrim needs today — the name each miqat goes by now and
 /// where people actually enter ihram — in the words of the Saudi Ministry of
 /// Hajj and Umrah, read from its own page (`assets/data/mawaqit_today.json`,
 /// which records the URL and the date it was read). A miqat the ministry
@@ -143,12 +143,8 @@ class MawaqitTodayCard extends StatelessWidget {
                   style: TextStyle(fontSize: 14 * scale, height: 1.7),
                 ),
               ],
-              const SizedBox(height: 10),
-              Text(
-                '${data.sourceName} — ${data.sourceUrl}',
-                textDirection: TextDirection.rtl,
-                style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
-              ),
+              // No citation line under the card (the owner, 2026-09-23): the
+              // note above names the ministry, and the Sources screen links it.
             ],
           ),
         );

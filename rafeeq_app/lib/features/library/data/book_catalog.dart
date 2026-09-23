@@ -2743,6 +2743,26 @@ const List<LibraryBook> libraryBookCatalog = [
           'المكتبة الشاملة — الإيضاح في مناسك الحج والعمرة، أبو زكريا محيي الدين يحيى بن شرف النووي (ت ٦٧٦هـ)، دار البشائر الإسلامية، بيروت - المكتبة الأمدادية، مكة المكرمة',
     ),
   ),
+  // The Hajj guide's text since 2026-09-23 - «ابني من الحديث وسيب النووي في
+  // المكتبة». The chapter «الحج والعمرة» of الفقه المنهجي, verbatim, built by
+  // scripts/build_hajj_guide_book.py; al-Nawawi's «الإيضاح» above stays in
+  // the library, downloaded like any other book.
+  LibraryBook(
+    id: 'al_fiqh_al_manhaji_hajj',
+    titleAr: 'الحج والعمرة — من الفقه المنهجي',
+    titleEn: 'Hajj and Umrah - from al-Fiqh al-Manhaji',
+    authorAr: 'مصطفى الخن، مصطفى البغا، علي الشربجي',
+    authorEn: 'Mustafa al-Khinn, Mustafa al-Bugha, Ali al-Sharbaji',
+    pages: 77,
+    category: BookCategory.fiqh,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/al_fiqh_al_manhaji_hajj.json',
+      sizeBytes: 39862,
+      sourceLabel:
+          'المكتبة الشاملة — الفقه المنهجي على مذهب الإمام الشافعي، دار القلم، دمشق، الطبعة الرابعة ١٤١٣هـ، الجزء الثاني ص١١١-١٨٨',
+    ),
+  ),
   // «التبيان في آداب حملة القرآن» was the third book catalogued twice
   // (Shamela 1969, 224/224 identical pages). The surviving entry is
   // `at_tibyan_hamalat_al_quran`, filed under adab.

@@ -163,12 +163,6 @@ class _Header extends StatelessWidget {
                     ),
                   ),
           ),
-          const SizedBox(height: 10),
-          Text(
-            'hajj.source'.tr(),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 11.5, color: scheme.onSurfaceVariant),
-          ),
         ],
       ),
     );
@@ -353,12 +347,6 @@ class _StepText extends ConsumerWidget {
               color: scheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            'p. ${step.pageCitation}',
-            textDirection: TextDirection.ltr,
-            style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
-          ),
         ],
       );
     }
@@ -408,14 +396,9 @@ class _StepText extends ConsumerWidget {
               ),
             },
           ),
-        Text(
-          'p. ${step.pageCitation}',
-          textDirection: TextDirection.ltr,
-          style: TextStyle(
-            fontSize: 11,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
+        // No book name or page under the text: «مش تذكر ارقام الصفحات ومن
+        // كتاب كذا … كفاية ذكر الفقه على المذاهب الاربعه» (the owner,
+        // 2026-09-23). The Sources screen still credits the book in full.
         if (mawaqitStepKeys.contains(step.key)) MawaqitTodayCard(scale: k),
         MadhahibSection(stepKey: step.key, scale: k),
       ],

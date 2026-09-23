@@ -96,9 +96,12 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // the Sources screen kept crediting the old book, so the app named a
       // source it no longer reads a word from. Corrected on 2026-09-17, in
       // the same pass that took the remaining Ibn Baz mentions out.
+      // Since 2026-09-23 the guide reads الفقه المنهجي, not al-Nawawi's
+      // «الإيضاح» (which is now a library book like any other) -
+      // scripts/build_hajj_guide_book.py.
       SourceEntry(
-          'الإيضاح في مناسك الحج والعمرة — النووي',
-          'https://shamela.ws/book/96232',
+          'الفقه المنهجي على مذهب الإمام الشافعي — الخن، البغا، الشربجي',
+          'https://shamela.ws/book/6369',
           'hajj.source'),
       // «في المذاهب الأربعة» under each step (2026-09-22), verbatim from
       // al-Jaziri's كتاب الحج — scripts/build_hajj_madhahib.py.

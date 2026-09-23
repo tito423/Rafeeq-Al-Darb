@@ -30,22 +30,21 @@ void main() {
     () {
       final steps = hajjStepsFor(HajjTrack.umrah);
       final body = [for (final step in steps) ...hajjStepParas(step, book)];
-      expect(body.length, greaterThan(100));
-      expect(body.first.text, startsWith('الأوْلَى: الْعُمْرَةُ فَرْض'));
-      expect(body.last.text, startsWith('الرَّابِعَةُ: لَوْ جَامَعَ'));
+      // al-Fiqh al-Manhaji's chapter (2026-09-23): the Umrah track opens on
+      // «حكم العمرة ودليلها» and ends on the penalty for intercourse in
+      // ihram, and walks the ihram, the circuits, the passes and the cut.
+      expect(body.length, greaterThan(40));
+      expect(body.first.text, startsWith('٢ـ حكم العمرة ودليلها'));
+      expect(body.last.text, startsWith('ثانياً: إن كان المحرم'));
       expect(body.every((p) => p.text.trim().isNotEmpty), isTrue);
-      expect(body.any((p) => p.text.contains('في آداب الإِحرام')), isTrue);
-      expect(body.any((p) => p.text.contains('في محرمات الإِحرام')), isTrue);
-      expect(body.any((p) => p.text.contains('في كيفية الطواف')), isTrue);
-      expect(body.any((p) => p.text.contains('في السعي')), isTrue);
+      expect(body.any((p) => p.text.contains('كيفية الإحرام')), isTrue);
+      expect(body.any((p) => p.text.contains('محرمات الإحرام')), isTrue);
+      expect(body.any((p) => p.text.contains('أعمال العمرة')), isTrue);
+      expect(body.any((p) => p.text.contains('العلم الأخضر')), isTrue);
       expect(
-        body.any((p) => p.text.contains('يدخل وقت طواف الإِفاضة بعد نصف')),
+        body.any((p) => p.text.contains('يوم التروية')),
         isFalse,
-        reason: 'the modern hamesh must not be attributed to al-Nawawi',
-      );
-      expect(
-        body.any((p) => p.text.contains('الدعاء عند الركن العراقي')),
-        isFalse,
+        reason: 'the days of Hajj are not the Umrah',
       );
 
       final source = <BookPara>[];

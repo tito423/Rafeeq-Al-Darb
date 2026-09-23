@@ -1,59 +1,35 @@
 /// مناسك الحج والعمرة, step by step.
 ///
 /// WHAT IS MINE HERE AND WHAT IS NOT.
+///
 /// The rulings of Hajj are not mine to write, so none are written here. Every
-/// step's text is read, verbatim, from «الإيضاح في مناسك الحج والعمرة»
-/// للإمام النووي (ت ٦٧٦هـ) — the classical pilgrim's manual, in the Library
-/// as `al_idah_fi_manasik_al_hajj_wal_umrah`, built from Shamela 96232.
+/// step's text is read, verbatim, from the chapter «الحج والعمرة» of «الفقه
+/// المنهجي على مذهب الإمام الشافعي» (مصطفى الخن، مصطفى البغا، علي الشربجي؛
+/// دار القلم، دمشق ١٤١٣هـ), Shamela 6369, vol. 2 pp. 111-188 — bundled as
+/// `al_fiqh_al_manhaji_hajj` by `scripts/build_hajj_guide_book.py`.
 ///
-/// IT USED TO READ التحقيق والإيضاح للشيخ ابن باز, and that is why it
-/// changed: «اي كتاب له حقوق ملكية احذفه واستبدل بدل منه المنقول عنه». A
-/// screen that prints a living-memory scholar's book page by page is
-/// reproducing it, whatever the citation under it says. النووي died in 1277,
-/// and his manual is the book Ibn Baz's own was written in the tradition of.
+/// WHY THIS BOOK (2026-09-23). The guide read al-Nawawi's «الإيضاح» until
+/// the owner asked for a modern one: «ابني من الحديث وسيب النووي في
+/// المكتبة». الفقه المنهجي is written for the ordinary reader, speaks of today
+/// (Dhu al-Hulayfah «وهو ما يسمى الآن بأبيار علي», ihram on an aeroplane),
+/// and stays in al-Nawawi's school, so the guide's fiqh does not change under
+/// the reader. It names none of the authors the owner keeps out. Al-Jaziri's
+/// four schools stay under each step (`madhahib_section.dart`).
 ///
-/// What this file holds is the ARRANGEMENT, exactly as the Tajweed course
-/// does: where each step starts and ends in that book, which day it falls on,
-/// whether it belongs to Umrah as well as Hajj, and which interactive
-/// illustration sits beside it. The illustrations only count what the text
-/// already says (seven circuits starting from the Black Stone, seven passes
-/// beginning at الصفا, seven pebbles at each of three جمرات in order); they add
-/// no ruling of their own.
+/// What this file holds is the ARRANGEMENT: where each step's text is in
+/// that chapter (printed page + paragraph index, as the bundled file splits
+/// it), which day it falls on, whether it belongs to Umrah as well as Hajj,
+/// and which interactive illustration sits beside it. The book is arranged by
+/// topic, not by day, so a step joins its ruling section to the matching
+/// stretch of the chapter's own walk-through «كيف تحج؟» (pp. 180-188). No
+/// passage is placed under a step it does not speak about, and no paragraph
+/// of the chapter is left unreachable. A `toPara` of 99 means «to the end of
+/// that page».
 ///
-/// THE BOUNDARIES are this printing's own chapter openings, read page by page
-/// off the built text (`scripts/_idah_bounds.txt`): الباب الأول opens p.45,
-/// الميقات p.113, الطواف p.206, السعي p.251, عرفات p.263, المزدلفة p.295,
-/// يوم النحر p.309, أيام التشريق p.357. Nothing starts before p.45: the
-/// pages under it are the modern edition's own front matter.
-///
-/// مسجد قباء HAD A STEP AND NO LONGER DOES. It was a heading in Ibn Baz's
-/// manual; al-Nawawi's باب الزيارة does not set one, and a card pointing at a
-/// section of a book that has none is §1.1's first rule broken.
+/// The illustrations only count what the text already says (seven circuits
+/// from the Black Stone, seven passes beginning at الصفا, seven pebbles at
+/// each of three جمرات in order); they add no ruling of their own.
 library;
-
-/// THE BOUNDARIES WERE RE-POINTED ON 2026-09-17, and the reason matters.
-///
-/// The only printing of «الإيضاح» that Shamela has carries a SECOND author's
-/// whole book alongside it — «الإفصاح على مسائل الإيضاح» by عبد الفتاح حسين
-/// رواه المكي, who is not a classical author. The edition card says so
-/// plainly, with «وعليه:», and nobody had read it.
-///
-/// Measured before anything was changed: of the 1,474 paragraphs these
-/// nineteen steps render, **280 (19.0%) were his, not an-Nawawi's** — under a
-/// caption that says «النص من كتاب الإيضاح … للإمام النووي». That is §1.2
-/// broken regardless of the rights question: the screen attributed one man's
-/// words to another.
-///
-/// So the hosted file was filtered, and because `hajj_screen.dart` slices by
-/// paragraph INDEX inside a page, filtering renumbered everything the guide
-/// pointed at. `scripts/remap_hajj_bounds.py` re-pointed each boundary **by
-/// its own text**, not by arithmetic: it reads the anchor paragraph from the
-/// unfiltered file and finds it again in the filtered one.
-///
-/// Twelve of the nineteen steps turned out to END on one of his notes. Each
-/// of those snaps INWARDS by one — never outwards, which would put him back.
-/// No `from` boundary moved: every step began on an-Nawawi and only ever ran
-/// past the end.
 
 /// The interactive piece shown beside a step.
 enum HajjRite { none, tawaf, sai, jamarat, journey, umrah }
@@ -140,8 +116,8 @@ const journeyPlaces = <String>[
 ];
 
 /// The source book, by its Library id.
-const hajjGuideBook = 'al_idah_fi_manasik_al_hajj_wal_umrah';
-const hajjGuideShamelaUrl = 'https://shamela.ws/book/96232';
+const hajjGuideBook = 'al_fiqh_al_manhaji_hajj';
+const hajjGuideShamelaUrl = 'https://shamela.ws/book/6369';
 
 /// الإفصاح, the modern commentary this printing carries under al-Nawawi's
 /// text, and which is NOT his and not ours to show.
@@ -171,177 +147,262 @@ final _hajjGloss = RegExp(
 const hajjSteps = <HajjStep>[
   HajjStep(
     key: 'preparation',
-    fromPage: 45,
+    fromPage: 180,
     fromPara: 0,
-    toPage: 92,
-    toPara: 0,
+    toPage: 180,
+    toPara: 5,
+    additionalRanges: [
+      HajjTextRange(fromPage: 118, fromPara: 0, toPage: 121, toPara: 99),
+    ],
   ),
   HajjStep(
     key: 'obligation',
-    fromPage: 92,
-    fromPara: 1,
-    toPage: 112,
-    toPara: 0,
+    fromPage: 111,
+    fromPara: 0,
+    toPage: 115,
+    toPara: 99,
+    additionalRanges: [
+      HajjTextRange(fromPage: 122, fromPara: 0, toPage: 126, toPara: 99),
+      // What the Hajj is made of: its obligations and its pillars.
+      HajjTextRange(fromPage: 136, fromPara: 0, toPage: 136, toPara: 6),
+      HajjTextRange(fromPage: 139, fromPara: 4, toPage: 139, toPara: 5),
+    ],
   ),
   HajjStep(
     key: 'mawaqit',
-    fromPage: 113,
+    fromPage: 129,
     fromPara: 0,
-    toPage: 123,
-    toPara: 0,
+    toPage: 131,
+    toPara: 2,
     rite: HajjRite.journey,
   ),
-  HajjStep(key: 'ihram', fromPage: 124, fromPara: 0, toPage: 131, toPara: 0),
-  HajjStep(key: 'nusuk', fromPage: 132, fromPara: 0, toPage: 145, toPara: 0),
+  HajjStep(
+    key: 'ihram',
+    fromPage: 131,
+    fromPara: 3,
+    toPage: 132,
+    toPara: 4,
+    additionalRanges: [
+      // «الإحرام من الميقات» as an obligation, and the ihram as a pillar.
+      HajjTextRange(fromPage: 136, fromPara: 7, toPage: 137, toPara: 1),
+      HajjTextRange(fromPage: 139, fromPara: 6, toPage: 139, toPara: 7),
+      HajjTextRange(fromPage: 180, fromPara: 6, toPage: 181, toPara: 4),
+      HajjTextRange(fromPage: 145, fromPara: 0, toPage: 146, toPara: 1),
+    ],
+  ),
+  HajjStep(
+    key: 'nusuk',
+    fromPage: 132,
+    fromPara: 5,
+    toPage: 133,
+    toPara: 2,
+    additionalRanges: [
+      HajjTextRange(fromPage: 167, fromPara: 0, toPage: 171, toPara: 99),
+    ],
+  ),
   HajjStep(
     key: 'prohibitions',
-    fromPage: 146,
-    fromPara: 0,
-    toPage: 191,
-    toPara: 1,
+    fromPage: 133,
+    fromPara: 3,
+    toPage: 135,
+    toPara: 99,
   ),
   HajjStep(
     key: 'tawaf',
-    fromPage: 192,
-    fromPara: 0,
-    toPage: 250,
-    toPara: 0,
+    fromPage: 140,
+    fromPara: 5,
+    toPage: 141,
+    toPara: 4,
     rite: HajjRite.tawaf,
+    additionalRanges: [
+      HajjTextRange(fromPage: 146, fromPara: 2, toPage: 149, toPara: 0),
+      HajjTextRange(fromPage: 181, fromPara: 5, toPage: 183, toPara: 9),
+    ],
   ),
   HajjStep(
     key: 'sai',
-    fromPage: 251,
-    fromPara: 0,
-    toPage: 262,
-    toPara: 0,
+    fromPage: 141,
+    fromPara: 5,
+    toPage: 142,
+    toPara: 5,
     rite: HajjRite.sai,
+    additionalRanges: [
+      HajjTextRange(fromPage: 149, fromPara: 1, toPage: 149, toPara: 4),
+      HajjTextRange(fromPage: 183, fromPara: 10, toPage: 184, toPara: 8),
+    ],
   ),
   HajjStep(
     key: 'tarwiyah',
-    fromPage: 263,
-    fromPara: 0,
-    toPage: 269,
-    toPara: 0,
+    fromPage: 149,
+    fromPara: 5,
+    toPage: 150,
+    toPara: 1,
     dayKey: 'hajj.day_8',
     rite: HajjRite.journey,
+    additionalRanges: [
+      HajjTextRange(fromPage: 184, fromPara: 9, toPage: 184, toPara: 9),
+    ],
   ),
   HajjStep(
     key: 'arafah',
-    fromPage: 270,
+    fromPage: 140,
     fromPara: 0,
-    toPage: 294,
-    toPara: 2,
+    toPage: 140,
+    toPara: 4,
     dayKey: 'hajj.day_9',
     rite: HajjRite.journey,
+    additionalRanges: [
+      HajjTextRange(fromPage: 150, fromPara: 2, toPage: 150, toPara: 2),
+      HajjTextRange(fromPage: 184, fromPara: 10, toPage: 185, toPara: 3),
+    ],
   ),
   HajjStep(
     key: 'muzdalifah',
-    fromPage: 295,
-    fromPara: 0,
-    toPage: 308,
-    toPara: 0,
+    fromPage: 137,
+    fromPara: 2,
+    toPage: 137,
+    toPara: 3,
     dayKey: 'hajj.night_10',
     rite: HajjRite.journey,
+    additionalRanges: [
+      HajjTextRange(fromPage: 150, fromPara: 3, toPage: 151, toPara: 1),
+      HajjTextRange(fromPage: 185, fromPara: 4, toPage: 186, toPara: 1),
+    ],
   ),
   HajjStep(
     key: 'nahr',
-    fromPage: 309,
-    fromPara: 0,
-    toPage: 329,
-    toPara: 1,
+    fromPage: 137,
+    fromPara: 4,
+    toPage: 138,
+    toPara: 0,
     dayKey: 'hajj.day_10',
     rite: HajjRite.jamarat,
+    additionalRanges: [
+      HajjTextRange(fromPage: 142, fromPara: 6, toPage: 143, toPara: 8),
+      HajjTextRange(fromPage: 151, fromPara: 2, toPage: 151, toPara: 6),
+      HajjTextRange(fromPage: 153, fromPara: 0, toPage: 153, toPara: 99),
+      // «كيف تحج؟» on the day of sacrifice, around its sacrifice paragraphs
+      // (p.186:6-187:0), which are «الهدي»'s.
+      HajjTextRange(fromPage: 186, fromPara: 2, toPage: 186, toPara: 5),
+      HajjTextRange(fromPage: 187, fromPara: 1, toPage: 187, toPara: 4),
+    ],
   ),
-  HajjStep(key: 'hady', fromPage: 330, fromPara: 0, toPage: 356, toPara: 1),
+  HajjStep(
+    key: 'hady',
+    fromPage: 186,
+    fromPara: 6,
+    toPage: 187,
+    toPara: 0,
+    additionalRanges: [
+      HajjTextRange(fromPage: 160, fromPara: 0, toPage: 166, toPara: 99),
+    ],
+  ),
   HajjStep(
     key: 'tashreeq',
-    fromPage: 357,
-    fromPara: 0,
-    toPage: 377,
-    toPara: 2,
+    fromPage: 138,
+    fromPara: 1,
+    toPage: 138,
+    toPara: 99,
     dayKey: 'hajj.days_11_13',
     rite: HajjRite.jamarat,
+    additionalRanges: [
+      HajjTextRange(fromPage: 151, fromPara: 7, toPage: 152, toPara: 99),
+      HajjTextRange(fromPage: 187, fromPara: 5, toPage: 187, toPara: 9),
+    ],
   ),
   HajjStep(
     key: 'farewell',
-    fromPage: 388,
+    fromPage: 139,
     fromPara: 0,
-    toPage: 445,
-    toPara: 1,
+    toPage: 139,
+    toPara: 3,
     rite: HajjRite.tawaf,
+    additionalRanges: [
+      HajjTextRange(fromPage: 188, fromPara: 0, toPage: 188, toPara: 99),
+    ],
   ),
   HajjStep(
     key: 'visitation',
-    fromPage: 446,
+    fromPage: 172,
     fromPara: 0,
-    toPage: 468,
-    toPara: 1,
+    toPage: 174,
+    toPara: 99,
   ),
-  HajjStep(key: 'child', fromPage: 505, fromPara: 0, toPage: 512, toPara: 0),
-  HajjStep(key: 'counsel', fromPage: 513, fromPara: 0, toPage: 522, toPara: 0),
-  // The Umrah chapter repeatedly says «كما سبق» instead of repeating the
-  // procedure. Each such reference is followed to the exact shared passage;
-  // chapters that concern Hajj alone remain outside the Umrah track.
+  HajjStep(
+    key: 'child',
+    fromPage: 127,
+    fromPara: 0,
+    toPage: 128,
+    toPara: 99,
+    additionalRanges: [
+      HajjTextRange(fromPage: 179, fromPara: 3, toPage: 179, toPara: 3),
+    ],
+  ),
+  HajjStep(
+    key: 'counsel',
+    fromPage: 154,
+    fromPara: 0,
+    toPage: 159,
+    toPara: 99,
+    additionalRanges: [
+      HajjTextRange(fromPage: 175, fromPara: 0, toPage: 179, toPara: 2),
+    ],
+  ),
+  // Umrah: the chapter «ثانياً: أعمال العمرة» (p.143-144) and the shared
+  // passages it rests on, followed by the Umrah path of «كيف تحج؟».
   HajjStep(
     key: 'umrah_obligation',
-    fromPage: 378,
-    fromPara: 2,
-    toPage: 380,
-    toPara: 0,
+    fromPage: 116,
+    fromPara: 0,
+    toPage: 117,
+    toPara: 99,
     tracks: {HajjTrack.umrah},
   ),
   HajjStep(
     key: 'umrah_miqaat',
-    fromPage: 383,
-    fromPara: 0,
-    toPage: 384,
-    toPara: 1,
-    additionalRanges: [
-      HajjTextRange(fromPage: 115, fromPara: 1, toPage: 123, toPara: 0),
-    ],
+    fromPage: 129,
+    fromPara: 2,
+    toPage: 131,
+    toPara: 2,
     tracks: {HajjTrack.umrah},
   ),
   HajjStep(
     key: 'umrah_ihram',
-    fromPage: 385,
-    fromPara: 1,
-    toPage: 386,
-    toPara: 0,
+    fromPage: 131,
+    fromPara: 3,
+    toPage: 133,
+    toPara: 2,
     additionalRanges: [
-      HajjTextRange(fromPage: 124, fromPara: 0, toPage: 124, toPara: 3),
-      HajjTextRange(fromPage: 126, fromPara: 1, toPage: 130, toPara: 1),
-      HajjTextRange(fromPage: 142, fromPara: 0, toPage: 143, toPara: 1),
-      HajjTextRange(fromPage: 144, fromPara: 2, toPage: 145, toPara: 0),
+      HajjTextRange(fromPage: 180, fromPara: 6, toPage: 181, toPara: 4),
     ],
     tracks: {HajjTrack.umrah},
   ),
   HajjStep(
     key: 'umrah_prohibitions',
-    fromPage: 146,
-    fromPara: 0,
-    toPage: 191,
-    toPara: 1,
+    fromPage: 133,
+    fromPara: 3,
+    toPage: 135,
+    toPara: 99,
     tracks: {HajjTrack.umrah},
   ),
   HajjStep(
     key: 'umrah_rites',
-    fromPage: 386,
-    fromPara: 1,
-    toPage: 387,
-    toPara: 0,
-    additionalRanges: [
-      HajjTextRange(fromPage: 206, fromPara: 1, toPage: 247, toPara: 0),
-      HajjTextRange(fromPage: 251, fromPara: 0, toPage: 262, toPara: 0),
-    ],
+    fromPage: 143,
+    fromPara: 9,
+    toPage: 144,
+    toPara: 99,
     rite: HajjRite.umrah,
+    additionalRanges: [
+      HajjTextRange(fromPage: 181, fromPara: 5, toPage: 184, toPara: 7),
+    ],
     tracks: {HajjTrack.umrah},
   ),
   HajjStep(
     key: 'umrah_invalidating',
-    fromPage: 387,
-    fromPara: 1,
-    toPage: 387,
-    toPara: 1,
+    fromPage: 162,
+    fromPara: 5,
+    toPage: 163,
+    toPara: 2,
     tracks: {HajjTrack.umrah},
   ),
 ];

@@ -13,8 +13,9 @@ final List<String> builtinBookIds = [
   'tuhfat_al_atfal',
   'al_muqaddimah_al_jazariyyah_matn',
   'at_tamhid_fi_ilm_at_tajwid',
-  // «الإيضاح في مناسك الحج والعمرة», which the Hajj screen is read from.
-  'al_idah_fi_manasik_al_hajj_wal_umrah',
+  // «الحج والعمرة» from الفقه المنهجي, which the Hajj screen is read from
+  // (2026-09-23; before that al-Nawawi's «الإيضاح», now in the library).
+  'al_fiqh_al_manhaji_hajj',
 ];
 
 /// Hadith-shelf books that are downloaded on demand instead of shipped. The
