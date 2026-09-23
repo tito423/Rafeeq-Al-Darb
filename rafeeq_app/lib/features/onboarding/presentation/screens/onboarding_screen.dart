@@ -64,9 +64,16 @@ class OnboardingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final editions = ref.watch(mushafEditionsProvider);
     final selectedEdition = ref.watch(selectedMushafEditionProvider);
+    final scheme = Theme.of(context).colorScheme;
 
+    // THE APP'S OWN THEME, not a hard-coded night. This screen used to set
+    // `AppColors.night` and night text colours outright, so on a fresh
+    // install - which opens on the DAY theme (`ThemeController.
+    // defaultVariant`) - the page right after the permissions screen was the
+    // one dark page in a light app: «اختر مصحفك تظهر داكنة على تثبيت
+    // جديد». The theme is chosen on the page before this one now, and this
+    // page wears whatever was chosen.
     return Scaffold(
-      backgroundColor: AppColors.night,
       body: SafeArea(
         child: Column(
           children: [
@@ -86,10 +93,10 @@ class OnboardingScreen extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           'onboarding.title'.tr(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'AmiriQuran',
                             fontSize: 24,
-                            color: AppColors.textHigh,
+                            color: scheme.onSurface,
                           ),
                         ),
                       ),
@@ -98,8 +105,8 @@ class OnboardingScreen extends ConsumerWidget {
                   const SizedBox(height: 6),
                   Text(
                     'onboarding.subtitle'.tr(),
-                    style: const TextStyle(
-                      color: AppColors.textMedium,
+                    style: TextStyle(
+                      color: scheme.onSurfaceVariant,
                       fontSize: 13,
                     ),
                   ),
@@ -238,29 +245,17 @@ class _SelectableEdition extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(4, 14, 0, 0),
               child: Icon(
                 selected ? Icons.radio_button_checked : Icons.radio_button_off,
-                color: selected ? AppColors.gold : AppColors.textLow,
+                color: selected
+                    ? AppColors.gold
+                    : Theme.of(context).colorScheme.outline,
                 size: 20,
               ),
             ),
-            // This screen is always night-dark, but the tile colours its text
-            // from the app theme - dark ink on a dark ground on a light-themed
-            // phone, the grey-on-black edition names seen on a fresh install.
-            // A dark theme here makes its text light whatever the app uses.
-            Expanded(
-              child: Theme(
-                data: ThemeData.dark(useMaterial3: true).copyWith(
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: AppColors.gold,
-                    brightness: Brightness.dark,
-                  ),
-                  textTheme: Theme.of(context).textTheme.apply(
-                        bodyColor: Colors.white,
-                        displayColor: Colors.white,
-                      ),
-                ),
-                child: MushafDownloadTile(edition: edition),
-              ),
-            ),
+            // No forced dark theme around the tile any more. It was there
+            // because this screen was always night-dark while the tile took
+            // its ink from the app theme; now the screen follows the theme
+            // too, so the tile's own colours are the right ones.
+            Expanded(child: MushafDownloadTile(edition: edition)),
           ],
         ),
       ),

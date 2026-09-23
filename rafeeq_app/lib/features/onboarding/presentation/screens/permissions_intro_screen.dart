@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/i18n/supported_locales.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_controller.dart';
 import 'onboarding_screen.dart';
 
 /// EVERY PERMISSION, ONCE, BEFORE ANYTHING ELSE — and told why first.
@@ -206,6 +207,53 @@ class _PermissionsIntroScreenState
                                         context.setLocale(Locale(e.key));
                                       }
                                     },
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // AND THE THEME, RIGHT UNDER IT. «اختيار الثيم في أول
+                    // شاشة بعد الإسبلاش». A fresh install opens on the day
+                    // theme, and the next screen used to be painted night-
+                    // dark whatever was chosen - so the first two screens
+                    // disagreed about what the app looks like. Choosing here
+                    // repaints everything from this page on.
+                    Card(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.palette_outlined,
+                                    color: AppColors.gold, size: 20),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'settings.theme'.tr(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                for (final v in ThemeVariant.values)
+                                  ChoiceChip(
+                                    avatar: Icon(v.icon, size: 18),
+                                    label: Text(v.labelKey.tr()),
+                                    selected:
+                                        ref.watch(themeControllerProvider) ==
+                                            v,
+                                    onSelected: (_) => ref
+                                        .read(themeControllerProvider.notifier)
+                                        .set(v),
                                   ),
                               ],
                             ),
