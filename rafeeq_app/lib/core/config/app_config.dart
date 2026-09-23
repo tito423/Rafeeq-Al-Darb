@@ -262,6 +262,24 @@ abstract final class AppConfig {
       '${surah.toString().padLeft(3, '0')}'
       '${ayah.toString().padLeft(3, '0')}.mp3';
 
+  /// The same ayah on the app's OWN bucket, for the few folders
+  /// `scripts/r2_mirror_recitations.py` copied there byte for byte. Where it
+  /// exists it is tried before everyayah — «خليهم كلهم الاساس للتشغيل
+  /// والتحميل والباقيين احتياطي» — and everyayah stays right behind it.
+  static String r2AyahUrl(String folder, int surah, int ayah) =>
+      '$contentBaseUrl/recitations/ayah/$folder/'
+      '${surah.toString().padLeft(3, '0')}'
+      '${ayah.toString().padLeft(3, '0')}.mp3';
+
+  /// A whole surah mirrored on the app's own bucket (see [r2AyahUrl]).
+  static String r2SurahUrl(String slug, int surah) =>
+      '$contentBaseUrl/recitations/surah/$slug/'
+      '${surah.toString().padLeft(3, '0')}.mp3';
+
+  /// Whether [url] points at the app's own bucket — so a failure there can
+  /// be retried from the public origin instead of being counted as final.
+  static bool isOwnMirror(String url) => url.startsWith(contentBaseUrl);
+
   /// [editionIdentifier] e.g. "ar.alafasy". Tries 128kbps then 64kbps.
   static List<String> ayahAudioUrls(String editionIdentifier, int globalAyah) =>
       [

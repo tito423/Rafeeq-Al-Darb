@@ -107,6 +107,24 @@ class RecitationSource {
     // nothing missing.
   };
 
+  /// everyayah folders the app ALSO holds on its own bucket, copied there by
+  /// `scripts/r2_mirror_recitations.py` (murattal only, under the owner's
+  /// 6 GB / zero-cost limit — see CONTENT-LICENSES.md). For these the bucket
+  /// is the first URL and everyayah the second, so the mirror is the primary
+  /// and never the only source. A folder is listed here only once its upload
+  /// was counted complete on the bucket.
+  static const Set<String> _mirroredOnR2 = {
+    'Alafasy_128kbps',
+    'MaherAlMuaiqly128kbps',
+    'Minshawy_Murattal_128kbps',
+  };
+
+  static bool isMirroredOnR2(String folder) => _mirroredOnR2.contains(folder);
+
+  /// For `reciter_sources_test.dart`, which holds this set equal to what the
+  /// mirror script actually uploads.
+  static Set<String> get mirroredOnR2Folders => Set.unmodifiable(_mirroredOnR2);
+
   /// Every edition that has a verified per-ayah source, and the folder it
   /// lives in. This IS the reciter list the app offers
   /// (`recitersProvider` filters by it), so a typo in a key here silently
@@ -142,6 +160,9 @@ class RecitationSource {
     final urls = <String>[];
     final folder = _everyAyahFolders[edition];
     if (folder != null) {
+      if (_mirroredOnR2.contains(folder)) {
+        urls.add(AppConfig.r2AyahUrl(folder, surah, ayah));
+      }
       urls.add(AppConfig.everyAyahUrl(folder, surah, ayah));
     }
     urls.addAll(AppConfig.ayahAudioUrls(edition, globalAyah));

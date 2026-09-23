@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../../../app/app_locale_provider.dart';
+import '../../../core/config/app_config.dart';
 
 /// One recitation of a reciter on mp3quran.net — a riwayah and a style
 /// («حفص عن عاصم - مرتل», «المصحف المجود»), served as one MP3 per surah.
@@ -42,7 +43,24 @@ class Mp3Moshaf {
         'surah_list': surahs.join(','),
       };
 
-  String urlFor(int surah) =>
+  /// mp3quran moshaf id -> the slug it is mirrored under on the app's own
+  /// bucket (`scripts/r2_mirror_recitations.py`, `recitations/surah/<slug>/`).
+  /// Ids read from the live API v3 on 2026-09-23: 53 is عبد الباسط, 102 is
+  /// ماهر المعيقلي, both «حفص عن عاصم - مرتل», 114/114 surahs each.
+  static const Map<int, String> r2Mirrors = {
+    53: 'basit_murattal',
+    102: 'maher_murattal',
+  };
+
+  /// The first place to fetch surah N from: the app's own mirror when this
+  /// recitation has one, mp3quran otherwise.
+  String urlFor(int surah) {
+    final slug = r2Mirrors[id];
+    return slug == null ? originUrlFor(surah) : AppConfig.r2SurahUrl(slug, surah);
+  }
+
+  /// mp3quran's own copy — the fallback behind a mirrored one.
+  String originUrlFor(int surah) =>
       '$server${surah.toString().padLeft(3, '0')}.mp3';
 }
 

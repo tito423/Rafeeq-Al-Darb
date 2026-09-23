@@ -382,9 +382,14 @@ class AyahRecitationLibrary extends ChangeNotifier {
     return queued;
   }
 
-  void _enqueueAyah(AyahDlEntry entry, int surah, int ayah) {
+  /// [origin] skips the app's own mirror and asks everyayah directly — the
+  /// retry for an ayah the mirror failed to deliver.
+  void _enqueueAyah(AyahDlEntry entry, int surah, int ayah,
+      {bool origin = false}) {
     _failed['${entry.edition}/$surah']?.remove(ayah);
-    final url = AppConfig.everyAyahUrl(entry.folder, surah, ayah);
+    final url = !origin && RecitationSource.isMirroredOnR2(entry.folder)
+        ? AppConfig.r2AyahUrl(entry.folder, surah, ayah)
+        : AppConfig.everyAyahUrl(entry.folder, surah, ayah);
     final dir = p.join(_dirName, entry.edition);
 
     DownloadEngine.fileQueue.add(DownloadTask(
@@ -434,6 +439,13 @@ class AyahRecitationLibrary extends ChangeNotifier {
       _notifyNow();
     } else if (u is TaskStatusUpdate &&
         (u.status == TaskStatus.failed || u.status == TaskStatus.notFound)) {
+      // The mirror is the primary, not the only source: an ayah it could not
+      // deliver is asked of everyayah before it is counted as failed.
+      final entry = _entries[edition];
+      if (entry != null && AppConfig.isOwnMirror(u.task.url)) {
+        _enqueueAyah(entry, surah, parsed.$3, origin: true);
+        return;
+      }
       (_failed['$edition/$surah'] ??= <int>{}).add(parsed.$3);
       _notifyNow();
     } else if (u is TaskProgressUpdate) {

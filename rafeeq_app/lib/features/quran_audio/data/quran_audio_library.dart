@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../../core/config/app_config.dart';
 import '../../../core/services/download_engine.dart';
 import 'mp3quran_api.dart';
 
@@ -241,7 +242,9 @@ class QuranAudioLibrary extends ChangeNotifier {
   /// was still waiting after sixteen other surahs had finished, and the
   /// screen said «جارٍ تنزيل سورة الفاتحة — 0%» the whole time. [at] spaces
   /// the batch a millisecond apart so it goes in surah order.
-  void _enqueue(LibraryEntry e, int surah, {DateTime? at}) {
+  /// [origin] skips the app's own mirror and asks mp3quran directly — the
+  /// retry for a surah the mirror failed to deliver.
+  void _enqueue(LibraryEntry e, int surah, {DateTime? at, bool origin = false}) {
     final key = _key(e.moshafId, surah);
     if (_status[key]?.isActive ?? false) return;
     _status[key] = const SurahAudioStatus(SurahAudioState.queued);
@@ -249,7 +252,7 @@ class QuranAudioLibrary extends ChangeNotifier {
       DownloadTask(
         creationTime: at ?? DateTime.now().add(Duration(milliseconds: surah)),
         taskId: taskIdFor(e.moshafId, surah),
-        url: e.moshaf.urlFor(surah),
+        url: origin ? e.moshaf.originUrlFor(surah) : e.moshaf.urlFor(surah),
         filename: fileNameFor(surah),
         baseDirectory: BaseDirectory.applicationDocuments,
         directory: '$_dirName/${e.moshafId}',
@@ -288,6 +291,14 @@ class QuranAudioLibrary extends ChangeNotifier {
           status == TaskStatus.waitingToRetry) {
         _status[key] = SurahAudioStatus(
             SurahAudioState.running, _status[key]?.progress ?? 0);
+      } else if ((status == TaskStatus.failed ||
+              status == TaskStatus.notFound) &&
+          AppConfig.isOwnMirror(u.task.url) &&
+          _entries[m] != null) {
+        // The mirror is the primary, not the only source: straight on to
+        // mp3quran, before anything is shown as failed.
+        _status.remove(key);
+        _enqueue(_entries[m]!, s, origin: true);
       } else if (status == TaskStatus.failed || status == TaskStatus.notFound) {
         _status[key] = const SurahAudioStatus(SurahAudioState.failed);
         // «ساعات بيتعذّر إكمال تحميل التلاوة». The plugin's own three

@@ -42,6 +42,9 @@ List<PlayerTrack> recitationTracks({
           artist: reciterName,
           album: moshaf.name,
           url: moshaf.urlFor(s),
+          fallbackUrl: moshaf.urlFor(s) == moshaf.originUrlFor(s)
+              ? null
+              : moshaf.originUrlFor(s),
           filePath: lib.isDownloaded(moshaf.id, s)
               ? lib.fileFor(moshaf.id, s).path
               : null,

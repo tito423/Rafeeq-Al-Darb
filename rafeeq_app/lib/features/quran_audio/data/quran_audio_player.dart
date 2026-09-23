@@ -17,6 +17,9 @@ class PlayerTrack {
   final String? url;
   final String? filePath;
 
+  /// Where [url] is the app's own mirror, the public origin behind it.
+  final String? fallbackUrl;
+
   const PlayerTrack({
     required this.id,
     required this.title,
@@ -24,6 +27,7 @@ class PlayerTrack {
     this.album,
     this.url,
     this.filePath,
+    this.fallbackUrl,
   });
 
   Map<String, dynamic> toJson() => {
@@ -33,6 +37,7 @@ class PlayerTrack {
         'album': album,
         'url': url,
         'filePath': filePath,
+        'fallbackUrl': fallbackUrl,
       };
 
   factory PlayerTrack.fromJson(Map<String, dynamic> j) => PlayerTrack(
@@ -42,19 +47,22 @@ class PlayerTrack {
         album: j['album'] as String?,
         url: j['url'] as String?,
         filePath: j['filePath'] as String?,
+        fallbackUrl: j['fallbackUrl'] as String?,
       );
 
   bool get isLocal =>
       (filePath != null && File(filePath!).existsSync()) ||
       (url?.startsWith('content://') ?? false);
 
-  AudioSource toSource() {
+  AudioSource toSource({bool origin = false}) {
     // Every source needs a MediaItem: `just_audio_background` throws on an
     // untagged one, and it is what the lock screen and the notification show.
     final tag = MediaItem(id: 'qa:$id', title: title, artist: artist, album: album);
     return (filePath != null && File(filePath!).existsSync())
         ? AudioSource.file(filePath!, tag: tag)
-        : AudioSource.uri(Uri.parse(url!), tag: tag);
+        : AudioSource.uri(
+            Uri.parse(origin && fallbackUrl != null ? fallbackUrl! : url!),
+            tag: tag);
   }
 }
 
@@ -118,12 +126,23 @@ class QuranAudioPlayer extends ChangeNotifier {
     _attach(player);
     notifyListeners();
     try {
-      await player.setAudioSource(
-        ConcatenatingAudioSource(
-          children: [for (final t in tracks) t.toSource()],
-        ),
-        initialIndex: _index,
-      );
+      try {
+        await player.setAudioSource(
+          ConcatenatingAudioSource(
+            children: [for (final t in tracks) t.toSource()],
+          ),
+          initialIndex: _index,
+        );
+      } catch (_) {
+        // The app's own mirror could not start it; the public origin can.
+        if (!tracks.any((t) => t.fallbackUrl != null)) rethrow;
+        await player.setAudioSource(
+          ConcatenatingAudioSource(
+            children: [for (final t in tracks) t.toSource(origin: true)],
+          ),
+          initialIndex: _index,
+        );
+      }
       await player.setLoopMode(_loop);
       if (_shuffle) await player.shuffle();
       await player.setShuffleModeEnabled(_shuffle);

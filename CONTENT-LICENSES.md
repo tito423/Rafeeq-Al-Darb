@@ -523,6 +523,45 @@ What the three sites state, read on 2026-09-17:
 Status: **`LINKED_NOT_REHOSTED`.** No permission is needed to point a device
 at a public URL, and none is claimed here.
 
+#### Changed 2026-09-23 — five recitation sets ARE rehosted now, by the owner's decision
+
+The paragraph above was true when written and is **no longer true for five
+sets**. Recitation went silent on the owner's phone (157 of the 175 listed
+reciters answered 403 on `cdn.islamic.network` and had no other source), and
+he asked for a copy on the project's own bucket to be the primary source,
+with the public origins as the fallback:
+
+> «ارفع عندي على ال r2 المعيقلي والعفاسي … وخليهم كلهم الاساس للتشغيل
+> والتحميل والباقيين احتياطي» — then, on being shown the sizes: «ارفع
+> المرتل بس … بحيث ان الحجم الكامل للرفع لايتجاوز ٦ جيجا».
+
+The rights question was put to him before any upload, in those words, and
+the decision to rehost is his. What was checked, so the record is honest
+about what is and is not known:
+
+| source | what it states about reuse, read 2026-09-23 |
+|---|---|
+| `everyayah.com` (home page and `/data/` index) | **no licence, no terms, no copyright line** — `NO_LICENCE_STATED` |
+| `mp3quran.net` (`/ar`, and its public API v3) | **no licence or terms found on the page**; the API is public and documented — `NO_LICENCE_STATED` |
+
+What is on the bucket, all murattal, Hafs — measured byte-exact before upload
+(everyayah's directory index; mp3quran's `Content-Length` on all 114):
+
+| prefix | reciter | from | size |
+|---|---|---|---|
+| `recitations/ayah/Alafasy_128kbps/` | مشاري العفاسي | everyayah | 1.72 GB, 6,236 files |
+| `recitations/ayah/MaherAlMuaiqly128kbps/` | ماهر المعيقلي | everyayah | 1.21 GB, 6,236 files |
+| `recitations/ayah/Minshawy_Murattal_128kbps/` | محمد صديق المنشاوي | everyayah | 1.67 GB, 6,236 files |
+| `recitations/surah/basit_murattal/` | عبد الباسط عبد الصمد | mp3quran moshaf 53 | 0.45 GB, 114 files |
+| `recitations/surah/maher_murattal/` | ماهر المعيقلي | mp3quran moshaf 102 | 0.71 GB, 114 files |
+
+Nothing is re-encoded, trimmed, renamed inside, or compressed: the bytes on
+R2 are the bytes the origin serves (each upload is read back and must match
+the downloaded length). Status for these five: **`REHOSTED_NO_LICENCE_STATED`,
+owner's decision 2026-09-23.** Every other reciter is still streamed from its
+origin exactly as described above. Uploaded by
+`scripts/r2_mirror_recitations.py`.
+
 **The one exception, stated so it is not mistaken for the rule:** the ruqyah
 recordings under `ruqyah/` on the bucket **are** rehosted, and sit under the
 same argument as the mushaf scans rather than this one.

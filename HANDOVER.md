@@ -2483,9 +2483,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-23 17:54 — COMPLETE**
+**2026-09-23 18:37 — IN PROGRESS — resume here**
 
-Recitation: the silent-failure half. A failed start now carries the HOST and the reason to the screen (AudioFailure + showRecitationFailure), in continuous recitation and in hifz «استمع». Seen on emulator-5554 with the radios off: «تعذّر تشغيل التلاوة» plus `cdn.islamic.network — (0) Source error`, and playback recovers when the network is back. Also dropped TWO more reciters after checking every folder's directory index against the Hafs ayah counts: مصطفى إسماعيل is missing 4,220 of 6,236 and نبيل الرفاعي five (27:93, 41:51, 72:23, 74:56 — each a direct 404). The list is 35. Size of mirroring all 35 to R2, measured from those indexes: 56.5 GB.
+IN PROGRESS — R2 recitation mirror UPLOADING in the background (`py -3 scripts/r2_mirror_recitations.py`, log `_mirror_log.txt`). Owner: murattal only, <= 6 GB, zero cost. Set: per-ayah Alafasy/MaherAlMuaiqly/Minshawy_Murattal (4.60 GB) + whole-surah basit/maher murattal (1.16 GB) = 5.76 GB; bucket was 1.248 GB. App code already reads the mirror FIRST with the origin behind it (per-ayah play+download, surah download+stream) — committed but NOT RELEASED: do not ship until the upload is complete. NEXT: when the log says `end:`, run the script AGAIN (it resumes; a few files failed with curl 56 connection resets), then count objects under recitations/ (expect 18,708 ayah + 228 surah), range-check first/last of each set, then see it play on emulator-5554. Token lacks Analytics/Billing Read — owner asked to add them; `scripts/r2_usage.py` reads them once added.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
