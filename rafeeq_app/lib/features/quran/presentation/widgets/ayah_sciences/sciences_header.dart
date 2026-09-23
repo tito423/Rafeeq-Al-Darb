@@ -78,7 +78,7 @@ class SciencesHeader extends ConsumerWidget {
         );
         if (config == null) return;
         final (times, gapSeconds) = config;
-        // THE RECITER. `playRepeated` defaults to `ar.minshawimujawwad`, and
+        // THE RECITER. `playRepeated` used to default to one fixed voice, and
         // this call used to take the default - so «لما بشغل تكرار فالمنشاوي
         // بيشتغل لوحده حتى لو اخترت قارئ غيره». The parameter is required
         // now, so no caller can quietly fall back to one voice again.

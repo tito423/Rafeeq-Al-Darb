@@ -179,4 +179,14 @@ void main() {
       expect(other.urlFor(1), other.originUrlFor(1));
     });
   });
+
+  test('the default reciter is playable and mirrored on the bucket', () {
+    // «تمام يبقى اختار المرتل» (2026-09-23): the first «استمع» a new reader
+    // presses must have a source AND the app's own mirror in front of it.
+    const d = AyahAudioService.defaultEdition;
+    expect(d, 'ar.minshawi');
+    expect(RecitationSource.hasVerifiedMirror(d), isTrue);
+    expect(RecitationSource.isMirroredOnR2(RecitationSource.folderFor(d)!),
+        isTrue);
+  });
 }

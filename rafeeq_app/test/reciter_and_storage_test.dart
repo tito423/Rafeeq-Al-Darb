@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 ///
 /// 1. «لما بشغل تكرار فالمنشاوي بيشتغل لوحده حتى لو اخترت قارئ غيره».
 ///    `AyahAudioService.playQueue` and `playRepeated` took
-///    `String edition = defaultEdition` - `ar.minshawimujawwad` - and two
+///    `String edition = defaultEdition` - then `ar.minshawimujawwad` - and two
 ///    call sites never passed one: the memorisation repeat on the ayah card
 ///    and «تشغيل الكل» on a search topic. Everything else passed
 ///    `selectedReciterProvider`, so the app looked like it honoured the

@@ -44,12 +44,15 @@ class AyahAudioService {
   // ignore: unused_field
   AppLifecycleListener? _lifecycle;
 
-  /// The reciter every fresh install starts on — the owner's choice:
-  /// محمد صديق المنشاوي (المجود). It has a verified everyayah mirror
-  /// (`Minshawy_Mujawwad_192kbps`, a range request on 002001.mp3 answered 206
-  /// on 2026-09-09), so it is a resumable, per-ayah source on day one and not
-  /// only a CDN stream.
-  static const String defaultEdition = 'ar.minshawimujawwad';
+  /// The reciter a reader starts on until he picks one — the owner's choice,
+  /// changed 2026-09-23 from المنشاوي المجوّد to محمد صديق المنشاوي
+  /// **(مرتّل)**: «تمام يبقى اختار المرتل». The same shaykh, at the pace the
+  /// app's own uses need — following the highlighted ayah, hifz and tasmee —
+  /// with files a third the size (1.67 GB for the mushaf against 4.93), and
+  /// the one of the two mirrored on the app's own bucket, so the default
+  /// path has R2 in front of everyayah. A reader who CHOSE the mujawwad keeps
+  /// it: only an explicit choice is saved, and this is only the fallback.
+  static const String defaultEdition = 'ar.minshawi';
 
   /// Every recitation in the reader streams, and has since 3.17.0: «شيل خيار
   /// تحميل التلاوات على الجهاز ده خالص وخليه دايما من الـ API آية بآية عشان
