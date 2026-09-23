@@ -132,6 +132,11 @@ String surahNamePlain(String s) {
   return t.replaceAll(RegExp('[ً-ٰٟۖ-ۭـ]'), '');
 }
 
+/// [surahNamePlain] without its leading «سورة»: «مريم». For short labels
+/// such as a memorization range, «مريم ١٢–٤٠».
+String surahNameShort(String s) =>
+    surahNamePlain(s).replaceFirst(RegExp(r'^سورة\s+'), '');
+
 /// Vowel marks that the source may set BETWEEN a letter and its madda or
 /// hamza mark, which would keep the pair from composing.
 const _stripLeft = ['َ', 'ُ', 'ِ', 'ْ', 'ّ'];

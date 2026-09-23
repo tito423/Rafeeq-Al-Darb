@@ -9,15 +9,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/arabic_normalize.dart' show surahNamePlain;
+import '../../../../core/utils/arabic_normalize.dart' show surahNamePlain, surahNameShort;
 import '../../../../core/utils/digits.dart';
 import '../../data/hifz_plans.dart';
 import '../../data/hifz_store.dart';
 import '../hifz_session_screen.dart';
 
 /// «مريم» out of «سورة مريم» — a plan's default name is short.
-String _bareName(Surah s) =>
-    surahNamePlain(s.nameAr).replaceFirst(RegExp(r'^سورة\s+'), '');
+String _bareName(Surah s) => surahNameShort(s.nameAr);
 
 /// What a plan is called when the reader gave it no name: «مريم ١٢–٤٠», or
 /// «مريم ١٢ – طه ٥» when it crosses into another surah.
