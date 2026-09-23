@@ -163,6 +163,18 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
         sampleRate: 16000,
         numChannels: 1,
         device: viaBluetooth ? mics.bluetooth : mics.phone,
+        // record 6 exposes what 5.x hid. A headset records the way Android
+        // documents for a Bluetooth call microphone: SCO managed by the
+        // plugin, the voice-communication source, the phone in communication
+        // mode. The phone's own microphone asks for none of that, so a
+        // paired headset cannot pull the route away from it.
+        androidConfig: viaBluetooth
+            ? const AndroidRecordConfig(
+                manageBluetooth: true,
+                audioSource: AndroidAudioSource.voiceCommunication,
+                audioManagerMode: AudioManagerMode.modeInCommunication,
+              )
+            : const AndroidRecordConfig(manageBluetooth: false),
       ),
       path: path,
     );

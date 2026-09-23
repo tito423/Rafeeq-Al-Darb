@@ -1924,15 +1924,12 @@
     "full_screen_why": "So the adhan fills the screen at prayer time, even locked."
   },
   "diag": {
-    "app_volume_hint": "The app is playing and the position is moving. If you hear nothing: some phones (Honor, Xiaomi…) have a volume slider per app — press the volume key, open the full volume panel, and raise the «Rafeeq Al-Darb» slider.",
-    "title": "Recitation check",
-    "hint": "Tries every source of al-Fatiha 1, plays it for 4 seconds, and writes down exactly what happened. Copy the report and send it.",
-    "run": "Run the check",
-    "copy": "Copy report",
-    "copied": "Copied — paste it in your message",
-    "link": "Hearing nothing? Check the recitation",
-    "action": "Check",
-    "volume_zero": "Media volume is at zero — raise it with the volume key while playing.",
-    "bluetooth_out": "Sound is going to a Bluetooth device: {} — disconnect it if it is not in your ears."
+    "link": "Hearing nothing?",
+    "action": "Help",
+    "tips_title": "Hearing no recitation?",
+    "tip_volume": "Raise the media volume with the volume key while it plays.",
+    "tip_app_volume": "Some phones (Honor, Xiaomi…) have a volume for each app: press the volume key, open the full panel, and raise the «Rafeeq Al-Darb» slider.",
+    "tip_bluetooth": "If a Bluetooth headset is connected, the sound goes to it.",
+    "tip_network": "A recitation that is not downloaded needs an internet connection."
   }
 }

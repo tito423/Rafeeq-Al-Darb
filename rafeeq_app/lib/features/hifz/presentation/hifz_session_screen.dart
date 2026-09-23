@@ -27,7 +27,6 @@ import '../../downloads/data/reciters_provider.dart';
 import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
 import 'widgets/hifz_navigator.dart';
 import 'widgets/hifz_plans_section.dart';
-import '../../quran_audio/presentation/recitation_diagnostics_screen.dart';
 import 'widgets/tasmee_panel.dart';
 import '../data/hifz_store.dart';
 
@@ -424,15 +423,11 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
             ),
             label: Text(_playing ? 'hifz.stop'.tr() : 'hifz.listen'.tr()),
           ),
-          // Nothing heard? One tap to the report that says why.
+          // Nothing heard? Four plain things to check.
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: TextButton.icon(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const RecitationDiagnosticsScreen(),
-                ),
-              ),
+              onPressed: () => showSilenceTips(context),
               icon: const Icon(Icons.hearing_disabled_outlined, size: 18),
               label: Text('diag.link'.tr()),
             ),

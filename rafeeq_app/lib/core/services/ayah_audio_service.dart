@@ -386,7 +386,7 @@ class AyahAudioService {
   /// Whether the player is currently on [id]'s track. Used by a list of
   /// recordings to show the stop button on the right row and only that row.
   bool isTrack(String id) =>
-      (_player.sequenceState?.currentSource?.tag as MediaItem?)?.id ==
+      (_player.sequenceState.currentSource?.tag as MediaItem?)?.id ==
       'track:$id';
 
   Stream<Duration> get positionStream => _player.positionStream;
@@ -583,11 +583,11 @@ class AyahAudioService {
       }
       try {
         await _player.stop();
+        // just_audio 0.10: a playlist is a list of sources handed to the
+        // player, not a ConcatenatingAudioSource (deprecated).
         await _player
-            .setAudioSource(
-              ConcatenatingAudioSource(
-                children: buildChildren(host: attempt == 2 ? 1 : 0),
-              ),
+            .setAudioSources(
+              buildChildren(host: attempt == 2 ? 1 : 0),
               initialIndex: plan.initialIndex,
             )
             .timeout(_loadLimit);

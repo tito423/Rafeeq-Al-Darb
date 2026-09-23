@@ -18,7 +18,7 @@ dependencies:
   # tree through just_audio; declared because it is now imported directly.
   crypto: ^3.0.0
   # The microphone for «التسميع» — raw PCM straight into the recogniser.
-  record: ^5.1.2
+  record: ^6.2.1
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -44,11 +44,11 @@ dependencies:
   archive: ^4.2.0
 
   # Audio playback (with background support)
-  just_audio: ^0.9.41
+  just_audio: ^0.10.6
   # Read directly by «تشخيص التلاوة» (output devices, media volume); it is
   # just_audio's own dependency, so this adds nothing new to the build.
-  audio_session: ^0.1.25
-  just_audio_background: ^0.0.1-beta.12
+  audio_session: ^0.2.4
+  just_audio_background: ^0.0.1-beta.17
 
   # Notifications & alarms (prayer Adhan)
   flutter_local_notifications: ^18.0.0
@@ -238,10 +238,5 @@ flutter_native_splash:
 # Vendored with one patch (fixed notification `when`, so the shade stops
 # re-sorting on every progress tick). See third_party/background_downloader/RAFEEQ_PATCH.md.
 dependency_overrides:
-  # record 5.x allows record_linux <1.0.0, and the newest in that range
-  # (0.7.2) does not implement record_platform_interface 1.2's methods -
-  # the Android build fails compiling a LINUX plugin we never use. Pin the
-  # interface to the version 0.7.2 was written against.
-  record_platform_interface: 1.1.0
   background_downloader:
     path: third_party/background_downloader

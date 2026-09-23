@@ -1924,15 +1924,12 @@
     "full_screen_why": "Para que el adhan llene la pantalla a la hora de la oración, incluso bloqueada."
   },
   "diag": {
-    "app_volume_hint": "La app está sonando y la posición avanza. Si no oyes nada: algunos teléfonos (Honor, Xiaomi…) tienen un volumen por app — pulsa la tecla de volumen, abre el panel completo y sube el de «Rafeeq Al-Darb».",
-    "title": "Comprobar la recitación",
-    "hint": "Prueba cada fuente de al-Fátiha 1, la reproduce 4 segundos y anota exactamente qué pasó. Copia el informe y envíalo.",
-    "run": "Iniciar",
-    "copy": "Copiar informe",
-    "copied": "Copiado — pégalo en tu mensaje",
-    "link": "¿No oyes nada? Comprueba la recitación",
-    "action": "Comprobar",
-    "volume_zero": "El volumen multimedia está a cero — súbelo con la tecla de volumen mientras suena.",
-    "bluetooth_out": "El sonido va a un dispositivo Bluetooth: {} — desconéctalo si no lo llevas puesto."
+    "link": "¿No oyes nada?",
+    "action": "Ayuda",
+    "tips_title": "¿No oyes la recitación?",
+    "tip_volume": "Sube el volumen multimedia con la tecla de volumen mientras suena.",
+    "tip_app_volume": "Algunos teléfonos (Honor, Xiaomi…) tienen un volumen por app: pulsa la tecla de volumen, abre el panel completo y sube el de «Rafeeq Al-Darb».",
+    "tip_bluetooth": "Si hay unos auriculares Bluetooth conectados, el sonido va a ellos.",
+    "tip_network": "Una recitación no descargada necesita conexión a internet."
   }
 }

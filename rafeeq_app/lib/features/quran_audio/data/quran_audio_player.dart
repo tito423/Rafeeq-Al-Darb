@@ -127,19 +127,15 @@ class QuranAudioPlayer extends ChangeNotifier {
     notifyListeners();
     try {
       try {
-        await player.setAudioSource(
-          ConcatenatingAudioSource(
-            children: [for (final t in tracks) t.toSource()],
-          ),
+        await player.setAudioSources(
+          [for (final t in tracks) t.toSource()],
           initialIndex: _index,
         );
       } catch (_) {
         // The app's own mirror could not start it; the public origin can.
         if (!tracks.any((t) => t.fallbackUrl != null)) rethrow;
-        await player.setAudioSource(
-          ConcatenatingAudioSource(
-            children: [for (final t in tracks) t.toSource(origin: true)],
-          ),
+        await player.setAudioSources(
+          [for (final t in tracks) t.toSource(origin: true)],
           initialIndex: _index,
         );
       }

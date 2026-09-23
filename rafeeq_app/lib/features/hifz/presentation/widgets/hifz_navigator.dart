@@ -133,8 +133,9 @@ class _HifzNavigatorState extends State<HifzNavigator> {
               ),
               const SizedBox(width: 8),
               // …or typed.
+              // Wide enough for «رقم الآية» in full: at 110 it read «رقم …».
               SizedBox(
-                width: 110,
+                width: 150,
                 child: TextField(
                   controller: _number,
                   keyboardType: TextInputType.number,
