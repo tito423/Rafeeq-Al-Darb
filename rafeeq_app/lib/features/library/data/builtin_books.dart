@@ -21,5 +21,5 @@ final List<String> builtinBookIds = [
 /// 36 built-in books come to 8.1 MB together, the largest 0.9 MB; فتح الباري
 /// is 12.6 MB on its own (2026-09-23) and would more than double the APK's
 /// share of books. It sits on the same shelf and downloads like the other
-/// encyclopaedias.
-const Set<String> hostedHadithBooks = {'fath_al_bari'};
+/// encyclopaedias. تهذيب الكمال (6.6 MB) joined it the same day.
+const Set<String> hostedHadithBooks = {'fath_al_bari', 'tahdhib_al_kamal'};

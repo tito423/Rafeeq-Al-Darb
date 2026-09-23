@@ -4720,6 +4720,44 @@ const List<LibraryBook> libraryBookCatalog = [
     ),
   ),
 
+  LibraryBook(
+    id: 'tahdhib_al_kamal',
+    titleAr: 'تهذيب الكمال في أسماء الرجال',
+    titleEn: 'Tahdhib al-Kamal',
+    authorAr: 'الحافظ جمال الدين المزي',
+    authorEn: 'Al-Mizzi',
+    deathYearAh: 742,
+    pages: 18994,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tahdhib_al_kamal.json',
+      sizeBytes: 6588013,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — تهذيب الكمال في أسماء الرجال، جمال الدين أبو الحجاج يوسف المزي (٦٥٤ - ٧٤٢ هـ)، مؤسسة الرسالة - بيروت، الأولى، (١٤٠٠ - ١٤١٣ هـ) (١٩٨٠ - ١٩٩٢ م)',
+    ),
+  ),
+  LibraryBook(
+    id: 'lisan_al_arab',
+    titleAr: 'لسان العرب',
+    titleEn: 'Lisan al-Arab',
+    authorAr: 'ابن منظور الإفريقي',
+    authorEn: 'Ibn Manzur',
+    deathYearAh: 711,
+    pages: 8101,
+    category: BookCategory.talibIlm,
+    // التوسّع: the lexicon a student reaches for once the نحو mutun are
+    // behind him, beside البرهان and الإتقان.
+    shelfOrder: 3,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/lisan_al_arab.json',
+      sizeBytes: 11825627,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — لسان العرب، محمد بن مكرم بن على، أبو الفضل، جمال الدين ابن منظور الأنصاري الرويفعى الإفريقى (ت ٧١١هـ)، دار صادر - بيروت، الثالثة - ١٤١٤ هـ',
+    ),
+  ),
+
 ];
 
 /// One book by its id, or null.

@@ -70,7 +70,7 @@ PLAN = {
     "tahdhib_al_kamal": ("تهذيب الكمال في أسماء الرجال", "Tahdhib al-Kamal",
         "الحافظ جمال الدين المزي", "Al-Mizzi", 742, "hadith", 0),
     "lisan_al_arab": ("لسان العرب", "Lisan al-Arab",
-        "ابن منظور الإفريقي", "Ibn Manzur", 711, "talibIlm", 0),
+        "ابن منظور الإفريقي", "Ibn Manzur", 711, "talibIlm", 3),
 }
 
 # The bare mutun leaving the shelf, replaced by the two shuruh above.
