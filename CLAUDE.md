@@ -728,6 +728,26 @@ Do not rediscover these.
     at an unbounded scale**, and when checking a Qur'an screen, zoom in —
     that is what makes this failure visible on an emulator.
 
+49. **"It plays" is not "it is heard" — and a phone can mute ONE app.**
+    On 2026-09-23 the recitation was silent on the owner's Honor for every
+    reciter, over the speaker and over Bluetooth, while the adhan played.
+    The highlight moved, no error showed, media volume was at maximum. The
+    cause was not in the app: Honor (and Xiaomi, and others) keep a
+    **per-app volume slider** — press a volume key, open the full panel —
+    and «Rafeeq Al-Darb» was at zero. Nothing the app can call reads it.
+
+    Two lessons, one about the phone and one about method:
+    * **Ask about the per-app slider first** when sound is missing but the
+      position moves. The in-app «لا تسمع التلاوة؟» tips say so.
+    * **An AudioTrack line in logcat and a moving highlight prove the
+      decoder runs, not that anything is audible.** The emulator had been
+      "verified" that way all day. The honest check is
+      `adb shell dumpsys media.audio_flinger` WHILE it plays: the app's
+      track row must be `Active yes`, `Usg 1` (media), `G db 0`, `PortMuted
+      false`. And read the pid/session before believing a mute: a `muted
+      source:clientVolume` event seen first here was the SPLASH video,
+      muted by setting — not the recitation.
+
 ---
 
 ## 4. Where things live
