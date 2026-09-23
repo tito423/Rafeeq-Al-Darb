@@ -23,6 +23,7 @@ import '../../tajweed/data/bundled_matn.dart';
 import '../data/hajj_text_scale.dart';
 import '../data/hajj_guide.dart';
 import '../data/hajj_step_text.dart';
+import 'widgets/mawaqit_today_card.dart';
 import 'widgets/jamarat_counter.dart';
 import 'widgets/journey_map.dart';
 import 'widgets/madhahib_section.dart';
@@ -415,6 +416,7 @@ class _StepText extends ConsumerWidget {
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
+        if (mawaqitStepKeys.contains(step.key)) MawaqitTodayCard(scale: k),
         MadhahibSection(stepKey: step.key, scale: k),
       ],
     );

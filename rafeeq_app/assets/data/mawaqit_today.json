@@ -1,0 +1,35 @@
+{
+ "source": {
+  "name": "وزارة الحج والعمرة — المملكة العربية السعودية",
+  "url": "https://haj.gov.sa/ar/Umrah/Miqaats",
+  "read": "2026-09-23",
+  "note": "Each 'text' is the ministry page's own sentence for that miqat, verbatim. 'today' is the present-day name that same sentence gives, and is null where the page gives none (Dhat Irq) - nothing here is added by the app."
+ },
+ "mawaqit": [
+  {
+   "name": "ذو الحُلَيْفة",
+   "today": "أبيار علي",
+   "text": "ميقات أهل المدينة ومَن في طريقهم، وهو يَبعُد (420) كلم عن مكّة، ويسمى كذلك أبيار علي"
+  },
+  {
+   "name": "الجُحْفة",
+   "today": "رابغ",
+   "text": "ميقات أهل الشام ومن في طريقهم، وهو يَبعُد (187) كلم عن مكّة، ويُحْرِم الناس اليوم من رابغ التي تبعد عن مكة (204) كلم"
+  },
+  {
+   "name": "قرن المنازل",
+   "today": "السيل الكبير",
+   "text": "ميقات أهل نجد ومَن في طريقهم، وهو يَبعُد (94) كلم عن مكّة، ويسمى كذلك السيل الكبير"
+  },
+  {
+   "name": "يَلَمْلَمُ",
+   "today": "السعدية",
+   "text": "ميقات أهل اليمن ومن في طريقهم، ويَبعُد (115) كلم عن مكة، ويسمى كذلك (السعدية)."
+  },
+  {
+   "name": "ذات عِرْق",
+   "today": null,
+   "text": "ميقات أهل العراق ومن في طريقهم، ويَبعُد (92) كلم عن مكة."
+  }
+ ]
+}

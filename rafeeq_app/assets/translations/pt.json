@@ -1690,6 +1690,9 @@
     "plan_delete": "Excluir"
   },
   "hajj": {
+    "mawaqit_today_title": "Os miqats hoje",
+    "mawaqit_today_note": "Seus nomes e locais atuais, nas palavras do Ministério saudita do Hajj e da Umrah. O texto de al-Nawawi acima não foi alterado.",
+    "mawaqit_today_name": "Hoje: {}",
     "safa": "as-Safa",
     "marwah": "al-Marwah",
     "title": "Ritos do Hajj e da Umrah",

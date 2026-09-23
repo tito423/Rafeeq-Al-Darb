@@ -106,6 +106,12 @@ final sourceGroups = <(String, List<SourceEntry>)>[
           'الفقه على المذاهب الأربعة — عبد الرحمن الجزيري',
           'https://shamela.ws/book/9849',
           'hajj.madhahib_title'),
+      // «المواقيت اليوم» under the miqat steps (2026-09-23): the ministry's
+      // own sentence per miqat, verbatim - assets/data/mawaqit_today.json.
+      SourceEntry(
+          'وزارة الحج والعمرة — المواقيت',
+          'https://haj.gov.sa/ar/Umrah/Miqaats',
+          'hajj.mawaqit_today_title'),
     ]
   ),
   (
