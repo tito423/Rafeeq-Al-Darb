@@ -69,6 +69,36 @@ def _api(env, url, body=None):
         return {"success": False, "http": e.code}
 
 
+def class_a_used():
+    """(Class A operations used in the current billing period, period end) —
+    read live, or (None, None) when it cannot be read. For the mirror script's
+    guard: it must stop before the free allowance, not after."""
+    env = load_env()
+    sub = _api(env, "https://api.cloudflare.com/client/v4/accounts/%s/subscriptions"
+               % env["CF_ACCOUNT_ID"])
+    if not (sub.get("success") and sub.get("result")):
+        return None, None
+    s0 = sub["result"][0]
+    ps, pe = s0.get("current_period_start"), s0.get("current_period_end")
+    if not ps:
+        return None, None
+    now = dt.datetime.now(dt.timezone.utc)
+    q = ("query($acc:String!,$s:Time!,$e:Time!){viewer{accounts(filter:"
+         "{accountTag:$acc}){ops:r2OperationsAdaptiveGroups(limit:1000,"
+         "filter:{datetime_geq:$s,datetime_leq:$e}){sum{requests}"
+         "dimensions{actionType}}}}}")
+    res = _api(env, "https://api.cloudflare.com/client/v4/graphql",
+               {"query": q, "variables": {
+                   "acc": env["CF_ACCOUNT_ID"],
+                   "s": ps.replace("+00:00", "Z"),
+                   "e": now.strftime("%Y-%m-%dT%H:%M:%SZ")}})
+    if res.get("errors") or not res.get("data"):
+        return None, pe
+    groups = res["data"]["viewer"]["accounts"][0]["ops"]
+    return sum(g["sum"]["requests"] for g in groups
+               if g["dimensions"]["actionType"] in CLASS_A), pe
+
+
 def main():
     env = load_env()
     out = []
@@ -84,6 +114,22 @@ def main():
     out.append("storage now      %.3f GB in %d objects   (free %d GB)  -> %.0f %%"
                % (total / 1e9, n, FREE["storage_gb"],
                   100 * total / 1e9 / FREE["storage_gb"]))
+
+    # The billing period first: the free allowance is counted over IT, not
+    # over the calendar month. Read live on 2026-09-23 it ran from the 24th
+    # to the 24th, so a calendar-month count would have been the wrong sum.
+    sub = _api(env, "https://api.cloudflare.com/client/v4/accounts/%s/subscriptions"
+               % env["CF_ACCOUNT_ID"])
+    if sub.get("success") and sub.get("result"):
+        s0 = sub["result"][0]
+        ps, pe = s0.get("current_period_start"), s0.get("current_period_end")
+        out.append("billing period   %s -> %s  (%s)"
+                   % (ps, pe, (s0.get("rate_plan") or {}).get("public_name", "?")))
+        if ps:
+            start = dt.datetime.fromisoformat(ps.replace("Z", "+00:00"))
+    else:
+        out.append("billing period   NOT READ — the token lacks 'Billing: Read'; "
+                   "counting the calendar month instead.")
 
     q = ("query($acc:String!,$s:Time!,$e:Time!){viewer{accounts(filter:"
          "{accountTag:$acc}){ops:r2OperationsAdaptiveGroups(limit:1000,"
@@ -106,23 +152,17 @@ def main():
                 if g["dimensions"]["actionType"] in CLASS_B)
         odd = sorted({g["dimensions"]["actionType"] for g in groups}
                      - CLASS_A - CLASS_B)
-        out.append("month so far     %s -> today (UTC)" % start.date())
+        out.append("counted from     %s UTC to now" % start.strftime("%Y-%m-%d %H:%M"))
         out.append("Class A          %d of %d  -> %.2f %%"
                    % (a, FREE["class_a"], 100 * a / FREE["class_a"]))
         out.append("Class B          %d of %d  -> %.2f %%"
                    % (b, FREE["class_b"], 100 * b / FREE["class_b"]))
-        if odd:
-            out.append("unclassified     %s" % ", ".join(odd))
-
-    sub = _api(env, "https://api.cloudflare.com/client/v4/accounts/%s/subscriptions"
-               % env["CF_ACCOUNT_ID"])
-    if sub.get("success"):
-        for s in sub.get("result") or []:
-            out.append("billing period   %s -> %s  (%s)"
-                       % (s.get("current_period_start"), s.get("current_period_end"),
-                          (s.get("rate_plan") or {}).get("public_name", "?")))
-    else:
-        out.append("billing period   NOT READ — the token lacks 'Billing: Read'.")
+        # Deletes are not billed at all on R2; anything else unknown is shown.
+        free = {x for x in odd if x.startswith("Delete")}
+        if free:
+            out.append("not billed       %s" % ", ".join(sorted(free)))
+        if set(odd) - free:
+            out.append("unclassified     %s" % ", ".join(sorted(set(odd) - free)))
 
     text = "\n".join(out)
     io.open(REPORT, "w", encoding="utf-8").write(text + "\n")

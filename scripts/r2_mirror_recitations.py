@@ -40,9 +40,17 @@ import threading
 import time
 
 from r2_common import BUCKET, r2_client
+from r2_usage import class_a_used
 
 UA = "RafeeqAlDarb/3.57 (https://github.com/tito423/Rafeeq-Al-Darb) curl/8"
 FREE_TIER_GUARD = 9.5e9
+# Class A (writes) has a free allowance of 1,000,000 per BILLING PERIOD, and
+# on 2026-09-23 the period was already at 951,219 — mostly spent in late
+# August, before this script existed. So the run reads the live count before
+# it starts and every CHECK_EVERY files, and stops itself above this line.
+# Analytics lags by minutes; 25,000 of headroom covers that many times over.
+CLASS_A_GUARD = 975_000
+CHECK_EVERY = 1000
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, "_mirror_log.txt")
 
@@ -159,6 +167,18 @@ def main():
           % ((now + remaining) / 1e9, FREE_TIER_GUARD / 1e9))
     if now + remaining > FREE_TIER_GUARD:
         sys.exit("REFUSED: this would take the bucket past the free-tier guard.")
+    used, period_end = class_a_used()
+    if used is None:
+        sys.exit("REFUSED: Class A usage could not be read, so the free "
+                 "allowance cannot be protected. Check the token's "
+                 "'Account Analytics: Read'.")
+    print("Class A this period %d  (guard %d, period ends %s)"
+          % (used, CLASS_A_GUARD, period_end))
+    if used + 2 * (18_936 - len(have)) > 1_000_000:
+        print("NOTE: finishing may need more Class A than the period has left;"
+              " the guard will stop the run and it resumes next period.")
+    if used >= CLASS_A_GUARD:
+        sys.exit("REFUSED: Class A is past the guard for this period.")
     if plan_only:
         return
 
@@ -178,6 +198,14 @@ def main():
             except Exception as e:  # noqa: BLE001 - logged, run continues
                 failed += 1
                 log("FAIL %s: %s" % (k, e))
+            if (done + failed) % CHECK_EVERY == 0:
+                used, _ = class_a_used()
+                if used is None or used >= CLASS_A_GUARD:
+                    log("STOP: Class A %s >= guard %d — resume next period"
+                        % (used, CLASS_A_GUARD))
+                    for other in futs:
+                        other.cancel()
+                    break
             if (done + failed) % 250 == 0 or done + failed == total:
                 rate = moved / max(1.0, time.time() - t0) / 1e6
                 log("progress %d/%d  failed %d  %.2f GB  %.1f MB/s"
