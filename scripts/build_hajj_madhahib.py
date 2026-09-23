@@ -40,6 +40,15 @@ REPORT = os.path.join(ROOT, "scripts", "build_hajj_madhahib_out.txt")
 FIRST, LAST = 569, 640
 
 SCHOOLS = ("الحنفية", "المالكية", "الشافعية", "الحنابلة")
+
+# «صلحها عادي» (the owner, 2026-09-23). Printed page 616 (Shamela page id
+# 614) quotes the hadith of 'A'ishah as «الحج والعمر»; the same hadith on
+# printed page 615 of this printing reads «الحج والعمرة». A dropped ta'
+# marbuta.
+CORRECTIONS = [
+    (616, "جهاد لا قتال فيه: الحج والعمر\"", "جهاد لا قتال فيه: الحج والعمرة\"",
+     "a dropped ta' marbuta; p.615 quotes the same hadith with it"),
+]
 DOTS = re.compile(r"^[\s.·،]+$")
 
 
@@ -211,6 +220,19 @@ def main():
         sys.exit("unmatched headings — fix STEP_SECTIONS")
     if "--report" in sys.argv:
         return
+    # Typos in the printing, corrected at the owner's instruction and ONLY
+    # these: (printed page, as printed, corrected, why). Each must match
+    # exactly once in that page's body or the build stops - a correction
+    # that finds nothing, or finds two, is not the one that was read.
+    for page, printed, fixed, why in CORRECTIONS:
+        hits = [(step, i, j) for step, parts in steps.items()
+                for i, part in enumerate(parts) if part["printed"] <= page
+                for j, para in enumerate(part["body"]) if printed in para]
+        if len(hits) != 1:
+            sys.exit(f"correction p.{page} «{printed}» matched {len(hits)}")
+        step, i, j = hits[0]
+        steps[step][i]["body"][j] = steps[step][i]["body"][j].replace(printed, fixed)
+        print(f"corrected p.{page}: «{printed}» -> «{fixed}» ({why})")
     doc = {
         "source": {
             "titleAr": "الفقه على المذاهب الأربعة",
