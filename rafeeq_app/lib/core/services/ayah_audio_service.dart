@@ -318,6 +318,7 @@ class AyahAudioService {
               .timeout(_loadLimit);
           unawaited(_player.play());
           AudioFailure.instance.clear();
+          debugPrint('recitation from ${Uri.parse(url).host}${Uri.parse(url).path}');
           return true;
         } catch (e) {
           AudioFailure.instance.record(url, e); // the last host wins
