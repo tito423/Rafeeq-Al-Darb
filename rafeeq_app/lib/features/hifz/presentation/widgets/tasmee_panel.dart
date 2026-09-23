@@ -24,6 +24,7 @@ import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../data/hifz_store.dart';
+import '../../data/tasmee_mic.dart';
 import '../../data/tasmee_engine.dart';
 
 enum _Phase { idle, downloading, recording, thinking, done }
@@ -63,11 +64,24 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   String? _heard;
   TasmeeResult? _result;
 
+  /// The microphones on offer; a headset is used when one is connected,
+  /// unless the reader switches to the phone's own.
+  TasmeeMics? _mics;
+  bool _useBluetooth = true;
+
+  /// How loud the microphone hears the reader, 0..1, while recording — the
+  /// plain answer to «is it hearing me at all?», on any microphone.
+  double _level = 0;
+  StreamSubscription<Amplitude>? _amp;
+
   @override
   void initState() {
     super.initState();
     TasmeeEngine.instance.isInstalled().then(
       (v) => mounted ? setState(() => _installed = v) : null,
+    );
+    TasmeeMics.find(_recorder).then(
+      (m) => mounted ? setState(() => _mics = m) : null,
     );
   }
 
@@ -87,7 +101,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   @override
   void dispose() {
     _cap?.cancel();
+    _amp?.cancel();
     _recorder.dispose();
+    // Never leave the phone on the call route behind a closed screen.
+    unawaited(restoreAudioRoute());
     _cancel?.cancel();
     super.dispose();
   }
@@ -133,15 +150,32 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     // one instead of holding the samples in memory.
     final dir = await getTemporaryDirectory();
     final path = p.join(dir.path, 'tasmee.wav');
+    // A headset if one is connected and chosen, the phone's microphone
+    // otherwise — named either way, so `record` never guesses. See
+    // tasmee_mic.dart for why the headset needs more than `record` does.
+    final mics = await TasmeeMics.find(_recorder);
+    if (mounted) setState(() => _mics = mics);
+    final viaBluetooth = mics.hasBluetooth && _useBluetooth;
+    if (viaBluetooth) await routeTasmeeToBluetooth();
     await _recorder.start(
-      const RecordConfig(
+      RecordConfig(
         encoder: AudioEncoder.wav,
         sampleRate: 16000,
         numChannels: 1,
+        device: viaBluetooth ? mics.bluetooth : mics.phone,
       ),
       path: path,
     );
     _wavPath = path;
+    // -50 dBFS and below reads as nothing heard, 0 dBFS as full.
+    await _amp?.cancel();
+    _amp = _recorder
+        .onAmplitudeChanged(const Duration(milliseconds: 150))
+        .listen((a) {
+      if (mounted) {
+        setState(() => _level = ((a.current + 50) / 50).clamp(0.0, 1.0));
+      }
+    });
     // A forgotten «stop» should not record for ever.
     _cap?.cancel();
     _cap = Timer(const Duration(seconds: tasmeeMaxSeconds), _stopRecording);
@@ -157,6 +191,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     setState(() => _phase = _Phase.thinking);
     _cap?.cancel();
     await _recorder.stop();
+    await _amp?.cancel();
+    _amp = null;
+    _level = 0;
+    await restoreAudioRoute();
     final path = _wavPath;
     try {
       if (path == null || !File(path).existsSync()) {
@@ -265,6 +303,47 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                 label: Text('tasmee.download'.tr()),
               ),
           ] else ...[
+            // Which microphone — offered only when a headset is there.
+            if ((_mics?.hasBluetooth ?? false) &&
+                _phase != _Phase.recording) ...[
+              Wrap(
+                spacing: 8,
+                children: [
+                  ChoiceChip(
+                    avatar: const Icon(Icons.headset_mic_rounded, size: 18),
+                    label: Text('tasmee.mic_bluetooth'.tr()),
+                    selected: _useBluetooth,
+                    onSelected: (_) => setState(() => _useBluetooth = true),
+                  ),
+                  ChoiceChip(
+                    avatar: const Icon(Icons.smartphone_rounded, size: 18),
+                    label: Text('tasmee.mic_phone'.tr()),
+                    selected: !_useBluetooth,
+                    onSelected: (_) => setState(() => _useBluetooth = false),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+            ],
+            if (_phase == _Phase.recording) ...[
+              Row(
+                children: [
+                  const Icon(Icons.graphic_eq_rounded, size: 18),
+                  const SizedBox(width: 8),
+                  Text('tasmee.level'.tr(),
+                      style: const TextStyle(fontSize: 12)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: _level,
+                      minHeight: 8,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+            ],
             switch (_phase) {
               _Phase.recording => FilledButton.icon(
                 style: FilledButton.styleFrom(backgroundColor: Colors.red),

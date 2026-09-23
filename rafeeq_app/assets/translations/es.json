@@ -1654,6 +1654,9 @@
     "open_failed": "No se pudo abrir el enlace"
   },
   "tasmee": {
+    "mic_bluetooth": "Micrófono del auricular",
+    "mic_phone": "Micrófono del teléfono",
+    "level": "Nivel",
     "title": "Recita esta aleya",
     "not_tajweed": "Escucha las palabras y te dice cuáles omitiste. No juzga el taywid: ni el madd ni la gunna.",
     "download_note": "Requiere descargar una vez el modelo de voz ({}); después funciona sin internet.",
@@ -1690,7 +1693,11 @@
     "plan_start": "Empezar",
     "plan_delete": "Eliminar",
     "jump": "Elegir sura y aleya",
-    "jump_start": "Empezar aquí"
+    "jump_start": "Empezar aquí",
+    "prev_ayah": "Aleya anterior",
+    "next_ayah": "Aleya siguiente",
+    "nav_number": "N.º de aleya",
+    "nav_go": "Ir"
   },
   "hajj": {
     "mawaqit_today_title": "Los miqat hoy",
@@ -1915,5 +1922,17 @@
     "battery_why": "Para que el sistema no detenga el adhan con la app cerrada.",
     "full_screen": "Adhan a pantalla completa",
     "full_screen_why": "Para que el adhan llene la pantalla a la hora de la oración, incluso bloqueada."
+  },
+  "diag": {
+    "app_volume_hint": "La app está sonando y la posición avanza. Si no oyes nada: algunos teléfonos (Honor, Xiaomi…) tienen un volumen por app — pulsa la tecla de volumen, abre el panel completo y sube el de «Rafeeq Al-Darb».",
+    "title": "Comprobar la recitación",
+    "hint": "Prueba cada fuente de al-Fátiha 1, la reproduce 4 segundos y anota exactamente qué pasó. Copia el informe y envíalo.",
+    "run": "Iniciar",
+    "copy": "Copiar informe",
+    "copied": "Copiado — pégalo en tu mensaje",
+    "link": "¿No oyes nada? Comprueba la recitación",
+    "action": "Comprobar",
+    "volume_zero": "El volumen multimedia está a cero — súbelo con la tecla de volumen mientras suena.",
+    "bluetooth_out": "El sonido va a un dispositivo Bluetooth: {} — desconéctalo si no lo llevas puesto."
   }
 }

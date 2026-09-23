@@ -1654,6 +1654,9 @@
     "open_failed": "Impossible d'ouvrir le lien"
   },
   "tasmee": {
+    "mic_bluetooth": "Micro du casque",
+    "mic_phone": "Micro du téléphone",
+    "level": "Niveau",
     "title": "Récitez ce verset",
     "not_tajweed": "Il écoute les mots et vous dit lesquels vous avez omis. Il ne juge pas le tajwid — ni le madd, ni la ghunna.",
     "download_note": "Nécessite un téléchargement unique du modèle vocal ({}) ; ensuite il fonctionne sans internet.",
@@ -1690,7 +1693,11 @@
     "plan_start": "Commencer",
     "plan_delete": "Supprimer",
     "jump": "Choisir la sourate et le verset",
-    "jump_start": "Commencer ici"
+    "jump_start": "Commencer ici",
+    "prev_ayah": "Verset précédent",
+    "next_ayah": "Verset suivant",
+    "nav_number": "N° du verset",
+    "nav_go": "Aller"
   },
   "hajj": {
     "mawaqit_today_title": "Les miqats aujourd'hui",
@@ -1915,5 +1922,17 @@
     "battery_why": "Pour que le système n’arrête pas l’adhan quand l’app est fermée.",
     "full_screen": "Adhan en plein écran",
     "full_screen_why": "Pour que l’adhan remplisse l’écran à l’heure de la prière, même verrouillé."
+  },
+  "diag": {
+    "app_volume_hint": "L’app joue et la position avance. Si vous n’entendez rien : certains téléphones (Honor, Xiaomi…) ont un volume par app — appuyez sur la touche volume, ouvrez le panneau complet et montez celui de «Rafeeq Al-Darb».",
+    "title": "Vérifier la récitation",
+    "hint": "Essaie chaque source d’al-Fatiha 1, la joue 4 secondes et note exactement ce qui s’est passé. Copiez le rapport et envoyez-le.",
+    "run": "Lancer",
+    "copy": "Copier le rapport",
+    "copied": "Copié — collez-le dans votre message",
+    "link": "Vous n’entendez rien ? Vérifiez la récitation",
+    "action": "Vérifier",
+    "volume_zero": "Le volume multimédia est à zéro — montez-le avec la touche de volume pendant la lecture.",
+    "bluetooth_out": "Le son part vers un appareil Bluetooth : {} — déconnectez-le s’il n’est pas sur vos oreilles."
   }
 }

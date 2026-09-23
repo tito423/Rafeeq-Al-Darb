@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 
 import '../services/audio_failure.dart';
 import '../utils/byte_formatter.dart' show ltr;
+import '../../features/quran_audio/presentation/recitation_diagnostics_screen.dart';
 
 void showRecitationFailure(BuildContext context) {
   final why = AudioFailure.instance.last.value;
@@ -23,6 +24,16 @@ void showRecitationFailure(BuildContext context) {
           ? 'quran.recite_failed'.tr()
           : '${'quran.recite_failed'.tr()}\n${ltr(why)}'),
       duration: const Duration(seconds: 7),
+      // One tap from the failure to the full report — the reader should not
+      // have to know where the check lives to reach it.
+      action: SnackBarAction(
+        label: 'diag.action'.tr(),
+        onPressed: () {
+          if (!context.mounted) return;
+          Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => const RecitationDiagnosticsScreen()));
+        },
+      ),
     ),
   );
 }

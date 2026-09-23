@@ -25,7 +25,9 @@ import '../data/hifz_mask.dart';
 import '../data/hifz_plans.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
+import 'widgets/hifz_navigator.dart';
 import 'widgets/hifz_plans_section.dart';
+import '../../quran_audio/presentation/recitation_diagnostics_screen.dart';
 import 'widgets/tasmee_panel.dart';
 import '../data/hifz_store.dart';
 
@@ -70,6 +72,12 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
   bool _playing = false;
   String? _error;
 
+  /// Every surah, for the navigator above the ayah.
+  List<Surah> _surahs = const [];
+
+  /// The app bar's title once the reader has moved to another surah here.
+  String? _titleOverride;
+
   @override
   void initState() {
     super.initState();
@@ -85,9 +93,8 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
   Future<void> _load() async {
     try {
       final repo = await ref.read(quranRepositoryProvider.future);
-      final names = {
-        for (final s in await repo.surahs()) s.id: surahNamePlain(s.nameAr),
-      };
+      final surahs = await repo.surahs();
+      final names = {for (final s in surahs) s.id: surahNamePlain(s.nameAr)};
       final all = <Ayah>[
         for (var s = widget.from.surah; s <= widget.to.surah; s++)
           for (final a in await repo.ayahsOfSurah(s))
@@ -102,6 +109,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
           : all.where((a) => store.isDue(a.surahId, a.ayahNumber)).toList();
       if (mounted) {
         setState(() {
+          _surahs = surahs;
           _surahNames = names;
           _ayahs = list.isEmpty ? all : list;
         });
@@ -151,7 +159,46 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     });
   }
 
-  String get _name => widget.title;
+  String get _name => _titleOverride ?? widget.title;
+
+  /// One ayah back or forward within the session — the swipe.
+  void _step1(int delta) {
+    final list = _ayahs!;
+    final to = _at + delta;
+    if (to < 0 || to >= list.length) return;
+    AyahAudioService.instance.stopQueue();
+    setState(() {
+      _at = to;
+      _step = 0;
+    });
+  }
+
+  /// To any surah and ayah, here, without leaving the screen: inside the
+  /// current stretch if it holds that ayah, otherwise the whole of the
+  /// chosen surah, opened at it.
+  Future<void> _goTo(int surah, int ayah) async {
+    AyahAudioService.instance.stopQueue();
+    final list = _ayahs!;
+    final i = list.indexWhere(
+      (a) => a.surahId == surah && a.ayahNumber == ayah,
+    );
+    if (i >= 0) {
+      setState(() {
+        _at = i;
+        _step = 0;
+      });
+      return;
+    }
+    final repo = await ref.read(quranRepositoryProvider.future);
+    final all = await repo.ayahsOfSurah(surah);
+    if (!mounted || all.isEmpty) return;
+    setState(() {
+      _ayahs = all;
+      _at = (ayah - 1).clamp(0, all.length - 1);
+      _step = 0;
+      _titleOverride = _surahNames[surah];
+    });
+  }
 
   String _reciterName() {
     final id = ref.watch(selectedReciterProvider);
@@ -188,7 +235,12 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
 
   /// Surah names, for a range that crosses from one surah into the next.
   Map<int, String> _surahNames = const {};
-  bool get _crossesSurahs => widget.from.surah != widget.to.surah;
+  bool get _crossesSurahs {
+    final list = _ayahs;
+    return list != null &&
+        list.isNotEmpty &&
+        list.first.surahId != list.last.surahId;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -237,6 +289,15 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         children: [
+          if (_surahs.isNotEmpty) ...[
+            HifzNavigator(
+              surahs: _surahs,
+              surah: ayah.surahId,
+              ayah: ayah.ayahNumber,
+              onGo: _goTo,
+            ),
+            const SizedBox(height: 12),
+          ],
           Text(
             [
               if (_crossesSurahs) _surahNames[ayah.surahId] ?? '',
@@ -257,32 +318,39 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
             ),
             const SizedBox(height: 8),
           ],
-          // The ayah, with the hidden words covered — never altered.
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.gold.withValues(alpha: 0.07),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
-            ),
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 8,
-                runSpacing: 10,
-                children: [
-                  for (var i = 0; i < words.length; i++)
-                    _Word(
-                      word: words[i],
-                      hidden: hifzWordHidden(i, words.length, _step),
-                      onTap: () => setState(() {
-                        // Tapping a hidden word brings that word back.
-                        final hiddenCount = words.length - i;
-                        _step = (hiddenCount - 1).clamp(0, words.length);
-                      }),
-                    ),
-                ],
+          // The ayah, with the hidden words covered — never altered. It
+          // follows the finger: drag it sideways to the next or last ayah.
+          SwipeableAyah(
+            onNext: _at + 1 < list.length ? () => _step1(1) : null,
+            onPrev: _at > 0 ? () => _step1(-1) : null,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.gold.withValues(alpha: 0.07),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.gold.withValues(alpha: 0.25),
+                ),
+              ),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  runSpacing: 10,
+                  children: [
+                    for (var i = 0; i < words.length; i++)
+                      _Word(
+                        word: words[i],
+                        hidden: hifzWordHidden(i, words.length, _step),
+                        onTap: () => setState(() {
+                          // Tapping a hidden word brings that word back.
+                          final hiddenCount = words.length - i;
+                          _step = (hiddenCount - 1).clamp(0, words.length);
+                        }),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -355,6 +423,19 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
               _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
             ),
             label: Text(_playing ? 'hifz.stop'.tr() : 'hifz.listen'.tr()),
+          ),
+          // Nothing heard? One tap to the report that says why.
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const RecitationDiagnosticsScreen(),
+                ),
+              ),
+              icon: const Icon(Icons.hearing_disabled_outlined, size: 18),
+              label: Text('diag.link'.tr()),
+            ),
           ),
           const Divider(height: 28),
           // «سمّع لنفسك»: the device listens and marks the words.

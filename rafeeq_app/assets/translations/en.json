@@ -1654,6 +1654,9 @@
     "open_failed": "Could not open the link"
   },
   "tasmee": {
+    "mic_bluetooth": "Headset mic",
+    "mic_phone": "Phone mic",
+    "level": "Level",
     "title": "Recite this ayah",
     "not_tajweed": "It listens for the words and tells you which ones you missed. It does not judge tajweed — not madd, not ghunnah.",
     "download_note": "Needs a one-time speech model download ({}); after that it works with no internet.",
@@ -1690,7 +1693,11 @@
     "plan_start": "Start",
     "plan_delete": "Delete",
     "jump": "Choose surah and ayah",
-    "jump_start": "Start here"
+    "jump_start": "Start here",
+    "prev_ayah": "Previous ayah",
+    "next_ayah": "Next ayah",
+    "nav_number": "Ayah no.",
+    "nav_go": "Go"
   },
   "hajj": {
     "mawaqit_today_title": "The miqats today",
@@ -1915,5 +1922,17 @@
     "battery_why": "So the system does not stop the adhan while the app is closed.",
     "full_screen": "Full-screen adhan",
     "full_screen_why": "So the adhan fills the screen at prayer time, even locked."
+  },
+  "diag": {
+    "app_volume_hint": "The app is playing and the position is moving. If you hear nothing: some phones (Honor, Xiaomi…) have a volume slider per app — press the volume key, open the full volume panel, and raise the «Rafeeq Al-Darb» slider.",
+    "title": "Recitation check",
+    "hint": "Tries every source of al-Fatiha 1, plays it for 4 seconds, and writes down exactly what happened. Copy the report and send it.",
+    "run": "Run the check",
+    "copy": "Copy report",
+    "copied": "Copied — paste it in your message",
+    "link": "Hearing nothing? Check the recitation",
+    "action": "Check",
+    "volume_zero": "Media volume is at zero — raise it with the volume key while playing.",
+    "bluetooth_out": "Sound is going to a Bluetooth device: {} — disconnect it if it is not in your ears."
   }
 }
