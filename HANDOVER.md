@@ -2493,9 +2493,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 03:18 — IN PROGRESS — resume here**
+**2026-09-24 03:20 (Dubai) — COMPLETE**
 
-v3.59.0 built, walked on every screen, 7 fixes re-seen on device; publishing release next
+COMPLETE — v3.59.0 published and verified (see the RELEASED row at the top). Next: the owner installs 3.59.0 on his phone; word search / library search / enhanced voice download still untested on a device. `_mirror_*.txt` and `_r2_usage_report.txt` in the repo root are untracked scratch logs from the R2 mirror session — deliberately not committed.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
