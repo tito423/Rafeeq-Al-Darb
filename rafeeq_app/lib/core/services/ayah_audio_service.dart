@@ -17,6 +17,7 @@ import 'continuous_recitation.dart';
 export 'continuous_recitation.dart';
 import '../db/quran_repository.dart';
 import 'audio_failure.dart';
+import 'finish_pauser.dart';
 import 'recitation_source.dart';
 
 /// Ayah-level recitation: streaming, on-disk caching, whole-surah downloads,
@@ -94,38 +95,7 @@ class AyahAudioService {
 
   bool get isPlaying => _player.playing;
 
-  /// just_audio leaves `playing` true after a source has played to its end.
-  /// With `handleInterruptions` on, anything that takes the audio focus and
-  /// gives it back - the adhan, a call, the tasmee microphone - then makes
-  /// the player "resume": the last ayah started again from nothing, minutes
-  /// after it had finished. Seen on emulator-5554: stopping the adhan preview
-  /// replayed 2:137. So a single ayah or track that finishes is paused, and
-  /// a finished player is not "playing" any more.
-  StreamSubscription<PlayerState>? _endSub;
-  int _endGen = 0;
-
-  void _pauseWhenFinished() {
-    final gen = ++_endGen;
-    // Bound to THIS source: continuous recitation and the surah player load
-    // their own and handle their own ends; pausing those would race their
-    // move to the next surah.
-    final source = _player.audioSource;
-    _endSub?.cancel();
-    _endSub = _player.playerStateStream.listen((s) {
-      if (gen != _endGen) return;
-      if (!identical(_player.audioSource, source)) {
-        _endSub?.cancel();
-        _endSub = null;
-        return;
-      }
-      if (s.processingState == ProcessingState.completed && s.playing) {
-        _endSub?.cancel();
-        _endSub = null;
-        unawaited(_player.pause());
-      }
-    }, onError: (Object _) {});
-  }
-
+  final _finish = FinishPauser(); // plays; pauses at the end - see its doc
   /// The shared player, for «تحميل تلاوات القرآن»'s player — which has to use
   /// this one rather than its own, see [_player]. Take it through
   /// [claimForMusic] so whatever else was playing is stopped properly first.
@@ -180,8 +150,6 @@ class AyahAudioService {
   /// player asks for one.
   Future<void> _recreatePlayer() async {
     final old = _player;
-    await _endSub?.cancel();
-    _endSub = null;
     await _stateBridge?.cancel();
     _stateBridge = null;
     try {
@@ -350,8 +318,7 @@ class AyahAudioService {
           await _player
               .setAudioSource(AudioSource.uri(Uri.parse(url), tag: tag))
               .timeout(_loadLimit);
-          unawaited(_player.play());
-          _pauseWhenFinished();
+          _finish.play(_player);
           AudioFailure.instance.clear();
           debugPrint('recitation from ${Uri.parse(url).host}${Uri.parse(url).path}');
           return true;
@@ -410,8 +377,7 @@ class AyahAudioService {
       } else {
         await _player.setAudioSource(AudioSource.uri(Uri.parse(url), tag: tag));
       }
-      unawaited(_player.play());
-      _pauseWhenFinished();
+      _finish.play(_player);
       return true;
     } catch (e) {
       debugPrint('playTrack failed for $id: $e');
