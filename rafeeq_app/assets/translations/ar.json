@@ -1687,7 +1687,9 @@
     "plan_ayah": "الآية",
     "plan_name": "الاسم (اختياري)",
     "plan_start": "ابدأ",
-    "plan_delete": "حذف"
+    "plan_delete": "حذف",
+    "jump": "اختر السورة والآية",
+    "jump_start": "ابدأ من هنا"
   },
   "hajj": {
     "mawaqit_today_title": "المواقيت اليوم",

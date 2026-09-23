@@ -21,6 +21,9 @@ import '../../../core/widgets/arabic_text.dart';
 import '../../quran/data/basmala.dart';
 import '../data/hifz_mask.dart';
 import '../data/hifz_plans.dart';
+import '../../downloads/data/reciters_provider.dart';
+import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
+import 'widgets/hifz_plans_section.dart';
 import 'widgets/tasmee_panel.dart';
 import '../data/hifz_store.dart';
 
@@ -33,11 +36,16 @@ class HifzSessionScreen extends ConsumerStatefulWidget {
   /// What the app bar says: the surah's name, or the plan's.
   final String title;
 
+  /// Every ayah of the range from its start, not only the due ones - what a
+  /// jump to a chosen ayah means.
+  final bool allAyahs;
+
   const HifzSessionScreen({
     super.key,
     required this.from,
     required this.to,
     required this.title,
+    this.allAyahs = false,
   });
 
   /// The whole of [surah], as the surah list opens it.
@@ -87,9 +95,9 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
       ];
       // Due ayahs first; when nothing in the range is due, the whole range.
       final store = ref.read(hifzStoreProvider);
-      final list = all
-          .where((a) => store.isDue(a.surahId, a.ayahNumber))
-          .toList();
+      final list = widget.allAyahs
+          ? all
+          : all.where((a) => store.isDue(a.surahId, a.ayahNumber)).toList();
       if (mounted) {
         setState(() {
           _surahNames = names;
@@ -111,7 +119,8 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
         repo,
         times: _repeats,
         gap: const Duration(milliseconds: 600),
-        edition: AyahAudioService.defaultEdition,
+        // The reader's own reciter, not always al-Minshawi.
+        edition: ref.read(selectedReciterProvider),
         title: '$_name — ${ayah.ayahNumber}',
       );
     } finally {
@@ -133,6 +142,39 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
   }
 
   String get _name => widget.title;
+
+  String _reciterName() {
+    final id = ref.watch(selectedReciterProvider);
+    final list = ref.watch(recitersProvider).valueOrNull;
+    final r = list?.where((x) => x.identifier == id).firstOrNull;
+    return r?.displayName(context.locale.languageCode) ?? id;
+  }
+
+  /// Start again from any surah and ayah the reader picks: the rest of
+  /// that surah, due or not, beginning at the chosen ayah.
+  Future<void> _jump(Ayah current) async {
+    final repo = await ref.read(quranRepositoryProvider.future);
+    final surahs = await repo.surahs();
+    if (!mounted) return;
+    final to = await showAyahJumpSheet(
+      context,
+      surahs,
+      AyahRef(current.surahId, current.ayahNumber),
+    );
+    if (to == null || !mounted) return;
+    final s = surahs.firstWhere((x) => x.id == to.surah);
+    AyahAudioService.instance.stopQueue();
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => HifzSessionScreen(
+          from: to,
+          to: AyahRef(s.id, s.ayahsCount),
+          title: surahNamePlain(s.nameAr),
+          allAyahs: true,
+        ),
+      ),
+    );
+  }
 
   /// Surah names, for a range that crosses from one surah into the next.
   Map<int, String> _surahNames = const {};
@@ -165,6 +207,13 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_name),
+        actions: [
+          IconButton(
+            tooltip: 'hifz.jump'.tr(),
+            icon: const Icon(Icons.format_list_numbered_rtl_rounded),
+            onPressed: () => _jump(ayah),
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
@@ -269,7 +318,25 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
                 ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
+          // «حطلي هنا اختيار صوت القارئ سواء من الجهاز لو موجود او من النت»
+          // (the owner, 2026-09-23). The same sheet as the mushaf's: a
+          // reciter with ayahs downloaded is marked and plays from the device,
+          // any other streams.
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: ActionChip(
+              avatar: const Icon(Icons.record_voice_over_rounded, size: 18),
+              label: Text(_reciterName()),
+              onPressed: () async {
+                final id = await showReciterPickerSheet(context);
+                if (id == null || !mounted) return;
+                await ref.read(selectedReciterProvider.notifier).select(id);
+                setState(() {});
+              },
+            ),
+          ),
+          const SizedBox(height: 6),
           FilledButton.icon(
             onPressed: _playing
                 ? () => AyahAudioService.instance.stopQueue()

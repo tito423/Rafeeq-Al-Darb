@@ -1687,7 +1687,9 @@
     "plan_ayah": "Ayah",
     "plan_name": "Name (optional)",
     "plan_start": "Start",
-    "plan_delete": "Delete"
+    "plan_delete": "Delete",
+    "jump": "Choose surah and ayah",
+    "jump_start": "Start here"
   },
   "hajj": {
     "mawaqit_today_title": "The miqats today",

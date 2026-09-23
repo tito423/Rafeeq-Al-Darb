@@ -31,6 +31,19 @@ Cline, or any other).
 
 Not started. Do them in this order unless he says otherwise.
 
+0. **FIRST: open these on the emulator — committed, analyze clean, 529 tests
+   pass, NEVER SEEN RUNNING** (quota ran out; commit after 423d5b37): in a
+   hifz session (a) the app-bar button «اختر السورة والآية» opens a sheet,
+   and «ابدأ من هنا» restarts the session at that surah/ayah with every ayah
+   from there (not only the due ones); (b) the reciter chip above «استمع»
+   opens the reciter sheet (downloaded reciters first, «على الجهاز») and
+   «استمع» then plays THAT reciter — it had always played al-Minshawi
+   (`AyahAudioService.defaultEdition` was hard-coded in `_play`).
+   The owner also reports «قراءة الآية مش شغالة» on v3.57.0 with no reciter
+   downloaded: «إيقاف» stays up. Unexplained — the 20 s bounds in 3.57.0
+   should end the wait. Get logcat from HIS phone (`adb logcat | grep -i
+   "AyahAudioService\|ExoPlayer"`) before guessing.
+
 1. **Theme choice on the first screen after the splash.** «حط نوت للتعديلات
    اللي جاية اختيار الثيم من اول شاشة بتظهر بعد الاسبلاش لان اول شاشة بتظهر
    دارك» (2026-09-23). Seen on emulator-5554 on a fresh install the same day:

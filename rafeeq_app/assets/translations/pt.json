@@ -1687,7 +1687,9 @@
     "plan_ayah": "Versículo",
     "plan_name": "Nome (opcional)",
     "plan_start": "Começar",
-    "plan_delete": "Excluir"
+    "plan_delete": "Excluir",
+    "jump": "Escolher surata e versículo",
+    "jump_start": "Começar aqui"
   },
   "hajj": {
     "mawaqit_today_title": "Os miqats hoje",

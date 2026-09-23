@@ -1687,7 +1687,9 @@
     "plan_ayah": "آیت",
     "plan_name": "نام (اختیاری)",
     "plan_start": "شروع کریں",
-    "plan_delete": "حذف کریں"
+    "plan_delete": "حذف کریں",
+    "jump": "سورت اور آیت منتخب کریں",
+    "jump_start": "یہاں سے شروع کریں"
   },
   "hajj": {
     "mawaqit_today_title": "میقات آج",

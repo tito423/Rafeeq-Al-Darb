@@ -9,7 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/arabic_normalize.dart' show surahNamePlain, surahNameShort;
+import '../../../../core/utils/arabic_normalize.dart'
+    show surahNamePlain, surahNameShort;
 import '../../../../core/utils/digits.dart';
 import '../../data/hifz_plans.dart';
 import '../../data/hifz_store.dart';
@@ -323,6 +324,115 @@ class _NewPlanSheetState extends ConsumerState<_NewPlanSheet> {
             },
             icon: const Icon(Icons.play_arrow_rounded),
             label: Text('hifz.plan_start'.tr()),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// «في الشاشة دي اديني اختيار تغيير الاية … اقدر اغير السورة والايه اللي
+/// ابتدي منها» (the owner, 2026-09-23): from inside a session, pick any
+/// surah and ayah and carry on from there. Returns the chosen start.
+Future<AyahRef?> showAyahJumpSheet(
+  BuildContext context,
+  List<Surah> surahs,
+  AyahRef initial,
+) => showModalBottomSheet<AyahRef>(
+  context: context,
+  isScrollControlled: true,
+  showDragHandle: true,
+  builder: (_) => _JumpSheet(surahs: surahs, initial: initial),
+);
+
+class _JumpSheet extends StatefulWidget {
+  final List<Surah> surahs;
+  final AyahRef initial;
+  const _JumpSheet({required this.surahs, required this.initial});
+
+  @override
+  State<_JumpSheet> createState() => _JumpSheetState();
+}
+
+class _JumpSheetState extends State<_JumpSheet> {
+  late int _surah = widget.initial.surah;
+  late int _ayah = widget.initial.ayah;
+
+  int get _count => widget.surahs.firstWhere((s) => s.id == _surah).ayahsCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = context.locale.languageCode;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'hifz.jump'.tr(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: DropdownButtonFormField<int>(
+                  key: ValueKey('s$_surah'),
+                  initialValue: _surah,
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    labelText: 'hifz.plan_surah'.tr(),
+                    isDense: true,
+                  ),
+                  items: [
+                    for (final s in widget.surahs)
+                      DropdownMenuItem(
+                        value: s.id,
+                        child: Text(
+                          '${localizeDigits('${s.id}', lang)}. ${surahNamePlain(s.nameAr)}',
+                        ),
+                      ),
+                  ],
+                  onChanged: (v) => v == null
+                      ? null
+                      : setState(() {
+                          _surah = v;
+                          _ayah = 1;
+                        }),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                flex: 2,
+                child: DropdownButtonFormField<int>(
+                  key: ValueKey('a$_surah:$_ayah'),
+                  initialValue: _ayah,
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    labelText: 'hifz.plan_ayah'.tr(),
+                    isDense: true,
+                  ),
+                  items: [
+                    for (var a = 1; a <= _count; a++)
+                      DropdownMenuItem(
+                        value: a,
+                        child: Text(localizeDigits('$a', lang)),
+                      ),
+                  ],
+                  onChanged: (v) =>
+                      v == null ? null : setState(() => _ayah = v),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          FilledButton.icon(
+            onPressed: () => Navigator.of(context).pop(AyahRef(_surah, _ayah)),
+            icon: const Icon(Icons.play_arrow_rounded),
+            label: Text('hifz.jump_start'.tr()),
           ),
         ],
       ),

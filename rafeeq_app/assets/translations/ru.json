@@ -1687,7 +1687,9 @@
     "plan_ayah": "Аят",
     "plan_name": "Название (необязательно)",
     "plan_start": "Начать",
-    "plan_delete": "Удалить"
+    "plan_delete": "Удалить",
+    "jump": "Выбрать суру и аят",
+    "jump_start": "Начать отсюда"
   },
   "hajj": {
     "mawaqit_today_title": "Микаты сегодня",

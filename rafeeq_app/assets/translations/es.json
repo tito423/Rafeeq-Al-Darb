@@ -1687,7 +1687,9 @@
     "plan_ayah": "Aleya",
     "plan_name": "Nombre (opcional)",
     "plan_start": "Empezar",
-    "plan_delete": "Eliminar"
+    "plan_delete": "Eliminar",
+    "jump": "Elegir sura y aleya",
+    "jump_start": "Empezar aquí"
   },
   "hajj": {
     "mawaqit_today_title": "Los miqat hoy",
