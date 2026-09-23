@@ -329,6 +329,8 @@
     "card_collapse": "Свернуть",
     "reciter_legend_fast": "Проверенная копия — быстрое воспроизведение",
     "reciter_legend_stream": "Потоком из сети",
+    "reciter_on_device": "На устройстве",
+    "reciter_on_device_count": "На устройстве: {}",
     "display_title": "Отображение",
     "display_layout": "Расположение аятов",
     "display_font": "Размер текста",

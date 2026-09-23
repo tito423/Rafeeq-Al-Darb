@@ -329,6 +329,8 @@
     "card_collapse": "Collapse",
     "reciter_legend_fast": "Verified mirror — plays fast",
     "reciter_legend_stream": "Streams from the CDN",
+    "reciter_on_device": "On this device",
+    "reciter_on_device_count": "On this device: {}",
     "display_title": "Display",
     "display_layout": "Verse layout",
     "display_font": "Text size",

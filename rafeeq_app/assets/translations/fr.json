@@ -329,6 +329,8 @@
     "card_collapse": "Réduire",
     "reciter_legend_fast": "Copie vérifiée — lecture rapide",
     "reciter_legend_stream": "Diffusé depuis le CDN",
+    "reciter_on_device": "Sur l'appareil",
+    "reciter_on_device_count": "Sur l'appareil : {}",
     "display_title": "Affichage",
     "display_layout": "Disposition des versets",
     "display_font": "Taille du texte",

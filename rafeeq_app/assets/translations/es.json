@@ -329,6 +329,8 @@
     "card_collapse": "Reducir",
     "reciter_legend_fast": "Copia verificada: reproducción rápida",
     "reciter_legend_stream": "Transmisión desde el CDN",
+    "reciter_on_device": "En el dispositivo",
+    "reciter_on_device_count": "En el dispositivo: {}",
     "display_title": "Visualización",
     "display_layout": "Disposición de las aleyas",
     "display_font": "Tamaño del texto",

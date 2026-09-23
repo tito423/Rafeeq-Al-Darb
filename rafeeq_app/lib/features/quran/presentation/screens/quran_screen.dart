@@ -538,17 +538,19 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       await audio.stopContinuous();
       return;
     }
+    // «لما تضغط على التلاوة المستمرة يديني اختيار قارئ» (2026-09-23): the
+    // reciter is chosen on every start. Downloaded reciters head the list
+    // and play from the device; the rest stream.
+    final id = await showReciterPickerSheet(context);
+    if (id == null || !mounted) return;
+    await ref.read(selectedReciterProvider.notifier).select(id);
     final ayahs = await _ayahsOfPage(_current, data);
     if (ayahs.isEmpty || !mounted) return;
     final start = ayahs.firstWhere(
       (a) => a.surahId == _highlightSurah && a.ayahNumber == _highlightAyah,
       orElse: () => ayahs.first,
     );
-    await audio.startContinuous(
-      from: start,
-      repo: data.repo,
-      edition: ref.read(selectedReciterProvider),
-    );
+    await audio.startContinuous(from: start, repo: data.repo, edition: id);
   }
 
   @override

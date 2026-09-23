@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/recitation_source.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../downloads/data/reciters_provider.dart';
+import '../../../quran_audio/data/ayah_recitation_library.dart';
 
 /// «اديني في خيارات تلاوة الآية بآية إمكانية اختيار القارئ في البلاير
 /// الصغير». Opened from the recitation bar under the page; returns the
@@ -35,6 +37,23 @@ class _ReciterPickerSheet extends ConsumerStatefulWidget {
 class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
   String _query = '';
 
+  /// «لو موجود في التطبيق يشغله ولو مش موجود يجيبه من النت» (2026-09-23): a
+  /// reciter with ayahs downloaded plays them from the device
+  /// ([RecitationSource.urlsFor] prefers the local file), so he is marked and
+  /// listed first. The counts are read once the library has loaded.
+  final _library = AyahRecitationLibrary.instance;
+  bool _libraryReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _library.ensureReady().then((_) {
+      if (mounted) setState(() => _libraryReady = true);
+    });
+  }
+
+  int _onDevice(String id) => _libraryReady ? _library.downloadedCount(id) : 0;
+
   @override
   Widget build(BuildContext context) {
     final locale = context.locale.languageCode;
@@ -48,6 +67,9 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
             r.nameEn.toLowerCase().contains(q))
           r,
     ]..sort((a, b) {
+        final da = _onDevice(a.identifier) > 0 ? 0 : 1;
+        final db = _onDevice(b.identifier) > 0 ? 0 : 1;
+        if (da != db) return da - db;
         final ma = RecitationSource.hasVerifiedMirror(a.identifier) ? 0 : 1;
         final mb = RecitationSource.hasVerifiedMirror(b.identifier) ? 0 : 1;
         return ma != mb ? ma - mb : a.displayName(locale).compareTo(b.displayName(locale));
@@ -91,6 +113,16 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
                           color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ),
                 const SizedBox(width: 12),
+                Icon(Icons.offline_pin_rounded,
+                    size: 16, color: goldOn(Theme.of(context).colorScheme)),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: Text('quran.reciter_on_device'.tr(),
+                      style: TextStyle(
+                          fontSize: 11.5,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                ),
+                const SizedBox(width: 12),
                 Icon(Icons.cloud_outlined,
                     size: 16,
                     color: Theme.of(context).colorScheme.onSurfaceVariant),
@@ -111,13 +143,22 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
                 final r = list[i];
                 final isSelected = r.identifier == selected;
                 final fast = RecitationSource.hasVerifiedMirror(r.identifier);
+                final onDevice = _onDevice(r.identifier);
                 return ListTile(
                   leading: Icon(
-                    fast ? Icons.bolt_rounded : Icons.cloud_outlined,
-                    color: fast
+                    onDevice > 0
+                        ? Icons.offline_pin_rounded
+                        : fast
+                            ? Icons.bolt_rounded
+                            : Icons.cloud_outlined,
+                    color: onDevice > 0 || fast
                         ? goldOn(Theme.of(context).colorScheme)
                         : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
+                  subtitle: onDevice > 0
+                      ? Text('quran.reciter_on_device_count'.tr(
+                          args: [pluralN('quran.ayahs', onDevice)]))
+                      : null,
                   title: Text(
                     r.displayName(locale),
                     style: TextStyle(

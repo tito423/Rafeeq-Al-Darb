@@ -193,8 +193,8 @@ class TasmeeEngine {
       if (got != a.bytes || hash != a.sha256) {
         await File(tmp).delete();
         throw StateError(
-          '${a.name} came back $got bytes / $hash, expected '
-          '${a.bytes} / ${a.sha256}',
+          '${a.name} came back $got bytes with sha256 $hash; expected '
+          '${a.bytes} bytes with sha256 ${a.sha256}',
         );
       }
       if (File(path).existsSync()) await File(path).delete();

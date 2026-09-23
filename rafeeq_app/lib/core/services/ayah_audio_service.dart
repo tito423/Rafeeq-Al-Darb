@@ -185,12 +185,16 @@ class AyahAudioService {
     for (var i = 0; i < ayahs.length; i++) {
       if (token != _queueToken) return; // superseded by a newer call/stop
       onIndex?.call(i);
-      await play(
+      final started = await play(
         ayahs[i],
         repo,
         edition: edition,
         title: titleFor?.call(ayahs[i], i),
       );
+      // Nothing could be loaded: waiting for it to "complete" would wait for
+      // ever, and «استمع» would stay «إيقاف» (the owner's al-Baqarah 3,
+      // 2026-09-23).
+      if (!started) break;
       await _waitForCompletionOrToken(token);
       if (token != _queueToken) return;
       if (gap > Duration.zero) await Future<void>.delayed(gap);
@@ -217,18 +221,46 @@ class AyahAudioService {
     );
   }
 
+  /// Returns when the ayah has finished — or when it never will.
+  ///
+  /// It used to wait for `completed` and nothing else, so a player that
+  /// errored, was stopped from outside, or was paused by another app or the
+  /// tasmee microphone taking the audio focus left the loop waiting for ever
+  /// and the button on «إيقاف». Now an `idle` player (stopped or failed), a
+  /// playback error, or a pause that lasts [_stallLimit] all end the wait.
   Future<void> _waitForCompletionOrToken(int token) async {
     final completer = Completer<void>();
+    void done() {
+      if (!completer.isCompleted) completer.complete();
+    }
+
+    Timer? stall;
     late final StreamSubscription<PlayerState> sub;
     sub = _player.playerStateStream.listen((s) {
       if (token != _queueToken ||
-          s.processingState == ProcessingState.completed) {
-        sub.cancel();
-        if (!completer.isCompleted) completer.complete();
+          s.processingState == ProcessingState.completed ||
+          s.processingState == ProcessingState.idle) {
+        done();
+        return;
       }
-    });
+      if (!s.playing) {
+        stall ??= Timer(_stallLimit, done);
+      } else {
+        stall?.cancel();
+        stall = null;
+      }
+    }, onError: (Object _) => done());
     await completer.future;
+    stall?.cancel();
+    await sub.cancel();
   }
+
+  static const _stallLimit = Duration(seconds: 20);
+
+  /// How long one source may take to load before the next host is tried.
+  /// `setAudioSource` on a host that accepts the connection and then sends
+  /// nothing does not throw; it waits.
+  static const _loadLimit = Duration(seconds: 20);
 
   /// Cancels any in-flight `playQueue`/`playRepeated` loop and stops audio.
   Future<void> stopQueue() async {
@@ -247,8 +279,9 @@ class AyahAudioService {
 
   // ── Single-ayah playback ────────────────────────────────────────────────
 
-  /// Plays one ayah from the network, trying each host in turn.
-  Future<void> play(
+  /// Plays one ayah — from the device when it is downloaded, otherwise from
+  /// the network, trying each host in turn. True when playback started.
+  Future<bool> play(
     Ayah ayah,
     QuranRepository repo, {
     String edition = defaultEdition,
@@ -276,11 +309,11 @@ class AyahAudioService {
       );
       for (final url in urls) {
         try {
-          await _player.setAudioSource(
-            AudioSource.uri(Uri.parse(url), tag: tag),
-          );
+          await _player
+              .setAudioSource(AudioSource.uri(Uri.parse(url), tag: tag))
+              .timeout(_loadLimit);
           unawaited(_player.play());
-          return;
+          return true;
         } catch (_) {} // try the next source
       }
       // No caller shows an error, so without this a dead «استمع» is silent.
@@ -288,6 +321,7 @@ class AyahAudioService {
     } catch (e) {
       debugPrint('AyahAudioService.play failed: $e');
     }
+    return false;
   }
 
   Future<void> stop() async {
@@ -541,12 +575,14 @@ class AyahAudioService {
       }
       try {
         await _player.stop();
-        await _player.setAudioSource(
-          ConcatenatingAudioSource(
-            children: buildChildren(host: attempt == 2 ? 1 : 0),
-          ),
-          initialIndex: plan.initialIndex,
-        );
+        await _player
+            .setAudioSource(
+              ConcatenatingAudioSource(
+                children: buildChildren(host: attempt == 2 ? 1 : 0),
+              ),
+              initialIndex: plan.initialIndex,
+            )
+            .timeout(_loadLimit);
         loaded = true;
       } catch (_) {
         // fall through to the retry, then to the report below

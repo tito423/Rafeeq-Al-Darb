@@ -18,6 +18,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
+import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart';
@@ -121,6 +122,9 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   }
 
   Future<void> _startRecording() async {
+    // The reciter must be silent while the reader recites: the microphone
+    // would hear him, and taking the audio focus left «استمع» waiting.
+    await AyahAudioService.instance.stopQueue();
     if (!await _recorder.hasPermission()) {
       if (mounted) setState(() => _error = 'tasmee.needs_mic'.tr());
       return;
