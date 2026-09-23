@@ -37,6 +37,12 @@ Not started. Do them in this order unless he says otherwise. The owner:
 — «والتسميع شغال تمام ماشاء الله». The generic-model fix is proven where it
 matters; the model-name/sha256 repair did its job on a real install.
 
+00. **URGENT — recitation is SILENT on the owner's phone** in continuous
+   recitation (after picking a reciter) and in hifz «استمع» (v3.57.0, nothing
+   downloaded, all streamed). Works on emulator-5554. Needs his logcat and a
+   check that everyayah.com / cdn.islamic.network open in his phone's browser
+   — see NEXT_PROMPT.md item 00. No code change before the evidence.
+
 0. **FIRST: open these on the emulator — committed, analyze clean, 529 tests
    pass, NEVER SEEN RUNNING** (quota ran out; commit after 423d5b37): in a
    hifz session (a) the app-bar button «اختر السورة والآية» opens a sheet,
