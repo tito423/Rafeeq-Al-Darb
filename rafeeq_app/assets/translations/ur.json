@@ -1678,7 +1678,16 @@
     "stop": "روکیں",
     "listen": "سنیں",
     "memorized": "یاد ہو گئی",
-    "again": "دوبارہ"
+    "again": "دوبارہ",
+    "my_plans": "میرا حفظ",
+    "new_plan": "نیا حفظ",
+    "plan_from": "سے",
+    "plan_to": "تک",
+    "plan_surah": "سورت",
+    "plan_ayah": "آیت",
+    "plan_name": "نام (اختیاری)",
+    "plan_start": "شروع کریں",
+    "plan_delete": "حذف کریں"
   },
   "hajj": {
     "safa": "الصفا",

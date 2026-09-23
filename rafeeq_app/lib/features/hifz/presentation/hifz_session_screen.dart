@@ -20,12 +20,33 @@ import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../quran/data/basmala.dart';
 import '../data/hifz_mask.dart';
+import '../data/hifz_plans.dart';
 import 'widgets/tasmee_panel.dart';
 import '../data/hifz_store.dart';
 
 class HifzSessionScreen extends ConsumerStatefulWidget {
-  final Surah surah;
-  const HifzSessionScreen({super.key, required this.surah});
+  /// The stretch being worked through, ends included — a whole surah from
+  /// the surah list, or any range the reader chose under «حفظي».
+  final AyahRef from;
+  final AyahRef to;
+
+  /// What the app bar says: the surah's name, or the plan's.
+  final String title;
+
+  const HifzSessionScreen({
+    super.key,
+    required this.from,
+    required this.to,
+    required this.title,
+  });
+
+  /// The whole of [surah], as the surah list opens it.
+  factory HifzSessionScreen.surah(Surah surah, {Key? key}) => HifzSessionScreen(
+    key: key,
+    from: AyahRef(surah.id, 1),
+    to: AyahRef(surah.id, surah.ayahsCount),
+    title: surahNamePlain(surah.nameAr),
+  );
 
   @override
   ConsumerState<HifzSessionScreen> createState() => _HifzSessionScreenState();
@@ -54,13 +75,27 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
   Future<void> _load() async {
     try {
       final repo = await ref.read(quranRepositoryProvider.future);
-      final all = await repo.ayahsOfSurah(widget.surah.id);
-      final due = ref
-          .read(hifzStoreProvider)
-          .dueIn(widget.surah.id, widget.surah.ayahsCount)
-          .toSet();
-      final list = all.where((a) => due.contains(a.ayahNumber)).toList();
-      if (mounted) setState(() => _ayahs = list.isEmpty ? all : list);
+      final names = {
+        for (final s in await repo.surahs()) s.id: surahNamePlain(s.nameAr),
+      };
+      final all = <Ayah>[
+        for (var s = widget.from.surah; s <= widget.to.surah; s++)
+          for (final a in await repo.ayahsOfSurah(s))
+            if (widget.from <= AyahRef(a.surahId, a.ayahNumber) &&
+                AyahRef(a.surahId, a.ayahNumber) <= widget.to)
+              a,
+      ];
+      // Due ayahs first; when nothing in the range is due, the whole range.
+      final store = ref.read(hifzStoreProvider);
+      final list = all
+          .where((a) => store.isDue(a.surahId, a.ayahNumber))
+          .toList();
+      if (mounted) {
+        setState(() {
+          _surahNames = names;
+          _ayahs = list.isEmpty ? all : list;
+        });
+      }
     } catch (e) {
       if (mounted) setState(() => _error = '$e');
     }
@@ -97,8 +132,11 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     });
   }
 
-  /// The name as a heading, marks off — see [surahNamePlain].
-  String get _name => surahNamePlain(widget.surah.nameAr);
+  String get _name => widget.title;
+
+  /// Surah names, for a range that crosses from one surah into the next.
+  Map<int, String> _surahNames = const {};
+  bool get _crossesSurahs => widget.from.surah != widget.to.surah;
 
   @override
   Widget build(BuildContext context) {
@@ -141,10 +179,13 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         children: [
           Text(
-            trn(
-              'hifz.ayah_of',
-              args: ['${ayah.ayahNumber}', '${list.length - _at}'],
-            ),
+            [
+              if (_crossesSurahs) _surahNames[ayah.surahId] ?? '',
+              trn(
+                'hifz.ayah_of',
+                args: ['${ayah.ayahNumber}', '${list.length - _at}'],
+              ),
+            ].where((t) => t.isNotEmpty).join(' — '),
             style: TextStyle(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: 12),
@@ -241,16 +282,16 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
           const Divider(height: 28),
           // «سمّع لنفسك»: the device listens and marks the words.
           TasmeePanel(
-            key: ValueKey('${widget.surah.id}:${ayah.ayahNumber}'),
+            key: ValueKey('${ayah.surahId}:${ayah.ayahNumber}'),
             ayahText: body,
-            surahId: widget.surah.id,
+            surahId: ayah.surahId,
             ayahNumber: ayah.ayahNumber,
             // «أتقنتها»: the same step «حفظتها» takes, offered where the
             // reader just proved it — never taken for him.
             onMastered: () async {
               await ref
                   .read(hifzStoreProvider.notifier)
-                  .remembered(widget.surah.id, ayah.ayahNumber);
+                  .remembered(ayah.surahId, ayah.ayahNumber);
               if (context.mounted) _next();
             },
           ),
@@ -262,7 +303,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
                   onPressed: () async {
                     await ref
                         .read(hifzStoreProvider.notifier)
-                        .forgot(widget.surah.id, ayah.ayahNumber);
+                        .forgot(ayah.surahId, ayah.ayahNumber);
                     if (context.mounted) _next();
                   },
                   icon: const Icon(Icons.replay_rounded),
@@ -275,7 +316,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
                   onPressed: () async {
                     await ref
                         .read(hifzStoreProvider.notifier)
-                        .remembered(widget.surah.id, ayah.ayahNumber);
+                        .remembered(ayah.surahId, ayah.ayahNumber);
                     if (context.mounted) _next();
                   },
                   icon: const Icon(Icons.check_rounded),

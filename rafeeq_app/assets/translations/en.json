@@ -1678,7 +1678,16 @@
     "stop": "Stop",
     "listen": "Listen",
     "memorized": "Memorized",
-    "again": "Again"
+    "again": "Again",
+    "my_plans": "My memorization",
+    "new_plan": "New",
+    "plan_from": "From",
+    "plan_to": "To",
+    "plan_surah": "Surah",
+    "plan_ayah": "Ayah",
+    "plan_name": "Name (optional)",
+    "plan_start": "Start",
+    "plan_delete": "Delete"
   },
   "hajj": {
     "safa": "as-Safa",

@@ -1678,7 +1678,16 @@
     "stop": "Стоп",
     "listen": "Слушать",
     "memorized": "Выучен",
-    "again": "Ещё раз"
+    "again": "Ещё раз",
+    "my_plans": "Моё заучивание",
+    "new_plan": "Новое",
+    "plan_from": "С",
+    "plan_to": "По",
+    "plan_surah": "Сура",
+    "plan_ayah": "Аят",
+    "plan_name": "Название (необязательно)",
+    "plan_start": "Начать",
+    "plan_delete": "Удалить"
   },
   "hajj": {
     "safa": "ас-Сафа",

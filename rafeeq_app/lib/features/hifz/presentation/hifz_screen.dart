@@ -22,6 +22,7 @@ import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
 import '../../../core/utils/digits.dart';
 import '../data/hifz_store.dart';
 import 'hifz_session_screen.dart';
+import 'widgets/hifz_plans_section.dart';
 
 final _surahsProvider = FutureProvider<List<Surah>>((ref) async {
   final repo = await ref.watch(quranRepositoryProvider.future);
@@ -47,38 +48,12 @@ class HifzScreen extends ConsumerWidget {
           itemCount: list.length + 1,
           itemBuilder: (context, i) {
             if (i == 0) {
-              return Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'hifz.intro'.tr(),
-                        style: TextStyle(
-                          height: 1.7,
-                          color: scheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.check_circle_outline,
-                            size: 18,
-                            color: AppColors.gold,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            trn('hifz.progress', args: ['${state.started}']),
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _intro(context, state, scheme),
+                  HifzPlansSection(surahs: list),
+                ],
               );
             }
             final s = list[i - 1];
@@ -100,12 +75,45 @@ class HifzScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    builder: (_) => HifzSessionScreen(surah: s),
+                    builder: (_) => HifzSessionScreen.surah(s),
                   ),
                 ),
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _intro(BuildContext context, HifzState state, ColorScheme scheme) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'hifz.intro'.tr(),
+              style: TextStyle(height: 1.7, color: scheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(
+                  Icons.check_circle_outline,
+                  size: 18,
+                  color: AppColors.gold,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  trn('hifz.progress', args: ['${state.started}']),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
