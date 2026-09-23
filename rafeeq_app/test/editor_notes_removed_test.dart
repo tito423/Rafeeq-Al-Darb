@@ -37,7 +37,7 @@ void main() {
     // 61 from 2026-09-22: library «المرحلة ١» added 18 books built by
     // build_book_text.py, which drops Shamela's hamesh (the editor's footnote
     // block) at crawl time, so the claim is true of each of them from birth.
-    expect(flagged.length, 65,
+    expect(flagged.length, 68,
         reason: 'scripts/mark_editor_notes_removed.py flags exactly the set '
             'of files that scripts/upload_stripped_books.py published. If this '
             'number moved, say why in CONTENT-LICENSES.md.');
@@ -89,7 +89,7 @@ void main() {
     //
     // This test holds the half that IS checkable from inside the app: the
     // catalogue and the bucket agree on how many were touched.
-    expect(libraryBookCatalog.length, 233,
+    expect(libraryBookCatalog.length, 236,
         reason: 'the library was 257 entries on the morning of 2026-09-17: 7 '
             'duplicates and mislabelled takhrij volumes went, then '
             'al_ijaz_fi_sharh_sunan_abi_dawud on the rights audit (248), then '
@@ -99,6 +99,6 @@ void main() {
             'complete: 27 added, 26 kept (iqtida dropped on its edition) - '
             '213. Then library «المرحلة ١» on 2026-09-22: 18 explained books '
             'in, the bare الورقات and الآجرومية out (229), then library '
-            '«المرحلة ٢» began landing on 2026-09-23 (230: إعلام الموقعين; 231: المجموع; 233: القرطبي والمغني).');
+            '«المرحلة ٢» began landing on 2026-09-23 (230: إعلام الموقعين; 231: المجموع; 233: القرطبي والمغني; 236: الطبري وفتح الباري والسير).');
   });
 }

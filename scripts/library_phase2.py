@@ -169,14 +169,68 @@ def dart_str(s):
 
 # Built but NOT to be catalogued until the reason is dealt with. Read from the
 # report's name hits in context, 2026-09-23.
-HOLD = {
-    # The Salafiyya edition prints Ibn Baz's own preface in the text stream
-    # (vol. 1 pp. 3-4, signed «عبد العزيز بن عبد الله بن باز», 1379 AH) and
-    # his closing note at the end of vol. 3 (p. 625). The builder drops only
-    # the hamesh, so both are in the body - and the owner's rule is nothing
-    # of Ibn Baz's but takhrij. Those pages must come out before it ships.
-    "fath_al_bari": "Ibn Baz's preface and vol. 3 note are in the body",
+HOLD = {}
+
+# Text in the body stream that is not the author's and falls under the owner's
+# rule «لا شيء لابن باز … إلا التخريج». Each passage is found by its OWN
+# words - the line it opens with and the signature it closes with - never by
+# a page index, so a rebuilt crawl cannot shift the cut onto the author.
+# `expect` is the number of (passages, pages) the book must yield, or the run
+# stops: a cut that finds more or less than was read by hand is not trusted.
+NOT_THE_AUTHOR = {
+    # The Salafiyya edition: Ibn Baz's preface (vol. 1 pp. 3-4, «حرر في ٢١
+    # من شعبان سنة ١٣٧٩ هـ») and his «تنبيه واعتذار» closing vol. 3 (p. 625).
+    # The publisher's closing word on the book's last page MENTIONS him and
+    # is not his; it stays (the similar-names rule).
+    "fath_al_bari": {
+        "passages": [
+            ("أما بعد فإنه لما قلت النسخ المطبوعة من فتح الباري",
+             "عبد العزيز بن عبد الله بن باز"),
+            ("تنبيه واعتذار", "عبد العزيز بن عبد الله بن باز"),
+        ],
+        "expect": (2, 3),
+        "why": "Ibn Baz's preface to the Salafiyya edition and his note "
+               "closing vol. 3 - the owner's rule admits nothing of his "
+               "but takhrij",
+    },
 }
+
+
+def cut_not_the_author(book_id, book):
+    """Empty the pages of each NOT_THE_AUTHOR passage (tidy() then drops them
+    and re-points the TOC). Returns the pages cut, or exits on a mismatch."""
+    spec = NOT_THE_AUTHOR.get(book_id)
+    if not spec:
+        return 0
+    text = lambda p: p["t"] if isinstance(p, dict) else p
+    pages = book["pages"]
+    # tidy() writes the build file back, so a --report run has already made
+    # the cut: then every opener must be GONE, and there is nothing to do.
+    if book["meta"].get("notTheAuthorRemoved"):
+        for opener, _ in spec["passages"]:
+            if any(text(p).startswith(opener) for pg in pages for p in pg["paras"]):
+                sys.exit(f"{book_id}: marked as cut but «{opener}» is still there")
+        return 0
+    found, cut = 0, 0
+    for opener, signature in spec["passages"]:
+        for i, pg in enumerate(pages):
+            if not any(text(p).startswith(opener) for p in pg["paras"]):
+                continue
+            end = next((k for k in range(i, min(i + 3, len(pages)))
+                        if any(signature in text(p) for p in pages[k]["paras"])),
+                       None)
+            if end is None:
+                sys.exit(f"{book_id}: «{opener}» has no «{signature}» within "
+                         "three pages - not cutting blind")
+            for k in range(i, end + 1):
+                pages[k]["paras"] = []
+                cut += 1
+            found += 1
+    if (found, cut) != spec["expect"]:
+        sys.exit(f"{book_id}: cut {found} passages / {cut} pages, expected "
+                 f"{spec['expect']} - read the book again before trusting it")
+    book["meta"]["notTheAuthorRemoved"] = spec["why"]
+    return cut
 
 
 def main():
@@ -199,7 +253,10 @@ def main():
             refused.append((book_id, "not built"))
             continue
         raw, book = load(book_id)
+        cut = cut_not_the_author(book_id, book)
         dropped = tidy(book)
+        if cut:
+            dropped["not the author"] = cut
         if any(dropped.values()):
             book["meta"]["tidiedBy"] = "scripts/library_phase2.py"
             raw = gzip.compress(json.dumps(book, ensure_ascii=False, separators=(",", ":"))

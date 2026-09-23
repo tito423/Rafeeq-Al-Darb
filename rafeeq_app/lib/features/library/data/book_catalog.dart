@@ -4668,6 +4668,58 @@ const List<LibraryBook> libraryBookCatalog = [
     ),
   ),
 
+  LibraryBook(
+    id: 'tafsir_al_tabari',
+    titleAr: 'جامع البيان عن تأويل آي القرآن',
+    titleEn: 'Tafsir al-Tabari',
+    authorAr: 'الإمام ابن جرير الطبري',
+    authorEn: 'Ibn Jarir al-Tabari',
+    deathYearAh: 310,
+    pages: 16699,
+    category: BookCategory.tafsir,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tafsir_al_tabari.json',
+      sizeBytes: 7551247,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — تفسير الطبري = جامع البيان عن تأويل آي القرآن، أبو جعفر محمد بن جرير الطبري (٢٢٤ - ٣١٠ هـ)، دار هجر للطباعة والنشر والتوزيع والإعلان - القاهرة، مصر، الأولى، ١٤٢٢ هـ - ٢٠٠١ م',
+    ),
+  ),
+  LibraryBook(
+    id: 'fath_al_bari',
+    titleAr: 'فتح الباري بشرح صحيح البخاري',
+    titleEn: 'Fath al-Bari',
+    authorAr: 'الحافظ ابن حجر العسقلاني',
+    authorEn: 'Ibn Hajar al-Asqalani',
+    deathYearAh: 852,
+    pages: 7993,
+    category: BookCategory.hadith,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/fath_al_bari.json',
+      sizeBytes: 12596094,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — فتح الباري بشرح البخاري، أحمد بن علي بن حجر العسقلاني (٧٧٣ - ٨٥٢ هـ)، المكتبة السلفية - مصر، «السلفية الأولى»، ١٣٨٠ - ١٣٩٠ هـ',
+    ),
+  ),
+  LibraryBook(
+    id: 'siyar_alam_al_nubala',
+    titleAr: 'سير أعلام النبلاء',
+    titleEn: 'Siyar Alam al-Nubala',
+    authorAr: 'الإمام شمس الدين الذهبي',
+    authorEn: 'Al-Dhahabi',
+    deathYearAh: 748,
+    pages: 14208,
+    category: BookCategory.seerah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/siyar_alam_al_nubala.json',
+      sizeBytes: 7399563,
+      editorNotesRemoved: true,
+      sourceLabel: 'المكتبة الشاملة — سير أعلام النبلاء، شمس الدين، محمد بن أحمد بن عثمان الذهبي (ت ٧٤٨ هـ)، مؤسسة الرسالة، الثالثة، ١٤٠٥ هـ - ١٩٨٥ م',
+    ),
+  ),
+
 ];
 
 /// One book by its id, or null.

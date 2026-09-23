@@ -8,10 +8,18 @@ import 'book_category.dart';
 /// size the catalogue records for it.
 final List<String> builtinBookIds = [
   for (final b in libraryBookCatalog)
-    if (b.category == BookCategory.hadith) b.id,
+    if (b.category == BookCategory.hadith && !hostedHadithBooks.contains(b.id))
+      b.id,
   'tuhfat_al_atfal',
   'al_muqaddimah_al_jazariyyah_matn',
   'at_tamhid_fi_ilm_at_tajwid',
   // «الإيضاح في مناسك الحج والعمرة», which the Hajj screen is read from.
   'al_idah_fi_manasik_al_hajj_wal_umrah',
 ];
+
+/// Hadith-shelf books that are downloaded on demand instead of shipped. The
+/// 36 built-in books come to 8.1 MB together, the largest 0.9 MB; فتح الباري
+/// is 12.6 MB on its own (2026-09-23) and would more than double the APK's
+/// share of books. It sits on the same shelf and downloads like the other
+/// encyclopaedias.
+const Set<String> hostedHadithBooks = {'fath_al_bari'};
