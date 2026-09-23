@@ -29,7 +29,12 @@ Cline, or any other).
 
 ## NEXT CHANGES — the owner's list (started 2026-09-23, after v3.57.0)
 
-Not started. Do them in this order unless he says otherwise.
+Not started. Do them in this order unless he says otherwise. The owner:
+«صلح كل ده اللي فات» — all of it, items 0-3, then a release when he asks.
+
+**CONFIRMED BY THE OWNER ON HIS PHONE (2026-09-23, v3.57.0): tasmee works**
+— «والتسميع شغال تمام ماشاء الله». The generic-model fix is proven where it
+matters; the model-name/sha256 repair did its job on a real install.
 
 0. **FIRST: open these on the emulator — committed, analyze clean, 529 tests
    pass, NEVER SEEN RUNNING** (quota ran out; commit after 423d5b37): in a
