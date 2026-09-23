@@ -151,9 +151,9 @@ class PrayerReminderService {
 
   Future<void> cancelAll() async {
     for (var i = 0; i < prayerKeys.length; i++) {
-      await _plugin.cancel(_preBase + i);
-      await _plugin.cancel(_postBase + i);
-      await _plugin.cancel(_iqamaBase + i);
+      await _plugin.cancel(id: _preBase + i);
+      await _plugin.cancel(id: _postBase + i);
+      await _plugin.cancel(id: _iqamaBase + i);
     }
   }
 
@@ -165,16 +165,16 @@ class PrayerReminderService {
     required String body,
   }) async {
     if (minutes <= 0) {
-      await _plugin.cancel(id);
+      await _plugin.cancel(id: id);
       return;
     }
     final (hour, minute) = wrapToDay(at);
     await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      _nextInstanceOf(hour, minute),
-      NotificationDetails(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: _nextInstanceOf(hour, minute),
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
@@ -183,8 +183,6 @@ class PrayerReminderService {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }

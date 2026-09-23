@@ -67,7 +67,7 @@ class QuoteReminderService {
 
   Future<void> cancelAll() async {
     for (var i = 0; i < maxSlots; i++) {
-      await _plugin.cancel(_baseId + i);
+      await _plugin.cancel(id: _baseId + i);
     }
   }
 
@@ -139,11 +139,11 @@ class QuoteReminderService {
       if (gen != _generation) return; // superseded; the next call cancels
 
       await _plugin.zonedSchedule(
-        _baseId + i,
-        'notif.quote_title'.tr(),
-        _preview(quote.text),
-        now.add(Duration(minutes: everyMinutes * (i + 1))),
-        NotificationDetails(
+        id: _baseId + i,
+        title: 'notif.quote_title'.tr(),
+        body: _preview(quote.text),
+        scheduledDate: now.add(Duration(minutes: everyMinutes * (i + 1))),
+        notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
             _channelId,
             _channelName,
@@ -174,8 +174,6 @@ class QuoteReminderService {
         // the setting he chose. The app already holds the exact-alarm
         // permission for the adhan.
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         // The router dispatches on this prefix; a bare integer payload is
         // the سنن السور reminder's and must stay unambiguous.
         payload: '${NotificationRouter.quotePrefix}${Quote.key(pick.$1, pick.$2)}',

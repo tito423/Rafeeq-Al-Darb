@@ -62,7 +62,7 @@ class TasbihReminderService {
 
   Future<void> cancelAll() async {
     for (var i = 0; i < _maxSlots; i++) {
-      await _plugin.cancel(_firstId + i);
+      await _plugin.cancel(id: _firstId + i);
     }
   }
 
@@ -79,11 +79,11 @@ class TasbihReminderService {
       var at = tz.TZDateTime(tz.local, now.year, now.month, now.day, h, m);
       if (!at.isAfter(now)) at = at.add(const Duration(days: 1));
       await _plugin.zonedSchedule(
-        _firstId + i,
-        item.titleKey.tr(),
-        body,
-        at,
-        NotificationDetails(
+        id: _firstId + i,
+        title: item.titleKey.tr(),
+        body: body,
+        scheduledDate: at,
+        notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
             _channelId,
             'tasbih.channel'.tr(),
@@ -99,8 +99,6 @@ class TasbihReminderService {
         // interval (trap #32). At most 14 a day, repeating — not a window of
         // one-shots.
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
       );
     }

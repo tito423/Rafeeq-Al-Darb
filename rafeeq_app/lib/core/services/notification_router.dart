@@ -78,7 +78,7 @@ class NotificationRouter {
     if (_ready) return;
     _ready = true;
     await _plugin.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher')),
       onDidReceiveNotificationResponse: _dispatch,
       onDidReceiveBackgroundNotificationResponse: _dispatch,

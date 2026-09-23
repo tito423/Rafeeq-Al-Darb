@@ -35,11 +35,11 @@ class KhatmaReminderService {
   Future<void> schedule(int id, int hour, int minute) async {
     await _ensureChannel();
     await _plugin.zonedSchedule(
-      id,
-      'notif.khatma_title'.tr(),
-      'notif.khatma_body'.tr(),
-      _nextInstanceOf(hour, minute),
-      NotificationDetails(
+      id: id,
+      title: 'notif.khatma_title'.tr(),
+      body: 'notif.khatma_body'.tr(),
+      scheduledDate: _nextInstanceOf(hour, minute),
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
@@ -48,13 +48,11 @@ class KhatmaReminderService {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 
-  Future<void> cancel(int id) => _plugin.cancel(id);
+  Future<void> cancel(int id) => _plugin.cancel(id: id);
 
   tz.TZDateTime _nextInstanceOf(int hour, int minute) {
     final now = tz.TZDateTime.now(tz.local);

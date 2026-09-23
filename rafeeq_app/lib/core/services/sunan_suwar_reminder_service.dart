@@ -58,11 +58,11 @@ class SunanSuwarReminderService {
   }) async {
     await _ensureChannel();
     await _plugin.zonedSchedule(
-      id,
-      title,
-      'notif.sunan_body'.tr(),
-      _nextInstanceOfWeekday(weekday, hour, minute),
-      NotificationDetails(
+      id: id,
+      title: title,
+      body: 'notif.sunan_body'.tr(),
+      scheduledDate: _nextInstanceOfWeekday(weekday, hour, minute),
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
@@ -71,14 +71,12 @@ class SunanSuwarReminderService {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       payload: payload,
     );
   }
 
-  Future<void> cancel(int id) => _plugin.cancel(id);
+  Future<void> cancel(int id) => _plugin.cancel(id: id);
 
   tz.TZDateTime _nextInstanceOfWeekday(int weekday, int hour, int minute) {
     var scheduled = tz.TZDateTime.now(tz.local);

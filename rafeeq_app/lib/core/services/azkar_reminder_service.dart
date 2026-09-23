@@ -56,9 +56,9 @@ class AzkarReminderService {
       _schedule(_sleepId, hour, minute, 'notif.azkar_sleep_title'.tr(),
           'notif.azkar_sleep_body'.tr());
 
-  Future<void> cancelMorning() => _plugin.cancel(_morningId);
-  Future<void> cancelEvening() => _plugin.cancel(_eveningId);
-  Future<void> cancelSleep() => _plugin.cancel(_sleepId);
+  Future<void> cancelMorning() => _plugin.cancel(id: _morningId);
+  Future<void> cancelEvening() => _plugin.cancel(id: _eveningId);
+  Future<void> cancelSleep() => _plugin.cancel(id: _sleepId);
 
   Future<void> _schedule(
     int id,
@@ -69,11 +69,11 @@ class AzkarReminderService {
   ) async {
     await _ensureChannel();
     await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      _nextInstanceOf(hour, minute),
-      NotificationDetails(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: _nextInstanceOf(hour, minute),
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
@@ -82,8 +82,6 @@ class AzkarReminderService {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }

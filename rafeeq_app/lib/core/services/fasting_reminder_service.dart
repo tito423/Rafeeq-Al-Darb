@@ -43,7 +43,7 @@ class FastingReminderService {
 
   Future<void> cancelAll() async {
     for (var i = 0; i < _maxCount; i++) {
-      await _plugin.cancel(_firstId + i);
+      await _plugin.cancel(id: _firstId + i);
     }
   }
 
@@ -63,11 +63,11 @@ class FastingReminderService {
           : mondayThursdayHadith;
       final body = '«${h.text}»\n${h.citationKey.tr()}';
       await _plugin.zonedSchedule(
-        _firstId + i,
-        title,
-        body,
-        tz.TZDateTime.from(r.at, tz.local),
-        NotificationDetails(
+        id: _firstId + i,
+        title: title,
+        body: body,
+        scheduledDate: tz.TZDateTime.from(r.at, tz.local),
+        notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
             _channelId,
             'fasting.channel'.tr(),
@@ -80,8 +80,6 @@ class FastingReminderService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }

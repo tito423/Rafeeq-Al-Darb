@@ -123,7 +123,7 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 
     // Only so `RafeeqApplication` can implement `Configuration.Provider` and
     // stop WorkManager initialising itself at every process start — see that

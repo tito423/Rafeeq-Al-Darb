@@ -109,10 +109,10 @@ class DownloadNotifications {
         groupKey: _channelId,
       );
       await plugin.show(
-        _notificationId(id),
-        title,
-        detail ?? (hasSize ? '$pct%' : '$done'),
-        NotificationDetails(android: android),
+        id: _notificationId(id),
+        title: title,
+        body: detail ?? (hasSize ? '$pct%' : '$done'),
+        notificationDetails: NotificationDetails(android: android),
         payload: payload,
       );
     } catch (_) {}
@@ -129,7 +129,7 @@ class DownloadNotifications {
     _lastPost.remove(id);
     try {
       final plugin = FlutterLocalNotificationsPlugin();
-      await plugin.cancel(_notificationId(id));
+      await plugin.cancel(id: _notificationId(id));
       const android = AndroidNotificationDetails(
         _channelId,
         _channelName,
@@ -139,10 +139,10 @@ class DownloadNotifications {
         groupKey: _channelId,
       );
       await plugin.show(
-        _notificationId(id) + 1000,
-        title,
-        'notif.dl_done'.tr(),
-        NotificationDetails(android: android),
+        id: _notificationId(id) + 1000,
+        title: title,
+        body: 'notif.dl_done'.tr(),
+        notificationDetails: NotificationDetails(android: android),
         payload: payload,
       );
     } catch (_) {}
@@ -163,7 +163,7 @@ class DownloadNotifications {
       for (final n in active) {
         final id = n.id;
         if (id == null || id == 4800) continue;
-        if (id >= 4700 && id < 5000) await plugin.cancel(id);
+        if (id >= 4700 && id < 5000) await plugin.cancel(id: id);
       }
     } catch (_) {}
   }
@@ -173,7 +173,7 @@ class DownloadNotifications {
     _lastPost.remove(id);
     if (!_ready || !Platform.isAndroid) return;
     try {
-      await FlutterLocalNotificationsPlugin().cancel(_notificationId(id));
+      await FlutterLocalNotificationsPlugin().cancel(id: _notificationId(id));
     } catch (_) {}
   }
 }

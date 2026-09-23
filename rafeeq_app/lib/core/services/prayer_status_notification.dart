@@ -84,7 +84,7 @@ class PrayerStatusNotification {
           ?.stopForegroundService();
     } catch (_) {}
     try {
-      await _plugin.cancel(_legacyRolloverId);
+      await _plugin.cancel(id: _legacyRolloverId);
     } catch (_) {}
   }
 
@@ -213,8 +213,8 @@ class PrayerStatusNotification {
       await _native.invokeMethod<void>('hide');
     } catch (_) {}
     try {
-      await _plugin.cancel(_liveId);
-      await _plugin.cancel(_legacyRolloverId);
+      await _plugin.cancel(id: _liveId);
+      await _plugin.cancel(id: _legacyRolloverId);
     } catch (_) {}
   }
 
