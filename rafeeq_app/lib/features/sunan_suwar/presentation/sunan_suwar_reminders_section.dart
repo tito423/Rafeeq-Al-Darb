@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -49,9 +50,10 @@ class SunanSuwarRemindersSection extends ConsumerWidget {
                                 if (reminder.weekdays.contains(d))
                                   _weekdayKeys[d]!.tr(),
                             ].join('، '),
-                            'time':
+                            'time': localizeDigits(
                                 '${reminder.time.hour.toString().padLeft(2, '0')}:'
                                 '${reminder.time.minute.toString().padLeft(2, '0')}',
+                                context.locale.languageCode),
                           }),
                   ),
                   trailing: const Icon(Icons.chevron_right),

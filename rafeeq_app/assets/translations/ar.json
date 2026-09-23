@@ -976,7 +976,7 @@
     "remove_reminder": "إزالة التذكير",
     "save_reminder": "حفظ التذكير",
     "reminder_off": "لا يوجد تذكير",
-    "reminder_on_at": "كل {day} الساعة {time}",
+    "reminder_on_at": "{day} من كل أسبوع، الساعة {time}",
     "reminders_section_title": "تذكيرات سنن السور",
     "note_baqarah": "اقرءوها، فإن أخذها بركة وتركها حسرة، وتنفر الشياطين من البيت الذي تُقرأ فيه",
     "source_baqarah": "صحيح مسلم",
