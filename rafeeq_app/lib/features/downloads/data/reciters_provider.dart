@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/ayah_audio_service.dart';
+import '../../../core/services/recitation_source.dart';
 
 /// A reciter whose recitation is available ayah by ayah.
 class Reciter {
@@ -41,7 +42,16 @@ class Reciter {
   }
 }
 
-/// Arabic ayah-by-ayah reciters from the bundled editions catalog.
+/// Arabic ayah-by-ayah reciters from the bundled editions catalog — **only
+/// the ones an ayah can actually be fetched for.**
+///
+/// The catalogue names 175 Arabic audio editions and the app listed all of
+/// them. Measured on 2026-09-23, 157 of those answer **403** on the audio CDN
+/// and exist on no other host the app knows, so choosing one produced silence
+/// with no error anywhere — «التلاوة مش شغالة بعد ما اختار القارئ». A reciter
+/// with no file is a catalogue entry with nothing behind it (§1.1), so the
+/// list is now exactly `RecitationSource`'s verified mirrors, every folder of
+/// which was range-checked at its first and last ayah.
 final recitersProvider = FutureProvider<List<Reciter>>((ref) async {
   final raw =
       await rootBundle.loadString('assets/data/catalogs/audio_editions.json');
@@ -60,6 +70,8 @@ final recitersProvider = FutureProvider<List<Reciter>>((ref) async {
     final nameAr = (m['name'] as String?) ?? '';
     final nameEn = (m['englishName'] as String?) ?? '';
     if (nameAr == id || nameEn == id) continue;
+    // The one gate that matters: no verified source, no entry.
+    if (!RecitationSource.hasVerifiedMirror(id)) continue;
     out.add(Reciter(
       identifier: id,
       nameAr: nameAr,
@@ -82,7 +94,16 @@ class SelectedReciter extends StateNotifier<String> {
   Future<void> _restore() async {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getString(_kReciterKey);
-    if (saved != null && saved.isNotEmpty) state = saved;
+    if (saved == null || saved.isEmpty) return;
+    // A phone that already chose one of the 157 reciters with no reachable
+    // file has that choice on disk, and restoring it would keep that phone
+    // silent for ever however the list is fixed. This is the half of the
+    // 2026-09-23 fix that reaches an install that already has the problem.
+    if (!RecitationSource.hasVerifiedMirror(saved)) {
+      await prefs.setString(_kReciterKey, AyahAudioService.defaultEdition);
+      return;
+    }
+    state = saved;
   }
 
   Future<void> select(String identifier) async {

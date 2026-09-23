@@ -4,11 +4,22 @@ import '../config/app_config.dart';
 
 /// Where one ayah's recitation audio actually comes from.
 ///
-/// The app's reciter list is the alquran.cloud editions catalog (176 Arabic
-/// entries in `assets/data/catalogs/audio_editions.json`), but only some of
-/// those are genuinely served as per-ayah MP3s. This class maps the ones that
-/// are onto **everyayah.com**, and falls back to islamic.network's CDN for the
-/// rest, so a reciter is never silently silent.
+/// The app's reciter list comes from the alquran.cloud editions catalog (175
+/// named Arabic entries in `assets/data/catalogs/audio_editions.json`), but
+/// only some of those are genuinely served as per-ayah MP3s anywhere. This
+/// class maps the ones that are onto **everyayah.com**, and
+/// `recitersProvider` shows the reader exactly that set.
+///
+/// It used to fall back to islamic.network's CDN "so a reciter is never
+/// silently silent". Measured on 2026-09-23, that sentence was false: a range
+/// request for `1.mp3` on that CDN returned **403 AccessDenied** for 157 of
+/// the 175, and 200 for only 18 — which are the same reciters this map
+/// already had. So the fallback covered nothing the primary did not, and the
+/// 157 others were offered in the picker and played nothing at all. That is
+/// the owner's «التلاوة في التلاوة المستمرة مش شغالة بعد ما اختار القارئ»,
+/// and the same silence in hifz «استمع», which reads the same setting.
+/// The CDN stays as a second URL for the mapped reciters; it is no longer
+/// treated as a source that makes an unmapped reciter listable.
 ///
 /// everyayah is preferred as the primary source for three concrete reasons:
 ///
@@ -55,11 +66,47 @@ class RecitationSource {
     'ar.muhammadjibreel': 'Muhammad_Jibreel_128kbps',
     'ar.nasseralqatami': 'Nasser_Alqatami_128kbps',
     'ar.saoodshuraym': 'Saood_ash-Shuraym_128kbps',
+    // 2026-09-23. The owner's «التلاوة مش شغالة بعد ما اختار القارئ» was this
+    // map being 19 entries long while the picker offered 175 reciters: the
+    // fallback host answers **403 AccessDenied** for everything it does not
+    // hold, so 157 of those 175 had no source at all and picking one was
+    // silence. These eighteen were read off everyayah's own directory index
+    // and matched by the reciter's ARABIC name, not by a fuzzy transliteration
+    // score — a wrong match here would put one shaykh's voice under another's
+    // name. Each folder was range-checked at BOTH 001001 and 114006 (206,
+    // audio/mpeg); `Ibrahim_Akhdar_64kbps` is listed in that index and 404s,
+    // so the 32 kbps folder is the one used.
+    'ar.abdulbasitmujawwad': 'Abdul_Basit_Mujawwad_128kbps',
+    'ar.abdullahalmatrood': 'Abdullah_Matroud_128kbps',
+    'ar.abdullahawadaljuhani': 'Abdullaah_3awwaad_Al-Juhaynee_128kbps',
+    'ar.alihajjajsouissi': 'Ali_Hajjaj_AlSuesy_128kbps',
+    'ar.aymanswoaid': 'Ayman_Sowaid_64kbps',
+    'ar.azizalili': 'aziz_alili_128kbps',
+    'ar.ibrahimalakhdar': 'Ibrahim_Akhdar_32kbps',
+    'ar.khaledalqahtani': 'Khaalid_Abdullaah_al-Qahtaanee_192kbps',
+    'ar.khalifaaltunaiji': 'khalefa_al_tunaiji_64kbps',
+    'ar.mahmoudalialbanna': 'mahmoud_ali_al_banna_32kbps',
+    'ar.muhammadabdulkareem': 'Muhammad_AbdulKareem_128kbps',
+    'ar.mustafaismail': 'Mustafa_Ismail_48kbps',
+    'ar.nabilarrifai': 'Nabil_Rifa3i_48kbps',
+    'ar.parhizgar': 'Parhizgar_48kbps',
+    'ar.sahlyasin': 'Sahl_Yassin_128kbps',
+    'ar.salahalbudair': 'Salah_Al_Budair_128kbps',
+    'ar.yasseraldossari': 'Yasser_Ad-Dussary_128kbps',
+    'ar.yassersalama': 'Yaser_Salamah_128kbps',
   };
 
-  /// Whether [edition] has a verified everyayah mirror (the fast, resumable
-  /// path). False means it streams from the CDN only — still playable, but
-  /// not the preferred source for a big offline download.
+  /// Every edition that has a verified per-ayah source, and the folder it
+  /// lives in. This IS the reciter list the app offers
+  /// (`recitersProvider` filters by it), so a typo in a key here silently
+  /// removes a shaykh from the picker — `reciter_sources_test.dart` checks
+  /// every key against the editions catalogue.
+  static Map<String, String> get verifiedMirrors =>
+      Map.unmodifiable(_everyAyahFolders);
+
+  /// Whether [edition] has a verified everyayah mirror. False now also means
+  /// the app has no way to play it at all, which is why such an edition is
+  /// not listed to the reader.
   static bool hasVerifiedMirror(String edition) =>
       _everyAyahFolders.containsKey(edition);
 

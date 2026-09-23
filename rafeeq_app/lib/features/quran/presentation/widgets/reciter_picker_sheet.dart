@@ -13,8 +13,9 @@ import '../../../quran_audio/data/ayah_recitation_library.dart';
 /// الصغير». Opened from the recitation bar under the page; returns the
 /// chosen edition, or null.
 ///
-/// Reciters with a verified everyayah mirror are listed first and marked:
-/// they are the fast, reliable per-ayah source, the rest stream from the CDN.
+/// Every reciter in this sheet has a verified per-ayah source — the list is
+/// `RecitationSource`'s mirrors (see `recitersProvider`). Ones already on the
+/// device are listed first and marked.
 Future<String?> showReciterPickerSheet(BuildContext context) {
   return showModalBottomSheet<String>(
     context: context,
@@ -70,9 +71,10 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
         final da = _onDevice(a.identifier) > 0 ? 0 : 1;
         final db = _onDevice(b.identifier) > 0 ? 0 : 1;
         if (da != db) return da - db;
-        final ma = RecitationSource.hasVerifiedMirror(a.identifier) ? 0 : 1;
-        final mb = RecitationSource.hasVerifiedMirror(b.identifier) ? 0 : 1;
-        return ma != mb ? ma - mb : a.displayName(locale).compareTo(b.displayName(locale));
+        // Nothing else to rank by any more: `recitersProvider` lists only
+        // reciters with a verified per-ayah source, so "has a mirror" is true
+        // of every row here.
+        return a.displayName(locale).compareTo(b.displayName(locale));
       });
 
     return SizedBox(
@@ -93,26 +95,16 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
               ),
             ),
           ),
-          // WHAT THE TWO ICONS MEAN. They were a gold bolt and a grey cloud
-          // with nothing saying which was which — «الأيقونات مختلفة بتاعة
-          // القارئ مش فاهم دلالتها». The distinction is real and worth
-          // keeping (a verified everyayah mirror plays ayah by ayah without
-          // stalling; the CDN fallback does not always), so it is labelled
-          // rather than removed.
+          // WHAT THE ICONS MEAN. They were a gold bolt and a grey cloud with
+          // nothing saying which was which — «الأيقونات مختلفة بتاعة القارئ
+          // مش فاهم دلالتها». The bolt is gone with the distinction it drew:
+          // every reciter listed now has a verified per-ayah mirror, so the
+          // only thing left to say is whether this one is already on the
+          // device or streams.
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 2, 16, 8),
             child: Row(
               children: [
-                Icon(Icons.bolt_rounded,
-                    size: 16, color: goldOn(Theme.of(context).colorScheme)),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Text('quran.reciter_legend_fast'.tr(),
-                      style: TextStyle(
-                          fontSize: 11.5,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                ),
-                const SizedBox(width: 12),
                 Icon(Icons.offline_pin_rounded,
                     size: 16, color: goldOn(Theme.of(context).colorScheme)),
                 const SizedBox(width: 4),
@@ -142,16 +134,13 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
               itemBuilder: (context, i) {
                 final r = list[i];
                 final isSelected = r.identifier == selected;
-                final fast = RecitationSource.hasVerifiedMirror(r.identifier);
                 final onDevice = _onDevice(r.identifier);
                 return ListTile(
                   leading: Icon(
                     onDevice > 0
                         ? Icons.offline_pin_rounded
-                        : fast
-                            ? Icons.bolt_rounded
-                            : Icons.cloud_outlined,
-                    color: onDevice > 0 || fast
+                        : Icons.cloud_outlined,
+                    color: onDevice > 0
                         ? goldOn(Theme.of(context).colorScheme)
                         : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),

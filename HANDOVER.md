@@ -2483,9 +2483,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-23 16:47 — COMPLETE**
+**2026-09-23 17:19 — COMPLETE**
 
-Focus mode now offers «الحفظ والتسميع» as a fourth card. It is not a bottom-nav tab, so it pins an extra IndexedStack slot (AppTab.focusHifz = 7) that is built only while that mode is on, and `_index` stays on a real tab so the nav bar is valid the instant focus is left. Seen on emulator-5554 (debug build re-signed with the release key so it installed over 3.57.0 without an uninstall): the card is on the sheet, picking it shows التحفيظ والتسميع alone with only «الخروج من وضع التركيز» at the bottom, a surah opens its session with the tasmee panel, the exit button returns to المزيد with the seven tabs intact, the back gesture leaves the mode onto Home without closing the app, and a cold restart reopens straight into it. logcat: no exception. analyze clean, 532 tests.
+Recitation silence root cause FOUND and fixed. The picker offered 175 reciters; measured 2026-09-23, 157 of them answer 403 AccessDenied on cdn.islamic.network and exist on no other host the app knows, so picking one was silence in continuous recitation AND in hifz listen (same setting). The everyayah map went 19 -> 37, each folder range-checked at 001001 and 114006; recitersProvider now lists only reciters with a verified source; a reciter already SAVED on a phone that has no source is reset to the default on restore. Seen on emulator-5554: the picker lists the 37 with real names, and Khaled al-Qahtani - 403 before - plays, highlight advancing 5 -> 8 in 12 s with AudioTrack in logcat. analyze clean, 538 tests.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

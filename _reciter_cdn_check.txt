@@ -1,0 +1,175 @@
+ar.abdulbasitmurattal	Abdul Basit	403 271
+ar.abdullahbasfar	Abdullah Basfar	403 271
+ar.abdurrahmaansudais	Abdurrahmaan As-Sudais	403 271
+ar.abdulsamad	Abdul Samad	403 271
+ar.shaatree	Abu Bakr Ash-Shaatree	206 1024
+ar.ahmedajamy	Ahmed ibn Ali al-Ajamy	206 1024
+ar.alafasy	Alafasy	206 1024
+ar.hanirifai	Hani Rifai	403 271
+ar.husary	Husary	206 1024
+ar.husarymujawwad	Husary (Mujawwad)	206 1024
+ar.hudhaify	Hudhaify	206 1024
+ar.ibrahimakhbar	Ibrahim Akhdar	403 271
+ar.mahermuaiqly	Maher Al Muaiqly	206 1024
+ar.minshawi	Minshawi	206 1024
+ar.minshawimujawwad	Minshawy (Mujawwad)	403 271
+ar.muhammadayyoub	Muhammad Ayyoub	206 1024
+ar.muhammadjibreel	Muhammad Jibreel	206 1024
+ar.saoodshuraym	Saood bin Ibraaheem Ash-Shuraym	403 271
+ar.parhizgar	Parhizgar	403 271
+ar.aymanswoaid	Ayman Sowaid	403 271
+ar.alafasy-2	Alafasy	206 1024
+ar.husary-2	Husary	206 1024
+ar.mahermuaiqly-2	Maher Al Muaiqly	206 1024
+ar.hudhaify-2	Hudhaify	206 1024
+ar.husarymujawwad-2	Husary (Mujawwad)	206 1024
+ar.minshawi-2	Minshawi	206 1024
+ar.muhammadayyoub-2	Muhammad Ayyoub	206 1024
+ar.muhammadjibreel-2	Muhammad Jibreel	206 1024
+ar.abdulazizazzahrani	Abdul Aziz az-Zahrani	403 271
+ar.abdulbariaththubaity	Abdul Bari ath-Thubaity	403 271
+ar.abdulbarimohammed	Abdul Bari Mohammed	403 271
+ar.abdulbasitmujawwad	Abdul Basit Abdus-Samad (Mujawwad)	403 271
+ar.abdulbasitmurattal-surah	Abdul Basit Abdus-Samad (Murattal)	403 271
+ar.abdulkareemalhazmi	Abdul Kareem al-Hazmi	403 271
+ar.abdullahalmatrood	Abdullah al-Matrood	403 271
+ar.abdullahawadaljuhani	Abdullah Awad al-Juhani	403 271
+ar.abdullahbasfar-surah	Abdullah Basfar	403 271
+ar.abdullahkhayat	Abdullah Khayat	403 271
+ar.abdullahkhulaifi	Abdullah al-Khulaifi	403 271
+ar.abdulmohsenalharthy	Abdul Mohsen al-Harthy	403 271
+ar.abdulmunimabdulmubdi	Abdul Munim Abdul Mubdi	403 271
+ar.abdulwadoodhaneef	Abdul Wadood Haneef	403 271
+ar.abdurrasheedsufiabialhaarithanalkasaaee	Abdur-Rasheed Sufi (Abul-Harith from al-Kisa'i)	403 271
+ar.abdurrasheedsufiaddoorianabiamr	Abdur-Rasheed Sufi (ad-Doori from Abu Amr)	403 271
+ar.abdurrasheedsufishubahanasim	Abdur-Rasheed Sufi (Shu'bah from Asim)	403 271
+ar.abdurrasheedsufisoosi	Abdur-Rasheed Sufi (as-Soosi)	403 271
+ar.abuabdullahmuniraltounsi	Abu Abdullah Munir at-Tounsi	403 271
+ar.abubakraldhabi	Abu Bakr adh-Dhabi	403 271
+ar.adilkalbani	Adil al-Kalbani	403 271
+ar.ahmadalhawashy	Ahmad al-Hawashy	403 271
+ar.ahmadkhaderaltarabulsi	Ahmad Khader at-Tarabulsi	403 271
+ar.ahmadsulaiman	Ahmad Sulaiman	403 271
+ar.ahmedalajmi	Ahmed al-Ajmi	403 271
+ar.ahmedalhammad	Ahmed al-Hammad	403 271
+ar.ahmedalmisbahi	Ahmed al-Misbahi	403 271
+ar.ahmedamir	Ahmed Amir	403 271
+ar.ahmedmohamedsalama	Ahmed Mohamed Salama	403 271
+ar.ahmedsaber	Ahmed Saber	403 271
+ar.alafasy-surah	Mishary Rashid Alafasy	403 271
+ar.alashryomran	al-Ashry Omran	403 271
+ar.alfatehmuhammadzubair	al-Fateh Muhammad Zubair	403 271
+ar.alhusaynialazazi	al-Husayni al-Azazi	403 271
+ar.alhusaynialazazichildren	al-Husayni al-Azazi (with children)	403 271
+ar.aliabdurrahmanalhuthaify	Ali Abdur-Rahman al-Huthaify	403 271
+ar.aliabdurrahmanalhuthaifyqaloon	Ali Abdur-Rahman al-Huthaify (Qaloon)	403 271
+ar.alihajjajsouissi	Ali Hajjaj Souissi	403 271
+ar.alzainmohamedahmed	al-Zain Mohamed Ahmed	403 271
+ar.aymanswed	Ayman Swed	403 271
+ar.azizalili	Aziz Alili	403 271
+ar.basselabdulrahmanraoui	Bassel Abdul-Rahman ar-Raoui	403 271
+ar.benkirane	Benkirane	403 271
+ar.darwishfarajdarwishalattar	Darwish Faraj Darwish al-Attar	403 271
+ar.emadalmansary	Emad al-Mansary	403 271
+ar.ezzatsabri	Ezzat Sabri	403 271
+ar.faresabbad	Fares Abbad	403 271
+ar.fouadalkhamiri	Fouad al-Khamiri	403 271
+ar.hamadsinan	Hamad Sinan	403 271
+ar.hamdyalsayedtolbasaad	Hamdy al-Sayed Tolba Saad	403 271
+ar.haniarrifai	Hani ar-Rifai	403 271
+ar.hasanhashem	Hasan Hashem	403 271
+ar.hassansaleh	Hassan Saleh	403 271
+ar.hatemfarid	Hatem Farid	403 271
+ar.ibrahimalakhdar	Ibrahim al-Akhdar	403 271
+ar.ibrahimaldossari	Ibrahim ad-Dossari	403 271
+ar.ibrahimaljormy	Ibrahim al-Jormy	403 271
+ar.ilhantok	Ilhan Tok	403 271
+ar.imadzuhairhafez	Imad Zuhair Hafez	403 271
+ar.jamaanalosaimi	Jamaan al-Osaimi	403 271
+ar.jamalshakerabdullah	Jamal Shaker Abdullah	403 271
+ar.jazzaalswaileh	Jazza al-Swaileh	403 271
+ar.kamel	Kamel	403 271
+ar.khaledalqahtani	Khaled al-Qahtani	403 271
+ar.khaledbarakat	Khaled Barakat	403 271
+ar.khalidabdulkafi	Khalid Abdul-Kafi	403 271
+ar.khalidaljalil	Khalid al-Jalil	403 271
+ar.khalidalmohanna	Khalid al-Mohanna	403 271
+ar.khalifaaltunaiji	Khalifa at-Tunaiji	403 271
+ar.laayounelkouchi	Laayoun el-Kouchi	403 271
+ar.lesaintcorantraduitenfrancais	Le Saint Coran traduit en français	403 271
+ar.mahershakhashiro	Maher Shakhashiro	403 271
+ar.mahmoodalrifai	Mahmood al-Rifai	403 271
+ar.mahmoudalialbanna	Mahmoud Ali al-Banna	403 271
+ar.mahmoudelsheimy	Mahmoud el-Sheimy	403 271
+ar.mahmoudsaaddarouich	Mahmoud Saad Darouich	403 271
+ar.mahmoudsayedeltayeb	Mahmoud Sayed el-Tayeb	403 271
+ar.misharyrashidalafasy	Mishary Rashid Alafasy	403 271
+ar.moeedhalharthi	Moeedh al-Harthi	403 271
+ar.mohamedabdelaziz	Mohamed Abdel-Aziz	403 271
+ar.mohamedabdelhakimsaadalabdullah	Mohamed Abdel-Hakim Saad al-Abdullah	403 271
+ar.mohamedaljaberyalheyani	Mohamed al-Jabery al-Heyani	403 271
+ar.mohamedalmohisni	Mohamed al-Mohisni	403 271
+ar.mohamedelkantaoui	Mohamed el-Kantaoui	403 271
+ar.mohamedhassan	Mohamed Hassan	403 271
+ar.mohamedmaabad	Mohamed Maabad	403 271
+ar.mohamedosmankhan	Mohamed Osman Khan	403 271
+ar.mohamedshaabanabuqarn	Mohamed Shaaban Abu Qarn	403 271
+ar.mohamedtablawi	Mohamed at-Tablawi	403 271
+ar.mohammadismaeelalmuqaddim	Mohammad Ismaeel al-Muqaddim	403 271
+ar.mohammadrachadalshareef	Mohammad Rachad al-Shareef	403 271
+ar.mohammedbinsalehabuzaid	Mohammed bin Saleh Abu Zaid	403 271
+ar.muftahalsaltany	Muftah al-Saltany	403 271
+ar.muhammadabdulkareem	Muhammad Abdul-Kareem	403 271
+ar.muhammadalaalimaldokali	Muhammad al-Aalim ad-Dokali	403 271
+ar.muhammadalluhaidan	Muhammad al-Luhaidan	403 271
+ar.muhammadalmehysni	Muhammad al-Mehysni	403 271
+ar.muhammadalsubayyil	Muhammad as-Subayyil	403 271
+ar.muhammadanwarshahat	Muhammad Anwar Shahat	403 271
+ar.muhammadayyub	Muhammad Ayyub	403 271
+ar.muhammadsalehalimshah	Muhammad Saleh Alim Shah	403 271
+ar.muhammadsiddiqalminshawimujawwad	Muhammad Siddiq al-Minshawi (Mujawwad)	403 271
+ar.muhammadsulaimanpatel	Muhammad Sulaiman Patel	403 271
+ar.musabilal	Musa Bilal	403 271
+ar.mustafaallahouni	Mustafa al-Lahouni	403 271
+ar.mustafaismail	Mustafa Ismail	403 271
+ar.mustafaraadalazzawi	Mustafa Raad al-Azzawi	403 271
+ar.mustaphagharbi	Mustapha Gharbi	403 271
+ar.nabilarrifai	Nabil ar-Rifai	403 271
+ar.nasseralqatami	Nasser al-Qatami	403 271
+ar.neamahalhassan	Neamah al-Hassan	403 271
+ar.obeikan	al-Obeikan	403 271
+ar.omaralkazabri	Omar al-Kazabri	403 271
+ar.osamabinalialghanim	Osama bin Ali al-Ghanim	403 271
+ar.rachidbelalia	Rachid Belalia	403 271
+ar.saberabdulhakam	Saber Abdul-Hakam	403 271
+ar.sadaqatali	Sadaqat Ali	403 271
+ar.sahlyasin	Sahl Yasin	403 271
+ar.saidalshaalan	Said ash-Shaalan	403 271
+ar.salahalbudair	Salah al-Budair	403 271
+ar.salahalhashem	Salah al-Hashem	403 271
+ar.salahbaothman	Salah Ba-Othman	403 271
+ar.samirbelaachya	Samir Belaachya	403 271
+ar.saudalshuraim	Saud ash-Shuraim	403 271
+ar.sayedramadan	Sayed Ramadan	403 271
+ar.shahriarparhizgar	Shahriar Parhizgar	403 271
+ar.sudaisshuraymnaeemsultan	Sudais & Shuraym (with Naeem Sultan translation)	403 271
+ar.tamerislam	Tamer Islam	403 271
+ar.tareqabdulganidaawob	Tareq Abdul-Gani Daawob	403 271
+ar.tawfeeqassayegh	Tawfeeq as-Sayegh	403 271
+ar.turkiebeidalmarri	Turki Ebeid al-Marri	403 271
+ar.waeldesouky	Wael ad-Desouky	403 271
+ar.waelradwanqureshi	Wael Radwan Qureshi	403 271
+ar.waleedidreesalmaneese	Waleed Idrees al-Maneese	403 271
+ar.waleednaehi	Waleed an-Naehi	403 271
+ar.waleedsamiraliabdulmajidsorour	Waleed Samir Ali Abdul-Majid Sorour	403 271
+ar.walidalshatti	Walid ash-Shatti	403 271
+ar.walidfathibashta	Walid Fathi Bashta	403 271
+ar.yahyahawwa	Yahya Hawwa	403 271
+ar.yassenaljazairi	Yassen al-Jazairi	403 271
+ar.yasseraldossari	Yasser ad-Dossari	403 271
+ar.yasseralmazroyee	Yasser al-Mazroyee	403 271
+ar.yasserqureshi	Yasser Qureshi	403 271
+ar.yassersalama	Yasser Salama	403 271
+ar.yassersarhaneldeeb	Yasser Sarhan el-Deeb	403 271
+ar.yousufalshoaey	Yousuf ash-Shoaey	403 271
+ar.yousufbinnoahahmad	Yousuf bin Noah Ahmad	403 271
