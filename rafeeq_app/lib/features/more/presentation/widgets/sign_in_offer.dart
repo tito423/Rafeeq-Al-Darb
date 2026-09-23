@@ -14,9 +14,13 @@ import '../../../../core/theme/app_colors.dart';
 /// answer - nothing in the app needs an account.
 Future<void> offerSignInOnce(BuildContext context, WidgetRef ref) async {
   if (ref.read(authStateProvider) != null) return;
+  // The app's theme, not a fixed night. This sheet closes the first run, and
+  // a fresh install is on the DAY theme: it was the last dark surface of the
+  // onboarding the owner asked to follow the chosen theme («اختيار الثيم في
+  // أول شاشة بعد الإسبلاش»). The sheet's default colours come from the theme.
+  final scheme = Theme.of(context).colorScheme;
   await showModalBottomSheet<void>(
     context: context,
-    backgroundColor: AppColors.night,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
@@ -40,15 +44,15 @@ Future<void> offerSignInOnce(BuildContext context, WidgetRef ref) async {
             const SizedBox(height: 14),
             Text('sync.sign_in_title'.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Colors.white,
+                style: TextStyle(
+                    color: scheme.onSurface,
                     fontSize: 18,
                     fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             Text('sync.sign_in_subtitle'.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8), height: 1.6)),
+                    color: scheme.onSurfaceVariant, height: 1.6)),
             const SizedBox(height: 18),
             SizedBox(
               width: double.infinity,
@@ -76,7 +80,7 @@ Future<void> offerSignInOnce(BuildContext context, WidgetRef ref) async {
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
               child: Text('sync.later'.tr(),
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.75))),
+                  style: TextStyle(color: scheme.onSurfaceVariant)),
             ),
           ],
         ),
