@@ -51,7 +51,7 @@ class RecitationSource {
     'ar.abdullahbasfar': 'Abdullah_Basfar_192kbps',
     'ar.abdurrahmaansudais': 'Abdurrahmaan_As-Sudais_192kbps',
     'ar.shaatree': 'Abu_Bakr_Ash-Shaatree_128kbps',
-    'ar.ahmedajamy': 'Ahmed_ibn_Ali_al_Ajamy_128kbps',
+    'ar.ahmedajamy': 'ahmed_ibn_ali_al_ajamy_128kbps',
     'ar.alafasy': 'Alafasy_128kbps',
     'ar.faresabbad': 'Fares_Abbad_64kbps',
     'ar.hanirifai': 'Hani_Rifai_192kbps',
@@ -87,13 +87,24 @@ class RecitationSource {
     'ar.khalifaaltunaiji': 'khalefa_al_tunaiji_64kbps',
     'ar.mahmoudalialbanna': 'mahmoud_ali_al_banna_32kbps',
     'ar.muhammadabdulkareem': 'Muhammad_AbdulKareem_128kbps',
-    'ar.mustafaismail': 'Mustafa_Ismail_48kbps',
-    'ar.nabilarrifai': 'Nabil_Rifa3i_48kbps',
     'ar.parhizgar': 'Parhizgar_48kbps',
     'ar.sahlyasin': 'Sahl_Yassin_128kbps',
     'ar.salahalbudair': 'Salah_Al_Budair_128kbps',
     'ar.yasseraldossari': 'Yasser_Ad-Dussary_128kbps',
     'ar.yassersalama': 'Yaser_Salamah_128kbps',
+    // TWO THAT WERE DROPPED, and why — because "the first ayah answers" is
+    // not the same as "the Qur'an is there". Each folder's directory index
+    // carries every file's exact size, so the whole set can be checked
+    // against the Hafs ayah counts without downloading anything:
+    //   مصطفى إسماعيل — 2,017 files, **4,220 ayahs missing** from Aal Imran
+    //     on. He never recorded a complete murattal mushaf.
+    //   نبيل الرفاعي — five missing: 27:93, 41:51, 72:23, 74:56 (each 404 on
+    //     a direct range request, so this is the folder and not the index).
+    //     He has no CDN mirror either, so those five would be silent gaps.
+    // And `ar.ahmedajamy` points at the lower-case folder now: both spellings
+    // serve (the host is case-insensitive), but only the lower-case one has
+    // an index, and that index is what proved the set complete — 6,350 files,
+    // nothing missing.
   };
 
   /// Every edition that has a verified per-ayah source, and the folder it

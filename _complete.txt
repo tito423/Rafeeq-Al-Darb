@@ -1,0 +1,3 @@
+ar.ahmedajamy                INDEX EMPTY (name case?) Ahmed_ibn_Ali_al_Ajamy_128kbps
+ar.mustafaismail             MISSING  4220 of 6236  e.g. ['003001', '003002', '003003', '003004']  [Mustafa_Ismail_48kbps]
+ar.nabilarrifai              MISSING     5 of 6236  e.g. ['027093', '041051', '072023', '074056']  [Nabil_Rifa3i_48kbps]

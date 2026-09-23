@@ -1,0 +1,17 @@
+--- Nabil ar-Rifai, the five the index does not list ---
+027093 404
+041051 404
+072023 404
+074056 404
+--- and ones it does ---
+001001 206
+002255 206
+114006 206
+--- al-Ajamy: the lowercase folder the index lists ---
+files listed: 6350 missing: 0 []
+--- and the MIXED-case name the app uses, sampled ---
+002255 206
+018001 206
+036001 206
+055001 206
+078001 206

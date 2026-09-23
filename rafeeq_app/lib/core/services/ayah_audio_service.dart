@@ -16,6 +16,7 @@ import '../db/models.dart';
 import 'continuous_recitation.dart';
 export 'continuous_recitation.dart';
 import '../db/quran_repository.dart';
+import 'audio_failure.dart';
 import 'recitation_source.dart';
 
 /// Ayah-level recitation: streaming, on-disk caching, whole-surah downloads,
@@ -313,12 +314,15 @@ class AyahAudioService {
               .setAudioSource(AudioSource.uri(Uri.parse(url), tag: tag))
               .timeout(_loadLimit);
           unawaited(_player.play());
+          AudioFailure.instance.clear();
           return true;
-        } catch (_) {} // try the next source
+        } catch (e) {
+          AudioFailure.instance.record(url, e); // the last host wins
+        }
       }
-      // No caller shows an error, so without this a dead «استمع» is silent.
-      debugPrint('AyahAudioService: nothing played, $edition ${ayah.surahId}:${ayah.ayahNumber}');
+      debugPrint('nothing played: ${AudioFailure.instance.last.value}');
     } catch (e) {
+      AudioFailure.instance.last.value = e.toString();
       debugPrint('AyahAudioService.play failed: $e');
     }
     return false;
@@ -584,11 +588,15 @@ class AyahAudioService {
             )
             .timeout(_loadLimit);
         loaded = true;
-      } catch (_) {
-        // fall through to the retry, then to the report below
+      } catch (e) {
+        // Retry, then report — but keep the reason, so the message can name
+        // the host rather than only that something went wrong.
+        AudioFailure.instance.recordContinuous(
+            _continuousEdition, ayahs.first, firstGlobal, attempt, e);
       }
     }
     if (token != _continuousToken) return;
+    if (loaded) AudioFailure.instance.clear();
     if (loaded) _loadedSurahId = surahId;
     if (!loaded) {
       await stopContinuous();

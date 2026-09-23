@@ -56,14 +56,17 @@ void main() {
     }
   });
 
-  test('the list is the 37 that were verified, not the whole catalogue', () {
-    expect(RecitationSource.verifiedMirrors.length, 37);
+  test('the list is the 35 that were verified, not the whole catalogue', () {
+    // 37 folders matched by name; two were dropped after their directory
+    // index was checked against the Hafs ayah counts — see the map's own
+    // note. A reciter here must have ALL 6,236.
+    expect(RecitationSource.verifiedMirrors.length, 35);
     final named = editions.where((e) =>
         e['language'] == 'ar' &&
         e['format'] == 'audio' &&
         e['name'] != e['identifier'] &&
         e['englishName'] != e['identifier']);
-    expect(named.length, greaterThan(37),
+    expect(named.length, greaterThan(35),
         reason: 'the catalogue is meant to be bigger than what is playable');
   });
 

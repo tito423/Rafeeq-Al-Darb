@@ -2483,9 +2483,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-23 17:19 — COMPLETE**
+**2026-09-23 17:54 — COMPLETE**
 
-Recitation silence root cause FOUND and fixed. The picker offered 175 reciters; measured 2026-09-23, 157 of them answer 403 AccessDenied on cdn.islamic.network and exist on no other host the app knows, so picking one was silence in continuous recitation AND in hifz listen (same setting). The everyayah map went 19 -> 37, each folder range-checked at 001001 and 114006; recitersProvider now lists only reciters with a verified source; a reciter already SAVED on a phone that has no source is reset to the default on restore. Seen on emulator-5554: the picker lists the 37 with real names, and Khaled al-Qahtani - 403 before - plays, highlight advancing 5 -> 8 in 12 s with AudioTrack in logcat. analyze clean, 538 tests.
+Recitation: the silent-failure half. A failed start now carries the HOST and the reason to the screen (AudioFailure + showRecitationFailure), in continuous recitation and in hifz «استمع». Seen on emulator-5554 with the radios off: «تعذّر تشغيل التلاوة» plus `cdn.islamic.network — (0) Source error`, and playback recovers when the network is back. Also dropped TWO more reciters after checking every folder's directory index against the Hafs ayah counts: مصطفى إسماعيل is missing 4,220 of 6,236 and نبيل الرفاعي five (27:93, 41:51, 72:23, 74:56 — each a direct 404). The list is 35. Size of mirroring all 35 to R2, measured from those indexes: 56.5 GB.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

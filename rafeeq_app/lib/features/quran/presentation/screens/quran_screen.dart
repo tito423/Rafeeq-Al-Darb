@@ -11,6 +11,7 @@ import '../widgets/mushaf/toolbar_bar.dart';
 import '../../data/mushaf_paper_provider.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
+import '../../../../core/widgets/recitation_failure_snackbar.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
@@ -416,12 +417,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final err = AyahAudioService.instance.continuousError.value;
     if (err == null || !mounted) return;
     AyahAudioService.instance.continuousError.value = null;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('quran.recite_failed'.tr()),
-        duration: const Duration(seconds: 4),
-      ),
-    );
+    // WITH THE HOST AND THE REASON — see `showRecitationFailure`.
+    showRecitationFailure(context);
   }
 
   /// The recitation moved to another verse. Two things follow: the highlight

@@ -13,9 +13,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
+import '../../../core/services/audio_failure.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
+import '../../../core/widgets/recitation_failure_snackbar.dart';
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../quran/data/basmala.dart';
@@ -113,6 +115,11 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     final repo = await ref.read(quranRepositoryProvider.future);
     if (!mounted) return;
     setState(() => _playing = true);
+    // Cleared first so what is read afterwards belongs to THIS press. A
+    // «استمع» that plays nothing used to leave the button on «إيقاف» and say
+    // nothing at all — the owner reported exactly that, and there was no way
+    // to tell a blocked host from a broken button.
+    AudioFailure.instance.clear();
     try {
       await AyahAudioService.instance.playRepeated(
         ayah,
@@ -125,6 +132,9 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
       );
     } finally {
       if (mounted) setState(() => _playing = false);
+    }
+    if (mounted && AudioFailure.instance.last.value != null) {
+      showRecitationFailure(context);
     }
   }
 
