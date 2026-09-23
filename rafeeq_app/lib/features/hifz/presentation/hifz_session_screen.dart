@@ -201,7 +201,9 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: _step == 0 ? null : () => setState(() => _step = 0),
+                  onPressed: _step == 0
+                      ? null
+                      : () => setState(() => _step = 0),
                   icon: const Icon(Icons.visibility_outlined),
                   label: Text('hifz.show_all'.tr()),
                 ),
@@ -231,7 +233,9 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
             onPressed: _playing
                 ? () => AyahAudioService.instance.stopQueue()
                 : () => _play(ayah),
-            icon: Icon(_playing ? Icons.stop_rounded : Icons.play_arrow_rounded),
+            icon: Icon(
+              _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
+            ),
             label: Text(_playing ? 'hifz.stop'.tr() : 'hifz.listen'.tr()),
           ),
           const Divider(height: 28),

@@ -65,9 +65,9 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   @override
   void initState() {
     super.initState();
-    TasmeeEngine.instance
-        .isInstalled()
-        .then((v) => mounted ? setState(() => _installed = v) : null);
+    TasmeeEngine.instance.isInstalled().then(
+      (v) => mounted ? setState(() => _installed = v) : null,
+    );
   }
 
   @override
@@ -170,8 +170,11 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
       // review ladder by itself.
       await ref
           .read(hifzStoreProvider.notifier)
-          .recordTasmee(widget.surahId, widget.ayahNumber,
-              (result.ratio * 100).round());
+          .recordTasmee(
+            widget.surahId,
+            widget.ayahNumber,
+            (result.ratio * 100).round(),
+          );
       if (mounted) {
         setState(() {
           _heard = heard.trim();
@@ -207,8 +210,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
         children: [
           Row(
             children: [
-              const Icon(Icons.record_voice_over_outlined,
-                  color: AppColors.gold),
+              const Icon(
+                Icons.record_voice_over_outlined,
+                color: AppColors.gold,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -221,24 +226,34 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
           const SizedBox(height: 6),
           Text(
             'tasmee.not_tajweed'.tr(),
-            style: TextStyle(fontSize: 12, height: 1.6,
-                color: scheme.onSurfaceVariant),
+            style: TextStyle(
+              fontSize: 12,
+              height: 1.6,
+              color: scheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: 10),
           if (!installed) ...[
             Text(
-              trn('tasmee.download_note',
-                  args: [formatBytes(tasmeeDownloadBytes)]),
-              style: TextStyle(fontSize: 12.5, height: 1.6,
-                  color: scheme.onSurfaceVariant),
+              trn(
+                'tasmee.download_note',
+                args: [formatBytes(tasmeeDownloadBytes)],
+              ),
+              style: TextStyle(
+                fontSize: 12.5,
+                height: 1.6,
+                color: scheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 8),
             if (_phase == _Phase.downloading) ...[
               LinearProgressIndicator(value: _progress, minHeight: 6),
               const SizedBox(height: 6),
-              Text(percentOf(_progress),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 12)),
+              Text(
+                percentOf(_progress),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12),
+              ),
             ] else
               FilledButton.icon(
                 onPressed: _download,
@@ -248,20 +263,20 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
           ] else ...[
             switch (_phase) {
               _Phase.recording => FilledButton.icon(
-                  style: FilledButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: _stopRecording,
-                  icon: const Icon(Icons.stop_rounded),
-                  label: Text('tasmee.stop'.tr()),
-                ),
+                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: _stopRecording,
+                icon: const Icon(Icons.stop_rounded),
+                label: Text('tasmee.stop'.tr()),
+              ),
               _Phase.thinking => const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: LinearProgressIndicator(minHeight: 6),
-                ),
+                padding: EdgeInsets.all(8),
+                child: LinearProgressIndicator(minHeight: 6),
+              ),
               _ => FilledButton.icon(
-                  onPressed: _startRecording,
-                  icon: const Icon(Icons.mic_rounded),
-                  label: Text('tasmee.start'.tr()),
-                ),
+                onPressed: _startRecording,
+                icon: const Icon(Icons.mic_rounded),
+                label: Text('tasmee.start'.tr()),
+              ),
             },
             if (_result case final r?) ...[
               const SizedBox(height: 12),
@@ -287,7 +302,9 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                     for (var i = 0; i < r.words.length; i++)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6),
                           color: r.heardWord[i]
@@ -311,13 +328,19 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                 const SizedBox(height: 10),
                 Text(
                   'tasmee.heard'.tr(),
-                  style: TextStyle(fontSize: 11.5, color: scheme.onSurfaceVariant),
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    color: scheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 ArabicText(
                   h,
-                  style: TextStyle(fontSize: 14, height: 1.8,
-                      color: scheme.onSurfaceVariant),
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.8,
+                    color: scheme.onSurfaceVariant,
+                  ),
                 ),
               ],
               if (r.ratio >= 0.9 && widget.onMastered != null) ...[
@@ -329,7 +352,8 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                 ),
               ],
             ],
-            if (ref.watch(hifzStoreProvider.notifier)
+            if (ref
+                    .watch(hifzStoreProvider.notifier)
                     .bestTasmee(widget.surahId, widget.ayahNumber)
                 case final best when best >= 0 && _result == null) ...[
               const SizedBox(height: 8),
@@ -341,9 +365,11 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
           ],
           if (_error case final e?) ...[
             const SizedBox(height: 8),
-            Text(e,
-                style: TextStyle(fontSize: 12, color: scheme.error),
-                textAlign: TextAlign.center),
+            Text(
+              e,
+              style: TextStyle(fontSize: 12, color: scheme.error),
+              textAlign: TextAlign.center,
+            ),
           ],
         ],
       ),

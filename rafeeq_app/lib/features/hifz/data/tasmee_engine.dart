@@ -27,9 +27,12 @@
 library;
 
 import 'dart:io';
+import 'dart:isolate';
+
+import 'package:crypto/crypto.dart';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';  // Float32List, @visibleForTesting
+import 'package:flutter/foundation.dart'; // Float32List, @visibleForTesting
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:whisper_flutter_new/whisper_flutter_new.dart';
@@ -40,21 +43,38 @@ import '../../../core/config/app_config.dart';
 /// number of bytes it must be once downloaded (a truncated model loads and
 /// then hears nothing).
 class TasmeeAsset {
+  /// The object's name on the bucket.
   final String name;
   final int bytes;
-  const TasmeeAsset(this.name, this.bytes);
+
+  /// The name it must have on the device: whisper_flutter_new opens
+  /// `<dir>/ggml-<model>.bin` and, when that file is missing, DOWNLOADS
+  /// whisper.cpp's generic model from HuggingFace under that name, silently.
+  final String localName;
+
+  /// SHA-256 of the bucket object. The generic `ggml-tiny.bin` is
+  /// 77,691,713 bytes too - HuggingFace's own size header says so - so the
+  /// size alone cannot tell the two apart; this can (theirs is be07e048…).
+  final String sha256;
+
+  const TasmeeAsset(this.name, this.bytes, this.localName, this.sha256);
 
   String get url =>
       '${AppConfig.contentBaseUrl}/asr/whisper-tiny-ar-quran/$name';
 }
 
-/// Measured with a HEAD against the bucket on 2026-09-23.
+/// Size measured with a HEAD, hash with sha256sum on the downloaded object,
+/// both on 2026-09-23.
 const tasmeeAssets = <TasmeeAsset>[
-  TasmeeAsset('ggml-model.bin', 77691713),
+  TasmeeAsset(
+    'ggml-model.bin',
+    77691713,
+    'ggml-tiny.bin',
+    '5a9a479f9ec6b192ba6860801fca70b69f10b9f8a9b876422990562521bf7a11',
+  ),
 ];
 
-int get tasmeeDownloadBytes =>
-    tasmeeAssets.fold(0, (sum, a) => sum + a.bytes);
+int get tasmeeDownloadBytes => tasmeeAssets.fold(0, (sum, a) => sum + a.bytes);
 
 /// How long one recitation may run. whisper.cpp slides its own 30-second
 /// window, so a longer ayah is handled — this is a cap on the recording, so a
@@ -89,26 +109,67 @@ class TasmeeEngine {
   Whisper? _whisper;
   Directory? _dir;
 
-  /// whisper.cpp looks for `ggml-tiny.bin` in the directory it is given,
-  /// and downloads it if missing — which it never has to, because the file is
-  /// already there under that name.
+  /// The model directory. whisper_flutter_new reads `ggml-tiny.bin` from
+  /// here - see [TasmeeAsset.localName] for why that name matters.
+  ///
+  /// WHAT WENT WRONG UNTIL 2026-09-23: the model was saved as
+  /// `ggml-model.bin`, the package did not find `ggml-tiny.bin`, and on the
+  /// first recitation it fetched whisper.cpp's GENERIC tiny model from
+  /// HuggingFace with no progress shown. The owner saw «ابدأ التسميع» hang;
+  /// and every recitation on his phone had been heard by that generic model,
+  /// not the Quran-tuned one that was measured and uploaded.
   Future<Directory> _modelDir() async {
     final base = await getApplicationSupportDirectory();
     return _dir ??= Directory(p.join(base.path, 'asr'));
   }
 
-  /// True when the model is present at exactly its expected size.
+  /// Written beside the model once its hash has been checked, so the 78 MB
+  /// are hashed once per install rather than on every screen.
+  static const _verifiedSuffix = '.quran-verified';
+
+  /// True only when OUR model sits where the package will read it. A file
+  /// under that name that is not ours (the generic download) is deleted,
+  /// and a copy of ours left under its old name is moved into place.
   Future<bool> isInstalled() async {
     final dir = await _modelDir();
     for (final a in tasmeeAssets) {
-      final f = File(p.join(dir.path, a.name));
-      if (!f.existsSync() || await f.length() != a.bytes) return false;
+      final local = File(p.join(dir.path, a.localName));
+      final marker = File('${local.path}$_verifiedSuffix');
+      if (local.existsSync() &&
+          marker.existsSync() &&
+          marker.readAsStringSync().trim() == a.sha256 &&
+          await local.length() == a.bytes) {
+        continue;
+      }
+      // Installs before the fix: ours under the bucket's name, possibly
+      // with the generic one beside it under the name that is read.
+      final old = File(p.join(dir.path, a.name));
+      if (old.existsSync() &&
+          await old.length() == a.bytes &&
+          await _sha256(old.path) == a.sha256) {
+        if (local.existsSync()) await local.delete();
+        await old.rename(local.path);
+        await marker.writeAsString(a.sha256);
+        continue;
+      }
+      if (local.existsSync() && await _sha256(local.path) == a.sha256) {
+        await marker.writeAsString(a.sha256);
+        continue;
+      }
+      if (local.existsSync()) await local.delete(); // not ours
+      _whisper = null;
+      return false;
     }
     return true;
   }
 
-  /// Downloads the model, verifying its exact byte count before it counts as
-  /// installed. [onProgress] gets 0..1.
+  static Future<String> _sha256(String path) => Isolate.run(() async {
+    final digest = await sha256.bind(File(path).openRead()).first;
+    return digest.toString();
+  });
+
+  /// Downloads the model, verifying its exact byte count and hash before it
+  /// counts as installed. [onProgress] gets 0..1.
   Future<void> download({
     required Dio dio,
     void Function(double progress)? onProgress,
@@ -119,13 +180,7 @@ class TasmeeEngine {
     final total = tasmeeDownloadBytes;
     var done = 0;
     for (final a in tasmeeAssets) {
-      final path = p.join(dir.path, a.name);
-      final f = File(path);
-      if (f.existsSync() && await f.length() == a.bytes) {
-        done += a.bytes;
-        onProgress?.call(done / total);
-        continue;
-      }
+      final path = p.join(dir.path, a.localName);
       final tmp = '$path.part';
       await dio.download(
         a.url,
@@ -134,14 +189,21 @@ class TasmeeEngine {
         onReceiveProgress: (got, _) => onProgress?.call((done + got) / total),
       );
       final got = await File(tmp).length();
-      if (got != a.bytes) {
+      final hash = await _sha256(tmp);
+      if (got != a.bytes || hash != a.sha256) {
         await File(tmp).delete();
-        throw StateError('${a.name} came back $got bytes, expected ${a.bytes}');
+        throw StateError(
+          '${a.name} came back $got bytes / $hash, expected '
+          '${a.bytes} / ${a.sha256}',
+        );
       }
+      if (File(path).existsSync()) await File(path).delete();
       await File(tmp).rename(path);
+      await File('$path$_verifiedSuffix').writeAsString(a.sha256);
       done += a.bytes;
       onProgress?.call(done / total);
     }
+    _whisper = null;
   }
 
   Future<void> deleteModel() async {
@@ -151,6 +213,9 @@ class TasmeeEngine {
   }
 
   /// Transcribes a 16 kHz mono WAV file recorded from the microphone.
+  ///
+  /// Refuses unless [isInstalled] has seen our model where the package reads
+  /// it: the package's own fallback is a silent download of another model.
   Future<String> transcribeFile(String wavPath) async {
     if (!await isInstalled()) {
       throw StateError('the recogniser is not downloaded yet');
@@ -218,8 +283,11 @@ class TasmeeEngine {
 /// ties broken by total closeness. When [letterNames] is given, e[0] is a
 /// surah's opening letters and counts as said when enough of their NAMES
 /// were heard, each name compared as a word of its own.
-(List<bool>, int) _align(List<String> e, List<String> h,
-    {List<String>? letterNames}) {
+(List<bool>, int) _align(
+  List<String> e,
+  List<String> h, {
+  List<String>? letterNames,
+}) {
   final n = e.length, m = h.length;
   final cnt = List.generate(n + 1, (_) => List<int>.filled(m + 1, 0));
   final sum = List.generate(n + 1, (_) => List<double>.filled(m + 1, 0));
@@ -291,13 +359,35 @@ const double _threshold = 0.7;
 /// The surahs that open with separate letters, by the letters' recited names
 /// (Hafs). Keyed by surah; 42:2 «عسق» is the one set in a second verse.
 const Map<int, String> _openingLetters = {
-  2: 'الف لام ميم', 3: 'الف لام ميم', 7: 'الف لام ميم صاد',
-  10: 'الف لام را', 11: 'الف لام را', 12: 'الف لام را', 13: 'الف لام ميم را',
-  14: 'الف لام را', 15: 'الف لام را', 19: 'كاف ها يا عين صاد', 20: 'طا ها',
-  26: 'طا سين ميم', 27: 'طا سين', 28: 'طا سين ميم', 29: 'الف لام ميم',
-  30: 'الف لام ميم', 31: 'الف لام ميم', 32: 'الف لام ميم', 36: 'يا سين',
-  38: 'صاد', 40: 'حا ميم', 41: 'حا ميم', 42: 'حا ميم', 43: 'حا ميم',
-  44: 'حا ميم', 45: 'حا ميم', 46: 'حا ميم', 50: 'قاف', 68: 'نون',
+  2: 'الف لام ميم',
+  3: 'الف لام ميم',
+  7: 'الف لام ميم صاد',
+  10: 'الف لام را',
+  11: 'الف لام را',
+  12: 'الف لام را',
+  13: 'الف لام ميم را',
+  14: 'الف لام را',
+  15: 'الف لام را',
+  19: 'كاف ها يا عين صاد',
+  20: 'طا ها',
+  26: 'طا سين ميم',
+  27: 'طا سين',
+  28: 'طا سين ميم',
+  29: 'الف لام ميم',
+  30: 'الف لام ميم',
+  31: 'الف لام ميم',
+  32: 'الف لام ميم',
+  36: 'يا سين',
+  38: 'صاد',
+  40: 'حا ميم',
+  41: 'حا ميم',
+  42: 'حا ميم',
+  43: 'حا ميم',
+  44: 'حا ميم',
+  45: 'حا ميم',
+  46: 'حا ميم',
+  50: 'قاف',
+  68: 'نون',
 };
 
 String? _asRecited(String firstWord, int surahId, int ayahNumber) {
@@ -364,7 +454,13 @@ List<String> tasmeeWords(String text) {
   t = t.replaceAll(_marks, '');
   t = t.replaceAll(_notArabic, ' ');
   const folds = {
-    'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ى': 'ي', 'ة': 'ه', 'ؤ': 'و', 'ئ': 'ي',
+    'أ': 'ا',
+    'إ': 'ا',
+    'آ': 'ا',
+    'ى': 'ي',
+    'ة': 'ه',
+    'ؤ': 'و',
+    'ئ': 'ي',
   };
   folds.forEach((a, b) => t = t.replaceAll(a, b));
   return t.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();

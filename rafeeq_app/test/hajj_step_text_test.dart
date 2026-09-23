@@ -6,6 +6,21 @@ import 'package:rafeeq_app/features/hajj/data/hajj_step_text.dart';
 import 'package:rafeeq_app/features/library/data/book_text.dart';
 
 void main() {
+  test('only the footnote markers go', () {
+    // al-Idah p. 121 as the book stores it
+    expect(
+      withoutNoteMarkers(
+        'فإنْ لم يُحَاذ شَيْئاً (١) أحْرَمَ عَلَى مَرْحَلَتَيْنِ مِنْ مَكةَ (٢) فإنْ اشْتبَهَ',
+      ),
+      'فإنْ لم يُحَاذ شَيْئاً أحْرَمَ عَلَى مَرْحَلَتَيْنِ مِنْ مَكةَ فإنْ اشْتبَهَ',
+    );
+    expect(withoutNoteMarkers('(فرع): إذا انْتَهَى'), '(فرع): إذا انْتَهَى');
+    expect(
+      withoutNoteMarkers('وطَريقُ الاحْتِيَاط لا تَخْفَى (٤).'),
+      'وطَريقُ الاحْتِيَاط لا تَخْفَى.',
+    );
+  });
+
   final book = BookText.fromBytes(
     File('assets/data/builtin_books/$hajjGuideBook.json').readAsBytesSync(),
   );
@@ -55,7 +70,21 @@ void main() {
           }
         }
       }
-      expect(body, source);
+      // Verbatim but for the footnote markers, whose notes are not shown.
+      expect(
+        [for (final p in body) (p.text, p.kind)],
+        [
+          for (final p in source)
+            (p.kind == 'aya' ? p.text : withoutNoteMarkers(p.text), p.kind),
+        ],
+      );
+      expect(
+        body.where(
+          (p) => p.kind != 'aya' && RegExp(r'\([٠-٩]{1,2}\)').hasMatch(p.text),
+        ),
+        isEmpty,
+        reason: 'a marker whose footnote is not shown points at nothing',
+      );
     },
   );
 
@@ -66,7 +95,11 @@ void main() {
       final opening = book.pages
           .firstWhere((p) => p.printedPage == step.fromPage)
           .paras[step.fromPara];
-      expect(body.first, same(opening), reason: step.key);
+      expect(
+        body.first.text,
+        withoutNoteMarkers(opening.text),
+        reason: step.key,
+      );
     }
   });
 }

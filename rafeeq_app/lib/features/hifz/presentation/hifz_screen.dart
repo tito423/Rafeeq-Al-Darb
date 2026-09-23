@@ -72,9 +72,7 @@ class HifzScreen extends ConsumerWidget {
                           const SizedBox(width: 6),
                           Text(
                             trn('hifz.progress', args: ['${state.started}']),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),

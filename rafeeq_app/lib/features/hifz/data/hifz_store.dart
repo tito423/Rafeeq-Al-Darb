@@ -41,8 +41,12 @@ class HifzAyah {
     this.bestPercent = -1,
   });
 
-  Map<String, Object?> toJson() =>
-      {'b': box, 'd': dueDay, 's': streak, 'p': bestPercent};
+  Map<String, Object?> toJson() => {
+    'b': box,
+    'd': dueDay,
+    's': streak,
+    'p': bestPercent,
+  };
 
   static HifzAyah fromJson(Map<String, Object?> j) => HifzAyah(
     box: (j['b'] as num?)?.toInt() ?? 0,
@@ -105,7 +109,9 @@ class HifzStore extends StateNotifier<HifzState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       _key,
-      jsonEncode({for (final e in state.ayahs.entries) e.key: e.value.toJson()}),
+      jsonEncode({
+        for (final e in state.ayahs.entries) e.key: e.value.toJson(),
+      }),
     );
   }
 

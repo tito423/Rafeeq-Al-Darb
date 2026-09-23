@@ -13,6 +13,10 @@ dependencies:
   # onnxruntime - the app already ships one for the reading voice, and two
   # ONNX Runtimes in one app collide (see HANDOVER, 2026-09-23).
   whisper_flutter_new: ^1.0.1
+  # SHA-256 of the tasmee model, to tell ours from whisper.cpp's generic
+  # ggml-tiny.bin - the two are the same size to the byte. Already in the
+  # tree through just_audio; declared because it is now imported directly.
+  crypto: ^3.0.0
   # The microphone for «التسميع» — raw PCM straight into the recogniser.
   record: ^5.1.2
   flutter:
