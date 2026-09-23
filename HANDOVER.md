@@ -2419,9 +2419,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-23 00:36 — IN PROGRESS — resume here**
+**2026-09-23 07:05 — IN PROGRESS — resume here**
 
-Tasmee: the recogniser is hosted and the engine is in the app (no UI yet). Uploaded to R2 and verified on the public URL: asr/whisper-base-ar-quran/encoder.int8.onnx 29,104,812 B, decoder.int8.onnx 130,659,024 B, tokens.txt 866,987 B - all 200, served size equal, no Content-Encoding. Added sherpa_onnx ^1.13.8 and record ^5.1.2. New lib/features/hifz/data/tasmee_engine.dart: downloads the three files verifying each one's exact byte count (a truncated model loads and hears nothing), loads sherpa's offline Whisper recognizer from the app's documents dir, and compares what was heard with the ayah word by word using the same skeleton rule the desktop measurement used - so Uthmani al-kitab and imlai al-kitaab count as the same word. tasmee_compare_test pins it: a full recitation 11/11, a skipped tail marked word by word, one wrong word marked alone, a different ayah rejected. Whisper's 30-second window and the fact that tajweed is NOT checked are written into the class doc. analyze clean.
+Tasmee matcher rewritten (DP word alignment; Maryam/Nisa transcripts pinned); basmala, pause marks, plain names in hifz; library 236 (Majmu, Qurtubi, Mughni, Tabari, Siyar, Fath al-Bari minus Ibn Baz preface+note, hosted not bundled); Najm al-Din Ibn Qudamah attribution fixed; 4 store shots re-shot. RUNNING: fetch_shamela_pages chain tahdhib_al_kamal (19002) then lisan_al_arab (8101), resumable, log scripts/_crawl_p2c.log. NOT on owner phone yet: needs build_github_release.bat.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
