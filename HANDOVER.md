@@ -27,6 +27,26 @@ Cline, or any other).
 | **Verified 2026-09-21 (release 3.53.0)** | `flutter analyze lib test` → **No issues found** · `flutter test` → **455 passed, 2 skipped** · built with `build_github_release.bat` and re-signed by `scripts/sign_release.py`, whose two-pass check passed (`CN=Rafeeq Al-Darb` from Android 9 up, the old debug certificate still covering Android 7–8) · `dist/RafeeqAlDarb-v3.53.0.apk` **260,175,087 B**, sha256 `033e183ae4377a8bef83286b32b128869cf5b2e1a20cf57685fcc347b14570ed` · installed on `emulator-5554` with `adb install -r` → `Success`, no FATAL EXCEPTION · hosted content range-checked with a User-Agent, all 206 with the right `Content-Type`: `books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json`, `hadith/hadith.zip`, `mushaf/madinah_qc/001.png`, and the Umrah JSON carries **no** `Content-Encoding` |
 | **Seen on the device 2026-09-21 (release 3.53.0)** | Home renders and the More list shows «ادعم التطبيق», so the GitHub-only support define is in this build · the العمرة track shows exactly **6** Umrah-only cards · step 2 «ميقات العمرة» — the one he photographed opening onto «في ميقات الحج» — now opens on «للعُمرةِ المُفرَدةِ عنِ الحجِّ ميقاتانِ زَمانيٌّ ومَكانيٌّ» · the About card reads **v3.53.0** |
 
+## NEXT CHANGES — the owner's list (started 2026-09-23, after v3.57.0)
+
+Not started. Do them in this order unless he says otherwise.
+
+1. **Theme choice on the first screen after the splash.** «حط نوت للتعديلات
+   اللي جاية اختيار الثيم من اول شاشة بتظهر بعد الاسبلاش لان اول شاشة بتظهر
+   دارك» (2026-09-23). Seen on emulator-5554 on a fresh install the same day:
+   the permissions screen came up light, then «اختر مصحفك»
+   (`lib/features/onboarding/presentation/screens/onboarding_screen.dart`)
+   came up DARK, before the reader had chosen anything. So: offer the theme
+   (نهاري / ليلي / …, the choices Settings already has) on that first screen,
+   the way the language is already offered on the permissions screen, and
+   find out why onboarding is dark by default before choosing a default.
+   See it on a fresh install (`adb uninstall`, then install) — an upgraded
+   install keeps the old choice and will not show the problem.
+
+2. Carried from v3.57.0, **still unseen on a real phone**: tasmee with the
+   Quran-tuned model (the generic-model fix), and opening the big
+   encyclopaedias (al-Tabari, 16,699 pages).
+
 ## SESSION 2026-09-22 — committed and pushed, NOT released, NOT on his phone
 
 Everything below is in checkpoint commits on `master` (`a334aefe` … the
