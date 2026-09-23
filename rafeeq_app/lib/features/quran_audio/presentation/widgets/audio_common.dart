@@ -351,12 +351,15 @@ void showPlayFailed(BuildContext context) {
   // under either message, the host and what it answered (AudioFailure's one
   // untranslated line), so a screenshot says where to look.
   final f = QuranAudioPlayer.instance.lastFailure;
-  final missing = f != null && f.error.toString().contains('404');
+  final missing = f?.status == 404 || f?.status == 410;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text([
         (missing ? 'quran_audio.play_missing' : 'quran_audio.play_failed').tr(),
-        if (f != null) AudioFailure.describe(f.url, f.error),
+        if (f != null)
+          f.status == null
+              ? AudioFailure.describe(f.url, f.error)
+              : '${Uri.tryParse(f.url)?.host ?? '?'} — http ${f.status}',
       ].join('\n')),
     ),
   );

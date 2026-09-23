@@ -151,13 +151,34 @@ class QuranAudioPlayer extends ChangeNotifier {
       // listed by mp3quran and answers 404; «check your connection» sent
       // the reader looking for a fault that was not his.
       final t = tracks[_index];
-      lastFailure = (url: t.fallbackUrl ?? t.url ?? '', error: e);
+      final url = t.fallbackUrl ?? t.url ?? '';
+      lastFailure = (url: url, error: e, status: await _statusOf(url));
       return false;
     }
   }
 
   /// The last failure of [playQueue], or null after a successful start.
-  ({String url, Object error})? lastFailure;
+  /// [status] is what the server answers a HEAD for the same file: the
+  /// player itself reports only «(0) Source error», whether the file is
+  /// missing or the phone is offline.
+  ({String url, Object error, int? status})? lastFailure;
+
+  static Future<int?> _statusOf(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri == null || !uri.hasScheme || uri.scheme == 'file') return null;
+    final client = HttpClient()..connectionTimeout = const Duration(seconds: 6);
+    try {
+      final req = await client.headUrl(uri).timeout(const Duration(seconds: 6));
+      // R2 refuses a request with no User-Agent (CLAUDE.md trap #19).
+      req.headers.set(HttpHeaders.userAgentHeader, 'RafeeqAlDarb');
+      final res = await req.close().timeout(const Duration(seconds: 6));
+      return res.statusCode;
+    } catch (_) {
+      return null; // no answer at all: that IS the connection
+    } finally {
+      client.close(force: true);
+    }
+  }
 
   void _attach(AudioPlayer player) {
     for (final s in _subs) {
