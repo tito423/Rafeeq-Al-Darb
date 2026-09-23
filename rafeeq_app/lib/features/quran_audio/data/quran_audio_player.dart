@@ -144,11 +144,20 @@ class QuranAudioPlayer extends ChangeNotifier {
       await player.setShuffleModeEnabled(_shuffle);
       await player.setSpeed(_speed);
       unawaited(player.play());
+      lastFailure = null;
       return true;
-    } catch (_) {
+    } catch (e) {
+      // Kept so the snackbar can say WHAT failed. Al-Burimi's An-Nas is
+      // listed by mp3quran and answers 404; «check your connection» sent
+      // the reader looking for a fault that was not his.
+      final t = tracks[_index];
+      lastFailure = (url: t.fallbackUrl ?? t.url ?? '', error: e);
       return false;
     }
   }
+
+  /// The last failure of [playQueue], or null after a successful start.
+  ({String url, Object error})? lastFailure;
 
   void _attach(AudioPlayer player) {
     for (final s in _subs) {

@@ -197,11 +197,46 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     _selectTarget(n);
   }
 
-  void _clearAll() {
+  /// «تصفير الكل» used to zero the counter and the rounds and leave the
+  /// total alone - while the total alone was enough to keep the button
+  /// enabled. With the counter at 0 and «المجموع: ٦» showing, it looked
+  /// live and did nothing (emulator-5554, 3.59.0). It clears the total too
+  /// now, after asking, since that number cannot be got back.
+  ///
+  /// The synced total is a SUM of increments on the server, which it pulls
+  /// back into `tasbeeh_total`; zeroing only the local copy would come back
+  /// at the next sync. So the reset travels as one negative increment.
+  Future<void> _clearAll() async {
+    final was = _total;
+    if (was > 0) {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Text('azkar.tasbeeh_reset_all_confirm'.tr(
+              args: [localizeDigits('$was', context.locale.languageCode)])),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text('common.cancel'.tr()),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text('common.reset_all'.tr()),
+            ),
+          ],
+        ),
+      );
+      if (ok != true || !mounted) return;
+    }
     setState(() {
       _count = 0;
       _rounds = 0;
+      _total = 0;
     });
+    if (was > 0) {
+      SharedPreferences.getInstance().then((p) => p.setInt('tasbeeh_total', 0));
+      ref.read(syncServiceProvider).incrementCounter('tasbeeh_total', -was);
+    }
   }
 
   String _targetLabel(int? t) => t == null

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/services/audio_failure.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 import '../../data/mp3quran_api.dart';
@@ -346,7 +347,17 @@ Future<bool> confirmAction(BuildContext context, String message) async {
 }
 
 void showPlayFailed(BuildContext context) {
+  // A 404 is the server not holding the file, not the reader's connection;
+  // under either message, the host and what it answered (AudioFailure's one
+  // untranslated line), so a screenshot says where to look.
+  final f = QuranAudioPlayer.instance.lastFailure;
+  final missing = f != null && f.error.toString().contains('404');
   ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('quran_audio.play_failed'.tr())),
+    SnackBar(
+      content: Text([
+        (missing ? 'quran_audio.play_missing' : 'quran_audio.play_failed').tr(),
+        if (f != null) AudioFailure.describe(f.url, f.error),
+      ].join('\n')),
+    ),
   );
 }
