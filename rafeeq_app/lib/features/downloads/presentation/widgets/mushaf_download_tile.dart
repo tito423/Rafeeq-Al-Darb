@@ -153,30 +153,39 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    complete
-                        ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
-                        : '${localizeDigits(ratio(_cached, total), uiLanguageCode)} ${'downloads.pages_cached'.tr()}'
-                              '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      // `outline` is the palette's DIVIDER grey - it is meant
-                      // for hairlines, not for a line someone has to read.
-                      // «وصف مصحف المدينة في التنزيلات باهت اللون».
-                      color: theme.colorScheme.onSurfaceVariant,
+                  // ONE LINE, PINNED. «ثبّت سطر ٠ / ٦٠٤ صفحة محفوظة بجانب نسبة
+                  // التحميل … يطلع وينزل مع الرقم». While downloading, this
+                  // line used to carry the saved count AND a size that grew
+                  // («· 1021.2 KB» -> «· 3.2 MB») and wrapped on a narrow tile,
+                  // so the bar under it rose and fell as the numbers changed;
+                  // and a second line under the bar counted the same pages
+                  // again, differently. Now it is one row of fixed height with
+                  // the saved pages at its start and the percentage at its end.
+                  if (_busy)
+                    _PinnedProgress(
+                      saved: _cached,
+                      total: total,
+                      fraction: total == 0 ? 0 : (_done * 100 ~/ total) / 100,
+                      paused: _paused,
+                    )
+                  else
+                    Text(
+                      complete
+                          ? '${'downloads.offline_ready'.tr()} · ${formatBytes(_bytes)}'
+                          : '${localizeDigits(ratio(_cached, total), uiLanguageCode)} ${'downloads.pages_cached'.tr()}'
+                                '${_bytes > 0 ? ' · ${formatBytes(_bytes)}' : ''}',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        // `outline` is the palette's DIVIDER grey - it is meant
+                        // for hairlines, not for a line someone has to read.
+                        // «وصف مصحف المدينة في التنزيلات باهت اللون».
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
                   if (_busy) ...[
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     LinearProgressIndicator(
                       value: total == 0 ? null : _done / total,
                       color: _paused ? theme.colorScheme.outline : AppColors.gold,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      _paused
-                          ? '${'downloads.paused'.tr()}  ${localizeDigits(ratio(_done, total), uiLanguageCode)}'
-                          : '${'downloads.downloading'.tr()}  ${localizeDigits(ratio(_done, total), uiLanguageCode)}',
-                      style: theme.textTheme.labelSmall,
                     ),
                   ],
                   const SizedBox(height: 10),
@@ -230,6 +239,67 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+/// The saved pages and the download percentage on one line that does not
+/// move: a fixed height, one line on each side, tabular digits, and the
+/// percentage laid over an invisible copy of its widest form («١٠٠٪»), so a
+/// number that gains a digit cannot shift anything beside it.
+class _PinnedProgress extends StatelessWidget {
+  final int saved;
+  final int total;
+
+  /// 0..1, floored by the caller: a download at 603 of 604 is not «١٠٠٪».
+  final double fraction;
+  final bool paused;
+
+  const _PinnedProgress({
+    required this.saved,
+    required this.total,
+    required this.fraction,
+    required this.paused,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    String label(double f) =>
+        '${(paused ? 'downloads.paused' : 'downloads.downloading').tr()}  '
+        '${percentOf(f)}';
+    return SizedBox(
+      height: 20,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              '${localizeDigits(ratio(saved, total), uiLanguageCode)} '
+              '${'downloads.pages_cached'.tr()}',
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              style: style,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Stack(
+            alignment: AlignmentDirectional.centerEnd,
+            children: [
+              Opacity(
+                opacity: 0,
+                child: Text(label(1), maxLines: 1, softWrap: false, style: style),
+              ),
+              Text(label(fraction), maxLines: 1, softWrap: false, style: style),
+            ],
+          ),
+        ],
       ),
     );
   }
