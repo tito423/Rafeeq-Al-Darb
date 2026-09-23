@@ -2419,9 +2419,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-23 07:05 — IN PROGRESS — resume here**
+**2026-09-23 11:27 — IN PROGRESS — resume here**
 
-Tasmee matcher rewritten (DP word alignment; Maryam/Nisa transcripts pinned); basmala, pause marks, plain names in hifz; library 236 (Majmu, Qurtubi, Mughni, Tabari, Siyar, Fath al-Bari minus Ibn Baz preface+note, hosted not bundled); Najm al-Din Ibn Qudamah attribution fixed; 4 store shots re-shot. RUNNING: fetch_shamela_pages chain tahdhib_al_kamal (19002) then lisan_al_arab (8101), resumable, log scripts/_crawl_p2c.log. NOT on owner phone yet: needs build_github_release.bat.
+RELEASED v3.56.0 (tag f8ea86c = HEAD, asset RafeeqAlDarb-v3.56.0.apk 264,395,103 B, download 200 verified; v3.55.0 + tag deleted, v3.51.0 kept). Library phase 2 complete, 238 books. Seen on emulator: release installs -r over debug, About v3.56.0, support button present. NOT YET ON A REAL PHONE: tasmee new matcher; the big encyclopaedias (Tabari 16,699 pp) download/open.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
