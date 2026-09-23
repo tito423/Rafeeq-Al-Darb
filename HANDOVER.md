@@ -30,6 +30,14 @@ Cline, or any other).
 
 ## NEXT CHANGES — the owner's list (started 2026-09-23, after v3.57.0)
 
+**STATUS 2026-09-23 (night):** items 00, 0, 1, 2, 3, 4 DONE and seen on
+emulator-5554 (commits ff41f514 … 724f058e); NOT released — v3.57.0 is still
+the latest. Item 7 (tajweed-correction model) is **PARKED by the owner**:
+«اركن خالص موضوع موديل التجويد ده … ابقى دور تاني كدة بضمير» — do not work
+on it; when he reopens it, search again from scratch and honestly (no free
+model was found that judges tajweed; word-level checking is what exists —
+see the ASR notes below). The rest of this list is kept for the record.
+
 Not started. Do them in this order unless he says otherwise. The owner:
 «صلح كل ده اللي فات» — all of it, items 0-3, then a release when he asks.
 
@@ -2483,9 +2491,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-23 18:37 — IN PROGRESS — resume here**
+**2026-09-23 19:47 — IN PROGRESS — resume here**
 
-IN PROGRESS — R2 recitation mirror UPLOADING in the background (`py -3 scripts/r2_mirror_recitations.py`, log `_mirror_log.txt`). Owner: murattal only, <= 6 GB, zero cost. Set: per-ayah Alafasy/MaherAlMuaiqly/Minshawy_Murattal (4.60 GB) + whole-surah basit/maher murattal (1.16 GB) = 5.76 GB; bucket was 1.248 GB. App code already reads the mirror FIRST with the origin behind it (per-ayah play+download, surah download+stream) — committed but NOT RELEASED: do not ship until the upload is complete. NEXT: when the log says `end:`, run the script AGAIN (it resumes; a few files failed with curl 56 connection resets), then count objects under recitations/ (expect 18,708 ayah + 228 surah), range-check first/last of each set, then see it play on emulator-5554. Token lacks Analytics/Billing Read — owner asked to add them; `scripts/r2_usage.py` reads them once added.
+IN PROGRESS — R2 recitation mirror running in the background under a live Class A guard (`py -3 scripts/r2_mirror_recitations.py`, log `_mirror_log.txt`; it stops itself at 975,000 Class A — the billing period 2026-08-24 -> 2026-09-24T00:00Z = 04:00 DUBAI was at 951k before this run). RESUME: (1) if the log's last line is `end:` or `STOP:`, run the script again (resumable; retries the curl-56 failures; after the 04:00 Dubai reset the guard has a fresh 1M). (2) count `recitations/` on the bucket: expect 18,708 ayah + 228 surah objects. (3) on emulator-5554 play Alafasy per-ayah and Maher/Basit surahs and confirm they come from R2. (4) only THEN is the mirror-first app code (568b0e29) releasable. Release v3.58.0 ONLY when the owner says so. Open question to him: make Minshawi MURATTAL the default reciter (mirrored) instead of mujawwad (not mirrored)? Owner is in DUBAI (UTC+4) — give times in Dubai time.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
