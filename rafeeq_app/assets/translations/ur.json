@@ -1529,7 +1529,9 @@
     "target_azkar": "اذکار",
     "target_azkar_desc": "صبح و شام کے اذکار، کارڈوں اور شمار کے ساتھ",
     "target_tasbeeh": "تسبیح",
-    "target_tasbeeh_desc": "گنتی، اور طویل مأثور اذکار"
+    "target_tasbeeh_desc": "گنتی، اور طویل مأثور اذکار",
+    "target_hifz": "حفظ اور سنانا",
+    "target_hifz_desc": "آیت آیت: سنیں، الفاظ چھپائیں، اور سنائیں"
   },
   "adhan": {
     "backgrounds_title": "اذان اسکرین کے پس منظر",

@@ -21,6 +21,7 @@ import '../../features/adhan/data/prayer_status_enabled_provider.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
 import '../../features/azkar/presentation/screens/tasbeeh_screen.dart';
 import '../../features/home/data/prayer_controller.dart';
+import '../../features/hifz/presentation/hifz_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/more/presentation/screens/more_screen.dart';
@@ -237,6 +238,13 @@ class _AppShellState extends ConsumerState<AppShell>
     // trade for a screen that is being re-rendered in another language anyway.
     final localeCode = context.locale.languageCode;
 
+    // «وضع التركيز». The nav bar is not merely hidden - the index is
+    // pinned, so a `requestedTabProvider` set by a pushed screen, or a
+    // stale `_index` from before the mode was turned on, cannot land the
+    // reader on another tab behind a missing bar. Read this early: the
+    // stack's children depend on it (`AppTab.focusHifz`).
+    final focus = ref.watch(focusModeProvider);
+
     // P3‑45: real-device feedback found whole tabs (Library's "Hadith" /
     // "Available books" chrome, seen live after switching locale mid-
     // session) frozen in whatever language was active on the app's first
@@ -264,6 +272,12 @@ class _AppShellState extends ConsumerState<AppShell>
       TasbeehScreen(),
       LibraryScreen(),
       MoreScreen(),
+      // AppTab.focusHifz — not a destination, and built ONLY while focus
+      // mode is on it. `IndexedStack` builds every child it is given, and
+      // `HifzScreen` opens the Qur'an database and reads the hifz store the
+      // moment it is built; nobody who is not in that mode should pay for
+      // that on every launch.
+      focus == FocusTarget.hifz ? HifzScreen() : const SizedBox.shrink(),
     ];
 
     // P3‑43 #6: a genuinely full-screen mushaf reader needs this bar gone
@@ -276,13 +290,15 @@ class _AppShellState extends ConsumerState<AppShell>
     // while a completely different tab is the one actually on screen — a
     // real bug caught live, not by inspection: a fullscreen toggle left on
     // from an earlier session made the bottom nav vanish on Home too.
-    final fullScreen =
-        ref.watch(quranFullScreenProvider) && _index == AppTab.quran;
+    // What the stack actually shows. Taking it from the focus target rather
+    // than from `_index` closes the one-frame gap the post-frame pin below
+    // would otherwise leave, and is the only way `FocusTarget.hifz` — a slot
+    // with no bottom-nav button — reaches the screen at all.
+    final shown = focus?.tab ?? _index;
 
-    // «وضع التركيز». The nav bar is not merely hidden - the index is
-    // pinned, so a `requestedTabProvider` set by a pushed screen, or a
-    // stale `_index` from before the mode was turned on, cannot land the
-    // reader on another tab behind a missing bar.
+    final fullScreen =
+        ref.watch(quranFullScreenProvider) && shown == AppTab.quran;
+
     final tour = ref.watch(tutorialRunningProvider);
     // On a true first run the tour has the screen, so the name is asked when
     // the tour ends rather than never.
@@ -297,8 +313,13 @@ class _AppShellState extends ConsumerState<AppShell>
         showReaderNameSheet(context);
       }
     });
-    final focus = ref.watch(focusModeProvider);
-    if (focus != null && _index != focus.tab) {
+    // `_index` follows a tab target so the bar and `activeTabProvider` agree
+    // with what is on screen — but only for a target that IS a tab.
+    // `FocusTarget.hifz` pins a stack slot past the last destination, and
+    // `NavigationBar` asserts on a `selectedIndex` it has no button for, so
+    // `_index` is deliberately left on a real tab there: the frame in which
+    // focus is switched off must already be a valid one for the bar.
+    if (focus != null && focus.isTab && _index != focus.tab) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _goTo(focus.tab);
       });
@@ -353,10 +374,10 @@ class _AppShellState extends ConsumerState<AppShell>
         // of the keyboard's slide — «لما بضغط على زر الانتقال الشاشة في الخلفية
         // بتمش أو بتعمل فليكر جامد جدا». Its dialogs float above the keyboard
         // on their own.
-        resizeToAvoidBottomInset: _index != AppTab.quran,
+        resizeToAvoidBottomInset: shown != AppTab.quran,
         body: KeyedSubtree(
           key: ValueKey<String>(localeCode),
-          child: IndexedStack(index: _index, children: screens),
+          child: IndexedStack(index: shown, children: screens),
         ),
       // P3‑57: seven destinations is more than Material's bar is designed
       // for (the spec says three to five), so the longest translated label

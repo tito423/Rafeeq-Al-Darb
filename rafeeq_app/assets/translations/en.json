@@ -1529,7 +1529,9 @@
     "target_azkar": "Adhkar",
     "target_azkar_desc": "The day and night adhkar with their cards and counter",
     "target_tasbeeh": "Tasbeeh",
-    "target_tasbeeh_desc": "Counting, and the long ma’thur adhkar"
+    "target_tasbeeh_desc": "Counting, and the long ma’thur adhkar",
+    "target_hifz": "Memorize and recite",
+    "target_hifz_desc": "Ayah by ayah: listen, hide the words, recite it back"
   },
   "adhan": {
     "backgrounds_title": "Adhan screen backgrounds",

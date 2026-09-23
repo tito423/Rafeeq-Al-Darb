@@ -24,6 +24,19 @@ abstract final class AppTab {
   // it renders visually left-most under RTL, matching where a "More" entry
   // conventionally lives.
   static const more = 6;
+
+  /// How many of the above are real bottom-nav destinations. `NavigationBar`
+  /// asserts on a `selectedIndex` outside its own list, so anything that
+  /// selects a stack slot beyond this one (see [focusHifz]) must never reach
+  /// the bar.
+  static const navCount = 7;
+
+  /// NOT a destination - an extra `IndexedStack` slot that only
+  /// «وضع التركيز» ever selects. «الحفظ والتسميع» is reached by pushing
+  /// `HifzScreen` from «المزيد», so focus mode has no tab to pin; it shows
+  /// the screen here instead, and `AppShell` keeps `_index` on a real tab
+  /// the whole time so the bar is still valid the instant focus is left.
+  static const focusHifz = 7;
 }
 
 /// Cross-route "switch the bottom-nav tab to N" seam.

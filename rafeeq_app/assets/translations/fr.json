@@ -1529,7 +1529,9 @@
     "target_azkar": "Les adhkar",
     "target_azkar_desc": "Les adhkar du jour et de la nuit, avec leurs cartes et leur compteur",
     "target_tasbeeh": "Le tasbih",
-    "target_tasbeeh_desc": "Le comptage, et les longs adhkar rapportés"
+    "target_tasbeeh_desc": "Le comptage, et les longs adhkar rapportés",
+    "target_hifz": "Mémoriser et réciter",
+    "target_hifz_desc": "Verset par verset : écoutez, masquez les mots, récitez-le"
   },
   "adhan": {
     "backgrounds_title": "Fonds de l’écran de l’adhan",

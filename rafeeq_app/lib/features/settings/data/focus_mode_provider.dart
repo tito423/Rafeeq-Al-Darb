@@ -7,8 +7,9 @@
 /// index, and swallows the system back gesture.
 ///
 /// And it is not only the Qur'an: «كارت للقرآن فيفتح القرآن ويقفل عليه، وكارت
-/// لوضع للأذكار ويقفل عليه، وكارت للمسبحة ويقفل عليها، بس هما دول». Three
-/// destinations, named here so nothing else can be locked onto by accident.
+/// لوضع للأذكار ويقفل عليه، وكارت للمسبحة ويقفل عليها، بس هما دول». Those
+/// three, plus «الحفظ والتسميع», which he added on 2026-09-23 — named here
+/// so nothing else can be locked onto by accident.
 ///
 /// It is persisted, because a mode you set to stop yourself wandering is
 /// worthless if closing the app quietly cancels it.
@@ -19,18 +20,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/shell/tab_request_provider.dart';
 
-/// The three screens focus mode may lock onto. Deliberately not "any tab":
-/// focus is for the three things a reader sits with, and the owner said «بس
-/// هما دول».
+/// The screens focus mode may lock onto. Deliberately not "any tab": focus
+/// is for the things a reader sits with, and the owner said «بس هما دول» —
+/// so this list only grows when he asks for it, as it did for [hifz].
 enum FocusTarget {
   quran(AppTab.quran),
   azkar(AppTab.azkar),
-  tasbeeh(AppTab.tasbeeh);
+  tasbeeh(AppTab.tasbeeh),
+
+  /// «زود في وضع التركيز الحفظ والتسميع» (2026-09-23). Memorizing is the
+  /// longest sitting in the app and the one a notification pulls you out of
+  /// most easily, so it earns a card of its own.
+  ///
+  /// Unlike the other three it is not a bottom-nav tab - it is pushed from
+  /// «المزيد» - so it pins an `IndexedStack` slot that only this mode ever
+  /// selects. The tasmee panel lives inside a hifz session, so locking onto
+  /// this one locks onto both halves the owner named.
+  hifz(AppTab.focusHifz);
 
   const FocusTarget(this.tab);
 
-  /// The `AppTab` index this target pins the shell to.
+  /// The `IndexedStack` slot this target pins the shell to. For everything
+  /// but [hifz] that is also its `AppTab` bottom-nav index.
   final int tab;
+
+  /// Whether [tab] is a real bottom-nav destination. `AppShell` keeps the
+  /// navigation bar's own index on one of those even while focus mode is
+  /// showing a slot beyond them.
+  bool get isTab => tab < AppTab.navCount;
 
   /// The i18n key for its name, and for the line under it on the picker.
   String get titleKey => 'focus.target_$name';

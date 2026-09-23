@@ -1529,7 +1529,9 @@
     "target_azkar": "الأذكار",
     "target_azkar_desc": "أذكار اليوم والليلة ببطاقاتها وعدّادها",
     "target_tasbeeh": "المسبحة",
-    "target_tasbeeh_desc": "التسبيح والعدّ، والأذكار المأثورة"
+    "target_tasbeeh_desc": "التسبيح والعدّ، والأذكار المأثورة",
+    "target_hifz": "الحفظ والتسميع",
+    "target_hifz_desc": "آية آية: استمع، وأخفِ الكلمات، وسمّع لنفسك"
   },
   "adhan": {
     "backgrounds_title": "خلفيات شاشة الأذان",

@@ -1,7 +1,8 @@
-/// The three cards «وضع التركيز» offers before it locks the app down.
+/// The cards «وضع التركيز» offers before it locks the app down.
 ///
 /// «لما نضغط عليه يديني كارت للقرآن فيفتح القرآن ويقفل عليه، وكارت لوضع
-/// للأذكار ويقفل عليه، وكارت للمسبحة ويقفل عليها، بس هما دول».
+/// للأذكار ويقفل عليه، وكارت للمسبحة ويقفل عليها، بس هما دول»، ثم «زود في
+/// وضع التركيز الحفظ والتسميع» (2026-09-23).
 ///
 /// A sheet rather than a screen: choosing is one tap and the thing you chose
 /// is what you get, with nothing in between.
@@ -17,10 +18,14 @@ import '../../data/focus_mode_provider.dart';
 /// Icon and accent per destination, kept beside the sheet that draws them
 /// rather than on the enum: they are how this one picker looks, not facts
 /// about focus mode.
-const _look = <FocusTarget, (IconData, Color)>{
+/// Public so `test/focus_targets_test.dart` can prove every target has one:
+/// the card reads this with `!`, so a target added without an entry here
+/// would crash the sheet the moment it is opened.
+const focusTargetLook = <FocusTarget, (IconData, Color)>{
   FocusTarget.quran: (Icons.menu_book_rounded, AppColors.gold),
   FocusTarget.azkar: (Icons.spa_rounded, Color(0xFF2E9D6F)),
   FocusTarget.tasbeeh: (Icons.radio_button_checked, Color(0xFFD4785A)),
+  FocusTarget.hifz: (Icons.record_voice_over_rounded, Color(0xFF6C7BC4)),
 };
 
 Future<void> showFocusModePicker(BuildContext context) {
@@ -79,7 +84,7 @@ class _FocusTargetCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final (icon, accent) = _look[target]!;
+    final (icon, accent) = focusTargetLook[target]!;
     return Material(
       color: accent.withValues(alpha: 0.10),
       borderRadius: BorderRadius.circular(16),
