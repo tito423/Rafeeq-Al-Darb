@@ -43,6 +43,24 @@ void main() {
     test('empty stays empty', () {
       expect(buckwalterToArabic(''), equals(''));
     });
+
+    // Real rows of quran_sciences.db: the corpus HTML-escaped < and >.
+    // 10,040 lemmas are stored this way, and read «ؤلت;ِن» on the device.
+    test('undoes the corpus HTML escapes before transliterating', () {
+      expect(buckwalterToArabic('&lt;in'), equals('إِن'));
+      expect(buckwalterToArabic('&lt;in~'), equals('إِنّ'));
+      expect(buckwalterToArabic('&gt;an'), equals('أَن'));
+      expect(buckwalterToArabic('&lt;ilaY`'), equals('إِلَىٰ'));
+    });
+
+    test('maps the corpus extensions ^ (maddah) and # (hamza above)', () {
+      expect(buckwalterToArabic('>uwla`^}ik'), equals('أُولَٰٓئِك'));
+      expect(buckwalterToArabic('_#a`n'), equals('ـٔ' 'َٰن'));
+    });
+
+    test('a bare & is still Buckwalter waw-hamza', () {
+      expect(buckwalterToArabic('&'), equals('ؤ'));
+    });
   });
 
   group('buckwalterForDisplay', () {

@@ -57,6 +57,10 @@ const Map<String, String> _buckwalterMap = {
   '`': 'ٰ', // ٰ  dagger alef
   '{': 'ٱ', // ٱ  alef wasla
   '_': 'ـ', // ـ  tatweel
+  // The Quranic Arabic Corpus's own extensions, found as raw `^` and `#` in
+  // 1,775 lemmas: `>uwla`^}ik` is أُو۟لَٰٓئِكَ, `S~a`bi_#iyn` is ٱلصَّٰبِـِٔينَ.
+  '^': 'ٓ', // ٓ  maddah above
+  '#': 'ٔ', // ٔ  hamza above
 };
 
 /// Converts a Buckwalter-transliterated string to Arabic script.
@@ -64,6 +68,15 @@ const Map<String, String> _buckwalterMap = {
 /// through unchanged, so `Hmd` → `حمد` and `rbb` → `ربب`.
 String buckwalterToArabic(String input) {
   if (input.isEmpty) return input;
+  // The corpus file HTML-escaped the two hamza-seat letters: 10,040 lemmas
+  // (and 3 roots) are stored as `&lt;in~` / `&gt;an`, not `<in~` / `>an`.
+  // Mapped a character at a time, `&lt;` became «ؤلت;» - so «إنّ», «إلى»,
+  // «أنْ» read as noise in the i'rab card. Undo the escape first; a bare
+  // `&` is still Buckwalter's ؤ and is left alone.
+  input = input
+      .replaceAll('&lt;', '<')
+      .replaceAll('&gt;', '>')
+      .replaceAll('&amp;', '&');
   final buffer = StringBuffer();
   for (final rune in input.split('')) {
     buffer.write(_buckwalterMap[rune] ?? rune);

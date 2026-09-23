@@ -98,6 +98,12 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
   /// Shorthand, since every face reaches for it.
   Color get ink => widget.ink;
 
+  /// A dark ink means the face sits on a light surface.
+  bool get _onLight => ink.computeLuminance() < 0.5;
+
+  /// _kGold for small text: 2 : 1 on a light card, so a deep gold there.
+  Color get _goldText => _onLight ? const Color(0xFF6B4E0E) : _kGold;
+
   @override
   Widget build(BuildContext context) {
     final h = widget.height;
@@ -246,7 +252,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
               ),
             ),
           ),
-          _meridiemChip(h, color: _kGold),
+          _meridiemChip(h, color: _goldText),
         ],
       );
 
@@ -261,7 +267,14 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
             localizeDigits(_text, true),
             textDirection: TextDirection.ltr,
             style: TextStyle(
-              color: const Color(0xFFF6E7B4),
+              // Pale gold was drawn for a dark card only. On the light
+              // themes it measured 1.06 : 1 against the gallery tile and
+              // 1.12 : 1 on the home card - the digits were not there. A
+              // dark ink means a light surface, so take a deep gold there
+              // (5.9 : 1 and 7.0 : 1 on the same two grounds).
+              color: _onLight
+                  ? const Color(0xFF6B4E0E)
+                  : const Color(0xFFF6E7B4),
               fontFamily: 'AmiriQuran',
               fontSize: h * 0.52,
               height: 1.5,
@@ -270,7 +283,7 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
               ],
             ),
           ),
-          _meridiemChip(h, color: _kGold),
+          _meridiemChip(h, color: _goldText),
         ],
       );
 

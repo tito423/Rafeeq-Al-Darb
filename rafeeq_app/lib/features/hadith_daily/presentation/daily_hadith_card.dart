@@ -170,6 +170,15 @@ class _PickedHadith extends ConsumerStatefulWidget {
 }
 
 class _PickedHadithState extends ConsumerState<_PickedHadith> {
+  /// Whose grading the card shows: the Encyclopaedia, by the name its own
+  /// catalogue gives it in this pack's language.
+  String _gradeSource() {
+    final catalog = ref.watch(hadeethEncCatalogProvider).valueOrNull;
+    final pack = ref.watch(hadeethEncPackProvider).valueOrNull;
+    final name = catalog?.nameFor(pack?.lang ?? 'ar') ?? '';
+    return name.isNotEmpty ? name : 'hadeethenc.title'.tr();
+  }
+
   /// Opens the Encyclopaedia's own screen — word meanings, hints, the full
   /// explanation and the source link.
   Future<void> _openDetail(DailyHadith daily) async {
@@ -413,8 +422,14 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                             [
                               if (daily.encyclopaedia.attributionAr.isNotEmpty)
                                 daily.encyclopaedia.attributionAr,
+                              // §1.2: never a bare «صحيح». The detail screen
+                              // says whose verdict it is, and so does this.
                               if (daily.encyclopaedia.gradeAr.isNotEmpty)
-                                daily.encyclopaedia.gradeAr,
+                                '${'hadeethenc.grade_inline'.tr(namedArgs: {
+                                      'grade': daily.encyclopaedia.gradeAr
+                                    })} — ${'hadeethenc.grade_by'.tr(namedArgs: {
+                                      'source': _gradeSource()
+                                    })}',
                             ].join(' · '),
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: scheme.onSurfaceVariant,
