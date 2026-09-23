@@ -1,0 +1,16 @@
+recitations/ayah/Alafasy_128kbps                6236 /  6236    1.71 GB  OK
+recitations/ayah/MaherAlMuaiqly128kbps          6236 /  6236    1.20 GB  OK
+recitations/ayah/Minshawy_Murattal_128kbps      6236 /  6236    1.66 GB  OK
+recitations/surah/basit_murattal                 114 /   114    0.45 GB  OK
+recitations/surah/maher_murattal                 114 /   114    0.71 GB  OK
+total objects: 18936  extra prefixes: []
+206 audio/mpeg recitations/ayah/Alafasy_128kbps/001001.mp3
+206 audio/mpeg recitations/ayah/Alafasy_128kbps/114006.mp3
+206 audio/mpeg recitations/ayah/MaherAlMuaiqly128kbps/001001.mp3
+206 audio/mpeg recitations/ayah/MaherAlMuaiqly128kbps/114006.mp3
+206 audio/mpeg recitations/ayah/Minshawy_Murattal_128kbps/002255.mp3
+206 audio/mpeg recitations/ayah/Minshawy_Murattal_128kbps/114006.mp3
+206 audio/mpeg recitations/surah/basit_murattal/001.mp3
+206 audio/mpeg recitations/surah/basit_murattal/114.mp3
+206 audio/mpeg recitations/surah/maher_murattal/002.mp3
+206 audio/mpeg recitations/surah/maher_murattal/114.mp3
