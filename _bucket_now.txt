@@ -1,0 +1,12 @@
+objects: 943   bytes: 1247776135   (1.248 GB)
+  ruqyah                      6 objects     394.3 MB
+  tts                         4 objects     325.5 MB
+  asr                         4 objects     238.3 MB
+  books                     252 objects     125.9 MB
+  mushaf                    604 objects      74.3 MB
+  sciences                    1 objects      33.2 MB
+  hadith                      1 objects      22.2 MB
+  hadeethenc                  7 objects      16.9 MB
+  quran                      45 objects      16.1 MB
+  channels                   18 objects       1.0 MB
+  legal                       1 objects       0.0 MB

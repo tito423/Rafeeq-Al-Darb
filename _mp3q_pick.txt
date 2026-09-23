@@ -1,0 +1,16 @@
+102 ماهر المعيقلي
+    moshaf 133 | المصحف المجود - المصحف المجود | surahs 114 | https://server12.mp3quran.net/maher/Almusshaf-Al-Mojawwad/
+    moshaf 103 | المصحف المعلم - المصحف المعلم | surahs 38 | https://server12.mp3quran.net/maher/Almusshaf-Al-Mo-lim/
+    moshaf 102 | حفص عن عاصم - مرتل | surahs 114 | https://server12.mp3quran.net/maher/
+106 محمد الطبلاوي
+    moshaf 10912 | المصحف المجود - المصحف المجود | surahs 114 | https://server12.mp3quran.net/tblawi/Al-Mojawwad/
+    moshaf 106 | حفص عن عاصم - مرتل | surahs 114 | https://server12.mp3quran.net/tblawi/
+112 محمد صديق المنشاوي
+    moshaf 10924 | حفص عن عاصم - تسجيل عام 1387 هـ - 1967م | surahs 110 | https://server10.mp3quran.net/minsh1387/
+    moshaf 114 | المصحف المعلم - المصحف المعلم | surahs 114 | https://server10.mp3quran.net/minsh/Almusshaf-Al-Mo-lim/
+    moshaf 113 | المصحف المجود - المصحف المجود | surahs 114 | https://server10.mp3quran.net/minsh/Almusshaf-Al-Mojawwad/
+    moshaf 112 | حفص عن عاصم - مرتل | surahs 114 | https://server10.mp3quran.net/minsh/
+51 عبدالباسط عبدالصمد
+    moshaf 53 | حفص عن عاصم - مرتل | surahs 114 | https://server7.mp3quran.net/basit/
+    moshaf 52 | ورش عن نافع - مرتل | surahs 114 | https://server7.mp3quran.net/basit/Rewayat-Warsh-A-n-Nafi/
+    moshaf 51 | المصحف المجود - المصحف المجود | surahs 114 | https://server7.mp3quran.net/basit/Almusshaf-Al-Mojawwad/
