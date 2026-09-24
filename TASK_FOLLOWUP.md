@@ -23,6 +23,7 @@ None in progress. The next task is **PLAN.md Stage 1 — «التحميلات ا
   real Google ID token).
 
 ## Log
+- 2026-09-24 14:09 - checkpoint.ps1 regex rebuilt with chr(92) (trap 11); log line verified
 - 2026-09-24 ~15:30 — Working rules settled (d56ee71f); TRAPS.md split out;
   AGENTS.md made a pointer to CLAUDE.md; this file created. v3.60.0 is the
   latest release; master has D1/B1/B5/C1 unreleased.

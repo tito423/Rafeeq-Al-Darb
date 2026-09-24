@@ -93,8 +93,7 @@ $follow = Join-Path $root 'TASK_FOLLOWUP.md'
 if (Test-Path $follow) {
     $ft = [System.IO.File]::ReadAllText($follow, [System.Text.Encoding]::UTF8)
     $line = "- $(Get-Date -Format 'yyyy-MM-dd HH:mm') - $Note"
-    $ft = $ft -replace '(?m)^## Log\s*?
-', "## Log`n$line`n"
+    $ft = $ft -replace '(?m)^## Log[ \t]*\r?\n', "## Log`n$line`n"
     [System.IO.File]::WriteAllText($follow, $ft, (New-Object System.Text.UTF8Encoding($false)))
 }
 git add -u | Out-Null
