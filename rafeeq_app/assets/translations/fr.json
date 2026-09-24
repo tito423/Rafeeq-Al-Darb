@@ -116,7 +116,24 @@
   "onboarding": {
     "title": "Téléchargements initiaux",
     "subtitle": "Ces téléchargements permettent à l'application de fonctionner entièrement sans internet. Le Wi‑Fi est recommandé.",
-    "cta": "Commencez votre voyage de foi 🚀"
+    "cta": "Commencez votre voyage de foi 🚀",
+    "mushaf_size": "Mushaf papier — taille {}",
+    "ayah_title": "Récitation verset par verset",
+    "ayah_hint": "Récitateur : {}. Taille {}. Pour écouter les versets et mémoriser hors ligne.",
+    "surah_title": "Récitation complète",
+    "surah_hint": "Récitateur : {}. Taille {} pour 114 sourates.",
+    "tasmee_title": "Modèle de vérification de la récitation",
+    "tasmee_hint": "Écoute votre récitation et la compare aux versets hors ligne. Taille {}.",
+    "voice_title": "Voix améliorée du lecteur de livres",
+    "voice_hint": "Une voix arabe plus claire pour lire à voix haute les livres de la bibliothèque. Taille {}.",
+    "change": "Changer",
+    "recommended": "Recommandé — le plus léger",
+    "fastest": "Réponse la plus rapide",
+    "response_ms": "A répondu en {} ms",
+    "pick_reciter": "Choisissez le récitateur",
+    "probing": "Mesure de la vitesse des serveurs…",
+    "no_host": "Aucun serveur n'a répondu pour l'instant. Réessayez plus tard.",
+    "total": "Espace nécessaire pour l'expérience complète : {}"
   },
   "common": {
     "coming_soon": "Bientôt disponible…",

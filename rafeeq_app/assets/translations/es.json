@@ -116,7 +116,24 @@
   "onboarding": {
     "title": "Descargas iniciales",
     "subtitle": "Estas descargas permiten que la aplicación funcione por completo sin internet. Se recomienda usar Wi‑Fi.",
-    "cta": "Comienza tu viaje de fe 🚀"
+    "cta": "Comienza tu viaje de fe 🚀",
+    "mushaf_size": "Mushaf en papel — tamaño {}",
+    "ayah_title": "Recitación aleya por aleya",
+    "ayah_hint": "Recitador: {}. Tamaño {}. Para escuchar aleyas y memorizar sin internet.",
+    "surah_title": "Recitación completa",
+    "surah_hint": "Recitador: {}. Tamaño {} para 114 suras.",
+    "tasmee_title": "Modelo de verificación de recitación",
+    "tasmee_hint": "Escucha tu recitación y la compara con las aleyas sin internet. Tamaño {}.",
+    "voice_title": "Voz mejorada del lector de libros",
+    "voice_hint": "Una voz árabe más clara para leer en voz alta los libros de la biblioteca. Tamaño {}.",
+    "change": "Cambiar",
+    "recommended": "Recomendado — el más pequeño",
+    "fastest": "Respuesta más rápida",
+    "response_ms": "Respondió en {} ms",
+    "pick_reciter": "Elige el recitador",
+    "probing": "Midiendo la velocidad de los servidores…",
+    "no_host": "Ningún servidor respondió ahora. Inténtalo más tarde.",
+    "total": "Espacio necesario para la experiencia completa: {}"
   },
   "common": {
     "coming_soon": "Próximamente…",

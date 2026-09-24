@@ -32,6 +32,10 @@ account, the other one, or another agent — reads this and continues from
 - «المزيد» screen: each MAIN card a different colour from the one under it,
   same style; every SUB-card of a section takes its main card's colour.
   Change ONLY the colours — card design stays exactly as it is.
+- Tasmee: tiny model goes in the row now (done). whisper-base-ar-quran
+  (R2, 160.6 MB, unused): owner asked «ادمجه ولا ايه رايك» — answer given:
+  not before PLAN 4a is MEASURED (word accuracy on real recitations +
+  latency); do 4a after this release, integrate only if it wins by numbers.
 
 ## Half-done / unverified (redo, do not trust)
 - Stage 1 rows in progress: `offline_pack_row.dart` (generic fixed-slot row)
@@ -53,6 +57,7 @@ account, the other one, or another agent — reads this and continues from
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 15:39 - Stage 1 rows: ayah reciter (host probe, smallest recommended), whole recitation, tasmee, voice, measured total; 7 locales; analyze clean, not yet on device
 - 2026-09-24 15:36 - Stage 1: shared OfflinePackRow + R2-measured mushaf/whole-recitation sizes; owner's queued orders logged
 - 2026-09-24 15:17 - C1 proven served from R2 via logging proxy; new rules 1.7b (certainty) and no-lazy-shortcuts; trap 53
 - 2026-09-24 14:50 - Stage 1 item 3: per-ayah reciter sizes measured (35 reciters, everyayah listings) and bundled as a catalogue

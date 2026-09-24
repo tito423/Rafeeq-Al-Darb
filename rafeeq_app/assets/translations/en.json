@@ -116,7 +116,24 @@
   "onboarding": {
     "title": "Initial downloads",
     "subtitle": "These downloads let the app work fully without internet. Wi‑Fi is recommended.",
-    "cta": "Begin your journey of faith 🚀"
+    "cta": "Begin your journey of faith 🚀",
+    "mushaf_size": "Paper mushaf — size {}",
+    "ayah_title": "Ayah-by-ayah recitation",
+    "ayah_hint": "Reciter: {}. Size {}. For listening to ayahs and memorising offline.",
+    "surah_title": "Complete recitation",
+    "surah_hint": "Reciter: {}. Size {} for 114 surahs.",
+    "tasmee_title": "Recitation-check model",
+    "tasmee_hint": "Hears your recitation and checks it against the ayahs offline. Size {}.",
+    "voice_title": "Enhanced book-reader voice",
+    "voice_hint": "A clearer Arabic voice for reading library books aloud. Size {}.",
+    "change": "Change",
+    "recommended": "Recommended — smallest",
+    "fastest": "Fastest response",
+    "response_ms": "Answered in {} ms",
+    "pick_reciter": "Choose the reciter",
+    "probing": "Measuring server speed…",
+    "no_host": "No server answered right now. Try again later.",
+    "total": "Space needed for the full experience: {}"
   },
   "common": {
     "coming_soon": "Coming soon…",

@@ -7,13 +7,20 @@ import '../../../../app/rafeeq_app.dart' show sharedPrefsProvider;
 import '../../../../app/shell/app_shell.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
-import '../../../downloads/presentation/widgets/mushaf_download_tile.dart';
+import '../../../downloads/presentation/widgets/mushaf_download_tile.dart'
+    show MushafDownloadTile;
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/onboarding_state.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/download_manager.dart';
+import '../../../../core/utils/byte_formatter.dart' show formatBytes;
+import '../../../../core/utils/digits.dart' show trn;
+import '../../../hifz/data/tasmee_engine.dart' show tasmeeDownloadBytes;
+import '../../../library/data/tts/open_voice.dart';
+import '../../data/offline_pack_sizes.dart';
 import '../widgets/content_pack_tile.dart';
+import '../widgets/offline_pack_tiles.dart';
 
 
 /// P3‑21: first-run onboarding — structured like the reference video's own
@@ -65,6 +72,19 @@ class OnboardingScreen extends ConsumerWidget {
     final editions = ref.watch(mushafEditionsProvider);
     final selectedEdition = ref.watch(selectedMushafEditionProvider);
     final scheme = Theme.of(context).colorScheme;
+    final sizes = ref.watch(offlinePackSizesProvider).valueOrNull;
+    final ayahChoice = ref.watch(onboardingAyahChoiceProvider);
+    final surahChoice = ref.watch(onboardingSurahChoiceProvider);
+    final ayahBytes = sizes?.ayahReciters[ayahChoice];
+    final surahBytes = sizes?.surahRecitations[surahChoice];
+    final total = sizes == null || ayahBytes == null || surahBytes == null
+        ? null
+        : sizes.mushaf +
+            AppConfig.sciencesDbBytes +
+            ayahBytes +
+            surahBytes +
+            tasmeeDownloadBytes +
+            OpenVoice.totalBytes;
 
     // THE APP'S OWN THEME, not a hard-coded night. This screen used to set
     // `AppColors.night` and night text colours outright, so on a fresh
@@ -126,6 +146,18 @@ class OnboardingScreen extends ConsumerWidget {
                   // two screens in a row - «اللغة اتكررت في شاشة الاذونات
                   // وشاشة تحميل المصحف».
                   const SizedBox(height: 18),
+                  if (sizes != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        trn('onboarding.mushaf_size',
+                            args: [formatBytes(sizes.mushaf)]),
+                        style: TextStyle(
+                          color: scheme.onSurfaceVariant,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
                   editions.when(
                     loading: () => const Padding(
                       padding: EdgeInsets.symmetric(vertical: 24),
@@ -174,9 +206,29 @@ class OnboardingScreen extends ConsumerWidget {
                       title: 'quran.sciences_pack'.tr(),
                     ),
                   ),
+                  const AyahReciterPackTile(),
+                  const SurahRecitationPackTile(),
+                  const TasmeePackTile(),
+                  const VoicePackTile(),
                 ],
               ),
             ),
+            // «المساحة المطلوبة للتجربة الكاملة», summed from the measured
+            // sizes of exactly the packs listed above, with the reciters the
+            // reader has chosen - never a number typed here.
+            if (total != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+                child: Text(
+                  trn('onboarding.total', args: [formatBytes(total)]),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: scheme.onSurface,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
               child: SizedBox(
