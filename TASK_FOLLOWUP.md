@@ -165,9 +165,13 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   reminder set 22:47 (text-input picker), app in background; notification
   «Morning adhkar» posted, tapped from the shade -> «Morning» adhkar
   screen 1/17. (Reminder left ON at 22:47 on the emulator.)
-- [ ] 6 splash preview · [ ] 8 city on locale
+- [x] 6 splash preview: VERIFIED 22:49 - Toubayti al-Baqara streaming
+  (PLAYING), Preview intro video with sound -> session PAUSED, recitation
+  player piid 207 paused; Back -> video piid 215 stopped, piid 207
+  started, session PLAYING. · [ ] 8 city on locale
 
 ## Log
+- 2026-09-24 22:50 - Verified item 6: splash preview pauses then resumes the recitation
 - 2026-09-24 22:47 - Verified item 5: morning adhkar reminder tap opens the Morning adhkar screen
 - 2026-09-24 22:42 - Verified item 4: tasmee download offline shows localized No internet connection
 - 2026-09-24 22:38 - Verified item 3: reader-voice download survives airplane mode and completes
