@@ -22,6 +22,13 @@ Settled facts.
 3. Then PLAN 4a: measure whisper-base vs tiny (owner asked about integrating
    the better model; answer was: only if it wins by numbers).
 
+- CORRECTION (16:30): the owner's Hifz video was NOT about the ayah flipping
+  (he swiped on purpose to test). His bug: scrolling up/down on a long ayah
+  (2:255) STALLS ~1 s mid-way. 3.61's arc fix is real but not his bug.
+  Now measuring with dumpsys gfxinfo on emulator (font 1.3, 2:255).
+  Umrah/Hajj summary PAUSED: material read (book pp.136-149, 180-188),
+  plan = verbatim excerpts + a test that every fragment is in the book.
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -64,6 +71,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:16 - Correction logged: hifz bug is a scroll stall, not ayah flip; measuring
 - 2026-09-24 16:10 - v3.61.0 released and verified (tag == HEAD); next: Umrah/Hajj summaries
 - 2026-09-24 16:08 - 3.61.0 final build verified (tutorial card teal under Tools); releasing
 - 2026-09-24 16:04 - 3.61.0 verified on emulator (onboarding rows, jump fix, More colours, Hifz arc); tutorial card follows group colour

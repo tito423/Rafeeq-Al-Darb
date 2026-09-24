@@ -2495,9 +2495,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 16:10 — IN PROGRESS — resume here**
+**2026-09-24 16:16 — IN PROGRESS — resume here**
 
-v3.61.0 released and verified (tag == HEAD); next: Umrah/Hajj summaries
+Correction logged: hifz bug is a scroll stall, not ayah flip; measuring
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
