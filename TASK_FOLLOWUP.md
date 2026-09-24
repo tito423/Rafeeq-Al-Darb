@@ -94,7 +94,15 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
 - FOUND (not fixed yet): on the slow (umts) network the onboarding
   per-ayah recitation row says «No server answered right now» and its
   button is DISABLED - the servers answer, just slowly. Look at the probe
-  timeout in offline_pack_tiles.dart (_Probe). The emulator's Quran tab opens full screen - Back
+  timeout in offline_pack_tiles.dart (_Probe). FIXED in code (15 s +
+  retry button), needs the next build.
+- SEEN 19:47: surah recitation (Toubayti, Fatiha downloaded) PLAYING from
+  device -> «Delete downloads» -> Delete: media_session NONE, mini player
+  gone, rows back to download icons.
+- FOUND + FIXED in code: reciter screen header (player theme, always a dark
+  ground) drew the moshaf name and «0 of 114 surahs downloaded» in the
+  app's onSurface - dark on dark in the LIGHT theme, unreadable. Now
+  white/white70. Needs the next build. The emulator's Quran tab opens full screen - Back
   returns Home (not a bug; Display sheet ate one Back).
 - VERIFIED on emulator (3.61.0 fresh install, 16:00-16:04): onboarding title/blurb + all 6 rows with measured sizes, smallest recommended (Banna 383.6, Basit 449.0), total 1.3 GB (= 1278.5 MB summed); علوم القرآن download screenrecorded 0->90%: row never re-wraps or moves; More colours gold/blue/teal/red/blue/gold, Reminders sub-cards red; Hifz: jump button gone; a fine-sampled thumb arc on 2:255 at font 1.3 SCROLLS the page and keeps 255; a sideways swipe still turns to 256.
 - FOUND + FIXED after the build: «شرح التطبيق» (TutorialEntryCard) stayed gold under Tools — now reads MoreGroupAccent. Needs the rebuild, then release.
@@ -105,6 +113,7 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 19:48 - Seen: deleting a playing surah recitation stops it; fixed unreadable reciter header text in light theme
 - 2026-09-24 19:45 - Onboarding ayah-reciter probe: 15 s timeout and a retry when no host answered (was disabled on a slow line); analyze clean, needs the next build
 - 2026-09-24 19:44 - Seen on device: tasmee download survives leaving the panel, shared with onboarding; adhan during download OK; found slow-network probe disables ayah row
 - 2026-09-24 19:40 - Seen on device: voice download state in Settings, tasmee listen-disabled + ayah-change cancel

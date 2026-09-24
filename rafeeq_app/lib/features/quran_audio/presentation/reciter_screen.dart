@@ -192,18 +192,18 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 16,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
+                                      // Every player theme's ground is dark,
+                                      // in the light app theme too: the app's
+                                      // onSurface here was dark on dark and
+                                      // unreadable (emulator, 2026-09-24).
+                                      color: Colors.white,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     trn('quran_audio.downloaded_of', args: [ltr('$done'), ltr('$total')]),
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant,
+                                    style: const TextStyle(
+                                        color: Colors.white70,
                                         fontSize: 12.5),
                                   ),
                                 ],
