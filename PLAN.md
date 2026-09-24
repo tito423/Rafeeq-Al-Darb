@@ -68,6 +68,11 @@ Do not state what Tarteel does without checking its current app first.
 4d. «من الذاكرة» mode: page hidden, words revealed as said correctly.
 Tajweed judgement: parked by the owner; no free model judges it.
 
+## Optional (not decided) — per-ABI APKs BESIDE the universal one
+The universal APK stays (owner's rule: every Android 7+ phone, every ABI).
+Publishing arm64-only / armv7-only builds next to it would shrink the
+download; measure the real sizes first — no figure is claimed here.
+
 ## Standing owner actions
 - Rotate the R2 API key (it is in public git history).
 - Buy a domain when ready → R2 custom domain + Cache Rule (steps in the
