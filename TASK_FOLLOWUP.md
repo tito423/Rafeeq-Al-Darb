@@ -150,10 +150,17 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   answered» on umts (Mp3QuranApi.reciters, 160 KB catalogue, failed on the
   first try while the page's other requests ran); retry tap loaded it in
   ~37 s (Abdulbasit). TO FIX: auto-retry in _SurahRecitationPackTileState._load.
-- [ ] 3 WM airplane · [ ] 4 offline text
+- [x] 3 WM airplane: VERIFIED 22:33 - voice at 17% kept «17%» + Cancel
+  through airplane mode (was «Not installed» before); network back ->
+  WM re-ran both files (TaskRunner: downloaded 22:33:45 / 22:33:55),
+  row turned to the green check by itself.
+  NOTE: the onboarding tasmee row, cut by airplane, silently went back to
+  «Download» (no message there); item 4 is checked in the Hifz panel.
+- [ ] 4 offline text (Hifz panel)
 - [ ] 5 reminder tap · [ ] 6 splash preview · [ ] 8 city on locale
 
 ## Log
+- 2026-09-24 22:38 - Verified item 3: reader-voice download survives airplane mode and completes
 - 2026-09-24 22:32 - Verified items 2 (one notification ask) and 7 (umts recommends Banna); found complete-recitation row fails first try on umts
 - 2026-09-24 22:26 - Build 3 signed (Kotlin compiled); item 1 adhan-without-notifications Stop verified on emulator
 - 2026-09-24 22:27 - Build 3 signed OK (Kotlin compiled); item 1 (adhan with notifications off shows Stop on app open) VERIFIED on emulator
