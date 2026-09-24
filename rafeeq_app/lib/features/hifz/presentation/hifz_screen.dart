@@ -15,6 +15,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/user_error.dart';
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/theme/app_colors.dart';
@@ -42,7 +43,7 @@ class HifzScreen extends ConsumerWidget {
       appBar: AppBar(title: Text('hifz.title'.tr())),
       body: surahs.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
+        error: (e, _) => Center(child: Text(userErrorText(e))),
         data: (list) => ListView.builder(
           padding: const EdgeInsets.fromLTRB(14, 12, 14, 24),
           itemCount: list.length + 1,

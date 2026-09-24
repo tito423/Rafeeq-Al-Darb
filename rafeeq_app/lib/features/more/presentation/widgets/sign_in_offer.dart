@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/utils/user_error.dart';
 import '../../../../core/services/sync_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -72,7 +73,7 @@ Future<void> offerSignInOnce(BuildContext context, WidgetRef ref) async {
                   } catch (e) {
                     messenger.showSnackBar(SnackBar(
                         content: Text('sync.sign_in_failed'
-                            .tr(namedArgs: {'error': '$e'}))));
+                            .tr(namedArgs: {'error': userErrorText(e)}))));
                   }
                 },
               ),

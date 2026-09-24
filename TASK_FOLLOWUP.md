@@ -16,8 +16,15 @@ DONE in code (analyze clean, 573 pass, NOT on device yet):
 
 ## Next step (exact)
 AUDIT PART 2 - gaps not covered by part 1, each on the emulator:
-1. [ ] splash video preview (settings) vs a playing recitation
-2. [ ] offline: airplane mode - home/quran/prayer/adhkar/library open;
+1. [x] splash preview vs recitation: with sound it pauses the recitation
+       (one sound, OK) but it STAYED paused after - FIXED in code: resumes
+       on close. Muted preview: recitation plays on (seen).
+2. [~] offline: FOUND tasmee download cut by airplane mode showed a raw
+       English «DioException [connection error] … github.com». FIXED in code:
+       core/utils/user_error.dart (errors.offline / errors.generic) in tasmee,
+       hifz, sign-in; DownloadManager task.error no longer the plugin's
+       English description. Screens offline: in progress.
+   offline: airplane mode - home/quran/prayer/adhkar/library open;
        a download cut mid-way (tasmee dio, voice WorkManager) + recovery
 3. [ ] reboot: adhan alarms re-armed after boot (dumpsys alarm)
 4. [ ] notification taps route to the right screen (trap 31)
@@ -105,6 +112,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 21:16 - Audit 2: splash preview resumes recitation; raw exception texts replaced by localized messages (user_error.dart)
 - 2026-09-24 21:08 - Fix: slow-line probe keeps timed-out hosts (right recommendation); city name re-read from saved coordinates on language switch; audit part 2 list
 - 2026-09-24 20:55 - v3.62.0 released and verified (tag == HEAD, asset re-downloaded byte-identical); v3.61.0 deleted
 - 2026-09-24 20:53 - v3.62.0 ready: audit complete on device, notes + HANDOVER updated; publishing

@@ -26,6 +26,7 @@ import '../../data/hifz_store.dart';
 import '../../data/tasmee_mic.dart';
 import '../../data/tasmee_engine.dart';
 import '../../../../core/services/adhan_native.dart';
+import '../../../../core/utils/user_error.dart';
 import '../../../../core/services/audio_exclusive.dart';
 
 enum _Phase { idle, recording, thinking, done }
@@ -148,10 +149,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
       await _engine.startDownload();
     } on DioException catch (e) {
       if (e.type != DioExceptionType.cancel && mounted) {
-        setState(() => _error = '$e');
+        setState(() => _error = userErrorText(e));
       }
     } catch (e) {
-      if (mounted) setState(() => _error = '$e');
+      if (mounted) setState(() => _error = userErrorText(e));
     }
   }
 
@@ -289,7 +290,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = '$e';
+          _error = userErrorText(e);
           _phase = _Phase.idle;
         });
       }

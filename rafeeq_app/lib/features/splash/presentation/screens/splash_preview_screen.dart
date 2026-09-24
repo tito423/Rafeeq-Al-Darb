@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/splash_video_provider.dart';
 
@@ -39,6 +40,7 @@ class _SplashPreviewScreenState extends ConsumerState<SplashPreviewScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _muted = !ref.read(splashVideoSoundProvider);
+    _resumeAfter = AyahAudioService.instance.player.playing;
     _init();
   }
 
@@ -84,8 +86,16 @@ class _SplashPreviewScreenState extends ConsumerState<SplashPreviewScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _video?.dispose();
+    // The video with sound takes the audio focus, and a recitation that was
+    // playing stayed paused after the preview closed (emulator-5554,
+    // 2026-09-24) - unlike after the adhan. Give it back.
+    final player = AyahAudioService.instance.player;
+    if (_resumeAfter && !player.playing) player.play();
     super.dispose();
   }
+
+  /// A recitation was playing when the preview opened.
+  bool _resumeAfter = false;
 
   @override
   Widget build(BuildContext context) {

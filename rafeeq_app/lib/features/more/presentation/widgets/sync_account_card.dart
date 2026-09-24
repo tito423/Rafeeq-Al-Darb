@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
 
+import '../../../../core/utils/user_error.dart';
 import '../../../../core/services/sync_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
@@ -73,7 +74,7 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
             messenger.showSnackBar(
               SnackBar(
                 content: Text('sync.sign_in_failed'
-                    .tr(namedArgs: {'error': '$e'})),
+                    .tr(namedArgs: {'error': userErrorText(e)})),
               ),
             );
           }

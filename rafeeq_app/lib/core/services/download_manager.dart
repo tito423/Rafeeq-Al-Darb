@@ -146,7 +146,15 @@ class DownloadManager {
           case bd.TaskStatus.failed:
             if (_tryNextMirror(task)) return;
             task.status = DownloadStatus.failed;
-            task.error = update.exception?.description ?? 'notif.dl_failed'.tr();
+            // The plugin's own description is English and technical («Failed
+            // host lookup …»); the card shows this text to the reader.
+            if (update.exception != null) {
+              debugPrint('DownloadManager ${task.id}: '
+                  '${update.exception!.description}');
+            }
+            task.error = update.exception is bd.TaskConnectionException
+                ? 'errors.offline'.tr()
+                : 'notif.dl_failed'.tr();
         }
       case bd.TaskProgressUpdate():
         // A negative progress value is the plugin's way of signalling a
