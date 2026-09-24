@@ -202,6 +202,19 @@ cheap: if it is off and the session is going to be long, say so in that first
 reply and let him decide whether to restart with `claude rc`. Never claim to
 have opened it, and never say it is on unless a `ListAgents` result showed it.
 
+### 2.0c `TASK_FOLLOWUP.md` — the live step log (mandatory)
+
+The owner works from his phone 12:00–24:00 Dubai time, drives the PC through
+TeamViewer/RustDesk, and when a subscription's quota stops he opens another
+session (the other account, or another agent) and pastes `NEXT_PROMPT.md`.
+That prompt is now a **stable pointer** — it always says «read CLAUDE.md, then
+TASK_FOLLOWUP.md, continue from Next step» — so it never needs rewriting.
+
+Therefore, after **every** step (not every stage): update `TASK_FOLLOWUP.md`
+— current task, **Next step (exact)**, half-done/unverified items, one log
+line with the commit — then `.\cp.bat "…"` (which commits it and pushes).
+A session may die between any two tool calls; the file must always be true.
+
 ### 2.1 Checkpoint constantly
 
 Sessions here die from quota exhaustion, usually mid-task. Do not save the

@@ -88,8 +88,17 @@ Write-Utf8 $handover $text
 # Tracked files only (-u): `-A` swept the root's untracked scratch logs
 # (_mirror_*.txt, _r2_usage_report.txt) into a checkpoint on 2026-09-24.
 # A NEW file meant for the repo is added by hand, deliberately.
+# The live step log (CLAUDE.md §2.0c): one dated line per checkpoint.
+$follow = Join-Path $root 'TASK_FOLLOWUP.md'
+if (Test-Path $follow) {
+    $ft = [System.IO.File]::ReadAllText($follow, [System.Text.Encoding]::UTF8)
+    $line = "- $(Get-Date -Format 'yyyy-MM-dd HH:mm') - $Note"
+    $ft = $ft -replace '(?m)^## Log\s*?
+', "## Log`n$line`n"
+    [System.IO.File]::WriteAllText($follow, $ft, (New-Object System.Text.UTF8Encoding($false)))
+}
 git add -u | Out-Null
-git add HANDOVER.md | Out-Null
+git add HANDOVER.md TASK_FOLLOWUP.md | Out-Null
 $prefix = if ($Done) { "checkpoint(done)" } else { "checkpoint(wip)" }
 git commit -q -m "$prefix`: $Note" 2>&1 | Out-Null
 
