@@ -2497,7 +2497,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-09-24 14:08 — IN PROGRESS — resume here**
 
-Handoff system: TASK_FOLLOWUP.md live step log, stable NEXT_PROMPT pointer, AGENTS.md points to CLAUDE.md
+checkpoint.ps1: log line into TASK_FOLLOWUP.md fixed, and every checkpoint is pushed
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -104,6 +104,10 @@ git commit -q -m "$prefix`: $Note" 2>&1 | Out-Null
 
 if ($LASTEXITCODE -eq 0 -or (git log -1 --pretty=%s) -like "*$Note*") {
     Write-Host "checkpointed -> $(git log -1 --oneline)" -ForegroundColor Green
+    # Pushed too: the next session may be another account or another agent,
+    # and a checkpoint that exists only on this disk is half a checkpoint.
+    git push -q origin HEAD 2>&1 | Out-Null
+    if ($LASTEXITCODE -eq 0) { Write-Host "pushed" -ForegroundColor Green } else { Write-Host "PUSH FAILED - run git push" -ForegroundColor Red }
 } else {
     Write-Host "nothing to commit (HANDOVER note still updated)" -ForegroundColor Yellow
 }
