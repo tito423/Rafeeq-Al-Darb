@@ -12,6 +12,7 @@
 library;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/models.dart';
@@ -234,10 +235,36 @@ class _SwipeableAyahState extends State<SwipeableAyah>
     await _c.forward(from: 0);
   }
 
+  /// Where the finger went down and where it is now, in raw pointer terms -
+  /// the drag recognizer only reports the horizontal part.
+  Offset? _down;
+  Offset _last = Offset.zero;
+
+  /// A SCROLL, NOT A SWIPE, MUST NEVER CHANGE THE AYAH.
+  ///
+  /// «التطبيق علق في اية الكرسي وانا برفع الشاشة لفوق» (2026-09-24, with a
+  /// video): pushing a long ayah up with the thumb flipped it to 256, 257,
+  /// back to 255, and the page never scrolled. Reproduced on emulator-5554
+  /// at font scale 1.3: a thumb ARC - a little sideways first, then mostly
+  /// up (400 px across, 550 px up) - turned 2:255 into 2:256 with no scroll.
+  /// The sideways recognizer had won the gesture on the arc's first few
+  /// pixels, and 400 px was past a third of the card. So the whole path
+  /// must be clearly sideways (twice as wide as tall) for the ayah to turn,
+  /// and [_slopFactor] lets the scroll claim an arc before this does.
+  static const _slopFactor = 3.0;
+
+  bool get _clearlySideways {
+    final d = _down;
+    if (d == null) return false;
+    final move = _last - d;
+    return move.dx.abs() >= 2 * move.dy.abs();
+  }
+
   Future<void> _end(DragEndDetails d, double width) async {
     final v = d.primaryVelocity ?? 0;
-    final forward = _dx > width / 3 || v > 700;
-    final back = _dx < -width / 3 || v < -700;
+    final sideways = _clearlySideways;
+    final forward = sideways && (_dx > width / 3 || v > 700);
+    final back = sideways && (_dx < -width / 3 || v < -700);
     if (forward && widget.onNext != null) {
       await _animate(width);
       widget.onNext!();
@@ -255,19 +282,40 @@ class _SwipeableAyahState extends State<SwipeableAyah>
 
   @override
   Widget build(BuildContext context) {
+    final settings = MediaQuery.maybeGestureSettingsOf(context);
+    final slop = (settings?.touchSlop ?? kTouchSlop) * _slopFactor;
     return LayoutBuilder(
-      builder: (context, c) => GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onHorizontalDragUpdate: (d) {
-          if (_c.isAnimating) return;
-          setState(() => _dx += d.delta.dx);
-        },
-        onHorizontalDragEnd: (d) => _end(d, c.maxWidth),
-        child: Transform.translate(
-          offset: Offset(_dx, 0),
-          child: Opacity(
-            opacity: (1 - (_dx.abs() / (c.maxWidth * 1.4))).clamp(0.3, 1.0),
-            child: widget.child,
+      builder: (context, c) => Listener(
+        onPointerDown: (e) => _down = _last = e.position,
+        onPointerMove: (e) => _last = e.position,
+        child: RawGestureDetector(
+          behavior: HitTestBehavior.translucent,
+          gestures: {
+            HorizontalDragGestureRecognizer:
+                GestureRecognizerFactoryWithHandlers<
+                  HorizontalDragGestureRecognizer
+                >(
+                  () => HorizontalDragGestureRecognizer(debugOwner: this),
+                  (r) => r
+                    ..gestureSettings = DeviceGestureSettings(touchSlop: slop)
+                    ..onUpdate = (d) {
+                      if (_c.isAnimating) return;
+                      setState(() => _dx += d.delta.dx);
+                    }
+                    ..onEnd = ((d) {
+                      _end(d, c.maxWidth);
+                    })
+                    ..onCancel = (() {
+                      _animate(0);
+                    }),
+                ),
+          },
+          child: Transform.translate(
+            offset: Offset(_dx, 0),
+            child: Opacity(
+              opacity: (1 - (_dx.abs() / (c.maxWidth * 1.4))).clamp(0.3, 1.0),
+              child: widget.child,
+            ),
           ),
         ),
       ),

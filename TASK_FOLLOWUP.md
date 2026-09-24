@@ -9,21 +9,15 @@ account, the other one, or another agent — reads this and continues from
 **PLAN.md Stage 1 — «التحميلات المبدئية»** (owner's order 2026-09-24).
 
 ## Next step (exact)
-1. Stage 1 item 3 rows. DONE: per-ayah sizes measured —
-   `scripts/measure_recitation_sizes.py` → `assets/data/catalogs/
-   ayah_recitation_sizes.json`, 35 reciters, all 6236/6236 (smallest:
-   mahmoud_ali_al_banna_32kbps 383.6 MB, Ibrahim_Akhdar_32kbps 485.9 MB;
-   Maher 1204.3 matches R2). NEXT: whole-surah (التلاوة الكاملة) sizes for
-   the R2 mirrors (`Mp3QuranApi.r2Mirrors`), then build the rows on
-   `onboarding_screen.dart` reusing `AyahRecitationLibrary.downloadReciter`
-   and the host-speed probe (range request per host at screen open).
-   FACT (15:11): the APK on the emulator (built 14:40) shows the OLD title
-   «المصحف الورقي» — it does NOT contain items 1/2. Rebuild before checking.
-2. Ask the owner about his note on «صوت قارئ الكتب المحسّن» (PLAN item 3).
-3. Items 1+2 are in code (analyze 0, 568 tests pass) but NOT seen on device:
-   verify both on a FRESH install (adb uninstall) with screenrecord during
-   the علوم القرآن download.
-
+1. «المزيد» card colours (see queued orders) — more_screen.dart /
+   more_group.dart. Colours only.
+2. ONE build (uild_github_release.bat, emulator OFF — trap 24), then
+   db uninstall com.tito.rafeeq_aldarb + install (fresh), and check on
+   the device: new title/blurb; every row (ayah reciter probe + picker,
+   whole recitation, tasmee, voice, total line); screenrecord the علوم
+   القرآن download for the jump fix; the More colours.
+3. Bump pubspec + About, release (delete v3.60.0 + tag; keep v3.51.0 and
+   content-*), verify tag SHA == HEAD.
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -38,9 +32,8 @@ account, the other one, or another agent — reads this and continues from
   latency); do 4a after this release, integrate only if it wins by numbers.
 
 ## Half-done / unverified (redo, do not trust)
-- Stage 1 rows in progress: `offline_pack_row.dart` (generic fixed-slot row)
-  written, ContentPackTile now uses it; tiles for ayah reciter / whole
-  recitation / tasmee / voice + total line NOT written yet. Sizes:
+- Stage 1 rows: ALL written (`offline_pack_tiles.dart`), analyze clean,
+  NOT seen on device. Sizes:
   `ayah_recitation_sizes.json`, `offline_pack_sizes.json` (mushaf 74.3 MB,
   basit 449.0, maher 709.1 — R2 listing). hadeethenc + UI-locale
   translations are bundled → no rows.
@@ -57,6 +50,7 @@ account, the other one, or another agent — reads this and continues from
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 15:51 - Hifz: vertical thumb arc no longer flips the ayah (reproduced 255->256 on emulator; fix: 3x slop + clearly-sideways path check); jump button/sheet removed; More main-card colours alternate
 - 2026-09-24 15:39 - Stage 1 rows: ayah reciter (host probe, smallest recommended), whole recitation, tasmee, voice, measured total; 7 locales; analyze clean, not yet on device
 - 2026-09-24 15:36 - Stage 1: shared OfflinePackRow + R2-measured mushaf/whole-recitation sizes; owner's queued orders logged
 - 2026-09-24 15:17 - C1 proven served from R2 via logging proxy; new rules 1.7b (certainty) and no-lazy-shortcuts; trap 53

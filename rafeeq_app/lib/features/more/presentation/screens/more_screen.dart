@@ -80,8 +80,13 @@ class MoreScreen extends ConsumerWidget {
           // each group is one card that opens onto its own cards. The
           // new-Muslim guide moved into worship when «التعلّم والإرشاد»
           // became «شرح ميزات واستخدام التطبيق» - it is not about the app.
+          // «خلي كل كارت رئيسي لون مختلف عن اللي تحتيه ... وكل الكروت
+          // الفرعية في كل قسم تاخد نفس لون الكارت الرئيسي» (2026-09-24):
+          // gold, info, primarySoft, error, info, gold top to bottom - no
+          // two neighbours alike. Children inherit through MoreGroupAccent.
           MoreGroup(
             title: 'more.group_worship'.tr(),
+            accent: AppColors.gold,
             subtitle: _names([
               'quran_audio.title',
               'tajweed.title',
@@ -211,7 +216,7 @@ class MoreScreen extends ConsumerWidget {
             title: 'more.group_tools'.tr(),
             subtitle: _names(['focus.title', 'tutorial.card_title']),
             icon: Icons.handyman_rounded,
-            accent: AppColors.info,
+            accent: AppColors.primarySoft,
             children: [
               TutorialAnchor(
                 id: TourAnchor.moreFocus,
@@ -235,6 +240,7 @@ class MoreScreen extends ConsumerWidget {
               'quotes.section_title',
             ]),
             icon: Icons.notifications_active_rounded,
+            accent: AppColors.error,
             children: const [SettingsBody(part: SettingsPart.reminders)],
           ),
           MoreGroup(
@@ -249,7 +255,7 @@ class MoreScreen extends ConsumerWidget {
               'library.voice_section_title',
             ]),
             icon: Icons.tune_rounded,
-            accent: AppColors.primarySoft,
+            accent: AppColors.info,
             // «حط الحساب والمزامنة في الاعدادات». It had a group of its own
             // holding one card, between the settings and «عن التطبيق», which
             // is where a setting belongs anyway.

@@ -26,7 +26,6 @@ import '../data/hifz_plans.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
 import 'widgets/hifz_navigator.dart';
-import 'widgets/hifz_plans_section.dart';
 import 'widgets/tasmee_panel.dart';
 import '../data/hifz_store.dart';
 
@@ -206,32 +205,6 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     return r?.displayName(context.locale.languageCode) ?? id;
   }
 
-  /// Start again from any surah and ayah the reader picks: the rest of
-  /// that surah, due or not, beginning at the chosen ayah.
-  Future<void> _jump(Ayah current) async {
-    final repo = await ref.read(quranRepositoryProvider.future);
-    final surahs = await repo.surahs();
-    if (!mounted) return;
-    final to = await showAyahJumpSheet(
-      context,
-      surahs,
-      AyahRef(current.surahId, current.ayahNumber),
-    );
-    if (to == null || !mounted) return;
-    final s = surahs.firstWhere((x) => x.id == to.surah);
-    AyahAudioService.instance.stopQueue();
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => HifzSessionScreen(
-          from: to,
-          to: AyahRef(s.id, s.ayahsCount),
-          title: surahNamePlain(s.nameAr),
-          allAyahs: true,
-        ),
-      ),
-    );
-  }
-
   /// Surah names, for a range that crosses from one surah into the next.
   Map<int, String> _surahNames = const {};
   bool get _crossesSurahs {
@@ -268,13 +241,11 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_name),
-        actions: [
-          IconButton(
-            tooltip: 'hifz.jump'.tr(),
-            icon: const Icon(Icons.format_list_numbered_rtl_rounded),
-            onPressed: () => _jump(ayah),
-          ),
-        ],
+        // No «اختر السورة والآية» button here any more: it opened a sheet
+        // with a surah list, an ayah list and «ابدأ من هنا» - every one of
+        // which HifzNavigator already offers above the ayah, plus a number
+        // box and a slider. «الزرار اللي فوق على الشمال معدش له لازمة»
+        // (2026-09-24).
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
