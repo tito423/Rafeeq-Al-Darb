@@ -157,6 +157,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 20:53 - v3.62.0 ready: audit complete on device, notes + HANDOVER updated; publishing
 - 2026-09-24 20:46 - Verified on build 2: adhan discards a tasmee recording; adhan over focus mode and back
 - 2026-09-24 20:36 - Verified on build 2: per-ayah delete stops playback; reciter header readable
 - 2026-09-24 20:35 - Verified on build 2: per-ayah delete stops playback; reciter header readable
