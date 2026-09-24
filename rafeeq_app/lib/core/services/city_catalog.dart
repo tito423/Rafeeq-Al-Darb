@@ -2,14 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:geocoding/geocoding.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import '../config/app_config.dart';
-import '../config/content_mirrors.dart';
 import '../utils/arabic_normalize.dart';
 import 'manual_location.dart';
 
@@ -18,17 +16,19 @@ import 'manual_location.dart';
 /// GeoNames `cities1000` (CC BY 4.0, credited on the Sources screen): every
 /// place over 1,000 people or an administrative seat - 171,075 of them - with
 /// names only where GeoNames tags the language (scripts/build_cities.py).
-/// HOSTED, not bundled - «without app size growing» (owner, 2026-09-25):
-/// 5.08 MB on R2 `geo/cities.tsv.gz` and the GitHub mirror, downloaded once,
-/// then searched on the device with no network at all.
+/// BUNDLED: «خلي مواقيت مدن العالم بندلد في التطبيق ... دول خمسة ميجا بس»
+/// (owner, 2026-09-25) - so a first search works with no network ever. The
+/// 5.08 MB gzip ships as an asset and is unpacked and indexed once, off the
+/// UI thread. The same file stays on R2 `geo/cities.tsv.gz` + the mirror.
 class CityCatalog {
   CityCatalog._();
   static final CityCatalog instance = CityCatalog._();
 
-  static String get url => '${AppConfig.contentBaseUrl}/geo/cities.tsv.gz';
+  static const asset = 'assets/data/cities.tsv.gz';
 
-  /// Measured on R2, 2026-09-25 (head_object ContentLength).
-  static const downloadBytes = 5080747;
+  /// The asset's size (test/city_catalog_test.dart checks it). It names the
+  /// unpacked files, so an app update that ships a new list re-indexes.
+  static const bundledBytes = 5080747;
 
   Future<Directory> _dir() async {
     final base = await getApplicationSupportDirectory();
@@ -37,43 +37,46 @@ class CityCatalog {
     return d;
   }
 
-  Future<File> _tsv() async => File(p.join((await _dir()).path, 'cities.tsv'));
-  Future<File> _keys() async => File(p.join((await _dir()).path, 'cities.key'));
+  Future<File> _tsv() async =>
+      File(p.join((await _dir()).path, 'cities-$bundledBytes.tsv'));
+  Future<File> _keys() async =>
+      File(p.join((await _dir()).path, 'cities-$bundledBytes.key'));
 
   Future<bool> isInstalled() async =>
       (await _tsv()).existsSync() && (await _keys()).existsSync();
 
-  /// Downloads the list (first host that answers, [ContentMirrors]) and
-  /// prepares the search index. [onProgress] gets 0..1.
-  Future<void> download({void Function(double)? onProgress}) async {
-    final bytes = await ContentMirrors.fetchFirst<List<int>>(url, (u) async {
-      final res = await Dio().get<List<int>>(
-        u,
-        options: Options(responseType: ResponseType.bytes),
-        onReceiveProgress: (r, t) =>
-            onProgress?.call((t > 0 ? r / t : r / downloadBytes) * 0.9),
-      );
-      return res.data ?? const [];
-    }, accept: (b) => b.length > 1000);
+  Future<void>? _preparing;
+
+  /// Unpacks the bundled list on first use; later calls return at once.
+  Future<void> ensureReady() => _preparing ??= _prepare().catchError((Object e) {
+        _preparing = null; // let the next call try again
+        throw e;
+      });
+
+  Future<void> _prepare() async {
+    if (await isInstalled()) return;
+    final dir = await _dir();
+    // files of an older list, and the 3.63 pre-release download
+    for (final f in dir.listSync().whereType<File>()) {
+      if (p.basename(f.path).startsWith('cities')) await f.delete();
+    }
+    final data = await rootBundle.load(asset);
+    final gz = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     final tsv = await _tsv();
     final keys = await _keys();
-    // gzip without Content-Encoding (trap #6): decoded here, and the index
-    // is built off the UI thread.
-    await _prepareOffThread(bytes, tsv.path, keys.path);
-    onProgress?.call(1);
-  }
-
-  Future<void> delete() async {
-    for (final f in [await _tsv(), await _keys()]) {
-      if (f.existsSync()) await f.delete();
-    }
+    // written under temporary names and renamed, so a kill mid-way never
+    // leaves a half file that isInstalled() would take for a whole one
+    await _prepareOffThread(gz, '${tsv.path}.part', '${keys.path}.part');
+    await File('${keys.path}.part').rename(keys.path);
+    await File('${tsv.path}.part').rename(tsv.path);
   }
 
   /// Up to [limit] places whose name in any language starts with, or
   /// contains, [query]; best match first, then the larger place.
   Future<List<CityHit>> search(String query, {int limit = 40}) async {
     final q = foldForSearch(query.trim());
-    if (q.length < 2 || !await isInstalled()) return const [];
+    if (q.length < 2) return const [];
+    await ensureReady();
     final tsv = (await _tsv()).path;
     final keys = (await _keys()).path;
     return _searchOffThread(tsv, keys, q, limit);
@@ -118,11 +121,9 @@ class CityCatalog {
   }
 }
 
-// Top level ON PURPOSE. Isolate.run sends its closure's whole scope, and
-// inside [CityCatalog.download] that scope held the progress callback -
-// which holds the screen's State, which cannot cross to an isolate. The
-// download reached 46 % and then failed on emulator-5554 (2026-09-25). Here
-// the scope is only strings and bytes.
+// Top level ON PURPOSE. Isolate.run sends its closure's whole scope; a
+// closure inside a method that also holds a callback into a widget's State
+// cannot cross to an isolate. Here the scope is only strings and bytes.
 Future<void> _prepareOffThread(List<int> gz, String tsv, String key) =>
     Isolate.run(() => prepareCityFiles(gz, tsv, key));
 

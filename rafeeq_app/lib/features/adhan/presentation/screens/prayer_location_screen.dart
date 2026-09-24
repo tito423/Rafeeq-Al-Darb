@@ -7,8 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/city_catalog.dart';
 import '../../../../core/services/manual_location.dart';
-import '../../../../core/utils/byte_formatter.dart' show formatBytes;
-import '../../../../core/utils/digits.dart' show trn;
 import '../../../../core/utils/user_error.dart';
 import '../../../home/data/prayer_controller.dart';
 
@@ -64,8 +62,8 @@ String _placeLine(ManualPlace p, String lang) => [
 /// لو مفيش نت او الموقع الاوتوماتيكي مش شغال» and «any city in the world …
 /// without app size growing» (owner, 2026-09-25).
 ///
-/// Three roads, best first: the offline world list (downloaded once, 5 MB,
-/// never bundled), the phone's geocoder when there is a connection, and
+/// Three roads, best first: the offline world list (bundled, unpacked on
+/// first open), the phone's geocoder when there is a connection, and
 /// typed coordinates when there is neither. Whatever is chosen is stored in
 /// [ManualLocationStore]; LocationService answers with it from then on.
 class PrayerLocationScreen extends ConsumerStatefulWidget {
@@ -84,7 +82,7 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
   Timer? _debounce;
   ManualPlace? _manual;
   bool _listReady = false;
-  double? _downloading;
+  bool _preparing = false;
   bool _searching = false;
   bool _online = false;
   List<CityHit> _hits = const [];
@@ -102,7 +100,27 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
     setState(() {
       _manual = m;
       _listReady = ready;
+      _preparing = !ready;
     });
+    if (!ready) await _prepareList();
+  }
+
+  /// The first open unpacks the bundled list (a few seconds, once).
+  Future<void> _prepareList() async {
+    try {
+      await CityCatalog.instance.ensureReady();
+      if (!mounted) return;
+      setState(() {
+        _listReady = true;
+        _preparing = false;
+      });
+      if (_query.text.trim().length >= 2) unawaited(_search());
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _preparing = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(userErrorText(e))));
+    }
   }
 
   @override
@@ -142,25 +160,6 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
       _online = online;
       _searching = false;
     });
-  }
-
-  Future<void> _downloadList() async {
-    setState(() => _downloading = 0);
-    try {
-      await CityCatalog.instance.download(
-          onProgress: (f) => mounted ? setState(() => _downloading = f) : null);
-      if (!mounted) return;
-      setState(() {
-        _listReady = true;
-        _downloading = null;
-      });
-      if (_query.text.trim().length >= 2) unawaited(_search());
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _downloading = null);
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(userErrorText(e))));
-    }
   }
 
   Future<void> _use(ManualPlace? place) async {
@@ -255,24 +254,13 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          if (_downloading != null)
-            ListTile(
-              leading: const Icon(Icons.download),
-              title: Text(trn('location.downloading',
-                  args: ['${(_downloading! * 100).round()}'])),
-              subtitle: LinearProgressIndicator(value: _downloading),
-            )
-          else if (!_listReady)
+          if (_preparing)
             ListTile(
               leading: const Icon(Icons.public),
-              title: Text(trn('location.list_offer',
-                  args: [formatBytes(CityCatalog.downloadBytes)])),
-              trailing: FilledButton(
-                onPressed: _downloadList,
-                child: Text('common.download'.tr()),
-              ),
+              title: Text('location.preparing'.tr()),
+              subtitle: const LinearProgressIndicator(),
             )
-          else
+          else if (_listReady)
             ListTile(
               dense: true,
               leading: Icon(Icons.offline_pin, color: scheme.primary),

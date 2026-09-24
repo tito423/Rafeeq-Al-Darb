@@ -9,7 +9,7 @@ https://download.geonames.org/export/dump/):
   countryInfo.txt      ISO code -> English name + the country's geonameid
   alternateNamesV2.zip names WITH language codes (never guessed from script)
 
-Output: scripts/_geonames/out/cities.tsv.gz (-> R2 geo/cities.tsv.gz), UTF-8, one row per city:
+Output: scripts/_geonames/out/cities.tsv.gz (-> assets/data + R2 geo/cities.tsv.gz), UTF-8, one row per city:
   lat  lon  cc  population  name  ar  ur  ru  fr  es  pt  en  search
 (search: '|'-joined Arabic-script alternates, for matching only)
 and a header block of countries, rows starting with '#':
@@ -23,9 +23,10 @@ import os
 import zipfile
 
 HERE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_geonames')
-# Hosted, not bundled (owner 2026-09-25: «without app size growing"):
-# uploaded to R2 as geo/cities.tsv.gz and mirrored on GitHub; the app
-# downloads it once, the first time manual location is opened.
+# BUNDLED since 2026-09-25 («دول خمسة ميجا بس», owner - earlier the same
+# day it was hosted-only). After a rebuild copy OUT to
+# rafeeq_app/assets/data/cities.tsv.gz and set CityCatalog.bundledBytes to
+# its size (a test checks it). The R2 geo/cities.tsv.gz copy stays.
 OUT = os.path.join(HERE, 'out', 'cities.tsv.gz')
 LANGS = ['ar', 'ur', 'ru', 'fr', 'es', 'pt', 'en']
 

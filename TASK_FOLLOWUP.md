@@ -12,14 +12,15 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
-SESSION 2026-09-25 ~02:35: analyze clean, 582 pass. City-list download
-error is no longer swallowed (was: any failure -> «offline» snackbar; now
-userErrorText(e), cause printed to logcat as `userErrorText:`). Build 10
-running (emulator OFF). Then: install, verify manual location (download to
-«ready», airplane+GPS off, search Tanta/Dubai, pick -> Home times+name,
-qibla; coordinates; back to automatic; time the search), then contrast
-crawl+scan light/dark/RGB. NOTE: the 46 % failure happened BEFORE the
-isolate step (that starts at 90 %) - watch logcat for the real cause.
+SESSION 2026-09-25 ~03:00. Build 10 SEEN: the hosted city-list download
+went to «World city list ready» (the build-9 46 % failure did not recur).
+Then OWNER: «خلي مواقيت مدن العالم بندلد في التطبيق ... دول خمسة ميجا بس»
+-> list now BUNDLED (assets/data/cities.tsv.gz, 5,080,747 B, same bytes as
+R2), unpacked once on first open of Prayer location (no download button;
+«Preparing the city list…»). 583 pass, analyze clean, NOT BUILT. Next:
+build 11 (emulator OFF), install, open Prayer location -> ready without
+network, then airplane+GPS off search Tanta/Dubai, pick -> Home times +
+name, qibla; coordinates; back to automatic. Then contrast crawl.
 
 HANDOVER 2026-09-25 ~02:10 (owner: quota ending). Exact resume steps are
 in NEXT_PROMPT.md. Short: both orders A (contrast) and B (manual location)
@@ -278,6 +279,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 03:00 - build 10: hosted list download reached «ready»; owner asked to BUNDLE it - done in code (asset + ensureReady), 583 pass, unbuilt
 - 2026-09-25 02:35 - download error surfaced (userErrorText + logcat), build 10 started
 - 2026-09-25 02:09 - HANDOVER (quota): city-list download failed at 46% on build 9 (Isolate.run captured State) - moved to top-level functions, unbuilt; contrast fixes unseen on device; NEXT_PROMPT.md rewritten
 - 2026-09-25 01:52 - Manual prayer location UI (Adhan settings > Prayer location): automatic / offline world list search / online geocoder / coordinates; 20 keys x 7 locales; GeoNames credited on Sources; 582 pass; building 9

@@ -130,6 +130,10 @@ flutter:
     - assets/data/builtin_books/
     - assets/data/hajj_madhahib.json
     - assets/data/mawaqit_today.json
+    # GeoNames cities1000, 171,075 places (CC BY 4.0) for manual prayer
+    # location with no network - 5.08 MB gzip, unpacked once on the device.
+    # «دول خمسة ميجا بس» (owner, 2026-09-25). scripts/build_cities.py.
+    - assets/data/cities.tsv.gz
     # quran_sciences.db is NOT bundled since 3.45.0. It was 131.68 MB -
     # more than half of everything the APK carried - for seven tafsirs,
     # six translations, i'rab and word meanings, all of which only the

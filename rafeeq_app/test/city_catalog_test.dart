@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/core/services/city_catalog.dart';
 
-/// Runs against the REAL list built by scripts/build_cities.py (the bytes
-/// uploaded to R2 geo/cities.tsv.gz). Skipped where that file is absent.
+/// Runs against the REAL list the app ships (assets/data/cities.tsv.gz,
+/// built by scripts/build_cities.py - the same bytes as R2 geo/cities.tsv.gz).
 void main() {
-  final gz = File('../scripts/_geonames/out/cities.tsv.gz');
+  final gz = File(CityCatalog.asset);
   final tmp = Directory.systemTemp.createTempSync('cities');
   final tsv = '${tmp.path}/cities.tsv';
   final key = '${tmp.path}/cities.key';
 
   setUpAll(() {
-    if (gz.existsSync()) prepareCityFiles(gz.readAsBytesSync(), tsv, key);
+    prepareCityFiles(gz.readAsBytesSync(), tsv, key);
   });
 
   String first(String q, [String lang = 'en']) {
@@ -32,5 +32,11 @@ void main() {
     expect(first('makkah'), contains('Saudi Arabia'));
     // ignore: avoid_print
     print('6 searches: ${sw.elapsedMilliseconds} ms');
-  }, skip: gz.existsSync() ? false : 'no built city list');
+  });
+
+  test('the unpacked-file name tracks the bundled list', () {
+    // bundledBytes names the index on the device: a new list with a stale
+    // constant would keep searching the old one.
+    expect(gz.lengthSync(), CityCatalog.bundledBytes);
+  });
 }
