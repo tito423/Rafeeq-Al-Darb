@@ -11,25 +11,25 @@ FULL-APP CONFLICT AUDIT before releasing 3.62.0 (owner: «مش تنشر الا �
 pubspec is ALREADY 3.62.0+64; NOT released; v3.61.0 is still the release.
 
 ## Next step (exact)
-1. Download buttons show real state app-wide (owner 18:55): «جاري التحميل»
-   while downloading (also after «متابعة في الخلفية»), «تم التحميل» when
-   done. Known offenders: tasmee panel «نزّل النموذج» (tasmee.download,
-   dio download held in the panel's state - lost when the panel is left);
-   the enhanced-voice offer «تنزيل الصوت» (library.open_voice_download,
-   open_voice_offer.dart) after «متابعة في الخلفية». Check every button in
-   the list of keys: common.download, library.download, library.text_download,
-   downloads.download, quran_audio.download_all, ayah_dl.download_*.
+1. DONE in code (594155e1+): download state app-wide. Tasmee model and the
+   enhanced voice were the ONLY buttons holding their download in widget
+   state; now TasmeeEngine.startDownload/downloadProgress/installed and
+   OpenVoice.install/installProgress/installed own it. Every other button
+   (books, hadith DB, sciences, translations, mushaf, reciters, ayah
+   reciters, onboarding rows) already read DownloadManager / a service -
+   checked by reading each file 2026-09-24. analyze clean, 570 tests pass.
+   NOT seen on device.
 2. ONE build (emulator OFF, trap 24; no flutter test during it, trap 54),
-   then verify on emulator the fixes NOT yet seen on device:
+   then verify on emulator:
+   - tasmee: start «نزّل النموذج», leave the Hifz screen, come back ->
+     still «جارٍ التحميل n%», then installed; onboarding row mirrors it.
+   - voice: start download from a book «استماع», press «متابعة في الخلفية»,
+     press «استماع» again -> progress dialog, not the offer; Settings
+     «قارئ الكتب» subtitle shows «جارٍ التحميل n%».
    - «استمع» disabled while tasmee records; changing ayah mid-recording
      cancels it (tasmee_panel.dart tasmeeRecordingProvider).
-   - deleting a reciter / surah recitation that is playing stops it
-     (ayah_recitation_library.deleteReciter, quran_audio_library
-     _stopIfPlaying) - download Fatiha for one reciter, play, delete.
-   - the download-state buttons of step 1.
-   The emulator can now use the RTX 3050 (owner enabled it; restart the
-   emulator to pick it up). TELL THE OWNER when done so he can put the
-   laptop back from Turbo.
+   - deleting a reciter / surah recitation that is playing stops it.
+   TELL THE OWNER when done so he can put the laptop back from Turbo.
 3. Only then: release 3.62.0 (notes in dist/release_notes_v3.62.0.md - add
    the tasmee/delete/download-state items), delete v3.61.0 + tag, keep
    v3.51.0 + content-*, git status clean of source (trap 55), tag == HEAD.
@@ -84,6 +84,7 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 19:26 - Download state audit done: only tasmee + voice held widget state (fixed); 570 tests pass; building 3.62.0 for device verification
 - 2026-09-24 19:24 - Download state app-wide (1/2): tasmee model and enhanced voice downloads owned by TasmeeEngine/OpenVoice, not widgets; panel, pack rows, voice settings and reader sheet show downloading %/installed; analyze clean, not on device
 - 2026-09-24 18:50 - Session stopped by owner: TASK_FOLLOWUP next steps exact (download-state buttons, one build, verify, then release 3.62.0)
 - 2026-09-24 18:49 - Queued: download buttons show downloading/done state app-wide
