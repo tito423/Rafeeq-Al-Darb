@@ -41,6 +41,7 @@ import '../widgets/mushaf/mushaf_toolbar.dart';
 import '../widgets/mushaf/page_overlay.dart';
 import '../widgets/mushaf/page_turn.dart';
 import '../widgets/mushaf/recite_bar.dart';
+import '../widgets/mushaf/follows_recitation_note.dart';
 
 enum MushafMode { text, image }
 
@@ -179,10 +180,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   void _onPageTap() {
     // Recitation highlights belong to the audio and clear when it stops.
     if (!_recite.active && _highlightSurah != null) {
-      setState(() {
-        _highlightSurah = null;
-        _highlightAyah = null;
-      });
+      setState(() { _highlightSurah = null; _highlightAyah = null; });
       return;
     }
     if (MediaQuery.orientationOf(context) == Orientation.landscape) return;
@@ -380,9 +378,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _applyImmersive(tab == AppTab.quran && _pageFillScreen);
   }
 
-  /// A recitation that is actually sounding (not paused, not torn down).
-  bool get _recitationDrives => _recite.active && !_recite.stalled;
-
   void _toggleAutoScroll() {
     setState(() => _autoScroll = !_autoScroll);
   }
@@ -474,12 +469,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // happened, and how to get the options back.
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text('quran.image_view_hint'.tr()),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      ..showSnackBar(SnackBar(
+        content: Text('quran.image_view_hint'.tr()),
+        duration: const Duration(seconds: 3),
+      ));
   }
 
   void _leaveImageView() {
@@ -638,11 +631,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// The surahs on the page being read — see `page_surahs.dart` for the rule
   /// and for the defect that made it necessary.
   String _currentSurahName(MushafData data) => surahNamesOnPage(
-    surahs: data.surahs,
-    startPages: data.surahStartPages,
-    endPages: data.surahEndPages,
-    page: _current,
-  ).join(' · ');
+        surahs: data.surahs,
+        startPages: data.surahStartPages,
+        endPages: data.surahEndPages,
+        page: _current,
+      ).join(' · ');
 
   /// Same rule as [_currentSurahName], against `juzStartPages` instead.
   int _currentJuzNumber(MushafData data) {
@@ -724,17 +717,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       // Never transparent over a printed page - see `opaqueMushafGround`.
-      backgroundColor:
-          mushafGround(
-            ref.watch(mushafPaperProvider),
-            imageMode: _mode == MushafMode.image,
-            darkPage: edition?.darkPage ?? false,
-          ) ??
+      backgroundColor: mushafGround(ref.watch(mushafPaperProvider),
+              imageMode: _mode == MushafMode.image,
+              darkPage: edition?.darkPage ?? false) ??
           (_mode == MushafMode.image
-              ? opaqueMushafGround(
-                  Theme.of(context).colorScheme.surface,
-                  Theme.of(context).brightness,
-                )
+              ? opaqueMushafGround(Theme.of(context).colorScheme.surface,
+                  Theme.of(context).brightness)
               : null),
       // P3‑43 #6: "ملء الشاشة" now hides the AppBar entirely (not just its
       // own toolbar row) plus this screen's own bottom bar below, and
@@ -749,7 +737,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               // nav bar below already shows Qur'an selected. Collapsing it
               // leaves only the toolbar in the app-bar slot.
               toolbarHeight: _toolbarLandscape(context) ? 0 : null,
-              title: _toolbarLandscape(context) ? null : Text('nav.quran'.tr()),
+              title: _toolbarLandscape(context)
+                  ? null
+                  : Text('nav.quran'.tr()),
               // P3‑34 made this one scrolling row; P3‑41 made it a `Wrap` so
               // nothing hid until you scrolled. With thirteen actions that
               // was two rows and ~116 logical pixels, permanently, on the tab
@@ -784,10 +774,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                         setState(() => _toolbarHeight = size.height);
                       },
                       child: _toolbarFor(
-                        mushaf.value!,
-                        isRaster,
-                        canIndexBySurah,
-                      ),
+                          mushaf.value!, isRaster, canIndexBySurah),
                     )
                   : null,
             ),
@@ -832,43 +819,36 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // — otherwise they would name a surah this page doesn't hold.
                 if (!_pageFillScreen || isLandscape)
                   PersistentPageOverlay(
-                    // Image mode only. The text page already carries its own
-                    // pinned header and a banner for every surah it opens, so a
-                    // third copy in the corner was «متكرر سورة الرعد ٣ مرات».
-                    // «في وضع المصحف شيل اسم السورة واسم الجزء واعتمد على اللي
-                    // موجودين في صفحة المصحف المصوّر». A printing whose page
-                    // prints them gets neither badge; one that does not (the
-                    // vector Hafs pages) keeps both. The text page has its own
-                    // header, so it keeps only the juz.
-                    surahName:
-                        (edition?.hafsPagination ?? true) &&
-                            _mode == MushafMode.image &&
-                            !(edition?.printedHeader ?? false)
-                        ? _currentSurahName(data)
-                        : null,
-                    juzNumber:
-                        (edition?.hafsPagination ?? true) &&
-                            !(_mode == MushafMode.image &&
-                                (edition?.printedHeader ?? false))
-                        ? _currentJuzNumber(data)
-                        : null,
-                    // Landscape drops the page-number bar under the text, so
-                    // the number has to live here instead of nowhere.
-                    pageNumber: (_pageFillScreen || isLandscape)
-                        ? _current
-                        : null,
-                  ),
+                  // Image mode only. The text page already carries its own
+                  // pinned header and a banner for every surah it opens, so a
+                  // third copy in the corner was «متكرر سورة الرعد ٣ مرات».
+                  // «في وضع المصحف شيل اسم السورة واسم الجزء واعتمد على اللي
+                  // موجودين في صفحة المصحف المصوّر». A printing whose page
+                  // prints them gets neither badge; one that does not (the
+                  // vector Hafs pages) keeps both. The text page has its own
+                  // header, so it keeps only the juz.
+                  surahName: (edition?.hafsPagination ?? true) &&
+                          _mode == MushafMode.image &&
+                          !(edition?.printedHeader ?? false)
+                      ? _currentSurahName(data)
+                      : null,
+                  juzNumber: (edition?.hafsPagination ?? true) &&
+                          !(_mode == MushafMode.image &&
+                              (edition?.printedHeader ?? false))
+                      ? _currentJuzNumber(data)
+                      : null,
+                  // Landscape drops the page-number bar under the text, so
+                  // the number has to live here instead of nowhere.
+                  pageNumber: (_pageFillScreen || isLandscape) ? _current : null,
+                ),
                 // THE FLOATING CONTROLS, replacing a black-and-white «exit
                 // immersive» circle. They take no layout space, so the
                 // mushaf keeps the whole screen — «مش تاكل اي حاجة من الشاشة».
                 if (_pageFillScreen && !isLandscape)
                   MushafChrome(
-                    visible:
-                        _chromeVisible || ref.watch(tutorialRunningProvider),
-                    mt: resolveMushafTheme(
-                      ref.watch(mushafThemeProvider),
-                      Theme.of(context).brightness,
-                    ),
+                    visible: _chromeVisible || ref.watch(tutorialRunningProvider),
+                    mt: resolveMushafTheme(ref.watch(mushafThemeProvider),
+                        Theme.of(context).brightness),
                     surahName: (edition?.hafsPagination ?? true)
                         ? _currentSurahName(data)
                         : null,
@@ -912,10 +892,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     // Only shown once auto-scroll is actually on — no point
                     // occupying screen space with a speed control for a feature
                     // that isn't running.
-                    if (_autoScroll &&
-                        _mode == MushafMode.text &&
-                        _recitationDrives)
-                      const _FollowsRecitationNote()
+                    if (_autoScroll && _mode == MushafMode.text && _recite.active)
+                      const FollowsRecitationNote()
                     else if (_autoScroll && _mode == MushafMode.text)
                       AutoScrollSpeedBar(
                         speed: _autoScrollSpeed,
@@ -959,122 +937,100 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // «دايمًا خلّي تقليب الصفحات من اليمين للشمال»: a mushaf turns right to
     // left in every UI language; each page keeps the UI's own direction.
     final ambient = Directionality.of(context);
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: PageView.builder(
-        controller: _pages,
-        // Frozen while the page is pinched in, so a pan moves the page instead
-        // of turning it — see `quran_zoom_provider.dart`.
-        physics: ref.watch(quranPageZoomedProvider)
-            ? const NeverScrollableScrollPhysics()
-            : null,
-        onPageChanged: (i) {
-          setState(() {
-            _current = i + 1;
-            if (!_recite.active) {
-              _highlightSurah = null;
-              _highlightAyah = null;
+    return Directionality(textDirection: TextDirection.rtl, child: PageView.builder(
+      controller: _pages,
+      // Frozen while the page is pinched in, so a pan moves the page instead
+      // of turning it — see `quran_zoom_provider.dart`.
+      physics: ref.watch(quranPageZoomedProvider)
+          ? const NeverScrollableScrollPhysics()
+          : null,
+      onPageChanged: (i) {
+        setState(() {
+          _current = i + 1;
+          if (!_recite.active) {
+            _highlightSurah = null;
+            _highlightAyah = null;
+          }
+        });
+        _persistPage();
+      },
+      itemCount: _totalPages,
+      itemBuilder: (context, index) {
+        final page = index + 1;
+        return TurningPage(
+          controller: _pages!,
+          index: index,
+          child: Directionality(textDirection: ambient, child: FutureBuilder<List<Ayah>>(
+          future: _ayahsOfPage(page, data), initialData: data.repo.pageIfLoaded(page),
+          builder: (context, snap) {
+            if (!snap.hasData) {
+              return const Center(child: CircularProgressIndicator());
             }
-          });
-          _persistPage();
-        },
-        itemCount: _totalPages,
-        itemBuilder: (context, index) {
-          final page = index + 1;
-          return TurningPage(
-            controller: _pages!,
-            index: index,
-            child: Directionality(
-              textDirection: ambient,
-              child: FutureBuilder<List<Ayah>>(
-                future: _ayahsOfPage(page, data),
-                initialData: data.repo.pageIfLoaded(page),
-                builder: (context, snap) {
-                  if (!snap.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  final ayahs = snap.data!;
-                  // The reader's own mode decides; the `|| edition.isRaster` that
-                  // stood here was always true after 3.43.0, so `MushafTextPage`
-                  // below was dead code. See the note on `isRaster` above.
-                  if (_mode == MushafMode.image) {
-                    if (edition == null) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return MushafPageView(
-                      edition: edition,
-                      page: page,
-                      highlight: _highlightRegion(edition, page),
-                      onAyahLongPress: (region) =>
-                          _onImageAyahTap(region, ayahs, data, edition),
-                      onLoadFailed: edition.isRaster
-                          ? null
-                          : () {
-                              setState(() => _mode = MushafMode.text);
-                              _applyOrientationLock();
-                            },
-                      onBackgroundTap: _onPageTap,
-                    );
-                  }
-                  final mushafTheme = resolveMushafTheme(
-                    ref.watch(mushafThemeProvider),
-                    Theme.of(context).brightness,
-                  );
-                  final frame = ref.watch(mushafFrameProvider);
-                  return MushafTextPage(
-                    layout: textLayout,
-                    mushafTheme: mushafTheme,
-                    frameStyle: frame.style,
-                    frameColor: frame.accent.color ?? mushafTheme.gold,
-                    ayahs: ayahs,
-                    surahNameOf: data.surahNameAr,
-                    // The selected verse stays marked after its card closes, as it
-                    // does on the image page, so the owner can see where the
-                    // continuous recitation will start from.
-                    playingSurah: _recite.active
-                        ? _recite.surahId
-                        : _highlightSurah,
-                    playingAyah: _recite.active
-                        ? _recite.ayahNumber
-                        : _highlightAyah,
-                    playingBasmalaSurah: _recite.basmala
-                        ? _recite.surahId
-                        : null,
-                    onAyahLongPress: (a) => _openSciences(a, data),
-                    // `edition:` is the RECITER, not the mushaf. Handed a printing
-                    // id (`hafs_kfqc`) every verse URL 404'd, `setAudioSource`
-                    // threw and the recitation stopped: «بتقف التلاوة مش بتشتغل».
-                    // The verse's own marker plays that one verse — separate from the
-                    // continuous recitation, which only the toolbar starts.
-                    onPlayTap: (a) => AyahAudioService.instance.play(
-                      a,
-                      data.repo,
-                      edition: ref.read(selectedReciterProvider),
-                    ),
-                    fontScale: _fontScale,
-                    // «مزامنة بين التلاوة المستمرة والتمرير التلقائي» (2026-09-24).
-                    // Both used to run at once: the ticker scrolled at its fixed
-                    // speed and turned the page at the bottom, the recitation turned
-                    // it when the reciter crossed - so the page ran ahead of the
-                    // reciter and was dragged back. While a recitation PLAYS it
-                    // drives the page (_scrollToPlayingAyah, at the reciter's own
-                    // pace); the fixed-speed scroll yields and comes back by itself
-                    // when the recitation stops or pauses.
-                    autoScroll: _autoScroll && !_recitationDrives,
-                    autoScrollSpeed: _autoScrollSpeed,
-                    isActive: page == _current,
-                    onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
-                    onBackgroundTap: _onPageTap,
-                    onReadingScroll: _onReadingScroll,
-                    pageFillScreen: _pageFillScreen,
-                  );
-                },
+            final ayahs = snap.data!;
+            // The reader's own mode decides; the `|| edition.isRaster` that
+            // stood here was always true after 3.43.0, so `MushafTextPage`
+            // below was dead code. See the note on `isRaster` above.
+            if (_mode == MushafMode.image) {
+              if (edition == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return MushafPageView(
+                edition: edition,
+                page: page,
+                highlight: _highlightRegion(edition, page),
+                onAyahLongPress: (region) =>
+                    _onImageAyahTap(region, ayahs, data, edition),
+                onLoadFailed: edition.isRaster
+                    ? null
+                    : () {
+                        setState(() => _mode = MushafMode.text);
+                        _applyOrientationLock();
+                      },
+                onBackgroundTap: _onPageTap,
+              );
+            }
+            final mushafTheme = resolveMushafTheme(
+              ref.watch(mushafThemeProvider),
+              Theme.of(context).brightness,
+            );
+            final frame = ref.watch(mushafFrameProvider);
+            return MushafTextPage(
+              layout: textLayout,
+              mushafTheme: mushafTheme,
+              frameStyle: frame.style,
+              frameColor: frame.accent.color ?? mushafTheme.gold,
+              ayahs: ayahs,
+              surahNameOf: data.surahNameAr,
+              // The selected verse stays marked after its card closes, as it
+              // does on the image page, so the owner can see where the
+              // continuous recitation will start from.
+              playingSurah: _recite.active ? _recite.surahId : _highlightSurah,
+              playingAyah: _recite.active ? _recite.ayahNumber : _highlightAyah,
+              playingBasmalaSurah: _recite.basmala ? _recite.surahId : null,
+              onAyahLongPress: (a) => _openSciences(a, data),
+              // `edition:` is the RECITER, not the mushaf. Handed a printing
+              // id (`hafs_kfqc`) every verse URL 404'd, `setAudioSource`
+              // threw and the recitation stopped: «بتقف التلاوة مش بتشتغل».
+              // The verse's own marker plays that one verse — separate from the
+              // continuous recitation, which only the toolbar starts.
+              onPlayTap: (a) => AyahAudioService.instance.play(
+                a,
+                data.repo,
+                edition: ref.read(selectedReciterProvider),
               ),
-            ),
-          );
-        },
-      ),
-    );
+              fontScale: _fontScale,
+              autoScroll: _autoScroll && !(_recite.active && !_recite.stalled),
+              autoScrollSpeed: _autoScrollSpeed,
+              isActive: page == _current,
+              onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
+              onBackgroundTap: _onPageTap,
+              onReadingScroll: _onReadingScroll,
+              pageFillScreen: _pageFillScreen,
+            );
+          },
+        )));
+      },
+    ));
   }
 
   void _onImageAyahTap(
@@ -1099,31 +1055,3 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 /// The compact transport shown under the page while continuous recitation is
 /// running: which verse is sounding, and the three controls a listener
 /// actually reaches for.
-
-/// Stands where the auto-scroll speed bar stands while a recitation drives
-/// the page, so the reader knows why the speed control went away and that
-/// auto-scroll is still on - it comes back when the recitation stops.
-class _FollowsRecitationNote extends StatelessWidget {
-  const _FollowsRecitationNote();
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.sync_rounded, size: 16, color: scheme.primary),
-          const SizedBox(width: 6),
-          Flexible(
-            child: Text(
-              'quran.autoscroll_follows'.tr(),
-              style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

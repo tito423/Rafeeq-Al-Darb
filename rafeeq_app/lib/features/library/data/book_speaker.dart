@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'tts/book_voice_pref.dart';
 import 'tts/open_voice.dart';
+import '../../../core/services/audio_exclusive.dart';
 
 /// Reads a book's page aloud, one sentence at a time.
 ///
@@ -112,7 +113,11 @@ class BookSpeaker {
       var cut = rest.lastIndexOf('،', max);
       if (cut < max ~/ 3) cut = rest.lastIndexOf(' ', max);
       if (cut <= 0) cut = max;
-      out.add(rest.substring(0, cut + (cut < rest.length && rest[cut] == '،' ? 1 : 0)).trim());
+      out.add(
+        rest
+            .substring(0, cut + (cut < rest.length && rest[cut] == '،' ? 1 : 0))
+            .trim(),
+      );
       rest = rest.substring(cut).replaceFirst(RegExp(r'^[،\s]+'), '');
     }
     if (rest.trim().isNotEmpty) out.add(rest.trim());
@@ -169,6 +174,10 @@ class BookSpeaker {
 
   Future<void> speak(String pageText, {double rate = 0.45}) async {
     await stop();
+    // Not over a recitation, and a recitation started later stops this
+    // (`AudioExclusive`): the two used to play at once.
+    await AudioExclusive.silenceAll();
+    AudioExclusive.speakerStarted(stop);
     if (await _useOpenVoice()) {
       final done = await _speakOpen(pageText);
       if (done) return;
@@ -199,11 +208,9 @@ class BookSpeaker {
 
     for (; _index < _chunks.length; _index++) {
       if (_cancelled) break;
-      _emit(BookSpeakerState(
-        speaking: true,
-        chunk: _index,
-        total: _chunks.length,
-      ));
+      _emit(
+        BookSpeakerState(speaking: true, chunk: _index, total: _chunks.length),
+      );
       try {
         await _tts.speak(_chunks[_index]);
       } catch (e) {
@@ -213,11 +220,9 @@ class BookSpeaker {
     }
 
     _speaking = false;
-    _emit(BookSpeakerState(
-      speaking: false,
-      chunk: _index,
-      total: _chunks.length,
-    ));
+    _emit(
+      BookSpeakerState(speaking: false, chunk: _index, total: _chunks.length),
+    );
   }
 
   /// The owner's choice in Settings, and only when the pack is really there.
@@ -225,7 +230,9 @@ class BookSpeaker {
       await BookVoicePref.load() == BookVoice.open &&
       await OpenVoice.isInstalled();
 
-  static const _voicePlayer = MethodChannel('com.tito.rafeeq_aldarb/voice_player');
+  static const _voicePlayer = MethodChannel(
+    'com.tito.rafeeq_aldarb/voice_player',
+  );
 
   /// FastPitch is fed short chunks: its cost grows with input length and the
   /// first sound waits for the whole first chunk, so a sentence or two at a
@@ -270,9 +277,16 @@ class BookSpeaker {
         if (stale()) break;
         started = true;
         next = _index + 1 < _chunks.length ? render(_index + 1) : null;
-        _emit(BookSpeakerState(
-            speaking: true, chunk: _index, total: _chunks.length));
-        final ended = await _voicePlayer.invokeMethod<bool>('play', {'path': path});
+        _emit(
+          BookSpeakerState(
+            speaking: true,
+            chunk: _index,
+            total: _chunks.length,
+          ),
+        );
+        final ended = await _voicePlayer.invokeMethod<bool>('play', {
+          'path': path,
+        });
         if (ended != true) break;
       }
     } catch (e) {
@@ -285,14 +299,16 @@ class BookSpeaker {
     }
     next?.ignore();
     _speaking = false;
-    _emit(BookSpeakerState(
-        speaking: false, chunk: _index, total: _chunks.length));
+    _emit(
+      BookSpeakerState(speaking: false, chunk: _index, total: _chunks.length),
+    );
     return true;
   }
 
   int _gen = 0;
 
   Future<void> stop() async {
+    AudioExclusive.speakerStopped(stop);
     _gen++;
     _cancelled = true;
     _speaking = false;

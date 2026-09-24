@@ -18,7 +18,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
-import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart';
@@ -26,6 +25,7 @@ import '../../../../core/widgets/arabic_text.dart';
 import '../../data/hifz_store.dart';
 import '../../data/tasmee_mic.dart';
 import '../../data/tasmee_engine.dart';
+import '../../../../core/services/audio_exclusive.dart';
 
 enum _Phase { idle, downloading, recording, thinking, done }
 
@@ -80,9 +80,9 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     TasmeeEngine.instance.isInstalled().then(
       (v) => mounted ? setState(() => _installed = v) : null,
     );
-    TasmeeMics.find(_recorder).then(
-      (m) => mounted ? setState(() => _mics = m) : null,
-    );
+    TasmeeMics.find(
+      _recorder,
+    ).then((m) => mounted ? setState(() => _mics = m) : null);
   }
 
   @override
@@ -141,7 +141,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   Future<void> _startRecording() async {
     // The reciter must be silent while the reader recites: the microphone
     // would hear him, and taking the audio focus left «استمع» waiting.
-    await AyahAudioService.instance.stopQueue();
+    // Everything, not only a queued ayah: a continuous recitation (with
+    // its listeners), the Qur'an player and the book reader were left
+    // sounding into the microphone (`AudioExclusive`).
+    await AudioExclusive.silenceAll();
     if (!await _recorder.hasPermission()) {
       if (mounted) setState(() => _error = 'tasmee.needs_mic'.tr());
       return;
@@ -184,10 +187,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     _amp = _recorder
         .onAmplitudeChanged(const Duration(milliseconds: 150))
         .listen((a) {
-      if (mounted) {
-        setState(() => _level = ((a.current + 50) / 50).clamp(0.0, 1.0));
-      }
-    });
+          if (mounted) {
+            setState(() => _level = ((a.current + 50) / 50).clamp(0.0, 1.0));
+          }
+        });
     // A forgotten «stop» should not record for ever.
     _cap?.cancel();
     _cap = Timer(const Duration(seconds: tasmeeMaxSeconds), _stopRecording);
@@ -342,8 +345,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                 children: [
                   const Icon(Icons.graphic_eq_rounded, size: 18),
                   const SizedBox(width: 8),
-                  Text('tasmee.level'.tr(),
-                      style: const TextStyle(fontSize: 12)),
+                  Text(
+                    'tasmee.level'.tr(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: LinearProgressIndicator(
