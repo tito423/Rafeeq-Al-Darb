@@ -355,6 +355,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 52. `permission_handler` 13 → `permission_handler_android` 14.1.0 needs AGP 9
 53. The emulator's `-tcpdump` captures nothing here; `-http-proxy` + a logging proxy does.
 54. Never run `flutter test` or edit `lib/` while a release build is running.
+55. `cp.bat` commits tracked files only - `git add` every new file (it now warns).
 
 ## 4. Where things live
 

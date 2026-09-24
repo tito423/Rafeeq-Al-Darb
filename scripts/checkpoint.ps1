@@ -107,6 +107,15 @@ if ($LASTEXITCODE -eq 0 -or (git log -1 --pretty=%s) -like "*$Note*") {
     # and a checkpoint that exists only on this disk is half a checkpoint.
     git push -q origin HEAD 2>&1 | Out-Null
     if ($LASTEXITCODE -eq 0) { Write-Host "pushed" -ForegroundColor Green } else { Write-Host "PUSH FAILED - run git push" -ForegroundColor Red }
+
+# New source files are NOT staged above (tracked files only, by agreement),
+# and on 2026-09-24 four of them sat untracked through a whole release: the
+# APK was built from disk and fine, the tag's source did not compile. So say
+# so, LAST, where a reader tailing this output cannot miss it.
+$untracked = git ls-files --others --exclude-standard -- rafeeq_app/lib rafeeq_app/test rafeeq_app/assets/data/catalogs scripts/*.py 2>$null
+if ($untracked) {
+    Write-Host ("UNTRACKED SOURCE - git add these: " + (($untracked | ForEach-Object { $_ }) -join ', ')) -ForegroundColor Red
+}
 } else {
     Write-Host "nothing to commit (HANDOVER note still updated)" -ForegroundColor Yellow
 }

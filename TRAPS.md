@@ -560,3 +560,11 @@ Do not rediscover these.
     with the code; rebuilding alone passed. Likewise do not edit `lib/`
     during a build - an APK built at 14:40 turned out NOT to contain an edit
     made while it compiled (seen on the device: the old title).
+
+55. **`cp.bat` commits TRACKED files only - a new file stays out until you
+    `git add` it.** 2026-09-24: the four new files of the initial-downloads
+    screen were never committed; v3.61.0's APK (built from disk) was fine, but
+    a checkout of the tag did not compile (fixed in 6b679984).
+    `scripts/checkpoint.ps1` now prints `UNTRACKED SOURCE - git add these:`
+    as its LAST line when lib/, test/, catalogs or scripts/*.py hold an
+    untracked file. Before a release, also run `git status --short`.
