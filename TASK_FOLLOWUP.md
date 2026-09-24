@@ -9,12 +9,14 @@ account, the other one, or another agent — reads this and continues from
 **PLAN.md Stage 1 — «التحميلات المبدئية»** (owner's order 2026-09-24).
 
 ## Next step (exact)
-1. Stage 1 item 3 rows. Sizes first: write `scripts/measure_recitation_sizes.py`
-   — everyayah folder listings carry exact bytes in `<td data-order="N">`
-   per file (checked 14:50 on Ibrahim_Akhdar_32kbps); sum the 6236
-   `SSSAAA.mp3` per folder for every edition in
-   `recitation_source.dart`; R2 folders via the bucket listing. Output a
-   JSON the app bundles — sizes are measured, never typed.
+1. Stage 1 item 3 rows. DONE: per-ayah sizes measured —
+   `scripts/measure_recitation_sizes.py` → `assets/data/catalogs/
+   ayah_recitation_sizes.json`, 35 reciters, all 6236/6236 (smallest:
+   mahmoud_ali_al_banna_32kbps 383.6 MB, Ibrahim_Akhdar_32kbps 485.9 MB;
+   Maher 1204.3 matches R2). NEXT: whole-surah (التلاوة الكاملة) sizes for
+   the R2 mirrors (`Mp3QuranApi.r2Mirrors`), then build the rows on
+   `onboarding_screen.dart` reusing `AyahRecitationLibrary.downloadReciter`
+   and the host-speed probe (range request per host at screen open).
 2. Ask the owner about his note on «صوت قارئ الكتب المحسّن» (PLAN item 3).
 3. Items 1+2 are in code (analyze 0, 568 tests pass) but NOT seen on device:
    verify both on a FRESH install (adb uninstall) with screenrecord during
@@ -28,6 +30,7 @@ account, the other one, or another agent — reads this and continues from
   real Google ID token).
 
 ## Log
+- 2026-09-24 14:50 - Stage 1 item 3: per-ayah reciter sizes measured (35 reciters, everyayah listings) and bundled as a catalogue
 - 2026-09-24 14:46 - Stage 1 item 1: title/blurb in 7 locales; C1 backgrounds seen on emulator (adhkar + new-Muslim render)
 - 2026-09-24 14:38 - Stage 1 item 2: ContentPackTile fixed-width trailing slot + tabular digits + cancel (unverified)
 - 2026-09-24 14:09 - checkpoint.ps1 regex rebuilt with chr(92) (trap 11); log line verified
