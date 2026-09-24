@@ -6,6 +6,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 
 import '../../../core/services/ayah_audio_service.dart';
+import 'surah_fallback.dart';
 
 /// One thing the player can play: a downloaded surah, a streamed one, or a
 /// file imported from the device.
@@ -54,6 +55,10 @@ class PlayerTrack {
       (filePath != null && File(filePath!).existsSync()) ||
       (url?.startsWith('content://') ?? false);
 
+  /// This track from its public origin only (the mirror failed).
+  PlayerTrack originOnly() => PlayerTrack(
+      id: id, title: title, artist: artist, album: album, url: fallbackUrl);
+
   AudioSource toSource({bool origin = false}) {
     // Every source needs a MediaItem: `just_audio_background` throws on an
     // untagged one, and it is what the lock screen and the notification show.
@@ -67,6 +72,8 @@ class PlayerTrack {
 }
 
 enum SleepMode { off, timer, endOfTrack }
+
+enum PlayerNotice { substituted, skipped, failed }
 
 /// The player of «تحميل تلاوات القرآن».
 ///
@@ -123,39 +130,94 @@ class QuranAudioPlayer extends ChangeNotifier {
     final player = await AyahAudioService.instance.claimForMusic();
     _queue = List.unmodifiable(tracks);
     _index = start.clamp(0, tracks.length - 1);
+    _substituted.clear();
     _attach(player);
     notifyListeners();
+    return _startAt(_index);
+  }
+
+  /// Loads the queue at [i] and plays; when that surah cannot be opened,
+  /// walks its backups ([_nextStep]) until something plays or nothing is
+  /// left. Every step either spends a URL or the one substitution a surah
+  /// is allowed, so the walk always ends.
+  Future<bool> _startAt(int i) async {
+    final player = _player;
+    _loading = true;
     try {
-      try {
-        await player.setAudioSources(
-          [for (final t in tracks) t.toSource()],
-          initialIndex: _index,
-        );
-      } catch (_) {
-        // The app's own mirror could not start it; the public origin can.
-        if (!tracks.any((t) => t.fallbackUrl != null)) rethrow;
-        await player.setAudioSources(
-          [for (final t in tracks) t.toSource(origin: true)],
-          initialIndex: _index,
-        );
+      while (true) {
+        try {
+          await player.setAudioSources(
+            [for (final t in _queue) t.toSource()],
+            initialIndex: i,
+          );
+          _index = i;
+          await player.setLoopMode(_loop);
+          if (_shuffle) await player.shuffle();
+          await player.setShuffleModeEnabled(_shuffle);
+          await player.setSpeed(_speed);
+          unawaited(player.play());
+          lastFailure = null;
+          return true;
+        } catch (e) {
+          // Kept so the snackbar can say WHAT failed if nothing is left.
+          final url = _queue[i].url ?? _queue[i].filePath ?? '';
+          lastFailure = (url: url, error: e, status: await _statusOf(url));
+          final next = _nextStep(i);
+          if (next == null) return false;
+          i = next;
+        }
       }
-      await player.setLoopMode(_loop);
-      if (_shuffle) await player.shuffle();
-      await player.setShuffleModeEnabled(_shuffle);
-      await player.setSpeed(_speed);
-      unawaited(player.play());
-      lastFailure = null;
-      return true;
-    } catch (e) {
-      // Kept so the snackbar can say WHAT failed. Al-Burimi's An-Nas is
-      // listed by mp3quran and answers 404; «check your connection» sent
-      // the reader looking for a fault that was not his.
-      final t = tracks[_index];
-      final url = t.fallbackUrl ?? t.url ?? '';
-      lastFailure = (url: url, error: e, status: await _statusOf(url));
-      return false;
+    } finally {
+      _loading = false;
     }
   }
+
+  /// The next thing to try after surah [i] failed, as a queue index (the
+  /// queue may have been rewritten at [i]), or null when nothing is left.
+  ///  1. its public origin, if it came from the app's own mirror;
+  ///  2. the same surah in another voice ([SurahFallback]), once;
+  ///  3. the next surah in the queue, rather than stopping «تشغيل الكل».
+  int? _nextStep(int i) {
+    final t = _queue[i];
+    PlayerTrack? replacement;
+    if (t.fallbackUrl != null && !t.isLocal) {
+      replacement = t.originOnly();
+    } else if (_substituted.add(t.id)) {
+      replacement = SurahFallback.forTrack(t);
+      if (replacement != null) {
+        onNotice?.call(PlayerNotice.substituted, t.title, replacement.artist);
+      }
+    }
+    if (replacement != null) {
+      _queue = List.unmodifiable([..._queue]..[i] = replacement);
+      notifyListeners();
+      return i;
+    }
+    if (i + 1 < _queue.length) {
+      onNotice?.call(PlayerNotice.skipped, t.title, '');
+      return i + 1;
+    }
+    return null;
+  }
+
+  /// A surah that failed while the queue was already playing — the next one
+  /// in «تشغيل الكل» — goes through the same backups as a first tap does.
+  Future<void> _recover() async {
+    if (_loading || !active) return;
+    final failed = _player.currentIndex ?? _index;
+    final next = _nextStep(failed);
+    if (next == null || !await _startAt(next)) {
+      onNotice?.call(PlayerNotice.failed, _queue[failed].title, '');
+    }
+  }
+
+  bool _loading = false;
+  final Set<String> _substituted = {};
+
+  /// Set once by the app shell to put these in front of the reader: which
+  /// voice is standing in, which surah was passed over, or that nothing
+  /// could be played. (surah title, voice).
+  static void Function(PlayerNotice kind, String surah, String voice)? onNotice;
 
   /// The last failure of [playQueue], or null after a successful start.
   /// [status] is what the server answers a HEAD for the same file: the
@@ -198,7 +260,11 @@ class QuranAudioPlayer extends ChangeNotifier {
         _sleepMode = SleepMode.off;
         notifyListeners();
       }))
-      ..add(player.playerStateStream.listen((_) => notifyListeners()));
+      ..add(player.playerStateStream.listen((_) => notifyListeners()))
+      // Errors surface here, not as exceptions, once the queue is playing.
+      ..add(player.playbackEventStream.listen((_) {}, onError: (Object _) {
+        unawaited(_recover());
+      }));
   }
 
   void _onOwnership() {

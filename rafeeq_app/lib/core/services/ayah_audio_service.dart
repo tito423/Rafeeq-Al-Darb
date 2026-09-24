@@ -20,6 +20,8 @@ import 'audio_failure.dart';
 import 'finish_pauser.dart';
 import 'recitation_source.dart';
 
+part 'continuous_recovery.dart';
+
 /// Ayah-level recitation: streaming, on-disk caching, whole-surah downloads,
 /// and continuous auto-advancing playback.
 ///
@@ -331,7 +333,7 @@ class AyahAudioService {
       AudioFailure.instance.last.value = e.toString();
       debugPrint('AyahAudioService.play failed: $e');
     }
-    return false;
+    return edition == defaultEdition ? false : _playBackupVoice(ayah, repo, title);
   }
 
   Future<void> stop() async {
@@ -545,11 +547,9 @@ class AyahAudioService {
     final firstGlobal = await repo.globalAyahNumber(surahId, 1);
     if (token != _continuousToken) return;
 
-    // Built fresh on each attempt below: an `AudioSource` is bound to the
-    // player it was given to, so the retry after [_recreatePlayer] must not
-    // reuse the objects the disposed player already saw. [host] picks which
-    // of the reciter's hosts every verse comes from — 0 is everyayah where it
-    // mirrors the reciter, the last is islamic.network's CDN.
+    // Built fresh on each attempt: an `AudioSource` is bound to the player it
+    // was given to, and the retry after [_recreatePlayer] needs new ones.
+    // [host] indexes RecitationSource.urlsFor (see continuous_recovery.dart).
     List<AudioSource> buildChildren({int host = 0}) => [
           for (var k = 0; k < ayahs.length; k++)
             () {
@@ -589,7 +589,7 @@ class AyahAudioService {
         // player, not a ConcatenatingAudioSource (deprecated).
         await _player
             .setAudioSources(
-              buildChildren(host: attempt == 2 ? 1 : 0),
+              buildChildren(host: _hostShift + (attempt == 2 ? 1 : 0)),
               initialIndex: plan.initialIndex,
             )
             .timeout(_loadLimit);
@@ -605,9 +605,8 @@ class AyahAudioService {
     if (loaded) AudioFailure.instance.clear();
     if (loaded) _loadedSurahId = surahId;
     if (!loaded) {
-      await stopContinuous();
-      continuousError.value = ContinuousError.loadFailed;
-      return;
+      final at = ayahs.where((x) => x.ayahNumber == startAyahNumber);
+      return _continuousLoadFailed(at.isEmpty ? ayahs.first : at.first, repo, token);
     }
 
     // The highlight source of truth: whichever child just_audio says is
@@ -627,6 +626,7 @@ class AyahAudioService {
       );
     });
 
+    _watchContinuousErrors(token, repo);
     _completionSub = _player.playerStateStream.listen((s) {
       if (token != _continuousToken) return;
       if (s.processingState != ProcessingState.completed) return;

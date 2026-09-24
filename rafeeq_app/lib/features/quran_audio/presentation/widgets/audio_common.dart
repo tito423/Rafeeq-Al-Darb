@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../app/navigation.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../../core/utils/arabic_normalize.dart';
@@ -344,6 +345,23 @@ Future<bool> confirmAction(BuildContext context, String message) async {
     ),
   );
   return ok ?? false;
+}
+
+/// Shows what the surah player did on its own: another voice standing in,
+/// a surah passed over, or nothing playable at all. Installed once in
+/// `main()`; it uses the app's root messenger because the screen that
+/// started the queue may be long gone when «تشغيل الكل» reaches a bad file.
+void showPlayerNotice(PlayerNotice kind, String surah, String voice) {
+  final text = switch (kind) {
+    PlayerNotice.substituted => 'quran_audio.play_substituted'
+        .tr(namedArgs: {'surah': surah, 'voice': voice}),
+    PlayerNotice.skipped =>
+      'quran_audio.play_skipped'.tr(namedArgs: {'surah': surah}),
+    PlayerNotice.failed => 'quran_audio.play_failed'.tr(),
+  };
+  rootScaffoldMessengerKey.currentState?.showSnackBar(
+    SnackBar(content: Text(text), duration: const Duration(seconds: 6)),
+  );
 }
 
 void showPlayFailed(BuildContext context) {

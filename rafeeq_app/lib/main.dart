@@ -14,11 +14,13 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 
 import 'adhan_entry.dart';
+import 'app/navigation.dart';
 import 'app/rafeeq_app.dart';
 import 'core/i18n/supported_locales.dart';
 import 'core/services/sync_service.dart';
 import 'core/services/syncable_shared_preferences.dart';
 import 'core/services/alarm_permissions_service.dart';
+import 'core/services/ayah_audio_service.dart';
 import 'core/services/quran_translation_store.dart';
 import 'core/services/download_engine.dart';
 import 'core/services/sunan_suwar_reminder_service.dart';
@@ -27,6 +29,8 @@ import 'core/utils/startup_trace.dart';
 import 'core/services/quote_reminder_service.dart';
 import 'features/downloads/presentation/download_navigation.dart';
 import 'features/quotes/presentation/quote_navigation.dart';
+import 'features/quran_audio/data/quran_audio_player.dart';
+import 'features/quran_audio/presentation/widgets/audio_common.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 
 /// The Adhan alert screen's Dart entrypoint, run by `AdhanActivity` (Kotlin)
@@ -148,6 +152,15 @@ Future<void> main() async {
   await QuoteReminderService.instance.initialize();
   NotificationRouter.onQuote = openQuoteFromPayload;
   NotificationRouter.onDownload = openDownloadFromPayload;
+  // The surah player's backups announce themselves (another voice, a
+  // skipped surah) through the root messenger.
+  QuranAudioPlayer.onNotice = showPlayerNotice;
+  continuousVoiceNotice = () => rootScaffoldMessengerKey.currentState?.showSnackBar(
+        SnackBar(
+          content: Text('quran.recite_voice_substituted'.tr()),
+          duration: const Duration(seconds: 6),
+        ),
+      );
   StartupTrace.step('QuoteReminderService.initialize');
   StartupTrace.report();
 
