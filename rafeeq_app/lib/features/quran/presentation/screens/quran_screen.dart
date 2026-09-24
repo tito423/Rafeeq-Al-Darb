@@ -578,7 +578,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     } else {
       pages.jumpToPage(p - 1);
     }
-    setState(() => _current = p);
+    // `_current` comes from onPageChanged only (a cut-off turn desynced it).
     _persistPage();
   }
 

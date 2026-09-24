@@ -35,6 +35,14 @@ Done since v3.61.0 (each verified):
   After the tiny-vs-base ASR measurement (running, scripts/asr_probe/
   tiny_vs_base.txt); same 3.62.0 release.
 
+- CONFLICT FOUND on device (18:00, v3.62 build): auto-scroll + page-turn.
+  (1) a page that fits the screen was turned instantly (1->12 in seconds);
+  (2) the burst left PageView on p13 while _current said 15 -> recitation
+  at 2:94-100 never turned the page, no highlight (media_session PLAYING
+  2:98/2:100 while screen showed 2:84-88). Fix: dwell a screen's worth on
+  pages that fit; _current only from onPageChanged. 570 tests pass.
+  Rebuilding to verify the SAME scenario, then release 3.62.0.
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -77,6 +85,7 @@ Done since v3.61.0 (each verified):
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 18:07 - Auto-scroll/page-turn conflict: dwell on pages that fit; _current from onPageChanged only (found on device with recitation)
 - 2026-09-24 17:48 - 3.62.0: recitation/auto-scroll sync (note in own file, under ceiling), AudioExclusive (book reader vs recitation, tasmee silences all), 570 tests pass
 - 2026-09-24 17:31 - PLAN 4a result recorded
 - 2026-09-24 17:30 - PLAN 4a measured: base == tiny on accuracy (446/500 each), 3.2x slower, 1.9x size -> tiny stays; recitation/auto-scroll sync in code

@@ -304,6 +304,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     final shouldRun = widget.autoScroll && widget.isActive && !_pausedForUser;
     if (shouldRun && _autoTimer == null) {
       _reachedEndFired = false;
+      _dwell = 0;
       _autoTimer = Timer.periodic(_tickInterval, (_) => _tickAutoScroll());
     } else if (!shouldRun && _autoTimer != null) {
       _autoTimer?.cancel();
@@ -357,13 +358,13 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     return false;
   }
 
+  double _dwell = 0; // a page that FITS was turned at once: 1->12 in seconds
   void _tickAutoScroll() {
     if (!_scroll.hasClients) return;
     final max = _scroll.position.maxScrollExtent;
-    final next =
-        (_scroll.offset +
-                widget.autoScrollSpeed * _tickInterval.inMilliseconds / 1000)
-            .clamp(0.0, max);
+    final step = widget.autoScrollSpeed * _tickInterval.inMilliseconds / 1000;
+    if (max <= 0 && (_dwell += step) < _scroll.position.viewportDimension) return;
+    final next = (_scroll.offset + step).clamp(0.0, max);
     _scroll.jumpTo(next);
     if (next >= max && !_reachedEndFired) {
       _reachedEndFired = true;
