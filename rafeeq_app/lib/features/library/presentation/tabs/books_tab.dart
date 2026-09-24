@@ -204,7 +204,9 @@ class _BooksTabState extends State<BooksTab> {
                     ),
                   ],
                 ),
-                labelColor: AppColors.gold,
+                // Flat gold on the white chosen tab: 2.45 : 1 (light theme).
+                labelColor: readableOn(
+                    AppColors.gold, Theme.of(context).colorScheme.surface),
                 labelStyle: const TextStyle(fontWeight: FontWeight.w700),
                 unselectedLabelColor: Theme.of(
                   context,

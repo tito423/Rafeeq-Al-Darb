@@ -25,6 +25,7 @@ import '../widgets/prayer_slides.dart';
 
 import '../../../../core/services/prayer_times_service.dart';
 import '../../../../core/models/prayer_times.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
 import '../../../quotes/presentation/widgets/home_quote_card.dart';
@@ -236,13 +237,16 @@ class _HeaderCard extends ConsumerWidget {
     final gradient = isLight
         ? const [Color(0xFFFBF6E9), Color(0xFFF3ECD8), Color(0xFFEFE6D2)]
         : const [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)];
+    // Light values measured against the gradient's darkest stop #EFE6D2
+    // (2026-09-25): Hijri 4.11 : 1, Gregorian 3.27 : 1 - both under 4.5.
+    // readableOn deepens them just enough; the dark values already pass.
     final hijriColor = isLight
-        ? const Color(0xFF0E7C6B)
+        ? readableOn(const Color(0xFF0E7C6B), gradient.last)
         : const Color(0xFF7DEBDA);
     final welcomeColor = isLight ? const Color(0xFF1D2C26) : Colors.white;
     final readerName = ref.watch(readerNameProvider);
     final gregorianColor = isLight
-        ? const Color(0xFF9A7A15)
+        ? readableOn(const Color(0xFF9A7A15), gradient.last)
         : const Color(0xFFD4AF37);
     return Container(
       // «وسّع كارت التاريخ ومرحبًا شوية».

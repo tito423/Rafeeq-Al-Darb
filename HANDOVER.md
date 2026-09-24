@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 00:42 — IN PROGRESS — resume here**
+**2026-09-25 01:04 — IN PROGRESS — resume here**
 
-Build 7 verified: no location-dialog loop with location off, card button opens location settings, Qibla asks again and finds 258
+Contrast (owner order A): measured scan tool + readableOn/fillForWhiteText; fixed tasbeeh pills/title, selected surahs, quote mark, Home dates, side prayer tiles, Library tabs (unbuilt)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

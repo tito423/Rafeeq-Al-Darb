@@ -214,7 +214,10 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
               final key = prayerSlideOrder[index];
               final distance = (_page - index).abs().clamp(0.0, 1.0);
               final scale = 1 - 0.22 * distance;
-              final opacity = 1 - 0.45 * distance;
+              // 0.55 at the side left the neighbouring time at 2.40 : 1 in
+              // the light theme (emulator-5554, 2026-09-25); the size step
+              // still says «not this one», the text stays readable.
+              final opacity = 1 - 0.2 * distance;
               // `Builder` so the slide has a context of its own — that is what
               // the card route uses as the point it grows out of.
               return Builder(

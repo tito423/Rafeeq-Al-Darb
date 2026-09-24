@@ -77,3 +77,36 @@ Color goldOn(ColorScheme scheme) => Color.alphaBlend(
       AppColors.gold.withValues(alpha: 0.50),
       scheme.onSurface,
     );
+
+/// WCAG 2 contrast ratio between two colours (1 : 1 to 21 : 1).
+double contrastRatio(Color a, Color b) {
+  final la = a.computeLuminance();
+  final lb = b.computeLuminance();
+  final hi = la > lb ? la : lb;
+  final lo = la > lb ? lb : la;
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+/// [color] with its hue kept, darkened (on a light [ground]) or lightened
+/// (on a dark one) until text in it reaches [min] : 1 against [ground].
+///
+/// Measured on emulator-5554 (2026-09-25), light theme: the Tasbeeh
+/// counter's dhikr title 1.69 : 1, the Home date 2.91 : 1, the selected
+/// Library tab 2.45 : 1 - the owner's «اي نص واضح». Accent colours stay
+/// recognisably themselves, only deep enough to read.
+Color readableOn(Color color, Color ground, {double min = 4.5}) {
+  if (contrastRatio(color, ground) >= min) return color;
+  final darken = ground.computeLuminance() > 0.4;
+  var hsl = HSLColor.fromColor(color);
+  for (var i = 0; i < 100 && contrastRatio(hsl.toColor(), ground) < min; i++) {
+    final l = hsl.lightness + (darken ? -0.01 : 0.01);
+    if (l < 0 || l > 1) break;
+    hsl = hsl.withLightness(l);
+  }
+  return hsl.toColor().withValues(alpha: color.a);
+}
+
+/// A solid [fill] that carries WHITE text, deepened (hue kept) until the
+/// white reaches 4.5 : 1. White on the Tasbeeh gold pill measured
+/// 2.42 : 1, on the blue one 2.90 : 1 (emulator-5554, 2026-09-25).
+Color fillForWhiteText(Color fill) => readableOn(fill, Colors.white);

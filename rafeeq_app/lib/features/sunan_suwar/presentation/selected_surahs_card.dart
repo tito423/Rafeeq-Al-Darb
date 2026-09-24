@@ -48,7 +48,13 @@ class SelectedSurahsCard extends ConsumerWidget {
                       mushaf?.surahNameAr(id) ?? '…',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontFamily: 'AmiriQuran',
-                        color: gold,
+                        // Flat gold on this cream measured 2.00 : 1 in the
+                        // light theme (emulator-5554, 2026-09-25).
+                        color: readableOn(
+                          gold,
+                          Color.alphaBlend(gold.withValues(alpha: 0.08),
+                              theme.colorScheme.surface),
+                        ),
                       ),
                     ),
                   ),

@@ -229,8 +229,9 @@ class _QuoteMiniature extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Gold on its cream ground measured 1.96 : 1 (light theme).
                 Icon(Icons.format_quote_rounded,
-                    size: 18, color: accent),
+                    size: 18, color: readableOn(accent, ground, min: 3)),
                 const SizedBox(height: 4),
                 Expanded(
                   child: ScriptText(

@@ -78,8 +78,13 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
                 labelPadding: const EdgeInsets.symmetric(horizontal: 4),
                 indicator: BoxDecoration(
                   borderRadius: BorderRadius.circular(22),
-                  gradient: const LinearGradient(
-                    colors: [AppColors.gold, Color(0xFFB8913A)],
+                  // White on the flat gold measured 2.42 : 1
+                  // (emulator-5554, 2026-09-25): same gold, deepened.
+                  gradient: LinearGradient(
+                    colors: [
+                      fillForWhiteText(AppColors.gold),
+                      fillForWhiteText(const Color(0xFFB8913A)),
+                    ],
                   ),
                   boxShadow: [
                     BoxShadow(

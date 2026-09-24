@@ -12,6 +12,14 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+OWNER 2026-09-25 ~00:55, two orders (in this order):
+A. Contrast: gold-on-cream and ANY text not clearly readable, app-wide,
+   fixed now. Method: measure WCAG contrast of text colour vs its ground
+   (4.5:1 body, 3:1 large) from code + screenshots, fix every failure.
+B. Manual location in the prayer location settings: type a city name,
+   pick it, works OFFLINE and with GPS off; the app builds on it. Needs a
+   bundled, credited city list (GeoNames, CC BY 4.0 - verify licence and
+   fields live before using).
 STATE 2026-09-25 00:43: build 7 (signed, on emulator) = master. Every fix
 of this session SEEN on the emulator except the one item below.
 1. Reported to the owner; release 3.63.0 ONLY if he asks (bump pubspec +
@@ -254,6 +262,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 01:04 - Contrast (owner order A): measured scan tool + readableOn/fillForWhiteText; fixed tasbeeh pills/title, selected surahs, quote mark, Home dates, side prayer tiles, Library tabs (unbuilt)
 - 2026-09-25 00:43 - Build 7 verified: no location-dialog loop with location off, card button opens location settings, Qibla asks again and finds 258
 - 2026-09-25 00:25 - Location switch off: Google dialog re-raised on every resume (endless) - service no longer requests a fix when location is off; building 7
 - 2026-09-25 00:15 - Build 5 verified (one location ask, quote arrows, pt explanation, adhkar landscape); enable-location buttons now handle a switched-off location and Qibla asks again (askToEnable)

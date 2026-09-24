@@ -247,6 +247,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final selected = _selected;
+    final circleGround = Color.alphaBlend(
+        selected.color.withValues(alpha: 0.10),
+        scheme.surfaceContainerHighest);
     return Scaffold(
       appBar: AppBar(title: Text('azkar.tab_tasbeeh'.tr())),
       body: SafeArea(
@@ -384,9 +387,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color.alphaBlend(
-                              selected.color.withValues(alpha: 0.10),
-                              scheme.surfaceContainerHighest),
+                          color: circleGround,
                           border: Border.all(
                               color: selected.color.withValues(alpha: 0.55),
                               width: 2),
@@ -408,7 +409,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                                 fontFamily: 'AmiriQuran',
                                 fontSize: 22,
                                 fontWeight: FontWeight.w700,
-                                color: selected.color,
+                                // Light blue on the pale circle measured
+                                // 1.69 : 1 (emulator-5554, 2026-09-25).
+                                color: readableOn(selected.color, circleGround),
                               ),
                             ),
                             // P3‑48: for non-Arabic UI languages, show a
@@ -627,7 +630,9 @@ class _DhikrPill extends StatelessWidget {
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: option.color,
+          // White on the gold pill measured 2.42 : 1, on the blue 2.90 : 1
+          // (emulator-5554, 2026-09-25): same hue, deep enough to read.
+          color: fillForWhiteText(option.color),
           borderRadius: BorderRadius.circular(24),
           border: selected
               ? Border.all(color: Colors.white.withValues(alpha: 0.85), width: 2)
