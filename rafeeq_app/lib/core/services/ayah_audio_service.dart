@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:just_audio/just_audio.dart';
@@ -199,9 +200,9 @@ class AyahAudioService {
         edition: edition,
         title: titleFor?.call(ayahs[i], i),
       );
-      // Nothing could be loaded: waiting for it to "complete" would wait for
-      // ever, and «استمع» would stay «إيقاف» (the owner's al-Baqarah 3,
-      // 2026-09-23).
+      // Nothing answered, backup voice included: hold on THIS verse and try
+      // it again — never on to the next (see _waitForSource).
+      if (!started && await _waitForSource(token, ayahs[i--])) continue;
       if (!started) break;
       await _waitForCompletionOrToken(token);
       if (token != _queueToken) return;
@@ -547,9 +548,8 @@ class AyahAudioService {
     final firstGlobal = await repo.globalAyahNumber(surahId, 1);
     if (token != _continuousToken) return;
 
-    // Built fresh on each attempt: an `AudioSource` is bound to the player it
-    // was given to, and the retry after [_recreatePlayer] needs new ones.
-    // [host] indexes RecitationSource.urlsFor (see continuous_recovery.dart).
+    // Fresh per attempt (a source is bound to its player). [host] indexes
+    // RecitationSource.urlsFor; see continuous_recovery.dart.
     List<AudioSource> buildChildren({int host = 0}) => [
           for (var k = 0; k < ayahs.length; k++)
             () {

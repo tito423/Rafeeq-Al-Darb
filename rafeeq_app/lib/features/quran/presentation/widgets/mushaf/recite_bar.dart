@@ -6,6 +6,8 @@ library;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../core/utils/digits.dart';
+
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/services/ayah_audio_service.dart';
 
@@ -43,7 +45,9 @@ class ReciteBar extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                state.stalled
+                state.waiting
+                    ? Icons.wifi_off_rounded
+                    : state.stalled
                     ? Icons.play_circle_outline_rounded
                     : state.buffering
                         ? Icons.hourglass_top_rounded
@@ -54,7 +58,12 @@ class ReciteBar extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  state.stalled
+                  state.waiting
+                      ? 'quran.recite_waiting'.tr(args: [
+                          localizeDigits('${state.surahId ?? ''}:${state.ayahNumber ?? ''}',
+                              context.locale.languageCode),
+                        ])
+                      : state.stalled
                       ? 'quran.recite_stalled'.tr()
                       : state.buffering
                       ? 'quran.recite_loading'.tr()

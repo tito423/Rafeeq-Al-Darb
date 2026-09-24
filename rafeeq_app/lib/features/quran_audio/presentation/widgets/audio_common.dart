@@ -355,8 +355,8 @@ void showPlayerNotice(PlayerNotice kind, String surah, String voice) {
   final text = switch (kind) {
     PlayerNotice.substituted => 'quran_audio.play_substituted'
         .tr(namedArgs: {'surah': surah, 'voice': voice}),
-    PlayerNotice.skipped =>
-      'quran_audio.play_skipped'.tr(namedArgs: {'surah': surah}),
+    PlayerNotice.waiting =>
+      'quran_audio.play_waiting'.tr(namedArgs: {'surah': surah}),
     PlayerNotice.failed => 'quran_audio.play_failed'.tr(),
   };
   rootScaffoldMessengerKey.currentState?.showSnackBar(

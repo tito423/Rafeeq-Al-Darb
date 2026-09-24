@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
@@ -73,7 +74,7 @@ class PlayerTrack {
 
 enum SleepMode { off, timer, endOfTrack }
 
-enum PlayerNotice { substituted, skipped, failed }
+enum PlayerNotice { substituted, waiting, failed }
 
 /// The player of «تحميل تلاوات القرآن».
 ///
@@ -129,11 +130,18 @@ class QuranAudioPlayer extends ChangeNotifier {
     if (tracks.isEmpty) return false;
     final player = await AyahAudioService.instance.claimForMusic();
     _queue = List.unmodifiable(tracks);
+    _original = _queue;
     _index = start.clamp(0, tracks.length - 1);
     _substituted.clear();
+    _cancelHold();
     _attach(player);
     notifyListeners();
-    return _startAt(_index);
+    if (await _startAt(_index)) return true;
+    _holdAt(_index);
+    // Held, not failed: the reader has been told and it will start by
+    // itself. False only when the queue is a single imported file with no
+    // backup at all, so the screen can still show the plain failure.
+    return waitingIndex != null;
   }
 
   /// Loads the queue at [i] and plays; when that surah cannot be opened,
@@ -176,7 +184,7 @@ class QuranAudioPlayer extends ChangeNotifier {
   /// queue may have been rewritten at [i]), or null when nothing is left.
   ///  1. its public origin, if it came from the app's own mirror;
   ///  2. the same surah in another voice ([SurahFallback]), once;
-  ///  3. the next surah in the queue, rather than stopping «تشغيل الكل».
+  ///  then nothing more here — the caller HOLDS on this surah ([_holdAt]).
   int? _nextStep(int i) {
     final t = _queue[i];
     PlayerTrack? replacement;
@@ -193,10 +201,7 @@ class QuranAudioPlayer extends ChangeNotifier {
       notifyListeners();
       return i;
     }
-    if (i + 1 < _queue.length) {
-      onNotice?.call(PlayerNotice.skipped, t.title, '');
-      return i + 1;
-    }
+    // Never on to the next surah: «مفيش حاجة اسمها تخطي». The caller holds.
     return null;
   }
 
@@ -206,13 +211,58 @@ class QuranAudioPlayer extends ChangeNotifier {
     if (_loading || !active) return;
     final failed = _player.currentIndex ?? _index;
     final next = _nextStep(failed);
-    if (next == null || !await _startAt(next)) {
-      onNotice?.call(PlayerNotice.failed, _queue[failed].title, '');
-    }
+    if (next == null || !await _startAt(next)) _holdAt(failed);
   }
 
   bool _loading = false;
   final Set<String> _substituted = {};
+  List<PlayerTrack> _original = const [];
+
+  /// The surah the player is holding on because nothing answered for it,
+  /// or null. It is retried every [_retryAfter] and at once when the
+  /// network comes back — the reader's own recitation first.
+  int? waitingIndex;
+  Timer? _retryTimer;
+  StreamSubscription<List<ConnectivityResult>>? _netSub;
+  static const _retryAfter = Duration(seconds: 20);
+
+  void _cancelHold() {
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    _netSub?.cancel();
+    _netSub = null;
+    waitingIndex = null;
+  }
+
+  void _holdAt(int i) {
+    final t = _queue[i];
+    if (!_isSurah(t) && t.isLocal) {
+      // An imported file that will not open is not coming back by waiting.
+      onNotice?.call(PlayerNotice.failed, t.title, '');
+      return;
+    }
+    _cancelHold();
+    waitingIndex = i;
+    _index = i;
+    onNotice?.call(PlayerNotice.waiting, t.title, '');
+    notifyListeners();
+    Future<void> retry() async {
+      if (waitingIndex != i || _loading) return;
+      _cancelHold();
+      // Back to what the reader chose, and its backups again from the top.
+      _queue = List.unmodifiable([..._queue]..[i] = _original[i]);
+      _substituted.remove(_original[i].id);
+      notifyListeners();
+      if (!await _startAt(i)) _holdAt(i);
+    }
+
+    _retryTimer = Timer(_retryAfter, () => unawaited(retry()));
+    _netSub = Connectivity().onConnectivityChanged.listen((r) {
+      if (r.any((c) => c != ConnectivityResult.none)) unawaited(retry());
+    });
+  }
+
+  static bool _isSurah(PlayerTrack t) => RegExp(r'^m\d+-s\d+$').hasMatch(t.id);
 
   /// Set once by the app shell to put these in front of the reader: which
   /// voice is standing in, which surah was passed over, or that nothing
@@ -269,6 +319,8 @@ class QuranAudioPlayer extends ChangeNotifier {
 
   void _onOwnership() {
     if (AyahAudioService.instance.musicOwnsPlayer.value) return;
+    // Something else is playing now: a held surah must not burst in on it.
+    _cancelHold();
     for (final s in _subs) {
       s.cancel();
     }

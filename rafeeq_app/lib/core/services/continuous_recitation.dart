@@ -31,6 +31,11 @@ class ContinuousRecitation {
   /// [AyahAudioService.onAppResumed].
   final bool stalled;
 
+  /// Every source for this verse failed, the backup voice included. The run
+  /// HOLDS here — it never skips a verse — and resumes from this very verse
+  /// by itself as soon as a source answers (see continuous_recovery.dart).
+  final bool waiting;
+
   const ContinuousRecitation({
     this.active = false,
     this.surahId,
@@ -40,11 +45,12 @@ class ContinuousRecitation {
     this.totalInSurah = 0,
     this.buffering = false,
     this.stalled = false,
+    this.waiting = false,
   });
 
   static const stopped = ContinuousRecitation();
 
-  ContinuousRecitation copyWith({bool? stalled, bool? buffering}) =>
+  ContinuousRecitation copyWith({bool? stalled, bool? buffering, bool? waiting}) =>
       ContinuousRecitation(
         active: active,
         surahId: surahId,
@@ -54,6 +60,7 @@ class ContinuousRecitation {
         totalInSurah: totalInSurah,
         buffering: buffering ?? this.buffering,
         stalled: stalled ?? this.stalled,
+        waiting: waiting ?? this.waiting,
       );
 
   bool isAyah(int surah, int ayah) =>

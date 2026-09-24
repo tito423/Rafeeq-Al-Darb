@@ -25,6 +25,7 @@ import 'core/services/quran_translation_store.dart';
 import 'core/services/download_engine.dart';
 import 'core/services/sunan_suwar_reminder_service.dart';
 import 'core/services/notification_router.dart';
+import 'core/utils/digits.dart';
 import 'core/utils/startup_trace.dart';
 import 'core/services/quote_reminder_service.dart';
 import 'features/downloads/presentation/download_navigation.dart';
@@ -155,6 +156,12 @@ Future<void> main() async {
   // The surah player's backups announce themselves (another voice, a
   // skipped surah) through the root messenger.
   QuranAudioPlayer.onNotice = showPlayerNotice;
+  ayahWaitingNotice = (verse) => rootScaffoldMessengerKey.currentState
+      ?..clearSnackBars()
+      ..showSnackBar(SnackBar(
+        content: Text('quran.recite_waiting'.tr(args: [localizeDigits(verse, 'ar')])),
+        duration: const Duration(seconds: 6),
+      ));
   continuousVoiceNotice = () => rootScaffoldMessengerKey.currentState?.showSnackBar(
         SnackBar(
           content: Text('quran.recite_voice_substituted'.tr()),
