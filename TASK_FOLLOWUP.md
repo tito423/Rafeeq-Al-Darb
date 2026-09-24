@@ -24,7 +24,22 @@ account, the other one, or another agent — reads this and continues from
    verify both on a FRESH install (adb uninstall) with screenrecord during
    the علوم القرآن download.
 
+## Owner's orders queued (15:25) — all go into ONE release
+- «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
+- Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
+  About, build_github_release.bat, delete v3.60.0 release+tag, keep v3.51.0
+  and content-* prereleases).
+- «المزيد» screen: each MAIN card a different colour from the one under it,
+  same style; every SUB-card of a section takes its main card's colour.
+  Change ONLY the colours — card design stays exactly as it is.
+
 ## Half-done / unverified (redo, do not trust)
+- Stage 1 rows in progress: `offline_pack_row.dart` (generic fixed-slot row)
+  written, ContentPackTile now uses it; tiles for ayah reciter / whole
+  recitation / tasmee / voice + total line NOT written yet. Sizes:
+  `ayah_recitation_sizes.json`, `offline_pack_sizes.json` (mushaf 74.3 MB,
+  basit 449.0, maher 709.1 — R2 listing). hadeethenc + UI-locale
+  translations are bundled → no rows.
 - Stage 1 items 1+2: title/blurb (7 locales) + ContentPackTile fixed-width
   slot/cancel — analyze+test pass, NOT seen on device.
 - D1 sign-out scope: committed, not device-tested (needs a Google sign-in).
@@ -38,6 +53,7 @@ account, the other one, or another agent — reads this and continues from
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 15:36 - Stage 1: shared OfflinePackRow + R2-measured mushaf/whole-recitation sizes; owner's queued orders logged
 - 2026-09-24 15:17 - C1 proven served from R2 via logging proxy; new rules 1.7b (certainty) and no-lazy-shortcuts; trap 53
 - 2026-09-24 14:50 - Stage 1 item 3: per-ayah reciter sizes measured (35 reciters, everyayah listings) and bundled as a catalogue
 - 2026-09-24 14:46 - Stage 1 item 1: title/blurb in 7 locales; C1 backgrounds seen on emulator (adhkar + new-Muslim render)

@@ -4,9 +4,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/download_manager.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart' show formatBytes;
-import '../../../../core/utils/digits.dart' show trn, percentOf;
+import '../../../../core/utils/digits.dart' show trn;
+import 'offline_pack_row.dart';
 
 /// One downloadable pack, offered on the first-run page.
 ///
@@ -47,8 +47,6 @@ class ContentPackTile extends StatefulWidget {
 }
 
 class _ContentPackTileState extends State<ContentPackTile> {
-  static const double _trailingWidth = 104;
-
   StreamSubscription<List<DownloadTask>>? _sub;
 
   @override
@@ -68,101 +66,21 @@ class _ContentPackTileState extends State<ContentPackTile> {
   @override
   Widget build(BuildContext context) {
     if (widget.installed) return const SizedBox.shrink();
-    final scheme = Theme.of(context).colorScheme;
     final task = DownloadManager.instance.taskById(widget.downloadId);
     final busy = task != null &&
         (task.status == DownloadStatus.downloading ||
             task.status == DownloadStatus.queued);
-    final done = task?.status == DownloadStatus.completed;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.25)),
+    return OfflinePackRow(
+      icon: widget.icon,
+      title: widget.titleKey.tr(),
+      hint: trn(widget.hintKey, args: [formatBytes(widget.bytes)]),
+      state: PackState(
+        done: task?.status == DownloadStatus.completed,
+        busy: busy,
+        progress: busy && task.total != null ? task.progress : null,
       ),
-      child: Row(
-        children: [
-          Icon(widget.icon, color: AppColors.gold, size: 26),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.titleKey.tr(),
-                    style: const TextStyle(fontWeight: FontWeight.w700)),
-                const SizedBox(height: 3),
-                Text(
-                  trn(widget.hintKey, args: [formatBytes(widget.bytes)]),
-                  style:
-                      TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
-                ),
-                if (busy) ...[
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: task.total == null ? null : task.progress,
-                    color: AppColors.gold,
-                  ),
-                ],
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          // ONE FIXED-WIDTH SLOT FOR EVERY STATE. The percentage used to sit
-          // here at its natural width, so «٩٪» → «١٠٪» → «١٠٠٪» narrowed the
-          // Expanded text column, the hint re-wrapped, and the whole row
-          // jumped in height as the download ran - the owner reported it
-          // twice. Fixed width + tabular figures: nothing beside it moves.
-          SizedBox(
-            width: _trailingWidth,
-            height: 40,
-            child: Center(
-              child: done
-                  ? const Icon(Icons.check_circle_rounded,
-                      color: AppColors.gold)
-                  : busy
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                percentOf(task.progress),
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontFeatures: [
-                                    FontFeature.tabularFigures(),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              tooltip: 'common.cancel'.tr(),
-                              visualDensity: VisualDensity.compact,
-                              icon: const Icon(Icons.close_rounded),
-                              onPressed: () => DownloadManager.instance
-                                  .cancel(widget.downloadId),
-                            ),
-                          ],
-                        )
-                      : FittedBox(
-                          child: FilledButton.icon(
-                            style: FilledButton.styleFrom(
-                              backgroundColor: AppColors.gold,
-                              foregroundColor: AppColors.night,
-                            ),
-                            onPressed: widget.onDownload,
-                            icon: const Icon(Icons.download_rounded,
-                                size: 18),
-                            label: Text('downloads.download'.tr()),
-                          ),
-                        ),
-            ),
-          ),
-        ],
-      ),
+      onDownload: widget.onDownload,
+      onCancel: () => DownloadManager.instance.cancel(widget.downloadId),
     );
   }
 }
