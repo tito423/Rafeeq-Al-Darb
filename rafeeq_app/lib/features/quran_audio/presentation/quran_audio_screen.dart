@@ -238,7 +238,7 @@ class _LibraryTab extends ConsumerWidget {
                     controller: controller,
                     onExpansionChanged: onExpansionChanged,
                   initiallyExpanded: byReciter.length <= 3,
-                  leading: const Icon(Icons.folder_rounded, color: AppColors.gold, size: 30),
+                  leading: Icon(Icons.folder_rounded, color: goldText(context), size: 30),
                   title: Text(group.first.reciterName, style: const TextStyle(fontWeight: FontWeight.w800)),
                   subtitle: Text(
                     trn('quran_audio.downloaded_surahs', args: [
@@ -453,7 +453,7 @@ class _DeviceTabState extends State<_DeviceTab> with AutomaticKeepAliveClientMix
                     const SizedBox(width: 8),
                     PopupMenuButton<int>(
                       tooltip: 'quran_audio.import_files'.tr(),
-                      icon: const Icon(Icons.add_circle_rounded, color: AppColors.gold, size: 32),
+                      icon: Icon(Icons.add_circle_rounded, color: goldText(context), size: 32),
                       onSelected: (v) => v == 0 ? _import() : _addFolder(),
                       itemBuilder: (_) => [
                         PopupMenuItem(
@@ -527,7 +527,7 @@ class _DeviceTabState extends State<_DeviceTab> with AutomaticKeepAliveClientMix
                                 for (final (i, f) in imported.indexed)
                                   ListTile(
                                     dense: true,
-                                    leading: const Icon(Icons.audio_file_rounded, color: AppColors.gold),
+                                    leading: Icon(Icons.audio_file_rounded, color: goldText(context)),
                                     title: Text(p.basenameWithoutExtension(f.path),
                                         maxLines: 1, overflow: TextOverflow.ellipsis),
                                     trailing: IconButton(
@@ -552,7 +552,7 @@ class _DeviceTabState extends State<_DeviceTab> with AutomaticKeepAliveClientMix
                                 for (final (i, f) in folder.value.indexed)
                                   ListTile(
                                     dense: true,
-                                    leading: const Icon(Icons.music_note_rounded, color: AppColors.gold),
+                                    leading: Icon(Icons.music_note_rounded, color: goldText(context)),
                                     title: Text(p.basenameWithoutExtension(f),
                                         maxLines: 1, overflow: TextOverflow.ellipsis),
                                     onTap: () => _play(_importedTracks([for (final x in folder.value) File(x)]), i),
@@ -685,7 +685,7 @@ class _Group extends StatelessWidget {
           builder: (controller, onExpansionChanged) => ExpansionTile(
             controller: controller,
             onExpansionChanged: onExpansionChanged,
-          leading: Icon(icon, color: AppColors.gold),
+          leading: Icon(icon, color: goldText(context)),
           title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontWeight: FontWeight.w700)),
           subtitle: Text(trn('quran_audio.files_count', args: [ltr('$count')]),
@@ -710,7 +710,7 @@ class _DeviceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
         dense: true,
-        leading: Icon(playing ? Icons.graphic_eq_rounded : Icons.music_note_rounded, color: AppColors.gold),
+        leading: Icon(playing ? Icons.graphic_eq_rounded : Icons.music_note_rounded, color: goldText(context)),
         title: Text(audio.title, maxLines: 1, overflow: TextOverflow.ellipsis,
             style: TextStyle(color: playing ? AppColors.gold : null, fontWeight: FontWeight.w600)),
         subtitle: Text(

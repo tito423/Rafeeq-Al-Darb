@@ -383,12 +383,16 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                 spacing: 8,
                 children: [
                   ChoiceChip(
+                    // the check would sit on the avatar icon, muddy
+                    showCheckmark: false,
                     avatar: const Icon(Icons.headset_mic_rounded, size: 18),
                     label: Text('tasmee.mic_bluetooth'.tr()),
                     selected: _useBluetooth,
                     onSelected: (_) => setState(() => _useBluetooth = true),
                   ),
                   ChoiceChip(
+                    // the check would sit on the avatar icon, muddy
+                    showCheckmark: false,
                     avatar: const Icon(Icons.smartphone_rounded, size: 18),
                     label: Text('tasmee.mic_phone'.tr()),
                     selected: !_useBluetooth,

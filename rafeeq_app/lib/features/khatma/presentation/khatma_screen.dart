@@ -329,7 +329,7 @@ class _CompletedTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        leading: const Icon(Icons.emoji_events_outlined, color: AppColors.gold),
+        leading: Icon(Icons.emoji_events_outlined, color: goldText(context)),
         title: Text(
           'khatma.completed_on'.tr(
             args: [

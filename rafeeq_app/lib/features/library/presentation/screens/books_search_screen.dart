@@ -401,6 +401,8 @@ class _SearchOptions extends StatelessWidget {
     Widget scopeChip(_Scope s, String key, IconData icon) => Padding(
           padding: const EdgeInsetsDirectional.only(end: 8),
           child: ChoiceChip(
+            // the check would sit on the avatar icon, muddy
+            showCheckmark: false,
             avatar: Icon(icon, size: 17),
             label: Text(key.tr()),
             selected: scope == s,
@@ -463,7 +465,7 @@ class _ResultsHeader extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.fromLTRB(2, 6, 2, 8),
         child: Row(children: [
-          Icon(icon, size: 18, color: AppColors.gold),
+          Icon(icon, size: 18, color: goldText(context)),
           const SizedBox(width: 6),
           Text(title,
               style: Theme.of(context)

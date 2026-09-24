@@ -273,7 +273,7 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
         children: [
-          Icon(icon, size: 19, color: AppColors.gold),
+          Icon(icon, size: 19, color: goldText(context)),
           const SizedBox(width: 8),
           Expanded(
             child: Text(

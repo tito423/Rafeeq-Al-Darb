@@ -222,7 +222,7 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
                 ].join(' · ')),
                 trailing: p.reciter.identifier ==
                         ref.read(onboardingAyahChoiceProvider)
-                    ? const Icon(Icons.check_rounded, color: AppColors.gold)
+                    ? Icon(Icons.check_rounded, color: goldText(context))
                     : null,
                 onTap: () => Navigator.of(ctx).pop(p.reciter.identifier),
               ),
@@ -394,7 +394,7 @@ class _SurahRecitationPackTileState
                   if (id == smallest) 'onboarding.recommended'.tr(),
                 ].join(' · ')),
                 trailing: id == ref.read(onboardingSurahChoiceProvider)
-                    ? const Icon(Icons.check_rounded, color: AppColors.gold)
+                    ? Icon(Icons.check_rounded, color: goldText(context))
                     : null,
                 onTap: () => Navigator.of(ctx).pop(id),
               ),

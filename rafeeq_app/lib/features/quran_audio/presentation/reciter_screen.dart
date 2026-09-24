@@ -424,7 +424,7 @@ class _SurahRow extends StatelessWidget {
                     border: Border.all(color: AppColors.gold.withValues(alpha: 0.45)),
                   ),
                   child: playing
-                      ? const Icon(Icons.graphic_eq_rounded, color: AppColors.gold, size: 20)
+                      ? Icon(Icons.graphic_eq_rounded, color: goldText(context), size: 20)
                       : Text(ltr(localizeDigits('$surah', uiLanguageCode)),
                           style: const TextStyle(
                               fontWeight: FontWeight.w700, fontSize: 13, color: AppColors.goldSoft)),

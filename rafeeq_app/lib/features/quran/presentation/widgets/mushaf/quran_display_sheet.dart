@@ -452,7 +452,7 @@ class _Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
     contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-    leading: Icon(icon, color: AppColors.gold),
+    leading: Icon(icon, color: goldText(context)),
     title: Text(title),
     // `chevron_right`, not `chevron_left`: the left one auto-mirrors in
     // RTL and ten of them pointed the wrong way once (trap #7).
@@ -476,7 +476,7 @@ class _SwitchTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SwitchListTile(
     contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-    secondary: Icon(icon, color: AppColors.gold),
+    secondary: Icon(icon, color: goldText(context)),
     title: Text(title),
     value: value,
     onChanged: onChanged,

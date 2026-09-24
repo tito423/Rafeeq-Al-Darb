@@ -364,7 +364,7 @@ class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.downloading_rounded, color: AppColors.gold, size: 20),
+                  Icon(Icons.downloading_rounded, color: goldText(context), size: 20),
                   const SizedBox(width: 8),
                   Text('downloads.active_now'.tr(),
                       style: const TextStyle(fontWeight: FontWeight.w800)),

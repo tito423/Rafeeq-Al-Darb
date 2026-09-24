@@ -71,7 +71,7 @@ class OfflinePackRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.gold, size: 26),
+          Icon(icon, color: goldText(context), size: 26),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -100,14 +100,14 @@ class OfflinePackRow extends StatelessWidget {
           SizedBox(
             width: trailingWidth,
             height: 40,
-            child: Center(child: _trailing()),
+            child: Center(child: _trailing(context)),
           ),
         ],
       ),
     );
   }
 
-  Widget _trailing() {
+  Widget _trailing(BuildContext context) {
     if (state.loading) {
       return const SizedBox.square(
         dimension: 22,
@@ -115,7 +115,7 @@ class OfflinePackRow extends StatelessWidget {
       );
     }
     if (state.done) {
-      return const Icon(Icons.check_circle_rounded, color: AppColors.gold);
+      return Icon(Icons.check_circle_rounded, color: goldText(context));
     }
     if (state.busy) {
       return Row(

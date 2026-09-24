@@ -103,6 +103,8 @@ class SettingsBody extends ConsumerWidget {
                   children: [
                     for (final v in ThemeVariant.values)
                       ChoiceChip(
+                        // the check would sit on the avatar icon, muddy
+                        showCheckmark: false,
                         avatar: Icon(
                           v.icon,
                           size: 18,

@@ -345,7 +345,7 @@ class _AuthorExpansionTile extends StatelessWidget {
       initiallyExpanded: initiallyExpanded,
       leading: CircleAvatar(
         backgroundColor: AppColors.gold.withValues(alpha: 0.15),
-        child: Icon(Icons.person_outline, color: AppColors.gold, size: 22),
+        child: Icon(Icons.person_outline, color: goldText(context), size: 22),
       ),
       title: Text(
         authorName,
@@ -503,7 +503,7 @@ class _CategoryExpansionTile extends StatelessWidget {
         controller: controller,
         onExpansionChanged: onExpansionChanged,
       initiallyExpanded: initiallyExpanded,
-      leading: Icon(category.icon, color: AppColors.gold),
+      leading: Icon(category.icon, color: goldText(context)),
       title: Text(
         category.labelKey.tr(),
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -607,7 +607,7 @@ class _MyLibraryView extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
         child: Row(
           children: [
-            Icon(Icons.article_outlined, size: 18, color: AppColors.gold),
+            Icon(Icons.article_outlined, size: 18, color: goldText(context)),
             const SizedBox(width: 10),
             Expanded(
               child: Column(

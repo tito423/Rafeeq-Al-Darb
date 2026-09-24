@@ -345,7 +345,7 @@ class _SharhSection extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.menu_book_rounded, color: AppColors.gold),
+                      Icon(Icons.menu_book_rounded, color: goldText(context)),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(

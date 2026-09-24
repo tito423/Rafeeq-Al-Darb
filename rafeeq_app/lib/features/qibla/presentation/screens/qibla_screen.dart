@@ -572,7 +572,7 @@ class _PrayerAdjustmentsLink extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.tune_rounded, color: AppColors.gold),
+        leading: Icon(Icons.tune_rounded, color: goldText(context)),
         title: Text('prayer.adjustments'.tr()),
         subtitle: Text('prayer.adjustments_hint'.tr(),
             style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
@@ -595,7 +595,7 @@ class _AdhanSettingsLink extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.campaign_outlined, color: AppColors.gold),
+        leading: Icon(Icons.campaign_outlined, color: goldText(context)),
         title: Text('prayer.adhan_settings'.tr()),
         subtitle: Text('qibla.adhan_settings_hint'.tr(),
             style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),

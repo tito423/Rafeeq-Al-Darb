@@ -382,7 +382,7 @@ class _HadithSectionHeader extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12, top: 2),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: AppColors.gold),
+          Icon(icon, size: 18, color: goldText(context)),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -408,7 +408,7 @@ class _HadithSectionHeader extends StatelessWidget {
             duration: const Duration(milliseconds: 180),
             // chevron_right, not chevron_left: the left one auto-mirrors in
             // RTL and would point the wrong way (trap #7).
-            child: const Icon(Icons.chevron_right, color: AppColors.gold),
+            child: Icon(Icons.chevron_right, color: goldText(context)),
           ),
         ],
       ),
@@ -539,7 +539,7 @@ class _CountChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: AppColors.gold),
+          Icon(icon, size: 14, color: goldText(context)),
           const SizedBox(width: 6),
           Text(
             text,

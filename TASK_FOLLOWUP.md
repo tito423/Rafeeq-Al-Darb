@@ -12,6 +12,18 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 ~03:50. ORDER A light crawl on build 13: 34/34 reached
+(ui_crawl.py paths fixed: Library sub-tab named per target; optional 3rd
+arg = only these targets). Every flag eyed. Real ones FIXED in code, NOT
+BUILT: 35 flat-gold ICONS on theme surfaces -> goldText (skipped: adhan
+screen, snackbar, player, reader - own dark grounds); hadith section
+icons; NonArabicReadingCard icon/labels/«Quran.com v4 API» badge; 5
+avatar ChoiceChips drew the check over the icon -> showCheckmark false.
+False flags: icon ring edges on More cards, the scrim behind sheets,
+disabled fasting time row (disabled = exempt), adhkar page dots (the
+«1 / 17» under them reads). NEXT: dark crawl (build 13), then RGB, then
+build 14 and re-scan light to confirm.
+
 SESSION 2026-09-25 ~03:27. ORDER B (manual location) DONE + SEEN on build
 13 = master e3ddb0d5, offline (airplane + location off): bundled list,
 Tanta pick -> times + name; Qibla 258 -> 138 (= independent great-circle
@@ -310,6 +322,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 03:50 - contrast light crawl complete + eyed; 35 gold icons, reading card, chip checkmarks fixed (unbuilt)
 - 2026-09-25 03:27 - build 13: manual location fully verified offline (times, name, qibla 138 = calc, method change, back to automatic)
 - 2026-09-25 03:20 - build 12: times follow the manual place (Tanta/Makkah checked by hand); FOUND qibla stuck on old place - fixed (changes notifier), building 13
 - 2026-09-25 03:10 - build 11: bundled list works offline; FOUND times cached by date only (place/method changes ignored until midnight) - fixed + test, building 12

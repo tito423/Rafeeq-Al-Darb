@@ -246,6 +246,8 @@ class _PermissionsIntroScreenState
                               children: [
                                 for (final v in ThemeVariant.values)
                                   ChoiceChip(
+                                    // the check would sit on the avatar icon, muddy
+                                    showCheckmark: false,
                                     avatar: Icon(v.icon, size: 18),
                                     label: Text(v.labelKey.tr()),
                                     selected:
@@ -266,7 +268,7 @@ class _PermissionsIntroScreenState
                         margin: const EdgeInsets.only(bottom: 10),
                         child: ListTile(
                           onTap: _asking == null ? () => _ask(which) : null,
-                          leading: Icon(icon, color: AppColors.gold),
+                          leading: Icon(icon, color: goldText(context)),
                           title: Text(
                             'permissions_intro.$key'.tr(),
                             style:

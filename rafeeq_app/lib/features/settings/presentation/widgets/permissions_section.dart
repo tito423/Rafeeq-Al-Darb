@@ -152,7 +152,7 @@ class _PermissionsSectionState extends State<PermissionsSection>
           if (_hasAutostartSettings) ...[
             const Divider(height: 1),
             ListTile(
-              leading: Icon(Icons.shield_outlined, color: AppColors.gold),
+              leading: Icon(Icons.shield_outlined, color: goldText(context)),
               title: Text('settings.perm_autostart'.tr()),
               subtitle: Text('settings.perm_autostart_desc'.tr()),
               trailing: const Icon(Icons.chevron_right),

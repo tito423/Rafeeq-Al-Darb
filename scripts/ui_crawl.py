@@ -1,6 +1,8 @@
 """Screenshot the app's screens one level deep, for the contrast scan.
 
-    py -3 scripts/ui_crawl.py OUT_DIR PREFIX
+    py -3 scripts/ui_crawl.py OUT_DIR PREFIX [name,name,...]
+
+The optional third argument runs only the named targets.
 
 Expects: emulator-5554, app open, English UI, portrait, on any tab.
 Each target is a path of labels tapped in order from a tab; after the
@@ -16,6 +18,7 @@ import tempfile
 import time
 
 OUT, PREFIX = sys.argv[1], sys.argv[2]
+ONLY = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else None
 TABS = {'home': 77, 'quran': 231, 'prayer': 386, 'adhkar': 540,
         'tasbeeh': 694, 'library': 848, 'more': 1003}
 
@@ -26,12 +29,13 @@ TARGETS = [
     ('adhkar_morning', 'adhkar', ['Morning Adhkar']),
     ('adhkar_ruqyah', 'adhkar', ['Ruqyah']),
     ('tasbeeh_long', 'tasbeeh', ['Longer remembrances']),
+    # The Library remembers its last sub-tab, so each target names its own.
     ('lib_hadith', 'library', ['Hadith']),
     ('lib_enc', 'library', ['Hadith Encyclopedia']),
-    ('lib_categories', 'library', ['Categories']),
-    ('lib_audio', 'library', ['Audio']),
-    ('lib_mine', 'library', ['My library']),
-    ('lib_author', 'library', ['Ibn Kathir']),
+    ('lib_categories', 'library', ['Available books', 'Categories']),
+    ('lib_audio', 'library', ['Available books', 'Audio']),
+    ('lib_mine', 'library', ['Available books', 'My library']),
+    ('lib_author', 'library', ['Available books', 'Authors', 'Ibn Kathir']),
     ('m_player', 'more', ["Qur'an & worship", 'Quran Recitation Player']),
     ('m_tajweed', 'more', ["Qur'an & worship", 'Learn Tajweed']),
     ('m_hajj', 'more', ["Qur'an & worship", 'Hajj and Umrah']),
@@ -123,6 +127,8 @@ def back_to_tabs():
 
 os.makedirs(OUT, exist_ok=True)
 for name, tab, path in TARGETS:
+    if ONLY and name not in ONLY:
+        continue
     adb('shell', 'input', 'tap', str(TABS[tab]), '2272')
     time.sleep(2.5)
     # the More groups remember being open; a second tap would close one

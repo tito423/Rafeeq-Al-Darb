@@ -506,7 +506,7 @@ class _FocusModeBar extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.logout_rounded, size: 20, color: AppColors.gold),
+                  Icon(Icons.logout_rounded, size: 20, color: goldText(context)),
                   const SizedBox(width: 10),
                   Flexible(
                     child: Text(

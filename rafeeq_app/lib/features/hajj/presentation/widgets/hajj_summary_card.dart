@@ -33,7 +33,7 @@ class HajjSummaryCard extends ConsumerWidget {
       ),
       child: ExpansionTile(
         shape: const Border(),
-        leading: const Icon(Icons.checklist_rtl_rounded, color: AppColors.gold),
+        leading: Icon(Icons.checklist_rtl_rounded, color: goldText(context)),
         title: Text(
           (track == HajjTrack.umrah
                   ? 'hajj.summary_umrah'

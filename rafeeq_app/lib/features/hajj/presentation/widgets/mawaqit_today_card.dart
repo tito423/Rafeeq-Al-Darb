@@ -85,7 +85,7 @@ class MawaqitTodayCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.place_outlined, color: AppColors.gold),
+                  Icon(Icons.place_outlined, color: goldText(context)),
                   const SizedBox(width: 6),
                   Text(
                     'hajj.mawaqit_today_title'.tr(),

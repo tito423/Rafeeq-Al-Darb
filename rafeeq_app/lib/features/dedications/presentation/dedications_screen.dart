@@ -79,7 +79,7 @@ class _DedicationCard extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.volunteer_activism, color: AppColors.gold),
+                Icon(Icons.volunteer_activism, color: goldText(context)),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(

@@ -15,6 +15,8 @@ class NonArabicReadingCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final gold = AppColors.gold;
+    // fills and borders keep flat gold; icons and words need [goldText]
+    final ink = goldText(context);
     final isEnabled = ref.watch(transliterationEnabledProvider);
 
     return Card(
@@ -44,7 +46,7 @@ class NonArabicReadingCard extends ConsumerWidget {
                   ),
                   child: Icon(
                     Icons.translate_rounded,
-                    color: gold,
+                    color: ink,
                     size: 24,
                   ),
                 ),
@@ -80,7 +82,7 @@ class NonArabicReadingCard extends ConsumerWidget {
               contentPadding: EdgeInsets.zero,
               secondary: Icon(
                 Icons.record_voice_over_outlined,
-                color: isEnabled ? gold : scheme.onSurfaceVariant,
+                color: isEnabled ? ink : scheme.onSurfaceVariant,
               ),
               title: Text(
                 'settings.show_transliteration'.tr(),
@@ -123,7 +125,7 @@ class NonArabicReadingCard extends ConsumerWidget {
                       Text(
                         'settings.live_preview'.tr(),
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: isEnabled ? gold : scheme.onSurfaceVariant,
+                          color: isEnabled ? ink : scheme.onSurfaceVariant,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -137,7 +139,7 @@ class NonArabicReadingCard extends ConsumerWidget {
                         child: Text(
                           'Quran.com v4 API',
                           style: theme.textTheme.labelSmall?.copyWith(
-                            color: gold,
+                            color: ink,
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
@@ -169,7 +171,7 @@ class NonArabicReadingCard extends ConsumerWidget {
                       textDirection: TextDirection.ltr,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontStyle: FontStyle.italic,
-                        color: gold,
+                        color: ink,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.3,
                       ),

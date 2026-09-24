@@ -126,7 +126,7 @@ class _TimeCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.nights_stay_rounded, color: AppColors.gold),
+                  Icon(Icons.nights_stay_rounded, color: goldText(context)),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text('fasting.time'.tr(),

@@ -141,7 +141,7 @@ class _NotHere extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.auto_stories_outlined, size: 56, color: AppColors.gold),
+            Icon(Icons.auto_stories_outlined, size: 56, color: goldText(context)),
             const SizedBox(height: 14),
             Text(
               trn('quran.sciences_pack_hint',
@@ -290,7 +290,7 @@ class _Section extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.gold, size: 20),
+              Icon(icon, color: goldText(context), size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(title,

@@ -52,7 +52,7 @@ class BookCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(book.category.icon, size: 16, color: AppColors.gold),
+                Icon(book.category.icon, size: 16, color: goldText(context)),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(properName(book.titleAr, book.titleEn),
