@@ -132,6 +132,13 @@ class LocationService {
         permission == LocationPermission.deniedForever) {
       return null;
     }
+    // Location switched off: do not ask for a fix. getCurrentPosition then
+    // raises Google Play services' «turn on device location» dialog; «No
+    // thanks» resumes the app, AppShell's resume check refreshes, and the
+    // dialog came straight back - six times in a row, no way out but to
+    // give in (emulator-5554, 2026-09-25). The card's button
+    // ([askToEnable]) opens the location settings when the reader asks.
+    if (!await Geolocator.isLocationServiceEnabled()) return null;
     final pos = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.low,

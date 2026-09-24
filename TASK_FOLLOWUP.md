@@ -226,6 +226,15 @@ ALL 8 VERIFIED on build 3.
   settings if the switch is off), used by Home and Qibla. 577 pass.
   NEXT: build 6; verify location switch OFF -> button opens location
   settings; Qibla button prompts on a fresh install.
+  FOUND on build 6 (serious, OLD - not from today): phone location switch
+  OFF -> Google Play «turn on device location» dialog; «No thanks» ->
+  resume -> refresh -> getCurrentPosition -> dialog again: 6 launches in
+  a row (logcat START LocationSettingsCheckerActivity), no way out.
+  FIXED: _fetchPosition returns null when the service is off (cached fix
+  used); only the card's button opens location settings. 577 pass.
+  NEXT: build 7 -> verify: switch off + fresh install = no dialog loop,
+  card button opens location settings, switch on + geo fix -> times;
+  Qibla button prompts on a fresh install.
   NOTE: after an emulator cold boot, accelerometer_rotation is 1 again -
   set it to 0 before user_rotation, or screenshots stay portrait.
 - OWNER 23:00: full matrix - every feature x 4 themes x 7 languages x
@@ -233,6 +242,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 00:25 - Location switch off: Google dialog re-raised on every resume (endless) - service no longer requests a fix when location is off; building 7
 - 2026-09-25 00:15 - Build 5 verified (one location ask, quote arrows, pt explanation, adhkar landscape); enable-location buttons now handle a switched-off location and Qibla asks again (askToEnable)
 - 2026-09-24 23:59 - Matrix done (7 languages x 3 themes x 2 orientations): hadith explanation was forced RTL in LTR languages - fixed; 577 pass; building 5
 - 2026-09-24 23:34 - Matrix en+ar read: quote arrows were swapped, adhkar grid 2 columns in landscape - both fixed (unbuilt)

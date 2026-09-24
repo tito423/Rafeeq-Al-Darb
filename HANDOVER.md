@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 00:15 — IN PROGRESS — resume here**
+**2026-09-25 00:25 — IN PROGRESS — resume here**
 
-Build 5 verified (one location ask, quote arrows, pt explanation, adhkar landscape); enable-location buttons now handle a switched-off location and Qibla asks again (askToEnable)
+Location switch off: Google dialog re-raised on every resume (endless) - service no longer requests a fix when location is off; building 7
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
