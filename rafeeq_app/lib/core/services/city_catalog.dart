@@ -59,7 +59,7 @@ class CityCatalog {
     final keys = await _keys();
     // gzip without Content-Encoding (trap #6): decoded here, and the index
     // is built off the UI thread.
-    await Isolate.run(() => prepareCityFiles(bytes, tsv.path, keys.path));
+    await _prepareOffThread(bytes, tsv.path, keys.path);
     onProgress?.call(1);
   }
 
@@ -76,7 +76,7 @@ class CityCatalog {
     if (q.length < 2 || !await isInstalled()) return const [];
     final tsv = (await _tsv()).path;
     final keys = (await _keys()).path;
-    return Isolate.run(() => searchCityFiles(tsv, keys, q, limit));
+    return _searchOffThread(tsv, keys, q, limit);
   }
 
   /// A place found by name through the phone's geocoder - any village or
@@ -117,6 +117,18 @@ class CityCatalog {
     }
   }
 }
+
+// Top level ON PURPOSE. Isolate.run sends its closure's whole scope, and
+// inside [CityCatalog.download] that scope held the progress callback -
+// which holds the screen's State, which cannot cross to an isolate. The
+// download reached 46 % and then failed on emulator-5554 (2026-09-25). Here
+// the scope is only strings and bytes.
+Future<void> _prepareOffThread(List<int> gz, String tsv, String key) =>
+    Isolate.run(() => prepareCityFiles(gz, tsv, key));
+
+Future<List<CityHit>> _searchOffThread(
+        String tsv, String key, String q, int limit) =>
+    Isolate.run(() => searchCityFiles(tsv, key, q, limit));
 
 class CityHit {
   final ManualPlace place;

@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 01:52 — IN PROGRESS — resume here**
+**2026-09-25 02:09 — IN PROGRESS — resume here**
 
-Manual prayer location UI (Adhan settings > Prayer location): automatic / offline world list search / online geocoder / coordinates; 20 keys x 7 locales; GeoNames credited on Sources; 582 pass; building 9
+HANDOVER (quota): city-list download failed at 46% on build 9 (Isolate.run captured State) - moved to top-level functions, unbuilt; contrast fixes unseen on device; NEXT_PROMPT.md rewritten
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
