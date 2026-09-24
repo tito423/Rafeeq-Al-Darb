@@ -40,6 +40,20 @@ const REVIEW_CORS: Record<string, string> = {
 	'Access-Control-Max-Age': '86400',
 };
 
+// ── Fences on /sync (audit 2026-09-24, B1) ─────────────────────────────
+// One signed-in account could write unbounded rows of unbounded size. The
+// app syncs exactly these keys (SyncService.syncedStateKeys /
+// syncedCounterKeys); anything else is IGNORED, not refused, because older
+// app versions sent every preference and a refusal would leave their queue
+// retrying the same request for ever.
+const SYNC_STATE_KEYS = new Set(['khatma_list_v1', 'ayah_notes_v1', 'quran_last_page', 'tasbeeh_custom_target']);
+const SYNC_COUNTER_KEYS = new Set(['tasbeeh_total', 'azkar_total']);
+const MAX_SYNC_BODY = 1_048_576; // bytes per request
+const MAX_STATE_VALUE = 524_288; // bytes per stored value
+const MAX_UPDATES = 100;
+const MAX_COUNTERS = 1000;
+const MAX_INCREMENT = 10_000_000;
+
 const MAX_NAME = 60;
 const MAX_ID = 120;
 const MAX_NOTE = 4000;
@@ -56,12 +70,15 @@ function clean(v: unknown, max: number): string {
 	return typeof v === 'string' ? v.trim().slice(0, max) : '';
 }
 
+let reviewTableReady = false;
+
 async function handleReview(request: Request, url: URL, env: Env): Promise<Response> {
 	if (request.method === 'OPTIONS') {
 		return new Response(null, { status: 204, headers: REVIEW_CORS });
 	}
 
-	await env.DB.prepare(
+	// Once per isolate, not once per request (audit B5).
+	if (!reviewTableReady) await env.DB.prepare(
 		`CREATE TABLE IF NOT EXISTS review_notes (
 			reviewer TEXT NOT NULL,
 			item_id TEXT NOT NULL,
@@ -73,6 +90,7 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 			PRIMARY KEY (reviewer, item_id)
 		)`
 	).run();
+	reviewTableReady = true;
 
 	// POST /review - one reviewer's notes, upserted by (reviewer, item).
 	if (request.method === 'POST') {
@@ -193,13 +211,19 @@ export default {
 		}
 
 		if (request.method === 'POST' && url.pathname === '/sync') {
+			const declared = Number(request.headers.get('content-length') ?? '0');
+			if (declared > MAX_SYNC_BODY) return new Response('Payload Too Large', { status: 413 });
 			try {
-				const body: any = await request.json();
+				const raw = await request.text();
+				if (raw.length > MAX_SYNC_BODY) return new Response('Payload Too Large', { status: 413 });
+				const body: any = JSON.parse(raw);
 				
 				const statements: D1PreparedStatement[] = [];
 
 				if (Array.isArray(body.updates)) {
-					for (const update of body.updates) {
+					for (const update of body.updates.slice(0, MAX_UPDATES)) {
+						if (!SYNC_STATE_KEYS.has(update?.key)) continue;
+						if (typeof update.value !== 'string' || update.value.length > MAX_STATE_VALUE) continue;
 						if (update.key && update.value && update.updated_at !== undefined) {
 							// For state, we upsert, but only if the incoming updated_at is greater
 							// However, SQLite UPSERT (ON CONFLICT) is supported.
@@ -219,7 +243,11 @@ export default {
 				}
 
 				if (Array.isArray(body.counters)) {
-					for (const counter of body.counters) {
+					for (const counter of body.counters.slice(0, MAX_COUNTERS)) {
+						if (!SYNC_COUNTER_KEYS.has(counter?.key)) continue;
+						if (typeof counter.event_id !== 'string' || counter.event_id.length > 64) continue;
+						const inc = counter.increment_value;
+						if (!Number.isInteger(inc) || Math.abs(inc) > MAX_INCREMENT) continue;
 						if (counter.key && counter.event_id && counter.increment_value !== undefined) {
 							// Insert ignore using ON CONFLICT DO NOTHING
 							statements.push(
