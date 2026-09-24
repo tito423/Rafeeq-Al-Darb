@@ -6,20 +6,26 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-DONE 2026-09-24 20:55: v3.62.0 RELEASED after the whole-app conflict audit
-(tag v3.62.0 = 1f758e40 = HEAD at publish; asset 265,296,679 B, sha256
-9eacb8b4…2d95f1db, downloaded back byte-identical). v3.61.0 + tag deleted;
-v3.51.0 and content-* kept.
+Owner 21:00 «صلح صلح وشيك ايه اللي ناقص في الاوديت الكامل». v3.62.0 is out.
+DONE in code (analyze clean, 573 pass, NOT on device yet):
+- slow-line probe keeps timed-out hosts (shown «بطيء على هذا الاتصال»),
+  so the smallest reciter is recommended again; key onboarding.response_slow
+  in 7 locales.
+- refreshPlaceName uses the SAVED coordinates (LocationService.savedIn) -
+  no 15 s GPS wait for the city name after a language switch.
 
 ## Next step (exact)
-Nothing in flight. Wait for the owner's next order. Open, for his decision:
-- Onboarding on a slow line recommends the smallest reciter among hosts
-  that ANSWERED - on UMTS only R2-mirrored ones answer, so it offered
-  Alafasy 1.7 GB instead of Banna 383.6 MB. As designed (PLAN), worth his call.
-- Phone-TTS reader pausing for the adhan is unit-tested only (emulator has
-  no Arabic TTS engine) - check on his phone with «صوت الهاتف».
-- Location name stays in the old language until the next refresh after a
-  language switch (seen: English in Arabic UI, fixed itself on resume).
+AUDIT PART 2 - gaps not covered by part 1, each on the emulator:
+1. [ ] splash video preview (settings) vs a playing recitation
+2. [ ] offline: airplane mode - home/quran/prayer/adhkar/library open;
+       a download cut mid-way (tasmee dio, voice WorkManager) + recovery
+3. [ ] reboot: adhan alarms re-armed after boot (dumpsys alarm)
+4. [ ] notification taps route to the right screen (trap 31)
+5. [ ] permissions denied: mic (tasmee), location (home/qibla), notifs
+6. [ ] rotation/landscape + largest font scale: overflow on main screens
+7. [ ] Urdu (RTL, Latin digits) quick pass
+8. [ ] ruqyah / tajweed / device-files audio vs book reader & adhan
+Then ONE build, verify both fixes above + anything fixed here, release.
 
 ## FULL AUDIT MATRIX (owner 19:55: «full audit in all app aspects»)
 Sound sources (grep, 20:00): SHARED just_audio player (ayah/queue/
@@ -99,6 +105,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 21:08 - Fix: slow-line probe keeps timed-out hosts (right recommendation); city name re-read from saved coordinates on language switch; audit part 2 list
 - 2026-09-24 20:55 - v3.62.0 released and verified (tag == HEAD, asset re-downloaded byte-identical); v3.61.0 deleted
 - 2026-09-24 20:53 - v3.62.0 ready: audit complete on device, notes + HANDOVER updated; publishing
 - 2026-09-24 20:46 - Verified on build 2: adhan discards a tasmee recording; adhan over focus mode and back

@@ -19,12 +19,14 @@ import '../../data/offline_pack_sizes.dart';
 import 'offline_pack_row.dart';
 
 /// How fast one reciter's host answered a 1 KB range request for al-Fatiha
-/// 1:1, measured when the page opens. Null: it did not answer.
+/// 1:1, measured when the page opens. Null [ms] and [slow]: it ran past the
+/// timeout - a slow line, not a broken host.
 class _Probe {
   final Reciter reciter;
   final int bytes;
   final int? ms;
-  const _Probe(this.reciter, this.bytes, this.ms);
+  final bool slow;
+  const _Probe(this.reciter, this.bytes, this.ms, {this.slow = false});
 }
 
 /// «تلاوة آية بآية»: pick a reciter, see his full measured size, download
@@ -96,6 +98,16 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
                   (res.data?.isNotEmpty ?? false);
               return _Probe(r, sizes.ayahReciters[r.identifier]!,
                   ok ? sw.elapsedMilliseconds : null);
+            } on DioException catch (e) {
+              // A timeout is the LINE being slow, not the host being gone.
+              // Dropping those made a UMTS emulator (2026-09-24) list only
+              // the R2-mirrored reciters and recommend Alafasy at 1.7 GB
+              // over Banna at 383.6 MB. A host that answered with an error
+              // or refused the connection is still left out.
+              final slow = e.type == DioExceptionType.connectionTimeout ||
+                  e.type == DioExceptionType.receiveTimeout;
+              return _Probe(r, sizes.ayahReciters[r.identifier]!, null,
+                  slow: slow);
             } catch (_) {
               return _Probe(r, sizes.ayahReciters[r.identifier]!, null);
             }
@@ -103,7 +115,7 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
     ]);
     final answered = [
       for (final p in probes)
-        if (p.ms != null) p,
+        if (p.ms != null || p.slow) p,
     ]..sort((a, b) => a.bytes.compareTo(b.bytes));
     if (!mounted) return;
     setState(() => _probes = answered);
@@ -177,7 +189,9 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
 
   Future<void> _pick(
       BuildContext context, List<_Probe> probes, String locale) async {
-    final fastest = probes.reduce((a, b) => a.ms! <= b.ms! ? a : b);
+    final timed = probes.where((p) => p.ms != null);
+    final fastest =
+        timed.isEmpty ? null : timed.reduce((a, b) => a.ms! <= b.ms! ? a : b);
     final picked = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
@@ -199,7 +213,9 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
                 title: Text(p.reciter.displayName(locale)),
                 subtitle: Text([
                   formatBytes(p.bytes),
-                  trn('onboarding.response_ms', args: ['${p.ms}']),
+                  p.ms == null
+                      ? 'onboarding.response_slow'.tr()
+                      : trn('onboarding.response_ms', args: ['${p.ms}']),
                   if (identical(p, probes.first))
                     'onboarding.recommended'.tr(),
                   if (identical(p, fastest)) 'onboarding.fastest'.tr(),

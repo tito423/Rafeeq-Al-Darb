@@ -200,6 +200,11 @@ class LocationService {
     }
   }
 
+  /// The saved fix with its names in [localeCode] - re-read from the
+  /// Geocoder for the same point when they were saved in another language.
+  /// No GPS: a language switch must not wait on a fresh fix for a name.
+  Future<AppPosition?> savedIn(String localeCode) => _readCached(localeCode);
+
   Future<AppPosition?> _readCached(String localeCode) async {
     final prefs = await SharedPreferences.getInstance();
     final lat = prefs.getDouble(_cacheLatKey);

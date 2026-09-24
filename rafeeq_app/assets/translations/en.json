@@ -130,6 +130,7 @@
     "recommended": "Recommended — smallest",
     "fastest": "Fastest response",
     "response_ms": "Answered in {} ms",
+    "response_slow": "Slow on this connection",
     "pick_reciter": "Choose the reciter",
     "probing": "Measuring server speed…",
     "no_host": "No server answered right now. Try again later.",

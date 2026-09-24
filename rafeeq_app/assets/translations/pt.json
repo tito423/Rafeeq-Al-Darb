@@ -130,6 +130,7 @@
     "recommended": "Recomendado — o menor",
     "fastest": "Resposta mais rápida",
     "response_ms": "Respondeu em {} ms",
+    "response_slow": "Lento nesta conexão",
     "pick_reciter": "Escolha o recitador",
     "probing": "Medindo a velocidade dos servidores…",
     "no_host": "Nenhum servidor respondeu agora. Tente mais tarde.",

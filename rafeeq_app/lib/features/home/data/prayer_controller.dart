@@ -162,9 +162,12 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
   Future<void> refreshPlaceName() async {
     final current = state.valueOrNull;
     if (current == null || current.times.isEmpty) return;
-    final pos = await LocationService.instance.getCurrentPosition(
-      localeCode: ref.read(appLocaleProvider),
-    );
+    final locale = ref.read(appLocaleProvider);
+    // The saved coordinates first (Geocoder only): going through
+    // getCurrentPosition waited up to 15 s for a GPS fix, and the Arabic
+    // Home card read «Dubai, United Arab Emirates» meanwhile (2026-09-24).
+    final pos = await LocationService.instance.savedIn(locale) ??
+        await LocationService.instance.getCurrentPosition(localeCode: locale);
     final city = pos?.locality ?? '';
     final country = pos?.country ?? '';
     if (city.isEmpty && country.isEmpty) return;
