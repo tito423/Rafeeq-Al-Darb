@@ -2495,9 +2495,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 14:38 — IN PROGRESS — resume here**
+**2026-09-24 14:46 — IN PROGRESS — resume here**
 
-Stage 1 item 2: ContentPackTile fixed-width trailing slot + tabular digits + cancel (unverified)
+Stage 1 item 1: title/blurb in 7 locales; C1 backgrounds seen on emulator (adhkar + new-Muslim render)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

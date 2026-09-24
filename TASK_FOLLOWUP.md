@@ -9,25 +9,26 @@ account, the other one, or another agent — reads this and continues from
 **PLAN.md Stage 1 — «التحميلات المبدئية»** (owner's order 2026-09-24).
 
 ## Next step (exact)
-1. A `build_github_release.bat` was started at ~14:40 (log:
-   `%TEMP%\claude\build_log.txt`); it may or may not contain the
-   ContentPackTile edit below (edited while it compiled). When it finishes,
-   start emulator-5554, install, and look at the C1 backgrounds (adhkar,
-   new-Muslim).
-2. Stage 1 item 2 (jumping علوم القرآن row): code changed, NOT verified —
-   `content_pack_tile.dart` now has a fixed 104-px trailing slot, tabular
-   figures, and a cancel button. Verify with screenrecord during a real
-   download (fresh install), per PLAN.md.
-3. Then Stage 1 item 1 (title + blurb) and item 3 rows.
+1. Stage 1 item 3 rows. Sizes first: write `scripts/measure_recitation_sizes.py`
+   — everyayah folder listings carry exact bytes in `<td data-order="N">`
+   per file (checked 14:50 on Ibrahim_Akhdar_32kbps); sum the 6236
+   `SSSAAA.mp3` per folder for every edition in
+   `recitation_source.dart`; R2 folders via the bucket listing. Output a
+   JSON the app bundles — sizes are measured, never typed.
+2. Ask the owner about his note on «صوت قارئ الكتب المحسّن» (PLAN item 3).
+3. Items 1+2 are in code (analyze 0, 568 tests pass) but NOT seen on device:
+   verify both on a FRESH install (adb uninstall) with screenrecord during
+   the علوم القرآن download.
 
 ## Half-done / unverified (redo, do not trust)
-- Stage 1 item 2: ContentPackTile fixed-width fix — analyze not run, not seen.
-- C1 backgrounds: committed, not seen on a device.
+- Stage 1 items 1+2: title/blurb (7 locales) + ContentPackTile fixed-width
+  slot/cancel — analyze+test pass, NOT seen on device.
 - D1 sign-out scope: committed, not device-tested (needs a Google sign-in).
 - B1 /sync caps: deployed (Worker 48b3fa3a), caps not exercised live (needs a
   real Google ID token).
 
 ## Log
+- 2026-09-24 14:46 - Stage 1 item 1: title/blurb in 7 locales; C1 backgrounds seen on emulator (adhkar + new-Muslim render)
 - 2026-09-24 14:38 - Stage 1 item 2: ContentPackTile fixed-width trailing slot + tabular digits + cancel (unverified)
 - 2026-09-24 14:09 - checkpoint.ps1 regex rebuilt with chr(92) (trap 11); log line verified
 - 2026-09-24 ~15:30 — Working rules settled (d56ee71f); TRAPS.md split out;
