@@ -2493,9 +2493,17 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 03:20 (Dubai) — COMPLETE**
+**2026-09-24 ~03:50 UTC (07:50 Dubai) — IN PROGRESS: «خمس حلول احتياطية لكل حاجة»**
 
-COMPLETE — v3.59.0 published and verified (see the RELEASED row at the top). Next: the owner installs 3.59.0 on his phone; word search / library search / enhanced voice download still untested on a device. `_mirror_*.txt` and `_r2_usage_report.txt` in the repo root are untracked scratch logs from the R2 mirror session — deliberately not committed.
+Owner's standing rule (memory: five-backups-never-skip): never skip an ayah, a word or a surah; five verified sources for every fetched thing; the app must never stop; another host besides R2 is acceptable.
+
+STAGE 1 DONE, seen on emulator-5554 (commits b8168c7e → f783e17c, NOT released — v3.59.0 is the latest release):
+- Recitation never skips: continuous holds on the verse (`ContinuousRecitation.waiting`, `lib/core/services/continuous_recovery.dart`, a part file — the service is at its 810-line ceiling), surah player holds (`waitingIndex`), hifz loop retries the same verse. Periodic 20 s retry + connectivity_plus; reader's own reciter first on each retry.
+- Backup voice only when a server ANSWERED (404…) — `core/utils/http_status_probe.dart`; offline → wait. Surah backup = local copy of any recitation, else al-Basit murattal R2 → mp3quran (`surah_fallback.dart`). Ayah backup = al-Minshawi murattal (R2).
+- just_audio 0.10 reports failures on `errorStream` (not playbackEventStream) — both players listen there.
+- Seen: continuous cut at 2:146 → held 2:148, only «بانتظار مصدر…» shown, resumed at 2:148 within 5 s of network; surah player offline → wait → PLAYING same reciter; Al-Burimi An-Nas 404 → al-Basit with notice; hifz ×3 offline → waits, resumes 3 plays of 1:1.
+
+NEXT (in the owner's order): STAGE 2 inventory every network-fetched item + current source count (measured); STAGE 3 reach 5 verified sources each (may need a second host — propose, owner creates account); then full audit + unit tests + full report; then evaluate the ChatGPT «R2 behind Cloudflare CDN custom domain» proposal (the owner pasted it; implement if sound).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
