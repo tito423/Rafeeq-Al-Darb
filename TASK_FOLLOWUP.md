@@ -6,69 +6,41 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-Post-3.61 fixes, all in code AND verified on emulator-5554 (build of 17:05),
-NOT released yet — ask the owner whether to release 3.62.0.
+FULL-APP CONFLICT AUDIT before releasing 3.62.0 (owner: «مش تنشر الا لما
+تتاكد مليون في المية»). Session stopped by the owner at 18:58 (quota).
+pubspec is ALREADY 3.62.0+64; NOT released; v3.61.0 is still the release.
 
 ## Next step (exact)
-1. Ask the owner: release 3.62.0 now? (bump pubspec + about_screen, build,
-   delete v3.61.0 + tag, keep v3.51.0 + content-*, notes in Arabic, verify
-   tag SHA == HEAD, `git status --short` clean of source first — trap 55).
-2. Then PLAN 4a (owner asked to be reminded): measure whisper-base-ar-quran
-   (R2, 160.6 MB) vs the tiny model — word accuracy on real recitations +
-   latency — integrate only if it wins by numbers.
+1. Download buttons show real state app-wide (owner 18:55): «جاري التحميل»
+   while downloading (also after «متابعة في الخلفية»), «تم التحميل» when
+   done. Known offenders: tasmee panel «نزّل النموذج» (tasmee.download,
+   dio download held in the panel's state - lost when the panel is left);
+   the enhanced-voice offer «تنزيل الصوت» (library.open_voice_download,
+   open_voice_offer.dart) after «متابعة في الخلفية». Check every button in
+   the list of keys: common.download, library.download, library.text_download,
+   downloads.download, quran_audio.download_all, ayah_dl.download_*.
+2. ONE build (emulator OFF, trap 24; no flutter test during it, trap 54),
+   then verify on emulator the fixes NOT yet seen on device:
+   - «استمع» disabled while tasmee records; changing ayah mid-recording
+     cancels it (tasmee_panel.dart tasmeeRecordingProvider).
+   - deleting a reciter / surah recitation that is playing stops it
+     (ayah_recitation_library.deleteReciter, quran_audio_library
+     _stopIfPlaying) - download Fatiha for one reciter, play, delete.
+   - the download-state buttons of step 1.
+   The emulator can now use the RTX 3050 (owner enabled it; restart the
+   emulator to pick it up). TELL THE OWNER when done so he can put the
+   laptop back from Turbo.
+3. Only then: release 3.62.0 (notes in dist/release_notes_v3.62.0.md - add
+   the tasmee/delete/download-state items), delete v3.61.0 + tag, keep
+   v3.51.0 + content-*, git status clean of source (trap 55), tag == HEAD.
 
-Done since v3.61.0 (each verified):
-- Hifz scroll stall: page built once (SingleChildScrollView). Root cause
-  from the owner's video (7 same-direction stalls while scrolling up, each
-  followed by a catch-up jump). Emulator does not stall at all, so the
-  final proof is the owner's phone.
-- Umrah/Hajj summary cards: seen on emulator; 2 tests prove every piece
-  verbatim from the book; ayah 2:198-199 from the mushaf.
-- Location stuck after first-run permission: reproduced, fixed, re-run of
-  the same fresh-install path shows Dubai + times at once.
-- Prayer methods: 2400 times vs AlAdhan live, worst 2 min; Dubai added.
-
-- NEW (17:25): continuous recitation + auto-scroll in the reader must not
-  fight. Owner lets me choose the best UX. Plan (verify code first): while
-  continuous recitation plays, auto-scroll yields - the page FOLLOWS the
-  highlighted ayah; when recitation stops, auto-scroll resumes if it was on.
-  After the tiny-vs-base ASR measurement (running, scripts/asr_probe/
-  tiny_vs_base.txt); same 3.62.0 release.
-
-- CONFLICT FOUND on device (18:00, v3.62 build): auto-scroll + page-turn.
-  (1) a page that fits the screen was turned instantly (1->12 in seconds);
-  (2) the burst left PageView on p13 while _current said 15 -> recitation
-  at 2:94-100 never turned the page, no highlight (media_session PLAYING
-  2:98/2:100 while screen showed 2:84-88). Fix: dwell a screen's worth on
-  pages that fit; _current only from onPageChanged. 570 tests pass.
-  Rebuilding to verify the SAME scenario, then release 3.62.0.
-
-- CONFLICT AUDIT (owner: no release until the whole app is checked). Device
-  results on the 3.62.0 build (18:10-18:40), each read from dumpsys:
-  * auto-scroll alone on p.1 (fits screen): 1 held ~20 s, 2 ~25 s, then 3
-    (was 1->12 in seconds) - FIXED, verified.
-  * auto-scroll + continuous recitation: page 4 stays, highlight walks
-    2:17->2:20 with the reciter - FIXED, verified.
-  * adhan preview during recitation: recitation PAUSED during adhan, back to
-    PLAYING at the same ayah (2:29) after Stop - OK, no change needed.
-  * book reader (enhanced voice) started during recitation: recitation
-    PLAYING -> NONE, only the voice's MediaPlayer sounds - FIXED, verified.
-  * reverse (recitation starting over the reader): unreachable - every way
-    to start one leaves the reader (dispose stops it); MEDIA_PLAY did
-    nothing (nothing loaded). The isPlayingStream watch is a safeguard.
-  * emulator has NO Arabic TTS engine: phone-voice reading shows the
-    no-engine snackbar and never calls speak() - correct.
-  Tools: scripts/ui_find.py (tap by label; refuses stale dumps).
-  NEXT in the audit: tasmee recording vs playing recitation; downloads vs
-  playback (deleting a reciter while it plays); notifications count;
-  focus mode vs adhan; location (qibla + prayer card at once).
-
-- NEW (18:55): EVERY download button must show its real state app-wide:
-  «جاري التحميل» while downloading (incl. after «متابعة في الخلفية»), «تم
-  التحميل» when done. Owner's case: the model/voice download sent to the
-  background left the button reading «حمّل النموذج». Audit every download
-  button (OpenVoice offer/library voice, tasmee model, Downloads screen,
-  mushaf, sciences, recitations, onboarding). Same release.
+Verified on device this session (3.62.0 builds): auto-scroll no longer
+cascades (p1 ~20 s, p2 ~25 s); recitation + auto-scroll in sync (highlight
+2:17->2:20 on p4); adhan pauses recitation and it resumes at the same ayah;
+book reader stops a playing recitation; tasmee start stops a playing ayah;
+tasmee + «استمع» ran at once (FIXED in code, not yet seen). Location fix,
+Umrah/Hajj summary, hifz scroll-stall fix, prayer methods (2400 vs AlAdhan,
+worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
 
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
@@ -112,6 +84,7 @@ Done since v3.61.0 (each verified):
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 18:50 - Session stopped by owner: TASK_FOLLOWUP next steps exact (download-state buttons, one build, verify, then release 3.62.0)
 - 2026-09-24 18:49 - Queued: download buttons show downloading/done state app-wide
 - 2026-09-24 18:49 - Conflict: deleting the recitation/surah being played now stops it first; audit notes
 - 2026-09-24 18:45 - Conflict: tasmee recording vs listen (both ran at once, verified on device) - listen disabled while recording; ayah change mid-recording cancels it
