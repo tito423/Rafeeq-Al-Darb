@@ -102,12 +102,23 @@ def shot(path):
         f.write(adb('exec-out', 'screencap', '-p').stdout)
 
 
+def in_app():
+    top = adb('shell', 'dumpsys', 'activity', 'activities').stdout.decode(
+        'utf-8', 'replace')
+    line = next((l for l in top.splitlines() if 'topResumedActivity' in l), '')
+    return 'com.tito.rafeeq_aldarb/.MainActivity' in line
+
+
 def back_to_tabs():
-    for _ in range(4):
-        if any(t.startswith('Home\nTab 1') for t, _, _ in labels()):
-            return
-        adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
-        time.sleep(1.5)
+    # One Back closes the pushed screen. Reading the tree to decide is not
+    # safe: on Home the ticking clock makes the dump fail, and an earlier
+    # version pressed Back until it left the app.
+    adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+    time.sleep(1.5)
+    if not in_app():
+        adb('shell', 'monkey', '-p', 'com.tito.rafeeq_aldarb', '-c',
+            'android.intent.category.LAUNCHER', '1')
+        time.sleep(8)
 
 
 os.makedirs(OUT, exist_ok=True)

@@ -45,6 +45,7 @@ class ContentMirrors {
       'tts/open_ar_v1/',
       'ruqyah/',
       'images/backgrounds/',
+      'geo/',
     ],
     'content-mushaf': ['mushaf/madinah_qc/'],
     'content-surah': [
