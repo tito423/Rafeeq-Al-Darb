@@ -141,10 +141,20 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   that is only the voice preview), HOME at once -> BAL_BLOCK in logcat,
   launcher on top, alarm player started; opening the app -> AdhanActivity
   on top with Stop; Stop -> player stopped, back to MainActivity.
-- [ ] 2 one notification ask · [ ] 3 WM airplane · [ ] 4 offline text
-- [ ] 5 reminder tap · [ ] 6 splash preview · [ ] 7 umts onboarding · [ ] 8 city on locale
+- [x] 2 one notification ask: VERIFIED 22:30 (pm clear) - tapping the
+  Notifications row: ONE system dialog, denied -> flags USER_SET (not
+  FIXED). «Allow them» chain: location, notifications (once), audio,
+  battery - one notification dialog.
+- [x] 7 umts onboarding: VERIFIED 22:33 - ayah row recommends al-Banna
+  383.6 MB. NEW FINDING: «Complete recitation» row said «No server
+  answered» on umts (Mp3QuranApi.reciters, 160 KB catalogue, failed on the
+  first try while the page's other requests ran); retry tap loaded it in
+  ~37 s (Abdulbasit). TO FIX: auto-retry in _SurahRecitationPackTileState._load.
+- [ ] 3 WM airplane · [ ] 4 offline text
+- [ ] 5 reminder tap · [ ] 6 splash preview · [ ] 8 city on locale
 
 ## Log
+- 2026-09-24 22:32 - Verified items 2 (one notification ask) and 7 (umts recommends Banna); found complete-recitation row fails first try on umts
 - 2026-09-24 22:26 - Build 3 signed (Kotlin compiled); item 1 adhan-without-notifications Stop verified on emulator
 - 2026-09-24 22:27 - Build 3 signed OK (Kotlin compiled); item 1 (adhan with notifications off shows Stop on app open) VERIFIED on emulator
 - 2026-09-24 22:16 - Resumed session: emulator off, release build of the 8 unbuilt fixes running

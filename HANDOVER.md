@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 22:26 — IN PROGRESS — resume here**
+**2026-09-24 22:32 — IN PROGRESS — resume here**
 
-Build 3 signed (Kotlin compiled); item 1 adhan-without-notifications Stop verified on emulator
+Verified items 2 (one notification ask) and 7 (umts recommends Banna); found complete-recitation row fails first try on umts
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
