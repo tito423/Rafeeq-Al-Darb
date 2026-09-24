@@ -187,11 +187,24 @@ ALL 8 VERIFIED on build 3.
 - OPEN: city line - first ar->ur switch still Arabic at 4 s; two later
   switches (ar and ur) updated in <2 s. Cause not established (release
   build has no geocoder log). Re-check on build 4 with a fresh pm clear.
+- BUILD 4 (23:05) verified: complete-recitation row on umts + pm clear
+  filled by itself in ~90 s (Abdulbasit 449 MB), never «no server».
+- FOUND on build 4 (fresh install, «Later» on the permissions page):
+  Home asked location, notifications, audio, then LOCATION AGAIN -> two
+  refusals = USER_FIXED. Second ask was LocationService._fetchPosition
+  racing requestStartupGrants. FIXED: the service never prompts (startup
+  ask, Home button, permission rows do; resume re-fetch covers a grant).
+  577 pass, needs build 5. Settings-path grant + resume -> times shown
+  (seen). Granting on the onboarding page -> times shown (seen).
+  (A pm grant while the app stayed foreground left the card «denied» and
+  its button logged «No requestable permission» - adb-only, not a user
+  path; not changed.)
 - OWNER 23:00: full matrix - every feature x 4 themes x 7 languages x
   portrait/landscape. Plan: build 4, then scripted screenshot sweep,
   reviewed by eye.
 
 ## Log
+- 2026-09-24 23:21 - Build 4: recitation row retry verified; location was asked twice on first run (service raced the startup ask) - service no longer prompts; matrix sweep script
 - 2026-09-24 23:03 - Urdu pass: adhkar cards kept the old language after a switch (const tab) - now depend on locale; owner asked for full theme x language x orientation matrix
 - 2026-09-24 22:56 - Landscape audit: tasbeeh counter shrank to a dot - side-by-side layout when wide and short (unbuilt)
 - 2026-09-24 22:52 - All 8 audit-2 fixes verified on build 3 (item 8 city on locale switch); complete-recitation row retries the catalogue 3 times (577 pass, unbuilt)

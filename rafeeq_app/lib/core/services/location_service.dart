@@ -117,19 +117,17 @@ class LocationService {
   }
 
   Future<AppPosition?> _fetchPosition(String localeCode) async {
-    var permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      // NOT BEFORE THE FIRST-RUN PAGE HAS EXPLAINED IT.
-      //
-      // «اذن الموقع بيظهر قبل صفحة الاذونات» - this service warms up while
-      // the splash is still on screen, and its own prompt beat the page
-      // whose whole job is to say why any of them is being asked for.
-      // Until onboarding is done the app works from the cached fix, which
-      // is what it does for a reader who says no anyway.
-      final prefs = await SharedPreferences.getInstance();
-      if (!(prefs.getBool('onboarding.completed') ?? false)) return null;
-      permission = await Geolocator.requestPermission();
-    }
+    // This service NEVER asks. It used to, and it raced the startup ask
+    // (`requestStartupGrants`): on a fresh install the reader refused the
+    // location dialog and it came straight back a second time
+    // (emulator-5554, 2026-09-24) - and a second refusal is final
+    // (USER_FIXED). Before that it beat the first-run page that explains
+    // the permissions («اذن الموقع بيظهر قبل صفحة الاذونات»). The prompts
+    // belong to the places the reader acts on: the startup ask, the Home
+    // card's button, the permission rows. A grant from any of them resumes
+    // the app, and AppShell re-fetches on resume while the card says
+    // «denied»; until then this falls back to the cached fix.
+    final permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       return null;
