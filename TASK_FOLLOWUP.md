@@ -38,7 +38,16 @@ AUDIT PART 2 - gaps not covered by part 1, each on the emulator:
 4. [x] taps: FOUND azkar/khatma/tasbih reminders had NO payload - tap only
        opened Home. FIXED: open:<screen> payloads + app/notification_open.dart,
        test/reminder_tap_routing_test.dart 4/4. Device: needs the build.
-5. [ ] permissions denied: mic (tasmee), location (home/qibla), notifs
+5. [x] permissions denied (seen): mic -> «Microphone permission is needed»,
+       no recording; location -> Home + qibla keep the saved fix, city shown.
+       FOUND: notifications asked TWICE back to back (plugin ask, then
+       permission_handler ask when still denied) -> 2nd refusal = USER_FIXED.
+       FIXED: one ask (alarm_permissions_service.dart), 577 pass.
+       FOUND (serious): notifications refused + app in background -> adhan
+       plays on the alarm stream with NO screen and NO notification
+       (BAL_BLOCK in logcat), opening the app showed a normal screen: no way
+       to stop it. FIXED in Kotlin: MainActivity.onResume opens AdhanActivity
+       while an adhan plays and notifications are off. Needs the build.
 6. [ ] rotation/landscape + largest font scale: overflow on main screens
 7. [ ] Urdu (RTL, Latin digits) quick pass
 8. [ ] ruqyah / tajweed / device-files audio vs book reader & adhan
@@ -122,6 +131,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 21:47 - Audit 2: notification permission asked twice (fixed); adhan with notifications off had no Stop anywhere (fixed in MainActivity.onResume)
 - 2026-09-24 21:32 - Audit 2: reminders open their screen (open: payloads, 4 tests); reboot re-arms adhan (seen)
 - 2026-09-24 21:25 - Audit 2: network drop mid-download was reported as a cancel (WorkManager stop) - now waiting; offline screens seen OK
 - 2026-09-24 21:16 - Audit 2: splash preview resumes recitation; raw exception texts replaced by localized messages (user_error.dart)

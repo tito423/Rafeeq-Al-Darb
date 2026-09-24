@@ -12,7 +12,11 @@ import androidx.core.content.ContextCompat
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import com.ryanheise.audioservice.AudioServiceActivity
+import androidx.core.app.NotificationManagerCompat
+import com.tito.rafeeq_aldarb.adhan.AdhanActivity
 import com.tito.rafeeq_aldarb.adhan.AdhanChannels
+import com.tito.rafeeq_aldarb.adhan.AdhanPlayer
+import com.tito.rafeeq_aldarb.adhan.AdhanService
 import com.tito.rafeeq_aldarb.adhan.AdhanNotifications
 
 class MainActivity: AudioServiceActivity() {
@@ -83,6 +87,29 @@ class MainActivity: AudioServiceActivity() {
             channel.invokeMethod("tap", what)
         } else {
             pendingDownloadTap = what
+        }
+    }
+
+    /*
+     * An adhan sounding with nothing on screen to stop it. With notifications
+     * refused there is no full-screen intent and no Stop/Mute notification,
+     * and Android 16 blocks the service's direct start of AdhanActivity from
+     * the background (BAL_BLOCK, emulator-5554, 2026-09-24) - the adhan
+     * played on the alarm stream, which the volume keys do not touch, and
+     * opening the app showed an ordinary screen. Once the app is visible the
+     * start is allowed, so its first frame puts the alert (and its Stop) up.
+     * Only when notifications are off: otherwise the notification already
+     * carries Stop, and backing out of the alert must stay possible.
+     */
+    override fun onResume() {
+        super.onResume()
+        val firing = AdhanService.current ?: return
+        if (!AdhanPlayer.isPlaying || AdhanActivity.isShowing) return
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) return
+        try {
+            startActivity(AdhanActivity.intentFor(this, firing))
+        } catch (e: Exception) {
+            android.util.Log.w("MainActivity", "could not show the adhan", e)
         }
     }
 

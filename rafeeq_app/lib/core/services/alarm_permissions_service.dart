@@ -1,4 +1,3 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'notification_router.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -47,8 +46,6 @@ class AlarmPermissionsService {
   AlarmPermissionsService._();
   static final AlarmPermissionsService instance = AlarmPermissionsService._();
 
-  final FlutterLocalNotificationsPlugin _plugin =
-      FlutterLocalNotificationsPlugin();
   bool _ready = false;
 
   /// Initialises the notifications plugin once, at startup, so the other
@@ -106,14 +103,12 @@ class AlarmPermissionsService {
   /// Notification + exact-alarm prompts. Safe to call more than once — each
   /// request no-ops if already granted.
   Future<void> requestStartupPermissions() async {
-    final androidPlugin = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
-    await androidPlugin?.requestNotificationsPermission();
-    if (await Permission.notification.isDenied) {
-      await Permission.notification.request();
-    }
+    // ONE ask. It used to ask through the notifications plugin and then, if
+    // the answer was still «denied» - which is what «Don't allow» leaves -
+    // ask again through permission_handler: two dialogs back to back on
+    // emulator-5554 (2026-09-24), and Android marks a second refusal as
+    // final (USER_FIXED), so the reader could never be asked again.
+    await Permission.notification.request();
     if (await Permission.scheduleExactAlarm.isDenied) {
       await Permission.scheduleExactAlarm.request();
     }
@@ -158,13 +153,8 @@ class AlarmPermissionsService {
         case AppPermission.location:
           await Geolocator.requestPermission();
         case AppPermission.notifications:
-          await _plugin
-              .resolvePlatformSpecificImplementation<
-                  AndroidFlutterLocalNotificationsPlugin>()
-              ?.requestNotificationsPermission();
-          if (await Permission.notification.isDenied) {
-            await Permission.notification.request();
-          }
+          // One ask - see [requestStartupPermissions].
+          await Permission.notification.request();
         case AppPermission.exactAlarms:
           await Permission.scheduleExactAlarm.request();
         case AppPermission.audio:

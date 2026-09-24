@@ -104,6 +104,9 @@ class AdhanActivity : FlutterActivity() {
         @Volatile
         private var instance: AdhanActivity? = null
 
+        /** True while the alert screen is up. */
+        val isShowing: Boolean get() = instance != null
+
         fun finishIfShowing() {
             instance?.let { activity ->
                 activity.runOnUiThread {
