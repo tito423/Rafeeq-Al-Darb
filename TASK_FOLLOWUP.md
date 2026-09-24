@@ -135,7 +135,18 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   bucket), zero to Unsplash (151.101.x / 146.75.x) or GitHub; images drawn.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
+## Build 3 verification (signed build 22:20, Kotlin compiled OK)
+- [x] 1 adhan + notifications off: VERIFIED 22:26 - notif revoked, Dhuhr
+  Test in Per-prayer settings (NOT the play icon in the home prayer sheet,
+  that is only the voice preview), HOME at once -> BAL_BLOCK in logcat,
+  launcher on top, alarm player started; opening the app -> AdhanActivity
+  on top with Stop; Stop -> player stopped, back to MainActivity.
+- [ ] 2 one notification ask · [ ] 3 WM airplane · [ ] 4 offline text
+- [ ] 5 reminder tap · [ ] 6 splash preview · [ ] 7 umts onboarding · [ ] 8 city on locale
+
 ## Log
+- 2026-09-24 22:26 - Build 3 signed (Kotlin compiled); item 1 adhan-without-notifications Stop verified on emulator
+- 2026-09-24 22:27 - Build 3 signed OK (Kotlin compiled); item 1 (adhan with notifications off shows Stop on app open) VERIFIED on emulator
 - 2026-09-24 22:16 - Resumed session: emulator off, release build of the 8 unbuilt fixes running
 - 2026-09-24 (new session) - Resumed: quota 5h 0% / weekly 69%; RC not connected; emulator off; build_github_release.bat running (step 1)
 - 2026-09-24 21:53 - Handover: verified (analyze, 577 tests, 8 hosted paths 206), measured, HANDOVER/NEXT_SESSION_PROMPT/NEXT_PROMPT rewritten; 8 fixes unbuilt
