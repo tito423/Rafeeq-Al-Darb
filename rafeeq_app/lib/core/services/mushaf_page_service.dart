@@ -1,3 +1,4 @@
+import '../config/content_mirrors.dart';
 import 'dart:async';
 import '../../core/utils/digits.dart';
 import '../utils/byte_formatter.dart' show ratio;
@@ -188,17 +189,21 @@ class MushafPageService {
     final file =
         File(p.join(dir.path, '${page.toString().padLeft(3, '0')}.$imageExt'));
     if (file.existsSync() && await file.length() > 4096) return;
-    final res = await _dio.get<List<int>>(
+    // R2, then the same scan on its mirror (ContentMirrors).
+    final bytes = await ContentMirrors.fetchFirst<List<int>>(
       AppConfig.mushafImageUrl(imagePath, page, ext: imageExt),
-      options: Options(
-        responseType: ResponseType.bytes,
-        receiveTimeout: const Duration(seconds: 40),
-      ),
+      (url) async =>
+          (await _dio.get<List<int>>(
+            url,
+            options: Options(
+              responseType: ResponseType.bytes,
+              receiveTimeout: const Duration(seconds: 40),
+            ),
+          ))
+              .data ??
+          const <int>[],
+      accept: (b) => b.length >= 4096,
     );
-    final bytes = res.data ?? const <int>[];
-    if (bytes.length < 4096) {
-      throw StateError('Incomplete mushaf scan $page (${bytes.length} bytes)');
-    }
     final tmp = File('${file.path}.part');
     await tmp.writeAsBytes(bytes, flush: true);
     await tmp.rename(file.path);

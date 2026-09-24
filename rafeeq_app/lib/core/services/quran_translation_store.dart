@@ -1,3 +1,4 @@
+import '../config/content_mirrors.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -112,8 +113,12 @@ class QuranTranslationStore {
     if (isInstalled(lang) || downloading.value.containsKey(lang)) return;
     _setProgress(lang, 0);
     try {
+      // R2, then its mirror: each source's bytes must decode to the whole
+      // translation (6,236 ayahs) or the next source is asked.
+      final doc = await ContentMirrors.fetchFirst<Map<String, dynamic>>(
+          AppConfig.quranTranslationUrl(lang), (url) async {
       final res = await _dio.get<List<int>>(
-        AppConfig.quranTranslationUrl(lang),
+        url,
         options: Options(
           responseType: ResponseType.bytes,
           receiveTimeout: const Duration(seconds: 60),
@@ -143,6 +148,9 @@ class QuranTranslationStore {
           'Translation $lang is incomplete (${verses.length}/6236 ayahs)',
         );
       }
+      return doc;
+      });
+      final verses = doc['verses'] as Map<String, dynamic>;
 
       final db = await _database;
       await db.transaction((txn) async {

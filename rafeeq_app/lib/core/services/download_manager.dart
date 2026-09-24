@@ -1,3 +1,4 @@
+import '../config/content_mirrors.dart';
 import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
@@ -139,9 +140,11 @@ class DownloadManager {
           case bd.TaskStatus.complete:
             unawaited(_finish(task));
           case bd.TaskStatus.notFound:
+            if (_tryNextMirror(task)) return;
             task.status = DownloadStatus.failed;
             task.error = 'notif.dl_not_found'.tr();
           case bd.TaskStatus.failed:
+            if (_tryNextMirror(task)) return;
             task.status = DownloadStatus.failed;
             task.error = update.exception?.description ?? 'notif.dl_failed'.tr();
         }
@@ -255,6 +258,34 @@ class DownloadManager {
     return dir;
   }
 
+  /// The URL a download was first asked for, and which of its mirrors
+  /// ([ContentMirrors.of]) is being tried now. A transfer that fails on one
+  /// host is started again on the next before anything is reported failed —
+  /// until 2026-09-24 every pack (hadith, sciences, the encyclopaedia, the
+  /// ruqyah recordings) had one host and one chance.
+  final Map<String, String> _firstUrl = {};
+  final Map<String, int> _mirrorAt = {};
+
+  bool _tryNextMirror(DownloadTask task) {
+    final first = _firstUrl[task.id] ?? task.url;
+    final mirrors = ContentMirrors.of(first);
+    final next = (_mirrorAt[task.id] ?? 0) + 1;
+    if (next >= mirrors.length) return false;
+    _mirrorAt[task.id] = next;
+    _tasks.remove(task.id);
+    unawaited(enqueue(
+      id: task.id,
+      url: mirrors[next],
+      category: task.category,
+      fileName: task.fileName,
+      unzipToDatabases: task.unzipToDatabases,
+      dbVersion: task.dbVersion,
+      title: task.title,
+      mirrorHop: true,
+    ));
+    return true;
+  }
+
   /// Enqueue (or re-enqueue) a download.
   Future<void> enqueue({
     required String id,
@@ -264,12 +295,19 @@ class DownloadManager {
     bool unzipToDatabases = false,
     String? dbVersion,
     String? title,
+    bool mirrorHop = false,
   }) async {
     final current = _tasks[id];
     if (current != null &&
         (current.status == DownloadStatus.downloading ||
             current.status == DownloadStatus.queued)) {
       return;
+    }
+    // A call from outside (not a hop to the next mirror) starts the chain
+    // again from [url], its first host.
+    if (!mirrorHop) {
+      _firstUrl[id] = url;
+      _mirrorAt[id] = 0;
     }
     await _ensureWired();
 
@@ -390,6 +428,9 @@ class DownloadManager {
     for (final task in _tasks.values) {
       if (task.status == DownloadStatus.paused || task.status == DownloadStatus.failed) {
         if (task.platformTask != null) {
+          // A retry the reader asked for walks every host again, the one
+          // this transfer is on first, then from the start of the chain.
+          if (task.status == DownloadStatus.failed) _mirrorAt[task.id] = -1;
           task.error = null;
           task.status = DownloadStatus.queued;
           bd.FileDownloader().resume(task.platformTask!);

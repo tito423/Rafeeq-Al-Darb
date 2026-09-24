@@ -8,6 +8,7 @@ import 'package:just_audio_background/just_audio_background.dart' show MediaItem
 
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/utils/http_status_probe.dart';
+import '../../../core/config/content_mirrors.dart';
 import 'surah_fallback.dart';
 
 /// One thing the player can play: a downloaded surah, a streamed one, or a
@@ -193,7 +194,14 @@ class QuranAudioPlayer extends ChangeNotifier {
   int? _nextStep(int i, {required bool answered}) {
     final t = _queue[i];
     PlayerTrack? replacement;
-    if (t.fallbackUrl != null && !t.isLocal) {
+    final mirrors = t.isLocal || t.url == null ? const <String>[] : ContentMirrors.of(t.url!);
+    if (mirrors.length > 1) {
+      // The app's bucket failed: the same bytes on its GitHub mirror, with
+      // the origin still behind them.
+      replacement = PlayerTrack(
+          id: t.id, title: t.title, artist: t.artist, album: t.album,
+          url: mirrors[1], fallbackUrl: t.fallbackUrl);
+    } else if (t.fallbackUrl != null && !t.isLocal) {
       replacement = t.originOnly();
     } else if (_substituted.add(t.id)) {
       replacement = SurahFallback.forTrack(t, localOnly: !answered && !t.isLocal);

@@ -1,9 +1,9 @@
+import '../../../../core/widgets/mirrored_network_image.dart';
 import '../../data/inked_svg.dart';
 import '../../data/mushaf_paper_provider.dart';
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -440,8 +440,8 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
 
         Widget image = localFile != null
             ? painted(ResizeImage(FileImage(localFile), width: memCacheWidth))
-            : CachedNetworkImage(
-                imageUrl: widget.edition.imagePageUrl(widget.page),
+            : MirroredNetworkImage(
+                url: widget.edition.imagePageUrl(widget.page),
                 fit: BoxFit.contain,
                 memCacheWidth: memCacheWidth,
                 imageBuilder: (_, provider) => painted(provider),

@@ -1,8 +1,8 @@
+import '../../../../core/widgets/mirrored_network_image.dart';
 import 'dart:async';
 import '../../../../core/utils/digits.dart';
 import 'dart:ui' as ui;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -532,8 +532,8 @@ class _PreviewPage extends StatelessWidget {
         width: width,
         height: height,
         color: edition.darkPage ? const Color(0xFF000000) : AppColors.paper,
-        child: CachedNetworkImage(
-          imageUrl: edition.imagePageUrl(page),
+        child: MirroredNetworkImage(
+          url: edition.imagePageUrl(page),
           fit: BoxFit.contain,
           memCacheWidth: (width * 2.5).round(),
           placeholder: (_, _) => _PagePlaceholder(width: width, height: height),

@@ -18,6 +18,7 @@ import 'continuous_recitation.dart';
 export 'continuous_recitation.dart';
 import '../db/quran_repository.dart';
 import '../utils/http_status_probe.dart';
+import '../config/content_mirrors.dart';
 import 'audio_failure.dart';
 import 'finish_pauser.dart';
 import 'recitation_source.dart';
@@ -378,7 +379,7 @@ class AyahAudioService {
           AudioSource.file(localFile.path, tag: tag),
         );
       } else {
-        await _player.setAudioSource(AudioSource.uri(Uri.parse(url), tag: tag));
+        await _setFirstReachable(url, tag);
       }
       _finish.play(_player);
       return true;
@@ -548,8 +549,7 @@ class AyahAudioService {
     final firstGlobal = await repo.globalAyahNumber(surahId, 1);
     if (token != _continuousToken) return;
 
-    // Fresh per attempt (a source is bound to its player). [host] indexes
-    // RecitationSource.urlsFor; see continuous_recovery.dart.
+    // Fresh per attempt; [host] indexes urlsFor (continuous_recovery.dart).
     List<AudioSource> buildChildren({int host = 0}) => [
           for (var k = 0; k < ayahs.length; k++)
             () {

@@ -60,6 +60,14 @@ void _cancelHold() {
 }
 
 extension _ContinuousRecovery on AyahAudioService {
+  /// A long track (a ruqyah recording) from the first of its hosts that
+  /// opens: R2, then the same bytes on GitHub Releases (ContentMirrors).
+  Future<void> _setFirstReachable(String url, MediaItem tag) =>
+      ContentMirrors.fetchFirst<void>(
+        url,
+        (u) async => _player.setAudioSource(AudioSource.uri(Uri.parse(u), tag: tag)),
+      );
+
   /// True when a server answered for [a] on the host in use — the file is
   /// the problem and another voice may help. False when nothing answered:
   /// no connection, so a substitute would fail too and the message would

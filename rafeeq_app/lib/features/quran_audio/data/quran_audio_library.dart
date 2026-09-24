@@ -1,3 +1,4 @@
+import '../../../core/config/content_mirrors.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -7,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import '../../../core/config/app_config.dart';
 import '../../../core/services/download_engine.dart';
 import 'mp3quran_api.dart';
 
@@ -242,17 +242,18 @@ class QuranAudioLibrary extends ChangeNotifier {
   /// was still waiting after sixteen other surahs had finished, and the
   /// screen said «جارٍ تنزيل سورة الفاتحة — 0%» the whole time. [at] spaces
   /// the batch a millisecond apart so it goes in surah order.
-  /// [origin] skips the app's own mirror and asks mp3quran directly — the
-  /// retry for a surah the mirror failed to deliver.
-  void _enqueue(LibraryEntry e, int surah, {DateTime? at, bool origin = false}) {
+  /// [hop] indexes [_sourcesFor]: 0 is the app's own bucket where the
+  /// recitation is mirrored there, then GitHub Releases, then mp3quran.
+  void _enqueue(LibraryEntry e, int surah, {DateTime? at, int hop = 0}) {
     final key = _key(e.moshafId, surah);
     if (_status[key]?.isActive ?? false) return;
+    _hop[key] = hop;
     _status[key] = const SurahAudioStatus(SurahAudioState.queued);
     unawaited(FileDownloader().enqueue(
       DownloadTask(
         creationTime: at ?? DateTime.now().add(Duration(milliseconds: surah)),
         taskId: taskIdFor(e.moshafId, surah),
-        url: origin ? e.moshaf.originUrlFor(surah) : e.moshaf.urlFor(surah),
+        url: _sourcesFor(e, surah)[hop.clamp(0, _sourcesFor(e, surah).length - 1)],
         filename: fileNameFor(surah),
         baseDirectory: BaseDirectory.applicationDocuments,
         directory: '$_dirName/${e.moshafId}',
@@ -268,6 +269,17 @@ class QuranAudioLibrary extends ChangeNotifier {
 
   /// Automatic re-queues per surah this run (see the failed branch below).
   final _autoRetries = <String, int>{};
+
+  /// Which of a surah's hosts its current transfer is on.
+  final _hop = <String, int>{};
+
+  /// Every host for one surah, in order, without repeats: the app's bucket
+  /// and its GitHub mirror (ContentMirrors) where the recitation is
+  /// mirrored, and mp3quran — its origin — always.
+  List<String> _sourcesFor(LibraryEntry e, int surah) {
+    final origin = e.moshaf.originUrlFor(surah);
+    return {...ContentMirrors.of(e.moshaf.urlFor(surah)), origin}.toList();
+  }
 
   void _onUpdate(TaskUpdate u) {
     if (u.task.group != DownloadEngine.groupQuranAudio) return;
@@ -293,12 +305,12 @@ class QuranAudioLibrary extends ChangeNotifier {
             SurahAudioState.running, _status[key]?.progress ?? 0);
       } else if ((status == TaskStatus.failed ||
               status == TaskStatus.notFound) &&
-          AppConfig.isOwnMirror(u.task.url) &&
-          _entries[m] != null) {
-        // The mirror is the primary, not the only source: straight on to
-        // mp3quran, before anything is shown as failed.
+          _entries[m] != null &&
+          (_hop[key] ?? 0) + 1 < _sourcesFor(_entries[m]!, s).length) {
+        // Not the last host: straight on to the next, before anything is
+        // shown as failed.
         _status.remove(key);
-        _enqueue(_entries[m]!, s, origin: true);
+        _enqueue(_entries[m]!, s, hop: (_hop[key] ?? 0) + 1);
       } else if (status == TaskStatus.failed || status == TaskStatus.notFound) {
         _status[key] = const SurahAudioStatus(SurahAudioState.failed);
         // «ساعات بيتعذّر إكمال تحميل التلاوة». The plugin's own three

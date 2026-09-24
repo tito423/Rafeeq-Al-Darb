@@ -26,6 +26,7 @@
 ///    wrong WORD, and nothing here would catch it. The screen must say so.
 library;
 
+import '../../../core/config/content_mirrors.dart';
 import 'dart:io';
 import 'dart:isolate';
 
@@ -182,21 +183,25 @@ class TasmeeEngine {
     for (final a in tasmeeAssets) {
       final path = p.join(dir.path, a.localName);
       final tmp = '$path.part';
-      await dio.download(
-        a.url,
-        tmp,
-        cancelToken: cancelToken,
-        onReceiveProgress: (got, _) => onProgress?.call((done + got) / total),
-      );
-      final got = await File(tmp).length();
-      final hash = await _sha256(tmp);
-      if (got != a.bytes || hash != a.sha256) {
-        await File(tmp).delete();
-        throw StateError(
-          '${a.name} came back $got bytes with sha256 $hash; expected '
-          '${a.bytes} bytes with sha256 ${a.sha256}',
+      // R2, then its mirror; each must pass the byte count AND the hash.
+      await ContentMirrors.fetchFirst<void>(a.url, (url) async {
+        await dio.download(
+          url,
+          tmp,
+          cancelToken: cancelToken,
+          onReceiveProgress: (got, _) =>
+              onProgress?.call((done + got) / total),
         );
-      }
+        final got = await File(tmp).length();
+        final hash = await _sha256(tmp);
+        if (got != a.bytes || hash != a.sha256) {
+          await File(tmp).delete();
+          throw StateError(
+            '${a.name} came back $got bytes with sha256 $hash; expected '
+            '${a.bytes} bytes with sha256 ${a.sha256}',
+          );
+        }
+      });
       if (File(path).existsSync()) await File(path).delete();
       await File(tmp).rename(path);
       await File('$path$_verifiedSuffix').writeAsString(a.sha256);

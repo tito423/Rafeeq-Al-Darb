@@ -1,3 +1,4 @@
+import '../../../core/config/content_mirrors.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -165,14 +166,22 @@ class LibraryApiService {
     return await file.length() == expected;
   }
 
+  /// R2 first, then every mirror of the same bytes ([ContentMirrors]).
+  /// A response is taken only if its length is the catalogue's — a host that
+  /// answers 200 with an error page (trap #5) is a failure, not a book.
   Future<void> downloadBook(String bookId, String url) async {
+    final expected = bookById(bookId)?.textEdition?.sizeBytes ?? 0;
     final dio = Dio();
-    final res = await dio.get<List<int>>(
+    final bytes = await ContentMirrors.fetchFirst<List<int>>(
       url,
-      options: Options(responseType: ResponseType.bytes),
+      (u) async => (await dio.get<List<int>>(
+            u,
+            options: Options(responseType: ResponseType.bytes),
+          ))
+              .data ??
+          const [],
+      accept: (b) => b.isNotEmpty && (expected == 0 || b.length == expected),
     );
-    final bytes = res.data;
-    if (bytes == null || bytes.isEmpty) throw Exception('No data');
     await installBookBytes(bookId, bytes);
   }
 
