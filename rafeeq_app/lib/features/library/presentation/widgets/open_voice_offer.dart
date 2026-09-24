@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/utils/digits.dart';
 import '../../data/tts/book_voice_pref.dart';
 import '../../data/tts/open_voice.dart';
 
@@ -23,6 +24,11 @@ Future<bool> offerOpenVoice(BuildContext context) async {
     return true;
   }
   if (!context.mounted) return false;
+  // Already downloading (sent to the background earlier): not offered
+  // again as if nothing had started - its progress is shown instead.
+  if (OpenVoice.installProgress.value != null) {
+    return installOpenVoice(context);
+  }
   final choice = await showDialog<String>(
     context: context,
     builder: (ctx) => AlertDialog(
@@ -50,6 +56,21 @@ Future<bool> offerOpenVoice(BuildContext context) async {
   if (choice != 'download' || !context.mounted) return false;
   return installOpenVoice(context);
 }
+
+/// The enhanced voice's state in words, for every place that lists it:
+/// downloading with its percentage, installed, or its size to download.
+String openVoiceStatus() {
+  final p = OpenVoice.installProgress.value;
+  if (p != null) return '${'downloads.downloading'.tr()}  ${percentOf(p)}';
+  return OpenVoice.installed.value == true
+      ? 'library.voice_open_installed'.tr()
+      : 'library.voice_open_not_installed'
+          .tr(args: [formatBytes(OpenVoice.totalBytes)]);
+}
+
+/// Rebuilds when the enhanced voice starts, progresses or finishes.
+final openVoiceChanges =
+    Listenable.merge([OpenVoice.installProgress, OpenVoice.installed]);
 
 /// Downloads the pack behind a progress dialog. True once it is installed;
 /// false if it failed or the user sent it to the background.

@@ -159,8 +159,10 @@ class TasmeeEngine {
       }
       if (local.existsSync()) await local.delete(); // not ours
       _whisper = null;
+      installed.value = false;
       return false;
     }
+    installed.value = true;
     return true;
   }
 
@@ -169,8 +171,44 @@ class TasmeeEngine {
     return digest.toString();
   });
 
+  /// 0..1 while the model is downloading, null otherwise. Held HERE, not in
+  /// a widget: the download used to live in the tasmee panel's state, so
+  /// leaving the panel cancelled it and coming back showed «نزّل النموذج»
+  /// again (owner, 2026-09-24). Every button that offers the model watches
+  /// this and [installed].
+  final ValueNotifier<double?> downloadProgress = ValueNotifier(null);
+
+  /// Last known install state; null until [isInstalled] has run once.
+  final ValueNotifier<bool?> installed = ValueNotifier(null);
+
+  final Dio _dio = Dio();
+  CancelToken? _cancelToken;
+  Future<void>? _inFlight;
+
+  /// Starts the download, or joins the one already running - so two
+  /// buttons never start two transfers of the same 78 MB.
+  Future<void> startDownload() => _inFlight ??= () async {
+    _cancelToken = CancelToken();
+    downloadProgress.value = 0;
+    try {
+      await download(
+        dio: _dio,
+        cancelToken: _cancelToken,
+        onProgress: (v) => downloadProgress.value = v,
+      );
+      installed.value = true;
+    } finally {
+      downloadProgress.value = null;
+      _cancelToken = null;
+      _inFlight = null;
+    }
+  }();
+
+  void cancelDownload() => _cancelToken?.cancel();
+
   /// Downloads the model, verifying its exact byte count and hash before it
-  /// counts as installed. [onProgress] gets 0..1.
+  /// counts as installed. [onProgress] gets 0..1. UI goes through
+  /// [startDownload]; this is the transfer itself.
   Future<void> download({
     required Dio dio,
     void Function(double progress)? onProgress,
@@ -215,6 +253,7 @@ class TasmeeEngine {
     _whisper = null;
     final dir = await _modelDir();
     if (dir.existsSync()) await dir.delete(recursive: true);
+    installed.value = false;
   }
 
   /// Transcribes a 16 kHz mono WAV file recorded from the microphone.

@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/byte_formatter.dart';
 import '../../data/tts/book_voice_pref.dart';
 import '../../data/tts/open_voice.dart';
 import 'open_voice_offer.dart';
@@ -28,6 +27,18 @@ class _BookVoiceSectionState extends State<BookVoiceSection> {
   void initState() {
     super.initState();
     _refresh();
+    openVoiceChanges.addListener(_onVoice);
+  }
+
+  @override
+  void dispose() {
+    openVoiceChanges.removeListener(_onVoice);
+    super.dispose();
+  }
+
+  void _onVoice() {
+    if (!mounted) return;
+    setState(() => _installed = OpenVoice.installed.value ?? _installed);
   }
 
   Future<void> _refresh() async {
@@ -78,10 +89,7 @@ class _BookVoiceSectionState extends State<BookVoiceSection> {
             option(
               BookVoice.open,
               'library.open_voice_title'.tr(),
-              _installed
-                  ? 'library.voice_open_installed'.tr()
-                  : 'library.voice_open_not_installed'
-                      .tr(args: [formatBytes(OpenVoice.totalBytes)]),
+              openVoiceStatus(),
             ),
             option(
               BookVoice.device,

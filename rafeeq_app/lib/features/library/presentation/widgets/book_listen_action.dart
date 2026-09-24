@@ -1,6 +1,5 @@
 import '../../data/tts/open_voice.dart';
 import '../../data/tts/book_voice_pref.dart';
-import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -126,8 +125,9 @@ class BookListenActionState extends State<BookListenAction> {
     final last = widget.doc.pages.length - 1;
     while (mounted && run == _run) {
       final page = widget.doc.pages[i];
-      final text =
-          pageSpeechText(page.paras.map((p) => (text: p.text, kind: p.kind)));
+      final text = pageSpeechText(
+        page.paras.map((p) => (text: p.text, kind: p.kind)),
+      );
       if (text.trim().isNotEmpty) await _speaker.speak(text);
       // «خليه هو يقلب الصفحة بنفسه ويكمل أوتوماتيك»: a page that ended on
       // its own, in whole-book mode, turns the reader and reads the next.
@@ -141,33 +141,40 @@ class BookListenActionState extends State<BookListenAction> {
 
   /// This page only, or on to the end of the book. Null if dismissed.
   Future<bool?> _askScope() => showModalBottomSheet<bool>(
-        context: context,
-        showDragHandle: true,
-        builder: (ctx) => SafeArea(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            ListTile(
-              leading: const Icon(Icons.menu_book_rounded),
-              title: Text('library.listen_scope_book'.tr()),
-              subtitle: Text('library.listen_scope_book_desc'.tr()),
-              onTap: () => Navigator.of(ctx).pop(true),
-            ),
-            ListTile(
-              leading: const Icon(Icons.article_outlined),
-              title: Text('library.listen_scope_page'.tr()),
-              onTap: () => Navigator.of(ctx).pop(false),
-            ),
-            const SizedBox(height: 8),
-          ]),
-        ),
-      );
+    context: context,
+    showDragHandle: true,
+    builder: (ctx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.menu_book_rounded),
+            title: Text('library.listen_scope_book'.tr()),
+            subtitle: Text('library.listen_scope_book_desc'.tr()),
+            onTap: () => Navigator.of(ctx).pop(true),
+          ),
+          ListTile(
+            leading: const Icon(Icons.article_outlined),
+            title: Text('library.listen_scope_page'.tr()),
+            onTap: () => Navigator.of(ctx).pop(false),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    ),
+  );
 
   void _explain() {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('library.text_listen_unavailable_title'.tr()),
-        content: Text(trn('library.text_listen_unavailable_body',
-            args: ['${widget.book.diacritisedPct}'])),
+        content: Text(
+          trn(
+            'library.text_listen_unavailable_body',
+            args: ['${widget.book.diacritisedPct}'],
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
@@ -189,41 +196,46 @@ class BookListenActionState extends State<BookListenAction> {
     final choice = await showModalBottomSheet<BookVoice>(
       context: context,
       showDragHandle: true,
-      builder: (ctx) => SafeArea(
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-            child: Text('library.voice_section_title'.tr(),
-                style: Theme.of(ctx).textTheme.titleMedium),
-          ),
-          for (final (v, title, sub) in [
-            (
-              BookVoice.open,
-              'library.open_voice_title'.tr(),
-              installed
-                  ? 'library.voice_open_installed'.tr()
-                  : 'library.voice_open_not_installed'
-                      .tr(args: [formatBytes(OpenVoice.totalBytes)]),
-            ),
-            (
-              BookVoice.device,
-              'library.open_voice_use_device'.tr(),
-              'library.voice_device_desc'.tr(),
-            ),
-          ])
-            ListTile(
-              leading: Icon(
-                v == current
-                    ? Icons.radio_button_checked_rounded
-                    : Icons.radio_button_off_rounded,
-                color: v == current ? AppColors.gold : null,
+      builder: (ctx) => ListenableBuilder(
+        listenable: openVoiceChanges,
+        builder: (ctx, _) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                child: Text(
+                  'library.voice_section_title'.tr(),
+                  style: Theme.of(ctx).textTheme.titleMedium,
+                ),
               ),
-              title: Text(title),
-              subtitle: Text(sub),
-              onTap: () => Navigator.of(ctx).pop(v),
-            ),
-          const SizedBox(height: 8),
-        ]),
+              for (final (v, title, sub) in [
+                (
+                  BookVoice.open,
+                  'library.open_voice_title'.tr(),
+                  openVoiceStatus(),
+                ),
+                (
+                  BookVoice.device,
+                  'library.open_voice_use_device'.tr(),
+                  'library.voice_device_desc'.tr(),
+                ),
+              ])
+                ListTile(
+                  leading: Icon(
+                    v == current
+                        ? Icons.radio_button_checked_rounded
+                        : Icons.radio_button_off_rounded,
+                    color: v == current ? AppColors.gold : null,
+                  ),
+                  title: Text(title),
+                  subtitle: Text(sub),
+                  onTap: () => Navigator.of(ctx).pop(v),
+                ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
       ),
     );
     if (choice == null || choice == current) return;
@@ -243,21 +255,26 @@ class BookListenActionState extends State<BookListenAction> {
   @override
   Widget build(BuildContext context) {
     final on = widget.book.canBeSpoken;
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      ToolbarAction(
-        icon: _speaking ? Icons.stop_circle_outlined : Icons.headphones_outlined,
-        label: _speaking
-            ? 'library.text_listen_stop'.tr()
-            : 'library.text_listen'.tr(),
-        active: _speaking,
-        onPressed: on ? _toggle : _explain,
-      ),
-      if (on)
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
         ToolbarAction(
-          icon: Icons.record_voice_over_outlined,
-          label: 'library.voice_short'.tr(),
-          onPressed: _pickVoice,
+          icon: _speaking
+              ? Icons.stop_circle_outlined
+              : Icons.headphones_outlined,
+          label: _speaking
+              ? 'library.text_listen_stop'.tr()
+              : 'library.text_listen'.tr(),
+          active: _speaking,
+          onPressed: on ? _toggle : _explain,
         ),
-    ]);
+        if (on)
+          ToolbarAction(
+            icon: Icons.record_voice_over_outlined,
+            label: 'library.voice_short'.tr(),
+            onPressed: _pickVoice,
+          ),
+      ],
+    );
   }
 }

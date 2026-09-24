@@ -84,6 +84,7 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 19:24 - Download state app-wide (1/2): tasmee model and enhanced voice downloads owned by TasmeeEngine/OpenVoice, not widgets; panel, pack rows, voice settings and reader sheet show downloading %/installed; analyze clean, not on device
 - 2026-09-24 18:50 - Session stopped by owner: TASK_FOLLOWUP next steps exact (download-state buttons, one build, verify, then release 3.62.0)
 - 2026-09-24 18:49 - Queued: download buttons show downloading/done state app-wide
 - 2026-09-24 18:49 - Conflict: deleting the recitation/surah being played now stops it first; audit notes

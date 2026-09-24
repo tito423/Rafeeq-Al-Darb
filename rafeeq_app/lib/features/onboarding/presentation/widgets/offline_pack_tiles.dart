@@ -370,8 +370,9 @@ class _SurahRecitationPackTileState
 }
 
 /// «نموذج التسميع»: the Quran-tuned whisper-tiny model, through
-/// [TasmeeEngine.download] - byte count and SHA-256 checked before it counts
-/// as installed.
+/// [TasmeeEngine.startDownload] - byte count and SHA-256 checked before it
+/// counts as installed. The state is the engine's, so this row and the
+/// tasmee panel show the same download.
 class TasmeePackTile extends StatefulWidget {
   const TasmeePackTile({super.key});
 
@@ -380,56 +381,45 @@ class TasmeePackTile extends StatefulWidget {
 }
 
 class _TasmeePackTileState extends State<TasmeePackTile> {
-  final _dio = Dio();
-  CancelToken? _cancel;
-  bool _installed = false;
-  double? _progress;
+  final _engine = TasmeeEngine.instance;
 
   @override
   void initState() {
     super.initState();
-    unawaited(TasmeeEngine.instance.isInstalled().then((v) {
-      if (mounted) setState(() => _installed = v);
-    }));
+    unawaited(_engine.isInstalled());
   }
 
   Future<void> _download() async {
-    _cancel = CancelToken();
-    setState(() => _progress = 0);
     try {
-      await TasmeeEngine.instance.download(
-        dio: _dio,
-        cancelToken: _cancel,
-        onProgress: (p) {
-          if (mounted) setState(() => _progress = p);
-        },
-      );
-      if (mounted) setState(() => _installed = true);
+      await _engine.startDownload();
     } catch (_) {
       // Cancelled or failed: the row goes back to its download button.
-    } finally {
-      if (mounted) setState(() => _progress = null);
     }
   }
 
   @override
-  Widget build(BuildContext context) => OfflinePackRow(
-        icon: Icons.mic_none_rounded,
-        title: 'onboarding.tasmee_title'.tr(),
-        hint: trn('onboarding.tasmee_hint',
-            args: [formatBytes(tasmeeDownloadBytes)]),
-        state: PackState(
-          done: _installed,
-          busy: _progress != null,
-          progress: _progress,
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable:
+            Listenable.merge([_engine.downloadProgress, _engine.installed]),
+        builder: (context, _) => OfflinePackRow(
+          icon: Icons.mic_none_rounded,
+          title: 'onboarding.tasmee_title'.tr(),
+          hint: trn('onboarding.tasmee_hint',
+              args: [formatBytes(tasmeeDownloadBytes)]),
+          state: PackState(
+            done: _engine.installed.value == true,
+            busy: _engine.downloadProgress.value != null,
+            progress: _engine.downloadProgress.value,
+          ),
+          onDownload: _download,
+          onCancel: _engine.cancelDownload,
         ),
-        onDownload: _download,
-        onCancel: () => _cancel?.cancel(),
       );
 }
 
 /// «صوت قارئ الكتب المحسّن»: the open Arabic TTS voice, through
-/// [OpenVoice.install] - a WorkManager download that survives leaving the app.
+/// [OpenVoice.install] - a WorkManager download that survives leaving the
+/// app, its state shared with the reader's own offer.
 class VoicePackTile extends StatefulWidget {
   const VoicePackTile({super.key});
 
@@ -438,44 +428,37 @@ class VoicePackTile extends StatefulWidget {
 }
 
 class _VoicePackTileState extends State<VoicePackTile> {
-  bool _installed = false;
-  double? _progress;
-
   @override
   void initState() {
     super.initState();
-    unawaited(OpenVoice.isInstalled().then((v) {
-      if (mounted) setState(() => _installed = v);
-    }));
+    unawaited(OpenVoice.isInstalled());
   }
 
   Future<void> _download() async {
-    setState(() => _progress = 0);
     try {
-      await OpenVoice.install((got, total) {
-        if (mounted) setState(() => _progress = got / total);
-      });
-      if (mounted) setState(() => _installed = true);
+      await OpenVoice.install(null);
     } catch (_) {
       // Cancelled or failed: the row goes back to its download button.
-    } finally {
-      if (mounted) setState(() => _progress = null);
     }
   }
 
   @override
-  Widget build(BuildContext context) => OfflinePackRow(
-        icon: Icons.menu_book_outlined,
-        title: 'onboarding.voice_title'.tr(),
-        hint: trn('onboarding.voice_hint',
-            args: [formatBytes(OpenVoice.totalBytes)]),
-        state: PackState(
-          done: _installed,
-          busy: _progress != null,
-          progress: _progress,
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable:
+            Listenable.merge([OpenVoice.installProgress, OpenVoice.installed]),
+        builder: (context, _) => OfflinePackRow(
+          icon: Icons.menu_book_outlined,
+          title: 'onboarding.voice_title'.tr(),
+          hint: trn('onboarding.voice_hint',
+              args: [formatBytes(OpenVoice.totalBytes)]),
+          state: PackState(
+            done: OpenVoice.installed.value == true,
+            busy: OpenVoice.installProgress.value != null,
+            progress: OpenVoice.installProgress.value,
+          ),
+          onDownload: _download,
+          onCancel: OpenVoice.cancelInstall,
         ),
-        onDownload: _download,
-        onCancel: OpenVoice.cancelInstall,
       );
 }
 

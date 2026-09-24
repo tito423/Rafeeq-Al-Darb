@@ -27,7 +27,7 @@ import '../../data/tasmee_mic.dart';
 import '../../data/tasmee_engine.dart';
 import '../../../../core/services/audio_exclusive.dart';
 
-enum _Phase { idle, downloading, recording, thinking, done }
+enum _Phase { idle, recording, thinking, done }
 
 /// True while the tasmee' microphone is open. «استمع» on the same screen
 /// reads it: pressing it mid-recording played the reciter INTO the
@@ -59,14 +59,11 @@ class TasmeePanel extends ConsumerStatefulWidget {
 
 class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   final _recorder = AudioRecorder();
-  final _dio = Dio();
+  final _engine = TasmeeEngine.instance;
   Timer? _cap;
   String? _wavPath;
-  CancelToken? _cancel;
 
   _Phase _phase = _Phase.idle;
-  bool? _installed;
-  double _progress = 0;
   String? _error;
   String? _heard;
   TasmeeResult? _result;
@@ -85,9 +82,11 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   void initState() {
     super.initState();
     _recordingFlag; // bind while `ref` is valid (see _recordingFlag)
-    TasmeeEngine.instance.isInstalled().then(
-      (v) => mounted ? setState(() => _installed = v) : null,
-    );
+    // The download lives in the engine, so it survives this panel and
+    // shows here again, still running, when the reader comes back.
+    _engine.downloadProgress.addListener(_onEngine);
+    _engine.installed.addListener(_onEngine);
+    unawaited(_engine.isInstalled());
     TasmeeMics.find(
       _recorder,
     ).then((m) => mounted ? setState(() => _mics = m) : null);
@@ -125,36 +124,26 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     _recorder.dispose();
     // Never leave the phone on the call route behind a closed screen.
     unawaited(restoreAudioRoute());
-    _cancel?.cancel();
+    _engine.downloadProgress.removeListener(_onEngine);
+    _engine.installed.removeListener(_onEngine);
+    // The download is NOT cancelled here: it belongs to the engine.
     super.dispose();
   }
 
+  void _onEngine() {
+    if (mounted) setState(() {});
+  }
+
   Future<void> _download() async {
-    setState(() {
-      _phase = _Phase.downloading;
-      _error = null;
-      _progress = 0;
-    });
-    _cancel = CancelToken();
+    setState(() => _error = null);
     try {
-      await TasmeeEngine.instance.download(
-        dio: _dio,
-        cancelToken: _cancel,
-        onProgress: (p) => mounted ? setState(() => _progress = p) : null,
-      );
-      if (mounted) {
-        setState(() {
-          _installed = true;
-          _phase = _Phase.idle;
-        });
+      await _engine.startDownload();
+    } on DioException catch (e) {
+      if (e.type != DioExceptionType.cancel && mounted) {
+        setState(() => _error = '$e');
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = '$e';
-          _phase = _Phase.idle;
-        });
-      }
+      if (mounted) setState(() => _error = '$e');
     }
   }
 
@@ -296,7 +285,8 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final installed = _installed;
+    final installed = _engine.installed.value;
+    final progress = _engine.downloadProgress.value;
     if (installed == null) return const SizedBox.shrink();
 
     return Container(
@@ -347,13 +337,22 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
               ),
             ),
             const SizedBox(height: 8),
-            if (_phase == _Phase.downloading) ...[
-              LinearProgressIndicator(value: _progress, minHeight: 6),
+            if (progress != null) ...[
+              LinearProgressIndicator(value: progress, minHeight: 6),
               const SizedBox(height: 6),
-              Text(
-                percentOf(_progress),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${'downloads.downloading'.tr()}  ${percentOf(progress)}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: _engine.cancelDownload,
+                    child: Text('common.cancel'.tr()),
+                  ),
+                ],
               ),
             ] else
               FilledButton.icon(

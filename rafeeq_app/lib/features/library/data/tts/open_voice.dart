@@ -55,9 +55,48 @@ class OpenVoice {
     final d = await _dir();
     for (final f in files) {
       final file = File(p.join(d.path, f));
-      if (!file.existsSync() || file.lengthSync() != _sizes[f]) return false;
+      if (!file.existsSync() || file.lengthSync() != _sizes[f]) {
+        installed.value = false;
+        return false;
+      }
     }
+    installed.value = true;
     return true;
+  }
+
+  /// 0..1 while the pack is downloading, null otherwise - app-wide, so a
+  /// button on any screen says «جارٍ التحميل» after «متابعة في الخلفية»
+  /// closed the dialog that started it (owner, 2026-09-24).
+  static final ValueNotifier<double?> installProgress = ValueNotifier(null);
+
+  /// Last known install state; null until [isInstalled] has run once.
+  static final ValueNotifier<bool?> installed = ValueNotifier(null);
+
+  static Future<void>? _inFlight;
+
+  /// Starts the download or joins the one running. [onProgress] gets
+  /// (bytesSoFar, totalBytes) for whichever caller asked.
+  static Future<void> install(void Function(int, int)? onProgress) async {
+    void relay() {
+      final v = installProgress.value;
+      if (v != null) onProgress?.call((v * totalBytes).round(), totalBytes);
+    }
+
+    installProgress.addListener(relay);
+    try {
+      await (_inFlight ??= () async {
+        installProgress.value = 0;
+        try {
+          await _install((got, total) => installProgress.value = got / total);
+          installed.value = true;
+        } finally {
+          installProgress.value = null;
+          _inFlight = null;
+        }
+      }());
+    } finally {
+      installProgress.removeListener(relay);
+    }
   }
 
   /// Downloads the pack through [DownloadManager] - Android's WorkManager,
@@ -67,7 +106,7 @@ class OpenVoice {
   /// `HttpClient` loop froze the moment the reader left the app, which is
   /// why «يكمل في الخلفية» restarted from zero (2026-09-19).
   /// [onProgress] gets (bytesSoFar, totalBytes).
-  static Future<void> install(void Function(int, int)? onProgress) async {
+  static Future<void> _install(void Function(int, int)? onProgress) async {
     _cancel = false;
     final d = await _dir();
     d.createSync(recursive: true);
@@ -207,6 +246,7 @@ class OpenVoice {
     }
     final d = await _dir();
     if (d.existsSync()) d.deleteSync(recursive: true);
+    installed.value = false;
   }
 
   Future<void> _ensureLoaded() async {
