@@ -115,6 +115,33 @@ never print them, never paste them into a message.
 
 ---
 
+### 1.7 Every fact is checked at the moment it is given
+
+> «اي معلومة تقولها لازم تكون بتاريخ اللحظة اللي بسالك فيها مش من دماغك
+> باخر تحديثات عشان مش نلبس في حيطة» (2026-09-24)
+
+Prices, store rules, package versions, API behaviour, another app's features,
+a host's limits: **look them up now** (web, the package's own source, the
+live endpoint) and say where from and when. Anything you could not check is
+labelled as unchecked, never stated as fact. Training memory is a starting
+point for where to look, not an answer.
+
+### 1.8 Libraries and toolchain: current, stable, and proven compatible
+
+> «كل مكتبات التطبيق والبيئة اللي بنطور بيها لازم تكون محدثة ومتوافقه
+> بالاصدارات المستقرة اللي مش تسبب اي مشاكل او كراشات» (2026-09-24)
+
+- Keep Flutter, Dart, Gradle/AGP/Kotlin and every package on the newest
+  **stable** release that actually works together — checked live
+  (`flutter pub outdated`, the changelog, the package source), not assumed.
+- "Newest" loses to "works": `permission_handler` 13 needed AGP 9 and broke
+  the release build, so 12.0.3 stayed (2026-09-24). Record every held-back
+  package and why, and re-check it when the toolchain moves.
+- An upgrade is done only when `build_github_release.bat` succeeds, the
+  signed APK installs over the previous one, and the features that use the
+  package are seen working on the emulator (§1.3). `flutter analyze` and a
+  debug build are not proof — the AGP-9 break passed both.
+
 ## 2. Workflow
 
 ### 2.0 Know how much quota is left — before you plan, and while you work
