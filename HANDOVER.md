@@ -2496,9 +2496,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 20:53 — IN PROGRESS — resume here**
+**2026-09-24 20:55 — IN PROGRESS — resume here**
 
-v3.62.0 ready: audit complete on device, notes + HANDOVER updated; publishing
+v3.62.0 released and verified (tag == HEAD, asset re-downloaded byte-identical); v3.61.0 deleted
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -6,78 +6,20 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-FULL-APP CONFLICT AUDIT before releasing 3.62.0 (owner: «مش تنشر الا لما
-تتاكد مليون في المية»). Session stopped by the owner at 18:58 (quota).
-pubspec is ALREADY 3.62.0+64; NOT released; v3.61.0 is still the release.
+DONE 2026-09-24 20:55: v3.62.0 RELEASED after the whole-app conflict audit
+(tag v3.62.0 = 1f758e40 = HEAD at publish; asset 265,296,679 B, sha256
+9eacb8b4…2d95f1db, downloaded back byte-identical). v3.61.0 + tag deleted;
+v3.51.0 and content-* kept.
 
 ## Next step (exact)
-1. DONE in code (594155e1+): download state app-wide. Tasmee model and the
-   enhanced voice were the ONLY buttons holding their download in widget
-   state; now TasmeeEngine.startDownload/downloadProgress/installed and
-   OpenVoice.install/installProgress/installed own it. Every other button
-   (books, hadith DB, sciences, translations, mushaf, reciters, ayah
-   reciters, onboarding rows) already read DownloadManager / a service -
-   checked by reading each file 2026-09-24. analyze clean, 570 tests pass.
-   NOT seen on device.
-2. ONE build (emulator OFF, trap 24; no flutter test during it, trap 54),
-   then verify on emulator:
-   - tasmee: start «نزّل النموذج», leave the Hifz screen, come back ->
-     still «جارٍ التحميل n%», then installed; onboarding row mirrors it.
-   - voice: start download from a book «استماع», press «متابعة في الخلفية»,
-     press «استماع» again -> progress dialog, not the offer; Settings
-     «قارئ الكتب» subtitle shows «جارٍ التحميل n%».
-   - «استمع» disabled while tasmee records; changing ayah mid-recording
-     cancels it (tasmee_panel.dart tasmeeRecordingProvider).
-   - deleting a reciter / surah recitation that is playing stops it.
-   - REST OF THE CONFLICT AUDIT (owner 19:30: finish ALL conflicts and
-     compat issues app-wide before the release): notifications count
-     (trap 33, >25 posted), focus mode vs adhan, location (qibla + prayer
-     card at once). Signed 3.62.0 APK built 19:30 with the download-state
-     fix (build/app/outputs/flutter-apk/app-release.apk, signed).
-   TELL THE OWNER when done so he can put the laptop back from Turbo.
-3. Only then: release 3.62.0 (notes in dist/release_notes_v3.62.0.md - add
-   the tasmee/delete/download-state items), delete v3.61.0 + tag, keep
-   v3.51.0 + content-*, git status clean of source (trap 55), tag == HEAD.
-
-Verified on device this session (3.62.0 builds): auto-scroll no longer
-cascades (p1 ~20 s, p2 ~25 s); recitation + auto-scroll in sync (highlight
-2:17->2:20 on p4); adhan pauses recitation and it resumes at the same ayah;
-book reader stops a playing recitation; tasmee start stops a playing ayah;
-tasmee + «استمع» ran at once (FIXED in code, not yet seen). Location fix,
-Umrah/Hajj summary, hifz scroll-stall fix, prayer methods (2400 vs AlAdhan,
-worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
-
-## Owner's orders queued (15:25) — all go into ONE release
-- «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
-- Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
-  About, build_github_release.bat, delete v3.60.0 release+tag, keep v3.51.0
-  and content-* prereleases).
-- «المزيد» screen: each MAIN card a different colour from the one under it,
-  same style; every SUB-card of a section takes its main card's colour.
-  Change ONLY the colours — card design stays exactly as it is.
-- Tasmee: tiny model goes in the row now (done). whisper-base-ar-quran
-  (R2, 160.6 MB, unused): owner asked «ادمجه ولا ايه رايك» — answer given:
-  not before PLAN 4a is MEASURED (word accuracy on real recitations +
-  latency); do 4a after this release, integrate only if it wins by numbers.
-
-- NEW (16:12): «ملخص العمرة» + «ملخص الحج» — a quick step-by-step card at
-  the BOTTOM of each section in the Hajj/Umrah screen: from arrival, stage
-  by stage, the adhkar said along the way, the wajibat and the sunan.
-  Religious content: every step/dhikr from a NAMED source (CLAUDE.md 1.2);
-  first read what hajj data the app already has (HajjScreen, its sources).
-  Do AFTER the v3.61.0 release.
-
-## Half-done / unverified (redo, do not trust)
-- Stage 1 rows: ALL written (`offline_pack_tiles.dart`), analyze clean,
-  NOT seen on device. Sizes:
-  `ayah_recitation_sizes.json`, `offline_pack_sizes.json` (mushaf 74.3 MB,
-  basit 449.0, maher 709.1 — R2 listing). hadeethenc + UI-locale
-  translations are bundled → no rows.
-- Stage 1 items 1+2: title/blurb (7 locales) + ContentPackTile fixed-width
-  slot/cancel — analyze+test pass, NOT seen on device.
-- D1 sign-out scope: committed, not device-tested (needs a Google sign-in).
-- B1 /sync caps: deployed (Worker 48b3fa3a), caps not exercised live (needs a
-  real Google ID token).
+Nothing in flight. Wait for the owner's next order. Open, for his decision:
+- Onboarding on a slow line recommends the smallest reciter among hosts
+  that ANSWERED - on UMTS only R2-mirrored ones answer, so it offered
+  Alafasy 1.7 GB instead of Banna 383.6 MB. As designed (PLAN), worth his call.
+- Phone-TTS reader pausing for the adhan is unit-tested only (emulator has
+  no Arabic TTS engine) - check on his phone with «صوت الهاتف».
+- Location name stays in the old language until the next refresh after a
+  language switch (seen: English in Arabic UI, fixed itself on resume).
 
 ## FULL AUDIT MATRIX (owner 19:55: «full audit in all app aspects»)
 Sound sources (grep, 20:00): SHARED just_audio player (ayah/queue/
@@ -157,6 +99,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 20:55 - v3.62.0 released and verified (tag == HEAD, asset re-downloaded byte-identical); v3.61.0 deleted
 - 2026-09-24 20:53 - v3.62.0 ready: audit complete on device, notes + HANDOVER updated; publishing
 - 2026-09-24 20:46 - Verified on build 2: adhan discards a tasmee recording; adhan over focus mode and back
 - 2026-09-24 20:36 - Verified on build 2: per-ayah delete stops playback; reciter header readable
