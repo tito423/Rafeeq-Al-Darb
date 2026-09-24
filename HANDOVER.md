@@ -2494,23 +2494,17 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 ~03:50 UTC (07:50 Dubai) — IN PROGRESS: «خمس حلول احتياطية لكل حاجة»**
+**2026-09-24 ~09:00 UTC (13:00 Dubai) — COMPLETE (five-backups work, not released; v3.59.0 is the latest release)**
 
-Owner's standing rule (memory: five-backups-never-skip): never skip an ayah, a word or a surah; five verified sources for every fetched thing; the app must never stop; another host besides R2 is acceptable.
+Done and SEEN on emulator-5554 (commits b8168c7e … 9c69a0d7):
+- Recitation never skips; holds at the verse/surah and resumes by itself (retry 20 s → backoff to 5 min; network change = immediate). Backup voice only when a server answered. Seen with the network cut (continuous 2:148, surah player, hifz ×3).
+- GitHub Releases mirror: content-mirror 336, content-mushaf 604, content-surah 228 assets — all equal to R2 by size, range 206 (`py -3 scripts/github_content_mirror.py --verify`). With R2 made unreachable (test APK), seen working from GitHub: book download+open, ruqyah stream, ruqyah download (DownloadManager hop) + offline play, mushaf pages 87/91, German translation, Basit surah stream.
+- Normal build reinstalled on the emulator afterwards (real R2 base checked in libapp.so); a new book downloaded from R2.
+- Tests: 565 pass; analyze clean.
 
-STAGE 1 DONE, seen on emulator-5554 (commits b8168c7e → f783e17c, NOT released — v3.59.0 is the latest release):
-- Recitation never skips: continuous holds on the verse (`ContinuousRecitation.waiting`, `lib/core/services/continuous_recovery.dart`, a part file — the service is at its 810-line ceiling), surah player holds (`waitingIndex`), hifz loop retries the same verse. Periodic 20 s retry + connectivity_plus; reader's own reciter first on each retry.
-- Backup voice only when a server ANSWERED (404…) — `core/utils/http_status_probe.dart`; offline → wait. Surah backup = local copy of any recitation, else al-Basit murattal R2 → mp3quran (`surah_fallback.dart`). Ayah backup = al-Minshawi murattal (R2).
-- just_audio 0.10 reports failures on `errorStream` (not playbackEventStream) — both players listen there.
-- Seen: continuous cut at 2:146 → held 2:148, only «بانتظار مصدر…» shown, resumed at 2:148 within 5 s of network; surah player offline → wait → PLAYING same reciter; Al-Burimi An-Nas 404 → al-Basit with notice; hifz ×3 offline → waits, resumes 3 plays of 1:1.
-
-STAGE 2/3 (GitHub mirror) — commits e7666e93, 7ab03fa1:
-- `scripts/github_content_mirror.py` uploads R2 bytes verbatim to prereleases content-mirror (336 assets, DONE), content-mushaf (604, uploading), content-surah (228, after). Resumable; `--verify` checks sizes + a range request. Owner approved GitHub Releases only; NO domain yet (CDN step waits); HF/archive.org declined for now → R2-only items now have 2 hosts + the phone copy, NOT 5 — say so.
-- App: `core/config/content_mirrors.dart` (+ test pinning it to the script) used by books, translations, tasmee model, mushaf scans (MirroredNetworkImage + prefetch), DownloadManager (failed → next host), surah downloads (R2→GitHub→mp3quran), surah/ruqyah streaming. Holds back off 20 s → 5 min.
-- Device-verified with a test APK whose R2 base is unreachable (`--dart-define=RAFEEQ_CONTENT_BASE=https://pub-000…r2.dev`, in %TEMP%afeeq_deadr2.apk): a new book downloaded and opened (text shown); ruqyah (al-Ajamy) streamed PLAYING; ruqyah (al-Sudais 41.6 MB) downloaded via DownloadManager hop in <10 s and played OFFLINE. NOT yet: mushaf page, surah stream/download, translation, tasmee model (uploads pending for the first two).
+Source count now: R2-only content → 2 remote hosts (R2 + GitHub) + the phone copy. Per-ayah: R2 (3 reciters) + everyayah + islamic.network ×2. NOT five everywhere — the owner approved GitHub only; a domain (Cloudflare cache + r2.dev as another road) and HF/archive.org would add more.
 - SECURITY: R2 key pair in public git history — owner must rotate (row at the top).
-
-NEXT: finish device checks above once content-mushaf/content-surah are up (`py -3 scripts/github_content_mirror.py --verify`), reinstall the NORMAL build (build_github_release.bat) on the emulator, then the owner's order: full audit + unit tests + full Arabic report; then the ChatGPT «R2 behind Cloudflare CDN» proposal (needs a domain — owner said «مش دلوقتي»: document the manual steps, implement the code side only if it helps without a domain).
+- Not done: quote/new-Muslim backgrounds from unsplash (1 source); per-ayah R2 folders not on GitHub (asset limit); hifz repeat re-requests the file each repetition (measure before changing); Cache-Control metadata waits for the domain.
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
