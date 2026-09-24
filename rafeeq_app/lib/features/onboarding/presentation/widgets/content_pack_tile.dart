@@ -47,6 +47,8 @@ class ContentPackTile extends StatefulWidget {
 }
 
 class _ContentPackTileState extends State<ContentPackTile> {
+  static const double _trailingWidth = 104;
+
   StreamSubscription<List<DownloadTask>>? _sub;
 
   @override
@@ -107,21 +109,58 @@ class _ContentPackTileState extends State<ContentPackTile> {
             ),
           ),
           const SizedBox(width: 8),
-          if (done)
-            const Icon(Icons.check_circle_rounded, color: AppColors.gold)
-          else if (busy)
-            Text(percentOf(task.progress),
-                style: const TextStyle(fontWeight: FontWeight.w700))
-          else
-            FilledButton.icon(
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.gold,
-                foregroundColor: AppColors.night,
-              ),
-              onPressed: widget.onDownload,
-              icon: const Icon(Icons.download_rounded, size: 18),
-              label: Text('downloads.download'.tr()),
+          // ONE FIXED-WIDTH SLOT FOR EVERY STATE. The percentage used to sit
+          // here at its natural width, so «٩٪» → «١٠٪» → «١٠٠٪» narrowed the
+          // Expanded text column, the hint re-wrapped, and the whole row
+          // jumped in height as the download ran - the owner reported it
+          // twice. Fixed width + tabular figures: nothing beside it moves.
+          SizedBox(
+            width: _trailingWidth,
+            height: 40,
+            child: Center(
+              child: done
+                  ? const Icon(Icons.check_circle_rounded,
+                      color: AppColors.gold)
+                  : busy
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                percentOf(task.progress),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontFeatures: [
+                                    FontFeature.tabularFigures(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              tooltip: 'common.cancel'.tr(),
+                              visualDensity: VisualDensity.compact,
+                              icon: const Icon(Icons.close_rounded),
+                              onPressed: () => DownloadManager.instance
+                                  .cancel(widget.downloadId),
+                            ),
+                          ],
+                        )
+                      : FittedBox(
+                          child: FilledButton.icon(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.gold,
+                              foregroundColor: AppColors.night,
+                            ),
+                            onPressed: widget.onDownload,
+                            icon: const Icon(Icons.download_rounded,
+                                size: 18),
+                            label: Text('downloads.download'.tr()),
+                          ),
+                        ),
             ),
+          ),
         ],
       ),
     );

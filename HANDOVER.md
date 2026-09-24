@@ -2495,9 +2495,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 14:09 — IN PROGRESS — resume here**
+**2026-09-24 14:38 — IN PROGRESS — resume here**
 
-checkpoint.ps1 regex rebuilt with chr(92) (trap 11); log line verified
+Stage 1 item 2: ContentPackTile fixed-width trailing slot + tabular digits + cancel (unverified)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
