@@ -156,10 +156,15 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   row turned to the green check by itself.
   NOTE: the onboarding tasmee row, cut by airplane, silently went back to
   «Download» (no message there); item 4 is checked in the Hifz panel.
-- [ ] 4 offline text (Hifz panel)
+- [x] 4 offline text: VERIFIED 22:42 - Hifz > Fatiha > Download the model,
+  airplane at 16% -> red «No internet connection» under the button (was
+  raw DioException English).
+  NOTE (first run, fresh data): after «Later» on the permissions page,
+  Home still asked location + music/audio on first open (system dialogs).
 - [ ] 5 reminder tap · [ ] 6 splash preview · [ ] 8 city on locale
 
 ## Log
+- 2026-09-24 22:42 - Verified item 4: tasmee download offline shows localized No internet connection
 - 2026-09-24 22:38 - Verified item 3: reader-voice download survives airplane mode and completes
 - 2026-09-24 22:32 - Verified items 2 (one notification ask) and 7 (umts recommends Banna); found complete-recitation row fails first try on umts
 - 2026-09-24 22:26 - Build 3 signed (Kotlin compiled); item 1 adhan-without-notifications Stop verified on emulator

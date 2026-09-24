@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 22:38 — IN PROGRESS — resume here**
+**2026-09-24 22:42 — IN PROGRESS — resume here**
 
-Verified item 3: reader-voice download survives airplane mode and completes
+Verified item 4: tasmee download offline shows localized No internet connection
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
