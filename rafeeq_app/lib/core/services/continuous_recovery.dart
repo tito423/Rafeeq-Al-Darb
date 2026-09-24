@@ -22,7 +22,7 @@ part of 'ayah_audio_service.dart';
 ///
 /// Module state rather than fields: [AyahAudioService] is a single instance
 /// and its file sits at its size ceiling (test/code_layout_test.dart).
-StreamSubscription<PlaybackEvent>? _contErrSub;
+StreamSubscription<PlayerException>? _contErrSub;
 int _contHostShift = 0;
 int _contShiftToken = -1;
 String _contChosenEdition = AyahAudioService.defaultEdition;
@@ -31,6 +31,7 @@ bool _contRetrying = false;
 Timer? _contRetryTimer;
 StreamSubscription<List<ConnectivityResult>>? _contNetSub;
 const _retryAfter = Duration(seconds: 20);
+String? _contHeldVerse;
 
 /// Set once in `main()`: shows that another voice has taken over.
 void Function()? continuousVoiceNotice;
@@ -59,6 +60,21 @@ void _cancelHold() {
 }
 
 extension _ContinuousRecovery on AyahAudioService {
+  /// True when a server answered for [a] on the host in use — the file is
+  /// the problem and another voice may help. False when nothing answered:
+  /// no connection, so a substitute would fail too and the message would
+  /// be untrue; the run waits instead.
+  Future<bool> _serverAnswered(Ayah a) async {
+    final urls = RecitationSource.urlsFor(
+      edition: _continuousEdition,
+      surah: a.surahId,
+      ayah: a.ayahNumber,
+      globalAyah: 1,
+    );
+    final url = urls[_contHostShift.clamp(0, urls.length - 1)];
+    return !url.startsWith('http') || await httpStatusOf(url) != null;
+  }
+
   /// A single verse (hifz «استمع», the ayah card, a topic list) that no host
   /// of the chosen reciter could give: the same verse in the default voice,
   /// which the app keeps on its own bucket, rather than silence.
@@ -99,6 +115,7 @@ extension _ContinuousRecovery on AyahAudioService {
       _contShiftToken = _continuousToken;
       _contHostShift = 0;
       _contChosenEdition = _continuousEdition;
+      _contHeldVerse = null;
       _cancelHold();
     }
     return _contHostShift;
@@ -106,9 +123,17 @@ extension _ContinuousRecovery on AyahAudioService {
 
   void _watchContinuousErrors(int token, QuranRepository repo) {
     _contErrSub?.cancel();
-    _contErrSub = _player.playbackEventStream.listen((_) {}, onError: (Object _) {
+    // just_audio 0.10 reports a failed source on `errorStream`, as a value;
+    // `playbackEventStream` carries no stream error for it at all (read in
+    // just_audio.dart 0.10.6, `_errorSubject`). Listening there was deaf:
+    // seen on emulator-5554 with the network cut, the run sat idle.
+    _contErrSub = _player.errorStream.listen((e) {
+      // A load in progress reports its own failure by throwing, and
+      // [_loadSurahIntoPlayer] handles that; every load marks the run
+      // `buffering` until a verse is actually sounding.
       if (token != _continuousToken || _contRecovering) return;
-      final i = _player.currentIndex ?? 0;
+      if (continuous.value.buffering) return;
+      final i = e.index ?? _player.currentIndex ?? 0;
       if (i < 0 || i >= _continuousAyahs.length) return;
       unawaited(_recoverContinuous(_continuousAyahs[i], repo, token));
     });
@@ -119,10 +144,12 @@ extension _ContinuousRecovery on AyahAudioService {
   Future<void> _continuousLoadFailed(
       Ayah a, QuranRepository repo, int token) async {
     if (token != _continuousToken) return;
-    if (_continuousEdition != AyahAudioService.defaultEdition) {
+    if (_continuousEdition != AyahAudioService.defaultEdition &&
+        await _serverAnswered(a)) {
       _continuousEdition = AyahAudioService.defaultEdition;
       _contHostShift = 0;
       _noticeVoice();
+      continuous.value = continuous.value.copyWith(buffering: true);
       await _loadSurahIntoPlayer(
         surahId: a.surahId,
         startAyahNumber: a.ayahNumber,
@@ -148,7 +175,8 @@ extension _ContinuousRecovery on AyahAudioService {
       ).length;
       if (_hostShift + 1 < hosts) {
         _contHostShift++;
-      } else if (_continuousEdition != AyahAudioService.defaultEdition) {
+      } else if (_continuousEdition != AyahAudioService.defaultEdition &&
+          await _serverAnswered(a)) {
         _continuousEdition = AyahAudioService.defaultEdition;
         _contHostShift = 0;
         _noticeVoice();
@@ -157,6 +185,7 @@ extension _ContinuousRecovery on AyahAudioService {
         return;
       }
       if (token != _continuousToken) return;
+      continuous.value = continuous.value.copyWith(buffering: true);
       await _loadSurahIntoPlayer(
         surahId: a.surahId,
         startAyahNumber: a.ayahNumber,
@@ -182,6 +211,11 @@ extension _ContinuousRecovery on AyahAudioService {
       ayahNumber: a.ayahNumber,
       waiting: true,
     );
+    // Said once per verse, and not only in the bar: in full-screen reading
+    // the bar is not drawn at all, and a silent pause looks like a fault.
+    final verse = '${a.surahId}:${a.ayahNumber}';
+    if (_contHeldVerse != verse) ayahWaitingNotice?.call(verse);
+    _contHeldVerse = verse;
     _cancelHold();
 
     Future<void> retry() async {

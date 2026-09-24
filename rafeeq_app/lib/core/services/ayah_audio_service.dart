@@ -17,6 +17,7 @@ import '../db/models.dart';
 import 'continuous_recitation.dart';
 export 'continuous_recitation.dart';
 import '../db/quran_repository.dart';
+import '../utils/http_status_probe.dart';
 import 'audio_failure.dart';
 import 'finish_pauser.dart';
 import 'recitation_source.dart';
@@ -200,8 +201,7 @@ class AyahAudioService {
         edition: edition,
         title: titleFor?.call(ayahs[i], i),
       );
-      // Nothing answered, backup voice included: hold on THIS verse and try
-      // it again — never on to the next (see _waitForSource).
+      // Nothing played: wait, then THIS verse again — never the next one.
       if (!started && await _waitForSource(token, ayahs[i--])) continue;
       if (!started) break;
       await _waitForCompletionOrToken(token);

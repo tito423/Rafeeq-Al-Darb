@@ -7,6 +7,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 
 import '../../../core/services/ayah_audio_service.dart';
+import '../../../core/utils/http_status_probe.dart';
 import 'surah_fallback.dart';
 
 /// One thing the player can play: a downloaded surah, a streamed one, or a
@@ -169,8 +170,8 @@ class QuranAudioPlayer extends ChangeNotifier {
         } catch (e) {
           // Kept so the snackbar can say WHAT failed if nothing is left.
           final url = _queue[i].url ?? _queue[i].filePath ?? '';
-          lastFailure = (url: url, error: e, status: await _statusOf(url));
-          final next = _nextStep(i);
+          lastFailure = (url: url, error: e, status: await httpStatusOf(url));
+          final next = _nextStep(i, answered: lastFailure?.status != null);
           if (next == null) return false;
           i = next;
         }
@@ -185,13 +186,18 @@ class QuranAudioPlayer extends ChangeNotifier {
   ///  1. its public origin, if it came from the app's own mirror;
   ///  2. the same surah in another voice ([SurahFallback]), once;
   ///  then nothing more here — the caller HOLDS on this surah ([_holdAt]).
-  int? _nextStep(int i) {
+  ///
+  /// [answered]: a server replied (404, 403…) — this file is the problem,
+  /// and another voice may stand in. No reply means no connection: only a
+  /// copy already on the phone can help then, and the rest is waiting.
+  int? _nextStep(int i, {required bool answered}) {
     final t = _queue[i];
     PlayerTrack? replacement;
     if (t.fallbackUrl != null && !t.isLocal) {
       replacement = t.originOnly();
     } else if (_substituted.add(t.id)) {
-      replacement = SurahFallback.forTrack(t);
+      replacement = SurahFallback.forTrack(t, localOnly: !answered && !t.isLocal);
+      if (replacement == null) _substituted.remove(t.id);
       if (replacement != null) {
         onNotice?.call(PlayerNotice.substituted, t.title, replacement.artist);
       }
@@ -210,7 +216,10 @@ class QuranAudioPlayer extends ChangeNotifier {
   Future<void> _recover() async {
     if (_loading || !active) return;
     final failed = _player.currentIndex ?? _index;
-    final next = _nextStep(failed);
+    final t = _queue[failed];
+    final answered =
+        t.isLocal || await httpStatusOf(t.url ?? '') != null;
+    final next = _nextStep(failed, answered: answered);
     if (next == null || !await _startAt(next)) _holdAt(failed);
   }
 
@@ -275,22 +284,7 @@ class QuranAudioPlayer extends ChangeNotifier {
   /// missing or the phone is offline.
   ({String url, Object error, int? status})? lastFailure;
 
-  static Future<int?> _statusOf(String url) async {
-    final uri = Uri.tryParse(url);
-    if (uri == null || !uri.hasScheme || uri.scheme == 'file') return null;
-    final client = HttpClient()..connectionTimeout = const Duration(seconds: 6);
-    try {
-      final req = await client.headUrl(uri).timeout(const Duration(seconds: 6));
-      // R2 refuses a request with no User-Agent (CLAUDE.md trap #19).
-      req.headers.set(HttpHeaders.userAgentHeader, 'RafeeqAlDarb');
-      final res = await req.close().timeout(const Duration(seconds: 6));
-      return res.statusCode;
-    } catch (_) {
-      return null; // no answer at all: that IS the connection
-    } finally {
-      client.close(force: true);
-    }
-  }
+
 
   void _attach(AudioPlayer player) {
     for (final s in _subs) {
@@ -311,10 +305,9 @@ class QuranAudioPlayer extends ChangeNotifier {
         notifyListeners();
       }))
       ..add(player.playerStateStream.listen((_) => notifyListeners()))
-      // Errors surface here, not as exceptions, once the queue is playing.
-      ..add(player.playbackEventStream.listen((_) {}, onError: (Object _) {
-        unawaited(_recover());
-      }));
+      // Once the queue is playing, a bad source arrives on errorStream as a
+      // value (just_audio 0.10) — not as an error on any other stream.
+      ..add(player.errorStream.listen((_) => unawaited(_recover())));
   }
 
   void _onOwnership() {

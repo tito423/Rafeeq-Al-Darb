@@ -33,19 +33,19 @@ class SurahFallback {
 
   /// A replacement for [t], or null when [t] is not a surah of a recitation
   /// (an imported device file) or it already IS the last backup.
-  static PlayerTrack? forTrack(PlayerTrack t) {
+  /// [localOnly]: no connection — only a copy on the phone is worth offering.
+  static PlayerTrack? forTrack(PlayerTrack t, {bool localOnly = false}) {
     final m = _id.firstMatch(t.id);
     if (m == null) return null;
     final moshaf = int.parse(m.group(1)!);
     final surah = int.parse(m.group(2)!);
-    if (moshaf == _basitMoshaf) return null;
-
     final lib = QuranAudioLibrary.instance;
     for (final e in lib.entries) {
       if (e.moshafId == moshaf || !lib.isDownloaded(e.moshafId, surah)) continue;
       return _as(t, surah, e.reciterName,
           filePath: lib.fileFor(e.moshafId, surah).path);
     }
+    if (localOnly || moshaf == _basitMoshaf) return null;
     final s = surah.toString().padLeft(3, '0');
     return _as(t, surah, _basitName,
         url: AppConfig.r2SurahUrl('basit_murattal', surah),

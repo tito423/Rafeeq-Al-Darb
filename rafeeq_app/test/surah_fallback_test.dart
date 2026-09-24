@@ -24,6 +24,11 @@ void main() {
     expect(fb.title, 'سورة الناس');
   });
 
+  test('with no connection, no network voice is offered (only a local copy)',
+      () {
+    expect(SurahFallback.forTrack(track('m57-s114'), localOnly: true), isNull);
+  });
+
   test('al-Basit himself has no further backup, so the walk ends', () {
     expect(SurahFallback.forTrack(track('m53-s114')), isNull);
   });
