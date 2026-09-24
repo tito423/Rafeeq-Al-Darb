@@ -25,6 +25,7 @@ import '../../../../core/widgets/arabic_text.dart';
 import '../../data/hifz_store.dart';
 import '../../data/tasmee_mic.dart';
 import '../../data/tasmee_engine.dart';
+import '../../../../core/services/adhan_native.dart';
 import '../../../../core/services/audio_exclusive.dart';
 
 enum _Phase { idle, recording, thinking, done }
@@ -61,6 +62,12 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   final _recorder = AudioRecorder();
   final _engine = TasmeeEngine.instance;
   Timer? _cap;
+
+  /// While recording, asks once a second whether an adhan has started. The
+  /// microphone would hear it and grade the reader against the muezzin; the
+  /// adhan's native player takes the audio focus, which a recorder is not
+  /// told about. That recording is thrown away, as on an ayah change.
+  Timer? _adhanWatch;
   String? _wavPath;
 
   _Phase _phase = _Phase.idle;
@@ -120,6 +127,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
       Future.microtask(() => n.state = false);
     }
     _cap?.cancel();
+    _adhanWatch?.cancel();
     _amp?.cancel();
     _recorder.dispose();
     // Never leave the phone on the call route behind a closed screen.
@@ -203,6 +211,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     // A forgotten «stop» should not record for ever.
     _cap?.cancel();
     _cap = Timer(const Duration(seconds: tasmeeMaxSeconds), _stopRecording);
+    _adhanWatch?.cancel();
+    _adhanWatch = Timer.periodic(const Duration(seconds: 1), (_) async {
+      if ((await AdhanNative.state()).playing) await _cancelRecording();
+    });
     _setRecording(true);
     setState(() {
       _phase = _Phase.recording;
@@ -215,6 +227,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   Future<void> _cancelRecording() async {
     if (_phase != _Phase.recording) return;
     _cap?.cancel();
+    _adhanWatch?.cancel();
     await _recorder.stop();
     await _amp?.cancel();
     _amp = null;
@@ -238,6 +251,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     _setRecording(false);
     setState(() => _phase = _Phase.thinking);
     _cap?.cancel();
+    _adhanWatch?.cancel();
     await _recorder.stop();
     await _amp?.cancel();
     _amp = null;

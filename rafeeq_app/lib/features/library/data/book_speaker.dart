@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'dart:io';
 
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -32,9 +33,49 @@ import '../../../core/services/audio_exclusive.dart';
 /// opposite, and passes the book's own vowelled text through untouched. The
 /// harakat are the entire point.
 class BookSpeaker {
-  BookSpeaker({FlutterTts? tts}) : _tts = tts ?? FlutterTts();
+  BookSpeaker({FlutterTts? tts, Stream<AudioInterruptionEvent>? interruptions})
+      : _tts = tts ?? FlutterTts(),
+        _interruptions = interruptions;
 
   final FlutterTts _tts;
+
+  /// Audio-focus interruptions for the phone voice. flutter_tts 4.2.5 asks
+  /// for focus with an EMPTY change listener, so nothing paused it: the
+  /// adhan and a page being read played at once (seen with the open voice
+  /// on emulator-5554, 2026-09-24; its native player now handles focus
+  /// itself). Null: the app's AudioSession. A test passes its own.
+  final Stream<AudioInterruptionEvent>? _interruptions;
+
+  /// Set while another sound (the adhan, a call) holds the focus; the
+  /// reading loop waits on it, then reads the interrupted chunk again.
+  Completer<void>? _held;
+
+  Future<StreamSubscription<AudioInterruptionEvent>?> _watchFocus() async {
+    var events = _interruptions;
+    if (events == null) {
+      try {
+        final session = await AudioSession.instance;
+        await session.setActive(true);
+        events = session.interruptionEventStream;
+      } catch (e) {
+        debugPrint('BookSpeaker: no audio session: $e');
+        return null;
+      }
+    }
+    return events.listen((e) {
+      if (!_speaking) return;
+      if (!e.begin) {
+        final h = _held;
+        _held = null;
+        h?.complete();
+      } else if (e.type == AudioInterruptionType.unknown) {
+        unawaited(stop()); // focus gone for good: another app's audio
+      } else if (e.type == AudioInterruptionType.pause && _held == null) {
+        _held = Completer<void>();
+        unawaited(_tts.stop());
+      }
+    });
+  }
 
   /// Android's `TextToSpeech` refuses an utterance past a platform maximum,
   /// so a page has to be cut up regardless of how it reads. Cutting on
@@ -206,6 +247,7 @@ class BookSpeaker {
       return;
     }
 
+    final focus = await _watchFocus();
     for (; _index < _chunks.length; _index++) {
       if (_cancelled) break;
       _emit(
@@ -217,7 +259,14 @@ class BookSpeaker {
         debugPrint('BookSpeaker: chunk $_index failed: $e');
         break;
       }
+      final held = _held;
+      if (held != null) {
+        await held.future;
+        if (_cancelled) break;
+        _index--; // the interrupted chunk again, from its start
+      }
     }
+    await focus?.cancel();
 
     _speaking = false;
     _emit(
@@ -311,6 +360,9 @@ class BookSpeaker {
     AudioExclusive.speakerStopped(stop);
     _gen++;
     _cancelled = true;
+    final held = _held;
+    _held = null;
+    held?.complete();
     _speaking = false;
     try {
       await _voicePlayer.invokeMethod<void>('stop');

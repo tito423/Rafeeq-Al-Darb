@@ -68,6 +68,11 @@ class SunanSuwarReminderService {
           _channelName,
           importance: Importance.defaultImportance,
           priority: Priority.defaultPriority,
+          // One id per surah per WEEKDAY, so undismissed reminders pile up:
+          // four surahs set daily reach 28 in a week, past the 25 Android
+          // allows a package, and then the adhan's own notification is the
+          // one dropped (trap #33). Gone before the next day's.
+          timeoutAfter: const Duration(hours: 20).inMilliseconds,
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,

@@ -89,9 +89,19 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
 - [x] book reader vs recitation (prev) · [x] tasmee vs listen/recitation
 - [x] delete playing surah recitation · [ ] delete playing per-ayah (fixed,
   rebuild) · [x] download state app-wide · [x] qibla 258 = computed 258.2
-- [ ] ADHAN vs BOOK READER (open voice takes no focus - suspect)
-- [ ] adhan vs tasmee recording · [ ] focus mode vs adhan
-- [ ] notifications count (trap 33) · [ ] theme/locale switch while playing
+- [x] ADHAN vs BOOK READER: CONFIRMED BUG 20:10 (Isha moved +27 min):
+  USAGE_ALARM + SPEECH MediaPlayers both started, reading went on after
+  Stop. FIXED in code: VoicePlayerChannel.kt holds audio focus (transient
+  loss pauses, gain resumes same chunk, loss stops, released 1.5 s after
+  the last chunk); phone TTS path: BookSpeaker listens to AudioSession
+  interruptions (pause -> re-read chunk, unknown -> stop, duck ignored),
+  test/book_speaker_focus_test.dart 3/3. NEEDS REBUILD + device check.
+- [~] adhan vs tasmee recording: FIXED in code (poll AdhanNative.state()
+  each 1 s while recording -> discard), needs rebuild + device check · [ ] focus mode vs adhan
+- [x] notifications count (trap 33): every service uses fixed ids ->
+  bounded, EXCEPT sunan-surah reminders (id per surah per weekday: 4
+  surahs daily = 28/week undismissed > 25 -> adhan notification dropped).
+  FIXED: timeoutAfter 20 h. Prayer reminders max 15, azkar 3, khatma 1/k. · [ ] theme/locale switch while playing
 - [ ] app to background + back while playing/downloading
 - [ ] slow network: onboarding probe (fixed, rebuild)
 - [ ] light theme contrast: reciter header (fixed, rebuild) - scan others
@@ -139,6 +149,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 20:19 - Audit: adhan+book reader played together (seen) -> audio focus in voice player + TTS interruptions (3 tests); tasmee discards recording on adhan; sunan reminders self-clear (trap 33); 573 pass
 - 2026-09-24 20:02 - Full audit matrix written (owner: audit every aspect); qibla verified 258 vs computed 258.2
 - 2026-09-24 20:01 - Found on device: deleting a per-ayah reciter left its queue playing from the network; fixed (tag check), 570 pass
 - 2026-09-24 19:48 - Seen: deleting a playing surah recitation stops it; fixed unreadable reciter header text in light theme
