@@ -29,6 +29,11 @@ pubspec is ALREADY 3.62.0+64; NOT released; v3.61.0 is still the release.
    - «استمع» disabled while tasmee records; changing ayah mid-recording
      cancels it (tasmee_panel.dart tasmeeRecordingProvider).
    - deleting a reciter / surah recitation that is playing stops it.
+   - REST OF THE CONFLICT AUDIT (owner 19:30: finish ALL conflicts and
+     compat issues app-wide before the release): notifications count
+     (trap 33, >25 posted), focus mode vs adhan, location (qibla + prayer
+     card at once). Signed 3.62.0 APK built 19:30 with the download-state
+     fix (build/app/outputs/flutter-apk/app-release.apk, signed).
    TELL THE OWNER when done so he can put the laptop back from Turbo.
 3. Only then: release 3.62.0 (notes in dist/release_notes_v3.62.0.md - add
    the tasmee/delete/download-state items), delete v3.61.0 + tag, keep
@@ -84,6 +89,7 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 19:31 - 3.62.0 signed build done (download-state fix in); owner 19:30: finish whole-app conflict audit first - remaining pairs logged; emulator starting
 - 2026-09-24 19:26 - Download state audit done: only tasmee + voice held widget state (fixed); 570 tests pass; building 3.62.0 for device verification
 - 2026-09-24 19:24 - Download state app-wide (1/2): tasmee model and enhanced voice downloads owned by TasmeeEngine/OpenVoice, not widgets; panel, pack rows, voice settings and reader sheet show downloading %/installed; analyze clean, not on device
 - 2026-09-24 18:50 - Session stopped by owner: TASK_FOLLOWUP next steps exact (download-state buttons, one build, verify, then release 3.62.0)
