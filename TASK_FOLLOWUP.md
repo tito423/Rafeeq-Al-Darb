@@ -6,25 +6,21 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-**PLAN.md Stage 1 — «التحميلات المبدئية»** (owner's order 2026-09-24).
+**«ملخص العمرة» + «ملخص الحج»** (owner's order 2026-09-24 16:12).
+PLAN.md Stage 1 is DONE and RELEASED: v3.61.0 published 2026-09-24 16:09
+(tag SHA d84abe8a == HEAD at release; APK 265,181,991 bytes; v3.60.0 +
+tag deleted; v3.51.0 and content-* kept). Verified on emulator — see
+Settled facts.
 
 ## Next step (exact)
-0. DONE in code (analyze 0, 568 tests): More colours (gold / info /
-   primarySoft / error / info / gold); Hifz swipe fix (owner's video: a
-   thumb arc flipped 2:255 <-> 256 - REPRODUCED on the emulator at
-   font_scale 1.3 with an `input motionevent` arc; fixed with 3x slop + a
-   |dx| >= 2|dy| path check); Hifz app-bar jump button + sheet + its keys
-   removed (the navigator covers it). Version 3.61.0+63. Release build
-   started ~16:05 (log %TEMP%/claude/build_log2.txt).
-1. When the build is done: start the emulator, `adb uninstall
-   com.tito.rafeeq_aldarb`, install fresh, and check on the device: new
-   title/blurb; every row (ayah reciter probe + picker, whole recitation,
-   tasmee, voice, total line); screenrecord the علوم القرآن download for
-   the jump fix; the More colours; the Hifz swipe fix (font_scale 1.3,
-   Baqarah 255, the same motionevent arc must SCROLL, not change the ayah;
-   a real sideways swipe must still turn it). Reset font_scale to 1.0.
-2. Release: delete v3.60.0 + its tag (keep v3.51.0 and content-*), publish
-   v3.61.0 with --target master, verify the tag SHA == HEAD.
+1. Read what the Hajj/Umrah screen already has (HajjScreen and its data /
+   sources) before writing anything.
+2. Write a quick stage-by-stage summary card at the BOTTOM of the Umrah
+   section and of the Hajj section: from arrival, what to do at each stage,
+   the adhkar said along the way, the wajibat and the sunan. Every step and
+   dhikr from a NAMED source (CLAUDE.md 1.2); credit on the Sources screen.
+3. Then PLAN 4a: measure whisper-base vs tiny (owner asked about integrating
+   the better model; answer was: only if it wins by numbers).
 
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
@@ -68,6 +64,7 @@ account, the other one, or another agent — reads this and continues from
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:10 - v3.61.0 released and verified (tag == HEAD); next: Umrah/Hajj summaries
 - 2026-09-24 16:08 - 3.61.0 final build verified (tutorial card teal under Tools); releasing
 - 2026-09-24 16:04 - 3.61.0 verified on emulator (onboarding rows, jump fix, More colours, Hifz arc); tutorial card follows group colour
 - 2026-09-24 15:56 - Owner order logged: Umrah/Hajj quick summaries after the release
