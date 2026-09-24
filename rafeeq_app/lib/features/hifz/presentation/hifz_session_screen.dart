@@ -403,7 +403,10 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
             ),
             const SizedBox(height: 6),
             FilledButton.icon(
-              onPressed: _playing
+              // Off while the tasmee' records (tasmeeRecordingProvider).
+              onPressed: ref.watch(tasmeeRecordingProvider)
+                  ? null
+                  : _playing
                   ? () => AyahAudioService.instance.stopQueue()
                   : () => _play(ayah),
               icon: Icon(

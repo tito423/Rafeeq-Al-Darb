@@ -29,6 +29,13 @@ import '../../../../core/services/audio_exclusive.dart';
 
 enum _Phase { idle, downloading, recording, thinking, done }
 
+/// True while the tasmee' microphone is open. «استمع» on the same screen
+/// reads it: pressing it mid-recording played the reciter INTO the
+/// microphone - on emulator-5554 (2026-09-24) the ayah played and the
+/// recording ran at once, and the reciter would have passed the reader's
+/// test for him.
+final tasmeeRecordingProvider = StateProvider<bool>((ref) => false);
+
 class TasmeePanel extends ConsumerStatefulWidget {
   final String ayahText;
   final int surahId;
@@ -77,6 +84,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   @override
   void initState() {
     super.initState();
+    _recordingFlag; // bind while `ref` is valid (see _recordingFlag)
     TasmeeEngine.instance.isInstalled().then(
       (v) => mounted ? setState(() => _installed = v) : null,
     );
@@ -88,6 +96,12 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   @override
   void didUpdateWidget(TasmeePanel old) {
     super.didUpdateWidget(old);
+    // A new ayah mid-recording: that recording is of the OLD ayah, and
+    // finishing it would mark the new one by it. Thrown away.
+    if (old.ayahText != widget.ayahText && _phase == _Phase.recording) {
+      unawaited(_cancelRecording());
+      return;
+    }
     // A new ayah: the previous result is not about it.
     if (old.ayahText != widget.ayahText && _result != null) {
       setState(() {
@@ -100,6 +114,12 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
 
   @override
   void dispose() {
+    if (_phase == _Phase.recording) {
+      // Not ref.read here (disposed); the provider is reset on the next
+      // frame so the screen that stays does not keep «استمع» disabled.
+      final n = _recordingFlag;
+      Future.microtask(() => n.state = false);
+    }
     _cap?.cancel();
     _amp?.cancel();
     _recorder.dispose();
@@ -194,6 +214,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     // A forgotten «stop» should not record for ever.
     _cap?.cancel();
     _cap = Timer(const Duration(seconds: tasmeeMaxSeconds), _stopRecording);
+    _setRecording(true);
     setState(() {
       _phase = _Phase.recording;
       _error = null;
@@ -201,8 +222,31 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     });
   }
 
+  /// Mic closed, recording discarded, nothing marked.
+  Future<void> _cancelRecording() async {
+    if (_phase != _Phase.recording) return;
+    _cap?.cancel();
+    await _recorder.stop();
+    await _amp?.cancel();
+    _amp = null;
+    _level = 0;
+    await restoreAudioRoute();
+    _setRecording(false);
+    if (mounted) setState(() => _phase = _Phase.idle);
+  }
+
+  /// Held from initState: `ref` is not usable once dispose has begun.
+  late final StateController<bool> _recordingFlag =
+      ref.read(tasmeeRecordingProvider.notifier);
+
+  void _setRecording(bool on) {
+    if (!mounted) return;
+    _recordingFlag.state = on;
+  }
+
   Future<void> _stopRecording() async {
     if (_phase != _Phase.recording) return;
+    _setRecording(false);
     setState(() => _phase = _Phase.thinking);
     _cap?.cancel();
     await _recorder.stop();
