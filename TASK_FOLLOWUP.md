@@ -100,8 +100,11 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   USAGE_ALARM plays; after Stop the same player (piid 455) -> started,
   reading resumed on the same page. Phone-TTS path: unit-tested only (the
   emulator has no Arabic TTS engine).
-- [~] adhan vs tasmee recording: FIXED in code (poll AdhanNative.state()
-  each 1 s while recording -> discard), needs rebuild + device check · [ ] focus mode vs adhan
+- [x] adhan vs tasmee recording: FIXED (poll AdhanNative.state() 1 s ->
+  discard) and VERIFIED build 2 20:43: recording dropped at the adhan, no
+  recording config left, panel back to Start reciting, nothing marked · [x] focus mode vs adhan: focus mode is in-app only (no lock task/DND);
+  VERIFIED 20:46: Dhuhr test adhan fired full screen over focus-mode
+  Tasbeeh, Stop -> back to focus mode, 0 players
 - [x] notifications count (trap 33): every service uses fixed ids ->
   bounded, EXCEPT sunan-surah reminders (id per surah per weekday: 4
   surahs daily = 28/week undismissed > 25 -> adhan notification dropped).
@@ -154,6 +157,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 20:46 - Verified on build 2: adhan discards a tasmee recording; adhan over focus mode and back
 - 2026-09-24 20:36 - Verified on build 2: per-ayah delete stops playback; reciter header readable
 - 2026-09-24 20:35 - Verified on build 2: per-ayah delete stops playback; reciter header readable
 - 2026-09-24 20:31 - Verified on device: adhan pauses the book reader and it resumes after
