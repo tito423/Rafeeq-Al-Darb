@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 23:34 — IN PROGRESS — resume here**
+**2026-09-24 23:59 — IN PROGRESS — resume here**
 
-Matrix en+ar read: quote arrows were swapped, adhkar grid 2 columns in landscape - both fixed (unbuilt)
+Matrix done (7 languages x 3 themes x 2 orientations): hadith explanation was forced RTL in LTR languages - fixed; 577 pass; building 5
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

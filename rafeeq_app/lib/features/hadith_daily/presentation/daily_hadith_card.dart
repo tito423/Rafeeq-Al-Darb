@@ -446,15 +446,33 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          ArabicText(
-                            stripBidiControls(daily.explanation),
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              height: 1.7,
+                          // The explanation is in the READER's language (the
+                          // pack follows the UI), so only Arabic and Urdu are
+                          // right-to-left. ArabicText forces RTL, and a
+                          // Portuguese explanation came out with «O Profeta»
+                          // moved to the end of its line (emulator-5554,
+                          // 2026-09-24).
+                          if (Directionality.of(context) ==
+                              ui.TextDirection.rtl)
+                            ArabicText(
+                              stripBidiControls(daily.explanation),
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                height: 1.7,
+                              ),
+                            )
+                          else
+                            Text(
+                              stripBidiControls(daily.explanation),
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                height: 1.7,
+                              ),
                             ),
-                          ),
                         ],
                       ],
                     ),
