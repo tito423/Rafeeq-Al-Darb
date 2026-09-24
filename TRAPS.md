@@ -539,3 +539,14 @@ Do not rediscover these.
     release build on this project's AGP 8.11 — while a debug build and
     `flutter analyze` passed. Stay on 12.0.3 until the project moves to AGP 9.
     Proof of an upgrade is `build_github_release.bat`, not a debug run (§1.8).
+
+53. **The emulator's `-tcpdump` captures nothing here; `-http-proxy` does.**
+    To prove which host served a file (2026-09-24, C1 backgrounds), a
+    `-tcpdump` capture came back 14 KB with not even a DNS query in it. Start
+    the emulator with `-http-proxy http://127.0.0.1:8899` behind a tiny
+    logging CONNECT proxy instead: every TCP connection from the guest goes
+    through it (checked with `nc example.com 80` from `adb shell`). It logs
+    IPs, not names - map them with `Resolve-DnsName` / `adb shell ping`.
+    Also: `pm trim-caches` does NOT evict `CachedNetworkImage`'s files -
+    only `pm clear` forced a refetch; grant runtime permissions with
+    `adb shell pm grant` so system dialogs do not sit on the screen.

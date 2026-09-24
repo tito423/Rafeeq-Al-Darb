@@ -17,6 +17,8 @@ account, the other one, or another agent — reads this and continues from
    the R2 mirrors (`Mp3QuranApi.r2Mirrors`), then build the rows on
    `onboarding_screen.dart` reusing `AyahRecitationLibrary.downloadReciter`
    and the host-speed probe (range request per host at screen open).
+   FACT (15:11): the APK on the emulator (built 14:40) shows the OLD title
+   «المصحف الورقي» — it does NOT contain items 1/2. Rebuild before checking.
 2. Ask the owner about his note on «صوت قارئ الكتب المحسّن» (PLAN item 3).
 3. Items 1+2 are in code (analyze 0, 568 tests pass) but NOT seen on device:
    verify both on a FRESH install (adb uninstall) with screenrecord during
@@ -29,7 +31,14 @@ account, the other one, or another agent — reads this and continues from
 - B1 /sync caps: deployed (Worker 48b3fa3a), caps not exercised live (needs a
   real Google ID token).
 
+## Settled facts
+- C1 backgrounds come from R2: after `pm clear`, opening Adhkar + new-Muslim
+  made 6 connections, all to 104.18.50.34/104.18.54.45 (= the r2.dev
+  bucket), zero to Unsplash (151.101.x / 146.75.x) or GitHub; images drawn.
+  Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
+
 ## Log
+- 2026-09-24 15:17 - C1 proven served from R2 via logging proxy; new rules 1.7b (certainty) and no-lazy-shortcuts; trap 53
 - 2026-09-24 14:50 - Stage 1 item 3: per-ayah reciter sizes measured (35 reciters, everyayah listings) and bundled as a catalogue
 - 2026-09-24 14:46 - Stage 1 item 1: title/blurb in 7 locales; C1 backgrounds seen on emulator (adhkar + new-Muslim render)
 - 2026-09-24 14:38 - Stage 1 item 2: ContentPackTile fixed-width trailing slot + tabular digits + cancel (unverified)

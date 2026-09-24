@@ -126,6 +126,23 @@ live endpoint) and say where from and when. Anything you could not check is
 labelled as unchecked, never stated as fact. Training memory is a starting
 point for where to look, not an answer.
 
+### 1.7b Certainty, not "maybe" — go and check
+
+> «مفيش حاجة اسمها ممكن تكون او معرفش او اظن لازم تتاكد يقينا دايما وابدا
+> عشان لما تبني قرار تاخده صح بناء على ارضية ثابته» (2026-09-24)
+
+"Maybe", "I think", "probably", "I don't know" are not answers on this
+project. When one is about to leave your mouth, stop and **find out** — run
+it, fetch it, read the source, measure it — then state the fact and how it
+was established. Labelling something "unverified" (§1.5) is not the end of
+the job; it is the list of things still to check. A decision is built only on
+facts checked this way. If a check is genuinely impossible from here (needs
+the owner's phone, his Google sign-in, money), say exactly what blocks it and
+what would unblock it — never leave a guess standing in its place.
+
+This was set after a report said the backgrounds «ممكن تكون جاية من المصدر
+الاحتياطي» instead of checking which host served them.
+
 ### 1.8 Libraries and toolchain: current, stable, and proven compatible
 
 > «كل مكتبات التطبيق والبيئة اللي بنطور بيها لازم تكون محدثة ومتوافقه
@@ -336,6 +353,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 50. just_audio 0.10 reports a failed source on `errorStream`, as a value.
 51. R2 objects stored with `Content-Encoding: gzip` come back INFLATED to a client that does not send `Accept-Encoding: gzip`.
 52. `permission_handler` 13 → `permission_handler_android` 14.1.0 needs AGP 9
+53. The emulator's `-tcpdump` captures nothing here; `-http-proxy` + a logging proxy does.
 
 ## 4. Where things live
 
@@ -369,6 +387,15 @@ download will open a stale file.
 - When he supplies an asset (an icon, an image), **use it exactly as given**:
   «ياصاحبي استخدمها هيا بالظبط من غير تعديل».
 - Ask only when two readings would lead to materially different work.
+- **No lazy shortcuts; look for the better road.** «اوعاك تستسهل في حاجة
+  ممكن تضيع تعبنا ... اوعاك الشورت كت اللي يودي في داهية ... دايما حلول
+  ابداعية وابتكارية» (2026-09-24). A shortcut that risks the work — skipping
+  a check, a guessed number, a hack that "should be fine" — is forbidden.
+  But a faster, more efficient AND more reliable method is exactly what he
+  wants: before grinding through a slow or fragile path, ask whether there
+  is a smarter one (one listing instead of 6,236 HEADs; `adb pm grant`
+  instead of tapping through dialogs; a logging proxy instead of guessing
+  which host answered) and take it.
 
 ---
 
