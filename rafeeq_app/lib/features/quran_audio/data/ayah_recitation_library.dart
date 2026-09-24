@@ -6,6 +6,7 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 
 import '../../../core/config/app_config.dart';
 import '../../../core/services/download_engine.dart';
@@ -528,6 +529,15 @@ class AyahRecitationLibrary extends ChangeNotifier {
     if (audio.continuous.value.active &&
         audio.continuousEdition == edition) {
       await audio.stopContinuous();
+    }
+    // A queue or single ayah of this reciter too (the reciter screen's own
+    // play button, the hifz loop): checking continuous recitation alone let
+    // a queue play on after its files were deleted, streaming the rest from
+    // the network (emulator-5554, 2026-09-24). Every ayah source is tagged
+    // `edition:global` (AyahAudioService._tag).
+    final tag = audio.player.sequenceState.currentSource?.tag;
+    if (tag is MediaItem && tag.id.split(':').first == edition) {
+      await audio.stopQueue();
     }
     _entries.remove(edition);
     _downloadedCounts.remove(edition);
