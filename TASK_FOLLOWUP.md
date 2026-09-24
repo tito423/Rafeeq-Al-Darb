@@ -85,7 +85,16 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
   (was a plain download offer); onboarding rows show both downloads with %;
   tasmee: «Listen» greyed while recording and pressing it plays nothing
   (media_session NONE); moving to ayah 2 mid-recording cancelled it, Listen
-  back, nothing marked. The emulator's Quran tab opens full screen - Back
+  back, nothing marked.
+- SEEN (19:40-19:44, fresh install, umts then full): tasmee download started
+  in onboarding shows in the Hifz panel «Downloading 0%» + Cancel; left the
+  panel 20 s, came back at 33% (old build cancelled it on leave); then 90%
+  -> «Start reciting» on its own. Isha adhan fired 19:43 during it (full
+  screen, USAGE_ALARM MediaPlayer), Stop -> nothing playing, panel intact.
+- FOUND (not fixed yet): on the slow (umts) network the onboarding
+  per-ayah recitation row says «No server answered right now» and its
+  button is DISABLED - the servers answer, just slowly. Look at the probe
+  timeout in offline_pack_tiles.dart (_Probe). The emulator's Quran tab opens full screen - Back
   returns Home (not a bug; Display sheet ate one Back).
 - VERIFIED on emulator (3.61.0 fresh install, 16:00-16:04): onboarding title/blurb + all 6 rows with measured sizes, smallest recommended (Banna 383.6, Basit 449.0), total 1.3 GB (= 1278.5 MB summed); علوم القرآن download screenrecorded 0->90%: row never re-wraps or moves; More colours gold/blue/teal/red/blue/gold, Reminders sub-cards red; Hifz: jump button gone; a fine-sampled thumb arc on 2:255 at font 1.3 SCROLLS the page and keeps 255; a sideways swipe still turns to 256.
 - FOUND + FIXED after the build: «شرح التطبيق» (TutorialEntryCard) stayed gold under Tools — now reads MoreGroupAccent. Needs the rebuild, then release.
@@ -96,6 +105,7 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 19:44 - Seen on device: tasmee download survives leaving the panel, shared with onboarding; adhan during download OK; found slow-network probe disables ayah row
 - 2026-09-24 19:40 - Seen on device: voice download state in Settings, tasmee listen-disabled + ayah-change cancel
 - 2026-09-24 19:31 - 3.62.0 signed build done (download-state fix in); owner 19:30: finish whole-app conflict audit first - remaining pairs logged; emulator starting
 - 2026-09-24 19:26 - Download state audit done: only tasmee + voice held widget state (fixed); 570 tests pass; building 3.62.0 for device verification
