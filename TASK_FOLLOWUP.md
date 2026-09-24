@@ -6,15 +6,20 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-Owner 21:00 «صلح صلح وشيك ايه اللي ناقص في الاوديت الكامل». v3.62.0 is out.
-DONE in code (analyze clean, 573 pass, NOT on device yet):
-- slow-line probe keeps timed-out hosts (shown «بطيء على هذا الاتصال»),
-  so the smallest reciter is recommended again; key onboarding.response_slow
-  in 7 locales.
-- refreshPlaceName uses the SAVED coordinates (LocationService.savedIn) -
-  no 15 s GPS wait for the city name after a language switch.
+HANDOVER 2026-09-24 ~22:00 (owner: «جهّز الدنيا», moving to the other
+account). v3.62.0 released (tag 1f758e40). master is AHEAD with 8 audit-part-2
+fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
+Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+1. Emulator OFF (`adb emu kill`, trap 24), then `build_github_release.bat`.
+   If the Kotlin in MainActivity.kt fails to compile, fix it first.
+2. Start the emulator, `adb install -r` the signed APK, and verify the 8
+   items in NEXT_SESSION_PROMPT.md «نصف منتهٍ», in that order (the Kotlin
+   adhan one first). Tick each below with what was seen.
+3. Remaining audit: landscape on main screens, Urdu pass.
+4. Report to the owner; release 3.63.0 ONLY if he asks.
+
 AUDIT PART 2 - gaps not covered by part 1, each on the emulator:
 1. [x] splash preview vs recitation: with sound it pauses the recitation
        (one sound, OK) but it STAYED paused after - FIXED in code: resumes
@@ -131,6 +136,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 21:53 - Handover: verified (analyze, 577 tests, 8 hosted paths 206), measured, HANDOVER/NEXT_SESSION_PROMPT/NEXT_PROMPT rewritten; 8 fixes unbuilt
 - 2026-09-24 21:47 - Audit 2: notification permission asked twice (fixed); adhan with notifications off had no Stop anywhere (fixed in MainActivity.onResume)
 - 2026-09-24 21:32 - Audit 2: reminders open their screen (open: payloads, 4 tests); reboot re-arms adhan (seen)
 - 2026-09-24 21:25 - Audit 2: network drop mid-download was reported as a cancel (WorkManager stop) - now waiting; offline screens seen OK
