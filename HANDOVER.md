@@ -2497,7 +2497,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-09-24 18:49 — IN PROGRESS — resume here**
 
-Conflict: deleting the recitation/surah being played now stops it first; audit notes
+Queued: download buttons show downloading/done state app-wide
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

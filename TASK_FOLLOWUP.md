@@ -63,6 +63,13 @@ Done since v3.61.0 (each verified):
   playback (deleting a reciter while it plays); notifications count;
   focus mode vs adhan; location (qibla + prayer card at once).
 
+- NEW (18:55): EVERY download button must show its real state app-wide:
+  «جاري التحميل» while downloading (incl. after «متابعة في الخلفية»), «تم
+  التحميل» when done. Owner's case: the model/voice download sent to the
+  background left the button reading «حمّل النموذج». Audit every download
+  button (OpenVoice offer/library voice, tasmee model, Downloads screen,
+  mushaf, sciences, recitations, onboarding). Same release.
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -105,6 +112,7 @@ Done since v3.61.0 (each verified):
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 18:49 - Queued: download buttons show downloading/done state app-wide
 - 2026-09-24 18:49 - Conflict: deleting the recitation/surah being played now stops it first; audit notes
 - 2026-09-24 18:45 - Conflict: tasmee recording vs listen (both ran at once, verified on device) - listen disabled while recording; ayah change mid-recording cancels it
 - 2026-09-24 18:36 - Conflict audit: 4 pairs tested on device (auto-scroll, recitation sync, adhan, book reader); ui_find.py tool
