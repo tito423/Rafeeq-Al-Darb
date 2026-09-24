@@ -44,12 +44,17 @@ class NotificationRouter {
   /// queue is where the reader wants to land.
   static const downloadPrefix = 'dl:';
 
+  /// `open:<screen>` - `open:azkar_morning`, `open:khatma`, `open:tasbih`:
+  /// a reminder that is about a screen opens that screen.
+  static const openPrefix = 'open:';
+
   /// Set by `main()`. All nullable because a notification can be tapped
   /// before the app has finished wiring itself up, and dropping the tap is
   /// better than crashing on it.
   static void Function(String payload)? onQuote;
   static void Function(String payload)? onSurah;
   static void Function(String what)? onDownload;
+  static void Function(String what)? onOpen;
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -65,6 +70,10 @@ class NotificationRouter {
     }
     if (payload.startsWith(downloadPrefix)) {
       onDownload?.call(payload.substring(downloadPrefix.length));
+      return;
+    }
+    if (payload.startsWith(openPrefix)) {
+      onOpen?.call(payload.substring(openPrefix.length));
       return;
     }
     if (int.tryParse(payload) != null) {

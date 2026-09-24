@@ -2,6 +2,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'notification_router.dart';
+
 /// Daily "read your khatma portion" reminders — one per khatma, at whatever
 /// time its owner picked (P2‑11). Same shape as `AzkarReminderService`: a
 /// plain notification, no full-screen intent, no custom sound — a nudge to
@@ -49,6 +51,7 @@ class KhatmaReminderService {
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
+      payload: '${NotificationRouter.openPrefix}khatma',
     );
   }
 

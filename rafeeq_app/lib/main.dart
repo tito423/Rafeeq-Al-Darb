@@ -29,6 +29,7 @@ import 'core/utils/digits.dart';
 import 'core/utils/startup_trace.dart';
 import 'core/services/quote_reminder_service.dart';
 import 'features/downloads/presentation/download_navigation.dart';
+import 'app/notification_open.dart';
 import 'features/quotes/presentation/quote_navigation.dart';
 import 'features/quran_audio/data/quran_audio_player.dart';
 import 'features/quran_audio/presentation/widgets/audio_common.dart';
@@ -153,6 +154,7 @@ Future<void> main() async {
   await QuoteReminderService.instance.initialize();
   NotificationRouter.onQuote = openQuoteFromPayload;
   NotificationRouter.onDownload = openDownloadFromPayload;
+  NotificationRouter.onOpen = openScreenFromPayload;
   // The surah player's backups announce themselves (another voice, a
   // skipped surah) through the root messenger.
   QuranAudioPlayer.onNotice = showPlayerNotice;

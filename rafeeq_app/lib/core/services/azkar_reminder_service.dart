@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'notification_router.dart';
 
 /// Daily "time for your adhkar" reminders, at whatever time the user picked
 /// — WORK_QUEUE Stage 3 is explicit that this must not be a hardcoded
@@ -45,15 +46,18 @@ class AzkarReminderService {
   }
 
   Future<void> scheduleMorning(int hour, int minute) =>
-      _schedule(_morningId, hour, minute, 'notif.azkar_morning_title'.tr(),
+      _schedule(_morningId, 'azkar_morning', hour, minute,
+          'notif.azkar_morning_title'.tr(),
           'notif.azkar_morning_body'.tr());
 
   Future<void> scheduleEvening(int hour, int minute) =>
-      _schedule(_eveningId, hour, minute, 'notif.azkar_evening_title'.tr(),
+      _schedule(_eveningId, 'azkar_evening', hour, minute,
+          'notif.azkar_evening_title'.tr(),
           'notif.azkar_evening_body'.tr());
 
   Future<void> scheduleSleep(int hour, int minute) =>
-      _schedule(_sleepId, hour, minute, 'notif.azkar_sleep_title'.tr(),
+      _schedule(_sleepId, 'azkar_sleep', hour, minute,
+          'notif.azkar_sleep_title'.tr(),
           'notif.azkar_sleep_body'.tr());
 
   Future<void> cancelMorning() => _plugin.cancel(id: _morningId);
@@ -62,6 +66,7 @@ class AzkarReminderService {
 
   Future<void> _schedule(
     int id,
+    String screen,
     int hour,
     int minute,
     String title,
@@ -83,6 +88,7 @@ class AzkarReminderService {
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
+      payload: '${NotificationRouter.openPrefix}$screen',
     );
   }
 

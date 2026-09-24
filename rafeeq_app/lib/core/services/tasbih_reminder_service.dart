@@ -100,6 +100,7 @@ class TasbihReminderService {
         // one-shots.
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
+        payload: '${NotificationRouter.openPrefix}tasbih',
       );
     }
   }

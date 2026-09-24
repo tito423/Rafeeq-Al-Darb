@@ -33,8 +33,11 @@ AUDIT PART 2 - gaps not covered by part 1, each on the emulator:
        `canceled` as queued unless the reader cancelled (_userCanceled).
    offline: airplane mode - home/quran/prayer/adhkar/library open;
        a download cut mid-way (tasmee dio, voice WorkManager) + recovery
-3. [ ] reboot: adhan alarms re-armed after boot (dumpsys alarm)
-4. [ ] notification taps route to the right screen (trap 31)
+3. [x] reboot: all 5 adhan alarms + rollover re-armed without opening the
+       app (seen; the 2nd 04:50 line is AlarmManager's «next wake», same alarm)
+4. [x] taps: FOUND azkar/khatma/tasbih reminders had NO payload - tap only
+       opened Home. FIXED: open:<screen> payloads + app/notification_open.dart,
+       test/reminder_tap_routing_test.dart 4/4. Device: needs the build.
 5. [ ] permissions denied: mic (tasmee), location (home/qibla), notifs
 6. [ ] rotation/landscape + largest font scale: overflow on main screens
 7. [ ] Urdu (RTL, Latin digits) quick pass
@@ -119,6 +122,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 21:32 - Audit 2: reminders open their screen (open: payloads, 4 tests); reboot re-arms adhan (seen)
 - 2026-09-24 21:25 - Audit 2: network drop mid-download was reported as a cancel (WorkManager stop) - now waiting; offline screens seen OK
 - 2026-09-24 21:16 - Audit 2: splash preview resumes recitation; raw exception texts replaced by localized messages (user_error.dart)
 - 2026-09-24 21:08 - Fix: slow-line probe keeps timed-out hosts (right recommendation); city name re-read from saved coordinates on language switch; audit part 2 list
