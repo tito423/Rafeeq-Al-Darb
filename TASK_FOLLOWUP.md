@@ -43,6 +43,26 @@ Done since v3.61.0 (each verified):
   pages that fit; _current only from onPageChanged. 570 tests pass.
   Rebuilding to verify the SAME scenario, then release 3.62.0.
 
+- CONFLICT AUDIT (owner: no release until the whole app is checked). Device
+  results on the 3.62.0 build (18:10-18:40), each read from dumpsys:
+  * auto-scroll alone on p.1 (fits screen): 1 held ~20 s, 2 ~25 s, then 3
+    (was 1->12 in seconds) - FIXED, verified.
+  * auto-scroll + continuous recitation: page 4 stays, highlight walks
+    2:17->2:20 with the reciter - FIXED, verified.
+  * adhan preview during recitation: recitation PAUSED during adhan, back to
+    PLAYING at the same ayah (2:29) after Stop - OK, no change needed.
+  * book reader (enhanced voice) started during recitation: recitation
+    PLAYING -> NONE, only the voice's MediaPlayer sounds - FIXED, verified.
+  * reverse (recitation starting over the reader): unreachable - every way
+    to start one leaves the reader (dispose stops it); MEDIA_PLAY did
+    nothing (nothing loaded). The isPlayingStream watch is a safeguard.
+  * emulator has NO Arabic TTS engine: phone-voice reading shows the
+    no-engine snackbar and never calls speak() - correct.
+  Tools: scripts/ui_find.py (tap by label; refuses stale dumps).
+  NEXT in the audit: tasmee recording vs playing recitation; downloads vs
+  playback (deleting a reciter while it plays); notifications count;
+  focus mode vs adhan; location (qibla + prayer card at once).
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -85,6 +105,7 @@ Done since v3.61.0 (each verified):
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 18:36 - Conflict audit: 4 pairs tested on device (auto-scroll, recitation sync, adhan, book reader); ui_find.py tool
 - 2026-09-24 18:07 - Auto-scroll/page-turn conflict: dwell on pages that fit; _current from onPageChanged only (found on device with recitation)
 - 2026-09-24 17:48 - 3.62.0: recitation/auto-scroll sync (note in own file, under ceiling), AudioExclusive (book reader vs recitation, tasmee silences all), 570 tests pass
 - 2026-09-24 17:31 - PLAN 4a result recorded
