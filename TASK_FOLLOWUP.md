@@ -79,6 +79,23 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
 - B1 /sync caps: deployed (Worker 48b3fa3a), caps not exercised live (needs a
   real Google ID token).
 
+## FULL AUDIT MATRIX (owner 19:55: «full audit in all app aspects»)
+Sound sources (grep, 20:00): SHARED just_audio player (ayah/queue/
+continuous/surah player/ruqyah/device files/tajweed/azkar/dedications/
+search/sunan), BOOK READER (TTS or open voice on its own MediaPlayer, no
+audio focus), NATIVE ADHAN (AdhanPlayer.kt, focus TRANSIENT_EXCLUSIVE, also
+the settings preview), TASMEE MIC, SPLASH VIDEO.
+- [x] adhan vs recitation (prev session) · [x] adhan during download
+- [x] book reader vs recitation (prev) · [x] tasmee vs listen/recitation
+- [x] delete playing surah recitation · [ ] delete playing per-ayah (fixed,
+  rebuild) · [x] download state app-wide · [x] qibla 258 = computed 258.2
+- [ ] ADHAN vs BOOK READER (open voice takes no focus - suspect)
+- [ ] adhan vs tasmee recording · [ ] focus mode vs adhan
+- [ ] notifications count (trap 33) · [ ] theme/locale switch while playing
+- [ ] app to background + back while playing/downloading
+- [ ] slow network: onboarding probe (fixed, rebuild)
+- [ ] light theme contrast: reciter header (fixed, rebuild) - scan others
+
 ## Settled facts
 - SEEN on emulator (3.62.0 signed, 19:32-19:39): voice download started in
   onboarding shows «Downloading 0%->2%» live in Settings > Book reader
@@ -122,6 +139,7 @@ worst 2 m), ASR tiny kept (base == accuracy, 3.2x slower) - all in the log.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 20:02 - Full audit matrix written (owner: audit every aspect); qibla verified 258 vs computed 258.2
 - 2026-09-24 20:01 - Found on device: deleting a per-ayah reciter left its queue playing from the network; fixed (tag check), 570 pass
 - 2026-09-24 19:48 - Seen: deleting a playing surah recitation stops it; fixed unreadable reciter header text in light theme
 - 2026-09-24 19:45 - Onboarding ayah-reciter probe: 15 s timeout and a retry when no host answered (was disabled on a slow line); analyze clean, needs the next build

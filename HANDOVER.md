@@ -2495,9 +2495,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 20:01 — IN PROGRESS — resume here**
+**2026-09-24 20:02 — IN PROGRESS — resume here**
 
-Found on device: deleting a per-ayah reciter left its queue playing from the network; fixed (tag check), 570 pass
+Full audit matrix written (owner: audit every aspect); qibla verified 258 vs computed 258.2
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
