@@ -134,7 +134,15 @@ class DownloadManager {
           case bd.TaskStatus.paused:
             task.status = DownloadStatus.paused;
           case bd.TaskStatus.canceled:
-            task.status = DownloadStatus.canceled;
+            // Only a cancel the reader asked for ([cancel]) is one. The
+            // plugin also reports `canceled` when WorkManager stops a job
+            // because the network dropped - and then runs it again when the
+            // network is back (seen: airplane mode during the reader-voice
+            // download, 2026-09-24; it finished 45 s later while the screen
+            // said «غير مثبّت»). That one is waiting, not cancelled.
+            task.status = _userCanceled.remove(id)
+                ? DownloadStatus.canceled
+                : DownloadStatus.queued;
           case bd.TaskStatus.waitingToRetry:
             task.status = DownloadStatus.downloading;
           case bd.TaskStatus.complete:
@@ -410,10 +418,15 @@ class DownloadManager {
     _notify();
   }
 
+  /// Ids whose cancel came from [cancel], so the plugin's `canceled` for
+  /// them is final (see the status handler).
+  final Set<String> _userCanceled = {};
+
   void cancel(String id) {
     final t = _tasks[id];
     final platform = t?.platformTask;
     if (t == null) return;
+    _userCanceled.add(id);
     if (platform != null) {
       DownloadEngine.fileQueue.removeTasksWithIds([platform.taskId]);
       unawaited(bd.FileDownloader().cancelTaskWithId(platform.taskId));

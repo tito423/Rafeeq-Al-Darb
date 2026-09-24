@@ -23,7 +23,14 @@ AUDIT PART 2 - gaps not covered by part 1, each on the emulator:
        English «DioException [connection error] … github.com». FIXED in code:
        core/utils/user_error.dart (errors.offline / errors.generic) in tasmee,
        hifz, sign-in; DownloadManager task.error no longer the plugin's
-       English description. Screens offline: in progress.
+       English description. Offline (airplane): Home+times+city, Quran,
+       Prayer/qibla, Adhkar backgrounds, Library all open (seen). Tasmee retry
+       after network back works (seen 9%).
+       FOUND: reader-voice (WorkManager) cut by airplane mode -> plugin
+       reports `canceled` (TaskRunner: isTaskStopped), dialog closed, row
+       «Not installed», but WM re-ran it and it FINISHED 21:21:22 while the
+       row still said Not installed. FIXED in code: DownloadManager treats
+       `canceled` as queued unless the reader cancelled (_userCanceled).
    offline: airplane mode - home/quran/prayer/adhkar/library open;
        a download cut mid-way (tasmee dio, voice WorkManager) + recovery
 3. [ ] reboot: adhan alarms re-armed after boot (dumpsys alarm)
@@ -112,6 +119,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 21:25 - Audit 2: network drop mid-download was reported as a cancel (WorkManager stop) - now waiting; offline screens seen OK
 - 2026-09-24 21:16 - Audit 2: splash preview resumes recitation; raw exception texts replaced by localized messages (user_error.dart)
 - 2026-09-24 21:08 - Fix: slow-line probe keeps timed-out hosts (right recommendation); city name re-read from saved coordinates on language switch; audit part 2 list
 - 2026-09-24 20:55 - v3.62.0 released and verified (tag == HEAD, asset re-downloaded byte-identical); v3.61.0 deleted

@@ -2496,9 +2496,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 21:16 — IN PROGRESS — resume here**
+**2026-09-24 21:25 — IN PROGRESS — resume here**
 
-Audit 2: splash preview resumes recitation; raw exception texts replaced by localized messages (user_error.dart)
+Audit 2: network drop mid-download was reported as a cancel (WorkManager stop) - now waiting; offline screens seen OK
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
