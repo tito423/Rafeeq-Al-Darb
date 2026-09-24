@@ -6,61 +6,27 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-**«ملخص العمرة» + «ملخص الحج»** (owner's order 2026-09-24 16:12).
-PLAN.md Stage 1 is DONE and RELEASED: v3.61.0 published 2026-09-24 16:09
-(tag SHA d84abe8a == HEAD at release; APK 265,181,991 bytes; v3.60.0 +
-tag deleted; v3.51.0 and content-* kept). Verified on emulator — see
-Settled facts.
+Post-3.61 fixes, all in code AND verified on emulator-5554 (build of 17:05),
+NOT released yet — ask the owner whether to release 3.62.0.
 
 ## Next step (exact)
-1. Read what the Hajj/Umrah screen already has (HajjScreen and its data /
-   sources) before writing anything.
-2. Write a quick stage-by-stage summary card at the BOTTOM of the Umrah
-   section and of the Hajj section: from arrival, what to do at each stage,
-   the adhkar said along the way, the wajibat and the sunan. Every step and
-   dhikr from a NAMED source (CLAUDE.md 1.2); credit on the Sources screen.
-3. Then PLAN 4a: measure whisper-base vs tiny (owner asked about integrating
-   the better model; answer was: only if it wins by numbers).
+1. Ask the owner: release 3.62.0 now? (bump pubspec + about_screen, build,
+   delete v3.61.0 + tag, keep v3.51.0 + content-*, notes in Arabic, verify
+   tag SHA == HEAD, `git status --short` clean of source first — trap 55).
+2. Then PLAN 4a (owner asked to be reminded): measure whisper-base-ar-quran
+   (R2, 160.6 MB) vs the tiny model — word accuracy on real recitations +
+   latency — integrate only if it wins by numbers.
 
-- CORRECTION (16:30): the owner's Hifz video was NOT about the ayah flipping
-  (he swiped on purpose to test). His bug: scrolling up/down on a long ayah
-  (2:255) STALLS ~1 s mid-way. 3.61's arc fix is real but not his bug.
-  Now measuring with dumpsys gfxinfo on emulator (font 1.3, 2:255).
-  Umrah/Hajj summary PAUSED: material read (book pp.136-149, 180-188),
-  plan = verbatim excerpts + a test that every fragment is in the book.
-
-- Scroll-stall evidence so far (3.61, emulator, font 1.3, 2:255): screenrecord
-  frame timeline — first swipe had a 180 ms gap with no frame mid-motion
-  (0.59->0.77 s), later swipes smooth. gfxinfo counts 0 frames (Flutter
-  surface) — useless here. Candidate (NOT proven): hifz_session_screen
-  ListView disposes off-screen children; TasmeePanel is rebuilt on every
-  scroll-in (new recorder, TasmeeMics.find platform call, isInstalled) and
-  on scroll-out dispose() calls restoreAudioRoute(). Owner is sending a
-  second video — read it before fixing.
-
-- NEW (16:45): verify prayer-time calculation methods are correct and
-  effective; and on app open the location HANGS (not working) until a
-  pull-to-refresh, then ~7 s to fix a location although permission was
-  granted at first run. Measure on emulator (cold start with a mock
-  location), find why, fix. After the hifz stall + Umrah/Hajj summary.
-
-- SCROLL STALL — measured (16:55): owner video 2 (v3.60): 7 freezes of
-  193-258 ms, EACH with the content moving the same way before and a
-  catch-up jump of 45-56 px (120-px thumbnails) after = real stalls, ALL
-  while scrolling back UP (navigator re-entering; old ListView rebuilt
-  HifzNavigator's DropdownMenus, 114 + 286 entries). Fix in code:
-  SingleChildScrollView+Column (page built once). CORRECTION: the emulator
-  'before' numbers (911/1019 ms) were my own 900 ms pauses at the page
-  edge, not stalls; the emulator does not stall at all, so the fix is NOT
-  proven on a device — needs the owner's phone. Scripts: scratchpad
-  stalls.py + direction.py (copy into scripts/ if kept).
-
-- LOCATION BUG reproduced (17:00): fresh install, location allowed ON the
-  permissions page (dumpsys granted=true), Home card still «فعّل الموقع» for
-  12 s+. Cause: prayerControllerProvider first loads during the splash,
-  before permission exists, gets locationDenied, never retries. Fix:
-  onboarding _finish invalidates prayerControllerProvider. Built? NOT YET
-  verified. PRAYER METHODS verified live: 2400 times vs AlAdhan, worst 2 m.
+Done since v3.61.0 (each verified):
+- Hifz scroll stall: page built once (SingleChildScrollView). Root cause
+  from the owner's video (7 same-direction stalls while scrolling up, each
+  followed by a catch-up jump). Emulator does not stall at all, so the
+  final proof is the owner's phone.
+- Umrah/Hajj summary cards: seen on emulator; 2 tests prove every piece
+  verbatim from the book; ayah 2:198-199 from the mushaf.
+- Location stuck after first-run permission: reproduced, fixed, re-run of
+  the same fresh-install path shows Dubai + times at once.
+- Prayer methods: 2400 times vs AlAdhan live, worst 2 min; Dubai added.
 
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
@@ -104,6 +70,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 17:02 - Location fix verified on fresh install (Dubai + times at once); 570 tests pass; post-3.61 fixes ready, release pending owner
 - 2026-09-24 16:53 - Location stuck after first-run permission: reproduced + fix (invalidate prayer controller at onboarding end); building to verify
 - 2026-09-24 16:48 - Hajj summary: pillars and obligations under separate headings; summary seen on emulator (Umrah + Hajj, ayah 2:198-199 from mushaf)
 - 2026-09-24 16:43 - Prayer times re-verified LIVE vs AlAdhan: 2400 times, 20 methods x 5 cities (Dubai added) x 2 dates x 2 schools, worst 2 min

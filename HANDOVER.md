@@ -2495,9 +2495,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 16:53 — IN PROGRESS — resume here**
+**2026-09-24 17:02 — IN PROGRESS — resume here**
 
-Location stuck after first-run permission: reproduced + fix (invalidate prayer controller at onboarding end); building to verify
+Location fix verified on fresh install (Dubai + times at once); 570 tests pass; post-3.61 fixes ready, release pending owner
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
