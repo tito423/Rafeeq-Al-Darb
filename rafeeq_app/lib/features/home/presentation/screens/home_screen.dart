@@ -11,7 +11,7 @@ import '../../../../core/utils/digits.dart' as digits;
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
+import '../../../../core/services/location_service.dart';
 
 import 'package:hijri/hijri_calendar.dart';
 
@@ -473,18 +473,12 @@ class _PrayerCard extends ConsumerWidget {
             message: 'home.location_needed'.tr(),
             actionLabel: 'home.enable_location'.tr(),
             onAction: () async {
-              // A permission the reader refused for good cannot be asked
-              // for again - Android answers «No requestable permission»
-              // and no prompt appears, so the button looked dead. Only
-              // the REQUEST tells the two apart (checkPermission says
-              // plain `denied` for both), so ask, and on a refusal-for-
-              // good send them to the app's settings, as Qibla does.
-              if (await Geolocator.requestPermission() ==
-                  LocationPermission.deniedForever) {
-                await Geolocator.openAppSettings();
-                return;
+              // Permission, a refusal for good, and a phone with location
+              // switched off are all handled there. Coming back from the
+              // settings it opens re-fetches through AppShell's resume check.
+              if (await LocationService.instance.askToEnable()) {
+                await ref.read(prayerControllerProvider.notifier).refresh();
               }
-              await ref.read(prayerControllerProvider.notifier).refresh();
             },
           );
         }

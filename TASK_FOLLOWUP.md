@@ -212,13 +212,28 @@ ALL 8 VERIFIED on build 3.
   language) drawn by ArabicText = forced RTL -> Portuguese words reordered
   («O Profeta» at the line end). Now Text for LTR languages. Build-4 fix
   SEEN: fr -> ur switch, Adhkar cards in Urdu at once.
-  NEXT: build 5 (location prompt, quote arrows, adhkar grid, explanation
-  direction), verify each on the emulator.
+  BUILD 5 (00:00, 25 Sep) VERIFIED: fresh install + «Later» -> location
+  asked ONCE (then notifications, audio), flags USER_SET not FIXED;
+  quote arrows «< >», next/prev work; pt explanation reads LTR; Adhkar
+  landscape 5 per row, titles visible.
+  FOUND on build 5: «Enable location» with permission GRANTED but no fix
+  (cold-boot emulator had last location=null; same for a phone with its
+  location switch OFF) -> card stays, button asks a held permission,
+  nothing. With a fix (adb emu geo fix x12) the button works (seen).
+  REGRESSION from the build-5 change: Qibla's button relied on the
+  service prompting -> would ask nothing. FIXED both: LocationService.
+  askToEnable() (ask if denied / app settings if forever / location
+  settings if the switch is off), used by Home and Qibla. 577 pass.
+  NEXT: build 6; verify location switch OFF -> button opens location
+  settings; Qibla button prompts on a fresh install.
+  NOTE: after an emulator cold boot, accelerometer_rotation is 1 again -
+  set it to 0 before user_rotation, or screenshots stay portrait.
 - OWNER 23:00: full matrix - every feature x 4 themes x 7 languages x
   portrait/landscape. Plan: build 4, then scripted screenshot sweep,
   reviewed by eye.
 
 ## Log
+- 2026-09-25 00:15 - Build 5 verified (one location ask, quote arrows, pt explanation, adhkar landscape); enable-location buttons now handle a switched-off location and Qibla asks again (askToEnable)
 - 2026-09-24 23:59 - Matrix done (7 languages x 3 themes x 2 orientations): hadith explanation was forced RTL in LTR languages - fixed; 577 pass; building 5
 - 2026-09-24 23:34 - Matrix en+ar read: quote arrows were swapped, adhkar grid 2 columns in landscape - both fixed (unbuilt)
 - 2026-09-24 23:21 - Build 4: recitation row retry verified; location was asked twice on first run (service raced the startup ask) - service no longer prompts; matrix sweep script

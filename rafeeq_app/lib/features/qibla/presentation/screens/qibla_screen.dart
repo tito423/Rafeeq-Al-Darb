@@ -213,7 +213,13 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
         icon: Icons.location_off_outlined,
         message: 'qibla.location_needed'.tr(),
         actionLabel: 'qibla.enable_location'.tr(),
-        onAction: _resolveLocation,
+        // LocationService never prompts on its own any more, so the tap
+        // asks (and opens the location switch when it is off).
+        onAction: () async {
+          if (await LocationService.instance.askToEnable()) {
+            await _resolveLocation();
+          }
+        },
         secondaryLabel: 'qibla.open_settings'.tr(),
         onSecondary: () => Geolocator.openAppSettings(),
       );

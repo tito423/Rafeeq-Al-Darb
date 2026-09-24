@@ -203,6 +203,37 @@ class LocationService {
   /// No GPS: a language switch must not wait on a fresh fix for a name.
   Future<AppPosition?> savedIn(String localeCode) => _readCached(localeCode);
 
+  /// What an «enable location» button does (Home card, Qibla) - the one
+  /// place a reader's tap asks, since [getCurrentPosition] never does.
+  /// True when a position can now be asked for.
+  ///
+  /// Permission alone was not enough: with the phone's location switched
+  /// off, the permission was granted, no fix ever came, the card still said
+  /// «Enable location» and its button asked for a permission already held -
+  /// nothing happened (emulator-5554, 2026-09-25). A refusal for good cannot
+  /// be asked again (Android: «No requestable permission»); only the request
+  /// tells it apart from a plain «denied», so it goes to the app's settings.
+  Future<bool> askToEnable() async {
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.deniedForever) {
+        await Geolocator.openAppSettings();
+        return false;
+      }
+      if (permission == LocationPermission.denied) return false;
+      if (!await Geolocator.isLocationServiceEnabled()) {
+        await Geolocator.openLocationSettings();
+        return false;
+      }
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<AppPosition?> _readCached(String localeCode) async {
     final prefs = await SharedPreferences.getInstance();
     final lat = prefs.getDouble(_cacheLatKey);

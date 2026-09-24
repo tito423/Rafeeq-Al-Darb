@@ -7,7 +7,7 @@ Cline, or any other).
 | | |
 |---|---|
 | **SECURITY (found 2026-09-24, OWNER ACTION NEEDED)** | The R2 **access key id and secret** that are in `scripts/.env` today are present in this PUBLIC repo's git history — hard-coded in `scripts/upload_quranflash_coords.dart` (3747f715, 2026-08-26), `scripts/phase1_upload.dart` (ecbb820d) and `test_r2*.dart` (eae5036d), since deleted from the tree. Checked by value, not printed. Not in the published v3.59.0 APK (checked byte-wise). CF_API_TOKEN and CF_WORKERS_TOKEN are NOT in history. **Fix: rotate the R2 API token in the Cloudflare dashboard (R2 → Manage API tokens), put the new pair in `scripts/.env`.** Rewriting history does not un-leak it. |
-| **Last updated** | 2026-09-24 |
+| **Last updated** | 2026-09-25 |
 | **HANDOVER 2026-09-24 ~22:00** | **Released: v3.62.0** (tag `1f758e40`). `master` is AHEAD of it with **8 fixes from audit part 2 that are in code, analyze-clean and tested (577 pass) but NOT BUILT and NOT SEEN ON A DEVICE** - one is Kotlin (`MainActivity.onResume`) and has never even been compiled. List + how to verify each: TASK_FOLLOWUP.md «Next step». Verified now: `flutter analyze lib test` → No issues; `flutter test` → **577 pass**; hosted range requests all **206** with the right type: `hadith/hadith.zip` 22,235,941 B, `books/text/tafsir_al_tabari.json` 7,551,247 B, `mushaf/madinah_qc/001.png` 40,445 B + `/604.png` 111,649 B, `quran/translations/am.json.gz` 336,066 B, `sciences/quran_sciences.zip` 33,239,511 B, `asr/whisper-tiny-ar-quran/ggml-model.bin` 77,691,713 B, `tts/open_ar_v1/fp_ms.onnx` 187,215,347 B. Measured: 7 locales × **1,810** keys (identical); **1** mushaf edition (`madinah_qc`, editions.json); library **239** books; `hadith.db` 109,731,840 B, **67,153** hadiths, **45,219** graded; pubspec `3.62.0+64`; v3.62.0 APK 265,296,679 B. |
 | **RELEASE 2026-09-24 night (v3.62.0)** | `pubspec` `3.62.0+64`, About v3.62.0. `dist/RafeeqAlDarb-v3.62.0.apk` 265,296,679 B, sha256 `9eacb8b4…2d95f1db`, support link in all three libapp.so. `flutter analyze lib test` clean, **573 tests pass**. Whole-app conflict audit run on emulator-5554 with the signed build (matrix + evidence in TASK_FOLLOWUP.md): FIXED and seen — adhan vs book reader (voice player now holds audio focus: pauses, resumes same chunk), adhan discards a tasmee recording, deleting a playing per-ayah reciter stops it, download state shared app-wide (tasmee model + enhanced voice), onboarding probe retry on a slow line, reciter header unreadable in light theme; FIXED in code + unit test only — phone-TTS reader pauses on the adhan (no Arabic TTS on the emulator), sunan reminders self-clear (trap 33). Seen fine: adhan over focus mode, theme/language switch and background while playing, qibla 258° = computed 258.2°, three themes on every tab. |
 | **RELEASED 2026-09-24 (v3.60.0)** | tag `v3.60.0` = `3b4247e1` = HEAD at publish; asset `RafeeqAlDarb-v3.60.0.apk` 265,144,900 B, sha256 `1bfd6de1…45bf9fd`, versionCode 62, three ABIs, support link + real R2 base in all three libapp.so; download 206. v3.59.0 + tag deleted; v3.51.0 and the three content-* prereleases (GitHub content mirror — must stay) kept. Seen on emulator-5554: install -r → Success, no FATAL, «ادعم التطبيق», About v3.60.0. Contents: never-skip holds, GitHub mirror fallback, i'rab/daily-hadith/tasbih/clock/reminder fixes (see the WIP note). Tests 565. |
@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 23:59 — IN PROGRESS — resume here**
+**2026-09-25 00:15 — IN PROGRESS — resume here**
 
-Matrix done (7 languages x 3 themes x 2 orientations): hadith explanation was forced RTL in LTR languages - fixed; 577 pass; building 5
+Build 5 verified (one location ask, quote arrows, pt explanation, adhkar landscape); enable-location buttons now handle a switched-off location and Qibla asks again (askToEnable)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
