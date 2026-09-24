@@ -39,6 +39,13 @@ account, the other one, or another agent — reads this and continues from
   not before PLAN 4a is MEASURED (word accuracy on real recitations +
   latency); do 4a after this release, integrate only if it wins by numbers.
 
+- NEW (16:12): «ملخص العمرة» + «ملخص الحج» — a quick step-by-step card at
+  the BOTTOM of each section in the Hajj/Umrah screen: from arrival, stage
+  by stage, the adhkar said along the way, the wajibat and the sunan.
+  Religious content: every step/dhikr from a NAMED source (CLAUDE.md 1.2);
+  first read what hajj data the app already has (HajjScreen, its sources).
+  Do AFTER the v3.61.0 release.
+
 ## Half-done / unverified (redo, do not trust)
 - Stage 1 rows: ALL written (`offline_pack_tiles.dart`), analyze clean,
   NOT seen on device. Sizes:
@@ -58,6 +65,7 @@ account, the other one, or another agent — reads this and continues from
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 15:56 - Owner order logged: Umrah/Hajj quick summaries after the release
 - 2026-09-24 15:53 - TASK_FOLLOWUP next steps rewritten (build running)
 - 2026-09-24 15:53 - TASK_FOLLOWUP next steps rewritten (build running)
 - 2026-09-24 15:52 - Bump 3.61.0; release build started
