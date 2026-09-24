@@ -261,7 +261,7 @@ const umrahSummary = <SummaryStage>[
 // ── Hajj ────────────────────────────────────────────────────────────────────
 
 const hajjSummary = <SummaryStage>[
-  SummaryStage('الأركان والواجبات', [
+  SummaryStage('أركان الحج', [
     // p.139 [5]
     SummaryLine.text(
       'فأركان الحج إذاً هي تلك الأعمال التي إذا أهمل واحد منها بطل الحج، ولم '
@@ -273,6 +273,8 @@ const hajjSummary = <SummaryStage>[
     SummaryLine.text('(الثالث): طواف الإفاضة:'),
     SummaryLine.text('(الرابع): السعي بين الصفا والمروة:'),
     SummaryLine.text('(الخامس): الحلق:'),
+  ]),
+  SummaryStage('واجبات الحج', [
     // p.136 [5]
     SummaryLine.text(
       'الواجبات والأركان، كلاهما واجب لا بد منه إلا أن الفرق بينهما أن '
