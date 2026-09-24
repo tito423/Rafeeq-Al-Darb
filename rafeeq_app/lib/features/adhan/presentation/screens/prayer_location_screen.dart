@@ -9,6 +9,7 @@ import '../../../../core/services/city_catalog.dart';
 import '../../../../core/services/manual_location.dart';
 import '../../../../core/utils/byte_formatter.dart' show formatBytes;
 import '../../../../core/utils/digits.dart' show trn;
+import '../../../../core/utils/user_error.dart';
 import '../../../home/data/prayer_controller.dart';
 
 /// The row in Adhan settings: where the prayer times are calculated for, and
@@ -154,11 +155,11 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
         _downloading = null;
       });
       if (_query.text.trim().length >= 2) unawaited(_search());
-    } catch (_) {
+    } catch (e) {
       if (!mounted) return;
       setState(() => _downloading = null);
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('errors.offline'.tr())));
+          SnackBar(content: Text(userErrorText(e))));
     }
   }
 

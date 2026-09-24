@@ -12,6 +12,15 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 ~02:35: analyze clean, 582 pass. City-list download
+error is no longer swallowed (was: any failure -> «offline» snackbar; now
+userErrorText(e), cause printed to logcat as `userErrorText:`). Build 10
+running (emulator OFF). Then: install, verify manual location (download to
+«ready», airplane+GPS off, search Tanta/Dubai, pick -> Home times+name,
+qibla; coordinates; back to automatic; time the search), then contrast
+crawl+scan light/dark/RGB. NOTE: the 46 % failure happened BEFORE the
+isolate step (that starts at 90 %) - watch logcat for the real cause.
+
 HANDOVER 2026-09-25 ~02:10 (owner: quota ending). Exact resume steps are
 in NEXT_PROMPT.md. Short: both orders A (contrast) and B (manual location)
 are in code; build 9 showed the location screen + online search working;
@@ -269,6 +278,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 02:35 - download error surfaced (userErrorText + logcat), build 10 started
 - 2026-09-25 02:09 - HANDOVER (quota): city-list download failed at 46% on build 9 (Isolate.run captured State) - moved to top-level functions, unbuilt; contrast fixes unseen on device; NEXT_PROMPT.md rewritten
 - 2026-09-25 01:52 - Manual prayer location UI (Adhan settings > Prayer location): automatic / offline world list search / online geocoder / coordinates; 20 keys x 7 locales; GeoNames credited on Sources; 582 pass; building 9
 - 2026-09-25 01:42 - Contrast: goldText() on 25 files where flat gold was text on a theme surface (scan found them); quote card gold measured on its palette; manual location core (ManualPlace store, CityCatalog download+offline search tested on real data, LocationService prefers it); 582 pass, unbuilt, no UI yet
