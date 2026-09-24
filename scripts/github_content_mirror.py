@@ -82,7 +82,13 @@ def existing_assets(tag):
 
 
 def fetch(key, dest):
-    req = urllib.request.Request(f"{PUBLIC}/{key}", headers={"User-Agent": UA})
+    # Accept-Encoding: gzip, so an object STORED with Content-Encoding: gzip
+    # (the 45 translations) comes back as its stored bytes. Without it
+    # Cloudflare inflates it on the way out, the byte count no longer equals
+    # the object's, and the size check below refused all 45 on the first run.
+    # urllib never inflates, so what is written is exactly what R2 holds.
+    req = urllib.request.Request(f"{PUBLIC}/{key}", headers={
+        "User-Agent": UA, "Accept-Encoding": "gzip"})
     with urllib.request.urlopen(req, timeout=120) as res, open(dest, "wb") as f:
         while True:
             b = res.read(1 << 20)
@@ -109,7 +115,9 @@ def main():
                 dest = os.path.join(tmp, asset_name(k))
                 fetch(k, dest)
                 if os.path.getsize(dest) != s:
-                    report.append(f"  SIZE MISMATCH from R2: {k}")
+                    msg = f"  SIZE MISMATCH from R2: {k} ({os.path.getsize(dest)} != {s})"
+                    report.append(msg)
+                    print(msg, flush=True)  # at once: a silent skip hid 45 of them
                     continue
                 gh("release", "upload", tag, dest, "--repo", REPO, "--clobber")
                 os.remove(dest)
