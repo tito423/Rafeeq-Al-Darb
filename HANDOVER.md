@@ -2495,9 +2495,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 16:16 — IN PROGRESS — resume here**
+**2026-09-24 16:20 — IN PROGRESS — resume here**
 
-Correction logged: hifz bug is a scroll stall, not ayah flip; measuring
+Scroll-stall evidence + candidate logged; waiting for owner's second video
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

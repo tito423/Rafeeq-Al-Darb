@@ -29,6 +29,15 @@ Settled facts.
   Umrah/Hajj summary PAUSED: material read (book pp.136-149, 180-188),
   plan = verbatim excerpts + a test that every fragment is in the book.
 
+- Scroll-stall evidence so far (3.61, emulator, font 1.3, 2:255): screenrecord
+  frame timeline — first swipe had a 180 ms gap with no frame mid-motion
+  (0.59->0.77 s), later swipes smooth. gfxinfo counts 0 frames (Flutter
+  surface) — useless here. Candidate (NOT proven): hifz_session_screen
+  ListView disposes off-screen children; TasmeePanel is rebuilt on every
+  scroll-in (new recorder, TasmeeMics.find platform call, isInstalled) and
+  on scroll-out dispose() calls restoreAudioRoute(). Owner is sending a
+  second video — read it before fixing.
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -71,6 +80,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:20 - Scroll-stall evidence + candidate logged; waiting for owner's second video
 - 2026-09-24 16:16 - Correction logged: hifz bug is a scroll stall, not ayah flip; measuring
 - 2026-09-24 16:10 - v3.61.0 released and verified (tag == HEAD); next: Umrah/Hajj summaries
 - 2026-09-24 16:08 - 3.61.0 final build verified (tutorial card teal under Tools); releasing
