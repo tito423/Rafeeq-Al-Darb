@@ -60,8 +60,14 @@ Editions (one codebase, a build flag, e.g. `--dart-define=RAFEEQ_EDITION=github|
 
 ## Stage 4 — Tarteel-level tasmee (hardest; in sub-stages)
 Do not state what Tarteel does without checking its current app first.
-4a. Measure: whisper-base-ar-quran (on R2, 160.6 MB, unused) vs tiny —
-    word accuracy on real recitations + latency on a mid-range phone.
+4a. DONE 2026-09-24 (scripts/measure_asr_tiny_vs_base.py, result in
+    scripts/asr_tiny_vs_base_2026-09-24.txt): same whisper.cpp engine, 500
+    words / 4 reciters / 661 s of audio. tiny 446/500 matched (89.2%), base
+    446/500 (89.2%) - identical; exact 407 vs 409; base 3.2x slower (0.636 vs
+    0.198 s per audio second) and 1.9x the size. Base does NOT win -> tiny
+    stays. (The R2 "base" is ONNX for another engine; its ggml build is local
+    only.) Both models are weaker on Alafasy (85%) and Minshawi (80%) than
+    on Husary (98%) - a limit of the model family, noted for 4b.
 4b. Live mode: transcribe 2–3 s windows while reciting; highlight the word on
     the mushaf page as it is said; stop at a missed/wrong word.
 4c. Mistake history per ayah feeding «حفظي»'s review schedule.
