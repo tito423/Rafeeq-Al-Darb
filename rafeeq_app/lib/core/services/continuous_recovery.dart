@@ -32,6 +32,7 @@ Timer? _contRetryTimer;
 StreamSubscription<List<ConnectivityResult>>? _contNetSub;
 const _retryAfter = Duration(seconds: 20);
 String? _contHeldVerse;
+int _contBackoff = 1;
 
 /// Set once in `main()`: shows that another voice has taken over.
 void Function()? continuousVoiceNotice;
@@ -124,6 +125,7 @@ extension _ContinuousRecovery on AyahAudioService {
       _contHostShift = 0;
       _contChosenEdition = _continuousEdition;
       _contHeldVerse = null;
+      _contBackoff = 1;
       _cancelHold();
     }
     return _contHostShift;
@@ -255,9 +257,22 @@ extension _ContinuousRecovery on AyahAudioService {
     // still loading is dropped, and a one-shot timer (or a single network
     // event) dropped that way left the run holding for good — seen on
     // emulator-5554, network back and 2:150 still waiting a minute later.
-    _contRetryTimer = Timer.periodic(_retryAfter, (_) => unawaited(retry()));
-    _contNetSub = Connectivity().onConnectivityChanged.listen((r) {
-      if (r.any((c) => c != ConnectivityResult.none)) unawaited(retry());
+    // Backing off: every tick is 20 s, but a hold that keeps failing with the
+    // network up asks again after 1, 2, 4, 8, then every 15 ticks (5 min) -
+    // not three requests every 20 s for as long as a host is down. A change
+    // of network always tries at once.
+    var ticks = 0;
+    final wait = _contBackoff;
+    _contRetryTimer = Timer.periodic(_retryAfter, (_) {
+      ticks++;
+      if (ticks >= wait) unawaited(retry());
     });
+    _contNetSub = Connectivity().onConnectivityChanged.listen((r) {
+      if (r.any((c) => c != ConnectivityResult.none)) {
+        _contBackoff = 1;
+        unawaited(retry());
+      }
+    });
+    _contBackoff = (_contBackoff * 2).clamp(1, 15);
   }
 }

@@ -135,6 +135,7 @@ class QuranAudioPlayer extends ChangeNotifier {
     _original = _queue;
     _index = start.clamp(0, tracks.length - 1);
     _substituted.clear();
+    _backoff = 1;
     _cancelHold();
     _attach(player);
     notifyListeners();
@@ -242,6 +243,7 @@ class QuranAudioPlayer extends ChangeNotifier {
   Timer? _retryTimer;
   StreamSubscription<List<ConnectivityResult>>? _netSub;
   static const _retryAfter = Duration(seconds: 20);
+  int _backoff = 1;
 
   void _cancelHold() {
     _retryTimer?.cancel();
@@ -275,10 +277,21 @@ class QuranAudioPlayer extends ChangeNotifier {
 
     // Periodic: a retry dropped because a load was still running must not
     // be the last one (the same fault held continuous recitation for good).
-    _retryTimer = Timer.periodic(_retryAfter, (_) => unawaited(retry()));
-    _netSub = Connectivity().onConnectivityChanged.listen((r) {
-      if (r.any((c) => c != ConnectivityResult.none)) unawaited(retry());
+    // Backing off as the continuous hold does: after 1, 2, 4, 8, then every
+    // 15 ticks of 20 s; a network change tries at once.
+    var ticks = 0;
+    final wait = _backoff;
+    _retryTimer = Timer.periodic(_retryAfter, (_) {
+      ticks++;
+      if (ticks >= wait) unawaited(retry());
     });
+    _netSub = Connectivity().onConnectivityChanged.listen((r) {
+      if (r.any((c) => c != ConnectivityResult.none)) {
+        _backoff = 1;
+        unawaited(retry());
+      }
+    });
+    _backoff = (_backoff * 2).clamp(1, 15);
   }
 
   static bool _isSurah(PlayerTrack t) => RegExp(r'^m\d+-s\d+$').hasMatch(t.id);
