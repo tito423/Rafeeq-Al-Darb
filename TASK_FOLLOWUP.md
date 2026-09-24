@@ -174,8 +174,15 @@ ALL 8 VERIFIED on build 3.
 - FIX (build 4 needed): complete-recitation row now tries the mp3quran
   catalogue 3 times (5 s, 10 s apart) before «no server answered».
   analyze clean, 577 pass. NOT yet on a device.
+- LANDSCAPE (22:54, Arabic): Home, Quran reader, Prayer, Adhkar, Library,
+  More OK. FOUND: Tasbeeh counter circle shrank to a DOT (controls took
+  the whole height, FittedBox scaled the 250 px circle to ~0) - nothing
+  to tap. FIXED in code: wide+short (<600 high) -> controls scroll on one
+  side, counter full size on the other; portrait unchanged. analyze
+  clean, NOT yet on a device (build 4).
 
 ## Log
+- 2026-09-24 22:56 - Landscape audit: tasbeeh counter shrank to a dot - side-by-side layout when wide and short (unbuilt)
 - 2026-09-24 22:52 - All 8 audit-2 fixes verified on build 3 (item 8 city on locale switch); complete-recitation row retries the catalogue 3 times (577 pass, unbuilt)
 - 2026-09-24 22:50 - Verified item 6: splash preview pauses then resumes the recitation
 - 2026-09-24 22:47 - Verified item 5: morning adhkar reminder tap opens the Morning adhkar screen

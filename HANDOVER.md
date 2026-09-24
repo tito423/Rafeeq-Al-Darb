@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 22:52 — IN PROGRESS — resume here**
+**2026-09-24 22:56 — IN PROGRESS — resume here**
 
-All 8 audit-2 fixes verified on build 3 (item 8 city on locale switch); complete-recitation row retries the catalogue 3 times (577 pass, unbuilt)
+Landscape audit: tasbeeh counter shrank to a dot - side-by-side layout when wide and short (unbuilt)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

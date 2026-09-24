@@ -252,8 +252,8 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              children: [
+            LayoutBuilder(builder: (context, box) {
+              final controls = <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(14, 14, 14, 4),
                   child: Row(
@@ -358,9 +358,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                     ),
                   ),
                 ),
-                if (_mathurIndex != null)
-                  Expanded(
-                    child: Center(
+              ];
+              final Widget counter = _mathurIndex != null
+                  ? Center(
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
                         child: _MathurCounterCard(
@@ -370,11 +370,8 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                           onTap: _tap,
                         ),
                       ),
-                    ),
-                  )
-                else
-                Expanded(
-                  child: Center(
+                    )
+                  : Center(
                     // A short or narrow screen gets a smaller circle rather
                     // than an overflow stripe.
                     child: FittedBox(
@@ -474,8 +471,8 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                       ),
                     ),
                     ),
-                  ),
-                ),
+                  );
+              final footer = <Widget>[
                 Text(
                     localizeDigits('azkar.rounds_count'.tr(args: ['$_rounds']),
                         context.locale.languageCode),
@@ -491,8 +488,35 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                     icon: const Icon(Icons.refresh),
                   ),
                 ),
-              ],
-            ),
+              ];
+              // Landscape: the controls above took the whole height and the
+              // FittedBox shrank the counter to a dot nobody could tap
+              // (emulator-5554, 2026-09-24, 2400x1080 rotated). Side by
+              // side, the controls scroll and the counter keeps its size.
+              if (box.maxWidth > box.maxHeight && box.maxHeight < 600) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(children: controls),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [Expanded(child: counter), ...footer],
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return Column(
+                children: [
+                  ...controls,
+                  Expanded(child: counter),
+                  ...footer,
+                ],
+              );
+            }),
             // Celebration overlay (P3‑47): a glowing burst + congratulatory
             // Arabic line when a 1000 milestone is reached. Auto-dismisses.
             if (_celebrate.isAnimating)
