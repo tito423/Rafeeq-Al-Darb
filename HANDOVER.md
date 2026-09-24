@@ -2495,17 +2495,15 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 ~09:00 UTC (13:00 Dubai) — COMPLETE (five-backups work, not released; v3.59.0 is the latest release)**
+**2026-09-24 ~10:30 UTC (14:30 Dubai) — IN PROGRESS: audit fixes, easiest first («الاسهل فالاصعب»)**
 
-Done and SEEN on emulator-5554 (commits b8168c7e … 9c69a0d7):
-- Recitation never skips; holds at the verse/surah and resumes by itself (retry 20 s → backoff to 5 min; network change = immediate). Backup voice only when a server answered. Seen with the network cut (continuous 2:148, surah player, hifz ×3).
-- GitHub Releases mirror: content-mirror 336, content-mushaf 604, content-surah 228 assets — all equal to R2 by size, range 206 (`py -3 scripts/github_content_mirror.py --verify`). With R2 made unreachable (test APK), seen working from GitHub: book download+open, ruqyah stream, ruqyah download (DownloadManager hop) + offline play, mushaf pages 87/91, German translation, Basit surah stream.
-- Normal build reinstalled on the emulator afterwards (real R2 base checked in libapp.so); a new book downloaded from R2.
-- Tests: 565 pass; analyze clean.
+v3.60.0 is released (row at the top). Since then, on master, NOT released:
+- DONE D1 (dc271f8f): sign-out clears only the account's synced keys/counters + queue, not every setting. Not device-tested (needs Google sign-in).
+- DONE B1+B5 (f218642d): /sync fenced (size, counts, known keys only), review table created once per isolate — DEPLOYED (Worker version 48b3fa3a); live 401/200/204 checked, caps not exercised live.
+- DONE C1 (ff2fab92): 12 Unsplash backgrounds on R2 images/backgrounds/ + GitHub; chain R2 → GitHub → Unsplash. Not yet seen on device.
+- Audit report: docs/AUDIT_2026-09-24.md (parts 1 and 2, with evidence).
 
-Source count now: R2-only content → 2 remote hosts (R2 + GitHub) + the phone copy. Per-ayah: R2 (3 reciters) + everyayah + islamic.network ×2. NOT five everywhere — the owner approved GitHub only; a domain (Cloudflare cache + r2.dev as another road) and HF/archive.org would add more.
-- SECURITY: R2 key pair in public git history — owner must rotate (row at the top).
-- Not done: quote/new-Muslim backgrounds from unsplash (1 source); per-ayah R2 folders not on GitHub (asset limit); hifz repeat re-requests the file each repetition (measure before changing); Cache-Control metadata waits for the domain.
+NEXT, in order (easiest → hardest): A1 accessibility labels sweep; DB1 onUpgrade stubs; B2 verify Google JWT locally (JWKS) in the Worker; B3 rate limiting; B4 review-site passphrase; then the Tarteel-style live tasmee (measure whisper-base on a mid phone first). OWNER: rotate the R2 key (S1); domain when ready (I1).
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
