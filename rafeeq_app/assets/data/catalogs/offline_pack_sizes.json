@@ -1,0 +1,9 @@
+{
+ "bytes": {
+  "mushaf/madinah_qc": 74336240,
+  "recitations/surah/basit_murattal": 448977404,
+  "recitations/surah/maher_murattal": 709059785
+ },
+ "measured": "2026-09-24T11:33Z",
+ "source": "R2 bucket rafeeq-content, list_objects_v2 sizes"
+}
