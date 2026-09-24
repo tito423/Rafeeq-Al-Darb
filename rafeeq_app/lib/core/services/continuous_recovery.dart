@@ -243,7 +243,11 @@ extension _ContinuousRecovery on AyahAudioService {
       }
     }
 
-    _contRetryTimer = Timer(_retryAfter, () => unawaited(retry()));
+    // PERIODIC, not one-shot: a retry that arrives while the previous one is
+    // still loading is dropped, and a one-shot timer (or a single network
+    // event) dropped that way left the run holding for good — seen on
+    // emulator-5554, network back and 2:150 still waiting a minute later.
+    _contRetryTimer = Timer.periodic(_retryAfter, (_) => unawaited(retry()));
     _contNetSub = Connectivity().onConnectivityChanged.listen((r) {
       if (r.any((c) => c != ConnectivityResult.none)) unawaited(retry());
     });

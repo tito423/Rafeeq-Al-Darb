@@ -265,7 +265,9 @@ class QuranAudioPlayer extends ChangeNotifier {
       if (!await _startAt(i)) _holdAt(i);
     }
 
-    _retryTimer = Timer(_retryAfter, () => unawaited(retry()));
+    // Periodic: a retry dropped because a load was still running must not
+    // be the last one (the same fault held continuous recitation for good).
+    _retryTimer = Timer.periodic(_retryAfter, (_) => unawaited(retry()));
     _netSub = Connectivity().onConnectivityChanged.listen((r) {
       if (r.any((c) => c != ConnectivityResult.none)) unawaited(retry());
     });
