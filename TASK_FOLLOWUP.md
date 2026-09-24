@@ -3,7 +3,7 @@
 Updated after EVERY step, committed and pushed, so a session that dies mid-task
 (quota, a dropped remote connection) loses nothing: the next session — this
 account, the other one, or another agent — reads this and continues from
-**Next step**. Newest entries at the top of the log. Times in Dubai (UTC+4).
+**Next step**. Newest entries at the top of the log. Log times are the PC clock (shows AST, UTC+3 — one hour behind Dubai).
 
 ## Current task
 None in progress. The next task is **PLAN.md Stage 1 — «التحميلات المبدئية»**
