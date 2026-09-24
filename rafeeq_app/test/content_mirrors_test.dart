@@ -33,6 +33,15 @@ void main() {
     ]);
   });
 
+  test('an r2.dev URL (a hop from a custom domain) still reaches GitHub', () {
+    const u = '${ContentMirrors.r2DevBase}/hadith/hadith.zip';
+    expect(ContentMirrors.of(u), [
+      u,
+      'https://github.com/tito423/Rafeeq-Al-Darb/releases/download/'
+          'content-mirror/hadith__hadith.zip',
+    ]);
+  });
+
   test('per-ayah recitation and foreign hosts are not rewritten', () {
     final ayah =
         '${AppConfig.contentBaseUrl}/recitations/ayah/Alafasy_128kbps/001001.mp3';

@@ -24,6 +24,14 @@ class ContentMirrors {
 
   static const githubRepo = 'tito423/Rafeeq-Al-Darb';
 
+  /// The bucket's public development URL. Today it IS [AppConfig
+  /// .contentBaseUrl]. Once the bucket sits behind a custom domain with
+  /// Cloudflare's cache in front (`--dart-define=RAFEEQ_CONTENT_BASE=` the
+  /// domain), r2.dev stays in the chain as the next host after
+  /// the domain — the same bucket by another road — so moving to the domain
+  /// adds a source instead of swapping one.
+  static const r2DevBase = 'https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev';
+
   static const Map<String, List<String>> githubReleases = {
     'content-mirror': [
       'books/text/',
@@ -48,18 +56,28 @@ class ContentMirrors {
   /// bucket, or whose folder is not mirrored, comes back alone.
   static List<String> of(String url) {
     final base = '${AppConfig.contentBaseUrl}/';
-    if (!url.startsWith(base)) return [url];
-    final key = url.substring(base.length);
+    // A bucket URL by either road: the configured base, or r2.dev itself
+    // (what a player holds after hopping from the domain to r2.dev).
+    final String key;
+    if (url.startsWith(base)) {
+      key = url.substring(base.length);
+    } else if (url.startsWith('$r2DevBase/')) {
+      key = url.substring(r2DevBase.length + 1);
+    } else {
+      return [url];
+    }
+    final viaR2Dev = url.startsWith('$r2DevBase/') ? null : '$r2DevBase/$key';
     for (final e in githubReleases.entries) {
       if (e.value.any(key.startsWith)) {
         return [
           url,
+          ?viaR2Dev,
           'https://github.com/$githubRepo/releases/download/'
               '${e.key}/${key.replaceAll('/', '__')}',
         ];
       }
     }
-    return [url];
+    return [url, ?viaR2Dev];
   }
 
   /// Tries [fetch] on each mirror of [url] in turn and returns the first
