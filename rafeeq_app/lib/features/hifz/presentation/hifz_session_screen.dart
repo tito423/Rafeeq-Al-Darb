@@ -256,200 +256,218 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
           ),
         ),
       ),
-      body: ListView(
+      // BUILT ONCE, NOT LAZILY.
+      //
+      // «بتعلق كدة ثانية في النص قبل ماتنزل تحت او تطلع فوق» (2026-09-24,
+      // with a screen recording). This was a ListView, which throws away
+      // whatever scrolls off and builds it again when it comes back - so
+      // mid-fling it rebuilt HifzNavigator (two DropdownMenus measuring 114
+      // surahs and up to 286 ayahs) going up, and TasmeePanel (a recorder,
+      // a platform call listing microphones, and on the way out an
+      // audio-route reset) going down. Measured: the owner's video froze 7
+      // times for 193-258 ms mid-scroll; emulator-5554 at font 1.3 on 2:255
+      // froze twice for 911 and 1019 ms in 12 flings. The page is about two
+      // screens long, so it is laid out once and only scrolled.
+      body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-        children: [
-          if (_surahs.isNotEmpty) ...[
-            HifzNavigator(
-              surahs: _surahs,
-              surah: ayah.surahId,
-              ayah: ayah.ayahNumber,
-              onGo: _goTo,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (_surahs.isNotEmpty) ...[
+              HifzNavigator(
+                surahs: _surahs,
+                surah: ayah.surahId,
+                ayah: ayah.ayahNumber,
+                onGo: _goTo,
+              ),
+              const SizedBox(height: 12),
+            ],
+            Text(
+              [
+                if (_crossesSurahs) _surahNames[ayah.surahId] ?? '',
+                trn(
+                  'hifz.ayah_of',
+                  args: ['${ayah.ayahNumber}', '${list.length - _at}'],
+                ),
+              ].where((t) => t.isNotEmpty).join(' — '),
+              style: TextStyle(color: scheme.onSurfaceVariant),
             ),
             const SizedBox(height: 12),
-          ],
-          Text(
-            [
-              if (_crossesSurahs) _surahNames[ayah.surahId] ?? '',
-              trn(
-                'hifz.ayah_of',
-                args: ['${ayah.ayahNumber}', '${list.length - _at}'],
-              ),
-            ].where((t) => t.isNotEmpty).join(' — '),
-            style: TextStyle(color: scheme.onSurfaceVariant),
-          ),
-          const SizedBox(height: 12),
-          if (basmala != null) ...[
-            Center(
-              child: ArabicText(
-                basmala,
-                style: const TextStyle(fontFamily: 'AmiriQuran', fontSize: 20),
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-          // The ayah, with the hidden words covered — never altered. It
-          // follows the finger: drag it sideways to the next or last ayah.
-          SwipeableAyah(
-            onNext: _at + 1 < list.length ? () => _step1(1) : null,
-            onPrev: _at > 0 ? () => _step1(-1) : null,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.gold.withValues(alpha: 0.07),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppColors.gold.withValues(alpha: 0.25),
-                ),
-              ),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 8,
-                  runSpacing: 10,
-                  children: [
-                    for (var i = 0; i < words.length; i++)
-                      _Word(
-                        word: words[i],
-                        hidden: hifzWordHidden(i, words.length, _step),
-                        onTap: () => setState(() {
-                          // Tapping a hidden word brings that word back.
-                          final hiddenCount = words.length - i;
-                          _step = (hiddenCount - 1).clamp(0, words.length);
-                        }),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: _step >= words.length - 1
-                      ? null
-                      : () => setState(() => _step++),
-                  icon: const Icon(Icons.visibility_off_outlined),
-                  label: Text('hifz.hide_one'.tr()),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: _step == 0
-                      ? null
-                      : () => setState(() => _step = 0),
-                  icon: const Icon(Icons.visibility_outlined),
-                  label: Text('hifz.show_all'.tr()),
-                ),
-              ),
-            ],
-          ),
-          const Divider(height: 28),
-          Row(
-            children: [
-              Text('hifz.repeats'.tr()),
-              const SizedBox(width: 10),
-              for (final n in [1, 3, 5, 10])
-                Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: ChoiceChip(
-                    label: Text(
-                      localizeDigits('$n', context.locale.languageCode),
-                    ),
-                    selected: _repeats == n,
-                    onSelected: (_) => setState(() => _repeats = n),
+            if (basmala != null) ...[
+              Center(
+                child: ArabicText(
+                  basmala,
+                  style: const TextStyle(
+                    fontFamily: 'AmiriQuran',
+                    fontSize: 20,
                   ),
                 ),
+              ),
+              const SizedBox(height: 8),
             ],
-          ),
-          const SizedBox(height: 6),
-          // «حطلي هنا اختيار صوت القارئ سواء من الجهاز لو موجود او من النت»
-          // (the owner, 2026-09-23). The same sheet as the mushaf's: a
-          // reciter with ayahs downloaded is marked and plays from the device,
-          // any other streams.
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: ActionChip(
-              avatar: const Icon(Icons.record_voice_over_rounded, size: 18),
-              label: Text(_reciterName()),
-              onPressed: () async {
-                final id = await showReciterPickerSheet(context);
-                if (id == null || !mounted) return;
-                await ref.read(selectedReciterProvider.notifier).select(id);
-                setState(() {});
+            // The ayah, with the hidden words covered — never altered. It
+            // follows the finger: drag it sideways to the next or last ayah.
+            SwipeableAyah(
+              onNext: _at + 1 < list.length ? () => _step1(1) : null,
+              onPrev: _at > 0 ? () => _step1(-1) : null,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.gold.withValues(alpha: 0.07),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.gold.withValues(alpha: 0.25),
+                  ),
+                ),
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    runSpacing: 10,
+                    children: [
+                      for (var i = 0; i < words.length; i++)
+                        _Word(
+                          word: words[i],
+                          hidden: hifzWordHidden(i, words.length, _step),
+                          onTap: () => setState(() {
+                            // Tapping a hidden word brings that word back.
+                            final hiddenCount = words.length - i;
+                            _step = (hiddenCount - 1).clamp(0, words.length);
+                          }),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _step >= words.length - 1
+                        ? null
+                        : () => setState(() => _step++),
+                    icon: const Icon(Icons.visibility_off_outlined),
+                    label: Text('hifz.hide_one'.tr()),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _step == 0
+                        ? null
+                        : () => setState(() => _step = 0),
+                    icon: const Icon(Icons.visibility_outlined),
+                    label: Text('hifz.show_all'.tr()),
+                  ),
+                ),
+              ],
+            ),
+            const Divider(height: 28),
+            Row(
+              children: [
+                Text('hifz.repeats'.tr()),
+                const SizedBox(width: 10),
+                for (final n in [1, 3, 5, 10])
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: ChoiceChip(
+                      label: Text(
+                        localizeDigits('$n', context.locale.languageCode),
+                      ),
+                      selected: _repeats == n,
+                      onSelected: (_) => setState(() => _repeats = n),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            // «حطلي هنا اختيار صوت القارئ سواء من الجهاز لو موجود او من النت»
+            // (the owner, 2026-09-23). The same sheet as the mushaf's: a
+            // reciter with ayahs downloaded is marked and plays from the device,
+            // any other streams.
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: ActionChip(
+                avatar: const Icon(Icons.record_voice_over_rounded, size: 18),
+                label: Text(_reciterName()),
+                onPressed: () async {
+                  final id = await showReciterPickerSheet(context);
+                  if (id == null || !mounted) return;
+                  await ref.read(selectedReciterProvider.notifier).select(id);
+                  setState(() {});
+                },
+              ),
+            ),
+            const SizedBox(height: 6),
+            FilledButton.icon(
+              onPressed: _playing
+                  ? () => AyahAudioService.instance.stopQueue()
+                  : () => _play(ayah),
+              icon: Icon(
+                _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
+              ),
+              label: Text(_playing ? 'hifz.stop'.tr() : 'hifz.listen'.tr()),
+            ),
+            // Nothing heard? Four plain things to check.
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                onPressed: () => showSilenceTips(context),
+                icon: const Icon(Icons.hearing_disabled_outlined, size: 18),
+                label: Text('diag.link'.tr()),
+              ),
+            ),
+            const Divider(height: 28),
+            // «سمّع لنفسك»: the device listens and marks the words.
+            TasmeePanel(
+              key: ValueKey('${ayah.surahId}:${ayah.ayahNumber}'),
+              ayahText: body,
+              surahId: ayah.surahId,
+              ayahNumber: ayah.ayahNumber,
+              // «أتقنتها»: the same step «حفظتها» takes, offered where the
+              // reader just proved it — never taken for him.
+              onMastered: () async {
+                await ref
+                    .read(hifzStoreProvider.notifier)
+                    .remembered(ayah.surahId, ayah.ayahNumber);
+                if (context.mounted) _next();
               },
             ),
-          ),
-          const SizedBox(height: 6),
-          FilledButton.icon(
-            onPressed: _playing
-                ? () => AyahAudioService.instance.stopQueue()
-                : () => _play(ayah),
-            icon: Icon(
-              _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
-            ),
-            label: Text(_playing ? 'hifz.stop'.tr() : 'hifz.listen'.tr()),
-          ),
-          // Nothing heard? Four plain things to check.
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TextButton.icon(
-              onPressed: () => showSilenceTips(context),
-              icon: const Icon(Icons.hearing_disabled_outlined, size: 18),
-              label: Text('diag.link'.tr()),
-            ),
-          ),
-          const Divider(height: 28),
-          // «سمّع لنفسك»: the device listens and marks the words.
-          TasmeePanel(
-            key: ValueKey('${ayah.surahId}:${ayah.ayahNumber}'),
-            ayahText: body,
-            surahId: ayah.surahId,
-            ayahNumber: ayah.ayahNumber,
-            // «أتقنتها»: the same step «حفظتها» takes, offered where the
-            // reader just proved it — never taken for him.
-            onMastered: () async {
-              await ref
-                  .read(hifzStoreProvider.notifier)
-                  .remembered(ayah.surahId, ayah.ayahNumber);
-              if (context.mounted) _next();
-            },
-          ),
-          const Divider(height: 28),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    await ref
-                        .read(hifzStoreProvider.notifier)
-                        .forgot(ayah.surahId, ayah.ayahNumber);
-                    if (context.mounted) _next();
-                  },
-                  icon: const Icon(Icons.replay_rounded),
-                  label: Text('hifz.again'.tr()),
+            const Divider(height: 28),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      await ref
+                          .read(hifzStoreProvider.notifier)
+                          .forgot(ayah.surahId, ayah.ayahNumber);
+                      if (context.mounted) _next();
+                    },
+                    icon: const Icon(Icons.replay_rounded),
+                    label: Text('hifz.again'.tr()),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () async {
-                    await ref
-                        .read(hifzStoreProvider.notifier)
-                        .remembered(ayah.surahId, ayah.ayahNumber);
-                    if (context.mounted) _next();
-                  },
-                  icon: const Icon(Icons.check_rounded),
-                  label: Text('hifz.memorized'.tr()),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () async {
+                      await ref
+                          .read(hifzStoreProvider.notifier)
+                          .remembered(ayah.surahId, ayah.ayahNumber);
+                      if (context.mounted) _next();
+                    },
+                    icon: const Icon(Icons.check_rounded),
+                    label: Text('hifz.memorized'.tr()),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

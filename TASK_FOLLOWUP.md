@@ -80,6 +80,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:24 - Hifz scroll stall: page built once (SingleChildScrollView) instead of lazy ListView; before = 2 stalls 911/1019 ms (emulator), owner video 7 x ~200 ms; after-measurement pending
 - 2026-09-24 16:20 - Scroll-stall evidence + candidate logged; waiting for owner's second video
 - 2026-09-24 16:16 - Correction logged: hifz bug is a scroll stall, not ayah flip; measuring
 - 2026-09-24 16:10 - v3.61.0 released and verified (tag == HEAD); next: Umrah/Hajj summaries
