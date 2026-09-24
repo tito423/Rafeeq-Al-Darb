@@ -58,6 +58,9 @@ CITIES = [
     ("makkah", 21.4225, 39.8262),
     ("jakarta", -6.2088, 106.8456),
     ("london", 51.5074, -0.1278),
+    # The owner's own city (added 2026-09-24): the UAE Awqaf method and its
+    # +3 min offsets are checked where they are actually used.
+    ("dubai", 25.2048, 55.2708),
 ]
 
 # One date near an equinox and one at the June solstice — the moonsighting

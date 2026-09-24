@@ -17,7 +17,7 @@ import 'package:rafeeq_app/features/adhan/data/prayer_calculation_methods.dart';
 ///     every Isha interval in `kPrayerCalculationMethods` has to equal what
 ///     the organisation publishes.
 ///   * `prayer_timings.json` — a grid of real answers from the same API
-///     (every method × 4 cities × 2 dates × both Asr schools, requested in
+///     (every method × 5 cities (Dubai added 2026-09-24) × 2 dates × both Asr schools, requested in
 ///     UTC so nothing has to be guessed about timezones). The app's own
 ///     calculation has to land on those times.
 ///

@@ -97,6 +97,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:43 - Prayer times re-verified LIVE vs AlAdhan: 2400 times, 20 methods x 5 cities (Dubai added) x 2 dates x 2 schools, worst 2 min
 - 2026-09-24 16:36 - Umrah/Hajj summary card (verbatim excerpts, ayah from mushaf, 7 locales); 570 tests pass; building
 - 2026-09-24 16:33 - checkpoint.ps1 warns about untracked source files; trap 55
 - 2026-09-24 16:32 - Add measurement scripts and hajj summary files to git
