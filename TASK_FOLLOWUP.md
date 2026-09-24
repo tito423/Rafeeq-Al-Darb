@@ -161,9 +161,14 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   raw DioException English).
   NOTE (first run, fresh data): after «Later» on the permissions page,
   Home still asked location + music/audio on first open (system dialogs).
-- [ ] 5 reminder tap · [ ] 6 splash preview · [ ] 8 city on locale
+- [x] 5 reminder tap: VERIFIED 22:47 - Adhkar settings sheet, morning
+  reminder set 22:47 (text-input picker), app in background; notification
+  «Morning adhkar» posted, tapped from the shade -> «Morning» adhkar
+  screen 1/17. (Reminder left ON at 22:47 on the emulator.)
+- [ ] 6 splash preview · [ ] 8 city on locale
 
 ## Log
+- 2026-09-24 22:47 - Verified item 5: morning adhkar reminder tap opens the Morning adhkar screen
 - 2026-09-24 22:42 - Verified item 4: tasmee download offline shows localized No internet connection
 - 2026-09-24 22:38 - Verified item 3: reader-voice download survives airplane mode and completes
 - 2026-09-24 22:32 - Verified items 2 (one notification ask) and 7 (umts recommends Banna); found complete-recitation row fails first try on umts
