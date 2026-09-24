@@ -141,14 +141,18 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
             IconButton(
               visualDensity: VisualDensity.compact,
               onPressed: _page == 0 ? null : () => _step(-1),
-              icon: const Icon(Icons.chevron_right, size: 22),
+              // left = previous, right = next, as on the daily-hadith card
+              // below it; both mirror in RTL (trap #7). They were swapped
+              // here, and read «> <» in English and Arabic alike
+              // (emulator-5554, 2026-09-24).
+              icon: const Icon(Icons.chevron_left, size: 22),
               tooltip: 'quotes.previous'.tr(),
             ),
             IconButton(
               visualDensity: VisualDensity.compact,
               onPressed:
                   _page >= picks.length - 1 ? null : () => _step(1),
-              icon: const Icon(Icons.chevron_left, size: 22),
+              icon: const Icon(Icons.chevron_right, size: 22),
               tooltip: 'quotes.next'.tr(),
             ),
           ],

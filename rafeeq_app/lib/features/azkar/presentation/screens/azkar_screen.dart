@@ -98,8 +98,11 @@ class _SectionsTab extends ConsumerWidget {
     context.locale;
     return GridView.builder(
       padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      // By card width, not a fixed 2: in landscape two columns made each
+      // card taller than the screen and its title fell below the fold
+      // (emulator-5554, 2026-09-24). A phone held upright still gets 2.
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 260,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         childAspectRatio: 0.9,

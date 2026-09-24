@@ -199,11 +199,21 @@ ALL 8 VERIFIED on build 3.
   (A pm grant while the app stayed foreground left the card «denied» and
   its button logged «No requestable permission» - adb-only, not a user
   path; not changed.)
+- MATRIX on build 4 (scripts/ui_matrix_sweep.py, sheets in
+  %TEMP%/sweep): en + ar x light/dark/rgb x portrait/landscape READ.
+  FOUND+FIXED (need build 5): quote-of-the-day arrows swapped («> <» in
+  en and ar; hadith card beside it is right) - icons swapped back;
+  Adhkar grid in landscape had 2 columns, cards taller than the screen,
+  titles below the fold -> max 260 dp per card. Tasbeeh landscape fix
+  SEEN working on build 4. Gold surah names on cream (Home «Selected
+  surahs») low contrast - noted, owner's gold design, not changed.
+  Next: es ru pt fr ur.
 - OWNER 23:00: full matrix - every feature x 4 themes x 7 languages x
   portrait/landscape. Plan: build 4, then scripted screenshot sweep,
   reviewed by eye.
 
 ## Log
+- 2026-09-24 23:34 - Matrix en+ar read: quote arrows were swapped, adhkar grid 2 columns in landscape - both fixed (unbuilt)
 - 2026-09-24 23:21 - Build 4: recitation row retry verified; location was asked twice on first run (service raced the startup ask) - service no longer prompts; matrix sweep script
 - 2026-09-24 23:03 - Urdu pass: adhkar cards kept the old language after a switch (const tab) - now depend on locale; owner asked for full theme x language x orientation matrix
 - 2026-09-24 22:56 - Landscape audit: tasbeeh counter shrank to a dot - side-by-side layout when wide and short (unbuilt)

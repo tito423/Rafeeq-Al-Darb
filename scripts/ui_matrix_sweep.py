@@ -105,6 +105,8 @@ def rotate(land):
 
 def sweep_screens(prefix, rtl, land):
     files = []
+    # A sheet left open by the previous pass eats the first tap.
+    tab(0, rtl, land)
     for i, name in enumerate(NAMES):
         tab(i, rtl, land)
         f = f'{prefix}_{name}.png'
@@ -143,7 +145,7 @@ def contact_sheet(files, out, land):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    rtl_now = True  # the sweep is started from Arabic
+    rtl_now = os.environ.get('START', 'ar') in RTL
     for code in LANGS:
         if not set_lang(code, rtl_now):
             print(f'{code}: language option not found', flush=True)
