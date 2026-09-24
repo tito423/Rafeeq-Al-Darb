@@ -28,6 +28,13 @@ Done since v3.61.0 (each verified):
   the same fresh-install path shows Dubai + times at once.
 - Prayer methods: 2400 times vs AlAdhan live, worst 2 min; Dubai added.
 
+- NEW (17:25): continuous recitation + auto-scroll in the reader must not
+  fight. Owner lets me choose the best UX. Plan (verify code first): while
+  continuous recitation plays, auto-scroll yields - the page FOLLOWS the
+  highlighted ayah; when recitation stops, auto-scroll resumes if it was on.
+  After the tiny-vs-base ASR measurement (running, scripts/asr_probe/
+  tiny_vs_base.txt); same 3.62.0 release.
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -70,6 +77,7 @@ Done since v3.61.0 (each verified):
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 17:26 - Queued: sync continuous recitation with auto-scroll; ASR tiny-vs-base script added (running)
 - 2026-09-24 17:02 - Location fix verified on fresh install (Dubai + times at once); 570 tests pass; post-3.61 fixes ready, release pending owner
 - 2026-09-24 16:53 - Location stuck after first-run permission: reproduced + fix (invalidate prayer controller at onboarding end); building to verify
 - 2026-09-24 16:48 - Hajj summary: pillars and obligations under separate headings; summary seen on emulator (Umrah + Hajj, ayah 2:198-199 from mushaf)
