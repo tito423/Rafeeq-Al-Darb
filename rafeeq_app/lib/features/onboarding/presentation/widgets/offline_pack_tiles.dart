@@ -284,7 +284,19 @@ class _SurahRecitationPackTileState
     final locale = context.locale.languageCode;
     try {
       final sizes = await ref.read(offlinePackSizesProvider.future);
-      final reciters = await Mp3QuranApi.reciters(locale);
+      // Three tries before «no server answered». On a UMTS emulator
+      // (2026-09-24) the first fetch of the 160 KB catalogue failed while
+      // the page's other probes shared the line; a retry a moment later
+      // loaded it (~37 s). The server was there - the line was busy.
+      List<Mp3Reciter>? reciters;
+      for (var attempt = 0; reciters == null; attempt++) {
+        try {
+          reciters = await Mp3QuranApi.reciters(locale);
+        } catch (_) {
+          if (attempt >= 2 || !mounted) rethrow;
+          await Future<void>.delayed(Duration(seconds: 5 * (attempt + 1)));
+        }
+      }
       final out = <int, (Mp3Reciter, Mp3Moshaf)>{};
       for (final r in reciters) {
         for (final m in r.moshafs) {

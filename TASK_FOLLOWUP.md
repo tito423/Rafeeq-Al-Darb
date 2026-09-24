@@ -12,11 +12,10 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
-1. Emulator OFF (`adb emu kill`, trap 24), then `build_github_release.bat`.
-   If the Kotlin in MainActivity.kt fails to compile, fix it first.
-2. Start the emulator, `adb install -r` the signed APK, and verify the 8
-   items in NEXT_SESSION_PROMPT.md «نصف منتهٍ», in that order (the Kotlin
-   adhan one first). Tick each below with what was seen.
+1. DONE (build 3, 22:20): all 8 fixes verified on the emulator (see
+   «Build 3 verification» below).
+2. Build 4 (emulator off first) for the complete-recitation retry; verify on
+   umts + pm clear that the row fills without a tap.
 3. Remaining audit: landscape on main screens, Urdu pass.
 4. Report to the owner; release 3.63.0 ONLY if he asks.
 
@@ -168,9 +167,16 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
 - [x] 6 splash preview: VERIFIED 22:49 - Toubayti al-Baqara streaming
   (PLAYING), Preview intro video with sound -> session PAUSED, recitation
   player piid 207 paused; Back -> video piid 215 stopped, piid 207
-  started, session PLAYING. · [ ] 8 city on locale
+  started, session PLAYING.
+- [x] 8 city on locale: VERIFIED 22:50 - Home, English -> العربية: 1.5 s
+  later the city line already reads «دبي، الإمارات العربية المتحدة».
+ALL 8 VERIFIED on build 3.
+- FIX (build 4 needed): complete-recitation row now tries the mp3quran
+  catalogue 3 times (5 s, 10 s apart) before «no server answered».
+  analyze clean, 577 pass. NOT yet on a device.
 
 ## Log
+- 2026-09-24 22:52 - All 8 audit-2 fixes verified on build 3 (item 8 city on locale switch); complete-recitation row retries the catalogue 3 times (577 pass, unbuilt)
 - 2026-09-24 22:50 - Verified item 6: splash preview pauses then resumes the recitation
 - 2026-09-24 22:47 - Verified item 5: morning adhkar reminder tap opens the Morning adhkar screen
 - 2026-09-24 22:42 - Verified item 4: tasmee download offline shows localized No internet connection
