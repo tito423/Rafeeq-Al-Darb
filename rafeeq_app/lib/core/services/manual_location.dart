@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show ValueNotifier;
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A place the reader chose by hand for the prayer times - a city from the
@@ -68,6 +70,12 @@ class ManualLocationStore {
 
   static const _key = 'manual_location_v1';
 
+  /// Ticks on every write and clear. Screens that read the place once and
+  /// stay alive (the Qibla lives in a kept-alive tab, trap #43) listen to
+  /// it: the Qibla kept Dubai's 258° after the place was set to Makkah
+  /// (emulator-5554, 2026-09-25).
+  final changes = ValueNotifier<int>(0);
+
   Future<ManualPlace?> read() async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_key);
@@ -82,11 +90,13 @@ class ManualLocationStore {
   Future<void> write(ManualPlace place) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, jsonEncode(place.toJson()));
+    changes.value++;
   }
 
   /// Back to automatic.
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key);
+    changes.value++;
   }
 }

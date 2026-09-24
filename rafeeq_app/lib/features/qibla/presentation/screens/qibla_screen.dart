@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../app/app_locale_provider.dart';
+import '../../../../core/services/manual_location.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/hero_surface.dart';
@@ -56,6 +57,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    ManualLocationStore.instance.changes.addListener(_resolveLocation);
     _resolveLocation();
     _listenCompass();
   }
@@ -63,6 +65,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    ManualLocationStore.instance.changes.removeListener(_resolveLocation);
     _compassSub?.cancel();
     super.dispose();
   }
@@ -79,6 +82,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
   bool _isPrayerTabActive() => ref.read(activeTabProvider) == AppTab.prayer;
 
   Future<void> _resolveLocation() async {
+    if (!mounted) return;
     setState(() => _locationState = _LocationState.loading);
     // The Qibla shows no city name, but it shares the location cache with
     // the prayer card - so it must ask in the same language, or it

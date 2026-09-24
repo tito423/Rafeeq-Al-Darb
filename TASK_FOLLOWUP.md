@@ -12,6 +12,17 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 ~03:20. Build 12 SEEN offline (airplane + location off):
+bundled list first unpack 5.3 s; Tanta -> Fajr 6:23 / Sunrise 7:46 phone
+time (Dubai sunrise 6:09 + 97 min longitude = 7:46, exact); Dubai found;
+coordinates Makkah -> Fajr 5:54 / Sunrise 7:10 (= 6:10 Makkah time).
+FOUND: Qibla kept Dubai's 258° (computed once in a kept-alive tab) - FIXED:
+ManualLocationStore.changes + Qibla listens. NOT BUILT. Emulator NOTE:
+`emu kill` + restart resumes an OLD snapshot (app reverted to build 9,
+airplane reset) - reinstall after every emulator restart.
+Next: build 13, qibla follows Tanta/Makkah, change calc method -> times
+change, back to Automatic. Then contrast crawl.
+
 SESSION 2026-09-25 ~03:10. Build 11 SEEN (airplane + location off):
 bundled list ready in <8 s, «Tanta» -> «Tanta, Egypt» first in ~2.8 s,
 picked -> Home name «Tanta, Egypt» BUT Fajr still Dubai's 4:50. CAUSE:
@@ -289,6 +300,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 03:20 - build 12: times follow the manual place (Tanta/Makkah checked by hand); FOUND qibla stuck on old place - fixed (changes notifier), building 13
 - 2026-09-25 03:10 - build 11: bundled list works offline; FOUND times cached by date only (place/method changes ignored until midnight) - fixed + test, building 12
 - 2026-09-25 03:00 - build 10: hosted list download reached «ready»; owner asked to BUNDLE it - done in code (asset + ensureReady), 583 pass, unbuilt
 - 2026-09-25 02:35 - download error surfaced (userErrorText + logcat), build 10 started
