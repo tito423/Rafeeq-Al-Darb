@@ -12,12 +12,20 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
-1. DONE (build 3, 22:20): all 8 fixes verified on the emulator (see
-   «Build 3 verification» below).
-2. Build 4 (emulator off first) for the complete-recitation retry; verify on
-   umts + pm clear that the row fills without a tap.
-3. Remaining audit: landscape on main screens, Urdu pass.
-4. Report to the owner; release 3.63.0 ONLY if he asks.
+STATE 2026-09-25 00:43: build 7 (signed, on emulator) = master. Every fix
+of this session SEEN on the emulator except the one item below.
+1. Reported to the owner; release 3.63.0 ONLY if he asks (bump pubspec +
+   AboutScreen, build_github_release.bat with the emulator OFF, delete
+   v3.62.0 + tag, keep v3.51.0 and content-*, tag == HEAD).
+2. UNVERIFIED (emulator GPS stopped delivering fixes after
+   `cmd location set-location-enabled` off/on - «last location=null»
+   even after a reboot): location switched OFF -> card button -> location
+   settings -> switch ON -> back -> times appear. Everything before «times
+   appear» was seen on build 7; the refresh-with-a-fix step was seen on
+   build 5. Redo on a real phone or a fresh AVD.
+3. Open, not changed: gold surah names on cream (Home «Selected surahs»)
+   are low contrast; after «Later» on the permissions page Home still
+   asks location, notifications and audio on first open (by design).
 
 AUDIT PART 2 - gaps not covered by part 1, each on the emulator:
 1. [x] splash preview vs recitation: with sound it pauses the recitation
@@ -232,7 +240,11 @@ ALL 8 VERIFIED on build 3.
   a row (logcat START LocationSettingsCheckerActivity), no way out.
   FIXED: _fetchPosition returns null when the service is off (cached fix
   used); only the card's button opens location settings. 577 pass.
-  NEXT: build 7 -> verify: switch off + fresh install = no dialog loop,
+  BUILD 7 VERIFIED (00:30-00:42): switch OFF + fresh install -> 0 Google
+  dialog launches (was 6+); card button -> Settings$LocationSettings
+  Activity; Qibla «Try again» after one refusal -> system dialog ->
+  allow -> «Qibla direction: 258°» and Home shows the times (resume).
+  (Was: build 7 -> verify: switch off + fresh install = no dialog loop,
   card button opens location settings, switch on + geo fix -> times;
   Qibla button prompts on a fresh install.
   NOTE: after an emulator cold boot, accelerometer_rotation is 1 again -
@@ -242,6 +254,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 00:43 - Build 7 verified: no location-dialog loop with location off, card button opens location settings, Qibla asks again and finds 258
 - 2026-09-25 00:25 - Location switch off: Google dialog re-raised on every resume (endless) - service no longer requests a fix when location is off; building 7
 - 2026-09-25 00:15 - Build 5 verified (one location ask, quote arrows, pt explanation, adhkar landscape); enable-location buttons now handle a switched-off location and Qibla asks again (askToEnable)
 - 2026-09-24 23:59 - Matrix done (7 languages x 3 themes x 2 orientations): hadith explanation was forced RTL in LTR languages - fixed; 577 pass; building 5
