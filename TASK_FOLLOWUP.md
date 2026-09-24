@@ -44,6 +44,17 @@ Settled facts.
   granted at first run. Measure on emulator (cold start with a mock
   location), find why, fix. After the hifz stall + Umrah/Hajj summary.
 
+- SCROLL STALL — measured (16:55): owner video 2 (v3.60): 7 freezes of
+  193-258 ms, EACH with the content moving the same way before and a
+  catch-up jump of 45-56 px (120-px thumbnails) after = real stalls, ALL
+  while scrolling back UP (navigator re-entering; old ListView rebuilt
+  HifzNavigator's DropdownMenus, 114 + 286 entries). Fix in code:
+  SingleChildScrollView+Column (page built once). CORRECTION: the emulator
+  'before' numbers (911/1019 ms) were my own 900 ms pauses at the page
+  edge, not stalls; the emulator does not stall at all, so the fix is NOT
+  proven on a device — needs the owner's phone. Scripts: scratchpad
+  stalls.py + direction.py (copy into scripts/ if kept).
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -86,6 +97,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:32 - Scroll stall root-caused from owner video (7 same-direction stalls while scrolling up); emulator numbers corrected; measurement scripts kept
 - 2026-09-24 16:28 - Hajj/Umrah summary data + verbatim test (2/2 pass); trap 54 (flutter test during a build breaks it)
 - 2026-09-24 16:24 - Hifz scroll stall: page built once (SingleChildScrollView) instead of lazy ListView; before = 2 stalls 911/1019 ms (emulator), owner video 7 x ~200 ms; after-measurement pending
 - 2026-09-24 16:20 - Scroll-stall evidence + candidate logged; waiting for owner's second video

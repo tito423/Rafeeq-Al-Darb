@@ -2495,9 +2495,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 16:28 — IN PROGRESS — resume here**
+**2026-09-24 16:32 — IN PROGRESS — resume here**
 
-Hajj/Umrah summary data + verbatim test (2/2 pass); trap 54 (flutter test during a build breaks it)
+Scroll stall root-caused from owner video (7 same-direction stalls while scrolling up); emulator numbers corrected; measurement scripts kept
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
