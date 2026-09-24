@@ -128,11 +128,21 @@ class SyncService {
     return account;
   }
 
+  /// «زر خروج يمسح الحساب والبيانات» — the ACCOUNT's data: what travels
+  /// with it ([syncedStateKeys], the synced counters) and anything still
+  /// queued for it. It used to be `_prefs.clear()`, which wiped every
+  /// setting on the phone as well — language, the finished onboarding, the
+  /// download registries, the adhan choices — so signing out put the app
+  /// back to a first install (audit 2026-09-24, finding D1).
+  static const syncedCounterKeys = <String>{'tasbeeh_total', 'azkar_total'};
+
   Future<void> signOut() async {
     await _googleSignIn.signOut();
     _ref.read(authStateProvider.notifier).state = null;
-    await _prefs.clear(); // Optionally clear data on sign out?
-    // Wait, prompt says: "زر خروج يمسح الحساب والبيانات". Yes.
+    for (final key in {...syncedStateKeys, ...syncedCounterKeys}) {
+      await _prefs.remove(key);
+    }
+    await _localQueueDb.delete('queue');
   }
 
   void notifySettingsChanged() {
