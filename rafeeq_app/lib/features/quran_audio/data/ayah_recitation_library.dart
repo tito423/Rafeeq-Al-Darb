@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/services/download_engine.dart';
 import '../../../core/services/recitation_source.dart';
+import '../../../core/services/ayah_audio_service.dart';
 
 /// Progress snapshot for one reciter's per-ayah download.
 class AyahDlProgress {
@@ -521,6 +522,13 @@ class AyahRecitationLibrary extends ChangeNotifier {
   /// after, and any ayah that still lands is deleted with the folder again.
   Future<void> deleteReciter(String edition) async {
     await ensureReady();
+    // Deleting the voice being listened to stops it first: its next
+    // verses point at files about to go (audit 2026-09-24).
+    final audio = AyahAudioService.instance;
+    if (audio.continuous.value.active &&
+        audio.continuousEdition == edition) {
+      await audio.stopContinuous();
+    }
     _entries.remove(edition);
     _downloadedCounts.remove(edition);
     await _save();

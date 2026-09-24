@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../core/services/download_engine.dart';
 import 'mp3quran_api.dart';
+import 'quran_audio_player.dart';
 
 enum SurahAudioState { none, queued, running, done, failed }
 
@@ -505,6 +506,7 @@ class QuranAudioLibrary extends ChangeNotifier {
   }
 
   Future<void> deleteRecitation(int moshafId) async {
+    await _stopIfPlaying(moshafId);
     await cancel(moshafId);
     final dir = Directory(p.join(_root.path, '$moshafId'));
     if (dir.existsSync()) await dir.delete(recursive: true);
@@ -514,7 +516,19 @@ class QuranAudioLibrary extends ChangeNotifier {
     _notifyNow();
   }
 
+  /// Deleting what is being listened to stops it first: the player's
+  /// playlist points at the files about to go (audit 2026-09-24).
+  Future<void> _stopIfPlaying(int moshafId, [int? surah]) async {
+    final player = QuranAudioPlayer.instance;
+    final id = player.current?.id ?? '';
+    final mine = surah == null
+        ? id.startsWith('m$moshafId-')
+        : id == 'm$moshafId-s$surah';
+    if (player.active && mine) await player.stop();
+  }
+
   Future<void> deleteSurah(int moshafId, int surah) async {
+    await _stopIfPlaying(moshafId, surah);
     final f = fileFor(moshafId, surah);
     if (f.existsSync()) await f.delete();
     _onDisk[moshafId]?.remove(surah);
