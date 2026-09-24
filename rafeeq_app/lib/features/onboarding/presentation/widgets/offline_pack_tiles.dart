@@ -71,9 +71,12 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
   Future<void> _probe() async {
     final sizes = await ref.read(offlinePackSizesProvider.future);
     final reciters = await ref.read(recitersProvider.future);
+    // 15 s, not 6: on a slow line (emulator at UMTS speed, 2026-09-24)
+    // ~35 probes at once all ran past 6 s and every host was reported as
+    // silent, though each answered. A 1 KB answer costs nothing to wait for.
     final dio = Dio(BaseOptions(
-      connectTimeout: const Duration(seconds: 6),
-      receiveTimeout: const Duration(seconds: 6),
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
       responseType: ResponseType.bytes,
       headers: {'Range': 'bytes=0-1023'},
     ));
@@ -127,6 +130,14 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
             ? 'onboarding.probing'.tr()
             : 'onboarding.no_host'.tr(),
         state: probes == null ? PackState.measuring : PackState.idle,
+        // No host answered: the button asks again instead of sitting
+        // disabled with no way forward.
+        onDownload: probes == null
+            ? null
+            : () {
+                setState(() => _probes = null);
+                unawaited(_probe());
+              },
       );
     }
 
