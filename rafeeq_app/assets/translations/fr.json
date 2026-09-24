@@ -1807,7 +1807,10 @@
     "arabic_only": "Le texte complet de cette étape est en arabe, tel qu'il a été écrit.",
     "madhahib_title": "Dans les quatre écoles",
     "text_smaller": "Texte plus petit",
-    "text_larger": "Texte plus grand"
+    "text_larger": "Texte plus grand",
+    "summary_umrah": "Résumé de la Omra",
+    "summary_hajj": "Résumé du Hajj",
+    "summary_hint": "Étape par étape, de l'arrivée à la fin du rite, avec les adhkar, obligations et sunnas de chacune."
   },
   "makharij": {
     "page": "p. {page}",

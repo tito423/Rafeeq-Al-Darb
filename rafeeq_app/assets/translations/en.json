@@ -1807,7 +1807,10 @@
     "arabic_only": "The full text of this step is in Arabic, shown as written.",
     "madhahib_title": "In the four schools",
     "text_smaller": "Smaller text",
-    "text_larger": "Larger text"
+    "text_larger": "Larger text",
+    "summary_umrah": "Umrah summary",
+    "summary_hajj": "Hajj summary",
+    "summary_hint": "Stage by stage from arrival to the end of the rite, with the adhkar, obligations and sunnahs of each."
   },
   "makharij": {
     "page": "p. {page}",

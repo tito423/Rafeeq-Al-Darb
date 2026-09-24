@@ -1807,7 +1807,10 @@
     "arabic_only": "El texto completo de este paso está en árabe, tal como fue escrito.",
     "madhahib_title": "En las cuatro escuelas",
     "text_smaller": "Texto más pequeño",
-    "text_larger": "Texto más grande"
+    "text_larger": "Texto más grande",
+    "summary_umrah": "Resumen de la Umrah",
+    "summary_hajj": "Resumen del Hayy",
+    "summary_hint": "Etapa por etapa, desde la llegada hasta el final del rito, con los adhkar, obligaciones y sunnas de cada una."
   },
   "makharij": {
     "page": "p. {page}",

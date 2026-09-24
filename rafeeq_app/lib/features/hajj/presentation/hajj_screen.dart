@@ -23,6 +23,7 @@ import '../../tajweed/data/bundled_matn.dart';
 import '../data/hajj_text_scale.dart';
 import '../data/hajj_guide.dart';
 import '../data/hajj_step_text.dart';
+import 'widgets/hajj_summary_card.dart';
 import 'widgets/mawaqit_today_card.dart';
 import 'widgets/jamarat_counter.dart';
 import 'widgets/journey_map.dart';
@@ -72,12 +73,19 @@ class HajjScreen extends ConsumerWidget {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(14, 10, 14, 28),
-        itemCount: steps.length + 1,
+        // + the header, + «ملخص العمرة / الحج» as the last card.
+        itemCount: steps.length + 2,
         itemBuilder: (context, i) {
           if (i == 0) {
             return _Header(
               track: track,
               onTrack: (t) => ref.read(_trackProvider.notifier).state = t,
+            );
+          }
+          if (i == steps.length + 1) {
+            return HajjSummaryCard(
+              key: ValueKey('summary-${track.name}'),
+              track: track,
             );
           }
           final step = steps[i - 1];

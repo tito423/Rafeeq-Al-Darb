@@ -109,9 +109,7 @@ const _ihramAfter = <SummaryLine>[
 
 const _arrival = SummaryStage('دخول مكة ورؤية الكعبة', [
   // p.181 [5]
-  SummaryLine.text(
-    'إذا شارف المحرم دخول مكة سن له أن يغتسل لدخول مكة',
-  ),
+  SummaryLine.text('إذا شارف المحرم دخول مكة سن له أن يغتسل لدخول مكة'),
   // p.181 [6]
   SummaryLine.text(
     'وعند مشاهدته الكعبة المشرفة يرفع يديه مكبراً وداعياً بهذا الدعاء:',
@@ -138,9 +136,7 @@ const _tawafLines = <SummaryLine>[
     'سبعة أشواط.',
   ),
   // p.182 [3]
-  SummaryLine.text(
-    'ويجب في الطواف ستر العورة، والطهارة من الحدث والنجس',
-  ),
+  SummaryLine.text('ويجب في الطواف ستر العورة، والطهارة من الحدث والنجس'),
   // p.147 [3]
   SummaryLine.text('أن يقول في أول طوافه:'),
   SummaryLine.dhikr(
@@ -210,13 +206,9 @@ const _saiLines = <SummaryLine>[
   ),
   // p.184 [4]
   SummaryLine.text('ويسن أن يقول الساعي أثناء سعيه:'),
-  SummaryLine.dhikr(
-    'رب اغفر وارحم وتجاوز عما تعلم، إنك أنت الأعز الأكرم',
-  ),
+  SummaryLine.dhikr('رب اغفر وارحم وتجاوز عما تعلم، إنك أنت الأعز الأكرم'),
   // p.184 [5]
-  SummaryLine.text(
-    'ومما مر علم أن الواجب الافتتاح بالصفا والاختتام بالمروة.',
-  ),
+  SummaryLine.text('ومما مر علم أن الواجب الافتتاح بالصفا والاختتام بالمروة.'),
 ];
 
 const _zamzam = <SummaryLine>[
@@ -239,9 +231,7 @@ const umrahSummary = <SummaryStage>[
     ),
     SummaryLine.text('٣ـ يسعى بين الصفا والمروة.'),
     SummaryLine.text('٤ـ يحلق أو يقصر من شعر رأسه.'),
-    SummaryLine.text(
-      'وبذلك يتحلل المعتمر من أعمال العمرة والتزاماتها.',
-    ),
+    SummaryLine.text('وبذلك يتحلل المعتمر من أعمال العمرة والتزاماتها.'),
   ]),
   SummaryStage('١. الإحرام من الميقات', [
     ..._ihramCommon,
@@ -263,9 +253,7 @@ const umrahSummary = <SummaryStage>[
       'من عمرته.',
     ),
     // p.143 [3]
-    SummaryLine.text(
-      'وأما المرأة فتقصر ولا تؤمر بالحلق إجماعاً.',
-    ),
+    SummaryLine.text('وأما المرأة فتقصر ولا تؤمر بالحلق إجماعاً.'),
   ]),
   SummaryStage('ماء زمزم', _zamzam),
 ];
@@ -297,9 +285,7 @@ const hajjSummary = <SummaryStage>[
     SummaryLine.text('(الرابع): المبيت بمنى ليلتي التشريق:'),
     SummaryLine.text('(الخامس): طواف الواداع:'),
     // p.139 [3]
-    SummaryLine.text(
-      'فهذه الأمور الخمسة واجبات يأثم الحاج بتركها من غير عذر.',
-    ),
+    SummaryLine.text('فهذه الأمور الخمسة واجبات يأثم الحاج بتركها من غير عذر.'),
   ]),
   SummaryStage('قبل السفر', [
     // p.180 [3]
@@ -309,16 +295,12 @@ const hajjSummary = <SummaryStage>[
       'منه، وطلب منه المسامحة.',
     ),
     // p.180 [4]
-    SummaryLine.text(
-      'يختار في الحج الرفقة الصالحة، ولاسيما الفقهاء في الدين',
-    ),
+    SummaryLine.text('يختار في الحج الرفقة الصالحة، ولاسيما الفقهاء في الدين'),
   ]),
   SummaryStage('١. الإحرام من الميقات', [
     ..._ihramCommon,
     // p.181 [0]
-    SummaryLine.text(
-      'ويقول: لبيك اللهم بحج ناوياً ذلك بقلبه أيضاً',
-    ),
+    SummaryLine.text('ويقول: لبيك اللهم بحج ناوياً ذلك بقلبه أيضاً'),
     ..._ihramAfter,
   ]),
   _arrival,
@@ -355,9 +337,7 @@ const hajjSummary = <SummaryStage>[
     SummaryLine.text(
       'إذا كان صباح يوم التاسع بعد طلوع الشمس توجه الحاج من منى إلى عرفات',
     ),
-    SummaryLine.text(
-      'ويصلي الظهر مع العصر مجموعة جمع تقديم.',
-    ),
+    SummaryLine.text('ويصلي الظهر مع العصر مجموعة جمع تقديم.'),
     // p.185 [1]
     SummaryLine.text(
       'ثم يدخل عرفه ويمكث فيها إلى غروب الشمس، وفي عرفات يذكر الحاج ربه ويدعوه '
@@ -438,9 +418,7 @@ const hajjSummary = <SummaryStage>[
       'ويجب أن يصيب الحصى المرمى، فإن لم تصب حصاة المرمى لم تحسب.',
     ),
     // p.186 [6]
-    SummaryLine.text(
-      'إذا انتهى الحاج من الرمي ذبح هديه إن كان معه هدي',
-    ),
+    SummaryLine.text('إذا انتهى الحاج من الرمي ذبح هديه إن كان معه هدي'),
     // p.187 [1]
     SummaryLine.text(
       'ثم يحلق شعره أو يقصر، والأفضل للرجل الحلق، وللمرأة التقصير، والحلق أو '

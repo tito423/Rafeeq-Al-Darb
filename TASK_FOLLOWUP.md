@@ -97,6 +97,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:36 - Umrah/Hajj summary card (verbatim excerpts, ayah from mushaf, 7 locales); 570 tests pass; building
 - 2026-09-24 16:33 - checkpoint.ps1 warns about untracked source files; trap 55
 - 2026-09-24 16:32 - Add measurement scripts and hajj summary files to git
 - 2026-09-24 16:32 - Scroll stall root-caused from owner video (7 same-direction stalls while scrolling up); emulator numbers corrected; measurement scripts kept
