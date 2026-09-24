@@ -68,6 +68,7 @@ account, the other one, or another agent — reads this and continues from
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:08 - 3.61.0 final build verified (tutorial card teal under Tools); releasing
 - 2026-09-24 16:04 - 3.61.0 verified on emulator (onboarding rows, jump fix, More colours, Hifz arc); tutorial card follows group colour
 - 2026-09-24 15:56 - Owner order logged: Umrah/Hajj quick summaries after the release
 - 2026-09-24 15:53 - TASK_FOLLOWUP next steps rewritten (build running)
