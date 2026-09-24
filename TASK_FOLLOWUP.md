@@ -95,7 +95,11 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   loss pauses, gain resumes same chunk, loss stops, released 1.5 s after
   the last chunk); phone TTS path: BookSpeaker listens to AudioSession
   interruptions (pause -> re-read chunk, unknown -> stop, duck ignored),
-  test/book_speaker_focus_test.dart 3/3. NEEDS REBUILD + device check.
+  test/book_speaker_focus_test.dart 3/3. VERIFIED on build 2 (20:31): the
+  reader holds focus (GAIN, SPEECH); at the adhan SPEECH -> paused, only
+  USAGE_ALARM plays; after Stop the same player (piid 455) -> started,
+  reading resumed on the same page. Phone-TTS path: unit-tested only (the
+  emulator has no Arabic TTS engine).
 - [~] adhan vs tasmee recording: FIXED in code (poll AdhanNative.state()
   each 1 s while recording -> discard), needs rebuild + device check · [ ] focus mode vs adhan
 - [x] notifications count (trap 33): every service uses fixed ids ->
@@ -149,6 +153,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 20:31 - Verified on device: adhan pauses the book reader and it resumes after
 - 2026-09-24 20:23 - Build 2 of 3.62.0 signed (focus/tasmee/sunan/per-ayah delete/probe/header fixes in); verifying on emulator
 - 2026-09-24 20:19 - Audit: adhan+book reader played together (seen) -> audio focus in voice player + TTS interruptions (3 tests); tasmee discards recording on adhan; sunan reminders self-clear (trap 33); 573 pass
 - 2026-09-24 20:02 - Full audit matrix written (owner: audit every aspect); qibla verified 258 vs computed 258.2
