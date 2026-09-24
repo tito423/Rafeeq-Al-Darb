@@ -180,8 +180,19 @@ ALL 8 VERIFIED on build 3.
   to tap. FIXED in code: wide+short (<600 high) -> controls scroll on one
   side, counter full size on the other; portrait unchanged. analyze
   clean, NOT yet on a device (build 4).
+- URDU (22:57): RTL, Latin digits, all tabs Urdu EXCEPT the Adhkar cards,
+  which stayed in the previous language (Arabic) until a restart: the tab
+  is built `const _SectionsTab()` and never rebuilt on locale change.
+  FIXED: `context.locale;` in _SectionsTab.build. 577 pass, NOT on device.
+- OPEN: city line - first ar->ur switch still Arabic at 4 s; two later
+  switches (ar and ur) updated in <2 s. Cause not established (release
+  build has no geocoder log). Re-check on build 4 with a fresh pm clear.
+- OWNER 23:00: full matrix - every feature x 4 themes x 7 languages x
+  portrait/landscape. Plan: build 4, then scripted screenshot sweep,
+  reviewed by eye.
 
 ## Log
+- 2026-09-24 23:03 - Urdu pass: adhkar cards kept the old language after a switch (const tab) - now depend on locale; owner asked for full theme x language x orientation matrix
 - 2026-09-24 22:56 - Landscape audit: tasbeeh counter shrank to a dot - side-by-side layout when wide and short (unbuilt)
 - 2026-09-24 22:52 - All 8 audit-2 fixes verified on build 3 (item 8 city on locale switch); complete-recitation row retries the catalogue 3 times (577 pass, unbuilt)
 - 2026-09-24 22:50 - Verified item 6: splash preview pauses then resumes the recitation

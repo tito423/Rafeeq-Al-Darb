@@ -92,6 +92,10 @@ class _SectionsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // This tab is built `const`, so a language switch never rebuilt it and
+    // the cards kept the old language until a restart (Arabic -> Urdu on
+    // emulator-5554, 2026-09-24). Reading the locale makes it depend on it.
+    context.locale;
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
