@@ -550,3 +550,13 @@ Do not rediscover these.
     Also: `pm trim-caches` does NOT evict `CachedNetworkImage`'s files -
     only `pm clear` forced a refetch; grant runtime permissions with
     `adb shell pm grant` so system dialogs do not sit on the screen.
+
+54. **Never run `flutter test` (or any flutter command) while a release build
+    is running.** 2026-09-24: `flutter test` regenerated
+    `GeneratedPluginRegistrant.java` with the dev-only `integration_test`
+    plugin halfway through `build_github_release.bat`, and
+    `:app:compileReleaseJavaWithJavac` failed with `package
+    dev.flutter.plugins.integration_test does not exist`. Nothing was wrong
+    with the code; rebuilding alone passed. Likewise do not edit `lib/`
+    during a build - an APK built at 14:40 turned out NOT to contain an edit
+    made while it compiled (seen on the device: the old title).

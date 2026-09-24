@@ -354,6 +354,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 51. R2 objects stored with `Content-Encoding: gzip` come back INFLATED to a client that does not send `Accept-Encoding: gzip`.
 52. `permission_handler` 13 → `permission_handler_android` 14.1.0 needs AGP 9
 53. The emulator's `-tcpdump` captures nothing here; `-http-proxy` + a logging proxy does.
+54. Never run `flutter test` or edit `lib/` while a release build is running.
 
 ## 4. Where things live
 

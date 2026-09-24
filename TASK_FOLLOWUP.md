@@ -38,6 +38,12 @@ Settled facts.
   on scroll-out dispose() calls restoreAudioRoute(). Owner is sending a
   second video — read it before fixing.
 
+- NEW (16:45): verify prayer-time calculation methods are correct and
+  effective; and on app open the location HANGS (not working) until a
+  pull-to-refresh, then ~7 s to fix a location although permission was
+  granted at first run. Measure on emulator (cold start with a mock
+  location), find why, fix. After the hifz stall + Umrah/Hajj summary.
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -80,6 +86,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:28 - Hajj/Umrah summary data + verbatim test (2/2 pass); trap 54 (flutter test during a build breaks it)
 - 2026-09-24 16:24 - Hifz scroll stall: page built once (SingleChildScrollView) instead of lazy ListView; before = 2 stalls 911/1019 ms (emulator), owner video 7 x ~200 ms; after-measurement pending
 - 2026-09-24 16:20 - Scroll-stall evidence + candidate logged; waiting for owner's second video
 - 2026-09-24 16:16 - Correction logged: hifz bug is a scroll stall, not ayah flip; measuring
