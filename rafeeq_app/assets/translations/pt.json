@@ -1068,7 +1068,8 @@
     "src_commons": "Wikimedia Commons — os fundos de ornamento islâmico, domínio público ou CC0, com a licença e o autor de cada ficheiro guardados na aplicação",
     "src_youtube": "Cada imagem de canal vem da própria página do YouTube desse canal e é replicada no servidor da aplicação para funcionar offline. Os canais abrem no YouTube; nenhum vídeo é republicado.",
     "src_unsplash": "As fotografias dos cartões dos adhkar e do guia do novo muçulmano — sob a licença Unsplash, obtidas diretamente da fonte.",
-    "dedication": "Dedico este trabalho à minha esposa, companheira do meu caminho"
+    "dedication": "Dedico este trabalho à minha esposa, companheira do meu caminho",
+    "src_geonames": "A lista de cidades do mundo, com coordenadas e nomes, para definir à mão o local da oração"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -1612,7 +1613,6 @@
     "listen_qalqalah": "The articulation bounces on the silent qalqalah letter",
     "listen_ra_tafkhim": "An open ra, so it is pronounced heavy",
     "listen_ra_tarqiq": "A silent ra after a kasrah, so it is pronounced light",
-    "stop": "Parar",
     "sharh_title": "Comentário",
     "sharh_source": "De «Fath Rabb al-Bariyyah, comentário de al-Muqaddimah al-Jazariyyah» de Safwat Mahmud Salim — Dar Nur al-Maktabat, 2.ª ed. 1424 H — al-Maktaba al-Shamela",
     "sharh_shared": "O comentador explica juntos os versos desta lição e da lição vizinha, por isso o mesmo comentário aparece nas duas."
@@ -1957,5 +1957,27 @@
     "tip_app_volume": "Alguns telefones (Honor, Xiaomi…) têm volume por app: aperte a tecla de volume, abra o painel completo e aumente o de «Rafeeq Al-Darb».",
     "tip_bluetooth": "Se um fone Bluetooth estiver conectado, o som vai para ele.",
     "tip_network": "Uma recitação não baixada precisa de conexão com a internet."
+  },
+  "location": {
+    "title": "Local para a oração",
+    "auto": "Automática (GPS)",
+    "auto_desc": "A localização do telefone, atualizada quando muda",
+    "manual": "Escolhida à mão",
+    "manual_desc": "Procure a sua cidade abaixo ou introduza coordenadas — funciona sem internet e sem GPS",
+    "search_hint": "Escreva o nome de uma cidade ou vila",
+    "list_offer": "Descarregue a lista de cidades do mundo ({}) para pesquisar sem internet",
+    "list_ready": "Lista de cidades pronta — a pesquisa funciona offline",
+    "downloading": "A descarregar a lista de cidades {}%",
+    "online_note": "Resultados do serviço de mapas do telefone (requer internet)",
+    "no_results": "Nenhum local encontrado com esse nome",
+    "coords": "Introduzir coordenadas",
+    "lat": "Latitude (-90 a 90)",
+    "lon": "Longitude (-180 a 180)",
+    "coords_name": "Nome do local (opcional)",
+    "save": "Usar este local",
+    "invalid": "Introduza uma latitude e longitude válidas",
+    "set_to": "Os horários de oração usam agora {}",
+    "source": "Lista de cidades: GeoNames (CC BY 4.0)",
+    "sep": ", "
   }
 }

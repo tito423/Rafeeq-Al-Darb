@@ -139,6 +139,10 @@ final sourceGroups = <(String, List<SourceEntry>)>[
     'about.src_prayer',
     [
       SourceEntry('api.aladhan.com', 'https://aladhan.com', 'about.src_aladhan'),
+      // The world city list behind manual prayer location (CC BY 4.0 -
+      // attribution is the licence's one condition).
+      SourceEntry('GeoNames (CC BY 4.0)', 'https://www.geonames.org',
+          'about.src_geonames'),
     ]
   ),
   // The channel list is a list of links, and a link needs no permission. The

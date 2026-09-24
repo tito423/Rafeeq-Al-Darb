@@ -1068,7 +1068,8 @@
     "src_commons": "Wikimedia Commons — les fonds d’ornement islamique, domaine public ou CC0, la licence et l’auteur de chaque fichier étant conservés dans l’application",
     "src_youtube": "Chaque image de chaîne provient de la page YouTube de cette chaîne et est mise en miroir sur le serveur de l’application pour fonctionner hors ligne. Les chaînes s’ouvrent dans YouTube ; aucune vidéo n’est republiée.",
     "src_unsplash": "Les photographies des cartes des adhkar et du guide du nouveau musulman — sous licence Unsplash, récupérées directement à la source.",
-    "dedication": "Je dédie ce travail à mon épouse, la compagne de ma route"
+    "dedication": "Je dédie ce travail à mon épouse, la compagne de ma route",
+    "src_geonames": "La liste des villes du monde, coordonnées et noms, pour choisir à la main le lieu de prière"
   },
   "ruqyah": {
     "title": "Roqya",
@@ -1612,7 +1613,6 @@
     "listen_qalqalah": "The articulation bounces on the silent qalqalah letter",
     "listen_ra_tafkhim": "An open ra, so it is pronounced heavy",
     "listen_ra_tarqiq": "A silent ra after a kasrah, so it is pronounced light",
-    "stop": "Arrêter",
     "sharh_title": "Commentaire",
     "sharh_source": "Tiré de « Fath Rabb al-Bariyyah, commentaire d'al-Muqaddimah al-Jazariyyah » de Safwat Mahmud Salim — Dar Nur al-Maktabat, 2e éd. 1424 H — al-Maktaba al-Shamela",
     "sharh_shared": "Le commentateur explique ensemble les vers de cette leçon et de la leçon voisine ; le même commentaire figure donc dans les deux."
@@ -1957,5 +1957,27 @@
     "tip_app_volume": "Certains téléphones (Honor, Xiaomi…) ont un volume par app : appuyez sur la touche volume, ouvrez le panneau complet et montez celui de «Rafeeq Al-Darb».",
     "tip_bluetooth": "Si un casque Bluetooth est connecté, le son y est envoyé.",
     "tip_network": "Une récitation non téléchargée a besoin d’une connexion internet."
+  },
+  "location": {
+    "title": "Lieu de prière",
+    "auto": "Automatique (GPS)",
+    "auto_desc": "La position du téléphone, mise à jour quand elle change",
+    "manual": "Choisi à la main",
+    "manual_desc": "Cherchez votre ville ci-dessous ou saisissez des coordonnées — fonctionne sans internet ni GPS",
+    "search_hint": "Tapez le nom d'une ville ou d'un village",
+    "list_offer": "Téléchargez la liste des villes du monde ({}) pour chercher sans internet",
+    "list_ready": "Liste des villes prête — la recherche marche hors ligne",
+    "downloading": "Téléchargement de la liste des villes {} %",
+    "online_note": "Résultats du service de cartes du téléphone (internet requis)",
+    "no_results": "Aucun lieu trouvé sous ce nom",
+    "coords": "Saisir des coordonnées",
+    "lat": "Latitude (-90 à 90)",
+    "lon": "Longitude (-180 à 180)",
+    "coords_name": "Nom du lieu (facultatif)",
+    "save": "Utiliser ce lieu",
+    "invalid": "Saisissez une latitude et une longitude valides",
+    "set_to": "Les horaires de prière utilisent maintenant {}",
+    "source": "Liste des villes : GeoNames (CC BY 4.0)",
+    "sep": ", "
   }
 }

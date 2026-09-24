@@ -5,6 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'prayer_location_screen.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../../core/models/adhan_mode.dart';
@@ -368,6 +370,8 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
             Card(
               child: Column(
                 children: [
+                  // Automatic or a place set by hand (owner, 2026-09-25).
+                  const PrayerLocationTile(),
                   SwitchListTile(
                     secondary: const Icon(Icons.my_location_outlined),
                     title: Text('prayer.auto_location'.tr()),

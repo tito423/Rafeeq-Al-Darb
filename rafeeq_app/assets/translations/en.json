@@ -1068,7 +1068,8 @@
     "src_commons": "Wikimedia Commons — the Islamic-ornament backgrounds, public domain or CC0, each file’s licence and author kept in the app",
     "src_youtube": "Each channel picture is taken from that channel’s own YouTube page and mirrored on the app’s server so the grid works offline. The channels open in YouTube; no video is re-published.",
     "src_unsplash": "The card photographs on the Azkar grid and the New Muslim guide — under the Unsplash License, fetched straight from the source to your device.",
-    "dedication": "I dedicate this work to my wife, the companion of my road"
+    "dedication": "I dedicate this work to my wife, the companion of my road",
+    "src_geonames": "The world city list, coordinates and names, for setting the prayer location by hand"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -1612,7 +1613,6 @@
     "listen_qalqalah": "The articulation bounces on the silent qalqalah letter",
     "listen_ra_tafkhim": "An open ra, so it is pronounced heavy",
     "listen_ra_tarqiq": "A silent ra after a kasrah, so it is pronounced light",
-    "stop": "Stop",
     "sharh_title": "Commentary",
     "sharh_source": "From “Fath Rabb al-Bariyyah, a commentary on al-Muqaddimah al-Jazariyyah” by Safwat Mahmud Salim — Dar Nur al-Maktabat, 2nd ed. 1424 AH — al-Maktaba al-Shamela",
     "sharh_shared": "The commentator explains this lesson's verses together with the neighbouring lesson's, so the same commentary appears in both."
@@ -1957,5 +1957,27 @@
     "tip_app_volume": "Some phones (Honor, Xiaomi…) have a volume for each app: press the volume key, open the full panel, and raise the «Rafeeq Al-Darb» slider.",
     "tip_bluetooth": "If a Bluetooth headset is connected, the sound goes to it.",
     "tip_network": "A recitation that is not downloaded needs an internet connection."
+  },
+  "location": {
+    "title": "Prayer location",
+    "auto": "Automatic (GPS)",
+    "auto_desc": "The phone's location, updated when it changes",
+    "manual": "Set by hand",
+    "manual_desc": "Search for your city below or enter coordinates — works with no internet and no GPS",
+    "search_hint": "Type a city or town name",
+    "list_offer": "Download the world city list ({}) to search with no internet",
+    "list_ready": "World city list ready — search works offline",
+    "downloading": "Downloading the city list {}%",
+    "online_note": "Results from the phone's map service (needs internet)",
+    "no_results": "No place found with that name",
+    "coords": "Enter coordinates",
+    "lat": "Latitude (-90 to 90)",
+    "lon": "Longitude (-180 to 180)",
+    "coords_name": "Place name (optional)",
+    "save": "Use this place",
+    "invalid": "Enter a valid latitude and longitude",
+    "set_to": "Prayer times now use {}",
+    "source": "City list: GeoNames (CC BY 4.0)",
+    "sep": ", "
   }
 }
