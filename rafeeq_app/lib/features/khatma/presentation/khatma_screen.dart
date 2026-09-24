@@ -63,7 +63,7 @@ class KhatmaScreen extends ConsumerWidget {
                     'khatma.history'.tr(),
                     style: Theme.of(
                       context,
-                    ).textTheme.titleSmall?.copyWith(color: AppColors.gold),
+                    ).textTheme.titleSmall?.copyWith(color: goldText(context)),
                   ),
                   const SizedBox(height: 8),
                   for (final k in done) _CompletedTile(khatma: k),

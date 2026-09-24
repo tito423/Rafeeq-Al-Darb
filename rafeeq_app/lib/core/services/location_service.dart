@@ -4,6 +4,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'manual_location.dart';
+
 /// Thin wrapper over Geolocator (real GPS/network location).
 class AppPosition {
   final double latitude;
@@ -80,6 +82,8 @@ class LocationService {
   /// notification reads «دبي» in Arabic and «Dubai» in English, instead of
   /// whatever the device's own language happens to be.
   Future<AppPosition?> getCurrentPosition({String localeCode = 'ar'}) async {
+    final manual = await _manual(localeCode);
+    if (manual != null) return manual;
     try {
       final fresh =
           await _fetchPosition(localeCode).timeout(const Duration(seconds: 15));
@@ -173,6 +177,8 @@ class LocationService {
   /// مواقيت الصلاة بيحمّل متأخر». The place names may be in the language
   /// they were last read in until then.
   Future<AppPosition?> lastSaved({String localeCode = 'ar'}) async {
+    final manual = await _manual(localeCode);
+    if (manual != null) return manual;
     final prefs = await SharedPreferences.getInstance();
     final lat = prefs.getDouble(_cacheLatKey);
     final lon = prefs.getDouble(_cacheLonKey);
@@ -208,7 +214,23 @@ class LocationService {
   /// The saved fix with its names in [localeCode] - re-read from the
   /// Geocoder for the same point when they were saved in another language.
   /// No GPS: a language switch must not wait on a fresh fix for a name.
-  Future<AppPosition?> savedIn(String localeCode) => _readCached(localeCode);
+  Future<AppPosition?> savedIn(String localeCode) async =>
+      await _manual(localeCode) ?? await _readCached(localeCode);
+
+  /// The place the reader set by hand, if any (Adhan settings > Prayer
+  /// location). It wins over every automatic tier: no GPS, no geocoder, no
+  /// network - its names travel with it in every language the source had.
+  Future<AppPosition?> _manual(String localeCode) async {
+    final m = await ManualLocationStore.instance.read();
+    if (m == null) return null;
+    return AppPosition(
+      latitude: m.latitude,
+      longitude: m.longitude,
+      locality: m.cityIn(localeCode),
+      country: m.countryIn(localeCode),
+      localeCode: localeCode,
+    );
+  }
 
   /// What an «enable location» button does (Home card, Qibla) - the one
   /// place a reader's tap asks, since [getCurrentPosition] never does.

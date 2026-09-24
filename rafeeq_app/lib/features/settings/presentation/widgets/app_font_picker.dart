@@ -23,8 +23,8 @@ class AppFontPicker extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 10, 4, 6),
               child: Text(titleKey.tr(),
-                  style: const TextStyle(
-                      color: AppColors.gold, fontWeight: FontWeight.w700)),
+                  style: TextStyle(
+                      color: goldText(context), fontWeight: FontWeight.w700)),
             ),
             for (final f in appFonts)
               if (f.traditional == traditional)

@@ -134,7 +134,7 @@ class MadhahibSection extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 16 * k,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.gold,
+                  color: goldText(context),
                 ),
               ),
             ),
@@ -190,9 +190,9 @@ class _SchoolStatement extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: text.substring(0, m.end),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      color: AppColors.gold,
+                      color: goldText(context),
                     ),
                   ),
                   TextSpan(text: text.substring(m.end)),

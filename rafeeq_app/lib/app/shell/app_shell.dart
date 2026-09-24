@@ -512,7 +512,7 @@ class _FocusModeBar extends ConsumerWidget {
                     child: Text(
                       'focus.exit'.tr(),
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppColors.gold,
+                            color: goldText(context),
                             fontWeight: FontWeight.w600,
                           ),
                       textAlign: TextAlign.center,

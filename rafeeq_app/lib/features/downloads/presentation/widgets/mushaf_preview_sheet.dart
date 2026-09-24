@@ -189,7 +189,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                     Text(
                       e.localizedRiwayah(context.locale.languageCode),
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.gold,
+                        color: goldText(context),
                         fontWeight: FontWeight.w600,
                       ),
                     ),

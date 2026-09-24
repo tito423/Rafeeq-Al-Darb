@@ -119,7 +119,7 @@ class QuoteReminderSection extends ConsumerWidget {
               alignment: AlignmentDirectional.centerStart,
               child: TextButton.icon(
                 icon: const Icon(Icons.visibility_outlined, size: 18),
-                style: TextButton.styleFrom(foregroundColor: AppColors.gold),
+                style: TextButton.styleFrom(foregroundColor: goldText(context)),
                 label: Text('quotes.preview'.tr()),
                 onPressed: () async {
                   // Read before the await: reaching for the context's locale

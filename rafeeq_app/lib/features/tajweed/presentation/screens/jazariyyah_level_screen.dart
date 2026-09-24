@@ -351,7 +351,7 @@ class _SharhSection extends ConsumerWidget {
                         child: Text(
                           'tajweed.sharh_title'.tr(),
                           style: theme.textTheme.titleSmall
-                              ?.copyWith(color: AppColors.gold),
+                              ?.copyWith(color: goldText(context)),
                         ),
                       ),
                       Icon(
@@ -388,14 +388,14 @@ class _SharhSection extends ConsumerWidget {
                             style: isJazariyyahVerse(p.text)
                                 ? theme.textTheme.bodyMedium?.copyWith(
                                     height: 1.9,
-                                    color: AppColors.gold,
+                                    color: goldText(context),
                                     fontWeight: FontWeight.w600,
                                   )
                                 : p.kind == 'aya'
                                     ? theme.textTheme.bodyLarge?.copyWith(
                                         fontFamily: 'AmiriQuran',
                                         height: 1.9,
-                                        color: AppColors.gold,
+                                        color: goldText(context),
                                       )
                                     : theme.textTheme.bodyMedium
                                         ?.copyWith(height: 1.9),

@@ -298,7 +298,7 @@ class _HitCard extends StatelessWidget {
       out.add(TextSpan(
         text: m.group(1),
         style: base?.copyWith(
-          color: AppColors.gold,
+          color: goldText(context),
           fontWeight: FontWeight.w700,
         ),
       ));
@@ -345,7 +345,7 @@ class _HitCard extends StatelessWidget {
                       '${'library.text_page'.tr()} '
                           '${localizeDigits('${hit.printedPage}', uiLanguageCode)}',
                       style: theme.textTheme.labelSmall
-                          ?.copyWith(color: AppColors.gold),
+                          ?.copyWith(color: goldText(context)),
                     ),
                   ),
                 ],

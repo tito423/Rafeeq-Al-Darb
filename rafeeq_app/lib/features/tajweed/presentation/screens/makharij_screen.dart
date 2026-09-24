@@ -326,8 +326,8 @@ class _Detail extends StatelessWidget {
         children: [
           Text(
             info.name,
-            style: const TextStyle(
-              color: AppColors.gold,
+            style: TextStyle(
+              color: goldText(context),
               fontWeight: FontWeight.bold,
               fontSize: 13,
             ),

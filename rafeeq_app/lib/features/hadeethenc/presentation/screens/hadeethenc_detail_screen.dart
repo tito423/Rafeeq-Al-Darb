@@ -229,7 +229,7 @@ class _GlossaryLine extends StatelessWidget {
           TextSpan(
             text: stripBidiControls(word),
             style: style?.copyWith(
-                color: AppColors.gold, fontWeight: FontWeight.w700),
+                color: goldText(context), fontWeight: FontWeight.w700),
           ),
           if (meaning.isNotEmpty)
             TextSpan(
@@ -291,7 +291,7 @@ class _SectionLabel extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .labelLarge
-            ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
+            ?.copyWith(color: goldText(context), fontWeight: FontWeight.w700),
       );
 }
 

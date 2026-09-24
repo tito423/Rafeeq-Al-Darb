@@ -864,6 +864,7 @@ class _RepairButtonState extends ConsumerState<_RepairButton> {
           : const Icon(Icons.build_rounded),
       label: Text('downloads.repair'.tr()),
       backgroundColor: AppColors.gold,
+      foregroundColor: AppColors.night, // ~9 : 1 on gold, every theme
     );
   }
 }

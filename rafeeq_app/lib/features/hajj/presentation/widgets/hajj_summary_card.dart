@@ -39,11 +39,11 @@ class HajjSummaryCard extends ConsumerWidget {
                   ? 'hajj.summary_umrah'
                   : 'hajj.summary_hajj')
               .tr(),
-          style: const TextStyle(fontWeight: FontWeight.w800),
+          style: TextStyle(fontWeight: FontWeight.w800),
         ),
         subtitle: Text(
           'hajj.summary_hint'.tr(),
-          style: const TextStyle(color: AppColors.gold, fontSize: 12),
+          style: TextStyle(color: goldText(context), fontSize: 12),
         ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
@@ -75,7 +75,7 @@ class HajjSummaryCard extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 17 * k,
                 fontWeight: FontWeight.w800,
-                color: AppColors.gold,
+                color: goldText(context),
               ),
             ),
             const SizedBox(height: 6),

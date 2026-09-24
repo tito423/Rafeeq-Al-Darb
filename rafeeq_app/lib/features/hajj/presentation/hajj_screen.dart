@@ -257,13 +257,13 @@ class _StepCard extends StatelessWidget {
         ),
         title: Text(
           'hajj.step_${step.key}'.tr(),
-          style: const TextStyle(fontWeight: FontWeight.w800),
+          style: TextStyle(fontWeight: FontWeight.w800),
         ),
         subtitle: step.dayKey == null
             ? null
             : Text(
                 step.dayKey!.tr(),
-                style: const TextStyle(color: AppColors.gold, fontSize: 12),
+                style: TextStyle(color: goldText(context), fontSize: 12),
               ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         children: [
@@ -395,7 +395,7 @@ class _StepText extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 17 * k,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.gold,
+                  color: goldText(context),
                 ),
               ),
               _ => ArabicText(

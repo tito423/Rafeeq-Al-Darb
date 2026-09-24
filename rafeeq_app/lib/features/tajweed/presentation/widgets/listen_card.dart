@@ -184,10 +184,10 @@ class ListenCardState extends ConsumerState<ListenCard>
                 ),
                 child: Text(
                   '﴿${widget.example.phrase}﴾',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'AmiriQuran',
                     fontSize: 15,
-                    color: AppColors.gold,
+                    color: goldText(context),
                     fontWeight: FontWeight.w700,
                   ),
                 ),

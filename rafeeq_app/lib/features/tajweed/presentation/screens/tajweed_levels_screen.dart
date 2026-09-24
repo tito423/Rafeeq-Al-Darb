@@ -151,10 +151,10 @@ class _LevelCard extends StatelessWidget {
                         : Text(
                             localizeDigits(
                                 '$number', context.locale.languageCode),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.gold,
+                              color: goldText(context),
                             ),
                           ),
                   ),

@@ -366,10 +366,10 @@ class _EventRow extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w800,
-                color: AppColors.gold,
+                color: goldText(context),
               ),
             ),
           ),

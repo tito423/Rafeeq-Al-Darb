@@ -182,7 +182,10 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
                               q.bookTitle,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: AppColors.gold,
+                                // Measured against this card's own ground,
+                                // which changes with its palette.
+                                color: readableOn(
+                                    AppColors.gold, _palette.bottom),
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                               ),

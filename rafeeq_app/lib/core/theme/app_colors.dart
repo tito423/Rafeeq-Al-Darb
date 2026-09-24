@@ -110,3 +110,12 @@ Color readableOn(Color color, Color ground, {double min = 4.5}) {
 /// white reaches 4.5 : 1. White on the Tasbeeh gold pill measured
 /// 2.42 : 1, on the blue one 2.90 : 1 (emulator-5554, 2026-09-25).
 Color fillForWhiteText(Color fill) => readableOn(fill, Colors.white);
+
+/// Gold for TEXT or an icon on the current theme's surface: the flat
+/// [AppColors.gold] wherever it already reads (dark, RGB), deepened just
+/// enough in the light theme, where flat gold measured 1.96 - 2.45 : 1 on
+/// 49 labels (contrast scan, emulator-5554, 2026-09-25). Not for grounds
+/// that are dark in every theme (the audio player, the adhan screen, the
+/// share card) - flat gold is right there.
+Color goldText(BuildContext context) =>
+    readableOn(AppColors.gold, Theme.of(context).colorScheme.surface);

@@ -90,7 +90,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           title: Text('search.title'.tr()),
           bottom: TabBar(
             indicatorColor: AppColors.gold,
-            labelColor: AppColors.gold,
+            labelColor: goldText(context),
             tabs: [
               Tab(text: 'search.tab_topics'.tr()),
               Tab(text: 'search.tab_keyword'.tr()),
@@ -226,7 +226,7 @@ class _KeywordTab extends StatelessWidget {
                     pluralN('search.results_count', results!.length),
                     style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.gold,
+                      color: goldText(context),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -299,7 +299,7 @@ class _HighlightedAyahText extends StatelessWidget {
           style: t(QuranWord.of(words[i]))
               ? TextStyle(
                   backgroundColor: AppColors.gold.withValues(alpha: 0.28),
-                  color: AppColors.gold,
+                  color: goldText(context),
                   fontWeight: FontWeight.w700,
                 )
               : null,
@@ -416,7 +416,7 @@ class _TopicsTabState extends ConsumerState<_TopicsTab> {
           style: Theme.of(context)
               .textTheme
               .titleSmall
-              ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700),
+              ?.copyWith(color: goldText(context), fontWeight: FontWeight.w700),
         ),
       );
 
@@ -515,7 +515,7 @@ class _TopicsTabState extends ConsumerState<_TopicsTab> {
               style: Theme.of(context)
                   .textTheme
                   .titleSmall
-                  ?.copyWith(color: AppColors.gold),
+                  ?.copyWith(color: goldText(context)),
             ),
           ),
           ...category.topics.map(

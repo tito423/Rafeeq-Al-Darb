@@ -391,7 +391,7 @@ class _HadithSectionHeader extends StatelessWidget {
                 Text(
                   title,
                   style: theme.textTheme.titleSmall?.copyWith(
-                    color: AppColors.gold,
+                    color: goldText(context),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -544,7 +544,7 @@ class _CountChip extends StatelessWidget {
           Text(
             text,
             style: theme.textTheme.labelSmall
-                ?.copyWith(color: AppColors.gold, fontWeight: FontWeight.w600),
+                ?.copyWith(color: goldText(context), fontWeight: FontWeight.w600),
           ),
         ],
       ),

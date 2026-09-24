@@ -91,7 +91,7 @@ class SupportScreen extends ConsumerWidget {
               'support.any_amount'.tr(),
               textAlign: TextAlign.center,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.gold,
+                color: goldText(context),
                 height: 1.8,
               ),
             ),

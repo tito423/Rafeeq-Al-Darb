@@ -118,7 +118,7 @@ class TranslationTabState extends ConsumerState<TranslationTab> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall
-                                      ?.copyWith(color: AppColors.gold),
+                                      ?.copyWith(color: goldText(context)),
                                 ),
                             ],
                           ),

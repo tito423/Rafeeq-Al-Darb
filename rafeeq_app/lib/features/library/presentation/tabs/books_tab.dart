@@ -507,7 +507,7 @@ class _CategoryExpansionTile extends StatelessWidget {
       title: Text(
         category.labelKey.tr(),
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-          color: AppColors.gold,
+          color: goldText(context),
           fontWeight: FontWeight.w700,
         ),
       ),

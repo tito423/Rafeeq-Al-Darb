@@ -2497,9 +2497,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 01:27 — IN PROGRESS — resume here**
+**2026-09-25 01:42 — IN PROGRESS — resume here**
 
-Manual location (order B): world city list (GeoNames cities1000, 171,075 places, CC BY 4.0) hosted on R2 geo/cities.tsv.gz + GitHub mirror, NOT bundled (owner: no size growth); both hosts answer 206
+Contrast: goldText() on 25 files where flat gold was text on a theme surface (scan found them); quote card gold measured on its palette; manual location core (ManualPlace store, CityCatalog download+offline search tested on real data, LocationService prefers it); 582 pass, unbuilt, no UI yet
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

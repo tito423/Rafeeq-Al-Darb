@@ -182,7 +182,7 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
-                          ?.copyWith(color: AppColors.gold),
+                          ?.copyWith(color: goldText(context)),
                     ),
                   ),
                 ],
@@ -232,7 +232,7 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                                       .textTheme
                                       .titleMedium
                                       ?.copyWith(
-                                        color: AppColors.gold,
+                                        color: goldText(context),
                                         fontWeight: FontWeight.w700,
                                       ),
                                 ),
@@ -287,7 +287,9 @@ Widget _choice({
     ListTile(
       title: Text(label),
       trailing: selected
-          ? const Icon(Icons.check, color: AppColors.gold)
+          // The theme's own icon colour: flat gold measured 2.10 : 1 on the
+          // light sheet (2026-09-25), and this helper has no context.
+          ? const Icon(Icons.check)
           : const SizedBox(width: 24),
       onTap: onTap,
     );

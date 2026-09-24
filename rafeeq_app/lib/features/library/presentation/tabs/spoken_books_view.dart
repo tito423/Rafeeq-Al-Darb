@@ -59,8 +59,8 @@ class SpokenBooksView extends StatelessWidget {
                   Text(
                     localizeDigits(pluralN('library.book_count', books.length),
                         context.locale.languageCode),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w800, color: AppColors.gold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w800, color: goldText(context)),
                   ),
                   const SizedBox(height: 3),
                   Text(

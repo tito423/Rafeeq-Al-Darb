@@ -295,7 +295,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                   ),
                   title: Text(_inkChoices[i].labelKey.tr()),
                   trailing: i == _inkIndex
-                      ? Icon(Icons.check, color: AppColors.gold)
+                      ? Icon(Icons.check, color: goldText(context))
                       : null,
                   onTap: () {
                     setState(() => _inkIndex = i);
@@ -732,7 +732,7 @@ class _Paragraph extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 16 * scale,
-              color: AppColors.gold,
+              color: goldText(context),
               height: 1.6,
             ),
           ),

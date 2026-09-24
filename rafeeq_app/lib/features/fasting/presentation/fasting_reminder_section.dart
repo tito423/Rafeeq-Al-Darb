@@ -138,7 +138,7 @@ class _TimeCard extends StatelessWidget {
                       _label(hour, minute),
                       key: ValueKey(hour * 60 + minute),
                       style: theme.textTheme.headlineSmall?.copyWith(
-                        color: AppColors.gold,
+                        color: goldText(context),
                         fontWeight: FontWeight.w700,
                       ),
                     ),

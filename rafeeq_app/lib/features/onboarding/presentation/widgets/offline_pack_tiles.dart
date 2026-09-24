@@ -512,7 +512,7 @@ class _ChangeButton extends StatelessWidget {
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             visualDensity: VisualDensity.compact,
-            foregroundColor: AppColors.gold,
+            foregroundColor: goldText(context),
           ),
           onPressed: onPressed,
           icon: const Icon(Icons.swap_horiz_rounded, size: 18),
