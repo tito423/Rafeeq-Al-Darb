@@ -42,6 +42,18 @@ void main() {
     ]);
   });
 
+  test('an Unsplash background is served from the bucket first, Unsplash last',
+      () {
+    const u = 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=640&q=70&fit=crop';
+    final chain = ContentMirrors.of(u);
+    expect(chain.first,
+        '${AppConfig.contentBaseUrl}/images/backgrounds/photo-1542816417-0983c9c9ad53.jpg');
+    expect(chain, contains(
+        'https://github.com/tito423/Rafeeq-Al-Darb/releases/download/'
+        'content-mirror/images__backgrounds__photo-1542816417-0983c9c9ad53.jpg'));
+    expect(chain.last, u);
+  });
+
   test('per-ayah recitation and foreign hosts are not rewritten', () {
     final ayah =
         '${AppConfig.contentBaseUrl}/recitations/ayah/Alafasy_128kbps/001001.mp3';

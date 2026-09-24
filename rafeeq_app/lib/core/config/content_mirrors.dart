@@ -44,6 +44,7 @@ class ContentMirrors {
       'asr/whisper-tiny-ar-quran/',
       'tts/open_ar_v1/',
       'ruqyah/',
+      'images/backgrounds/',
     ],
     'content-mushaf': ['mushaf/madinah_qc/'],
     'content-surah': [
@@ -55,6 +56,18 @@ class ContentMirrors {
   /// [url] first, then every mirror of it. A URL that is not on the app's
   /// bucket, or whose folder is not mirrored, comes back alone.
   static List<String> of(String url) {
+    // The adhkar / new-Muslim backgrounds are catalogued by their Unsplash
+    // URL (their provenance) but copied to the bucket byte for byte by
+    // scripts/mirror_background_images.py: the bucket and its mirrors
+    // first, Unsplash itself last (audit 2026-09-24, C1).
+    final photo = RegExp(r'^https://images\.unsplash\.com/(photo-[0-9a-f-]+)')
+        .firstMatch(url);
+    if (photo != null) {
+      return [
+        ...of('${AppConfig.contentBaseUrl}/images/backgrounds/${photo.group(1)}.jpg'),
+        url,
+      ];
+    }
     final base = '${AppConfig.contentBaseUrl}/';
     // A bucket URL by either road: the configured base, or r2.dev itself
     // (what a player holds after hopping from the domain to r2.dev).

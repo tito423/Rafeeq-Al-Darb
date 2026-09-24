@@ -1,6 +1,6 @@
+import '../../../../core/widgets/mirrored_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/utils/digits.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -57,8 +57,8 @@ class NewMuslimGuideScreen extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 if (bg != null)
-                  CachedNetworkImage(
-                    imageUrl: bg,
+                  MirroredNetworkImage(
+                    url: bg,
                     fit: BoxFit.cover,
                     memCacheWidth: 640,
                     // No placeholder art: an empty card simply shows the
