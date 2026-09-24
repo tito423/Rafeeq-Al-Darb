@@ -9,15 +9,23 @@ account, the other one, or another agent — reads this and continues from
 **PLAN.md Stage 1 — «التحميلات المبدئية»** (owner's order 2026-09-24).
 
 ## Next step (exact)
-1. «المزيد» card colours (see queued orders) — more_screen.dart /
-   more_group.dart. Colours only.
-2. ONE build (uild_github_release.bat, emulator OFF — trap 24), then
-   db uninstall com.tito.rafeeq_aldarb + install (fresh), and check on
-   the device: new title/blurb; every row (ayah reciter probe + picker,
-   whole recitation, tasmee, voice, total line); screenrecord the علوم
-   القرآن download for the jump fix; the More colours.
-3. Bump pubspec + About, release (delete v3.60.0 + tag; keep v3.51.0 and
-   content-*), verify tag SHA == HEAD.
+0. DONE in code (analyze 0, 568 tests): More colours (gold / info /
+   primarySoft / error / info / gold); Hifz swipe fix (owner's video: a
+   thumb arc flipped 2:255 <-> 256 - REPRODUCED on the emulator at
+   font_scale 1.3 with an `input motionevent` arc; fixed with 3x slop + a
+   |dx| >= 2|dy| path check); Hifz app-bar jump button + sheet + its keys
+   removed (the navigator covers it). Version 3.61.0+63. Release build
+   started ~16:05 (log %TEMP%/claude/build_log2.txt).
+1. When the build is done: start the emulator, `adb uninstall
+   com.tito.rafeeq_aldarb`, install fresh, and check on the device: new
+   title/blurb; every row (ayah reciter probe + picker, whole recitation,
+   tasmee, voice, total line); screenrecord the علوم القرآن download for
+   the jump fix; the More colours; the Hifz swipe fix (font_scale 1.3,
+   Baqarah 255, the same motionevent arc must SCROLL, not change the ayah;
+   a real sideways swipe must still turn it). Reset font_scale to 1.0.
+2. Release: delete v3.60.0 + its tag (keep v3.51.0 and content-*), publish
+   v3.61.0 with --target master, verify the tag SHA == HEAD.
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -50,6 +58,7 @@ account, the other one, or another agent — reads this and continues from
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 15:53 - TASK_FOLLOWUP next steps rewritten (build running)
 - 2026-09-24 15:53 - TASK_FOLLOWUP next steps rewritten (build running)
 - 2026-09-24 15:52 - Bump 3.61.0; release build started
 - 2026-09-24 15:51 - Hifz: vertical thumb arc no longer flips the ayah (reproduced 255->256 on emulator; fix: 3x slop + clearly-sideways path check); jump button/sheet removed; More main-card colours alternate
