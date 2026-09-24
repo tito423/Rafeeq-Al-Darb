@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../more/presentation/widgets/more_group.dart' show MoreGroupAccent;
 import '../../data/tutorial_state.dart';
 import '../screens/feature_gallery_screen.dart';
 
@@ -19,13 +20,16 @@ class TutorialEntryCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final everyLaunch = ref.watch(tutorialOnEveryLaunchProvider);
+    // Inside a «المزيد» group it wears that group's colour, like every
+    // other card there (2026-09-24); gold anywhere else.
+    final accent = MoreGroupAccent.of(context) ?? AppColors.gold;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
-        color: AppColors.gold.withValues(alpha: 0.06),
+        border: Border.all(color: accent.withValues(alpha: 0.35)),
+        color: accent.withValues(alpha: 0.06),
       ),
       child: Column(
         children: [
@@ -36,10 +40,10 @@ class TutorialEntryCard extends ConsumerWidget {
               height: 42,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(13),
-                color: AppColors.gold.withValues(alpha: 0.14),
+                color: accent.withValues(alpha: 0.14),
               ),
-              child: const Icon(Icons.school_rounded,
-                  color: AppColors.gold, size: 22),
+              child: Icon(Icons.school_rounded,
+                  color: accent, size: 22),
             ),
             title: Text(
               'tutorial.card_title'.tr(),
@@ -60,11 +64,11 @@ class TutorialEntryCard extends ConsumerWidget {
                 Expanded(
                   child: FilledButton.icon(
                     style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.gold,
+                      backgroundColor: accent,
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () => _start(ref, TutorialMode.quick),
-                    icon: const Icon(Icons.bolt_rounded, size: 18),
+                    icon: Icon(Icons.bolt_rounded, size: 18),
                     label: Text('tutorial.quick_tour'.tr()),
                   ),
                 ),
@@ -72,7 +76,7 @@ class TutorialEntryCard extends ConsumerWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _start(ref, TutorialMode.detailed),
-                    icon: const Icon(Icons.list_alt_rounded, size: 18),
+                    icon: Icon(Icons.list_alt_rounded, size: 18),
                     label: Text('tutorial.detailed_tour'.tr()),
                   ),
                 ),
@@ -92,7 +96,7 @@ class TutorialEntryCard extends ConsumerWidget {
                     builder: (_) => const FeatureGalleryScreen(),
                   ),
                 ),
-                icon: const Icon(Icons.photo_library_outlined, size: 18),
+                icon: Icon(Icons.photo_library_outlined, size: 18),
                 label: Text('tutorial.gallery'.tr()),
               ),
             ),
@@ -101,12 +105,12 @@ class TutorialEntryCard extends ConsumerWidget {
             height: 1,
             indent: 16,
             endIndent: 16,
-            color: AppColors.gold.withValues(alpha: 0.18),
+            color: accent.withValues(alpha: 0.18),
           ),
           SwitchListTile(
             contentPadding: const EdgeInsets.fromLTRB(16, 0, 12, 4),
             value: everyLaunch,
-            activeThumbColor: AppColors.gold,
+            activeThumbColor: accent,
             onChanged: (v) =>
                 ref.read(tutorialOnEveryLaunchProvider.notifier).set(v),
             title: Text(

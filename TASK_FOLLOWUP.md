@@ -59,12 +59,16 @@ account, the other one, or another agent — reads this and continues from
   real Google ID token).
 
 ## Settled facts
+- VERIFIED on emulator (3.61.0 fresh install, 16:00-16:04): onboarding title/blurb + all 6 rows with measured sizes, smallest recommended (Banna 383.6, Basit 449.0), total 1.3 GB (= 1278.5 MB summed); علوم القرآن download screenrecorded 0->90%: row never re-wraps or moves; More colours gold/blue/teal/red/blue/gold, Reminders sub-cards red; Hifz: jump button gone; a fine-sampled thumb arc on 2:255 at font 1.3 SCROLLS the page and keeps 255; a sideways swipe still turns to 256.
+- FOUND + FIXED after the build: «شرح التطبيق» (TutorialEntryCard) stayed gold under Tools — now reads MoreGroupAccent. Needs the rebuild, then release.
+
 - C1 backgrounds come from R2: after `pm clear`, opening Adhkar + new-Muslim
   made 6 connections, all to 104.18.50.34/104.18.54.45 (= the r2.dev
   bucket), zero to Unsplash (151.101.x / 146.75.x) or GitHub; images drawn.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:04 - 3.61.0 verified on emulator (onboarding rows, jump fix, More colours, Hifz arc); tutorial card follows group colour
 - 2026-09-24 15:56 - Owner order logged: Umrah/Hajj quick summaries after the release
 - 2026-09-24 15:53 - TASK_FOLLOWUP next steps rewritten (build running)
 - 2026-09-24 15:53 - TASK_FOLLOWUP next steps rewritten (build running)
