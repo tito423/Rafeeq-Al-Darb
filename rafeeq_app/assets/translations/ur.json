@@ -359,7 +359,8 @@
     "display_turn": "صفحہ پلٹنا",
     "display_turn_book": "کاغذی مصحف کی طرح پلٹیں",
     "sciences_words": "الفاظ",
-    "ayah_count": "{} آیات"
+    "ayah_count": "{} آیات",
+    "autoscroll_follows": "خودکار اسکرول اب تلاوت کے ساتھ چل رہا ہے؛ تلاوت رکنے پر اپنی رفتار پر واپس آ جائے گا۔"
   },
   "library": {
     "title": "کتب خانہ",

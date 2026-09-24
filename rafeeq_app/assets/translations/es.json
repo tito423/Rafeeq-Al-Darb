@@ -359,7 +359,8 @@
     "display_turn": "Paso de página",
     "display_turn_book": "Pasar como un mushaf de papel",
     "sciences_words": "Palabras",
-    "ayah_count": "{} versículos"
+    "ayah_count": "{} versículos",
+    "autoscroll_follows": "El desplazamiento automático sigue la recitación; vuelve a su velocidad cuando esta se detiene."
   },
   "library": {
     "title": "Biblioteca",

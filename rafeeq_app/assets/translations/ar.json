@@ -359,7 +359,8 @@
     "display_turn": "تقليب الصفحات",
     "display_turn_book": "تقليب كالمصحف الورقي",
     "sciences_words": "عدد الكلمات",
-    "ayah_count": "{} آية"
+    "ayah_count": "{} آية",
+    "autoscroll_follows": "التمرير التلقائي يتبع التلاوة الآن، ويعود لسرعته عند إيقافها."
   },
   "library": {
     "title": "المكتبة",

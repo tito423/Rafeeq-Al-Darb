@@ -359,7 +359,8 @@
     "display_turn": "Page turn",
     "display_turn_book": "Turn like a real mushaf",
     "sciences_words": "Words",
-    "ayah_count": "{} verses"
+    "ayah_count": "{} verses",
+    "autoscroll_follows": "Auto-scroll is following the recitation; it returns to its speed when the recitation stops."
   },
   "library": {
     "title": "Library",

@@ -359,7 +359,8 @@
     "display_turn": "Tourner la page",
     "display_turn_book": "Tourner comme un mushaf papier",
     "sciences_words": "Mots",
-    "ayah_count": "{} versets"
+    "ayah_count": "{} versets",
+    "autoscroll_follows": "Le défilement automatique suit la récitation ; il reprend sa vitesse quand elle s'arrête."
   },
   "library": {
     "title": "Bibliothèque",
