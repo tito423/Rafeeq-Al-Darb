@@ -2495,9 +2495,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 16:48 — IN PROGRESS — resume here**
+**2026-09-24 16:53 — IN PROGRESS — resume here**
 
-Hajj summary: pillars and obligations under separate headings; summary seen on emulator (Umrah + Hajj, ayah 2:198-199 from mushaf)
+Location stuck after first-run permission: reproduced + fix (invalidate prayer controller at onboarding end); building to verify
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -55,6 +55,13 @@ Settled facts.
   proven on a device — needs the owner's phone. Scripts: scratchpad
   stalls.py + direction.py (copy into scripts/ if kept).
 
+- LOCATION BUG reproduced (17:00): fresh install, location allowed ON the
+  permissions page (dumpsys granted=true), Home card still «فعّل الموقع» for
+  12 s+. Cause: prayerControllerProvider first loads during the splash,
+  before permission exists, gets locationDenied, never retries. Fix:
+  onboarding _finish invalidates prayerControllerProvider. Built? NOT YET
+  verified. PRAYER METHODS verified live: 2400 times vs AlAdhan, worst 2 m.
+
 ## Owner's orders queued (15:25) — all go into ONE release
 - «حطّه»: the enhanced book-reader voice (OpenVoice, 260.7 MB) IS a row.
 - Finish every requested edit, then PUBLISH on GitHub (bump pubspec +
@@ -97,6 +104,7 @@ Settled facts.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 16:53 - Location stuck after first-run permission: reproduced + fix (invalidate prayer controller at onboarding end); building to verify
 - 2026-09-24 16:48 - Hajj summary: pillars and obligations under separate headings; summary seen on emulator (Umrah + Hajj, ayah 2:198-199 from mushaf)
 - 2026-09-24 16:43 - Prayer times re-verified LIVE vs AlAdhan: 2400 times, 20 methods x 5 cities (Dubai added) x 2 dates x 2 schools, worst 2 min
 - 2026-09-24 16:36 - Umrah/Hajj summary card (verbatim excerpts, ayah from mushaf, 7 locales); 570 tests pass; building

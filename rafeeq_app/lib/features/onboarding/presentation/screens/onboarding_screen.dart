@@ -11,6 +11,7 @@ import '../../../downloads/presentation/widgets/mushaf_download_tile.dart'
     show MushafDownloadTile;
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/onboarding_state.dart';
+import '../../../home/data/prayer_controller.dart' show prayerControllerProvider;
 import '../../../../core/config/app_config.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/download_manager.dart';
@@ -49,6 +50,16 @@ class OnboardingScreen extends ConsumerWidget {
   Future<void> _finish(BuildContext context, WidgetRef ref) async {
     final prefs = ref.read(sharedPrefsProvider);
     await markOnboardingCompleted(prefs);
+    // «لما فتحت التطبيق علق على الموقع مش شغال … مع انه واخد اذن الموقع في
+    // الاول» (2026-09-24). The prayer card first loads while the splash is
+    // still up - BEFORE the permissions page - so on a first run it asked,
+    // was denied (no permission yet, and LocationService does not prompt
+    // before onboarding), and kept «فعّل الموقع» on the Home screen after the
+    // reader had granted it, until a pull-to-refresh. Reproduced on
+    // emulator-5554 (fresh install, location allowed on the permissions page,
+    // `granted=true` in dumpsys, card still asking). Onboarding is where the
+    // answer changes, so the card starts again from here.
+    ref.invalidate(prayerControllerProvider);
     if (!context.mounted) return;
     // Once per install: the sign-in offer (see `offerSignInOnce`).
     await offerSignInOnce(context, ref);
