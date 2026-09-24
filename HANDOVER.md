@@ -2495,7 +2495,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-24 20:35 — IN PROGRESS — resume here**
+**2026-09-24 20:36 — IN PROGRESS — resume here**
 
 Verified on build 2: per-ayah delete stops playback; reciter header readable
 

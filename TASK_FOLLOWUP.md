@@ -87,8 +87,8 @@ audio focus), NATIVE ADHAN (AdhanPlayer.kt, focus TRANSIENT_EXCLUSIVE, also
 the settings preview), TASMEE MIC, SPLASH VIDEO.
 - [x] adhan vs recitation (prev session) · [x] adhan during download
 - [x] book reader vs recitation (prev) · [x] tasmee vs listen/recitation
-- [x] delete playing surah recitation · [ ] delete playing per-ayah (fixed,
-  rebuild) · [x] download state app-wide · [x] qibla 258 = computed 258.2
+- [x] delete playing surah recitation · [x] delete playing per-ayah (VERIFIED build 2:
+  PLAYING -> NONE, 0 players) · [x] download state app-wide · [x] qibla 258 = computed 258.2
 - [x] ADHAN vs BOOK READER: CONFIRMED BUG 20:10 (Isha moved +27 min):
   USAGE_ALARM + SPEECH MediaPlayers both started, reading went on after
   Stop. FIXED in code: VoicePlayerChannel.kt holds audio focus (transient
@@ -108,7 +108,8 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   FIXED: timeoutAfter 20 h. Prayer reminders max 15, azkar 3, khatma 1/k. · [ ] theme/locale switch while playing
 - [ ] app to background + back while playing/downloading
 - [ ] slow network: onboarding probe (fixed, rebuild)
-- [ ] light theme contrast: reciter header (fixed, rebuild) - scan others
+- [x] reciter header contrast: VERIFIED build 2 (white/white70 readable)
+- [ ] dark + RGB theme contrast scan
 
 ## Settled facts
 - SEEN on emulator (3.62.0 signed, 19:32-19:39): voice download started in
@@ -153,6 +154,7 @@ the settings preview), TASMEE MIC, SPLASH VIDEO.
   Method: emulator `-http-proxy` + logging proxy (TRAPS #53).
 
 ## Log
+- 2026-09-24 20:36 - Verified on build 2: per-ayah delete stops playback; reciter header readable
 - 2026-09-24 20:35 - Verified on build 2: per-ayah delete stops playback; reciter header readable
 - 2026-09-24 20:31 - Verified on device: adhan pauses the book reader and it resumes after
 - 2026-09-24 20:23 - Build 2 of 3.62.0 signed (focus/tasmee/sunan/per-ayah delete/probe/header fixes in); verifying on emulator
