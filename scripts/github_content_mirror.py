@@ -6,6 +6,7 @@ the release asset second (AppConfig.mirrorsFor).
 
     py -3 scripts/github_content_mirror.py            # upload what is missing
     py -3 scripts/github_content_mirror.py --verify   # sizes + a range request
+    py -3 scripts/github_content_mirror.py --only content-mirror   # one release
 
 Bytes are copied VERBATIM from the public R2 endpoint — the books stay gzip
 with no Content-Encoding (CLAUDE.md trap #6), and the app sniffs them the same
@@ -101,7 +102,10 @@ def main():
     verify = "--verify" in sys.argv
     objs = r2_objects()
     report = []
+    only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else None
     for tag, prefixes in RELEASES.items():
+        if only and tag != only:
+            continue
         want = [(k, s) for k, s in objs if any(k.startswith(p) for p in prefixes)]
         if not verify:
             ensure_release(tag)
