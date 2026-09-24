@@ -32,14 +32,12 @@ class PrayerTimesService {
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now().toIso8601String().substring(0, 10);
 
-    // Fresh cache?
-    if (prefs.getString(_cacheDateKey) == today) {
-      final cached = prefs.getString(_cacheKey);
-      if (cached != null) {
-        final pt = _decode(cached, cityName, countryName);
-        if (pt != null) return pt;
-      }
-    }
+    // Always calculated: it is offline arithmetic, microseconds. A same-day
+    // cache used to answer FIRST, keyed by the date alone - so a new place,
+    // method, madhab or high-latitude rule kept the old times until midnight.
+    // Seen on emulator-5554 (2026-09-25): manual location set to Tanta, the
+    // card said «Tanta, Egypt» over Dubai's Fajr 4:50. The cache below is
+    // only the fallback if the calculation itself throws.
 
     try {
       final coordinates = adhan.Coordinates(lat, lon);

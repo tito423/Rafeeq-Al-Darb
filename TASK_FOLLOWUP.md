@@ -12,6 +12,16 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 ~03:10. Build 11 SEEN (airplane + location off):
+bundled list ready in <8 s, «Tanta» -> «Tanta, Egypt» first in ~2.8 s,
+picked -> Home name «Tanta, Egypt» BUT Fajr still Dubai's 4:50. CAUSE:
+PrayerTimesService answered from a cache keyed by DATE ONLY before
+calculating (also broke same-day method/madhab changes and travel). FIXED:
+always calculate; cache only on throw. test/prayer_times_place_test.dart
+fails on old code (04:50 == 04:50), passes now. Next: build 12, redo
+Tanta -> times must change; also change calc method -> times change;
+Dubai; coordinates; back to automatic; qibla. Then contrast crawl.
+
 SESSION 2026-09-25 ~03:00. Build 10 SEEN: the hosted city-list download
 went to «World city list ready» (the build-9 46 % failure did not recur).
 Then OWNER: «خلي مواقيت مدن العالم بندلد في التطبيق ... دول خمسة ميجا بس»
@@ -279,6 +289,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 03:10 - build 11: bundled list works offline; FOUND times cached by date only (place/method changes ignored until midnight) - fixed + test, building 12
 - 2026-09-25 03:00 - build 10: hosted list download reached «ready»; owner asked to BUNDLE it - done in code (asset + ensureReady), 583 pass, unbuilt
 - 2026-09-25 02:35 - download error surfaced (userErrorText + logcat), build 10 started
 - 2026-09-25 02:09 - HANDOVER (quota): city-list download failed at 46% on build 9 (Isolate.run captured State) - moved to top-level functions, unbuilt; contrast fixes unseen on device; NEXT_PROMPT.md rewritten
