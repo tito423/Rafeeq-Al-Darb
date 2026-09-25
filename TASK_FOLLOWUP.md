@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:41 - i'rab refs: owner list with proposals for the 222 unproven
+- 2026-09-26 00:41 - Refs: the 59 'quote not found' are «سبق إعراب مثلها / ما يشبهها» = a PATTERN, not an ayah (4:15 «إن الله كان توابا رحيما»). Not shown. scripts/propose_irab_daas_refs.py writes scripts/irab_daas_refs_for_owner.md: 222 items (82 with a proposed nearest-similar ayah, 58 no quote, 36 one-word, 69 held numbers); 30 'own section' need nothing. App shows the book's sentence as-is there. Next: APP side - irab_daas table + ayah sheet.
 - 2026-09-26 00:40 - i'rab refs: identical-ayah rule (215 of 467 shown)
 - 2026-09-26 00:40 - Refs: rule 4 'identical' = a section ayah word-for-word equal to an earlier ayah (not when the book wrote a number - 3:1 «الآية ٢٥٤» had matched 2:1 «الم»; not when 2+ section ayahs have twins - 77:41-45, 26:136-145). Now 215 of 467 shown (103 quote, 60 number, 35 identical, 15 previous, 2 surah-start), 252 open. Next: 'not accepted' numbered refs - read print for the unclear ones.
 - 2026-09-26 00:39 - CLAUDE.md 2.0b: do not report Remote Control (owner)
