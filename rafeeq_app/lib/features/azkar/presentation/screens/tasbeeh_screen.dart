@@ -544,11 +544,19 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                           child: Column(children: controls),
                         ),
                       ),
+                      // Rounds + reset BESIDE the counter, not under it: in
+                      // landscape at font scale 1.45 the body is ~180 dp
+                      // high and the footer under the circle left it ~65 dp
+                      // (owner's phone, 2026-09-25). Beside, the circle gets
+                      // the whole height.
                       Expanded(
-                        child: Column(
+                        child: Row(
                           children: [
                             Expanded(child: counter),
-                            ...footer,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: footer,
+                            ),
                           ],
                         ),
                       ),
