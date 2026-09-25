@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:08 - Daas: 12 of 27 transcribed from the print (+10:64)
+- 2026-09-26 00:08 - Daas print: 12 of 27 (+10:64-66 vol2 34, 192 words; «وفي الآخرة» is a quote in the print, KSU lost it; KSU «إِنَّ نافية»/«أَلا أداة حصر» are wrong - print «إن»/«إلا»; print's «اسم لا» for مَن kept as the book's text). Next: 12:86 (vol2 102-103).
 - 2026-09-26 00:08 - Daas: 11 of 27 transcribed from the print (+10:55)
 - 2026-09-26 00:08 - Daas print: 11 of 27 (+10:55-58 vol2 32, 246 words; 1 new word «وهو» = the print's own quote for 10:56 whose ayah reads «هُوَ يُحْيِي» - book text kept undiacritised, NOT corrected; tell owner). Next: 10:64 (vol2 34).
 - 2026-09-26 00:07 - Daas: 10 of 27 transcribed from the print (+4:172)
