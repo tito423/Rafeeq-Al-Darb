@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:09 - Daas: 13 of 27 transcribed from the print (+12:86)
+- 2026-09-26 00:09 - Daas print: 13 of 27 (+12:86-87 vol2 102-103, 241 words; 4 new words all read on the print: تقديره «أنا», «وحزني», «إلى الله», بتيئسوا - KSU garbled all four). Next: 16:32 (vol2 157-158).
 - 2026-09-26 00:08 - Daas: 12 of 27 transcribed from the print (+10:64)
 - 2026-09-26 00:08 - Daas print: 12 of 27 (+10:64-66 vol2 34, 192 words; «وفي الآخرة» is a quote in the print, KSU lost it; KSU «إِنَّ نافية»/«أَلا أداة حصر» are wrong - print «إن»/«إلا»; print's «اسم لا» for مَن kept as the book's text). Next: 12:86 (vol2 102-103).
 - 2026-09-26 00:08 - Daas: 11 of 27 transcribed from the print (+10:55)
