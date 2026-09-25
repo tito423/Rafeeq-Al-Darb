@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:12 - Daas: 17 of 27 transcribed from the print (+23:21)
+- 2026-09-26 00:12 - Daas print: 17 of 27 (+23:21-23 vol2 326-327, 0 new). Next: 26:10 (vol2 380).
 - 2026-09-26 00:11 - Daas: 16 of 27 transcribed from the print (+20:91)
 - 2026-09-26 00:11 - Daas print: 16 of 27 (+20:91-94 vol2 269-270, 279 words; 2 new: وقرئ (print spelling), «ابن أمّ» (KSU «بن أم») - both on the print). Next: 23:21 (vol2 326-327).
 - 2026-09-26 00:11 - Daas: 15 of 27 transcribed from the print (+18:47)
