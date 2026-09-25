@@ -36,6 +36,11 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // (scripts/build_irab_daas_final.py; CONTENT-LICENSES.md).
       SourceEntry('المكتبة الشاملة — إعراب القرآن الكريم (الدعاس)',
           'https://shamela.ws/book/23584', 'about.src_irab_daas'),
+      // Where al-Da'as's own commentary is wrong in all four copies, the
+      // fix is taken from these named books (scripts/irab_daas_quran_
+      // corrections.json), read on tafsir.app on 2026-09-26.
+      SourceEntry('tafsir.app — الجدول، إعراب درويش، الإعراب الميسر',
+          'https://tafsir.app', 'about.src_irab_check'),
       SourceEntry('quran.com', 'https://quran.com', 'about.src_qurancom'),
       SourceEntry('api.alquran.cloud', 'https://alquran.cloud',
           'about.src_alquran'),

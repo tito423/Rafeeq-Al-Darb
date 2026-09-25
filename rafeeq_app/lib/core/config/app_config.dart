@@ -175,7 +175,7 @@ abstract final class AppConfig {
   /// Measured with `head_object` against the bucket on 2026-09-26 (v2), and
   /// range-checked over the public endpoint — not estimated. Re-measure
   /// whenever `scripts/upload_sciences_pack.py` runs again.
-  static const int sciencesDbBytes = 32146462;
+  static const int sciencesDbBytes = 32146611;
 
   /// Same contract as [hadithDbVersion]: stamped beside the extracted file,
   /// and `DbHelper.openDownloaded` treats any other stamp as "not

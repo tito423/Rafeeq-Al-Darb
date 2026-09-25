@@ -69,6 +69,14 @@ time.
   corrected and the reference. Only the quoted Qur'an words change; the book's
   own commentary stays as printed and any mismatch it leaves is flagged to him.
   Never correct «silently», never from memory, never by a script alone.
+- **No leniency in anything that touches the Qur'an** (owner, 2026-09-26:
+  «مينفعش التساهل في علم يمس القرآن … متستسهلش»). A doubt is not handed to
+  the owner as «leave it + a note» until it has been CHASED: every other copy
+  of the book (Shamela, KSU/e-quran, the print, other printings), then other
+  named works on the same ayah (other i'rab books, tafsirs that parse it),
+  then scholars who discussed it. Fix it from a named, cited source, record
+  the evidence, and only what truly has no source goes to him - with what was
+  searched.
 - Every content source gets credited on the Sources screen with a link.
 
 ### 1.3 Verify on a real device, not in your head

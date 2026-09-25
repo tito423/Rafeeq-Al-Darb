@@ -186,7 +186,7 @@ def main():
         if r['text'].count(c['printed']) != 1:
             sys.exit(f"correction {c['ayah']}: {c['printed']} found {r['text'].count(c['printed'])} times")
         r['text'] = r['text'].replace(c['printed'], c['corrected'])
-        stats['quran_word_corrected'] += 1
+        stats['corrected'] += 1
     json.dump(out, io.open(os.path.join(T, 'irab_daas_final.json'), 'w', encoding='utf-8'),
               ensure_ascii=False, indent=0)
     sys.stdout.reconfigure(encoding='utf-8')

@@ -329,6 +329,7 @@ the owner's «لو منتش متأكد مليون المية متحطهومش»,
 | Copyright page | «جميع الحقوق محفوظة … إلا بإذن خطي من الناشرين» |
 | Source | Shamela 23584 (fetched 2026-09-25), 3,639 sections |
 | Checked against | the printed edition (archive.org `i3rb-krn-d3s`, 3 vols, used to VERIFY, not rehosted): 54,434 eight-word chunks; the 27 sections Shamela damaged transcribed from the print by eye (`scripts/irab_daas_print_transcriptions.json`) |
+| Commentary fixed | 3 places where the authors' own grammar is wrong in all four copies (Shamela, KSU, print, tafsir.app) - 10:56, 22:60, 24:21 - replaced from named books read on tafsir.app 2026-09-26 (الجدول لصافي، إعراب القرآن وبيانه لدرويش، الإعراب الميسر), each marked in the text «[تصويب عن … ؛ وفي الأصل: …]» so the reader sees the change and its source |
 | Changed | 6 Qur'an quotes corrected to the mushaf, each seen on the Madinah page and the print (`scripts/irab_daas_quran_corrections.json`, evidence in `scripts/evidence/`); nothing else in the authors' text |
 | Shipped | `irab_daas`, `irab_daas_refs` in `quran_sciences.db`, R2 `sciences/v2/quran_sciences.zip` (32,146,462 B) + GitHub `content-mirror` |
 | Rights | **Not cleared.** Shamela text, shipped on the owner's Shamela ruling (2026-09-22, below) and his choice of this book (2026-09-25). Credited on the Sources screen and in the tab's header. |

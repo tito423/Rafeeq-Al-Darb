@@ -1041,6 +1041,7 @@
     "src_qurancom": "Tafsir and word meanings, and a second copy of the Complex text for verification",
     "src_kfgqpc": "The Quran text (Hafs, Madinah Mushaf) and its Uthmani font",
     "src_irab_daas": "Grammatical analysis (i‘rab): al-Da‘as, Hamidan and al-Qasim, checked against the printed edition",
+    "src_irab_check": "Checking and correcting the i‘rab: al-Jadwal (Mahmud Safi), I‘rab al-Qur’an wa-Bayanuh (Muhyi al-Din Darwish), al-I‘rab al-Muyassar",
     "src_alquran": "Quran translations in every language",
     "src_svg": "Mushaf page images and verse coordinates — CC BY-NC-ND as stated by the quran_android repository. Mirrored on our own server, at their request.",
     "src_archive": "Scanned mushaf printings and adhan recordings",
