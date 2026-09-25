@@ -80,7 +80,10 @@ def main():
                 docs[vol][idx].get_pixmap(dpi=200).save(img)
                 cache[key] = (img, ocr_boxes(img, out_dir))
             img, lines = cache[key]
-            needle = (a or b).split()
+            # The reading with its context words: a bare «لكل» matches
+            # anywhere on the page.
+            ctx = raw.get('ctx', ['', ''])
+            needle = (ctx[0] + ' ' + (a or b) + ' ' + ctx[1]).split()
             at, score = best_line(lines, needle)
             if at is not None and score > best[1]:
                 best = (key, score, at, img)

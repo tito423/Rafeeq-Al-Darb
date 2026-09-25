@@ -31,6 +31,7 @@ MARKS = re.compile('[ؐ-ًؚ-ٰٟۖ-ۭـ]')
 FOLD = str.maketrans({'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ٱ': 'ا', 'ة': 'ه', 'ى': 'ي',
                       'ئ': 'ي', 'ؤ': 'و'})
 MARGIN = 0.06   # how much closer to the print one reading must be to win
+VOLUME_PAGES = {1: 478, 2: 459, 3: 481}   # counted with pymupdf, 2026-09-25
 
 
 def words(t, fold=False):
@@ -98,7 +99,9 @@ def locate(pid, sh, ocr, cache):
         if w is None:
             # Not OCR'd yet: judging against the neighbours would pick the
             # wrong page (seen: 2:92-95 matched to p. 39 before p. 40 existed).
-            if 0 <= idx < 500:
+            # (Past the last page of a volume is simply not a candidate:
+            # the printed volumes have 478, 459 and 481 pages.)
+            if 0 <= idx < VOLUME_PAGES[vol]:
                 cache[pid] = (None, 0, 0)
                 return cache[pid]
             continue
@@ -158,6 +161,7 @@ def main():
                     verdict = 'A' if a_in else 'B'
                     stats['op_exact_word'] += 1
             ops.append({'tag': tag, 'a': ' '.join(wa[i1:i2]), 'b': ' '.join(wb[j1:j2]),
+                        'ctx': [' '.join(ctx_l), ' '.join(ctx_r)],
                         'ra': round(ra, 3), 'rb': round(rb, 3), 'v': verdict})
             stats['op_' + verdict] += 1
         # Where A and B AGREE, is the print saying something else? A's text in

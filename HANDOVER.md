@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 22:33 — IN PROGRESS — resume here**
+**2026-09-25 23:03 — IN PROGRESS — resume here**
 
-Daas: whole print OCRd; 99.95% of agreed text confirmed by the print; review crops for the rest
+Daas: every disputed place decided against the printed page; verdicts file; parser fix for 19:14
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

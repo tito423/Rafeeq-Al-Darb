@@ -74,6 +74,20 @@ def main():
                                 norm.startswith('بِسْمِ اللَّهِ')):
             cur['ayah_text'].append(para)
             continue
+        # Shamela sometimes glues the section's last ayah line and the start
+        # of the i'rab into one paragraph (19:14-17: «… بَشَراً سَوِيًّا (١٧)
+        # «وَبَرًّا» معطوف …»). Split after the section's last ayah number when
+        # nothing before it is book text (no «).
+        if not cur['text']:
+            m = None
+            for m_ in re.finditer(r'\((\d+)\)', norm):
+                if int(m_.group(1)) == cur['to']:
+                    m = m_
+            if m and '«' not in para[:m.end()]:
+                cur['ayah_text'].append(para[:m.end()].strip())
+                para = para[m.end():].strip()
+                if not para:
+                    continue
         cur['text'].append(para)
     if cur:
         rows.append(cur)
