@@ -2501,9 +2501,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 00:12 — IN PROGRESS — resume here**
+**2026-09-26 00:13 — IN PROGRESS — resume here**
 
-Daas: 17 of 27 transcribed from the print (+23:21)
+Daas: 19 of 27 transcribed from the print (+26:10, 26:15)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

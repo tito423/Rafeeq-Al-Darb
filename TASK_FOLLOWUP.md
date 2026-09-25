@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:13 - Daas: 19 of 27 transcribed from the print (+26:10, 26:15)
+- 2026-09-26 00:13 - Daas print: 19 of 27 (+26:10-14 vol2 380, +26:15-18 vol2 380-381, 0 new words each). Next: 27:44 (vol2 408).
 - 2026-09-26 00:12 - Daas: 17 of 27 transcribed from the print (+23:21)
 - 2026-09-26 00:12 - Daas print: 17 of 27 (+23:21-23 vol2 326-327, 0 new). Next: 26:10 (vol2 380).
 - 2026-09-26 00:11 - Daas: 16 of 27 transcribed from the print (+20:91)
