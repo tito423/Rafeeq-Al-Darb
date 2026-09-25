@@ -13,11 +13,9 @@ import '../../../library/presentation/screens/library_screen.dart';
 /// leaves him in the library with nothing to say where he is or how to get
 /// back. A pushed route keeps the stack, so one back gesture returns.
 class LibraryRoute extends ConsumerWidget {
-  final String title;
   final int initialTab;
   const LibraryRoute({
     super.key,
-    required this.title,
     required this.initialTab,
   });
 
@@ -28,9 +26,9 @@ class LibraryRoute extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(requestedLibraryTabProvider.notifier).state = initialTab;
     });
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: const LibraryScreen(),
-    );
+    // The library's own AppBar is the only one: it shows the back arrow
+    // itself when pushed. Wrapping it in a second Scaffold drew two bars,
+    // «الكتب» over «المكتبة», each with an arrow (owner's phone, 2026-09-25).
+    return const LibraryScreen();
   }
 }

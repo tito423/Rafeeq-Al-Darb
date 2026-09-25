@@ -158,10 +158,7 @@ class _OverviewTab extends ConsumerWidget {
       case DownloadCategory.books:
         return () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => LibraryRoute(
-                  title: 'downloads.cat_books'.tr(),
-                  initialTab: 0,
-                ),
+                builder: (_) => const LibraryRoute(initialTab: 0),
               ),
             );
       // «والباقي مش بيوديني لحاجة» - these two had no destination at all.

@@ -159,8 +159,16 @@ class _BackEntry extends PopEntry<Object?> {
     }
   }
 
+  /// Only a card the reader OPENED counts - the same list the handler
+  /// below closes from. A card built already open (`initiallyOpen`,
+  /// `initiallyExpanded`) never went through [AccordionMember.accordionOpened],
+  /// so counting it here made the route refuse to pop while the handler
+  /// found nothing to close: back was dead for good on the reader-voice
+  /// screen, and in the library once «التصنيفات» (first shelf open) had
+  /// been visited (owner's phone, 2026-09-25; reproduced on emulator-5554).
   static bool _hasVisibleOpen(ModalRoute<Object?> route) =>
-      _byRoute[route]?.members.any((m) => m._visibleOpen) ?? false;
+      _byRoute[route]?.members.any((m) => _opened.contains(m) && m._visibleOpen) ??
+      false;
 
   /// Recomputes every route's answer after the current frame — open states
   /// change inside builds, and a pop entry must not notify mid-build.

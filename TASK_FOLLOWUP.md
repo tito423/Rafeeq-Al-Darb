@@ -12,12 +12,12 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
-START: NEXT_SESSION_PROMPT.md stage 1 item 1 - back arrow dead in Book reader
-settings and in Library opened from More (two app bars «الكتب»/«المكتبة»).
-Prove the cause in code, fix, build (emulator OFF), install, SEE it, log here.
-Then items 2..17 in order. UNVERIFIED, redo: 3.63.3 ANR/lock-stop fix only
-seen on emulator, not on the owner's Xiaomi; qibla «مش ظبطت» today, unchecked.
-Weekly quota was 96% at handover.
+Stage 1 item 1 FIXED IN CODE (accordion back + LibraryRoute double bar),
+analyze clean, 589 pass - NOT YET SEEN ON DEVICE. Next: build
+(build_github_release.bat, emulator OFF), install on emulator-5554, see:
+Downloads > Book reader voice > back leaves; Downloads > Books shows ONE bar
+and back leaves; Library tab > Categories > back goes Home. Then item 2.
+UNVERIFIED, redo: 3.63.3 ANR/lock-stop fix only seen on emulator; qibla.
 
 (History below.)
 After the release: nothing ordered. Still open (need the owner or a fresh
@@ -391,6 +391,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 17:09 - Stage 1 item 1: back dead behind a card that started open; library double app bar (code + test, not built)
+- 2026-09-25 17:10 - Item 1 cause PROVEN on emulator-5554 (3.63.7): Downloads > Book reader voice, arrow AND system back both dead. accordion.dart: canPop counted any open card, the back handler only closes cards in _opened (user-opened); a card built open (initiallyOpen / initiallyExpanded: voice screen, library Categories first shelf, recitations <=3 reciters) blocked pop with nothing to close. Fix: count only _opened. Test added (fails old, passes new). LibraryRoute no longer wraps LibraryScreen in a 2nd Scaffold. Not built yet.
 - 2026-09-25 15:50 - HANDOVER: analyze clean, 588 pass, 8 hosted paths 206, 7 locales x 1,833 keys, 239 books, hadith.db 109,731,840 B, v3.63.7 APK 270,769,028 B. Plan written (NEXT_SESSION_PROMPT.md), NEXT_PROMPT.md rewritten.
 - 2026-09-25 15:30 - Owner sent 8 screenshots + 9 screen recordings from his Xiaomi (3.63.7), asked for a REPORT ONLY, no changes. Findings (unverified in code, from frames): back arrows not responding (Book reader settings, Library opened from More), double app bar «الكتب»+«المكتبة», ayah-download notification done>total (1488/1485), Initial downloads says «no server» while the ayah download runs, per-ayah list shows 0/114 during download, More accordion jumps + long reminder text inline, account name dark on dark, i'rab «على» = «جمع», odd «خطوات الصلاة» icon, tour step 8 highlights the player card, mushaf size line clipped. Waiting for owner to pick.
 - 2026-09-25 14:44 - v3.63.7 published: final ring-cropped icon without prayer beads
