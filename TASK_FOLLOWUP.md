@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:04 - Daas: 6 of 27 transcribed from the print (+6:130)
+- 2026-09-26 00:04 - Daas print transcription: 6 of 27 (+6:130, vol1 pdf 334-335, check 198 words / 0 in neither copy; print's own typo «نعلق به» kept). Next: 64:15 (vol3 351), then the list.
 - 2026-09-25 23:44 - HANDOVER: analyze clean, 594 pass, 9/9 hosted 206; i'rab resume point; next prompt
 - 2026-09-25 23:45 - OWNER REQUIREMENT: where the book says «سبق إعرابها / تقدم إعرابها / انظر الآية N / ينظر الآية N / يراجع…» the i'rab tab must SHOW the actual i'rab, not the phrase. Measured on the final text: 393 sections mention an earlier i'rab, 63 are ONLY a reference, 105 carry an ayah number. Plan (not done): keep the book's sentence (it is the book) and render the referenced section's i'rab under it, labelled «إعراب الآية N كما ورد في الكتاب»; target = the named ayah, or for «مثيلها/السابقة» the nearest earlier ayah with the identical text (KFGQPC) - anything not resolvable that way goes to a list for the owner, never guessed. HANDOVER written (analyze clean, 594 pass, 9/9 hosted 206).
 - 2026-09-25 23:39 - Daas: 5 of 27 transcribed from the print; exact resume point logged (quota 85%)
