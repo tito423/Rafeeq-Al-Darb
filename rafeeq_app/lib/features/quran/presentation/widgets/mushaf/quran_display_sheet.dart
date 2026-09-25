@@ -29,12 +29,12 @@ import '../../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/mushaf_paper_provider.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../data/page_turn_provider.dart';
 import '../../../data/text_layout_provider.dart';
 import '../mushaf_theme_picker.dart';
 import 'auto_scroll_speed_bar.dart';
+import 'mushaf_paper_chips.dart';
 
 Future<void> showQuranDisplaySheet(
   BuildContext context, {
@@ -193,19 +193,7 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
             // has its full theme picker above; this is its image-mode twin.
             if (!_textOnly) ...[
               _Group(label: 'quran.paper_title'.tr()),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final p in MushafPaper.values)
-                    ChoiceChip(
-                      label: Text(p.titleKey.tr()),
-                      selected: ref.watch(mushafPaperProvider) == p,
-                      onSelected: (_) =>
-                          ref.read(mushafPaperProvider.notifier).set(p),
-                    ),
-                ],
-              ),
+              const MushafPaperChips(),
             ],
             _Group(label: 'quran.display_turn'.tr()),
             _SwitchTile(

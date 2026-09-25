@@ -396,6 +396,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 18:35 - KFGQPC text seen on emulator; ANR round 2 (no files tracking, status-only ayah tasks); paper chips in special-surah reader
+- 2026-09-25 18:50 - SEEN on emulator-5554 (build installed 18:23:50): new text + KFGQPC font live - 18:31 «عدن» no meem, staggered kasratan drawn (Amiri would draw U+0656 as a small alif; it does not), final ya dotless as in print; al-Kahf opens with the basmala line then 18:1 «ٱلۡحَمۡدُ». ANR NOT fixed yet: main thread still ~40 ticks/s after the tap (idle 0). Now: files group no longer tracked in the plugin DB, ayah tasks status-only, completion notify throttled; special-surah reader image mode gets the paper chips + ground. 591 pass. (Log times 18:05/18:40 above were estimates, not the clock - the clock read 18:21 at install.)
 - 2026-09-25 18:17 - Ayah text: King Fahd Complex hafs v18 + its font (replaces Tanzil 1.0: false iqlab meems, 5 text errors); not built
 - 2026-09-25 18:40 - Text mushaf moved to the King Fahd Complex text+font (code+data, 591 pass, not built).
 - 2026-09-25 17:59 - Ayah download ANR: feed the plugin queue 12 at a time, set-based counts (not built); text mushaf source audit

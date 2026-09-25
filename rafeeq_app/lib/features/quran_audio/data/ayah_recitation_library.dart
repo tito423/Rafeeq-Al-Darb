@@ -453,7 +453,11 @@ class AyahRecitationLibrary extends ChangeNotifier {
         baseDirectory: BaseDirectory.applicationDocuments,
         directory: p.join(_dirName, edition),
         group: DownloadEngine.groupFiles,
-        updates: Updates.statusAndProgress,
+        // Status only. An ayah is a few KB; its progress bar is invisible
+        // and the screens count ayahs, not bytes - but every progress event
+        // crossed the platform channel and ran through three listeners on
+        // the main thread, several times per ayah, 6,236 ayahs long.
+        updates: Updates.status,
         retries: 3,
         allowPause: true,
       ));
@@ -512,7 +516,9 @@ class AyahRecitationLibrary extends ChangeNotifier {
           unawaited(_save());
         }
       }
-      _notifyNow();
+      // Throttled like progress: completions arrive many per second, and
+      // each one rebuilt every screen listening to the library.
+      _notifySoon();
     } else if (u is TaskStatusUpdate &&
         (u.status == TaskStatus.failed || u.status == TaskStatus.notFound)) {
       // The mirror is the primary, not the only source: an ayah it could not

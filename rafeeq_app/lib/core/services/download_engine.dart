@@ -394,7 +394,14 @@ class DownloadEngine {
     // Keeps task records in the plugin's own database so a transfer that
     // outlived the app can be reconciled on the next launch instead of
     // showing as lost.
-    await downloader.trackTasksInGroup(groupFiles);
+    //
+    // NOT the files group. Nothing reads its records (only QuranAudioLibrary
+    // reads records, and only its own group), and tracking made the plugin
+    // look up and rewrite a record on the main isolate for EVERY status and
+    // progress event of every file - thousands during an ayah-by-ayah
+    // download. With the queue scan already gone (2026-09-25) the main
+    // thread still ran at ~40 ticks/s on emulator-5554 during that download
+    // against 0 idle; this was the largest per-event cost left.
     await downloader.trackTasksInGroup(groupRuqyah);
     await downloader.trackTasksInGroup(groupQuranAudio);
 

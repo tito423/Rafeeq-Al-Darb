@@ -20,6 +20,8 @@ import '../../quran/presentation/widgets/ayah_sciences_sheet.dart';
 import '../../quran/presentation/widgets/mushaf_page_view.dart';
 import '../../quran/presentation/widgets/mushaf_text_page.dart';
 import '../../quran/presentation/widgets/mushaf_theme_picker.dart';
+import '../../quran/data/mushaf_paper_provider.dart';
+import '../../quran/presentation/widgets/mushaf/mushaf_paper_chips.dart';
 
 enum _Mode { text, image }
 
@@ -201,6 +203,15 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
         final showChrome = !_fullScreen && _toolbarVisible;
 
         return Scaffold(
+          // Same ground as the Qur'an tab (`QuranScreen`): the chosen paper
+          // under a printed page, never the app theme through it.
+          backgroundColor: isText
+              ? null
+              : mushafGround(ref.watch(mushafPaperProvider),
+                      imageMode: true,
+                      darkPage: edition?.darkPage ?? false) ??
+                  opaqueMushafGround(Theme.of(context).colorScheme.surface,
+                      Theme.of(context).brightness),
           appBar: showChrome
               ? AppBar(
                   title: Text(data.surahNameAr(widget.surahId)),
@@ -512,6 +523,13 @@ class _ReaderBar extends StatelessWidget {
                     ),
                   ),
                 ],
+                // The paper mushaf's colours, as the Qur'an tab offers them.
+                if (!isText)
+                  IconButton(
+                    tooltip: 'quran.paper_title'.tr(),
+                    icon: const Icon(Icons.palette_outlined),
+                    onPressed: () => MushafPaperChips.show(context),
+                  ),
                 IconButton(
                   tooltip: 'quran.page_fit_full'.tr(),
                   icon: const Icon(Icons.fullscreen),
