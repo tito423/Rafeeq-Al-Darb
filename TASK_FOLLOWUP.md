@@ -411,6 +411,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:19 - build_irab_daas_final.py now USES the print transcriptions for the 27 damaged sections (base='print'), and exits if the transcribed set != the damaged set. Rebuilt: 3,639 = 3,612 shamela + 27 print; diff vs previous build = exactly those 27. Next: step 3 - «سبق إعرابها» references (owner requirement, log 23:45).
 - 2026-09-26 00:18 - Daas: all 27 damaged sections transcribed from the print
 - 2026-09-26 00:18 - Daas print: ALL 27 of 27 transcribed (+78:40 vol3 416, +81:10 vol3 423 - KSU had «معطوفة على الاية رقم 9» x4 garbage). check: 16 words in neither copy across 9 sections, every one read on the print. Next: wire build_irab_daas_final.py to use the transcriptions for these 27, rebuild.
 - 2026-09-26 00:17 - Daas: 25 of 27 transcribed from the print (+51:40)

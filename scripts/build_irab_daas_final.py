@@ -18,6 +18,10 @@ Rules, each one established against the printed pages:
     marks ( ) become « » and its one-item-per-line layout becomes a paragraph,
     so every section reads the same.
   * Where both copies are wrong, the printed word is used (16:33 «يَنْظُرُونَ»).
+  * Neither copy is clean in those damaged sections (27 of them), so the text
+    shipped there is the transcription from the printed page
+    (irab_daas_print_transcriptions.json, checked by irab_daas_transcribe.py);
+    the KSU splice above is only what decides WHICH sections are damaged.
   * The book's sections are kept: B's per-ayah split puts text under the wrong
     ayah in places (55:19 under 55:20, 69:2 under 69:1).
 
@@ -100,7 +104,9 @@ def main():
         if d['kind'] == 'op':
             ver[(d['surah'], d['from'])].append(d)
 
-    out, stats, unresolved = [], collections.Counter(), []
+    printed = json.load(io.open(os.path.join(ROOT, 'scripts', 'irab_daas_print_transcriptions.json'),
+                                encoding='utf-8'))
+    out, stats, unresolved, damaged = [], collections.Counter(), [], []
     for r in A:
         key = (r['surah'], r['from'])
         a = r['text']
@@ -163,12 +169,20 @@ def main():
                     text = text[:s] + v.split(':', 1)[1] + text[e:]
                     stats['print_word'] += 1
             text = b_to_paragraph(text)
+            damaged.append(key)
+        if f'{key[0]}:{key[1]}' in printed:
+            text, base = printed[f'{key[0]}:{key[1]}'], 'print'
         stats[base] += 1
         out.append({'surah': r['surah'], 'ayah_from': r['from'], 'ayah_to': r['to'],
                     'text': text, 'base': base})
     json.dump(out, io.open(os.path.join(T, 'irab_daas_final.json'), 'w', encoding='utf-8'),
               ensure_ascii=False, indent=0)
     sys.stdout.reconfigure(encoding='utf-8')
+    # Every damaged section must have its transcription, and nothing else may.
+    want = {f'{s}:{a}' for s, a in damaged}
+    if want != set(printed):
+        sys.exit(f'transcriptions do not match the damaged sections: '
+                 f'missing {sorted(want - set(printed))}, extra {sorted(set(printed) - want)}')
     print(dict(stats))
     print(f'unresolved differences: {len(unresolved)}')
     for u in unresolved[:30]:
