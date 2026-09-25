@@ -299,7 +299,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
                 child: ArabicText(
                   basmala,
                   style: const TextStyle(
-                    fontFamily: 'AmiriQuran',
+                    fontFamily: 'KFGQPCHafs',
                     fontSize: 20,
                   ),
                 ),
@@ -487,7 +487,7 @@ class _Word extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = const TextStyle(
-      fontFamily: 'AmiriQuran',
+      fontFamily: 'KFGQPCHafs',
       fontSize: 24,
       height: 1.9,
     );

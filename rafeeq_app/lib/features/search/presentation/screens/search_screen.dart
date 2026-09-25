@@ -278,7 +278,7 @@ class _HighlightedAyahText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const base = TextStyle(fontFamily: 'AmiriQuran', fontSize: 17, height: 1.6);
+    const base = TextStyle(fontFamily: 'KFGQPCHafs', fontSize: 17, height: 1.6);
     final t = test;
     if (t == null) {
       // ArabicText / an RTL Directionality below: an ayah is Arabic, and the

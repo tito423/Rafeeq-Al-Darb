@@ -476,7 +476,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                         child: ArabicText(
                           r.words[i],
                           style: TextStyle(
-                            fontFamily: 'AmiriQuran',
+                            fontFamily: 'KFGQPCHafs',
                             fontSize: 19,
                             height: 1.8,
                             color: r.heardWord[i] ? null : Colors.red.shade700,

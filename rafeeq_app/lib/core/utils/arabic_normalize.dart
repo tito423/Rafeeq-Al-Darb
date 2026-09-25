@@ -64,8 +64,21 @@ final RegExp _alefVariants = RegExp('[آأإٰٱ]');
 /// alif) in it — used only by [normalizeArabicLoose].
 final RegExp _alefVariantsNoDagger = RegExp('[آأإٱ]');
 
+/// The King Fahd Complex text (the ayah source since 2026-09-25) writes a
+/// hamza on a seat as the seat letter followed by a combining hamza -
+/// «ٱمۡرِيٕ» is ي + U+0654, where typed Arabic has the one letter ئ. The
+/// marks are stripped next, and stripping first would leave a bare ي, so a
+/// search for «امرئ» found nothing. Composed here, as Unicode's NFC does;
+/// search input and the index both pass through it.
+String composeHamza(String s) => s
+    .replaceAll('\u064A\u0654', '\u0626')
+    .replaceAll('\u0649\u0654', '\u0626')
+    .replaceAll('\u0648\u0654', '\u0624')
+    .replaceAll('\u0627\u0654', '\u0623')
+    .replaceAll('\u0627\u0655', '\u0625');
+
 String normalizeArabic(String s) {
-  var out = s.replaceAll(_arabicDiacritics, '');
+  var out = composeHamza(s).replaceAll(_arabicDiacritics, '');
   out = out.replaceAll(_alefVariants, 'ا');
   out = out.replaceAll('ى', 'ي'); // ى (alef maksura) -> ي
   return out;
@@ -78,7 +91,7 @@ String normalizeArabic(String s) {
 /// [normalizeArabic]'s doc for the full explanation. Search call sites
 /// should try a query against both variants, not just one.
 String normalizeArabicLoose(String s) {
-  var out = s.replaceAll(_arabicDiacritics, '');
+  var out = composeHamza(s).replaceAll(_arabicDiacritics, '');
   out = out.replaceAll('ٰ', ''); // dagger alif: dropped, not expanded
   out = out.replaceAll(_alefVariantsNoDagger, 'ا');
   out = out.replaceAll('ى', 'ي');

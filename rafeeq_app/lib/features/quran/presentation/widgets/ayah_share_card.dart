@@ -116,7 +116,7 @@ class _AyahShareCard extends StatelessWidget {
             textAlign: TextAlign.center,
             textDirection: TextDirection.rtl,
             style: const TextStyle(
-              fontFamily: 'AmiriQuran',
+              fontFamily: 'KFGQPCHafs',
               fontSize: 30,
               height: 1.9,
               color: AppColors.textHigh,

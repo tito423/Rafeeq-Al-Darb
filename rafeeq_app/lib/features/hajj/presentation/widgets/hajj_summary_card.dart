@@ -144,7 +144,7 @@ class _Line extends ConsumerWidget {
                 text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'AmiriQuran',
+                  fontFamily: 'KFGQPCHafs',
                   fontSize: 19 * k,
                   height: 2,
                 ),

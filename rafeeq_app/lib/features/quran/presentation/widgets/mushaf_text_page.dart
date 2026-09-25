@@ -414,7 +414,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     final playingIndex = _playingIndex;
 
     final textStyle = TextStyle(
-      fontFamily: 'AmiriQuran',
+      fontFamily: 'KFGQPCHafs',
       fontSize: baseFont,
       // Tighter leading in the reading layout, which is most of why the
       // reference page fits noticeably more of the surah on one screen.

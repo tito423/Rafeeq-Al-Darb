@@ -51,11 +51,31 @@ int _basmalaEnd(int surahId, int ayahNumber, String text) {
   return end;
 }
 
-/// The basmala that opens [ayah], exactly as the source writes it, or null
-/// when this verse does not carry one.
+/// Al-Fatiha 1:1 as the King Fahd Complex text writes it - the basmala
+/// every other surah but at-Tawbah opens with.
+///
+/// Since 2026-09-25 the ayah text is the Complex's (hafsData v18,
+/// scripts/build_quran_text_kfgqpc.py), which - like the printed Madinah
+/// mushaf - does not weld the basmala into verse 1 of each surah; Tanzil,
+/// the previous source, did. The line under each banner is the source's
+/// own 1:1, copied here codepoint by codepoint from the database.
+const String kBasmala =
+    '\u{628}\u{650}\u{633}\u{6E1}\u{645}\u{650} '
+    '\u{671}\u{644}\u{644}\u{651}\u{64E}\u{647}\u{650} '
+    '\u{671}\u{644}\u{631}\u{651}\u{64E}\u{62D}\u{6E1}\u{645}\u{64E}\u{670}\u{646}\u{650} '
+    '\u{671}\u{644}\u{631}\u{651}\u{64E}\u{62D}\u{650}\u{64A}\u{645}\u{650}';
+
+/// The basmala that opens [ayah]'s surah, or null when this verse is not
+/// the first of a surah that has one. Taken from the verse itself when the
+/// source writes it there, otherwise [kBasmala].
 String? basmalaOf(Ayah ayah) {
+  if (ayah.ayahNumber != 1 ||
+      ayah.surahId == kAlFatiha ||
+      ayah.surahId == kAtTawbah) {
+    return null;
+  }
   final end = _basmalaEnd(ayah.surahId, ayah.ayahNumber, ayah.textUthmani);
-  return end < 0 ? null : ayah.textUthmani.substring(0, end);
+  return end < 0 ? kBasmala : ayah.textUthmani.substring(0, end);
 }
 
 /// [ayah]'s own text with any leading basmala taken off — the verse as it

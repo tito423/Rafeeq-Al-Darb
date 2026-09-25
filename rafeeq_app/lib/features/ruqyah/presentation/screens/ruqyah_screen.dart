@@ -332,7 +332,7 @@ class _AyahLine extends StatelessWidget {
               color: scheme.onSurface,
               fontSize: 19,
               height: 1.95,
-              fontFamily: 'AmiriQuran',
+              fontFamily: 'KFGQPCHafs',
             ),
           ),
           const SizedBox(height: 4),

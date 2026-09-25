@@ -149,7 +149,7 @@ class ListenCardState extends ConsumerState<ListenCard>
             ArabicText(
               ayah.textUthmani,
               style: const TextStyle(
-                fontFamily: 'AmiriQuran',
+                fontFamily: 'KFGQPCHafs',
                 fontSize: 18,
                 height: 2.0,
               ),

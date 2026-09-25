@@ -12,23 +12,17 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
-OWNER ORDER 17:40: finish ALL plan items, test on the emulator, then PUBLISH
-the release (he asked for it). Order of work now:
-A. TEXT MUSHAF SOURCE - owner must choose (asked 18:05): our quran_local.db
-   text_uthmani = Tanzil Uthmani 1.0.x (== alquran.cloud quran-uthmani).
-   It carries 6,643 legacy tanween+small-meem markers (U+06E2/U+06ED) that
-   Amiri Quran draws as a literal iqlab meem (owner saw it on 18:31 عدنٍۢ),
-   plus 5 real text errors vs the King Fahd (QPC) text: 12:39, 12:41
-   يَٰصَىٰحِبَىِ (extra ى), 2:181 8:6 13:37 بَعْدَمَا joined. Tanzil 1.1
-   (tanzil.net, downloaded 17:56) fixes all of those; still differs from
-   QPC in 3 word-joins (15:7 لوما, 27:20 مالي, 36:22 ومالي) and shows plain
-   tanween where the paper shows staggered. QPC text needs the QPC font,
-   whose licence forbids reproduction without written approval.
-B. ANR (ayah-by-ayah download) - FIXED IN CODE, NOT BUILT/SEEN: backlog +
-   window of 12 in ayah_recitation_library.dart; set-based counts; files
-   notification has no x/y and no bar; onboarding tile reads the library.
-C. Then plan items 2.. in order + owner's 17:56 ask: special surahs and
-   Sunnah-of-surahs screens get the mushaf theme choices (light/warm/night).
+Owner (18:10): «هات المصدر الأوثق وحط عليه كل اللي عملناه» after asking if a
+trusted free source exists. DONE IN CODE, NOT BUILT/SEEN: ayah text = KFGQPC
+hafsData v18 (two copies identical 6236/6236), font KFGQPCHafs (licence:
+free use/copy/distribute, unmodified), basmala line = 1:1 (kBasmala), DB
+stamp quran-v2-kfgqpc, search hamza compose + U+06E1 sukun mapping,
+Sources + CONTENT-LICENSES. 591 pass. ALSO NOT SEEN: the ayah-download ANR fix.
+NEXT: build (emulator OFF), install, SEE: text mushaf al-Kahf 18:31 (no
+meem), 12:39 (no extra ى), a surah head with the basmala line, search
+«امرئ» and «عدن», tap «تلاوة آية بآية» and measure main-thread CPU.
+Then plan items 2.. + mushaf themes for special surahs/sunan (owner 17:56),
+then RELEASE (owner asked 17:40).
 
 (History below.)
 After the release: nothing ordered. Still open (need the owner or a fresh
@@ -402,6 +396,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 18:17 - Ayah text: King Fahd Complex hafs v18 + its font (replaces Tanzil 1.0: false iqlab meems, 5 text errors); not built
+- 2026-09-25 18:40 - Text mushaf moved to the King Fahd Complex text+font (code+data, 591 pass, not built).
 - 2026-09-25 17:59 - Ayah download ANR: feed the plugin queue 12 at a time, set-based counts (not built); text mushaf source audit
 - 2026-09-25 18:05 - ANR PROVEN: tap «تلاوة آية بآية» -> main thread ~50% busy for ever on emulator-5554 (/proc task stat, 50 ticks/s); MemoryTaskQueue.getNextTask = 7.7 ms per call with 6,236 waiting (bench), twice per finished ayah. Fix in code (backlog+window 12), 589 pass. Text mushaf audit: see Next step A.
 - 2026-09-25 17:23 - Stage 1 item 1 SEEN on emulator: back leaves screens whose card started open; library shows one app bar

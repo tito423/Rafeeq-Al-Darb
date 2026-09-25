@@ -289,6 +289,33 @@ evening — 11 filtered, 1 removed. See the correction box above.**
 | api.alquran.cloud | **45** translations | **`STATED_LICENCE` — resolved 2026-09-17, see below** |
 | quranpedia / quran-svg | the `hafs_kfqc` SVG glyph layer | **`NEEDS_REVIEW`** |
 
+### The ayah text and its font — replaced 2026-09-25
+
+**Correction to the row above:** the bundled `quran_local.db` text was NOT
+quran.com's. It was Tanzil Uthmani 1.0.x, byte-identical to
+api.alquran.cloud's `quran-uthmani` (checked 2026-09-25, 18:31 compared
+codepoint by codepoint). Against the King Fahd Complex (KFGQPC) text it
+carried 6,643 legacy tanween+small-meem pairs (drawn by Amiri Quran as a
+false iqlab meem — the owner's 18:31 «عدنٍ») and 5 real differences: 12:39,
+12:41 «يَٰصَىٰحِبَىِ» (an extra ى), 2:181, 8:6, 13:37 «بَعْدَمَا» joined.
+
+Now: **KFGQPC hafsData v18** (the Complex's developer text of the Madinah
+printing), written verbatim by `scripts/build_quran_text_kfgqpc.py`, which
+refuses to write unless two independent copies agree on all 6,236 ayahs
+(a pinned public mirror of the Complex package, and quran.com's
+`qpc_hafs`) — they did, 6,236 of 6,236.
+
+Drawn with **KFGQPC HAFS Uthmanic Script v0.18**, bundled unmodified as
+`assets/fonts/KFGQPC-HAFS-Uthmanic-Script-v18.ttf` (sha256 a0636e68…cbec3a).
+Its licence, read from the font's own name table (IDs 0, 13) and shipped
+beside it as `assets/fonts/KFGQPC-HAFS-LICENSE.txt`: «Permission is hereby
+granted, Free of Cost … the rights to Use, Copy, Distribute», on condition
+the font is not sold, modified, altered, translated, reverse engineered.
+`STATED_LICENCE` for a free app that ships the file unchanged. The
+Complex's site (fonts.qurancomplex.gov.sa) refused connections from this
+machine on 2026-09-25 (ECONNREFUSED), so the file came from the mirror; the
+licence text inside it is the Complex's own.
+
 ### The translations — settled, and three corrections to this document
 
 An earlier draft of this file called the translations «the clearest unexamined

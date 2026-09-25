@@ -54,7 +54,7 @@ class AyahPanel extends ConsumerWidget {
               textAlign: TextAlign.center,
               textDirection: TextDirection.rtl,
               style: theme.textTheme.titleLarge?.copyWith(
-                fontFamily: 'AmiriQuran',
+                fontFamily: 'KFGQPCHafs',
                 height: 2.0,
               ),
             ),

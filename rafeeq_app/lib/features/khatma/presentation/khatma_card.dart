@@ -266,7 +266,7 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
           ArabicText(
             ayahOpening(range.start.textUthmani),
             style: const TextStyle(
-              fontFamily: 'AmiriQuran',
+              fontFamily: 'KFGQPCHafs',
               fontSize: 17,
               height: 1.6,
             ),

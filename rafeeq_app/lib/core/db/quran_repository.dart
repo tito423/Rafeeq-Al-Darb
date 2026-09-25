@@ -305,6 +305,6 @@ class QuranRepository {
 
 final quranRepositoryProvider = FutureProvider<QuranRepository>((ref) async {
   final db = await DbHelper.instance.openBundled('data/quran_local.db',
-      stamp: 'quran-v1');
+      stamp: 'quran-v2-kfgqpc');
   return QuranRepository(db);
 });

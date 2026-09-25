@@ -189,11 +189,20 @@ flutter:
     # depends on a network round-trip, honoring the offline-first rule the
     # same way AmiriQuran already does for the Quran text itself.
     - assets/fonts/google_fonts/
+    # Ships with the KFGQPC font it licenses ("accompanying this license").
+    - assets/fonts/KFGQPC-HAFS-LICENSE.txt
 
   fonts:
     - family: AmiriQuran
       fonts:
         - asset: assets/fonts/AmiriQuran-Regular.ttf
+    # The King Fahd Complex's own face for its own Hafs text (the ayah
+    # source since 2026-09-25). Bundled unmodified, as its licence requires
+    # (assets/fonts/KFGQPC-HAFS-LICENSE.txt: free to use, copy, distribute;
+    # no sale, no modification).
+    - family: KFGQPCHafs
+      fonts:
+        - asset: assets/fonts/KFGQPC-HAFS-Uthmanic-Script-v18.ttf
 
 flutter_launcher_icons:
   android: true

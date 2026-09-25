@@ -57,8 +57,21 @@ class QuranWord {
 /// The harakat (U+064B–U+065F) are deliberately not here.
 final RegExp _annotationMarks = RegExp('[ؐ-ؚۖ-ۭـ]');
 
-String normalizeKeepHarakat(String s) =>
-    s.replaceAll(_annotationMarks, '').replaceAll('ٱ', 'ا');
+/// The King Fahd Complex text writes the sukun as U+06E1 (the small head
+/// of khah the Madinah mushaf prints) and the staggered tanween of idgham
+/// and ikhfa as U+065E / U+0657 / U+0656. A reader types U+0652 and the
+/// plain tanween, and U+06E1 sits inside [_annotationMarks], so without
+/// this every sukun vanished from the index and «بالتشكيل» matched
+/// nothing that had one. Search-side only; the ayah is never rewritten.
+String _qpcHarakat(String s) => s
+    .replaceAll('\u06E1', '\u0652')
+    .replaceAll('\u065e', '\u064b')
+    .replaceAll('\u0657', '\u064C')
+    .replaceAll('\u0656', '\u064D');
+
+String normalizeKeepHarakat(String s) => _qpcHarakat(composeHamza(s))
+    .replaceAll(_annotationMarks, '')
+    .replaceAll('ٱ', 'ا');
 
 bool _wholeWord(String word, String needle) =>
     word == needle || arabicProclitics.any((p) => word == '$p$needle');

@@ -212,4 +212,19 @@ void main() {
       expect(basmalaOf(_ayah(9, 1, texts[9]!)), isNull);
     });
   });
+
+  // The King Fahd Complex text (2026-09-25) does not carry the basmala in
+  // verse 1: the line under the banner is 1:1's text, and the verse stays
+  // whole.
+  test('KFGQPC 2:1 - no basmala in the verse: the line is 1:1, the verse is whole', () {
+    final a = _ayah(2, 1, '\u{627}\u{644}\u{653}\u{645}\u{653}');
+    expect(basmalaOf(a), kBasmala);
+    expect(bodyOf(a), a.textUthmani);
+  });
+
+  test('KFGQPC 9:1, 1:1 and a non-first verse - no basmala line', () {
+    expect(basmalaOf(_ayah(9, 1, '\u{628}\u{64E}\u{631}\u{64E}\u{622}\u{621}\u{64E}\u{629}')), isNull);
+    expect(basmalaOf(_ayah(1, 1, kBasmala)), isNull);
+    expect(basmalaOf(_ayah(2, 2, '\u{630}\u{64E}\u{670}\u{644}\u{650}\u{643}\u{64E}')), isNull);
+  });
 }

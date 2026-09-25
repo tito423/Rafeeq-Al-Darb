@@ -26,6 +26,11 @@ final sourceGroups = <(String, List<SourceEntry>)>[
   (
     'about.src_quran',
     [
+      // The ayah text and the font it is drawn in, since 2026-09-25
+      // (scripts/build_quran_text_kfgqpc.py; licence in
+      // assets/fonts/KFGQPC-HAFS-LICENSE.txt).
+      SourceEntry('مجمع الملك فهد لطباعة المصحف الشريف',
+          'https://qurancomplex.gov.sa', 'about.src_kfgqpc'),
       SourceEntry('quran.com', 'https://quran.com', 'about.src_qurancom'),
       SourceEntry('api.alquran.cloud', 'https://alquran.cloud',
           'about.src_alquran'),
