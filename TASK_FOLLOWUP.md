@@ -12,6 +12,14 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 10:25 (owner: release now, 1 hour, his phone
+AB3S6R4C04016607 BRP-NX1 Android 12 connected - KEEP IT SILENT, people
+asleep). Bumped 3.63.0+65 (pubspec + AboutScreen), analyze clean,
+build_github_release.bat running. Then: install over old build on the
+phone (volume muted), check Support + About 3.63.0, location off->on
+path (old item 2); delete v3.62.0+tag, gh release create v3.63.0
+--target master with scratchpad notes, verify tag == HEAD.
+
 SESSION 2026-09-25 ~05:15: owner orders A (contrast, 3 themes) and B
 (manual location, bundled list) DONE and SEEN on build 15 = master.
 Reported to the owner. NOT released - 3.63.0 only if he asks (bump
