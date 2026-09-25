@@ -279,8 +279,13 @@ Future<void> _adoptBundledCopy() async {
   if (!File(dbPath).existsSync() || version.existsSync()) return;
   if (!legacy.existsSync()) return;
   if (legacy.readAsStringSync().trim() != _bundledStamp) return;
-  await version.writeAsString(AppConfig.sciencesDbVersion, flush: true);
+  // The bundled copy IS the v1 content - stamp it v1, not the current
+  // version: from v2 on, stamping it current would pass an old database with
+  // no i'rab tables as up to date, and the reader would never be offered v2.
+  await version.writeAsString(_bundledCopyVersion, flush: true);
 }
+
+const _bundledCopyVersion = 'v1';
 
 /// Null until the sciences pack has been downloaded - see above.
 ///

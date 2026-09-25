@@ -165,20 +165,26 @@ abstract final class AppConfig {
   /// The archive is named after the database it becomes — trap #27:
   /// `DownloadManager._unzipToDatabases` writes `basename(zip) + '.db'` and
   /// ignores the entry's own name.
+  ///
+  /// v2 sits under its own key (2026-09-26): 3.63.7 and older still fetch
+  /// `sciences/quran_sciences.zip` and read the Corpus `word_grammar` table
+  /// this pack no longer has.
   static const String sciencesDbUrl =
-      '$contentBaseUrl/sciences/quran_sciences.zip';
+      '$contentBaseUrl/sciences/v2/quran_sciences.zip';
 
-  /// Measured with `head_object` against the bucket on 2026-09-20, and
+  /// Measured with `head_object` against the bucket on 2026-09-26 (v2), and
   /// range-checked over the public endpoint — not estimated. Re-measure
   /// whenever `scripts/upload_sciences_pack.py` runs again.
-  static const int sciencesDbBytes = 33239511;
+  static const int sciencesDbBytes = 32146462;
 
   /// Same contract as [hadithDbVersion]: stamped beside the extracted file,
   /// and `DbHelper.openDownloaded` treats any other stamp as "not
   /// downloaded". v1 is the `sciences-v9` content that shipped bundled up to
   /// 3.44.0, so an install that already holds that copy adopts it instead of
   /// fetching 32 MB again (see `_adoptBundledCopy`).
-  static const String sciencesDbVersion = 'v1';
+  /// v2 (2026-09-26): al-Da'as's i'rab (`irab_daas`, `irab_daas_refs`)
+  /// replaces the Corpus `word_grammar`; a v1 copy is re-fetched.
+  static const String sciencesDbVersion = 'v2';
 
   static const String hadithDbUrl = '$contentBaseUrl/hadith/hadith.zip';
 

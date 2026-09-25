@@ -28,7 +28,11 @@ sys.path.insert(0, 'scripts')
 from r2_common import r2_client  # noqa: E402
 
 BUCKET = 'rafeeq-content'
-KEY = 'sciences/quran_sciences.zip'
+# v2 (2026-09-26, al-Da'as i'rab, no word_grammar) goes under its OWN key:
+# the published 3.63.7 still fetches sciences/quran_sciences.zip and reads
+# word_grammar, so overwriting that object would break its i'rab tab. The
+# zip keeps its basename - trap #27, the app names the .db after it.
+KEY = 'sciences/v2/quran_sciences.zip'
 PUBLIC = ('https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/' + KEY)
 SRC = os.path.join('rafeeq_app', 'assets', 'data', 'quran_sciences.db')
 ZIP = os.path.join('build', 'quran_sciences.zip')

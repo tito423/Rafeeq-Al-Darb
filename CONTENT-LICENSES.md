@@ -316,6 +316,23 @@ Complex's site (fonts.qurancomplex.gov.sa) refused connections from this
 machine on 2026-09-25 (ECONNREFUSED), so the file came from the mirror; the
 licence text inside it is the Complex's own.
 
+### The i'rab — «إعراب القرآن الكريم» للدعاس وحميدان والقاسم (2026-09-26)
+
+Replaces the Quranic Arabic Corpus word labels (`word_grammar`, dropped on
+the owner's «لو منتش متأكد مليون المية متحطهومش», 2026-09-25).
+
+| | |
+|---|---|
+| Work | «إعراب القرآن الكريم» |
+| Authors | أحمد عبيد الدعاس، أحمد محمد حميدان، إسماعيل محمود القاسم — **modern** authors |
+| Edition | دار النمير (دمشق) ودار الفارابي، الطبعة الأولى ١٤٢٥ هـ / ٢٠٠٤ م — read off the printed title and copyright pages (Shamela's card says «دار المنير»; the print wins) |
+| Copyright page | «جميع الحقوق محفوظة … إلا بإذن خطي من الناشرين» |
+| Source | Shamela 23584 (fetched 2026-09-25), 3,639 sections |
+| Checked against | the printed edition (archive.org `i3rb-krn-d3s`, 3 vols, used to VERIFY, not rehosted): 54,434 eight-word chunks; the 27 sections Shamela damaged transcribed from the print by eye (`scripts/irab_daas_print_transcriptions.json`) |
+| Changed | 6 Qur'an quotes corrected to the mushaf, each seen on the Madinah page and the print (`scripts/irab_daas_quran_corrections.json`, evidence in `scripts/evidence/`); nothing else in the authors' text |
+| Shipped | `irab_daas`, `irab_daas_refs` in `quran_sciences.db`, R2 `sciences/v2/quran_sciences.zip` (32,146,462 B) + GitHub `content-mirror` |
+| Rights | **Not cleared.** Shamela text, shipped on the owner's Shamela ruling (2026-09-22, below) and his choice of this book (2026-09-25). Credited on the Sources screen and in the tab's header. |
+
 ### The translations — settled, and three corrections to this document
 
 An earlier draft of this file called the translations «the clearest unexamined
