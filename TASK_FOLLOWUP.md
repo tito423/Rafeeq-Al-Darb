@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:14 - Daas: 21 of 27 transcribed from the print (+30:47)
+- 2026-09-26 00:14 - Daas print: 21 of 27 (+30:47 vol3 20, 0 new; print quotes «فجاؤوهم», kept the KSU diacritised quote form per method). Next: 37:168 (vol3 117).
 - 2026-09-26 00:14 - Daas: 20 of 27 transcribed from the print (+27:44)
 - 2026-09-26 00:14 - Daas print: 20 of 27 (+27:44 vol2 408). Next: 30:47 (vol3 20).
 - 2026-09-26 00:13 - Daas: 19 of 27 transcribed from the print (+26:10, 26:15)

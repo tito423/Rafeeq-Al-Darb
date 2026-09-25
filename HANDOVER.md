@@ -2503,7 +2503,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-09-26 00:14 — IN PROGRESS — resume here**
 
-Daas: 20 of 27 transcribed from the print (+27:44)
+Daas: 21 of 27 transcribed from the print (+30:47)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
