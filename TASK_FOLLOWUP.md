@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:11 - Daas: 15 of 27 transcribed from the print (+18:47)
+- 2026-09-26 00:11 - Daas print: 15 of 27 (+18:47-48 vol2 220-221, 161 words; 2 new «وعرضوا», بجئتمونا - both on the print). Next: 20:91 (vol2 269-270).
 - 2026-09-26 00:10 - Daas: 14 of 27 transcribed from the print (+16:32)
 - 2026-09-26 00:10 - Daas print: 14 of 27 (+16:32-33 vol2 157-158, 175 words; 1 new «ينظرون» = print, KSU «تنظرون» wrong). Next: 18:47 (vol2 220-221).
 - 2026-09-26 00:09 - Daas: 13 of 27 transcribed from the print (+12:86)
