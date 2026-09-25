@@ -1,6 +1,6 @@
+import 'mushaf/ayah_marker.dart';
 import 'mushaf/ayah_wash_painter.dart';
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
@@ -694,142 +694,6 @@ class _ListItem {
   );
 }
 
-// ─── Ayah marker (rosette) ─────────────────────────────────────────────────
-
-/// The end-of-ayah ornament: a small rosette carrying the Arabic-Indic ayah
-/// number.
-class _AyahMarker extends StatelessWidget {
-  final int number;
-  final bool playing;
-  final MushafTheme mt;
-
-  /// Draw the marker as a filled disc instead of the open rosette — the
-  /// reading layout's one piece of ornament, kept because a verse still has
-  /// to end somewhere visible.
-  final bool bare;
-
-  const _AyahMarker({
-    required this.number,
-    required this.mt,
-    this.playing = false,
-    this.bare = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final gold = mt.gold;
-    final size = bare ? 26.0 : 32.0;
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          if (bare)
-            // A filled disc rather than the open rosette: it reads as a full
-            // stop at a glance and takes less of the line, which is the
-            // difference the owner pointed at in the app he reads in.
-            DecoratedBox(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: gold.withValues(alpha: playing ? 1.0 : 0.88),
-              ),
-              child: SizedBox(width: size, height: size),
-            )
-          else
-            CustomPaint(
-              size: Size(size, size),
-              painter: _RosettePainter(
-                color: gold.withValues(alpha: playing ? 1.0 : 0.85),
-              ),
-            ),
-          // «صغر الارقام … وخليها في النص بالظبط». Two faults: the size was
-          // measured against the whole box while a rosette's points stick out
-          // past its usable middle, and `height: 1.0` alone does not centre a
-          // glyph - the font's ascent and descent still pad the line box and
-          // Arabic-Indic digits sit low in it. See `_numberScale` below.
-          Text(
-            _arabicNumber(number),
-            textHeightBehavior: const TextHeightBehavior(
-              applyHeightToFirstAscent: false,
-              applyHeightToLastDescent: false,
-              leadingDistribution: TextLeadingDistribution.even,
-            ),
-            style: TextStyle(
-              fontSize: size * _numberScale(bare, number),
-              // On the disc the number sits ON the gold, so it takes the
-              // paper's colour; the rosette is an outline and the number
-              // stays gold inside it.
-              color: bare ? mt.paper : gold,
-              fontWeight: FontWeight.w700,
-              height: 1.0,
-              leadingDistribution: TextLeadingDistribution.even,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// How much of the marker's box the number may take.
-  ///
-  /// The open rosette keeps less room than the filled disc, and every extra
-  /// digit needs the glyphs to come down again so «٢٨٦» sits inside the same
-  /// ornament «٧» does.
-  static double _numberScale(bool bare, int number) {
-    final digits = number < 10 ? 1 : (number < 100 ? 2 : 3);
-    final base = bare ? 0.36 : 0.32;
-    return switch (digits) {
-      1 => base,
-      2 => base * 0.88,
-      _ => base * 0.74,
-    };
-  }
-
-  static String _arabicNumber(int n) {
-    const digits =
-        '\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669';
-    return n.toString().split('').map((c) => digits[int.parse(c)]).join();
-  }
-}
-
-/// An 8-point rosette (two overlapped squares).
-class _RosettePainter extends CustomPainter {
-  final Color color;
-  const _RosettePainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.06
-      ..color = color;
-    final c = size.center(Offset.zero);
-    final r = size.width * 0.46;
-    canvas.drawPath(_star(c, r, 0), paint);
-    canvas.drawPath(_star(c, r, 45), paint);
-  }
-
-  Path _star(Offset c, double r, double rotationDeg) {
-    final path = Path();
-    final rad = rotationDeg * math.pi / 180;
-    for (var i = 0; i < 4; i++) {
-      final a = rad + i * math.pi / 2;
-      final p = Offset(c.dx + r * math.cos(a), c.dy + r * math.sin(a));
-      if (i == 0) {
-        path.moveTo(p.dx, p.dy);
-      } else {
-        path.lineTo(p.dx, p.dy);
-      }
-    }
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldRepaint(covariant _RosettePainter old) => old.color != color;
-}
-
 // ─── Flowing verses ────────────────────────────────────────────────────────
 
 /// One contiguous run of a surah's verses, set as a single justified paragraph
@@ -923,6 +787,8 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
   Widget build(BuildContext context) {
     final spans = <InlineSpan>[];
     final ranges = <(int, int, int)>[];
+    final markers = <FlowingMarker>[];
+    final side = AyahMarker.sizeFor(bare: widget.bare);
     var offset = 0;
 
     for (var i = widget.from; i <= widget.to; i++) {
@@ -942,18 +808,13 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
       ranges.add((offset, offset + text.length, i));
       offset += text.length;
 
+      // Room only - the marker is painted by `FlowingMarkersPainter` at this
+      // placeholder's own text position (see there for why).
+      markers.add((offset: offset, number: ayah.ayahNumber, playing: isPlaying));
       spans.add(
         WidgetSpan(
           alignment: PlaceholderAlignment.middle,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: _AyahMarker(
-              number: ayah.ayahNumber,
-              playing: isPlaying,
-              mt: widget.mt,
-              bare: widget.bare,
-            ),
-          ),
+          child: SizedBox(width: side + 4, height: side),
         ),
       );
       offset += 1; // a WidgetSpan occupies one placeholder character
@@ -975,6 +836,13 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
             for (final r in ranges)
               if (r.$3 == widget.playingIndex) (r.$1, r.$2 - 1),
           ].firstOrNull,
+        ),
+        foregroundPainter: FlowingMarkersPainter(
+          textKey: _textKey,
+          markers: markers,
+          mt: widget.mt,
+          bare: widget.bare,
+          baseStyle: DefaultTextStyle.of(context).style,
         ),
         child: Text.rich(
           TextSpan(children: spans),

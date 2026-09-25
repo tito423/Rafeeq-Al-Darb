@@ -86,7 +86,7 @@ class _AyahRow extends StatelessWidget {
                       right: 4,
                       bottom: 4,
                     ),
-                    child: _AyahMarker(
+                    child: AyahMarker(
                       number: ayah.ayahNumber,
                       playing: isPlaying,
                       mt: mt,
