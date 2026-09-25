@@ -24,7 +24,7 @@ OWNER 20:20 DECISION (i'rab): source = «إعراب القرآن الكريم» 
 pages by hand, parser, hand-check a sample, show owner, then replace.
 Corpus root/lemma only after a cross-check against an independent source
 with zero disagreements - else removed.
-DONE (1) tour seen 20:17. NEXT (2) i'rab (OLD plan, superseded by Daas): py -3 scripts/upload_sciences_pack.py, update sciencesDbBytes,
+DONE (1) tour seen 20:17. NOW: Daas crawl + diff (see log 20:45); next = parse e-quran pages, normalise, diff vs Shamela sections, damaged -> check printed PDF, then report to owner BEFORE any app change. NEXT (2) i'rab (OLD plan, superseded by Daas): py -3 scripts/upload_sciences_pack.py, update sciencesDbBytes,
 bump sciencesDbVersion v2, see the sheet for 2:5 on the emulator.
 
 (Older) Owner (18:10): «هات المصدر الأوثق وحط عليه كل اللي عملناه» after asking if a
@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 20:23 - Daas i'rab: Shamela crawled and cut into 3,639 sections (full coverage); damage found; second copy crawling
+- 2026-09-25 20:45 - Daas i'rab: Shamela 23584 crawled (1399 pages, scripts/shamela_raw/irab_daas.jsonl); parse_irab_daas.py -> 3,639 book sections covering all 6,236 ayahs exactly once (0 gaps, 0 overlaps vs quran_local.db). FOUND: Shamela copy damaged (first letter of «» dropped, lines shuffled) in >= 58 sections / 124 ayahs (unbalanced «»); tafsir.app serves the SAME damaged text (not independent). Second copy: e-quran.com slug eerab (= KSU Ayat slug), clean at 4:172; crawling all 6,236 pages (fetch_irab_daas_equran.py) to diff section by section. Also found: word_grammar (corpus) has 6,122 ayahs, not 6,236.
 - 2026-09-25 20:16 - Tour pictures seen on the emulator (quick 7/7, full 27/27); owner chose the Daas i'rab
 - 2026-09-25 20:17 - Tour pictures SEEN on emulator (signed build 20:11, lastUpdateTime 20:11:28): quick tour 7/7 in ur->ar switch, full tour 27/27 in ar - every stop shows its webp picture, frame on the named element, no stop blank. Picture state is the capture device's (Cairo, 07:51, hifz list with plans). Owner chose Daas for i'rab (20:20).
 - 2026-09-25 20:06 - Tour pictures recaptured in 7 languages (32 each) committed and listed in pubspec; i'rab label rewrite scripts added

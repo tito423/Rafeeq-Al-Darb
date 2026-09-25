@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 20:16 — IN PROGRESS — resume here**
+**2026-09-25 20:23 — IN PROGRESS — resume here**
 
-Tour pictures seen on the emulator (quick 7/7, full 27/27); owner chose the Daas i'rab
+Daas i'rab: Shamela crawled and cut into 3,639 sections (full coverage); damage found; second copy crawling
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
