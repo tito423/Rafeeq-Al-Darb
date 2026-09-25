@@ -15,7 +15,8 @@ Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 SESSION 2026-09-25 10:25 (owner: release now, 1 hour, his phone
 AB3S6R4C04016607 BRP-NX1 Android 12 connected - KEEP IT SILENT, people
 asleep). Bumped 3.63.0+65 (pubspec + AboutScreen), analyze clean,
-build_github_release.bat running. Then: install over old build on the
+DONE 10:33: v3.63.0 published + verified, v3.62.0 deleted. NOW: phone
+checks (About, manual location Tanta, back to automatic). Was: install over old build on the
 phone (volume muted), check Support + About 3.63.0, location off->on
 path (old item 2); delete v3.62.0+tag, gh release create v3.63.0
 --target master with scratchpad notes, verify tag == HEAD.
@@ -358,6 +359,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 10:33 - v3.63.0 published and verified (tag == HEAD, asset digest = local); v3.62.0 deleted; installed on owner's phone
+- 2026-09-25 10:33 - v3.63.0 PUBLISHED (tag == HEAD 6145c3c9, asset sha256 673d5353 = local file), v3.62.0 + tag deleted; installed on owner's phone BRP-NX1 over the old build: onboarding, location + notification grant, Home Dubai times, Support button seen
 - 2026-09-25 05:15 - build 15: last contrast fixes seen (player/tajweed/hadith clean, chip fixed, RGB player+theme clean); HANDOVER updated
 - 2026-09-25 04:55 - 21 more gold icons + player tab + chip icon fixed (28eba2c7, unbuilt); Fajr adhan seen firing on time on build 14
 - 2026-09-25 04:15 - dark clean; RGB filled buttons white-on-cyan 1.67:1 fixed via measured onPrimary (unbuilt)
