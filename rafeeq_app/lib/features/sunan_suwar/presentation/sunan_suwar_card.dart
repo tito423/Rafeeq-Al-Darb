@@ -7,6 +7,7 @@ import '../../quran/data/mushaf_data_provider.dart';
 import '../data/sunan_suwar_catalog.dart';
 import '../data/sunan_suwar_store.dart';
 import 'single_surah_screen.dart';
+import '../../../core/widgets/fitted_sheet.dart';
 
 const _weekdayKeys = {
   1: 'sunan_suwar.mon',
@@ -71,7 +72,7 @@ Future<void> pickSunanReminder(
   String label,
   SunanReminder? existing,
 ) async {
-  await showModalBottomSheet<void>(
+  await showFittedSheet<void>(
     context: context,
     builder: (_) => SunanReminderSheet(
       surahId: surahId,

@@ -13,11 +13,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../data/reader_name_provider.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 
 Future<void> showReaderNameSheet(BuildContext context) {
-  return showModalBottomSheet<void>(
+  return showFittedSheet<void>(
     context: context,
-    isScrollControlled: true,
     showDragHandle: true,
     builder: (_) => const _ReaderNameSheet(),
   );

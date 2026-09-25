@@ -1,6 +1,8 @@
 import '../../../more/presentation/widgets/sign_in_offer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/widgets/headed_list_layout.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/rafeeq_app.dart' show sharedPrefsProvider;
@@ -11,7 +13,8 @@ import '../../../downloads/presentation/widgets/mushaf_download_tile.dart'
     show MushafDownloadTile;
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/onboarding_state.dart';
-import '../../../home/data/prayer_controller.dart' show prayerControllerProvider;
+import '../../../home/data/prayer_controller.dart'
+    show prayerControllerProvider;
 import '../../../../core/config/app_config.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/download_manager.dart';
@@ -22,7 +25,6 @@ import '../../../library/data/tts/open_voice.dart';
 import '../../data/offline_pack_sizes.dart';
 import '../widgets/content_pack_tile.dart';
 import '../widgets/offline_pack_tiles.dart';
-
 
 /// P3‑21: first-run onboarding — structured like the reference video's own
 /// mushaf-choice screen (a heading, a description, a prominent download
@@ -96,11 +98,11 @@ class OnboardingScreen extends ConsumerWidget {
     final total = sizes == null || ayahBytes == null || surahBytes == null
         ? null
         : sizes.mushaf +
-            AppConfig.sciencesDbBytes +
-            ayahBytes +
-            surahBytes +
-            tasmeeDownloadBytes +
-            OpenVoice.totalBytes;
+              AppConfig.sciencesDbBytes +
+              ayahBytes +
+              surahBytes +
+              tasmeeDownloadBytes +
+              OpenVoice.totalBytes;
 
     // THE APP'S OWN THEME, not a hard-coded night. This screen used to set
     // `AppColors.night` and night text colours outright, so on a fresh
@@ -111,178 +113,180 @@ class OnboardingScreen extends ConsumerWidget {
     // page wears whatever was chosen.
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.download_for_offline_rounded,
-                        color: goldText(context),
-                        size: 26,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'onboarding.title'.tr(),
-                          style: TextStyle(
-                            fontFamily: 'AmiriQuran',
-                            fontSize: 24,
-                            color: scheme.onSurface,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'onboarding.subtitle'.tr(),
-                    style: TextStyle(
-                      color: scheme.onSurfaceVariant,
-                      fontSize: 13,
+        child: HeadedListLayout(
+          header: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.download_for_offline_rounded,
+                      color: goldText(context),
+                      size: 26,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-                children: [
-                  // THE LANGUAGE IS NOT HERE ANY MORE.
-                  //
-                  // It moved to `PermissionsIntroScreen`, the page BEFORE
-                  // this one, because that page was asking for five
-                  // permissions in whatever language the phone happened to
-                  // be set to. Leaving a copy here put the same chooser on
-                  // two screens in a row - «اللغة اتكررت في شاشة الاذونات
-                  // وشاشة تحميل المصحف».
-                  const SizedBox(height: 18),
-                  if (sizes != null)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                    const SizedBox(width: 10),
+                    Expanded(
                       child: Text(
-                        trn('onboarding.mushaf_size',
-                            args: [formatBytes(sizes.mushaf)]),
+                        'onboarding.title'.tr(),
                         style: TextStyle(
-                          color: scheme.onSurfaceVariant,
-                          fontSize: 12,
+                          fontFamily: 'AmiriQuran',
+                          fontSize: 24,
+                          color: scheme.onSurface,
                         ),
                       ),
                     ),
-                  editions.when(
-                    loading: () => const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24),
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                    error: (_, _) => ErrorRetry(
-                      onRetry: () => ref.invalidate(mushafEditionsProvider),
-                    ),
-                    data: (list) => Column(
-                      children: [
-                        for (final e in list) ...[
-                          _SelectableEdition(
-                            edition: e,
-                            selected: e.id == selectedEdition,
-                            onSelect: () => ref
-                                .read(selectedMushafEditionProvider.notifier)
-                                .select(e.id),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  // EVERYTHING ELSE THAT CAN BE DOWNLOADED, HERE.
-                  //
-                  // «والاوبشنز اللي ممكن يحملها المستخدم في نفس الصفحة بدل
-                  // مايتفاجأ بيها جوه مش موجودة زي التفاسير مثلا». علوم
-                  // القرآن left the APK in 3.45.0 and the only place that
-                  // said so was a prompt inside an ayah card, weeks later.
-                  ContentPackTile(
-                    icon: Icons.auto_stories_outlined,
-                    titleKey: 'quran.sciences_pack',
-                    hintKey: 'quran.sciences_pack_hint',
-                    bytes: AppConfig.sciencesDbBytes,
-                    downloadId: sciencesDbDownloadId,
-                    installed: ref.watch(sciencesRepositoryProvider).valueOrNull
-                        != null,
-                    onDownload: () => DownloadManager.instance.enqueue(
-                      id: sciencesDbDownloadId,
-                      url: AppConfig.sciencesDbUrl,
-                      category: 'sciences',
-                      fileName: 'quran_sciences.zip',
-                      unzipToDatabases: true,
-                      dbVersion: AppConfig.sciencesDbVersion,
-                      title: 'quran.sciences_pack'.tr(),
-                    ),
-                  ),
-                  const AyahReciterPackTile(),
-                  const SurahRecitationPackTile(),
-                  const TasmeePackTile(),
-                  const VoicePackTile(),
-                ],
-              ),
-            ),
-            // «المساحة المطلوبة للتجربة الكاملة», summed from the measured
-            // sizes of exactly the packs listed above, with the reciters the
-            // reader has chosen - never a number typed here.
-            if (total != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
-                child: Text(
-                  trn('onboarding.total', args: [formatBytes(total)]),
-                  textAlign: TextAlign.center,
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'onboarding.subtitle'.tr(),
                   style: TextStyle(
-                    color: scheme.onSurface,
-                    fontWeight: FontWeight.w700,
+                    color: scheme.onSurfaceVariant,
                     fontSize: 13,
                   ),
                 ),
-              ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 4, 20, revisit ? 20 : 4),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.gold,
-                    foregroundColor: AppColors.night,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  onPressed: revisit
-                      ? () => Navigator.of(context).maybePop()
-                      : () => _finish(context, ref),
-                  child: Text(
-                    revisit ? 'onboarding.done'.tr() : 'onboarding.cta'.tr(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
+              ],
             ),
-            // «ابقى حط لاحقا في شاشة التحميلات المبدئية» (2026-09-25):
-            // leaving without downloading anything, said in so many words.
-            // Every row stays reachable from Downloads → Initial downloads.
-            if (!revisit)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: TextButton(
-                  onPressed: () => _finish(context, ref),
-                  child: Text('onboarding.later'.tr()),
+          ),
+          list: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+            children: [
+              // THE LANGUAGE IS NOT HERE ANY MORE.
+              //
+              // It moved to `PermissionsIntroScreen`, the page BEFORE
+              // this one, because that page was asking for five
+              // permissions in whatever language the phone happened to
+              // be set to. Leaving a copy here put the same chooser on
+              // two screens in a row - «اللغة اتكررت في شاشة الاذونات
+              // وشاشة تحميل المصحف».
+              const SizedBox(height: 18),
+              if (sizes != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    trn(
+                      'onboarding.mushaf_size',
+                      args: [formatBytes(sizes.mushaf)],
+                    ),
+                    style: TextStyle(
+                      color: scheme.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              editions.when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (_, _) => ErrorRetry(
+                  onRetry: () => ref.invalidate(mushafEditionsProvider),
+                ),
+                data: (list) => Column(
+                  children: [
+                    for (final e in list) ...[
+                      _SelectableEdition(
+                        edition: e,
+                        selected: e.id == selectedEdition,
+                        onSelect: () => ref
+                            .read(selectedMushafEditionProvider.notifier)
+                            .select(e.id),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ],
                 ),
               ),
-          ],
+              const SizedBox(height: 6),
+              // EVERYTHING ELSE THAT CAN BE DOWNLOADED, HERE.
+              //
+              // «والاوبشنز اللي ممكن يحملها المستخدم في نفس الصفحة بدل
+              // مايتفاجأ بيها جوه مش موجودة زي التفاسير مثلا». علوم
+              // القرآن left the APK in 3.45.0 and the only place that
+              // said so was a prompt inside an ayah card, weeks later.
+              ContentPackTile(
+                icon: Icons.auto_stories_outlined,
+                titleKey: 'quran.sciences_pack',
+                hintKey: 'quran.sciences_pack_hint',
+                bytes: AppConfig.sciencesDbBytes,
+                downloadId: sciencesDbDownloadId,
+                installed:
+                    ref.watch(sciencesRepositoryProvider).valueOrNull != null,
+                onDownload: () => DownloadManager.instance.enqueue(
+                  id: sciencesDbDownloadId,
+                  url: AppConfig.sciencesDbUrl,
+                  category: 'sciences',
+                  fileName: 'quran_sciences.zip',
+                  unzipToDatabases: true,
+                  dbVersion: AppConfig.sciencesDbVersion,
+                  title: 'quran.sciences_pack'.tr(),
+                ),
+              ),
+              const AyahReciterPackTile(),
+              const SurahRecitationPackTile(),
+              const TasmeePackTile(),
+              const VoicePackTile(),
+            ],
+          ),
+          footer: Column(
+            children: [
+              // «المساحة المطلوبة للتجربة الكاملة», summed from the measured
+              // sizes of exactly the packs listed above, with the reciters the
+              // reader has chosen - never a number typed here.
+              if (total != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+                  child: Text(
+                    trn('onboarding.total', args: [formatBytes(total)]),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: scheme.onSurface,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 4, 20, revisit ? 20 : 4),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.gold,
+                      foregroundColor: AppColors.night,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: revisit
+                        ? () => Navigator.of(context).maybePop()
+                        : () => _finish(context, ref),
+                    child: Text(
+                      revisit ? 'onboarding.done'.tr() : 'onboarding.cta'.tr(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // «ابقى حط لاحقا في شاشة التحميلات المبدئية» (2026-09-25):
+              // leaving without downloading anything, said in so many words.
+              // Every row stays reachable from Downloads → Initial downloads.
+              if (!revisit)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: TextButton(
+                    onPressed: () => _finish(context, ref),
+                    child: Text('onboarding.later'.tr()),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

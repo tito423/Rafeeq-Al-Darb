@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/azkar_settings_provider.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 
 /// Shared settings entry point (haptics, + morning/evening reminders on
 /// the Azkar tab only) — pulled out to its own file (P3‑4 round 2) so
@@ -26,9 +27,8 @@ class AzkarSettingsButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       icon: const Icon(Icons.tune),
-      onPressed: () => showModalBottomSheet<void>(
+      onPressed: () => showFittedSheet<void>(
         context: context,
-        isScrollControlled: true,
         builder: (_) => _AzkarSettingsSheet(showReminders: showReminders),
       ),
     );

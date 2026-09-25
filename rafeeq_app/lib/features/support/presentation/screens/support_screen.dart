@@ -7,6 +7,7 @@ import '../../../../app/rafeeq_app.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/external_link.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 
 /// «شاشة الدونيشن … بأسلوب راقي في الحديث وإظهار ليه سبب طلب الدونيشن».
 ///
@@ -145,9 +146,8 @@ Future<void> showSupportIntro(BuildContext context, WidgetRef ref) async {
 
   final theme = Theme.of(context);
   final gold = goldOn(theme.colorScheme);
-  await showModalBottomSheet<void>(
+  await showFittedSheet<void>(
     context: context,
-    isScrollControlled: true,
     showDragHandle: true,
     builder: (sheet) => Padding(
       padding: const EdgeInsets.fromLTRB(22, 4, 22, 28),

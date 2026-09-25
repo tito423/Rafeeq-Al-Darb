@@ -10,6 +10,7 @@ import '../../data/book_catalog.dart';
 import '../../data/book_speaker.dart';
 import '../../data/book_text.dart';
 import 'open_voice_offer.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 
 /// The reader's «استماع» control, and everything behind it.
 ///
@@ -140,7 +141,7 @@ class BookListenActionState extends State<BookListenAction> {
   }
 
   /// This page only, or on to the end of the book. Null if dismissed.
-  Future<bool?> _askScope() => showModalBottomSheet<bool>(
+  Future<bool?> _askScope() => showFittedSheet<bool>(
     context: context,
     showDragHandle: true,
     builder: (ctx) => SafeArea(
@@ -193,7 +194,7 @@ class BookListenActionState extends State<BookListenAction> {
     final current = await BookVoicePref.load();
     final installed = await OpenVoice.isInstalled();
     if (!mounted) return;
-    final choice = await showModalBottomSheet<BookVoice>(
+    final choice = await showFittedSheet<BookVoice>(
       context: context,
       showDragHandle: true,
       builder: (ctx) => ListenableBuilder(

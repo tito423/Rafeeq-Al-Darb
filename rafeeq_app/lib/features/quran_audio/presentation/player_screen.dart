@@ -14,6 +14,7 @@ import '../data/player_theme.dart';
 import '../data/quran_audio_favorites.dart';
 import '../data/quran_audio_player.dart';
 import 'widgets/audio_common.dart';
+import '../../../core/widgets/fitted_sheet.dart';
 
 /// The full player.
 ///
@@ -107,7 +108,7 @@ class QuranAudioPlayerScreen extends ConsumerWidget {
   }
 
   static void _pickTheme(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet<void>(
+    showFittedSheet<void>(
       context: context,
       backgroundColor: AppColors.nightElevated,
       shape: const RoundedRectangleBorder(
@@ -822,7 +823,7 @@ class _Extras extends StatelessWidget {
 
   void _pickSpeed(BuildContext context) {
     final player = QuranAudioPlayer.instance;
-    showModalBottomSheet<void>(
+    showFittedSheet<void>(
       context: context,
       backgroundColor: AppColors.nightElevated,
       shape: const RoundedRectangleBorder(
@@ -863,7 +864,7 @@ class _Extras extends StatelessWidget {
 
   void _pickSleep(BuildContext context) {
     final player = QuranAudioPlayer.instance;
-    showModalBottomSheet<void>(
+    showFittedSheet<void>(
       context: context,
       backgroundColor: AppColors.nightElevated,
       shape: const RoundedRectangleBorder(

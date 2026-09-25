@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/user_error.dart';
 import '../../../../core/services/sync_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 
 /// Offers Google sign-in once, at the end of the very first run.
 ///
@@ -20,7 +21,7 @@ Future<void> offerSignInOnce(BuildContext context, WidgetRef ref) async {
   // onboarding the owner asked to follow the chosen theme («اختيار الثيم في
   // أول شاشة بعد الإسبلاش»). The sheet's default colours come from the theme.
   final scheme = Theme.of(context).colorScheme;
-  await showModalBottomSheet<void>(
+  await showFittedSheet<void>(
     context: context,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),

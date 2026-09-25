@@ -17,6 +17,7 @@ import '../../../quran_audio/data/mp3quran_api.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../data/offline_pack_sizes.dart';
 import 'offline_pack_row.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 
 /// How fast one reciter's host answered a 1 KB range request for al-Fatiha
 /// 1:1, measured when the page opens. Null [ms] and [slow]: it ran past the
@@ -410,7 +411,7 @@ class _SurahRecitationPackTileState
     final ids = options.keys.toList()
       ..sort((a, b) =>
           sizes.surahRecitations[a]!.compareTo(sizes.surahRecitations[b]!));
-    final picked = await showModalBottomSheet<int>(
+    final picked = await showFittedSheet<int>(
       context: context,
       showDragHandle: true,
       builder: (ctx) => SafeArea(

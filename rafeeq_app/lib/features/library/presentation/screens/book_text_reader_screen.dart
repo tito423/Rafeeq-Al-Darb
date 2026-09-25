@@ -17,6 +17,7 @@ import '../../data/book_text.dart';
 import '../../../../core/utils/external_link.dart';
 import '../widgets/book_provenance_strip.dart';
 import '../widgets/book_page_rail.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 
 /// P3‑29 visual redesign: a small closed set of reading-ink choices offered
 /// by the "لون الخط" toolbar action. Each entry carries both a light- and a
@@ -220,7 +221,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   /// two separate always-visible AppBar buttons, so it fits the same
   /// one-icon-per-feature toolbar row as the other 5 actions.
   Future<void> _openFontSizeSheet() async {
-    await showModalBottomSheet<void>(
+    await showFittedSheet<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) => Padding(
@@ -270,7 +271,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   /// P3‑29 "لون الخط" toolbar action — picks among [_inkChoices].
   Future<void> _openInkColorSheet() async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    await showModalBottomSheet<void>(
+    await showFittedSheet<void>(
       context: context,
       builder: (ctx) => SafeArea(
         child: Padding(
@@ -385,7 +386,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   void _openProvenance() {
     final te = widget.book.textEdition;
     if (te == null) return;
-    showModalBottomSheet<void>(
+    showFittedSheet<void>(
       context: context,
       builder: (ctx) => Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),

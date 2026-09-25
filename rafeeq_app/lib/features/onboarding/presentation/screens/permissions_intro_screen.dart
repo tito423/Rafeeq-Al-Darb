@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/widgets/headed_list_layout.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/alarm_permissions_service.dart';
@@ -33,8 +35,7 @@ class PermissionsIntroScreen extends ConsumerStatefulWidget {
       _PermissionsIntroScreenState();
 }
 
-class _PermissionsIntroScreenState
-    extends ConsumerState<PermissionsIntroScreen>
+class _PermissionsIntroScreenState extends ConsumerState<PermissionsIntroScreen>
     with WidgetsBindingObserver {
   final _granted = <AppPermission, bool>{};
   AppPermission? _asking;
@@ -119,216 +120,205 @@ class _PermissionsIntroScreenState
       (
         Icons.notifications_active_outlined,
         'notifications',
-        AppPermission.notifications
+        AppPermission.notifications,
       ),
       (Icons.alarm_on_outlined, 'alarms', AppPermission.exactAlarms),
       (Icons.audiotrack_outlined, 'audio', AppPermission.audio),
       (Icons.battery_saver_outlined, 'battery', AppPermission.battery),
-      (
-        Icons.fullscreen_rounded,
-        'full_screen',
-        AppPermission.fullScreen
-      ),
+      (Icons.fullscreen_rounded, 'full_screen', AppPermission.fullScreen),
     ];
+
+    final header = Padding(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
+      child: Column(
+        children: [
+          Icon(
+            Icons.verified_user_outlined,
+            size: 44,
+            color: goldText(context),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'permissions_intro.title'.tr(),
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'permissions_intro.subtitle'.tr(),
+            textAlign: TextAlign.center,
+            style: TextStyle(color: scheme.onSurfaceVariant),
+          ),
+        ],
+      ),
+    );
+    final list = ListView(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      children: [
+        // THE LANGUAGE COMES FIRST, on this page.
+        //
+        // It used to live on the onboarding screen, one step
+        // later - so the very first thing a first-run reader saw,
+        // this page, asked him for five permissions in whatever
+        // language his phone happened to be set to. Seen on
+        // emulator-5554: «Permissions the app needs» in English
+        // in front of an Arabic reader. Asking in a language
+        // someone may not read is worse than asking late.
+        Card(
+          margin: const EdgeInsets.only(bottom: 10),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.language, color: goldText(context), size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'settings.language'.tr(),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final e in kLanguageNames.entries)
+                      ChoiceChip(
+                        label: Text(e.value),
+                        selected: context.locale.languageCode == e.key,
+                        onSelected: (_) {
+                          if (context.locale.languageCode != e.key) {
+                            context.setLocale(Locale(e.key));
+                          }
+                        },
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        // AND THE THEME, RIGHT UNDER IT. «اختيار الثيم في أول
+        // شاشة بعد الإسبلاش». A fresh install opens on the day
+        // theme, and the next screen used to be painted night-
+        // dark whatever was chosen - so the first two screens
+        // disagreed about what the app looks like. Choosing here
+        // repaints everything from this page on.
+        Card(
+          margin: const EdgeInsets.only(bottom: 10),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.palette_outlined,
+                      color: goldText(context),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'settings.theme'.tr(),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final v in ThemeVariant.values)
+                      ChoiceChip(
+                        // the check would sit on the avatar icon, muddy
+                        showCheckmark: false,
+                        avatar: Icon(v.icon, size: 18),
+                        label: Text(v.labelKey.tr()),
+                        selected: ref.watch(themeControllerProvider) == v,
+                        onSelected: (_) =>
+                            ref.read(themeControllerProvider.notifier).set(v),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        for (final (icon, key, which) in rows)
+          Card(
+            margin: const EdgeInsets.only(bottom: 10),
+            child: ListTile(
+              onTap: _asking == null ? () => _ask(which) : null,
+              leading: Icon(icon, color: goldText(context)),
+              title: Text(
+                'permissions_intro.$key'.tr(),
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              subtitle: Text('permissions_intro.${key}_why'.tr()),
+              trailing: _asking == which
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2.2),
+                    )
+                  : Icon(
+                      _granted[which] == true
+                          ? Icons.check_circle_rounded
+                          : Icons.chevron_right_rounded,
+                      color: _granted[which] == true
+                          ? AppColors.primary
+                          : scheme.onSurfaceVariant,
+                    ),
+            ),
+          ),
+      ],
+    );
+    final actions = Padding(
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
+      child: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.gold,
+                foregroundColor: AppColors.night,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              onPressed: _asking == null ? _askAll : null,
+              child: Text(
+                'permissions_intro.allow'.tr(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          // NEVER disabled. Whatever a request does, the reader can
+          // always get into the app.
+          TextButton(
+            onPressed: _continue,
+            child: Text('permissions_intro.later'.tr()),
+          ),
+        ],
+      ),
+    );
 
     return Scaffold(
       body: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
-                child: Column(
-                  children: [
-                    Icon(Icons.verified_user_outlined,
-                        size: 44, color: goldText(context)),
-                    const SizedBox(height: 12),
-                    Text(
-                      'permissions_intro.title'.tr(),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'permissions_intro.subtitle'.tr(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: scheme.onSurfaceVariant),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                  children: [
-                    // THE LANGUAGE COMES FIRST, on this page.
-                    //
-                    // It used to live on the onboarding screen, one step
-                    // later - so the very first thing a first-run reader saw,
-                    // this page, asked him for five permissions in whatever
-                    // language his phone happened to be set to. Seen on
-                    // emulator-5554: «Permissions the app needs» in English
-                    // in front of an Arabic reader. Asking in a language
-                    // someone may not read is worse than asking late.
-                    Card(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.language,
-                                    color: goldText(context), size: 20),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'settings.language'.tr(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                for (final e in kLanguageNames.entries)
-                                  ChoiceChip(
-                                    label: Text(e.value),
-                                    selected:
-                                        context.locale.languageCode == e.key,
-                                    onSelected: (_) {
-                                      if (context.locale.languageCode !=
-                                          e.key) {
-                                        context.setLocale(Locale(e.key));
-                                      }
-                                    },
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // AND THE THEME, RIGHT UNDER IT. «اختيار الثيم في أول
-                    // شاشة بعد الإسبلاش». A fresh install opens on the day
-                    // theme, and the next screen used to be painted night-
-                    // dark whatever was chosen - so the first two screens
-                    // disagreed about what the app looks like. Choosing here
-                    // repaints everything from this page on.
-                    Card(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.palette_outlined,
-                                    color: goldText(context), size: 20),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'settings.theme'.tr(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                for (final v in ThemeVariant.values)
-                                  ChoiceChip(
-                                    // the check would sit on the avatar icon, muddy
-                                    showCheckmark: false,
-                                    avatar: Icon(v.icon, size: 18),
-                                    label: Text(v.labelKey.tr()),
-                                    selected:
-                                        ref.watch(themeControllerProvider) ==
-                                            v,
-                                    onSelected: (_) => ref
-                                        .read(themeControllerProvider.notifier)
-                                        .set(v),
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    for (final (icon, key, which) in rows)
-                      Card(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: ListTile(
-                          onTap: _asking == null ? () => _ask(which) : null,
-                          leading: Icon(icon, color: goldText(context)),
-                          title: Text(
-                            'permissions_intro.$key'.tr(),
-                            style:
-                                const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                          subtitle: Text('permissions_intro.${key}_why'.tr()),
-                          trailing: _asking == which
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                      strokeWidth: 2.2),
-                                )
-                              : Icon(
-                                  _granted[which] == true
-                                      ? Icons.check_circle_rounded
-                                      : Icons.chevron_right_rounded,
-                                  color: _granted[which] == true
-                                      ? AppColors.primary
-                                      : scheme.onSurfaceVariant,
-                                ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.gold,
-                          foregroundColor: AppColors.night,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        onPressed: _asking == null ? _askAll : null,
-                        child: Text(
-                          'permissions_intro.allow'.tr(),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 16),
-                        ),
-                      ),
-                    ),
-                    // NEVER disabled. Whatever a request does, the reader can
-                    // always get into the app.
-                    TextButton(
-                      onPressed: _continue,
-                      child: Text('permissions_intro.later'.tr()),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-        ),
+        child: HeadedListLayout(header: header, list: list, footer: actions),
       ),
     );
   }

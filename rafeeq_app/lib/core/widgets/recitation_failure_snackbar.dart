@@ -17,6 +17,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import 'fitted_sheet.dart';
 
 void showRecitationFailure(BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -36,7 +37,7 @@ void showRecitationFailure(BuildContext context) {
 /// «لا تسمع التلاوة؟» — four things to check, nothing technical.
 Future<void> showSilenceTips(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
-  return showModalBottomSheet<void>(
+  return showFittedSheet<void>(
     context: context,
     showDragHandle: true,
     builder: (_) => SafeArea(

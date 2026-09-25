@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/mushaf_paper_provider.dart';
+import '../../../../../core/widgets/fitted_sheet.dart';
 
 /// The paper mushaf's grounds - normal, warm, night - as one row of chips.
 ///
@@ -32,7 +33,7 @@ class MushafPaperChips extends ConsumerWidget {
 
   /// The chips in a small sheet of their own, for a reader with no display
   /// sheet to put them in.
-  static Future<void> show(BuildContext context) => showModalBottomSheet<void>(
+  static Future<void> show(BuildContext context) => showFittedSheet<void>(
         context: context,
         showDragHandle: true,
         builder: (ctx) => SafeArea(

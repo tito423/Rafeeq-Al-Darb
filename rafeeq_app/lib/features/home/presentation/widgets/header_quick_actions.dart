@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../support/presentation/screens/support_screen.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 
 /// «حط تحت التاريخ الهجري زر سريع لتغيير الثيم … وتحت التاريخ الميلادي زر
 /// سريع لتغيير اللغة … وخلّي أيقوناتهم جميلة وأنيميتد». Two small round
@@ -44,7 +45,7 @@ class LanguageQuickButton extends StatelessWidget {
       color: color,
       icon: Icons.translate_rounded,
       label: kLanguageNames[code] ?? code,
-      onTap: () => showModalBottomSheet<void>(
+      onTap: () => showFittedSheet<void>(
         context: context,
         showDragHandle: true,
         builder: (ctx) => SafeArea(
