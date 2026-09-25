@@ -70,7 +70,7 @@
     "library_title": "The library",
     "library_body": "Text books to download, read and search; the nine hadith collections with their chapters and each hadith’s takhrij; the hadith encyclopaedia in seven languages; and a set of Islamic channels and websites. One search runs across every book you have downloaded at once.",
     "more_title": "More",
-    "more_body": "Here are the recitations player for downloading whole surahs, the ruqyah, the new-Muslim guide, and the Downloads page — where you see everything you have downloaded with its size and remove what you no longer need.",
+    "more_body": "Here are the recitations player for downloading whole surahs, the ruqyah, and the Downloads page — where you see everything you have downloaded with its size and remove what you no longer need.",
     "themes_title": "Themes and languages",
     "themes_body": "Four app themes, separate themes for the mushaf page, and fonts and sizes you choose. The interface is in seven languages, and the Quran in forty-five translations you download when you need them.",
     "offline_title": "It works offline",
@@ -177,7 +177,6 @@
     "mushaf": "Holy Mushaf",
     "tasbeeh": "Tasbeeh",
     "qibla": "Qibla",
-    "new_muslim": "New Muslim Guide",
     "location_needed": "Enable location to calculate prayer times",
     "enable_location": "Enable Location",
     "tap_to_open": "Tap to open",
@@ -855,22 +854,6 @@
     "active_now": "Downloading now",
     "cat_ayah_recitations": "Per-Ayah Recitations"
   },
-  "new_muslim": {
-    "title": "New Muslim Guide",
-    "pillars": "Pillars of Islam",
-    "wudu": "Wudu (Ablution)",
-    "prayer_steps": "Steps of Prayer",
-    "faith": "Faith",
-    "quran_basics": "Introduction to the Quran",
-    "points_count": {
-      "zero": "{} points",
-      "one": "{} point",
-      "two": "{} points",
-      "few": "{} points",
-      "many": "{} points",
-      "other": "{} points"
-    }
-  },
   "search": {
     "title": "Thematic Search",
     "themes": "Themes",
@@ -1072,7 +1055,7 @@
     "src_quotes": "Quotes and their backgrounds",
     "src_commons": "Wikimedia Commons — the Islamic-ornament backgrounds, public domain or CC0, each file’s licence and author kept in the app",
     "src_youtube": "Each channel picture is taken from that channel’s own YouTube page and mirrored on the app’s server so the grid works offline. The channels open in YouTube; no video is re-published.",
-    "src_unsplash": "The card photographs on the Azkar grid and the New Muslim guide — under the Unsplash License, fetched straight from the source to your device.",
+    "src_unsplash": "The card photographs on the Azkar grid — under the Unsplash License, fetched straight from the source to your device.",
     "dedication": "I dedicate this work to my wife, the companion of my road",
     "src_geonames": "The world city list, coordinates and names, for setting the prayer location by hand"
   },

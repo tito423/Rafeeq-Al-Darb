@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 18:54 — IN PROGRESS — resume here**
+**2026-09-25 18:59 — IN PROGRESS — resume here**
 
-Stage 1 items 2,5,6,7 and stage 2 item 8 (code, 592 pass)
+Stage 2 items 9, 12, 13: New Muslim guide removed, reciter badge icon, juz without frame
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

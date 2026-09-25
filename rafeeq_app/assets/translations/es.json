@@ -70,7 +70,7 @@
     "library_title": "La biblioteca",
     "library_body": "Libros para descargar, leer y buscar; las nueve colecciones de hadices con sus capítulos y el tajrij de cada hadiz; la enciclopedia de hadices en siete idiomas; y una selección de canales y sitios islámicos. Una sola búsqueda recorre a la vez todos los libros que has descargado.",
     "more_title": "Más",
-    "more_body": "Aquí están el reproductor de recitaciones para descargar suras enteras, la ruqya, la guía del nuevo musulmán, y la página de Descargas — donde ves todo lo descargado con su tamaño y borras lo que ya no necesitas.",
+    "more_body": "Aquí están el reproductor de recitaciones para descargar suras enteras, la ruqya y la página de Descargas — donde ves todo lo descargado con su tamaño y borras lo que ya no necesitas.",
     "themes_title": "Temas e idiomas",
     "themes_body": "Cuatro temas de la aplicación, temas aparte para la página del mushaf, y tipografías y tamaños a tu elección. La interfaz está en siete idiomas, y el Corán en cuarenta y cinco traducciones que descargas cuando las necesitas.",
     "offline_title": "Funciona sin conexión",
@@ -177,7 +177,6 @@
     "mushaf": "Sagrado Mushaf",
     "tasbeeh": "Tasbih",
     "qibla": "Alquibla",
-    "new_muslim": "Guía del nuevo musulmán",
     "location_needed": "Activa la ubicación para calcular los horarios de oración",
     "enable_location": "Activar ubicación",
     "tap_to_open": "Toca para abrir",
@@ -855,22 +854,6 @@
     "active_now": "Descargando ahora",
     "cat_ayah_recitations": "Recitaciones por Aleya"
   },
-  "new_muslim": {
-    "title": "Guía del nuevo musulmán",
-    "pillars": "Pilares del islam",
-    "wudu": "Wudú (ablución)",
-    "prayer_steps": "Pasos de la oración",
-    "faith": "La fe",
-    "quran_basics": "Introducción al Corán",
-    "points_count": {
-      "zero": "{} puntos",
-      "one": "{} punto",
-      "two": "{} puntos",
-      "few": "{} puntos",
-      "many": "{} puntos",
-      "other": "{} puntos"
-    }
-  },
   "search": {
     "title": "Búsqueda temática",
     "themes": "Temas",
@@ -1072,7 +1055,7 @@
     "src_quotes": "Citas y sus fondos",
     "src_commons": "Wikimedia Commons — los fondos de ornamento islámico, dominio público o CC0, con la licencia y el autor de cada archivo guardados en la app",
     "src_youtube": "Cada imagen de canal procede de la propia página de YouTube de ese canal y se replica en el servidor de la aplicación para funcionar sin conexión. Los canales se abren en YouTube; no se republica ningún vídeo.",
-    "src_unsplash": "Las fotografías de las tarjetas de Adhkar y de la guía del nuevo musulmán — bajo la licencia de Unsplash, obtenidas directamente de la fuente.",
+    "src_unsplash": "Las fotografías de las tarjetas de Adhkar — bajo la licencia de Unsplash, obtenidas directamente de la fuente.",
     "dedication": "Dedico este trabajo a mi esposa, compañera de mi camino",
     "src_geonames": "La lista de ciudades del mundo, con coordenadas y nombres, para fijar a mano la ubicación de la oración"
   },

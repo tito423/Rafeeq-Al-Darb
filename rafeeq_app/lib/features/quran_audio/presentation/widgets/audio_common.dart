@@ -72,20 +72,17 @@ String formatClock(Duration d) {
       h > 0 ? '$h:$m:$s' : '$m:$s', uiLanguageCode));
 }
 
-/// A reciter's badge: his number in the list, centred, on a ground chosen
-/// from his name. «Delete the Arabic letters in reciter card, use numbers
-/// instead and aligned to the center». Letters could not be centred honestly
-/// — the Qur'an face's tall ascent sat every letter low in its box — and most
-/// names begin with the same word anyway. A badge with no number (a
-/// recitation opened from the library) shows a microphone.
+/// A reciter's badge: one open-mushaf icon on a ground chosen from his name.
+///
+/// It carried his position in the list («١٠٤») - a number that means
+/// nothing about the reciter and changes when the list does. «استبدلها
+/// بأيقونة واحدة تدل على قراءة المصحف لكل القراء» (owner, 2026-09-25).
 class ReciterAvatar extends StatelessWidget {
   final String name;
-  final int? number;
   final double size;
   const ReciterAvatar({
     super.key,
     required this.name,
-    this.number,
     this.size = 44,
   });
 
@@ -123,28 +120,11 @@ class ReciterAvatar extends StatelessWidget {
               ),
             ),
             Center(
-              child: number == null
-                  ? Icon(Icons.mic_rounded, size: size * 0.48, color: AppColors.goldSoft)
-                  : FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Padding(
-                        padding: EdgeInsets.all(size * 0.12),
-                        child: Text(
-                          ltr(localizeDigits('$number', uiLanguageCode)),
-                          textAlign: TextAlign.center,
-                          textHeightBehavior: const TextHeightBehavior(
-                            applyHeightToFirstAscent: false,
-                            applyHeightToLastDescent: false,
-                          ),
-                          style: TextStyle(
-                            fontSize: size * 0.4,
-                            height: 1.0,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.goldSoft,
-                          ),
-                        ),
-                      ),
-                    ),
+              child: Icon(
+                Icons.auto_stories_rounded,
+                size: size * 0.5,
+                color: AppColors.goldSoft,
+              ),
             ),
           ],
         ),

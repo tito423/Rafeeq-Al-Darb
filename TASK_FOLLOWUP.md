@@ -396,6 +396,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 18:59 - Stage 2 items 9, 12, 13: New Muslim guide removed, reciter badge icon, juz without frame
+- 2026-09-25 18:59 - Stage 2 items 9 (New Muslim guide deleted: feature folder, More card + subtitle, keys new_muslim.* and orphan home.new_muslim in 7 locales, its mention in tutorial.more_body and about.src_unsplash), 12 (reciter badge: open-mushaf icon, no list number), 13 (juz pill: no frame) in code. 592 pass. NOT BUILT.
 - 2026-09-25 18:54 - Stage 1 items 2,5,6,7 and stage 2 item 8 (code, 592 pass)
 - 2026-09-25 18:54 - Stage 1 items 2,5,6,7 + stage 2 item 8 in code (592 pass, NOT BUILT): 2 = the Audio (مسموعة) list drew from the whole catalogue so «−» said removed and the book stayed (authors/categories verified working on emulator, undo works); 5 = quran.stop in 7 locales + test for keys inside (…).tr() (fails without the key); 6 = sciencesRepositoryProvider re-reads itself when the pack completes (a background completion left it null); 7 = could NOT reproduce «not marked until re-enter» (flow works on emulator, qibla 136° for Cairo); «تحديد يدوي» row now focuses the search; 8 = location + auto-update moved to Times & date screen. ANR round 2 on emulator: 11-20 ticks/s (was 40-50), ~22 ms main thread per ayah - not an ANR, still jank; real fix = per-surah zips (not done). Special-surah image mode night paper SEEN.
 - 2026-09-25 18:35 - KFGQPC text seen on emulator; ANR round 2 (no files tracking, status-only ayah tasks); paper chips in special-surah reader

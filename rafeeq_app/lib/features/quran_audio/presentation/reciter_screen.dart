@@ -181,7 +181,7 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                       children: [
                         Row(
                           children: [
-                            ReciterAvatar(name: widget.reciter.name, number: widget.number, size: 56),
+                            ReciterAvatar(name: widget.reciter.name, size: 56),
                             const SizedBox(width: 14),
                             Expanded(
                               child: Column(

@@ -70,7 +70,7 @@
     "library_title": "A biblioteca",
     "library_body": "Livros para transferir, ler e pesquisar; as nove coleções de hadices com os seus capítulos e o takhrij de cada hadiz; a enciclopédia de hadices em sete idiomas; e uma seleção de canais e sites islâmicos. Uma única pesquisa percorre de uma vez todos os livros transferidos.",
     "more_title": "Mais",
-    "more_body": "Aqui estão o leitor de recitações para transferir suratas inteiras, a ruqya, o guia do novo muçulmano, e a página de Transferências — onde vê tudo o que transferiu com o seu tamanho e apaga o que já não precisa.",
+    "more_body": "Aqui estão o leitor de recitações para transferir suratas inteiras, a ruqya e a página de Transferências — onde vê tudo o que transferiu com o seu tamanho e apaga o que já não precisa.",
     "themes_title": "Temas e idiomas",
     "themes_body": "Quatro temas da aplicação, temas separados para a página do mushaf, e tipos de letra e tamanhos à sua escolha. A interface está em sete idiomas, e o Alcorão em quarenta e cinco traduções que transfere quando precisar.",
     "offline_title": "Funciona offline",
@@ -177,7 +177,6 @@
     "mushaf": "Sagrado Mushaf",
     "tasbeeh": "Tasbih",
     "qibla": "Qibla",
-    "new_muslim": "Guia do novo muçulmano",
     "location_needed": "Ative a localização para calcular os horários de oração",
     "enable_location": "Ativar localização",
     "tap_to_open": "Toque para abrir",
@@ -855,22 +854,6 @@
     "active_now": "Baixando agora",
     "cat_ayah_recitations": "Recitações por Versículo"
   },
-  "new_muslim": {
-    "title": "Guia do novo muçulmano",
-    "pillars": "Pilares do islão",
-    "wudu": "Wudu (ablução)",
-    "prayer_steps": "Passos da oração",
-    "faith": "A fé",
-    "quran_basics": "Introdução ao Alcorão",
-    "points_count": {
-      "zero": "{} pontos",
-      "one": "{} ponto",
-      "two": "{} pontos",
-      "few": "{} pontos",
-      "many": "{} pontos",
-      "other": "{} pontos"
-    }
-  },
   "search": {
     "title": "Pesquisa temática",
     "themes": "Temas",
@@ -1072,7 +1055,7 @@
     "src_quotes": "Citações e os seus fundos",
     "src_commons": "Wikimedia Commons — os fundos de ornamento islâmico, domínio público ou CC0, com a licença e o autor de cada ficheiro guardados na aplicação",
     "src_youtube": "Cada imagem de canal vem da própria página do YouTube desse canal e é replicada no servidor da aplicação para funcionar offline. Os canais abrem no YouTube; nenhum vídeo é republicado.",
-    "src_unsplash": "As fotografias dos cartões dos adhkar e do guia do novo muçulmano — sob a licença Unsplash, obtidas diretamente da fonte.",
+    "src_unsplash": "As fotografias dos cartões dos adhkar — sob a licença Unsplash, obtidas diretamente da fonte.",
     "dedication": "Dedico este trabalho à minha esposa, companheira do meu caminho",
     "src_geonames": "A lista de cidades do mundo, com coordenadas e nomes, para definir à mão o local da oração"
   },

@@ -150,7 +150,7 @@ class _RecitersTabState extends ConsumerState<_RecitersTab>
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       child: ListTile(
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        leading: ReciterAvatar(name: r.name, number: all.indexOf(r) + 1),
+                        leading: ReciterAvatar(name: r.name),
                         title: Text(r.name, style: const TextStyle(fontWeight: FontWeight.w700)),
                         subtitle: Text(
                           r.moshafs.map((m) => m.name).join(' • '),

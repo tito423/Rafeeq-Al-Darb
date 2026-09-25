@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
-import '../../../new_muslim/presentation/screens/new_muslim_guide_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
@@ -93,7 +92,6 @@ class MoreScreen extends ConsumerWidget {
               'hajj.title',
               'ruqyah.audio_title',
               'dedication.title',
-              'new_muslim.title',
             ]),
             icon: Icons.auto_awesome_rounded,
             children: [
@@ -173,17 +171,6 @@ class MoreScreen extends ConsumerWidget {
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (_) => const DedicationsScreen(),
-                  ),
-                ),
-              ),
-              IslamicActionCard(
-                icon: Icons.auto_stories_outlined,
-                accent: AppColors.primarySoft,
-                title: 'new_muslim.title'.tr(),
-                subtitle: 'home.tap_to_open'.tr(),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const NewMuslimGuideScreen(),
                   ),
                 ),
               ),

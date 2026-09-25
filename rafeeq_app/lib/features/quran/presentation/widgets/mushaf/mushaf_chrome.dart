@@ -296,14 +296,11 @@ class _Pill extends StatelessWidget {
 
   const _Pill({required this.mt, required this.text});
 
+  // No frame: «شيل الإطار اللي حوالين كلمة الجزء» (owner's phone,
+  // 2026-09-25, plan item 13) - the juz reads as plain text beside the surah.
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-    decoration: BoxDecoration(
-      color: mt.gold.withValues(alpha: 0.13),
-      borderRadius: BorderRadius.circular(999),
-      border: Border.all(color: mt.gold.withValues(alpha: 0.45)),
-    ),
     child: Text(
       text,
       textDirection: TextDirection.rtl,

@@ -70,7 +70,7 @@
     "library_title": "La bibliothèque",
     "library_body": "Des livres à télécharger, lire et rechercher ; les neuf recueils de hadiths avec leurs chapitres et le takhrij de chaque hadith ; l’encyclopédie des hadiths en sept langues ; et une sélection de chaînes et de sites islamiques. Une seule recherche parcourt d’un coup tous les livres téléchargés.",
     "more_title": "Plus",
-    "more_body": "Ici : le lecteur de récitations pour télécharger des sourates entières, la roqya, le guide du nouveau musulman, et la page Téléchargements — où vous voyez tout ce que vous avez téléchargé avec sa taille et supprimez ce dont vous n’avez plus besoin.",
+    "more_body": "Ici : le lecteur de récitations pour télécharger des sourates entières, la roqya et la page Téléchargements — où vous voyez tout ce que vous avez téléchargé avec sa taille et supprimez ce dont vous n’avez plus besoin.",
     "themes_title": "Thèmes et langues",
     "themes_body": "Quatre thèmes d’application, des thèmes distincts pour la page du mushaf, et des polices et tailles à choisir. L’interface est en sept langues, et le Coran en quarante-cinq traductions que vous téléchargez au besoin.",
     "offline_title": "Il fonctionne hors ligne",
@@ -177,7 +177,6 @@
     "mushaf": "Saint Mushaf",
     "tasbeeh": "Tasbeeh",
     "qibla": "Qibla",
-    "new_muslim": "Guide du nouveau musulman",
     "location_needed": "Activez la localisation pour calculer les horaires de prière",
     "enable_location": "Activer la localisation",
     "tap_to_open": "Touchez pour ouvrir",
@@ -855,22 +854,6 @@
     "active_now": "En cours de téléchargement",
     "cat_ayah_recitations": "Récitations par Verset"
   },
-  "new_muslim": {
-    "title": "Guide du nouveau musulman",
-    "pillars": "Les piliers de l'Islam",
-    "wudu": "Wudu (Ablutions)",
-    "prayer_steps": "Étapes de la prière",
-    "faith": "La foi",
-    "quran_basics": "Introduction au Coran",
-    "points_count": {
-      "zero": "{} points",
-      "one": "{} point",
-      "two": "{} points",
-      "few": "{} points",
-      "many": "{} points",
-      "other": "{} points"
-    }
-  },
   "search": {
     "title": "Recherche thématique",
     "themes": "Thèmes",
@@ -1072,7 +1055,7 @@
     "src_quotes": "Citations et leurs fonds",
     "src_commons": "Wikimedia Commons — les fonds d’ornement islamique, domaine public ou CC0, la licence et l’auteur de chaque fichier étant conservés dans l’application",
     "src_youtube": "Chaque image de chaîne provient de la page YouTube de cette chaîne et est mise en miroir sur le serveur de l’application pour fonctionner hors ligne. Les chaînes s’ouvrent dans YouTube ; aucune vidéo n’est republiée.",
-    "src_unsplash": "Les photographies des cartes des adhkar et du guide du nouveau musulman — sous licence Unsplash, récupérées directement à la source.",
+    "src_unsplash": "Les photographies des cartes des adhkar — sous licence Unsplash, récupérées directement à la source.",
     "dedication": "Je dédie ce travail à mon épouse, la compagne de ma route",
     "src_geonames": "La liste des villes du monde, coordonnées et noms, pour choisir à la main le lieu de prière"
   },
