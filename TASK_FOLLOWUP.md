@@ -12,6 +12,22 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 11:12 (owner's hour ended). 3.63.1 (diacritisation fix
+91d82a33) built + installed on owner's phone, NOT RELEASED - asked owner.
+FOUND on phone at system font «Huge» (font_scale 1.45) + Bold, NOT FIXED:
+1. Tasbeeh PORTRAIT: counter circle shrank to a dot (controls take the
+   height, FittedBox shrinks the counter) - same class as the landscape
+   bug; tasbeeh_screen.dart ~line 499 only handles wide+short. Fix: let
+   the portrait column scroll with the counter at a minimum size.
+2. Library sub-tabs: «Categories» / «My library» drawn tiny next to
+   «Audio» (per-label shrink-to-fit) - make them uniform.
+3. Home: centre (next-prayer) tile shows «12:11» without «PM»; side
+   tiles keep it.
+SEEN OK at 1.45: Quran page, Prayer/qibla, Adhkar grid, More, book reader.
+Location switch OFF (owner did it): app launch -> 0 Google dialog
+launches (logcat LocationSettingsChecker = 0), Home keeps Dubai times.
+Owner's phone left with font Huge/Bold and location OFF - his settings.
+
 SESSION 2026-09-25 10:25 (owner: release now, 1 hour, his phone
 AB3S6R4C04016607 BRP-NX1 Android 12 connected - KEEP IT SILENT, people
 asleep). Bumped 3.63.0+65 (pubspec + AboutScreen), analyze clean,
@@ -359,6 +375,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 11:12 - Phone at font 1.45 + location off: no dialog loop; found tasbeeh counter dot, tiny library tabs, missing PM on Home centre tile (unfixed, logged)
 - 2026-09-25 11:04 - 3.63.1 on owner's phone: diacritisation fix seen, adhan pauses/resumes book reader voice and ruqyah, book reader stops ruqyah
 - 2026-09-25 11:05 - PHONE 3.63.1: enhanced voice downloaded (260.7 MB, owner OK); Dhuhr Test fired while the book reader read Ihkam: voice player piid 4207 PAUSED, adhan USAGE_ALARM started, full screen + notification Stop/Mute; Stop -> 4207 STARTED again, next chunk 4223 followed; reader stopped -> 0 players. (Was unit-tested / emulator-only before; now seen on a real phone.)
 - 2026-09-25 11:02 - PHONE: ruqyah + adhan preview -> ruqyah PAUSED, alarm player started; Stop -> ruqyah resumed same position (76.1 s). FOUND: Ihkam al-Ahkam (visibly vowelled) said «only 0% harakat» - 28 books never measured, default 0. FIXED 91d82a33 (measured, Ihkam 83.4%), 3.63.1+66 built + installed on phone: Listen offered. Phone TTS vs ruqyah: ruqyah -> NONE (one sound). Enhanced voice downloading (owner OK). 3.63.1 NOT released - ask owner.
