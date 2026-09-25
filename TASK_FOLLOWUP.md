@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:26 - i'rab refs resolver WIP: 244 of 467 resolved, numbers not yet checked vs print
+- 2026-09-26 00:26 - Step 3 WIP: scripts/resolve_irab_daas_refs.py (NOT final, NOT in the app). 467 references in 423 sections; 244 resolved (107 by the book's ayah number, 104 by identical earlier quote, 31 'previous', 2 surah-start), 223 open for the owner. Fixed on real cases: skeleton across word boundaries (27:64->23:88, 40:62->40:28 false hits), «أمّن» vs «مَن», يا joined in the mushaf, «قبلها» false 'previous'. FOUND: ayah NUMBERS were never checked vs the print (arbitration compared words only) - 34:39 says «الآية ١٦» where the matching ayah is 34:36. Next: check every number against the print OCR.
 - 2026-09-26 00:19 - build_irab_daas_final.py now USES the print transcriptions for the 27 damaged sections (base='print'), and exits if the transcribed set != the damaged set. Rebuilt: 3,639 = 3,612 shamela + 27 print; diff vs previous build = exactly those 27. Next: step 3 - «سبق إعرابها» references (owner requirement, log 23:45).
 - 2026-09-26 00:18 - Daas: all 27 damaged sections transcribed from the print
 - 2026-09-26 00:18 - Daas print: ALL 27 of 27 transcribed (+78:40 vol3 416, +81:10 vol3 423 - KSU had «معطوفة على الاية رقم 9» x4 garbage). check: 16 words in neither copy across 9 sections, every one read on the print. Next: wire build_irab_daas_final.py to use the transcriptions for these 27, rebuild.
