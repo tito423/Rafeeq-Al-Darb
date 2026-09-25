@@ -6,11 +6,20 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-2026-09-25 ~11:50: owner «اعمل وخلص وانشر الريليز النهائي». v3.63.1 being
-published (replaces v3.63.0). Everything in it SEEN on the owner's phone -
-see HANDOVER top row.
+HANDOVER 2026-09-25 ~15:50 (owner: «اكتب الخطة وظبط ملفات البدء»). Released
+v3.63.7 (tag c6f8d3ac). Owner reviewed 10 videos + 11 screenshots from his
+phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
+his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+START: NEXT_SESSION_PROMPT.md stage 1 item 1 - back arrow dead in Book reader
+settings and in Library opened from More (two app bars «الكتب»/«المكتبة»).
+Prove the cause in code, fix, build (emulator OFF), install, SEE it, log here.
+Then items 2..17 in order. UNVERIFIED, redo: 3.63.3 ANR/lock-stop fix only
+seen on emulator, not on the owner's Xiaomi; qibla «مش ظبطت» today, unchecked.
+Weekly quota was 96% at handover.
+
+(History below.)
 After the release: nothing ordered. Still open (need the owner or a fresh
 device): largest font in LANDSCAPE; «Enable location» with NO cached fix
 (clear app data or fresh device); city line ar->ur first-switch delay.
@@ -382,6 +391,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 15:50 - HANDOVER: analyze clean, 588 pass, 8 hosted paths 206, 7 locales x 1,833 keys, 239 books, hadith.db 109,731,840 B, v3.63.7 APK 270,769,028 B. Plan written (NEXT_SESSION_PROMPT.md), NEXT_PROMPT.md rewritten.
 - 2026-09-25 15:30 - Owner sent 8 screenshots + 9 screen recordings from his Xiaomi (3.63.7), asked for a REPORT ONLY, no changes. Findings (unverified in code, from frames): back arrows not responding (Book reader settings, Library opened from More), double app bar «الكتب»+«المكتبة», ayah-download notification done>total (1488/1485), Initial downloads says «no server» while the ayah download runs, per-ayah list shows 0/114 during download, More accordion jumps + long reminder text inline, account name dark on dark, i'rab «على» = «جمع», odd «خطوات الصلاة» icon, tour step 8 highlights the player card, mushaf size line clipped. Waiting for owner to pick.
 - 2026-09-25 14:44 - v3.63.7 published: final ring-cropped icon without prayer beads
 - 2026-09-25 14:44 - FINAL icon: owner's 1024 image WITHOUT prayer beads (he regenerated it after the inpaint attempt smeared the stand), cropped to the ring (box 24,30-997,1003). Preview shown, owner approved («انشر»), seen on emulator launcher. v3.63.7 PUBLISHED (tag == HEAD c6f8d3ac, sha256 b3c22dc8 = local), v3.63.5 deleted (3.63.6 was never published). Not yet on the owner's Xiaomi.
