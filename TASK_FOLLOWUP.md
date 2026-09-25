@@ -24,7 +24,7 @@ OWNER 20:20 DECISION (i'rab): source = «إعراب القرآن الكريم» 
 pages by hand, parser, hand-check a sample, show owner, then replace.
 Corpus root/lemma only after a cross-check against an independent source
 with zero disagreements - else removed.
-DONE tour v2 (seen 21:01). NOW: Daas crawl + diff (see log 20:45); next = parse e-quran pages, normalise, diff vs Shamela sections, damaged -> check printed PDF, then report to owner BEFORE any app change. NEXT (2) i'rab (OLD plan, superseded by Daas): py -3 scripts/upload_sciences_pack.py, update sciencesDbBytes,
+DONE tour v2 (seen 21:01). NOW: wait for OCR of the print (see log 21:20), run arbitrate_irab_daas.py on all 3,639 sections, read the «?» and doubtful ones off the page images, build the final text. OLDER: Daas crawl + diff (see log 20:45); next = parse e-quran pages, normalise, diff vs Shamela sections, damaged -> check printed PDF, then report to owner BEFORE any app change. NEXT (2) i'rab (OLD plan, superseded by Daas): py -3 scripts/upload_sciences_pack.py, update sciencesDbBytes,
 bump sciencesDbVersion v2, see the sheet for 2:5 on the emulator.
 
 (Older) Owner (18:10): «هات المصدر الأوثق وحط عليه كل اللي عملناه» after asking if a
@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 21:06 - Daas: printed edition as third witness (Windows Arabic OCR of all pages) and the arbitration script
+- 2026-09-25 21:20 - Daas third witness: the PRINT. scripts/winocr.ps1 (Windows OCR ar-SA, reads the commentary well; ornate ayah lines weak), ocr_irab_daas_print.py OCRing all 1,418 pages (2.4-2.9 s/page, background, resumable -> temp_phase1/irab_daas_print_ocr.jsonl; PDFs in the session scratchpad, re-download from archive.org i3rb-krn-d3s if lost). arbitrate_irab_daas.py: locates each Shamela page on the PDF by word-trigram overlap (offset differs per volume), then for every A/B difference tests both readings (+3 words context) against the print (margin 0.06, else «?» for eyes), and flags 8-word chunks where A+B agree but the print does not. First 57 sections: 13 differences, print sided with Shamela in 9, 4 undecided.
 - 2026-09-25 21:00 - Tour v2 pictures (8 whole screens, 7 languages) captured and seen on the emulator; Daas printed edition located
 - 2026-09-25 21:01 - Tour v2 SEEN on emulator (signed build installed 20:58:43, cold start): quick tour 9/9 (welcome + Home, Quran, Prayer, Adhkar, Tasbeeh, Hifz, Recitations, Tajweed), each the whole screen framed in its colour, Arabic after switching from Urdu on stop 1, last button «تم». Capture: 238 pictures (7 x 34), 4.61 MB. Daas printed edition found: archive.org i3rb-krn-d3s, 3 vols 478/459/481 pages (the alfirdwsiy2018 zip's vol 3 is truncated, 0 pages); title page «دار النمير - دار الفارابي» (Shamela's «المنير» is a typo), Baqara on printed p.9 = Shamela pageNum 9. archive.org OCR is Latin garbage; Windows OCR has ar-SA -> third witness.
 - 2026-09-25 20:44 - Daas: two digital copies agree on the scholar text for 90% of sections; 313 sections need the printed page

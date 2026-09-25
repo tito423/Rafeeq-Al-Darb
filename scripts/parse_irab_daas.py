@@ -68,6 +68,7 @@ def main():
             unparsed_heads.append((page, para))
         if cur is None or SURAH_TITLE.match(norm):
             continue
+        cur['page_end'] = page
         # Ayah lines come right after the heading, before any book text.
         if not cur['text'] and (AYAH_END.search(norm) or
                                 norm.startswith('بِسْمِ اللَّهِ')):
@@ -78,7 +79,8 @@ def main():
         rows.append(cur)
 
     out = [{'surah': r['surah'], 'from': r['from'], 'to': r['to'],
-            'page': r['page'], 'text': '\n'.join(r['text'])} for r in rows]
+            'page': r['page'], 'page_end': r.get('page_end', r['page']),
+            'text': '\n'.join(r['text'])} for r in rows]
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump(out, io.open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
     sys.stdout.reconfigure(encoding='utf-8')
