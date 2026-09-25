@@ -20,6 +20,7 @@ MIUI Gallery open sideways too); intro clip BoxFit.cover cut the emblem + wordma
 DONE IN CODE (not built/seen): splash_screen.dart `_WholeClip` - when the screen is
 wider than 720x1280, clip shown whole (contain) over a blurred first frame.
 DONE IN CODE 02:45 (analyze clean, NOT built): HeadedListLayout (permissions + initial-downloads screens two panes sideways); showFittedSheet on 18 plain-column sheets (were clipped at 9/16 height, sign-in offer buttons unreachable sideways). Location+notifications granted on the Xiaomi by owner order.
+DONE IN CODE 03:05 (analyze clean, 587 pass, NOT built): tour slides side by side sideways; AppShell NavigationRail (scrollable, 7 tabs) instead of the bottom bar sideways + navigationRailTheme. BUILD started ~03:06.
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -453,6 +454,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 02:34 - Landscape: navigation rail sideways, tour slides side by side (587 pass, building)
 - 2026-09-26 02:25 - Landscape: two-pane onboarding screens, fitted bottom sheets (analyze clean, not built)
 - 2026-09-26 02:16 - Splash shows the whole portrait intro in landscape (not built yet); landscape tour next
 - 2026-09-26 02:05 - HANDOVER (owner: «شيل التطبيق وسطبه تاني وجهز الدنيا»): Xiaomi uninstall+reinstall clean 02:02:48, not opened. analyze clean, 587 pass, hosted 10/10 206 (+GitHub v2). HANDOVER row, NEXT_SESSION_PROMPT, NEXT_PROMPT rewritten. Stopped here on the owner's order - next session.

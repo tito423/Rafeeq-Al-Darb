@@ -64,42 +64,60 @@ class _TourSlidesState extends State<TourSlides>
     final i = _i.clamp(0, stops.length - 1);
     final chapter = stops[i];
     final frame = _frameOf(locale, chapter);
+    final picture = frame == null
+        ? Center(
+            child: Icon(
+              chapter.icon,
+              size: 96,
+              color: chapter.accent,
+            ),
+          )
+        : Center(child: _shot(locale, chapter, frame));
+    final bubble = _ChapterBubble(
+      chapter: chapter,
+      index: i,
+      total: stops.length,
+      locale: locale,
+      isFirst: i == 0,
+      isLast: i == stops.length - 1,
+      onPrev: i == 0 ? null : () => setState(() => _i = i - 1),
+      onNext: i == stops.length - 1
+          ? widget.onFinish
+          : () => setState(() => _i = i + 1),
+      onSkip: widget.onFinish,
+      pointerX: null,
+      pointerBelow: false,
+    );
     return Material(
       color: scheme.surface,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-          child: Column(
-            children: [
-              Expanded(
-                child: frame == null
-                    ? Center(
-                        child: Icon(
-                          chapter.icon,
-                          size: 96,
-                          color: chapter.accent,
-                        ),
-                      )
-                    : Center(child: _shot(locale, chapter, frame)),
-              ),
-              const SizedBox(height: 10),
-              _ChapterBubble(
-                chapter: chapter,
-                index: i,
-                total: stops.length,
-                locale: locale,
-                isFirst: i == 0,
-                isLast: i == stops.length - 1,
-                onPrev: i == 0 ? null : () => setState(() => _i = i - 1),
-                onNext: i == stops.length - 1
-                    ? widget.onFinish
-                    : () => setState(() => _i = i + 1),
-                onSkip: widget.onFinish,
-                pointerX: null,
-                pointerBelow: false,
-              ),
-            ],
-          ),
+          // SIDEWAYS, SIDE BY SIDE. Stacked, the explanation took the height
+          // and the photograph of the screen was left a thumbnail too small
+          // to read - measured on the owner's Xiaomi held sideways
+          // (2026-09-26): 480 px = 160 dp tall on a 1220 px-high screen. Beside it,
+          // the explanation leaves it the whole height.
+          child: MediaQuery.orientationOf(context) == Orientation.landscape
+              ? Row(
+                  children: [
+                    Expanded(flex: 2, child: picture),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      flex: 3,
+                      child: Center(
+                        child: SingleChildScrollView(child: bubble),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    Expanded(child: picture),
+                    const SizedBox(height: 10),
+                    bubble,
+                  ],
+                ),
         ),
       ),
     );

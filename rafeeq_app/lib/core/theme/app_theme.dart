@@ -149,6 +149,19 @@ class AppTheme {
                   : onSurfaceVar,
             )),
       ),
+      // The same seven tabs, sideways (`AppShell`): dressed exactly like the
+      // bottom bar so turning the phone moves the tabs, not their look.
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: card,
+        indicatorColor: primaryContainer,
+        elevation: 0,
+        selectedLabelTextStyle:
+            AppTypography.uiMedium(11, color: onSurface).copyWith(height: 1.15),
+        unselectedLabelTextStyle:
+            AppTypography.uiMedium(11, color: onSurface).copyWith(height: 1.15),
+        selectedIconTheme: IconThemeData(color: primarySoft),
+        unselectedIconTheme: IconThemeData(color: onSurfaceVar),
+      ),
       chipTheme: ChipThemeData(
         backgroundColor: card,
         selectedColor: primaryContainer,

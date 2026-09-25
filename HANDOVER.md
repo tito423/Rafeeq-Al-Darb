@@ -2502,9 +2502,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 02:25 — IN PROGRESS — resume here**
+**2026-09-26 02:34 — IN PROGRESS — resume here**
 
-Landscape: two-pane onboarding screens, fitted bottom sheets (analyze clean, not built)
+Landscape: navigation rail sideways, tour slides side by side (587 pass, building)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

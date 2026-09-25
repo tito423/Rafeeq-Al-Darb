@@ -820,7 +820,6 @@ class _Extras extends StatelessWidget {
     );
   }
 
-
   void _pickSpeed(BuildContext context) {
     final player = QuranAudioPlayer.instance;
     showFittedSheet<void>(

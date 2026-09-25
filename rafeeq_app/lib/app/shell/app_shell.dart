@@ -325,6 +325,34 @@ class _AppShellState extends ConsumerState<AppShell>
       });
     }
 
+    // The seven tabs, once, for the bottom bar upright and the rail sideways.
+    const tabs = <(IconData, IconData, String)>[
+      (Icons.home_outlined, Icons.home, 'nav.home'),
+      (Icons.menu_book_outlined, Icons.menu_book, 'nav.quran'),
+      (Icons.explore_outlined, Icons.explore, 'nav.prayer'),
+      (Icons.auto_awesome_outlined, Icons.auto_awesome, 'nav.azkar'),
+      (
+        Icons.radio_button_checked_outlined,
+        Icons.radio_button_checked,
+        'nav.tasbeeh'
+      ),
+      (Icons.library_books_outlined, Icons.library_books, 'nav.library'),
+      (Icons.menu, Icons.menu_open, 'nav.more'),
+    ];
+    final tabStack = KeyedSubtree(
+      key: ValueKey<String>(localeCode),
+      child: IndexedStack(index: shown, children: screens),
+    );
+    // SIDEWAYS, THE TABS GO TO THE SIDE. Measured on the owner's Xiaomi held
+    // sideways (2026-09-26): the bottom bar took 290 of the screen's 1220 px,
+    // leaving every tab a letterbox under a header card. A phone on its side
+    // has width to spare and height to none, so the tabs stand in a rail at
+    // the start edge and every screen gets the full height. The IndexedStack
+    // is the same one either way - turning the phone keeps each tab's state.
+    final sideways = MediaQuery.orientationOf(context) == Orientation.landscape &&
+        !fullScreen &&
+        focus == null;
+
     // P3‑44: real-device feedback — pressing the system back button/gesture
     // on any non-Home tab exited the app outright (Android's own default
     // for a root route with nothing beneath it in the Navigator stack).
@@ -375,10 +403,33 @@ class _AppShellState extends ConsumerState<AppShell>
         // بتمش أو بتعمل فليكر جامد جدا». Its dialogs float above the keyboard
         // on their own.
         resizeToAvoidBottomInset: shown != AppTab.quran,
-        body: KeyedSubtree(
-          key: ValueKey<String>(localeCode),
-          child: IndexedStack(index: shown, children: screens),
-        ),
+        body: sideways
+            ? Row(
+                children: [
+                  SafeArea(
+                    child: NavigationRail(
+                      selectedIndex: _index,
+                      onDestinationSelected: _goTo,
+                      labelType: NavigationRailLabelType.all,
+                      // Seven tabs at about 72 dp each is ~500 dp; a phone on
+                      // its side has ~380. Scrolling beats a clipped tab.
+                      scrollable: true,
+                      groupAlignment: 0,
+                      destinations: [
+                        for (final (icon, selected, key) in tabs)
+                          NavigationRailDestination(
+                            icon: Icon(icon),
+                            selectedIcon: _PopIcon(selected),
+                            label: Text(key.tr()),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const VerticalDivider(width: 1),
+                  Expanded(child: tabStack),
+                ],
+              )
+            : tabStack,
       // P3‑57: seven destinations is more than Material's bar is designed
       // for (the spec says three to five), so the longest translated label
       // wins or loses by a few pixels. On the owner's phone «Bibliothèque»
@@ -386,7 +437,7 @@ class _AppShellState extends ConsumerState<AppShell>
       // fixed 68px height. Pinning the text scale stops a device font-size
       // setting from making that worse, and is the only part of this that a
       // user setting could otherwise break.
-      bottomNavigationBar: fullScreen
+      bottomNavigationBar: fullScreen || sideways
           ? null
           : focus != null
               ? const _FocusModeBar()
@@ -430,41 +481,12 @@ class _AppShellState extends ConsumerState<AppShell>
               // The selected icon is built fresh whenever a tab becomes
               // selected, so `_PopIcon` plays its entrance exactly then.
               destinations: [
-                NavigationDestination(
-                  icon: const Icon(Icons.home_outlined),
-                  selectedIcon: const _PopIcon(Icons.home),
-                  label: 'nav.home'.tr(),
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.menu_book_outlined),
-                  selectedIcon: const _PopIcon(Icons.menu_book),
-                  label: 'nav.quran'.tr(),
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.explore_outlined),
-                  selectedIcon: const _PopIcon(Icons.explore),
-                  label: 'nav.prayer'.tr(),
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.auto_awesome_outlined),
-                  selectedIcon: const _PopIcon(Icons.auto_awesome),
-                  label: 'nav.azkar'.tr(),
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.radio_button_checked_outlined),
-                  selectedIcon: const _PopIcon(Icons.radio_button_checked),
-                  label: 'nav.tasbeeh'.tr(),
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.library_books_outlined),
-                  selectedIcon: const _PopIcon(Icons.library_books),
-                  label: 'nav.library'.tr(),
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.menu),
-                  selectedIcon: const _PopIcon(Icons.menu_open),
-                  label: 'nav.more'.tr(),
-                ),
+                for (final (icon, selected, key) in tabs)
+                  NavigationDestination(
+                    icon: Icon(icon),
+                    selectedIcon: _PopIcon(selected),
+                    label: key.tr(),
+                  ),
               ],
             ),
           ),
