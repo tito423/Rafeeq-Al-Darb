@@ -4,7 +4,6 @@ import '../../../../core/utils/digits.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../../core/services/download_engine.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/services/mushaf_page_service.dart';
@@ -28,6 +27,7 @@ import '../widgets/mushaf_tiles.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quran/presentation/screens/sciences_pack_screen.dart';
+import '../widgets/initial_downloads_entry.dart';
 
 String _fmtSize(int bytes) {
   // Binary units, matching what Android's own storage screen reports.
@@ -198,7 +198,7 @@ class _OverviewTab extends ConsumerWidget {
                   : null,
             ),
             const _ActiveDownloadsPanel(),
-            const SizedBox(height: 18),
+            const InitialDownloadsEntry(),
             Padding(
               padding: const EdgeInsetsDirectional.only(start: 6, bottom: 8),
               child: Text(

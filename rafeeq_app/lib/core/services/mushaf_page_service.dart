@@ -385,11 +385,24 @@ class MushafPageService {
           }
           consecutiveErrors = 0;
         } catch (_) {
+          // Hold and resume, never stop («five backups, never skip»). Three
+          // failures in a row used to END the run, and locking the owner's
+          // Xiaomi drops the network for a few seconds - three quick
+          // failures and the download sat dead until the app was opened
+          // again (screen recording 2026-09-25 13:13). Now the same page is
+          // retried after 4, 8, 16, 32, then 60 s; only Cancel ends it.
           consecutiveErrors++;
-          if (consecutiveErrors >= 3) {
+          final shift = consecutiveErrors < 5 ? consecutiveErrors : 5;
+          final waitSeconds = (2 << shift) > 60 ? 60 : (2 << shift);
+          for (var s = 0; s < waitSeconds * 2 && mine(); s++) {
+            await Future<void>.delayed(const Duration(milliseconds: 500));
+          }
+          if (!mine()) {
             stopped = true;
             break;
           }
+          page--;
+          continue;
         }
         if (!mine()) {
           stopped = true;

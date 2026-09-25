@@ -134,7 +134,10 @@
     "pick_reciter": "Choose the reciter",
     "probing": "Measuring server speed…",
     "no_host": "No server answered right now. Try again later.",
-    "total": "Space needed for the full experience: {}"
+    "total": "Space needed for the full experience: {}",
+    "later": "Later",
+    "done": "Done",
+    "revisit_hint": "The mushaf, Quranic sciences, recitations, the tasmee model and the reader voice in one place"
   },
   "common": {
     "coming_soon": "Coming soon…",

@@ -134,7 +134,10 @@
     "pick_reciter": "Elige el recitador",
     "probing": "Midiendo la velocidad de los servidores…",
     "no_host": "Ningún servidor respondió ahora. Inténtalo más tarde.",
-    "total": "Espacio necesario para la experiencia completa: {}"
+    "total": "Espacio necesario para la experiencia completa: {}",
+    "later": "Más tarde",
+    "done": "Listo",
+    "revisit_hint": "El mushaf, las ciencias coránicas, las recitaciones, el modelo de tasmee y la voz del lector en un solo lugar"
   },
   "common": {
     "coming_soon": "Próximamente…",

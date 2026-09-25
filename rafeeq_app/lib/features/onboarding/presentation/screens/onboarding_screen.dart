@@ -45,7 +45,12 @@ import '../widgets/offline_pack_tiles.dart';
 /// forced: both are real background jobs the user can also start later from
 /// Downloads, so the closing CTA never blocks on them finishing.
 class OnboardingScreen extends ConsumerWidget {
-  const OnboardingScreen({super.key});
+  const OnboardingScreen({super.key, this.revisit = false});
+
+  /// Opened again from Downloads («حطها خيار في التنزيلات ممكن ارجعلها
+  /// بعدين», 2026-09-25): the same rows, but the button just closes the
+  /// page - onboarding is not run a second time.
+  final bool revisit;
 
   Future<void> _finish(BuildContext context, WidgetRef ref) async {
     final prefs = ref.read(sharedPrefsProvider);
@@ -241,7 +246,7 @@ class OnboardingScreen extends ConsumerWidget {
                 ),
               ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+              padding: EdgeInsets.fromLTRB(20, 4, 20, revisit ? 20 : 4),
               child: SizedBox(
                 width: double.infinity,
                 child: FilledButton(
@@ -253,9 +258,11 @@ class OnboardingScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  onPressed: () => _finish(context, ref),
+                  onPressed: revisit
+                      ? () => Navigator.of(context).maybePop()
+                      : () => _finish(context, ref),
                   child: Text(
-                    'onboarding.cta'.tr(),
+                    revisit ? 'onboarding.done'.tr() : 'onboarding.cta'.tr(),
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -264,6 +271,17 @@ class OnboardingScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            // «ابقى حط لاحقا في شاشة التحميلات المبدئية» (2026-09-25):
+            // leaving without downloading anything, said in so many words.
+            // Every row stays reachable from Downloads → Initial downloads.
+            if (!revisit)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: TextButton(
+                  onPressed: () => _finish(context, ref),
+                  child: Text('onboarding.later'.tr()),
+                ),
+              ),
           ],
         ),
       ),

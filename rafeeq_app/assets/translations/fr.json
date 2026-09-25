@@ -134,7 +134,10 @@
     "pick_reciter": "Choisissez le récitateur",
     "probing": "Mesure de la vitesse des serveurs…",
     "no_host": "Aucun serveur n'a répondu pour l'instant. Réessayez plus tard.",
-    "total": "Espace nécessaire pour l'expérience complète : {}"
+    "total": "Espace nécessaire pour l'expérience complète : {}",
+    "later": "Plus tard",
+    "done": "Terminé",
+    "revisit_hint": "Le mushaf, les sciences coraniques, les récitations, le modèle de tasmee et la voix du lecteur au même endroit"
   },
   "common": {
     "coming_soon": "Bientôt disponible…",

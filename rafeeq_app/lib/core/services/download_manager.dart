@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:archive/archive.dart';
@@ -603,8 +604,19 @@ class DownloadManager {
 
   /// Unzips a pack. A single `.db` inside is installed into `databases/<stem>`;
   /// otherwise the archive is extracted under `downloads/<stem>/`.
+  ///
+  /// Off the UI isolate. Inflating علوم القرآن (33 MB) here froze the app
+  /// into «isn't responding» at the end of the onboarding download (owner's
+  /// Xiaomi, screen recording 2026-09-25 13:13). A top-level function, so
+  /// the isolate captures two strings and not this manager.
   Future<String> _unzipToDatabases(String zipPath) async {
     final support = await getApplicationSupportDirectory();
+    return Isolate.run(() => _unzipPackOffThread(zipPath, support.path));
+  }
+}
+
+Future<String> _unzipPackOffThread(String zipPath, String supportPath) async {
+  {
     final bytes = await File(zipPath).readAsBytes();
     final archive = ZipDecoder().decodeBytes(bytes);
 
@@ -616,7 +628,7 @@ class DownloadManager {
       }
     }
 
-    final dbDir = p.join(support.path, 'databases');
+    final dbDir = p.join(supportPath, 'databases');
     await Directory(dbDir).create(recursive: true);
 
     if (singleDb != null) {
