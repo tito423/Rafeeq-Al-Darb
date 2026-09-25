@@ -12,6 +12,16 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 ~04:55. Build 14 (= d7ed9a35) on emulator. Light
+re-crawl: hadith icons gone. Fixed in code since (28eba2c7, NOT BUILT):
+21 multi-line flat-gold icons, player TabBar label, theme chip icon
+(onPrimaryContainer). 588 pass (one run hung at ui_strings_translated_test
+for 13 min and was killed; the rerun passed in 64 s - watch for it).
+SEEN by chance: Fajr adhan fired 04:50 on build 14, screen + synced
+text, Stop works. RGB crawl on build 14 running -> confirm filled
+buttons read (onPrimary fix), eye the rest; then build 15, final light
++ RGB scan, HANDOVER, report to owner.
+
 SESSION 2026-09-25 ~04:15. Dark crawl (build 13): every flag eyed, all
 false (card/chip borders, icon rings, map dots, photo-card edges, scrim).
 RGB crawl: REAL - white on the RGB primary #22E0C6 = 1.67:1 on every
@@ -332,6 +342,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 04:55 - 21 more gold icons + player tab + chip icon fixed (28eba2c7, unbuilt); Fajr adhan seen firing on time on build 14
 - 2026-09-25 04:15 - dark clean; RGB filled buttons white-on-cyan 1.67:1 fixed via measured onPrimary (unbuilt)
 - 2026-09-25 03:50 - contrast light crawl complete + eyed; 35 gold icons, reading card, chip checkmarks fixed (unbuilt)
 - 2026-09-25 03:27 - build 13: manual location fully verified offline (times, name, qibla 138 = calc, method change, back to automatic)
