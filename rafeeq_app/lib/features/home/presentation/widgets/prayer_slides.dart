@@ -21,14 +21,7 @@ import '../../data/prayer_controller.dart';
 import 'prayer_slide_adhan_extras.dart';
 
 /// The six timings, in the order they occur.
-const prayerSlideOrder = [
-  'fajr',
-  'sunrise',
-  'dhuhr',
-  'asr',
-  'maghrib',
-  'isha',
-];
+const prayerSlideOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
 const prayerSlideLabelKeys = {
   'fajr': 'prayer.fajr',
@@ -181,11 +174,13 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
           // in this card's own header.
           final times =
               ref.watch(prayerControllerProvider).valueOrNull?.times ??
-                  widget.times;
+              widget.times;
           return CardScreen(
             title: prayerSlideLabelKeys[key]!.tr(),
             subtitle: formatTime12h(
-                times.byName(key), context.locale.languageCode),
+              times.byName(key),
+              context.locale.languageCode,
+            ),
             icon: _prayerSlideIcons[key],
             accent: prayerSlideColors[key]!,
             child: PrayerSlideDetails(prayerKey: key),
@@ -201,50 +196,52 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
     // "+3" line, and at 116 that overflowed by 0.8px on the device. Sized for
     // the tallest state the slide can actually be in, not the common one.
     return SizedBox(
-          height: 126,
-          child: PageView.builder(
-            controller: _controller,
-            // No `reverse`: a horizontal PageView already resolves its scroll
-            // direction from the ambient Directionality, so in Arabic Fajr is
-            // at the right-hand (leading) end on its own. Setting `reverse`
-            // here double-flipped it and laid the day out left-to-right.
-            itemCount: prayerSlideOrder.length,
-            padEnds: true,
-            itemBuilder: (context, index) {
-              final key = prayerSlideOrder[index];
-              final distance = (_page - index).abs().clamp(0.0, 1.0);
-              final scale = 1 - 0.22 * distance;
-              // 0.55 at the side left the neighbouring time at 2.40 : 1 in
-              // the light theme (emulator-5554, 2026-09-25); the size step
-              // still says «not this one», the text stays readable.
-              final opacity = 1 - 0.2 * distance;
-              // `Builder` so the slide has a context of its own — that is what
-              // the card route uses as the point it grows out of.
-              return Builder(
-                builder: (slideContext) => Center(
-                  child: Transform.scale(
-                    scale: scale,
-                    child: Opacity(
-                      opacity: opacity,
-                      child: _PrayerSlide(
-                        label: prayerSlideLabelKeys[key]!.tr(),
-                        time: formatTime12h(
-                            widget.times.byName(key),
-                            context.locale.languageCode),
-                        color: prayerSlideColors[key]!,
-                        icon: _prayerSlideIcons[key]!,
-                        isNext: widget.nextKey == key,
-                        isFocused: index == _focused,
-                        offsetMinutes:
-                            ref.watch(prayerAdjustmentsProvider).offsetFor(key),
-                        onTap: () => _onSlideTapped(index, slideContext),
-                      ),
+      height: 126,
+      child: PageView.builder(
+        controller: _controller,
+        // No `reverse`: a horizontal PageView already resolves its scroll
+        // direction from the ambient Directionality, so in Arabic Fajr is
+        // at the right-hand (leading) end on its own. Setting `reverse`
+        // here double-flipped it and laid the day out left-to-right.
+        itemCount: prayerSlideOrder.length,
+        padEnds: true,
+        itemBuilder: (context, index) {
+          final key = prayerSlideOrder[index];
+          final distance = (_page - index).abs().clamp(0.0, 1.0);
+          final scale = 1 - 0.22 * distance;
+          // 0.55 at the side left the neighbouring time at 2.40 : 1 in
+          // the light theme (emulator-5554, 2026-09-25); the size step
+          // still says «not this one», the text stays readable.
+          final opacity = 1 - 0.2 * distance;
+          // `Builder` so the slide has a context of its own — that is what
+          // the card route uses as the point it grows out of.
+          return Builder(
+            builder: (slideContext) => Center(
+              child: Transform.scale(
+                scale: scale,
+                child: Opacity(
+                  opacity: opacity,
+                  child: _PrayerSlide(
+                    label: prayerSlideLabelKeys[key]!.tr(),
+                    time: formatTime12h(
+                      widget.times.byName(key),
+                      context.locale.languageCode,
                     ),
+                    color: prayerSlideColors[key]!,
+                    icon: _prayerSlideIcons[key]!,
+                    isNext: widget.nextKey == key,
+                    isFocused: index == _focused,
+                    offsetMinutes: ref
+                        .watch(prayerAdjustmentsProvider)
+                        .offsetFor(key),
+                    onTap: () => _onSlideTapped(index, slideContext),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -315,11 +312,7 @@ class _PrayerSlide extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 18,
-              color: filled ? hero.onChip : accent,
-            ),
+            Icon(icon, size: 18, color: filled ? hero.onChip : accent),
             const SizedBox(height: 4),
             Text(
               label,
@@ -331,13 +324,20 @@ class _PrayerSlide extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 3),
-            Text(
-              time,
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: filled ? hero.onChip : hero.onSurfaceMuted,
+            // Scaled down, not clipped: at the largest system font «12:11 PM»
+            // is wider than the 96 dp slide and maxLines cut the «PM» off
+            // (owner's phone, font scale 1.45, 2026-09-25). A one-digit hour
+            // fitted, so only some slides lost it.
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                time,
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: filled ? hero.onChip : hero.onSurfaceMuted,
+                ),
               ),
             ),
             // An honest marker that this timing is not the calculated one.
@@ -360,8 +360,7 @@ class _PrayerSlide extends StatelessWidget {
             Icon(
               Icons.open_in_full_rounded,
               size: 13,
-              color:
-                  (filled ? hero.onChip : accent).withValues(alpha: 0.75),
+              color: (filled ? hero.onChip : accent).withValues(alpha: 0.75),
             ),
           ],
         ),
@@ -421,14 +420,16 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
     );
     if (!mounted) return;
     if (!started) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('errors.generic'.tr())));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('errors.generic'.tr())));
       return;
     }
     setState(() => _previewing = true);
     _previewWatch?.cancel();
-    _previewWatch =
-        Timer.periodic(const Duration(milliseconds: 500), (t) async {
+    _previewWatch = Timer.periodic(const Duration(milliseconds: 500), (
+      t,
+    ) async {
       final state = await AdhanNative.state();
       if (!mounted) {
         t.cancel();
@@ -456,8 +457,9 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
   }
 
   Future<void> _nudge(int delta) async {
-    final current =
-        ref.read(prayerAdjustmentsProvider).offsetFor(widget.prayerKey);
+    final current = ref
+        .read(prayerAdjustmentsProvider)
+        .offsetFor(widget.prayerKey);
     await ref
         .read(prayerAdjustmentsProvider.notifier)
         .setMinuteOffset(widget.prayerKey, current + delta);
@@ -468,9 +470,9 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
     final color = prayerSlideColors[widget.prayerKey]!;
     final settings = ref.watch(adhanSettingsProvider);
     final catalog = ref.watch(adhanCatalogProvider).valueOrNull ?? const [];
-    final offset = ref.watch(prayerAdjustmentsProvider).offsetFor(
-          widget.prayerKey,
-        );
+    final offset = ref
+        .watch(prayerAdjustmentsProvider)
+        .offsetFor(widget.prayerKey);
 
     final adhanId = settings.adhanIdFor(widget.prayerKey);
     final hero = HeroSurface.of(context);
@@ -478,120 +480,114 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
     final option = catalog.isEmpty || !_hasAdhan
         ? null
         : resolveAdhanFor(catalog, settings, widget.prayerKey);
-    final usesDefault =
-        settings.adhanIdByPrayer[widget.prayerKey] == null;
+    final usesDefault = settings.adhanIdByPrayer[widget.prayerKey] == null;
 
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // ── Manual correction — always available, sunrise included ──
-          _DetailRow(
-            icon: Icons.tune_rounded,
-            label: 'prayer.times_adjust'.tr(),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _StepperButton(
-                  icon: Icons.remove_rounded,
-                  onTap: () => _nudge(-1),
-                ),
-                SizedBox(
-                  width: 60,
-                  // The reader's numerals: «0» sat in an Arabic dialog.
-                  child: Text(
-                    localizeDigits(
-                      offset == 0
-                          ? '0'
-                          : (offset > 0 ? '+$offset' : '$offset'),
-                      uiLanguageCode,
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: offset == 0
-                          ? hero.onSurfaceFaint
-                          : hero.accent(color),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                    ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // ── Manual correction — always available, sunrise included ──
+        _DetailRow(
+          icon: Icons.tune_rounded,
+          label: 'prayer.times_adjust'.tr(),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _StepperButton(
+                icon: Icons.remove_rounded,
+                onTap: () => _nudge(-1),
+              ),
+              SizedBox(
+                width: 60,
+                // The reader's numerals: «0» sat in an Arabic dialog.
+                child: Text(
+                  localizeDigits(
+                    offset == 0 ? '0' : (offset > 0 ? '+$offset' : '$offset'),
+                    uiLanguageCode,
+                  ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: offset == 0
+                        ? hero.onSurfaceFaint
+                        : hero.accent(color),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
-                _StepperButton(
-                  icon: Icons.add_rounded,
-                  onTap: () => _nudge(1),
-                ),
-              ],
-            ),
-          ),
-
-          if (!_hasAdhan)
-            // Honest: the sunrise is a timing, not a prayer — it has no adhan
-            // and never gets one, so the card says that rather than showing
-            // dead controls.
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                'prayer.sunrise_no_adhan'.tr(),
-                style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
               ),
-            )
-          else ...[
-            const _ThinDivider(),
+              _StepperButton(icon: Icons.add_rounded, onTap: () => _nudge(1)),
+            ],
+          ),
+        ),
 
-            // ── Alert mode ──
-            Text(
-              'prayer.notification_mode'.tr(),
+        if (!_hasAdhan)
+          // Honest: the sunrise is a timing, not a prayer — it has no adhan
+          // and never gets one, so the card says that rather than showing
+          // dead controls.
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              'prayer.sunrise_no_adhan'.tr(),
               style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
             ),
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children: [
-                for (final mode in AdhanMode.values)
-                  _Pill(
-                    label: mode.trKey.tr(),
-                    selected: settings.modeFor(widget.prayerKey) == mode,
-                    color: color,
-                    onTap: () => _setMode(mode),
-                  ),
-              ],
-            ),
+          )
+        else ...[
+          const _ThinDivider(),
 
-            const _ThinDivider(),
+          // ── Alert mode ──
+          Text(
+            'prayer.notification_mode'.tr(),
+            style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
+          ),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final mode in AdhanMode.values)
+                _Pill(
+                  label: mode.trKey.tr(),
+                  selected: settings.modeFor(widget.prayerKey) == mode,
+                  color: color,
+                  onTap: () => _setMode(mode),
+                ),
+            ],
+          ),
 
-            // ── Muezzin ──
-            _DetailRow(
-              icon: Icons.record_voice_over_outlined,
-              label: 'prayer.choose_adhan'.tr(),
-              value: option?.name ?? '—',
-              subValue: usesDefault ? 'prayer.use_default'.tr() : null,
-              onTap: catalog.isEmpty
-                  ? null
-                  : () => _pickAdhan(catalog, adhanId, usesDefault),
-              trailing: option == null
-                  ? null
-                  : IconButton(
-                      visualDensity: VisualDensity.compact,
-                      tooltip: 'prayer.test'.tr(),
-                      onPressed: () => _togglePreview(option),
-                      icon: Icon(
-                        _previewing
-                            ? Icons.stop_circle_outlined
-                            : Icons.play_circle_outline,
-                        color: color,
-                      ),
+          const _ThinDivider(),
+
+          // ── Muezzin ──
+          _DetailRow(
+            icon: Icons.record_voice_over_outlined,
+            label: 'prayer.choose_adhan'.tr(),
+            value: option?.name ?? '—',
+            subValue: usesDefault ? 'prayer.use_default'.tr() : null,
+            onTap: catalog.isEmpty
+                ? null
+                : () => _pickAdhan(catalog, adhanId, usesDefault),
+            trailing: option == null
+                ? null
+                : IconButton(
+                    visualDensity: VisualDensity.compact,
+                    tooltip: 'prayer.test'.tr(),
+                    onPressed: () => _togglePreview(option),
+                    icon: Icon(
+                      _previewing
+                          ? Icons.stop_circle_outlined
+                          : Icons.play_circle_outline,
+                      color: color,
                     ),
-            ),
-            PrayerSlideAdhanExtras(
-              prayerKey: widget.prayerKey,
-              color: color,
-              stopRowPreview: () async {
-                if (_previewing && option != null) await _togglePreview(option);
-              },
-            ),
-          ],
+                  ),
+          ),
+          PrayerSlideAdhanExtras(
+            prayerKey: widget.prayerKey,
+            color: color,
+            stopRowPreview: () async {
+              if (_previewing && option != null) await _togglePreview(option);
+            },
+          ),
         ],
+      ],
     );
   }
 
@@ -624,12 +620,13 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
               onTap: () => Navigator.of(ctx).pop('__default__'),
             ),
             Divider(height: 1, color: HeroSurface.of(context).hairline),
-            for (final o in catalog.where((o) => o.fitsPrayer(widget.prayerKey)))
+            for (final o in catalog.where(
+              (o) => o.fitsPrayer(widget.prayerKey),
+            ))
               ListTile(
                 title: Text(
                   o.name,
-                  style:
-                      TextStyle(color: HeroSurface.of(context).onSurface),
+                  style: TextStyle(color: HeroSurface.of(context).onSurface),
                 ),
                 leading: Icon(
                   !usesDefault && o.id == currentId
@@ -646,7 +643,6 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
     if (chosen == null) return;
     await _setAdhan(chosen == '__default__' ? null : chosen as String);
   }
-
 }
 
 class _DetailRow extends StatelessWidget {
@@ -684,8 +680,7 @@ class _DetailRow extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style:
-                        TextStyle(color: hero.onSurfaceFaint, fontSize: 11),
+                    style: TextStyle(color: hero.onSurfaceFaint, fontSize: 11),
                   ),
                   if (value != null)
                     Text(
@@ -702,7 +697,9 @@ class _DetailRow extends StatelessWidget {
                     Text(
                       subValue!,
                       style: TextStyle(
-                          color: hero.onSurfaceFaint, fontSize: 10),
+                        color: hero.onSurfaceFaint,
+                        fontSize: 10,
+                      ),
                     ),
                 ],
               ),
@@ -787,10 +784,7 @@ class _ThinDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Container(
-          height: 1,
-          color: HeroSurface.of(context).hairline,
-        ),
-      );
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Container(height: 1, color: HeroSurface.of(context).hairline),
+  );
 }

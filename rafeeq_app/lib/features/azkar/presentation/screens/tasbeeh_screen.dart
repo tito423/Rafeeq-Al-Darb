@@ -18,7 +18,6 @@ import '../../../tutorial/data/tutorial_anchors.dart';
 
 part 'tasbeeh_mathur_cards.dart';
 
-
 class TasbeehScreen extends ConsumerStatefulWidget {
   const TasbeehScreen({super.key});
 
@@ -41,14 +40,15 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   int _rounds = 0;
   int _total = 0;
 
-  late final AnimationController _celebrate = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 2400),
-  )..addStatusListener((s) {
-      if (s == AnimationStatus.completed && mounted) {
-        setState(() {}); // clear the overlay when the burst finishes
-      }
-    });
+  late final AnimationController _celebrate =
+      AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 2400),
+      )..addStatusListener((s) {
+        if (s == AnimationStatus.completed && mounted) {
+          setState(() {}); // clear the overlay when the burst finishes
+        }
+      });
 
   /// Whether haptic feedback is enabled — persisted in SharedPreferences.
   bool _hapticEnabled = true;
@@ -96,8 +96,10 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       _total++;
       if (t != null && _count == t) _rounds++;
     });
-    
-    SharedPreferences.getInstance().then((p) => p.setInt('tasbeeh_total', _total));
+
+    SharedPreferences.getInstance().then(
+      (p) => p.setInt('tasbeeh_total', _total),
+    );
     ref.read(syncServiceProvider).incrementCounter('tasbeeh_total', 1);
     // Celebrate on a completed finite target of 1000, or every 1000 counts
     // in no-limit mode.
@@ -143,8 +145,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   }
 
   /// The phrase currently being counted, whichever of the two lists it is in.
-  DhikrOption get _selected =>
-      _mathurIndex == null ? tasbeehShortAdhkar[_dhikrIndex] : tasbeehLongAdhkar[_mathurIndex!];
+  DhikrOption get _selected => _mathurIndex == null
+      ? tasbeehShortAdhkar[_dhikrIndex]
+      : tasbeehLongAdhkar[_mathurIndex!];
 
   Future<void> _openMathurPicker() async {
     final chosen = await showModalBottomSheet<int>(
@@ -166,7 +169,8 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
 
   Future<void> _askCustomTarget() async {
     final ctrl = TextEditingController(
-        text: _customTarget == null ? '' : '$_customTarget');
+      text: _customTarget == null ? '' : '$_customTarget',
+    );
     final n = await showDialog<int>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -176,7 +180,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
           autofocus: true,
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: InputDecoration(hintText: 'azkar.tasbeeh_custom_hint'.tr()),
+          decoration: InputDecoration(
+            hintText: 'azkar.tasbeeh_custom_hint'.tr(),
+          ),
           onSubmitted: (v) => Navigator.of(ctx).pop(int.tryParse(v)),
         ),
         actions: [
@@ -212,8 +218,11 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       final ok = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          content: Text('azkar.tasbeeh_reset_all_confirm'.tr(
-              args: [localizeDigits('$was', context.locale.languageCode)])),
+          content: Text(
+            'azkar.tasbeeh_reset_all_confirm'.tr(
+              args: [localizeDigits('$was', context.locale.languageCode)],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
@@ -248,278 +257,327 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     final scheme = Theme.of(context).colorScheme;
     final selected = _selected;
     final circleGround = Color.alphaBlend(
-        selected.color.withValues(alpha: 0.10),
-        scheme.surfaceContainerHighest);
+      selected.color.withValues(alpha: 0.10),
+      scheme.surfaceContainerHighest,
+    );
     return Scaffold(
       appBar: AppBar(title: Text('azkar.tab_tasbeeh'.tr())),
       body: SafeArea(
         child: Stack(
           children: [
-            LayoutBuilder(builder: (context, box) {
-              final controls = <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 4),
-                  child: Row(
-                    children: [
-                      Chip(
-                        label: Text(localizeDigits(
-                            'azkar.tasbeeh_total'.tr(args: ['$_total']),
-                            context.locale.languageCode)),
-                        backgroundColor: scheme.surfaceContainerHighest,
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        tooltip: _hapticEnabled
-                            ? 'azkar.haptic_on'.tr()
-                            : 'azkar.haptic_off'.tr(),
-                        onPressed: _toggleHaptic,
-                        icon: Icon(
-                          _hapticEnabled
-                              ? Icons.vibration
-                              : Icons.phonelink_erase,
-                          color: _hapticEnabled
-                              ? scheme.primary
-                              : scheme.onSurfaceVariant,
-                        ),
-                      ),
-                      IconButton(
-                        tooltip: 'common.reset_all'.tr(),
-                        onPressed: _total == 0 && _rounds == 0 && _count == 0
-                            ? null
-                            : _clearAll,
-                        icon: SvgPicture.asset(
-                          'assets/icons/reset.svg',
-                          colorFilter: ColorFilter.mode(scheme.error, BlendMode.srcIn),
-                          width: 24,
-                          height: 24,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Target selector (P3‑47).
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: TutorialAnchor(
-                    id: TourAnchor.tasbeehTargets,
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 8,
+            LayoutBuilder(
+              builder: (context, box) {
+                final controls = <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 14, 14, 4),
+                    child: Row(
                       children: [
-                        for (final t in tasbeehTargets)
-                          ChoiceChip(
-                            // No tick: it widened the chosen chip, the row
-                            // re-wrapped («مخصص» hopping lines) and the whole
-                            // counter below jumped - the glitch in the
-                            // owner's recording. Selection shows by colour.
-                            showCheckmark: false,
-                            label: Text(_targetLabel(t)),
-                            selected: _target == t,
-                            onSelected: (_) => _selectTarget(t),
+                        Chip(
+                          label: Text(
+                            localizeDigits(
+                              'azkar.tasbeeh_total'.tr(args: ['$_total']),
+                              context.locale.languageCode,
+                            ),
                           ),
-                        // «مربع لعدد مخصص مالوش سقف».
-                        ChoiceChip(
-                          showCheckmark: false,
-                          avatar: const Icon(Icons.edit_rounded, size: 16),
-                          label: Text(_customTarget == null ||
-                                  tasbeehTargets.contains(_customTarget)
-                              ? 'azkar.tasbeeh_custom'.tr()
-                              : _targetLabel(_customTarget)),
-                          selected: _target != null &&
-                              !tasbeehTargets.contains(_target),
-                          onSelected: (_) => _askCustomTarget(),
+                          backgroundColor: scheme.surfaceContainerHighest,
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          tooltip: _hapticEnabled
+                              ? 'azkar.haptic_on'.tr()
+                              : 'azkar.haptic_off'.tr(),
+                          onPressed: _toggleHaptic,
+                          icon: Icon(
+                            _hapticEnabled
+                                ? Icons.vibration
+                                : Icons.phonelink_erase,
+                            color: _hapticEnabled
+                                ? scheme.primary
+                                : scheme.onSurfaceVariant,
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'common.reset_all'.tr(),
+                          onPressed: _total == 0 && _rounds == 0 && _count == 0
+                              ? null
+                              : _clearAll,
+                          icon: SvgPicture.asset(
+                            'assets/icons/reset.svg',
+                            colorFilter: ColorFilter.mode(
+                              scheme.error,
+                              BlendMode.srcIn,
+                            ),
+                            width: 24,
+                            height: 24,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      for (var i = 0; i < tasbeehShortAdhkar.length; i++)
-                        _DhikrPill(
-                          option: tasbeehShortAdhkar[i],
-                          selected: i == _dhikrIndex && _mathurIndex == null,
-                          onTap: () => _selectDhikr(i),
-                        ),
-                    ],
-                  ),
-                ),
-                // The gateway to the five long adhkar.
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 2, 14, 6),
-                  child: TutorialAnchor(
-                    id: TourAnchor.tasbeehMathur,
-                    child: _MathurEntryCard(
-                      active: _mathurIndex != null,
-                      onTap: _openMathurPicker,
+                  // Target selector (P3‑47).
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TutorialAnchor(
+                      id: TourAnchor.tasbeehTargets,
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 8,
+                        children: [
+                          for (final t in tasbeehTargets)
+                            ChoiceChip(
+                              // No tick: it widened the chosen chip, the row
+                              // re-wrapped («مخصص» hopping lines) and the whole
+                              // counter below jumped - the glitch in the
+                              // owner's recording. Selection shows by colour.
+                              showCheckmark: false,
+                              label: Text(_targetLabel(t)),
+                              selected: _target == t,
+                              onSelected: (_) => _selectTarget(t),
+                            ),
+                          // «مربع لعدد مخصص مالوش سقف».
+                          ChoiceChip(
+                            showCheckmark: false,
+                            avatar: const Icon(Icons.edit_rounded, size: 16),
+                            label: Text(
+                              _customTarget == null ||
+                                      tasbeehTargets.contains(_customTarget)
+                                  ? 'azkar.tasbeeh_custom'.tr()
+                                  : _targetLabel(_customTarget),
+                            ),
+                            selected:
+                                _target != null &&
+                                !tasbeehTargets.contains(_target),
+                            onSelected: (_) => _askCustomTarget(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ];
-              final Widget counter = _mathurIndex != null
-                  ? Center(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-                        child: _MathurCounterCard(
-                          option: selected,
-                          count: _count,
-                          target: _target,
-                          onTap: _tap,
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (var i = 0; i < tasbeehShortAdhkar.length; i++)
+                          _DhikrPill(
+                            option: tasbeehShortAdhkar[i],
+                            selected: i == _dhikrIndex && _mathurIndex == null,
+                            onTap: () => _selectDhikr(i),
+                          ),
+                      ],
+                    ),
+                  ),
+                  // The gateway to the five long adhkar.
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 2, 14, 6),
+                    child: TutorialAnchor(
+                      id: TourAnchor.tasbeehMathur,
+                      child: _MathurEntryCard(
+                        active: _mathurIndex != null,
+                        onTap: _openMathurPicker,
                       ),
-                    )
-                  : Center(
-                    // A short or narrow screen gets a smaller circle rather
-                    // than an overflow stripe.
-                    child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: GestureDetector(
-                      onTap: _tap,
-                      child: Container(
-                        width: 250,
-                        height: 250,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: circleGround,
-                          border: Border.all(
-                              color: selected.color.withValues(alpha: 0.55),
-                              width: 2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: selected.color.withValues(alpha: 0.35),
-                              blurRadius: 28,
-                              spreadRadius: 2,
-                            ),
-                          ],
+                    ),
+                  ),
+                ];
+                final Widget counter = _mathurIndex != null
+                    ? Center(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                          child: _MathurCounterCard(
+                            option: selected,
+                            count: _count,
+                            target: _target,
+                            onTap: _tap,
+                          ),
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              selected.textKey.tr(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'AmiriQuran',
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                // Light blue on the pale circle measured
-                                // 1.69 : 1 (emulator-5554, 2026-09-25).
-                                color: readableOn(selected.color, circleGround),
-                              ),
-                            ),
-                            // P3‑48: for non-Arabic UI languages, show a
-                            // transliteration ("how to read it") beneath the
-                            // Arabic so a non-Arabic speaker can pronounce it.
-                            if (context.locale.languageCode != 'ar') ...[
-                              const SizedBox(height: 4),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                child: Text(
-                                  '${selected.textKey}_ph'.tr(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontStyle: FontStyle.italic,
-                                    color: scheme.onSurfaceVariant,
-                                  ),
+                      )
+                    : Center(
+                        // A short or narrow screen gets a smaller circle rather
+                        // than an overflow stripe.
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: GestureDetector(
+                            onTap: _tap,
+                            child: Container(
+                              width: 250,
+                              height: 250,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: circleGround,
+                                border: Border.all(
+                                  color: selected.color.withValues(alpha: 0.55),
+                                  width: 2,
                                 ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: selected.color.withValues(
+                                      alpha: 0.35,
+                                    ),
+                                    blurRadius: 28,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
                               ),
-                            ],
-                            const SizedBox(height: 14),
-                            // «٠ / ٣٣», not «٣٣ / ٠». Seen in Arabic on
-                            // emulator-5554 reading «33 / 0» — «33 of 0».
-                            // CORRECTION. This was "fixed" once already, by
-                            // splitting the pair into three Text widgets in a
-                            // Row. The reasoning about bidi was right - three
-                            // Texts share no paragraph, so rule N1 has no
-                            // neutral to resolve - and the fix STILL rendered
-                            // «33 / 2» on emulator-5554, because it swapped
-                            // one reordering for another: a Row lays its
-                            // children out along the ambient Directionality,
-                            // and under RTL that puts the FIRST child on the
-                            // RIGHT. The pair was reordered by the Row itself.
-                            //
-                            // ratio() is the fix used by the other fifteen
-                            // sites, and it is the one with a rendering test
-                            // behind it (test/ratio_direction_test.dart lays
-                            // text out under real RTL and reads caret offsets).
-                            // Wrapped in localizeDigits because in Arabic this
-                            // screen was the only one on it printing Latin
-                            // numerals - the Home clock, the date and the
-                            // prayer times are all Arabic-Indic.
-                            Text(
-                              localizeDigits(
-                                _target == null
-                                    ? '$_count'
-                                    : localizeDigits(ratio(_count, _target!), uiLanguageCode),
-                                context.locale.languageCode,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    selected.textKey.tr(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'AmiriQuran',
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                      // Light blue on the pale circle measured
+                                      // 1.69 : 1 (emulator-5554, 2026-09-25).
+                                      color: readableOn(
+                                        selected.color,
+                                        circleGround,
+                                      ),
+                                    ),
+                                  ),
+                                  // P3‑48: for non-Arabic UI languages, show a
+                                  // transliteration ("how to read it") beneath the
+                                  // Arabic so a non-Arabic speaker can pronounce it.
+                                  if (context.locale.languageCode != 'ar') ...[
+                                    const SizedBox(height: 4),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                      ),
+                                      child: Text(
+                                        '${selected.textKey}_ph'.tr(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontStyle: FontStyle.italic,
+                                          color: scheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  const SizedBox(height: 14),
+                                  // «٠ / ٣٣», not «٣٣ / ٠». Seen in Arabic on
+                                  // emulator-5554 reading «33 / 0» — «33 of 0».
+                                  // CORRECTION. This was "fixed" once already, by
+                                  // splitting the pair into three Text widgets in a
+                                  // Row. The reasoning about bidi was right - three
+                                  // Texts share no paragraph, so rule N1 has no
+                                  // neutral to resolve - and the fix STILL rendered
+                                  // «33 / 2» on emulator-5554, because it swapped
+                                  // one reordering for another: a Row lays its
+                                  // children out along the ambient Directionality,
+                                  // and under RTL that puts the FIRST child on the
+                                  // RIGHT. The pair was reordered by the Row itself.
+                                  //
+                                  // ratio() is the fix used by the other fifteen
+                                  // sites, and it is the one with a rendering test
+                                  // behind it (test/ratio_direction_test.dart lays
+                                  // text out under real RTL and reads caret offsets).
+                                  // Wrapped in localizeDigits because in Arabic this
+                                  // screen was the only one on it printing Latin
+                                  // numerals - the Home clock, the date and the
+                                  // prayer times are all Arabic-Indic.
+                                  Text(
+                                    localizeDigits(
+                                      _target == null
+                                          ? '$_count'
+                                          : localizeDigits(
+                                              ratio(_count, _target!),
+                                              uiLanguageCode,
+                                            ),
+                                      context.locale.languageCode,
+                                    ),
+                                    style: const TextStyle(
+                                      fontSize: 52,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'azkar.tap_to_count'.tr(),
+                                    style: TextStyle(
+                                      color: scheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              style: const TextStyle(
-                                  fontSize: 52, fontWeight: FontWeight.bold),
                             ),
-                            const SizedBox(height: 6),
-                            Text('azkar.tap_to_count'.tr(),
-                                style:
-                                    TextStyle(color: scheme.onSurfaceVariant)),
+                          ),
+                        ),
+                      );
+                final footer = <Widget>[
+                  Text(
+                    localizeDigits(
+                      'azkar.rounds_count'.tr(args: ['$_rounds']),
+                      context.locale.languageCode,
+                    ),
+                    style: TextStyle(color: scheme.onSurfaceVariant),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: IconButton.filledTonal(
+                      tooltip: 'azkar.reset'.tr(),
+                      onPressed: () => setState(() {
+                        _count = 0;
+                        _rounds = 0;
+                      }),
+                      icon: const Icon(Icons.refresh),
+                    ),
+                  ),
+                ];
+                // Landscape: the controls above took the whole height and the
+                // FittedBox shrank the counter to a dot nobody could tap
+                // (emulator-5554, 2026-09-24, 2400x1080 rotated). Side by
+                // side, the controls scroll and the counter keeps its size.
+                if (box.maxWidth > box.maxHeight && box.maxHeight < 600) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(children: controls),
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(child: counter),
+                            ...footer,
                           ],
                         ),
                       ),
-                    ),
-                    ),
+                    ],
                   );
-              final footer = <Widget>[
-                Text(
-                    localizeDigits('azkar.rounds_count'.tr(args: ['$_rounds']),
-                        context.locale.languageCode),
-                    style: TextStyle(color: scheme.onSurfaceVariant)),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: IconButton.filledTonal(
-                    tooltip: 'azkar.reset'.tr(),
-                    onPressed: () => setState(() {
-                      _count = 0;
-                      _rounds = 0;
-                    }),
-                    icon: const Icon(Icons.refresh),
-                  ),
-                ),
-              ];
-              // Landscape: the controls above took the whole height and the
-              // FittedBox shrank the counter to a dot nobody could tap
-              // (emulator-5554, 2026-09-24, 2400x1080 rotated). Side by
-              // side, the controls scroll and the counter keeps its size.
-              if (box.maxWidth > box.maxHeight && box.maxHeight < 600) {
-                return Row(
+                }
+                // Portrait at the largest system font (owner's phone, font
+                // scale 1.45, 2026-09-25) did the same thing: the controls
+                // grew until the counter was a dot. They are capped so the
+                // counter always keeps room for its 250 dp circle, and scroll
+                // inside that cap only when they would not fit. At normal
+                // sizes they fit under the cap and nothing moves.
+                final scale = MediaQuery.textScalerOf(context).scale(1);
+                final footerHeight = 88 + 24 * scale;
+                final cap = box.maxHeight - 260 - footerHeight;
+                return Column(
                   children: [
-                    Expanded(
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: cap > 0 ? cap : 0),
                       child: SingleChildScrollView(
                         child: Column(children: controls),
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        children: [Expanded(child: counter), ...footer],
-                      ),
-                    ),
+                    Expanded(child: counter),
+                    ...footer,
                   ],
                 );
-              }
-              return Column(
-                children: [
-                  ...controls,
-                  Expanded(child: counter),
-                  ...footer,
-                ],
-              );
-            }),
+              },
+            ),
             // Celebration overlay (P3‑47): a glowing burst + congratulatory
             // Arabic line when a 1000 milestone is reached. Auto-dismisses.
             if (_celebrate.isAnimating)
@@ -556,9 +614,7 @@ class _CelebrationOverlay extends StatelessWidget {
       builder: (context, _) {
         final t = animation.value;
         // Fade in fast, hold, fade out.
-        final opacity = t < 0.15
-            ? t / 0.15
-            : (t > 0.75 ? (1 - t) / 0.25 : 1.0);
+        final opacity = t < 0.15 ? t / 0.15 : (t > 0.75 ? (1 - t) / 0.25 : 1.0);
         return Opacity(
           opacity: opacity.clamp(0.0, 1.0),
           child: Container(
@@ -568,7 +624,8 @@ class _CelebrationOverlay extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Transform.scale(
-                  scale: 0.6 + 0.6 * Curves.easeOutBack.transform(t.clamp(0, 1)),
+                  scale:
+                      0.6 + 0.6 * Curves.easeOutBack.transform(t.clamp(0, 1)),
                   child: Container(
                     width: 180,
                     height: 180,
@@ -582,8 +639,11 @@ class _CelebrationOverlay extends StatelessWidget {
                       ),
                     ),
                     alignment: Alignment.center,
-                    child: const Icon(Icons.auto_awesome,
-                        color: Colors.white, size: 64),
+                    child: const Icon(
+                      Icons.auto_awesome,
+                      color: Colors.white,
+                      size: 64,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -618,8 +678,11 @@ class _DhikrPill extends StatelessWidget {
   final DhikrOption option;
   final bool selected;
   final VoidCallback onTap;
-  const _DhikrPill(
-      {required this.option, required this.selected, required this.onTap});
+  const _DhikrPill({
+    required this.option,
+    required this.selected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -635,7 +698,10 @@ class _DhikrPill extends StatelessWidget {
           color: fillForWhiteText(option.color),
           borderRadius: BorderRadius.circular(24),
           border: selected
-              ? Border.all(color: Colors.white.withValues(alpha: 0.85), width: 2)
+              ? Border.all(
+                  color: Colors.white.withValues(alpha: 0.85),
+                  width: 2,
+                )
               : null,
           boxShadow: selected
               ? [

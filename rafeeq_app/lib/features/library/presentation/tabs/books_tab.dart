@@ -189,49 +189,85 @@ class _BooksTabState extends State<BooksTab> {
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: TabBar(
-                dividerColor: Colors.transparent,
-                indicatorSize: TabBarIndicatorSize.tab,
-                splashBorderRadius: BorderRadius.circular(12),
-                indicator: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                // Flat gold on the white chosen tab: 2.45 : 1 (light theme).
-                labelColor: readableOn(
-                    AppColors.gold, Theme.of(context).colorScheme.surface),
-                labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-                unselectedLabelColor: Theme.of(
-                  context,
-                ).colorScheme.onSurfaceVariant,
-                // A four-way TabBar gives each tab a quarter of the width
-                // and a `Tab`'s text CLIPS rather than ellipsises, so on a
-                // phone a little narrower than the emulator «التصنيفات» lost
-                // its alif and «مسموعة» its meem - «المؤلفين والتصنيفات
-                // واللي جنبها في مكتبتي مقصوصة ومش كاملة». Shrinking a label
-                // to fit its quarter keeps the word whole, which is what a
-                // tab is for.
-                tabs: [
-                  for (final key in const [
+              child: LayoutBuilder(
+                builder: (context, box) {
+                  // One size for all four labels. Shrinking each on its own
+                  // left «Categories» and «My library» tiny beside «Audio» at
+                  // the largest system font (owner's phone, 1.45, 2026-09-25).
+                  // The longest label sets the size; FittedBox stays as the
+                  // guard against clipping.
+                  const keys = [
                     'library.sub_authors',
                     'library.sub_categories',
                     'library.sub_spoken',
                     'library.sub_mine',
-                  ])
-                    Tab(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(key.tr()),
-                      ),
+                  ];
+                  final base =
+                      (Theme.of(context).textTheme.titleSmall ??
+                              const TextStyle(fontSize: 14))
+                          .copyWith(fontWeight: FontWeight.w700);
+                  final scaler = MediaQuery.textScalerOf(context);
+                  var widest = 0.0;
+                  for (final key in keys) {
+                    final painter = TextPainter(
+                      text: TextSpan(text: key.tr(), style: base),
+                      textScaler: scaler,
+                      textDirection: Directionality.of(context),
+                      maxLines: 1,
+                    )..layout();
+                    if (painter.width > widest) widest = painter.width;
+                    painter.dispose();
+                  }
+                  final slot = box.maxWidth / keys.length - 32;
+                  final factor = widest > slot && widest > 0
+                      ? slot / widest
+                      : 1.0;
+                  final fontSize = (base.fontSize ?? 14) * factor;
+                  return TabBar(
+                    dividerColor: Colors.transparent,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    splashBorderRadius: BorderRadius.circular(12),
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                ],
+                    // Flat gold on the white chosen tab: 2.45 : 1 (light theme).
+                    labelColor: readableOn(
+                      AppColors.gold,
+                      Theme.of(context).colorScheme.surface,
+                    ),
+                    labelStyle: const TextStyle(fontWeight: FontWeight.w700),
+                    unselectedLabelColor: Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant,
+                    // A four-way TabBar gives each tab a quarter of the width
+                    // and a `Tab`'s text CLIPS rather than ellipsises, so on a
+                    // phone a little narrower than the emulator «التصنيفات» lost
+                    // its alif and «مسموعة» its meem - «المؤلفين والتصنيفات
+                    // واللي جنبها في مكتبتي مقصوصة ومش كاملة». Shrinking a label
+                    // to fit its quarter keeps the word whole, which is what a
+                    // tab is for.
+                    tabs: [
+                      for (final key in keys)
+                        Tab(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              key.tr(),
+                              style: TextStyle(fontSize: fontSize),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -342,76 +378,76 @@ class _AuthorExpansionTile extends StatelessWidget {
       builder: (controller, onExpansionChanged) => ExpansionTile(
         controller: controller,
         onExpansionChanged: onExpansionChanged,
-      initiallyExpanded: initiallyExpanded,
-      leading: CircleAvatar(
-        backgroundColor: AppColors.gold.withValues(alpha: 0.15),
-        child: Icon(Icons.person_outline, color: goldText(context), size: 22),
-      ),
-      title: Text(
-        authorName,
-        style: Theme.of(
-          context,
-        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-      ),
-      subtitle: Text(
-        // A living author has no death date; do not render a dangling
-        // bullet. The isolates that used to wrap each half are gone with the
-        // reason for them: the death line is written in the reader's own
-        // language now, not Arabic inside a left-to-right paragraph.
-        // In Arabic the AUTHOR'S NAME beside this already carries
-        // Arabic-Indic digits - «(١٧٠ - ٨٥٢ هـ)» comes straight from
-        // the catalogue - so a Latin «852» on the line beneath it put two
-        // numbering systems on one row. Seen on emulator-5554.
-        localizeDigits(
-          deathDate.isEmpty
-              ? pluralN('library.book_count', books.length)
-              : '$deathDate • ${pluralN('library.book_count', books.length)}',
-          context.locale.languageCode,
+        initiallyExpanded: initiallyExpanded,
+        leading: CircleAvatar(
+          backgroundColor: AppColors.gold.withValues(alpha: 0.15),
+          child: Icon(Icons.person_outline, color: goldText(context), size: 22),
         ),
-        style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
-      ),
-      shape: const Border(),
-      collapsedShape: const Border(),
-      childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
-      children: [
-        // «حط خيار جديد في المكتبة في خانة المؤلفين لإمكانية تحميل كتب المؤلف
-        // كلها دفعة واحدة». Only books with a hosted text and not already on
-        // the device are counted, and the button goes once there are none.
-        if (_missing.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: FilledButton.tonalIcon(
-                onPressed: () {
-                  for (final b in _missing) {
-                    onDownload(b);
-                  }
-                },
-                icon: const Icon(Icons.download_for_offline_rounded),
-                label: Text(
-                  localizeDigits(
-                    trn(
-                      'library.download_author_all',
-                      args: ['${_missing.length}'],
+        title: Text(
+          authorName,
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        subtitle: Text(
+          // A living author has no death date; do not render a dangling
+          // bullet. The isolates that used to wrap each half are gone with the
+          // reason for them: the death line is written in the reader's own
+          // language now, not Arabic inside a left-to-right paragraph.
+          // In Arabic the AUTHOR'S NAME beside this already carries
+          // Arabic-Indic digits - «(١٧٠ - ٨٥٢ هـ)» comes straight from
+          // the catalogue - so a Latin «852» on the line beneath it put two
+          // numbering systems on one row. Seen on emulator-5554.
+          localizeDigits(
+            deathDate.isEmpty
+                ? pluralN('library.book_count', books.length)
+                : '$deathDate • ${pluralN('library.book_count', books.length)}',
+            context.locale.languageCode,
+          ),
+          style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
+        ),
+        shape: const Border(),
+        collapsedShape: const Border(),
+        childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
+        children: [
+          // «حط خيار جديد في المكتبة في خانة المؤلفين لإمكانية تحميل كتب المؤلف
+          // كلها دفعة واحدة». Only books with a hosted text and not already on
+          // the device are counted, and the button goes once there are none.
+          if (_missing.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: FilledButton.tonalIcon(
+                  onPressed: () {
+                    for (final b in _missing) {
+                      onDownload(b);
+                    }
+                  },
+                  icon: const Icon(Icons.download_for_offline_rounded),
+                  label: Text(
+                    localizeDigits(
+                      trn(
+                        'library.download_author_all',
+                        args: ['${_missing.length}'],
+                      ),
+                      context.locale.languageCode,
                     ),
-                    context.locale.languageCode,
                   ),
                 ),
               ),
             ),
-          ),
-        for (final b in books) ...[
-          BookCard(
-            book: b,
-            paths: paths,
-            onDownload: () => onDownload(b),
-            onOpen: () => onOpen(b),
-          ),
-          const SizedBox(height: 10),
+          for (final b in books) ...[
+            BookCard(
+              book: b,
+              paths: paths,
+              onDownload: () => onDownload(b),
+              onOpen: () => onOpen(b),
+            ),
+            const SizedBox(height: 10),
+          ],
         ],
-      ],
-    ),
+      ),
     );
   }
 
@@ -502,40 +538,40 @@ class _CategoryExpansionTile extends StatelessWidget {
       builder: (controller, onExpansionChanged) => ExpansionTile(
         controller: controller,
         onExpansionChanged: onExpansionChanged,
-      initiallyExpanded: initiallyExpanded,
-      leading: Icon(category.icon, color: goldText(context)),
-      title: Text(
-        category.labelKey.tr(),
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-          color: goldText(context),
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      subtitle: Text(
-        localizeDigits(
-          pluralN('library.book_count', books.length),
-          context.locale.languageCode,
-        ),
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          fontSize: 12,
-        ),
-      ),
-      shape: const Border(),
-      collapsedShape: const Border(),
-      childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
-      children: [
-        for (final b in books) ...[
-          BookCard(
-            book: b,
-            paths: paths,
-            onDownload: () => onDownload(b),
-            onOpen: () => onOpen(b),
+        initiallyExpanded: initiallyExpanded,
+        leading: Icon(category.icon, color: goldText(context)),
+        title: Text(
+          category.labelKey.tr(),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: goldText(context),
+            fontWeight: FontWeight.w700,
           ),
-          const SizedBox(height: 10),
+        ),
+        subtitle: Text(
+          localizeDigits(
+            pluralN('library.book_count', books.length),
+            context.locale.languageCode,
+          ),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: 12,
+          ),
+        ),
+        shape: const Border(),
+        collapsedShape: const Border(),
+        childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
+        children: [
+          for (final b in books) ...[
+            BookCard(
+              book: b,
+              paths: paths,
+              onDownload: () => onDownload(b),
+              onOpen: () => onOpen(b),
+            ),
+            const SizedBox(height: 10),
+          ],
         ],
-      ],
-    ),
+      ),
     );
   }
 }
