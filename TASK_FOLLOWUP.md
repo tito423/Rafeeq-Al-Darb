@@ -382,6 +382,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 11:49 - v3.63.1 published and verified (tag == HEAD, digest = local); v3.63.0 deleted
+- 2026-09-25 11:49 - v3.63.1 PUBLISHED: tag == HEAD afa4a8a9, asset RafeeqAlDarb-v3.63.1.apk 270,576,516 B sha256 6913d7de = local file; v3.63.0 + tag deleted; v3.51.0 + content-* kept.
 - 2026-09-25 11:47 - PHONE: device file (Music) + Dhuhr Test -> paused 66.3 s, Stop -> resumed 66.4 s; tajweed example plays on the shared player (clip shorter than the 8 s test); theme Light->Dark and language en->ar while playing: same player PLAYING, city in Arabic at once; HOME 12 s while playing: still PLAYING; 108 MB ruqyah download finished with the app in background. Phone restored to Light + English, playback stopped.
 - 2026-09-25 11:27 - Font 1.45 fixes seen on owner's phone: Home PM, tasbeeh counter full size and counting, uniform library tabs
 - 2026-09-25 11:27 - d7a482c2 built + installed on owner's phone (font 1.45 bold): Home «12:11 PM» whole; Tasbeeh full circle, 2 taps -> Total 2; Library sub-tabs one uniform size. The 3 findings of 11:12 are FIXED and SEEN. Build = 3.63.1+66 code, NOT released.
