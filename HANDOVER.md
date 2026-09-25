@@ -2502,7 +2502,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-09-25 23:39 — IN PROGRESS — resume here**
 
-Daas: 5 of 27 damaged sections transcribed from the print (+55:66, 8:13)
+Daas: 5 of 27 transcribed from the print; exact resume point logged (quota 85%)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
