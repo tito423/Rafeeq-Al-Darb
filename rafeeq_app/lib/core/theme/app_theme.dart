@@ -72,10 +72,16 @@ class AppTheme {
     required Color onPrimaryContainer,
     Color? appBarColor,
   }) {
+    // Words on a primary fill: white, unless white does not read on it.
+    // The RGB primary #22E0C6 carried white at 1.67 : 1 - every filled
+    // button in that theme (contrast scan, emulator-5554, 2026-09-25).
+    final onPrimary = contrastRatio(Colors.white, primary) >= 4.5
+        ? Colors.white
+        : const Color(0xFF06131A);
     final scheme = ColorScheme(
       brightness: brightness,
       primary: primary,
-      onPrimary: Colors.white,
+      onPrimary: onPrimary,
       primaryContainer: primaryContainer,
       onPrimaryContainer: onPrimaryContainer,
       secondary: AppColors.gold,
@@ -155,7 +161,7 @@ class AppTheme {
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: primary,
-          foregroundColor: Colors.white,
+          foregroundColor: onPrimary,
           textStyle: AppTypography.uiSemibold(15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.radiusSm + 4),

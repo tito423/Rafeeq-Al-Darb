@@ -12,6 +12,16 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 ~04:15. Dark crawl (build 13): every flag eyed, all
+false (card/chip borders, icon rings, map dots, photo-card edges, scrim).
+RGB crawl: REAL - white on the RGB primary #22E0C6 = 1.67:1 on every
+filled button. FIXED: onPrimary + FilledButton foreground picked by
+measured contrast (white unless < 4.5, else #06131A);
+test/theme_on_primary_test.dart fails old (1.67) passes new. NOT BUILT.
+NEXT: build 14, re-crawl light + rgb, eye what is left (widgets with
+explicit Colors.white on primary would still show), RGB m_player and
+m_set_theme were not reached - run them with the 3rd arg.
+
 SESSION 2026-09-25 ~03:50. ORDER A light crawl on build 13: 34/34 reached
 (ui_crawl.py paths fixed: Library sub-tab named per target; optional 3rd
 arg = only these targets). Every flag eyed. Real ones FIXED in code, NOT
@@ -322,6 +332,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 04:15 - dark clean; RGB filled buttons white-on-cyan 1.67:1 fixed via measured onPrimary (unbuilt)
 - 2026-09-25 03:50 - contrast light crawl complete + eyed; 35 gold icons, reading card, chip checkmarks fixed (unbuilt)
 - 2026-09-25 03:27 - build 13: manual location fully verified offline (times, name, qibla 138 = calc, method change, back to automatic)
 - 2026-09-25 03:20 - build 12: times follow the manual place (Tanta/Makkah checked by hand); FOUND qibla stuck on old place - fixed (changes notifier), building 13
