@@ -12,6 +12,21 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+SESSION 2026-09-26 00:00-02:30 (i'rab). DONE+PUSHED: 27/27 damaged sections
+from the print; 6 Qur'an quotes corrected to the mushaf with evidence
+(scripts/irab_daas_quran_corrections.json); references resolver (215 proved
+of 467 shown; 222 in scripts/irab_daas_refs_for_owner.md, NOT shown); app
+tab rewritten (commit 347323d8); pack v2 uploaded to sciences/v2/ + GitHub
+mirror, AppConfig v2 (3a467d15). NOT YET SEEN ON A DEVICE.
+NEXT (exact): build_github_release.bat was started ~02:30 with the emulator
+OFF. When it ends: start emulator-5554, install buildpp\outputs\...signed APK over the old one, re-check lastUpdateTime (trap 56), open Quran
+-> long-press 2:5 -> الإعراب: expect the pack download to be offered (v2),
+download it, then SEE: 2:5 text + gold quotes + source header; 55:16
+(«سبق إعرابها» + framed 55:13); 29:1 (-> 3:1); 22:27 section shows
+«مَعْلُوماتٍ»; Sources screen has the Shamela 23584 row. Then report to
+owner. Open for owner: book-commentary mismatches at 10:56, 22:60, 24:21
+(asked: leave + note?); the 222 unproved references list.
+
 SESSION 2026-09-25 20:05 (quota 5h 1%, weekly 57%, RC off). Tour recapture
 FINISHED: 7 langs x 32 webp (636-724 KB each) + frames.json, now in git
 and in pubspec. I'rab: corpus_labels.py rewrite RUN on the local
@@ -411,6 +426,9 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 01:15 - TASK_FOLLOWUP: exact device-check plan while the signed build runs
+- 2026-09-26 01:15 - Sciences pack v2 UPLOADED under a NEW key sciences/v2/quran_sciences.zip (32,146,462 B, PK, no Content-Encoding, public range 206) + GitHub content-mirror asset (206, same size); v1 object left for 3.63.7 (range 206). AppConfig: url v2, bytes 32146462, version v2. FIXED a trap: _adoptBundledCopy stamped the old bundled sciences-v9 DB with the CURRENT version - would have passed a no-irab DB as v2; now stamps v1. CONTENT-LICENSES entry added (rights not cleared, owner's Shamela ruling). analyze clean. Next: signed build (emulator OFF), install, SEE the i'rab tab (2:5, 55:16 ref, 29:1->3:1, 22:28 correction), pack download.
+- 2026-09-26 01:11 - APP SIDE (code only, NOT uploaded, NOT seen on device): scripts/build_irab_daas_table.py puts irab_daas (3,639 sections = 6,236 ayahs) + irab_daas_refs (215) into the LOCAL quran_sciences.db and drops word_grammar; build_sciences_db.py calls it. New IrabTab = book text (quotes gold) + proved references framed under the book's line + source header; pack screen row = book / 6,236 ayahs; Sources entry shamela 23584; 5 keys x 7 locales; QuranGrammarParser + test removed. analyze clean, 587 pass (594-7). Title page read: authors أحمد عبيد الدعاس، أحمد محمد حميدان، إسماعيل محمود القاسم; دار النمير (Shamela says المنير - print wins) ودار الفارابي ط1 1425. Next: upload pack under a NEW key so v3.63.7 keeps its v1 pack, sciencesDbVersion v2 + bytes, CONTENT-LICENSES, then signed build on emulator.
 - 2026-09-26 00:48 - evidence: 37:169 print speck image
 - 2026-09-26 00:48 - 37:169 «متعلقان»: print shows a dot over the ع (reads متغلقان) - it is the book's grammar term, not Qur'an; kept «متعلقان» as Shamela+KSU; image scripts/evidence/print_37_169_mutaallaqan.png sent to owner. Next: APP side (irab_daas table, ayah sheet, Sources, CONTENT-LICENSES, drop corpus labels, sciences pack v2).
 - 2026-09-26 00:48 - OWNER RULE (CLAUDE.md 1.2 exception): Qur'an words quoted in a book are corrected to the mushaf after a by-eye check of the Madinah page + the print, with evidence image and record. scripts/check_irab_daas_quotes.py checked 59,532 quotes: 86 not in their ayah; read all - glosses/comparisons/spelling except 6 real, each seen on mushaf + print: 44:49 الكريم, 10:56 هو, 22:28 معلومات, 22:60 لعفو غفور, 24:21 والله سميع عليم (book), 3:107 رحمة (Shamela typo). Applied in build (quran_word_corrected=6), record scripts/irab_daas_quran_corrections.json, images scripts/evidence/. 22:61 print misquotes «سميع عليم» but Shamela already has «بصير» = shipped correct. Earlier reply gave wrong line numbers (44:49 is line 7, 10:56 end of line 4) - corrected in the record.
