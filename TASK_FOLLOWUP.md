@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:07 - Daas: 10 of 27 transcribed from the print (+4:172)
+- 2026-09-26 00:07 - Daas print: 10 of 27 (+4:172 vol1 237-238, 182 words / 0 new). Next: 10:55 (vol2 32).
 - 2026-09-26 00:06 - Daas: 9 of 27 transcribed from the print (+3:116)
 - 2026-09-26 00:06 - Daas print: 9 of 27 (+3:116 vol1 155-156, 166 words / 0 new; print's paragraph break between ayahs kept as \n, ayah ref digits Arabic-Indic like the print). Next: 4:172 (vol1 237-238).
 - 2026-09-26 00:05 - Daas: 8 of 27 transcribed from the print (+64:15, 2:147)
