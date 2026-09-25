@@ -2499,9 +2499,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 11:49 — IN PROGRESS — resume here**
+**2026-09-25 12:03 — IN PROGRESS — resume here**
 
-v3.63.1 published and verified (tag == HEAD, digest = local); v3.63.0 deleted
+FINAL v3.63.2 published and verified; v3.63.1 deleted; landscape large-font tasbeeh fixed and seen
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

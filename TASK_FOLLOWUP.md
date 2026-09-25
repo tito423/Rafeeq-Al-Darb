@@ -382,6 +382,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 12:03 - FINAL v3.63.2 published and verified; v3.63.1 deleted; landscape large-font tasbeeh fixed and seen
+- 2026-09-25 12:04 - FINAL v3.63.2 PUBLISHED: tag == HEAD 88e77914, asset sha256 92860ddc = local; v3.63.1 + tag deleted. Landscape at font 1.45 (owner rotated): Home/Prayer/Adhkar/Library/More fine; Tasbeeh circle was ~65 dp -> footer moved beside it, SEEN full size, tap 2->3. Remaining open: «Enable location» with no cached fix; city ar->ur first-switch delay.
 - 2026-09-25 11:49 - v3.63.1 published and verified (tag == HEAD, digest = local); v3.63.0 deleted
 - 2026-09-25 11:49 - v3.63.1 PUBLISHED: tag == HEAD afa4a8a9, asset RafeeqAlDarb-v3.63.1.apk 270,576,516 B sha256 6913d7de = local file; v3.63.0 + tag deleted; v3.51.0 + content-* kept.
 - 2026-09-25 11:47 - PHONE: device file (Music) + Dhuhr Test -> paused 66.3 s, Stop -> resumed 66.4 s; tajweed example plays on the shared player (clip shorter than the 8 s test); theme Light->Dark and language en->ar while playing: same player PLAYING, city in Arabic at once; HOME 12 s while playing: still PLAYING; 108 MB ruqyah download finished with the app in background. Phone restored to Light + English, playback stopped.
