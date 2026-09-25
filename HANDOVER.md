@@ -2498,9 +2498,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 10:33 — IN PROGRESS — resume here**
+**2026-09-25 10:39 — IN PROGRESS — resume here**
 
-v3.63.0 published and verified (tag == HEAD, asset digest = local); v3.62.0 deleted; installed on owner's phone
+3.63.0 seen on the owner's phone: About version, manual location Tanta (times + qibla match hand calc), back to Automatic
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

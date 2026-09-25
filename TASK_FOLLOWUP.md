@@ -359,6 +359,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 10:39 - 3.63.0 seen on the owner's phone: About version, manual location Tanta (times + qibla match hand calc), back to Automatic
+- 2026-09-25 10:40 - OWNER'S PHONE (BRP-NX1, Android 12, 3.63.0 release APK): About «v3.63.0»; Prayer location -> Tanta (offline list, typed in Latin) -> Home «Tanta, Egypt», sunrise 7:46 / Dhuhr 1:48 PM phone time (hand calc: solar noon lon 31.0 = 09:48 UTC = 13:48 Dubai), qibla 259 -> 138; back to Automatic -> Dubai 12:11, qibla 259. Phone left on Automatic. NOT done on the phone (sound / system settings, people asleep): location switch off->on path, largest font, ruqyah/tajweed/device-files audio conflicts.
 - 2026-09-25 10:33 - v3.63.0 published and verified (tag == HEAD, asset digest = local); v3.62.0 deleted; installed on owner's phone
 - 2026-09-25 10:33 - v3.63.0 PUBLISHED (tag == HEAD 6145c3c9, asset sha256 673d5353 = local file), v3.62.0 + tag deleted; installed on owner's phone BRP-NX1 over the old build: onboarding, location + notification grant, Home Dubai times, Support button seen
 - 2026-09-25 05:15 - build 15: last contrast fixes seen (player/tajweed/hadith clean, chip fixed, RGB player+theme clean); HANDOVER updated
