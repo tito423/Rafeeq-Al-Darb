@@ -2501,9 +2501,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 00:41 — IN PROGRESS — resume here**
+**2026-09-26 00:48 — IN PROGRESS — resume here**
 
-i'rab refs: owner list with proposals for the 222 unproven
+evidence: 37:169 print speck image
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

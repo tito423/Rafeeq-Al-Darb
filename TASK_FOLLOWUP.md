@@ -411,6 +411,9 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:48 - evidence: 37:169 print speck image
+- 2026-09-26 00:48 - 37:169 «متعلقان»: print shows a dot over the ع (reads متغلقان) - it is the book's grammar term, not Qur'an; kept «متعلقان» as Shamela+KSU; image scripts/evidence/print_37_169_mutaallaqan.png sent to owner. Next: APP side (irab_daas table, ayah sheet, Sources, CONTENT-LICENSES, drop corpus labels, sciences pack v2).
+- 2026-09-26 00:48 - OWNER RULE (CLAUDE.md 1.2 exception): Qur'an words quoted in a book are corrected to the mushaf after a by-eye check of the Madinah page + the print, with evidence image and record. scripts/check_irab_daas_quotes.py checked 59,532 quotes: 86 not in their ayah; read all - glosses/comparisons/spelling except 6 real, each seen on mushaf + print: 44:49 الكريم, 10:56 هو, 22:28 معلومات, 22:60 لعفو غفور, 24:21 والله سميع عليم (book), 3:107 رحمة (Shamela typo). Applied in build (quran_word_corrected=6), record scripts/irab_daas_quran_corrections.json, images scripts/evidence/. 22:61 print misquotes «سميع عليم» but Shamela already has «بصير» = shipped correct. Earlier reply gave wrong line numbers (44:49 is line 7, 10:56 end of line 4) - corrected in the record.
 - 2026-09-26 00:41 - i'rab refs: owner list with proposals for the 222 unproven
 - 2026-09-26 00:41 - Refs: the 59 'quote not found' are «سبق إعراب مثلها / ما يشبهها» = a PATTERN, not an ayah (4:15 «إن الله كان توابا رحيما»). Not shown. scripts/propose_irab_daas_refs.py writes scripts/irab_daas_refs_for_owner.md: 222 items (82 with a proposed nearest-similar ayah, 58 no quote, 36 one-word, 69 held numbers); 30 'own section' need nothing. App shows the book's sentence as-is there. Next: APP side - irab_daas table + ayah sheet.
 - 2026-09-26 00:40 - i'rab refs: identical-ayah rule (215 of 467 shown)
