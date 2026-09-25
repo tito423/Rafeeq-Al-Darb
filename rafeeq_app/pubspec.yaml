@@ -160,10 +160,6 @@ flutter:
     # scripts/fetch_on_this_day_hijri.py from Arabic Wikipedia's own per-Hijri-
     # day pages. Arabic only: English Wikipedia has no such pages at all.
     - assets/data/on_this_day_hijri_ar.json
-    # The eight Play-Store shots, resized once to 540x960 JPEG by
-    # scripts/build_tutorial_shots.py: 6.70 MB of PNG -> 0.42 MB. They
-    # are «شرح ميزات التطبيق»'s gallery, asked for three times.
-    - assets/tutorial_shots/
     - assets/quote_backgrounds/
     - assets/data/mushaf/
     - assets/mushaf_covers/

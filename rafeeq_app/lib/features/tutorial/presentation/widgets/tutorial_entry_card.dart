@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../more/presentation/widgets/more_group.dart' show MoreGroupAccent;
+import '../../../more/presentation/widgets/more_group.dart'
+    show MoreGroupAccent;
 import '../../data/tutorial_state.dart';
-import '../screens/feature_gallery_screen.dart';
 
 /// The tour's entry in «المزيد»: one card that plays it now, with the
 /// every-launch switch tucked under the same border rather than loose in the
@@ -42,18 +42,19 @@ class TutorialEntryCard extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(13),
                 color: accent.withValues(alpha: 0.14),
               ),
-              child: Icon(Icons.school_rounded,
-                  color: accent, size: 22),
+              child: Icon(Icons.school_rounded, color: accent, size: 22),
             ),
             title: Text(
               'tutorial.card_title'.tr(),
-              style: theme.textTheme.titleSmall
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             subtitle: Text(
               'tutorial.card_subtitle'.tr(),
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: scheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
             ),
           ),
           // Two tours: screen by screen, or feature by feature.
@@ -83,24 +84,6 @@ class TutorialEntryCard extends ConsumerWidget {
               ],
             ),
           ),
-          // «حط بالله الصور بتاعة البلاي استور في شرح ميزات التطبيق». The
-          // card offered two guided tours and nothing to look at; someone
-          // who only wants to SEE what the app has had to walk a tour.
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-            child: SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const FeatureGalleryScreen(),
-                  ),
-                ),
-                icon: Icon(Icons.photo_library_outlined, size: 18),
-                label: Text('tutorial.gallery'.tr()),
-              ),
-            ),
-          ),
           Divider(
             height: 1,
             indent: 16,
@@ -115,13 +98,15 @@ class TutorialEntryCard extends ConsumerWidget {
                 ref.read(tutorialOnEveryLaunchProvider.notifier).set(v),
             title: Text(
               'tutorial.every_launch'.tr(),
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
             subtitle: Text(
               'tutorial.every_launch_desc'.tr(),
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: scheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
             ),
           ),
         ],

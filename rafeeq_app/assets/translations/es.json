@@ -52,7 +52,7 @@
     "every_launch": "Mostrarla en cada inicio",
     "every_launch_desc": "El recorrido se abre solo cada vez que inicias la aplicación",
     "welcome_title": "Bienvenido a Rafeeq Al-Darb",
-    "welcome_body": "Un breve recorrido por la aplicación, pantalla a pantalla. Puedes salir en cualquier momento con «Saltar» arriba, y volver cuando quieras desde la pestaña «Más».",
+    "welcome_body": "Un breve recorrido por la aplicación. Puedes salir en cualquier momento con «Saltar», y volver cuando quieras desde la pestaña «Más».",
     "home_title": "Inicio",
     "home_body": "Un reloj cuya esfera eliges entre veinte, y debajo la próxima oración con una cuenta atrás — tócala y se da la vuelta para mostrar la oración anterior y cuánto hace de ella. Más abajo: tu ciudad, dónde dejaste la lectura, tu jatma, las sunnas de las suras y la cita del día.",
     "quran_title": "El mushaf",
@@ -94,7 +94,7 @@
     "quick_home_title": "Inicio",
     "quick_home_body": "Horarios de oración y la cuenta atrás hasta la próxima, tu lectura y jatma, las sunnas de las suras, la frase del día y el hadiz del día con su explicación.",
     "quick_quran_title": "El Mushaf",
-    "quick_quran_body": "Toca la página para mostrar esta barra: ir a una sura o página, búsqueda temática, recitación continua, visualización y edición. Mantén pulsada una aleya para su tafsir, gramática y recitación.",
+    "quick_quran_body": "Lee el mushaf página a página. Toca la página para mostrar la barra: ir a una sura o página, búsqueda, recitación continua, visualización y edición. Mantén pulsada una aleya para su tafsir, gramática y recitación.",
     "quick_prayer_title": "Oración y alquibla",
     "quick_prayer_body": "La brújula de la alquibla, los ajustes del adhan de cada oración y el ajuste de horarios y de la fecha hégira para tu país.",
     "quick_azkar_title": "Adhkar",
@@ -102,8 +102,11 @@
     "quick_tasbeeh_title": "Tasbih",
     "quick_tasbeeh_body": "Elige el dhikr y la cantidad: 33, 100, 1000 o un número propio, y toca. El teléfono vibra con fuerza en 33, 66, 99 y cada cien.",
     "quick_hifz_title": "Memorizar y recitar",
-    "quick_hifz_body": "Aprende aleya por aleya mientras las palabras se ocultan una a una; luego recita y la app te escucha y compara tu recitación con las aleyas. Puedes repetir este recorrido desde Más cuando quieras.",
-    "gallery": "Imágenes de la aplicación"
+    "quick_hifz_body": "Aprende aleya por aleya mientras las palabras se ocultan una a una; luego recita y la app te escucha y compara tu recitación con las aleyas.",
+    "quick_recite_title": "Recitaciones",
+    "quick_recite_body": "Elige un recitador y escucha suras completas con su voz, y descárgalas para escucharlas sin conexión a internet.",
+    "quick_tajweed_title": "Aprender tayuid",
+    "quick_tajweed_body": "Lecciones graduales sobre las reglas del tayuid, y cada regla escuchada en una aleya del Corán con recitación muyawwad. Puedes repetir este recorrido desde Más cuando quieras."
   },
   "app": {
     "name": "Rafeeq Al-Darb",

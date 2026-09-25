@@ -16,10 +16,15 @@ void main() {
     }
   });
 
-  test('the quick tour visits each screen once, framing something on each', () {
+  // «الشاشات الرئيسيه سبع ثمان شاشات ... مش كل سمة صغيرة» (owner,
+  // 2026-09-25): each stop is one main screen, shown whole.
+  test('the quick tour shows each main screen once, whole', () {
     expect(quickTutorialChapters.first.key, 'welcome');
-    final tabs = quickTutorialChapters.skip(1).map((c) => c.tab).toList();
-    expect(tabs.toSet().length, tabs.length, reason: 'one stop per screen');
-    expect(quickTutorialChapters.skip(1).every((c) => c.anchor != null), isTrue);
+    final stops = quickTutorialChapters.skip(1).toList();
+    expect(stops.length, 8);
+    expect(stops.every((c) => c.whole && c.anchor == null), isTrue);
+    // Stops in the More tab are told apart by the screen they draw.
+    final screens = stops.map((c) => c.screen ?? c.tab).toList();
+    expect(screens.toSet().length, screens.length, reason: 'one stop per screen');
   });
 }

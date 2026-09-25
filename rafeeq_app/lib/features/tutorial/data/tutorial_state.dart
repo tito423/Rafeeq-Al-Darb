@@ -29,7 +29,7 @@ final tutorialSeenProvider = Provider<bool>((ref) {
 
 class TutorialEveryLaunchNotifier extends StateNotifier<bool> {
   TutorialEveryLaunchNotifier(this._prefs)
-      : super(_prefs.getBool(_kEveryLaunch) ?? false);
+    : super(_prefs.getBool(_kEveryLaunch) ?? false);
 
   final SharedPreferences _prefs;
 
@@ -41,8 +41,8 @@ class TutorialEveryLaunchNotifier extends StateNotifier<bool> {
 
 final tutorialOnEveryLaunchProvider =
     StateNotifierProvider<TutorialEveryLaunchNotifier, bool>((ref) {
-  return TutorialEveryLaunchNotifier(ref.watch(sharedPrefsProvider));
-});
+      return TutorialEveryLaunchNotifier(ref.watch(sharedPrefsProvider));
+    });
 
 /// Marks the tour as seen. Called when it is closed **however** it is closed —
 /// finished, skipped, or dismissed with the system back gesture — because
@@ -73,5 +73,6 @@ void endTutorial(WidgetRef ref) {
 /// first run gets the quick one.
 enum TutorialMode { quick, detailed }
 
-final tutorialModeProvider =
-    StateProvider<TutorialMode>((ref) => TutorialMode.quick);
+final tutorialModeProvider = StateProvider<TutorialMode>(
+  (ref) => TutorialMode.quick,
+);

@@ -52,7 +52,7 @@
     "every_launch": "L’afficher à chaque ouverture",
     "every_launch_desc": "La visite s’ouvre d’elle-même à chaque démarrage",
     "welcome_title": "Bienvenue dans Rafeeq Al-Darb",
-    "welcome_body": "Une courte visite de l’application, écran par écran. Vous pouvez sortir à tout moment avec « Passer » en haut, et y revenir quand vous voulez depuis l’onglet « Plus ».",
+    "welcome_body": "Une courte visite de l’application. Vous pouvez sortir à tout moment avec « Passer », et y revenir quand vous voulez depuis l’onglet « Plus ».",
     "home_title": "Accueil",
     "home_body": "Une horloge dont vous choisissez le cadran parmi vingt, et en dessous la prochaine prière avec un compte à rebours — touchez-le et il se retourne pour montrer la prière précédente et le temps écoulé. Plus bas : votre ville, votre reprise de lecture, votre khatma, les sunnas des sourates et la citation du jour.",
     "quran_title": "Le mushaf",
@@ -94,7 +94,7 @@
     "quick_home_title": "Accueil",
     "quick_home_body": "Les horaires de prière et le compte à rebours jusqu'à la prochaine, votre lecture et votre khatma, les sunnas des sourates, la parole du jour et le hadith du jour avec son explication.",
     "quick_quran_title": "Le Mushaf",
-    "quick_quran_body": "Touchez la page pour afficher cette barre : aller à une sourate ou une page, recherche thématique, récitation continue, affichage et édition. Appui long sur un verset pour son tafsir, sa grammaire et sa récitation.",
+    "quick_quran_body": "Lisez le mushaf page par page. Touchez la page pour afficher la barre : aller à une sourate ou une page, recherche, récitation continue, affichage et édition. Appui long sur un verset pour son tafsir, sa grammaire et sa récitation.",
     "quick_prayer_title": "Prière et qibla",
     "quick_prayer_body": "La boussole de la qibla, les réglages de l'adhan pour chaque prière, et l'ajustement des horaires et de la date hégirienne selon votre pays.",
     "quick_azkar_title": "Adhkar",
@@ -102,8 +102,11 @@
     "quick_tasbeeh_title": "Tasbih",
     "quick_tasbeeh_body": "Choisissez le dhikr et le nombre : 33, 100, 1000 ou un nombre personnalisé, puis touchez. Le téléphone vibre fort à 33, 66, 99 et à chaque centaine.",
     "quick_hifz_title": "Mémoriser et réciter",
-    "quick_hifz_body": "Apprenez verset par verset pendant que les mots se cachent un à un, puis récitez : l'application vous écoute et compare votre récitation aux versets. Vous pouvez refaire cette visite depuis Plus à tout moment.",
-    "gallery": "Images de l'application"
+    "quick_hifz_body": "Apprenez verset par verset pendant que les mots se cachent un à un, puis récitez : l'application vous écoute et compare votre récitation aux versets.",
+    "quick_recite_title": "Récitations",
+    "quick_recite_body": "Choisissez un récitateur et écoutez des sourates entières avec sa voix, et téléchargez-les pour les écouter sans connexion internet.",
+    "quick_tajweed_title": "Apprendre le tajwid",
+    "quick_tajweed_body": "Des leçons progressives sur les règles du tajwid, chaque règle étant écoutée dans un verset du Coran en récitation mujawwad. Vous pouvez refaire cette visite depuis Plus à tout moment."
   },
   "app": {
     "name": "Rafeeq Al-Darb",

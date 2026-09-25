@@ -52,7 +52,7 @@
     "every_launch": "Show it on every launch",
     "every_launch_desc": "The tour opens by itself every time you start the app",
     "welcome_title": "Welcome to Rafeeq Al-Darb",
-    "welcome_body": "A short tour of the app, one screen at a time. You can leave at any moment with Skip at the top, and come back to it whenever you like from the More tab.",
+    "welcome_body": "A short tour of the app. You can leave at any moment with Skip, and come back to it whenever you like from the More tab.",
     "home_title": "Home",
     "home_body": "A clock whose face you pick from a gallery of twenty, and under it the next prayer with a live countdown — tap it and it turns over to show the previous prayer and how long ago it was. Below that: your city, where you left off reading, your khatma, the sunnah of the surahs, and the saying of the day.",
     "quran_title": "The mushaf",
@@ -94,7 +94,7 @@
     "quick_home_title": "Home",
     "quick_home_body": "Prayer times and the countdown to the next prayer, your reading and khatma, the surah sunnahs, the saying of the day and the hadith of the day with its explanation.",
     "quick_quran_title": "The Mushaf",
-    "quick_quran_body": "Tap the page to show this bar: go to a surah or page, topic search, continuous recitation, display and edition. Long-press any ayah for its tafsir, grammar and recitation.",
+    "quick_quran_body": "Read the mushaf page by page. Tap the page to show the bar: go to a surah or page, search, continuous recitation, display and edition. Long-press any ayah for its tafsir, grammar and recitation.",
     "quick_prayer_title": "Prayer & Qibla",
     "quick_prayer_body": "The Qibla compass, the adhan settings for each prayer, and adjusting the times and the Hijri date for your country.",
     "quick_azkar_title": "Adhkar",
@@ -102,8 +102,11 @@
     "quick_tasbeeh_title": "Tasbih",
     "quick_tasbeeh_body": "Choose the dhikr and the count: 33, 100, 1000 or a custom number, then tap. The phone vibrates strongly at 33, 66, 99 and every hundred.",
     "quick_hifz_title": "Memorize and recite",
-    "quick_hifz_body": "Learn ayah by ayah as the words are hidden one by one, then recite and the app listens and compares your recitation with the ayahs. You can replay this tour from More at any time.",
-    "gallery": "Pictures from inside the app"
+    "quick_hifz_body": "Learn ayah by ayah as the words are hidden one by one, then recite and the app listens and compares your recitation with the ayahs.",
+    "quick_recite_title": "Recitations",
+    "quick_recite_body": "Choose a reciter and listen to whole surahs in his voice, and download them to listen without an internet connection.",
+    "quick_tajweed_title": "Learn Tajweed",
+    "quick_tajweed_body": "Graded lessons on the rules of Tajweed, and each rule heard in a verse of the Qur'an in a mujawwad recitation. You can replay this tour from More at any time."
   },
   "app": {
     "name": "Rafeeq Al-Darb",
