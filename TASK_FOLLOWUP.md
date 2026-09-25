@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:16 - Daas: 23 of 27 transcribed from the print (+40:79)
+- 2026-09-26 00:16 - Daas print: 23 of 27 (+40:79-82 vol3 166; KSU is TRUNCATED there («الفا.....»), Shamela lost first letters in 40:81 - both repaired from the print). Next: 44:44 (vol3 212).
 - 2026-09-26 00:15 - Daas: 22 of 27 transcribed from the print (+37:168)
 - 2026-09-26 00:15 - Daas print: 22 of 27 (+37:168-173 vol3 117, 0 new). OWNER-CHECK: in «به» متعلقان بكفروا the print shows a speck over the ع (reads like «متغلقان» at 300 dpi); both digital copies have «متعلقان» - kept متعلقان, flagged. Next: 40:79 (vol3 166).
 - 2026-09-26 00:14 - Daas: 21 of 27 transcribed from the print (+30:47)
