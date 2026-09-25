@@ -95,6 +95,8 @@ def accept(rec, shares, target_text):
     # nothing, the ayahs must share 3 consecutive words (2 was measured too
     # weak: 34:39 and 34:16 share a common pair and passed). A number or
     # «السابقة» alone is the book's pointer, not proof it lands right.
+    if rec['how'] == 'identical':      # the whole ayah is the same text
+        return True
     q = wskel(rec['quote'])
     if len(q.split()) >= 2:
         return q in target_text
@@ -175,7 +177,30 @@ def main():
                     if sq in ayahs[i][2]:
                         target, how = ayahs[i][:2], 'quote'
                         break
+            # 4. no usable quote: an ayah of this section that is word for word
+            # the same as an earlier ayah («فَبِأَيِّ آلاءِ رَبِّكُما تُكَذِّبانِ»,
+            # «وَيْلٌ يَوْمَئِذٍ لِلْمُكَذِّبِينَ») - the nearest earlier one.
+            # Not when the book wrote a number (3:1 «الآية ٢٥٤» is not 2:1
+            # «الم»), and not when two ayahs of the section each have an
+            # earlier twin (77:41-45: 77:43 and 77:45) - which one is meant
+            # is then a guess.
+            ambiguous = False
+            if target is None and len(quote.split()) < 2 and not re.search(r'\d', tail):
+                cands = set()
+                for k in ([at] if quote else range(a0, a1 + 1)):
+                    me = ayahs[order[(s, k)]][2]
+                    for i in range(order[(s, a0)] - 1, -1, -1):
+                        if ayahs[i][2] == me:
+                            cands.add(ayahs[i][:2])
+                            break
+                if len(cands) == 1:
+                    target, how = cands.pop(), 'identical'
+                ambiguous = len(cands) > 1
             rec = {'surah': s, 'ayah_from': a0, 'ayah_to': a1, 'ref': ref, 'quote': quote}
+            if ambiguous:
+                rec['why'] = 'several ayahs of the section have an earlier twin'
+                open_.append(rec)
+                continue
             if target is None:
                 open_.append(rec)
                 continue

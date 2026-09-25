@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:40 - i'rab refs: identical-ayah rule (215 of 467 shown)
+- 2026-09-26 00:40 - Refs: rule 4 'identical' = a section ayah word-for-word equal to an earlier ayah (not when the book wrote a number - 3:1 «الآية ٢٥٤» had matched 2:1 «الم»; not when 2+ section ayahs have twins - 77:41-45, 26:136-145). Now 215 of 467 shown (103 quote, 60 number, 35 identical, 15 previous, 2 surah-start), 252 open. Next: 'not accepted' numbered refs - read print for the unclear ones.
 - 2026-09-26 00:39 - CLAUDE.md 2.0b: do not report Remote Control (owner)
 - 2026-09-26 00:39 - Owner: stop reporting Remote Control / suggesting claude rc (he gets every session on the phone automatically; ListAgents cannot see it). CLAUDE.md §2.0b rewritten, NEXT_PROMPT.md first-reply line fixed. Next: i'rab refs - identical-ayah rule for the 94 no-quote refs.
 - 2026-09-26 00:35 - i'rab refs: shown only when the target is proven (179 of 467)
