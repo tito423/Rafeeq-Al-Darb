@@ -70,6 +70,29 @@ def wskel(t):
 PREV = re.compile(r'^\S+\s+(?:\S+\s+){0,5}?(?:السابقة|كسابقت)')
 
 
+def shares_wording(src_words, tgt_words, n=2):
+    """True when source and target ayahs have n consecutive words in common
+    (word skeletons, as wskel gives them)."""
+    grams = {tuple(tgt_words[i:i + n]) for i in range(len(tgt_words) - n + 1)}
+    return any(tuple(src_words[i:i + n]) in grams for i in range(len(src_words) - n + 1))
+
+
+def accept(rec, shares):
+    """Decide whether a resolved reference is SHOWN in the app, or goes to the
+    owner's list instead.
+
+    rec['how']   'number' | 'quote' | 'previous' | 'surah-start'
+    rec['quote'] the book's quoted words before the reference ('' if none)
+    shares       the source ayah(s) and the target ayah share 2+ words
+
+    Measured on the book: 34:39 says «انظر الآية ١٦» and the print confirms
+    ١٦, but 34:16 shares no wording with 34:39 (the phrase is in 34:36);
+    7:197 says «(١٠)» and 7:10 is about something else. Showing those would
+    put the wrong i'rab under the ayah.
+    """
+    # TODO(human)
+
+
 def ref_only(text):
     """True for a section that gives no i'rab of its own: once the references
     and the quoted words are removed, (almost) nothing is left."""
@@ -159,6 +182,11 @@ def main():
                 continue
             rec.update(target_surah=target[0], target_ayah=target[1],
                        target_section=list(tsec), how=how)
+            src = sum((ayahs[order[(s, k)]][2].split() for k in range(a0, a1 + 1)), [])
+            if not accept(rec, shares_wording(src, ayahs[order[target]][2].split())):
+                rec['why'] = f'not accepted ({how} -> {target[0]}:{target[1]})'
+                open_.append(rec)
+                continue
             resolved.append(rec)
 
     # A target section that is itself only a pointer («سبق إعرابها.») is
