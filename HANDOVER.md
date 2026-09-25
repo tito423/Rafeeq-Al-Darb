@@ -2498,9 +2498,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 10:39 — IN PROGRESS — resume here**
+**2026-09-25 11:04 — IN PROGRESS — resume here**
 
-3.63.0 seen on the owner's phone: About version, manual location Tanta (times + qibla match hand calc), back to Automatic
+3.63.1 on owner's phone: diacritisation fix seen, adhan pauses/resumes book reader voice and ruqyah, book reader stops ruqyah
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

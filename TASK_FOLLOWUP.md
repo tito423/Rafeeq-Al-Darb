@@ -359,6 +359,9 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 11:04 - 3.63.1 on owner's phone: diacritisation fix seen, adhan pauses/resumes book reader voice and ruqyah, book reader stops ruqyah
+- 2026-09-25 11:05 - PHONE 3.63.1: enhanced voice downloaded (260.7 MB, owner OK); Dhuhr Test fired while the book reader read Ihkam: voice player piid 4207 PAUSED, adhan USAGE_ALARM started, full screen + notification Stop/Mute; Stop -> 4207 STARTED again, next chunk 4223 followed; reader stopped -> 0 players. (Was unit-tested / emulator-only before; now seen on a real phone.)
+- 2026-09-25 11:02 - PHONE: ruqyah + adhan preview -> ruqyah PAUSED, alarm player started; Stop -> ruqyah resumed same position (76.1 s). FOUND: Ihkam al-Ahkam (visibly vowelled) said «only 0% harakat» - 28 books never measured, default 0. FIXED 91d82a33 (measured, Ihkam 83.4%), 3.63.1+66 built + installed on phone: Listen offered. Phone TTS vs ruqyah: ruqyah -> NONE (one sound). Enhanced voice downloading (owner OK). 3.63.1 NOT released - ask owner.
 - 2026-09-25 10:39 - 3.63.0 seen on the owner's phone: About version, manual location Tanta (times + qibla match hand calc), back to Automatic
 - 2026-09-25 10:40 - OWNER'S PHONE (BRP-NX1, Android 12, 3.63.0 release APK): About «v3.63.0»; Prayer location -> Tanta (offline list, typed in Latin) -> Home «Tanta, Egypt», sunrise 7:46 / Dhuhr 1:48 PM phone time (hand calc: solar noon lon 31.0 = 09:48 UTC = 13:48 Dubai), qibla 259 -> 138; back to Automatic -> Dubai 12:11, qibla 259. Phone left on Automatic. NOT done on the phone (sound / system settings, people asleep): location switch off->on path, largest font, ruqyah/tajweed/device-files audio conflicts.
 - 2026-09-25 10:33 - v3.63.0 published and verified (tag == HEAD, asset digest = local); v3.62.0 deleted; installed on owner's phone
