@@ -12,6 +12,14 @@ fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
 Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
 
 ## Next step (exact)
+SESSION 2026-09-25 ~05:15: owner orders A (contrast, 3 themes) and B
+(manual location, bundled list) DONE and SEEN on build 15 = master.
+Reported to the owner. NOT released - 3.63.0 only if he asks (bump
+pubspec + AboutScreen, build_github_release.bat with the emulator OFF,
+delete v3.62.0 + tag, keep v3.51.0 and content-*, tag == HEAD).
+Still open from before: location OFF -> button -> settings -> ON ->
+times appear (needs a real phone); audit part 2 items 6-8.
+
 SESSION 2026-09-25 ~04:55. Build 14 (= d7ed9a35) on emulator. Light
 re-crawl: hadith icons gone. Fixed in code since (28eba2c7, NOT BUILT):
 21 multi-line flat-gold icons, player TabBar label, theme chip icon
@@ -342,6 +350,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 05:15 - build 15: last contrast fixes seen (player/tajweed/hadith clean, chip fixed, RGB player+theme clean); HANDOVER updated
 - 2026-09-25 04:55 - 21 more gold icons + player tab + chip icon fixed (28eba2c7, unbuilt); Fajr adhan seen firing on time on build 14
 - 2026-09-25 04:15 - dark clean; RGB filled buttons white-on-cyan 1.67:1 fixed via measured onPrimary (unbuilt)
 - 2026-09-25 03:50 - contrast light crawl complete + eyed; 35 gold icons, reading card, chip checkmarks fixed (unbuilt)

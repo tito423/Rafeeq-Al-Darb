@@ -89,14 +89,16 @@ def labels():
 
 
 def tap_label(prefix):
-    for _ in range(3):
+    # Down first, then up: a tab keeps its scroll, and the More list left
+    # scrolled past «Qur'an & worship» was never found looking down only.
+    for swipe in [('1700', '1000')] * 3 + [('600', '1700')] * 6:
         for text, x, y in labels():
             if text.startswith(prefix) and y < 2200:
                 adb('shell', 'input', 'tap', str(x), str(y))
                 time.sleep(3)
                 return True
         # not on screen: scroll a little and look again
-        adb('shell', 'input', 'swipe', '540', '1700', '540', '1000', '300')
+        adb('shell', 'input', 'swipe', '540', swipe[0], '540', swipe[1], '300')
         time.sleep(1.5)
     return False
 
