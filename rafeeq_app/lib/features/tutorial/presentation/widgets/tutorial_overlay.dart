@@ -78,6 +78,9 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
 
   bool _closing = false;
 
+  /// The screen drawn under the current stop, if it is about one.
+  WidgetBuilder? _screen;
+
   /// Where the spotlight is now. Null on stops that have nothing to point at.
   Rect? _spot;
 
@@ -114,6 +117,10 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
   /// frame to lay itself out.
   void _enter(int i) {
     widget.onGoToTab(_chapters[i].tab);
+    // A stop about a pushed screen draws that screen under the tour; the
+    // next stop takes it away. Rebuilt only when that changes.
+    final screen = _chapters[i].screen;
+    if (!identical(screen, _screen)) setState(() => _screen = screen);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
       // A part further down a scrolling screen is brought into view first,
@@ -249,6 +256,10 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
               : (_from == null ? _spot : Rect.lerp(_from, _spot, t));
           return Stack(
             children: [
+              // The screen this stop is about, when it is not a tab. It is
+              // a const widget, so the animation's rebuilds do not rebuild it.
+              if (_screen != null)
+                Positioned.fill(child: _screen!(context)),
               // The dim, with a hole in it. It ignores pointers: the tour
               // advances from its own buttons, so a stray finger cannot skip
               // a stop, and the lit control stays tappable underneath.

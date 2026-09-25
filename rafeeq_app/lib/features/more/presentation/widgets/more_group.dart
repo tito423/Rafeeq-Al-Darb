@@ -75,7 +75,21 @@ class _MoreGroupState extends ConsumerState<MoreGroup>
   void _toggle() {
     setState(() => _open = !_open);
     if (_open) {
-      accordionOpened();
+      // «قائمة واحدة مفتوحة فقط - فتح قائمة يغلق المفتوحة وتظهر الجديدة
+      // بملء الشاشة» (owner, 2026-09-25). The group that closes above this
+      // one shrinks for 240 ms and drags this one up while it does; the old
+      // reveal chased it and the list jumped. Once both have settled, this
+      // group's own header is brought to the top of the screen, once.
+      accordionOpened(reveal: false);
+      Future<void>.delayed(const Duration(milliseconds: 300), () {
+        if (!mounted) return;
+        Scrollable.ensureVisible(
+          context,
+          alignment: 0,
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutCubic,
+        );
+      });
     } else {
       accordionClosed();
     }

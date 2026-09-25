@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import 'tutorial_anchors.dart';
+import '../../hifz/presentation/hifz_screen.dart';
 
 /// One stop on the tour.
 ///
@@ -34,9 +35,16 @@ class TutorialChapter {
   final Color accent;
   final String? anchor;
 
+  /// A screen that is not a tab, drawn under the tour for this stop - the
+  /// stop is about that screen, not about the card that opens it.
+  /// «مش كارت الحفظ والتسميع، شاشته اللي فيها الحفظ» (owner, 2026-09-25).
+  final WidgetBuilder? screen;
+
   const TutorialChapter(this.key, this.tab, this.icon, this.accent,
-      {this.anchor});
+      {this.anchor, this.screen});
 }
+
+Widget _hifzScreen(BuildContext context) => const HifzScreen();
 
 const _quranGold = AppColors.gold;
 const _prayerViolet = Color(0xFF6C5FBC);
@@ -175,5 +183,5 @@ const quickTutorialChapters = <TutorialChapter>[
       anchor: TourAnchor.azkarCategory),
   TutorialChapter('quick_hifz', AppTab.more, Icons.school_rounded,
       AppColors.gold,
-      anchor: TourAnchor.moreHifz),
+      anchor: TourAnchor.hifzPlans, screen: _hifzScreen),
 ];

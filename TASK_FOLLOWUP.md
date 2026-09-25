@@ -396,6 +396,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 19:10 - More: header-to-top on open, sections open as screens; tour hifz stop shows the hifz screen
+- 2026-09-25 19:10 - Item 10 More: a group opening scrolls its own header to the top after the closing one settles (no chase); any CollapsibleSection inside a More group opens as its own screen. Tour hifz stop per owner («مش كارت الحفظ، شاشته»): TutorialChapter.screen draws HifzScreen under the tour, frame on the plans section (TourAnchor.hifzPlans). Code only, NOT BUILT.
 - 2026-09-25 19:06 - Quick tour in the owner order, no library, last stop on the hifz card
 - 2026-09-25 19:06 - Item 11 tour: owner chose (18:5x) Home > Quran > Prayer&Qibla > Tasbeeh > Adhkar > Hifz, NO library anywhere in the tour (a store build without the library is planned). Quick tour rebuilt, last stop framed on the hifz card (new anchor moreHifz), full tour library stop removed, keys quick_hifz_* in 7 locales, quick_library/quick_more/library_tabs keys removed. 592 pass. NOT BUILT.
 - 2026-09-25 18:59 - Stage 2 items 9, 12, 13: New Muslim guide removed, reciter badge icon, juz without frame

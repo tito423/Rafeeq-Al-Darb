@@ -24,6 +24,7 @@ import '../../../core/utils/digits.dart';
 import '../data/hifz_store.dart';
 import 'hifz_session_screen.dart';
 import 'widgets/hifz_plans_section.dart';
+import '../../tutorial/data/tutorial_anchors.dart';
 
 final _surahsProvider = FutureProvider<List<Surah>>((ref) async {
   final repo = await ref.watch(quranRepositoryProvider.future);
@@ -53,7 +54,10 @@ class HifzScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _intro(context, state, scheme),
-                  HifzPlansSection(surahs: list),
+                  TutorialAnchor(
+                    id: TourAnchor.hifzPlans,
+                    child: HifzPlansSection(surahs: list),
+                  ),
                 ],
               );
             }

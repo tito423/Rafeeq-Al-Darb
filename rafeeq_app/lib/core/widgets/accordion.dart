@@ -95,6 +95,7 @@ mixin AccordionMember<T extends StatefulWidget> on State<T> {
   /// the whole of this one on screen once it has finished growing.
   void accordionOpened({
     Duration settle = const Duration(milliseconds: 260),
+    bool reveal = true,
   }) {
     for (final other in [...?_group]) {
       if (identical(other, this) || other._encloses(this)) continue;
@@ -104,7 +105,7 @@ mixin AccordionMember<T extends StatefulWidget> on State<T> {
       ..remove(this)
       ..add(this);
     _BackEntry.refreshSoon();
-    revealWholeAfter(context, settle);
+    if (reveal) revealWholeAfter(context, settle);
   }
 }
 

@@ -26,6 +26,7 @@ import 'about_screen.dart';
 import 'sources_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../widgets/permissions_section.dart';
+import '../../../more/presentation/widgets/more_group.dart';
 
 /// Every actual setting, as a `Column` with no scroll view and no `Scaffold`
 /// of its own.
@@ -496,6 +497,27 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
   void accordionCollapse() => setState(() => _open = false);
 
   void _toggle() {
+    // Inside a «المزيد» group the section is a screen of its own: «أي شيء
+    // فيه نص كثير (مثل تذكير بالتسابيح بأحاديثه) يفتح شاشة كاملة لا يتمدد
+    // داخل القائمة» (owner, 2026-09-25). Opening it in place pushed every
+    // card below it down the page, inside a group that had itself just
+    // opened - that was the jumping.
+    final accent = MoreGroupAccent.of(context);
+    if (accent != null) {
+      Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          appBar: AppBar(title: Text(widget.title)),
+          body: MoreGroupAccent(
+            accent: accent,
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+              children: widget.children,
+            ),
+          ),
+        ),
+      ));
+      return;
+    }
     setState(() => _open = !_open);
     if (_open) {
       accordionOpened();

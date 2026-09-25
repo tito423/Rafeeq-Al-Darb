@@ -50,6 +50,7 @@ abstract final class TourAnchor {
   static const moreQuranAudio = 'more_quran_audio';
   static const moreTajweed = 'more_tajweed';
   static const moreHifz = 'more_hifz';
+  static const hifzPlans = 'hifz_plans';
   static const moreDownloads = 'more_downloads';
   static const moreFocus = 'more_focus';
 }
