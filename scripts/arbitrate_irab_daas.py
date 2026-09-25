@@ -135,6 +135,13 @@ def main():
         for tag, i1, i2, j1, j2 in sm.get_opcodes():
             if tag == 'equal':
                 continue
+            a_txt, b_txt = ' '.join(wa[i1:i2]), ' '.join(wb[j1:j2])
+            # Same letters, a space moved: e-quran splits «و الله», «لو لا»,
+            # «ب الله» where Shamela and the print have one word. Not a
+            # difference in wording; Shamela's spacing stays.
+            if a_txt and a_txt.replace(' ', '') == b_txt.replace(' ', ''):
+                stats['op_space'] += 1
+                continue
             ctx_l, ctx_r = wa[max(0, i1 - 3):i1], wa[i2:i2 + 3]
             ra = best_ratio(ctx_l + wa[i1:i2] + ctx_r, hay)
             rb = best_ratio(ctx_l + wb[j1:j2] + ctx_r, hay)

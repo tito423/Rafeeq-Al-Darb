@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 21:06 — IN PROGRESS — resume here**
+**2026-09-25 21:56 — IN PROGRESS — resume here**
 
-Daas: printed edition as third witness (Windows Arabic OCR of all pages) and the arbitration script
+Mushaf line order wrong under Impeller on the emulator (Skia correct); test for RTL order; asked owner to check his phone
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
