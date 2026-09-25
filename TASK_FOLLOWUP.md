@@ -29,6 +29,7 @@ OWNER 03:15: «اظبط الشكل والتصميم في الاورينتيشن 
 SEEN 03:22 build 03:21:38: Home two columns, Prayer compass|links, Adhkar 4x2 tiles, More two columns - all good. DONE IN CODE next: adhkar reader counter beside the dhikr sideways; Library pills beside the title sideways. Building.
 SEEN 03:31 build 03:30:44: Library pills beside title (3 authors in view), adhkar reader counter beside dhikr, khatma OK. NEXT: settings expanded, hadith tab, book reader, surah index, hifz, hajj, tajweed, player.
 DONE IN CODE ~03:45: PairedListView/PairedColumn (two cards a row sideways; header/footer full width; test paired_list_view_test) on reciters list, tajweed levels, hifz surahs, ruqyah recordings, dedications. Hajj left one column on purpose (sequential steps that expand). Building.
+SEEN 03:53-03:55 on emulator-5554 (build 03:50, rotated with adb emu rotate; Arabic RTL): tabs on the right, Home 2 cols, More 2 cols, reciters 2 a row in RTL reading order, tajweed 2x2, hifz surahs paired, ruqyah 6 recordings 3x2. Xiaomi went upright at 03:50 (owner holding it) - my landscape taps opened the clock-face picker twice, nothing changed (Minimal kept). Dedications empty on emulator (pairs covered by test). NEXT: book reader + surah index sideways.
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -462,6 +463,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 03:55 - Seen sideways on the emulator (Arabic): paired card lists in RTL order
 - 2026-09-26 03:46 - Sideways card lists two a row: reciters, tajweed levels, hifz, ruqyah, dedications
 - 2026-09-26 03:31 - Seen sideways: library header, adhkar reader, khatma
 - 2026-09-26 03:26 - Landscape: adhkar counter beside the dhikr, library tabs beside the title
