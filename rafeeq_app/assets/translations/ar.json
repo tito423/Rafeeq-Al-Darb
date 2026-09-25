@@ -1193,7 +1193,7 @@
     "prayer_enable_location": "فعّل الموقع لعرض مواقيت الصلاة",
     "prayer_event": "{prayer}، {time}",
     "dl_files_running_title": "جارٍ التنزيل",
-    "dl_files_running_body": "الملفات المكتملة: {numFinished} من {numTotal}",
+    "dl_files_running_body": "التقدم الدقيق داخل التطبيق في «التنزيلات»",
     "dl_files_complete_title": "اكتمل التنزيل",
     "dl_files_complete_body": "المحتوى جاهز للاستخدام بدون إنترنت",
     "dl_files_error_title": "تعذّر التنزيل",

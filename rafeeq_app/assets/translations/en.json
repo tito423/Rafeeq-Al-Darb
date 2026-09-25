@@ -1193,7 +1193,7 @@
     "prayer_enable_location": "Turn on location to show prayer times",
     "prayer_event": "{prayer}, {time}",
     "dl_files_running_title": "Downloading",
-    "dl_files_running_body": "Files completed: {numFinished} of {numTotal}",
+    "dl_files_running_body": "Exact progress is in the app, under Downloads",
     "dl_files_complete_title": "Download complete",
     "dl_files_complete_body": "The content is ready to use offline",
     "dl_files_error_title": "Download failed",

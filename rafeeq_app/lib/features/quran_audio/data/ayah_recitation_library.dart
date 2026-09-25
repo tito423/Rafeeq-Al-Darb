@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -121,8 +122,34 @@ class AyahRecitationLibrary extends ChangeNotifier {
   late Directory _root;
   final Map<String, AyahDlEntry> _entries = {};
 
-  /// edition -> set of (surah, ayah) pairs on disk, cached from scanning.
-  final Map<String, int> _downloadedCounts = {};
+  /// edition -> the ayahs on disk, as `surah * 1000 + ayah`. Filled by one
+  /// directory listing per reciter and kept by the completion events, so
+  /// every «is it here» and every count is a set lookup, never a file stat.
+  ///
+  /// It replaced a counter that did `prev + 1` on every completion: a
+  /// duplicate completion (a retry, an origin re-fetch, a replay after a
+  /// restart) counted twice, and the owner's phone read «1488 من 1485»
+  /// (2026-09-25). A set cannot count an ayah twice or pass 6,236.
+  final Map<String, Set<int>> _have = {};
+
+  static int _key(int surah, int ayah) => surah * 1000 + ayah;
+
+  /// Ayahs asked for and not yet handed to the downloader, in order.
+  ///
+  /// THE ANR. `downloadReciter` used to add all 6,236 tasks to the plugin's
+  /// `MemoryTaskQueue`, whose `getNextTask` - once four transfers hold the
+  /// host - pops EVERY waiting task, parses its URL for the host, and pushes
+  /// it back: 7.7 ms per call with 6,236 waiting, measured on the desktop
+  /// (2026-09-25), and it runs twice per finished ayah. The main thread sat
+  /// at ~50 % on emulator-5554 from the tap on, and the owner's Xiaomi went
+  /// «isn't responding» the moment he tapped «تلاوة آية بآية». The plugin
+  /// now holds at most [_window] of ours; [_pump] feeds it.
+  final ListQueue<(String, int, int, bool)> _backlog = ListQueue();
+  final Set<String> _backlogIds = {};
+
+  /// Task ids handed to the plugin's queue that it has not reported on yet.
+  final Set<String> _handed = {};
+  static const _window = 12;
 
   StreamSubscription<TaskUpdate>? _sub;
   Future<void>? _ready;
@@ -167,7 +194,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
   /// not a download and must not push the total past what exists.
   void _countDownloaded(String edition) {
     final dir = Directory(p.join(_root.path, edition));
-    var count = 0;
+    final have = <int>{};
     if (dir.existsSync()) {
       for (final f in dir.listSync()) {
         if (f is! File || !f.path.endsWith('.mp3')) continue;
@@ -177,10 +204,10 @@ class AyahRecitationLibrary extends ChangeNotifier {
         if (surah == null || ayah == null || ayah < 1 || ayah > ayahCount(surah)) {
           continue;
         }
-        if (f.lengthSync() > 0) count++;
+        if (f.lengthSync() > 0) have.add(_key(surah, ayah));
       }
     }
-    _downloadedCounts[edition] = count;
+    _have[edition] = have;
   }
 
   Future<void> _save() async {
@@ -196,7 +223,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
   /// All reciters with something downloaded or in progress.
   List<AyahDlEntry> get entries => _entries.values.toList();
 
-  int downloadedCount(String edition) => _downloadedCounts[edition] ?? 0;
+  int downloadedCount(String edition) => _have[edition]?.length ?? 0;
 
   /// Ayahs in [surah] in the Hafs count (1-based), or 0 out of range.
   static int ayahCount(int surah) =>
@@ -241,10 +268,8 @@ class AyahRecitationLibrary extends ChangeNotifier {
     );
   }
 
-  bool isDownloaded(String edition, int surah, int ayah) {
-    final f = fileFor(edition, surah, ayah);
-    return f.existsSync() && f.lengthSync() > 0;
-  }
+  bool isDownloaded(String edition, int surah, int ayah) =>
+      _have[edition]?.contains(_key(surah, ayah)) ?? false;
 
   /// The downloaded file for one ayah, or null when it is not on disk — or
   /// when the library has not loaded yet.
@@ -352,6 +377,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
       }
     }
     await _save();
+    _pump();
     if (queued > 0) unawaited(DownloadEngine.ensureNotificationPermission());
     _notifyNow();
     return queued;
@@ -379,32 +405,76 @@ class AyahRecitationLibrary extends ChangeNotifier {
       queued++;
     }
     await _save();
+    _pump();
     if (queued > 0) unawaited(DownloadEngine.ensureNotificationPermission());
     _notifyNow();
     return queued;
   }
 
-  /// [origin] skips the app's own mirror and asks everyayah directly — the
-  /// retry for an ayah the mirror failed to deliver.
+  /// Asks for one ayah: it joins the backlog, and [_pump] hands it to the
+  /// downloader when there is room. [origin] skips the app's own mirror and
+  /// asks everyayah directly - the retry for an ayah the mirror failed to
+  /// deliver - and goes to the front, so a retry is not 6,000 ayahs away.
   void _enqueueAyah(AyahDlEntry entry, int surah, int ayah,
       {bool origin = false}) {
     _failed['${entry.edition}/$surah']?.remove(ayah);
-    final url = !origin && RecitationSource.isMirroredOnR2(entry.folder)
-        ? AppConfig.r2AyahUrl(entry.folder, surah, ayah)
-        : AppConfig.everyAyahUrl(entry.folder, surah, ayah);
-    final dir = p.join(_dirName, entry.edition);
+    final id = _taskId(entry.edition, surah, ayah);
+    if (_handed.contains(id)) return;
+    if (!_backlogIds.add(id)) {
+      if (!origin) return;
+      _backlog.removeWhere((w) => _taskId(w.$1, w.$2, w.$3) == id);
+    }
+    final want = (entry.edition, surah, ayah, origin);
+    origin ? _backlog.addFirst(want) : _backlog.addLast(want);
+  }
 
-    DownloadEngine.fileQueue.add(DownloadTask(
-      taskId: _taskId(entry.edition, surah, ayah),
-      url: url,
-      filename: _fileName(surah, ayah),
-      baseDirectory: BaseDirectory.applicationDocuments,
-      directory: dir,
-      group: DownloadEngine.groupFiles,
-      updates: Updates.statusAndProgress,
-      retries: 3,
-      allowPause: true,
-    ));
+  /// Tops the plugin's queue up to [_window] of ours. Cheap: it stops at a
+  /// full window, and skips what was paused, cancelled or has arrived.
+  void _pump() {
+    while (_backlog.isNotEmpty && _handed.length < _window) {
+      final (edition, surah, ayah, origin) = _backlog.removeFirst();
+      final id = _taskId(edition, surah, ayah);
+      _backlogIds.remove(id);
+      final entry = _entries[edition];
+      if (entry == null ||
+          entry.paused ||
+          !entry.pendingSurahs.contains(surah) ||
+          isDownloaded(edition, surah, ayah)) {
+        continue;
+      }
+      final url = !origin && RecitationSource.isMirroredOnR2(entry.folder)
+          ? AppConfig.r2AyahUrl(entry.folder, surah, ayah)
+          : AppConfig.everyAyahUrl(entry.folder, surah, ayah);
+      _handed.add(id);
+      DownloadEngine.fileQueue.add(DownloadTask(
+        taskId: id,
+        url: url,
+        filename: _fileName(surah, ayah),
+        baseDirectory: BaseDirectory.applicationDocuments,
+        directory: p.join(_dirName, edition),
+        group: DownloadEngine.groupFiles,
+        updates: Updates.statusAndProgress,
+        retries: 3,
+        allowPause: true,
+      ));
+    }
+  }
+
+  /// Forgets everything queued for [edition] that has not started: our
+  /// backlog, and the few tasks still waiting in the plugin's own queue
+  /// (`allTasks` does not list those, so a cancel alone left them to run).
+  void _dropQueued(String edition) {
+    final prefix = 'ayah_${edition}_';
+    _backlog.removeWhere((w) => w.$1 == edition);
+    _backlogIds.removeWhere((id) => id.startsWith(prefix));
+    final waiting = [
+      for (final id in _handed)
+        if (id.startsWith(prefix)) id,
+    ];
+    if (waiting.isNotEmpty) {
+      DownloadEngine.fileQueue.removeTasksWithIds(waiting);
+      _handed.removeAll(waiting);
+    }
   }
 
   void _onUpdate(TaskUpdate u) {
@@ -412,6 +482,8 @@ class AyahRecitationLibrary extends ChangeNotifier {
     final parsed = _parseTaskId(u.task.taskId);
     if (parsed == null) return;
     final (edition, surah, _) = parsed;
+    // Any status means the plugin has taken it out of its waiting queue.
+    if (u is TaskStatusUpdate && _handed.remove(u.task.taskId)) _pump();
 
     if (u is TaskStatusUpdate && u.status == TaskStatus.complete) {
       // A transfer that finishes after its reciter was deleted is not a
@@ -421,8 +493,10 @@ class AyahRecitationLibrary extends ChangeNotifier {
         if (f.existsSync()) unawaited(f.delete());
         return;
       }
-      final prev = _downloadedCounts[edition] ?? 0;
-      _downloadedCounts[edition] = prev + 1;
+      final f = fileFor(edition, surah, parsed.$3);
+      if (f.existsSync() && f.lengthSync() > 0) {
+        (_have[edition] ??= <int>{}).add(_key(surah, parsed.$3));
+      }
       // Check if the whole surah is now done.
       final count = _ayahCounts[surah];
       var surahDone = true;
@@ -446,6 +520,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
       final entry = _entries[edition];
       if (entry != null && AppConfig.isOwnMirror(u.task.url)) {
         _enqueueAyah(entry, surah, parsed.$3, origin: true);
+        _pump();
         return;
       }
       (_failed['$edition/$surah'] ??= <int>{}).add(parsed.$3);
@@ -460,6 +535,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
     final entry = _entries[edition];
     if (entry == null) return;
     entry.paused = true;
+    _dropQueued(edition);
     await _save();
     _notifyNow();
     await _cancelLiveTasks(edition);
@@ -480,6 +556,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
         }
       }
     }
+    _pump();
     _notifyNow();
   }
 
@@ -488,6 +565,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
     if (entry == null) return;
     entry.pendingSurahs.clear();
     entry.paused = false;
+    _dropQueued(edition);
     await _save();
     await _cancelLiveTasks(edition);
     _notifyNow();
@@ -540,14 +618,15 @@ class AyahRecitationLibrary extends ChangeNotifier {
       await audio.stopQueue();
     }
     _entries.remove(edition);
-    _downloadedCounts.remove(edition);
+    _have.remove(edition);
+    _dropQueued(edition);
     await _save();
     _notifyNow();
     final dir = Directory(p.join(_root.path, edition));
     if (dir.existsSync()) await dir.delete(recursive: true);
     await _cancelLiveTasks(edition);
     if (dir.existsSync()) await dir.delete(recursive: true);
-    _downloadedCounts.remove(edition);
+    _have.remove(edition);
     _notifyNow();
   }
 
@@ -561,6 +640,14 @@ class AyahRecitationLibrary extends ChangeNotifier {
             .map((t) => t.taskId),
       );
     } catch (_) {}
+    // A task the plugin refused past its retries never reports a status, so
+    // it would hold a place in the window for ever. Anything neither running
+    // nor waiting in the plugin's queue is handed back to the backlog below.
+    final waiting = {
+      for (final t in DownloadEngine.fileQueue.waiting.unorderedElements)
+        t.taskId,
+    };
+    _handed.removeWhere((id) => !live.contains(id) && !waiting.contains(id));
     var count = 0;
     for (final entry in _entries.values) {
       if (entry.paused) continue;
@@ -574,6 +661,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
         }
       }
     }
+    _pump();
     _notifyNow();
     return count;
   }

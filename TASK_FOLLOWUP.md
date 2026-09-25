@@ -12,12 +12,23 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
-Stage 1 item 1 DONE + SEEN (build 17:20, emulator-5554). NEXT: item 2 -
-book «−» (remove from list) shows «أُزيل … / تراجع» but the book stays.
-Prove the cause in code, fix, build (emulator OFF), see it. Then item 3.
-Not seen on the owner's Xiaomi yet (the same APK logic; no device-specific
-path involved). UNVERIFIED, redo: 3.63.3 ANR/lock-stop fix only seen on
-emulator; qibla «مش ظبطت».
+OWNER ORDER 17:40: finish ALL plan items, test on the emulator, then PUBLISH
+the release (he asked for it). Order of work now:
+A. TEXT MUSHAF SOURCE - owner must choose (asked 18:05): our quran_local.db
+   text_uthmani = Tanzil Uthmani 1.0.x (== alquran.cloud quran-uthmani).
+   It carries 6,643 legacy tanween+small-meem markers (U+06E2/U+06ED) that
+   Amiri Quran draws as a literal iqlab meem (owner saw it on 18:31 عدنٍۢ),
+   plus 5 real text errors vs the King Fahd (QPC) text: 12:39, 12:41
+   يَٰصَىٰحِبَىِ (extra ى), 2:181 8:6 13:37 بَعْدَمَا joined. Tanzil 1.1
+   (tanzil.net, downloaded 17:56) fixes all of those; still differs from
+   QPC in 3 word-joins (15:7 لوما, 27:20 مالي, 36:22 ومالي) and shows plain
+   tanween where the paper shows staggered. QPC text needs the QPC font,
+   whose licence forbids reproduction without written approval.
+B. ANR (ayah-by-ayah download) - FIXED IN CODE, NOT BUILT/SEEN: backlog +
+   window of 12 in ayah_recitation_library.dart; set-based counts; files
+   notification has no x/y and no bar; onboarding tile reads the library.
+C. Then plan items 2.. in order + owner's 17:56 ask: special surahs and
+   Sunnah-of-surahs screens get the mushaf theme choices (light/warm/night).
 
 (History below.)
 After the release: nothing ordered. Still open (need the owner or a fresh
@@ -391,6 +402,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 17:59 - Ayah download ANR: feed the plugin queue 12 at a time, set-based counts (not built); text mushaf source audit
+- 2026-09-25 18:05 - ANR PROVEN: tap «تلاوة آية بآية» -> main thread ~50% busy for ever on emulator-5554 (/proc task stat, 50 ticks/s); MemoryTaskQueue.getNextTask = 7.7 ms per call with 6,236 waiting (bench), twice per finished ayah. Fix in code (backlog+window 12), 589 pass. Text mushaf audit: see Next step A.
 - 2026-09-25 17:23 - Stage 1 item 1 SEEN on emulator: back leaves screens whose card started open; library shows one app bar
 - 2026-09-25 17:23 - Item 1 SEEN on emulator-5554 (APK built 17:18, installed 17:20:37, cold start): Downloads > Book reader voice > arrow returns to Downloads; Downloads > Books shows ONE bar «Library» with its own arrow; Categories (first shelf open) > system back > Downloads in one press; Authors > tap Ibn Kathir (user-opened) > back closes the card and stays (old rule kept). analyze clean, 589 pass.
 - 2026-09-25 17:09 - Stage 1 item 1: back dead behind a card that started open; library double app bar (code + test, not built)

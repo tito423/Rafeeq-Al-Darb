@@ -131,10 +131,15 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
     final locale = context.locale.languageCode;
     final probes = _probes;
     final choice = ref.watch(onboardingAyahChoiceProvider);
-    final chosen =
+    // A reciter already downloading (or done) is shown from the library,
+    // the one record of what is on disk - not from a fresh probe of the
+    // hosts. Reopening «التحميلات المبدئية» mid-download re-probed 35 hosts
+    // under a busy line and said «لم يستجب أي خادم» over a download that
+    // was running (owner's phone, 2026-09-25).
+    final chosen = _fromLibrary(choice) ??
         probes?.where((p) => p.reciter.identifier == choice).firstOrNull;
 
-    if (probes == null || chosen == null) {
+    if (chosen == null) {
       return OfflinePackRow(
         icon: Icons.record_voice_over_outlined,
         title: 'onboarding.ayah_title'.tr(),
@@ -174,7 +179,7 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
         busy: busy,
         progress: progress.fraction,
       ),
-      footer: busy || progress.isComplete
+      footer: busy || progress.isComplete || probes == null
           ? null
           : _ChangeButton(onPressed: () => _pick(context, probes, locale)),
       onDownload: () async {
@@ -185,6 +190,33 @@ class _AyahReciterPackTileState extends ConsumerState<AyahReciterPackTile> {
       },
       onCancel: () => _lib.cancel(chosen.reciter.identifier),
     );
+  }
+
+  /// The reciter the library is downloading or has finished, the chosen one
+  /// first. Null when nothing was asked for yet - then the probes decide.
+  _Probe? _fromLibrary(String? choice) {
+    final reciters = ref.watch(recitersProvider).valueOrNull;
+    final sizes = ref.watch(offlinePackSizesProvider).valueOrNull;
+    if (reciters == null || sizes == null) return null;
+    AyahDlEntry? pick;
+    for (final e in _lib.entries) {
+      if (e.pendingSurahs.isEmpty &&
+          !_lib.progressOf(e.edition).isComplete) {
+        continue;
+      }
+      if (e.edition == choice) {
+        pick = e;
+        break;
+      }
+      pick ??= e;
+    }
+    if (pick == null) return null;
+    final edition = pick.edition;
+    final reciter =
+        reciters.where((r) => r.identifier == edition).firstOrNull;
+    final bytes = sizes.ayahReciters[edition];
+    if (reciter == null || bytes == null) return null;
+    return _Probe(reciter, bytes, null);
   }
 
   Future<void> _pick(

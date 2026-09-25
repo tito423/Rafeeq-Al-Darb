@@ -1193,7 +1193,7 @@
     "prayer_enable_location": "Activez la localisation pour afficher les horaires de prière",
     "prayer_event": "{prayer}, {time}",
     "dl_files_running_title": "Téléchargement en cours",
-    "dl_files_running_body": "Fichiers terminés : {numFinished} sur {numTotal}",
+    "dl_files_running_body": "La progression exacte est dans l'app, sous Téléchargements",
     "dl_files_complete_title": "Téléchargement terminé",
     "dl_files_complete_body": "Le contenu est prêt à être utilisé hors connexion",
     "dl_files_error_title": "Échec du téléchargement",

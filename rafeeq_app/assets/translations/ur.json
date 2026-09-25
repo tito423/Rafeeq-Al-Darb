@@ -1193,7 +1193,7 @@
     "prayer_enable_location": "نماز کے اوقات دیکھنے کے لیے مقام آن کریں",
     "prayer_event": "{prayer}، {time}",
     "dl_files_running_title": "ڈاؤن لوڈ جاری",
-    "dl_files_running_body": "مکمل فائلیں: {numFinished} از {numTotal}",
+    "dl_files_running_body": "درست پیش رفت ایپ میں «ڈاؤن لوڈز» میں ہے",
     "dl_files_complete_title": "ڈاؤن لوڈ مکمل",
     "dl_files_complete_body": "مواد آف لائن استعمال کے لیے تیار ہے",
     "dl_files_error_title": "ڈاؤن لوڈ ناکام",
