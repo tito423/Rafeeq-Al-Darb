@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 23:03 — IN PROGRESS — resume here**
+**2026-09-25 23:17 — IN PROGRESS — resume here**
 
-Daas: every disputed place decided against the printed page; verdicts file; parser fix for 19:14
+Daas final build: 3,612 sections from Shamela backed by the print; 27 damaged sections to transcribe from the printed page
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
