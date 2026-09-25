@@ -2502,9 +2502,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 03:26 — IN PROGRESS — resume here**
+**2026-09-26 03:31 — IN PROGRESS — resume here**
 
-Landscape: adhkar counter beside the dhikr, library tabs beside the title
+Seen sideways: library header, adhkar reader, khatma
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

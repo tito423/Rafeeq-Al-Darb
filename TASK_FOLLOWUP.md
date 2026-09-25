@@ -27,6 +27,7 @@ SEEN SIDEWAYS 03:00-03:05 on the Xiaomi (build 02:55): al-Fatiha markers 1-7 in 
 BUILD 03:0x installed 03:09:52 on the Xiaomi: SideTabs SEEN sideways, all 7 tabs with names, no scrolling. BLOCKED ON OWNER: Avast One on his phone popped «Suspicious app found - Rafeeq Al-Darb, Detection ID 3d1dc328d456, recommend uninstalling» right after this install. Dialog left untouched. Do not dismiss/uninstall; ask him. Still to see sideways: Prayer/Adhkar/Tasbeeh/Library tab contents; splash clip after a long absence.
 OWNER 03:15: «اظبط الشكل والتصميم في الاورينتيشن ... كانه تاب شغال بالعرض». Avast dialog gone from his screen (he handled it). DONE IN CODE (593 pass): TwoPaneScroll (core/widgets) - Home (date+prayer | reading cards), Prayer (compass sized to height | links), More (6 groups in 2 columns); Adhkar grid 200dp tiles aspect 1.2 sideways. Building. NEXT: see them, then Library + pushed screens (downloads, surah list, adhkar reader, hadith, settings).
 SEEN 03:22 build 03:21:38: Home two columns, Prayer compass|links, Adhkar 4x2 tiles, More two columns - all good. DONE IN CODE next: adhkar reader counter beside the dhikr sideways; Library pills beside the title sideways. Building.
+SEEN 03:31 build 03:30:44: Library pills beside title (3 authors in view), adhkar reader counter beside dhikr, khatma OK. NEXT: settings expanded, hadith tab, book reader, surah index, hifz, hajj, tajweed, player.
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -460,6 +461,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 03:31 - Seen sideways: library header, adhkar reader, khatma
 - 2026-09-26 03:26 - Landscape: adhkar counter beside the dhikr, library tabs beside the title
 - 2026-09-26 03:18 - Tablet-style landscape: two scrolling columns on Home, Prayer and More; wider adhkar tiles (593 pass, building)
 - 2026-09-26 03:10 - SideTabs seen on the Xiaomi; Avast One flagged the sideloaded build - waiting on the owner
