@@ -12,6 +12,21 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+SESSION 2026-09-26 ~02:05 (quota 5h 89%). HEAD 645a3b12. build_github_release.bat
+RUNNING (emulator killed first). Owner's XIAOMI is on adb: BYKRKJPRC6O7FMHU.
+NEXT (exact):
+1. When the build ends: adb -s BYKRKJPRC6O7FMHU install -r rafeeq_appuildpp\outputslutter-apkpp-release.apk
+   (phone is SILENT-sensitive: do not play audio). Check lastUpdateTime.
+2. On the phone: Quran -> البقرة ص2 line order (KFGQPC font); long-press 2:5 -> download pack
+   (32.1 MB) -> الإعراب; 2:31 framed ref to 2:23; 24:21 shows «[تصويب عن ...]».
+3. Owner rule «مينفعش التساهل»: the 222 unproved references (scripts/irab_daas_refs_for_owner.md)
+   must be CHASED like the commentary was - other i'rab books on tafsir.app
+   (get.php?src=aljadwal|iraab-aldarweesh|aliraab-almuyassar&s=&a=&ver=1) name the
+   earlier ayah for «مثلها» - not parked with the owner.
+4. Cosmetic: Shamela mid-sentence line breaks inside sections (2:23 «فعل ماض / ناقص»).
+5. Release only if the owner asks.
+SEEN on emulator earlier (01:25 build, before the commentary fix): 2:5, 2:31->2:23, Sources.
+
 SESSION 2026-09-26 00:00-02:30 (i'rab). DONE+PUSHED: 27/27 damaged sections
 from the print; 6 Qur'an quotes corrected to the mushaf with evidence
 (scripts/irab_daas_quran_corrections.json); references resolver (215 proved
@@ -426,6 +441,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 01:53 - TASK_FOLLOWUP: Xiaomi install + chase the 222 refs next (quota 89%)
+- 2026-09-26 01:53 - OWNER RULE «مينفعش التساهل في علم يمس القرآن» (CLAUDE.md 1.2 + memory no-leniency-quran): the 3 commentary mismatches were CHASED, not parked. 4th witness tafsir.app iraab-daas has the same errors -> the authors' own. Fixed from named books read on tafsir.app get.php: 10:56 «هو مبتدأ» (الجدول، درويش، الميسر); 22:60 «وعفو خبر إن وغفور خبر ثان» (الإعراب الميسر); 24:21 «والله مبتدأ وسميع خبر أول وعليم خبر ثان» (درويش) - each marked in the text «[تصويب عن ... ؛ وفي الأصل: ...]». Sources row tafsir.app + CONTENT-LICENSES. Pack v2 re-uploaded 32,146,611 B (R2 206 + GitHub 206), AppConfig + pinned test updated. analyze clean, 587 pass. Next: signed build for the owner's Xiaomi (he is connecting it).
 - 2026-09-26 01:34 - i'rab tab SEEN on emulator: 2:5 source+text, 2:31 framed ref to 2:23, Sources row
 - 2026-09-26 01:34 - SEEN on emulator-5554 (signed build 3.63.7 code+i'rab, installed 01:25:56 over the debug build): sheet offered the pack at 32.1 MB, downloaded, tafsir shown; الإعراب for 2:5 = source header (authors, دار النمير ودار الفارابي ط1 1425) + «يعرب الكتاب الآيات من ١ إلى ٥ معًا» + book text with gold quotes; 2:31 shows «إن كنتم صادقين» انظر الآية ٢٣ and UNDER it the framed «إعراب سورة البقرة الآية ٢٣ كما ورد في الكتاب» with 2:23's section; Sources screen shows the Shamela/Da'as row. Hosted v2 zip re-downloaded: 6 corrections present, 3,639 sections/6,236 ayahs, 215 refs, no word_grammar. NOT released (v3.63.7 still published; ask owner). Target text keeps Shamela's line breaks mid-sentence (e.g. 2:23 «فعل ماض / ناقص») - cosmetic, next.
 - 2026-09-26 01:15 - TASK_FOLLOWUP: exact device-check plan while the signed build runs
