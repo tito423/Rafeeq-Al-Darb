@@ -2,7 +2,7 @@ name: rafeeq_app
 description: "Rafeeq Al-Darb â€” Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
 publish_to: 'none'
 
-version: 3.63.3+68
+version: 3.63.4+69
 
 environment:
   sdk: ^3.10.7
@@ -199,9 +199,9 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: 'assets/icon/app_icon.png'
-  adaptive_icon_background: '#081F4F'
+  adaptive_icon_background: '#F7FCFF'
   adaptive_icon_foreground: 'assets/icon/app_icon_foreground.png'
-  background_color_ios: '#0C2C29'
+  background_color_ios: '#F7FCFF'
   remove_alpha_ios: true
   min_sdk_android: 21
 
