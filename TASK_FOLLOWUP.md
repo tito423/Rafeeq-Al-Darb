@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:16 - Daas: 24 of 27 transcribed from the print (+44:44)
+- 2026-09-26 00:16 - Daas print: 24 of 27 (+44:44-53 vol3 212). OWNER-CHECK: the print quotes 44:49 as «العزيز الحكيم» (ayah: الْعَزِيزُ الْكَرِيمُ) - book's own misquote, kept undiacritised as printed, not corrected. Next: 51:40 (vol3 265-266).
 - 2026-09-26 00:16 - Daas: 23 of 27 transcribed from the print (+40:79)
 - 2026-09-26 00:16 - Daas print: 23 of 27 (+40:79-82 vol3 166; KSU is TRUNCATED there («الفا.....»), Shamela lost first letters in 40:81 - both repaired from the print). Next: 44:44 (vol3 212).
 - 2026-09-26 00:15 - Daas: 22 of 27 transcribed from the print (+37:168)
