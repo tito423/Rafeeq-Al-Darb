@@ -382,6 +382,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 14:44 - v3.63.7 published: final ring-cropped icon without prayer beads
+- 2026-09-25 14:44 - FINAL icon: owner's 1024 image WITHOUT prayer beads (he regenerated it after the inpaint attempt smeared the stand), cropped to the ring (box 24,30-997,1003). Preview shown, owner approved («انشر»), seen on emulator launcher. v3.63.7 PUBLISHED (tag == HEAD c6f8d3ac, sha256 b3c22dc8 = local), v3.63.5 deleted (3.63.6 was never published). Not yet on the owner's Xiaomi.
 - 2026-09-25 14:16 - v3.63.5 published: owner's 1024 icon
 - 2026-09-25 14:17 - Owner's 1024 square icon used as given, bg #9BC4B3 (image edge median), seen on emulator launcher. v3.63.5 PUBLISHED (tag == HEAD 6e3114a3, sha256 39b559da = local), v3.63.4 deleted. Not yet on the owner's Xiaomi.
 - 2026-09-25 14:00 - v3.63.4 published: owner's light app icon
