@@ -1,4 +1,6 @@
 import json, os, re, sqlite3, html, io, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import corpus_labels  # noqa: E402
 
 BASE = r"e:\My Projects\Rafiq-Al-Darb\scripts\temp_phase1"
 APPDATA = r"e:\My Projects\Rafiq-Al-Darb\rafeeq_app\assets\data"
@@ -170,28 +172,13 @@ with open(xml_path, encoding="utf-8") as f:
         mw = pat.search(line)
         if mw:
             posn, token, morph = int(mw.group(1)), html.unescape(mw.group(2)), html.unescape(mw.group(3))
-            mpos = re.search(r"POS:(\w+)", morph)
-            pos_tag = mpos.group(1) if mpos else ""
-            pos_ar = POS_AR.get(pos_tag, "حرف" if not pos_tag else pos_tag)
-            case_ar = ""
-            for c in ("NOM", "GEN", "ACC", "JUS", "SUB"):
-                if re.search(r"\b" + c + r"\b", morph):
-                    case_ar = CASE_AR[c]
-                    break
-            for t, ar in TAG_AR.items():
-                if re.search(r"\b" + t + r"\b", morph):
-                    if case_ar:
-                        case_ar += " / " + ar
-                    else:
-                        case_ar = ar
-                    break
+            # One definition of the labels, shared with
+            # fix_word_grammar_labels.py - see corpus_labels.py for what the
+            # inline version here got wrong (2026-09-25).
+            pos_ar = corpus_labels.pos_label(morph)
+            case_ar = corpus_labels.label(morph)
             mroot = re.search(r"ROOT:(\S+)", morph)
             mlem = re.search(r"LEM:(\S+)", morph)
-            num = next((NUM_AR[x] for x in ("S", "D", "P") if re.search(r"\b" + x + r"\b", morph)), "")
-            gen = next((GEN_AR[x] for x in ("M", "F") if re.search(r"\b" + x + r"\b", morph)), "")
-            extra = " ، ".join(x for x in (num, gen) if x)
-            if extra:
-                case_ar = (case_ar + " ، " + extra) if case_ar else extra
             grows.append((ch, vs, posn, token, pos_ar, case_ar,
                           mroot.group(1) if mroot else "", mlem.group(1) if mlem else ""))
 cur.executemany("INSERT OR REPLACE INTO word_grammar(surah,ayah,pos,token,pos_ar,case_ar,root,lemma) VALUES(?,?,?,?,?,?,?,?)", grows)

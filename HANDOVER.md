@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 19:45 — IN PROGRESS — resume here**
+**2026-09-25 20:06 — IN PROGRESS — resume here**
 
-Tour as screenshots (TourSlides + capture build + script); account and reciter cards follow the theme
+Tour pictures recaptured in 7 languages (32 each) committed and listed in pubspec; i'rab label rewrite scripts added
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -12,7 +12,17 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
-Owner (18:10): «هات المصدر الأوثق وحط عليه كل اللي عملناه» after asking if a
+SESSION 2026-09-25 20:05 (quota 5h 1%, weekly 57%, RC off). Tour recapture
+FINISHED: 7 langs x 32 webp (636-724 KB each) + frames.json, now in git
+and in pubspec. I'rab: corpus_labels.py rewrite RUN on the local
+quran_sciences.db 19:59 (عَلَى = «حرف جر», no «جمع»; 0 prepositions with
+جمع) but NOT uploaded to R2 and sciencesDbVersion still v1.
+NEXT: (1) normal release build (emulator OFF, no capture define), install,
+open the quick + full tour in ar and en, SEE pictures + frames line up;
+(2) i'rab: py -3 scripts/upload_sciences_pack.py, update sciencesDbBytes,
+bump sciencesDbVersion v2, see the sheet for 2:5 on the emulator.
+
+(Older) Owner (18:10): «هات المصدر الأوثق وحط عليه كل اللي عملناه» after asking if a
 trusted free source exists. DONE IN CODE, NOT BUILT/SEEN: ayah text = KFGQPC
 hafsData v18 (two copies identical 6236/6236), font KFGQPCHafs (licence:
 free use/copy/distribute, unmodified), basmala line = 1:1 (kBasmala), DB
@@ -396,6 +406,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 20:06 - Tour pictures recaptured in 7 languages (32 each) committed and listed in pubspec; i'rab label rewrite scripts added
 - 2026-09-25 19:45 - Tour as screenshots (TourSlides + capture build + script); account and reciter cards follow the theme
 - 2026-09-25 19:45 - Owner: the tour must be PICTURES of the screens («اسكرين شوتات»), in the reader's language. Done in code: TourSlides (image + framed feature + bubble, nothing behind it touchable); capture build (--dart-define=RAFEEQ_TOUR_CAPTURE=true) walks both tours in all 7 languages, logs TOURCAP lines; scripts/capture_tour.py screenshots, crops, writes assets/tour/<lang>/<key>.webp + frames.json. First run: ar 32 pictures 644 KB, then it stopped (last stops skipped called _finish) - fixed; recapturing. Also item 14: account card back side theme-aware (was fixed dark green), reciter panel follows light theme (pale ground, dark ink). SEEN on emulator build 19:14: More groups one-open + sections open as screens (tasbih reminders full screen), Audio tab «−» removes (89->88), location in Times & date, New Muslim gone. assets/tour NOT yet in pubspec (release build would show no pictures).
 - 2026-09-25 19:10 - More: header-to-top on open, sections open as screens; tour hifz stop shows the hifz screen

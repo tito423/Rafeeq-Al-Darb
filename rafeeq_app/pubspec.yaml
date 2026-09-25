@@ -189,6 +189,16 @@ flutter:
     # depends on a network round-trip, honoring the offline-first rule the
     # same way AmiriQuran already does for the Quran text itself.
     - assets/fonts/google_fonts/
+    # The tour's pictures of the real screens, one folder per language,
+    # taken by scripts/capture_tour.py (owner, 2026-09-25).
+    - assets/tour/
+    - assets/tour/ar/
+    - assets/tour/en/
+    - assets/tour/es/
+    - assets/tour/ru/
+    - assets/tour/pt/
+    - assets/tour/fr/
+    - assets/tour/ur/
     # Ships with the KFGQPC font it licenses ("accompanying this license").
     - assets/fonts/KFGQPC-HAFS-LICENSE.txt
 
