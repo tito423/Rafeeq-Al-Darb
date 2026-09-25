@@ -59,6 +59,16 @@ time.
 - Never rewrite, normalise or "fix" the text of a Qur'an ayah or a hadith. If a
   source has an obvious typo (`إسناده صحح`), it stays — it is the source's text,
   and silently correcting scripture-adjacent text is not yours to do.
+- **Exception — Qur'an words quoted inside a book** (owner, 2026-09-26: «آيات
+  وحروف القرآن الكريم مفيش فيها هزار»). When a book quotes the Qur'an
+  differently from the mushaf, the Qur'an wins, but only after this: open the
+  Madinah page (`madinah_qc` on R2), screenshot it and **look at it**; read the
+  book's printed page too; make an evidence image (mushaf line over the book's
+  line); record it in the correction file with page, line and evidence
+  (`scripts/irab_daas_quran_corrections.json` for al-Da'as). Tell the owner what was
+  corrected and the reference. Only the quoted Qur'an words change; the book's
+  own commentary stays as printed and any mismatch it leaves is flagged to him.
+  Never correct «silently», never from memory, never by a script alone.
 - Every content source gets credited on the Sources screen with a link.
 
 ### 1.3 Verify on a real device, not in your head

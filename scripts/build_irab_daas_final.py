@@ -175,6 +175,18 @@ def main():
         stats[base] += 1
         out.append({'surah': r['surah'], 'ayah_from': r['from'], 'ayah_to': r['to'],
                     'text': text, 'base': base})
+    # Qur'an words the book (or Shamela) quotes differently from the mushaf,
+    # each checked on the Madinah page by eye and recorded with its page,
+    # line and evidence image (owner, 2026-09-26). Only the quoted Qur'an
+    # words change; the book's grammar around them is left as printed.
+    by_key = {(r['surah'], r['ayah_from']): r for r in out}
+    for c in json.load(io.open(os.path.join(ROOT, 'scripts', 'irab_daas_quran_corrections.json'),
+                               encoding='utf-8')):
+        r = by_key[tuple(int(v) for v in c['section'].split(':'))]
+        if r['text'].count(c['printed']) != 1:
+            sys.exit(f"correction {c['ayah']}: {c['printed']} found {r['text'].count(c['printed'])} times")
+        r['text'] = r['text'].replace(c['printed'], c['corrected'])
+        stats['quran_word_corrected'] += 1
     json.dump(out, io.open(os.path.join(T, 'irab_daas_final.json'), 'w', encoding='utf-8'),
               ensure_ascii=False, indent=0)
     sys.stdout.reconfigure(encoding='utf-8')

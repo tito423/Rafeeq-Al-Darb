@@ -1,0 +1,62 @@
+[
+ {
+  "section": "44:44",
+  "ayah": "44:49",
+  "printed": "«العزيز الحكيم»",
+  "corrected": "«الْعَزِيزُ الْكَرِيمُ»",
+  "mushaf": "مصحف المدينة (madinah_qc، صور quran.com) ص498 س7: «ذُقۡ إِنَّكَ أَنتَ ٱلۡعَزِيزُ ٱلۡكَرِيمُ»",
+  "book": "المطبوع ج3 ص212 (pdf 212)، وفي الشاملة مثله",
+  "evidence": "scripts/evidence/evidence_44_49.png",
+  "note": "the book's own comment «خبران» is untouched"
+ },
+ {
+  "section": "10:55",
+  "ayah": "10:56",
+  "printed": "«وهو»",
+  "corrected": "«هُوَ»",
+  "mushaf": "مصحف المدينة (madinah_qc، صور quran.com) ص215 آخر س4: «هُوَ يُحۡيِۦ وَيُمِيتُ» بلا واو",
+  "book": "المطبوع ج2 ص32",
+  "evidence": "scripts/evidence/evidence_10_56.png",
+  "note": "the book's comment «الواو استئنافية ومبتدأ» analyses a waw the ayah does not have; it is the book's analysis and stays - flagged to the owner"
+ },
+ {
+  "section": "22:27",
+  "ayah": "22:28",
+  "printed": "«معدودات»",
+  "corrected": "«مَعْلُوماتٍ»",
+  "mushaf": "مصحف المدينة (madinah_qc، صور quran.com) ص335 س9: «فِيٓ أَيَّامٖ مَّعۡلُومَٰتٍ»",
+  "book": "المطبوع ج2 ص309 - ونص الآية في صندوق الكتاب نفسه «معلومات»",
+  "evidence": "scripts/evidence/evidence_22_28.png",
+  "note": "«معدودات» is 2:203; the book's i'rab «صفة لأيام مجرور بالكسرة» fits both"
+ },
+ {
+  "section": "22:59",
+  "ayah": "22:60",
+  "printed": "«إن الله لغفور رحيم»",
+  "corrected": "«إِنَّ اللَّهَ لَعَفُوٌّ غَفُورٌ»",
+  "mushaf": "مصحف المدينة (madinah_qc، صور quran.com) ص339 آخر س8 وأول س9: «إِنَّ ٱللَّهَ لَعَفُوٌّ غَفُورٞ»",
+  "book": "المطبوع ج2 ص318",
+  "evidence": "scripts/evidence/evidence_22_60.png",
+  "note": "the book's comment «وغفور ورحيم خبراها» stays as the book wrote it - flagged to the owner"
+ },
+ {
+  "section": "24:21",
+  "ayah": "24:21",
+  "printed": "«إن الله سميع عليم»",
+  "corrected": "«وَاللَّهُ سَمِيعٌ عَلِيمٌ»",
+  "mushaf": "مصحف المدينة (madinah_qc، صور quran.com) ص352 س4: «وَٱللَّهُ سَمِيعٌ عَلِيمٞ»",
+  "book": "المطبوع ج2 ص347 - ونص الآية في صندوق الكتاب نفسه «والله»",
+  "evidence": "scripts/evidence/evidence_24_21.png",
+  "note": "the book's comment «إن ولفظ الجلالة اسمها» analyses an إنّ the ayah does not have; stays as the book's - flagged to the owner"
+ },
+ {
+  "section": "3:106",
+  "ayah": "3:107",
+  "printed": "«في رَحْمَتِ»",
+  "corrected": "«فِي رَحْمَةِ»",
+  "mushaf": "مصحف المدينة (madinah_qc، صور quran.com) ص63 س14: «فَفِي رَحۡمَةِ ٱللَّهِ»",
+  "book": "المطبوع ج1 ص154 (pdf 153) يطبع «في رحمة» - الخطأ من نسخة الشاملة لا من الكتاب",
+  "evidence": "scripts/evidence/evidence_3_107.png",
+  "note": "Shamela typo, not the book's"
+ }
+]
