@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:08 - Daas: 11 of 27 transcribed from the print (+10:55)
+- 2026-09-26 00:08 - Daas print: 11 of 27 (+10:55-58 vol2 32, 246 words; 1 new word «وهو» = the print's own quote for 10:56 whose ayah reads «هُوَ يُحْيِي» - book text kept undiacritised, NOT corrected; tell owner). Next: 10:64 (vol2 34).
 - 2026-09-26 00:07 - Daas: 10 of 27 transcribed from the print (+4:172)
 - 2026-09-26 00:07 - Daas print: 10 of 27 (+4:172 vol1 237-238, 182 words / 0 new). Next: 10:55 (vol2 32).
 - 2026-09-26 00:06 - Daas: 9 of 27 transcribed from the print (+3:116)
