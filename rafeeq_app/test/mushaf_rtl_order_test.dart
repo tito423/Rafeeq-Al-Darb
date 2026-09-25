@@ -18,11 +18,6 @@ Future<void> _load(String family, String path) async {
   await loader.load();
 }
 
-double _xOf(RenderParagraph p, int from, int to) =>
-    p.getBoxesForSelection(TextSelection(baseOffset: from, extentOffset: to))
-        .first
-        .left;
-
 void main() {
   for (final (family, path) in [
     ('KFGQPCHafs', 'assets/fonts/KFGQPC-HAFS-Uthmanic-Script-v18.ttf'),
