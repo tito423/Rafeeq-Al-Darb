@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:10 - Daas: 14 of 27 transcribed from the print (+16:32)
+- 2026-09-26 00:10 - Daas print: 14 of 27 (+16:32-33 vol2 157-158, 175 words; 1 new «ينظرون» = print, KSU «تنظرون» wrong). Next: 18:47 (vol2 220-221).
 - 2026-09-26 00:09 - Daas: 13 of 27 transcribed from the print (+12:86)
 - 2026-09-26 00:09 - Daas print: 13 of 27 (+12:86-87 vol2 102-103, 241 words; 4 new words all read on the print: تقديره «أنا», «وحزني», «إلى الله», بتيئسوا - KSU garbled all four). Next: 16:32 (vol2 157-158).
 - 2026-09-26 00:08 - Daas: 12 of 27 transcribed from the print (+10:64)
