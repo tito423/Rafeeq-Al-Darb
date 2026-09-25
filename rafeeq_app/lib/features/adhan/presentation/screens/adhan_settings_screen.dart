@@ -1,12 +1,10 @@
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'prayer_location_screen.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../../core/models/adhan_mode.dart';
@@ -363,58 +361,9 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                     ref.read(prayerStatusEnabledProvider.notifier).set(v),
               ),
             ),
-            // Prayer times move with the device's position, so a traveller
-            // can have the app re-acquire it on a timer instead of only at
-            // launch. Off by default — a fix costs battery, and most users
-            // pray in one place.
-            Card(
-              child: Column(
-                children: [
-                  // Automatic or a place set by hand (owner, 2026-09-25).
-                  const PrayerLocationTile(),
-                  SwitchListTile(
-                    secondary: const Icon(Icons.my_location_outlined),
-                    title: Text('prayer.auto_location'.tr()),
-                    subtitle: Text('prayer.auto_location_desc'.tr()),
-                    value: settings.autoLocationUpdate,
-                    onChanged: (v) => ref
-                        .read(adhanSettingsProvider.notifier)
-                        .setAutoLocationUpdate(v),
-                  ),
-                  if (settings.autoLocationUpdate)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                      child: DropdownButtonFormField<int>(
-                        decoration: InputDecoration(
-                          labelText: 'prayer.location_interval'.tr(),
-                          icon: const Icon(Icons.schedule_outlined),
-                          border: InputBorder.none,
-                        ),
-                        initialValue: settings.locationUpdateMinutes,
-                        items: [
-                          for (final m in locationUpdateIntervals)
-                            DropdownMenuItem(
-                              value: m,
-                              child: Text(
-                                m < 60
-                                    ? trn('prayer.every_minutes', args: ['$m'])
-                                    : trn('prayer.every_hours', args: ['${m ~/ 60}']),
-                              ),
-                            ),
-                        ],
-                        onChanged: (v) {
-                          if (v != null) {
-                            ref
-                                .read(adhanSettingsProvider.notifier)
-                                .setLocationUpdateMinutes(v);
-                          }
-                        },
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
+            // «موقع الصلاة» and its auto-update moved to «المواقيت والتاريخ»
+            // (PrayerAdjustmentsScreen): the place decides WHEN, this screen
+            // is HOW the adhan is announced (owner, 2026-09-25, plan item 8).
             const SizedBox(height: 20),
             // The alarm-stream volume, right where the adhans are chosen: the
             // adhan plays on STREAM_ALARM by design, so the volume rocker

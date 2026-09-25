@@ -13,6 +13,7 @@ import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_settings_provider.dart';
 import '../../data/prayer_calculation_methods.dart';
 import '../../data/prayer_adjustments_provider.dart';
+import 'prayer_location_screen.dart';
 
 /// Manual corrections for the Hijri date and each prayer time, plus the
 /// calculation method that decides those times in the first place.
@@ -45,6 +46,62 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // ── Where: the place the times are calculated for ──
+          //
+          // Moved from Adhan settings with its auto-update (2026-09-25): the
+          // place is the first thing that decides the times.
+          // Prayer times move with the device's position, so a traveller
+          // can have the app re-acquire it on a timer instead of only at
+          // launch. Off by default — a fix costs battery, and most users
+          // pray in one place.
+          Card(
+            child: Column(
+              children: [
+                // Automatic or a place set by hand (owner, 2026-09-25).
+                const PrayerLocationTile(),
+                SwitchListTile(
+                  secondary: const Icon(Icons.my_location_outlined),
+                  title: Text('prayer.auto_location'.tr()),
+                  subtitle: Text('prayer.auto_location_desc'.tr()),
+                  value: settings.autoLocationUpdate,
+                  onChanged: (v) => ref
+                      .read(adhanSettingsProvider.notifier)
+                      .setAutoLocationUpdate(v),
+                ),
+                if (settings.autoLocationUpdate)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                    child: DropdownButtonFormField<int>(
+                      decoration: InputDecoration(
+                        labelText: 'prayer.location_interval'.tr(),
+                        icon: const Icon(Icons.schedule_outlined),
+                        border: InputBorder.none,
+                      ),
+                      initialValue: settings.locationUpdateMinutes,
+                      items: [
+                        for (final m in locationUpdateIntervals)
+                          DropdownMenuItem(
+                            value: m,
+                            child: Text(
+                              m < 60
+                                  ? trn('prayer.every_minutes', args: ['$m'])
+                                  : trn('prayer.every_hours', args: ['${m ~/ 60}']),
+                            ),
+                          ),
+                      ],
+                      onChanged: (v) {
+                        if (v != null) {
+                          ref
+                              .read(adhanSettingsProvider.notifier)
+                              .setLocationUpdateMinutes(v);
+                        }
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
           // ── What decides the times (moved here from Adhan settings) ──
           //
           // A dropdown held four methods; there are twenty-one now, with

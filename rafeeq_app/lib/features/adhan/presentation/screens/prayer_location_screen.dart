@@ -76,6 +76,7 @@ class PrayerLocationScreen extends ConsumerStatefulWidget {
 
 class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
   final _query = TextEditingController();
+  final _queryFocus = FocusNode();
   final _lat = TextEditingController();
   final _lon = TextEditingController();
   final _name = TextEditingController();
@@ -127,6 +128,7 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
   void dispose() {
     _debounce?.cancel();
     _query.dispose();
+    _queryFocus.dispose();
     _lat.dispose();
     _lon.dispose();
     _name.dispose();
@@ -222,6 +224,9 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
                     : const Icon(Icons.radio_button_unchecked),
               ),
               ListTile(
+                // «تحديد يدوي» was a row that did nothing when tapped: it
+                // takes the reader to the search that sets it.
+                onTap: () => _queryFocus.requestFocus(),
                 leading: const Icon(Icons.edit_location_alt),
                 title: Text('location.manual'.tr()),
                 subtitle: Text(_manual == null
@@ -236,6 +241,7 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
           const SizedBox(height: 12),
           TextField(
             controller: _query,
+            focusNode: _queryFocus,
             onChanged: _onQuery,
             textInputAction: TextInputAction.search,
             decoration: InputDecoration(

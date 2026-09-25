@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../data/book_catalog.dart';
 import '../widgets/book_card.dart';
+import '../widgets/hidden_books_sheet.dart';
 
 /// «اعمل تاب جديد قبل مكتبتي بأسماء الكتب القابلة للقراءة الصوتية»
 /// (2026-09-19): every book the reader's voice will read - the ones
@@ -24,8 +25,12 @@ class SpokenBooksView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // `visibleBookCatalog`, like the authors and categories lists: this
+    // list drew from the whole catalogue, so «−» here said «أُزيل … من
+    // القائمة» while the book stayed exactly where it was (owner's phone,
+    // 2026-09-25).
     final books = [
-      for (final b in libraryBookCatalog)
+      for (final b in visibleBookCatalog())
         if (b.canBeSpoken) b,
     ]..sort((a, b) => a.sortKey.compareTo(b.sortKey));
     final scheme = Theme.of(context).colorScheme;

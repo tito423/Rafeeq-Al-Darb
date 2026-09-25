@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../config/app_config.dart';
+import '../services/download_manager.dart';
 
 import 'db_helper.dart';
 import 'models.dart';
@@ -237,10 +238,24 @@ Future<void> _adoptBundledCopy() async {
 }
 
 /// Null until the sciences pack has been downloaded - see above.
+///
+/// It re-reads the disk by itself when the pack finishes. Before, only a
+/// screen that happened to be open at that moment invalidated it, so a pack
+/// that completed in the background (the onboarding download, the owner's
+/// phone 2026-09-25) left the provider at its cached null: the ayah card
+/// asked for a download that was on disk, until some later download event
+/// happened to refresh it - «ثم صلحت وحدها».
 final sciencesRepositoryProvider =
     FutureProvider<SciencesRepository?>((ref) async {
   await _adoptBundledCopy();
   final db = await DbHelper.instance.openDownloaded('quran_sciences.db',
       expectedVersion: AppConfig.sciencesDbVersion);
+  if (db == null) {
+    final sub = DownloadManager.instance.stream.listen((_) {
+      final task = DownloadManager.instance.taskById(sciencesDbDownloadId);
+      if (task?.status == DownloadStatus.completed) ref.invalidateSelf();
+    });
+    ref.onDispose(sub.cancel);
+  }
   return db == null ? null : SciencesRepository(db);
 });
