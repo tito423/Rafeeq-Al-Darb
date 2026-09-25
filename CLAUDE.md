@@ -356,6 +356,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 53. The emulator's `-tcpdump` captures nothing here; `-http-proxy` + a logging proxy does.
 54. Never run `flutter test` or edit `lib/` while a release build is running.
 55. `cp.bat` commits tracked files only - `git add` every new file (it now warns).
+56. Restarting the emulator resumes an OLD snapshot - reinstall and re-check `lastUpdateTime` every time.
 
 ## 4. Where things live
 

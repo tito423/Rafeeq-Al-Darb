@@ -568,3 +568,13 @@ Do not rediscover these.
     `scripts/checkpoint.ps1` now prints `UNTRACKED SOURCE - git add these:`
     as its LAST line when lib/, test/, catalogs or scripts/*.py hold an
     untracked file. Before a release, also run `git status --short`.
+
+56. **Restarting this emulator (`adb emu kill`, then `-no-snapshot-save`)
+    resumes an OLD quickboot snapshot - the installed APK and every app
+    setting go back with it.** 2026-09-25: a manual place set on build 11
+    was «gone» after the restart; `dumpsys package` showed
+    `lastUpdateTime=01:56:56` - build 9's install time, not build 12's -
+    and airplane mode was back off. Not an app bug. After EVERY emulator
+    restart (and trap 24 forces one per release build): `adb install -r`
+    the APK again, check `lastUpdateTime`, and redo any setting the test
+    depends on.
