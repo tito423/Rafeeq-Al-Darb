@@ -17,9 +17,14 @@ FINISHED: 7 langs x 32 webp (636-724 KB each) + frames.json, now in git
 and in pubspec. I'rab: corpus_labels.py rewrite RUN on the local
 quran_sciences.db 19:59 (عَلَى = «حرف جر», no «جمع»; 0 prepositions with
 جمع) but NOT uploaded to R2 and sciencesDbVersion still v1.
-NEXT: (1) normal release build (emulator OFF, no capture define), install,
-open the quick + full tour in ar and en, SEE pictures + frames line up;
-(2) i'rab: py -3 scripts/upload_sciences_pack.py, update sciencesDbBytes,
+OWNER 20:20 DECISION (i'rab): source = «إعراب القرآن الكريم» للدعاس
+وحميدان والقاسم (Shamela 23584, Dar al-Munir/al-Farabi 1425). Corpus tags
+(root/wazn) may stay ONLY if 100% certain - «لو منتش متاكد منهم مليون
+المية متحطهومش». So: corpus labels are NOT uploaded; plan = read Daas
+pages by hand, parser, hand-check a sample, show owner, then replace.
+Corpus root/lemma only after a cross-check against an independent source
+with zero disagreements - else removed.
+DONE (1) tour seen 20:17. NEXT (2) i'rab (OLD plan, superseded by Daas): py -3 scripts/upload_sciences_pack.py, update sciencesDbBytes,
 bump sciencesDbVersion v2, see the sheet for 2:5 on the emulator.
 
 (Older) Owner (18:10): «هات المصدر الأوثق وحط عليه كل اللي عملناه» after asking if a
@@ -406,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 20:16 - Tour pictures seen on the emulator (quick 7/7, full 27/27); owner chose the Daas i'rab
+- 2026-09-25 20:17 - Tour pictures SEEN on emulator (signed build 20:11, lastUpdateTime 20:11:28): quick tour 7/7 in ur->ar switch, full tour 27/27 in ar - every stop shows its webp picture, frame on the named element, no stop blank. Picture state is the capture device's (Cairo, 07:51, hifz list with plans). Owner chose Daas for i'rab (20:20).
 - 2026-09-25 20:06 - Tour pictures recaptured in 7 languages (32 each) committed and listed in pubspec; i'rab label rewrite scripts added
 - 2026-09-25 19:45 - Tour as screenshots (TourSlides + capture build + script); account and reciter cards follow the theme
 - 2026-09-25 19:45 - Owner: the tour must be PICTURES of the screens («اسكرين شوتات»), in the reader's language. Done in code: TourSlides (image + framed feature + bubble, nothing behind it touchable); capture build (--dart-define=RAFEEQ_TOUR_CAPTURE=true) walks both tours in all 7 languages, logs TOURCAP lines; scripts/capture_tour.py screenshots, crops, writes assets/tour/<lang>/<key>.webp + frames.json. First run: ar 32 pictures 644 KB, then it stopped (last stops skipped called _finish) - fixed; recapturing. Also item 14: account card back side theme-aware (was fixed dark green), reciter panel follows light theme (pale ground, dark ink). SEEN on emulator build 19:14: More groups one-open + sections open as screens (tasbih reminders full screen), Audio tab «−» removes (89->88), location in Times & date, New Muslim gone. assets/tour NOT yet in pubspec (release build would show no pictures).

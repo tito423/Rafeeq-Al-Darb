@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 20:06 — IN PROGRESS — resume here**
+**2026-09-25 20:16 — IN PROGRESS — resume here**
 
-Tour pictures recaptured in 7 languages (32 each) committed and listed in pubspec; i'rab label rewrite scripts added
+Tour pictures seen on the emulator (quick 7/7, full 27/27); owner chose the Daas i'rab
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
