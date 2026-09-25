@@ -12,12 +12,12 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
-Stage 1 item 1 FIXED IN CODE (accordion back + LibraryRoute double bar),
-analyze clean, 589 pass - NOT YET SEEN ON DEVICE. Next: build
-(build_github_release.bat, emulator OFF), install on emulator-5554, see:
-Downloads > Book reader voice > back leaves; Downloads > Books shows ONE bar
-and back leaves; Library tab > Categories > back goes Home. Then item 2.
-UNVERIFIED, redo: 3.63.3 ANR/lock-stop fix only seen on emulator; qibla.
+Stage 1 item 1 DONE + SEEN (build 17:20, emulator-5554). NEXT: item 2 -
+book «−» (remove from list) shows «أُزيل … / تراجع» but the book stays.
+Prove the cause in code, fix, build (emulator OFF), see it. Then item 3.
+Not seen on the owner's Xiaomi yet (the same APK logic; no device-specific
+path involved). UNVERIFIED, redo: 3.63.3 ANR/lock-stop fix only seen on
+emulator; qibla «مش ظبطت».
 
 (History below.)
 After the release: nothing ordered. Still open (need the owner or a fresh
@@ -391,6 +391,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 17:23 - Stage 1 item 1 SEEN on emulator: back leaves screens whose card started open; library shows one app bar
+- 2026-09-25 17:23 - Item 1 SEEN on emulator-5554 (APK built 17:18, installed 17:20:37, cold start): Downloads > Book reader voice > arrow returns to Downloads; Downloads > Books shows ONE bar «Library» with its own arrow; Categories (first shelf open) > system back > Downloads in one press; Authors > tap Ibn Kathir (user-opened) > back closes the card and stays (old rule kept). analyze clean, 589 pass.
 - 2026-09-25 17:09 - Stage 1 item 1: back dead behind a card that started open; library double app bar (code + test, not built)
 - 2026-09-25 17:10 - Item 1 cause PROVEN on emulator-5554 (3.63.7): Downloads > Book reader voice, arrow AND system back both dead. accordion.dart: canPop counted any open card, the back handler only closes cards in _opened (user-opened); a card built open (initiallyOpen / initiallyExpanded: voice screen, library Categories first shelf, recitations <=3 reciters) blocked pop with nothing to close. Fix: count only _opened. Test added (fails old, passes new). LibraryRoute no longer wraps LibraryScreen in a 2nd Scaffold. Not built yet.
 - 2026-09-25 15:50 - HANDOVER: analyze clean, 588 pass, 8 hosted paths 206, 7 locales x 1,833 keys, 239 books, hadith.db 109,731,840 B, v3.63.7 APK 270,769,028 B. Plan written (NEXT_SESSION_PROMPT.md), NEXT_PROMPT.md rewritten.

@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 17:09 — IN PROGRESS — resume here**
+**2026-09-25 17:23 — IN PROGRESS — resume here**
 
-Stage 1 item 1: back dead behind a card that started open; library double app bar (code + test, not built)
+Stage 1 item 1 SEEN on emulator: back leaves screens whose card started open; library shows one app bar
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
