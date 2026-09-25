@@ -136,13 +136,16 @@ class MoreScreen extends ConsumerWidget {
               ),
 
               // «ممكن نعمل قسم لتحفيظ القرآن الكريم وتسميعه» (2026-09-22).
-              IslamicActionCard(
-                icon: Icons.school_outlined,
-                accent: AppColors.gold,
-                title: 'hifz.title'.tr(),
-                subtitle: 'hifz.card_subtitle'.tr(),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (_) => const HifzScreen()),
+              TutorialAnchor(
+                id: TourAnchor.moreHifz,
+                child: IslamicActionCard(
+                  icon: Icons.school_outlined,
+                  accent: AppColors.gold,
+                  title: 'hifz.title'.tr(),
+                  subtitle: 'hifz.card_subtitle'.tr(),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => const HifzScreen()),
+                  ),
                 ),
               ),
 

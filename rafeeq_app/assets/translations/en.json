@@ -36,8 +36,6 @@
     "tasbeeh_targets_body": "Pick the round's target — 33, 100, 1000 or no limit — then tap the circle to count.",
     "tasbeeh_mathur_title": "Narrated adhkar",
     "tasbeeh_mathur_body": "Longer adhkar, each shown on its own card with its own counter, so you read and count in one place.",
-    "library_tabs_title": "Library sections",
-    "library_tabs_body": "Move between books, the hadith collections, the hadith encyclopaedia, Islamic channels and Islamic websites from this bar.",
     "more_quran_audio_title": "Qur'an recitation player",
     "more_quran_audio_body": "Choose a reciter, download whole surahs in his voice, and listen to them without an internet connection.",
     "more_tajweed_title": "Learn Tajweed",
@@ -103,10 +101,8 @@
     "quick_azkar_body": "Morning, evening, sleep, after-prayer, travel adhkar and more, from Imam an-Nawawi's «al-Adhkar» with their sources. Tap to count; swipe to move on.",
     "quick_tasbeeh_title": "Tasbih",
     "quick_tasbeeh_body": "Choose the dhikr and the count: 33, 100, 1000 or a custom number, then tap. The phone vibrates strongly at 33, 66, 99 and every hundred.",
-    "quick_library_title": "Library",
-    "quick_library_body": "Classical books to download and read offline, hadith collections with their gradings, the hadith encyclopaedia, and trusted channels and websites.",
-    "quick_more_title": "More",
-    "quick_more_body": "Full Qur'an recitations, tajweed lessons, Hajj & Umrah, ruqyah, reminders and settings. You can replay this tour from here at any time.",
+    "quick_hifz_title": "Memorize and recite",
+    "quick_hifz_body": "Learn ayah by ayah as the words are hidden one by one, then recite and the app listens and compares your recitation with the ayahs. You can replay this tour from More at any time.",
     "gallery": "Pictures from inside the app"
   },
   "app": {

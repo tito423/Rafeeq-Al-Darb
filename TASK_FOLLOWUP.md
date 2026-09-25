@@ -396,6 +396,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 19:06 - Quick tour in the owner order, no library, last stop on the hifz card
+- 2026-09-25 19:06 - Item 11 tour: owner chose (18:5x) Home > Quran > Prayer&Qibla > Tasbeeh > Adhkar > Hifz, NO library anywhere in the tour (a store build without the library is planned). Quick tour rebuilt, last stop framed on the hifz card (new anchor moreHifz), full tour library stop removed, keys quick_hifz_* in 7 locales, quick_library/quick_more/library_tabs keys removed. 592 pass. NOT BUILT.
 - 2026-09-25 18:59 - Stage 2 items 9, 12, 13: New Muslim guide removed, reciter badge icon, juz without frame
 - 2026-09-25 18:59 - Stage 2 items 9 (New Muslim guide deleted: feature folder, More card + subtitle, keys new_muslim.* and orphan home.new_muslim in 7 locales, its mention in tutorial.more_body and about.src_unsplash), 12 (reciter badge: open-mushaf icon, no list number), 13 (juz pill: no frame) in code. 592 pass. NOT BUILT.
 - 2026-09-25 18:54 - Stage 1 items 2,5,6,7 and stage 2 item 8 (code, 592 pass)

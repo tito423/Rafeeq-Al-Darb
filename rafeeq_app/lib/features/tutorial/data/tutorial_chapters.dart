@@ -125,10 +125,8 @@ const tutorialChapters = <TutorialChapter>[
       _tasbeehCopper,
       anchor: TourAnchor.tasbeehMathur),
 
-  // ── Library ─────────────────────────────────────────────────────────────
-  TutorialChapter('library_tabs', AppTab.library, Icons.tab_rounded,
-      _libraryTeal,
-      anchor: TourAnchor.libraryTabs),
+  // No library stop (owner, 2026-09-25): a store build without the library
+  // is planned, and the tour must not describe a screen it may not have.
 
   // ── More ────────────────────────────────────────────────────────────────
   TutorialChapter('more_quran_audio', AppTab.more, Icons.library_music_rounded,
@@ -154,6 +152,11 @@ const tutorialChapters = <TutorialChapter>[
 /// The quick tour: one stop per screen, each an overview of that screen,
 /// framed on the part a newcomer needs first («شاشة شاشة ويشرح نبذة عنها
 /// ويشاور على أهم اللي فيها»).
+///
+/// The owner's order and nothing else (2026-09-25): «الرئيسية ثم المصحف ثم
+/// الصلاة والقبلة ثم المسبحة ثم الأذكار ثم الحفظ والتسميع». No library -
+/// «هنعمل نسختين» - and the last stop frames the card its text is about:
+/// the old step 8 spoke of all of «المزيد» while ringing the player card.
 const quickTutorialChapters = <TutorialChapter>[
   TutorialChapter('welcome', AppTab.home, Icons.mosque_rounded, AppColors.gold),
   TutorialChapter('quick_home', AppTab.home, Icons.home_rounded, AppColors.gold,
@@ -164,16 +167,13 @@ const quickTutorialChapters = <TutorialChapter>[
   TutorialChapter('quick_prayer', AppTab.prayer, Icons.explore_rounded,
       _prayerViolet,
       anchor: TourAnchor.qiblaCompass),
-  TutorialChapter('quick_azkar', AppTab.azkar, Icons.auto_awesome_rounded,
-      _azkarGreen,
-      anchor: TourAnchor.azkarCategory),
   TutorialChapter('quick_tasbeeh', AppTab.tasbeeh, Icons.radio_button_checked,
       _tasbeehCopper,
       anchor: TourAnchor.tasbeehTargets),
-  TutorialChapter('quick_library', AppTab.library, Icons.local_library_rounded,
-      _libraryTeal,
-      anchor: TourAnchor.libraryTabs),
-  TutorialChapter('quick_more', AppTab.more, Icons.menu_rounded,
-      AppColors.primarySoft,
-      anchor: TourAnchor.moreQuranAudio),
+  TutorialChapter('quick_azkar', AppTab.azkar, Icons.auto_awesome_rounded,
+      _azkarGreen,
+      anchor: TourAnchor.azkarCategory),
+  TutorialChapter('quick_hifz', AppTab.more, Icons.school_rounded,
+      AppColors.gold,
+      anchor: TourAnchor.moreHifz),
 ];

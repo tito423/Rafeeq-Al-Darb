@@ -36,8 +36,6 @@
     "tasbeeh_targets_body": "Escolha a meta da rodada — 33, 100, 1000 ou sem limite — e toque no círculo para contar.",
     "tasbeeh_mathur_title": "Adhkar transmitidos",
     "tasbeeh_mathur_body": "Adhkar mais longos, cada um no seu próprio cartão com o seu contador, para ler e contar num só lugar.",
-    "library_tabs_title": "Seções da biblioteca",
-    "library_tabs_body": "Navegue por esta barra entre os livros, as coleções de hadith, a enciclopédia de hadith, os canais islâmicos e os sites islâmicos.",
     "more_quran_audio_title": "Leitor de recitações",
     "more_quran_audio_body": "Escolha um recitador, baixe suratas inteiras na sua voz e ouça-as sem ligação à internet.",
     "more_tajweed_title": "Aprender tajwid",
@@ -103,10 +101,8 @@
     "quick_azkar_body": "Adhkar da manhã, da tarde, antes de dormir, após a oração, de viagem e mais, do «al-Adhkar» do imam an-Nawawi com suas fontes. Toque para contar; deslize para avançar.",
     "quick_tasbeeh_title": "Tasbih",
     "quick_tasbeeh_body": "Escolha o dhikr e a contagem: 33, 100, 1000 ou um número próprio, e toque. O telefone vibra forte em 33, 66, 99 e a cada cem.",
-    "quick_library_title": "Biblioteca",
-    "quick_library_body": "Livros clássicos para baixar e ler offline, coleções de hadith com suas classificações, a enciclopédia de hadith e canais e sites confiáveis.",
-    "quick_more_title": "Mais",
-    "quick_more_body": "Recitações completas do Alcorão, tajwid, Hajj e Umrah, ruqya, lembretes e configurações. Você pode repetir este tour daqui a qualquer momento.",
+    "quick_hifz_title": "Memorizar e recitar",
+    "quick_hifz_body": "Aprenda versículo a versículo enquanto as palavras se escondem uma a uma; depois recite e a app ouve e compara a sua recitação com os versículos. Pode repetir esta visita a partir de Mais a qualquer momento.",
     "gallery": "Imagens da aplicação"
   },
   "app": {

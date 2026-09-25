@@ -36,8 +36,6 @@
     "tasbeeh_targets_body": "Elige el objetivo de la ronda — 33, 100, 1000 o sin límite — y toca el círculo para contar.",
     "tasbeeh_mathur_title": "Adhkar transmitidos",
     "tasbeeh_mathur_body": "Adhkar más largos, cada uno en su propia tarjeta con su contador, para leer y contar en un solo lugar.",
-    "library_tabs_title": "Secciones de la biblioteca",
-    "library_tabs_body": "Pasa desde esta barra entre los libros, las colecciones de hadices, la enciclopedia de hadices, los canales islámicos y los sitios web islámicos.",
     "more_quran_audio_title": "Reproductor de recitaciones",
     "more_quran_audio_body": "Elige un recitador, descarga suras completas con su voz y escúchalas sin conexión a internet.",
     "more_tajweed_title": "Aprender tayuid",
@@ -103,10 +101,8 @@
     "quick_azkar_body": "Adhkar de la mañana, la tarde, antes de dormir, tras la oración, de viaje y más, del «al-Adhkar» del imam an-Nawawi con sus fuentes. Toca para contar; desliza para avanzar.",
     "quick_tasbeeh_title": "Tasbih",
     "quick_tasbeeh_body": "Elige el dhikr y la cantidad: 33, 100, 1000 o un número propio, y toca. El teléfono vibra con fuerza en 33, 66, 99 y cada cien.",
-    "quick_library_title": "Biblioteca",
-    "quick_library_body": "Libros clásicos para descargar y leer sin conexión, colecciones de hadiz con sus calificaciones, la enciclopedia de hadiz y canales y webs de confianza.",
-    "quick_more_title": "Más",
-    "quick_more_body": "Recitaciones completas del Corán, tajwid, Hajj y Umra, ruqya, recordatorios y ajustes. Puedes repetir este recorrido desde aquí en cualquier momento.",
+    "quick_hifz_title": "Memorizar y recitar",
+    "quick_hifz_body": "Aprende aleya por aleya mientras las palabras se ocultan una a una; luego recita y la app te escucha y compara tu recitación con las aleyas. Puedes repetir este recorrido desde Más cuando quieras.",
     "gallery": "Imágenes de la aplicación"
   },
   "app": {

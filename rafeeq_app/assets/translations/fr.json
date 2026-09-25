@@ -36,8 +36,6 @@
     "tasbeeh_targets_body": "Choisissez l'objectif du tour — 33, 100, 1000 ou sans limite — puis touchez le cercle pour compter.",
     "tasbeeh_mathur_title": "Adhkar rapportés",
     "tasbeeh_mathur_body": "Des adhkar plus longs, chacun sur sa propre carte avec son compteur, pour lire et compter au même endroit.",
-    "library_tabs_title": "Sections de la bibliothèque",
-    "library_tabs_body": "Passez depuis cette barre entre les livres, les recueils de hadiths, l'encyclopédie des hadiths, les chaînes islamiques et les sites islamiques.",
     "more_quran_audio_title": "Lecteur de récitations",
     "more_quran_audio_body": "Choisissez un récitateur, téléchargez des sourates entières avec sa voix et écoutez-les sans connexion internet.",
     "more_tajweed_title": "Apprendre le tajwid",
@@ -103,10 +101,8 @@
     "quick_azkar_body": "Adhkar du matin, du soir, du coucher, après la prière, du voyage et d'autres, tirés d'« al-Adhkar » de l'imam an-Nawawi avec leurs sources. Touchez pour compter ; balayez pour avancer.",
     "quick_tasbeeh_title": "Tasbih",
     "quick_tasbeeh_body": "Choisissez le dhikr et le nombre : 33, 100, 1000 ou un nombre personnalisé, puis touchez. Le téléphone vibre fort à 33, 66, 99 et à chaque centaine.",
-    "quick_library_title": "Bibliothèque",
-    "quick_library_body": "Des livres classiques à télécharger et lire hors ligne, les recueils de hadiths avec leurs jugements, l'encyclopédie du hadith, et des chaînes et sites de confiance.",
-    "quick_more_title": "Plus",
-    "quick_more_body": "Récitations complètes du Coran, tajwid, Hajj et Omra, roqya, rappels et réglages. Vous pouvez relancer cette visite d'ici à tout moment.",
+    "quick_hifz_title": "Mémoriser et réciter",
+    "quick_hifz_body": "Apprenez verset par verset pendant que les mots se cachent un à un, puis récitez : l'application vous écoute et compare votre récitation aux versets. Vous pouvez refaire cette visite depuis Plus à tout moment.",
     "gallery": "Images de l'application"
   },
   "app": {
