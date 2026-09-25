@@ -28,6 +28,7 @@ BUILD 03:0x installed 03:09:52 on the Xiaomi: SideTabs SEEN sideways, all 7 tabs
 OWNER 03:15: «اظبط الشكل والتصميم في الاورينتيشن ... كانه تاب شغال بالعرض». Avast dialog gone from his screen (he handled it). DONE IN CODE (593 pass): TwoPaneScroll (core/widgets) - Home (date+prayer | reading cards), Prayer (compass sized to height | links), More (6 groups in 2 columns); Adhkar grid 200dp tiles aspect 1.2 sideways. Building. NEXT: see them, then Library + pushed screens (downloads, surah list, adhkar reader, hadith, settings).
 SEEN 03:22 build 03:21:38: Home two columns, Prayer compass|links, Adhkar 4x2 tiles, More two columns - all good. DONE IN CODE next: adhkar reader counter beside the dhikr sideways; Library pills beside the title sideways. Building.
 SEEN 03:31 build 03:30:44: Library pills beside title (3 authors in view), adhkar reader counter beside dhikr, khatma OK. NEXT: settings expanded, hadith tab, book reader, surah index, hifz, hajj, tajweed, player.
+DONE IN CODE ~03:45: PairedListView/PairedColumn (two cards a row sideways; header/footer full width; test paired_list_view_test) on reciters list, tajweed levels, hifz surahs, ruqyah recordings, dedications. Hajj left one column on purpose (sequential steps that expand). Building.
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -461,6 +462,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 03:46 - Sideways card lists two a row: reciters, tajweed levels, hifz, ruqyah, dedications
 - 2026-09-26 03:31 - Seen sideways: library header, adhkar reader, khatma
 - 2026-09-26 03:26 - Landscape: adhkar counter beside the dhikr, library tabs beside the title
 - 2026-09-26 03:18 - Tablet-style landscape: two scrolling columns on Home, Prayer and More; wider adhkar tiles (593 pass, building)

@@ -1,3 +1,4 @@
+import '../../../../core/widgets/paired_list_view.dart';
 import 'dart:async';
 import '../../../../core/utils/digits.dart';
 import 'dart:io';
@@ -68,15 +69,15 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
   }
 
   List<PlayerTrack> _tracks() => [
-        for (final r in ruqyahRecordings)
-          PlayerTrack(
-            id: _trackId(r),
-            title: r.heading(),
-            artist: 'ruqyah.audio_title'.tr(),
-            url: r.url,
-            filePath: _paths[r.id],
-          ),
-      ];
+    for (final r in ruqyahRecordings)
+      PlayerTrack(
+        id: _trackId(r),
+        title: r.heading(),
+        artist: 'ruqyah.audio_title'.tr(),
+        url: r.url,
+        filePath: _paths[r.id],
+      ),
+  ];
 
   Future<void> _play(RuqyahRecording r) async {
     final player = QuranAudioPlayer.instance;
@@ -90,20 +91,21 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
     );
     if (!mounted) return;
     if (!ok) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('errors.offline'.tr())));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('errors.offline'.tr())));
       return;
     }
     unawaited(QuranAudioPlayerScreen.open(context));
   }
 
   Future<void> _download(RuqyahRecording r) => DownloadManager.instance.enqueue(
-        id: r.downloadId,
-        url: r.url,
-        category: 'ruqyah',
-        fileName: r.fileName,
-        title: r.heading(),
-      );
+    id: r.downloadId,
+    url: r.url,
+    category: 'ruqyah',
+    fileName: r.fileName,
+    title: r.heading(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -122,49 +124,65 @@ class _RuqyahAudioScreenState extends State<RuqyahAudioScreen> {
               IslamicPatternPanel(
                 child: Row(
                   children: [
-                    Icon(Icons.healing_outlined,
-                        color: goldOn(Theme.of(context).colorScheme),
-                        size: 30),
+                    Icon(
+                      Icons.healing_outlined,
+                      color: goldOn(Theme.of(context).colorScheme),
+                      size: 30,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        trn('ruqyah.audio_intro', args: [
-                          pluralN('ruqyah.recordings_count',
-                              ruqyahRecordings.length)
-                        ]),
+                        trn(
+                          'ruqyah.audio_intro',
+                          args: [
+                            pluralN(
+                              'ruqyah.recordings_count',
+                              ruqyahRecordings.length,
+                            ),
+                          ],
+                        ),
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontSize: 13,
-                            height: 1.5),
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 13,
+                          height: 1.5,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              for (final r in ruqyahRecordings) ...[
-                _RecordingCard(
-                  recording: r,
-                  arabic: arabic,
-                  downloadedPath: _paths[r.id],
-                  task: DownloadManager.instance.taskById(r.downloadId),
-                  isCurrent: currentId == _trackId(r),
-                  isPlaying: currentId == _trackId(r) && player.playing,
-                  onToggle: () => _play(r),
-                  onDownload: () => _download(r),
-                  onPause: () => DownloadManager.instance.pause(r.downloadId),
-                  onResume: () => DownloadManager.instance.resume(r.downloadId),
-                  onCancel: () => DownloadManager.instance.cancel(r.downloadId),
-                ),
-                const SizedBox(height: 10),
-              ],
+              // Sideways two a row (`PairedColumn`).
+              PairedColumn(
+                gap: 10,
+                children: [
+                  for (final r in ruqyahRecordings)
+                    _RecordingCard(
+                      recording: r,
+                      arabic: arabic,
+                      downloadedPath: _paths[r.id],
+                      task: DownloadManager.instance.taskById(r.downloadId),
+                      isCurrent: currentId == _trackId(r),
+                      isPlaying: currentId == _trackId(r) && player.playing,
+                      onToggle: () => _play(r),
+                      onDownload: () => _download(r),
+                      onPause: () =>
+                          DownloadManager.instance.pause(r.downloadId),
+                      onResume: () =>
+                          DownloadManager.instance.resume(r.downloadId),
+                      onCancel: () =>
+                          DownloadManager.instance.cancel(r.downloadId),
+                    ),
+                ],
+              ),
               const SizedBox(height: 8),
               Text(
                 ruqyahAudioSourceLabelKey.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontSize: 11),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 11,
+                ),
               ),
             ],
           );
@@ -211,8 +229,8 @@ class _RecordingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = task?.status;
-    final busy = status == DownloadStatus.downloading ||
-        status == DownloadStatus.queued;
+    final busy =
+        status == DownloadStatus.downloading || status == DownloadStatus.queued;
     final paused = status == DownloadStatus.paused;
     final offline = downloadedPath != null;
 
@@ -236,9 +254,7 @@ class _RecordingCard extends StatelessWidget {
             colors: [top, scheme.surfaceContainerHigh],
           ),
           border: Border.all(
-            color: isCurrent
-                ? scheme.primary
-                : accent.withValues(alpha: 0.32),
+            color: isCurrent ? scheme.primary : accent.withValues(alpha: 0.32),
             width: isCurrent ? 1.6 : 1,
           ),
         ),
@@ -300,7 +316,9 @@ class _RecordingCard extends StatelessWidget {
                           ].join(' · '),
                           maxLines: 2,
                           style: TextStyle(
-                              color: scheme.onSurfaceVariant, fontSize: 12),
+                            color: scheme.onSurfaceVariant,
+                            fontSize: 12,
+                          ),
                         ),
                         if (busy || paused)
                           Padding(
@@ -317,21 +335,28 @@ class _RecordingCard extends StatelessWidget {
                   if (offline)
                     const Padding(
                       padding: EdgeInsets.only(left: 8, right: 8),
-                      child: Icon(Icons.offline_pin_rounded,
-                          size: 20, color: AppColors.success),
+                      child: Icon(
+                        Icons.offline_pin_rounded,
+                        size: 20,
+                        color: AppColors.success,
+                      ),
                     )
                   else if (busy) ...[
                     IconButton(
                       tooltip: 'downloads.pause'.tr(),
                       onPressed: onPause,
-                      icon: Icon(Icons.pause_rounded,
-                          color: scheme.onSurfaceVariant),
+                      icon: Icon(
+                        Icons.pause_rounded,
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                     IconButton(
                       tooltip: 'downloads.cancel'.tr(),
                       onPressed: onCancel,
-                      icon: Icon(Icons.close_rounded,
-                          color: scheme.onSurfaceVariant),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ] else if (paused) ...[
                     IconButton(
@@ -342,15 +367,19 @@ class _RecordingCard extends StatelessWidget {
                     IconButton(
                       tooltip: 'downloads.cancel'.tr(),
                       onPressed: onCancel,
-                      icon: Icon(Icons.close_rounded,
-                          color: scheme.onSurfaceVariant),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ] else
                     IconButton(
                       tooltip: 'downloads.title'.tr(),
                       onPressed: onDownload,
-                      icon: Icon(Icons.download_rounded,
-                          color: scheme.onSurfaceVariant),
+                      icon: Icon(
+                        Icons.download_rounded,
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                 ],
               ),

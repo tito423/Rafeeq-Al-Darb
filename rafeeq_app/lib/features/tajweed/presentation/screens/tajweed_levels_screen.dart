@@ -20,6 +20,7 @@
 /// counters cannot drift into each other.
 library;
 
+import '../../../../core/widgets/paired_list_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
@@ -51,55 +52,64 @@ class TajweedLevelsScreen extends ConsumerWidget {
         children: [
           Text(
             'tajweed.subtitle'.tr(),
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: 14),
-          const MakharijEntry(),
-          const SizedBox(height: 18),
-          _LevelCard(
-            number: 1,
-            title: 'tajweed.level_one'.tr(),
-            subtitle: 'tajweed.level_one_sub'.tr(),
-            total: tuhfaLessons.length,
-            // Only ticks that still belong to a lesson in this level.
-            done: tuhfaLessons.where((l) => tuhfaDone.contains(l.title)).length,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const TuhfaLevelScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _LevelCard(
-            number: 2,
-            title: 'tajweed.level_two'.tr(),
-            subtitle: 'tajweed.level_two_sub'.tr(),
-            total: jazariyyahLessons.length,
-            done: jazariyyahLessons
-                .where((l) => jazariyyahDone.contains(l.title))
-                .length,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                  builder: (_) => const JazariyyahLevelScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          // «علم التجويد كامل في المستويين دول بس ولا في اكتر» — it was not,
-          // and when it finally was, it stood on two books still in copyright.
-          // The ladder is all Ibn al-Jazari and al-Jamzuri now: matn, matn,
-          // then the author's own commentary. Nothing in it is anyone's
-          // property.
-          _LevelCard(
-            number: 3,
-            title: 'tajweed.level_three'.tr(),
-            subtitle: 'tajweed.level_three_sub'.tr(),
-            total: tamhidLessons.length,
-            done: tamhidLessons
-                .where((l) => tamhidDone.contains(l.title))
-                .length,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                  builder: (_) => const TamhidLevelScreen()),
-            ),
+          // Sideways the four entries stand two by two (`PairedColumn`).
+          PairedColumn(
+            children: [
+              const MakharijEntry(),
+              _LevelCard(
+                number: 1,
+                title: 'tajweed.level_one'.tr(),
+                subtitle: 'tajweed.level_one_sub'.tr(),
+                total: tuhfaLessons.length,
+                // Only ticks that still belong to a lesson in this level.
+                done: tuhfaLessons
+                    .where((l) => tuhfaDone.contains(l.title))
+                    .length,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const TuhfaLevelScreen(),
+                  ),
+                ),
+              ),
+              _LevelCard(
+                number: 2,
+                title: 'tajweed.level_two'.tr(),
+                subtitle: 'tajweed.level_two_sub'.tr(),
+                total: jazariyyahLessons.length,
+                done: jazariyyahLessons
+                    .where((l) => jazariyyahDone.contains(l.title))
+                    .length,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const JazariyyahLevelScreen(),
+                  ),
+                ),
+              ),
+              // «علم التجويد كامل في المستويين دول بس ولا في اكتر» — it was not,
+              // and when it finally was, it stood on two books still in copyright.
+              // The ladder is all Ibn al-Jazari and al-Jamzuri now: matn, matn,
+              // then the author's own commentary. Nothing in it is anyone's
+              // property.
+              _LevelCard(
+                number: 3,
+                title: 'tajweed.level_three'.tr(),
+                subtitle: 'tajweed.level_three_sub'.tr(),
+                total: tamhidLessons.length,
+                done: tamhidLessons
+                    .where((l) => tamhidDone.contains(l.title))
+                    .length,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const TamhidLevelScreen(),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -150,7 +160,9 @@ class _LevelCard extends StatelessWidget {
                         ? const Icon(Icons.check, size: 19, color: Colors.black)
                         : Text(
                             localizeDigits(
-                                '$number', context.locale.languageCode),
+                              '$number',
+                              context.locale.languageCode,
+                            ),
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w800,
@@ -163,16 +175,21 @@ class _LevelCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(title,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w700, fontSize: 15)),
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 15,
+                          ),
+                        ),
                         const SizedBox(height: 3),
                         Text(
                           subtitle,
                           style: TextStyle(
-                              fontSize: 12.5,
-                              height: 1.6,
-                              color: scheme.onSurfaceVariant),
+                            fontSize: 12.5,
+                            height: 1.6,
+                            color: scheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
@@ -190,27 +207,34 @@ class _LevelCard extends StatelessWidget {
                   value: total == 0 ? 0 : done / total,
                   minHeight: 6,
                   backgroundColor: scheme.surfaceContainerHighest,
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(AppColors.gold),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.gold,
+                  ),
                 ),
               ),
               const SizedBox(height: 6),
               Row(
                 children: [
                   Text(
-                    localizeDigits('tajweed.lessons_count'.plural(total),
-                        context.locale.languageCode),
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: scheme.onSurfaceVariant),
+                    localizeDigits(
+                      'tajweed.lessons_count'.plural(total),
+                      context.locale.languageCode,
+                    ),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
                   ),
                   const Spacer(),
                   Text(
                     localizeDigits(
-                        'tajweed.progress'.tr(
-                            namedArgs: {'done': '$done', 'total': '$total'}),
-                        context.locale.languageCode),
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: scheme.onSurfaceVariant),
+                      'tajweed.progress'.tr(
+                        namedArgs: {'done': '$done', 'total': '$total'},
+                      ),
+                      context.locale.languageCode,
+                    ),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),

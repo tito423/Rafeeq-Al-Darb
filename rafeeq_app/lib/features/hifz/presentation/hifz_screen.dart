@@ -11,6 +11,7 @@
 /// nothing new is downloaded and nothing is written by the app itself.
 library;
 
+import '../../../core/widgets/paired_list_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,23 +46,23 @@ class HifzScreen extends ConsumerWidget {
       body: surahs.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(userErrorText(e))),
-        data: (list) => ListView.builder(
+        // Sideways the surahs stand two a row (`PairedListView`).
+        data: (list) => PairedListView.builder(
           padding: const EdgeInsets.fromLTRB(14, 12, 14, 24),
-          itemCount: list.length + 1,
+          gap: 8,
+          header: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _intro(context, state, scheme),
+              TutorialAnchor(
+                id: TourAnchor.hifzPlans,
+                child: HifzPlansSection(surahs: list),
+              ),
+            ],
+          ),
+          itemCount: list.length,
           itemBuilder: (context, i) {
-            if (i == 0) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _intro(context, state, scheme),
-                  TutorialAnchor(
-                    id: TourAnchor.hifzPlans,
-                    child: HifzPlansSection(surahs: list),
-                  ),
-                ],
-              );
-            }
-            final s = list[i - 1];
+            final s = list[i];
             final due = state.dueIn(s.id, s.ayahsCount).length;
             return Card(
               margin: const EdgeInsets.only(bottom: 8),

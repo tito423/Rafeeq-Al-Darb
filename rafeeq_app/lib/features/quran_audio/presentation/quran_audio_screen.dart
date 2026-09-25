@@ -1,3 +1,4 @@
+import '../../../core/widgets/paired_list_view.dart';
 import '../../../core/widgets/accordion.dart';
 import 'dart:io';
 import '../../../core/utils/digits.dart';
@@ -138,11 +139,13 @@ class _RecitersTabState extends ConsumerState<_RecitersTab>
             Expanded(
               child: ListenableBuilder(
                 listenable: lib,
-                builder: (context, _) => ListView.builder(
+                // Sideways two reciters a row (`PairedListView`).
+                builder: (context, _) => PairedListView.builder(
                   padding: const EdgeInsets.fromLTRB(10, 4, 10, 16),
-                  itemCount: list.length + 1,
+                  gap: 8,
+                  itemCount: list.length,
+                  footer: const _SourceCredit(),
                   itemBuilder: (context, i) {
-                    if (i == list.length) return const _SourceCredit();
                     final r = list[i];
                     final onDevice = r.moshafs.where((m) => lib.downloadedCount(m.id) > 0).length;
                     return Card(

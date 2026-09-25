@@ -1,3 +1,4 @@
+import '../../../core/widgets/paired_list_view.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +35,8 @@ class DedicationsScreen extends ConsumerWidget {
                 ),
               ),
             )
-          : ListView(
+          // Sideways two a row (`PairedListView`).
+          : PairedListView(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
               children: [
                 for (final d in list) _DedicationCard(d: d),
