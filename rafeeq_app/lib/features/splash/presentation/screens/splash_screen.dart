@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show ImageFilter;
 import '../../../../core/services/notification_router.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -284,20 +285,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         behavior: HitTestBehavior.opaque,
         onTap: videoReady ? _proceed : null,
         child: videoReady
-            ? SizedBox.expand(
-                // NOTHING is drawn over the clip any more. It carries its own
-                // wordmark, and this one is set correctly — «رَفِيقُ الدَّرْبِ»
-                // over «رفيق المسلم في رحلته إلى الجنة», with «إلى» spelled
-                // properly. The caption the app used to paint existed only
-                // because the OTHER clip burned in the wrong tashkeel.
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: SizedBox(
-                    width: video.value.size.width,
-                    height: video.value.size.height,
-                    child: VideoPlayer(video),
-                  ),
-                ),
+            // NOTHING is drawn over the clip any more. It carries its own
+            // wordmark, and this one is set correctly — «رَفِيقُ الدَّرْبِ»
+            // over «رفيق المسلم في رحلته إلى الجنة», with «إلى» spelled
+            // properly. The caption the app used to paint existed only
+            // because the OTHER clip burned in the wrong tashkeel.
+            ? _WholeClip(
+                size: video.value.size,
+                child: VideoPlayer(video),
               )
             // THE CLIP'S OWN FIRST FRAME while it decodes — not the app mark,
             // and not a flat colour either.
@@ -308,14 +303,72 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             // flat colour before the video appeared — honest, but empty. A
             // still of frame one fills that with the storm the clip opens on,
             // so the video does not start: it *moves*.
-            : const SizedBox.expand(
+            : const _WholeClip(
+                size: _clipSize,
                 child: Image(
-                  image: AssetImage('assets/branding/splash_first_frame.jpg'),
-                  fit: BoxFit.cover,
+                  image: _firstFrame,
+                  fit: BoxFit.fill,
                   gaplessPlayback: true,
                 ),
               ),
       ),
     );
+  }
+}
+
+const _firstFrame = AssetImage('assets/branding/splash_first_frame.jpg');
+
+/// `splash_intro.mp4` and its first frame are both 720x1280 (measured).
+const _clipSize = Size(720, 1280);
+
+/// The intro is a portrait clip; the screen is whatever the owner holds.
+///
+/// `BoxFit.cover` alone was right for a phone upright and wrong for every
+/// other shape: recorded on the owner's Xiaomi held sideways (2026-09-26),
+/// cover scaled the clip to the screen's WIDTH and cut the emblem's top and
+/// the whole wordmark away. The same happens on a portrait tablet (3:4 is
+/// wider than 9:16).
+///
+/// So when the screen is wider than the clip, the clip is shown whole at the
+/// screen's height, and the band either side is the clip's own storm - the
+/// first frame, covering, blurred and dimmed so it reads as ground rather than
+/// as a second copy of the picture. On an upright phone (narrower than the
+/// clip) nothing changes: cover trims a sliver of sky at the sides, as before.
+class _WholeClip extends StatelessWidget {
+  const _WholeClip({required this.size, required this.child});
+
+  final Size size;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, box) {
+      final media = SizedBox(
+        width: size.width,
+        height: size.height,
+        child: child,
+      );
+      final wider = box.maxWidth / box.maxHeight > size.width / size.height;
+      if (!wider) {
+        return SizedBox.expand(
+          child: FittedBox(fit: BoxFit.cover, child: media),
+        );
+      }
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          ImageFiltered(
+            imageFilter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+            child: const Image(
+              image: _firstFrame,
+              fit: BoxFit.cover,
+              gaplessPlayback: true,
+            ),
+          ),
+          const ColoredBox(color: Color(0x59000000)),
+          FittedBox(fit: BoxFit.contain, child: media),
+        ],
+      );
+    });
   }
 }

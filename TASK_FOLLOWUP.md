@@ -12,6 +12,17 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+SESSION 2026-09-26 ~02:10-02:40 (quota 5h 0%, weekly 68%). OWNER: landscape is
+DELIBERATE - «عاوز التطبيق مناسب جدا لجميع انواع الشاشات ... في وضع الاورينتيشن».
+Do NOT lock portrait (tried, reverted). Findings (Xiaomi video, frames seen):
+boot turns sideways at 0.7 s (OS: phone flat, stale sensor ROTATION_90; Chrome and
+MIUI Gallery open sideways too); intro clip BoxFit.cover cut the emblem + wordmark.
+DONE IN CODE (not built/seen): splash_screen.dart `_WholeClip` - when the screen is
+wider than 720x1280, clip shown whole (contain) over a blurred first frame.
+NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
+fix all, ONE build_github_release.bat, install -r, record boot + tour again.
+Then the old list below (phone checks, 222 refs).
+
 SESSION 2026-09-26 ~02:05 (quota 5h 89%). HEAD 645a3b12. build_github_release.bat
 RUNNING (emulator killed first). Owner's XIAOMI is on adb: BYKRKJPRC6O7FMHU.
 NEXT (exact):
@@ -441,6 +452,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 02:16 - Splash shows the whole portrait intro in landscape (not built yet); landscape tour next
 - 2026-09-26 02:05 - HANDOVER (owner: «شيل التطبيق وسطبه تاني وجهز الدنيا»): Xiaomi uninstall+reinstall clean 02:02:48, not opened. analyze clean, 587 pass, hosted 10/10 206 (+GitHub v2). HANDOVER row, NEXT_SESSION_PROMPT, NEXT_PROMPT rewritten. Stopped here on the owner's order - next session.
 - 2026-09-26 01:53 - TASK_FOLLOWUP: Xiaomi install + chase the 222 refs next (quota 89%)
 - 2026-09-26 01:53 - OWNER RULE «مينفعش التساهل في علم يمس القرآن» (CLAUDE.md 1.2 + memory no-leniency-quran): the 3 commentary mismatches were CHASED, not parked. 4th witness tafsir.app iraab-daas has the same errors -> the authors' own. Fixed from named books read on tafsir.app get.php: 10:56 «هو مبتدأ» (الجدول، درويش، الميسر); 22:60 «وعفو خبر إن وغفور خبر ثان» (الإعراب الميسر); 24:21 «والله مبتدأ وسميع خبر أول وعليم خبر ثان» (درويش) - each marked in the text «[تصويب عن ... ؛ وفي الأصل: ...]». Sources row tafsir.app + CONTENT-LICENSES. Pack v2 re-uploaded 32,146,611 B (R2 206 + GitHub 206), AppConfig + pinned test updated. analyze clean, 587 pass. Next: signed build for the owner's Xiaomi (he is connecting it).
