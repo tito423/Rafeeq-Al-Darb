@@ -2500,9 +2500,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-25 19:10 — IN PROGRESS — resume here**
+**2026-09-25 19:45 — IN PROGRESS — resume here**
 
-More: header-to-top on open, sections open as screens; tour hifz stop shows the hifz screen
+Tour as screenshots (TourSlides + capture build + script); account and reciter cards follow the theme
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

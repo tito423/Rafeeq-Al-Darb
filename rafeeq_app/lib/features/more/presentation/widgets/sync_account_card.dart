@@ -105,8 +105,12 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
               : Transform(
                   transform: Matrix4.identity()..rotateX(math.pi),
                   alignment: Alignment.center,
+                  // The theme's own container and its "on" colour. It was the
+                  // fixed dark green of the dark palette with the theme's
+                  // text on it, so in the light theme the name was dark on
+                  // dark (owner's phone, 2026-09-25).
                   child: Card(
-                    color: AppColors.primaryContainer,
+                    color: Theme.of(context).colorScheme.primaryContainer,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -126,11 +130,13 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
                                   children: [
                                     Text(
                                       account.displayName ?? '',
-                                      style: Theme.of(context).textTheme.titleMedium,
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          color: Theme.of(context).colorScheme.onPrimaryContainer),
                                     ),
                                     Text(
                                       account.email,
-                                      style: Theme.of(context).textTheme.bodySmall,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: Theme.of(context).colorScheme.onPrimaryContainer),
                                     ),
                                   ],
                                 ),
@@ -142,6 +148,8 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               TextButton.icon(
+                                style: TextButton.styleFrom(
+                                    foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer),
                                 onPressed: _toggleCard,
                                 icon: const Icon(Icons.arrow_upward),
                                 label: Text('sync.hide'.tr()),

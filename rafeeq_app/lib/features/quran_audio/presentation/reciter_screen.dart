@@ -192,18 +192,17 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 16,
-                                      // Every player theme's ground is dark,
-                                      // in the light app theme too: the app's
-                                      // onSurface here was dark on dark and
-                                      // unreadable (emulator, 2026-09-24).
-                                      color: Colors.white,
+                                      // The panel follows the app's theme now
+                                      // (a pale ground in the light one), so
+                                      // its ink does too - see _ThemedPanel.
+                                      color: _PanelInk.of(context).strong,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     trn('quran_audio.downloaded_of', args: [ltr('$done'), ltr('$total')]),
-                                    style: const TextStyle(
-                                        color: Colors.white70,
+                                    style: TextStyle(
+                                        color: _PanelInk.of(context).soft,
                                         fontSize: 12.5),
                                   ),
                                 ],
@@ -237,10 +236,10 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                                             '${surahTitle(data, surah, locale)} ${percentOf(progress)}',
                                         ].join('  ·  '),
                                       ]),
-                                      style: TextStyle(color: theme.accentSoft, fontWeight: FontWeight.w700),
+                                      style: TextStyle(color: _PanelInk.of(context).accent, fontWeight: FontWeight.w700),
                                     ),
                                   ),
-                                  Icon(Icons.my_location_rounded, color: theme.accentSoft, size: 18),
+                                  Icon(Icons.my_location_rounded, color: _PanelInk.of(context).accent, size: 18),
                                 ],
                               ),
                             ),
@@ -478,16 +477,38 @@ class _ThemedPanel extends StatelessWidget {
   final Widget child;
   const _ThemedPanel({required this.theme, required this.child});
 
+  // «كارت القارئ الكحلي لا يتبع الثيم» (owner, 2026-09-25): every player
+  // theme is a dark ground, and the card kept it in the light app theme -
+  // a navy slab on a pale screen. In the light theme it now takes the same
+  // hues lifted almost to white, and its ink turns dark (_PanelInk).
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
+    final light = Theme.of(context).brightness == Brightness.light;
+    final scheme = Theme.of(context).colorScheme;
+    final ground = light
+        ? [for (final c in theme.ground) Color.lerp(c, Colors.white, 0.86)!]
+        : theme.ground;
+    final ink = light
+        ? _PanelInk(
+            strong: scheme.onSurface,
+            soft: scheme.onSurfaceVariant,
+            accent: Color.lerp(theme.accent, Colors.black, 0.45)!,
+          )
+        : _PanelInk(
+            strong: Colors.white,
+            soft: Colors.white70,
+            accent: theme.accentSoft,
+          );
+    return _PanelInkScope(
+      ink: ink,
+      child: AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: theme.ground,
+          colors: ground,
         ),
         border: Border.all(color: theme.accent.withValues(alpha: 0.55)),
         boxShadow: [
@@ -510,6 +531,34 @@ class _ThemedPanel extends StatelessWidget {
           ],
         ),
       ),
+      ),
     );
   }
+}
+
+
+/// The panel's three inks, set by [_ThemedPanel] for its ground.
+class _PanelInk {
+  final Color strong;
+  final Color soft;
+  final Color accent;
+  const _PanelInk({
+    required this.strong,
+    required this.soft,
+    required this.accent,
+  });
+
+  static _PanelInk of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_PanelInkScope>()!.ink;
+}
+
+class _PanelInkScope extends InheritedWidget {
+  final _PanelInk ink;
+  const _PanelInkScope({required this.ink, required super.child});
+
+  @override
+  bool updateShouldNotify(_PanelInkScope old) =>
+      old.ink.strong != ink.strong ||
+      old.ink.soft != ink.soft ||
+      old.ink.accent != ink.accent;
 }

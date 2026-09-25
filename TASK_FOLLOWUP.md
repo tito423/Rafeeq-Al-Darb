@@ -396,6 +396,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 19:45 - Tour as screenshots (TourSlides + capture build + script); account and reciter cards follow the theme
+- 2026-09-25 19:45 - Owner: the tour must be PICTURES of the screens («اسكرين شوتات»), in the reader's language. Done in code: TourSlides (image + framed feature + bubble, nothing behind it touchable); capture build (--dart-define=RAFEEQ_TOUR_CAPTURE=true) walks both tours in all 7 languages, logs TOURCAP lines; scripts/capture_tour.py screenshots, crops, writes assets/tour/<lang>/<key>.webp + frames.json. First run: ar 32 pictures 644 KB, then it stopped (last stops skipped called _finish) - fixed; recapturing. Also item 14: account card back side theme-aware (was fixed dark green), reciter panel follows light theme (pale ground, dark ink). SEEN on emulator build 19:14: More groups one-open + sections open as screens (tasbih reminders full screen), Audio tab «−» removes (89->88), location in Times & date, New Muslim gone. assets/tour NOT yet in pubspec (release build would show no pictures).
 - 2026-09-25 19:10 - More: header-to-top on open, sections open as screens; tour hifz stop shows the hifz screen
 - 2026-09-25 19:10 - Item 10 More: a group opening scrolls its own header to the top after the closing one settles (no chase); any CollapsibleSection inside a More group opens as its own screen. Tour hifz stop per owner («مش كارت الحفظ، شاشته»): TutorialChapter.screen draws HifzScreen under the tour, frame on the plans section (TourAnchor.hifzPlans). Code only, NOT BUILT.
 - 2026-09-25 19:06 - Quick tour in the owner order, no library, last stop on the hifz card

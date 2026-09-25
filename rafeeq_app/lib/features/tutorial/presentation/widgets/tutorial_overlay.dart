@@ -27,6 +27,8 @@ import 'dart:math' as math;
 // decide which end of the navigation bar a tab sits at.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert' show jsonDecode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
@@ -52,9 +54,23 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     with TickerProviderStateMixin {
   int _index = 0;
 
-  /// The tour being played, fixed when it starts.
-  late final List<TutorialChapter> _chapters =
-      ref.read(tutorialModeProvider) == TutorialMode.quick
+  /// The tour the reader sees is PICTURES of the app, not the app: «الأفضل
+  /// تخلي الجولة اسكرين شوتات … لو ضغطت في أي مكان تاني هتخرج من الجولة»
+  /// (owner, 2026-09-25). The live walk below survives only in the capture
+  /// build (`--dart-define=RAFEEQ_TOUR_CAPTURE=true`), which drives the real
+  /// screens, draws nothing, and logs where each feature is, so that
+  /// `scripts/capture_tour.py` can photograph them in every language.
+  static const bool _capture = bool.fromEnvironment('RAFEEQ_TOUR_CAPTURE');
+
+  /// The tour being played, fixed when it starts. The capture build walks
+  /// both tours in one pass.
+  late final List<TutorialChapter> _chapters = _capture
+      ? [
+          ...quickTutorialChapters,
+          for (final c in tutorialChapters)
+            if (!quickTutorialChapters.any((q) => q.key == c.key)) c,
+        ]
+      : ref.read(tutorialModeProvider) == TutorialMode.quick
           ? quickTutorialChapters
           : tutorialChapters;
 
@@ -103,7 +119,9 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _enter(0));
+    if (_capture) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _enter(0));
+    }
   }
 
   @override
@@ -139,6 +157,12 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
         final to = i + step;
         if (to < 0) return;
         if (to >= _chapters.length) {
+          // The capture build goes on to the next language even when the
+          // last stops were not on screen.
+          if (_capture) {
+            unawaited(_nextLanguage());
+            return;
+          }
           _finish();
           return;
         }
@@ -149,6 +173,7 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
         return;
       }
       _lastIndex = i;
+      if (_capture) _logStop(_chapters[i]);
       setState(() {
         _from = _spot;
         _spot = next;
@@ -214,8 +239,50 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     return framed.isEmpty ? null : framed;
   }
 
+  /// One line per stop for `scripts/capture_tour.py`: the feature's
+  /// rectangle and the screen, in logical pixels, plus the system bars the
+  /// script crops away.
+  void _logStop(TutorialChapter c) {
+    final media = MediaQuery.of(context);
+    final rect = c.anchor == null ? null : anchorRect(c.anchor!);
+    final r = rect == null
+        ? 'NONE'
+        : [rect.left, rect.top, rect.right, rect.bottom]
+            .map((v) => v.toStringAsFixed(1))
+            .join(',');
+    // ignore: avoid_print
+    print('TOURCAP|${context.locale.languageCode}|${c.key}|$r|'
+        '${media.size.width.toStringAsFixed(1)},'
+        '${media.size.height.toStringAsFixed(1)}|'
+        '${media.padding.top.toStringAsFixed(1)},'
+        '${media.padding.bottom.toStringAsFixed(1)}|'
+        '${media.devicePixelRatio}');
+  }
+
+  /// Capture build: after the last stop, the same walk in the next language.
+  Future<void> _nextLanguage() async {
+    final codes = kLanguageNames.keys.toList();
+    final at = codes.indexOf(context.locale.languageCode);
+    if (at < 0 || at >= codes.length - 1) {
+      // ignore: avoid_print
+      print('TOURCAP|DONE');
+      _finish();
+      return;
+    }
+    await context.setLocale(Locale(codes[at + 1]));
+    await Future<void>.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+    _index = 0;
+    _lastIndex = 0;
+    _enter(0);
+  }
+
   void _next() {
     if (_index >= _chapters.length - 1) {
+      if (_capture) {
+        unawaited(_nextLanguage());
+        return;
+      }
       _finish();
       return;
     }
@@ -242,6 +309,32 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
 
   @override
   Widget build(BuildContext context) {
+    if (!_capture) {
+      return Positioned.fill(
+        child: TourSlides(chapters: _chapters, onFinish: _finish),
+      );
+    }
+    // The capture build draws nothing over the screen it photographs; a tap
+    // anywhere (the script's) moves on.
+    return Positioned.fill(
+      child: Stack(
+        children: [
+          if (_screen != null) Positioned.fill(child: _screen!(context)),
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: _next,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // The live overlay's own drawing, kept for reference by the capture walk's
+  // history; not built any more.
+  // ignore: unused_element
+  Widget _liveBuild(BuildContext context) {
     final chapter = _chapters[_shown];
     final locale = context.locale.languageCode;
     final media = MediaQuery.of(context);
@@ -734,6 +827,146 @@ class _LanguageRow extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+
+/// The tour as the reader sees it: one photograph of the real screen per
+/// stop, taken in his own language by `scripts/capture_tour.py`, with the
+/// feature framed on it and the explanation under it. Nothing behind it can
+/// be touched, so no stray tap can end the tour.
+///
+/// A stop with no photograph for this language (a feature that was not on
+/// screen when the photographs were taken) is left out rather than shown
+/// with a picture of something else. The welcome has no picture.
+class TourSlides extends StatefulWidget {
+  final List<TutorialChapter> chapters;
+  final VoidCallback onFinish;
+
+  const TourSlides({super.key, required this.chapters, required this.onFinish});
+
+  @override
+  State<TourSlides> createState() => _TourSlidesState();
+}
+
+class _TourSlidesState extends State<TourSlides>
+    with SingleTickerProviderStateMixin {
+  Map<String, dynamic>? _frames;
+  int _i = 0;
+  late final AnimationController _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1500),
+  )..repeat(reverse: true);
+
+  @override
+  void initState() {
+    super.initState();
+    rootBundle
+        .loadString('assets/tour/frames.json')
+        .then((s) => jsonDecode(s) as Map<String, dynamic>)
+        .catchError((_) => <String, dynamic>{})
+        .then((f) {
+      if (mounted) setState(() => _frames = f);
+    });
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  Map<String, dynamic>? _frameOf(String locale, TutorialChapter c) =>
+      (_frames?[locale] as Map<String, dynamic>?)?[c.key]
+          as Map<String, dynamic>?;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final locale = context.locale.languageCode;
+    if (_frames == null) {
+      return ColoredBox(color: scheme.surface);
+    }
+    final stops = [
+      for (final c in widget.chapters)
+        if (c.anchor == null || _frameOf(locale, c) != null) c,
+    ];
+    final i = _i.clamp(0, stops.length - 1);
+    final chapter = stops[i];
+    final frame = _frameOf(locale, chapter);
+    return Material(
+      color: scheme.surface,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+          child: Column(
+            children: [
+              Expanded(
+                child: frame == null
+                    ? Center(
+                        child: Icon(chapter.icon,
+                            size: 96, color: chapter.accent),
+                      )
+                    : Center(child: _shot(locale, chapter, frame)),
+              ),
+              const SizedBox(height: 10),
+              _ChapterBubble(
+                chapter: chapter,
+                index: i,
+                total: stops.length,
+                locale: locale,
+                isFirst: i == 0,
+                isLast: i == stops.length - 1,
+                onPrev: i == 0 ? null : () => setState(() => _i = i - 1),
+                onNext: i == stops.length - 1
+                    ? widget.onFinish
+                    : () => setState(() => _i = i + 1),
+                onSkip: widget.onFinish,
+                pointerX: null,
+                pointerBelow: false,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _shot(String locale, TutorialChapter c, Map<String, dynamic> f) {
+    final aspect = (f['a'] as num).toDouble();
+    final r = (f['r'] as List).map((v) => (v as num).toDouble()).toList();
+    return AspectRatio(
+      aspectRatio: aspect,
+      child: LayoutBuilder(
+        builder: (context, box) {
+          final w = box.maxWidth;
+          final h = box.maxHeight;
+          final spot = Rect.fromLTRB(r[0] * w, r[1] * h, r[2] * w, r[3] * h)
+              .inflate(6);
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset('assets/tour/$locale/${c.key}.webp',
+                    fit: BoxFit.fill),
+                AnimatedBuilder(
+                  animation: _pulse,
+                  builder: (context, _) => CustomPaint(
+                    painter: _SpotlightPainter(
+                      spot: spot,
+                      accent: c.accent,
+                      pulse: _pulse.value,
+                      draw: 1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
