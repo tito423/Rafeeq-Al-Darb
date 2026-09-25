@@ -25,6 +25,7 @@ FOUND ~02:40 on the Xiaomi (text mushaf, al-Fatiha): ayah markers REVERSED withi
 (Times corrected: earlier lines said 02:45/03:05/03:20 - guesses; the PC clock read 02:55 at install.) BUILD 02:55:39 installed on the Xiaomi 02:55:50 (install -r OK). SEEN PORTRAIT: al-Fatiha markers 1-7 in order, incl. 2 and 6 opening the next line. NEXT: owner turns the phone sideways -> see splash (whole clip), rail, Fatiha sideways, a sheet, More -> initial downloads (two panes).
 SEEN SIDEWAYS 03:00-03:05 on the Xiaomi (build 02:55): al-Fatiha markers 1-7 in order; rail + full-height home; language sheet whole; support sheet with both buttons; initial downloads two panes; tour side by side. FAULT: NavigationRail tiles 61dp x7 > 351dp -> Library cut, More below the edge. FIX in code (593 pass): side_tabs.dart SideTabs shares the height by 7. Rebuilding.
 BUILD 03:0x installed 03:09:52 on the Xiaomi: SideTabs SEEN sideways, all 7 tabs with names, no scrolling. BLOCKED ON OWNER: Avast One on his phone popped «Suspicious app found - Rafeeq Al-Darb, Detection ID 3d1dc328d456, recommend uninstalling» right after this install. Dialog left untouched. Do not dismiss/uninstall; ask him. Still to see sideways: Prayer/Adhkar/Tasbeeh/Library tab contents; splash clip after a long absence.
+OWNER 03:15: «اظبط الشكل والتصميم في الاورينتيشن ... كانه تاب شغال بالعرض». Avast dialog gone from his screen (he handled it). DONE IN CODE (593 pass): TwoPaneScroll (core/widgets) - Home (date+prayer | reading cards), Prayer (compass sized to height | links), More (6 groups in 2 columns); Adhkar grid 200dp tiles aspect 1.2 sideways. Building. NEXT: see them, then Library + pushed screens (downloads, surah list, adhkar reader, hadith, settings).
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -458,6 +459,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 03:18 - Tablet-style landscape: two scrolling columns on Home, Prayer and More; wider adhkar tiles (593 pass, building)
 - 2026-09-26 03:10 - SideTabs seen on the Xiaomi; Avast One flagged the sideloaded build - waiting on the owner
 - 2026-09-26 03:06 - Sideways tabs share the height by seven (the rail hid More below the edge on the Xiaomi); rest of the landscape fixes seen
 - 2026-09-26 02:57 - Seen on the Xiaomi (portrait): al-Fatiha ayah markers 1-7 in order after the fix

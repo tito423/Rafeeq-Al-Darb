@@ -1,3 +1,4 @@
+import '../../../../core/widgets/two_pane_scroll.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../dedications/presentation/dedications_screen.dart';
 import '../../../ruqyah/data/ruqyah_catalog.dart';
@@ -65,9 +66,13 @@ class MoreScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text('nav.more'.tr())),
-      body: ListView(
+      // Sideways, the six groups in two columns (see `TwoPaneScroll`): what
+      // the reader goes to on the start side, what he sets on the other.
+      body: TwoPaneScroll(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-        children: [
+        gap: 0,
+        columnGap: 16,
+        start: [
           // «عايزك ترتب قسم المزيد بشكل أحسن … يبقى فيه تقسيمات منطقية
           // للمتشابهات» (2026-09-19). Seven groups, each under its own
           // header: what the reader does with the Qur'an and worship, what
@@ -221,6 +226,8 @@ class MoreScreen extends ConsumerWidget {
               const TutorialEntryCard(),
             ],
           ),
+        ],
+        end: [
           MoreGroup(
             title: 'more.group_reminders'.tr(),
             subtitle: _names([

@@ -2502,9 +2502,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 03:10 — IN PROGRESS — resume here**
+**2026-09-26 03:18 — IN PROGRESS — resume here**
 
-SideTabs seen on the Xiaomi; Avast One flagged the sideloaded build - waiting on the owner
+Tablet-style landscape: two scrolling columns on Home, Prayer and More; wider adhkar tiles (593 pass, building)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

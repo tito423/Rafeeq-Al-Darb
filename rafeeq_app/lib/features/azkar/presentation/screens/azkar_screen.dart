@@ -101,12 +101,24 @@ class _SectionsTab extends ConsumerWidget {
       // By card width, not a fixed 2: in landscape two columns made each
       // card taller than the screen and its title fell below the fold
       // (emulator-5554, 2026-09-24). A phone held upright still gets 2.
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 260,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        childAspectRatio: 0.9,
-      ),
+      //
+      // Sideways that still left one row of tall cards on the owner's Xiaomi
+      // (2026-09-26), three sections of nine in view. Sideways the
+      // cards are smaller and wider than tall, like a tablet's tiles: four
+      // across on that phone (788 dp / 214), two rows and more in view.
+      gridDelegate: MediaQuery.orientationOf(context) == Orientation.landscape
+          ? const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+              mainAxisSpacing: 14,
+              crossAxisSpacing: 14,
+              childAspectRatio: 1.2,
+            )
+          : const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 260,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 0.9,
+            ),
       itemCount: _categoryOrder.length,
       itemBuilder: (context, i) {
         final category = _categoryOrder[i];

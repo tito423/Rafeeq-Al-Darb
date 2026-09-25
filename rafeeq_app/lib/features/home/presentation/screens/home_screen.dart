@@ -1,3 +1,4 @@
+import '../../../../core/widgets/two_pane_scroll.dart';
 import '../../data/on_this_day_repository.dart';
 import '../widgets/header_quick_actions.dart';
 import '../../../../core/services/official_hijri.dart';
@@ -106,12 +107,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: RefreshIndicator(
             onRefresh: () =>
                 ref.read(prayerControllerProvider.notifier).refresh(),
-            child: ListView(
-              padding: const EdgeInsets.all(20),
-              children: [
-                const SizedBox(height: 4),
+            // Sideways, two columns (see `TwoPaneScroll`): what is happening
+            // now - the date and the prayer - on the start side, what to read
+            // on the other.
+            child: TwoPaneScroll(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+              start: [
                 const _HeaderCard(),
-                const SizedBox(height: 16),
                 // The four cards the guided tour stops on, each wrapped so it
                 // can say where it is rather than describing it from a
                 // distance. TutorialAnchor costs one GlobalKey and nothing
@@ -121,41 +123,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   id: TourAnchor.prayerCard,
                   child: _PrayerCard(state: prayerState),
                 ),
-                const SizedBox(height: 16),
+              ],
+              end: const [
                 // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
                 // the reference shows a "متابعة القراءة" bookmark-style card
                 // ("where you left off") as its own thing, separate from the
                 // khatma daily-goal card below it. Renders nothing when
                 // there's no real last-read page yet (see its own doc).
-                const TutorialAnchor(
+                TutorialAnchor(
                   id: TourAnchor.continueReading,
                   child: ContinueReadingCard(),
                 ),
-                const SizedBox(height: 16),
-                const TutorialAnchor(
+                TutorialAnchor(
                   id: TourAnchor.khatmaCard,
                   child: KhatmaCard(),
                 ),
-                const SizedBox(height: 16),
-                const TutorialAnchor(
+                TutorialAnchor(
                   id: TourAnchor.sunanCard,
                   child: SunanSuwarCard(),
                 ),
-                const SizedBox(height: 16),
-                const SelectedSurahsCard(),
-                const SizedBox(height: 16),
+                SelectedSurahsCard(),
                 // «حط كارت مقولة اليوم … في الشاشة الرئيسية فوق حديث
                 // اليوم». It draws nothing at all when the setting is off.
-                const TutorialAnchor(
+                TutorialAnchor(
                   id: TourAnchor.quoteCard,
                   child: HomeQuoteCard(),
                 ),
-                const SizedBox(height: 16),
-                const TutorialAnchor(
+                TutorialAnchor(
                   id: TourAnchor.hadithCard,
                   child: DailyHadithCard(),
                 ),
-                const SizedBox(height: 12),
               ],
             ),
           ),

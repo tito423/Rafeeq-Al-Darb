@@ -1,3 +1,4 @@
+import '../../../../core/widgets/two_pane_scroll.dart';
 import 'dart:async';
 import '../../../../core/utils/digits.dart';
 import 'dart:math' as math;
@@ -181,19 +182,21 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     return Scaffold(
       appBar: AppBar(title: Text('nav.prayer'.tr())),
       body: SafeArea(
-        child: ListView(
+        // Sideways: the compass on one side, its settings on the other.
+        child: TwoPaneScroll(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          children: [
+          gap: 14,
+          start: [
             TutorialAnchor(
               id: TourAnchor.qiblaCompass,
               child: _buildCompassCard(context),
             ),
-            const SizedBox(height: 16),
+          ],
+          end: [
             TutorialAnchor(
               id: TourAnchor.adhanSettings,
               child: _AdhanSettingsLink(),
             ),
-            const SizedBox(height: 12),
             const TutorialAnchor(
               id: TourAnchor.prayerAdjustments,
               child: _PrayerAdjustmentsLink(),
@@ -334,8 +337,14 @@ class _CompassDial extends StatelessWidget {
     // surface now — the same ground the home cards and the card screens use —
     // with the compass accent adjusted for it.
     final surface = HeroSurface.of(context);
+    // Sideways the dial is sized to the screen's height, so the whole card -
+    // dial, the aligned mark and the bearing - is on screen without scrolling.
+    final sideways = TwoPaneScroll.isSideways(context);
+    final dial = sideways
+        ? math.min(280.0, MediaQuery.sizeOf(context).height * 0.5)
+        : 280.0;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 28),
+      padding: EdgeInsets.symmetric(vertical: sideways ? 14 : 28),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: LinearGradient(
@@ -363,7 +372,9 @@ class _CompassDial extends StatelessWidget {
           // Scaled down, never clipped: the dial is drawn for 280 and a
           // narrow phone at a large display size has less than that inside
           // this card.
-          FittedBox(
+          SizedBox(
+            height: dial,
+            child: FittedBox(
             fit: BoxFit.scaleDown,
             child: SizedBox(
             width: 280,
@@ -420,7 +431,8 @@ class _CompassDial extends StatelessWidget {
             ),
           ),
           ),
-          const SizedBox(height: 20),
+          ),
+          SizedBox(height: sideways ? 10 : 20),
           AnimatedOpacity(
             opacity: aligned ? 1 : 0,
             duration: const Duration(milliseconds: 200),
