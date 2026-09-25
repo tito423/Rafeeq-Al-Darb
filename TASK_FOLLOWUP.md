@@ -23,6 +23,7 @@ DONE IN CODE ~02:30 (analyze clean, NOT built): HeadedListLayout (permissions + 
 DONE IN CODE ~02:40 (analyze clean, 587 pass, NOT built): tour slides side by side sideways; AppShell NavigationRail (scrollable, 7 tabs) instead of the bottom bar sideways + navigationRailTheme. BUILD started ~02:40.
 FOUND ~02:40 on the Xiaomi (text mushaf, al-Fatiha): ayah markers REVERSED within each line (5 after basmala). Cause measured: Flutter 3.38.7 engine gives RTL-line placeholder boxes in visual order (selection boxes of the placeholder char too). FIX in code (593 pass): mushaf/ayah_marker.dart FlowingMarkersPainter + resolveMarkerSlots (slot left of each verse closing space); WidgetSpan only reserves room; test rtl_ayah_marker_order_test. NOT yet seen on device. Rebuilding.
 (Times corrected: earlier lines said 02:45/03:05/03:20 - guesses; the PC clock read 02:55 at install.) BUILD 02:55:39 installed on the Xiaomi 02:55:50 (install -r OK). SEEN PORTRAIT: al-Fatiha markers 1-7 in order, incl. 2 and 6 opening the next line. NEXT: owner turns the phone sideways -> see splash (whole clip), rail, Fatiha sideways, a sheet, More -> initial downloads (two panes).
+SEEN SIDEWAYS 03:00-03:05 on the Xiaomi (build 02:55): al-Fatiha markers 1-7 in order; rail + full-height home; language sheet whole; support sheet with both buttons; initial downloads two panes; tour side by side. FAULT: NavigationRail tiles 61dp x7 > 351dp -> Library cut, More below the edge. FIX in code (593 pass): side_tabs.dart SideTabs shares the height by 7. Rebuilding.
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -456,6 +457,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 03:06 - Sideways tabs share the height by seven (the rail hid More below the edge on the Xiaomi); rest of the landscape fixes seen
 - 2026-09-26 02:57 - Seen on the Xiaomi (portrait): al-Fatiha ayah markers 1-7 in order after the fix
 - 2026-09-26 02:52 - Text mushaf: ayah markers were reversed within each RTL line (engine placeholder order); painted from each verse's own words now (593 pass, not on device yet)
 - 2026-09-26 02:34 - Landscape: navigation rail sideways, tour slides side by side (587 pass, building)

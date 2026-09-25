@@ -1,6 +1,7 @@
 import '../../features/library/data/library_api_service.dart';
 import 'dart:async';
 
+import 'side_tabs.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -346,8 +347,8 @@ class _AppShellState extends ConsumerState<AppShell>
     // SIDEWAYS, THE TABS GO TO THE SIDE. Measured on the owner's Xiaomi held
     // sideways (2026-09-26): the bottom bar took 290 of the screen's 1220 px,
     // leaving every tab a letterbox under a header card. A phone on its side
-    // has width to spare and height to none, so the tabs stand in a rail at
-    // the start edge and every screen gets the full height. The IndexedStack
+    // has width to spare and height to none, so the tabs stand at the
+    // start edge (`SideTabs`) and every screen gets the full height. The IndexedStack
     // is the same one either way - turning the phone keeps each tab's state.
     final sideways = MediaQuery.orientationOf(context) == Orientation.landscape &&
         !fullScreen &&
@@ -406,24 +407,11 @@ class _AppShellState extends ConsumerState<AppShell>
         body: sideways
             ? Row(
                 children: [
-                  SafeArea(
-                    child: NavigationRail(
-                      selectedIndex: _index,
-                      onDestinationSelected: _goTo,
-                      labelType: NavigationRailLabelType.all,
-                      // Seven tabs at about 72 dp each is ~500 dp; a phone on
-                      // its side has ~380. Scrolling beats a clipped tab.
-                      scrollable: true,
-                      groupAlignment: 0,
-                      destinations: [
-                        for (final (icon, selected, key) in tabs)
-                          NavigationRailDestination(
-                            icon: Icon(icon),
-                            selectedIcon: _PopIcon(selected),
-                            label: Text(key.tr()),
-                          ),
-                      ],
-                    ),
+                  SideTabs(
+                    tabs: tabs,
+                    selectedIndex: _index,
+                    onSelect: _goTo,
+                    selectedIcon: (icon) => _PopIcon(icon),
                   ),
                   const VerticalDivider(width: 1),
                   Expanded(child: tabStack),
