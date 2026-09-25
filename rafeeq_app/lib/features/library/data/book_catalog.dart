@@ -2726,7 +2726,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // an-Nawawi keeps his other fifteen titles in the library.
   LibraryBook(
     id: 'al_idah_fi_manasik_al_hajj_wal_umrah',
-    diacritisedPct: 27,
+    diacritisedPct: 47,
     titleAr: 'الإيضاح في مناسك الحج والعمرة',
     titleEn: 'Al Idah Fi Manasik Al Hajj Wal Umrah',
     authorAr: 'الإمام محيي الدين النووي',
@@ -2749,6 +2749,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // the library, downloaded like any other book.
   LibraryBook(
     id: 'al_fiqh_al_manhaji_hajj',
+    diacritisedPct: 3,
     titleAr: 'الحج والعمرة — من الفقه المنهجي',
     titleEn: 'Hajj and Umrah - from al-Fiqh al-Manhaji',
     authorAr: 'مصطفى الخن، مصطفى البغا، علي الشربجي',
@@ -4309,6 +4310,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // rulings (no bare mutun; Shamela text as served). scripts/library_phase1.py.
   LibraryBook(
     id: 'sharh_al_aqidah_al_tahawiyyah',
+    diacritisedPct: 84,
     titleAr: 'شرح العقيدة الطحاوية',
     titleEn: 'Sharh al-Aqidah al-Tahawiyyah',
     authorAr: 'ابن أبي العز الحنفي',
@@ -4326,6 +4328,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_iqtisad_fil_itiqad',
+    diacritisedPct: 1,
     titleAr: 'الاقتصاد في الاعتقاد',
     titleEn: 'Al-Iqtisad fi al-Itiqad',
     authorAr: 'الإمام أبو حامد الغزالي',
@@ -4343,6 +4346,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'qawaid_al_aqaid',
+    diacritisedPct: 36,
     titleAr: 'قواعد العقائد',
     titleEn: 'Qawaid al-Aqaid',
     authorAr: 'الإمام أبو حامد الغزالي',
@@ -4360,6 +4364,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_lubab_fi_sharh_al_kitab',
+    diacritisedPct: 1,
     titleAr: 'اللباب في شرح الكتاب',
     titleEn: 'Al-Lubab fi Sharh al-Kitab',
     authorAr: 'عبد الغني الغنيمي الميداني',
@@ -4377,6 +4382,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_ikhtiyar_li_talil_al_mukhtar',
+    diacritisedPct: 85,
     titleAr: 'الاختيار لتعليل المختار',
     titleEn: 'Al-Ikhtiyar li Talil al-Mukhtar',
     authorAr: 'عبد الله بن محمود الموصلي',
@@ -4394,6 +4400,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_thamar_al_dani',
+    diacritisedPct: 1,
     titleAr: 'الثمر الداني شرح رسالة ابن أبي زيد القيرواني',
     titleEn: 'Al-Thamar al-Dani',
     authorAr: 'صالح عبد السميع الآبي الأزهري',
@@ -4411,6 +4418,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_fawakih_al_dawani',
+    diacritisedPct: 85,
     titleAr: 'الفواكه الدواني على رسالة ابن أبي زيد القيرواني',
     titleEn: 'Al-Fawakih al-Dawani',
     authorAr: 'أحمد بن غانم النفراوي',
@@ -4428,6 +4436,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'kifayat_al_akhyar',
+    diacritisedPct: 41,
     titleAr: 'كفاية الأخيار في حل غاية الاختصار',
     titleEn: 'Kifayat al-Akhyar',
     authorAr: 'تقي الدين الحصني',
@@ -4445,6 +4454,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_iqna_fi_hall_alfaz_abi_shuja',
+    diacritisedPct: 40,
     titleAr: 'الإقناع في حل ألفاظ أبي شجاع',
     titleEn: 'Al-Iqna fi Hall Alfaz Abi Shuja',
     authorAr: 'الخطيب الشربيني',
@@ -4462,6 +4472,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'fath_al_qarib_al_mujib',
+    diacritisedPct: 3,
     titleAr: 'فتح القريب المجيب في شرح ألفاظ التقريب',
     titleEn: 'Fath al-Qarib al-Mujib',
     authorAr: 'ابن قاسم الغزي',
@@ -4479,6 +4490,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_uddah_sharh_al_umdah',
+    diacritisedPct: 6,
     titleAr: 'العدة شرح العمدة',
     titleEn: 'Al-Uddah Sharh al-Umdah',
     authorAr: 'بهاء الدين المقدسي',
@@ -4496,6 +4508,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_rawd_al_murbi',
+    diacritisedPct: 42,
     titleAr: 'الروض المربع شرح زاد المستقنع',
     titleEn: 'Al-Rawd al-Murbi',
     authorAr: 'منصور بن يونس البهوتي',
@@ -4513,6 +4526,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'bidayat_al_mujtahid',
+    diacritisedPct: 83,
     titleAr: 'بداية المجتهد ونهاية المقتصد',
     titleEn: 'Bidayat al-Mujtahid',
     authorAr: 'ابن رشد الحفيد',
@@ -4530,6 +4544,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'ihkam_al_ahkam',
+    diacritisedPct: 83,
     titleAr: 'إحكام الأحكام شرح عمدة الأحكام',
     titleEn: 'Ihkam al-Ahkam',
     authorAr: 'ابن دقيق العيد',
@@ -4547,6 +4562,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tanwir_al_hawalik',
+    diacritisedPct: 39,
     titleAr: 'تنوير الحوالك شرح موطأ مالك',
     titleEn: 'Tanwir al-Hawalik',
     authorAr: 'الحافظ جلال الدين السيوطي',
@@ -4564,6 +4580,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_rahiq_al_makhtum',
+    diacritisedPct: 2,
     titleAr: 'الرحيق المختوم',
     titleEn: 'Al-Raheeq al-Makhtum',
     authorAr: 'صفي الرحمن المباركفوري',
@@ -4581,6 +4598,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'sharh_al_waraqat_al_mahalli',
+    diacritisedPct: 3,
     titleAr: 'شرح الورقات في أصول الفقه',
     titleEn: 'Sharh al-Waraqat',
     authorAr: 'جلال الدين المحلي',
@@ -4599,6 +4617,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'sharh_al_ajurrumiyyah_hifzi',
+    diacritisedPct: 7,
     titleAr: 'شرح الآجرومية',
     titleEn: 'Sharh al-Ajurrumiyyah',
     authorAr: 'حسن بن محمد الحفظي',
@@ -4619,6 +4638,7 @@ const List<LibraryBook> libraryBookCatalog = [
   // rulings. scripts/library_phase2.py.
   LibraryBook(
     id: 'ilam_al_muwaqqiin',
+    diacritisedPct: 84,
     titleAr: 'إعلام الموقعين عن رب العالمين',
     titleEn: 'Ilam al-Muwaqqiin',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -4637,6 +4657,7 @@ const List<LibraryBook> libraryBookCatalog = [
 
   LibraryBook(
     id: 'al_majmu_sharh_al_muhadhdhab',
+    diacritisedPct: 72,
     titleAr: 'المجموع شرح المهذب',
     titleEn: 'Al-Majmu Sharh al-Muhadhdhab',
     authorAr: 'الإمام محيي الدين النووي',
@@ -4655,6 +4676,7 @@ const List<LibraryBook> libraryBookCatalog = [
 
   LibraryBook(
     id: 'tafsir_al_qurtubi',
+    diacritisedPct: 79,
     titleAr: 'الجامع لأحكام القرآن',
     titleEn: 'Tafsir al-Qurtubi',
     authorAr: 'الإمام القرطبي',
@@ -4672,6 +4694,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_mughni_ibn_qudamah',
+    diacritisedPct: 48,
     titleAr: 'المغني',
     titleEn: 'Al-Mughni',
     authorAr: 'الإمام موفق الدين ابن قدامة المقدسي',
@@ -4690,6 +4713,7 @@ const List<LibraryBook> libraryBookCatalog = [
 
   LibraryBook(
     id: 'tafsir_al_tabari',
+    diacritisedPct: 31,
     titleAr: 'جامع البيان عن تأويل آي القرآن',
     titleEn: 'Tafsir al-Tabari',
     authorAr: 'الإمام ابن جرير الطبري',
@@ -4707,6 +4731,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'fath_al_bari',
+    diacritisedPct: 80,
     titleAr: 'فتح الباري بشرح صحيح البخاري',
     titleEn: 'Fath al-Bari',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -4724,6 +4749,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'siyar_alam_al_nubala',
+    diacritisedPct: 69,
     titleAr: 'سير أعلام النبلاء',
     titleEn: 'Siyar Alam al-Nubala',
     authorAr: 'الإمام شمس الدين الذهبي',
@@ -4742,6 +4768,7 @@ const List<LibraryBook> libraryBookCatalog = [
 
   LibraryBook(
     id: 'tahdhib_al_kamal',
+    diacritisedPct: 24,
     titleAr: 'تهذيب الكمال في أسماء الرجال',
     titleEn: 'Tahdhib al-Kamal',
     authorAr: 'الحافظ جمال الدين المزي',
@@ -4759,6 +4786,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'lisan_al_arab',
+    diacritisedPct: 65,
     titleAr: 'لسان العرب',
     titleEn: 'Lisan al-Arab',
     authorAr: 'ابن منظور الإفريقي',
