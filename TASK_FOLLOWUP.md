@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:05 - Daas: 8 of 27 transcribed from the print (+64:15, 2:147)
+- 2026-09-26 00:05 - Daas print: 8 of 27 (+64:15 vol3 351, +2:147 vol1 62). 2:147 has 2 words in neither copy, both read on the print: «بلا الناهية» (KSU «بال»), «أينما» one word (KSU «أين ما»). Next: 3:116 (vol1 155-156).
 - 2026-09-26 00:04 - Daas: 6 of 27 transcribed from the print (+6:130)
 - 2026-09-26 00:04 - Daas print transcription: 6 of 27 (+6:130, vol1 pdf 334-335, check 198 words / 0 in neither copy; print's own typo «نعلق به» kept). Next: 64:15 (vol3 351), then the list.
 - 2026-09-25 23:44 - HANDOVER: analyze clean, 594 pass, 9/9 hosted 206; i'rab resume point; next prompt
