@@ -77,7 +77,7 @@ def shares_wording(src_words, tgt_words, n=2):
     return any(tuple(src_words[i:i + n]) in grams for i in range(len(src_words) - n + 1))
 
 
-def accept(rec, shares):
+def accept(rec, shares, target_text):
     """Decide whether a resolved reference is SHOWN in the app, or goes to the
     owner's list instead.
 
@@ -90,7 +90,15 @@ def accept(rec, shares):
     7:197 says «(١٠)» and 7:10 is about something else. Showing those would
     put the wrong i'rab under the ayah.
     """
-    # TODO(human)
+    # Shown only when the target is PROVEN. If the book quoted the words it
+    # refers to, those words must be in the target ayah. If it quoted
+    # nothing, the ayahs must share 3 consecutive words (2 was measured too
+    # weak: 34:39 and 34:16 share a common pair and passed). A number or
+    # «السابقة» alone is the book's pointer, not proof it lands right.
+    q = wskel(rec['quote'])
+    if len(q.split()) >= 2:
+        return q in target_text
+    return shares
 
 
 def ref_only(text):
@@ -183,7 +191,8 @@ def main():
             rec.update(target_surah=target[0], target_ayah=target[1],
                        target_section=list(tsec), how=how)
             src = sum((ayahs[order[(s, k)]][2].split() for k in range(a0, a1 + 1)), [])
-            if not accept(rec, shares_wording(src, ayahs[order[target]][2].split())):
+            if not accept(rec, shares_wording(src, ayahs[order[target]][2].split(), 3),
+                          ayahs[order[target]][2]):
                 rec['why'] = f'not accepted ({how} -> {target[0]}:{target[1]})'
                 open_.append(rec)
                 continue

@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:35 - i'rab refs: shown only when the target is proven (179 of 467)
+- 2026-09-26 00:35 - Owner: never TODO(human) - decide myself (memory saved). accept() rule: shown only if PROVEN - book's quote found in the target ayah, or (no quote) 3 consecutive shared words (2 was too weak: 34:39->34:16 passed). Now: 179 of 467 shown (102 quote, 60 number, 15 previous, 2 surah-start); 34:39 and 7:197 correctly held back; 288 open. Next: categorise open list for the owner, then app side.
 - 2026-09-26 00:28 - i'rab refs: numbers checked vs print; acceptance rule left to owner
 - 2026-09-26 00:28 - Ref numbers vs print OCR (scripts/check_irab_daas_ref_numbers.py): 64 same, 36 OCR-unseen, 7 'differ' = OCR noise on the ones read. READ ON THE PAGE: 7:197 «الآية (١٠)» and 34:39 «الآية ١٦» are the BOOK's numbers, yet the targets share no wording (34:39's phrase is in 34:36) -> policy needed: accept() in resolve_irab_daas_refs.py is TODO(human), waiting for the owner. Next: owner fills accept(), re-run, then app side.
 - 2026-09-26 00:26 - i'rab refs resolver WIP: 244 of 467 resolved, numbers not yet checked vs print
