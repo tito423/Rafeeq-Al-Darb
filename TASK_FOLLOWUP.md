@@ -382,6 +382,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 15:30 - Owner sent 8 screenshots + 9 screen recordings from his Xiaomi (3.63.7), asked for a REPORT ONLY, no changes. Findings (unverified in code, from frames): back arrows not responding (Book reader settings, Library opened from More), double app bar «الكتب»+«المكتبة», ayah-download notification done>total (1488/1485), Initial downloads says «no server» while the ayah download runs, per-ayah list shows 0/114 during download, More accordion jumps + long reminder text inline, account name dark on dark, i'rab «على» = «جمع», odd «خطوات الصلاة» icon, tour step 8 highlights the player card, mushaf size line clipped. Waiting for owner to pick.
 - 2026-09-25 14:44 - v3.63.7 published: final ring-cropped icon without prayer beads
 - 2026-09-25 14:44 - FINAL icon: owner's 1024 image WITHOUT prayer beads (he regenerated it after the inpaint attempt smeared the stand), cropped to the ring (box 24,30-997,1003). Preview shown, owner approved («انشر»), seen on emulator launcher. v3.63.7 PUBLISHED (tag == HEAD c6f8d3ac, sha256 b3c22dc8 = local), v3.63.5 deleted (3.63.6 was never published). Not yet on the owner's Xiaomi.
 - 2026-09-25 14:16 - v3.63.5 published: owner's 1024 icon
