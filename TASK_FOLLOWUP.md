@@ -382,6 +382,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 14:16 - v3.63.5 published: owner's 1024 icon
+- 2026-09-25 14:17 - Owner's 1024 square icon used as given, bg #9BC4B3 (image edge median), seen on emulator launcher. v3.63.5 PUBLISHED (tag == HEAD 6e3114a3, sha256 39b559da = local), v3.63.4 deleted. Not yet on the owner's Xiaomi.
 - 2026-09-25 14:00 - v3.63.4 published: owner's light app icon
 - 2026-09-25 14:00 - Owner's LIGHT app icon (cropped from his 512x279 banner, no redraw) + adaptive bg #F7FCFF, seen on emulator launcher. v3.63.4 PUBLISHED (tag == HEAD 5bb2c9eb, sha256 3a1f95f8 = local), v3.63.3 deleted. Not yet on the owner's Xiaomi.
 - 2026-09-25 13:44 - v3.63.3 published (download ANR + lock-stop fixes, Later, revisit); icon question pending
