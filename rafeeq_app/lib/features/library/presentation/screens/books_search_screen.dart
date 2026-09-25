@@ -502,8 +502,8 @@ class _BookResult extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 color: AppColors.gold.withValues(alpha: 0.14),
               ),
-              child: const Icon(Icons.auto_stories_rounded,
-                  color: AppColors.gold),
+              child: Icon(Icons.auto_stories_rounded,
+                  color: goldText(context)),
             ),
             const SizedBox(width: 12),
             Expanded(

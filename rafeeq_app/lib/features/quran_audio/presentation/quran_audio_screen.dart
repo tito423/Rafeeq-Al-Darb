@@ -53,7 +53,7 @@ class _QuranAudioScreenState extends State<QuranAudioScreen> {
             indicatorColor: AppColors.gold,
             indicatorWeight: 3,
             indicatorSize: TabBarIndicatorSize.label,
-            labelColor: AppColors.gold,
+            labelColor: goldText(context),
             labelStyle: const TextStyle(fontWeight: FontWeight.w700),
             labelPadding: const EdgeInsets.symmetric(horizontal: 6),
             // Four tabs on a phone: «ملفات الجهاز» was cut to «علفات الجهاز»
@@ -641,7 +641,7 @@ class _FavoritesTab extends StatelessWidget {
                     player.active && player.current?.id == t.id
                         ? Icons.graphic_eq_rounded
                         : Icons.favorite_rounded,
-                    color: AppColors.gold,
+                    color: goldText(context),
                   ),
                   title: Text(t.title, maxLines: 1, overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontWeight: FontWeight.w700)),

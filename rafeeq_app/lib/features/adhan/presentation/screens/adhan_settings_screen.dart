@@ -539,7 +539,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                                 picked == null
                                     ? Icons.radio_button_checked
                                     : Icons.radio_button_off,
-                                color: AppColors.gold,
+                                color: goldText(context),
                               ),
                               title: Text('prayer.fajr_adhan_auto'.tr()),
                               subtitle: Text(

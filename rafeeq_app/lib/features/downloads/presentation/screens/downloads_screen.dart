@@ -438,9 +438,9 @@ class _StorageHero extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.sd_storage_rounded,
-                color: AppColors.gold,
+                color: goldText(context),
                 size: 20,
               ),
               const SizedBox(width: 8),

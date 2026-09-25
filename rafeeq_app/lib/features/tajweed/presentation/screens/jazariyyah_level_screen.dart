@@ -356,7 +356,7 @@ class _SharhSection extends ConsumerWidget {
                       ),
                       Icon(
                         open ? Icons.expand_less : Icons.expand_more,
-                        color: AppColors.gold,
+                        color: goldText(context),
                       ),
                     ],
                   ),

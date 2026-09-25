@@ -140,7 +140,7 @@ class _PermissionsIntroScreenState
                 child: Column(
                   children: [
                     Icon(Icons.verified_user_outlined,
-                        size: 44, color: AppColors.gold),
+                        size: 44, color: goldText(context)),
                     const SizedBox(height: 12),
                     Text(
                       'permissions_intro.title'.tr(),
@@ -181,8 +181,8 @@ class _PermissionsIntroScreenState
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.language,
-                                    color: AppColors.gold, size: 20),
+                                Icon(Icons.language,
+                                    color: goldText(context), size: 20),
                                 const SizedBox(width: 8),
                                 Text(
                                   'settings.language'.tr(),
@@ -229,8 +229,8 @@ class _PermissionsIntroScreenState
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.palette_outlined,
-                                    color: AppColors.gold, size: 20),
+                                Icon(Icons.palette_outlined,
+                                    color: goldText(context), size: 20),
                                 const SizedBox(width: 8),
                                 Text(
                                   'settings.theme'.tr(),

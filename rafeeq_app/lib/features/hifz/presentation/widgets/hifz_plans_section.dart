@@ -112,9 +112,9 @@ class HifzPlansSection extends ConsumerWidget {
             margin: const EdgeInsets.only(bottom: 8),
             color: AppColors.gold.withValues(alpha: 0.08),
             child: ListTile(
-              leading: const Icon(
+              leading: Icon(
                 Icons.bookmark_rounded,
-                color: AppColors.gold,
+                color: goldText(context),
               ),
               title: Text(hifzPlanTitle(p, byId)),
               subtitle: Text(

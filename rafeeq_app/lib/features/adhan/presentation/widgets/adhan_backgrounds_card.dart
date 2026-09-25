@@ -18,8 +18,8 @@ class AdhanBackgroundsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.auto_awesome_mosaic_rounded,
-            size: 30, color: AppColors.gold),
+        leading: Icon(Icons.auto_awesome_mosaic_rounded,
+            size: 30, color: goldText(context)),
         title: Text('adhan.backgrounds_title'.tr()),
         subtitle: Text('adhan.backgrounds_desc'.tr()),
         // chevron_right, not chevron_left: this one must not mirror (trap #7).

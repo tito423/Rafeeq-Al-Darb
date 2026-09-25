@@ -316,9 +316,9 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.record_voice_over_outlined,
-                color: AppColors.gold,
+                color: goldText(context),
               ),
               const SizedBox(width: 8),
               Expanded(

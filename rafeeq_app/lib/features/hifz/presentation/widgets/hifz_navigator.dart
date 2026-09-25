@@ -91,9 +91,9 @@ class _HifzNavigatorState extends State<HifzNavigator> {
               enableFilter: true,
               requestFocusOnTap: true,
               menuHeight: 360,
-              leadingIcon: const Icon(
+              leadingIcon: Icon(
                 Icons.menu_book_rounded,
-                color: AppColors.gold,
+                color: goldText(context),
                 size: 20,
               ),
               dropdownMenuEntries: [

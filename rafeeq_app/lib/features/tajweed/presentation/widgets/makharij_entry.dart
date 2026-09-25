@@ -32,8 +32,8 @@ class MakharijEntry extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.record_voice_over_rounded,
-                color: AppColors.gold, size: 26),
+            Icon(Icons.record_voice_over_rounded,
+                color: goldText(context), size: 26),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

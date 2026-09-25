@@ -105,7 +105,7 @@ class HifzScreen extends ConsumerWidget {
                 Icon(
                   Icons.check_circle_outline,
                   size: 18,
-                  color: AppColors.gold,
+                  color: goldText(context),
                 ),
                 const SizedBox(width: 6),
                 Text(

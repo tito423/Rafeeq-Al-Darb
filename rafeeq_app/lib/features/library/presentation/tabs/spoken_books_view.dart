@@ -48,8 +48,8 @@ class SpokenBooksView extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: AppColors.gold.withValues(alpha: 0.16),
               ),
-              child: const Icon(Icons.headphones_rounded,
-                  color: AppColors.gold),
+              child: Icon(Icons.headphones_rounded,
+                  color: goldText(context)),
             ),
             const SizedBox(width: 12),
             Expanded(

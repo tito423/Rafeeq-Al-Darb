@@ -449,7 +449,7 @@ class _HadithBookTile extends StatelessWidget {
                     radius: 22,
                     backgroundColor: AppColors.gold.withValues(alpha: 0.14),
                     child: Icon(Icons.menu_book_rounded,
-                        color: AppColors.gold, size: 22),
+                        color: goldText(context), size: 22),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

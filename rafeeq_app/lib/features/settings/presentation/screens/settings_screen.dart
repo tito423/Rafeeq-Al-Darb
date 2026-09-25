@@ -109,7 +109,7 @@ class SettingsBody extends ConsumerWidget {
                           v.icon,
                           size: 18,
                           color: themeVariant == v
-                              ? scheme.onSecondaryContainer
+                              ? scheme.onPrimaryContainer
                               : scheme.onSurfaceVariant,
                         ),
                         label: Text(v.labelKey.tr()),

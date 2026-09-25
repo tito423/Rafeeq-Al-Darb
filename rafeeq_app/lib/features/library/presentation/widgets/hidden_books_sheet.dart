@@ -109,7 +109,7 @@ class _HiddenBooksSheet extends StatelessWidget {
                             child: ListTile(
                               leading: Icon(
                                 b.category.icon,
-                                color: AppColors.gold,
+                                color: goldText(context),
                               ),
                               title: Text(properName(b.titleAr, b.titleEn)),
                               subtitle: Text(

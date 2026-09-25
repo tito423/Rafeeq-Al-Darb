@@ -110,7 +110,7 @@ class AdhanCard extends StatelessWidget {
                 if (isPlaying)
                   IconButton(
                     icon: Icon(Icons.stop_circle,
-                        color: AppColors.gold, size: 28),
+                        color: goldText(context), size: 28),
                     tooltip: 'prayer.test'.tr(),
                     onPressed: onStop,
                   ),

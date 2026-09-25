@@ -115,9 +115,9 @@ class OnboardingScreen extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.download_for_offline_rounded,
-                        color: AppColors.gold,
+                        color: goldText(context),
                         size: 26,
                       ),
                       const SizedBox(width: 10),
