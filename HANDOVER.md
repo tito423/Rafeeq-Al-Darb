@@ -2502,9 +2502,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 02:52 — IN PROGRESS — resume here**
+**2026-09-26 02:57 — IN PROGRESS — resume here**
 
-Text mushaf: ayah markers were reversed within each RTL line (engine placeholder order); painted from each verse's own words now (593 pass, not on device yet)
+Seen on the Xiaomi (portrait): al-Fatiha ayah markers 1-7 in order after the fix
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
