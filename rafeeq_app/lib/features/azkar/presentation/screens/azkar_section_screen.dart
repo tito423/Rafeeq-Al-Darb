@@ -108,6 +108,43 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
   @override
   Widget build(BuildContext context) {
     final items = _items;
+    // Sideways the counter stands beside the dhikr instead of under it.
+    // Under it, on the owner's Xiaomi held sideways (2026-09-26), the ring,
+    // its line and the dots took ~210 of the ~300 dp below the app bar and
+    // left the dhikr a strip two lines high.
+    final sideways =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
+    final pages = items == null
+        ? null
+        : PageView.builder(
+            controller: _pageController,
+            itemCount: items.length + 1, // +1 → "section done"
+            onPageChanged: (i) => setState(() => _index = i),
+            itemBuilder: (context, i) {
+              if (i == items.length) {
+                return _DonePage(
+                  onBack: () => Navigator.of(context).pop(),
+                );
+              }
+              return _DhikrPage(
+                item: items[i],
+                isFirst: i == 0,
+              );
+            },
+          );
+    // Bottom controls belong to the *current* dhikr, so they live outside
+    // the PageView and read `_index` — hidden on the trailing "done" card,
+    // which has its own layout.
+    final controls = items != null && _index < items.length
+        ? _BottomControls(
+            accent: _accent,
+            count: _counts[_index] ?? 0,
+            target: _targetFor(_index),
+            index: _index,
+            total: items.length,
+            onTap: _tapCount,
+          )
+        : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -119,40 +156,28 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
           : Stack(
               children: [
                 const Positioned.fill(child: _CardBackground()),
-                Column(
-                  children: [
-                    Expanded(
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: items.length + 1, // +1 → "section done"
-                        onPageChanged: (i) => setState(() => _index = i),
-                        itemBuilder: (context, i) {
-                          if (i == items.length) {
-                            return _DonePage(
-                              onBack: () => Navigator.of(context).pop(),
-                            );
-                          }
-                          return _DhikrPage(
-                            item: items[i],
-                            isFirst: i == 0,
-                          );
-                        },
-                      ),
-                    ),
-                    // Bottom controls belong to the *current* dhikr, so they
-                    // live outside the PageView and read `_index` — hidden on
-                    // the trailing "done" card, which has its own layout.
-                    if (_index < items.length)
-                      _BottomControls(
-                        accent: _accent,
-                        count: _counts[_index] ?? 0,
-                        target: _targetFor(_index),
-                        index: _index,
-                        total: items.length,
-                        onTap: _tapCount,
-                      ),
-                  ],
-                ),
+                if (sideways)
+                  Row(
+                    children: [
+                      Expanded(child: pages!),
+                      if (controls != null)
+                        SizedBox(
+                          width: 250,
+                          child: SafeArea(
+                            child: Center(
+                              child: SingleChildScrollView(child: controls),
+                            ),
+                          ),
+                        ),
+                    ],
+                  )
+                else
+                  Column(
+                    children: [
+                      Expanded(child: pages!),
+                      ?controls,
+                    ],
+                  ),
               ],
             ),
     );

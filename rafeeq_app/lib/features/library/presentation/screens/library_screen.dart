@@ -52,67 +52,80 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
       ref.read(requestedLibraryTabProvider.notifier).state = null;
     });
 
+    // «طوّر قسم المكتبة بصريًا … التابات … أحدث وأروع بصريًا وأنيميتد».
+    // Each tab is an icon and a word in a pill; the gold pill slides to
+    // the chosen tab as the pages swipe (TabBar animates its indicator
+    // with the controller), so the eye follows the move.
+    final tabs = TutorialAnchor(
+      id: TourAnchor.libraryTabs,
+      child: TabBar(
+        controller: _tabController,
+        isScrollable: true,
+        tabAlignment: TabAlignment.start,
+        dividerColor: Colors.transparent,
+        indicatorSize: TabBarIndicatorSize.tab,
+        splashBorderRadius: BorderRadius.circular(22),
+        labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+        indicator: BoxDecoration(
+          borderRadius: BorderRadius.circular(22),
+          // White on the flat gold measured 2.42 : 1
+          // (emulator-5554, 2026-09-25): same gold, deepened.
+          gradient: LinearGradient(
+            colors: [
+              fillForWhiteText(AppColors.gold),
+              fillForWhiteText(const Color(0xFFB8913A)),
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.gold.withValues(alpha: 0.35),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        labelColor: Colors.white,
+        unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        labelStyle: const TextStyle(fontWeight: FontWeight.w700),
+        tabs: [
+          _pill(Icons.auto_stories_rounded, 'library.tab_books'.tr()),
+          _pill(Icons.menu_book_rounded, 'library.tab_hadith'.tr()),
+          _pill(Icons.library_books_rounded, 'library.tab_hadeethenc'.tr()),
+          _pill(Icons.live_tv_rounded, 'library.tab_channels'.tr()),
+          _pill(Icons.public_rounded, 'library.tab_websites'.tr()),
+        ],
+      ),
+    );
+    // SIDEWAYS THE PILLS SIT BESIDE THE TITLE. Under it, on the owner's
+    // Xiaomi held sideways (2026-09-26), the title bar, this row and the
+    // books tab's own row took more than half the height before the first
+    // author; one row fewer gives the list 62 dp back.
+    final sideways = MediaQuery.orientationOf(context) == Orientation.landscape;
+
     return Scaffold(
       appBar: AppBar(
         //  rather than : the bottom bar's label is
         // abbreviated to fit seven tiles (see test/nav_label_width_test.dart),
         // and an AppBar has room for the whole word.
-        title: Text('library.title'.tr()),
-        // «طوّر قسم المكتبة بصريًا … التابات … أحدث وأروع بصريًا وأنيميتد».
-        // Each tab is an icon and a word in a pill; the gold pill slides to
-        // the chosen tab as the pages swipe (TabBar animates its indicator
-        // with the controller), so the eye follows the move.
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(62),
-          child: TutorialAnchor(
-            id: TourAnchor.libraryTabs,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 10),
-              child: TabBar(
-                controller: _tabController,
-                isScrollable: true,
-                tabAlignment: TabAlignment.start,
-                dividerColor: Colors.transparent,
-                indicatorSize: TabBarIndicatorSize.tab,
-                splashBorderRadius: BorderRadius.circular(22),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(22),
-                  // White on the flat gold measured 2.42 : 1
-                  // (emulator-5554, 2026-09-25): same gold, deepened.
-                  gradient: LinearGradient(
-                    colors: [
-                      fillForWhiteText(AppColors.gold),
-                      fillForWhiteText(const Color(0xFFB8913A)),
-                    ],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.gold.withValues(alpha: 0.35),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                labelColor: Colors.white,
-                unselectedLabelColor: Theme.of(
-                  context,
-                ).colorScheme.onSurfaceVariant,
-                labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-                tabs: [
-                  _pill(Icons.auto_stories_rounded, 'library.tab_books'.tr()),
-                  _pill(Icons.menu_book_rounded, 'library.tab_hadith'.tr()),
-                  _pill(
-                    Icons.library_books_rounded,
-                    'library.tab_hadeethenc'.tr(),
-                  ),
-                  _pill(Icons.live_tv_rounded, 'library.tab_channels'.tr()),
-                  _pill(Icons.public_rounded, 'library.tab_websites'.tr()),
+        title: sideways
+            ? Row(
+                children: [
+                  Text('library.title'.tr()),
+                  const SizedBox(width: 16),
+                  Expanded(child: tabs),
                 ],
+              )
+            : Text('library.title'.tr()),
+        toolbarHeight: sideways ? 60 : null,
+        bottom: sideways
+            ? null
+            : PreferredSize(
+                preferredSize: const Size.fromHeight(62),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 10),
+                  child: tabs,
+                ),
               ),
-            ),
-          ),
-        ),
         actions: [
           IconButton(
             tooltip: 'library.search_all_books'.tr(),
