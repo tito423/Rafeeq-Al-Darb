@@ -83,7 +83,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   /// stay null while it is missing, which is what the gate renders.
   Future<Map<String, String>>? _tafseer;
   Future<Map<String, AyahTranslation>>? _translations;
-  Future<List<WordGrammar>>? _grammar;
+  Future<IrabSection?>? _irab;
 
   /// The gate redraws on every progress tick, the way the hadith tab's does.
   StreamSubscription<List<DownloadTask>>? _downloads;
@@ -116,7 +116,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
     final a = widget.ayah.ayahNumber;
     _tafseer = repo.tafseerForAyah(s, a);
     _translations = repo.translationsForAyah(s, a);
-    _grammar = repo.wordGrammar(s, a);
+    _irab = repo.irabForAyah(s, a);
   }
 
   Future<void> _startDownload() async {
@@ -207,7 +207,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                       TafseerTab(future: _tafseer!),
                       TranslationTab(
                           ayah: widget.ayah, future: _translations!),
-                      IrabTab(ayah: widget.ayah, future: _grammar!),
+                      IrabTab(ayah: widget.ayah, future: _irab!),
                     ],
                   ),
                 ),

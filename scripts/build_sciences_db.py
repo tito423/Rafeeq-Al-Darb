@@ -1,6 +1,6 @@
 import json, os, re, sqlite3, html, io, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import corpus_labels  # noqa: E402
+import build_irab_daas_table  # noqa: E402
 
 BASE = r"e:\My Projects\Rafiq-Al-Darb\scripts\temp_phase1"
 APPDATA = r"e:\My Projects\Rafiq-Al-Darb\rafeeq_app\assets\data"
@@ -50,17 +50,12 @@ CREATE TABLE tafseer_texts(
 CREATE TABLE word_meanings(
   surah INTEGER NOT NULL, ayah INTEGER NOT NULL, pos INTEGER NOT NULL,
   en TEXT, PRIMARY KEY(surah, ayah, pos));
-CREATE TABLE word_grammar(
-  surah INTEGER NOT NULL, ayah INTEGER NOT NULL, pos INTEGER NOT NULL,
-  token TEXT, pos_ar TEXT, case_ar TEXT, root TEXT, lemma TEXT,
-  PRIMARY KEY(surah, ayah, pos));
 CREATE TABLE azkar_sections(
   id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL);
 CREATE TABLE azkar_items(
   id INTEGER PRIMARY KEY AUTOINCREMENT, section_id INTEGER NOT NULL,
   body TEXT NOT NULL, footnote TEXT);
 CREATE INDEX idx_wm ON word_meanings(surah, ayah);
-CREATE INDEX idx_wg ON word_grammar(surah, ayah);
 CREATE INDEX idx_tt ON tafseer_texts(source, surah, ayah_start, ayah_end);
 """)
 
@@ -154,35 +149,10 @@ rows = [(w["s"], w["a"], w["pos"], w.get("en", "").strip())
 cur.executemany("INSERT OR REPLACE INTO word_meanings(surah,ayah,pos,en) VALUES(?,?,?,?)", rows)
 out(f"word_meanings rows: {len(rows)}")
 
-# ── 5) word grammar / i'rab (Quranic Arabic Corpus 0.x XML) ────────
-xml_path = os.path.join(BASE, "corpus_morphology.xml")
-pat = re.compile(r'<word number="(\d+)" token="([^"]*)" morphology="([^"]*)"')
-grows = []
-with open(xml_path, encoding="utf-8") as f:
-    ch = vs = 0
-    for line in f:
-        mch = re.search(r'<chapter number="(\d+)"', line)
-        if mch:
-            ch = int(mch.group(1))
-            continue
-        mvs = re.search(r'<verse number="(\d+)"', line)
-        if mvs:
-            vs = int(mvs.group(1))
-            continue
-        mw = pat.search(line)
-        if mw:
-            posn, token, morph = int(mw.group(1)), html.unescape(mw.group(2)), html.unescape(mw.group(3))
-            # One definition of the labels, shared with
-            # fix_word_grammar_labels.py - see corpus_labels.py for what the
-            # inline version here got wrong (2026-09-25).
-            pos_ar = corpus_labels.pos_label(morph)
-            case_ar = corpus_labels.label(morph)
-            mroot = re.search(r"ROOT:(\S+)", morph)
-            mlem = re.search(r"LEM:(\S+)", morph)
-            grows.append((ch, vs, posn, token, pos_ar, case_ar,
-                          mroot.group(1) if mroot else "", mlem.group(1) if mlem else ""))
-cur.executemany("INSERT OR REPLACE INTO word_grammar(surah,ayah,pos,token,pos_ar,case_ar,root,lemma) VALUES(?,?,?,?,?,?,?,?)", grows)
-out(f"word_grammar rows: {len(grows)}")
+# ── 5) i'rab: al-Da'as, Hamidan and al-Qasim - added after VACUUM below by
+# build_irab_daas_table.py. The Quranic Arabic Corpus word labels that used
+# to be built here were dropped on the owner's word (2026-09-25): shown only
+# if 100% certain, and they were not verified.
 
 # ── 6) azkar (Hisn al-Muslim, real) ────────────────────────────────
 az = json.load(open(os.path.join(BASE, "hisn_almuslim.json"), encoding="utf-8"))
@@ -206,7 +176,11 @@ out(f"azkar sections: {n_sections}, items: {n_items}")
 con.commit()
 cur.execute("VACUUM")
 con.commit()
-for t in ("tafseer_texts", "word_meanings", "word_grammar", "azkar_sections", "azkar_items"):
+con.close()
+build_irab_daas_table.build(OUTDB)
+con = sqlite3.connect(OUTDB)
+cur = con.cursor()
+for t in ("tafseer_texts", "word_meanings", "irab_daas", "irab_daas_refs", "azkar_sections", "azkar_items"):
     c = cur.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
     out(f"table {t}: {c}")
 con.close()

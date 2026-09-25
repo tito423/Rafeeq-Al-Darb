@@ -43,18 +43,19 @@ class SciencesPackContents {
 
   /// (translator or language, verses) per translation.
   final List<(String, int)> translations;
-  final int grammarRows;
+  /// Ayahs the i'rab book covers (6,236 when the pack is current).
+  final int irabAyahs;
   final int meaningRows;
   const SciencesPackContents({
     required this.tafsirs,
     required this.translations,
-    required this.grammarRows,
+    required this.irabAyahs,
     required this.meaningRows,
   });
 }
 
 /// Read access to quran_sciences.db: tafseer ranges, word-by-word meanings,
-/// i'rab (corpus morphology), ayah translations.
+/// the i'rab of al-Da'as, Hamidan and al-Qasim, ayah translations.
 ///
 /// The adhkar were here too until 3.45.0. They are 48 KB and this file is
 /// 131.68 MB on its way to the download screen, so they moved to
@@ -125,14 +126,48 @@ class SciencesRepository {
     return rows.map(WordMeaning.fromRow).toList();
   }
 
-  Future<List<WordGrammar>> wordGrammar(int surah, int ayah) async {
-    final rows = await _db.query(
-      'word_grammar',
-      where: 'surah = ? AND ayah = ?',
-      whereArgs: [surah, ayah],
-      orderBy: 'pos',
+  /// The book's section that parses [ayah], with the earlier i'rab of each
+  /// proved «سبق إعرابها» attached. Null when the installed pack predates
+  /// the table (a v1 pack: [AppConfig.sciencesDbVersion] makes it re-fetch).
+  Future<IrabSection?> irabForAyah(int surah, int ayah) async {
+    final List<Map<String, Object?>> rows;
+    try {
+      rows = await _db.query(
+        'irab_daas',
+        where: 'surah = ? AND ayah_from <= ? AND ayah_to >= ?',
+        whereArgs: [surah, ayah, ayah],
+        limit: 1,
+      );
+    } on DatabaseException {
+      return null;
+    }
+    if (rows.isEmpty) return null;
+    final r = rows.first;
+    final from = r['ayah_from'] as int;
+    final refs = await _db.rawQuery(
+      'SELECT f.at, f.target_surah, f.target_ayah, t.ayah_from, t.ayah_to, t.text '
+      'FROM irab_daas_refs f JOIN irab_daas t '
+      'ON t.surah = f.target_surah AND t.ayah_from = f.target_ayah_from '
+      'WHERE f.surah = ? AND f.ayah_from = ? ORDER BY f.at',
+      [surah, from],
     );
-    return rows.map(WordGrammar.fromRow).toList();
+    return IrabSection(
+      surah: surah,
+      ayahFrom: from,
+      ayahTo: r['ayah_to'] as int,
+      text: r['text'] as String,
+      references: [
+        for (final f in refs)
+          IrabReference(
+            at: f['at'] as int,
+            targetSurah: f['target_surah'] as int,
+            targetAyah: f['target_ayah'] as int,
+            targetAyahFrom: f['ayah_from'] as int,
+            targetAyahTo: f['ayah_to'] as int,
+            targetText: f['text'] as String,
+          ),
+      ],
+    );
   }
 
   /// Every bundled translation of one ayah, keyed by language code.
@@ -189,9 +224,19 @@ class SciencesRepository {
             (r['n'] as int?) ?? 0,
           ),
       ],
-      grammarRows: await count('word_grammar'),
+      irabAyahs: await _irabAyahs(),
       meaningRows: await count('word_meanings'),
     );
+  }
+
+  Future<int> _irabAyahs() async {
+    try {
+      final r = await _db.rawQuery(
+          'SELECT SUM(ayah_to - ayah_from + 1) AS n FROM irab_daas');
+      return (r.first['n'] as int?) ?? 0;
+    } on DatabaseException {
+      return 0;
+    }
   }
 
   /// One ayah in a single language, or null when that language is absent.

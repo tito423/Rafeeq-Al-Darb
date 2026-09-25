@@ -87,31 +87,50 @@ class WordMeaning {
       );
 }
 
-class WordGrammar {
-  final int pos;
-  final String token;
-  final String posAr;
-  final String caseAr;
-  final String root;
-  final String lemma;
+/// One section of «إعراب القرآن الكريم» (al-Da'as, Hamidan, al-Qasim - Dar
+/// al-Munir / Dar al-Farabi, 1425 AH): the book parses an ayah or a run of
+/// ayahs together, so a section covers [ayahFrom]..[ayahTo].
+class IrabSection {
+  final int surah;
+  final int ayahFrom;
+  final int ayahTo;
 
-  const WordGrammar({
-    required this.pos,
-    required this.token,
-    required this.posAr,
-    required this.caseAr,
-    required this.root,
-    required this.lemma,
+  /// The book's text; «» mark the Qur'an words it parses.
+  final String text;
+
+  /// Where the book says «سبق إعرابها» and the earlier i'rab was PROVED
+  /// (scripts/resolve_irab_daas_refs.py), in text order.
+  final List<IrabReference> references;
+
+  const IrabSection({
+    required this.surah,
+    required this.ayahFrom,
+    required this.ayahTo,
+    required this.text,
+    this.references = const [],
   });
+}
 
-  factory WordGrammar.fromRow(Map<String, Object?> row) => WordGrammar(
-        pos: row['pos'] as int,
-        token: row['token'] as String? ?? '',
-        posAr: row['pos_ar'] as String? ?? '',
-        caseAr: row['case_ar'] as String? ?? '',
-        root: row['root'] as String? ?? '',
-        lemma: row['lemma'] as String? ?? '',
-      );
+/// The earlier i'rab a section points to, shown under the book's own line.
+class IrabReference {
+  /// Offset in [IrabSection.text] after which the referenced i'rab is shown.
+  final int at;
+  final int targetSurah;
+
+  /// The ayah the book points to (the target section may cover more).
+  final int targetAyah;
+  final int targetAyahFrom;
+  final int targetAyahTo;
+  final String targetText;
+
+  const IrabReference({
+    required this.at,
+    required this.targetSurah,
+    required this.targetAyah,
+    required this.targetAyahFrom,
+    required this.targetAyahTo,
+    required this.targetText,
+  });
 }
 
 class AzkarSection {

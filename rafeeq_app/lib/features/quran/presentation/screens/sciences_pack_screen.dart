@@ -238,8 +238,8 @@ class _Contents extends StatelessWidget {
           title: 'quran.irab'.tr(),
           children: [
             _Row(
-                label: 'quran.sciences_words'.tr(),
-                value: _n(data.grammarRows)),
+                label: 'quran.irab_book'.tr(),
+                value: trn('quran.ayah_count', args: [_n(data.irabAyahs)])),
           ],
         ),
         _Section(

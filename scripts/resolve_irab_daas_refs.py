@@ -196,7 +196,13 @@ def main():
                 if len(cands) == 1:
                     target, how = cands.pop(), 'identical'
                 ambiguous = len(cands) > 1
-            rec = {'surah': s, 'ayah_from': a0, 'ayah_to': a1, 'ref': ref, 'quote': quote}
+            # where the app puts the referenced i'rab: right after the
+            # book's clause, past its full stop
+            end = m.end()
+            while end < len(text) and text[end] in ' .،':
+                end += 1
+            rec = {'surah': s, 'ayah_from': a0, 'ayah_to': a1, 'ref': ref, 'quote': quote,
+                   'at': end}
             if ambiguous:
                 rec['why'] = 'several ayahs of the section have an earlier twin'
                 open_.append(rec)

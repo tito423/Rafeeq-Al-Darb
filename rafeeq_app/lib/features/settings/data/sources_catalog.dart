@@ -31,6 +31,11 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // assets/fonts/KFGQPC-HAFS-LICENSE.txt).
       SourceEntry('مجمع الملك فهد لطباعة المصحف الشريف',
           'https://qurancomplex.gov.sa', 'about.src_kfgqpc'),
+      // The i'rab tab since 2026-09-26: Shamela 23584, its 27 damaged sections
+      // transcribed from the printed edition and the rest checked against it
+      // (scripts/build_irab_daas_final.py; CONTENT-LICENSES.md).
+      SourceEntry('المكتبة الشاملة — إعراب القرآن الكريم (الدعاس)',
+          'https://shamela.ws/book/23584', 'about.src_irab_daas'),
       SourceEntry('quran.com', 'https://quran.com', 'about.src_qurancom'),
       SourceEntry('api.alquran.cloud', 'https://alquran.cloud',
           'about.src_alquran'),
