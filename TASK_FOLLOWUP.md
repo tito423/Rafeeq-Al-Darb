@@ -6,15 +6,22 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-HANDOVER 2026-09-24 ~22:00 (owner: «جهّز الدنيا», moving to the other
-account). v3.62.0 released (tag 1f758e40). master is AHEAD with 8 audit-part-2
-fixes: in code, analyze clean, 577 pass, NOT BUILT, NOT ON A DEVICE (one is
-Kotlin and never compiled). Details + how to check each: NEXT_SESSION_PROMPT.md.
+2026-09-25 ~11:50: owner «اعمل وخلص وانشر الريليز النهائي». v3.63.1 being
+published (replaces v3.63.0). Everything in it SEEN on the owner's phone -
+see HANDOVER top row.
 
 ## Next step (exact)
-SESSION 2026-09-25 11:12 (owner's hour ended). 3.63.1 (diacritisation fix
-91d82a33) built + installed on owner's phone, NOT RELEASED - asked owner.
-FOUND on phone at system font «Huge» (font_scale 1.45) + Bold, NOT FIXED:
+After the release: nothing ordered. Still open (need the owner or a fresh
+device): largest font in LANDSCAPE; «Enable location» with NO cached fix
+(clear app data or fresh device); city line ar->ur first-switch delay.
+Audit-2 items 6-8 and the matrix rows «theme/locale switch while playing»,
+«background + back while playing/downloading», «dark + RGB contrast»,
+«slow network» are DONE (see log 2026-09-24 22:54-23:57 and 2026-09-25).
+
+(History) SESSION 2026-09-25 11:12. 3.63.1 (diacritisation fix
+91d82a33) built + installed on owner's phone. FIXED since in d7a482c2 and
+SEEN on the phone at 11:27 - the three below:
+FOUND on phone at system font «Huge» (font_scale 1.45) + Bold:
 1. Tasbeeh PORTRAIT: counter circle shrank to a dot (controls take the
    height, FittedBox shrinks the counter) - same class as the landscape
    bug; tasbeeh_screen.dart ~line 499 only handles wide+short. Fix: let
@@ -375,6 +382,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 11:47 - PHONE: device file (Music) + Dhuhr Test -> paused 66.3 s, Stop -> resumed 66.4 s; tajweed example plays on the shared player (clip shorter than the 8 s test); theme Light->Dark and language en->ar while playing: same player PLAYING, city in Arabic at once; HOME 12 s while playing: still PLAYING; 108 MB ruqyah download finished with the app in background. Phone restored to Light + English, playback stopped.
 - 2026-09-25 11:27 - Font 1.45 fixes seen on owner's phone: Home PM, tasbeeh counter full size and counting, uniform library tabs
 - 2026-09-25 11:27 - d7a482c2 built + installed on owner's phone (font 1.45 bold): Home «12:11 PM» whole; Tasbeeh full circle, 2 taps -> Total 2; Library sub-tabs one uniform size. The 3 findings of 11:12 are FIXED and SEEN. Build = 3.63.1+66 code, NOT released.
 - 2026-09-25 11:12 - Phone at font 1.45 + location off: no dialog loop; found tasbeeh counter dot, tiny library tabs, missing PM on Home centre tile (unfixed, logged)
