@@ -6,6 +6,7 @@
 #   powershell -File scripts\winocr.ps1 out.txt page1.png [page2.png ...]
 #
 # Writes UTF-8, one "=== <image>" header per page, one OCR line per line.
+# With WINOCR_BOXES=1 each line is prefixed by its box "x0,y0,x1,y1<TAB>".
 param([string]$Out, [Parameter(ValueFromRemainingArguments = $true)][string[]]$Images)
 
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
@@ -33,7 +34,19 @@ foreach ($img in $Images) {
     $bitmap = Await ($decoder.GetSoftwareBitmapAsync()) ([Windows.Graphics.Imaging.SoftwareBitmap])
     $result = Await ($engine.RecognizeAsync($bitmap)) ([Windows.Media.Ocr.OcrResult])
     [void]$sb.AppendLine("=== $img")
-    foreach ($line in $result.Lines) { [void]$sb.AppendLine($line.Text) }
+    foreach ($line in $result.Lines) {
+        if ($env:WINOCR_BOXES) {
+            # x0,y0,x1,y1 of the line (union of its words), then a tab.
+            $x0 = 1e9; $y0 = 1e9; $x1 = 0; $y1 = 0
+            foreach ($w in $line.Words) {
+                $r = $w.BoundingRect
+                $x0 = [Math]::Min($x0, $r.X); $y0 = [Math]::Min($y0, $r.Y)
+                $x1 = [Math]::Max($x1, $r.X + $r.Width); $y1 = [Math]::Max($y1, $r.Y + $r.Height)
+            }
+            [void]$sb.Append(('{0:0},{1:0},{2:0},{3:0}' -f $x0, $y0, $x1, $y1) + "`t")
+        }
+        [void]$sb.AppendLine($line.Text)
+    }
     $stream.Dispose()
 }
 [System.IO.File]::WriteAllText($Out, $sb.ToString(), (New-Object System.Text.UTF8Encoding $false))

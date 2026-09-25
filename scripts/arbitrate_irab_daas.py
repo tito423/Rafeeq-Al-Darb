@@ -146,6 +146,17 @@ def main():
             ra = best_ratio(ctx_l + wa[i1:i2] + ctx_r, hay)
             rb = best_ratio(ctx_l + wb[j1:j2] + ctx_r, hay)
             verdict = 'A' if ra - rb >= MARGIN else 'B' if rb - ra >= MARGIN else '?'
+            # One letter apart is below what a character ratio can separate:
+            # Shamela drops the first letter of every word of some quoted
+            # ayahs («لكل جهه و وليها» for «ولكل وجهة هو موليها», 2:148). Then
+            # the exact word decides - on the page, or not on the page.
+            if verdict == '?' and a_txt and b_txt:
+                page_words = set(hay)
+                a_in = all(w in page_words for w in wa[i1:i2])
+                b_in = all(w in page_words for w in wb[j1:j2])
+                if a_in != b_in:
+                    verdict = 'A' if a_in else 'B'
+                    stats['op_exact_word'] += 1
             ops.append({'tag': tag, 'a': ' '.join(wa[i1:i2]), 'b': ' '.join(wb[j1:j2]),
                         'ra': round(ra, 3), 'rb': round(rb, 3), 'v': verdict})
             stats['op_' + verdict] += 1
