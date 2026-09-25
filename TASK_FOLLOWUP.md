@@ -382,6 +382,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 13:44 - v3.63.3 published (download ANR + lock-stop fixes, Later, revisit); icon question pending
+- 2026-09-25 13:45 - Owner video (Xiaomi): ANR at onboarding + downloads die on screen lock. FIXED 9aadd313 (sciences unzip off UI isolate; mushaf retries with backoff instead of stopping after 3 errors) + «Later» + Downloads > Initial downloads. SEEN on emulator-5554 (fresh install): ANR 0, sciences unzipped while mushaf ran; screen off + 15 s network cut: mushaf 170 -> 290. v3.63.3 PUBLISHED (tag == HEAD e762db38, sha256 c9a11217 = local), v3.63.2 deleted. NOT yet on the owner's Xiaomi. PENDING owner answer: app icon «فاتح» (A: he sends a light icon / B: adaptive background cream / C: default light theme).
 - 2026-09-25 12:03 - FINAL v3.63.2 published and verified; v3.63.1 deleted; landscape large-font tasbeeh fixed and seen
 - 2026-09-25 12:04 - FINAL v3.63.2 PUBLISHED: tag == HEAD 88e77914, asset sha256 92860ddc = local; v3.63.1 + tag deleted. Landscape at font 1.45 (owner rotated): Home/Prayer/Adhkar/Library/More fine; Tasbeeh circle was ~65 dp -> footer moved beside it, SEEN full size, tap 2->3. Remaining open: «Enable location» with no cached fix; city ar->ur first-switch delay.
 - 2026-09-25 11:49 - v3.63.1 published and verified (tag == HEAD, digest = local); v3.63.0 deleted
