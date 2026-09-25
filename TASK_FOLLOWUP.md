@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:39 - CLAUDE.md 2.0b: do not report Remote Control (owner)
+- 2026-09-26 00:39 - Owner: stop reporting Remote Control / suggesting claude rc (he gets every session on the phone automatically; ListAgents cannot see it). CLAUDE.md §2.0b rewritten, NEXT_PROMPT.md first-reply line fixed. Next: i'rab refs - identical-ayah rule for the 94 no-quote refs.
 - 2026-09-26 00:35 - i'rab refs: shown only when the target is proven (179 of 467)
 - 2026-09-26 00:35 - Owner: never TODO(human) - decide myself (memory saved). accept() rule: shown only if PROVEN - book's quote found in the target ayah, or (no quote) 3 consecutive shared words (2 was too weak: 34:39->34:16 passed). Now: 179 of 467 shown (102 quote, 60 number, 15 previous, 2 surah-start); 34:39 and 7:197 correctly held back; 288 open. Next: categorise open list for the owner, then app side.
 - 2026-09-26 00:28 - i'rab refs: numbers checked vs print; acceptance rule left to owner

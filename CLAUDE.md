@@ -193,31 +193,20 @@ So:
 Never answer "how much quota is left" from memory or from an earlier reading in
 the same session. It is a live number; read it live.
 
-### 2.0b Remote Control — check it in the first reply
+### 2.0b Remote Control — do NOT report it
 
-The owner steers sessions from his phone, so **in the same first reply as the
-quota question**, check whether Remote Control is on and say so.
+> «ما تقعدش تقول كل مره انا مش لاقي السيشن شغاله واكتب كلود ار سي» (2026-09-26)
 
-`ListAgents` is the check: with Remote Control connected it lists the account's
-other sessions, including Remote Control ones on other machines. None listed
-means it is not connected.
+How a new session actually starts: the owner, on his phone, opens the PC
+through TeamViewer, starts a new session in the Claude desktop app under the
+other account, pastes `NEXT_PROMPT.md` and presses Enter. He then switches
+accounts on the phone and finds the new session there **automatically** - he
+already has it on his phone.
 
-**It is switched on when the session STARTS, and only then.**
-
-    claude rc            # or: claude --remote-control [name]
-
-That is `claude remote-control`, «Control local sessions from claude.ai/code or
-the Claude mobile app», and it **starts a new interactive session** with Remote
-Control enabled — it cannot be added to a session that is already running.
-So an agent inside a running session cannot turn it on for that session, and
-running `claude rc` from a tool call only spawns a process the owner is not
-sitting in front of. (Checked: `claude rc --help` prints exactly that usage,
-and a bare `claude rc` blocks waiting for a terminal.)
-
-So the useful thing to do is tell him **early**, while restarting is still
-cheap: if it is off and the session is going to be long, say so in that first
-reply and let him decide whether to restart with `claude rc`. Never claim to
-have opened it, and never say it is on unless a `ListAgents` result showed it.
+`ListAgents` does NOT see that (it showed «no reachable agents» while he was
+steering this very session from his phone). So: **do not check Remote
+Control, do not say it is off, do not suggest `claude rc`.** The first reply
+reports the quota only.
 
 ### 2.0c `TASK_FOLLOWUP.md` — the live step log (mandatory)
 
