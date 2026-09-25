@@ -411,6 +411,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-25 23:39 - Daas: 5 of 27 damaged sections transcribed from the print (+55:66, 8:13)
 - 2026-09-25 23:38 - Daas: 3 of 27 damaged sections transcribed from the print (106:3, 87:11, 72:15), checked word by word
 - 2026-09-25 23:30 - Owner phone shows the mushaf lines in the right order: the reversal was an emulator rendering fault
 - 2026-09-25 23:30 - OWNER'S PHONE (3.63.7, Amiri, Impeller): al-Baqara p.2 line 1 «الٓمٓ ١ ذَٰلِكَ…» and 2:6-13 all in the RIGHT order (his screenshots). => the reversed lines were an EMULATOR rendering fault (Impeller on emulated GLES; seen with both fonts, Skia correct). No app change. Still to see once: the KFGQPC build on his phone, same page.
