@@ -411,6 +411,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 00:18 - Daas: all 27 damaged sections transcribed from the print
+- 2026-09-26 00:18 - Daas print: ALL 27 of 27 transcribed (+78:40 vol3 416, +81:10 vol3 423 - KSU had «معطوفة على الاية رقم 9» x4 garbage). check: 16 words in neither copy across 9 sections, every one read on the print. Next: wire build_irab_daas_final.py to use the transcriptions for these 27, rebuild.
 - 2026-09-26 00:17 - Daas: 25 of 27 transcribed from the print (+51:40)
 - 2026-09-26 00:17 - Daas print: 25 of 27 (+51:40-44 vol3 265-266, 0 new). Next: 78:40 (vol3 416), 81:10 (vol3 423).
 - 2026-09-26 00:16 - Daas: 24 of 27 transcribed from the print (+44:44)
