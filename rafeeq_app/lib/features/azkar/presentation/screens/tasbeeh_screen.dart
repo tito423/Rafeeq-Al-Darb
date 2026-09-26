@@ -384,6 +384,11 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                     ),
                   ),
                 ];
+                // Sideways the circle GROWS to the height it has, not only
+                // shrinks: at 250 dp it left half the screen empty beside it
+                // (owner's photo, 2026-09-26: «خلي الشاشة تتملى اكتر»).
+                final sideways =
+                    box.maxWidth > box.maxHeight && box.maxHeight < 600;
                 final Widget counter = _mathurIndex != null
                     ? Center(
                         child: SingleChildScrollView(
@@ -399,114 +404,120 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                     : Center(
                         // A short or narrow screen gets a smaller circle rather
                         // than an overflow stripe.
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: GestureDetector(
-                            onTap: _tap,
-                            child: Container(
-                              width: 250,
-                              height: 250,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: circleGround,
-                                border: Border.all(
-                                  color: selected.color.withValues(alpha: 0.55),
-                                  width: 2,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
+                        child: Padding(
+                          padding: EdgeInsets.all(sideways ? 12 : 0),
+                          child: FittedBox(
+                            fit: sideways ? BoxFit.contain : BoxFit.scaleDown,
+                            child: GestureDetector(
+                              onTap: _tap,
+                              child: Container(
+                                width: 250,
+                                height: 250,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: circleGround,
+                                  border: Border.all(
                                     color: selected.color.withValues(
-                                      alpha: 0.35,
+                                      alpha: 0.55,
                                     ),
-                                    blurRadius: 28,
-                                    spreadRadius: 2,
+                                    width: 2,
                                   ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    selected.textKey.tr(),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'AmiriQuran',
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w700,
-                                      // Light blue on the pale circle measured
-                                      // 1.69 : 1 (emulator-5554, 2026-09-25).
-                                      color: readableOn(
-                                        selected.color,
-                                        circleGround,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: selected.color.withValues(
+                                        alpha: 0.35,
                                       ),
+                                      blurRadius: 28,
+                                      spreadRadius: 2,
                                     ),
-                                  ),
-                                  // P3‑48: for non-Arabic UI languages, show a
-                                  // transliteration ("how to read it") beneath the
-                                  // Arabic so a non-Arabic speaker can pronounce it.
-                                  if (context.locale.languageCode != 'ar') ...[
-                                    const SizedBox(height: 4),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                      ),
-                                      child: Text(
-                                        '${selected.textKey}_ph'.tr(),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontStyle: FontStyle.italic,
-                                          color: scheme.onSurfaceVariant,
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      selected.textKey.tr(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontFamily: 'AmiriQuran',
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w700,
+                                        // Light blue on the pale circle measured
+                                        // 1.69 : 1 (emulator-5554, 2026-09-25).
+                                        color: readableOn(
+                                          selected.color,
+                                          circleGround,
                                         ),
                                       ),
                                     ),
+                                    // P3‑48: for non-Arabic UI languages, show a
+                                    // transliteration ("how to read it") beneath the
+                                    // Arabic so a non-Arabic speaker can pronounce it.
+                                    if (context.locale.languageCode !=
+                                        'ar') ...[
+                                      const SizedBox(height: 4),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                        ),
+                                        child: Text(
+                                          '${selected.textKey}_ph'.tr(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontStyle: FontStyle.italic,
+                                            color: scheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    const SizedBox(height: 14),
+                                    // «٠ / ٣٣», not «٣٣ / ٠». Seen in Arabic on
+                                    // emulator-5554 reading «33 / 0» — «33 of 0».
+                                    // CORRECTION. This was "fixed" once already, by
+                                    // splitting the pair into three Text widgets in a
+                                    // Row. The reasoning about bidi was right - three
+                                    // Texts share no paragraph, so rule N1 has no
+                                    // neutral to resolve - and the fix STILL rendered
+                                    // «33 / 2» on emulator-5554, because it swapped
+                                    // one reordering for another: a Row lays its
+                                    // children out along the ambient Directionality,
+                                    // and under RTL that puts the FIRST child on the
+                                    // RIGHT. The pair was reordered by the Row itself.
+                                    //
+                                    // ratio() is the fix used by the other fifteen
+                                    // sites, and it is the one with a rendering test
+                                    // behind it (test/ratio_direction_test.dart lays
+                                    // text out under real RTL and reads caret offsets).
+                                    // Wrapped in localizeDigits because in Arabic this
+                                    // screen was the only one on it printing Latin
+                                    // numerals - the Home clock, the date and the
+                                    // prayer times are all Arabic-Indic.
+                                    Text(
+                                      localizeDigits(
+                                        _target == null
+                                            ? '$_count'
+                                            : localizeDigits(
+                                                ratio(_count, _target!),
+                                                uiLanguageCode,
+                                              ),
+                                        context.locale.languageCode,
+                                      ),
+                                      style: const TextStyle(
+                                        fontSize: 52,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      'azkar.tap_to_count'.tr(),
+                                      style: TextStyle(
+                                        color: scheme.onSurfaceVariant,
+                                      ),
+                                    ),
                                   ],
-                                  const SizedBox(height: 14),
-                                  // «٠ / ٣٣», not «٣٣ / ٠». Seen in Arabic on
-                                  // emulator-5554 reading «33 / 0» — «33 of 0».
-                                  // CORRECTION. This was "fixed" once already, by
-                                  // splitting the pair into three Text widgets in a
-                                  // Row. The reasoning about bidi was right - three
-                                  // Texts share no paragraph, so rule N1 has no
-                                  // neutral to resolve - and the fix STILL rendered
-                                  // «33 / 2» on emulator-5554, because it swapped
-                                  // one reordering for another: a Row lays its
-                                  // children out along the ambient Directionality,
-                                  // and under RTL that puts the FIRST child on the
-                                  // RIGHT. The pair was reordered by the Row itself.
-                                  //
-                                  // ratio() is the fix used by the other fifteen
-                                  // sites, and it is the one with a rendering test
-                                  // behind it (test/ratio_direction_test.dart lays
-                                  // text out under real RTL and reads caret offsets).
-                                  // Wrapped in localizeDigits because in Arabic this
-                                  // screen was the only one on it printing Latin
-                                  // numerals - the Home clock, the date and the
-                                  // prayer times are all Arabic-Indic.
-                                  Text(
-                                    localizeDigits(
-                                      _target == null
-                                          ? '$_count'
-                                          : localizeDigits(
-                                              ratio(_count, _target!),
-                                              uiLanguageCode,
-                                            ),
-                                      context.locale.languageCode,
-                                    ),
-                                    style: const TextStyle(
-                                      fontSize: 52,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    'azkar.tap_to_count'.tr(),
-                                    style: TextStyle(
-                                      color: scheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
@@ -536,12 +547,29 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 // FittedBox shrank the counter to a dot nobody could tap
                 // (emulator-5554, 2026-09-24, 2400x1080 rotated). Side by
                 // side, the controls scroll and the counter keeps its size.
-                if (box.maxWidth > box.maxHeight && box.maxHeight < 600) {
+                //
+                // The controls start at the TOP and share out the height.
+                // Centred, they began well under the title with empty bands
+                // above and below (owner's photo, 2026-09-26: «ارفع الحد
+                // بتاع الشاشة لفوق»). They still scroll when a large font
+                // makes them taller than the screen.
+                if (sideways) {
                   return Row(
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
-                          child: Column(children: controls),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: box.maxHeight,
+                            ),
+                            child: IntrinsicHeight(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: controls,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       // Rounds + reset BESIDE the counter, not under it: in
@@ -557,7 +585,8 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                             // 5 px from it (emulator-5554, 2026-09-26).
                             Padding(
                               padding: const EdgeInsetsDirectional.only(
-                                  end: 16),
+                                end: 16,
+                              ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: footer,

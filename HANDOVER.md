@@ -2503,9 +2503,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 11:28 — IN PROGRESS — resume here**
+**2026-09-26 11:43 — IN PROGRESS — resume here**
 
-Handover 2026-09-26 11:30: landscape/tablet session state, verified and measured; next = owner's three new requests then 3.64.0
+Tasbeeh sideways fills height; side tabs hug the notch; no double inset beside the rail (not built)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

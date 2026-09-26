@@ -71,15 +71,15 @@ class _PopIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TweenAnimationBuilder<double>(
-        tween: Tween<double>(begin: 0, end: 1),
-        duration: const Duration(milliseconds: 620),
-        curve: Curves.elasticOut,
-        builder: (context, t, child) => Transform.rotate(
-          angle: (1 - t) * -0.5,
-          child: Transform.scale(scale: 0.55 + 0.45 * t, child: child),
-        ),
-        child: Icon(icon),
-      );
+    tween: Tween<double>(begin: 0, end: 1),
+    duration: const Duration(milliseconds: 620),
+    curve: Curves.elasticOut,
+    builder: (context, t, child) => Transform.rotate(
+      angle: (1 - t) * -0.5,
+      child: Transform.scale(scale: 0.55 + 0.45 * t, child: child),
+    ),
+    child: Icon(icon),
+  );
 }
 
 class _AppShellState extends ConsumerState<AppShell>
@@ -108,8 +108,12 @@ class _AppShellState extends ConsumerState<AppShell>
       unawaited(DownloadTapChannel.instance.start());
       // Books that ship in the APK are put in the library once, quietly -
       // after the first screen has settled, not while it is drawing.
-      unawaited(Future<void>.delayed(const Duration(seconds: 8),
-          LibraryApiService.instance.installBuiltinBooks));
+      unawaited(
+        Future<void>.delayed(
+          const Duration(seconds: 8),
+          LibraryApiService.instance.installBuiltinBooks,
+        ),
+      );
       // The one point both first-run and returning users pass through, so
       // this is where the startup grants are asked for. Delayed past the
       // route transition so the dialog lands on a settled screen rather than
@@ -336,7 +340,7 @@ class _AppShellState extends ConsumerState<AppShell>
       (
         Icons.radio_button_checked_outlined,
         Icons.radio_button_checked,
-        'nav.tasbeeh'
+        'nav.tasbeeh',
       ),
       (Icons.library_books_outlined, Icons.library_books, 'nav.library'),
       (Icons.menu, Icons.menu_open, 'nav.more'),
@@ -358,7 +362,8 @@ class _AppShellState extends ConsumerState<AppShell>
     // has width to spare and height to none, so the tabs stand at the
     // start edge (`SideTabs`) and every screen gets the full height. The IndexedStack
     // is the same one either way (`_tabsKey`).
-    final sideways = MediaQuery.orientationOf(context) == Orientation.landscape &&
+    final sideways =
+        MediaQuery.orientationOf(context) == Orientation.landscape &&
         !fullScreen &&
         focus == null;
 
@@ -406,87 +411,104 @@ class _AppShellState extends ConsumerState<AppShell>
       child: Stack(
         children: [
           Scaffold(
-        // The Qur'an tab lays a whole mushaf page out against the body's
-        // height; letting a keyboard shrink it re-laid the page on every frame
-        // of the keyboard's slide — «لما بضغط على زر الانتقال الشاشة في الخلفية
-        // بتمش أو بتعمل فليكر جامد جدا». Its dialogs float above the keyboard
-        // on their own.
-        resizeToAvoidBottomInset: shown != AppTab.quran,
-        body: sideways
-            ? Row(
-                children: [
-                  SideTabs(
-                    tabs: tabs,
-                    selectedIndex: _index,
-                    onSelect: _goTo,
-                    selectedIcon: (icon) => _PopIcon(icon),
+            // The Qur'an tab lays a whole mushaf page out against the body's
+            // height; letting a keyboard shrink it re-laid the page on every frame
+            // of the keyboard's slide — «لما بضغط على زر الانتقال الشاشة في الخلفية
+            // بتمش أو بتعمل فليكر جامد جدا». Its dialogs float above the keyboard
+            // on their own.
+            resizeToAvoidBottomInset: shown != AppTab.quran,
+            body: sideways
+                ? Row(
+                    children: [
+                      SideTabs(
+                        tabs: tabs,
+                        selectedIndex: _index,
+                        onSelect: _goTo,
+                        selectedIcon: (icon) => _PopIcon(icon),
+                      ),
+                      const VerticalDivider(width: 1),
+                      // The rail already stands clear of the notch; the screen
+                      // beside it must not clear it AGAIN. Measured on the
+                      // owner's Xiaomi (ROTATION_90, 2026-09-26): the home cards
+                      // began 60 dp past the rail - 39 dp of that was the notch
+                      // inset re-applied by the tab's own SafeArea.
+                      Expanded(
+                        child: MediaQuery.removePadding(
+                          context: context,
+                          removeLeft:
+                              Directionality.of(context).name == 'ltr',
+                          removeRight:
+                              Directionality.of(context).name == 'rtl',
+                          child: tabStack,
+                        ),
+                      ),
+                    ],
+                  )
+                : tabStack,
+            // P3‑57: seven destinations is more than Material's bar is designed
+            // for (the spec says three to five), so the longest translated label
+            // wins or loses by a few pixels. On the owner's phone «Bibliothèque»
+            // wrapped to two lines and had its last letter clipped by the bar's
+            // fixed 68px height. Pinning the text scale stops a device font-size
+            // setting from making that worse, and is the only part of this that a
+            // user setting could otherwise break.
+            bottomNavigationBar: fullScreen || sideways
+                ? null
+                : focus != null
+                ? const _FocusModeBar()
+                : MediaQuery.withNoTextScaling(
+                    child: NavigationBarTheme(
+                      // «اكتب اسماء الايقونات دايما تحت الايقونات اللي في البوتوم
+                      // نافيجيشن» — every tab carries its name now, on every width.
+                      //
+                      // The width rule this replaces was not wrong about the problem,
+                      // only about the fix: seven tiles on a narrow window leave each
+                      // about 41 dp, and «المسبحة» broke into «المسبد / ة» on
+                      // emulator-5554 at `wm density 600`. Hiding six of the seven
+                      // labels was what his own phone got — the Honor measures
+                      // 1224 px at density 520, which is 376.6 dp, four short of the
+                      // 380 threshold.
+                      //
+                      // So the label shrinks to fit instead of disappearing.
+                      // `nav_label_width_test` budgets each label against **56 dp per
+                      // tile at 11 px**, the theme's size; scaling the size by the
+                      // real tile's share of that 56 dp keeps every one of those
+                      // budgets true at any width, which a fixed smaller size would
+                      // not. Floored at 0.72 so it stays legible rather than chasing
+                      // an absurd window.
+                      data: NavigationBarThemeData(
+                        labelTextStyle: WidgetStatePropertyAll(
+                          (Theme.of(context).navigationBarTheme.labelTextStyle
+                                      ?.resolve(<WidgetState>{}) ??
+                                  const TextStyle(fontSize: 11))
+                              .copyWith(
+                                fontSize:
+                                    11 *
+                                    ((MediaQuery.sizeOf(context).width / 7) /
+                                            56)
+                                        .clamp(0.72, 1.0),
+                              ),
+                        ),
+                      ),
+                      child: NavigationBar(
+                        selectedIndex: _index,
+                        onDestinationSelected: _goTo,
+                        labelBehavior:
+                            NavigationDestinationLabelBehavior.alwaysShow,
+                        // «اعملي أنيميشن جميل في شكل … أيقونات الشريط الرئيسي السفلي».
+                        // The selected icon is built fresh whenever a tab becomes
+                        // selected, so `_PopIcon` plays its entrance exactly then.
+                        destinations: [
+                          for (final (icon, selected, key) in tabs)
+                            NavigationDestination(
+                              icon: Icon(icon),
+                              selectedIcon: _PopIcon(selected),
+                              label: key.tr(),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const VerticalDivider(width: 1),
-                  Expanded(child: tabStack),
-                ],
-              )
-            : tabStack,
-      // P3‑57: seven destinations is more than Material's bar is designed
-      // for (the spec says three to five), so the longest translated label
-      // wins or loses by a few pixels. On the owner's phone «Bibliothèque»
-      // wrapped to two lines and had its last letter clipped by the bar's
-      // fixed 68px height. Pinning the text scale stops a device font-size
-      // setting from making that worse, and is the only part of this that a
-      // user setting could otherwise break.
-      bottomNavigationBar: fullScreen || sideways
-          ? null
-          : focus != null
-              ? const _FocusModeBar()
-              : MediaQuery.withNoTextScaling(
-              child: NavigationBarTheme(
-              // «اكتب اسماء الايقونات دايما تحت الايقونات اللي في البوتوم
-              // نافيجيشن» — every tab carries its name now, on every width.
-              //
-              // The width rule this replaces was not wrong about the problem,
-              // only about the fix: seven tiles on a narrow window leave each
-              // about 41 dp, and «المسبحة» broke into «المسبد / ة» on
-              // emulator-5554 at `wm density 600`. Hiding six of the seven
-              // labels was what his own phone got — the Honor measures
-              // 1224 px at density 520, which is 376.6 dp, four short of the
-              // 380 threshold.
-              //
-              // So the label shrinks to fit instead of disappearing.
-              // `nav_label_width_test` budgets each label against **56 dp per
-              // tile at 11 px**, the theme's size; scaling the size by the
-              // real tile's share of that 56 dp keeps every one of those
-              // budgets true at any width, which a fixed smaller size would
-              // not. Floored at 0.72 so it stays legible rather than chasing
-              // an absurd window.
-              data: NavigationBarThemeData(
-                labelTextStyle: WidgetStatePropertyAll(
-                  (Theme.of(context).navigationBarTheme.labelTextStyle
-                              ?.resolve(<WidgetState>{}) ??
-                          const TextStyle(fontSize: 11))
-                      .copyWith(
-                    fontSize: 11 *
-                        ((MediaQuery.sizeOf(context).width / 7) / 56)
-                            .clamp(0.72, 1.0),
-                  ),
-                ),
-              ),
-              child: NavigationBar(
-              selectedIndex: _index,
-              onDestinationSelected: _goTo,
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-              // «اعملي أنيميشن جميل في شكل … أيقونات الشريط الرئيسي السفلي».
-              // The selected icon is built fresh whenever a tab becomes
-              // selected, so `_PopIcon` plays its entrance exactly then.
-              destinations: [
-                for (final (icon, selected, key) in tabs)
-                  NavigationDestination(
-                    icon: Icon(icon),
-                    selectedIcon: _PopIcon(selected),
-                    label: key.tr(),
-                  ),
-              ],
-            ),
-          ),
-          ),
           ),
           if (tour) TutorialOverlay(onGoToTab: _goTo),
         ],
@@ -494,7 +516,6 @@ class _AppShellState extends ConsumerState<AppShell>
     );
   }
 }
-
 
 /// The only way out of «وضع التركيز» that is visible on screen.
 ///
@@ -524,15 +545,19 @@ class _FocusModeBar extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.logout_rounded, size: 20, color: goldText(context)),
+                  Icon(
+                    Icons.logout_rounded,
+                    size: 20,
+                    color: goldText(context),
+                  ),
                   const SizedBox(width: 10),
                   Flexible(
                     child: Text(
                       'focus.exit'.tr(),
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: goldText(context),
-                            fontWeight: FontWeight.w600,
-                          ),
+                        color: goldText(context),
+                        fontWeight: FontWeight.w600,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),

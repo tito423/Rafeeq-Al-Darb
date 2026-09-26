@@ -11,6 +11,14 @@ import 'package:flutter/material.dart';
 /// seventh of it, icon over name - «اكتب اسماء الايقونات دايما تحت
 /// الايقونات» holds here too - and a tile too short for both scales down
 /// rather than losing its name.
+///
+/// Hugging the notch (owner, 2026-09-26: «خلي النافيجيشن بار يروح شمال شوية
+/// لحد قبل الشريط اللي فيه النوتش»). Measured on his Xiaomi at ROTATION_90:
+/// the cutout strip is 117 px (39 dp) and the rail was 84 dp beside it, so
+/// the icons stood at 69-93 dp - 30 dp of blank white past the camera. The
+/// strip stays (the punch hole's bounding rect is the full 39 dp and sits at
+/// the height of the middle tab), but the column is now just the indicator's
+/// width plus 4 dp a side, which puts the icons right after the strip.
 class SideTabs extends StatelessWidget {
   const SideTabs({
     super.key,
@@ -33,14 +41,15 @@ class SideTabs extends StatelessWidget {
     final theme = Theme.of(context);
     final bar = theme.navigationBarTheme;
     final on = theme.colorScheme.onSurface;
-    final label = (bar.labelTextStyle?.resolve(<WidgetState>{}) ??
-            const TextStyle(fontSize: 11))
-        .copyWith(color: on);
+    final label =
+        (bar.labelTextStyle?.resolve(<WidgetState>{}) ??
+                const TextStyle(fontSize: 11))
+            .copyWith(color: on);
     return Material(
       color: bar.backgroundColor ?? theme.colorScheme.surface,
       child: SafeArea(
         child: SizedBox(
-          width: 84,
+          width: 64,
           child: Column(
             children: [
               for (var i = 0; i < tabs.length; i++)
@@ -54,7 +63,9 @@ class SideTabs extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                            horizontal: 4,
+                            vertical: 2,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -69,7 +80,8 @@ class SideTabs extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: IconTheme.merge(
-                                  data: bar.iconTheme?.resolve({
+                                  data:
+                                      bar.iconTheme?.resolve({
                                         if (i == selectedIndex)
                                           WidgetState.selected,
                                       }) ??
@@ -80,11 +92,7 @@ class SideTabs extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 3),
-                              Text(
-                                tabs[i].$3.tr(),
-                                maxLines: 1,
-                                style: label,
-                              ),
+                              Text(tabs[i].$3.tr(), maxLines: 1, style: label),
                             ],
                           ),
                         ),
