@@ -105,10 +105,21 @@ const double _kMinWidth = 0.012;
 
 /// The rectangles to fill for one ayah, in the same normalized page space the
 /// rings use.
+///
+/// [inkTight]: the rings were drawn tight to the ink, marks included, so the
+/// band is NOT shaved. The 9 % inset below was written for the old tap
+/// layer, whose rings span the whole pitch; applied to `madinah_qc`'s rings
+/// it cut ~12 px off the top and the bottom of every line - the waqf marks,
+/// the harakat above and the descenders below stood outside the highlight
+/// (owner's photo, page 7, 2026-09-26: «التظليل يغطي الآية بالتشكيل بتاعها
+/// والعلامات»). Measured on page 7's image: line 1's ring spans rows 30-150
+/// and its ink 31-148; line 2 167-281 against 168-279 - the ring already
+/// holds every mark, and the gap to the next line is ~22 % of the pitch.
 List<Rect> highlightRectsFor(
   List<List<Offset>> rings,
-  PageLineGrid grid,
-) {
+  PageLineGrid grid, {
+  bool inkTight = false,
+}) {
   final out = <Rect>[];
   for (final ring in rings) {
     if (ring.length < 3) continue;
@@ -133,11 +144,22 @@ List<Rect> highlightRectsFor(
     // with a gap through the middle of the words — the edges of a SHORT ring
     // on the same line land inside a longer one. Measured on the real asset:
     // Al-Baqarah 2:31 on page 6 came back as four rectangles for two lines.
-    final bands = (bottom - top) <= 1.35 * grid.pitch
+    // An ink-tight layer is one ring per printed line by construction (see
+    // its test «no ring covers more than its own line»); a tall one is a
+    // line with tall marks - 21:50 on page 326 is 0.0687 of the page - and
+    // cutting it would drop the marks this flag exists to keep.
+    final bands = inkTight || (bottom - top) <= 1.35 * grid.pitch
         ? <(double, double)>[(top, bottom)]
         : _bands(top, bottom, grid);
 
     for (final band in bands) {
+      if (inkTight) {
+        // A hair outside the ring, so anti-aliased edges are inside too;
+        // far less than the ~0.22-pitch gap to the neighbouring line.
+        final pad = grid.pitch * 0.012;
+        out.add(Rect.fromLTRB(left, band.$1 - pad, right, band.$2 + pad));
+        continue;
+      }
       final inset = math.min(
         grid.pitch * _kVerticalInsetFactor,
         (band.$2 - band.$1) * 0.25,

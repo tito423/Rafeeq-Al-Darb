@@ -38,12 +38,13 @@ class AyahRegion {
   );
 
   /// The same ayah with its highlight rectangles resolved against [grid].
-  AyahRegion withGrid(PageLineGrid grid) => AyahRegion._(
+  AyahRegion withGrid(PageLineGrid grid, {bool inkTight = false}) =>
+      AyahRegion._(
         surah,
         ayah,
         rings,
         bounds,
-        highlightRectsFor(rings, grid),
+        highlightRectsFor(rings, grid, inkTight: inkTight),
       );
 
   factory AyahRegion(int surah, int ayah, List<List<Offset>> rings) {
@@ -138,6 +139,9 @@ class AyahCoordsRepository {
       final raw = await rootBundle.loadString(assetPath);
       final doc = jsonDecode(raw) as Map<String, dynamic>;
       final pages = doc['pages'] as Map<String, dynamic>;
+      // madinah_qc's rings are tight to the ink, marks included (measured
+      // against its page images) - see `highlightRectsFor`.
+      final inkTight = doc['edition'] == 'madinah_qc';
       final parsed = <int, List<AyahRegion>>{};
       for (final entry in pages.entries) {
         final page = int.tryParse(entry.key);
@@ -166,7 +170,9 @@ class AyahCoordsRepository {
         final grid = PageLineGrid.fromRings(
           regions.expand((r) => r.rings),
         );
-        parsed[page] = [for (final r in regions) r.withGrid(grid)];
+        parsed[page] = [
+          for (final r in regions) r.withGrid(grid, inkTight: inkTight),
+        ];
       }
       _byAsset[assetPath] = parsed;
     } finally {

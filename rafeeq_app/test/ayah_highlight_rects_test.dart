@@ -131,6 +131,41 @@ void main() {
         reason: 'paper has to show between two marked lines');
   });
 
+  test('madinah_qc: the highlight holds every mark and descender', () {
+    // The owner's photo of page 7 (2026-09-26): waqf marks and harakat above
+    // the line and descenders below it stood OUTSIDE the recited-ayah
+    // highlight. This layer's rings are tight to the ink (page 7, line 1:
+    // ring rows 30-150, ink 31-148), so the drawn band must contain the
+    // whole ring - and, 0.22 pitch of paper away, still not touch the next.
+    expect(doc['edition'], 'madinah_qc');
+    for (final entry in pages.entries) {
+      final grid =
+          PageLineGrid.fromRings((entry.value as List).expand(ringsOf));
+      for (final row in entry.value as List) {
+        final rings = ringsOf(row);
+        final rects = highlightRectsFor(rings, grid, inkTight: true);
+        for (final ring in rings) {
+          final top = ring.map((p) => p.dy).reduce((a, b) => a < b ? a : b);
+          final bottom =
+              ring.map((p) => p.dy).reduce((a, b) => a > b ? a : b);
+          final left = ring.map((p) => p.dx).reduce((a, b) => a < b ? a : b);
+          final covering = rects.where((r) =>
+              r.left <= left + 1e-9 && r.top <= top && r.bottom >= bottom);
+          expect(covering, isNotEmpty,
+              reason: 'page ${entry.key} ${(row as List)[0]}:${row[1]}: a '
+                  'ring left outside its own highlight');
+        }
+      }
+    }
+    final row = (pages['6'] as List).firstWhere(
+      (r) => (r as List)[0] == 2 && r[1] == 31,
+    );
+    final grid = PageLineGrid.fromRings((pages['6'] as List).expand(ringsOf));
+    final rects = highlightRectsFor(ringsOf(row), grid, inkTight: true);
+    expect(rects[1].top - rects[0].bottom, greaterThan(0.004),
+        reason: 'paper still shows between two marked lines');
+  });
+
   test('every rectangle stays on the page', () {
     for (final entry in pages.entries) {
       final rows = entry.value as List;
