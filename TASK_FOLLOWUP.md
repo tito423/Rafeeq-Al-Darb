@@ -472,6 +472,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 11:09 - Test pins the new rule: the sideways page tap shows the controls
 - 2026-09-26 11:04 - Mushaf sideways: a tap shows the floating controls (owner reversed the portrait-only rule)
 - 2026-09-26 10:22 - Landscape sweep complete; reminder times seen in Arabic digits
 - 2026-09-26 10:14 - Arabic digits in reminder times (sunan sheet, khatma); link manage at reading width

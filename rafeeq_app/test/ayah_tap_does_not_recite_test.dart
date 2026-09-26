@@ -34,8 +34,11 @@ void main() {
     // an `if` block inside it, and stopping at the first brace would read
     // half the body and silently assert against a fragment.
     final body = screen.substring(at, screen.indexOf('\n  }', at));
-    expect(body, contains('Orientation.landscape'),
-        reason: 'landscape has no options, so the tap does nothing there');
+    // Sideways the tap is no longer ignored: on 2026-09-26 the owner asked
+    // for the controls there too («اظهرهم لما اضغط»), so nothing in the
+    // handler may bail out on the orientation.
+    expect(body, isNot(contains('Orientation.landscape')),
+        reason: 'sideways the tap must show the controls, not do nothing');
 
     // WHAT CHANGED ON 2026-09-17. Full screen became the default and
     // permanent state — «خلي دايما الصفحة في وضع ملء الشاشة» — so the tap's
