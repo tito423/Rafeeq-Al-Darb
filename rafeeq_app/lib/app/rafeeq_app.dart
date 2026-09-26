@@ -23,6 +23,7 @@ import '../features/splash/presentation/screens/splash_screen.dart';
 import 'app_locale_provider.dart';
 import 'navigation.dart';
 import '../core/services/sync_service.dart';
+import '../core/utils/screen_class.dart';
 
 /// Injected from main() so sync reads are possible anywhere.
 final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
@@ -178,9 +179,31 @@ class RafeeqApp extends ConsumerWidget {
       darkTheme: dark,
       themeMode: mode,
       scrollBehavior: const ArrowScrollBehavior(),
-      builder: variant == ThemeVariant.rgb
-          ? (context, child) => RgbScaffoldBackground(child: child!)
-          : null,
+      builder: (context, child) {
+        // Height is the scarce direction on a phone held sideways (< 480 dp):
+        // every title bar there was 56 dp of a ~400 dp screen, pushing the
+        // content down under «الأذكار» / «الصلاة» (owner's photos,
+        // 2026-09-26: «ارفع الحاجز ... عشان يبقى فيه رووم أكتر للمحتوى»).
+        // One override here shortens all of them - 44 dp, title a size down.
+        Widget page = child!;
+        if (ScreenClass.shortHeight(context)) {
+          final theme = Theme.of(context);
+          page = Theme(
+            data: theme.copyWith(
+              appBarTheme: theme.appBarTheme.copyWith(
+                toolbarHeight: 44,
+                titleTextStyle: (theme.appBarTheme.titleTextStyle ??
+                        theme.textTheme.titleLarge)
+                    ?.copyWith(fontSize: 17),
+              ),
+            ),
+            child: page,
+          );
+        }
+        return variant == ThemeVariant.rgb
+            ? RgbScaffoldBackground(child: page)
+            : page;
+      },
       // P3‑49: the owner asked for his AI-generated splash video (Gemini
       // watermark now removed) put back. `SplashScreen` plays it, then
       // itself decides whether to hand off to onboarding (first run) or

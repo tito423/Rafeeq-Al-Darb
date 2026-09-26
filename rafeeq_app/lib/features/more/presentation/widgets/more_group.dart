@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/accordion.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 import '../../../tutorial/data/tutorial_state.dart';
+import '../../../../core/utils/screen_class.dart';
 
 /// One group of «المزيد» as a single card that opens onto its contents.
 ///
@@ -105,7 +106,13 @@ class _MoreGroupState extends ConsumerState<MoreGroup>
           icon: widget.icon,
           accent: widget.accent,
           title: widget.title,
-          subtitle: widget.subtitle,
+          // Three a row, the descriptions made the cards every height from
+          // two lines to six, out of line with each other (owner's photo,
+          // 2026-09-26: «شيل الكلام ... يبقوا متناسقين مش واحد كبير والتاني
+          // صغير»). In a grid the title says it; the list upright keeps
+          // the description, where it has the width to be read.
+          subtitle: ScreenClass.twoColumns(context) ? '' : widget.subtitle,
+          singleLineTitle: ScreenClass.twoColumns(context),
           onTap: _toggle,
           trailing: AnimatedRotation(
             turns: open ? 0.25 : 0,

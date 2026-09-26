@@ -23,6 +23,10 @@ class IslamicActionCard extends StatelessWidget {
   final String title;
   final String subtitle;
 
+  /// One line, shrunk to fit rather than wrapped - so cards set side by
+  /// side come out the same height.
+  final bool singleLineTitle;
+
   /// Tints the border, the icon medallion, the lattice and the glow.
   final Color accent;
 
@@ -37,6 +41,7 @@ class IslamicActionCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.singleLineTitle = false,
     required this.onTap,
     this.accent = AppColors.gold,
     this.trailing,
@@ -119,14 +124,29 @@ class IslamicActionCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                title,
-                                style: TextStyle(
-                                  color: hero.onSurface,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
+                              if (singleLineTitle)
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: Text(
+                                    title,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      color: hero.onSurface,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                )
+                              else
+                                Text(
+                                  title,
+                                  style: TextStyle(
+                                    color: hero.onSurface,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              ),
                               // A card with nothing to add under its title
                               // (a settings section) leaves the line out.
                               if (subtitle.isNotEmpty) ...[
